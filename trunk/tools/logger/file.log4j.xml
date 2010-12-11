@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <!--
+    <appender name="RootAppender" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %p [%t] %c{3} %3x - %m%n"/>
+        </layout>
+    </appender>
+    -->
+    <appender name="RootAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="C:/temp/all_debug.log"/>
+        <param name="Threshold" value="DEBUG"/>
+        <param name="MaxFileSize" value="50000KB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %p [%t] %c{3} %3x - %m%n"/>
+        </layout>
+    </appender>
+    <root>
+        <priority value="debug"/>
+        <appender-ref ref="RootAppender"/>
+    </root>
+</log4j:configuration>

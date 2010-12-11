@@ -1,0 +1,29 @@
+#* @vtlmacrolibrary path="/templates/mail/notification/game_common_ru.vm" *#
+
+#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+<html>
+<body>
+#parse("/templates/mail/notification/game_common_ru.vm")
+
+#set ($playerHand = $board.getPlayerHand($player.Id))
+
+<p>
+    Игра закончена в ничью на доске #boardName($board). Все игроки набрали одинаковое количество очков.
+</p>
+<br>
+
+<p>
+    #set ($won = ($playerHand.getRatingDelta() > 0))
+    Так как в случае ничьей рейтиг все равно пересчитывается, ваш рейтинг был
+    #if ($won)
+    <em>увеличен на $playerHand.RatingDelta</em>
+    #else
+    #set ($k = $playerHand.RatingDelta * -1)
+    <em>уменьшен на $k</em>
+    #end
+    и теперь составляет <em>$playerHand.Rating</em>.
+</p>
+
+#parse("/templates/mail/notification/mail_footer_ru.vm")
+</body>
+</html>

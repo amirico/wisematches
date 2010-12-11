@@ -1,0 +1,25 @@
+<html>
+<body>
+<p>
+    Your address, ${player.email}, is associated with username:
+    <br>
+    &nbsp;&nbsp;${player.username}
+</p>
+
+<p>
+    To sign in, visit the link below.
+</p>
+
+<p>
+    <a href="${site-url}">${site-url}</a>
+    <br>
+    If clicking on the link above does not work, copy and paste the URL in a
+    new browser window instead. Thank you for using WiseMatches.
+</p>
+
+<p>
+    This is a post-only mailing. Replies to this message are not monitored
+    or answered.
+</p>
+</body>
+</html>

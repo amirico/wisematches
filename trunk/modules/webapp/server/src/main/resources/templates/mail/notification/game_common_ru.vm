@@ -1,0 +1,41 @@
+#macro(daysAsString $days)
+    $days
+    #if ($days == 0)
+    дней
+    #elseif($days == 1)
+    день
+    #elseif($days <= 4 )
+    дня
+    #else
+    дней
+    #end
+#end
+
+#macro(hoursAsString $hours)
+    $hours
+    #if ($hours == 0)
+    часов
+    #elseif( $hours == 1)
+    час
+    #else
+    часа
+    #end
+#end
+
+#macro(minutesAsString $minutes)
+    $minutes
+    #if ($minutes == 0)
+    минут
+    #elseif($minutes == 1)
+    минута
+    #elseif($minutes <= 4 )
+    минуты
+    #else
+    минут
+    #end
+#end
+
+#parse("/templates/mail/notification/game_common.vm")
+<p>
+    Здраствуйте, $player.Username.
+</p>

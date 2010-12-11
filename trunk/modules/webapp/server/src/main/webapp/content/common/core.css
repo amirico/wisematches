@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+ */
+
+body, div {
+    font-family: arial, sans-serif;
+    font-size: small;
+}
+
+body {
+    background-color: white;
+    color: black;
+    margin: 8px;
+}
+
+table {
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+}
+
+.footer {
+
+}
+
+.copyrights {
+    color: #666666;
+}
+
+.x-panel-round-top .x-panel-tl, .x-panel-round .x-panel-tl {
+    border-bottom: 0 none;
+}
+
+.x-panel-round-top .x-panel-tc, .x-panel-round .x-panel-tc {
+    height: 3px;
+    font-size: 0;
+}
+
+.x-panel-round-top .x-panel-bl {
+    background: transparent url('/ext/resources/images/default/panel/left-right.gif') repeat-y scroll 0 0;
+    padding-left: 1px;
+}
+
+.x-panel-round-top .x-panel-br {
+    background: transparent url('/ext/resources/images/default/panel/left-right.gif') repeat-y scroll right 0;
+    padding-right: 1px;
+}
+
+div.space-line {
+    clear: both;
+    margin: 0;
+    padding: 0;
+    width: auto;
+}

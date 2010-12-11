@@ -1,0 +1,30 @@
+#* @vtlvariable name="report" type="wisematches.server.web.modules.core.problems.ProblemsReport" *#
+<html>
+<body>
+<p>
+    User '${report.username}' has sent problem report.
+</p>
+
+<p>
+    The subject: ${report.subject}
+</p>
+
+<p>
+    The operation system: ${report.os}
+</p>
+
+<p>
+    The browser: ${report.browser}
+</p>
+
+<p>
+    -------------------<br>
+    ${report.message}
+</p>
+<br>
+
+<p>
+    P.S. user account: ${report.account}.
+</p>
+</body>
+</html>

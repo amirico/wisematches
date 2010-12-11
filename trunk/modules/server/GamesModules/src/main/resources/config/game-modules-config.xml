@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="classpath:/config/server-core-config.xml"/>
+
+    <!-- Tiles a placed in classpath in /banks/ directory. -->
+    <bean id="tilesBankingHouse" class="wisematches.server.games.scribble.bank.impl.XMLTilesBankingHouse">
+        <property name="banksPath" value="classpath:/banks/"/>
+    </bean>
+
+    <bean id="modulesSessionFactory" parent="serverSessionFactory">
+        <property name="annotatedClasses">
+            <list merge="true">
+                <value>wisematches.server.games.scribble.board.ScribbleBoard</value>
+                <value>wisematches.server.games.scribble.board.ScribbleSettings</value>
+                <value>wisematches.server.games.scribble.board.ScribblePlayerHand</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="scribbleBoardDAO" class="wisematches.server.games.scribble.board.ScribbleBoardDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="scribbleRoomManager" class="wisematches.server.games.scribble.board.ScribbleRoomManager">
+        <property name="dictionaryManager" ref="wordGamesDictionaries"/>
+        <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
+        <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
+    </bean>
+
+    <bean id="scribbleRoomManagerFacade" class="wisematches.server.games.scribble.board.ScribbleRoomManagerFacade">
+        <constructor-arg index="0" ref="scribbleRoomManager"/>
+    </bean>
+
+    <bean id="roomsManager" class="wisematches.server.core.room.RoomsManager">
+        <property name="roomManagers">
+            <list>
+                <ref bean="scribbleRoomManager"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ratingsCaculationManager" class="wisematches.server.core.rating.impl.RatingsCalculationCenter">
+        <property name="ratingSystem">
+            <bean class="wisematches.server.core.rating.impl.systems.ELORatingSystem"/>
+        </property>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="ratingsManager" class="wisematches.server.core.rating.impl.RatingsManagerImpl">
+        <property name="topPlayersCount" value="5"/>
+        <property name="ratingsCalculationManager" ref="ratingsCaculationManager"/>
+        <property name="ratingsManagerDao" ref="ratingsManagerDao"/>
+    </bean>
+
+    <bean id="robotsBrainManager" class="wisematches.server.core.robot.impl.RobotsBrainManagerImpl">
+        <property name="robotBrains">
+            <list>
+                <bean class="wisematches.server.games.scribble.robot.ScribbleRobotBrain"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="guestPlayerManager" class="wisematches.server.core.guest.GuestPlayerManager"/>
+
+    <bean id="playerManager" class="wisematches.server.core.robot.impl.CompositePlayerManager">
+        <property name="realPlayerManager" ref="accountManager"/>
+        <property name="robotsBrainManager" ref="robotsBrainManager"/>
+        <property name="guestPlayerManager" ref="guestPlayerManager"/>
+    </bean>
+
+    <bean id="robotMovesExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="1"/>
+        <property name="maxPoolSize" value="5"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="false"/>
+        <property name="keepAliveSeconds" value="60"/>
+    </bean>
+
+    <bean id="robotsActivityManager" class="wisematches.server.core.robot.impl.RobotsActivityCenter">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="robotsBrainManager" ref="robotsBrainManager"/>
+        <property name="movesExecutor" ref="robotMovesExecutor"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="statisticsCleanerCenter" class="wisematches.server.core.statistic.impl.StatisticCleanerCenter">
+        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
+    </bean>
+
+    <bean id="statisticCalculationCenter" class="wisematches.server.core.statistic.impl.StatisticCalculationCenter">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="statisticsCleanerJobDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="statisticsCleanerCenter"/>
+        <property name="targetMethod" value="performClean"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="statisticsCleanerJobDetail"/>
+
+        <!-- run every morning at 3 AM -->
+        <property name="cronExpression" value="0 0 3 * * ?"/>
+    </bean>
+
+    <bean id="gameTimeoutProcessor" class="wisematches.server.core.timeouts.GameTimeoutTerminator"
+          destroy-method="destroy">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="transactionTemplate" ref="transactionTemplateRequiredNew"/>
+    </bean>
+</beans>
+        

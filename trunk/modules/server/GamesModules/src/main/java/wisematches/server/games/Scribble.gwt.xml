@@ -1,0 +1,4 @@
+<module>
+    <inherits name="wisematches.server.games.scribble.ScribbleCore"/>
+    <inherits name="wisematches.server.games.scribble.ScribbleScores"/>
+</module>
