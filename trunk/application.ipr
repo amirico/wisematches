@@ -400,7 +400,6 @@
       <module fileurl="file://$PROJECT_DIR$/group (wisematches.server).iml" filepath="$PROJECT_DIR$/group (wisematches.server).iml" />
       <module fileurl="file://$PROJECT_DIR$/group (wisematches.web).iml" filepath="$PROJECT_DIR$/group (wisematches.web).iml" />
       <module fileurl="file://$PROJECT_DIR$/kernel.iml" filepath="$PROJECT_DIR$/kernel.iml" />
-      <module fileurl="file://$PROJECT_DIR$/web-client.iml" filepath="$PROJECT_DIR$/web-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-server.iml" filepath="$PROJECT_DIR$/web-server.iml" />
     </modules>
   </component>
@@ -522,7 +521,7 @@
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/.." vcs="hg4idea" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="libraryTable">
@@ -601,28 +600,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.smartgwt:smartgwt-skins:2.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/smartgwt/smartgwt-skins/2.1/smartgwt-skins-2.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/smartgwt/smartgwt-skins/2.1/smartgwt-skins-2.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/smartgwt/smartgwt-skins/2.1/smartgwt-skins-2.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.smartgwt:smartgwt:2.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/smartgwt/smartgwt/2.1/smartgwt-2.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/smartgwt/smartgwt/2.1/smartgwt-2.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/smartgwt/smartgwt/2.1/smartgwt-2.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:2.1.1">

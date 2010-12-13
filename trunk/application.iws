@@ -25,29 +25,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="c58aeef6-06ff-4ee2-8277-516371716913" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/resources/images/empty.gif" />
-      <change type="DELETED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\resources\about\about_en.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\resources\about\about_ru.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\resources\features\features_en.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\resources\features\features_ru.json" afterPath="" />
-      <change type="MOVED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\login\panel\about.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/about.ftl" />
-      <change type="MOVED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\login\panel\features.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/features.ftl" />
-      <change type="MOVED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\login\panel\policy.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/policy.ftl" />
-      <change type="MOVED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\login\panel\problems.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/problems.ftl" />
-      <change type="MOVED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\login\panel\rules.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/rules.ftl" />
-      <change type="MOVED" beforePath="C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\login\panel\terms.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/terms.ftl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.ipr" afterPath="$PROJECT_DIR$/application.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.iws" afterPath="$PROJECT_DIR$/application.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/controller/InformationController.java" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/controller/InformationController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/client/login.properties" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/client/login.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/server/web.properties" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/server/web.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/server/web_ru.properties" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/server/web_ru.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/custom-el.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/custom-el.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/layout.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/layout.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/body.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/body.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/header.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/header.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/layout.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/layout.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/login.css" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/login.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/panel/index.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/panel/index.ftl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kernel.iml" afterPath="$PROJECT_DIR$/kernel.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-server.iml" afterPath="$PROJECT_DIR$/web-server.iml" />
     </list>
     <ignored path="application.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -189,26 +170,7 @@
     <subPane subId="FailedTest" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="terms.ftl" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/terms.ftl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="59" selection-start="1990" selection-end="1990" vertical-scroll-proportion="-14.384615">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="custom-el.ftl" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/custom-el.ftl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="20" selection-start="0" selection-end="974" vertical-scroll-proportion="0.5678497">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -501,236 +463,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Favorites">
         <subPane subId="FailedTest" />
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -749,16 +487,16 @@
     <property name="options.splitter.details.proportions" value="0.31123918" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="RESOURCE_BUNDLE_SPLITTER_PROPORTION" value="0.5" />
-    <property name="options.lastSelected" value="File.Encoding" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="com.intellij.codeInsight.intention.impl.createTest.CreateTestDialog.defaultLibrary" value="JUnit3" />
     <property name="project.structure.side.proportion" value="0.22337125" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="com.intellij.codeInsight.intention.impl.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="248" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="233" />
     <property name="project.structure.last.edited" value="SDKs" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="233" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="20" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="OverrideImplement.combined" value="true" />
@@ -770,7 +508,7 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder5" value="5" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder4" value="4" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../temp/eeeeeeeeee" />
+    <property name="last_opened_file_path" value="C:/temp/eeeeeeeeee" />
     <property name="JdbcConsole.OpenEditorOnStart" value="false" />
     <property name="GoToClass.includeJavaFiles" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -784,8 +522,8 @@
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -853,6 +591,10 @@
             <option name="mySupportsDeletion" value="false" />
             <option name="myCanBeAbsent" value="false" />
             <option name="myId" value="UPDATED" />
+            <PATH vcs="hg4idea" revision="">C:\prj\wm\trunk\application.ipr</PATH>
+            <PATH vcs="hg4idea" revision="">C:\prj\wm\trunk\kernel.iml</PATH>
+            <PATH vcs="hg4idea" revision="">C:\prj\wm\trunk\web-server.iml</PATH>
+            <PATH vcs="hg4idea" revision="">C:\prj\wm\trunk\application.iws</PATH>
           </FILE-GROUP>
           <FILE-GROUP>
             <option name="myUpdateName" value="Created" />
@@ -903,7 +645,6 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-          <PATH vcs="svn" revision="376">C:\prj\test\src\trunk\modules\webapp\server\src\main\webapp\content\core</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Merged" />
@@ -939,13 +680,6 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="SWITCHED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with property conflicts" />
-          <option name="myStatusName" value="Will be merged with property conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
         </FILE-GROUP>
       </UpdatedFiles>
     </UpdateInfo>
@@ -1201,30 +935,6 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <configuration default="true" type="GWT.ConfigurationType" factoryName="GWT Configuration">
-      <module name="" />
-      <option name="VM_PARAMETERS" value="" />
-      <RunnerSettings RunnerId="Profile ">
-        <option name="myExternalizedOptions" />
-      </RunnerSettings>
-      <method>
-        <option name="AntTarget" enabled="false" />
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="false" />
-        <option name="Maven.BeforeRunTask" enabled="false" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JavascriptDebugSession" factoryName="Local">
-      <JSDebuggerConfigurationSettings>
-        <option name="engineId" value="firefox" />
-        <option name="fileUrl" value="file://" />
-      </JSDebuggerConfigurationSettings>
-      <method>
-        <option name="AntTarget" enabled="false" />
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Maven.BeforeRunTask" enabled="false" />
-      </method>
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="emma" />
       <module name="" />
@@ -1254,36 +964,14 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <configuration default="true" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Remote">
-      <option name="LOCAL" value="false" />
-      <server-settings>
-        <option name="DEPLOY_TOMCAT_APPS" value="false" />
-        <option name="BASE_DIRECTORY_NAME" value="" />
-      </server-settings>
-      <predefined_log_file id="TOMCAT_LOCALHOST_LOG_ID" enabled="true" />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="46428" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="false" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
+    <configuration default="true" type="JavascriptDebugSession" factoryName="Local">
+      <JSDebuggerConfigurationSettings>
+        <option name="engineId" value="firefox" />
+        <option name="fileUrl" value="file://" />
+      </JSDebuggerConfigurationSettings>
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="false" />
-        <option name="Maven.BeforeRunTask" enabled="false" />
-      </method>
-    </configuration>
-    <configuration default="true" type="com.intellij.persistence.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
-      <option name="VM_PARAMETERS" value="" />
-      <option name="USER_CFG_CLASS" />
-      <option name="CONTEXT_PROVIDER" />
-      <method>
-        <option name="AntTarget" enabled="false" />
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="false" />
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
@@ -1330,6 +1018,39 @@
           <option name="PROGRAM_PARAMETERS" value="" />
         </SHUTDOWN>
       </ConfigurationWrapper>
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="false" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="com.intellij.persistence.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
+      <option name="VM_PARAMETERS" value="" />
+      <option name="USER_CFG_CLASS" />
+      <option name="CONTEXT_PROVIDER" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="false" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Remote">
+      <option name="LOCAL" value="false" />
+      <server-settings>
+        <option name="DEPLOY_TOMCAT_APPS" value="false" />
+        <option name="BASE_DIRECTORY_NAME" value="" />
+      </server-settings>
+      <predefined_log_file id="TOMCAT_LOCALHOST_LOG_ID" enabled="true" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="46428" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
@@ -1391,7 +1112,7 @@
         <option name="DEPLOY_TOMCAT_APPS" value="false" />
         <option name="BASE_DIRECTORY_NAME" value="WebServer_application" />
       </server-settings>
-      <log_file path="$PROJECT_DIR$/../../../.IntelliJIdea80/system/tomcat/Unnamed_applicationc338a708/logs/localhost*" checked="true" skipped="true" show_all="false" alias="Tomcat Log" />
+      <log_file path="C:/.IntelliJIdea80/system/tomcat/Unnamed_applicationc338a708/logs/localhost*" checked="true" skipped="true" show_all="false" alias="Tomcat Log" />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="41356" />
         <option name="TRANSPORT" value="0" />
@@ -1456,13 +1177,13 @@
     <configuration default="false" name="WebServer-YouKit" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local">
       <option name="OPEN_IN_BROWSER" value="false" />
       <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/" />
-      <option name="COMMON_VM_ARGUMENTS" value="-agentpath:$PROJECT_DIR$/../../../Downloads/yjp-8.0.10/bin/linux-x86-32/libyjpagent.so=disablestacktelemetry,disableexceptiontelemetry,delay=10000,sessionname=Tomcat -Dlog4j.configuration=file:$PROJECT_DIR$/log4j.xml -Xmx64M" />
+      <option name="COMMON_VM_ARGUMENTS" value="-agentpath:C:/Downloads/yjp-8.0.10/bin/linux-x86-32/libyjpagent.so=disablestacktelemetry,disableexceptiontelemetry,delay=10000,sessionname=Tomcat -Dlog4j.configuration=file:$PROJECT_DIR$/log4j.xml -Xmx64M" />
       <deployment />
       <server-settings>
         <option name="DEPLOY_TOMCAT_APPS" value="false" />
         <option name="BASE_DIRECTORY_NAME" value="" />
       </server-settings>
-      <log_file path="$PROJECT_DIR$/../../../.IntelliJIdea80/system/tomcat/Unnamed_applicationc338a708/logs/localhost*" checked="true" skipped="true" show_all="false" alias="Tomcat Log" />
+      <log_file path="C:/.IntelliJIdea80/system/tomcat/Unnamed_applicationc338a708/logs/localhost*" checked="true" skipped="true" show_all="false" alias="Tomcat Log" />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="41356" />
         <option name="TRANSPORT" value="0" />
@@ -1519,16 +1240,14 @@
       </ConfigurationWrapper>
       <method />
     </configuration>
-    <list size="9">
+    <list size="7">
       <item index="0" class="java.lang.String" itemvalue="JUnit.SmallRobotsGameTest.test_makeSmallGame" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.wisematches.client.gwt" />
       <item index="2" class="java.lang.String" itemvalue="JUnit.wisematches.server.web" />
       <item index="3" class="java.lang.String" itemvalue="JUnit.FilePlayerImagesManagerTest" />
       <item index="4" class="java.lang.String" itemvalue="JUnit.FilteredResourceBundleMessageSourceTest" />
-      <item index="5" class="java.lang.String" itemvalue="GWT Configuration.Tomcat GWT" />
-      <item index="6" class="java.lang.String" itemvalue="GWT Configuration.Embedded GWT" />
-      <item index="7" class="java.lang.String" itemvalue="Tomcat Server.WebServer" />
-      <item index="8" class="java.lang.String" itemvalue="Tomcat Server.WebServer-YouKit" />
+      <item index="5" class="java.lang.String" itemvalue="Tomcat Server.WebServer" />
+      <item index="6" class="java.lang.String" itemvalue="Tomcat Server.WebServer-YouKit" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -2113,24 +1832,6 @@
     <myIsUseDefaultProxy>true</myIsUseDefaultProxy>
     <supportedVersion>125</supportedVersion>
   </component>
-  <component name="SvnFileUrlMappingImpl">
-    <option name="myMappingRoots">
-      <list>
-        <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="C:\prj\test\src\trunk" />
-          <option name="myCopyRoot" value="C:\prj\test\src\trunk" />
-        </SvnCopyRootSimple>
-      </list>
-    </option>
-    <option name="myMoreRealMappingRoots">
-      <list>
-        <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="C:\prj\test\src\trunk" />
-          <option name="myCopyRoot" value="C:\prj\test\src\trunk" />
-        </SvnCopyRootSimple>
-      </list>
-    </option>
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="c58aeef6-06ff-4ee2-8277-516371716913" name="Default" comment="" />
@@ -2162,7 +1863,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1284" y="-4" width="1288" height="998" extended-state="6" />
+    <frame x="-4" y="-4" width="1288" height="998" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2605178" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -2171,24 +1872,23 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24838188" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977092" sideWeight="0.0" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32875144" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3906071" sideWeight="0.99351174" order="19" side_tool="false" content_ui="tabs" x="22" y="364" width="1236" height="261" />
       <window_info id="TODO" active="false" anchor="left" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.47249192" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25161812" sideWeight="0.21076746" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26045015" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2669903" sideWeight="0.6643757" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32927817" sideWeight="0.6093929" order="1" side_tool="false" content_ui="tabs" x="350" y="74" width="324" height="622" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2514193" sideWeight="0.67124856" order="1" side_tool="false" content_ui="tabs" x="350" y="74" width="324" height="622" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48713827" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28751433" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" x="24" y="388" width="1232" height="251" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24269481" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Runner Output" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38992974" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Tapestry" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Dataflow to this" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Tapestry" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="SVN Repositories" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329582" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Regex Tester" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290398" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="SVN Repositories" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329582" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928804" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.44174758" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2196,6 +1896,7 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4833906" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Slice" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3906071" sideWeight="0.99351174" order="19" side_tool="false" content_ui="tabs" x="22" y="364" width="1236" height="261" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39967638" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2328,11 +2029,11 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/server/web_ru.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="66" selection-start="1267" selection-end="1267" vertical-scroll-proportion="0.6273063" />
-      </provider>
       <provider editor-type-id="ResourceBundle">
         <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="66" selection-start="1267" selection-end="1267" vertical-scroll-proportion="0.6273063" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/header.ftl">
@@ -2341,11 +2042,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/server/web.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="20" selection-start="1333" selection-end="1333" vertical-scroll-proportion="0.05904059" />
-      </provider>
       <provider editor-type-id="ResourceBundle">
         <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="20" selection-start="1333" selection-end="1333" vertical-scroll-proportion="0.05904059" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/login/login.css">
@@ -2405,14 +2106,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/info/terms.ftl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="59" selection-start="1990" selection-end="1990" vertical-scroll-proportion="-14.384615">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/custom-el.ftl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="20" selection-start="0" selection-end="974" vertical-scroll-proportion="0.5678497">
+        <state line="60" column="30" selection-start="2324" selection-end="2324" vertical-scroll-proportion="0.23172243">
           <folding />
         </state>
       </provider>

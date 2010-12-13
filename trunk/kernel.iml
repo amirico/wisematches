@@ -4,10 +4,10 @@
     <output url="file://$MODULE_DIR$/modules/kernel/Kernel/target/classes" />
     <output-test url="file://$MODULE_DIR$/modules/kernel/Kernel/target/test-classes" />
     <content url="file://$MODULE_DIR$/modules/kernel/Kernel">
-      <sourceFolder url="file://$MODULE_DIR$/modules/kernel/Kernel/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/modules/kernel/Kernel/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/modules/kernel/Kernel/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/kernel/Kernel/src/test/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/kernel/Kernel/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/modules/kernel/Kernel/target" />
     </content>
     <orderEntry type="inheritedJdk" />
