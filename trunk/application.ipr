@@ -372,6 +372,8 @@
     <dictionary name="klimese">
       <words>
         <w>directwebremoting</w>
+        <w>ftlvariable</w>
+        <w>persister</w>
         <w>springframework</w>
         <w>wisematches</w>
       </words>

@@ -17,57 +17,57 @@ import java.util.Date;
  * @version 1.0
  */
 public interface Player {
-    /**
-     * Returns unique unmodifiable id of this player.
-     *
-     * @return the player id.
-     */
-    long getId();
+	/**
+	 * Returns unique unmodifiable id of this player.
+	 *
+	 * @return the player id.
+	 */
+	long getId();
 
-    /**
-     * Return unique unmodifiable username of player. This is nick name.
-     *
-     * @return unique unmodifiable username.
-     */
-    String getUsername();
+	/**
+	 * Return unique unmodifiable username of player. This is nick name.
+	 *
+	 * @return unique unmodifiable username.
+	 */
+	String getUsername();
 
-    String getPassword();
+	String getPassword();
 
-    String getEmail();
+	String getEmail();
 
-    void setPassword(String password);
+	void setPassword(String password);
 
-    void setEmail(String email);
+	void setEmail(String email);
 
-    Language getLanguage();
+	Language getLanguage();
 
-    void setLanguage(Language locale);
+	void setLanguage(Language locale);
 
-    Date getCreationDate();
+	Date getCreationDate();
 
-    int getRating();
+	int getRating();
 
-    void setRating(int rating);
+	void setRating(int rating);
 
-    void changeRating(int delta);
+	void changeRating(int delta);
 
 
-    Date getLastSigninDate();
+	Date getLastSigninDate();
 
-    void setLastSigninDate(Date date);
+	void setLastSigninDate(Date date);
 
-    /**
-     * Returns player profile.
-     *
-     * @return the profile of this player.
-     */
-    PlayerProfile getPlayerProfile();
+	/**
+	 * Returns player profile.
+	 *
+	 * @return the profile of this player.
+	 */
+	PlayerProfile getPlayerProfile();
 
-    /**
-     * Returns interface that allows get information about enabled/disable notification and change
-     * set of such notifications.
-     *
-     * @return the interface for interaction with plyaer notifications info.
-     */
-    PlayerNotifications getPlayerNotifications();
+	/**
+	 * Returns interface that allows get information about enabled/disable notification and change
+	 * set of such notifications.
+	 *
+	 * @return the interface for interaction with plyaer notifications info.
+	 */
+	PlayerNotifications getPlayerNotifications();
 }

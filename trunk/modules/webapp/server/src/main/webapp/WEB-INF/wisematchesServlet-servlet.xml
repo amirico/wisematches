@@ -63,6 +63,7 @@
         <property name="freemarkerSettings">
             <props>
                 <prop key="template_exception_handler">rethrow</prop>
+                <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
             </props>
         </property>
     </bean>
