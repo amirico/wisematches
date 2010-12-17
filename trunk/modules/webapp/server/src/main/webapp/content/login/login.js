@@ -1,13 +1,6 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-function onLanguageSelect(como, rec, index) {
-    var new_lang = rec.get('code');
-    if (new_lang != lang.locale) {
-        location.href = addUrlParameter('', 'language', new_lang, true);
-    }
-}
-
 Ext.onReady(function() {
     var languageCombo = new Ext.form.ComboBox({
         store: new Ext.data.ArrayStore({
@@ -28,7 +21,12 @@ Ext.onReady(function() {
         style: 'background: transparent;',
         value: lang.locale
     });
-    languageCombo.on('select', onLanguageSelect);
+    languageCombo.on('select', function(como, rec, index) {
+        var new_lang = rec.get('code');
+        if (new_lang != lang.locale) {
+            location.href = addUrlParameter('', 'language', new_lang, true);
+        }
+    });
 
     var registerNewUser = new Ext.Button({
         text: _('login.form.register.label'),
@@ -85,7 +83,7 @@ Ext.onReady(function() {
         href: 'javascript: false;'
     });
 
-    new Ext.Panel({
+    var navigationPanel = new Ext.Panel({
         bodyStyle:'padding:5px 5px 0',
         title: _('login.form.title'),
         titleAlign: 'center',
@@ -98,6 +96,5 @@ Ext.onReady(function() {
         },
         items: [formPanel, restoreLink]
     });
-
     Ext.fly(Ext.getDom('navigation')).removeClass(['x-hidden', 'x-hide-display']);
 });

@@ -64,7 +64,6 @@ var I18n = function() {
         }
     };
 }();
-
 var _ = function(key, options) {
     return I18n.t(key, options);
 }
@@ -166,3 +165,68 @@ Ext.Hyperlink = Ext.extend(Ext.Button, {
     }
 });
 Ext.reg('link', Ext.Hyperlink);
+
+var problemsWindow;
+function showProblemsWindow() {
+    if (!problemsWindow) {
+        problemsWindow = new Ext.Window({
+            title: 'Problems Report Window',
+            closable: true,
+            layout: 'fit',
+            width: 650,
+            height: 420,
+            modal: true,
+            resizable: false,
+            closeAction: 'hide',
+
+            items: [
+                new Ext.FormPanel({
+                    labelWidth: 120,
+                    frame: true,
+                    defaultType: 'textfield',
+                    width: 400,
+                    items:[
+                        {
+                            fieldLabel: 'Real Name', //lblProblemsRealName
+                            name: 'username',
+                            anchor:'95%',
+                            allowBlank: false },
+                        {
+                            fieldLabel: 'Your email', //lblProblemsEmail
+                            name: 'email',
+                            anchor:'95%',
+                            allowBlank: true },
+                        {
+                            fieldLabel: 'Account username', //lblProblemsAccount
+                            name: 'account',
+                            anchor:'95%',
+                            allowBlank: true },
+                        {
+                            fieldLabel: 'Subject', //lblProblemsSubject
+                            name: 'subject',
+                            anchor:'95%',
+                            allowBlank: false },
+                        {
+                            fieldLabel: 'Message', //lblProblemsMessage
+                            xtype:'htmleditor',
+                            name: 'message',
+                            anchor:'98%',
+                            height: 230,
+                            enableSourceEdit: false,
+                            allowBlank: false }
+                    ],
+
+                    buttons: [
+                        {
+                            text: 'Submit'
+                        },
+                        {
+                            text: 'Cancel'
+                        }
+                    ]
+                })
+            ]
+        });
+    }
+    problemsWindow.show(this);
+}
