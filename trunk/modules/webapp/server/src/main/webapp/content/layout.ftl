@@ -7,6 +7,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 
     <link rel="stylesheet" type="text/css" href="/content/common/core.css">
+    <link rel="stylesheet" type="text/css" href="/content/common/info.css">
     <link rel="stylesheet" type="text/css" href="/ext/resources/css/ext-all.css">
     <#list styles as style>
         <link rel="stylesheet" href="${style}">

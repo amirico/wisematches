@@ -7,5 +7,7 @@
 &nbsp;-&nbsp;
 <a href="/info/policy.html"><@spring.message "login.info.privacy_policy.label"/></a>
 &nbsp;-&nbsp;
+<a href="/info/naming.html"><@spring.message "login.info.naming.label"/></a>
+&nbsp;-&nbsp;
 <a href="/info/problems.html"><@spring.message "login.info.problems.label"/></a>
 </@ext.bottomRoundPanel>

@@ -86,7 +86,6 @@ Ext.onReady(function() {
     });
 
     new Ext.Panel({
-        width: 250,
         bodyStyle:'padding:5px 5px 0',
         title: _('login.form.title'),
         titleAlign: 'center',

@@ -53,33 +53,3 @@ div.space-line {
     width: auto;
 }
 
-#terms-header {
-    font-size: large;
-    font-weight: bold;
-    color: #a52a2a;
-}
-
-#terms-description {
-}
-
-#terms-content {
-}
-
-.terms-section {
-    padding-top: 10px;
-    list-style: square inside;
-}
-
-.terms-section-header {
-    font-weight: bold;
-}
-
-.terms-section-item {
-    padding-top: 3px;
-    padding-left: 10px;
-    list-style: circle inside;
-}
-
-/*.terms-section-item:before {
-    content: "\00BB \0020";
-}                            */

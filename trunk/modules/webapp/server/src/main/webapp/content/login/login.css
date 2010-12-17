@@ -22,6 +22,7 @@
 
 /* Main CSS declaration */
 #body {
+    width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
 }
@@ -60,80 +61,7 @@
     text-align: center;
 }
 
-/* Main INFO CSS declaration */
 #info-links {
     text-align: center;
 }
-
-#info-main-header {
-    font-size: larger;
-    font-weight: bold;
-}
-
-#info-main-text {
-    padding-top: 10px;
-    text-align: justify;
-}
-
-.info-game {
-    padding-top: 10px;
-    vertical-align: top;
-}
-
-.info-game-image {
-    padding-left: 15px;
-    text-align: left;
-    float: left;
-}
-
-.info-game-name {
-    font-size: larger;
-    font-weight: bold;
-}
-
-.info-game-description {
-    padding-left: 5px;
-    text-align: justify;
-}
-
-.info-game-rules {
-    font-size: x-small;
-    text-align: right;
-}
-
-/* About & Features CSS declaration */
-#info-about-header, #info-features-header {
-    font-weight: bold;
-    font-size: larger;
-    color: #551f1f;
-}
-
-#info-about-text, #info-features-text {
-}
-
-.info-about-item, .info-features-item {
-    padding-top: 20px;
-    padding-left: 10px;
-}
-
-.info-about-image, .info-features-image {
-    float: left;
-    width: 48px;
-    height: 48px;
-    padding-right: 10px;
-}
-
-.info-about-name, .info-features-name {
-    font-weight: bold;
-}
-
-.info-about-description, .info-features-description {
-    padding-top: 5px;
-    text-align: justify;
-}
-
-.info-features-description {
-    padding-left: 10px;
-}
-
 
