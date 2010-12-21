@@ -77,14 +77,12 @@
     </bean>
 
     <dwr:configuration>
-        <dwr:convert type="bean" class="wisematches.server.web.rpc.Address"/>
+        <dwr:convert class="wisematches.server.web.services.ProblemsReport" type="bean"/>
     </dwr:configuration>
 
-    <bean id="dwrService" class="wisematches.server.web.rpc.DWRService">
-        <property name="state" value="aaaaaaaaaaa"/>
-
-        <dwr:remote javascript="dwrService">
-            <dwr:include method="getAddress"/>
+    <bean id="problemsReportService" class="wisematches.server.web.services.ProblemsReportService">
+        <dwr:remote javascript="problemsReportService">
+            <dwr:include method="reportProblem"/>
         </dwr:remote>
     </bean>
 </beans>
