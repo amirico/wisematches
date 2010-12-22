@@ -46,6 +46,16 @@ table {
     padding-right: 1px;
 }
 
+.msg .x-box-mc {
+    font-size: 14px;
+}
+
+#msg-div {
+    position: absolute;
+    width: 95%;
+    z-index: 20000;
+}
+
 div.space-line {
     clear: both;
     margin: 0;

@@ -2,10 +2,10 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-var WM = {};
+if (wm == null) var wm = {};
 
 // Define I18N object inside WM namespace.
-WM.i18n = new function() {
+if (wm.i18n == null) wm.i18n = new function() {
     var translations = null;
     var locale = null;
 
@@ -65,7 +65,7 @@ WM.i18n = new function() {
      * @param {String} key the name of text constant
      * @param {String} options possible values to be replaced
      * @return {String} returns obj the appropriate localized text by specified key.
-     * @member WM.i18n
+     * @member wm.i18n
      */
     this.t = function(key, options) {
         return getValue(key, options);
@@ -74,7 +74,7 @@ WM.i18n = new function() {
     /**
      * Returns two letters name of current locale.
      * @return {String} returns current locale.
-     * @member WM.i18n
+     * @member wm.i18n
      */
     this.locale = function() {
         return getLocale();
@@ -82,7 +82,7 @@ WM.i18n = new function() {
 };
 
 // Define some utility functions
-WM.util = new function() {
+if (wm.util == null) wm.util = new function() {
     this.extendURL = function(sourceUrl, parameterName, parameterValue, replaceDuplicates) {
         if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
         var urlParts = sourceUrl.split("?");
@@ -111,7 +111,7 @@ WM.util = new function() {
 };
 
 // Define problems notification/report and so one functions
-WM.problems = new function() {
+if (wm.problems == null) wm.problems = new function() {
     var problemsWindow;
 
     this.showReportWindow = function () {
@@ -119,66 +119,88 @@ WM.problems = new function() {
             var form = new Ext.form.FormPanel({
                 labelWidth: 120,
                 frame: true,
+                layout: 'form',
+                defaults: { msgTarget: 'side' },
                 defaultType: 'textfield',
-                width: 400,
                 items:[
                     {
-                        fieldLabel: 'Real Name', //lblProblemsRealName
-                        name: 'name',
-                        anchor:'95%',
-                        allowBlank: false },
-                    {
-                        fieldLabel: 'Your email', //lblProblemsEmail
+                        fieldLabel: _('problems.report.field.email.label'),
                         name: 'email',
-                        anchor:'95%',
+                        anchor:'97%',
                         vtype: 'email',
-                        allowBlank: true },
+                        allowBlank: false,
+                        emptyText: _('problems.report.field.email.err.empty'),
+                        blankText: _('problems.report.field.email.err.empty')
+                    },
                     {
-                        fieldLabel: 'Account username', //lblProblemsAccount
-                        name: 'account',
-                        anchor:'95%',
-                        allowBlank: true },
+                        fieldLabel: _('problems.report.field.username.label'),
+                        name: 'username',
+                        anchor:'97%',
+                        allowBlank: false,
+                        emptyText: _('problems.report.field.username.err.empty'),
+                        blankText: _('problems.report.field.username.err.empty')
+                    },
                     {
-                        fieldLabel: 'Subject', //lblProblemsSubject
+                        fieldLabel: _('problems.report.field.subject.label'),
                         name: 'subject',
-                        anchor:'95%',
-                        allowBlank: false },
+                        anchor:'97%',
+                        allowBlank: false,
+                        emptyText: _('problems.report.field.subject.err.empty'),
+                        blankText: _('problems.report.field.subject.err.empty')
+                    },
                     {
-                        fieldLabel: 'Message', //lblProblemsMessage
+                        fieldLabel: _('problems.report.field.message.label'),
                         xtype:'htmleditor',
                         name: 'message',
-                        anchor:'98%',
-                        height: 230,
+                        anchor:'97%',
+                        height: 300,
                         enableSourceEdit: false,
-                        allowBlank: false }
+                        enableFont: false,
+                        allowBlank: false
+                    }
                 ],
 
                 buttons: [
                     {
-                        text: 'Submit',
+                        text: _('submit.label'),
                         handler: function() {
                             if (form.form.isValid()) {
-                                var report = { name:'aaaaaaaaaa' };
+                                Ext.MessageBox.show({
+                                    title: _('problems.report.submit.wait.label'),
+                                    msg: _('problems.report.submit.wait.description'),
+                                    width: 400,
+                                    buttonAlign: 'right',
+                                    progress: false,
+                                    closable: false
+                                });
+                                var report = {
+                                    email:null, username: null, subject:null, message:null, // are taken from form
+                                    page:document.location.href,
+                                    os:navigator.platform + ": " + navigator.userAgent,
+                                    browser:navigator.appName + ": " + navigator.appVersion };
                                 dwr.util.getValues(report);
 
                                 problemsReportService.reportProblem(report, {
+                                    timeout:900,
+                                    errorHandler: function() {
+                                        Ext.MessageBox.hide();
+                                        Ext.MessageBox.alert(_('problems.report.submit.err.label'), _('problems.report.submit.err.description'));
+                                    },
                                     callback: function() {
-                                        alert('ok');
+                                        Ext.MessageBox.hide();
+                                        problemsWindow.hide();
+                                        Ext.ux.wm.msg({
+                                            title: _('problems.report.submit.done.label'),
+                                            message: _('problems.report.submit.done.description'),
+                                            pause: 7
+                                        });
                                     }
                                 });
-                                /*
-
-                                 form.form.submit({
-                                 url:'/rpc/',
-                                 waitMsg:'Saving Data...',
-                                 submitEmptyText: false
-                                 });
-                                 */
                             }
                         }
                     },
                     {
-                        text: 'Cancel',
+                        text: _('cancel.label'),
                         handler: function() {
                             problemsWindow.hide();
                         }
@@ -187,13 +209,13 @@ WM.problems = new function() {
             });
 
             problemsWindow = new Ext.Window({
-                title: _('Asd'),
-                closable: true,
-                layout: 'fit',
-                width: 650,
-                height: 420,
+                title: _('problems.report.label'),
                 modal: true,
+                layout: 'form',
+                width: 600,
+                autoHeight: true,
                 resizable: false,
+                closable: true,
                 closeAction: 'hide',
 
                 items: [ form ]
@@ -201,10 +223,16 @@ WM.problems = new function() {
         }
         problemsWindow.show(this);
     };
-
-    this.reportIssue = function() {
-    }
 };
+
+/**
+ * Copies all the properties of config to obj.
+ * @param {String} key the name of text constant
+ * @param {String} options possible values to be replaced
+ * @return {String} returns obj the appropriate localized text by specified key.
+ * @member wm.i18n
+ */
+if (_ == null) var _ = wm.i18n.t;
 
 Ext.onReady(function() {
     // Init QuickTips
@@ -212,13 +240,10 @@ Ext.onReady(function() {
 
     // turn on validation errors beside the field globally
     Ext.form.Field.prototype.msgTarget = 'side';
+
+    Ext.apply(Ext.form.VTypes, {
+        'emailText' : _('email.err.format')
+    });
 });
 
-/**
- * Copies all the properties of config to obj.
- * @param {String} key the name of text constant
- * @param {String} options possible values to be replaced
- * @return {String} returns obj the appropriate localized text by specified key.
- * @member WM.i18n
- */
-var _ = WM.i18n.t;
+

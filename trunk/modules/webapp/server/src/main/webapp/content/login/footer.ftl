@@ -9,5 +9,5 @@
 &nbsp;-&nbsp;
 <a href="/info/naming.html"><@spring.message "login.info.naming.label"/></a>
 &nbsp;-&nbsp;
-<a href="javascript: showProblemsWindow();"><@spring.message "login.info.problems.label"/></a>
+<a href="javascript: wm.problems.showReportWindow();"><@spring.message "login.info.problems.label"/></a>
 </@ext.bottomRoundPanel>

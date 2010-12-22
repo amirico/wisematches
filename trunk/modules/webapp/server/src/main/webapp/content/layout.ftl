@@ -19,7 +19,6 @@
     <script type="text/javascript" src="/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="/ext/ext-all-debug.js"></script>
     <script type="text/javascript" src="/ext/ext-custom.js"></script>
-
     <script type="text/javascript" src="/content/common/core.js"></script>
 
     <script type="text/javascript" src="/dwr/engine.js"></script>
