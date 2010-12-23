@@ -245,5 +245,3 @@ Ext.onReady(function() {
         'emailText' : _('email.err.format')
     });
 });
-
-

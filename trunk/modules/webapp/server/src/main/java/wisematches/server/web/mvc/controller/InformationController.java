@@ -26,10 +26,21 @@ import java.util.Locale;
 public class InformationController {
 	private FreeMarkerNodeModelResourceBundle freeMarkerNodeModelResourceBundle;
 
+	@RequestMapping("/plain/{pageName}")
+	public String infoPlainPages(@PathVariable String pageName, Model model, Locale locale, HttpServletRequest request)
+			throws NoSuchRequestHandlingMethodException {
+		handleInfoPage(pageName, model, locale, request);
+		return "/content/common/information";
+	}
+
 	@RequestMapping("/{pageName}")
 	public String infoPages(@PathVariable String pageName, Model model, Locale locale, HttpServletRequest request)
 			throws NoSuchRequestHandlingMethodException {
+		handleInfoPage(pageName, model, locale, request);
+		return "/content/login/layout";
+	}
 
+	private void handleInfoPage(String pageName, Model model, Locale locale, HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
 		final NodeModel informationHolder = freeMarkerNodeModelResourceBundle.getInfoHolder(pageName, locale);
 		if (informationHolder == null) {
 			throw new NoSuchRequestHandlingMethodException(request);
@@ -38,7 +49,6 @@ public class InformationController {
 		model.addAttribute("id", pageName);
 		model.addAttribute("pageName", "/content/common/information.ftl");
 		model.addAttribute("informationHolder", informationHolder);
-		return "/content/login/layout";
 	}
 
 	@Autowired(required = true)

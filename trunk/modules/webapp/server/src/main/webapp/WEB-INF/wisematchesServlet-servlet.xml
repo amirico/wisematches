@@ -78,11 +78,19 @@
 
     <dwr:configuration>
         <dwr:convert class="wisematches.server.web.services.ProblemsReport" type="bean"/>
+        <dwr:convert class="wisematches.server.web.services.AccountRegistrationForm" type="bean"/>
     </dwr:configuration>
 
     <bean id="problemsReportService" class="wisematches.server.web.services.ProblemsReportService">
         <dwr:remote javascript="problemsReportService">
             <dwr:include method="reportProblem"/>
+        </dwr:remote>
+    </bean>
+
+    <bean id="accountManagementService" class="wisematches.server.web.services.AccountManagementService">
+        <dwr:remote javascript="accountManagementService">
+            <dwr:include method="registerAccount"/>
+            <dwr:include method="checkUsernameAvailability"/>
         </dwr:remote>
     </bean>
 </beans>

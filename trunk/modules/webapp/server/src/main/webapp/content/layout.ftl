@@ -16,10 +16,12 @@
     <#list i18n as i>
         <script type="text/javascript" src="/i18n/${i}/<@spring.message code="locale"/>.js"></script>
     </#list>
-    <script type="text/javascript" src="/ext/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="/ext/ext-all-debug.js"></script>
-    <script type="text/javascript" src="/ext/ext-custom.js"></script>
+    <script type="text/javascript" src="/ext/debug/ext-base-debug.js"></script>
+    <script type="text/javascript" src="/ext/debug/ext-all-debug.js"></script>
+    <script type="text/javascript" src="/ext/ext-ux.js"></script>
+
     <script type="text/javascript" src="/content/common/core.js"></script>
+    <script type="text/javascript" src="/ext/ext-wm.js"></script>
 
     <script type="text/javascript" src="/dwr/engine.js"></script>
     <script type="text/javascript" src="/dwr/util.js"></script>

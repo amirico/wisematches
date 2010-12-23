@@ -36,6 +36,11 @@
     padding-top: 10px;
 }
 
+#register-form-label {
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
 #navigation {
     padding-left: 5px;
 }
