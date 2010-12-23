@@ -4,7 +4,7 @@
 Ext.onReady(function() {
     var registrationWindow;
 
-    var languageCombo = new Ext.ux.LanguageComboBox({
+    var languageCombo = new Ext.ux.wm.LanguageComboBox({
         applyTo:'language-combobox'
     });
     languageCombo.on('select', function(como, rec, index) {
@@ -29,93 +29,93 @@ Ext.onReady(function() {
                 defaultType: 'textfield'
             });
 
-/*
-                items:[
-                    {
-                        fieldLabel: _('problems.report.field.email.label'),
-                        name: 'email',
-                        anchor:'97%',
-                        vtype: 'email',
-                        allowBlank: false,
-                        emptyText: _('problems.report.field.email.err.empty'),
-                        blankText: _('problems.report.field.email.err.empty')
-                    },
-                    {
-                        fieldLabel: _('problems.report.field.username.label'),
-                        name: 'username',
-                        anchor:'97%',
-                        allowBlank: false,
-                        emptyText: _('problems.report.field.username.err.empty'),
-                        blankText: _('problems.report.field.username.err.empty')
-                    },
-                    {
-                        fieldLabel: _('problems.report.field.subject.label'),
-                        name: 'subject',
-                        anchor:'97%',
-                        allowBlank: false,
-                        emptyText: _('problems.report.field.subject.err.empty'),
-                        blankText: _('problems.report.field.subject.err.empty')
-                    },
-                    {
-                        fieldLabel: _('problems.report.field.message.label'),
-                        xtype:'htmleditor',
-                        name: 'message',
-                        anchor:'97%',
-                        height: 300,
-                        enableSourceEdit: false,
-                        enableFont: false,
-                        allowBlank: false
-                    }
-                ],
+            /*
+             items:[
+             {
+             fieldLabel: _('problems.report.field.email.label'),
+             name: 'email',
+             anchor:'97%',
+             vtype: 'email',
+             allowBlank: false,
+             emptyText: _('problems.report.field.email.err.empty'),
+             blankText: _('problems.report.field.email.err.empty')
+             },
+             {
+             fieldLabel: _('problems.report.field.username.label'),
+             name: 'username',
+             anchor:'97%',
+             allowBlank: false,
+             emptyText: _('problems.report.field.username.err.empty'),
+             blankText: _('problems.report.field.username.err.empty')
+             },
+             {
+             fieldLabel: _('problems.report.field.subject.label'),
+             name: 'subject',
+             anchor:'97%',
+             allowBlank: false,
+             emptyText: _('problems.report.field.subject.err.empty'),
+             blankText: _('problems.report.field.subject.err.empty')
+             },
+             {
+             fieldLabel: _('problems.report.field.message.label'),
+             xtype:'htmleditor',
+             name: 'message',
+             anchor:'97%',
+             height: 300,
+             enableSourceEdit: false,
+             enableFont: false,
+             allowBlank: false
+             }
+             ],
 
-                buttons: [
-                    {
-                        text: _('submit.label'),
-                        handler: function() {
-                            if (form.form.isValid()) {
-                                Ext.MessageBox.show({
-                                    title: _('problems.report.submit.wait.label'),
-                                    msg: _('problems.report.submit.wait.description'),
-                                    width: 400,
-                                    buttonAlign: 'right',
-                                    progress: false,
-                                    closable: false
-                                });
-                                var report = {
-                                    email:null, username: null, subject:null, message:null, // are taken from form
-                                    page:document.location.href,
-                                    os:navigator.platform + ": " + navigator.userAgent,
-                                    browser:navigator.appName + ": " + navigator.appVersion };
-                                dwr.util.getValues(report);
+             buttons: [
+             {
+             text: _('submit.label'),
+             handler: function() {
+             if (form.form.isValid()) {
+             Ext.MessageBox.show({
+             title: _('problems.report.submit.wait.label'),
+             msg: _('problems.report.submit.wait.description'),
+             width: 400,
+             buttonAlign: 'right',
+             progress: false,
+             closable: false
+             });
+             var report = {
+             email:null, username: null, subject:null, message:null, // are taken from form
+             page:document.location.href,
+             os:navigator.platform + ": " + navigator.userAgent,
+             browser:navigator.appName + ": " + navigator.appVersion };
+             dwr.util.getValues(report);
 
-                                problemsReportService.reportProblem(report, {
-                                    timeout:900,
-                                    errorHandler: function() {
-                                        Ext.MessageBox.hide();
-                                        Ext.MessageBox.alert(_('problems.report.submit.err.label'), _('problems.report.submit.err.description'));
-                                    },
-                                    callback: function() {
-                                        Ext.MessageBox.hide();
-                                        problemsWindow.hide();
-                                        Ext.ux.wm.msg({
-                                            title: _('problems.report.submit.done.label'),
-                                            message: _('problems.report.submit.done.description'),
-                                            pause: 7
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    },
-                    {
-                        text: _('cancel.label'),
-                        handler: function() {
-                            problemsWindow.hide();
-                        }
-                    }
-                ]
-            });
-*/
+             problemsReportService.reportProblem(report, {
+             timeout:900,
+             errorHandler: function() {
+             Ext.MessageBox.hide();
+             Ext.MessageBox.alert(_('problems.report.submit.err.label'), _('problems.report.submit.err.description'));
+             },
+             callback: function() {
+             Ext.MessageBox.hide();
+             problemsWindow.hide();
+             Ext.ux.wm.msg({
+             title: _('problems.report.submit.done.label'),
+             message: _('problems.report.submit.done.description'),
+             pause: 7
+             });
+             }
+             });
+             }
+             }
+             },
+             {
+             text: _('cancel.label'),
+             handler: function() {
+             problemsWindow.hide();
+             }
+             }
+             ]
+             });
+             */
 
             registrationWindow = new Ext.Window({
                 title: _('problems.report.label'),

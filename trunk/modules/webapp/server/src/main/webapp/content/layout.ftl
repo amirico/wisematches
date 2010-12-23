@@ -18,7 +18,6 @@
     </#list>
     <script type="text/javascript" src="/ext/debug/ext-base-debug.js"></script>
     <script type="text/javascript" src="/ext/debug/ext-all-debug.js"></script>
-    <script type="text/javascript" src="/ext/ext-ux.js"></script>
 
     <script type="text/javascript" src="/content/common/core.js"></script>
     <script type="text/javascript" src="/ext/ext-wm.js"></script>

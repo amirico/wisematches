@@ -12,6 +12,8 @@
  * Creates a new LinkButton
  */
 Ext.ns('Ext.ux');
+Ext.ns('Ext.ux.form');
+
 Ext.ux.wm = new function() {
     var msgCt;
 
@@ -41,7 +43,81 @@ Ext.ux.wm = new function() {
     };
 };
 
-Ext.ux.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
+Ext.ux.wm.DWRServiceValidator = function(config) {
+    Ext.apply(this, config, {
+        validationService:null,
+        validationHandler: null,
+        validationTimeout:700
+    });
+    Ext.ux.wm.DWRServiceValidator.superclass.constructor.apply(this, arguments);
+};
+Ext.extend(Ext.ux.wm.DWRServiceValidator, Ext.util.Observable, {
+    serverValidate: function() {
+        var options = {
+            scope: this,
+            timeout: this.validationTimeout,
+            callback: this.handleServerResult,
+            errorHandler: this.handleServerResult
+        };
+        this.validationService.call(this, this.field.getValue(), options);
+    },
+
+    handleServerResult:function(errorMsg) {
+        if (Ext.isFunction(this.validationHandler)) {
+            errorMsg = this.validationHandler.call(this, errorMsg);
+        }
+        this.field.serverValid = errorMsg == null;
+        this.field.reason = errorMsg;
+        this.field.validate();
+    },
+
+    init:function(field) {
+        this.field = field;
+        var validator = this;
+        var isValid = field.isValid;
+        var validate = field.validate;
+
+        Ext.apply(field, {
+            serverValid: undefined !== this.serverValid ? this.serverValid : true,
+            lastValidatedValue: null,
+
+            isValid:function(preventMark) {
+                if (this.disabled) {
+                    return true;
+                }
+                return isValid.call(this, preventMark) && this.serverValid;
+            },
+
+            validate: function() {
+                // if disabled - do nothing
+                if (this.disabled) {
+                    this.clearInvalid();
+                    return true;
+                }
+
+                var clientValid = validate.call(this);
+                // return false if client validation failed
+                if (!clientValid) {
+                    return false;
+                }
+
+                // if value hasn't been changed - do nothing
+                if (this.lastValue !== this.getValue()) {
+                    this.lastValue = this.getValue();
+                    validator.serverValidate();
+                    return false;
+                }
+                if (!this.serverValid) {
+                    this.markInvalid(this.reason);
+                    return false;
+                }
+                return true;
+            }
+        });
+    }
+});
+
+Ext.ux.wm.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
     store: new Ext.data.ArrayStore({
         fields: ['code', 'name'],
         data : [
@@ -59,8 +135,7 @@ Ext.ux.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
     style: 'background: transparent;',
     value: _('locale')
 });
-
-Ext.ux.Hyperlink = Ext.extend(Ext.Button, {
+Ext.ux.wm.Hyperlink = Ext.extend(Ext.Button, {
     template: new Ext.Template(
             '<em class="{2}" unselectable="on"><a id="{4}" href="{5}" style="display:block" target="{6}" class="x-btn-text">{0}</a></em>').compile(),
 
@@ -121,4 +196,4 @@ Ext.ux.Hyperlink = Ext.extend(Ext.Button, {
         this.el.child(this.buttonSelector, true).href = this.getHref();
     }
 });
-Ext.reg('link', Ext.ux.Hyperlink);
+Ext.reg('link', Ext.ux.wm.Hyperlink);

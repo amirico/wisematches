@@ -16,11 +16,19 @@ public class AccountManagementService {
 		}
 	}
 
-	public String checkUsernameAvailability(String username) {
+	public AccountAvailabilityStatus checkUsernameAvailability(String username) {
 		System.out.println("checkUsernameAvailability: " + username);
 		if (username.startsWith("test")) {
-			return "Fuck off!";
+			return AccountAvailabilityStatus.BUSY;
 		}
-		return null;
+		return AccountAvailabilityStatus.AVAILABLE;
+	}
+
+	public AccountAvailabilityStatus checkEmailAvailability(String email) {
+		System.out.println("checkEmailAvailability: " + email);
+		if (email.startsWith("test")) {
+			return AccountAvailabilityStatus.INCORRECT;
+		}
+		return AccountAvailabilityStatus.AVAILABLE;
 	}
 }

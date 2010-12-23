@@ -79,6 +79,7 @@
     <dwr:configuration>
         <dwr:convert class="wisematches.server.web.services.ProblemsReport" type="bean"/>
         <dwr:convert class="wisematches.server.web.services.AccountRegistrationForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.services.AccountAvailabilityStatus" type="enum"/>
     </dwr:configuration>
 
     <bean id="problemsReportService" class="wisematches.server.web.services.ProblemsReportService">
@@ -91,6 +92,7 @@
         <dwr:remote javascript="accountManagementService">
             <dwr:include method="registerAccount"/>
             <dwr:include method="checkUsernameAvailability"/>
+            <dwr:include method="checkEmailAvailability"/>
         </dwr:remote>
     </bean>
 </beans>
