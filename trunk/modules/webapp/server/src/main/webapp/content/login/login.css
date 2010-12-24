@@ -70,3 +70,8 @@
     text-align: center;
 }
 
+#acceptTermsGroup .x-form-invalid-msg {
+    margin-top: 5px;
+    width: 98% !important;
+    background-image: url('/ext/resources/images/default/form/exclamation.gif') !important;
+}

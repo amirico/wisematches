@@ -45,9 +45,9 @@ Ext.ux.wm = new function() {
 
 Ext.ux.wm.DWRServiceValidator = function(config) {
     Ext.apply(this, config, {
-        validationService:null,
-        validationHandler: null,
-        validationTimeout:700
+        dwrService:null,
+        dwrTimeout:700,
+        errorMessageConverter: null
     });
     Ext.ux.wm.DWRServiceValidator.superclass.constructor.apply(this, arguments);
 };
@@ -55,16 +55,16 @@ Ext.extend(Ext.ux.wm.DWRServiceValidator, Ext.util.Observable, {
     serverValidate: function() {
         var options = {
             scope: this,
-            timeout: this.validationTimeout,
+            timeout: this.dwrTimeout,
             callback: this.handleServerResult,
             errorHandler: this.handleServerResult
         };
-        this.validationService.call(this, this.field.getValue(), options);
+        this.dwrService.call(this, this.field.getValue(), options);
     },
 
     handleServerResult:function(errorMsg) {
-        if (Ext.isFunction(this.validationHandler)) {
-            errorMsg = this.validationHandler.call(this, errorMsg);
+        if (Ext.isFunction(this.errorMessageConverter)) {
+            errorMsg = this.errorMessageConverter.call(this, errorMsg);
         }
         this.field.serverValid = errorMsg == null;
         this.field.reason = errorMsg;
@@ -117,6 +117,20 @@ Ext.extend(Ext.ux.wm.DWRServiceValidator, Ext.util.Observable, {
     }
 });
 
+// Taken from here: http://www.marcusschiesser.de/?p=151
+Ext.form.Checkbox.prototype.validate = function() {
+    if (this.validateField) {
+        this.msgTarget = 'under';
+        if (this.checked) {
+            Ext.form.Field.prototype.clearInvalid.call(this);
+            return true;
+        } else {
+            Ext.form.Field.prototype.markInvalid.call(this, this.validateMessage);
+            return false;
+        }
+    }
+};
+
 Ext.ux.wm.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
     store: new Ext.data.ArrayStore({
         fields: ['code', 'name'],
@@ -138,24 +152,8 @@ Ext.ux.wm.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
 Ext.ux.wm.Hyperlink = Ext.extend(Ext.Button, {
     template: new Ext.Template(
             '<em class="{2}" unselectable="on"><a id="{4}" href="{5}" style="display:block" target="{6}" class="x-btn-text">{0}</a></em>').compile(),
-
     buttonSelector : 'a:first',
-
-    /**
-     * @cfg String href
-     * The URL to create a link for.
-     */
-    /**
-     * @cfg String target
-     * The target for the &lt;a> element.
-     */
-    /**
-     * @cfg Object
-     * A set of parameters which are always passed to the URL specified in the href
-     */
     baseParams: {},
-
-//  private
     params: {},
 
     getTemplateArgs: function() {
@@ -176,8 +174,6 @@ Ext.ux.wm.Hyperlink = Ext.extend(Ext.Button, {
             }
         }
     },
-
-    // private
     getHref: function() {
         var result = this.href;
         var p = Ext.urlEncode(Ext.apply(Ext.apply({}, this.baseParams), this.params));
@@ -186,11 +182,6 @@ Ext.ux.wm.Hyperlink = Ext.extend(Ext.Button, {
         }
         return result;
     },
-
-    /**
-     * Sets the href of the link dynamically according to the params passed, and any {@link #baseParams} configured.
-     * @param {Object} Parameters to use in the href URL.
-     */
     setParams: function(p) {
         this.params = p;
         this.el.child(this.buttonSelector, true).href = this.getHref();

@@ -4,6 +4,8 @@
 
 package wisematches.server.web.spring.i18n;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.HierarchicalMessageSource;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -30,11 +32,14 @@ public class WebAccessibleResourceBundleMessageSource extends ReloadableResource
 
 	private final Map<Locale, JSScriptHolder> cachedScripts = new HashMap<Locale, JSScriptHolder>();
 
+	private static final Log log = LogFactory.getLog("wisematches.server.web.spring.i18n");
+
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final Matcher matcher = PAGE_PATTERN.matcher(request.getRequestURI());
 		if (!matcher.find()) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
 		}
 
 		final Locale locale = new Locale(matcher.group(0));
@@ -42,7 +47,7 @@ public class WebAccessibleResourceBundleMessageSource extends ReloadableResource
 
 		synchronized (cachedScripts) {
 			JSScriptHolder scriptHolder = cachedScripts.get(locale);
-			if (scriptHolder == null || mp.getFileTimestamp() != scriptHolder.getGenerationTimestamp()) {
+			if (scriptHolder == null || mp.getFileTimestamp() != scriptHolder.getFileTimestamp()) {
 				final Properties properties = new Properties();
 				properties.putAll(mp.getProperties());
 				MessageSource parentMessageSource = getParentMessageSource();
@@ -59,14 +64,32 @@ public class WebAccessibleResourceBundleMessageSource extends ReloadableResource
 						parentMessageSource = null;
 					}
 				}
-				scriptHolder = createScriptHolder(locale, properties, mp.getFileTimestamp());
+				scriptHolder = createScriptHolder(properties, mp.getFileTimestamp());
 				cachedScripts.put(locale, scriptHolder);
 			}
-			FileCopyUtils.copy(scriptHolder.getJsContent(), response.getWriter());
+
+			final long lastModified = scriptHolder.getGenerationTimestamp() / 1000 * 1000;
+			final long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+			if (log.isTraceEnabled()) {
+				log.trace("If-Modified-Since value: " + ifModifiedSince);
+			}
+			if (lastModified > ifModifiedSince) {
+				if (log.isTraceEnabled()) {
+					log.trace("The resource has been modified or unknown. Generation new one.");
+				}
+				response.setContentType("text/javascript");
+				response.setDateHeader("Last-Modified", lastModified);
+				FileCopyUtils.copy(scriptHolder.getJsContent(), response.getWriter());
+			} else {
+				if (log.isTraceEnabled()) {
+					log.trace("The resource has not been modified. Return status 304 (NOT MODIFIED)");
+				}
+				response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+			}
 		}
 	}
 
-	private JSScriptHolder createScriptHolder(Locale locale, Properties properties, long fileTimestamp) {
+	private JSScriptHolder createScriptHolder(Properties properties, long fileTimestamp) {
 		final StringWriter out = new StringWriter();
 		final PrintWriter writer = new PrintWriter(out);
 		writer.println("var lang = {");
@@ -87,24 +110,30 @@ public class WebAccessibleResourceBundleMessageSource extends ReloadableResource
 			}
 		}
 		writer.println("}");
-		return new JSScriptHolder(fileTimestamp, out.getBuffer().toString());
+		return new JSScriptHolder(out.getBuffer().toString(), fileTimestamp, System.currentTimeMillis());
 	}
 
 	private static class JSScriptHolder {
-		private long generationTimestamp = -1;
 		private String jsContent;
+		private long fileTimestamp = -1;
+		private long generationTimestamp = -1;
 
-		private JSScriptHolder(long generationTimestamp, String jsContent) {
-			this.generationTimestamp = generationTimestamp;
+		private JSScriptHolder(String jsContent, long fileTimestamp, long generationTimestamp) {
 			this.jsContent = jsContent;
-		}
-
-		public long getGenerationTimestamp() {
-			return generationTimestamp;
+			this.fileTimestamp = fileTimestamp;
+			this.generationTimestamp = generationTimestamp;
 		}
 
 		public String getJsContent() {
 			return jsContent;
+		}
+
+		public long getFileTimestamp() {
+			return fileTimestamp;
+		}
+
+		public long getGenerationTimestamp() {
+			return generationTimestamp;
 		}
 	}
 }

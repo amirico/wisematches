@@ -10,10 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
+import org.springframework.web.context.request.WebRequest;
 import wisematches.server.web.spring.i18n.FreeMarkerNodeModelResourceBundle;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 /**
@@ -26,29 +25,28 @@ import java.util.Locale;
 public class InformationController {
 	private FreeMarkerNodeModelResourceBundle freeMarkerNodeModelResourceBundle;
 
-	@RequestMapping("/plain/{pageName}")
-	public String infoPlainPages(@PathVariable String pageName, Model model, Locale locale, HttpServletRequest request)
-			throws NoSuchRequestHandlingMethodException {
-		handleInfoPage(pageName, model, locale, request);
-		return "/content/common/information";
-	}
-
 	@RequestMapping("/{pageName}")
-	public String infoPages(@PathVariable String pageName, Model model, Locale locale, HttpServletRequest request)
-			throws NoSuchRequestHandlingMethodException {
-		handleInfoPage(pageName, model, locale, request);
-		return "/content/login/layout";
+	public String infoPages(@PathVariable String pageName, Model model, Locale locale, WebRequest webRequest) {
+		if (!handleInfoPage(pageName, model, locale, webRequest)) {
+			return null;
+		}
+		if (webRequest.getParameter("plain") != null) {
+			return "/content/common/information";
+		} else {
+			return "/content/login/layout";
+		}
 	}
 
-	private void handleInfoPage(String pageName, Model model, Locale locale, HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
+	private boolean handleInfoPage(String pageName, Model model, Locale locale, WebRequest webRequest) {
 		final NodeModel informationHolder = freeMarkerNodeModelResourceBundle.getInfoHolder(pageName, locale);
 		if (informationHolder == null) {
-			throw new NoSuchRequestHandlingMethodException(request);
+			return false;
 		}
 
 		model.addAttribute("id", pageName);
 		model.addAttribute("pageName", "/content/common/information.ftl");
 		model.addAttribute("informationHolder", informationHolder);
+		return true;
 	}
 
 	@Autowired(required = true)
