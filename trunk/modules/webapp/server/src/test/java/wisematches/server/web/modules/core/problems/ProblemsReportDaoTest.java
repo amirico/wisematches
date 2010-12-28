@@ -16,7 +16,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
     public void test() throws InterruptedException {
         int count = jdbcTemplate.queryForInt("select count(*) from rp_problems");
 
-        ProblemsReport report = new ProblemsReport();
+        ProblemsReportForm report = new ProblemsReportForm();
         report.setUsername("username");
         report.setAccount("account");
         report.setSubject("subject");
@@ -30,7 +30,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
         int newCount = jdbcTemplate.queryForInt("select count(*) from rp_problems");
         assertEquals(count + 1, newCount);
 
-        final ProblemsReport problemsReport = problemsReportDao.getProblemReport(report.getId());
+        final ProblemsReportForm problemsReport = problemsReportDao.getProblemReport(report.getId());
         assertNotNull(problemsReport);
 
         problemsReportDao.deleteProblemReport(report);
@@ -42,7 +42,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
     public void test2() {
         int count = jdbcTemplate.queryForInt("select count(*) from rp_problems");
 
-        ProblemsReport report = new ProblemsReport();
+        ProblemsReportForm report = new ProblemsReportForm();
         report.setUsername("username");
         report.setAccount("account");
         report.setSubject("subject");
@@ -56,7 +56,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
         int newCount = jdbcTemplate.queryForInt("select count(*) from rp_problems");
         assertEquals(count + 1, newCount);
 
-        final ProblemsReport problemsReport = problemsReportDao.getProblemReport(report.getId());
+        final ProblemsReportForm problemsReport = problemsReportDao.getProblemReport(report.getId());
         assertNotNull(problemsReport);
 
         problemsReportDao.deleteProblemReport(report);

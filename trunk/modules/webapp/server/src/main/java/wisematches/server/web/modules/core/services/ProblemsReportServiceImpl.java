@@ -1,20 +1,6 @@
 package wisematches.server.web.modules.core.services;
 
-import org.apache.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.web.mail.FromTeam;
-import wisematches.server.web.mail.MailSender;
-import wisematches.server.web.mail.ToTeam;
-import wisematches.server.web.modules.core.problems.ProblemsReport;
-import wisematches.server.web.modules.core.problems.ProblemsReportDao;
 import wisematches.server.web.rpc.GenericRemoteService;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class ProblemsReportServiceImpl extends GenericRemoteService {//implements ProblemsReportService {
 /*    private MailSender mailSender;
@@ -27,7 +13,7 @@ public class ProblemsReportServiceImpl extends GenericRemoteService {//implement
     @Transactional
     public void reportProblem(String username, String email, String accountName,
                               OperationSystems os, Browser browser, String subject, String message) {
-        ProblemsReport report = new ProblemsReport();
+        ProblemsReportForm report = new ProblemsReportForm();
         report.setUsername(username);
         report.setAccount(accountName);
         report.setBrowser(browser);

@@ -56,6 +56,12 @@ table {
     z-index: 20000;
 }
 
+.x-form-invalid-msg {
+    margin-top: 5px;
+    width: 98% !important;
+    background-image: url('/ext/resources/images/default/form/exclamation.gif') !important;
+}
+
 div.space-line {
     clear: both;
     margin: 0;

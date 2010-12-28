@@ -2,14 +2,13 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.web.services;
+package wisematches.server.web.mvc.forms;
 
 /**
  * @author klimese
  */
-public class ProblemsReport {
+public class ProblemsReportForm {
 	private String email;
-	private String username;
 	private String subject;
 	private String message;
 	private String page;
@@ -22,14 +21,6 @@ public class ProblemsReport {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getSubject() {
@@ -75,9 +66,8 @@ public class ProblemsReport {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("ProblemsReport");
+		sb.append("ProblemsReportForm");
 		sb.append("{email='").append(email).append('\'');
-		sb.append(", username='").append(username).append('\'');
 		sb.append(", subject='").append(subject).append('\'');
 		sb.append(", message='").append(message).append('\'');
 		sb.append(", page='").append(page).append('\'');

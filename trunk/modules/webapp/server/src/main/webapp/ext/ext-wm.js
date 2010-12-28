@@ -43,34 +43,20 @@ Ext.ux.wm = new function() {
     };
 };
 
-Ext.ux.wm.DWRServiceValidator = function(config) {
-    Ext.apply(this, config, {
-        dwrService:null,
-        dwrTimeout:700,
-        errorMessageConverter: null
-    });
-    Ext.ux.wm.DWRServiceValidator.superclass.constructor.apply(this, arguments);
+Ext.ns('Ext.ux.dwr');
+Ext.ns('Ext.ux.dwr.config');
+Ext.ns('Ext.ux.dwr.Action');
+Ext.ux.dwr.config.Common = {
+    dwrFunction: null,
+    dwrTimeout: 700,
+    dwrResponseConverter: null
 };
-Ext.extend(Ext.ux.wm.DWRServiceValidator, Ext.util.Observable, {
-    serverValidate: function() {
-        var options = {
-            scope: this,
-            timeout: this.dwrTimeout,
-            callback: this.handleServerResult,
-            errorHandler: this.handleServerResult
-        };
-        this.dwrService.call(this, this.field.getValue(), options);
-    },
 
-    handleServerResult:function(errorMsg) {
-        if (Ext.isFunction(this.errorMessageConverter)) {
-            errorMsg = this.errorMessageConverter.call(this, errorMsg);
-        }
-        this.field.serverValid = errorMsg == null;
-        this.field.reason = errorMsg;
-        this.field.validate();
-    },
-
+Ext.ux.dwr.Validator = function(config) {
+    Ext.apply(this, config, Ext.ux.dwr.config.Common);
+    Ext.ux.dwr.Validator.superclass.constructor.apply(this, arguments);
+};
+Ext.extend(Ext.ux.dwr.Validator, Ext.util.Observable, {
     init:function(field) {
         this.field = field;
         var validator = this;
@@ -114,8 +100,108 @@ Ext.extend(Ext.ux.wm.DWRServiceValidator, Ext.util.Observable, {
                 return true;
             }
         });
+    },
+
+    serverValidate: function() {
+        var options = {
+            scope: this,
+            timeout: this.dwrTimeout,
+            callback: this.handleServerResult,
+            errorHandler: this.handleServerResult
+        };
+        this.dwrFunction.call(this, this.field.getValue(), options);
+    },
+
+    handleServerResult:function(errorMsg) {
+        if (Ext.isFunction(this.dwrResponseConverter)) {
+            errorMsg = this.dwrResponseConverter.call(this, errorMsg);
+        }
+        this.field.serverValid = errorMsg == null;
+        this.field.reason = errorMsg;
+        this.field.validate();
     }
 });
+
+
+// DWR Actions extension
+Ext.ux.dwr.config.Action = {
+    failureTitle: null,
+    failureMsg: null,
+    failureConnectionTitle: null,
+    failureConnectionMsg: null,
+
+    dwrValuesObject: {},
+    dwrValuesOptions: null,
+
+    success: function(form, action) {
+    },
+
+    failure: function(form, action) {
+        var o = action.options;
+        if (action.failureType === Ext.form.Action.CONNECT_FAILURE) {
+            if (o.failureConnectionMsg) {
+                Ext.MessageBox.alert(o.failureConnectionTitle || o.failureTitle || '', o.failureConnectionMsg || action.response);
+            }
+        } else {
+            if (action.result && action.result.summary) {
+                Ext.MessageBox.alert(o.failureTitle || '', action.result.summary || o.failureMsg);
+            }
+        }
+    }
+};
+Ext.apply(Ext.ux.dwr.config.Action, Ext.ux.dwr.config.Common);
+
+Ext.ux.dwr.Action.Submit = function(form, options) {
+    var config = {};
+    Ext.apply(config, options, Ext.ux.dwr.config.Action);
+    Ext.form.Action.Submit.superclass.constructor.call(this, form, config);
+};
+Ext.extend(Ext.ux.dwr.Action.Submit, Ext.form.Action, {
+    type : 'submit',
+
+    run : function() {
+        var o = this.options;
+        if (o.clientValidation === false || this.form.isValid()) {
+            var options = {
+                scope: this,
+                timeout: o.dwrTimeout,
+                callback: this.success.createDelegate(this, this.createCallback(), 1),
+                errorHandler:this.failure.createDelegate(this, this.createCallback(), 1)
+            };
+            o.dwrFunction.call(this, dwr.util.getValues(o.dwrValuesObject, o.dwrValuesOptions), options);
+        } else if (o.clientValidation !== false) { // client validation failed
+            this.failureType = Ext.form.Action.CLIENT_INVALID;
+            this.form.afterAction(this, false);
+        }
+    },
+
+    success : function(response) {
+        this.response = response;
+        if (this.options.dwrResponseConverter) {
+            this.result = this.options.dwrResponseConverter.call(this, response);
+        } else {
+            this.result = response;
+        }
+        if (this.result === true || this.result.success) {
+            this.form.afterAction(this, true);
+            return;
+        }
+        if (this.result.errors) {
+            this.form.markInvalid(this.result.errors);
+            this.failureType = Ext.form.Action.SERVER_INVALID;
+        }
+        this.form.afterAction(this, false);
+    }
+});
+Ext.form.Action.ACTION_TYPES.dwrsubmit = Ext.ux.dwr.Action.Submit;
+
+/**
+ * Override default form's submit function to DWR implementation. The Ext.ux.dwr.config must be
+ * passed as a options now not submit() function
+ */
+Ext.form.BasicForm.prototype.submit = function(options) {
+    this.doAction('dwrsubmit', options);
+};
 
 // Taken from here: http://www.marcusschiesser.de/?p=151
 Ext.form.Checkbox.prototype.validate = function() {

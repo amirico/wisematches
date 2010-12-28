@@ -2,14 +2,16 @@
 
 <table id="body">
     <tr>
-        <td style="vertical-align: top; text-align: left;">
+        <td style="width: 100%; vertical-align: top; text-align: left;">
             <div id="content">
             <#include "${pageName}">
             </div>
         </td>
-        <td style="width: 250px; vertical-align: top; text-align: right;">
-            <div id="navigation" class='x-hide-display'>
+        <td style="vertical-align: top;">
+            <div id="navigation" class='x-hide-display' style="width: 270px;">
+            <@ext.roundPanel>
                 <div id="login-panel"></div>
+            </@ext.roundPanel>
 
             <@ext.roundPanel id="register-panel">
                 <div id="register-link"></div>

@@ -2,6 +2,10 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 /* Header CSS declaration */
+#header {
+    width: 100%
+}
+
 #header-image {
     float: left;
 }
@@ -50,6 +54,22 @@
     color: gray;
 }
 
+#login-panel-header {
+    text-align: center;
+    font-size: larger;
+    font-weight: bold;
+    padding-bottom: 10px;
+    color: #7a2c2c;
+}
+
+#login-panel-form .x-form-check-wrap {
+    text-align: center;
+}
+
+.login-remember-checkbox {
+    text-align: center;
+}
+
 #register-link button, #login-guest-link {
     text-align: center;
     font-size: larger;
@@ -68,10 +88,4 @@
 
 #info-links {
     text-align: center;
-}
-
-#acceptTermsGroup .x-form-invalid-msg {
-    margin-top: 5px;
-    width: 98% !important;
-    background-image: url('/ext/resources/images/default/form/exclamation.gif') !important;
 }

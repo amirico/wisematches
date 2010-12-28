@@ -2,7 +2,7 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.web.mvc.controller;
+package wisematches.server.web.mvc.controllers;
 
 import freemarker.ext.dom.NodeModel;
 import org.springframework.beans.factory.annotation.Autowired;

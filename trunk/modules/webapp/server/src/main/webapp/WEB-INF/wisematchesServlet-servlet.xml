@@ -77,19 +77,21 @@
     </bean>
 
     <dwr:configuration>
-        <dwr:convert class="wisematches.server.web.services.ProblemsReport" type="bean"/>
-        <dwr:convert class="wisematches.server.web.services.AccountRegistrationForm" type="bean"/>
-        <dwr:convert class="wisematches.server.web.services.AccountAvailabilityStatus" type="enum"/>
+        <dwr:convert class="wisematches.server.web.mvc.services.ServiceResponse" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.ProblemsReportForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.AccountRegistrationForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.AccountRegistrationStatus" type="enum"/>
     </dwr:configuration>
 
-    <bean id="problemsReportService" class="wisematches.server.web.services.ProblemsReportService">
+    <bean id="problemsReportService" class="wisematches.server.web.mvc.services.ProblemsReportService">
         <dwr:remote javascript="problemsReportService">
             <dwr:include method="reportProblem"/>
         </dwr:remote>
     </bean>
 
-    <bean id="accountManagementService" class="wisematches.server.web.services.AccountManagementService">
+    <bean id="accountManagementService" class="wisematches.server.web.mvc.services.AccountManagementService">
         <dwr:remote javascript="accountManagementService">
+            <dwr:include method="resetPassword"/>
             <dwr:include method="registerAccount"/>
             <dwr:include method="checkUsernameAvailability"/>
             <dwr:include method="checkEmailAvailability"/>
