@@ -217,24 +217,6 @@ Ext.form.Checkbox.prototype.validate = function() {
     }
 };
 
-Ext.ux.wm.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
-    store: new Ext.data.ArrayStore({
-        fields: ['code', 'name'],
-        data : [
-            ['ru', 'Русский'],
-            ['en', 'English']
-        ]
-    }),
-    editable: false,
-    valueField: 'code',
-    displayField:'name',
-    typeAhead: true,
-    mode: 'local',
-    triggerAction: 'all',
-    selectOnFocus:true,
-    style: 'background: transparent;',
-    value: _('locale')
-});
 Ext.ux.wm.Hyperlink = Ext.extend(Ext.Button, {
     template: new Ext.Template(
             '<em class="{2}" unselectable="on"><a id="{4}" href="{5}" style="display:block" target="{6}" class="x-btn-text">{0}</a></em>').compile(),

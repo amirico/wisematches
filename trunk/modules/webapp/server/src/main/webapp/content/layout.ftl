@@ -19,8 +19,11 @@
     <script type="text/javascript" src="/ext/debug/ext-base-debug.js"></script>
     <script type="text/javascript" src="/ext/debug/ext-all-debug.js"></script>
 
+    <script type="text/javascript" src="/ext/ext-ux-wm.js"></script>
     <script type="text/javascript" src="/content/common/core.js"></script>
-    <script type="text/javascript" src="/ext/ext-wm.js"></script>
+
+    <!-- Some extension. TODO: add only for a few pages where it's really required. -->
+    <script type="text/javascript" src="/content/common/account.js"></script>
 
     <script type="text/javascript" src="/dwr/engine.js"></script>
     <script type="text/javascript" src="/dwr/util.js"></script>

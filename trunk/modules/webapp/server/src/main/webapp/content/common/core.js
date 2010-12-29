@@ -223,225 +223,52 @@ if (wm.problems == null) wm.problems = new function() {
     };
 };
 
-// Define functions for work with accounts
-if (wm.account == null) wm.account = new function() {
-    var registrationWindow;
+Ext.ux.wm.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
+    store: new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        data : [
+            ['ru', 'Русский'],
+            ['en', 'English']
+        ]
+    }),
+    editable: false,
+    valueField: 'code',
+    displayField:'name',
+    typeAhead: true,
+    mode: 'local',
+    triggerAction: 'all',
+    selectOnFocus:true,
+    style: 'background: transparent;',
+    value: _('locale')
+});
 
-    Ext.apply(Ext.form.VTypes, {
-        password : function(val, field) {
-            if (field.initialPassField) {
-                var pwd = Ext.getCmp(field.initialPassField);
-                return (val == pwd.getValue());
-            }
-            return true;
-        },
-        passwordText : _('account.register.form.pwd-cfr.err.mismatch')
-    });
+// turn on validation errors beside the field globally
+Ext.form.Field.prototype.msgTarget = 'side';
 
-    this.showRegistrationWindow = function () {
-        if (!registrationWindow) {
-            var registrationForm = new Ext.form.FormPanel({
-                labelWidth: 110,
-                frame: true,
-                border: false,
-                title: _('account.register.form.info.label'),
-                defaultType:'fieldset',
-                defaults: {
-                    msgTarget: 'side',
-                    border: false,
-                    style: 'padding:0; margin: 0;',
-                    bodyStyle: 'padding-left: 5px; padding-top: 10px;'
-                },
+Ext.apply(Ext.form.VTypes, {
+    'emailText' : _('email.err.format')
+});
 
-                items:[
-                    {
-                        xtype: 'box',
-                        id: 'register-form-label',
-                        html: _('account.register.form.info.description')
-                    },
-                    {
-                        id: 'userInfoGroup',
-                        defaultType: 'textfield',
-                        defaults: {
-                            allowBlank : false,
-                            anchor : '-20'
-                        },
-                        items:[
-                            {
-                                name: 'username',
-                                fieldLabel: _('account.register.form.username.label'),
-                                emptyText: _('account.register.form.username.err.empty'),
-                                blankText: _('account.register.form.username.err.blank'),
-                                plugins:[new Ext.ux.dwr.Validator({
-                                    dwrFunction: accountManagementService.checkUsernameAvailability,
-                                    dwrResponseConverter: function(message) {
-                                        switch (message) {
-                                            case 'AVAILABLE':
-                                                return null;
-                                            case 'BUSY':
-                                                return _('account.register.form.username.err.busy');
-                                            case 'INCORRECT':
-                                                return _('account.register.form.username.err.incorrect');
-                                            default:
-                                                return message;
-                                        }
-                                    }
-                                })]
-                            },
-                            {
-                                name : 'email',
-                                vtype : 'email',
-                                fieldLabel: _('account.register.form.email.label'),
-                                emptyText : _('account.register.form.email.err.empty'),
-                                blankText : _('account.register.form.email.err.blank')
-                            }
-                        ]
-                    },
-                    {
-                        id: 'passwordsGroup',
-                        defaultType: 'textfield',
-                        defaults: {
-                            inputType : 'password',
-                            allowBlank : false,
-                            anchor : '-20'
-                        },
-                        items:[
-                            {
-                                id : 'password',
-                                name : 'password',
-                                fieldLabel: _('account.register.form.pwd.label'),
-                                blankText : _('account.register.form.pwd.err.blank')
-                            },
-                            {
-                                id : 'password-cfrm',
-                                name : 'password-cfrm',
-                                vtype : 'password',
-                                initialPassField : 'password',
-                                fieldLabel: _('account.register.form.pwd-cfr.label'),
-                                blankText : _('account.register.form.pwd-cfr.err.blank')
-                            }
-                        ]
-                    },
-                    {
-                        id: 'acceptTermsGroup',
-                        items:[
-//                            {
-//                                id: 'acceptTerms',
-//                                name : 'acceptTerms',
-//                                xtype : 'checkbox',
-//                                boxLabel: _('account.register.form.terms.label'),
-//                                validateMessage: _('account.register.form.terms.err.accept'),
-//                                validateField: true,
-//                                hideLabel: true
-//                            }
-                            {
-                                xtype: 'box',
-                                html: _('account.register.form.terms.description')
-                            }
-                        ]
-                    }
-                ],
+Ext.apply(Ext.ux.dwr.config.Action, {
+    failureTitle: _('failure.unknown.label'),
+    failureMsg: _('failure.unknown.description'),
+    failureConnectionTitle: _('failure.connection.label'),
+    failureConnectionMsg: _('failure.connection.description'),
 
-                buttons: [
-                    {
-                        text: _('account.register.form.submit.label'),
-                        handler: function() {
-                            if (registrationForm.form.isValid()) {
-                                var registrationBean = {
-                                    username: null, email:null, password:null,
-                                    timezone:new Date().getGMTOffset() };
-
-                                registrationForm.form.submit({
-                                    reset: true,
-                                    waitMsg: _('account.register.form.submit.wait.label'),
-                                    waitTitle: _('account.register.form.submit.wait.description'),
-                                    failureTitle: _('account.register.form.submit.err.label'),
-
-                                    dwrFunction: accountManagementService.registerAccount,
-                                    dwrValuesObject: registrationBean,
-                                    success: function(form, action) {
-                                        // TODO: Decode registration error or redirect to game page
-                                        registrationWindow.hide();
-                                    }
-                                });
-                            }
-                        }
-                    },
-                    {
-                        text: _('cancel.label'),
-                        handler: function() {
-                            registrationWindow.hide();
-                        }
-                    }
-                ]
-            });
-
-            var infoPanel = new Ext.TabPanel({
-                activeTab: 0,
-                frame:false,
-                border: true,
-                style: 'padding-left: 1px',
-                bodyStyle: 'padding-left: 5px',
-                defaults:{
-                    autoScroll: true
-                },
-                items:[
-                    {title: _('info.terms_of_use.label'), autoLoad: '/info/terms.html?plain'},
-                    {title: _('info.privacy_policy.label'), autoLoad: '/info/policy.html?plain'},
-                    {title: _('info.naming.label'), autoLoad: '/info/naming.html?plain'}
-                ]
-            });
-
-            registrationWindow = new Ext.Window({
-                title: _('account.register.form.label'),
-                modal: true,
-                width: 900,
-                height: 500,
-                resizable: true,
-                maximizable: true,
-                closable: true,
-                border: false,
-                closeAction: 'hide',
-
-                layout:'border',
-                items: [
-                    Ext.apply(registrationForm, {region: 'west', width:330}),
-                    Ext.apply(infoPanel, { region: 'center', height: '100%'})
-                ]
-            });
+    // I18N response converter. Set it by default
+    dwrResponseConverter: function(response) {
+        if (response.summary) {
+            response.summary = _(response.summary);
         }
-        registrationWindow.show(this);
+        if (response.errors && typeof response.errors == 'object') {
+            for (var p in response.errors) {
+                response.errors[p] = _(response.errors[p]);
+            }
+        }
+        return response;
     }
-};
+});
 
 Ext.onReady(function() {
-    // Init QuickTips
     Ext.QuickTips.init();
-
-    // turn on validation errors beside the field globally
-    Ext.form.Field.prototype.msgTarget = 'side';
-
-    Ext.apply(Ext.form.VTypes, {
-        'emailText' : _('email.err.format')
-    });
-
-    Ext.apply(Ext.ux.dwr.config.Action, {
-        failureTitle: _('failure.unknown.label'),
-        failureMsg: _('failure.unknown.description'),
-        failureConnectionTitle: _('failure.connection.label'),
-        failureConnectionMsg: _('failure.connection.description'),
-
-        // I18N response converter. Set it by default
-        dwrResponseConverter: function(response) {
-            if (response.summary) {
-                response.summary = _(response.summary);
-            }
-            if (response.errors && typeof response.errors == 'object') {
-                for (var p in response.errors) {
-                    response.errors[p] = _(response.errors[p]);
-                }
-            }
-            return response;
-        }
-    });
 });

@@ -80,6 +80,7 @@
         <dwr:convert class="wisematches.server.web.mvc.services.ServiceResponse" type="bean"/>
         <dwr:convert class="wisematches.server.web.mvc.forms.ProblemsReportForm" type="bean"/>
         <dwr:convert class="wisematches.server.web.mvc.forms.AccountRegistrationForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.AccountAvailabilityForm" type="bean"/>
         <dwr:convert class="wisematches.server.web.mvc.forms.AccountRegistrationStatus" type="enum"/>
     </dwr:configuration>
 
@@ -93,8 +94,7 @@
         <dwr:remote javascript="accountManagementService">
             <dwr:include method="resetPassword"/>
             <dwr:include method="registerAccount"/>
-            <dwr:include method="checkUsernameAvailability"/>
-            <dwr:include method="checkEmailAvailability"/>
+            <dwr:include method="checkAvailability"/>
         </dwr:remote>
     </bean>
 </beans>

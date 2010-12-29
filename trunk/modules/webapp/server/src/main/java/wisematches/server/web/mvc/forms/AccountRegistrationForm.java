@@ -8,9 +8,9 @@ package wisematches.server.web.mvc.forms;
  * @author klimese
  */
 public class AccountRegistrationForm {
+	private String email;
 	private String username;
 	private String password;
-	private String email;
 	private String timezone;
 
 	public String getUsername() {

@@ -4,8 +4,11 @@
 
 package wisematches.server.web.mvc.services;
 
+import wisematches.server.web.mvc.forms.AccountAvailabilityForm;
 import wisematches.server.web.mvc.forms.AccountRegistrationForm;
-import wisematches.server.web.mvc.forms.AccountRegistrationStatus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author klimese
@@ -20,20 +23,16 @@ public class AccountManagementService {
 		return ServiceResponse.SUCCESS;
 	}
 
-	public AccountRegistrationStatus checkUsernameAvailability(String username) {
-		System.out.println("checkUsernameAvailability: " + username);
-		if (username.startsWith("test")) {
-			return AccountRegistrationStatus.BUSY;
+	public ServiceResponse checkAvailability(AccountAvailabilityForm form) {
+		System.out.println("checkAvailability: " + form.getEmail() + ", " + form.getUsername());
+		Map<String, String> checks = new HashMap<String, String>();
+		if (form.getEmail().startsWith("test")) {
+			checks.put("email", "account.register.form.email.err.busy");
 		}
-		return AccountRegistrationStatus.AVAILABLE;
-	}
-
-	public AccountRegistrationStatus checkEmailAvailability(String email) {
-		System.out.println("checkEmailAvailability: " + email);
-		if (email.startsWith("test")) {
-			return AccountRegistrationStatus.INCORRECT;
+		if (form.getUsername().startsWith("test")) {
+			checks.put("username", "account.register.form.username.err.incorrect");
 		}
-		return AccountRegistrationStatus.AVAILABLE;
+		return checks.isEmpty() ? ServiceResponse.SUCCESS : ServiceResponse.failure(null, checks);
 	}
 
 	public boolean resetPassword(String email) {

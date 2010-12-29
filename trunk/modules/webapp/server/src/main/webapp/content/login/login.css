@@ -41,7 +41,9 @@
 }
 
 #register-form-label {
+    font-size: larger;
     font-weight: bold;
+    color: #003333;
     padding-bottom: 10px;
 }
 
@@ -70,14 +72,17 @@
     text-align: center;
 }
 
-#register-link button, #login-guest-link {
+#register-link, #login-guest-link {
     text-align: center;
     font-size: larger;
     font-weight: bold;
     height: auto;
 }
 
-#register-link button {
+#register-link {
+    padding: 3px;
+    cursor: pointer;
+    width: 100%;
     font-size: large;
     color: #6a2525;
 }
@@ -88,4 +93,14 @@
 
 #info-links {
     text-align: center;
+}
+
+.account-available button {
+    font-weight: bold !important;
+    color: green !important;
+}
+
+.account-unavailable button {
+    font-weight: bold !important;
+    color: red !important;
 }

@@ -14,7 +14,9 @@
             </@ext.roundPanel>
 
             <@ext.roundPanel id="register-panel">
-                <div id="register-link"></div>
+                <input type="button" id="register-link" onclick="wm.account.showRegistrationWindow();"
+                       value="<@spring.message code="login.info.register.label"/>">
+            <#--<div id="register-link"></div>-->
                 <div class="navigation-separator"><@spring.message code="separator.or"/></div>
                 <div id="login-guest-link">
                     <a href="/accounts/loginGuest.html"><@spring.message code="login.info.guest.label"/></a>
