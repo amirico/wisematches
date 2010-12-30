@@ -104,3 +104,7 @@
     font-weight: bold !important;
     color: red !important;
 }
+
+#recoveryEmail, #recoveryToken {
+    color: black !important;
+}

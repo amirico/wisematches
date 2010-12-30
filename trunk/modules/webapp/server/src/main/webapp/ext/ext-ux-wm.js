@@ -131,6 +131,7 @@ Ext.ux.dwr.config.Action = {
     failureConnectionMsg: null,
 
     dwrValuesObject: {},
+    dwrValuesPlain: false,
     dwrValuesOptions: null,
 
     success: function(form, action) {
@@ -168,7 +169,18 @@ Ext.extend(Ext.ux.dwr.Action.Submit, Ext.form.Action, {
                 callback: this.success.createDelegate(this, this.createCallback(), 1),
                 errorHandler:this.failure.createDelegate(this, this.createCallback(), 1)
             };
-            o.dwrFunction.call(this, dwr.util.getValues(o.dwrValuesObject, o.dwrValuesOptions), options);
+            var v = dwr.util.getValues(o.dwrValuesObject, o.dwrValuesOptions);
+            if (o.dwrValuesPlain === true) {
+                var va = [v.length + 1];
+                var index = 0;
+                for (var p in v) {
+                    va[index++] = v[p];
+                }
+                va[index] = options;
+                o.dwrFunction.apply(this, va);
+            } else {
+                o.dwrFunction.call(this, v, options);
+            }
         } else if (o.clientValidation !== false) { // client validation failed
             this.failureType = Ext.form.Action.CLIENT_INVALID;
             this.form.afterAction(this, false);
@@ -214,6 +226,8 @@ Ext.form.Checkbox.prototype.validate = function() {
             Ext.form.Field.prototype.markInvalid.call(this, this.validateMessage);
             return false;
         }
+    } else {
+        return Ext.form.Checkbox.superclass.validate.call(this);
     }
 };
 

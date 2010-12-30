@@ -1,21 +1,6 @@
 package wisematches.server.web.modules.login.services;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
-import wisematches.kernel.player.Player;
-import wisematches.kernel.util.Language;
-import wisematches.server.core.InvalidArgumentException;
-import wisematches.server.core.account.*;
-import wisematches.server.web.mail.FromTeam;
-import wisematches.server.web.mail.MailSender;
-import wisematches.server.web.modules.login.tokens.*;
-import wisematches.server.web.rpc.RemoteServiceContextAccessor;
-import wisematches.server.web.server.sessions.WebSessionCustomHouse;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -251,7 +236,7 @@ public class CheckPointServiceImplTest extends TestCase {
         expect(accountManager.getPlayer(12)).andReturn(null);
         replayMocks();
 
-        assertEquals(RestorePasswordResult.UNKNOWN_PLAYER, service.resetPassword(12, "asd", "qwe"));
+        assertEquals(RestorePasswordResult.UNKNOWN_PLAYER, service.generateRecoveryToken(12, "asd", "qwe"));
         verifyMocks();
 
         //no stored token
@@ -260,7 +245,7 @@ public class CheckPointServiceImplTest extends TestCase {
         expect(restoreTokenDao.getToken(player)).andReturn(null);
         replayMocks();
 
-        assertEquals(RestorePasswordResult.INVALID_TOKEN, service.resetPassword(12, "asd", "qwe"));
+        assertEquals(RestorePasswordResult.INVALID_TOKEN, service.generateRecoveryToken(12, "asd", "qwe"));
         verifyMocks();
 
         //invalid stored token
@@ -269,7 +254,7 @@ public class CheckPointServiceImplTest extends TestCase {
         expect(restoreTokenDao.getToken(player)).andReturn(restoreToken);
         replayMocks();
 
-        assertEquals(RestorePasswordResult.INVALID_TOKEN, service.resetPassword(12, "asd", "qwe"));
+        assertEquals(RestorePasswordResult.INVALID_TOKEN, service.generateRecoveryToken(12, "asd", "qwe"));
         verifyMocks();
 
         //token expired
@@ -278,7 +263,7 @@ public class CheckPointServiceImplTest extends TestCase {
         expect(restoreTokenDao.getToken(player)).andReturn(restoreToken2);
         replayMocks();
 
-        assertEquals(RestorePasswordResult.TOKEN_EXPIRED, service.resetPassword(12, "asd", "qwe"));
+        assertEquals(RestorePasswordResult.TOKEN_EXPIRED, service.generateRecoveryToken(12, "asd", "qwe"));
         verifyMocks();
 
         //valid resettings
@@ -290,7 +275,7 @@ public class CheckPointServiceImplTest extends TestCase {
         restoreTokenDao.removeToken(restoreToken);
         replayMocks();
 
-        assertEquals(RestorePasswordResult.SUCCESS, service.resetPassword(12, restoreToken.getToken(), "qwe"));
+        assertEquals(RestorePasswordResult.SUCCESS, service.generateRecoveryToken(12, restoreToken.getToken(), "qwe"));
         verifyMocks();
     }
 

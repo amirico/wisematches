@@ -5,6 +5,7 @@
 package wisematches.server.web.mvc.services;
 
 import wisematches.server.web.mvc.forms.AccountAvailabilityForm;
+import wisematches.server.web.mvc.forms.AccountRecoveryForm;
 import wisematches.server.web.mvc.forms.AccountRegistrationForm;
 
 import java.util.HashMap;
@@ -14,6 +15,11 @@ import java.util.Map;
  * @author klimese
  */
 public class AccountManagementService {
+	public ServiceResponse signInWithAccount(String email, String password, String[] remember) {
+		System.out.println("signInWithAccount: " + email + ", " + password + ", " + remember.length);
+		return ServiceResponse.success();
+	}
+
 	public ServiceResponse registerAccount(AccountRegistrationForm form) {
 		System.out.println(form);
 
@@ -35,10 +41,22 @@ public class AccountManagementService {
 		return checks.isEmpty() ? ServiceResponse.SUCCESS : ServiceResponse.failure(null, checks);
 	}
 
-	public boolean resetPassword(String email) {
-		if (email.startsWith("test")) {
-			return false;
+	public ServiceResponse generateRecoveryToken(String tokenEmail) {
+		System.out.println("generateRecoveryToken: " + tokenEmail);
+		if (tokenEmail.startsWith("test")) {
+			return ServiceResponse.failure(null, "tokenEmail", "dafasd.wer.qwerqw");
 		}
-		return true;
+		return ServiceResponse.SUCCESS;
+	}
+
+	public ServiceResponse recoveryAccount(AccountRecoveryForm form) {
+		System.out.println("recoveryAccount: " + form);
+		if (form.getRecoveryEmail().startsWith("test")) {
+			return ServiceResponse.failure(null, "recoveryEmail", "dafasd.wer.qwerqw");
+		}
+		if (!form.getRecoveryToken().equals("test")) {
+			return ServiceResponse.failure(null, "recoveryToken", "token.very.bad");
+		}
+		return ServiceResponse.SUCCESS;
 	}
 }

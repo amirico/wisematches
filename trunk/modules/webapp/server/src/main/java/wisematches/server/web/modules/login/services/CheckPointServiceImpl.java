@@ -1,20 +1,6 @@
 package wisematches.server.web.modules.login.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
-import wisematches.kernel.util.Language;
-import wisematches.server.core.InvalidArgumentException;
-import wisematches.server.core.account.*;
-import wisematches.server.web.mail.FromTeam;
-import wisematches.server.web.mail.MailSender;
-import wisematches.server.web.modules.login.tokens.RememberToken;
-import wisematches.server.web.modules.login.tokens.RememberTokenDao;
-import wisematches.server.web.modules.login.tokens.RestoreToken;
-import wisematches.server.web.modules.login.tokens.RestoreTokenDao;
 import wisematches.server.web.rpc.GenericRemoteService;
-import wisematches.server.web.server.sessions.WebSessionCustomHouse;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -165,7 +151,7 @@ public class CheckPointServiceImpl extends GenericRemoteService { //implements C
     }
 
     @Transactional
-    public RestorePasswordResult resetPassword(long playerId, String token, String newPassword) {
+    public RestorePasswordResult generateRecoveryToken(long playerId, String token, String newPassword) {
         RestorePasswordResult res;
         final Player player = accountManager.getPlayer(playerId);
         if (player != null) {

@@ -9,7 +9,7 @@ Ext.onReady(function() {
     languageCombo.on('select', function(como, rec, index) {
         var new_lang = rec.get('code');
         if (new_lang != lang.locale) {
-            location.href = wm.util.extendURL(null, 'language', new_lang, true);
+            location.href = wm.util.url.extend(null, 'language', new_lang, true);
         }
     });
 

@@ -4,7 +4,7 @@
 // Define functions for work with accounts
 wm.account = new function() {
     var registrationWindow;
-    var resetPasswordWindow;
+    var recoveryAccountWindow;
 
     Ext.apply(Ext.form.VTypes, {
         password : function(val, field) {
@@ -16,6 +16,188 @@ wm.account = new function() {
         },
         passwordText : _('account.register.form.pwd-cfr.err.mismatch')
     });
+
+    var getRecoveryAccountWindow = function(activePage) {
+        if (!recoveryAccountWindow) {
+            var generateTokenForm = new Ext.form.FormPanel({
+                id: 'generate-token',
+                labelWidth: 70,
+                labelAlign: 'right',
+                items:[
+                    {
+                        xtype: 'box',
+                        style: 'padding-bottom: 10px',
+                        html: _('account.recovery.form.generate.description')
+                    },
+                    {
+                        id: 'tokenEmail',
+                        name: 'tokenEmail',
+                        xtype: 'textfield',
+                        fieldLabel: _('account.recovery.form.email.label'),
+                        allowBlank:false,
+                        msgTarget: 'under',
+                        vtype: 'email',
+                        anchor: '-20',
+                        blankText: _('account.recovery.form.email.err.blank'),
+                        emptyText: _('account.recovery.form.email.err.empty')
+                    }
+                ],
+
+                buttons: [
+                    {
+                        text: _('account.recovery.form.generate.submit.label'),
+                        handler: function() {
+                            if (generateTokenForm.form.isValid()) {
+                                generateTokenForm.form.submit({
+                                    waitMsg: _('account.recovery.form.generate.submit.wait.label'),
+                                    waitTitle: _('account.recovery.form.generate.submit.wait.description'),
+                                    failureTitle: _('account.recovery.form.generate.submit.err.label'),
+
+                                    dwrFunction: accountManagementService.generateRecoveryToken,
+                                    dwrValuesPlain: true,
+                                    dwrValuesObject: {tokenEmail: null},
+
+                                    success: function(form, action) {
+                                        validateTokenForm.form.findField('recoveryEmail').setValue(generateTokenForm.form.findField('tokenEmail').getValue());
+                                        validateTokenForm.form.findField('recoveryToken').setValue('');
+                                        validateTokenForm.form.findField('recoveryToken').setDisabled(false);
+                                        Ext.getCmp('notValidButton').setText(_('account.recovery.form.generate.invalid.label'));
+                                        recoveryAccountWindow.layout.setActiveItem('recovery-account');
+                                        recoveryAccountWindow.syncSize();
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: _('cancel.label'),
+                        handler: function() {
+                            recoveryAccountWindow.hide();
+                        }
+                    }
+                ]
+            });
+
+            var validateTokenForm = new Ext.form.FormPanel({
+                id: 'recovery-account',
+                xtype: 'form',
+                labelWidth: 120,
+                labelAlign: 'right',
+                defaultType: 'textfield',
+                defaults: {
+                    msgTarget: 'under',
+                    anchor: '-20',
+                    allowBlank: false
+                },
+                buttonAlign: 'left',
+
+                items:[
+                    {
+                        xtype: 'box',
+                        style: 'padding-bottom: 10px',
+                        html: _('account.recovery.form.change.description')
+                    },
+                    {
+                        id: 'recoveryEmail',
+                        name: 'recoveryEmail',
+                        vtype: 'email',
+                        disabled: true,
+                        fieldLabel: _('account.recovery.form.email.label'),
+                        blankText: _('account.recovery.form.email.err.blank'),
+                        emptyText: _('account.recovery.form.email.err.empty')
+                    },
+                    {
+                        id: 'recoveryToken',
+                        name: 'recoveryToken',
+                        fieldLabel: _('account.recovery.form.change.token.label'),
+                        blankText: _('account.recovery.form.change.token.err.blank'),
+                        emptyText: _('account.recovery.form.change.token.err.empty')
+                    },
+                    { xtype: 'spacer', height: 15 },
+                    {
+                        id : 'recoveryPassword',
+                        name : 'recoveryPassword',
+                        inputType : 'password',
+                        fieldLabel: _('account.register.form.pwd.label'),
+                        blankText : _('account.register.form.pwd.err.blank')
+                    },
+                    {
+                        id : 'recoveryConfirm',
+                        name : 'recoveryConfirm',
+                        vtype : 'password',
+                        inputType : 'password',
+                        initialPassField : 'recoveryPassword',
+                        fieldLabel: _('account.register.form.pwd-cfr.label'),
+                        blankText : _('account.register.form.pwd-cfr.err.blank')
+                    }
+                ],
+
+                buttons: [
+                    {
+                        id: 'notValidButton',
+                        text: _('account.recovery.form.generate.invalid.label'),
+                        handler: function() {
+                            recoveryAccountWindow.layout.setActiveItem('generate-token');
+                            recoveryAccountWindow.syncSize();
+                        }
+                    },
+                    '->',
+                    {
+                        text: _('account.recovery.form.change.submit.label'),
+                        handler: function() {
+                            if (validateTokenForm.form.isValid()) {
+                                validateTokenForm.form.submit({
+                                    waitMsg: _('account.recovery.form.change.submit.wait.label'),
+                                    waitTitle: _('account.recovery.form.change.submit.wait.description'),
+                                    failureTitle: _('account.recovery.form.change.submit.err.label'),
+
+                                    dwrFunction: accountManagementService.recoveryAccount,
+                                    dwrValuesObject: {recoveryEmail: null, recoveryToken: null, recoveryPassword:null},
+
+                                    success: function(form, action) {
+                                        // TODO: move to game here
+                                        alert('aaa');
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: _('cancel.label'),
+                        handler: function() {
+                            recoveryAccountWindow.hide();
+                        }
+                    }
+                ]
+            });
+
+            recoveryAccountWindow = new Ext.Window({
+                title: _('account.recovery.form.label'),
+                modal: true,
+                width: 400,
+                autoHeight: true,
+                resizable: false,
+                closable: true,
+                border: false,
+                closeAction: 'hide',
+                frame: true,
+                layout:'card',
+                defaults: {
+                    frame: true,
+                    border:false,
+                    autoHeight: true
+                },
+                activeItem: activePage,
+
+                items: [ generateTokenForm, validateTokenForm ]
+            });
+        }
+        if (typeof recoveryAccountWindow.getLayout() != 'string') {
+            recoveryAccountWindow.getLayout().setActiveItem(activePage);
+            recoveryAccountWindow.syncSize();
+        }
+        return recoveryAccountWindow;
+    };
 
     this.showRegistrationWindow = function () {
         if (!registrationWindow) {
@@ -258,80 +440,86 @@ wm.account = new function() {
         registrationWindow.show(this);
     };
 
-    this.showResetPassword = function() {
-        if (!resetPasswordWindow) {
-            var resetPasswordForm = new Ext.form.FormPanel({
-                labelWidth: 50,
-                labelAlign: 'right',
-                frame: true,
+    this.showGenerateTokenWindow = function() {
+        getRecoveryAccountWindow('generate-token').show(this);
+    };
 
-                items: [
-                    {
-                        xtype: 'box',
-                        style: 'padding-bottom: 10px',
-                        html: 'Please enter your EMail address and we will sent you a link and a token for the password resetting.'
-                    },
-                    {
-                        id: 'email',
-                        name: 'email',
-                        xtype: 'textfield',
-                        fieldLabel: 'EMail',
-                        allowBlank:false,
-                        msgTarget: 'side',
-                        vtype: 'email',
-                        anchor: '-20',
-                        blankText: 'asdadasd',
+    this.showRecoveryAccountWindow = function() {
+        var ra = getRecoveryAccountWindow('recovery-account');
+        var email = ra.findById('recoveryEmail');
+        email.setDisabled(true);
+        email.setValue(wm.util.url.param('recoveryEmail'));
 
-                        markInvalid : function(msg) {
-                            Ext.form.MessageTargets['under'].clear(this);
-                            Ext.form.TextField.superclass.markInvalid.call(this, msg);
-                        },
+        var token = ra.findById('recoveryToken');
+        token.setDisabled(true);
+        token.setValue(wm.util.url.param('recoveryToken'));
 
-                        clearInvalid : function() {
-                            Ext.form.MessageTargets['under'].clear(this);
-                            Ext.form.TextField.superclass.clearInvalid.call(this);
-                        }
-                    }
-                ],
+        Ext.getCmp('notValidButton').setText(_('account.recovery.form.change.invalid.label'));
 
-                buttons: [
-                    {
-                        text: 'Reset Password',
-                        handler: function() {
-                            if (resetPasswordForm.form.isValid()) {
-                                // TODO: mark invalid code
-                                var field = resetPasswordForm.form.findField('email');
-                                Ext.form.MessageTargets['under'].mark(field, 'Entered email is unknown');
-                            }
-                        }
-                    },
-                    {
-                        text: 'Cancel',
-                        handler: function() {
-                            resetPasswordWindow.hide();
-                        }
-                    }
-                ]
-            });
-
-
-            resetPasswordWindow = new Ext.Window({
-                title: 'Resetting Password',
-                modal: true,
-                width: 350,
-                autoHeight: true,
-                resizable: false,
-                closable: true,
-                border: false,
-                closeAction: 'hide',
-
-                items: [ resetPasswordForm ]
-            });
-        }
-        resetPasswordWindow.show(this);
+        ra.show(this);
     };
 
     this.createSignInPanel = function() {
+        var signInForm = new Ext.form.FormPanel({
+            id: 'login-panel-form',
+            labelWidth: 90,
+            labelAlign: 'right',
+            buttonAlign: 'center',
+            defaultType: 'textfield',
+            style: 'padding: 0',
+            defaults: {
+                msgTarget: 'under',
+                allowBlank:false,
+                selectOnFocus: true,
+                width: '90%'
+            },
+            items: [
+                {
+                    name: 'email',
+                    vtype: 'email',
+                    fieldLabel: _('login.form.email.label'),
+                    blankText: _('login.form.email.err.empty')
+                },
+                {
+                    name: 'password',
+                    inputType: 'password',
+                    fieldLabel: _('login.form.password.label'),
+                    blankText: _('login.form.password.err.empty')
+                },
+                {
+                    name: 'remember',
+                    xtype: 'checkbox',
+                    checked: true,
+                    width: 'auto',
+                    boxLabel: _('login.form.remember.label'),
+                    hideLabel: true
+                }
+            ],
+
+            buttons: [
+                {
+                    text: _('login.form.signin.label'),
+                    handler: function() {
+                        if (signInForm.form.isValid()) {
+                            signInForm.form.submit({
+                                waitMsg: _('account.register.form.submit.wait.label'),
+                                waitTitle: _('account.register.form.submit.wait.description'),
+                                failureTitle: _('account.register.form.submit.err.label'),
+
+                                dwrFunction: accountManagementService.signInWithAccount,
+                                dwrValuesPlain: true,
+                                dwrValuesObject: { email: null, password:null, remember:null },
+                                success: function(form, action) {
+                                    // TODO: Decode registration error or redirect to game page
+                                    alert('Not implemented');
+                                }
+                            });
+                        }
+                    }
+                }
+            ]
+        });
+
         return new Ext.Panel({
             frame:true,
 
@@ -342,53 +530,12 @@ wm.account = new function() {
                     html: _('login.form.title')
                 },
 
-                new Ext.form.FormPanel({
-                    id: 'login-panel-form',
-                    labelWidth: 80,
-                    labelAlign: 'right',
-                    buttonAlign: 'center',
-                    defaultType: 'textfield',
-                    defaults: {
-                        msgTarget: 'side',
-                        allowBlank:false,
-                        selectOnFocus: true,
-                        width: '90%'
-                    },
-                    items: [
-                        {
-                            name: 'username',
-                            fieldLabel: _('login.form.username.label'),
-                            blankText: _('login.form.username.err.empty')
-                        },
-                        {
-                            name: 'password',
-                            inputType: 'password',
-                            fieldLabel: _('login.form.password.label'),
-                            blankText: _('login.form.password.err.empty')
-                        },
-                        {
-                            name: 'remember',
-                            xtype: 'checkbox',
-                            width: 'auto',
-                            boxLabel: _('login.form.remember.label'),
-                            hideLabel: true
-                        }
-                    ],
-
-                    buttons: [
-                        {
-                            text: _('login.form.signin.label'),
-                            handler: function() {
-                                alert('Not implemented yet');
-                            }
-                        }
-                    ]
-                }),
+                signInForm,
 
                 new Ext.ux.wm.Hyperlink({
                     id: 'restore-password-link',
                     text: _('login.form.restore.label'),
-                    href: 'javascript: wm.account.showResetPassword();'
+                    href: 'javascript: wm.account.showGenerateTokenWindow();'
                 })
             ]
         });

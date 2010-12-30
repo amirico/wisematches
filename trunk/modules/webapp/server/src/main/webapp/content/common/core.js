@@ -83,8 +83,10 @@ if (wm.i18n == null) wm.i18n = new function() {
 if (_ == null) var _ = wm.i18n.t;
 
 // Define some utility functions
-if (wm.util == null) wm.util = new function() {
-    this.extendURL = function(sourceUrl, parameterName, parameterValue, replaceDuplicates) {
+if (wm.util == null) wm.util = {};
+
+if (wm.util.url == null) wm.util.url = new function() {
+    this.extend = function(sourceUrl, parameterName, parameterValue, replaceDuplicates) {
         if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
         var urlParts = sourceUrl.split("?");
         var newQueryString = "";
@@ -108,6 +110,15 @@ if (wm.util == null) wm.util = new function() {
         newQueryString += parameterName + "=" + parameterValue;
 
         return urlParts[0] + newQueryString;
+    };
+
+    this.params = function() {
+        return Ext.urlDecode(location.search.substring(1));
+    };
+
+    this.param = function(name) {
+        var params = this.params();
+        return name ? params[name] : params;
     }
 };
 
