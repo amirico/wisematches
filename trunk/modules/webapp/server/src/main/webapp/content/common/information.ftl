@@ -12,7 +12,7 @@
     </#if>
     </div>
 
-    <div id="info-${id}-items" class="info-items">
+    <div id="NodeListModelinfo-${id}-items" class="info-items">
     <#visit informationHolder.items>
     </div>
 </div>

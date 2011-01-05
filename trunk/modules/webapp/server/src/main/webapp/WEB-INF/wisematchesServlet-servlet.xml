@@ -82,6 +82,9 @@
         <dwr:convert class="wisematches.server.web.mvc.forms.AccountAvailabilityForm" type="bean"/>
     </dwr:configuration>
 
+
+    <bean id="dwrDestroyHelper" class="wisematches.server.web.spring.dwr.DWRDestroyHelper" destroy-method="destroy"/>
+
     <bean id="problemsReportService" class="wisematches.server.web.mvc.services.ProblemsReportService">
         <dwr:remote javascript="problemsReportService">
             <dwr:include method="reportProblem"/>

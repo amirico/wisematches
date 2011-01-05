@@ -467,27 +467,32 @@ wm.account = new function() {
             buttonAlign: 'center',
             defaultType: 'textfield',
             style: 'padding: 0',
+            url: '/account/checkAccount.html',
             defaults: {
                 msgTarget: 'under',
                 allowBlank:false,
                 selectOnFocus: true,
+                validationEvent: false,
                 width: '90%'
             },
             items: [
                 {
-                    name: 'email',
+                    id: 'j_username',
+                    name: 'j_username',
                     vtype: 'email',
                     fieldLabel: _('login.form.email.label'),
                     blankText: _('login.form.email.err.empty')
                 },
                 {
-                    name: 'password',
+                    id: 'j_password',
+                    name: 'j_password',
                     inputType: 'password',
                     fieldLabel: _('login.form.password.label'),
                     blankText: _('login.form.password.err.empty')
                 },
                 {
-                    name: 'remember',
+                    id: '_remember_me',
+                    name: '_remember_me',
                     xtype: 'checkbox',
                     checked: true,
                     width: 'auto',
@@ -499,19 +504,16 @@ wm.account = new function() {
             buttons: [
                 {
                     text: _('login.form.signin.label'),
+                    type: 'submit',
                     handler: function() {
                         if (signInForm.form.isValid()) {
-                            signInForm.form.submit({
-                                waitMsg: _('account.register.form.submit.wait.label'),
-                                waitTitle: _('account.register.form.submit.wait.description'),
-                                failureTitle: _('account.register.form.submit.err.label'),
+                            signInForm.form.doAction('submit', {
+                                waitMsg: _('login.form.submit.wait.label'),
+                                waitTitle: _('login.form.submit.wait.description'),
 
-                                dwrFunction: accountManagementService.signInWithAccount,
-                                dwrValuesPlain: true,
-                                dwrValuesObject: { email: null, password:null, remember:null },
-                                success: function(form, action) {
-                                    // TODO: Decode registration error or redirect to game page
-                                    alert('Not implemented');
+                                success: function() {
+                                    Ext.MessageBox.wait('Sign in successfully. Please wait while you will be redirected to dashboard...');
+                                    window.location.href = '/game/dashboard.html';
                                 }
                             });
                         }

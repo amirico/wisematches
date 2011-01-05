@@ -14,11 +14,12 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             /WEB-INF/wisematches-security.xml
+            /WEB-INF/wisematches-base.xml
         </param-value>
     </context-param>
 
     <filter>
-        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
@@ -30,15 +31,15 @@
         </init-param>
     </filter>
 
-    <filter-mapping>
-        <filter-name>CharacterEncodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
+
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>

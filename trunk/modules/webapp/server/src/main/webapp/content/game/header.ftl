@@ -10,6 +10,8 @@
             asdf
             asdf
             asdf
+
+            <a href="/account/logout.html">Logout</a>
         </td>
     </tr>
 </table>
