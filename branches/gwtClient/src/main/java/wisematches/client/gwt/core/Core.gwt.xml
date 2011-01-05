@@ -1,0 +1,47 @@
+<module>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.core.Core"/>
+    <inherits name="com.google.gwt.user.History"/>
+    <inherits name="com.google.gwt.i18n.I18N"/>
+
+    <!--<inherits name="com.smartgwt.SmartGwtNoTheme"/>-->
+    <inherits name="com.smartgwt.SmartGwtNoScript"/>
+    <inherits name="com.smartgwt.tools.SmartGwtTools"/>
+    <inherits name="com.smartclient.theme.enterprise.EnterpriseResources"/>
+    <inherits name="com.smartclient.theme.enterpriseblue.EnterpriseBlueResources"/>
+    <inherits name="com.smartclient.theme.graphite.GraphiteResources"/>
+
+    <!--<inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG"/>-->
+    <!--<inherits name="com.allen_sauer.gwt.log.gwt-log-OFF"/>-->
+
+    <!--<stylesheet src="Core.css"/>-->
+    <!--<stylesheet src="js/ext/resources/css/ext-all.css"/>-->
+
+    <!--<script src="js/ext/adapter/ext/ext-base.js"/>-->
+    <!--<script src="js/ext/ext-all.js"/>-->
+
+    <extend-property name="locale" values="en"/>
+    <extend-property name="locale" values="ru"/>
+
+    <!-- Loggers Enabled by default -->
+    <define-property name="log_level" values="OFF"/>
+
+    <inherits name="com.allen_sauer.gwt.log.gwt-log-common"/>
+
+    <set-property name="log_ConsoleLogger" value="ENABLED"/>
+    <set-property name="log_GWTLogger" value="ENABLED"/>
+    <set-property name="log_SystemLogger" value="ENABLED"/>
+
+    <!-- Loggers Disabled by default -->
+    <set-property name="log_DivLogger" value="DISABLED"/>
+    <set-property name="log_FirebugLogger" value="DISABLED"/>
+    <set-property name="log_RemoteLogger" value="DISABLED"/>
+    <set-property name="log_WindowLogger" value="DISABLED"/>
+
+
+    <servlet path="/rpc/VersionedDocumentService"
+             class="wisematches.server.web.modules.core.services.VersionedDocumentServiceImpl"/>
+
+    <servlet path="/rpc/ProblemsReportService"
+             class="wisematches.server.web.modules.core.services.ProblemsReportServiceImpl"/>
+</module>

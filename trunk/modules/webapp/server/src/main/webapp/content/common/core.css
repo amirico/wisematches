@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+ */
+
+body, div {
+    font-family: arial, sans-serif;
+    font-size: small;
+}
+
+body {
+    background-color: white;
+    color: black;
+    margin: 8px;
+}
+
+table {
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+}
+
+.footer {
+}
+
+.copyrights {
+    color: #666666;
+}
+
+.x-panel-round-top .x-panel-tl, .x-panel-round .x-panel-tl {
+    border-bottom: 0 none;
+}
+
+.x-panel-round-top .x-panel-tc, .x-panel-round .x-panel-tc {
+    height: 3px;
+    font-size: 0;
+}
+
+.x-panel-round-top .x-panel-bl {
+    background: transparent url('/ext/resources/images/default/panel/left-right.gif') repeat-y scroll 0 0;
+    padding-left: 1px;
+}
+
+.x-panel-round-top .x-panel-br {
+    background: transparent url('/ext/resources/images/default/panel/left-right.gif') repeat-y scroll right 0;
+    padding-right: 1px;
+}
+
+.msg .x-box-mc {
+    font-size: 14px;
+}
+
+.x-btn-text {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+
+#msg-div {
+    position: absolute;
+    width: 95%;
+    z-index: 20000;
+}
+
+.x-form-invalid-msg {
+    padding-left: 0 !important;
+    width: 97% !important;
+    background-image: none !important;
+}
+
+.button-wait-icon {
+    padding-left: 22px !important;
+    background-image: url('/resources/images/wait.gif');
+}
+
+div.space-line {
+    clear: both;
+    margin: 0;
+    padding: 0;
+    width: auto;
+}

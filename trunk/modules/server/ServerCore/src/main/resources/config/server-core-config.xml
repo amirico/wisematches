@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="classpath:/config/hibernate-config.xml"/>
+
+    <bean id="ratingsManagerDao" class="wisematches.server.core.rating.impl.RatingsManagerDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="lexicalDictionary" class="wisematches.server.core.words.dict.impl.file.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
+    </bean>
+
+    <bean id="slanglyDictionary" class="wisematches.server.core.words.dict.impl.file.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
+        <property name="createEmptyDictionary" value="true"/>
+    </bean>
+
+    <bean id="wordGamesDictionaries" class="wisematches.server.core.words.dict.impl.WordGamesDictionariesImpl">
+        <property name="lexicalManager" ref="lexicalDictionary"/>
+        <property name="slanglyManager" ref="slanglyDictionary"/>
+    </bean>
+
+    <bean id="lockAccountManager" class="wisematches.server.core.account.impl.HibernateLockAccountManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="accountManager" class="wisematches.server.core.account.impl.HibernateAccountManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+
+        <property name="lockAccountManager" ref="lockAccountManager"/>
+        <property name="defaultPlayerRating" value="1200"/>
+    </bean>
+
+    <bean id="statisticsManager" class="wisematches.server.core.statistic.impl.HibernateStatisticsManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="serverPropertiesManager" class="wisematches.server.core.system.impl.HibernateServerPropertiesManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="countriesManager" class="wisematches.server.core.counties.impl.CSVCountriesManager">
+        <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
+    </bean>
+
+    <bean id="serverSessionFactory" parent="templateSessionFactory">
+        <property name="annotatedClasses">
+            <list merge="true">
+                <value>wisematches.server.core.account.impl.PlayerImpl</value>
+                <value>wisematches.server.core.account.impl.PlayerProfileImpl</value>
+                <value>wisematches.server.core.account.impl.PlayerNotificationsImpl</value>
+                <value>wisematches.server.core.account.LockAccountInfo</value>
+                <value>wisematches.server.core.account.LockUsernameInfo</value>
+                <value>wisematches.server.core.statistic.PlayerStatistic</value>
+                <value>wisematches.server.core.statistic.RatingInfo</value>
+                <value>wisematches.server.core.system.impl.ServerPropertyValue</value>
+            </list>
+        </property>
+    </bean>
+</beans>

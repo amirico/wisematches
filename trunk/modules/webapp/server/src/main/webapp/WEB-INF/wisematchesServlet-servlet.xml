@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <import resource="classpath:/config/message-sources-config.xml"/>
+
+    <dwr:controller id="dwrController" debug="true"/>
+
+    <context:component-scan base-package="wisematches.server.web.mvc"/>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="language"/>
+    </bean>
+
+    <bean name="extResourceRequestHandler" class="org.springframework.web.servlet.resource.ResourceHttpRequestHandler">
+        <property name="locations">
+            <list>
+                <value>/ext/*</value>
+                <value>classpath:/ext</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="1"/>
+        <property name="alwaysUseFullPath" value="true"/>
+        <property name="mappings">
+            <props>
+                <prop key="/dwr/**/*">dwrController</prop>
+                <prop key="/ext/**/*">extResourceRequestHandler</prop>
+                <prop key="/i18n/login/*.js">clientLoginMessageSource</prop>
+                <prop key="/i18n/game/*.js">clientGameMessageSource</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="order" value="2"/>
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_exception_handler">rethrow</prop>
+                <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+    </bean>
+
+    <dwr:configuration>
+        <dwr:convert class="wisematches.server.web.mvc.services.ServiceResponse" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.ProblemsReportForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.AccountRecoveryForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.AccountRegistrationForm" type="bean"/>
+        <dwr:convert class="wisematches.server.web.mvc.forms.AccountAvailabilityForm" type="bean"/>
+    </dwr:configuration>
+
+
+    <bean id="dwrDestroyHelper" class="wisematches.server.web.spring.dwr.DWRDestroyHelper" destroy-method="destroy"/>
+
+    <bean id="problemsReportService" class="wisematches.server.web.mvc.services.ProblemsReportService">
+        <dwr:remote javascript="problemsReportService">
+            <dwr:include method="reportProblem"/>
+        </dwr:remote>
+    </bean>
+
+    <bean id="accountManagementService" class="wisematches.server.web.mvc.services.AccountManagementService">
+        <dwr:remote javascript="accountManagementService">
+            <dwr:include method="signInWithAccount"/>
+            <dwr:include method="registerAccount"/>
+            <dwr:include method="checkAvailability"/>
+            <dwr:include method="generateRecoveryToken"/>
+            <dwr:include method="recoveryAccount"/>
+        </dwr:remote>
+    </bean>
+</beans>

@@ -1,0 +1,13 @@
+#* @vtlvariable name="stack-trace" type="java.lang.String" *#
+<html>
+<body>
+<p>
+    Client catch wollowing exception:
+</p>
+
+<p>
+<pre>
+${stack-trace}
+</pre>
+</body>
+</html>

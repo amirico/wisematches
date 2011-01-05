@@ -1,0 +1,44 @@
+#* @vtlmacrolibrary path="/templates/mail/notification/game_common_ru.vm" *#
+
+#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+#* @vtlvariable name="wonPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="interrupterPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="timeouted" type="java.lang.Boolean" *#
+#* @vtlvariable name="rated" type="java.lang.Boolean" *#
+<html>
+<body>
+#parse("/templates/mail/notification/game_common_ru.vm")
+
+#set ($won = ($player.Id == $wonPlayer.Id))
+#set ($playerHand = $board.getPlayerHand($player.Id))
+
+<p>
+    #if ($interrupterPlayer && $interrupterPlayer.Id == $player.Id)
+    #if ($timeouted)
+    Время вашего хода истекло и игра #boardName($board) была прервана
+    #else
+    Вы прервали игру #boardName($board)
+    #end
+    . Эта игра засчитана вам как поражение.
+    #else
+    #if ($won)
+    Поздравляем! Вы выйграли игру #boardName($board)
+    #else
+    Сожалеем, вы проиграли игру #boardName($board)
+    #end
+    с $playerHand.Points очками.
+    #end
+</p>
+
+<p>
+    #if ($rated)
+    Ваш рейтин был изменен на <em>$playerHand.RatingDelta</em> очков и
+    теперь составляет <em>$playerHand.Rating</em>.
+    #else
+    Ваш рейтинг и статистика не будут изменены так как игра не учитывается в рейтингах.
+    #end
+</p>
+
+#parse("/templates/mail/notification/mail_footer_ru.vm")
+</body>
+</html>

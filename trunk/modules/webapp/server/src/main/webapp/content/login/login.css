@@ -1,0 +1,110 @@
+/*
+ * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+ */
+/* Header CSS declaration */
+#header {
+    width: 100%
+}
+
+#header-image {
+    float: left;
+}
+
+#header-welcome-label {
+    font-weight: bold;
+    font-size: medium;
+    color: #003333;
+}
+
+/* Footer CSS declaration */
+#footer {
+    font-size: 1em;
+    white-space: nowrap;
+    text-align: center;
+    height: auto;
+}
+
+/* Main CSS declaration */
+#body {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#content {
+    width: 100%;
+}
+
+/* Navigation CSS declaration */
+#register-panel {
+    padding-top: 10px;
+}
+
+#register-form-label {
+    font-size: larger;
+    font-weight: bold;
+    color: #003333;
+    padding-bottom: 10px;
+}
+
+#navigation {
+    padding-left: 5px;
+}
+
+.navigation-separator {
+    text-align: center;
+    color: gray;
+}
+
+#login-panel-header {
+    text-align: center;
+    font-size: larger;
+    font-weight: bold;
+    padding-bottom: 10px;
+    color: #7a2c2c;
+}
+
+#login-panel-form .x-form-check-wrap {
+    text-align: center;
+}
+
+.login-remember-checkbox {
+    text-align: center;
+}
+
+#register-link, #login-guest-link {
+    text-align: center;
+    font-size: larger;
+    font-weight: bold;
+    height: auto;
+}
+
+#register-link {
+    padding: 3px;
+    cursor: pointer;
+    width: 100%;
+    font-size: large;
+    color: #6a2525;
+}
+
+#restore-password-link {
+    text-align: center;
+}
+
+#info-links {
+    text-align: center;
+}
+
+.account-available button {
+    font-weight: bold !important;
+    color: green !important;
+}
+
+.account-unavailable button {
+    font-weight: bold !important;
+    color: red !important;
+}
+
+#recoveryEmail, #recoveryToken {
+    color: black !important;
+}

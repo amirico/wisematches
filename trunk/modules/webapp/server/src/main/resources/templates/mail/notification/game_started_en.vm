@@ -1,0 +1,26 @@
+#* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
+
+#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+#* @vtlvariable name="turnOwnerPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="timeoutTime" type="java.lang.Long" *#
+<html>
+<body>
+#parse("/templates/mail/notification/game_common_en.vm")
+<p>
+    A Game Board #boardName($board) you are waiting is started.
+</p>
+<br>
+
+<p>
+    #if ($turnOwnerPlayer.Id == $player.Id)
+    <strong>It's you turn in this game</strong>. You have
+    <em>#timeout($board.GameSettings.DaysPerMove $timeoutTime)</em> to make a turn or game will be timed out and
+    you will be defeated.
+    #else
+    Turn was transmitted to #playerName($turnOwnerPlayer).
+    #end
+</p>
+
+#parse("/templates/mail/notification/mail_footer_en.vm")
+</body>
+</html>

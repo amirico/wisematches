@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="classpath:/config/web-server-config.xml"/>
+
+    <bean id="propertiesPlaceholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/config/server-settings.properties"/>
+    </bean>
+
+    <bean id="hibernateSessionInterceptor"
+          class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="languageChangeInterceptor" class="wisematches.server.web.server.language.QueryLanguageInterceptor">
+        <property name="visibleUrls">
+            <set>
+                <value>/app</value>
+                <value>/signin</value>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="playerAuthenticationInterceptor" class="wisematches.server.web.server.PlayerAuthenticationInterceptor">
+        <property name="accountManager" ref="accountManager"/>
+        <property name="cookiesTokenDao" ref="rememberTokenDao"/>
+        <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
+    </bean>
+
+    <bean name="remoteServiceHandlerAdapter" class="wisematches.server.web.rpc.RemoteServiceHandlerAdapter">
+        <property name="playerSessionsManager" ref="playerSessionsManager"/>
+    </bean>
+
+    <bean name="controllerHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+
+    <bean name="abstractUrlMapping" class="wisematches.server.web.server.TransactionalUrlHandlerMapping"
+          abstract="true">
+        <property name="alwaysUseFullPath" value="true"/>
+
+        <property name="interceptors">
+            <list>
+                <ref bean="languageChangeInterceptor"/>
+                <ref bean="playerAuthenticationInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="transactionalUrlMapping" parent="abstractUrlMapping">
+        <property name="allowedType" value="TRANSACTIONAL_ONLY"/>
+
+        <property name="interceptors">
+            <list merge="true">
+                <ref bean="hibernateSessionInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="notTransactionalUrlMapping" parent="abstractUrlMapping">
+        <property name="allowedType" value="NOT_TRANSACTION_ONLY"/>
+    </bean>
+
+    <bean name="/rpc/CheckPointService" class="wisematches.server.web.modules.login.services.CheckPointServiceImpl">
+        <property name="accountManager" ref="accountManager"/>
+        <property name="mailSender" ref="mailSender"/>
+
+        <property name="rememberTokenDao" ref="rememberTokenDao"/>
+        <property name="restoreTokenDao" ref="restoreTokenDao"/>
+        <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
+    </bean>
+
+    <bean name="/rpc/VersionedDocumentService"
+          class="wisematches.server.web.modules.core.services.VersionedDocumentServiceImpl">
+        <property name="documentsPath" value="/resources"/>
+    </bean>
+
+    <bean name="/rpc/ProblemsReportService"
+          class="wisematches.server.web.modules.core.services.ProblemsReportServiceImpl">
+        <property name="mailSender" ref="mailSender"/>
+
+        <property name="problemsReportDao" ref="problemsReportDao"/>
+
+        <property name="emailNotificationTeams">
+            <set>
+                <value>BUGS_TEAM</value>
+            </set>
+        </property>
+    </bean>
+
+    <bean name="/rpc/DashboardService" class="wisematches.server.web.modules.app.services.DashboardServiceImpl">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="playerManager" ref="playerManager"/>
+    </bean>
+
+    <bean name="/rpc/ApplicationSettingsService"
+          class="wisematches.server.web.modules.app.services.ApplicationSettingsServiceImpl">
+        <property name="playerSettingsDao" ref="playerSettingsDao"/>
+    </bean>
+
+    <bean name="/rpc/EventsDispatcherService"
+          class="wisematches.server.web.modules.app.services.EventsDispatcherServiceImpl"/>
+
+    <bean name="/rpc/PlayboardService" class="wisematches.server.web.modules.app.services.PlayboardServiceImpl">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="playerManager" ref="playerManager"/>
+    </bean>
+
+    <bean name="/rpc/PlayerInfoService" class="wisematches.server.web.modules.app.services.PlayerInfoServiceImpl">
+        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="playerSessionsManager" ref="playerSessionsManager"/>
+    </bean>
+
+    <bean name="/rpc/ApplicationStatisticService"
+          class="wisematches.server.web.modules.app.services.ApplicationStatisticServiceImpl">
+        <property name="ratingsManager" ref="ratingsManager"/>
+        <property name="playerSessionsManager" ref="playerSessionsManager"/>
+        <property name="accountManager" ref="accountManager"/>
+        <property name="roomManagerFacade" ref="scribbleRoomManagerFacade"/>
+    </bean>
+
+    <bean name="/rpc/ProfileService" class="wisematches.server.web.modules.app.services.PlayerProfileServiceImpl">
+        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="ratingsManager" ref="ratingsManager"/>
+        <property name="countriesManager" ref="countriesManager"/>
+        <property name="roomsManager" ref="roomsManager"/>
+    </bean>
+
+    <bean name="/rpc/GameboardService" class="wisematches.server.web.modules.app.services.GameboardServiceImpl">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="playerManager" ref="playerManager"/>
+    </bean>
+
+    <bean name="/rpc/MemoryWordsService" class="wisematches.server.web.modules.app.services.MemoryWordsServiceImpl">
+        <property name="memoryWordsDao" ref="memoryWordsDao"/>
+        <property name="roomsManager" ref="roomsManager"/>
+    </bean>
+
+    <bean name="/rpc/PlayerImagesService" class="wisematches.server.web.modules.app.services.PlayerImagesServiceImpl">
+        <property name="playerImagesManager" ref="playerImagesManager"/>
+        <property name="noImageImageUrl" value="images/noPlayerIcon.png"/>
+        <property name="playerSessionsManager" ref="playerSessionsManager"/>
+    </bean>
+
+    <bean name="/rpc/JSONCountriesList" class="wisematches.server.web.modules.app.services.JsonCountriesServlet">
+        <property name="countriesManager" ref="countriesManager"/>
+    </bean>
+
+
+    <!-- Common URLs processing: signin, app and index.html -->
+    <bean id="applicationMappingServlet" class="wisematches.server.web.ApplicationMappingController">
+        <property name="signinPageUrl" value="/wisematches.client.gwt.login.Login/Login.html"/>
+        <property name="applicationPageUrl" value="/wisematches.client.gwt.app.Application/Application.html"/>
+
+        <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
+
+        <property name="pagePreProcessors">
+            <list>
+                <bean class="wisematches.server.web.server.pproc.google.GoogleAnaliyticsPreProcessor">
+                    <property name="trackerCode" value="${google.analiytics.trackcode}"/>
+                </bean>
+
+                <bean class="wisematches.server.web.server.pproc.google.GoogleAdSensePreProcessor">
+                    <property name="clientId" value="${google.adsense.client}"/>
+                    <property name="dashboardSlot" value="${google.adsense.dashboard}"/>
+                    <property name="gameboardSlot" value="${google.adsense.gameboard}"/>
+                    <property name="playboardSlot" value="${google.adsense.playboard}"/>
+                    <property name="searchId" value="${google.adsense.search}"/>
+                </bean>
+
+                <bean class="wisematches.server.web.server.pproc.common.GWTPropertiesPreProcessor"/>
+                <bean class="wisematches.server.web.server.pproc.common.SearchEnginesPreProcessor"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias alias="/" name="applicationMappingServlet"/>
+
+    <alias alias="/app" name="applicationMappingServlet"/>
+
+    <alias alias="/app/*" name="applicationMappingServlet"/>
+
+    <alias alias="/signin" name="applicationMappingServlet"/>
+
+    <alias alias="/signin/*" name="applicationMappingServlet"/>
+</beans>

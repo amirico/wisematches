@@ -1,0 +1,36 @@
+#* @vtlmacrolibrary path="/templates/mail/notification/game_common_ru.vm" *#
+
+#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+#* @vtlvariable name="move" type="wisematches.server.core.board.PlayerMove" *#
+#* @vtlvariable name="points" type="java.lang.Integer" *#
+#* @vtlvariable name="movedPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="nextPlayer" type="wisematches.kernel.player.Player" *#
+<html>
+<body>
+#parse("/templates/mail/notification/game_common_ru.vm")
+
+<p>
+    Игрок #playerName($movedPlayer)
+    #if($move)
+    выполнил ход и получил $points очков.
+    #else
+    пропустил ход.
+    #end
+</p>
+<br>
+#if ($nextPlayer && $nextPlayer.Id == $player.Id)
+<p>
+    <strong>Ход передан вам</strong> в игре #boardName($board).
+
+    У вас есть <em>#timeout($board.GameSettings.DaysPerMove 0)</em> для выполнения хода или игра
+    будет прервана и вам будет засчитан проигрыш
+</p>
+#elseif(! $nextPlayer || $nextPlayer.Id != $player.Id)
+<p>
+    Ход был передан игроку #playerName($nextPlayer).
+</p>
+#end
+
+#parse("/templates/mail/notification/mail_footer_ru.vm")
+</body>
+</html>

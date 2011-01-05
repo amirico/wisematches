@@ -1,0 +1,8 @@
+<module rename-to="login">
+    <inherits name="wisematches.client.gwt.core.Core"/>
+
+    <entry-point class='wisematches.client.gwt.login.client.LoginEntryPoint'/>
+
+    <servlet path="/rpc/CheckPointService"
+             class="wisematches.server.web.modules.login.services.CheckPointServiceImpl"/>
+</module>

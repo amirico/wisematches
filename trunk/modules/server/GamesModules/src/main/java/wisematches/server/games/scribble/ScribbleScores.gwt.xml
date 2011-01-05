@@ -1,0 +1,5 @@
+<module>
+    <inherits name="wisematches.server.games.scribble.ScribbleCore"/>
+
+    <source path="scores"/>
+</module>

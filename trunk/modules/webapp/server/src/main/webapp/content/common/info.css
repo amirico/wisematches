@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+ */
+/* Common styles */
+.info-label {
+    font-weight: bold;
+}
+
+.info-header .info-label {
+    font-size: large;
+    color: #551f1f;
+    padding-bottom: 5px;
+}
+
+.info-description {
+    padding-bottom: 10px;
+}
+
+.info-items {
+    text-align: justify;
+}
+
+/* Terms & Policy & Naming styles */
+#info-terms-items li, #info-policy-items li, #info-naming-items li {
+    list-style: decimal inside;
+    padding-bottom: 5px;
+}
+
+.info-terms-item li, .info-policy-item li, .info-naming-item li {
+    list-style: square inside !important;
+    padding-left: 15px;
+}
+
+.info-terms-item .info-terms-item li, .info-policy-item .info-policy-item li, .info-naming-item .info-naming-item li {
+    list-style: circle inside !important;
+    padding-left: 10px;
+}
+
+.info-terms-item, .info-policy-item, .info-naming-item {
+    display: inline;
+}
+
+.info-terms-label, .info-policy-label, .info-naming-label {
+    display: inline;
+}
+
+.info-terms-description, .info-policy-description, .info-naming-description {
+    display: inline;
+}
+
+/* About & features styles */
+.info-about-item, .info-features-item {
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.info-about-image, .info-features-image {
+    float: left;
+    width: 48px;
+    height: 48px;
+    padding-right: 10px;
+}
+
+.info-features-description {
+    padding-left: 10px;
+}
+
+/* Index styles */
+.info-index-image {
+    float: left;
+    text-align: left;
+    padding-left: 15px;
+}
+
+.info-index-links {
+    font-size: x-small;
+    text-align: right;
+}

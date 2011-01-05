@@ -1,0 +1,175 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>WebClient</name>
+    <packaging>jar</packaging>
+
+    <groupId>wisematches.web</groupId>
+    <artifactId>web-client</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+<!--
+    <parent>
+        <groupId>wisematches.web</groupId>
+        <artifactId>group</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+-->
+
+<!--
+    <repositories>
+        <repository>
+            <id>gwt-maven</id>
+            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo</url>
+        </repository>
+
+        <repository>
+            <id>smartgwt</id>
+            <name>SmartGWT</name>
+            <url>http://www.smartclient.com/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <configuration>
+                    <gwtHome>${gwtHome}</gwtHome>
+                    <disableCastChecking>true</disableCastChecking>
+                    <disableClassMetadata>true</disableClassMetadata>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateAsync</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- TODO: all exclude *.java files should be copied here -->
+    <!--
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            &lt;!&ndash; All the fantastical settings that GWT needs &ndash;&gt;
+            <plugin>
+                <groupId>com.totsp.gwt</groupId>
+                <artifactId>maven-googlewebtoolkit2-plugin</artifactId>
+                <version>2.0-beta26</version>
+
+                <executions>
+                    <execution>
+                        <id>compileGWT</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <gwtVersion>${gwt.version}</gwtVersion>
+
+                    <logLevel>WARN</logLevel>
+
+                    <output>
+                        ${project.build.directory}/gwt
+                    </output>
+
+                    <compileTargets>
+                        <value>wisematches.client.gwt.login.Login</value>
+                        <value>wisematches.client.gwt.app.Application</value>
+                    </compileTargets>
+
+                    <runTarget>wisematches.client.gwt.login.Login</runTarget>
+
+                    &lt;!&ndash; Allowed: OBF[USCATED], PRETTY, or DETAILED &ndash;&gt;
+                    <style>OBF</style>
+
+                    <noServer>true</noServer>
+
+                    <extraJvmArgs>-Dgwt.coverage.enable=false</extraJvmArgs>
+                    <extraJvmArgs>-Xmx1G -Xms512M -Xss1024k</extraJvmArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+
+                        <configuration>
+                            <classesDirectory>${project.build.directory}/gwt</classesDirectory>
+                            <classifier>gwt-compiled</classifier>
+
+                            <excludes>
+                                <exclude>.gwt-tmp/**/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+-->
+
+    <dependencies>
+        <dependency>
+            <groupId>com.smartgwt</groupId>
+            <artifactId>smartgwt</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smartgwt</groupId>
+            <artifactId>smartgwt-skins</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>wisematches.server</groupId>
+            <artifactId>games-modules</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--
+
+                <dependency>
+                    <groupId>com.google.code.gwt-dnd</groupId>
+                    <artifactId>gwt-dnd</artifactId>
+                    <version>2.6.5</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.google.code.gwt-log</groupId>
+                    <artifactId>gwt-log</artifactId>
+                    <version>2.6.2</version>
+                </dependency>
+        -->
+    </dependencies>
+</project>
