@@ -334,8 +334,7 @@ CREATE TABLE `user_user` (
   `email` varchar(150) NOT NULL COMMENT 'EMail address of the user.',
   `creationDate` timestamp NOT NULL default '0000-00-00 00:00:00',
   `lastSigninDate` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `rating` int(11) NOT NULL default '1000',
-  `locale` varchar(10) default NULL,
+  `rating` int(11) NOT NULL default '1000',          `locale` varchar(10) default NULL,
   PRIMARY KEY  (`id`),
   KEY `id` (`id`),
   KEY `login_info` (`password`,`username`)
