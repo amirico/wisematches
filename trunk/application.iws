@@ -25,31 +25,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c58aeef6-06ff-4ee2-8277-516371716913" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/controllers/AccountController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/spring/dwr/DWRDestroyHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/spring/security/ExtJSAuthenticationHandler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/spring/security/IPTokenBasedRememberMeServices.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/unauthorized.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/unauthorized_ru.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-base.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/patches/path_from_5_to_6.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/patches/path_from_2_to_3.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/patches/path_from_3_to_4.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/patches/path_from_0_to_1.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/patches/path_from_4_to_5.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/patches/path_from_1_to_2.sql" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.ipr" afterPath="$PROJECT_DIR$/application.ipr" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-db.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/hibernate-config.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.iws" afterPath="$PROJECT_DIR$/application.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/services/AccountManagementService.java" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/services/AccountManagementService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/index.properties" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/index.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/index_ru.properties" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/index_ru.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/web.xml" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/web.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/server-core-config.xml" afterPath="$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/server-core-config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-base.xml" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-base.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-security.xml" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-security.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematchesServlet-servlet.xml" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematchesServlet-servlet.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/account.js" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/account.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/information.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/information.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/game/header.ftl" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/game/header.ftl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/database.sql" afterPath="$PROJECT_DIR$/sql/database.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-server.iml" afterPath="$PROJECT_DIR$/web-server.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/hibernate-ehcache.xml" afterPath="$PROJECT_DIR$/modules/webapp/server/src/main/resources/config/hibernate-ehcache.xml" />
     </list>
     <ignored path="application.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -244,11 +229,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/services/AccountManagementService.java" />
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/controllers/AccountController.java" />
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/information.ftl" />
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/mvc/controllers/InformationController.java" />
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/index.properties" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/index_ru.properties" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/unauthorized.properties" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/resources/i18n/info/unauthorized_ru.properties" />
@@ -256,10 +236,15 @@
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/spring/security/ExtJSAuthenticationHandler.java" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/game/header.ftl" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/content/common/account.js" />
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-security.xml" />
-        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-base.xml" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/spring/dwr/DWRDestroyHelper.java" />
         <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematchesServlet-servlet.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/sql/database.sql" />
+        <option value="$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/hibernate-config.xml" />
+        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-db.xml" />
+        <option value="$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/server-core-config.xml" />
+        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-base.xml" />
+        <option value="$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-security.xml" />
       </list>
     </option>
   </component>
@@ -637,6 +622,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="sql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -795,183 +794,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="login" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="game" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="game" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1019,23 +842,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1053,27 +860,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="server" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
+              <option name="myItemId" value="ServerCore" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1091,31 +882,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="server" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="ServerCore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="spring" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1133,11 +908,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
+              <option name="myItemId" value="server" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
+              <option name="myItemId" value="ServerCore" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1149,19 +924,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="spring" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dwr" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1179,11 +942,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
+              <option name="myItemId" value="server" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
+              <option name="myItemId" value="ServerCore" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1195,15 +958,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvc" />
+              <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1221,11 +980,89 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ServerCore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GamesModules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GamesModules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GamesModules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1237,19 +1074,79 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mvc" />
+              <option name="myItemId" value="modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GamesModules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="banks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GamesModules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1304,7 +1201,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="248" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="233" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="20" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="OverrideImplement.combined" value="true" />
@@ -2443,19 +2340,20 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.49369988" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43386245" sideWeight="0.34142396" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4144621" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35626101" sideWeight="0.34142396" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28293243" sideWeight="0.6529126" order="18" side_tool="true" content_ui="tabs" x="-1041" y="376" width="801" height="237" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38908452" sideWeight="0.99351174" order="20" side_tool="false" content_ui="tabs" x="22" y="364" width="1236" height="261" />
-      <window_info id="TODO" active="false" anchor="left" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.47249192" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Web" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25080907" sideWeight="0.32646048" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25970873" sideWeight="0.70446736" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2669903" sideWeight="0.6002291" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27756655" sideWeight="0.56613755" order="0" side_tool="false" content_ui="tabs" x="-1167" y="256" width="324" height="622" />
+      <window_info id="TODO" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.47249192" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31202435" sideWeight="0.32098764" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27756655" sideWeight="0.23985891" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2669903" sideWeight="0.6002291" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22036473" sideWeight="0.664903" order="0" side_tool="false" content_ui="tabs" x="-1167" y="256" width="324" height="622" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48713827" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29553264" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" x="24" y="388" width="1232" height="251" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.44174758" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24838188" sideWeight="0.6002291" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24838188" sideWeight="0.6002291" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24269481" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Runner Output" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38992974" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -2465,16 +2363,15 @@
       <window_info id="SVN Repositories" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329582" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Regex Tester" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290398" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928804" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25970873" sideWeight="0.6002291" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25970873" sideWeight="0.6002291" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="SQL" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48243558" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4146621" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Slice" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39967638" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Web Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32524273" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Web Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32524273" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39929742" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2506,7 +2403,7 @@
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="SignIn and Account Recovery windows are ready" />
+    <option name="LAST_COMMIT_MESSAGE" value="Spring Security integrated (first draft)" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2519,7 +2416,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="!!! Project does not work!!!&#10;Start refactoring to SmartGWT instead of gwt-ext. Project moved to GWT 2.0.3" />
     <MESSAGE value="!!! Project does not work!!!&#10;Spring updated to 3.0.5&#10;EasyMock to 3.0&#10;&#10;" />
     <MESSAGE value="!!! Project does not work!!!&#10;Spring MVC test added." />
     <MESSAGE value="!!! Project does not work!!!&#10;GWT and client module removed&#10;All not compiled code commented&#10;All not used libraries removed from Maven files  &#10;FreeMarker added and integrated into Spring context" />
@@ -2544,6 +2440,7 @@
     <MESSAGE value="New Ext.ux.dwr package added. There are two main features:&#10; - Ext.ux.dwr.Action.Submit that allows send any form via DWR&#10; - Ext.ux.dwr.Validator that allows check a value of a field via DWR&#10;  &#10;  Problems and Account forms refactored for new package." />
     <MESSAGE value="Account window redesigned" />
     <MESSAGE value="SignIn and Account Recovery windows are ready" />
+    <MESSAGE value="Spring Security integrated (first draft)" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -2603,115 +2500,106 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/impl/DefaultScriptSessionManager.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.0.4.RELEASE/spring-security-config-3.0.4.RELEASE.jar!/org/springframework/security/config/spring-security-3.0.xsd">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="0" selection-start="2427" selection-end="2427" vertical-scroll-proportion="0.0">
+        <state line="1261" column="69" selection-start="70344" selection-end="70344" vertical-scroll-proportion="-0.43726236">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///usr/lib/jvm/java-6-sun/src.zip!/java/util/concurrent/ThreadPoolExecutor.java">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="584" column="0" selection-start="24765" selection-end="24765" vertical-scroll-proportion="0.0">
+        <state line="126" column="38" selection-start="4227" selection-end="4227" vertical-scroll-proportion="3.059369">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib/rt.jar!/sun/reflect/NativeConstructorAccessorImpl.class">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE-sources.jar!/org/springframework/security/core/GrantedAuthority.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="43" selection-start="858" selection-end="858" vertical-scroll-proportion="0.44378698">
+        <state line="42" column="34" selection-start="1901" selection-end="1901" vertical-scroll-proportion="0.6557377">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-security.xml">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE-sources.jar!/org/springframework/security/core/CredentialsContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="17" selection-start="627" selection-end="627" vertical-scroll-proportion="0.5754717">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE-sources.jar!/org/springframework/security/core/userdetails/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="49" selection-start="1833" selection-end="1833" vertical-scroll-proportion="0.59016395">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE-sources.jar!/org/springframework/security/core/userdetails/UserDetails.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="0" selection-start="3530" selection-end="3530" vertical-scroll-proportion="0.38032788">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE-sources.jar!/org/springframework/security/provisioning/JdbcUserDetailsManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="138" column="38" selection-start="7364" selection-end="7364" vertical-scroll-proportion="0.14506173">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/database.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="336" column="43" selection-start="12120" selection-end="12120" vertical-scroll-proportion="0.4163498">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.0.4.RELEASE/spring-tx-3.0.4.RELEASE.jar!/org/springframework/transaction/config/spring-tx-3.0.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-6.3964496">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.0.4.RELEASE/spring-orm-3.0.4.RELEASE.jar!/org/springframework/orm/hibernate3/HibernateTransactionManager.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="16" selection-start="1254" selection-end="1254" vertical-scroll-proportion="0.35062242">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/resources/config/hibernate-ehcache.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="67" selection-start="240" selection-end="240" vertical-scroll-proportion="0.115384616">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/server/ServerCore/src/main/resources/config/server-core-config.xml">
       <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="39" selection-start="600" selection-end="600" vertical-scroll-proportion="0.2777778">
+        <state line="46" column="77" selection-start="2346" selection-end="2346" vertical-scroll-proportion="1.3663366">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/extend/DownloadManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="17" selection-start="866" selection-end="866" vertical-scroll-proportion="0.28846154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-6-sun/src.zip!/java/util/concurrent/ScheduledThreadPoolExecutor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="297" column="0" selection-start="10769" selection-end="10769" vertical-scroll-proportion="0.18653846">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/util/SharedObjects.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="63" selection-start="822" selection-end="822" vertical-scroll-proportion="0.19480519">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/impl/InMemoryDownloadManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="45" selection-start="1156" selection-end="1156" vertical-scroll-proportion="-4.3448277">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/java/wisematches/server/web/spring/dwr/DWRDestroyHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="66" selection-start="448" selection-end="448" vertical-scroll-proportion="0.4174397">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.0.4.RELEASE/spring-beans-3.0.4.RELEASE.jar!/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="31" selection-start="9713" selection-end="9713" vertical-scroll-proportion="-3.48">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/impl/DefaultContainer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="20" selection-start="1532" selection-end="1532" vertical-scroll-proportion="0.1459854">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/spring/DwrController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="211" column="33" selection-start="8564" selection-end="8564" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/impl/ContainerUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="106" selection-start="11674" selection-end="11674" vertical-scroll-proportion="-24.172413">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/directwebremoting/dwr/3.0.M1/dwr-3.0.M1-sources.jar!/org/directwebremoting/impl/PurgingDownloadManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="1430" selection-end="1430" vertical-scroll-proportion="0.3540146">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematchesServlet-servlet.xml">
+    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-db.xml">
       <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="114" selection-start="3997" selection-end="3997" vertical-scroll-proportion="0.38613862">
+        <state line="45" column="46" selection-start="2475" selection-end="2475" vertical-scroll-proportion="0.46534654">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE-sources.jar!/org/springframework/security/authentication/dao/ReflectionSaltSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="35" selection-start="2006" selection-end="2006" vertical-scroll-proportion="-0.17751479">
           <folding />
         </state>
       </provider>
@@ -2721,7 +2609,17 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="861" selection-end="861" vertical-scroll-proportion="0.5346535">
+        <state line="31" column="75" selection-start="1529" selection-end="1529" vertical-scroll-proportion="0.82625484">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/webapp/server/src/main/webapp/WEB-INF/wisematches-security.xml">
+      <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="28" selection-start="821" selection-end="821" vertical-scroll-proportion="0.44554454">
           <folding />
         </state>
       </provider>
@@ -2732,12 +2630,12 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>web-server:war</last-edited>
+          <last-edited>web-server:war exploded</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
-                <option value="0.5" />
+                <option value="0.22337125" />
+                <option value="0.49819493" />
               </list>
             </option>
           </splitter-proportions>
