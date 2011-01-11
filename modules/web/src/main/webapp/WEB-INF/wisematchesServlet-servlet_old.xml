@@ -5,10 +5,6 @@
 
     <import resource="classpath:/config/web-server-config.xml"/>
 
-    <bean id="propertiesPlaceholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:/config/server-settings.properties"/>
-    </bean>
-
     <bean id="hibernateSessionInterceptor"
           class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
         <property name="sessionFactory" ref="sessionFactory"/>

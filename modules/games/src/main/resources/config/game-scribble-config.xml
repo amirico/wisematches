@@ -3,21 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <import resource="classpath:/config/server-core-config.xml"/>
+    <import resource="classpath:/config/server-base-config.xml"/>
 
     <!-- Tiles a placed in classpath in /banks/ directory. -->
     <bean id="tilesBankingHouse" class="wisematches.server.games.scribble.bank.impl.XMLTilesBankingHouse">
         <property name="banksPath" value="classpath:/banks/"/>
-    </bean>
-
-    <bean id="modulesSessionFactory" parent="serverSessionFactory">
-        <property name="annotatedClasses">
-            <list merge="true">
-                <value>wisematches.server.games.scribble.board.ScribbleBoard</value>
-                <value>wisematches.server.games.scribble.board.ScribbleSettings</value>
-                <value>wisematches.server.games.scribble.board.ScribblePlayerHand</value>
-            </list>
-        </property>
     </bean>
 
     <bean id="scribbleBoardDAO" class="wisematches.server.games.scribble.board.ScribbleBoardDao">

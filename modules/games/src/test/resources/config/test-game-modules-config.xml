@@ -9,5 +9,5 @@
 
     <alias name="modulesSessionFactory" alias="sessionFactory"/>
 
-    <import resource="classpath:/config/game-modules-config.xml"/>
+    <import resource="classpath:/config/game-scribble-config.xml"/>
 </beans>

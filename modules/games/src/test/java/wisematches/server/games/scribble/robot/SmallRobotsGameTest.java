@@ -47,7 +47,7 @@ public class SmallRobotsGameTest extends AbstractTransactionalDataSourceSpringCo
 
     @Override
     protected String[] getConfigLocations() {
-        return new String[]{"classpath:/config/test-game-modules-config.xml"};
+        return new String[]{"classpath:/config/test-game-scribble-config.xml"};
     }
 
     public void onSetUp() throws Exception {
