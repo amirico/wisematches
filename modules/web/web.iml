@@ -9,14 +9,16 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
-      <configuration />
+      <configuration>
+        <fileset id="fileset1" name="Base" removed="false">
+          <file>file://$MODULE_DIR$/../base/src/main/resources/config/security-base-config.xml</file>
+          <file>file://$MODULE_DIR$/../base/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/../base/src/main/resources/config/server-base-config.xml</file>
+        </fileset>
+      </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
@@ -49,6 +51,10 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.6.8" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.6.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate:3.2.6.ga" level="project" />
@@ -71,10 +77,6 @@
     <orderEntry type="library" name="Maven: org.mortbay.jetty:jetty-util:6.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:3.0.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:3.0.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.0.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.6.8" level="project" />
-    <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.6.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />

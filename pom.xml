@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>WisematchesApplication</name>
+    <name>WiseMathes</name>
     <packaging>pom</packaging>
 
     <groupId>wisematches</groupId>
@@ -20,7 +20,7 @@
     </properties>
 
     <dependencies>
-        <!-- Statrt logging systems dependency -->
+        <!-- Start logging systems dependency -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -104,6 +104,18 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
 

@@ -2,7 +2,13 @@
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
-      <configuration />
+      <configuration>
+        <fileset id="fileset1" name="Base" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/config/hibernate-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/server-base-config.xml</file>
+          <file>file://$MODULE_DIR$/src/test/resources/config/test-server-config.xml</file>
+        </fileset>
+      </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
@@ -34,6 +40,10 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.6.8" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.6.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate:3.2.6.ga" level="project" />

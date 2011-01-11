@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <import resource="web-app-dwr.xml"/>
+
+    <context:component-scan base-package="wisematches.server.web.mvc"/>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="language"/>
+    </bean>
+
+    <bean name="abstractMessageSource"
+          class="wisematches.server.web.spring.i18n.WebAccessibleResourceBundleMessageSource" abstract="true">
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="fallbackToSystemLocale" value="false"/>
+    </bean>
+
+    <bean name="commonMessageSource" parent="abstractMessageSource">
+        <property name="basenames">
+            <array>
+                <value>classpath:/i18n/common/common</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean name="clientLoginMessageSource" parent="abstractMessageSource">
+        <property name="parentMessageSource" ref="commonMessageSource"/>
+        <property name="basenames">
+            <array>
+                <value>classpath:/i18n/client/login</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean name="clientGameMessageSource" parent="abstractMessageSource">
+        <property name="parentMessageSource" ref="commonMessageSource"/>
+        <property name="basenames">
+            <array>
+                <value>classpath:/i18n/client/game</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean name="serverMessageSource" parent="abstractMessageSource">
+        <property name="parentMessageSource" ref="commonMessageSource"/>
+        <property name="basenames">
+            <array>
+                <value>classpath:/i18n/server/mail</value>
+                <value>classpath:/i18n/server/web</value>
+            </array>
+        </property>
+    </bean>
+
+
+    <bean id="extjsResourceRequestHandler"
+          class="org.springframework.web.servlet.resource.ResourceHttpRequestHandler">
+        <property name="locations">
+            <list>
+                <value>/ext/*</value>
+                <value>classpath:/ext</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="freeMarkerNodeModelResourceBundle"
+          class="wisematches.server.web.spring.i18n.FreeMarkerNodeModelResourceBundle">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resourcesPaths" value="classpath:/i18n/info/"/>
+    </bean>
+
+    <bean id="urlHandlerMapping"
+          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="1"/>
+        <property name="alwaysUseFullPath" value="true"/>
+
+        <property name="mappings">
+            <props>
+                <prop key="/dwr/**/*">dwrController</prop>
+                <prop key="/ext/**/*">extjsResourceRequestHandler</prop>
+                <prop key="/i18n/login/*.js">clientLoginMessageSource</prop>
+                <prop key="/i18n/game/*.js">clientGameMessageSource</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="annotationHandlerMapping"
+          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="order" value="2"/>
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_exception_handler">rethrow</prop>
+                <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+    </bean>
+
+    <alias alias="messageSource" name="serverMessageSource"/>
+</beans>

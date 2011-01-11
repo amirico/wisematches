@@ -43,19 +43,4 @@
     <bean id="countriesManager" class="wisematches.server.core.counties.impl.CSVCountriesManager">
         <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
     </bean>
-
-    <bean id="serverSessionFactory" parent="templateSessionFactory">
-        <property name="annotatedClasses">
-            <list merge="true">
-                <value>wisematches.server.core.account.impl.PlayerImpl</value>
-                <value>wisematches.server.core.account.impl.PlayerProfileImpl</value>
-                <value>wisematches.server.core.account.impl.PlayerNotificationsImpl</value>
-                <value>wisematches.server.core.account.LockAccountInfo</value>
-                <value>wisematches.server.core.account.LockUsernameInfo</value>
-                <value>wisematches.server.core.statistic.PlayerStatistic</value>
-                <value>wisematches.server.core.statistic.RatingInfo</value>
-                <value>wisematches.server.core.system.impl.ServerPropertyValue</value>
-            </list>
-        </property>
-    </bean>
 </beans>
