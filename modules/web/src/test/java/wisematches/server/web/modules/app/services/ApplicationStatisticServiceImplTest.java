@@ -11,7 +11,7 @@ public class ApplicationStatisticServiceImplTest {
         Player p2 = createMockPlayer(2, 300);
         Player p3 = createMockPlayer(3, 200);
 
-        final RatingsManager ratingsManager = createStrictMock(RatingsManager.class);
+        final PlayerRatingsManager ratingsManager = createStrictMock(PlayerRatingsManager.class);
         expect(ratingsManager.getTopRatedPlayers()).andReturn(Arrays.asList(p1, p2, p3));
         ratingsManager.addTopPlayersListener(isA(TopPlayersListener.class));
         replay(ratingsManager);
@@ -45,7 +45,7 @@ public class ApplicationStatisticServiceImplTest {
         final Player p6 = createMockPlayer(6, 200);
 
         final Capture<TopPlayersListener> topPlayersListener = new Capture<TopPlayersListener>();
-        final RatingsManager ratingsManager = createStrictMock(RatingsManager.class);
+        final PlayerRatingsManager ratingsManager = createStrictMock(PlayerRatingsManager.class);
         expect(ratingsManager.getTopRatedPlayers()).andReturn(Arrays.asList(p3, p2, p1));
         ratingsManager.addTopPlayersListener(capture(topPlayersListener));
         expect(ratingsManager.getTopRatedPlayers()).andReturn(Arrays.asList(p4, p5, p6));
@@ -54,7 +54,7 @@ public class ApplicationStatisticServiceImplTest {
         final ApplicationStatisticServiceImpl impl = new ApplicationStatisticServiceImpl();
         impl.setRatingsManager(ratingsManager);
 
-        topPlayersListener.getValue().topRatingsUpdated();
+        topPlayersListener.getValue().topPlayersChanged();
 
         final PlayerInfoBean[] topRatedPlayers = impl.getTopRatedPlayers();
         assertEquals(3, topRatedPlayers.length);

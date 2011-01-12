@@ -2,7 +2,7 @@ package wisematches.server.web.server.pproc.common;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;

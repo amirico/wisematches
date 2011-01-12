@@ -342,6 +342,7 @@
     <dictionary name="klimese">
       <words>
         <w>accoint</w>
+        <w>blacknames</w>
         <w>configurer</w>
         <w>extjs</w>
         <w>freemarker</w>

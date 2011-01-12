@@ -26,7 +26,7 @@ public class PlayerEventProducerTest {
 
     @Test
     public void test_PlayerStatisticEvent() {
-        final StatisticsManager manager = createStrictMock(StatisticsManager.class);
+        final PlayerStatisticsManager manager = createStrictMock(PlayerStatisticsManager.class);
         manager.addPlayerStatisticListener(isA(PlayerStatisticListener.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
@@ -37,7 +37,7 @@ public class PlayerEventProducerTest {
         replay(manager);
 
         final PlayerEventProducer producer = new PlayerEventProducer();
-        producer.setStatisticsManager(manager);
+        producer.setPlayerStatisticsManager(manager);
 
         // Nothing to do
         playerStatisticListener.playerStatisticUpdated(12L, new PlayerStatistic(12L));

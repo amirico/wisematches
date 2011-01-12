@@ -1,9 +1,9 @@
 package wisematches.server.core;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.notification.PlayerNotifications;
 import wisematches.kernel.player.Player;
 import wisematches.kernel.player.PlayerProfile;
+import wisematches.server.player.Language;
 
 import java.util.Date;
 

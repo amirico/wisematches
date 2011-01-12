@@ -60,19 +60,19 @@ package wisematches.server.web.modules.impl;
         }
 
         private void doImageTest(final File image) throws IOException {
-        FilePlayerImagesManager manager = new FilePlayerImagesManager();
-        manager.setImagesFolder(imagesFolder);
+        FilePlayerImagesManager managerPlayer = new FilePlayerImagesManager();
+        managerPlayer.setImagesFolder(imagesFolder);
 
-        assertNull(manager.getPlayerImage(1L, PlayerImageType.REAL));
+        assertNull(managerPlayer.getPlayerImage(1L, PlayerImageType.REAL));
 
-        manager.setPlayerImage(1L, new FileInputStream(image), PlayerImageType.REAL);
-        assertNotNull(manager.getPlayerImage(1L, PlayerImageType.REAL));
-        assertNull(manager.getPlayerImage(1L, PlayerImageType.AVATAR));
+        managerPlayer.setPlayerImage(1L, new FileInputStream(image), PlayerImageType.REAL);
+        assertNotNull(managerPlayer.getPlayerImage(1L, PlayerImageType.REAL));
+        assertNull(managerPlayer.getPlayerImage(1L, PlayerImageType.AVATAR));
 
-        manager.setPlayerImage(1L, new FileInputStream(image), PlayerImageType.AVATAR);
-        assertNotNull(manager.getPlayerImage(1L, PlayerImageType.REAL));
+        managerPlayer.setPlayerImage(1L, new FileInputStream(image), PlayerImageType.AVATAR);
+        assertNotNull(managerPlayer.getPlayerImage(1L, PlayerImageType.REAL));
 
-        final InputStream img = manager.getPlayerImage(1L, PlayerImageType.AVATAR);
+        final InputStream img = managerPlayer.getPlayerImage(1L, PlayerImageType.AVATAR);
         assertNotNull(img);
 
         final BufferedImage bufferedImage = ImageIO.read(img);

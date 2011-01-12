@@ -8,7 +8,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.kernel.player.Player;
 import wisematches.server.core.account.impl.PlayerImpl;
-import wisematches.server.player.rating.RatingsManager;
+import wisematches.server.player.rating.PlayerRatingsManager;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class RatingsManagerDao extends HibernateDaoSupport {
 	public List<Player> getPlayersRating(final long fromPosition,
 										 final int playersCount,
-										 final RatingsManager.SortType sortType) {
+										 final PlayerRatingsManager.SortType sortType) {
 		final HibernateTemplate template = getHibernateTemplate();
 		final Object o = template.executeWithNativeSession(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {

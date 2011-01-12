@@ -1,8 +1,8 @@
 package wisematches.server.core.account.impl;
 
 import org.hibernate.annotations.*;
-import wisematches.core.user.Language;
 import wisematches.kernel.player.Player;
+import wisematches.server.player.Language;
 
 import javax.persistence.*;
 import javax.persistence.CascadeType;
@@ -61,7 +61,7 @@ public class PlayerImpl implements Player, Serializable {
 	private long id;
 
 	@Basic
-	@Column(name = "username", nullable = false, length = 50, updatable = false)
+	@Column(name = "username", nullable = false, length = 100, updatable = false)
 	private String username;
 
 	@Basic

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-package wisematches.core.user;
+package wisematches.server.player;
 
 import java.util.Locale;
 

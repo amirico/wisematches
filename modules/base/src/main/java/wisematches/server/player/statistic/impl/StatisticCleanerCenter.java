@@ -4,7 +4,7 @@ import wisematches.server.core.system.ServerPropertiesManager;
 import wisematches.server.games.board.GameState;
 import wisematches.server.games.room.RoomManager;
 import wisematches.server.games.room.RoomsManager;
-import wisematches.server.player.statistic.StatisticsManager;
+import wisematches.server.player.statistic.PlayerStatisticsManager;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.EnumSet;
  */
 public class StatisticCleanerCenter {
 	private RoomsManager roomsManager;
-	private StatisticsManager statisticsManager;
+	private PlayerStatisticsManager playerStatisticsManager;
 	private ServerPropertiesManager serverPropertiesManager;
 
 	private final ThreadLocal<Calendar> localCalendar = new ThreadLocal<Calendar>();
@@ -52,10 +52,10 @@ public class StatisticCleanerCenter {
 //            for (GamePlayerHand hand : hands) {
 //                final long playerId = hand.getPlayerId();
 //
-//                statisticsManager.lockPlayerStatistic(playerId);
+//                playerStatisticsManager.lockPlayerStatistic(playerId);
 //                try {
-//                    final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
-//                    final RatingInfo ratingInfo = statistic.getYearRaingInfo();
+//                    final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(playerId);
+//                    final PlayerRatingInfo ratingInfo = statistic.getYearRaingInfo();
 //
 ///*
 //                    final long cleanupTime = statistic.getLastCleanupTime();
@@ -65,7 +65,7 @@ public class StatisticCleanerCenter {
 //                    statistic.setLastCleanupTime(System.currentTimeMillis());
 //*/
 //                } finally {
-//                    statisticsManager.lockPlayerStatistic(playerId);
+//                    playerStatisticsManager.lockPlayerStatistic(playerId);
 //                }
 //            }
 //        }
@@ -99,8 +99,8 @@ public class StatisticCleanerCenter {
 		return calendar;
 	}
 
-	public void setStatisticsManager(StatisticsManager statisticsManager) {
-		this.statisticsManager = statisticsManager;
+	public void setPlayerStatisticsManager(PlayerStatisticsManager playerStatisticsManager) {
+		this.playerStatisticsManager = playerStatisticsManager;
 	}
 
 	public void setRoomsManager(RoomsManager roomsManager) {

@@ -8,9 +8,9 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import wisematches.server.games.board.*;
 import wisematches.server.games.room.*;
+import wisematches.server.player.statistic.PlayerRatingInfo;
 import wisematches.server.player.statistic.PlayerStatistic;
-import wisematches.server.player.statistic.RatingInfo;
-import wisematches.server.player.statistic.StatisticsManager;
+import wisematches.server.player.statistic.PlayerStatisticsManager;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class StatisticCalculationCenter {
 	private RoomsManager roomsManager;
-	private StatisticsManager statisticsManager;
+	private PlayerStatisticsManager playerStatisticsManager;
 	private PlatformTransactionManager transactionManager;
 
 	private final TheBoardListener boardListener = new TheBoardListener();
@@ -33,7 +33,7 @@ public class StatisticCalculationCenter {
 		final List<GamePlayerHand> hands = board.getPlayersHands();
 		for (GamePlayerHand hand : hands) {
 			final long playerId = hand.getPlayerId();
-			statisticsManager.lockPlayerStatistic(playerId);
+			playerStatisticsManager.lockPlayerStatistic(playerId);
 			try {
 				final PlayerStatistic statistic = getPlayerStatistic(playerId);
 				statistic.setActiveGames(statistic.getActiveGames() + 1);
@@ -41,11 +41,11 @@ public class StatisticCalculationCenter {
 				if (log.isDebugEnabled()) {
 					log.debug("Increase active games for player " + playerId + " to " + statistic.getActiveGames());
 				}
-				statisticsManager.updatePlayerStatistic(statistic);
+				playerStatisticsManager.updatePlayerStatistic(statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated by system error", th);
 			} finally {
-				statisticsManager.unlockPlayerStatistic(playerId);
+				playerStatisticsManager.unlockPlayerStatistic(playerId);
 			}
 		}
 	}
@@ -57,7 +57,7 @@ public class StatisticCalculationCenter {
 		for (GamePlayerHand hand : hands) {
 			final long playerId = hand.getPlayerId();
 
-			statisticsManager.lockPlayerStatistic(playerId);
+			playerStatisticsManager.lockPlayerStatistic(playerId);
 			try {
 				final PlayerStatistic statistic = getPlayerStatistic(playerId);
 				statistic.setActiveGames(statistic.getActiveGames() - 1);
@@ -79,9 +79,9 @@ public class StatisticCalculationCenter {
 					}
 					updateRatingsInfo(board, hand, statistic);
 				}
-				statisticsManager.updatePlayerStatistic(statistic);
+				playerStatisticsManager.updatePlayerStatistic(statistic);
 			} finally {
-				statisticsManager.unlockPlayerStatistic(playerId);
+				playerStatisticsManager.unlockPlayerStatistic(playerId);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public class StatisticCalculationCenter {
 		for (GamePlayerHand hand : hands) {
 			final long playerId = hand.getPlayerId();
 
-			statisticsManager.lockPlayerStatistic(playerId);
+			playerStatisticsManager.lockPlayerStatistic(playerId);
 			try {
 				final PlayerStatistic statistic = getPlayerStatistic(playerId);
 				statistic.setActiveGames(statistic.getActiveGames() - 1);
@@ -109,9 +109,9 @@ public class StatisticCalculationCenter {
 					}
 					updateRatingsInfo(board, hand, statistic);
 				}
-				statisticsManager.updatePlayerStatistic(statistic);
+				playerStatisticsManager.updatePlayerStatistic(statistic);
 			} finally {
-				statisticsManager.unlockPlayerStatistic(playerId);
+				playerStatisticsManager.unlockPlayerStatistic(playerId);
 			}
 		}
 	}
@@ -119,7 +119,7 @@ public class StatisticCalculationCenter {
 	protected void processGameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
 		if (board.isRatedGame() && byTimeout) {
 			final long playerId = interrupterPlayer.getPlayerId();
-			statisticsManager.lockPlayerStatistic(playerId);
+			playerStatisticsManager.lockPlayerStatistic(playerId);
 			try {
 				final PlayerStatistic statistic = getPlayerStatistic(playerId);
 				statistic.setTimeouts(statistic.getTimeouts() + 1);
@@ -127,7 +127,7 @@ public class StatisticCalculationCenter {
 					log.debug("Increate by timeouts games for player " + playerId + " to " + statistic.getTimeouts());
 				}
 			} finally {
-				statisticsManager.unlockPlayerStatistic(playerId);
+				playerStatisticsManager.unlockPlayerStatistic(playerId);
 			}
 		}
 
@@ -145,13 +145,13 @@ public class StatisticCalculationCenter {
 		}
 
 		final long playerId = movedPlayer.getPlayerId();
-		statisticsManager.lockPlayerStatistic(playerId);
+		playerStatisticsManager.lockPlayerStatistic(playerId);
 		try {
 			final PlayerStatistic statistic = getPlayerStatistic(playerId);
 			updateTurnsStatistic(statistic, getPreviousMoveTime(board), move.getMoveTime());
-			statisticsManager.updatePlayerStatistic(statistic);
+			playerStatisticsManager.updatePlayerStatistic(statistic);
 		} finally {
-			statisticsManager.unlockPlayerStatistic(playerId);
+			playerStatisticsManager.unlockPlayerStatistic(playerId);
 		}
 	}
 
@@ -162,7 +162,7 @@ public class StatisticCalculationCenter {
 		updateRatingInfo(statistic, statistic.getThirtyDaysRaingInfo(), board, hand);
 	}
 
-	protected void updateRatingInfo(PlayerStatistic statistic, RatingInfo ri, GameBoard board, GamePlayerHand hand) {
+	protected void updateRatingInfo(PlayerStatistic statistic, PlayerRatingInfo ri, GameBoard board, GamePlayerHand hand) {
 		@SuppressWarnings("unchecked")
 		final List<GamePlayerHand> hands = board.getPlayersHands();
 		final int rating = hand.getRating();
@@ -304,7 +304,7 @@ public class StatisticCalculationCenter {
 	}
 
 	private PlayerStatistic getPlayerStatistic(long playerId) {
-		return statisticsManager.getPlayerStatistic(playerId);
+		return playerStatisticsManager.getPlayerStatistic(playerId);
 	}
 
 
@@ -333,8 +333,8 @@ public class StatisticCalculationCenter {
 		}
 	}
 
-	public void setStatisticsManager(StatisticsManager manager) {
-		this.statisticsManager = manager;
+	public void setPlayerStatisticsManager(PlayerStatisticsManager managerPlayer) {
+		this.playerStatisticsManager = managerPlayer;
 	}
 
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {

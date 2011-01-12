@@ -1,9 +1,9 @@
 package wisematches.server.robot.impl;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.notification.PlayerNotification;
 import wisematches.kernel.notification.PlayerNotifications;
 import wisematches.server.core.account.impl.ResourceablePlayer;
+import wisematches.server.player.Language;
 import wisematches.server.robot.RobotPlayer;
 import wisematches.server.robot.RobotType;
 

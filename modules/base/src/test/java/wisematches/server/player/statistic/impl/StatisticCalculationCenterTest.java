@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import wisematches.server.games.board.*;
 import wisematches.server.games.room.*;
+import wisematches.server.player.statistic.PlayerRatingInfo;
 import wisematches.server.player.statistic.PlayerStatistic;
-import wisematches.server.player.statistic.RatingInfo;
 
 import java.util.Arrays;
 
@@ -71,7 +71,7 @@ public class StatisticCalculationCenterTest {
 	@Test
 	public void test_updateRatingInfo() {
 		final PlayerStatistic statistic = new PlayerStatistic(12L);
-		final RatingInfo ri = statistic.getAllGamesRaingInfo();
+		final PlayerRatingInfo ri = statistic.getAllGamesRaingInfo();
 
 		{
 			statistic.setLostGames(1);
@@ -169,7 +169,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernateStatisticsManager mi = createStrictMock(HibernateStatisticsManager.class);
+		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.updatePlayerStatistic(s1);
@@ -188,7 +188,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
 		replay(board);
 
-		calculationCenter.setStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticsManager(mi);
 		calculationCenter.processGameStarted(board);
 
 		assertEquals(1, s1.getActiveGames());
@@ -202,7 +202,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernateStatisticsManager mi = createStrictMock(HibernateStatisticsManager.class);
+		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.updatePlayerStatistic(s1);
@@ -222,7 +222,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
 		replay(board);
 
-		calculationCenter.setStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticsManager(mi);
 		calculationCenter.processGameFinished(board, hand1);
 
 		assertEquals(1, s1.getWonGames());
@@ -241,7 +241,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernateStatisticsManager mi = createStrictMock(HibernateStatisticsManager.class);
+		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.updatePlayerStatistic(s1);
@@ -261,7 +261,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
 		replay(board);
 
-		calculationCenter.setStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticsManager(mi);
 		calculationCenter.processGameDraw(board);
 
 		assertEquals(1, s1.getDrawGames());
@@ -278,7 +278,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernateStatisticsManager mi = createStrictMock(HibernateStatisticsManager.class);
+		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.unlockPlayerStatistic(13L);
@@ -302,7 +302,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getWonPlayer()).andReturn(hand2);
 		replay(board);
 
-		calculationCenter.setStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticsManager(mi);
 		calculationCenter.processGameInterrupted(board, hand1, true);
 
 		assertEquals(1, s1.getLostGames());
@@ -326,7 +326,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernateStatisticsManager mi = createStrictMock(HibernateStatisticsManager.class);
+		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
 		for (int i = 0; i < 3; i++) {
 			mi.lockPlayerStatistic(13L);
 			expect(mi.getPlayerStatistic(13L)).andReturn(s1);
@@ -348,7 +348,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getWonPlayer()).andReturn(null);
 		replay(board);
 
-		calculationCenter.setStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticsManager(mi);
 
 		calculationCenter.processGameDraw(board);
 		calculationCenter.processGameFinished(board, null);

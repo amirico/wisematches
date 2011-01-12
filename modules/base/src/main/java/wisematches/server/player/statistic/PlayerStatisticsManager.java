@@ -8,7 +8,7 @@ package wisematches.server.player.statistic;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface StatisticsManager {
+public interface PlayerStatisticsManager {
 	void addPlayerStatisticListener(PlayerStatisticListener l);
 
 	void removePlayerStatisticListener(PlayerStatisticListener l);

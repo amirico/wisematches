@@ -1,7 +1,7 @@
 package wisematches.kernel.player;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.notification.PlayerNotifications;
+import wisematches.server.player.Language;
 
 import java.util.Date;
 

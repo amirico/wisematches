@@ -7,10 +7,10 @@ import org.springframework.test.AbstractTransactionalDataSourceSpringContextTest
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import wisematches.server.player.statistic.PlayerRatingInfo;
 import wisematches.server.player.statistic.PlayerStatistic;
 import wisematches.server.player.statistic.PlayerStatisticListener;
-import wisematches.server.player.statistic.RatingInfo;
-import wisematches.server.player.statistic.StatisticsManager;
+import wisematches.server.player.statistic.PlayerStatisticsManager;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -25,7 +25,7 @@ import static org.easymock.EasyMock.*;
  */
 public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSourceSpringContextTests {
 	private SessionFactory sessionFactory;
-	private StatisticsManager statisticsManager;
+	private PlayerStatisticsManager playerStatisticsManager;
 
 	protected String[] getConfigLocations() {
 		return new String[]{"classpath:/config/test-server-config.xml"};
@@ -59,12 +59,12 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 	public void test_lockUnlock() throws InterruptedException {
 		final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-		statisticsManager.lockPlayerStatistic(1L);
+		playerStatisticsManager.lockPlayerStatistic(1L);
 		final Future<PlayerStatistic> future = executorService.submit(new Callable<PlayerStatistic>() {
 			public PlayerStatistic call() throws Exception {
 				final TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 				try {
-					final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(1L);
+					final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(1L);
 					transactionManager.commit(status);
 					return statistic;
 				} catch (Exception th) {
@@ -78,7 +78,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 			public PlayerStatistic call() throws Exception {
 				final TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 				try {
-					final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(2L);
+					final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(2L);
 					transactionManager.commit(status);
 					return statistic;
 				} catch (Exception th) {
@@ -92,16 +92,16 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertFalse(future.isDone());
 		assertTrue(future2.isDone());
 
-		final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(1L);
+		final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(1L);
 		assertNotNull(statistic);
-		statisticsManager.unlockPlayerStatistic(1L);
+		playerStatisticsManager.unlockPlayerStatistic(1L);
 
 		Thread.sleep(1000);
 		assertTrue(future.isDone());
 	}
 
 	public void test_updateStatistic() {
-		final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(1);
+		final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(1);
 		assertNotNull(statistic);
 
 		long time = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		expectLastCall().times(5);
 		replay(listener);
 
-		statisticsManager.addPlayerStatisticListener(listener);
+		playerStatisticsManager.addPlayerStatisticListener(listener);
 
 		statistic.setAverageTurnTime(1);
 		statistic.setDrawGames(2);
@@ -121,9 +121,9 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		statistic.setTurnsCount(6);
 		statistic.setWonGames(7);
 		statistic.setActiveGames(8);
-		statisticsManager.updatePlayerStatistic(statistic);
+		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final RatingInfo ri1 = statistic.getAllGamesRaingInfo();
+		final PlayerRatingInfo ri1 = statistic.getAllGamesRaingInfo();
 		ri1.setHighestRating(1);
 		ri1.setLowestRating(2);
 		ri1.setAverageMovesPerGame(3);
@@ -133,9 +133,9 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri1.setHighestWonOpponentId(7);
 		ri1.setLowestLostOpponentRating(8);
 		ri1.setLowestLostOpponentId(9);
-		statisticsManager.updatePlayerStatistic(statistic);
+		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final RatingInfo ri2 = statistic.getNinetyDaysRaingInfo();
+		final PlayerRatingInfo ri2 = statistic.getNinetyDaysRaingInfo();
 		ri2.setHighestRating(10);
 		ri2.setLowestRating(20);
 		ri2.setAverageMovesPerGame(30);
@@ -145,9 +145,9 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri2.setHighestWonOpponentId(70);
 		ri2.setLowestLostOpponentRating(80);
 		ri2.setLowestLostOpponentId(90);
-		statisticsManager.updatePlayerStatistic(statistic);
+		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final RatingInfo ri3 = statistic.getThirtyDaysRaingInfo();
+		final PlayerRatingInfo ri3 = statistic.getThirtyDaysRaingInfo();
 		ri3.setHighestRating(100);
 		ri3.setLowestRating(200);
 		ri3.setAverageMovesPerGame(300);
@@ -157,9 +157,9 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri3.setHighestWonOpponentId(700);
 		ri3.setLowestLostOpponentRating(800);
 		ri3.setLowestLostOpponentId(900);
-		statisticsManager.updatePlayerStatistic(statistic);
+		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final RatingInfo ri4 = statistic.getYearRaingInfo();
+		final PlayerRatingInfo ri4 = statistic.getYearRaingInfo();
 		ri4.setHighestRating(1000);
 		ri4.setLowestRating(2000);
 		ri4.setAverageMovesPerGame(3000);
@@ -169,11 +169,11 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri4.setHighestWonOpponentId(7000);
 		ri4.setLowestLostOpponentRating(8000);
 		ri4.setLowestLostOpponentId(9000);
-		statisticsManager.updatePlayerStatistic(statistic);
+		playerStatisticsManager.updatePlayerStatistic(statistic);
 
 		sessionFactory.getCurrentSession().clear();
 
-		final PlayerStatistic s = statisticsManager.getPlayerStatistic(1);
+		final PlayerStatistic s = playerStatisticsManager.getPlayerStatistic(1);
 		assertEquals(1, s.getAverageTurnTime());
 		assertEquals(2, s.getDrawGames());
 		assertEquals(3, s.getLastMoveTime());
@@ -184,7 +184,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(8, s.getActiveGames());
 		assertTrue(s.getUpdateTime() >= time);
 
-		final RatingInfo sri1 = s.getAllGamesRaingInfo();
+		final PlayerRatingInfo sri1 = s.getAllGamesRaingInfo();
 		assertEquals(1, sri1.getHighestRating());
 		assertEquals(2, sri1.getLowestRating());
 		assertEquals(3, sri1.getAverageMovesPerGame());
@@ -195,7 +195,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(8, sri1.getLowestLostOpponentRating());
 		assertEquals(9, sri1.getLowestLostOpponentId());
 
-		final RatingInfo sri2 = s.getNinetyDaysRaingInfo();
+		final PlayerRatingInfo sri2 = s.getNinetyDaysRaingInfo();
 		assertEquals(10, sri2.getHighestRating());
 		assertEquals(20, sri2.getLowestRating());
 		assertEquals(30, sri2.getAverageMovesPerGame());
@@ -206,7 +206,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(80, sri2.getLowestLostOpponentRating());
 		assertEquals(90, sri2.getLowestLostOpponentId());
 
-		final RatingInfo sri3 = s.getThirtyDaysRaingInfo();
+		final PlayerRatingInfo sri3 = s.getThirtyDaysRaingInfo();
 		assertEquals(100, sri3.getHighestRating());
 		assertEquals(200, sri3.getLowestRating());
 		assertEquals(300, sri3.getAverageMovesPerGame());
@@ -217,7 +217,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(800, sri3.getLowestLostOpponentRating());
 		assertEquals(900, sri3.getLowestLostOpponentId());
 
-		final RatingInfo sri4 = statistic.getYearRaingInfo();
+		final PlayerRatingInfo sri4 = statistic.getYearRaingInfo();
 		assertEquals(1000, sri4.getHighestRating());
 		assertEquals(2000, sri4.getLowestRating());
 		assertEquals(3000, sri4.getAverageMovesPerGame());
@@ -231,8 +231,8 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		verify(listener);
 	}
 
-	public void setStatisticsManager(StatisticsManager statisticsManager) {
-		this.statisticsManager = statisticsManager;
+	public void setPlayerStatisticsManager(PlayerStatisticsManager playerStatisticsManager) {
+		this.playerStatisticsManager = playerStatisticsManager;
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {

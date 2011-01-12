@@ -1,8 +1,8 @@
 package wisematches.server.robot;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.player.InternationalPlayer;
 import wisematches.kernel.player.Player;
+import wisematches.server.player.Language;
 
 /**
  * This interface indicates that player is robot.

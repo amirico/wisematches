@@ -3,7 +3,7 @@ package wisematches.server.web.modules.app.services;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
 
 public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService {//} implements ApplicationStatisticService {
-/*    private RatingsManager ratingsManager;
+/*    private PlayerRatingsManager ratingsManager;
     private AccountManager accountManager;
     private RoomManagerFacade roomManagerFacade;
     private PlayerSessionsManager playerSessionsManager;
@@ -79,7 +79,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
     }
 
 
-    public void setRatingsManager(RatingsManager ratingsManager) {
+    public void setRatingsManager(PlayerRatingsManager ratingsManager) {
         if (this.ratingsManager != null) {
             ratingsManager.removeTopPlayersListener(ratingsChangeListener);
         }
@@ -135,7 +135,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
     }
 
     private class TheTopPlayersListener implements TopPlayersListener {
-        public void topRatingsUpdated() {
+        public void topPlayersChanged() {
             loadCurrentRatings();
         }
     }

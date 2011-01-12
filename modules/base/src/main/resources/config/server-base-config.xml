@@ -21,7 +21,7 @@
         <property name="slanglyManager" ref="slanglyDictionary"/>
     </bean>
 
-    <bean id="lockAccountManager" class="wisematches.server.core.account.impl.HibernateLockAccountManager">
+    <bean id="lockAccountManager" class="wisematches.server.player.locks.impl.HibernateLockAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -32,7 +32,7 @@
         <property name="defaultPlayerRating" value="1200"/>
     </bean>
 
-    <bean id="statisticsManager" class="wisematches.server.player.statistic.impl.HibernateStatisticsManager">
+    <bean id="statisticsManager" class="wisematches.server.player.statistic.impl.HibernatePlayerStatisticsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

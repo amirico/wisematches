@@ -2,8 +2,9 @@ package wisematches.server.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import wisematches.core.user.Language;
-import wisematches.core.user.Player;
+import wisematches.server.player.Language;
+import wisematches.server.player.Membership;
+import wisematches.server.player.Player;
 
 import java.util.Collection;
 
@@ -13,11 +14,11 @@ import java.util.Collection;
  *
  * @author klimese
  */
-public class PlayerDetails extends User implements Player {
+public class WMUserDetails extends User implements Player {
 	private final Player originalPlayer;
 
-	public PlayerDetails(Player originalPlayer, String password, boolean enabled, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-		super(originalPlayer.getUsername(), password, enabled, true, true, accountNonLocked, authorities);
+	public WMUserDetails(Player originalPlayer, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+		super(originalPlayer.getUsername(), originalPlayer.getPassword(), true, true, true, accountNonLocked, authorities);
 		this.originalPlayer = originalPlayer;
 	}
 
@@ -32,6 +33,11 @@ public class PlayerDetails extends User implements Player {
 	}
 
 	@Override
+	public String getPassword() {
+		return originalPlayer.getPassword();
+	}
+
+	@Override
 	public String getEmail() {
 		return originalPlayer.getEmail();
 	}
@@ -39,6 +45,11 @@ public class PlayerDetails extends User implements Player {
 	@Override
 	public Language getLanguage() {
 		return originalPlayer.getLanguage();
+	}
+
+	@Override
+	public Membership getMembership() {
+		return originalPlayer.getMembership();
 	}
 
 	@Override

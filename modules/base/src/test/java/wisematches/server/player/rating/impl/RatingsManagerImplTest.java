@@ -7,7 +7,7 @@ import wisematches.kernel.player.Player;
 import wisematches.server.core.MockPlayer;
 import wisematches.server.player.rating.PlayerRatingEvent;
 import wisematches.server.player.rating.PlayerRatingListener;
-import wisematches.server.player.rating.RatingsManager;
+import wisematches.server.player.rating.PlayerRatingsManager;
 import wisematches.server.player.rating.TopPlayersListener;
 
 import java.util.Arrays;
@@ -58,7 +58,7 @@ public class RatingsManagerImplTest {
 		final List<Player> value = Arrays.asList(Arrays.copyOf(players, 5));
 
 		RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, TOP_COUNT, RatingsManager.SortType.DESC)).andReturn(value);
+		expect(dao.getPlayersRating(0, TOP_COUNT, PlayerRatingsManager.SortType.DESC)).andReturn(value);
 		replay(dao);
 
 		ratingsManager.setRatingsManagerDao(dao);
@@ -70,7 +70,7 @@ public class RatingsManagerImplTest {
 	@Test
 	public void test_getPlayerPosition() {
 		RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, 5, RatingsManager.SortType.DESC)).andReturn(Collections.<Player>emptyList());
+		expect(dao.getPlayersRating(0, 5, PlayerRatingsManager.SortType.DESC)).andReturn(Collections.<Player>emptyList());
 		expect(dao.getPlayerPosition(13L)).andReturn(456L);
 		replay(dao);
 
@@ -82,7 +82,7 @@ public class RatingsManagerImplTest {
 	@Test
 	public void test_getPlayersCount() {
 		RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, 5, RatingsManager.SortType.DESC)).andReturn(Collections.<Player>emptyList());
+		expect(dao.getPlayersRating(0, 5, PlayerRatingsManager.SortType.DESC)).andReturn(Collections.<Player>emptyList());
 		expect(dao.getPlayersCount()).andReturn(456L);
 		replay(dao);
 
@@ -97,12 +97,12 @@ public class RatingsManagerImplTest {
 		final List<Player> list = createNiceMock(List.class);
 
 		RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, 5, RatingsManager.SortType.DESC)).andReturn(Collections.<Player>emptyList());
-		expect(dao.getPlayersRating(1, 3, RatingsManager.SortType.DESC)).andReturn(list);
+		expect(dao.getPlayersRating(0, 5, PlayerRatingsManager.SortType.DESC)).andReturn(Collections.<Player>emptyList());
+		expect(dao.getPlayersRating(1, 3, PlayerRatingsManager.SortType.DESC)).andReturn(list);
 		replay(dao);
 
 		ratingsManager.setRatingsManagerDao(dao);
-		assertSame(list, ratingsManager.getPlayersRating(1, 3, RatingsManager.SortType.DESC));
+		assertSame(list, ratingsManager.getPlayersRating(1, 3, PlayerRatingsManager.SortType.DESC));
 		verify(dao);
 	}
 
@@ -111,14 +111,14 @@ public class RatingsManagerImplTest {
 		final List<Player> value = Arrays.asList(Arrays.copyOf(players, TOP_COUNT));
 
 		topPlayersListener = createStrictMock(TopPlayersListener.class);
-		topPlayersListener.topRatingsUpdated();
-		topPlayersListener.topRatingsUpdated();
+		topPlayersListener.topPlayersChanged();
+		topPlayersListener.topPlayersChanged();
 		replay(topPlayersListener);
 
 		ratingsManager.addTopPlayersListener(topPlayersListener);
 
 		RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, TOP_COUNT, RatingsManager.SortType.DESC)).andReturn(value);
+		expect(dao.getPlayersRating(0, TOP_COUNT, PlayerRatingsManager.SortType.DESC)).andReturn(value);
 		replay(dao);
 
 		ratingsManager.setRatingsManagerDao(dao);
@@ -132,7 +132,7 @@ public class RatingsManagerImplTest {
 		verify(dao);
 
 		reset(dao);
-		expect(dao.getPlayersRating(3, 2, RatingsManager.SortType.DESC)).andReturn(Arrays.asList(Arrays.copyOfRange(players, 3, 5)));
+		expect(dao.getPlayersRating(3, 2, PlayerRatingsManager.SortType.DESC)).andReturn(Arrays.asList(Arrays.copyOfRange(players, 3, 5)));
 		replay(dao);
 		ratingsManager.setTopPlayersCount(5);
 		assertArrayEquals(Arrays.copyOf(players, 5), ratingsManager.getTopRatedPlayers().toArray());
@@ -146,14 +146,14 @@ public class RatingsManagerImplTest {
 		final List<Player> value = Arrays.asList(Arrays.copyOf(players, 5));
 
 		topPlayersListener = createStrictMock(TopPlayersListener.class);
-		topPlayersListener.topRatingsUpdated();
+		topPlayersListener.topPlayersChanged();
 		expectLastCall().times(3);
 		replay(topPlayersListener);
 
 		ratingsManager.addTopPlayersListener(topPlayersListener);
 
 		final RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, 5, RatingsManager.SortType.DESC)).andReturn(value);
+		expect(dao.getPlayersRating(0, 5, PlayerRatingsManager.SortType.DESC)).andReturn(value);
 		replay(dao);
 		ratingsManager.setTopPlayersCount(5);
 		ratingsManager.setRatingsManagerDao(dao);
@@ -189,7 +189,7 @@ public class RatingsManagerImplTest {
 
 		// Known player's rating changed to lowest
 		reset(dao);
-		expect(dao.getPlayersRating(4, 1, RatingsManager.SortType.DESC)).andReturn(Arrays.asList(players[4]));
+		expect(dao.getPlayersRating(4, 1, PlayerRatingsManager.SortType.DESC)).andReturn(Arrays.asList(players[4]));
 		replay(dao);
 
 		players[3].setRating(0);
@@ -210,7 +210,7 @@ public class RatingsManagerImplTest {
 	@Test
 	public void test_updateTop5Ratings() {
 		topPlayersListener = createStrictMock(TopPlayersListener.class);
-		topPlayersListener.topRatingsUpdated();
+		topPlayersListener.topPlayersChanged();
 		replay(topPlayersListener);
 
 		ratingsManager.addTopPlayersListener(topPlayersListener);
@@ -218,7 +218,7 @@ public class RatingsManagerImplTest {
 		final List<Player> value = Arrays.asList(Arrays.copyOf(players, 2));
 
 		final RatingsManagerDao dao = createStrictMock(RatingsManagerDao.class);
-		expect(dao.getPlayersRating(0, 5, RatingsManager.SortType.DESC)).andReturn(value);
+		expect(dao.getPlayersRating(0, 5, PlayerRatingsManager.SortType.DESC)).andReturn(value);
 		replay(dao);
 		ratingsManager.setTopPlayersCount(5);
 		ratingsManager.setRatingsManagerDao(dao);

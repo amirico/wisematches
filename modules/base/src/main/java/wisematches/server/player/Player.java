@@ -1,12 +1,13 @@
-package wisematches.core.user;
+package wisematches.server.player;
 
 /**
  * The {@code Player} interface represents simple user. This interface is read-only
  * and contains only methods that returns common and necessary information about the player,
  * like id, username, nickname, email and language.
  * <p/>
- * Any other player information, like gender, city and so on is defined in {@code PlayerProfile}
- * object.
+ * Please note that this interface declares only information that is required every time when
+ * player info should be shown. Any other player information, like gender, city and so on is defined in
+ * {@code PlayerProfile} object.
  *
  * @author klimese
  */
@@ -39,6 +40,13 @@ public interface Player {
 	String getUsername();
 
 	/**
+	 * Returns player's password.
+	 *
+	 * @return the player's password.
+	 */
+	String getPassword();
+
+	/**
 	 * Returns default language of the player.
 	 * <p/>
 	 * This value can't be null.
@@ -46,6 +54,13 @@ public interface Player {
 	 * @return not null default language of the player.
 	 */
 	Language getLanguage();
+
+	/**
+	 * Returns this membership for the player.
+	 *
+	 * @return the membership for the player.
+	 */
+	Membership getMembership();
 
 	/**
 	 * Returns current rating of the player.

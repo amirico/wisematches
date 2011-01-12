@@ -1,6 +1,6 @@
 package wisematches.server.web.modules.app.events.producers;
 
-import wisematches.server.player.rating.RatingsManager;
+import wisematches.server.player.rating.PlayerRatingsManager;
 import wisematches.server.web.modules.app.events.EventNotificator;
 import wisematches.server.web.modules.app.events.EventProducer;
 
@@ -18,6 +18,6 @@ public class ProjectEventProducer implements EventProducer {
 		this.notificator = null;
 	}
 
-	public void setRatingsManager(RatingsManager ratingsManager) {
+	public void setRatingsManager(PlayerRatingsManager ratingsManager) {
 	}
 }

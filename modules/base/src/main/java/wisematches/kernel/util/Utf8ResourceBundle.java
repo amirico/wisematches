@@ -1,6 +1,6 @@
 package wisematches.kernel.util;
 
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;

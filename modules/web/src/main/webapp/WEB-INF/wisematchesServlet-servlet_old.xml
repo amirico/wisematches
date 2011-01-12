@@ -103,7 +103,7 @@
     </bean>
 
     <bean name="/rpc/PlayerInfoService" class="wisematches.server.web.modules.app.services.PlayerInfoServiceImpl">
-        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="playerManager" ref="playerManager"/>
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
     </bean>
@@ -117,7 +117,7 @@
     </bean>
 
     <bean name="/rpc/ProfileService" class="wisematches.server.web.modules.app.services.PlayerProfileServiceImpl">
-        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="playerManager" ref="playerManager"/>
         <property name="ratingsManager" ref="ratingsManager"/>
         <property name="countriesManager" ref="countriesManager"/>

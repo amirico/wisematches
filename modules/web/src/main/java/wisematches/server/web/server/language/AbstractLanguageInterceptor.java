@@ -4,7 +4,7 @@
 package wisematches.server.web.server.language;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 import wisematches.server.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
 package wisematches.kernel.player;
 
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 /**
  * International player. This interface indicates that player can be localized by locale.

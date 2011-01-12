@@ -78,14 +78,14 @@
     </bean>
 
     <bean id="statisticsCleanerCenter" class="wisematches.server.player.statistic.impl.StatisticCleanerCenter">
-        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerStatisticsManager" ref="statisticsManager"/>
         <property name="roomsManager" ref="roomsManager"/>
         <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
     </bean>
 
     <bean id="statisticCalculationCenter" class="wisematches.server.player.statistic.impl.StatisticCalculationCenter">
         <property name="roomsManager" ref="roomsManager"/>
-        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerStatisticsManager" ref="statisticsManager"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 

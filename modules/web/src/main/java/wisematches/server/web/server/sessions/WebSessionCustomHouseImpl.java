@@ -1,10 +1,10 @@
 package wisematches.server.web.server.sessions;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.player.Player;
 import wisematches.server.core.account.PlayerManager;
 import wisematches.server.core.guest.GuestPlayer;
 import wisematches.server.core.sessions.chouse.AbstractPlayerCustomHouse;
+import wisematches.server.player.Language;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;

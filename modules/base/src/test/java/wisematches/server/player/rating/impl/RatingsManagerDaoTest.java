@@ -5,7 +5,7 @@ import wisematches.kernel.player.Player;
 import wisematches.server.core.account.AccountManager;
 import wisematches.server.core.account.PlayerManager;
 import wisematches.server.core.account.impl.PlayerImpl;
-import wisematches.server.player.rating.RatingsManager;
+import wisematches.server.player.rating.PlayerRatingsManager;
 
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpring
 
 		int lastRating = 0;
 		for (int i = 0; i < pages; i++) {
-			final Collection<Player> p = ratingsManagerDao.getPlayersRating(playersCount * i, playersCount, RatingsManager.SortType.ASC);
+			final Collection<Player> p = ratingsManagerDao.getPlayersRating(playersCount * i, playersCount, PlayerRatingsManager.SortType.ASC);
 			assertEquals(playersCount, p.size());
 			for (Player player : p) {
 				assertTrue(player.getRating() >= lastRating);
@@ -71,7 +71,7 @@ public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpring
 		}
 
 		if (lastPageCount != 0) {
-			final Collection<Player> p = ratingsManagerDao.getPlayersRating(playersCount * pages, playersCount, RatingsManager.SortType.ASC);
+			final Collection<Player> p = ratingsManagerDao.getPlayersRating(playersCount * pages, playersCount, PlayerRatingsManager.SortType.ASC);
 			assertEquals(lastPageCount, p.size());
 			for (Player player : p) {
 				assertTrue(player.getRating() >= lastRating);
@@ -79,8 +79,8 @@ public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpring
 			}
 		}
 
-		final List<Player> first = ratingsManagerDao.getPlayersRating(0, playersCount, RatingsManager.SortType.ASC);
-		final List<Player> last = ratingsManagerDao.getPlayersRating(count - playersCount, playersCount, RatingsManager.SortType.DESC);
+		final List<Player> first = ratingsManagerDao.getPlayersRating(0, playersCount, PlayerRatingsManager.SortType.ASC);
+		final List<Player> last = ratingsManagerDao.getPlayersRating(count - playersCount, playersCount, PlayerRatingsManager.SortType.DESC);
 		Collections.reverse(last); //We need get a reverse order
 		assertEquals(first, last);
 	}
@@ -95,7 +95,7 @@ public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpring
 
 	public void testGetPlayerPosition() {
 		final int count = (int) ratingsManagerDao.getPlayersCount();
-		final List<Player> list = ratingsManagerDao.getPlayersRating(0, count, RatingsManager.SortType.DESC);
+		final List<Player> list = ratingsManagerDao.getPlayersRating(0, count, PlayerRatingsManager.SortType.DESC);
 
 		final Player player = players.get(3);
 		final int index = list.indexOf(player);

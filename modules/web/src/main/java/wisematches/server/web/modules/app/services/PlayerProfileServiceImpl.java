@@ -5,8 +5,8 @@ import wisematches.server.web.rpc.GenericSecureRemoteService;
 public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} implements PlayerProfileService {
 /*    private RoomsManager roomsManager;
     private PlayerManager playerManager;
-    private RatingsManager ratingsManager;
-    private StatisticsManager statisticsManager;
+    private PlayerRatingsManager ratingsManager;
+    private PlayerStatisticsManager statisticsManager;
     private CountriesManager countriesManager;
 
     private final Set<PlayerNotification> changeableNotifications;
@@ -175,7 +175,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         return bean;
     }
 
-    protected PlayerRatingBean cratePlayerRating(RatingInfo ratingInfo) {
+    protected PlayerRatingBean cratePlayerRating(PlayerRatingInfo ratingInfo) {
         final PlayerRatingBean bean = new PlayerRatingBean();
         bean.setAverageMovesPerGame(ratingInfo.getAverageMovesPerGame());
         bean.setAverageOpponentRating(ratingInfo.getAverageOpponentRating());
@@ -295,12 +295,12 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
 
 
     *//**
-     * Calculates start date for history ratings. This date is 365 days ago from last day of current mounth.
-     * <p/>
-     * Specified calendar will contains start date after calculation.
-     *
-     * @param calendar the calendar to calculation and updation.
-     *//*
+	 * Calculates start date for history ratings. This date is 365 days ago from last day of current mounth.
+	 * <p/>
+	 * Specified calendar will contains start date after calculation.
+	 *
+	 * @param calendar the calendar to calculation and updation.
+	 *//*
     protected void calculateStartTime(Calendar calendar) {
         //get current time
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -320,22 +320,22 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
     }
 
     *//**
-     * Returns set of all player notifications which can be changed by user.
-     *
-     * @return the set of player notifications.
-     *//*
+	 * Returns set of all player notifications which can be changed by user.
+	 *
+	 * @return the set of player notifications.
+	 *//*
     protected Set<PlayerNotification> getChangeableNotifications() {
         return changeableNotifications;
     }
 
     *//**
-     * Returns string code of specified notification. Notification code
-     * is formed by following rule: {@code Notification.type() + "-" + Notification.name()}
-     *
-     * @param notification the notification to get code
-     * @return the notification code
-     * @throws NullPointerException if specified {@code notification} is null
-     *//*
+	 * Returns string code of specified notification. Notification code
+	 * is formed by following rule: {@code Notification.type() + "-" + Notification.name()}
+	 *
+	 * @param notification the notification to get code
+	 * @return the notification code
+	 * @throws NullPointerException if specified {@code notification} is null
+	 *//*
     protected static String getNotificationCode(PlayerNotification notification) {
         if (notification == null) {
             throw new NullPointerException("Notification can't be null");
@@ -344,7 +344,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
     }
 
 
-    public void setStatisticsManager(StatisticsManager statisticsManager) {
+    public void setPlayerStatisticsManager(PlayerStatisticsManager statisticsManager) {
         this.statisticsManager = statisticsManager;
     }
 
@@ -352,7 +352,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         this.playerManager = playerManager;
     }
 
-    public void setRatingsManager(RatingsManager ratingsManager) {
+    public void setRatingsManager(PlayerRatingsManager ratingsManager) {
         this.ratingsManager = ratingsManager;
     }
 

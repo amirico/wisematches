@@ -5,7 +5,7 @@
 package wisematches.server.web.server.pproc.google;
 
 import org.junit.Test;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
