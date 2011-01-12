@@ -1,7 +1,7 @@
 package wisematches.server.games.scribble.scores;
 
-import wisematches.server.games.scribble.core.TilesPlacement;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.board.TilesPlacement;
+import wisematches.server.games.scribble.Word;
 
 /**
  * <code>ScoreEngine</code> is base interface that allows calculate scores of specified word. Object of

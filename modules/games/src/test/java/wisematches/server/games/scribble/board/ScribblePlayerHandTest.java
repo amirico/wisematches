@@ -1,7 +1,7 @@
 package wisematches.server.games.scribble.board;
 
 import junit.framework.TestCase;
-import wisematches.server.games.scribble.core.Tile;
+import wisematches.server.games.scribble.Tile;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

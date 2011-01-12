@@ -1,8 +1,8 @@
 package wisematches.server.games.scribble.scores.engines;
 
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.TilesPlacement;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Tile;
+import wisematches.server.games.scribble.board.TilesPlacement;
+import wisematches.server.games.scribble.Word;
 import wisematches.server.games.scribble.scores.ScoreBonus;
 import wisematches.server.games.scribble.scores.ScoreCalculation;
 import wisematches.server.games.scribble.scores.ScoreEngine;

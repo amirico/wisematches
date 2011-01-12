@@ -1,17 +1,6 @@
 package wisematches.server.web.modules.app.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.core.room.BoardLoadingException;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.games.scribble.board.ScribbleBoard;
-import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.web.modules.app.playboard.memory.MemoryWordsDao;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
-
-import java.util.Collection;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

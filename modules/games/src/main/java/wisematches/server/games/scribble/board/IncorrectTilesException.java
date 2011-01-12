@@ -1,9 +1,10 @@
 package wisematches.server.games.scribble.board;
 
 import wisematches.server.core.board.IncorrectMoveException;
+import wisematches.server.games.scribble.Position;
+import wisematches.server.games.scribble.Tile;
+
 import static wisematches.server.games.scribble.board.IncorrectTilesException.Type.*;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
 
 /**
  * Indicates that a tile of word are incorrect of can not be placed on board by some

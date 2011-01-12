@@ -1,20 +1,7 @@
 package wisematches.server.web.modules.app.services;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.games.scribble.board.ScribbleBoard;
-import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.games.scribble.board.ScribbleSettings;
-
-import java.util.Arrays;
-import java.util.Date;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

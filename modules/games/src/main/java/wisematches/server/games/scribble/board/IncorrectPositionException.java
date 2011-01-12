@@ -1,8 +1,8 @@
 package wisematches.server.games.scribble.board;
 
 import wisematches.server.core.board.IncorrectMoveException;
-import wisematches.server.games.scribble.core.Direction;
-import wisematches.server.games.scribble.core.Position;
+import wisematches.server.games.scribble.Direction;
+import wisematches.server.games.scribble.Position;
 
 /**
  * This exception is indicates that word placed in incorrect position. This exception contains information

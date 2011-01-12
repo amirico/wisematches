@@ -1,6 +1,6 @@
 package wisematches.server.web.modules.app.playboard.memory;
 
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Word;
 
 import java.io.Serializable;
 

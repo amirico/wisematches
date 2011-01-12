@@ -1,6 +1,6 @@
 package wisematches.server.games.scribble.bank;
 
-import wisematches.server.games.scribble.core.Tile;
+import wisematches.server.games.scribble.Tile;
 
 import java.util.ArrayList;
 import java.util.List;

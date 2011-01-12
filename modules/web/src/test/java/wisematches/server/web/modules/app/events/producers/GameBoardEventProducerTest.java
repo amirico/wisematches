@@ -1,28 +1,5 @@
 package wisematches.server.web.modules.app.events.producers;
 
-import static org.easymock.EasyMock.expect;
-import org.easymock.IAnswer;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.board.*;
-import wisematches.server.core.room.BoardLoadingException;
-import wisematches.server.core.room.RoomManagerFacade;
-import wisematches.server.games.scribble.board.*;
-import wisematches.server.games.scribble.core.Direction;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.Word;
-import wisematches.server.web.modules.app.events.EventNotificator;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Queue;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

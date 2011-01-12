@@ -1,19 +1,6 @@
 package wisematches.server.web.modules.app.services;
 
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.board.GameBoard;
-import wisematches.server.core.board.GamePlayerHand;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.games.scribble.board.ScribbleBoard;
-import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.games.scribble.board.ScribbleSettings;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
-
-import java.util.Collection;
-import java.util.List;
 
 public class GameboardServiceImpl extends GenericSecureRemoteService { //implements GameboardService {
 /*    private ScribbleRoomManager roomManager;

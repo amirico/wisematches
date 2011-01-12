@@ -4,7 +4,8 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.server.games.scribble.core.*;
+import wisematches.server.games.scribble.*;
+import wisematches.server.games.scribble.board.TilesPlacement;
 import wisematches.server.games.scribble.scores.ScoreBonus;
 import wisematches.server.games.scribble.scores.ScoreCalculation;
 

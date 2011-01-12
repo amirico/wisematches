@@ -6,12 +6,9 @@ import wisematches.kernel.player.Player;
 import wisematches.server.core.board.*;
 import wisematches.server.core.words.dict.Dictionary;
 import wisematches.server.core.words.dict.DictionaryNotFoundException;
+import wisematches.server.games.scribble.*;
 import wisematches.server.games.scribble.bank.TilesBank;
 import static wisematches.server.games.scribble.board.ScribbleBoard.LETTERS_IN_HAND;
-import wisematches.server.games.scribble.core.Direction;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.Word;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

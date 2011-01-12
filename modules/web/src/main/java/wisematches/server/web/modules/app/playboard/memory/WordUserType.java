@@ -2,10 +2,10 @@ package wisematches.server.web.modules.app.playboard.memory;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
-import wisematches.server.games.scribble.core.Direction;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Direction;
+import wisematches.server.games.scribble.Tile;
+import wisematches.server.games.scribble.Word;
+import wisematches.server.games.scribble.Position;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;

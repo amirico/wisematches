@@ -1,25 +1,6 @@
 package wisematches.server.web.modules.app.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.board.TooManyPlayersException;
-import wisematches.server.core.guest.GuestPlayer;
-import wisematches.server.core.robot.RobotPlayer;
-import wisematches.server.core.robot.RobotType;
-import wisematches.server.core.room.BoardCreationException;
-import wisematches.server.core.room.BoardLoadingException;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.games.scribble.board.ScribbleBoard;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.games.scribble.board.ScribbleSettings;
-import wisematches.server.web.modules.app.events.producers.GameBoardEventProducer;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
-
-import java.util.Collection;
-import java.util.Date;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

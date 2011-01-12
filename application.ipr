@@ -341,9 +341,11 @@
   <component name="ProjectDictionaryState">
     <dictionary name="klimese">
       <words>
+        <w>accoint</w>
         <w>configurer</w>
         <w>extjs</w>
         <w>freemarker</w>
+        <w>iterable</w>
       </words>
     </dictionary>
   </component>
@@ -388,26 +390,6 @@
     <option name="ALTERNATIVE_WORKING_PATH" value="" />
     <option name="LOCK_ON_CHECKOUT" value="false" />
     <option name="UNLOCK_ON_CHECKIN" value="false" />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <are-packages-shown value="false" />
-      <are-modules-shown value="false" />
-      <flatten-packages value="false" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <are-modules-shown value="false" />
-      <flatten-packages value="false" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="default-changelist">
-      <are-packages-shown value="false" />
-      <are-modules-shown value="false" />
-      <flatten-packages value="false" />
-      <is-autoscroll-to-source value="false" />
-    </todo-panel>
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />

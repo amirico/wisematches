@@ -7,10 +7,11 @@ import org.junit.Test;
 import wisematches.server.core.board.GameMoveException;
 import wisematches.server.core.robot.RobotType;
 import wisematches.server.core.words.dict.IterableDictionary;
+import wisematches.server.games.scribble.*;
 import wisematches.server.games.scribble.board.MakeWordMove;
 import wisematches.server.games.scribble.board.ScribbleBoard;
 import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.core.*;
+import wisematches.server.games.scribble.board.TilesPlacement;
 import wisematches.server.games.scribble.scores.ScoreCalculation;
 import wisematches.server.games.scribble.scores.ScoreEngine;
 
@@ -98,7 +99,7 @@ public class ScribbleRobotBrainTest {
         replay(dictionary);
 
         final ScribbleRobotBrain brain = new ScribbleRobotBrain();
-        final List<Word> list = brain.analizeValidWords(board, hand, RobotType.DULL, dictionary);
+        final List<Word> list = brain.analyzeValidWords(board, hand, RobotType.DULL, dictionary);
         assertEquals(10, list.size()); //two 'ahed' and six 'load' can be placed.
     }
 
@@ -215,7 +216,7 @@ public class ScribbleRobotBrainTest {
             freeMemory = runtime.freeMemory();
             timeMS = System.currentTimeMillis();
             timeNS = System.nanoTime();
-            List<Word> list = brain.analizeValidWords(board, hand, RobotType.DULL, dictionary);
+            List<Word> list = brain.analyzeValidWords(board, hand, RobotType.DULL, dictionary);
             System.out.println("TreeSet Seach time: " + (System.nanoTime() - timeNS) + "ns or " + (System.currentTimeMillis() - timeMS) + "ms" +
                     ". Free memory taken: " + (runtime.freeMemory() - freeMemory) +
                     ". Found: " + list.size() + " words");
@@ -223,7 +224,7 @@ public class ScribbleRobotBrainTest {
             freeMemory = runtime.freeMemory();
             timeMS = System.currentTimeMillis();
             timeNS = System.nanoTime();
-            list = brain.analizeValidWords(board, hand, RobotType.DULL, dictionary);
+            list = brain.analyzeValidWords(board, hand, RobotType.DULL, dictionary);
             System.out.println("HashSet seach time: " + (System.nanoTime() - timeNS) + "ns or " + (System.currentTimeMillis() - timeMS) + "ms" +
                     ". Free memory taken: " + (runtime.freeMemory() - freeMemory) +
                     ". Found: " + list.size() + " words");
