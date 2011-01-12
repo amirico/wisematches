@@ -1,26 +1,5 @@
 package wisematches.server.web.modules.app.services;
 
-import org.easymock.Capture;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.AccountListener;
-import wisematches.server.core.account.AccountManager;
-import wisematches.server.core.board.GameState;
-import wisematches.server.core.board.GameStateListener;
-import wisematches.server.core.rating.RatingsManager;
-import wisematches.server.core.rating.TopPlayersListener;
-import wisematches.server.core.room.RoomManager;
-import wisematches.server.core.room.RoomManagerFacade;
-import wisematches.server.core.room.SearchesEngine;
-import wisematches.server.core.sessions.PlayerOnlineStateListener;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-
-import java.util.Arrays;
-import java.util.EnumSet;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

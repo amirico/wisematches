@@ -1,5 +1,7 @@
 package wisematches.kernel.util;
 
+import wisematches.core.user.Language;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.PropertyResourceBundle;

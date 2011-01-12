@@ -1,13 +1,5 @@
 package wisematches.server.web.modules.app.services;
 
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.statistic.PlayerStatistic;
-import wisematches.server.core.statistic.StatisticsManager;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-import wisematches.server.core.sessions.impl.PlayerSessionsManagerImpl;
-import wisematches.server.web.modules.app.events.producers.PlayerEventProducer;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
 
 public class PlayerInfoServiceImpl extends GenericSecureRemoteService { //implements PlayerInfoService {

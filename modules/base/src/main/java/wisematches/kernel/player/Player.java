@@ -1,13 +1,13 @@
 package wisematches.kernel.player;
 
+import wisematches.core.user.Language;
 import wisematches.kernel.notification.PlayerNotifications;
-import wisematches.kernel.util.Language;
 
 import java.util.Date;
 
 /**
- * {@code Player} is base inteface for player. Each player has set of unmodifiable and modifiable
- * attributes like username, passweord, locale and so on.
+ * {@code Player} is base interface for player. Each player has set of unmodifiable and modifiable
+ * attributes like username, password, locale and so on.
  * <p/>
  * Each player also has a profile with additional attributes.
  * <p/>

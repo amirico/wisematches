@@ -1,20 +1,5 @@
 package wisematches.server.web.modules.app.services;
 
-import static org.easymock.EasyMock.*;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Assert;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.statistic.PlayerStatistic;
-import wisematches.server.core.statistic.StatisticsManager;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-import wisematches.server.web.rpc.RemoteServiceContextAccessor;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

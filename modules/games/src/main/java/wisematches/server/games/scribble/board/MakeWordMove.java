@@ -1,6 +1,6 @@
 package wisematches.server.games.scribble.board;
 
-import wisematches.server.core.board.MakeTurnMove;
+import wisematches.server.games.board.MakeTurnMove;
 import wisematches.server.games.scribble.Word;
 
 /**
@@ -9,48 +9,48 @@ import wisematches.server.games.scribble.Word;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class MakeWordMove extends MakeTurnMove {
-    private final Word word;
+	private final Word word;
 
-    public MakeWordMove(long gamePlayer, Word word) {
-        super(gamePlayer);
-        if (word == null) {
-            throw new NullPointerException("Word can't be null");
-        }
-        this.word = word;
-    }
+	public MakeWordMove(long gamePlayer, Word word) {
+		super(gamePlayer);
+		if (word == null) {
+			throw new NullPointerException("Word can't be null");
+		}
+		this.word = word;
+	}
 
-    public Word getWord() {
-        return word;
-    }
+	public Word getWord() {
+		return word;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		if (!super.equals(o)) {
+			return false;
+		}
 
-        MakeWordMove move = (MakeWordMove) o;
-        return word.equals(move.word);
-    }
+		MakeWordMove move = (MakeWordMove) o;
+		return word.equals(move.word);
+	}
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + word.hashCode();
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 31 * result + word.hashCode();
+		return result;
+	}
 
-    @Override
-    public String toString() {
-        return "ScribbleMove{" +
-                "word=" + word +
-                ", gamePlayer=" + getPlayerId() +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ScribbleMove{" +
+				"word=" + word +
+				", gamePlayer=" + getPlayerId() +
+				'}';
+	}
 }

@@ -24,7 +24,7 @@
         <constructor-arg index="0" ref="scribbleRoomManager"/>
     </bean>
 
-    <bean id="roomsManager" class="wisematches.server.core.room.RoomsManager">
+    <bean id="roomsManager" class="wisematches.server.games.room.RoomsManager">
         <property name="roomManagers">
             <list>
                 <ref bean="scribbleRoomManager"/>
@@ -32,22 +32,22 @@
         </property>
     </bean>
 
-    <bean id="ratingsCaculationManager" class="wisematches.server.core.rating.impl.RatingsCalculationCenter">
+    <bean id="ratingsCaculationManager" class="wisematches.server.player.rating.impl.RatingsCalculationCenter">
         <property name="ratingSystem">
-            <bean class="wisematches.server.core.rating.impl.systems.ELORatingSystem"/>
+            <bean class="wisematches.server.player.rating.impl.systems.ELORatingSystem"/>
         </property>
         <property name="playerManager" ref="playerManager"/>
         <property name="roomsManager" ref="roomsManager"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="ratingsManager" class="wisematches.server.core.rating.impl.RatingsManagerImpl">
+    <bean id="ratingsManager" class="wisematches.server.player.rating.impl.RatingsManagerImpl">
         <property name="topPlayersCount" value="5"/>
         <property name="ratingsCalculationManager" ref="ratingsCaculationManager"/>
         <property name="ratingsManagerDao" ref="ratingsManagerDao"/>
     </bean>
 
-    <bean id="robotsBrainManager" class="wisematches.server.core.robot.impl.RobotsBrainManagerImpl">
+    <bean id="robotsBrainManager" class="wisematches.server.robot.impl.RobotsBrainManagerImpl">
         <property name="robotBrains">
             <list>
                 <bean class="wisematches.server.games.scribble.robot.ScribbleRobotBrain"/>
@@ -57,7 +57,7 @@
 
     <bean id="guestPlayerManager" class="wisematches.server.core.guest.GuestPlayerManager"/>
 
-    <bean id="playerManager" class="wisematches.server.core.robot.impl.CompositePlayerManager">
+    <bean id="playerManager" class="wisematches.server.robot.impl.CompositePlayerManager">
         <property name="realPlayerManager" ref="accountManager"/>
         <property name="robotsBrainManager" ref="robotsBrainManager"/>
         <property name="guestPlayerManager" ref="guestPlayerManager"/>
@@ -70,20 +70,20 @@
         <property name="keepAliveSeconds" value="60"/>
     </bean>
 
-    <bean id="robotsActivityManager" class="wisematches.server.core.robot.impl.RobotsActivityCenter">
+    <bean id="robotsActivityManager" class="wisematches.server.robot.impl.RobotsActivityCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="robotsBrainManager" ref="robotsBrainManager"/>
         <property name="movesExecutor" ref="robotMovesExecutor"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="statisticsCleanerCenter" class="wisematches.server.core.statistic.impl.StatisticCleanerCenter">
+    <bean id="statisticsCleanerCenter" class="wisematches.server.player.statistic.impl.StatisticCleanerCenter">
         <property name="statisticsManager" ref="statisticsManager"/>
         <property name="roomsManager" ref="roomsManager"/>
         <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
     </bean>
 
-    <bean id="statisticCalculationCenter" class="wisematches.server.core.statistic.impl.StatisticCalculationCenter">
+    <bean id="statisticCalculationCenter" class="wisematches.server.player.statistic.impl.StatisticCalculationCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="statisticsManager" ref="statisticsManager"/>
         <property name="transactionManager" ref="transactionManager"/>
@@ -103,7 +103,7 @@
         <property name="cronExpression" value="0 0 3 * * ?"/>
     </bean>
 
-    <bean id="gameTimeoutProcessor" class="wisematches.server.core.timeouts.GameTimeoutTerminator"
+    <bean id="gameTimeoutProcessor" class="wisematches.server.games.cleaner.GameTimeoutTerminator"
           destroy-method="destroy">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="transactionTemplate" ref="transactionTemplateRequiredNew"/>

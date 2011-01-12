@@ -1,29 +1,5 @@
 package wisematches.server.web.modules.app.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
-import wisematches.kernel.player.Player;
-import wisematches.kernel.util.Language;
-import wisematches.server.core.sessions.PlayerSessionBean;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-import wisematches.server.web.ResourceManager;
-import wisematches.server.web.modules.app.images.PlayerImageType;
-import wisematches.server.web.modules.app.images.PlayerImagesManager;
-import wisematches.server.web.modules.app.images.UnsupportedImageException;
-import wisematches.server.web.util.WebUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.List;
-
 /**
  * TODO: there is no Unit test for this class
  *

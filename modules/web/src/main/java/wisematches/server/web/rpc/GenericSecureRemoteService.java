@@ -1,10 +1,5 @@
 package wisematches.server.web.rpc;
 
-import wisematches.kernel.player.Player;
-import wisematches.server.core.guest.GuestPlayer;
-import wisematches.server.core.robot.RobotPlayer;
-import wisematches.server.core.sessions.PlayerSessionBean;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
@@ -12,12 +7,12 @@ public class GenericSecureRemoteService extends GenericRemoteService implements 
 /*
     */
 /**
-     * Returns associated with this session player. This method never returns {@code null}
-     * because before any method is called this controller checks that session and
-     * player exist.
-     *
-     * @return the associated player.
-     *//*
+ * Returns associated with this session player. This method never returns {@code null}
+ * because before any method is called this controller checks that session and
+ * player exist.
+ *
+ * @return the associated player.
+ *//*
 
     protected Player getPlayer() {
         return getPlayerSessionBean().getPlayer();
@@ -25,12 +20,12 @@ public class GenericSecureRemoteService extends GenericRemoteService implements 
 
     */
 /**
-     * Returns {@code PlayerSessionBean} associated with this controller.
-     *
-     * @param <T> the result type of {@code PlayerSessionBean}.
-     * @return the player session bean interface
-     * @see wisematches.server.core.sessions.PlayerSessionsManager#getPlayerSessionBean(String)
-     *//*
+ * Returns {@code PlayerSessionBean} associated with this controller.
+ *
+ * @param <T> the result type of {@code PlayerSessionBean}.
+ * @return the player session bean interface
+ * @see wisematches.server.core.sessions.PlayerSessionsManager#getPlayerSessionBean(String)
+ *//*
 
     @SuppressWarnings("unchecked")
     protected <T extends PlayerSessionBean> T getPlayerSessionBean() {
@@ -39,11 +34,11 @@ public class GenericSecureRemoteService extends GenericRemoteService implements 
 
     */
 /**
-     * Returns member type for specified player.
-     *
-     * @param player the player to check.
-     * @return the player member type.
-     *//*
+ * Returns member type for specified player.
+ *
+ * @param player the player to check.
+ * @return the player member type.
+ *//*
 
 */
 /*

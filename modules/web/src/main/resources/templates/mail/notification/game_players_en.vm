@@ -1,22 +1,22 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
 
-#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+#* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
 #* @vtlvariable name="changedPlayer" type="wisematches.kernel.player.Player" *#
 #* @vtlvariable name="joined" type="java.lang.Boolean" *#
 <html>
 <body>
-#parse("/templates/mail/notification/game_common_en.vm")
+    #parse("/templates/mail/notification/game_common_en.vm")
 
 <p>
     Player #playerName($changedPlayer) was
     #if ($joined)
-    joined to a
+        joined to a
     #else
-    left a
+        left a
     #end
     board #boardName($board).
 </p>
 
-#parse("/templates/mail/notification/mail_footer_en.vm")
+    #parse("/templates/mail/notification/mail_footer_en.vm")
 </body>
 </html>

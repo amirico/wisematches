@@ -1,25 +1,6 @@
 package wisematches.server.web.modules.app.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.AccountListener;
-import wisematches.server.core.account.AccountManager;
-import wisematches.server.core.board.GameBoard;
-import wisematches.server.core.board.GamePlayerHand;
-import wisematches.server.core.board.GameState;
-import wisematches.server.core.board.GameStateListener;
-import wisematches.server.core.rating.RatingsManager;
-import wisematches.server.core.rating.TopPlayersListener;
-import wisematches.server.core.room.RoomManagerFacade;
-import wisematches.server.core.room.SearchesEngine;
-import wisematches.server.core.sessions.PlayerOnlineStateListener;
-import wisematches.server.core.sessions.PlayerSessionsManager;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
-
-import java.util.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService {//} implements ApplicationStatisticService {
 /*    private RatingsManager ratingsManager;
