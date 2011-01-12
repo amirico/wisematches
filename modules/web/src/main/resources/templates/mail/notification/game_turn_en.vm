@@ -1,36 +1,36 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
 
-#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
-#* @vtlvariable name="move" type="wisematches.server.core.board.PlayerMove" *#
+#* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
+#* @vtlvariable name="move" type="wisematches.server.games.board.PlayerMove" *#
 #* @vtlvariable name="points" type="java.lang.Integer" *#
 #* @vtlvariable name="movedPlayer" type="wisematches.kernel.player.Player" *#
 #* @vtlvariable name="nextPlayer" type="wisematches.kernel.player.Player" *#
 <html>
 <body>
-#parse("/templates/mail/notification/game_common_en.vm")
+    #parse("/templates/mail/notification/game_common_en.vm")
 
 <p>
     Player #playerName($movedPlayer) has
     #if($move)
-    made a turn with $points points.
+        made a turn with $points points.
     #else
-    passed a turn.
+        passed a turn.
     #end
 </p>
 <br>
-#if ($nextPlayer && $nextPlayer.Id == $player.Id)
-<p>
-    <strong>It's you turn again</strong> in game board #boardName($board).
+    #if ($nextPlayer && $nextPlayer.Id == $player.Id)
+    <p>
+        <strong>It's you turn again</strong> in game board #boardName($board).
 
-    You have <em>#timeout($board.GameSettings.DaysPerMove 0)</em> to make a turn or game will be timed out
-    and you will be defeated.
-</p>
-#elseif(! $nextPlayer || $nextPlayer.Id != $player.Id)
-<p>
-    Turn was transmitted to player #playerName($nextPlayer).
-</p>
-#end
+        You have <em>#timeout($board.GameSettings.DaysPerMove 0)</em> to make a turn or game will be timed out
+        and you will be defeated.
+    </p>
+    #elseif(! $nextPlayer || $nextPlayer.Id != $player.Id)
+    <p>
+        Turn was transmitted to player #playerName($nextPlayer).
+    </p>
+    #end
 
-#parse("/templates/mail/notification/mail_footer_en.vm")
+    #parse("/templates/mail/notification/mail_footer_en.vm")
 </body>
 </html>

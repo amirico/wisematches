@@ -1,17 +1,5 @@
 package wisematches.server.web.modules.app.events.producers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.board.*;
-import wisematches.server.core.room.RoomManagerFacade;
-import wisematches.server.games.scribble.board.*;
-import wisematches.server.web.modules.app.events.EventNotificator;
-import wisematches.server.web.modules.app.events.EventProducer;
-
-import java.util.List;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
@@ -41,12 +29,12 @@ public class GameBoardEventProducer {//implements EventProducer {
 
     */
 /**
-     * This method converts specified {@code ScribbleBoard} to {@code DashboardItemBean}.
-     *
-     * @param board         the board to convert
-     * @param playerManager the player manager is used to load information about players.
-     * @return the converted {@code DashboardItemBean}
-     *//*
+ * This method converts specified {@code ScribbleBoard} to {@code DashboardItemBean}.
+ *
+ * @param board		 the board to convert
+ * @param playerManager the player manager is used to load information about players.
+ * @return the converted {@code DashboardItemBean}
+ *//*
 
     public static DashboardItemBean convertDashboard(ScribbleBoard board, PlayerManager playerManager) {
         final ScribbleSettings settings = board.getGameSettings();

@@ -1,6 +1,6 @@
 package wisematches.kernel.player;
 
-import wisematches.kernel.util.Language;
+import wisematches.core.user.Language;
 
 /**
  * International player. This interface indicates that player can be localized by locale.
@@ -8,11 +8,11 @@ import wisematches.kernel.util.Language;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface InternationalPlayer extends Player {
-    /**
-     * Returns player for specified locale.
-     *
-     * @param language
-     * @return the localized player.
-     */
-    Player getNationalityPlayer(Language language);
+	/**
+	 * Returns player for specified locale.
+	 *
+	 * @param language
+	 * @return the localized player.
+	 */
+	Player getNationalityPlayer(Language language);
 }

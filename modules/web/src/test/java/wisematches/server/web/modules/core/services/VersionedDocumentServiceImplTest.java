@@ -1,16 +1,6 @@
 package wisematches.server.web.modules.core.services;
 
 import junit.framework.TestCase;
-import org.easymock.IAnswer;
-import static org.easymock.EasyMock.*;
-import wisematches.kernel.util.Language;
-import wisematches.server.web.rpc.RemoteServiceContextAccessor;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.util.Calendar;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

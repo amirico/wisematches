@@ -1,10 +1,10 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
 
-#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
-#* @vtlvariable name="remainderTime" type="wisematches.server.core.timeouts.RemainderType" *#
+#* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
+#* @vtlvariable name="remainderTime" type="wisematches.server.games.cleaner.RemainderType" *#
 <html>
 <body>
-#parse("/templates/mail/notification/game_common_en.vm")
+    #parse("/templates/mail/notification/game_common_en.vm")
 <p>
     Your move time is running out in game board #boardName($board).
 </p>
@@ -15,6 +15,6 @@
     You have <em>#timeToString($elapsedMnutes)</em> to make a turn or game will be terminated and
     you will be defeated.
 </p>
-#parse("/templates/mail/notification/mail_footer_en.vm")
+    #parse("/templates/mail/notification/mail_footer_en.vm")
 </body>
 </html>

@@ -1,12 +1,5 @@
 package wisematches.server.web.rpc;
 
-import wisematches.kernel.util.Language;
-import wisematches.server.web.util.WebUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

@@ -1,23 +1,5 @@
 package wisematches.server.web.modules.app.events.producers;
 
-import static org.easymock.EasyMock.expect;
-import org.easymock.IAnswer;
-import org.easymock.LogicalOperator;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.LockAccountListener;
-import wisematches.server.core.account.LockAccountManager;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.statistic.PlayerStatistic;
-import wisematches.server.core.statistic.PlayerStatisticListener;
-import wisematches.server.core.statistic.StatisticsManager;
-import wisematches.server.web.modules.app.events.EventNotificator;
-
-import java.util.Comparator;
-import java.util.Date;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

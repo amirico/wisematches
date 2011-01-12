@@ -1,20 +1,5 @@
 package wisematches.server.web.rpc;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.web.servlet.HandlerAdapter;
-import org.springframework.web.servlet.ModelAndView;
-import wisematches.kernel.util.Language;
-import wisematches.server.core.sessions.PlayerSessionBean;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-import wisematches.server.web.ResourceManager;
-import wisematches.server.web.util.WebUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 /**
  * This is implementation of Spring {@code HandlerAdapter} which also is GWT {@code RemoteServiceServlet}.
  * <p/>

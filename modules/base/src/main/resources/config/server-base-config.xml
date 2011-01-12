@@ -3,20 +3,20 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="ratingsManagerDao" class="wisematches.server.core.rating.impl.RatingsManagerDao">
+    <bean id="ratingsManagerDao" class="wisematches.server.player.rating.impl.RatingsManagerDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="lexicalDictionary" class="wisematches.server.core.words.dict.impl.file.FileDictionaryManager">
+    <bean id="lexicalDictionary" class="wisematches.server.games.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>
 
-    <bean id="slanglyDictionary" class="wisematches.server.core.words.dict.impl.file.FileDictionaryManager">
+    <bean id="slanglyDictionary" class="wisematches.server.games.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
         <property name="createEmptyDictionary" value="true"/>
     </bean>
 
-    <bean id="wordGamesDictionaries" class="wisematches.server.core.words.dict.impl.WordGamesDictionariesImpl">
+    <bean id="wordGamesDictionaries" class="wisematches.server.games.dictionary.impl.WordGamesDictionariesImpl">
         <property name="lexicalManager" ref="lexicalDictionary"/>
         <property name="slanglyManager" ref="slanglyDictionary"/>
     </bean>
@@ -32,7 +32,7 @@
         <property name="defaultPlayerRating" value="1200"/>
     </bean>
 
-    <bean id="statisticsManager" class="wisematches.server.core.statistic.impl.HibernateStatisticsManager">
+    <bean id="statisticsManager" class="wisematches.server.player.statistic.impl.HibernateStatisticsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -40,7 +40,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="countriesManager" class="wisematches.server.core.counties.impl.CSVCountriesManager">
+    <bean id="countriesManager" class="wisematches.server.player.profile.counties.impl.CSVCountriesManager">
         <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
     </bean>
 </beans>

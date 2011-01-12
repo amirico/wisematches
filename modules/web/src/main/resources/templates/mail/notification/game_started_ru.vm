@@ -1,11 +1,11 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_ru.vm" *#
 
-#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+#* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
 #* @vtlvariable name="turnOwnerPlayer" type="wisematches.kernel.player.Player" *#
 #* @vtlvariable name="timeoutTime" type="java.lang.Long" *#
 <html>
 <body>
-#parse("/templates/mail/notification/game_common_ru.vm")
+    #parse("/templates/mail/notification/game_common_ru.vm")
 
 <p>
     Игра #boardName($board), которую вы ожидаете, началась.
@@ -14,14 +14,14 @@
 
 <p>
     #if ($turnOwnerPlayer.Id == $player.Id)
-    <strong>Ход в этой игре передан вам</strong>. У вас есть
-    <em>#timeout($board.GameSettings.DaysPerMove $timeoutTime)</em> для выполнения хода или игра
-    будет прервана и вам будет засчитан проигрыш.
+        <strong>Ход в этой игре передан вам</strong>. У вас есть
+        <em>#timeout($board.GameSettings.DaysPerMove $timeoutTime)</em> для выполнения хода или игра
+        будет прервана и вам будет засчитан проигрыш.
     #else
-    Ход был передан игроку #playerName($turnOwnerPlayer).
+        Ход был передан игроку #playerName($turnOwnerPlayer).
     #end
 </p>
 
-#parse("/templates/mail/notification/mail_footer_ru.vm")
+    #parse("/templates/mail/notification/mail_footer_ru.vm")
 </body>
 </html>

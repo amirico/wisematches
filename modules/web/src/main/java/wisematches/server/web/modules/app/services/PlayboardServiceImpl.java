@@ -1,10 +1,8 @@
 package wisematches.server.web.modules.app.services;
 
-import wisematches.server.core.board.*;
-import wisematches.server.core.room.BoardLoadingException;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
 
-public class PlayboardServiceImpl extends GenericSecureRemoteService  {//implements PlayboardService {
+public class PlayboardServiceImpl extends GenericSecureRemoteService {//implements PlayboardService {
 /*    private PlayerManager playerManager;
     private RoomManager roomManager;
 
@@ -124,15 +122,15 @@ public class PlayboardServiceImpl extends GenericSecureRemoteService  {//impleme
     }
 
     *//**
-     * Loads, checks and returns {@code ScribbleBoard}.
-     * <p/>
-     * This metohd check that board exist and that current player can change it.
-     *
-     * @param boardId the board to load
-     * @return the loaded board.
-     * @throws BoardLoadingException     if board can't be loaded.
-     * @throws UnsuitablePlayerException if current player can't change a board.
-     *//*
+	 * Loads, checks and returns {@code ScribbleBoard}.
+	 * <p/>
+	 * This metohd check that board exist and that current player can change it.
+	 *
+	 * @param boardId the board to load
+	 * @return the loaded board.
+	 * @throws wisematches.server.games.room.BoardLoadingException	 if board can't be loaded.
+	 * @throws wisematches.server.games.board.UnsuitablePlayerException if current player can't change a board.
+	 *//*
     private ScribbleBoard getScribbleBoard(long boardId) throws BoardLoadingException, UnsuitablePlayerException {
         final ScribbleBoard board = (ScribbleBoard) roomManager.openBoard(boardId);
         if (board == null) {

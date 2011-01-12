@@ -5,14 +5,13 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.AccessType;
 import org.hibernate.annotations.Type;
 import wisematches.kernel.player.Player;
-import wisematches.server.core.board.*;
-import wisematches.server.core.words.dict.Dictionary;
-import wisematches.server.games.scribble.*;
+import wisematches.server.games.board.*;
+import wisematches.server.games.dictionary.Dictionary;
+import wisematches.server.games.scribble.Direction;
+import wisematches.server.games.scribble.Position;
+import wisematches.server.games.scribble.Tile;
+import wisematches.server.games.scribble.Word;
 import wisematches.server.games.scribble.bank.TilesBank;
-
-import static wisematches.server.games.scribble.Direction.HORIZONTAL;
-import static wisematches.server.games.scribble.Direction.VERTICAL;
-
 import wisematches.server.games.scribble.scores.ScoreEngine;
 import wisematches.server.games.scribble.scores.engines.ScribbleScoreEngine;
 
@@ -21,6 +20,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static wisematches.server.games.scribble.Direction.HORIZONTAL;
+import static wisematches.server.games.scribble.Direction.VERTICAL;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -386,7 +388,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * This method also invokes <code>super</code> method to check that game is right state.
 	 *
 	 * @throws GameMoveException if there is no dictionary or tiles bank.
-	 * @see #setDictionary(wisematches.server.core.words.dict.Dictionary)
+	 * @see #setDictionary(wisematches.server.games.dictionary.Dictionary)
 	 * @see #setTilesBank(wisematches.server.games.scribble.bank.TilesBank)
 	 */
 	protected void checkState() throws GameMoveException {

@@ -1,11 +1,11 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
 
-#* @vtlvariable name="board" type="wisematches.server.core.board.GameBoard" *#
+#* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
 <html>
 <body>
-#parse("/templates/mail/notification/game_common_en.vm")
+    #parse("/templates/mail/notification/game_common_en.vm")
 
-#set ($playerHand = $board.getPlayerHand($player.Id))
+    #set ($playerHand = $board.getPlayerHand($player.Id))
 
 <p>
     You made a draw in game board #boardName($board). All players took the same points.
@@ -16,14 +16,14 @@
     #set ($won = ($playerHand.getRatingDelta() > 0))
     Because in case of draw raiting is changed anyway your rating was
     #if ($won)
-    <em>increased by $playerHand.RatingDelta</em>
+        <em>increased by $playerHand.RatingDelta</em>
     #else
-    #set ($k = $playerHand.RatingDelta * -1)
-    <em>reduced by $k</em>
+        #set ($k = $playerHand.RatingDelta * -1)
+        <em>reduced by $k</em>
     #end
     and now is <em>$playerHand.Rating</em>.
 </p>
 
-#parse("/templates/mail/notification/mail_footer_en.vm")
+    #parse("/templates/mail/notification/mail_footer_en.vm")
 </body>
 </html>
