@@ -1,24 +1,8 @@
 package wisematches.server.web.modules.app.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
 import wisematches.server.core.board.*;
 import wisematches.server.core.room.BoardLoadingException;
-import wisematches.server.core.room.RoomManager;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.games.scribble.bank.TilesBank;
-import wisematches.server.games.scribble.board.*;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.Word;
-import wisematches.server.web.modules.app.events.producers.GameBoardEventProducer;
-import wisematches.server.web.modules.app.playboard.PlayerOpenBoardsBean;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayboardServiceImpl extends GenericSecureRemoteService  {//implements PlayboardService {
 /*    private PlayerManager playerManager;

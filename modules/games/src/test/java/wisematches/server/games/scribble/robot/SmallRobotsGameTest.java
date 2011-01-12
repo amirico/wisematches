@@ -14,7 +14,7 @@ import wisematches.server.core.room.BoardCreationException;
 import wisematches.server.core.room.RoomsManager;
 import wisematches.server.core.words.dict.impl.file.FileDictionaryManager;
 import wisematches.server.games.scribble.board.ScribbleBoard;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
+import wisematches.server.games.scribble.room.ScribbleRoomManager;
 import wisematches.server.games.scribble.board.ScribbleSettings;
 
 import java.io.File;

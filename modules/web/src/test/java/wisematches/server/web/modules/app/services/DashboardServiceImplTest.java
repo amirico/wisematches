@@ -1,29 +1,7 @@
 package wisematches.server.web.modules.app.services;
 
-import org.easymock.IAnswer;
-import static org.easymock.EasyMock.*;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.board.TooManyPlayersException;
-import wisematches.server.core.robot.RobotPlayer;
-import wisematches.server.core.robot.RobotType;
-import wisematches.server.core.room.BoardCreationException;
-import wisematches.server.core.room.BoardLoadingException;
-import wisematches.server.core.room.Room;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.core.sessions.PlayerSessionBean;
-import wisematches.server.games.scribble.board.ScribbleBoard;
-import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.games.scribble.board.ScribbleSettings;
-import wisematches.server.web.rpc.RemoteServiceContextAccessor;
-
-import java.util.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

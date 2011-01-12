@@ -1,7 +1,7 @@
 package wisematches.server.games.scribble.board;
 
 import wisematches.server.core.board.GamePlayerHand;
-import wisematches.server.games.scribble.core.Tile;
+import wisematches.server.games.scribble.Tile;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

@@ -2,12 +2,11 @@ package wisematches.server.web.modules.app.playboard.memory;
 
 import static org.easymock.EasyMock.*;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
+import wisematches.server.games.scribble.*;
 import wisematches.server.games.scribble.board.ScribbleBoard;
 import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.core.Direction;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Position;
+import wisematches.server.games.scribble.Word;
 
 import java.util.Collection;
 

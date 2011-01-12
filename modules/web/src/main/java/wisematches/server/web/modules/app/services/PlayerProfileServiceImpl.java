@@ -1,30 +1,6 @@
 package wisematches.server.web.modules.app.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.notification.PlayerNotification;
-import wisematches.kernel.notification.PlayerNotifications;
-import wisematches.kernel.player.Gender;
-import wisematches.kernel.player.Player;
-import wisematches.kernel.player.PlayerProfile;
-import wisematches.kernel.util.Language;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.counties.CountriesManager;
-import wisematches.server.core.counties.Country;
-import wisematches.server.core.rating.RatingsManager;
-import wisematches.server.core.room.RatedBoardsInfo;
-import wisematches.server.core.room.RoomManager;
-import wisematches.server.core.room.RoomsManager;
-import wisematches.server.core.room.SearchesEngine;
-import wisematches.server.core.statistic.PlayerStatistic;
-import wisematches.server.core.statistic.RatingInfo;
-import wisematches.server.core.statistic.StatisticsManager;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.web.modules.app.notification.GameBoardNotification;
 import wisematches.server.web.rpc.GenericSecureRemoteService;
-
-import java.util.*;
 
 public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} implements PlayerProfileService {
 /*    private RoomsManager roomsManager;

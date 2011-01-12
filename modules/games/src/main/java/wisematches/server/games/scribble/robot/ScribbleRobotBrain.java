@@ -9,14 +9,14 @@ import wisematches.server.core.robot.RobotType;
 import wisematches.server.core.room.Room;
 import wisematches.server.core.words.dict.Dictionary;
 import wisematches.server.core.words.dict.IterableDictionary;
+import wisematches.server.games.scribble.Word;
 import wisematches.server.games.scribble.board.MakeWordMove;
 import wisematches.server.games.scribble.board.ScribbleBoard;
 import wisematches.server.games.scribble.board.ScribblePlayerHand;
-import wisematches.server.games.scribble.board.ScribbleRoomManager;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.TilesPlacement;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.room.ScribbleRoomManager;
+import wisematches.server.games.scribble.Position;
+import wisematches.server.games.scribble.Tile;
+import wisematches.server.games.scribble.board.TilesPlacement;
 import wisematches.server.games.scribble.scores.ScoreCalculation;
 import wisematches.server.games.scribble.scores.ScoreEngine;
 
@@ -72,7 +72,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
             log.trace("Hand robot tiles: " + Arrays.toString(robotHand.getTiles()));
         }
 
-        final List<Word> words = analizeValidWords(board, robotHand, type, dictionary);
+        final List<Word> words = analyzeValidWords(board, robotHand, type, dictionary);
         if (log.isTraceEnabled()) {
             log.trace("Found " + words.size() + " variants of words ");
         }
@@ -110,8 +110,8 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
         }
     }
 
-    List<Word> analizeValidWords(final TilesPlacement board, final ScribblePlayerHand hand,
-                                 final RobotType type, final IterableDictionary dictionary) {
+    List<Word> analyzeValidWords(final TilesPlacement board, final ScribblePlayerHand hand,
+								 final RobotType type, final IterableDictionary dictionary) {
         final List<WorkTile> tiles = new ArrayList<WorkTile>();
         for (int row = 0; row < ScribbleBoard.CELLS_NUMBER; row++) {
             for (int column = 0; column < ScribbleBoard.CELLS_NUMBER; column++) {
@@ -128,35 +128,35 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 
         final List<Word> words = new ArrayList<Word>();
         boolean lastWasIncorrect = false;
-        final AnalizingTree analizingTree = new AnalizingTree(board, tiles);
+        final AnalyzingTree analyzingTree = new AnalyzingTree(board, tiles);
         for (String word : dictionary) {
             if (!isLegalWord(word, type)) {
                 continue;
             }
 
-            final String cw = analizingTree.getCurrentWord();
+            final String cw = analyzingTree.getCurrentWord();
             if (cw.length() != 0 && lastWasIncorrect) {
                 if (word.startsWith(cw)) {
                     continue;
                 }
             }
 
-            while (!word.startsWith(analizingTree.getCurrentWord())) {
-                analizingTree.rollback();
+            while (!word.startsWith(analyzingTree.getCurrentWord())) {
+                analyzingTree.rollback();
                 lastWasIncorrect = false;
             }
 
             final char[] chars = word.toCharArray();
-            for (int i = analizingTree.getCurrentLevel(); i < chars.length; i++) {
+            for (int i = analyzingTree.getCurrentLevel(); i < chars.length; i++) {
                 char ch = chars[i];
-                if (!analizingTree.offerNextChar(ch)) {
+                if (!analyzingTree.offerNextChar(ch)) {
                     lastWasIncorrect = true;
                     break;
                 }
             }
 
             if (!lastWasIncorrect) {
-                words.addAll(analizingTree.getAcceptableWords());
+                words.addAll(analyzingTree.getAcceptableWords());
             }
         }
         return words;

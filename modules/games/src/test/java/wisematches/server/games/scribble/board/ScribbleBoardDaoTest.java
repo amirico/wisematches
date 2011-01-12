@@ -18,11 +18,11 @@ import wisematches.server.core.board.PassTurnMove;
 import wisematches.server.core.room.ExpiringBoardInfo;
 import wisematches.server.core.room.RatedBoardsInfo;
 import wisematches.server.core.words.dict.Dictionary;
+import wisematches.server.games.scribble.*;
 import wisematches.server.games.scribble.bank.TilesBank;
-import wisematches.server.games.scribble.core.Direction;
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Direction;
+import wisematches.server.games.scribble.Tile;
+import wisematches.server.games.scribble.Word;
 
 import javax.annotation.Resource;
 import java.util.*;

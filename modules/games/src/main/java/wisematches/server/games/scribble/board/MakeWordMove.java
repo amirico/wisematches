@@ -1,7 +1,7 @@
 package wisematches.server.games.scribble.board;
 
 import wisematches.server.core.board.MakeTurnMove;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Word;
 
 /**
  * Scrable move has a few parameters: letters of the putted word, start position and word direction.

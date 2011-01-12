@@ -1,7 +1,7 @@
 package wisematches.server.games.scribble.robot;
 
-import wisematches.server.games.scribble.core.Position;
-import wisematches.server.games.scribble.core.Tile;
+import wisematches.server.games.scribble.Tile;
+import wisematches.server.games.scribble.Position;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

@@ -4,7 +4,7 @@ import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import wisematches.server.games.scribble.core.Word;
+import wisematches.server.games.scribble.Word;
 
 import javax.persistence.*;
 import java.io.Serializable;
