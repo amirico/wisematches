@@ -3,7 +3,6 @@ package wisematches.server.web.modules.app.notification;
 import org.easymock.Capture;
 import org.easymock.IAnswer;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
-import wisematches.core.user.Language;
 import wisematches.kernel.notification.PlayerNotification;
 import wisematches.kernel.notification.PlayerNotifications;
 import wisematches.kernel.player.Player;
@@ -16,6 +15,7 @@ import wisematches.server.games.cleaner.RemainderType;
 import wisematches.server.games.room.*;
 import wisematches.server.games.scribble.board.MakeWordMove;
 import wisematches.server.games.scribble.board.ScribbleSettings;
+import wisematches.server.player.Language;
 import wisematches.server.web.mail.MailSender;
 
 import java.util.Arrays;

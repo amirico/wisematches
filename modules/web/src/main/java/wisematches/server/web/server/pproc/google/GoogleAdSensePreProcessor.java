@@ -2,7 +2,7 @@ package wisematches.server.web.server.pproc.google;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 import wisematches.server.web.ResourceManager;
 import wisematches.server.web.server.pproc.PagePreProcessor;
 import wisematches.server.web.util.WebUtils;

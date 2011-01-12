@@ -1,6 +1,6 @@
 package wisematches.server.web.server.pproc.common;
 
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 import wisematches.server.web.server.pproc.PagePreProcessor;
 import wisematches.server.web.util.WebUtils;
 

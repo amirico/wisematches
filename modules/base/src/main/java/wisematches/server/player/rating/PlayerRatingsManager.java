@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface RatingsManager {
+public interface PlayerRatingsManager {
 	/**
 	 * Adds ratings listener.
 	 *

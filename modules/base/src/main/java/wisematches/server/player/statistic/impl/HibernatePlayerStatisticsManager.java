@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.player.statistic.PlayerStatistic;
 import wisematches.server.player.statistic.PlayerStatisticListener;
-import wisematches.server.player.statistic.StatisticsManager;
+import wisematches.server.player.statistic.PlayerStatisticsManager;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,13 +18,13 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class HibernateStatisticsManager extends HibernateDaoSupport implements StatisticsManager {
+public class HibernatePlayerStatisticsManager extends HibernateDaoSupport implements PlayerStatisticsManager {
 	private final Lock lockLock = new ReentrantLock();
 	private final Map<Long, ReentrantLock> locksMap = new HashMap<Long, ReentrantLock>();
 
 	private final Collection<PlayerStatisticListener> listeners = new CopyOnWriteArraySet<PlayerStatisticListener>();
 
-	public HibernateStatisticsManager() {
+	public HibernatePlayerStatisticsManager() {
 	}
 
 	public void addPlayerStatisticListener(PlayerStatisticListener l) {

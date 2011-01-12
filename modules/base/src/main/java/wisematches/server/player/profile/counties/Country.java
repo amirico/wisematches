@@ -1,6 +1,6 @@
 package wisematches.server.player.profile.counties;
 
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 import java.io.Serializable;
 

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.kernel.player.Player;
 import wisematches.server.player.rating.PlayerRatingEvent;
 import wisematches.server.player.rating.PlayerRatingListener;
-import wisematches.server.player.rating.RatingsManager;
+import wisematches.server.player.rating.PlayerRatingsManager;
 import wisematches.server.player.rating.TopPlayersListener;
 
 import java.util.*;
@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class RatingsManagerImpl implements RatingsManager {
+public class RatingsManagerImpl implements PlayerRatingsManager {
 	private int topPlayersNumber = DEFAULT_TOP_PLAYERS_NUMBER;
 
 	private RatingsManagerDao ratingsManagerDao;
@@ -189,7 +189,7 @@ public class RatingsManagerImpl implements RatingsManager {
 					}
 
 					for (TopPlayersListener topListener : topListeners) {
-						topListener.topRatingsUpdated();
+						topListener.topPlayersChanged();
 					}
 				} finally {
 					lock.unlock();
@@ -224,7 +224,7 @@ public class RatingsManagerImpl implements RatingsManager {
 		public void playerRaitingChanged(PlayerRatingEvent event) {
 			if (updateTopRatedPlayers(event.getPlayer())) {
 				for (TopPlayersListener topListener : topListeners) {
-					topListener.topRatingsUpdated();
+					topListener.topPlayersChanged();
 				}
 			}
 

@@ -1,6 +1,6 @@
 package wisematches.server.web.mail;
 
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 import wisematches.server.web.ResourceManager;
 
 import javax.mail.internet.InternetAddress;

@@ -6,7 +6,7 @@ package wisematches.server.core.account.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;

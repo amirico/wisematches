@@ -85,7 +85,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "thirtyLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "thirtyAverageMovesPerGame"))
 	})
-	private RatingInfo thirtyDaysRaingInfo = new RatingInfo();
+	private PlayerRatingInfo thirtyDaysRaingInfo = new PlayerRatingInfo();
 
 	@Embedded
 	@AttributeOverrides({
@@ -99,7 +99,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "ninetyLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "ninetyAverageMovesPerGame"))
 	})
-	private RatingInfo ninetyDaysRaingInfo = new RatingInfo();
+	private PlayerRatingInfo ninetyDaysRaingInfo = new PlayerRatingInfo();
 
 	@Embedded
 	@AttributeOverrides({
@@ -113,7 +113,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "yearLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "yearAverageMovesPerGame"))
 	})
-	private RatingInfo yearRaingInfo = new RatingInfo();
+	private PlayerRatingInfo yearRaingInfo = new PlayerRatingInfo();
 
 	@Embedded
 	@AttributeOverrides({
@@ -127,7 +127,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "allLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "allAverageMovesPerGame"))
 	})
-	private RatingInfo allGamesRaingInfo = new RatingInfo();
+	private PlayerRatingInfo allGamesRaingInfo = new PlayerRatingInfo();
 
 	/**
 	 * This is Hibernate constructor
@@ -224,19 +224,19 @@ public class PlayerStatistic implements Serializable {
 		this.lastMoveTime = lastMoveTime;
 	}
 
-	public RatingInfo getThirtyDaysRaingInfo() {
+	public PlayerRatingInfo getThirtyDaysRaingInfo() {
 		return thirtyDaysRaingInfo;
 	}
 
-	public RatingInfo getNinetyDaysRaingInfo() {
+	public PlayerRatingInfo getNinetyDaysRaingInfo() {
 		return ninetyDaysRaingInfo;
 	}
 
-	public RatingInfo getYearRaingInfo() {
+	public PlayerRatingInfo getYearRaingInfo() {
 		return yearRaingInfo;
 	}
 
-	public RatingInfo getAllGamesRaingInfo() {
+	public PlayerRatingInfo getAllGamesRaingInfo() {
 		return allGamesRaingInfo;
 	}
 

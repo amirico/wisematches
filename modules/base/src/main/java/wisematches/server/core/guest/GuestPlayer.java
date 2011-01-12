@@ -1,9 +1,9 @@
 package wisematches.server.core.guest;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.notification.PlayerNotification;
 import wisematches.kernel.notification.PlayerNotifications;
 import wisematches.server.core.account.impl.ResourceablePlayer;
+import wisematches.server.player.Language;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

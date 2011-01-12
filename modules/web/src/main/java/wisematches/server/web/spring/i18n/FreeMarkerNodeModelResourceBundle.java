@@ -14,7 +14,7 @@ import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import wisematches.core.utils.StringComparators;
+import wisematches.server.utils.StringComparators;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

@@ -3,7 +3,7 @@ package wisematches.server.player.profile.counties.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 import wisematches.server.player.profile.counties.CountriesManager;
 import wisematches.server.player.profile.counties.Country;
 

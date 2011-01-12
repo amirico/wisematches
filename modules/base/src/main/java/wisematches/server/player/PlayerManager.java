@@ -1,18 +1,14 @@
 package wisematches.server.player;
 
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerListener;
-
 /**
- * Manager for get and authenticate player. Allows get player by it's id and authenticate it's
- * by <code>Player</code> object or it's <code>username</code> and <code>password</code>.
+ * Players manager interface. This
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerManager {
-	void addPlayerListener(PlayerListener l);
+	void addPlayerListener(PlayerListener listener);
 
-	void removePlayerListener(PlayerListener l);
+	void removePlayerListener(PlayerListener listener);
 
 	/**
 	 * Returns player by it's id.
@@ -23,9 +19,18 @@ public interface PlayerManager {
 	Player getPlayer(long playerId);
 
 	/**
-	 * Updates information about player.
+	 * Searches a player by specified email.
 	 *
-	 * @param player the player who should be updated.
+	 * @param email the email to be searched
+	 * @return the found player or {@code null} if no player with specified email.
 	 */
-	void updatePlayer(Player player);
+	Player findByEmail(String email);
+
+	/**
+	 * Searches a player by specified username.
+	 *
+	 * @param username the username to be searched
+	 * @return the found player or {@code null} if no player with specified username.
+	 */
+	Player findByUsername(String username);
 }

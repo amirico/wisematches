@@ -3,7 +3,7 @@ package wisematches.server.robot.impl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 import wisematches.server.robot.RobotPlayer;
 import wisematches.server.robot.RobotType;
 

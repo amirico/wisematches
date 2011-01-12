@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @Embeddable
-public class RatingInfo implements Serializable {
+public class PlayerRatingInfo implements Serializable {
 	/**
 	 * Average player's rating
 	 */
@@ -45,7 +45,7 @@ public class RatingInfo implements Serializable {
 	 */
 	private int averageMovesPerGame;
 
-	public RatingInfo() {
+	public PlayerRatingInfo() {
 	}
 
 	public int getAverageRating() {

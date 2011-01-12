@@ -9,7 +9,7 @@ public interface TopPlayersListener {
 	/**
 	 * Indicates that top players list was updated.
 	 *
-	 * @see RatingsManager#getTopRatedPlayers()
+	 * @see PlayerRatingsManager#getTopRatedPlayers()
 	 */
-	void topRatingsUpdated();
+	void topPlayersChanged();
 }

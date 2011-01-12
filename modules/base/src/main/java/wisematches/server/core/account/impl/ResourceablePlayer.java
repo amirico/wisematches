@@ -1,10 +1,10 @@
 package wisematches.server.core.account.impl;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.player.Gender;
 import wisematches.kernel.player.InternationalPlayer;
 import wisematches.kernel.player.PlayerProfile;
 import wisematches.kernel.util.Utf8ResourceBundle;
+import wisematches.server.player.Language;
 
 import java.text.DateFormat;
 import java.text.ParseException;

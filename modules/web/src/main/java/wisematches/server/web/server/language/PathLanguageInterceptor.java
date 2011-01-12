@@ -4,7 +4,7 @@
 
 package wisematches.server.web.server.language;
 
-import wisematches.core.user.Language;
+import wisematches.server.player.Language;
 
 import javax.servlet.http.HttpServletRequest;
 

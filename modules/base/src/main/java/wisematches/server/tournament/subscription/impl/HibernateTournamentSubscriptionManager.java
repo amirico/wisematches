@@ -4,8 +4,8 @@
 
 package wisematches.server.tournament.subscription.impl;
 
-import wisematches.core.user.Language;
 import wisematches.kernel.player.Player;
+import wisematches.server.player.Language;
 import wisematches.server.tournament.Tournament;
 import wisematches.server.tournament.TournamentSection;
 import wisematches.server.tournament.subscription.TournamentSubscription;

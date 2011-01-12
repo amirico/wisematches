@@ -21,7 +21,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package wisematches.core.utils;
+package wisematches.server.utils;
 
 import java.text.Collator;
 import java.util.Comparator;

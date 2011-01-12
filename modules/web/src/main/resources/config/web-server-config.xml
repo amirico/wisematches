@@ -121,7 +121,7 @@
     </bean>
 
     <bean id="playerEventProducer" class="wisematches.server.web.modules.app.events.producers.PlayerEventProducer">
-        <property name="statisticsManager" ref="statisticsManager"/>
+        <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="lockAccountManager" ref="lockAccountManager"/>
     </bean>
 
