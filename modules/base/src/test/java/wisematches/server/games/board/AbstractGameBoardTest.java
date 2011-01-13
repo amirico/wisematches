@@ -3,8 +3,8 @@ package wisematches.server.games.board;
 import org.easymock.LogicalOperator;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.kernel.player.Player;
 import wisematches.server.core.MockPlayer;
+import wisematches.server.player.Player;
 
 import java.util.*;
 

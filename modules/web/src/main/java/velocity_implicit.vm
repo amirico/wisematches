@@ -1,4 +1,4 @@
 #* @implicitly included *#
-#* @vtlvariable name="player" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="player" type="wisematches.server.player.Player" *#
 #* @vtlvariable name="site-url" type="java.lang.String" *#
 #* @vtlvariable name="site-name" type="java.lang.String" *#

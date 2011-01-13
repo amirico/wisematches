@@ -1,7 +1,6 @@
 package wisematches.server.games.scribble.board;
 
 import junit.framework.TestCase;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.*;
 import wisematches.server.games.dictionary.Dictionary;
 import wisematches.server.games.dictionary.DictionaryNotFoundException;
@@ -10,6 +9,7 @@ import wisematches.server.games.scribble.Position;
 import wisematches.server.games.scribble.Tile;
 import wisematches.server.games.scribble.Word;
 import wisematches.server.games.scribble.bank.TilesBank;
+import wisematches.server.player.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

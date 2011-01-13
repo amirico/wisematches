@@ -1,7 +1,7 @@
 package wisematches.server.player.rating;
 
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.GameBoard;
+import wisematches.server.player.Player;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

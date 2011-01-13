@@ -2,15 +2,15 @@ package wisematches.server.robot.impl;
 
 import wisematches.kernel.notification.PlayerNotification;
 import wisematches.kernel.notification.PlayerNotifications;
-import wisematches.server.core.account.impl.ResourceablePlayer;
 import wisematches.server.player.Language;
+import wisematches.server.player.Membership;
 import wisematches.server.robot.RobotPlayer;
 import wisematches.server.robot.RobotType;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-final class RobotPlayerImpl extends ResourceablePlayer implements RobotPlayer {
+final class RobotPlayerImpl implements RobotPlayer {
 	private final RobotType robotType;
 
 	private static final RobotPlayerNotifications NOTIFICATOR = new RobotPlayerNotifications();
@@ -20,28 +20,13 @@ final class RobotPlayerImpl extends ResourceablePlayer implements RobotPlayer {
 	}
 
 	private RobotPlayerImpl(long id, RobotType robotType, Language locale) {
-		super(id, robotType.getRating(), locale, "i18n/players", robotType.name().toLowerCase());
+//		super(id, robotType.getRating(), locale, "i18n/players", robotType.name().toLowerCase());
 		this.robotType = robotType;
-	}
-
-	@Override
-	protected ResourceablePlayer createNewPlayer(Language locale) {
-		return new RobotPlayerImpl(getId(), robotType, locale);
 	}
 
 	@Override
 	public RobotType getRobotType() {
 		return robotType;
-	}
-
-	@Override
-	public RobotPlayerImpl getNationalityPlayer(Language language) {
-		return (RobotPlayerImpl) super.getNationalityPlayer(language);
-	}
-
-	@Override
-	public PlayerNotifications getPlayerNotifications() {
-		return NOTIFICATOR;
 	}
 
 	@Override
@@ -52,6 +37,40 @@ final class RobotPlayerImpl extends ResourceablePlayer implements RobotPlayer {
 				'}';
 	}
 
+	@Override
+	public long getId() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public String getEmail() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public String getUsername() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public String getPassword() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public Language getLanguage() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public Membership getMembership() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public int getRating() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
 
 	/**
 	 * {@code RobotPlayerNotificator} always returns {@code false} for eny notification types.

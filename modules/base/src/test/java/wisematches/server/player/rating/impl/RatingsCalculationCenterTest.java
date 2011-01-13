@@ -1,32 +1,16 @@
 package wisematches.server.player.rating.impl;
 
-import org.easymock.IAnswer;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.MockPlayer;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.games.board.GameBoard;
-import wisematches.server.games.board.GamePlayerHand;
-import wisematches.server.games.board.GameStateListener;
-import wisematches.server.games.room.*;
-import wisematches.server.player.rating.PlayerRatingEvent;
-import wisematches.server.player.rating.PlayerRatingListener;
-import wisematches.server.player.rating.RatingSystem;
-
-import java.util.Arrays;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RatingsCalculationCenterTest {
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("Commented");
+	}
+/*
 	private RoomManager roomManager;
 	private PlayerManager playerManager;
 
@@ -194,4 +178,5 @@ public class RatingsCalculationCenterTest {
 			}
 		});
 	}
+*/
 }

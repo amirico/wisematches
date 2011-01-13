@@ -1,8 +1,8 @@
 package wisematches.server.robot.impl;
 
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerListener;
 import wisematches.server.games.room.Room;
+import wisematches.server.player.Player;
+import wisematches.server.player.PlayerListener;
 import wisematches.server.robot.RobotBrain;
 import wisematches.server.robot.RobotPlayer;
 import wisematches.server.robot.RobotType;
@@ -36,6 +36,16 @@ public class RobotsBrainManagerImpl implements RobotsBrainManager {
 	}
 
 	public void removePlayerListener(PlayerListener l) {
+	}
+
+	@Override
+	public Player findByEmail(String email) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public Player findByUsername(String username) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	public void addRobotBrain(RobotBrain brain) {

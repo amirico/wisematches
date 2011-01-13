@@ -3,16 +3,14 @@ package wisematches.server.player.rating.impl;
 import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.kernel.player.Player;
 import wisematches.server.core.MockPlayer;
-import wisematches.server.player.rating.PlayerRatingEvent;
+import wisematches.server.player.Player;
 import wisematches.server.player.rating.PlayerRatingListener;
 import wisematches.server.player.rating.PlayerRatingsManager;
 import wisematches.server.player.rating.TopPlayersListener;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
@@ -143,6 +141,9 @@ public class RatingsManagerImplTest {
 
 	@Test
 	public void test_playerRatingChangedNotification() {
+		throw new UnsupportedOperationException("Commented");
+
+/*
 		final List<Player> value = Arrays.asList(Arrays.copyOf(players, 5));
 
 		topPlayersListener = createStrictMock(TopPlayersListener.class);
@@ -204,11 +205,14 @@ public class RatingsManagerImplTest {
 		verify(dao);
 
 		verify(topPlayersListener);
+*/
 	}
 
 
 	@Test
 	public void test_updateTop5Ratings() {
+		throw new UnsupportedOperationException("Commented");
+/*
 		topPlayersListener = createStrictMock(TopPlayersListener.class);
 		topPlayersListener.topPlayersChanged();
 		replay(topPlayersListener);
@@ -233,5 +237,6 @@ public class RatingsManagerImplTest {
 		assertArrayEquals(Arrays.copyOf(players, 2), objects);
 
 		verify(topPlayersListener);
+*/
 	}
 }

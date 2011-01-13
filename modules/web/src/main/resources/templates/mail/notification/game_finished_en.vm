@@ -1,8 +1,8 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
 
 #* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
-#* @vtlvariable name="wonPlayer" type="wisematches.kernel.player.Player" *#
-#* @vtlvariable name="interrupterPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="wonPlayer" type="wisematches.server.player.Player" *#
+#* @vtlvariable name="interrupterPlayer" type="wisematches.server.player.Player" *#
 #* @vtlvariable name="timeouted" type="java.lang.Boolean" *#
 #* @vtlvariable name="rated" type="java.lang.Boolean" *#
 <html>

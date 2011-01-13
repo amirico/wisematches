@@ -2,13 +2,12 @@ package wisematches.server.core.guest;
 
 import wisematches.kernel.notification.PlayerNotification;
 import wisematches.kernel.notification.PlayerNotifications;
-import wisematches.server.core.account.impl.ResourceablePlayer;
 import wisematches.server.player.Language;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public final class GuestPlayer extends ResourceablePlayer {
+public final class GuestPlayer {
 	public static final int PLAYER_ID = 1001;
 
 	public static final GuestPlayer GUEST_PLAYER = new GuestPlayer(Language.ENGLISH);
@@ -16,22 +15,7 @@ public final class GuestPlayer extends ResourceablePlayer {
 	private static final GuestPlayerNotifications NOTIFICATOR = new GuestPlayerNotifications();
 
 	private GuestPlayer(Language locale) {
-		super(PLAYER_ID, 0, locale, "i18n/players", "guest");
-	}
-
-	@Override
-	protected ResourceablePlayer createNewPlayer(Language locale) {
-		return new GuestPlayer(locale);
-	}
-
-	@Override
-	public GuestPlayer getNationalityPlayer(Language language) {
-		return (GuestPlayer) super.getNationalityPlayer(language);
-	}
-
-	@Override
-	public PlayerNotifications getPlayerNotifications() {
-		return NOTIFICATOR;
+//		super(PLAYER_ID, 0, locale, "i18n/players", "guest");
 	}
 
 	/**

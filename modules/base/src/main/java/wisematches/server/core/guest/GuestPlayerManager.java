@@ -1,13 +1,11 @@
 package wisematches.server.core.guest;
 
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.account.PlayerListener;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class GuestPlayerManager implements PlayerManager {
+public class GuestPlayerManager {
+/*
     public void addPlayerListener(PlayerListener l) {
 
     }
@@ -33,4 +31,5 @@ public class GuestPlayerManager implements PlayerManager {
     public boolean isGuestPlayer(Player player) {
         return player == GuestPlayer.GUEST_PLAYER;
     }
+*/
 }

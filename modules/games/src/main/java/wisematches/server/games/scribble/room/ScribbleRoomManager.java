@@ -2,7 +2,6 @@ package wisematches.server.games.scribble.room;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.dictionary.Dictionary;
 import wisematches.server.games.dictionary.DictionaryManager;
 import wisematches.server.games.dictionary.DictionaryNotFoundException;
@@ -17,6 +16,7 @@ import wisematches.server.games.scribble.board.ScribbleBoard;
 import wisematches.server.games.scribble.board.ScribbleBoardDao;
 import wisematches.server.games.scribble.board.ScribbleSearchesEngine;
 import wisematches.server.games.scribble.board.ScribbleSettings;
+import wisematches.server.player.Player;
 
 import java.util.Collection;
 import java.util.Locale;

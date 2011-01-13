@@ -1,8 +1,8 @@
 package wisematches.server.games.room;
 
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.GameBoard;
 import wisematches.server.games.board.GameSettings;
+import wisematches.server.player.Player;
 
 import java.util.Collection;
 

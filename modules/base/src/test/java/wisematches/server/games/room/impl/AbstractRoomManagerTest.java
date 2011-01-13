@@ -5,9 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.easymock.IAnswer;
 import org.easymock.internal.matchers.Equals;
 import org.junit.Test;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.*;
 import wisematches.server.games.room.*;
+import wisematches.server.player.Player;
 
 import java.util.Arrays;
 import java.util.Collection;

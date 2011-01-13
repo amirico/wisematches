@@ -2,279 +2,281 @@ package wisematches.server.core.sessions.impl;
 
 import org.easymock.Capture;
 import org.easymock.IAnswer;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
 import wisematches.server.core.sessions.PlayerOnlineStateListener;
 import wisematches.server.core.sessions.PlayerSessionBean;
 import wisematches.server.core.sessions.PlayerSessionsEvent;
 import wisematches.server.core.sessions.PlayerSessionsListener;
 import wisematches.server.core.sessions.chouse.PlayerCustomHouse;
 import wisematches.server.core.sessions.chouse.PlayerCustomHouseListener;
+import wisematches.server.player.Player;
+import wisematches.server.player.PlayerManager;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class PlayerSessionsManagerImplTest {
-    private PlayerManager accountManager;
-    private PlayerCustomHouseListener playerCustomHouseListener;
+	private PlayerManager accountManager;
+	private PlayerCustomHouseListener playerCustomHouseListener;
 
-    private PlayerSessionsManagerImpl playerSessionsManager;
+	private PlayerSessionsManagerImpl playerSessionsManager;
 
-    private final MocksGenerator generator = new MocksGenerator();
+	private final MocksGenerator generator = new MocksGenerator();
 
-    @Before
-    public void init() throws Exception {
-        accountManager = createStrictMock(PlayerManager.class);
+	@Before
+	public void init() throws Exception {
+		accountManager = createStrictMock(PlayerManager.class);
 
-        final PlayerCustomHouse playerCustomHouse = createStrictMock(PlayerCustomHouse.class);
-        playerCustomHouse.addPlayerCustomHouseListener(isA(PlayerCustomHouseListener.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                playerCustomHouseListener = (PlayerCustomHouseListener) getCurrentArguments()[0];
-                return null;
-            }
-        });
-        replay(playerCustomHouse);
+		final PlayerCustomHouse playerCustomHouse = createStrictMock(PlayerCustomHouse.class);
+		playerCustomHouse.addPlayerCustomHouseListener(isA(PlayerCustomHouseListener.class));
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+			public Object answer() throws Throwable {
+				playerCustomHouseListener = (PlayerCustomHouseListener) getCurrentArguments()[0];
+				return null;
+			}
+		});
+		replay(playerCustomHouse);
 
-        playerSessionsManager = new PlayerSessionsManagerImpl();
-        playerSessionsManager.setPlayerManager(accountManager);
-        playerSessionsManager.setPlayerCustomHouses(Arrays.asList(playerCustomHouse));
-        verify(playerCustomHouse);
-    }
+		playerSessionsManager = new PlayerSessionsManagerImpl();
+		playerSessionsManager.setPlayerManager(accountManager);
+		playerSessionsManager.setPlayerCustomHouses(Arrays.asList(playerCustomHouse));
+		verify(playerCustomHouse);
+	}
 
-    @Test
-    public void testPlayerSessionsListener() {
-        final Player p = createNiceMock(Player.class);
+	@Test
+	public void testPlayerSessionsListener() {
+		final Player p = createNiceMock(Player.class);
 
-        final Capture<PlayerSessionsEvent> eventCapture1 = new Capture<PlayerSessionsEvent>();
-        final Capture<PlayerSessionsEvent> eventCapture2 = new Capture<PlayerSessionsEvent>();
+		final Capture<PlayerSessionsEvent> eventCapture1 = new Capture<PlayerSessionsEvent>();
+		final Capture<PlayerSessionsEvent> eventCapture2 = new Capture<PlayerSessionsEvent>();
 
-        final PlayerSessionsListener l1 = createStrictMock(PlayerSessionsListener.class);
-        l1.playerSessionsCreated(capture(eventCapture1));
-        l1.playerSessionsCreated(capture(eventCapture1));
-        replay(l1);
+		final PlayerSessionsListener l1 = createStrictMock(PlayerSessionsListener.class);
+		l1.playerSessionsCreated(capture(eventCapture1));
+		l1.playerSessionsCreated(capture(eventCapture1));
+		replay(l1);
 
-        final PlayerSessionsListener l2 = createStrictMock(PlayerSessionsListener.class);
-        l2.playerSessionsCreated(capture(eventCapture2));
-        l2.playerSessionsCreated(capture(eventCapture2));
-        replay(l2);
+		final PlayerSessionsListener l2 = createStrictMock(PlayerSessionsListener.class);
+		l2.playerSessionsCreated(capture(eventCapture2));
+		l2.playerSessionsCreated(capture(eventCapture2));
+		replay(l2);
 
-        playerSessionsManager.addPlayerSessionsListener(l1);
-        playerSessionsManager.addPlayerSessionsListener(l1); //one more time
+		playerSessionsManager.addPlayerSessionsListener(l1);
+		playerSessionsManager.addPlayerSessionsListener(l1); //one more time
 
-        playerSessionsManager.firePlayerSessionsCreated(p, "session1");
-        assertSame(p, eventCapture1.getValue().getPlayer());
-        assertEquals("session1", eventCapture1.getValue().getSessionKey());
+		playerSessionsManager.firePlayerSessionsCreated(p, "session1");
+		assertSame(p, eventCapture1.getValue().getPlayer());
+		assertEquals("session1", eventCapture1.getValue().getSessionKey());
 
-        playerSessionsManager.addPlayerSessionsListener(l2);
-        playerSessionsManager.firePlayerSessionsCreated(p, "session2");
-        assertEquals("session2", eventCapture1.getValue().getSessionKey());
-        assertEquals("session2", eventCapture2.getValue().getSessionKey());
+		playerSessionsManager.addPlayerSessionsListener(l2);
+		playerSessionsManager.firePlayerSessionsCreated(p, "session2");
+		assertEquals("session2", eventCapture1.getValue().getSessionKey());
+		assertEquals("session2", eventCapture2.getValue().getSessionKey());
 
-        playerSessionsManager.removePlayerSessionsListener(l1);
-        playerSessionsManager.firePlayerSessionsCreated(p, "session3");
-        assertEquals("session3", eventCapture2.getValue().getSessionKey());
+		playerSessionsManager.removePlayerSessionsListener(l1);
+		playerSessionsManager.firePlayerSessionsCreated(p, "session3");
+		assertEquals("session3", eventCapture2.getValue().getSessionKey());
 
-        playerSessionsManager.removePlayerSessionsListener(l1);
-        playerSessionsManager.removePlayerSessionsListener(l2);
-        playerSessionsManager.firePlayerSessionsCreated(p, "session4");
+		playerSessionsManager.removePlayerSessionsListener(l1);
+		playerSessionsManager.removePlayerSessionsListener(l2);
+		playerSessionsManager.firePlayerSessionsCreated(p, "session4");
 
-        verify(l1, l2);
-    }
+		verify(l1, l2);
+	}
 
-    @Test
-    public void testPlayerOnlineStateListener() {
-        final Player p1 = createNiceMock("Player1", Player.class);
-        final Player p2 = createNiceMock("Player2", Player.class);
+	@Test
+	public void testPlayerOnlineStateListener() {
+		final Player p1 = createNiceMock("Player1", Player.class);
+		final Player p2 = createNiceMock("Player2", Player.class);
 
-        final PlayerOnlineStateListener l1 = createStrictMock(PlayerOnlineStateListener.class);
-        l1.playerIsOnline(p1);
-        l1.playerIsOnline(p2);
-        l1.playerIsOffline(p2);
-        replay(l1);
+		final PlayerOnlineStateListener l1 = createStrictMock(PlayerOnlineStateListener.class);
+		l1.playerIsOnline(p1);
+		l1.playerIsOnline(p2);
+		l1.playerIsOffline(p2);
+		replay(l1);
 
-        final PlayerOnlineStateListener l2 = createStrictMock(PlayerOnlineStateListener.class);
-        l2.playerIsOnline(p2);
-        l2.playerIsOffline(p2);
-        l2.playerIsOffline(p2);
-        replay(l2);
+		final PlayerOnlineStateListener l2 = createStrictMock(PlayerOnlineStateListener.class);
+		l2.playerIsOnline(p2);
+		l2.playerIsOffline(p2);
+		l2.playerIsOffline(p2);
+		replay(l2);
 
-        playerSessionsManager.addPlayerOnlineStateListener(l1);
-        playerSessionsManager.addPlayerOnlineStateListener(l1); //one more time
+		playerSessionsManager.addPlayerOnlineStateListener(l1);
+		playerSessionsManager.addPlayerOnlineStateListener(l1); //one more time
 
-        playerSessionsManager.firePlayerOnline(p1);
+		playerSessionsManager.firePlayerOnline(p1);
 
-        playerSessionsManager.addPlayerOnlineStateListener(l2);
-        playerSessionsManager.firePlayerOnline(p2);
+		playerSessionsManager.addPlayerOnlineStateListener(l2);
+		playerSessionsManager.firePlayerOnline(p2);
 
-        playerSessionsManager.firePlayerOffline(p2);
+		playerSessionsManager.firePlayerOffline(p2);
 
-        playerSessionsManager.removePlayerOnlineStateListener(l1);
-        playerSessionsManager.firePlayerOffline(p2);
+		playerSessionsManager.removePlayerOnlineStateListener(l1);
+		playerSessionsManager.firePlayerOffline(p2);
 
-        playerSessionsManager.removePlayerOnlineStateListener(l1);
-        playerSessionsManager.removePlayerOnlineStateListener(l2);
-        playerSessionsManager.firePlayerOffline(p1);
+		playerSessionsManager.removePlayerOnlineStateListener(l1);
+		playerSessionsManager.removePlayerOnlineStateListener(l2);
+		playerSessionsManager.firePlayerOffline(p1);
 
-        verify(l1, l2);
-    }
+		verify(l1, l2);
+	}
 
-    @Test
-    public void setPlayerCustomHouses() {
-        final PlayerCustomHouse playerCustomHouse = createStrictMock(PlayerCustomHouse.class);
-        playerCustomHouse.addPlayerCustomHouseListener(isA(PlayerCustomHouseListener.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                playerCustomHouseListener = (PlayerCustomHouseListener) getCurrentArguments()[0];
-                return null;
-            }
-        });
-        replay(playerCustomHouse);
+	@Test
+	public void setPlayerCustomHouses() {
+		final PlayerCustomHouse playerCustomHouse = createStrictMock(PlayerCustomHouse.class);
+		playerCustomHouse.addPlayerCustomHouseListener(isA(PlayerCustomHouseListener.class));
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+			public Object answer() throws Throwable {
+				playerCustomHouseListener = (PlayerCustomHouseListener) getCurrentArguments()[0];
+				return null;
+			}
+		});
+		replay(playerCustomHouse);
 
-        playerSessionsManager = new PlayerSessionsManagerImpl();
-        playerSessionsManager.setPlayerManager(accountManager);
-        playerSessionsManager.setPlayerCustomHouses(Arrays.asList(playerCustomHouse));
+		playerSessionsManager = new PlayerSessionsManagerImpl();
+		playerSessionsManager.setPlayerManager(accountManager);
+		playerSessionsManager.setPlayerCustomHouses(Arrays.asList(playerCustomHouse));
 
-        reset(playerCustomHouse);
-        playerCustomHouse.removePlayerCustomHouseListener(playerCustomHouseListener);
-        playerCustomHouse.addPlayerCustomHouseListener(isA(PlayerCustomHouseListener.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                playerCustomHouseListener = (PlayerCustomHouseListener) getCurrentArguments()[0];
-                return null;
-            }
-        });
-        replay(playerCustomHouse);
-        playerSessionsManager.setPlayerCustomHouses(Arrays.asList(playerCustomHouse));
-        verify(playerCustomHouse);
-    }
+		reset(playerCustomHouse);
+		playerCustomHouse.removePlayerCustomHouseListener(playerCustomHouseListener);
+		playerCustomHouse.addPlayerCustomHouseListener(isA(PlayerCustomHouseListener.class));
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+			public Object answer() throws Throwable {
+				playerCustomHouseListener = (PlayerCustomHouseListener) getCurrentArguments()[0];
+				return null;
+			}
+		});
+		replay(playerCustomHouse);
+		playerSessionsManager.setPlayerCustomHouses(Arrays.asList(playerCustomHouse));
+		verify(playerCustomHouse);
+	}
 
-    @Test
-    public void psbError1() {
-        // interface does not extends PlayerSessionBean interface
-        generator.generateInterface();
-        generator.addInterfaceMethod("getTest", Void.TYPE, int.class);
-        try {
-            playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
-            fail("Exception must be here: interface does not extends PlayerSessionBean interface");
-        } catch (IllegalArgumentException ex) {
-            ;
-        }
-    }
+	@Test
+	public void psbError1() {
+		// interface does not extends PlayerSessionBean interface
+		generator.generateInterface();
+		generator.addInterfaceMethod("getTest", Void.TYPE, int.class);
+		try {
+			playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
+			fail("Exception must be here: interface does not extends PlayerSessionBean interface");
+		} catch (IllegalArgumentException ex) {
+			;
+		}
+	}
 
-    @Test
-    public void psbError2() {
-        // interface has not JavaBean method and no @ImplementationBean annotation
-        generator.generateInterface(PlayerSessionBean.class);
-        generator.addInterfaceMethod("notJavaBeanMethod", Void.TYPE, int.class);
-        try {
-            playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
-            fail("Exception must be here: interface has not JavaBean method and no @ImplementationBean annotation");
-        } catch (IllegalArgumentException ex) {
-            ;
-        }
-    }
+	@Test
+	public void psbError2() {
+		// interface has not JavaBean method and no @ImplementationBean annotation
+		generator.generateInterface(PlayerSessionBean.class);
+		generator.addInterfaceMethod("notJavaBeanMethod", Void.TYPE, int.class);
+		try {
+			playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
+			fail("Exception must be here: interface has not JavaBean method and no @ImplementationBean annotation");
+		} catch (IllegalArgumentException ex) {
+			;
+		}
+	}
 
-    @Test
-    public void psbError3() {
-        // class is not interface
-        generator.generateClass(true, Object.class, PlayerSessionBean.class);
-        try {
-            playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
-            fail("Exception must be here: class is not interface");
-        } catch (IllegalArgumentException ex) {
-            ;
-        }
-    }
+	@Test
+	public void psbError3() {
+		// class is not interface
+		generator.generateClass(true, Object.class, PlayerSessionBean.class);
+		try {
+			playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
+			fail("Exception must be here: class is not interface");
+		} catch (IllegalArgumentException ex) {
+			;
+		}
+	}
 
-    @Test
-    public void pcbError4() throws Exception {
-        //implementation does not implement interface
-        generator.generateInterface(PlayerSessionBean.class);
-        generator.addInterfaceMethod("test", Void.TYPE, int.class);
-        generator.addImplementationAnnotation();
-        final Class its = generator.toClass();
+	@Test
+	public void pcbError4() throws Exception {
+		//implementation does not implement interface
+		generator.generateInterface(PlayerSessionBean.class);
+		generator.addInterfaceMethod("test", Void.TYPE, int.class);
+		generator.addImplementationAnnotation();
+		final Class its = generator.toClass();
 
-        generator.generateClass(false, Object.class);
-        generator.addImplementationMethod("test", Void.TYPE, int.class);
-        generator.toClass();
+		generator.generateClass(false, Object.class);
+		generator.addImplementationMethod("test", Void.TYPE, int.class);
+		generator.toClass();
 
-        try {
-            playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(its));
-            fail("Exception must be here: implementation does not implement interface");
-        } catch (IllegalArgumentException ex) {
-            assertEquals("Implementation class is not implement " + its, ex.getMessage());
-        }
-    }
+		try {
+			playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(its));
+			fail("Exception must be here: implementation does not implement interface");
+		} catch (IllegalArgumentException ex) {
+			assertEquals("Implementation class is not implement " + its, ex.getMessage());
+		}
+	}
 
-    @Test
-    public void pcbError5() {
-        // implementation is abstract
-        generator.generateInterface(PlayerSessionBean.class);
-        generator.addInterfaceMethod("test", Void.TYPE, int.class);
-        generator.addImplementationAnnotation();
-        final Class its = generator.toClass();
+	@Test
+	public void pcbError5() {
+		// implementation is abstract
+		generator.generateInterface(PlayerSessionBean.class);
+		generator.addInterfaceMethod("test", Void.TYPE, int.class);
+		generator.addImplementationAnnotation();
+		final Class its = generator.toClass();
 
-        generator.generateClass(true, Object.class, its);
-        generator.addImplementationMethod("test", Void.TYPE, int.class);
-        final Class aClass = generator.toClass();
+		generator.generateClass(true, Object.class, its);
+		generator.addImplementationMethod("test", Void.TYPE, int.class);
+		final Class aClass = generator.toClass();
 
-        try {
-            playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(its));
-            fail("Exception must be here: implementation is abstract");
-        } catch (IllegalArgumentException ex) {
-            assertEquals("Implementation class " + aClass + " is abstract or interface", ex.getMessage());
-        }
-    }
+		try {
+			playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(its));
+			fail("Exception must be here: implementation is abstract");
+		} catch (IllegalArgumentException ex) {
+			assertEquals("Implementation class " + aClass + " is abstract or interface", ex.getMessage());
+		}
+	}
 
-    @Test
-    public void pcbError6() {
-        //implementation has not default public constructor
-        generator.generateInterface(PlayerSessionBean.class);
-        generator.addInterfaceMethod("test", Void.TYPE, int.class);
-        generator.addImplementationAnnotation();
-        final Class its = generator.toClass();
+	@Test
+	public void pcbError6() {
+		//implementation has not default public constructor
+		generator.generateInterface(PlayerSessionBean.class);
+		generator.addInterfaceMethod("test", Void.TYPE, int.class);
+		generator.addImplementationAnnotation();
+		final Class its = generator.toClass();
 
-        generator.generateClass(false, Object.class, its);
-        generator.addImplementationMethod("test", Void.TYPE, int.class);
-        generator.addConstructor(Modifier.PRIVATE, String.class);
-        final Class aClass = generator.toClass();
+		generator.generateClass(false, Object.class, its);
+		generator.addImplementationMethod("test", Void.TYPE, int.class);
+		generator.addConstructor(Modifier.PRIVATE, String.class);
+		final Class aClass = generator.toClass();
 
-        try {
-            playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(its));
-            fail("Exception must be here: implementation has not default public constructor ");
-        } catch (IllegalArgumentException ex) {
-            assertEquals("Implementation class " + aClass + " doesn't have default public constructor", ex.getMessage());
-        }
-    }
+		try {
+			playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(its));
+			fail("Exception must be here: implementation has not default public constructor ");
+		} catch (IllegalArgumentException ex) {
+			assertEquals("Implementation class " + aClass + " doesn't have default public constructor", ex.getMessage());
+		}
+	}
 
-    @Test
-    public void pcbCorrect() {
-        generator.generateInterface();
-        generator.addInterfaceMethod("test", Void.TYPE, int.class);
-        generator.addImplementationAnnotation();
-        final Class its1 = generator.toClass();
+	@Test
+	public void pcbCorrect() {
+		generator.generateInterface();
+		generator.addInterfaceMethod("test", Void.TYPE, int.class);
+		generator.addImplementationAnnotation();
+		final Class its1 = generator.toClass();
 
-        generator.generateClass(false, Object.class, its1);
-        generator.addImplementationMethod("test", Void.TYPE, int.class);
-        generator.addConstructor(Modifier.PUBLIC);
-        generator.toClass();
+		generator.generateClass(false, Object.class, its1);
+		generator.addImplementationMethod("test", Void.TYPE, int.class);
+		generator.addConstructor(Modifier.PUBLIC);
+		generator.toClass();
 
-        generator.generateInterface(PlayerSessionBean.class, its1);
-        playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
-    }
+		generator.generateInterface(PlayerSessionBean.class, its1);
+		playerSessionsManager.setPlayerSessionBeanInterfaces(asCollection(generator.toClass()));
+	}
 
-    @Test
-    public void playerMoveIn() {
+	@Test
+	public void playerMoveIn() {
+		throw new UnsupportedOperationException("Commented");
+/*
         final Capture<PlayerSessionsEvent> eventCapture = new Capture<PlayerSessionsEvent>();
 
         final Player player = createNiceMock(Player.class);
@@ -317,10 +319,13 @@ public class PlayerSessionsManagerImplTest {
         assertEquals(2, playerSessionsManager.getPlayerSessionBeans(player).size());
 
         verify(sessionsListener, player, accountManager, stateListener);
-    }
+*/
+	}
 
-    @Test
-    public void playerMoveOut() {
+	@Test
+	public void playerMoveOut() {
+		throw new UnsupportedOperationException("Commented");
+/*
         final Player player1 = createNiceMock(Player.class);
         player1.setLastSigninDate(isA(Date.class));
         expectLastCall().times(3);
@@ -407,11 +412,12 @@ public class PlayerSessionsManagerImplTest {
         assertEquals(0, playerSessionsManager.getOnlinePlayers().size());
 
         verify(sessionsListener);
-    }
+*/
+	}
 
-    ////////////// Helper methods ///////////////////////////
+	////////////// Helper methods ///////////////////////////
 
-    private Collection<Class<? extends PlayerSessionBean>> asCollection(Class<? extends PlayerSessionBean> i1) {
-        return Arrays.<Class<? extends PlayerSessionBean>>asList(i1);
-    }
+	private Collection<Class<? extends PlayerSessionBean>> asCollection(Class<? extends PlayerSessionBean> i1) {
+		return Arrays.<Class<? extends PlayerSessionBean>>asList(i1);
+	}
 }

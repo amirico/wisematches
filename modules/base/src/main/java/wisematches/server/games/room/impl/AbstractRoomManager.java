@@ -1,9 +1,9 @@
 package wisematches.server.games.room.impl;
 
 import org.apache.commons.logging.Log;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.*;
 import wisematches.server.games.room.*;
+import wisematches.server.player.Player;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;

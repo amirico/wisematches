@@ -3,22 +3,6 @@
  */
 package wisematches.server.web.server;
 
-import org.apache.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.AccountLockedException;
-import wisematches.server.core.account.AccountManager;
-import wisematches.server.core.guest.GuestPlayer;
-import wisematches.server.web.modules.login.tokens.RememberToken;
-import wisematches.server.web.modules.login.tokens.RememberTokenDao;
-import wisematches.server.web.server.sessions.WebSessionCustomHouse;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 /**
  * This interceptor tryes to get player from specified request in following order:
  * 1. Take player object from session.

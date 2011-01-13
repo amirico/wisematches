@@ -1,16 +1,6 @@
 package wisematches.server.web.modules.core.sessions.impl;
 
 import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.sessions.chouse.PlayerCustomHouseListener;
-import wisematches.server.player.Language;
-import wisematches.server.web.server.sessions.WebSessionCustomHouseImpl;
-
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -18,6 +8,12 @@ import static org.easymock.EasyMock.*;
 public class WebSessionCustomHouseImplTest {
 	private static final String SESSION_ID = "MockSessionID";
 
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("Commented");
+	}
+
+/*
 	@Test
 	public void test_playerLogin() {
 		final Player p = createMock(Player.class);
@@ -75,4 +71,5 @@ public class WebSessionCustomHouseImplTest {
 
 		verify(p, ss, playerManager, listener);
 	}
+*/
 }

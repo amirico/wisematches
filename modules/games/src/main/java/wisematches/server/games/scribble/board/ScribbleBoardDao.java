@@ -2,10 +2,10 @@ package wisematches.server.games.scribble.board;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.GameState;
 import wisematches.server.games.room.ExpiringBoardInfo;
 import wisematches.server.games.room.RatedBoardsInfo;
+import wisematches.server.player.Player;
 
 import java.util.*;
 

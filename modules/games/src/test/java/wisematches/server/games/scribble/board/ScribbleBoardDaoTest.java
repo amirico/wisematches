@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.GameMoveException;
 import wisematches.server.games.board.GameState;
 import wisematches.server.games.board.PassTurnMove;
@@ -20,6 +19,7 @@ import wisematches.server.games.scribble.Position;
 import wisematches.server.games.scribble.Tile;
 import wisematches.server.games.scribble.Word;
 import wisematches.server.games.scribble.bank.TilesBank;
+import wisematches.server.player.Player;
 
 import javax.annotation.Resource;
 import java.util.*;

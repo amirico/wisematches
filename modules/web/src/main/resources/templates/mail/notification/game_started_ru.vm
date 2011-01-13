@@ -1,7 +1,7 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_ru.vm" *#
 
 #* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
-#* @vtlvariable name="turnOwnerPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="turnOwnerPlayer" type="wisematches.server.player.Player" *#
 #* @vtlvariable name="timeoutTime" type="java.lang.Long" *#
 <html>
 <body>

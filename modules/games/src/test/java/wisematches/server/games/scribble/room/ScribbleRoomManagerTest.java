@@ -2,7 +2,6 @@ package wisematches.server.games.scribble.room;
 
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.dictionary.Dictionary;
 import wisematches.server.games.dictionary.DictionaryManager;
 import wisematches.server.games.dictionary.DictionaryNotFoundException;
@@ -13,6 +12,7 @@ import wisematches.server.games.scribble.bank.TilesBankingHouse;
 import wisematches.server.games.scribble.board.ScribbleBoard;
 import wisematches.server.games.scribble.board.ScribbleBoardDao;
 import wisematches.server.games.scribble.board.ScribbleSettings;
+import wisematches.server.player.Player;
 
 import java.util.Arrays;
 import java.util.Collection;

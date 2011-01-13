@@ -7,14 +7,14 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.kernel.notification.PlayerNotification;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
 import wisematches.server.core.sessions.PlayerSessionsManager;
 import wisematches.server.games.board.*;
 import wisematches.server.games.cleaner.GameTimeoutEvent;
 import wisematches.server.games.cleaner.GameTimeoutListener;
 import wisematches.server.games.cleaner.GameTimeoutTerminator;
 import wisematches.server.games.room.*;
+import wisematches.server.player.Player;
+import wisematches.server.player.PlayerManager;
 import wisematches.server.web.mail.FromTeam;
 import wisematches.server.web.mail.MailSender;
 
@@ -99,7 +99,8 @@ public class EMailNotificationsSender {
 	}
 
 	protected boolean isPlayerAllowsNotification(Player p, PlayerNotification notification) {
-		return p.getPlayerNotifications().isNotificationEnabled(notification);
+		throw new UnsupportedOperationException("Commented");
+//		return p.getPlayerNotifications().isNotificationEnabled(notification);
 	}
 
 	private void listenBoardEvents(GameBoard board) {

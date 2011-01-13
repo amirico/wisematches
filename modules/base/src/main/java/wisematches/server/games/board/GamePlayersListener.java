@@ -1,6 +1,6 @@
 package wisematches.server.games.board;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
