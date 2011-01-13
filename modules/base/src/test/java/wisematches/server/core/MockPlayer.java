@@ -1,9 +1,8 @@
 package wisematches.server.core;
 
-import wisematches.kernel.notification.PlayerNotifications;
-import wisematches.kernel.player.Player;
-import wisematches.kernel.player.PlayerProfile;
 import wisematches.server.player.Language;
+import wisematches.server.player.Membership;
+import wisematches.server.player.Player;
 
 import java.util.Date;
 
@@ -49,6 +48,11 @@ public class MockPlayer implements Player {
 		return null;
 	}
 
+	@Override
+	public Membership getMembership() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
 	public void setLanguage(Language locale) {
 	}
 
@@ -63,30 +67,12 @@ public class MockPlayer implements Player {
 	public void setLastSigninDate(Date date) {
 	}
 
-	@Override
-	public PlayerProfile getPlayerProfile() {
-		return null;
-	}
-
-	@Override
-	public PlayerNotifications getPlayerNotifications() {
-		return null;
-	}
 
 	@Override
 	public int getRating() {
 		return rating;
 	}
 
-	@Override
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
-
-	@Override
-	public void changeRating(int delta) {
-		rating += delta;
-	}
 
 	@Override
 	public String toString() {

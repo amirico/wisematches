@@ -6,8 +6,8 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.impl.PlayerImpl;
+import wisematches.server.player.Player;
+import wisematches.server.player.impl.HibernatePlayerImpl;
 import wisematches.server.player.rating.PlayerRatingsManager;
 
 import java.sql.SQLException;
@@ -23,7 +23,7 @@ public class RatingsManagerDao extends HibernateDaoSupport {
 		final HibernateTemplate template = getHibernateTemplate();
 		final Object o = template.executeWithNativeSession(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				final Query query = session.createQuery("from " + PlayerImpl.class.getName() + " u order by u.rating " + sortType.sqlStatement());
+				final Query query = session.createQuery("from " + HibernatePlayerImpl.class.getName() + " u order by u.rating " + sortType.sqlStatement());
 				query.setMaxResults(playersCount);
 				query.setFirstResult((int) fromPosition);
 				return query.list();
@@ -34,7 +34,7 @@ public class RatingsManagerDao extends HibernateDaoSupport {
 
 	public long getPlayersCount() {
 		final HibernateTemplate template = getHibernateTemplate();
-		final List list = template.find("select count(*) from " + PlayerImpl.class.getName());
+		final List list = template.find("select count(*) from " + HibernatePlayerImpl.class.getName());
 		if (list.size() != 1) {
 			return 0;
 		}

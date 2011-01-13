@@ -1,6 +1,6 @@
 package wisematches.server.games.board;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 /**
  * This exception is throw if player can't make a turn because turn belongs to other player or player

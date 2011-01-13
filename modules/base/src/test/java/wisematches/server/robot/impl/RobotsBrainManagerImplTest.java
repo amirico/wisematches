@@ -1,8 +1,8 @@
 package wisematches.server.robot.impl;
 
 import org.junit.Test;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.room.Room;
+import wisematches.server.player.Player;
 import wisematches.server.robot.RobotBrain;
 import wisematches.server.robot.RobotType;
 

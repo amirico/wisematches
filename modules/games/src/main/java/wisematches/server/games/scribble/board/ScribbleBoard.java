@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.AccessType;
 import org.hibernate.annotations.Type;
-import wisematches.kernel.player.Player;
 import wisematches.server.games.board.*;
 import wisematches.server.games.dictionary.Dictionary;
 import wisematches.server.games.scribble.Direction;
@@ -14,6 +13,7 @@ import wisematches.server.games.scribble.Word;
 import wisematches.server.games.scribble.bank.TilesBank;
 import wisematches.server.games.scribble.scores.ScoreEngine;
 import wisematches.server.games.scribble.scores.engines.ScribbleScoreEngine;
+import wisematches.server.player.Player;
 
 import javax.persistence.*;
 import java.nio.ByteBuffer;

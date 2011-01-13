@@ -6,8 +6,8 @@ import org.easymock.IAnswer;
 import org.junit.Test;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import wisematches.kernel.player.Player;
 import wisematches.server.player.Language;
+import wisematches.server.player.Player;
 import wisematches.server.web.mail.FromTeam;
 
 import javax.mail.Message;

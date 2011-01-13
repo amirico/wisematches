@@ -1,8 +1,6 @@
 package wisematches.server.robot;
 
-import wisematches.kernel.player.InternationalPlayer;
-import wisematches.kernel.player.Player;
-import wisematches.server.player.Language;
+import wisematches.server.player.Player;
 
 /**
  * This interface indicates that player is robot.
@@ -11,15 +9,7 @@ import wisematches.server.player.Language;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface RobotPlayer extends Player, InternationalPlayer {
-	/**
-	 * Returns localized robot.
-	 *
-	 * @param language
-	 * @return the localized robot.
-	 */
-	RobotPlayer getNationalityPlayer(Language language);
-
+public interface RobotPlayer extends Player {
 	/**
 	 * Returns type of this robot.
 	 *

@@ -4,8 +4,8 @@
 
 package wisematches.server.tournament.subscription;
 
-import wisematches.kernel.player.Player;
 import wisematches.server.player.Language;
+import wisematches.server.player.Player;
 import wisematches.server.tournament.Tournament;
 import wisematches.server.tournament.TournamentSection;
 
@@ -63,7 +63,7 @@ public interface TournamentSubscriptionManager {
 	 *
 	 * @param player the player
 	 * @return the subscription info or {@code null} if player is not subscribed to announced tournament.
-	 * @see #isSubscribed(wisematches.kernel.player.Player)
+	 * @see #isSubscribed(wisematches.server.player.Player)
 	 */
 	TournamentSubscription getSubscription(Player player);
 }

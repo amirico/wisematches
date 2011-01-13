@@ -1,14 +1,5 @@
 package wisematches.server.web.rpc;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.replay;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.sessions.PlayerSessionBean;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 public class RemoteServiceContextAccessor {
 /*
     public static void setRequest(HttpServletRequest request) {

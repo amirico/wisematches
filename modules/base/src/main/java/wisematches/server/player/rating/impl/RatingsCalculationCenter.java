@@ -6,12 +6,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
 import wisematches.server.games.board.GameBoard;
 import wisematches.server.games.board.GamePlayerHand;
 import wisematches.server.games.board.GameStateListener;
 import wisematches.server.games.room.*;
+import wisematches.server.player.Player;
+import wisematches.server.player.PlayerManager;
 import wisematches.server.player.rating.PlayerRatingEvent;
 import wisematches.server.player.rating.PlayerRatingListener;
 import wisematches.server.player.rating.RatingSystem;
@@ -88,10 +88,13 @@ public class RatingsCalculationCenter {
 
 				oldRatings[i] = oldRating;
 
+				// TODO: commented
+/*
 				player.setRating(newRating);
 				hand.updateRating(oldRating, ratingDelta);
 
 				playerManager.updatePlayer(player);
+*/
 			}
 			updateGameBoard(room, board);
 			transactionManager.commit(status);

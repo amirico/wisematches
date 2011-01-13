@@ -1,6 +1,6 @@
 package wisematches.server.player.rating.impl.systems;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 import wisematches.server.player.rating.RatingSystem;
 
 /**

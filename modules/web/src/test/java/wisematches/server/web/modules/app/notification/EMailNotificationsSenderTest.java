@@ -1,32 +1,17 @@
 package wisematches.server.web.modules.app.notification;
 
-import org.easymock.Capture;
-import org.easymock.IAnswer;
+import org.junit.Test;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
-import wisematches.kernel.notification.PlayerNotification;
-import wisematches.kernel.notification.PlayerNotifications;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.games.board.*;
-import wisematches.server.games.cleaner.GameTimeoutEvent;
-import wisematches.server.games.cleaner.GameTimeoutListener;
-import wisematches.server.games.cleaner.GameTimeoutTerminator;
-import wisematches.server.games.cleaner.RemainderType;
-import wisematches.server.games.room.*;
-import wisematches.server.games.scribble.board.MakeWordMove;
-import wisematches.server.games.scribble.board.ScribbleSettings;
-import wisematches.server.player.Language;
-import wisematches.server.web.mail.MailSender;
-
-import java.util.Arrays;
-import java.util.Date;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourceSpringContextTests {
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("Commented");
+	}
+/*
 	private Capture<RoomBoardsListener> roomBoardsListener = new Capture<RoomBoardsListener>();
 	private EMailNotificationsSender notificationsSender;
 
@@ -146,4 +131,5 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 		replay(p);
 		return p;
 	}
+*/
 }

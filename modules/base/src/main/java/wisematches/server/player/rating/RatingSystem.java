@@ -1,6 +1,6 @@
 package wisematches.server.player.rating;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 /**
  * Rating System is implementation of rating system that allows calculates rating of players

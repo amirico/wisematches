@@ -1,13 +1,10 @@
 package wisematches.server.web.server.sessions;
 
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.guest.GuestPlayer;
 import wisematches.server.core.sessions.chouse.AbstractPlayerCustomHouse;
-import wisematches.server.player.Language;
+import wisematches.server.player.Player;
+import wisematches.server.player.PlayerManager;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -21,6 +18,8 @@ public class WebSessionCustomHouseImpl extends AbstractPlayerCustomHouse impleme
 	private static final String PLAYER_SESSION_ATTRIBUTE_NAME = Player.class.getName();
 
 	public void performLogin(Player player, HttpSession session) {
+		throw new UnsupportedOperationException("Commented");
+/*
 		if (player == null) {
 			throw new NullPointerException("Player can't be null");
 		}
@@ -42,6 +41,7 @@ public class WebSessionCustomHouseImpl extends AbstractPlayerCustomHouse impleme
 		playerManager.updatePlayer(player);
 
 		firePlayerMoveIn(player, session.getId());
+*/
 	}
 
 	public void performLogout(Player player, HttpSession session) {

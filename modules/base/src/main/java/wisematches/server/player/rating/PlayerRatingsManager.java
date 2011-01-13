@@ -1,6 +1,6 @@
 package wisematches.server.player.rating;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package wisematches.server.core.sessions;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface PlayerSessionBean extends Serializable {
-    Player getPlayer();
+	Player getPlayer();
 
-    String getSessionKey();
+	String getSessionKey();
 }

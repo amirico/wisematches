@@ -1,22 +1,17 @@
 package wisematches.server.player.rating.impl;
 
-import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
-import wisematches.kernel.player.Player;
-import wisematches.server.core.account.AccountManager;
-import wisematches.server.core.account.PlayerManager;
-import wisematches.server.core.account.impl.PlayerImpl;
-import wisematches.server.player.rating.PlayerRatingsManager;
-
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpringContextTests {
+public class RatingsManagerDaoTest {
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("Commented");
+	}
+
+/*
 	private PlayerManager playerManager;
 	private AccountManager accountManager;
 	private RatingsManagerDao ratingsManagerDao;
@@ -115,4 +110,5 @@ public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpring
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
+*/
 }

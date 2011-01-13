@@ -53,7 +53,7 @@ import java.io.Serializable;
 				)
 		}
 )
-class HibernatePlayerImpl implements Player, Serializable {
+public class HibernatePlayerImpl implements Player, Serializable {
 	@Id
 	@Column(name = "id", nullable = false, updatable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)

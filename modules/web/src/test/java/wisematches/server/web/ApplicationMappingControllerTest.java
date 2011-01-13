@@ -1,7 +1,7 @@
 package wisematches.server.web;
 
 import junit.framework.TestCase;
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 import wisematches.server.web.server.pproc.PagePreProcessor;
 import wisematches.server.web.server.sessions.WebSessionCustomHouse;
 

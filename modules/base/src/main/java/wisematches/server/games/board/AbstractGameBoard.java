@@ -1,6 +1,6 @@
 package wisematches.server.games.board;
 
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 import javax.persistence.*;
 import java.util.*;

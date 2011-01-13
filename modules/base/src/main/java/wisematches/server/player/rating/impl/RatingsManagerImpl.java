@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 import wisematches.server.player.rating.PlayerRatingEvent;
 import wisematches.server.player.rating.PlayerRatingListener;
 import wisematches.server.player.rating.PlayerRatingsManager;

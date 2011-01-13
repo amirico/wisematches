@@ -1,14 +1,5 @@
 package wisematches.server.web.modules.app.services;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.*;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import wisematches.kernel.player.Player;
-import wisematches.server.web.modules.app.settings.ApplicationSettingsDao;
-import wisematches.server.web.rpc.RemoteServiceContextAccessor;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

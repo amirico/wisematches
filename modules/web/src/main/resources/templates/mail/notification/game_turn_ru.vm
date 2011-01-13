@@ -3,8 +3,8 @@
 #* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
 #* @vtlvariable name="move" type="wisematches.server.games.board.PlayerMove" *#
 #* @vtlvariable name="points" type="java.lang.Integer" *#
-#* @vtlvariable name="movedPlayer" type="wisematches.kernel.player.Player" *#
-#* @vtlvariable name="nextPlayer" type="wisematches.kernel.player.Player" *#
+#* @vtlvariable name="movedPlayer" type="wisematches.server.player.Player" *#
+#* @vtlvariable name="nextPlayer" type="wisematches.server.player.Player" *#
 <html>
 <body>
     #parse("/templates/mail/notification/game_common_ru.vm")

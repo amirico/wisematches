@@ -1,7 +1,7 @@
 package wisematches.server.player.rating.impl.systems;
 
 import org.junit.Test;
-import wisematches.kernel.player.Player;
+import wisematches.server.player.Player;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
