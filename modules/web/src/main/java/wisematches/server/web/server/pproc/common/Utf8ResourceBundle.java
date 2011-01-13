@@ -1,4 +1,4 @@
-package wisematches.kernel.util;
+package wisematches.server.web.server.pproc.common;
 
 import wisematches.server.player.Language;
 

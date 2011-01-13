@@ -1,7 +1,7 @@
-package wisematches.server.player.locks.impl;
+package wisematches.server.player.lock.impl;
 
 import wisematches.server.player.Player;
-import wisematches.server.player.locks.LockAccountInfo;
+import wisematches.server.player.lock.LockAccountInfo;
 
 import javax.persistence.*;
 import java.util.Date;

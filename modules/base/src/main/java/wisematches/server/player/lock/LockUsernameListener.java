@@ -1,4 +1,4 @@
-package wisematches.server.player.locks;
+package wisematches.server.player.lock;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

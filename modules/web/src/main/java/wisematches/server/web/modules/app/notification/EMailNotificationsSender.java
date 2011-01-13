@@ -6,7 +6,6 @@ import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
-import wisematches.kernel.notification.PlayerNotification;
 import wisematches.server.core.sessions.PlayerSessionsManager;
 import wisematches.server.games.board.*;
 import wisematches.server.games.cleaner.GameTimeoutEvent;
@@ -15,6 +14,7 @@ import wisematches.server.games.cleaner.GameTimeoutTerminator;
 import wisematches.server.games.room.*;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
+import wisematches.server.player.notice.PlayerNotification;
 import wisematches.server.web.mail.FromTeam;
 import wisematches.server.web.mail.MailSender;
 

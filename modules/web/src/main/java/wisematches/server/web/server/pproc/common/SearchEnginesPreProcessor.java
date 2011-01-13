@@ -2,7 +2,6 @@ package wisematches.server.web.server.pproc.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.kernel.util.Utf8ResourceBundle;
 import wisematches.server.player.Language;
 import wisematches.server.web.server.pproc.PagePreProcessor;
 import wisematches.server.web.util.WebUtils;

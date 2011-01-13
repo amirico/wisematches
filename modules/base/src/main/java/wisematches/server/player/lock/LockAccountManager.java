@@ -1,4 +1,4 @@
-package wisematches.server.player.locks;
+package wisematches.server.player.lock;
 
 import wisematches.server.player.Player;
 
@@ -31,9 +31,9 @@ public interface LockAccountManager {
 	 * @param player		the player to be locked.
 	 * @param publicReason  the public reason that will be shown the player and sign in.
 	 * @param privateReason the private reason that will be shown moderators.
-	 * @param unlockdate	the unlock date or <code>null</code> if player is locked forever.
+	 * @param unlockDate	the unlock date or <code>null</code> if player is locked forever.
 	 */
-	void lockAccount(Player player, String publicReason, String privateReason, Date unlockdate);
+	void lockAccount(Player player, String publicReason, String privateReason, Date unlockDate);
 
 	/**
 	 * Unlocks specified player.

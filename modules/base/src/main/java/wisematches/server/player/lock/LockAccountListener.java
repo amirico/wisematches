@@ -1,4 +1,4 @@
-package wisematches.server.player.locks;
+package wisematches.server.player.lock;
 
 import wisematches.server.player.Player;
 

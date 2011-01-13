@@ -1,4 +1,4 @@
-package wisematches.server.player.locks.impl;
+package wisematches.server.player.lock.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -10,7 +10,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.player.Player;
-import wisematches.server.player.locks.*;
+import wisematches.server.player.lock.*;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -84,7 +84,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 			public Date doInHibernate(Session session) throws HibernateException, SQLException {
 				final Query query = session.createQuery("" +
 						"select lock.unlockDate " +
-						"from wisematches.server.player.locks.impl.HibernateLockAccountInfo lock " +
+						"from wisematches.server.player.lock.impl.HibernateLockAccountInfo lock " +
 						"where lock.playerId = ?");
 				query.setLong(0, player.getId());
 				return (Date) query.uniqueResult();
@@ -97,7 +97,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 				template.execute(new HibernateCallback<Void>() {
 					public Void doInHibernate(Session session) throws HibernateException, SQLException {
 						final Query q = session.createQuery(
-								"delete from wisematches.server.player.locks.impl.HibernateLockAccountInfo lock where lock.playerId = ?");
+								"delete from wisematches.server.player.lock.impl.HibernateLockAccountInfo lock where lock.playerId = ?");
 						q.setLong(0, player.getId());
 						q.executeUpdate();
 
