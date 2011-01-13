@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * TODO: no unit test for this class
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WebAccessibleResourceBundleMessageSource extends ReloadableResourceBundleMessageSource implements HttpRequestHandler {
 	private static final Pattern PAGE_PATTERN = Pattern.compile("[^/]*(?=\\.js.*$)");

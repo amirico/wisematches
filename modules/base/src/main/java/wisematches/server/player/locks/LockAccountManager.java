@@ -44,21 +44,21 @@ public interface LockAccountManager {
 
 	/**
 	 * Checks that player is locked or not. It's fast operation. If your need get some information about lock
-	 * please use {@link #getLockAccountInfo(wisematches.kernel.player.Player)} method instead.
+	 * please use {@link #getLockAccountInfo(wisematches.server.player.Player)} method instead.
 	 *
 	 * @param player the player to be checked.
 	 * @return <code>true</code> if player is locked; <code>false</code> - otherwise.
-	 * @see #getLockAccountInfo(wisematches.kernel.player.Player)
+	 * @see #getLockAccountInfo(wisematches.server.player.Player)
 	 */
 	boolean isAccountLocked(Player player);
 
 	/**
 	 * Returns lock information about account. This is heavy operation and it's better to use
-	 * {@link #isAccountLocked(wisematches.kernel.player.Player)} check before call this method.
+	 * {@link #isAccountLocked(wisematches.server.player.Player)} } check before call this method.
 	 *
 	 * @param player the player
 	 * @return the information about lock cause or <code>null</code> if player isn't loacked.
-	 * @see #isAccountLocked(wisematches.kernel.player.Player)
+	 * @see #isAccountLocked(wisematches.server.player.Player)
 	 */
 	LockAccountInfo getLockAccountInfo(Player player);
 

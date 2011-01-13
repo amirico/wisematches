@@ -1,8 +1,8 @@
 package wisematches.server.player;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerListener {
-	void playerInfoUpdated(Player oldPlayer, Player newPlayer);
+	void playerUpdated(Player oldInfo, Player newInfo);
 }

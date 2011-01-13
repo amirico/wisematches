@@ -10,11 +10,11 @@ import org.springframework.beans.factory.DisposableBean;
 /**
  * TODO: java docs
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DWRDestroyHelper implements DisposableBean {
-    @Override
-    public void destroy() throws Exception {
-        SharedObjects.getScheduledThreadPoolExecutor().shutdown();
-    }
+	@Override
+	public void destroy() throws Exception {
+		SharedObjects.getScheduledThreadPoolExecutor().shutdown();
+	}
 }

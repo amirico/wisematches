@@ -18,20 +18,20 @@ import java.io.IOException;
 /**
  * TODO: java docs
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ExtJSAuthenticationHandler implements AuthenticationFailureHandler, AuthenticationSuccessHandler {
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        if (exception instanceof BadCredentialsException) {
-            response.getWriter().write("{success: false, errors:{j_password: 'bad.credentials'}}");
-        } else {
-            response.getWriter().write("{success: false, errors:{j_password: '" + exception.getClass().getSimpleName() + "'}}");
-        }
-    }
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+		if (exception instanceof BadCredentialsException) {
+			response.getWriter().write("{success: false, errors:{j_password: 'bad.credentials'}}");
+		} else {
+			response.getWriter().write("{success: false, errors:{j_password: '" + exception.getClass().getSimpleName() + "'}}");
+		}
+	}
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        response.getWriter().write("{success: true}");
-    }
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+		response.getWriter().write("{success: true}");
+	}
 }

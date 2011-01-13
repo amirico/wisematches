@@ -1,7 +1,7 @@
 package wisematches.server.player.profile;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerProfileManager {
 }

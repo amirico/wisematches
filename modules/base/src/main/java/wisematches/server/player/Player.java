@@ -1,5 +1,7 @@
 package wisematches.server.player;
 
+import java.io.Serializable;
+
 /**
  * The {@code Player} interface represents simple user. This interface is read-only
  * and contains only methods that returns common and necessary information about the player,
@@ -9,9 +11,9 @@ package wisematches.server.player;
  * player info should be shown. Any other player information, like gender, city and so on is defined in
  * {@code PlayerProfile} object.
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface Player {
+public interface Player extends Serializable {
 	/**
 	 * Returns unique id of the player.
 	 * <p/>

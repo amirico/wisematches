@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum WMAuthorities implements GrantedAuthority {
 	ADMIN,

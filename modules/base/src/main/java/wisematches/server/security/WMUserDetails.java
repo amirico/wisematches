@@ -12,7 +12,7 @@ import java.util.Collection;
  * This is implementation of Spring Security {@code UserDetails} interface that extends {@code Player} interface as
  * well. So any authorized user is a player by default.
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMUserDetails extends User implements Player {
 	private final Player originalPlayer;

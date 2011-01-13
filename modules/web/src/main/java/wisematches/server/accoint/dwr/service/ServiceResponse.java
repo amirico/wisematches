@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class ServiceResponse {
 	private final boolean success;

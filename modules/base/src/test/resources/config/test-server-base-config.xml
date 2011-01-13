@@ -6,12 +6,4 @@
     <bean id="propertiesPlaceholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:/config/core-server-settings.properties"/>
     </bean>
-
-    <import resource="classpath:/config/server-base-config.xml"/>
-
-    <bean id="ratingsManager" class="wisematches.server.player.rating.impl.RatingsManagerImpl">
-        <property name="topPlayersCount" value="5"/>
-    </bean>
-
-    <alias name="serverSessionFactory" alias="sessionFactory"/>
 </beans>

@@ -15,7 +15,7 @@ import wisematches.server.tournament.subscription.TournamentSubscriptionManager;
 /**
  * TODO: write description here
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  * @version $Id:  $
  */
 public class HibernateTournamentSubscriptionManager implements TournamentSubscriptionManager {
