@@ -1,4 +1,4 @@
-package wisematches.server.player.locks;
+package wisematches.server.player.lock;
 
 import java.io.Serializable;
 

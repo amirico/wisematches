@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wisematches.server.player.AccountManager;
 import wisematches.server.player.Player;
-import wisematches.server.player.locks.LockAccountManager;
+import wisematches.server.player.lock.LockAccountManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

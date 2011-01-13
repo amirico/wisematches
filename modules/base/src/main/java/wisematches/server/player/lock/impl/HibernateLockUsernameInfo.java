@@ -1,6 +1,6 @@
-package wisematches.server.player.locks.impl;
+package wisematches.server.player.lock.impl;
 
-import wisematches.server.player.locks.LockUsernameInfo;
+import wisematches.server.player.lock.LockUsernameInfo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package wisematches.server.player.locks.impl;
+package wisematches.server.player.lock.impl;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.player.AccountManager;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerEditor;
-import wisematches.server.player.locks.LockAccountInfo;
-import wisematches.server.player.locks.LockAccountListener;
-import wisematches.server.player.locks.LockAccountManager;
-import wisematches.server.player.locks.LockUsernameListener;
+import wisematches.server.player.lock.LockAccountInfo;
+import wisematches.server.player.lock.LockAccountListener;
+import wisematches.server.player.lock.LockAccountManager;
+import wisematches.server.player.lock.LockUsernameListener;
 
 import java.util.Date;
 

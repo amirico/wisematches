@@ -9,7 +9,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.player.*;
-import wisematches.server.player.locks.LockAccountManager;
+import wisematches.server.player.lock.LockAccountManager;
 
 import java.sql.SQLException;
 import java.util.Collection;
