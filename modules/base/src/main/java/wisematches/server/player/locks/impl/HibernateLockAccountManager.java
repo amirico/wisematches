@@ -43,21 +43,22 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void lockAccount(Player player, String publicReason, String privateReason, Date unlockdate) {
+	public void lockAccount(Player player, String publicReason, String privateReason, Date unlockDate) {
 		final HibernateTemplate template = getHibernateTemplate();
-		final LockAccountInfo lai = (LockAccountInfo) template.get(LockAccountInfo.class, player.getId());
+		final HibernateLockAccountInfo lai = template.get(HibernateLockAccountInfo.class, player.getId());
 		if (lai != null) {
 			lai.setPublicReason(publicReason);
 			lai.setPrivateReason(privateReason);
-			lai.setUnlockDate(unlockdate);
+			lai.setLockDate(new Date());
+			lai.setUnlockDate(unlockDate);
 			template.update(lai);
 		} else {
-			template.persist(new LockAccountInfo(player, publicReason, privateReason, unlockdate));
+			template.persist(new HibernateLockAccountInfo(player, publicReason, privateReason, unlockDate));
 		}
 		template.flush();
 
 		for (LockAccountListener accountListener : accountListeners) {
-			accountListener.accountLocked(player, publicReason, privateReason, unlockdate);
+			accountListener.accountLocked(player, publicReason, privateReason, unlockDate);
 		}
 	}
 
@@ -65,7 +66,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 	public void unlockAccount(Player player) {
 		final HibernateTemplate template = getHibernateTemplate();
 
-		final LockAccountInfo lai = (LockAccountInfo) template.get(LockAccountInfo.class, player.getId());
+		final LockAccountInfo lai = template.get(HibernateLockAccountInfo.class, player.getId());
 		if (lai != null) {
 			template.delete(lai);
 			template.flush();
@@ -79,10 +80,12 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isAccountLocked(final Player player) {
 		final HibernateTemplate template = getHibernateTemplate();
-		Date unlockDate = template.execute(new HibernateCallback<Date>() {
+		final Date unlockDate = template.execute(new HibernateCallback<Date>() {
 			public Date doInHibernate(Session session) throws HibernateException, SQLException {
-				final Query query = session.createQuery(
-						"select lock.unlockDate from " + LockAccountInfo.class.getName() + " where lock.playerId = ?");
+				final Query query = session.createQuery("" +
+						"select lock.unlockDate " +
+						"from wisematches.server.player.locks.impl.HibernateLockAccountInfo lock " +
+						"where lock.playerId = ?");
 				query.setLong(0, player.getId());
 				return (Date) query.uniqueResult();
 			}
@@ -94,7 +97,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 				template.execute(new HibernateCallback<Void>() {
 					public Void doInHibernate(Session session) throws HibernateException, SQLException {
 						final Query q = session.createQuery(
-								"delete from " + LockAccountInfo.class.getName() + " where playerId = ?");
+								"delete from wisematches.server.player.locks.impl.HibernateLockAccountInfo lock where lock.playerId = ?");
 						q.setLong(0, player.getId());
 						q.executeUpdate();
 
@@ -115,7 +118,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 		final HibernateTemplate template = getHibernateTemplate();
 		template.setCacheQueries(false);
 
-		LockAccountInfo accountInfo = (LockAccountInfo) template.get(LockAccountInfo.class, player.getId());
+		HibernateLockAccountInfo accountInfo = template.get(HibernateLockAccountInfo.class, player.getId());
 		if (log.isDebugEnabled()) {
 			log.debug("Get account lock info: " + accountInfo);
 		}
@@ -149,7 +152,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String isUsernameLocked(String username) {
 		final HibernateTemplate template = getHibernateTemplate();
-		final LockUsernameInfo name = (LockUsernameInfo) template.get(LockUsernameInfo.class, username);
+		final LockUsernameInfo name = template.get(HibernateLockUsernameInfo.class, username);
 		if (name != null) {
 			return name.getReason();
 		}
@@ -160,9 +163,9 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 	public void lockUsername(String username, String reason) {
 		final HibernateTemplate template = getHibernateTemplate();
 
-		LockUsernameInfo info = (LockUsernameInfo) template.get(LockUsernameInfo.class, username);
+		HibernateLockUsernameInfo info = template.get(HibernateLockUsernameInfo.class, username);
 		if (info == null) {
-			info = new LockUsernameInfo(username, reason);
+			info = new HibernateLockUsernameInfo(username, reason);
 			template.persist(info);
 		} else {
 			info.setReason(reason);
@@ -181,7 +184,7 @@ public class HibernateLockAccountManager extends HibernateDaoSupport implements 
 		template.execute(new HibernateCallback<Void>() {
 			public Void doInHibernate(Session session) throws HibernateException, SQLException {
 				Query q = session.createQuery(
-						"delete from " + LockUsernameInfo.class.getName() + " where username = ?");
+						"delete from " + HibernateLockUsernameInfo.class.getName() + " where username = ?");
 				q.setString(0, username);
 				final int removedCount = q.executeUpdate();
 				if (removedCount != 0) {

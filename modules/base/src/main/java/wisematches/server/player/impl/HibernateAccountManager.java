@@ -1,5 +1,9 @@
 package wisematches.server.player.impl;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
@@ -7,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.player.*;
 import wisematches.server.player.locks.LockAccountManager;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -20,10 +25,10 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	private final Collection<PlayerListener> playerListeners = new CopyOnWriteArraySet<PlayerListener>();
 	private final Collection<AccountListener> accountListeners = new CopyOnWriteArraySet<AccountListener>();
 
-	private static final String CHECK_PLAYER_QUERY = "" +
-			"select count(player.username), count(player.email) " +
+	private static final String CHECK_ACCOUNT_AVAILABILITY = "" +
+			"select player.username, player.email " +
 			"from wisematches.server.player.impl.HibernatePlayerImpl player " +
-			"where player.username = ? or player.email = ?";
+			"where player.username = :username or player.email = :email";
 
 	public HibernateAccountManager() {
 	}
@@ -57,13 +62,11 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY, readOnly = true)
 	public Player getPlayer(long playerId) {
 		return getHibernateTemplate().get(HibernatePlayerImpl.class, playerId);
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY, readOnly = true)
 	public Player findByEmail(String email) {
 		final HibernateTemplate template = getHibernateTemplate();
 		List l = template.find("from wisematches.server.player.impl.HibernatePlayerImpl user where user.email=?", email);
@@ -74,7 +77,6 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY, readOnly = true)
 	public Player findByUsername(String username) {
 		final HibernateTemplate template = getHibernateTemplate();
 		List l = template.find("from wisematches.server.player.impl.HibernatePlayerImpl user where user.username=?", username);
@@ -100,57 +102,84 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	}
 
 	@Override
-	public void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException {
-		throw new UnsupportedOperationException("Not implemented");
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException {
+		final AccountAvailability a = checkAccountAvailable(player.getUsername(), player.getEmail());
+		if (!a.isEmailAvailable()) {
+			throw new DuplicateAccountException(player, "email");
+		}
+
+		Player oldPlayer = getPlayer(player.getId());
+		if (oldPlayer == null) {
+			throw new UnknownAccountException(player);
+		}
+		// Copy previous state
+		oldPlayer = new PlayerEditor(oldPlayer).createPlayer();
+
+		// merge and update
+		final HibernateTemplate hibernateTemplate = getHibernateTemplate();
+		final Player p = hibernateTemplate.merge(new HibernatePlayerImpl(player));
+		hibernateTemplate.flush();
+		for (PlayerListener playerListener : playerListeners) {
+			playerListener.playerUpdated(oldPlayer, p);
+		}
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void removePlayer(Player player) throws UnknownAccountException {
-		HibernatePlayerImpl hp;
-		if (player instanceof HibernatePlayerImpl) {
-			hp = (HibernatePlayerImpl) player;
-		} else {
-			hp = (HibernatePlayerImpl) getPlayer(player.getId());
-		}
+		final HibernatePlayerImpl hp = (HibernatePlayerImpl) getPlayer(player.getId());
 		if (hp != null) {
 			getHibernateTemplate().delete(hp);
+
+			for (AccountListener accountListener : accountListeners) {
+				accountListener.accountRemove(player);
+			}
 		}
 	}
 
-	private void checkPlayer(final Player player) throws InadmissibleUsernameException {
+	@Override
+	public AccountAvailability checkAccountAvailable(final String username, final String email) {
+		final long[] res = getHibernateTemplate().execute(new HibernateCallback<long[]>() {
+			@Override
+			public long[] doInHibernate(Session session) throws HibernateException, SQLException {
+				final Query query = session.createQuery(CHECK_ACCOUNT_AVAILABILITY);
+				query.setString("username", username);
+				query.setString("email", email);
+
+				final long[] res = new long[2];
+				final List list = query.list();
+				for (Object lValue : list) {
+					final Object[] o = (Object[]) lValue;
+					if (username.equals(o[0])) {
+						res[0]++;
+					}
+					if (email.equals(o[1])) {
+						res[1]++;
+					}
+				}
+				return res;
+			}
+		});
+		return new AccountAvailability(res[0] == 0, res[1] == 0);
+	}
+
+	private void checkPlayer(final Player player) throws InadmissibleUsernameException, DuplicateAccountException {
 		final String reason = lockAccountManager.isUsernameLocked(player.getUsername());
 		if (reason != null) {
 			throw new InadmissibleUsernameException(player, reason);
 		}
 
-
-/*
-		final int count = ((Number) ((List) getHibernateTemplate().findByNamedQuery("PlayersCount")).get(0)).intValue();
-		final List list = template.executeFind(new HibernateCallback<List>() {
-			public List doInHibernate(Session session) {
-				final Query query = session.createQuery(CHECK_PLAYER_QUERY);
-				query.setString(0, player.getUsername());
-				query.setString(1, player.getEmail());
-				query.setMaxResults(1); //we don't check all database. First record is enaf.
-				return query.list();
+		final AccountAvailability a = checkAccountAvailable(player.getUsername(), player.getEmail());
+		if (!a.isAvailable()) {
+			if (!a.isEmailAvailable() && a.isUsernameAvailable()) {
+				throw new DuplicateAccountException(player, "email");
+			} else if (a.isEmailAvailable() && !a.isUsernameAvailable()) {
+				throw new DuplicateAccountException(player, "username");
+			} else {
+				throw new DuplicateAccountException(player, "username", "email");
 			}
-		});
-		if (list != null && list.size() != 0) {
-			boolean usernameDublicate = false;
-			boolean emailDublicate = false;
-
-			for (Object o : list) {
-				final Object[] values = (Object[]) o;
-				final String un = (String) values[0];
-				final String mail = (String) values[1];
-
-				usernameDublicate = usernameDublicate || username.equals(un);
-				emailDublicate = emailDublicate || email.equals(mail);
-			}
-			throw new DuplicateAccountException(player, );
 		}
-*/
 	}
 
 	public void setLockAccountManager(LockAccountManager lockAccountManager) {

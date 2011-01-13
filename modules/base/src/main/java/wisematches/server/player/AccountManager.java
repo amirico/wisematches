@@ -33,7 +33,7 @@ public interface AccountManager extends PlayerManager {
 	 * @throws UnknownAccountException   if an account for specified player is unknown.
 	 * @throws DuplicateAccountException if account with specified username or email already exist.
 	 */
-	void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException;
+	void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException;
 
 	/**
 	 * Removes specified player.
@@ -42,4 +42,13 @@ public interface AccountManager extends PlayerManager {
 	 * @throws UnknownAccountException if an account for specified player is unknown.
 	 */
 	void removePlayer(Player player) throws UnknownAccountException;
+
+	/**
+	 * Checks is account with specified username and email can be created or not.
+	 *
+	 * @param username the username to be checked
+	 * @param email	the email to be checked.
+	 * @return the {@code AccountAvailability} object that contains information about availability.
+	 */
+	AccountAvailability checkAccountAvailable(String username, String email);
 }

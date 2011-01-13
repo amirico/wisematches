@@ -6,11 +6,11 @@ package wisematches.server.player;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class UnknownAccountException extends AccountException {
-	public UnknownAccountException(String message, Player player) {
-		super(message, player);
+	public UnknownAccountException(Player player) {
+		super("UnknownAccountException: " + player, player);
 	}
 
-	public UnknownAccountException(String message, Throwable cause, Player player) {
-		super(message, cause, player);
+	public UnknownAccountException(Throwable cause, Player player) {
+		super("UnknownAccountException: " + player, cause, player);
 	}
 }
