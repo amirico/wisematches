@@ -42,7 +42,7 @@ public class RatingsManagerDaoTest extends AbstractTransactionalDataSourceSpring
 	}
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-server-config.xml"};
+		return new String[]{"classpath:/config/test-server-base-config.xml"};
 	}
 
 	@Override

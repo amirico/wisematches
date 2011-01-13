@@ -31,7 +31,7 @@ public class HibernateAccountManagerTest extends AbstractTransactionalDataSource
 	}
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-server-config.xml"};
+		return new String[]{"classpath:/config/test-server-base-config.xml"};
 	}
 
 	public void setAccountManager(AccountManager accountManager) {

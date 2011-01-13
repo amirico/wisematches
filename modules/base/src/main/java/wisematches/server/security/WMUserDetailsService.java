@@ -9,7 +9,7 @@ import wisematches.server.player.Player;
 import wisematches.server.player.locks.LockAccountManager;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMUserDetailsService implements UserDetailsService {
 	private AccountManager accountManager;

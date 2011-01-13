@@ -18,7 +18,7 @@ import java.util.Locale;
 /**
  * This is base controller that processes any requests in <i>/info/*</i>.
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping({"/", "/info"})

@@ -5,7 +5,7 @@
 package wisematches.server.accoint.dwr.bean;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ProblemsReportForm {
 	private String email;

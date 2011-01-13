@@ -15,20 +15,20 @@ import java.util.Locale;
 /**
  * TODO: java docs
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-    private InformationController informationController;
+	private InformationController informationController;
 
-    @RequestMapping("unauthorized")
-    public String unauthorizedAccess(Model model, Locale locale, WebRequest webRequest) {
-        return informationController.infoPages("unauthorized", model, locale, webRequest);
-    }
+	@RequestMapping("unauthorized")
+	public String unauthorizedAccess(Model model, Locale locale, WebRequest webRequest) {
+		return informationController.infoPages("unauthorized", model, locale, webRequest);
+	}
 
-    @Autowired
-    public void setInformationController(InformationController informationController) {
-        this.informationController = informationController;
-    }
+	@Autowired
+	public void setInformationController(InformationController informationController) {
+		this.informationController = informationController;
+	}
 }

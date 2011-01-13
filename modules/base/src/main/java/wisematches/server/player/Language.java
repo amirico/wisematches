@@ -30,8 +30,7 @@ public enum Language {
 	private final String code;
 	private final Locale locale;
 
-
-	Language(Locale locale) {
+	private Language(Locale locale) {
 		this.code = locale.getLanguage();
 		this.locale = locale;
 	}

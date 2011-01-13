@@ -7,7 +7,7 @@ package wisematches.server.accoint.dwr.service;
 import wisematches.server.accoint.dwr.bean.ProblemsReportForm;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ProblemsReportService {
 	public ServiceResponse reportProblem(ProblemsReportForm report) {

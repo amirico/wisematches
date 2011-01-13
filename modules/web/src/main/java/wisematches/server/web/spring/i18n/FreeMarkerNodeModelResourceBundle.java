@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * TODO: java docs
  *
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FreeMarkerNodeModelResourceBundle {
 	private String[] resourcesPaths;

@@ -3,7 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="ratingsManagerDao" class="wisematches.server.player.rating.impl.RatingsManagerDao">
+    <bean id="lockAccountManager" class="wisematches.server.player.locks.impl.HibernateLockAccountManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="accountManager" class="wisematches.server.player.impl.HibernateAccountManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="lockAccountManager" ref="lockAccountManager"/>
+    </bean>
+
+    <alias alias="playerManager" name="accountManager"/>
+
+    <!--    <bean id="ratingsManagerDao" class="wisematches.server.player.rating.impl.RatingsManagerDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -42,5 +53,5 @@
 
     <bean id="countriesManager" class="wisematches.server.player.profile.counties.impl.CSVCountriesManager">
         <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
-    </bean>
+    </bean>-->
 </beans>

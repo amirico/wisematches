@@ -5,7 +5,7 @@
 package wisematches.server.tournament;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  * @version $Id:  $
  */
 public interface TournamentListener {

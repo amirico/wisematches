@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.Locale;
 
 /**
- * @author klimese
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/game")
