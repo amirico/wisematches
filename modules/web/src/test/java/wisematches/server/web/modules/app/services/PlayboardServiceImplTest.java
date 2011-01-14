@@ -416,7 +416,7 @@ public class PlayboardServiceImplTest {
     private Player createMockPlayer(long id) {
         Player player = createMock(Player.class);
         expect(player.getId()).andReturn(id).anyTimes();
-        expect(player.getUsername()).andReturn("u").anyTimes();
+        expect(player.getNickname()).andReturn("u").anyTimes();
         expect(player.getRating()).andReturn(12).anyTimes();
         replay(player);
         return player;

@@ -57,7 +57,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         bean.setTurnsCount(statistic.getTurnsCount());
 
         bean.setRegistredFrom(player.getCreationDate().getTime());
-        bean.setPlayerInfoBean(new PlayerInfoBean(player.getId(), player.getUsername(), getMemberType(player), player.getRating()));
+        bean.setPlayerInfoBean(new PlayerInfoBean(player.getId(), player.getNickname(), getMemberType(player), player.getRating()));
 
         updateBeanInfo(player, bean.getPlayerSettingsBean());
 
@@ -187,7 +187,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         if (p1Id != 0) {
             final Player p1 = playerManager.getPlayer(p1Id);
             if (p1 != null) {
-                bean.setHighestWonOpponentBean(new PlayerInfoBean(p1Id, p1.getUsername(), getMemberType(p1), ratingInfo.getHighestWonOpponentRating()));
+                bean.setHighestWonOpponentBean(new PlayerInfoBean(p1Id, p1.getNickname(), getMemberType(p1), ratingInfo.getHighestWonOpponentRating()));
             }
         }
 
@@ -195,7 +195,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         if (p2Id != 0) {
             final Player p2 = playerManager.getPlayer(p2Id);
             if (p2 != null) {
-                bean.setLowestLostOpponentBean(new PlayerInfoBean(p2Id, p2.getUsername(), getMemberType(p2), ratingInfo.getLowestLostOpponentRating()));
+                bean.setLowestLostOpponentBean(new PlayerInfoBean(p2Id, p2.getNickname(), getMemberType(p2), ratingInfo.getLowestLostOpponentRating()));
             }
         }
         return bean;
@@ -205,7 +205,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
     protected void updateBeanInfo(Player player, PlayerSettingsBean bean) {
         final PlayerProfile profile = player.getPlayerProfile();
         bean.setPlayerId(player.getId());
-        bean.setUsername(player.getUsername());
+        bean.setUsername(player.getNickname());
         bean.setEmail(player.getEmail());
 
         final String countryCode = profile.getCountryCode();

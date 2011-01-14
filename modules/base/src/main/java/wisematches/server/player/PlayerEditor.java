@@ -17,7 +17,7 @@ public class PlayerEditor {
 
 	public PlayerEditor(Player player) {
 		this.id = player.getId();
-		this.username = player.getUsername();
+		this.username = player.getNickname();
 		this.password = player.getPassword();
 		this.email = player.getEmail();
 		this.language = player.getLanguage();
@@ -124,7 +124,7 @@ public class PlayerEditor {
 		}
 
 		@Override
-		public String getUsername() {
+		public String getNickname() {
 			return username;
 		}
 

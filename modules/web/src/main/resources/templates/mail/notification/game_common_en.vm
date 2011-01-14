@@ -1,16 +1,16 @@
 #macro(daysAsString $days)
-$days #if ($days <= 1) day #else days #end
+    $days #if ($days <= 1) day #else days #end
 #end
 
 #macro(hoursAsString $hours)
-$hours #if ($hours <= 1) hour #else hours #end
+    $hours #if ($hours <= 1) hour #else hours #end
 #end
 
 #macro(minutesAsString $minutes)
-$minutes #if ($minutes <= 1) minute #else minutes #end
+    $minutes #if ($minutes <= 1) minute #else minutes #end
 #end
 
 #parse("/templates/mail/notification/game_common.vm")
 <p>
-    Hello, $player.Username.
+    Hello, $player.Nickname.
 </p>

@@ -6,6 +6,33 @@ wm.account = new function() {
     var registrationWindow;
     var recoveryAccountWindow;
 
+    var defaultAuthorizedUrl = '/game/dashboard.html';
+
+    var post_to_url = function(path, params, method) {
+        method = method || "post";
+
+        var form = document.createElement("form");
+
+        //move the submit function to another variable
+        //so that it doesn't get over written
+        form._submit_function_ = form.submit;
+
+        form.setAttribute("method", method);
+        form.setAttribute("action", path);
+
+        for (var key in params) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+        }
+
+        document.body.appendChild(form);
+        form._submit_function_(); //call the renamed function
+    };
+
     Ext.apply(Ext.form.VTypes, {
         password : function(val, field) {
             if (field.initialPassField) {
@@ -199,6 +226,71 @@ wm.account = new function() {
         return recoveryAccountWindow;
     };
 
+    var createSignInForm = function() {
+        var signInForm = new Ext.form.FormPanel({
+            id: 'login-panel-form',
+            labelWidth: 90,
+            labelAlign: 'right',
+            buttonAlign: 'center',
+            defaultType: 'textfield',
+            style: 'padding: 0',
+            url: '/account/checkAccount.html',
+            defaults: {
+                msgTarget: 'under',
+                allowBlank:false,
+                selectOnFocus: true,
+                validationEvent: false,
+                width: '90%'
+            },
+            items: [
+                {
+                    id: 'j_username',
+                    name: 'j_username',
+                    vtype: 'email',
+                    fieldLabel: _('login.form.email.label'),
+                    blankText: _('login.form.email.err.empty')
+                },
+                {
+                    id: 'j_password',
+                    name: 'j_password',
+                    inputType: 'password',
+                    fieldLabel: _('login.form.password.label'),
+                    blankText: _('login.form.password.err.empty')
+                },
+                {
+                    id: '_remember_me',
+                    name: '_remember_me',
+                    xtype: 'checkbox',
+                    checked: true,
+                    width: 'auto',
+                    boxLabel: _('login.form.remember.label'),
+                    hideLabel: true
+                }
+            ],
+
+            buttons: [
+                {
+                    text: _('login.form.signin.label'),
+                    type: 'submit',
+                    handler: function() {
+                        if (signInForm.form.isValid()) {
+                            signInForm.form.doAction('submit', {
+                                waitMsg: _('login.form.submit.wait.label'),
+                                waitTitle: _('login.form.submit.wait.description'),
+
+                                success: function() {
+                                    Ext.MessageBox.wait('Sign in successfully. Please wait while you will be redirected to dashboard...');
+                                    window.location.href = defaultAuthorizedUrl;
+                                }
+                            });
+                        }
+                    }
+                }
+            ]
+        });
+        return signInForm;
+    };
+
     this.showRegistrationWindow = function () {
         if (!registrationWindow) {
             var checkAvailabilityButton = new Ext.Button({
@@ -251,7 +343,6 @@ wm.account = new function() {
                 }
             });
 
-
             var emailField = new Ext.form.TextField({
                 id: 'email',
                 name : 'email',
@@ -267,6 +358,7 @@ wm.account = new function() {
                 },
 
                 onKeyUp : function(e) {
+                    Ext.form.TextField.superclass.onKeyUp.call(this, arguments);
                     this.updateUsername();
                 },
 
@@ -366,7 +458,7 @@ wm.account = new function() {
                             if (registrationForm.form.isValid()) {
                                 var registrationBean = {
                                     username: null, email:null, password:null,
-                                    timezone:new Date().getGMTOffset() };
+                                    language: _('locale'), timezone:new Date().getGMTOffset() };
 
                                 registrationForm.form.submit({
                                     reset: true,
@@ -393,6 +485,13 @@ wm.account = new function() {
                 ]
             });
 
+            var registrationPanel = new Ext.Panel({
+                frame: true,
+                border: false,
+                title: _('account.register.form.info.label'),
+                items: [registrationForm]
+            });
+
             var infoPanel = new Ext.TabPanel({
                 activeTab: 0,
                 frame:false,
@@ -407,13 +506,6 @@ wm.account = new function() {
                     {title: _('info.privacy_policy.label'), autoLoad: '/info/policy.html?plain'},
                     {title: _('info.naming.label'), autoLoad: '/info/naming.html?plain'}
                 ]
-            });
-
-            var p = new Ext.Panel({
-                frame: true,
-                border: false,
-                title: _('account.register.form.info.label'),
-                items: [registrationForm]
             });
 
             registrationWindow = new Ext.Window({
@@ -432,7 +524,7 @@ wm.account = new function() {
 
                 layout:'border',
                 items: [
-                    Ext.apply(p, {region: 'west', width:330}),
+                    Ext.apply(registrationPanel, {region: 'west', width:330}),
                     Ext.apply(infoPanel, { region: 'center', height: '100%'})
                 ]
             });
@@ -460,68 +552,6 @@ wm.account = new function() {
     };
 
     this.createSignInPanel = function() {
-        var signInForm = new Ext.form.FormPanel({
-            id: 'login-panel-form',
-            labelWidth: 90,
-            labelAlign: 'right',
-            buttonAlign: 'center',
-            defaultType: 'textfield',
-            style: 'padding: 0',
-            url: '/account/checkAccount.html',
-            defaults: {
-                msgTarget: 'under',
-                allowBlank:false,
-                selectOnFocus: true,
-                validationEvent: false,
-                width: '90%'
-            },
-            items: [
-                {
-                    id: 'j_username',
-                    name: 'j_username',
-                    vtype: 'email',
-                    fieldLabel: _('login.form.email.label'),
-                    blankText: _('login.form.email.err.empty')
-                },
-                {
-                    id: 'j_password',
-                    name: 'j_password',
-                    inputType: 'password',
-                    fieldLabel: _('login.form.password.label'),
-                    blankText: _('login.form.password.err.empty')
-                },
-                {
-                    id: '_remember_me',
-                    name: '_remember_me',
-                    xtype: 'checkbox',
-                    checked: true,
-                    width: 'auto',
-                    boxLabel: _('login.form.remember.label'),
-                    hideLabel: true
-                }
-            ],
-
-            buttons: [
-                {
-                    text: _('login.form.signin.label'),
-                    type: 'submit',
-                    handler: function() {
-                        if (signInForm.form.isValid()) {
-                            signInForm.form.doAction('submit', {
-                                waitMsg: _('login.form.submit.wait.label'),
-                                waitTitle: _('login.form.submit.wait.description'),
-
-                                success: function() {
-                                    Ext.MessageBox.wait('Sign in successfully. Please wait while you will be redirected to dashboard...');
-                                    window.location.href = '/game/dashboard.html';
-                                }
-                            });
-                        }
-                    }
-                }
-            ]
-        });
-
         return new Ext.Panel({
             frame:true,
 
@@ -532,7 +562,7 @@ wm.account = new function() {
                     html: _('login.form.title')
                 },
 
-                signInForm,
+                createSignInForm(),
 
                 new Ext.ux.wm.Hyperlink({
                     id: 'restore-password-link',

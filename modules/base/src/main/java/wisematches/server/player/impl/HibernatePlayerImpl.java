@@ -91,7 +91,7 @@ public class HibernatePlayerImpl implements Player, Serializable {
 
 	public HibernatePlayerImpl(Player player) {
 		this.id = player.getId();
-		this.username = player.getUsername();
+		this.username = player.getNickname();
 		updatePlayerInfo(player);
 	}
 
@@ -106,7 +106,7 @@ public class HibernatePlayerImpl implements Player, Serializable {
 	}
 
 	@Override
-	public String getUsername() {
+	public String getNickname() {
 		return username;
 	}
 

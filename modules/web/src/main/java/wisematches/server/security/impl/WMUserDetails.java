@@ -1,4 +1,4 @@
-package wisematches.server.security;
+package wisematches.server.security.impl;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,7 +18,7 @@ public class WMUserDetails extends User implements Player {
 	private final Player originalPlayer;
 
 	public WMUserDetails(Player originalPlayer, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-		super(originalPlayer.getUsername(), originalPlayer.getPassword(), true, true, true, accountNonLocked, authorities);
+		super(originalPlayer.getNickname(), originalPlayer.getPassword(), true, true, true, accountNonLocked, authorities);
 		this.originalPlayer = originalPlayer;
 	}
 
@@ -29,7 +29,12 @@ public class WMUserDetails extends User implements Player {
 
 	@Override
 	public String getUsername() {
-		return originalPlayer.getUsername();
+		return originalPlayer.getEmail();
+	}
+
+	@Override
+	public String getNickname() {
+		return originalPlayer.getNickname();
 	}
 
 	@Override

@@ -13,7 +13,7 @@
 
     <beans:bean id="ipTokenBasedRememberMeServicesBean"
                 class="wisematches.server.web.spring.security.IPTokenBasedRememberMeServices">
-        <beans:property name="key" value="jbcpPetStore"/>
+        <beans:property name="key" value="${security.remember.token}"/>
         <beans:property name="userDetailsService" ref="userDetailsService"/>
         <beans:property name="parameter" value="_remember_me"/>
         <beans:property name="cookieName" value="REMEMBER_ME"/>
@@ -27,8 +27,7 @@
         <intercept-url pattern="/**" access="permitAll"/>
 
         <!-- TODO: move this key to server configuration. Must not be under source control -->
-        <remember-me key="wisematches-tOPiCBendy46toRNani1SpiTE2moMisReItAnt58Slam"
-                     services-ref="ipTokenBasedRememberMeServicesBean"/>
+        <remember-me services-ref="ipTokenBasedRememberMeServicesBean"/>
 
         <form-login login-processing-url="/account/checkAccount.html"
                     login-page="/account/unauthorized.html"

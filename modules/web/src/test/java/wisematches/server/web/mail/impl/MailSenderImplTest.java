@@ -28,7 +28,7 @@ public class MailSenderImplTest {
 
 		final Player p = createMock(Player.class);
 		expect(p.getEmail()).andReturn("player@test.ts");
-		expect(p.getUsername()).andReturn("username");
+		expect(p.getNickname()).andReturn("username");
 		expect(p.getLanguage()).andReturn(language);
 		replay(p);
 

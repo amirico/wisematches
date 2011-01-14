@@ -1,6 +1,9 @@
 package wisematches.server.player;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This exception is thrown is you try register or modify an account and any of the account's attributes
@@ -9,21 +12,12 @@ import java.util.Arrays;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DuplicateAccountException extends AccountException {
-	private final String[] fieldNames;
+	private final Set<String> fieldNames;
 
 	public DuplicateAccountException(Player player, String... fieldNames) {
 		super("DuplicateAccount: " + Arrays.toString(fieldNames), player);
 		if (fieldNames != null) {
-			this.fieldNames = fieldNames.clone();
-		} else {
-			this.fieldNames = null;
-		}
-	}
-
-	public DuplicateAccountException(Throwable cause, Player player, String... fieldNames) {
-		super("DuplicateAccount: " + Arrays.toString(fieldNames), cause, player);
-		if (fieldNames != null) {
-			this.fieldNames = fieldNames.clone();
+			this.fieldNames = new HashSet<String>(Arrays.asList(fieldNames));
 		} else {
 			this.fieldNames = null;
 		}
@@ -34,9 +28,9 @@ public class DuplicateAccountException extends AccountException {
 	 *
 	 * @return the duplicate field names.
 	 */
-	public String[] getFieldNames() {
+	public Set<String> getFieldNames() {
 		if (fieldNames != null) {
-			return fieldNames.clone();
+			return Collections.unmodifiableSet(fieldNames);
 		}
 		return null;
 	}

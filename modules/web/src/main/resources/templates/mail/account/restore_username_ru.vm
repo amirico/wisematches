@@ -3,7 +3,7 @@
 <p>
     Ваш адес эл. почты, ${player.email}, связан с именем пользователя:
     <br>
-    &nbsp;&nbsp;${player.username}
+    &nbsp;&nbsp;${player.nickname}
 </p>
 
 <p>

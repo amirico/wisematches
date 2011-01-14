@@ -53,7 +53,7 @@ public class GameboardServiceImpl extends GenericSecureRemoteService { //impleme
         for (ScribblePlayerHand hand : playersHands) {
             final long playerId = hand.getPlayerId();
             final Player player = manager.getPlayer(playerId);
-            opponents[index++] = new PlayerInfoBean(playerId, player.getUsername(), getMemberType(player), hand.getPoints());
+            opponents[index++] = new PlayerInfoBean(playerId, player.getNickname(), getMemberType(player), hand.getPoints());
         }
 
         bean.setPlayers(opponents);
@@ -64,7 +64,7 @@ public class GameboardServiceImpl extends GenericSecureRemoteService { //impleme
     protected static PlayerInfoBean convertPlayer(Player player, GameBoard gameBoard) {
         final long id = player.getId();
         final GamePlayerHand hand = gameBoard.getPlayerHand(id);
-        return new PlayerInfoBean(id, player.getUsername(), getMemberType(player), hand.getPoints());
+        return new PlayerInfoBean(id, player.getNickname(), getMemberType(player), hand.getPoints());
     }
 
     public void setRoomsManager(RoomsManager roomsManager) {

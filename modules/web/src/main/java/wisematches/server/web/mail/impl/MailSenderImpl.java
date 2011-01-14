@@ -52,7 +52,7 @@ public class MailSenderImpl extends AbstractMailSender {
 				final String template = ResourceManager.getFormatString(resource + ".template", locale, mdl);
 
 				try {
-					final InternetAddress to = new InternetAddress(player.getEmail(), player.getUsername(), "UTF-8");
+					final InternetAddress to = new InternetAddress(player.getEmail(), player.getNickname(), "UTF-8");
 
 					MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 					message.setFrom(from.getInternetAddress(locale));

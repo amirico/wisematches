@@ -75,13 +75,13 @@ public class HibernateAccountManagerTest {
 		final Player account = createAccount();
 
 		final PlayerEditor editor = createMockEditor();
-		editor.setUsername(account.getUsername());
+		editor.setUsername(account.getNickname());
 		try {
 			accountManager.createPlayer(editor.createPlayer());
 			fail("DuplicateAccountException must be here");
 		} catch (DuplicateAccountException ex) {
-			assertEquals(1, ex.getFieldNames().length);
-			assertEquals("username", ex.getFieldNames()[0]);
+			assertEquals(1, ex.getFieldNames().size());
+			assertTrue(ex.getFieldNames().contains("username"));
 		}
 		sessionFactory.getCurrentSession().flush();
 	}
@@ -96,8 +96,8 @@ public class HibernateAccountManagerTest {
 			accountManager.createPlayer(editor.createPlayer());
 			fail("DuplicateAccountException must be here");
 		} catch (DuplicateAccountException ex) {
-			assertEquals(1, ex.getFieldNames().length);
-			assertEquals("email", ex.getFieldNames()[0]);
+			assertEquals(1, ex.getFieldNames().size());
+			assertTrue(ex.getFieldNames().contains("email"));
 		}
 		sessionFactory.getCurrentSession().flush();
 	}
@@ -107,15 +107,15 @@ public class HibernateAccountManagerTest {
 		final Player account = createAccount();
 
 		final PlayerEditor editor = createMockEditor();
-		editor.setUsername(account.getUsername());
+		editor.setUsername(account.getNickname());
 		editor.setEmail(account.getEmail());
 		try {
 			accountManager.createPlayer(editor.createPlayer());
 			fail("DuplicateAccountException must be here");
 		} catch (DuplicateAccountException ex) {
-			assertEquals(2, ex.getFieldNames().length);
-			assertEquals("username", ex.getFieldNames()[0]);
-			assertEquals("email", ex.getFieldNames()[1]);
+			assertEquals(2, ex.getFieldNames().size());
+			assertTrue(ex.getFieldNames().contains("username"));
+			assertTrue(ex.getFieldNames().contains("email"));
 		}
 		sessionFactory.getCurrentSession().flush();
 	}
@@ -145,7 +145,7 @@ public class HibernateAccountManagerTest {
 
 		final Player player = accountManager.getPlayer(p.getId());
 		assertEquals(e.getEmail(), player.getEmail());
-		assertEquals(e.getUsername(), player.getUsername());
+		assertEquals(e.getUsername(), player.getNickname());
 		assertEquals(e.getPassword(), player.getPassword());
 		assertEquals(e.getLanguage(), player.getLanguage());
 		assertEquals(e.getMembership(), player.getMembership());
@@ -161,7 +161,7 @@ public class HibernateAccountManagerTest {
 		assertNotNull(mock);
 		assertFalse(0 == mock.getId());
 		assertEquals(op.getEmail(), mock.getEmail());
-		assertEquals(op.getUsername(), mock.getUsername());
+		assertEquals(op.getNickname(), mock.getNickname());
 		assertEquals(op.getPassword(), mock.getPassword());
 		assertEquals(Language.DEFAULT, mock.getLanguage());
 		assertEquals(Membership.GUEST, mock.getMembership());

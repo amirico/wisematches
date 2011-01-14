@@ -1,19 +1,27 @@
 package wisematches.server.player;
 
+import java.io.Serializable;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class AccountAvailability {
+public final class AccountAvailability implements Serializable {
 	private final boolean usernameAvailable;
 	private final boolean emailAvailable;
+	private final boolean usernameProhibited;
 
-	public AccountAvailability(boolean usernameAvailable, boolean emailAvailable) {
+	public AccountAvailability(boolean emailAvailable, boolean usernameAvailable, boolean usernameProhibited) {
 		this.usernameAvailable = usernameAvailable;
 		this.emailAvailable = emailAvailable;
+		this.usernameProhibited = usernameProhibited;
 	}
 
 	public boolean isUsernameAvailable() {
 		return usernameAvailable;
+	}
+
+	public boolean isUsernameProhibited() {
+		return usernameProhibited;
 	}
 
 	public boolean isEmailAvailable() {

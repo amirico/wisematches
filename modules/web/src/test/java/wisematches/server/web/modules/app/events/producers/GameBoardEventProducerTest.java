@@ -330,7 +330,7 @@ public class GameBoardEventProducerTest {
     private Player createMockPlayer(long id) {
         final Player player = createMock(Player.class);
         expect(player.getId()).andReturn(id).anyTimes();
-        expect(player.getUsername()).andReturn("test-" + id).anyTimes();
+        expect(player.getNickname()).andReturn("test-" + id).anyTimes();
         expect(player.getRating()).andReturn(100 + (int) id).anyTimes();
         replay(player);
         return player;

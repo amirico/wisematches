@@ -3,7 +3,7 @@
 <p>
     Your address, ${player.email}, is associated with username:
     <br>
-    &nbsp;&nbsp;${player.username}
+    &nbsp;&nbsp;${player.nickname}
 </p>
 
 <p>

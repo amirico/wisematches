@@ -16,11 +16,12 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
-    <bean id="userDetailsService" class="org.springframework.security.provisioning.JdbcUserDetailsManager">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="enableGroups" value="true"/>
-        <property name="enableAuthorities" value="false"/>
+    <bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
+        <property name="accountManager" ref="accountManager"/>
+        <property name="lockAccountManager" ref="lockAccountManager"/>
         <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="saltSource" ref="saltSource"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>
 
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>

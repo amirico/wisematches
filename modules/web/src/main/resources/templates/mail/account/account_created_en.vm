@@ -1,7 +1,7 @@
 <html>
 <body>
 <p>
-    Congratulations on creating your new WiseMatches account, <strong>${player.username}</strong>.
+    Congratulations on creating your new WiseMatches account, <strong>${player.nickname}</strong>.
 </p>
 
 <p>

@@ -125,7 +125,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 	private Player createMockPlayer(long id) {
 		Player p = createMock(Player.class);
 		expect(p.getId()).andReturn(id).anyTimes();
-		expect(p.getUsername()).andReturn("MockPlayer" + id).anyTimes();
+		expect(p.getNickname()).andReturn("MockPlayer" + id).anyTimes();
 		expect(p.getEmail()).andReturn("test@localhost");
 		expect(p.getLanguage()).andReturn(Language.RUSSIAN);
 		replay(p);

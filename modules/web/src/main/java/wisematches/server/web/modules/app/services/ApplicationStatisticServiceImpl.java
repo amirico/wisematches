@@ -56,7 +56,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
             topPlayers.clear();
             final List<Player> topRatedPlayers = ratingsManager.getTopRatedPlayers();
             for (Player player : topRatedPlayers) {
-                topPlayers.put(player, new PlayerInfoBean(player.getId(), player.getUsername(), getMemberType(player), player.getRating()));
+                topPlayers.put(player, new PlayerInfoBean(player.getId(), player.getNickname(), getMemberType(player), player.getRating()));
             }
         } finally {
             topPlayersLock.writeLock().unlock();
