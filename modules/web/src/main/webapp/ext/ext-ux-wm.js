@@ -48,7 +48,7 @@ Ext.ns('Ext.ux.dwr.config');
 Ext.ns('Ext.ux.dwr.Action');
 Ext.ux.dwr.config.Common = {
     dwrFunction: null,
-    dwrTimeout: 700,
+    dwrTimeout: 3000,
     dwrResponseConverter: null
 };
 

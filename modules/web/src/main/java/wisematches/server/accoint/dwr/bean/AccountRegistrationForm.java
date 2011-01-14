@@ -11,6 +11,7 @@ public class AccountRegistrationForm {
 	private String email;
 	private String username;
 	private String password;
+	private String language;
 	private String timezone;
 
 	public String getUsername() {
@@ -45,13 +46,21 @@ public class AccountRegistrationForm {
 		this.timezone = timezone;
 	}
 
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("AccountRegistrationForm");
 		sb.append("{username='").append(username).append('\'');
-		sb.append(", password='").append(password).append('\'');
 		sb.append(", email='").append(email).append('\'');
+		sb.append(", language='").append(language).append('\'');
 		sb.append(", timezone=").append(timezone);
 		sb.append('}');
 		return sb.toString();

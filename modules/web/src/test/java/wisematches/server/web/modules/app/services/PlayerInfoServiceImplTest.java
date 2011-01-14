@@ -21,7 +21,7 @@ public class PlayerInfoServiceImplTest {
     public void test_getSessionPlayer() throws SerializationException {
         final Player player = createStrictMock(Player.class);
         expect(player.getId()).andReturn(13L);
-        expect(player.getUsername()).andReturn("mock");
+        expect(player.getNickname()).andReturn("mock");
         expect(player.getRating()).andReturn(123);
         replay(player);
 
@@ -54,7 +54,7 @@ public class PlayerInfoServiceImplTest {
 
         final Player player = createMock(Player.class);
         expect(player.getRating()).andReturn(321);
-        expect(player.getUsername()).andReturn("Test Name");
+        expect(player.getNickname()).andReturn("Test Name");
         replay(player);
 
         reset(playerManager);

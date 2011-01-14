@@ -22,7 +22,7 @@ public class UnsuitablePlayerException extends GameMoveException {
 	 * @param player	the player who try do this operation.
 	 */
 	public UnsuitablePlayerException(String operation, Player player) {
-		super("Player " + player.getUsername() + "[" + player.getId() + "] can not perform " +
+		super("Player " + player.getNickname() + "[" + player.getId() + "] can not perform " +
 				operation + " operation because does not belongs to this game.");
 
 		expectedPlayerId = 0;
@@ -57,9 +57,9 @@ public class UnsuitablePlayerException extends GameMoveException {
 	 * @param specifiedPlayer the player who try to perform operation.
 	 */
 	public UnsuitablePlayerException(String operation, Player expectedPlayer, Player specifiedPlayer) {
-		super("For " + operation + " operation player " + expectedPlayer.getUsername() +
+		super("For " + operation + " operation player " + expectedPlayer.getNickname() +
 				"[" + expectedPlayer.getId() + "]" + " expected but " +
-				"player " + specifiedPlayer.getUsername() + "[" + specifiedPlayer.getId() + "]" +
+				"player " + specifiedPlayer.getNickname() + "[" + specifiedPlayer.getId() + "]" +
 				" was specified");
 		this.expectedPlayerId = expectedPlayer.getId();
 		this.specifiedPlayerId = specifiedPlayer.getId();

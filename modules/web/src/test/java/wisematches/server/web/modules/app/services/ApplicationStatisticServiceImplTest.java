@@ -140,7 +140,7 @@ public class ApplicationStatisticServiceImplTest {
     private Player createMockPlayer(long id, int rating) {
         Player p = createMock(Player.class);
         expect(p.getId()).andReturn(id);
-        expect(p.getUsername()).andReturn("Player" + id);
+        expect(p.getNickname()).andReturn("Player" + id);
         expect(p.getRating()).andReturn(rating);
         replay(p);
         return p;

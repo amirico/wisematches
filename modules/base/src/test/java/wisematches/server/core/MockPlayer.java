@@ -26,7 +26,7 @@ public class MockPlayer implements Player {
 		return id;
 	}
 
-	public String getUsername() {
+	public String getNickname() {
 		return "MockPlayer" + id;
 	}
 

@@ -118,7 +118,7 @@ public class PlayerEventProducerTest {
     private Player createMockPlayer() {
         final Player player = createMock(Player.class);
         expect(player.getId()).andReturn(13L).anyTimes();
-        expect(player.getUsername()).andReturn("test").anyTimes();
+        expect(player.getNickname()).andReturn("test").anyTimes();
         expect(player.getRating()).andReturn(123).anyTimes();
         replay(player);
         return player;

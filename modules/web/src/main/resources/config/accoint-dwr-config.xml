@@ -23,8 +23,12 @@
     </bean>
 
     <bean id="accountManagementService" class="wisematches.server.accoint.dwr.service.AccountManagementService">
+        <property name="accountManager" ref="accountManager"/>
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <property name="defaultRating" value="1200"/>
+        <property name="defaultMembership" value="BASIC"/>
+
         <dwr:remote javascript="accountManagementService">
-            <dwr:include method="signInWithAccount"/>
             <dwr:include method="registerAccount"/>
             <dwr:include method="checkAvailability"/>
             <dwr:include method="generateRecoveryToken"/>

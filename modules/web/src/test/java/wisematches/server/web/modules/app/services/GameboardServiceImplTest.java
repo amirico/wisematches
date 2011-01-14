@@ -1,8 +1,5 @@
 package wisematches.server.web.modules.app.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
@@ -100,7 +97,7 @@ public class GameboardServiceImplTest {
     private Player createMockPlayer(long playerId) {
         Player player = createMock(Player.class);
         expect(player.getId()).andReturn(playerId);
-        expect(player.getUsername()).andReturn("u");
+        expect(player.getNickname()).andReturn("u");
         expect(player.getRating()).andReturn(12);
         replay(player);
         return player;

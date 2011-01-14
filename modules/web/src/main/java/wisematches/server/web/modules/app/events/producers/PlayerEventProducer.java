@@ -50,7 +50,7 @@ public class PlayerEventProducer {//implements EventProducer {
     }
 
     public static PlayerInfoBean convertPlayer(final Player player) {
-        return new PlayerInfoBean(player.getId(), player.getUsername(), getMemberType(player), player.getRating());
+        return new PlayerInfoBean(player.getId(), player.getNickname(), getMemberType(player), player.getRating());
     }
 
     public static MemberType getMemberType(Player player) {

@@ -27,7 +27,7 @@ public class ProblemsReportServiceImplTest extends TestCase {
 				 OperationSystems.POWER_MAC_OS, Browser.FIREFOX_2, "subject", "message");
 
 		 assertNotNull(report);
-		 assertEquals("username", report.getUsername());
+		 assertEquals("username", report.getNickname());
 		 assertEquals("email", report.getEmail());
 		 assertEquals("account", report.getAccount());
 		 assertEquals(OperationSystems.POWER_MAC_OS, report.getOs());

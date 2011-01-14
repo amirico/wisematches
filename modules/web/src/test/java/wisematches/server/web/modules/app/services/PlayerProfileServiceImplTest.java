@@ -171,10 +171,10 @@ public class PlayerProfileServiceImplTest {
         service.setPlayerManager(playerManager);
 
         final Player p1 = createMock(Player.class);
-        expect(p1.getUsername()).andReturn("p1");
+        expect(p1.getNickname()).andReturn("p1");
 
         final Player p2 = createMock(Player.class);
-        expect(p2.getUsername()).andReturn("p2");
+        expect(p2.getNickname()).andReturn("p2");
         replay(p1, p2);
 
         expect(playerManager.getPlayer(13L)).andReturn(p1);
@@ -363,7 +363,7 @@ public class PlayerProfileServiceImplTest {
         final Player player = createMock(Player.class);
         expect(player.getId()).andReturn(playerId).anyTimes();
         expect(player.getEmail()).andReturn("test_" + playerId + "@test.en");
-        expect(player.getUsername()).andReturn("test" + playerId);
+        expect(player.getNickname()).andReturn("test" + playerId);
         expect(player.getPlayerProfile()).andReturn(playerProfile);
         expect(player.getPlayerNotifications()).andReturn(notifications);
         expect(player.getLanguage()).andReturn(language);
@@ -387,7 +387,7 @@ public class PlayerProfileServiceImplTest {
         assertEquals("real name" + playerId, result.getRealName());
         assertEquals(timezone, result.getTimezone());
         assertEquals(language, Language.byCode(result.getLanguage()));
-        assertEquals("test" + playerId, result.getUsername());
+        assertEquals("test" + playerId, result.getNickname());
 
         final Set<String> disabledN = new HashSet<String>();
         final Set<String> enabledN = new HashSet<String>();

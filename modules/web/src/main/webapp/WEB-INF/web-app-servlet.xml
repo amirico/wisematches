@@ -3,23 +3,17 @@
   ~ Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
-    <import resource="classpath:/config/accoint-dwr-config.xml"/>
 
     <context:component-scan base-package="wisematches.server.web.controllers"/>
 
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
-
-    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <property name="paramName" value="language"/>
-    </bean>
 
     <bean name="abstractMessageSource"
           class="wisematches.server.web.spring.i18n.WebAccessibleResourceBundleMessageSource" abstract="true">
@@ -64,49 +58,51 @@
         </property>
     </bean>
 
-
-    <bean id="extjsResourceRequestHandler"
+    <bean name="extjsResourcesHandler"
           class="org.springframework.web.servlet.resource.ResourceHttpRequestHandler">
         <property name="locations">
-            <list>
+            <array>
                 <value>/ext/*</value>
                 <value>classpath:/ext</value>
-            </list>
+            </array>
         </property>
     </bean>
 
-    <bean id="freeMarkerNodeModelResourceBundle"
-          class="wisematches.server.web.spring.i18n.FreeMarkerNodeModelResourceBundle">
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="resourcesPaths" value="classpath:/i18n/info/"/>
-    </bean>
-
-    <bean id="urlHandlerMapping"
+    <bean id="mappingDriven"
           class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="order" value="1"/>
         <property name="alwaysUseFullPath" value="true"/>
 
         <property name="mappings">
             <props>
-                <prop key="/dwr/**/*">dwrController</prop>
-                <prop key="/ext/**/*">extjsResourceRequestHandler</prop>
+                <prop key="/ext/**">extjsResourcesHandler</prop>
+                <prop key="/dwr/**">dwrController</prop>
                 <prop key="/i18n/login/*.js">clientLoginMessageSource</prop>
                 <prop key="/i18n/game/*.js">clientGameMessageSource</prop>
             </props>
         </property>
     </bean>
 
-    <bean id="annotationHandlerMapping"
-          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-        <property name="order" value="2"/>
-        <property name="interceptors">
-            <list>
-                <ref bean="localeChangeInterceptor"/>
-            </list>
-        </property>
-    </bean>
 
-    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <mvc:interceptors>
+        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="language"/>
+        </bean>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/dwr/**"/>
+            <bean id="hibernateSessionInterceptor"
+                  class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+                <property name="sessionFactory" ref="sessionFactory"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean id="annotationDriven"
+          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/"/>
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="freemarkerSettings">
@@ -117,7 +113,14 @@
         </property>
     </bean>
 
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+    <bean id="freemarkerNodeModelResourceBundle"
+          class="wisematches.server.web.spring.i18n.FreeMarkerNodeModelResourceBundle">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resourcesPaths" value="classpath:/i18n/info/"/>
+    </bean>
+
+    <bean id="freemarkerViewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
         <property name="cache" value="true"/>
         <property name="prefix" value=""/>
         <property name="suffix" value=".ftl"/>
@@ -126,4 +129,6 @@
     </bean>
 
     <alias alias="messageSource" name="serverMessageSource"/>
+
+    <alias alias="viewResolver" name="freemarkerViewResolver"/>
 </beans>

@@ -104,7 +104,7 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException {
-		final AccountAvailability a = checkAccountAvailable(player.getUsername(), player.getEmail());
+		final AccountAvailability a = checkAccountAvailable(player.getNickname(), player.getEmail());
 		if (!a.isEmailAvailable()) {
 			throw new DuplicateAccountException(player, "email");
 		}
@@ -161,16 +161,16 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 				return res;
 			}
 		});
-		return new AccountAvailability(res[0] == 0, res[1] == 0);
+		return new AccountAvailability(res[1] == 0, res[0] == 0, lockAccountManager.isUsernameLocked(username) == null);
 	}
 
 	private void checkPlayer(final Player player) throws InadmissibleUsernameException, DuplicateAccountException {
-		final String reason = lockAccountManager.isUsernameLocked(player.getUsername());
+		final String reason = lockAccountManager.isUsernameLocked(player.getNickname());
 		if (reason != null) {
 			throw new InadmissibleUsernameException(player, reason);
 		}
 
-		final AccountAvailability a = checkAccountAvailable(player.getUsername(), player.getEmail());
+		final AccountAvailability a = checkAccountAvailable(player.getNickname(), player.getEmail());
 		if (!a.isAvailable()) {
 			if (!a.isEmailAvailable() && a.isUsernameAvailable()) {
 				throw new DuplicateAccountException(player, "email");

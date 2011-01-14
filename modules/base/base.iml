@@ -7,6 +7,7 @@
           <file>file://$MODULE_DIR$/src/main/resources/config/server-base-config.xml</file>
           <file>file://$MODULE_DIR$/src/test/resources/config/test-server-base-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/../web/src/main/resources/config/security-base-config.xml</file>
         </fileset>
       </configuration>
     </facet>

@@ -39,7 +39,7 @@ public interface Player extends Serializable {
 	 *
 	 * @return not null username of the player.
 	 */
-	String getUsername();
+	String getNickname();
 
 	/**
 	 * Returns player's password.

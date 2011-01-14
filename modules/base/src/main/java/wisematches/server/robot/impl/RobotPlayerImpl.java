@@ -48,7 +48,7 @@ final class RobotPlayerImpl implements RobotPlayer {
 	}
 
 	@Override
-	public String getUsername() {
+	public String getNickname() {
 		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 
