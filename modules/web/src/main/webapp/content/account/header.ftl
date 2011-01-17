@@ -10,7 +10,7 @@
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
-                    <@spring.message code="login.header"/>
+                    <@message code="login.header"/>
                     </td>
                     <td style="text-align: right;">
                         <input id="language-combobox" type="text" size="20"/>

@@ -2,7 +2,7 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.web.spring.i18n;
+package wisematches.server.web.controllers;
 
 import freemarker.ext.dom.NodeModel;
 import org.apache.commons.logging.Log;
@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.ui.Model;
 import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 import org.w3c.dom.Element;
@@ -23,11 +24,9 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * TODO: java docs
- *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class FreeMarkerNodeModelResourceBundle {
+public class AbstractInfoController {
 	private String[] resourcesPaths;
 	private String defaultEncoding = "UTF-8";
 	private ResourceLoader resourceLoader = new DefaultResourceLoader();
@@ -35,12 +34,47 @@ public class FreeMarkerNodeModelResourceBundle {
 
 	private final Map<String, Map<Locale, NodeModel>> cachedFilenames = new HashMap<String, Map<Locale, NodeModel>>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.spring.info");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.info");
 
-	public FreeMarkerNodeModelResourceBundle() {
+	public AbstractInfoController() {
 	}
 
-	public NodeModel getInfoHolder(String name, Locale locale) {
+	public AbstractInfoController(String... resourcesPaths) {
+		this.resourcesPaths = resourcesPaths;
+	}
+
+	/**
+	 * Loads resources for specified page and put loaded data into specified model. This handler
+	 * <p/>
+	 * The method adds two attributes to the model:
+	 * <ol>
+	 * <li><strong>infoId</strong> - name of the page. This id will be added to all ids and classes of the end HTML page.
+	 * <li><strong>infoModel</strong> - info model as a {@link NodeModel} object.
+	 * </ol>
+	 * <p/>
+	 * This method also adds {@code infoConverter} parameter that contains name of default
+	 * converter template. If required this parameter can be redefined or not used at all in
+	 * page where info is required.
+	 *
+	 * @param pageName the page name
+	 * @param model	the model to be modified
+	 * @param locale   the locale
+	 * @return {@code true} if data for specified page has been loaded and model has been updated;
+	 *         {@code false} if there is no data for specified page or page unknown.
+	 */
+	public boolean processInfoPage(String pageName, Model model, Locale locale) {
+		final NodeModel nodeModel = getInfoHolder(pageName, locale);
+		if (nodeModel == null) {
+			return false;
+		}
+
+		model.addAttribute("infoId", pageName.toLowerCase());
+		model.addAttribute("infoModel", nodeModel);
+		model.addAttribute("infoConverter", "/content/common/modelConverter.ftl");
+		return true;
+	}
+
+	protected NodeModel getInfoHolder(String name, Locale locale) {
 		synchronized (cachedFilenames) {
 			Map<Locale, NodeModel> holder = cachedFilenames.get(name);
 			if (holder == null) {

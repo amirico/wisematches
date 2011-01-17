@@ -30,17 +30,7 @@
         </property>
     </bean>
 
-    <bean name="clientLoginMessageSource" parent="abstractMessageSource">
-        <property name="parentMessageSource" ref="commonMessageSource"/>
-        <property name="basenames">
-            <array>
-                <value>classpath:/i18n/client/login</value>
-            </array>
-        </property>
-    </bean>
-
     <bean name="clientGameMessageSource" parent="abstractMessageSource">
-        <property name="parentMessageSource" ref="commonMessageSource"/>
         <property name="basenames">
             <array>
                 <value>classpath:/i18n/client/game</value>
@@ -52,8 +42,9 @@
         <property name="parentMessageSource" ref="commonMessageSource"/>
         <property name="basenames">
             <array>
-                <value>classpath:/i18n/server/mail</value>
+                <value>classpath:/i18n/common/common</value>
                 <value>classpath:/i18n/server/web</value>
+                <value>classpath:/i18n/server/mail</value>
             </array>
         </property>
     </bean>
@@ -77,7 +68,7 @@
             <props>
                 <prop key="/ext/**">extjsResourcesHandler</prop>
                 <prop key="/dwr/**">dwrController</prop>
-                <prop key="/i18n/login/*.js">clientLoginMessageSource</prop>
+                <prop key="/i18n/common/*.js">clientGameMessageSource</prop>
                 <prop key="/i18n/game/*.js">clientGameMessageSource</prop>
             </props>
         </property>
@@ -111,12 +102,6 @@
                 <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
             </props>
         </property>
-    </bean>
-
-    <bean id="freemarkerNodeModelResourceBundle"
-          class="wisematches.server.web.spring.i18n.FreeMarkerNodeModelResourceBundle">
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="resourcesPaths" value="classpath:/i18n/info/"/>
     </bean>
 
     <bean id="freemarkerViewResolver"

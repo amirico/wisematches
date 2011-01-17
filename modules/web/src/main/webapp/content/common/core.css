@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-
-body, div {
-    font-family: arial, sans-serif;
-    font-size: small;
-}
-
 body {
     background-color: white;
     color: black;
     margin: 8px;
+}
+
+body, div {
+    font-family: arial, sans-serif;
+    font-size: small;
+    line-height: 1.5;
 }
 
 table {
@@ -19,7 +19,27 @@ table {
     border-spacing: 0;
 }
 
-.footer {
+/* Header CSS declaration */
+#header {
+    width: 100%
+}
+
+#header-image {
+    float: left;
+}
+
+#header-welcome-label {
+    font-weight: bold;
+    font-size: medium;
+    color: #003333;
+}
+
+/* Footer CSS declaration */
+#footer {
+    font-size: 1em;
+    white-space: nowrap;
+    text-align: center;
+    height: auto;
 }
 
 .copyrights {

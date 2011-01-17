@@ -86,6 +86,10 @@ if (_ == null) var _ = wm.i18n.t;
 if (wm.util == null) wm.util = {};
 
 if (wm.util.url == null) wm.util.url = new function() {
+    this.redirect = function(url) {
+        window.location = url;
+    };
+
     this.extend = function(sourceUrl, parameterName, parameterValue, replaceDuplicates) {
         if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
         var urlParts = sourceUrl.split("?");
@@ -282,4 +286,14 @@ Ext.apply(Ext.ux.dwr.config.Action, {
 
 Ext.onReady(function() {
     Ext.QuickTips.init();
+
+    var languageCombo = new Ext.ux.wm.LanguageComboBox({
+        applyTo:'language-combobox'
+    });
+    languageCombo.on('select', function(como, rec, index) {
+        var new_lang = rec.get('code');
+        if (new_lang != _('locale')) {
+            location.href = wm.util.url.extend(null, 'language', new_lang, true);
+        }
+    });
 });

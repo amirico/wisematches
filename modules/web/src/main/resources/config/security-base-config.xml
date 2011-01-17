@@ -29,4 +29,12 @@
     <bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
         <property name="userPropertyToUse" value="username"/>
     </bean>
+
+    <bean id="ipTokenBasedRememberMeServicesBean"
+          class="wisematches.server.web.spring.security.IPTokenBasedRememberMeServices">
+        <property name="key" value="${security.remember.token}"/>
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <property name="parameter" value="_remember_me"/>
+        <property name="cookieName" value="REMEMBER_ME"/>
+    </bean>
 </beans>
