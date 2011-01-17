@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-#createAnAccount {
+.account-button {
     padding: 3px;
     width: 100%;
 }
@@ -39,7 +39,7 @@
 }
 
 #info-navigation #start li {
-    padding: 0;
+    padding: 0 0 0 15px;
 }
 
 #info-navigation .separator {
