@@ -280,7 +280,7 @@ wm.account = new function() {
 
                                 success: function() {
                                     Ext.MessageBox.wait('Sign in successfully. Please wait while you will be redirected to dashboard...');
-                                    window.location.href = defaultAuthorizedUrl;
+                                    wm.util.redirect(defaultAuthorizedUrl);
                                 }
                             });
                         }

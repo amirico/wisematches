@@ -44,6 +44,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.6.8" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.6.8" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-acl:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate:3.2.6.ga" level="project" />

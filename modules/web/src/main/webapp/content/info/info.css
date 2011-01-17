@@ -1,7 +1,64 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-/* Common styles */
+#createAnAccount {
+    padding: 3px;
+    width: 100%;
+}
+
+#info-page {
+    padding: 10px 3px 3px;
+}
+
+#info-navigation {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#info-navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: nowrap;
+}
+
+#info-navigation ul ul {
+    padding-left: 15px;
+}
+
+#info-navigation ul ul li {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 25px;
+}
+
+#info-navigation #start {
+    text-align: center;
+    line-height: normal;
+    padding: 0;
+}
+
+#info-navigation #start li {
+    padding: 0;
+}
+
+#info-navigation .separator {
+    height: 1px;
+    padding-right: 0;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+#info-navigation .selected a {
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+#info-content {
+    padding-left: 0.4em;
+}
+
 .info-label {
     font-weight: bold;
 }
@@ -63,16 +120,4 @@
 
 .info-features-description {
     padding-left: 10px;
-}
-
-/* Index styles */
-.info-index-image {
-    float: left;
-    text-align: left;
-    padding-left: 15px;
-}
-
-.info-index-links {
-    font-size: x-small;
-    text-align: right;
 }

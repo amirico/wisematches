@@ -69,6 +69,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.6.8" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.6.8" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-acl:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate:3.2.6.ga" level="project" />
@@ -92,6 +93,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-web:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-taglibs:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.velocity:velocity:1.6" level="project" />

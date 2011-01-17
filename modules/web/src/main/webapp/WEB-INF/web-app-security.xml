@@ -9,30 +9,20 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd"
              default-destroy-method="destroy">
 
-    <beans:bean id="authenticationHandler" class="wisematches.server.web.spring.security.ExtJSAuthenticationHandler"/>
-
-    <beans:bean id="ipTokenBasedRememberMeServicesBean"
-                class="wisematches.server.web.spring.security.IPTokenBasedRememberMeServices">
-        <beans:property name="key" value="${security.remember.token}"/>
-        <beans:property name="userDetailsService" ref="userDetailsService"/>
-        <beans:property name="parameter" value="_remember_me"/>
-        <beans:property name="cookieName" value="REMEMBER_ME"/>
-    </beans:bean>
-
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/game/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/account/modify.html" access="isFullyAuthenticated()"/>
+
         <intercept-url pattern="/ext/**" filters="none"/>
         <intercept-url pattern="/resources/**" filters="none"/>
         <intercept-url pattern="/i18n/**" filters="none"/>
+
         <intercept-url pattern="/**" access="permitAll"/>
 
-        <!-- TODO: move this key to server configuration. Must not be under source control -->
         <remember-me services-ref="ipTokenBasedRememberMeServicesBean"/>
 
-        <form-login login-processing-url="/account/checkAccount.html"
-                    login-page="/account/unauthorized.html"
-                    authentication-failure-handler-ref="authenticationHandler"
-                    authentication-success-handler-ref="authenticationHandler"/>
+        <form-login login-processing-url="/account/authMember.html"
+                    login-page="/account/authRequired.html"/>
 
         <logout invalidate-session="true"
                 logout-success-url="/"

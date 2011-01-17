@@ -2,7 +2,7 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.web.spring.i18n;
+package wisematches.server.web.controllers;
 
 import freemarker.ext.dom.NodeModel;
 import freemarker.template.TemplateHashModel;
@@ -20,12 +20,12 @@ import static junit.framework.Assert.assertNotNull;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class FreeMarkerNodeModelResourceBundleTest {
+public class AbstractInfoControllerTest {
 	@Test
 	public void testparseInfoHolder() throws Exception {
 		final Resource r = new ClassPathResource("/i18n/info/parsingTest.properties");
 
-		final FreeMarkerNodeModelResourceBundle c = new FreeMarkerNodeModelResourceBundle();
+		final AbstractInfoController c = new AbstractInfoController();
 		final NodeModel holder = c.parseInfoHolder(r);
 		assertNotNull(holder);
 
@@ -55,7 +55,7 @@ public class FreeMarkerNodeModelResourceBundleTest {
 
 	@Test
 	public void testgetInfoHolder() throws Exception {
-		final FreeMarkerNodeModelResourceBundle c = new FreeMarkerNodeModelResourceBundle();
+		final AbstractInfoController c = new AbstractInfoController();
 		c.setResourcesPaths("classpath:/i18n/info/");
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("en")), "L_default", "I_default", "D_default", 0);
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("jp")), "L_default", "I_default", "D_default", 0);
