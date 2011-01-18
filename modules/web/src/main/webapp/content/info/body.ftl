@@ -81,10 +81,8 @@
                 </ul>
             </div>
         </td>
-        <td class="x-panel" style="vertical-align: top; border-left-width: 1px;">
-            <div id="info-content">
-            <#include "/content/info/modelConverter.ftl">
-            </div>
+        <td id="info-content" class="x-panel" style="vertical-align: top;">
+        <#include "/content/info/modelConverter.ftl">
         </td>
     </tr>
 </table>

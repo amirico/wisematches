@@ -1,9 +1,10 @@
+<#-- @ftlvariable name="headerTitle" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<#macro html title styles=[] scripts=[] i18n=[] headers=[]>
+<#macro html styles=[] scripts=[] i18n=[] headers=[]>
 <html>
 <head>
-    <title id="page-title"><@message code="${title}"/></title>
+    <title id="page-title"><@message code="${headerTitle!'wisematches.title'}"/></title>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 
     <link rel="stylesheet" type="text/css" href="/content/common/core.css">

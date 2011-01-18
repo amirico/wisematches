@@ -75,7 +75,7 @@ public class HibernateAccountManagerTest {
 		final Player account = createAccount();
 
 		final PlayerEditor editor = createMockEditor();
-		editor.setUsername(account.getNickname());
+		editor.setNickname(account.getNickname());
 		try {
 			accountManager.createPlayer(editor.createPlayer());
 			fail("DuplicateAccountException must be here");
@@ -107,7 +107,7 @@ public class HibernateAccountManagerTest {
 		final Player account = createAccount();
 
 		final PlayerEditor editor = createMockEditor();
-		editor.setUsername(account.getNickname());
+		editor.setNickname(account.getNickname());
 		editor.setEmail(account.getEmail());
 		try {
 			accountManager.createPlayer(editor.createPlayer());
@@ -145,7 +145,7 @@ public class HibernateAccountManagerTest {
 
 		final Player player = accountManager.getPlayer(p.getId());
 		assertEquals(e.getEmail(), player.getEmail());
-		assertEquals(e.getUsername(), player.getNickname());
+		assertEquals(e.getNickname(), player.getNickname());
 		assertEquals(e.getPassword(), player.getPassword());
 		assertEquals(e.getLanguage(), player.getLanguage());
 		assertEquals(e.getMembership(), player.getMembership());

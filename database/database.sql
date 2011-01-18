@@ -40,9 +40,9 @@ DROP TABLE IF EXISTS `lock_username`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `lock_username` (
-  `username` varchar(100) NOT NULL,
+  `nickname` varchar(100) NOT NULL,
   `reason` varchar(255) NOT NULL,
-  PRIMARY KEY  (`username`)
+  PRIMARY KEY  (`nickname`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
@@ -55,7 +55,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `rp_problems` (
   `id` bigint(20) NOT NULL auto_increment,
-  `username` varchar(100) NOT NULL,
+  `nickname` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `account` varchar(100) NOT NULL,
   `os` tinyint(4) default NULL,
@@ -275,7 +275,7 @@ CREATE TABLE `user_notification` (
           'The string that contains information about disabled notifications.\n',
   PRIMARY KEY  (`playerId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8
-COMMENT='User notifications setting table.';
+  COMMENT='User notifications setting table.';
 SET character_set_client = @saved_cs_client;
 
 --
@@ -328,18 +328,19 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `user_user` (
   `id` bigint(20) unsigned NOT NULL auto_increment COMMENT 'id of user',
-  `username` varchar(50) NOT NULL COMMENT 'User name. Max length is 50',
+  `nickname` varchar(50) NOT NULL COMMENT 'User name. Max length is 50',
   `password` varchar(100) NOT NULL COMMENT
           'Password of user. Max length is 100.',
   `email` varchar(150) NOT NULL COMMENT 'EMail address of the user.',
   `creationDate` timestamp NOT NULL default '0000-00-00 00:00:00',
   `lastSigninDate` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `rating` int(11) NOT NULL default '1000',          `locale` varchar(10) default NULL,
+  `rating` int(11) NOT NULL default '1000',
+  `locale` varchar(10) default NULL,
   PRIMARY KEY  (`id`),
   KEY `id` (`id`),
-  KEY `login_info` (`password`,`username`)
+  KEY `login_info` (`password`,`nickname`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3007 DEFAULT CHARSET=utf8
-COMMENT='User id, name and password table';
+  COMMENT='User id, name and password table';
 SET character_set_client = @saved_cs_client;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -3,32 +3,32 @@
 #end
 
 #macro(playerName $player)
-$player.username
+    $player.nickname
 #end
 
 #macro (timeout $daysPerMove $elapsedFromLast) ## daysPerMove - in minutes, elapsedFromLast - in milliseconds 
  #set ($minutesPerMove = $daysPerMove * 24 * 60)
-#set ($minutesElapsed = $elapsedFromLast / 1000 / 60)
+    #set ($minutesElapsed = $elapsedFromLast / 1000 / 60)
 
-#set ($k = $minutesPerMove - $minutesElapsed)
+    #set ($k = $minutesPerMove - $minutesElapsed)
 
-#timeToString($k)
+    #timeToString($k)
 #end
 
 #macro (timeToString $time)
-#set ($days = $time / 60 / 24)
-#if ($days > 0)
-#daysAsString($days)
-#end
+    #set ($days = $time / 60 / 24)
+    #if ($days > 0)
+        #daysAsString($days)
+    #end
 
-#set ($hours = ($time - ($days * 24 * 60)) / 60)
-#if ($hours > 0)
-#hoursAsString($hours)
-#end
+    #set ($hours = ($time - ($days * 24 * 60)) / 60)
+    #if ($hours > 0)
+        #hoursAsString($hours)
+    #end
 
 
-#set ($minutes = $time % 60)
-#if ($minutes > 0)
-#minutesAsString($minutes)
+    #set ($minutes = $time % 60)
+    #if ($minutes > 0)
+        #minutesAsString($minutes)
+    #end
 #end
-        #end

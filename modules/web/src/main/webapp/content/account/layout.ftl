@@ -1,10 +1,12 @@
 <#-- @ftlvariable name="accountBodyPageName" type="java.lang.String" -->
-
 <#include "/core.ftl">
 
-<@wisematches.html title="account.header" scripts=["/dwr/interface/problemsReportService.js"] styles=["/content/info/info.css", "/content/account/account.css"] >
-    <#include "header.ftl">
-    <#include "/content/account/pages/${accountBodyPageName}.ftl">
-    <#include "/content/common/footer.ftl">
-</@wisematches.html>
+<#assign headerTitle="account.header"/>
 
+<@wisematches.html
+scripts=["/dwr/interface/problemsReportService.js"]
+styles=["/content/info/info.css", "/content/account/account.css"] >
+    <#include "../common/header.ftl">
+    <#include "pages/${accountBodyPageName}.ftl">
+    <#include "../common/footer.ftl">
+</@wisematches.html>

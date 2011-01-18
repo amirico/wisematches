@@ -5,13 +5,26 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
+
+    <!--
+    <dwr:annotation-config/>
+    <dwr:controller id="dwrController" debug="true"/>
+-->
 
     <context:component-scan base-package="wisematches.server.web.controllers"/>
+
+    <bean id="validator" class="org.springmodules.validation.bean.BeanValidator">
+        <property name="configurationLoader">
+            <bean class="org.springmodules.validation.bean.conf.loader.annotation.AnnotationBeanValidationConfigurationLoader"/>
+        </property>
+    </bean>
 
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
 
@@ -22,24 +35,16 @@
         <property name="fallbackToSystemLocale" value="false"/>
     </bean>
 
-    <bean name="commonMessageSource" parent="abstractMessageSource">
-        <property name="basenames">
-            <array>
-                <value>classpath:/i18n/common/common</value>
-            </array>
-        </property>
-    </bean>
-
     <bean name="clientGameMessageSource" parent="abstractMessageSource">
         <property name="basenames">
             <array>
+                <value>classpath:/i18n/common/common</value>
                 <value>classpath:/i18n/client/game</value>
             </array>
         </property>
     </bean>
 
     <bean name="serverMessageSource" parent="abstractMessageSource">
-        <property name="parentMessageSource" ref="commonMessageSource"/>
         <property name="basenames">
             <array>
                 <value>classpath:/i18n/common/common</value>
@@ -67,7 +72,7 @@
         <property name="mappings">
             <props>
                 <prop key="/ext/**">extjsResourcesHandler</prop>
-                <prop key="/dwr/**">dwrController</prop>
+                <!--<prop key="/dwr/**">dwrController</prop>-->
                 <prop key="/i18n/common/*.js">clientGameMessageSource</prop>
                 <prop key="/i18n/game/*.js">clientGameMessageSource</prop>
             </props>
