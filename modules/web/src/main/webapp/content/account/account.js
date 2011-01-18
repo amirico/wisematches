@@ -294,7 +294,7 @@ wm.account = new function() {
     this.showRegistrationWindow = function () {
         if (!registrationWindow) {
             var checkAvailabilityButton = new Ext.Button({
-                name: 'checkAvailability',
+                name: 'getAvailabilityStatus',
                 style: 'margin-left: 115px;',
                 text: _('account.register.form.availability.check.label'),
                 disabled: true,

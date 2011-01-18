@@ -56,7 +56,7 @@
 }
 
 #info-content {
-    padding-left: 0.4em;
+    padding-left: 0.4em; /*border-left-width: 1px;*/
 }
 
 .info-label {
@@ -64,9 +64,10 @@
 }
 
 .info-header .info-label {
-    font-size: large;
+    font-size: xx-large;
     color: #551f1f;
-    padding-bottom: 5px;
+    padding-bottom: 15px;
+    line-height: normal;
 }
 
 .info-description {

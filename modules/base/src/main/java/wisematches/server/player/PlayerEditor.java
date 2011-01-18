@@ -6,7 +6,7 @@ package wisematches.server.player;
 public class PlayerEditor {
 	private long id = 0;
 	private String email;
-	private String username;
+	private String nickname;
 	private String password;
 	private Language language = Language.DEFAULT;
 	private Membership membership = Membership.GUEST;
@@ -17,7 +17,7 @@ public class PlayerEditor {
 
 	public PlayerEditor(Player player) {
 		this.id = player.getId();
-		this.username = player.getNickname();
+		this.nickname = player.getNickname();
 		this.password = player.getPassword();
 		this.email = player.getEmail();
 		this.language = player.getLanguage();
@@ -25,9 +25,9 @@ public class PlayerEditor {
 		this.rating = player.getRating();
 	}
 
-	public PlayerEditor(String email, String username, String password) {
+	public PlayerEditor(String email, String nickname, String password) {
 		this.email = email;
-		this.username = username;
+		this.nickname = nickname;
 		this.password = password;
 	}
 
@@ -39,12 +39,12 @@ public class PlayerEditor {
 		this.email = email;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getPassword() {
@@ -83,10 +83,10 @@ public class PlayerEditor {
 		if (email == null) {
 			throw new IllegalArgumentException("email is not specified");
 		}
-		if (username == null) {
-			throw new IllegalArgumentException("username is not specified");
+		if (nickname == null) {
+			throw new IllegalArgumentException("nickname is not specified");
 		}
-		return new PlayerDetails(id, email, username, password, language, membership, rating);
+		return new PlayerDetails(id, email, nickname, password, language, membership, rating);
 	}
 
 	/**
@@ -97,16 +97,16 @@ public class PlayerEditor {
 	private static class PlayerDetails implements Player {
 		private final long id;
 		private final String email;
-		private final String username;
+		private final String nickname;
 		private final String password;
 		private final Language language;
 		private final Membership membership;
 		private final int rating;
 
-		private PlayerDetails(long id, String email, String username, String password, Language language, Membership membership, int rating) {
+		private PlayerDetails(long id, String email, String nickname, String password, Language language, Membership membership, int rating) {
 			this.id = id;
 			this.email = email;
-			this.username = username;
+			this.nickname = nickname;
 			this.password = password;
 			this.language = language;
 			this.membership = membership;
@@ -125,7 +125,7 @@ public class PlayerEditor {
 
 		@Override
 		public String getNickname() {
-			return username;
+			return nickname;
 		}
 
 		@Override

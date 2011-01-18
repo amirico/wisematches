@@ -2,7 +2,7 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.accoint.dwr.bean;
+package wisematches.server.web.forms;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

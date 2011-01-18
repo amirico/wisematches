@@ -98,7 +98,7 @@ public class PlayerProfileServiceImplTest {
         bean1.setRealName("real name");
         bean1.setTimezone(9);
         bean1.setLanguage("ru");
-        bean1.setUsername("username");
+        bean1.setNickname("username");
         bean1.setEnabledNotifications(new HashSet<String>(Arrays.asList("BOARD-TIME_IS_RUNNING", "BOARD-PLAYER_ADDED")));
         bean1.setDisabledNotifications(new HashSet<String>(Arrays.asList("BOARD-GAME_FINISHED", "BOARD-PLAYER_MOVED")));
 

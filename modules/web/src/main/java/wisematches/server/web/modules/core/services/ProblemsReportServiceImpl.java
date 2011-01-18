@@ -14,7 +14,7 @@ public class ProblemsReportServiceImpl extends GenericRemoteService {//implement
     public void reportProblem(String username, String email, String accountName,
                               OperationSystems os, Browser browser, String subject, String message) {
         ProblemsReportForm report = new ProblemsReportForm();
-        report.setUsername(username);
+        report.setNickname(username);
         report.setAccount(accountName);
         report.setBrowser(browser);
         report.setOs(os);

@@ -17,7 +17,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
         int count = jdbcTemplate.queryForInt("select count(*) from rp_problems");
 
         ProblemsReportForm report = new ProblemsReportForm();
-        report.setUsername("username");
+        report.setNickname("username");
         report.setAccount("account");
         report.setSubject("subject");
         report.setMessage("Message");
@@ -43,7 +43,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
         int count = jdbcTemplate.queryForInt("select count(*) from rp_problems");
 
         ProblemsReportForm report = new ProblemsReportForm();
-        report.setUsername("username");
+        report.setNickname("username");
         report.setAccount("account");
         report.setSubject("subject");
         report.setMessage("Message");

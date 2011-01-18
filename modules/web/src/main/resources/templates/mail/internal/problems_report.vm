@@ -2,7 +2,7 @@
 <html>
 <body>
 <p>
-    User '${report.username}' has sent problem report.
+    User '${report.nickname}' has sent problem report.
 </p>
 
 <p>

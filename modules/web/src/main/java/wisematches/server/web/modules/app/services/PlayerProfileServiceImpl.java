@@ -205,7 +205,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
     protected void updateBeanInfo(Player player, PlayerSettingsBean bean) {
         final PlayerProfile profile = player.getPlayerProfile();
         bean.setPlayerId(player.getId());
-        bean.setUsername(player.getNickname());
+        bean.setNickname(player.getNickname());
         bean.setEmail(player.getEmail());
 
         final String countryCode = profile.getCountryCode();

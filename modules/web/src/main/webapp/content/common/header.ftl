@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="headerTitle" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <table id="header">
@@ -10,7 +11,7 @@
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
-                    <@message code="login.header"/>
+                    <@message code="${headerTitle!'wisematches.title'}"/>
                     </td>
                     <td style="text-align: right;">
                         <input id="language-combobox" type="text" size="20"/>
