@@ -37,7 +37,7 @@
         <#include "${header}">
     </#list>
 </head>
-<body style="padding-left: 2px; padding-right: 2px;">
+<body>
     <#nested>
 </body>
 </html>
