@@ -18,10 +18,16 @@ public class AccountRegistrationForm {
 	private String email;
 
 	private String nickname;
+
 	private String password;
-	private String passwordConfirm;
+
+	private String confirm;
+
 	private String language;
+
 	private String timezone;
+
+	private boolean rememberMe = true;
 
 	public AccountRegistrationForm() {
 	}
@@ -66,22 +72,31 @@ public class AccountRegistrationForm {
 		this.language = language;
 	}
 
-	public String getPasswordConfirm() {
-		return passwordConfirm;
+	public String getConfirm() {
+		return confirm;
 	}
 
-	public void setPasswordConfirm(String passwordConfirm) {
-		this.passwordConfirm = passwordConfirm;
+	public void setConfirm(String confirm) {
+		this.confirm = confirm;
+	}
+
+	public boolean isRememberMe() {
+		return rememberMe;
+	}
+
+	public void setRememberMe(boolean rememberMe) {
+		this.rememberMe = rememberMe;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("AccountRegistrationForm");
-		sb.append("{nickname='").append(nickname).append('\'');
-		sb.append(", email='").append(email).append('\'');
+		sb.append("{email='").append(email).append('\'');
+		sb.append(", nickname='").append(nickname).append('\'');
 		sb.append(", language='").append(language).append('\'');
-		sb.append(", timezone=").append(timezone);
+		sb.append(", timezone='").append(timezone).append('\'');
+		sb.append(", rememberMe=").append(rememberMe);
 		sb.append('}');
 		return sb.toString();
 	}

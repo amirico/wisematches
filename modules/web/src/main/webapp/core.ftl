@@ -6,4 +6,6 @@
 
 <#include "/content/messages.ftl"/>
 
+<#assign locale="${springMacroRequestContext.getMessage('locale')}"/>
+
 <#assign security=JspTaglibs["http://www.springframework.org/security/tags"] />

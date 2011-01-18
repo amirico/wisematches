@@ -1,48 +1,139 @@
 <#include "/core.ftl">
 
-<form action="/account/create.html" method="post">
-    <table cellpadding="0" cellspacing="0" border="0">
+<div id="registration">
+    <div class="label"><@message code="account.register.label"/></div>
+
+    <div class="description"><@message code="account.register.description"/></div>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
         <tr>
-            <td>
-                Nickname
+            <td width="500px">
+                <form id="form" class="form" action="/account/create.html" method="post">
+                    <table class="x-panel" width="100%">
+                        <tr>
+                            <td colspan="2">
+                                <div style="color: #36C; padding-top: 15px; font-size: medium; font-weight: bold;">
+                                    Required information for WiseMatches account
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="email"><@message code="account.register.email.label"/>:</label>
+                            </td>
+                            <td>
+                                <div class="field">
+                                <@spring.bind "registration.email"/>
+                                    <input type="text" id="email" name="email" size="30"
+                                           value="${spring.stringStatusValue}"/>
+                                </div>
+                                <span class="sample"><@message code="account.register.email.description"/></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label for="nickname"><@message code="account.register.nickname.label"/>:</label>
+                            </td>
+                            <td>
+                                <div class="field">
+                                <@spring.bind "registration.nickname"/>
+                                    <input type="text" id="nickname" name="nickname" size="30"
+                                           value="${spring.stringStatusValue}"/>
+                                </div>
+                                <span class="sample"><@message code="account.register.nickname.description"/></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label for="password"><@message code="account.register.pwd.label"/>:</label>
+                            </td>
+                            <td>
+                                <div class="field">
+                                <@spring.bind "registration.password"/>
+                                    <input type="password" id="password" name="password" size="30"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="confirm"><@message code="account.register.pwd-cfr.label"/>:</label>
+                            </td>
+                            <td>
+                                <div class="field">
+                                <@spring.bind "registration.confirm"/>
+                                    <input type="password" id="confirm" name="confirm" size="30"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div class="field">
+                                <@spring.bind "registration.rememberMe"/>
+                                    <input type="checkbox" id="rememberMe" name="rememberMe"
+                                           <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
+                                    <label for="rememberMe"><@message code="account.login.remember.label"/></label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <div style="color: #36C; padding-top: 15px; font-size: medium; font-weight: bold;">
+                                    Get started with WiseMatches
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="language"><@message code="account.register.language.label"/>:</label>
+                            </td>
+                            <td>
+                                <div class="field">
+                                <@spring.bind "registration.language"/>
+                                    <select id="language" name="language" style="width: 170px;">
+                                        <option value="en" <#if (locale=="en")>selected="selected"</#if>>English
+                                        </option>
+                                        <option value="ru" <#if (locale=="ru")>selected="selected"</#if>>Русский
+                                        </option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="timezone" name="timezone" value="">
+                                <span class="sample"><@message code="account.register.language.description"/></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label><@message code='account.register.terms.label'/>:</label>
+                            </td>
+                            <td align="center">
+                                <span><@message code="account.register.terms.description"/></span>
+
+                                <div class="field">
+                                    <button id="createAccount"
+                                            name="createAccount"
+                                            type="submit"
+                                            value="submit"><@message code='account.register.submit.label'/></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </td>
             <td>
-            <@spring.formInput "registration.nickname"/>
-                <@spring.bind path="registration.nickname"/>
+                <iframe src="/info/terms.html?plain=true" width="100%" height="100%"></iframe>
             </td>
         </tr>
-        <tr>
-            <td>
-                EMail
-            </td>
-            <td>
-            <@spring.formInput "registration.email"/>
-                <#--<@spring.bind path="email"/>-->
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Password
-            </td>
-            <td>
-            <@spring.formPasswordInput "registration.password"/>
-                <#--<@spring.bind path="password"/>-->
-            </td>
-        </tr>
-        <tr>
-            <td>
-            </td>
-            <td>
-            ${spring.status}
-            <#list spring.status.errorMessages as error> <b>${error}</b> <br> </#list>
-            </td>
-        </tr>
-        <tr>
-            <td>
-            </td>
-            <td>
-                <input type="submit" value="submit"/>
-            </td>
-        </tr>
+        </tbody>
     </table>
-</form>
+</div>

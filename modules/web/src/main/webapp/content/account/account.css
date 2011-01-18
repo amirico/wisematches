@@ -13,6 +13,43 @@
     text-align: right;
 }
 
+#registration .label {
+    font-weight: bold;
+    font-size: large;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+#registration .description {
+    padding-bottom: 15px;
+}
+
+#registration form table {
+    border-width: 2px;
+    border-spacing: 5px;
+}
+
+#registration td {
+    text-align: left;
+    vertical-align: top;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#registration label {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+#registration .sample {
+    color: #666666;
+    line-height: normal;
+}
+
+#registration button {
+    width: 80%;
+}
+
 /* Navigation CSS declaration */
 /*
 #register-panel {
