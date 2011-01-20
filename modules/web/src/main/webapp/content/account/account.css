@@ -32,6 +32,9 @@
 #registration td {
     text-align: left;
     vertical-align: top;
+}
+
+#registration #form td {
     padding-top: 3px;
     padding-bottom: 3px;
 }
@@ -48,6 +51,33 @@
 
 #registration button {
     width: 80%;
+}
+
+#registration #terms_tabs {
+    background-color: #EBEFF9;
+    border-bottom-width: 2px;
+    padding-left: 10px;
+}
+
+#registration #terms_panel {
+    height: 100%;
+    overflow: auto;
+    border-width: 0 2px 2px 0;
+}
+
+#registration #terms_tabs .tab {
+    float: left;
+    margin: 5px 10px 6px 10px;
+}
+
+#registration #terms_tabs .active {
+    text-decoration: none;
+    color: black;
+    margin: 0 5px -2px 0;
+    padding: 3px 10px 8px 10px;
+    border-width: 2px 2px 0 2px;
+    font-weight: bold;
+    background-color: white;
 }
 
 /* Navigation CSS declaration */
