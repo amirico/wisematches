@@ -131,7 +131,21 @@
                 </form>
             </td>
             <td>
-                <iframe src="/info/terms.html?plain=true" width="100%" height="100%"></iframe>
+                <div id="terms_tabs" class="x-panel">
+                    <a id="terms-page-link" class="x-panel tab active"
+                       href="javascript: wm.account.loadTermsPage('terms');">
+                    <@message code="info.policies.terms_of_use.label"/>
+                    </a>
+                    <a id="policy-page-link" class="x-panel tab" href="javascript: wm.account.loadTermsPage('policy');">
+                    <@message code="info.policies.privacy_policy.label"/>
+                    </a>
+                    <a id="naming-page-link" class="x-panel tab" href="javascript: wm.account.loadTermsPage('naming');">
+                    <@message code="info.policies.naming.label"/>
+                    </a>
+
+                    <div style="clear: left;"></div>
+                </div>
+                <div id="terms_panel" class="x-panel"></div>
             </td>
         </tr>
         </tbody>
