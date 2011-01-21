@@ -32,9 +32,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.directwebremoting</groupId>
-            <artifactId>dwr</artifactId>
-            <version>3.0.M1</version>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.7.1</version>
         </dependency>
 
         <dependency>
@@ -62,12 +62,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springmodules</groupId>
-            <artifactId>spring-modules-validation</artifactId>
-            <version>0.8</version>
-        </dependency>
-
-        <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
@@ -77,6 +71,12 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.0.2.GA</version>
         </dependency>
 
         <dependency>
@@ -91,6 +91,7 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
+
         <!--
         <dependency>
             <groupId>javax.activation</groupId>

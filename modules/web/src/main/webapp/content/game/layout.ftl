@@ -2,8 +2,7 @@
 
 <#include "/core.ftl">
 
-<@wisematches.html i18n=["login"]
-scripts=["/content/game/game.js", "/dwr/interface/problemsReportService.js"] styles=["/content/game/game.css"] >
+<@wisematches.html i18n=["login"] scripts=["/content/game/game.js"] styles=["/content/game/game.css"] >
     <#include "header.ftl">
     <#include "pages/${pageName}.ftl">
 <#--<#include "modelConverter.ftl">-->

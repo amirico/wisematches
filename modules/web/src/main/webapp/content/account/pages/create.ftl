@@ -13,9 +13,7 @@
                     <table class="x-panel" width="100%">
                         <tr>
                             <td colspan="2">
-                                <div style="color: #36C; padding-top: 15px; font-size: medium; font-weight: bold;">
-                                    Required information for WiseMatches account
-                                </div>
+                                <div class="group label"><@message code="account.register.group.required.label"/></div>
                             </td>
                         </tr>
                         <tr>
@@ -23,10 +21,13 @@
                                 <label for="email"><@message code="account.register.email.label"/>:</label>
                             </td>
                             <td>
-                                <div class="field">
+                                <div class="x-form-invalid-msg field">
                                 <@spring.bind "registration.email"/>
                                     <input type="text" id="email" name="email" size="30"
                                            value="${spring.stringStatusValue}"/>
+                                <#list spring.status.errorMessages as msg>
+                                    <div class="x-form-invalid-msg">${msg}</div>
+                                </#list>
                                 </div>
                                 <span class="sample"><@message code="account.register.email.description"/></span>
                             </td>
@@ -41,10 +42,24 @@
                                 <@spring.bind "registration.nickname"/>
                                     <input type="text" id="nickname" name="nickname" size="30"
                                            value="${spring.stringStatusValue}"/>
+                                <#list spring.status.errorMessages as msg>
+                                    <div class="x-form-invalid-msg">${msg}</div>
+                                </#list>
                                 </div>
                                 <span class="sample"><@message code="account.register.nickname.description"/></span>
                             </td>
                         </tr>
+                    <#--
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button id="checkAvailability" type="button"
+                                        onclick="wm.account.checkAvailability(this)">
+                                <@message code="account.register.availability.check.label"/>
+                                </button>
+                            </td>
+                        </tr>
+-->
 
                         <tr>
                             <td>
@@ -54,6 +69,9 @@
                                 <div class="field">
                                 <@spring.bind "registration.password"/>
                                     <input type="password" id="password" name="password" size="30"/>
+                                <#list spring.status.errorMessages as msg>
+                                    <div class="x-form-invalid-msg">${msg}</div>
+                                </#list>
                                 </div>
                             </td>
                         </tr>
@@ -65,6 +83,9 @@
                                 <div class="field">
                                 <@spring.bind "registration.confirm"/>
                                     <input type="password" id="confirm" name="confirm" size="30"/>
+                                <#list spring.status.errorMessages as msg>
+                                    <div class="x-form-invalid-msg">${msg}</div>
+                                </#list>
                                 </div>
                             </td>
                         </tr>
@@ -76,6 +97,9 @@
                                     <input type="checkbox" id="rememberMe" name="rememberMe"
                                            <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
                                     <label for="rememberMe"><@message code="account.login.remember.label"/></label>
+                                <#list spring.status.errorMessages as msg>
+                                    <div class="x-form-invalid-msg">${msg}</div>
+                                </#list>
                                 </div>
                             </td>
                         </tr>
@@ -88,9 +112,7 @@
 
                         <tr>
                             <td colspan="2">
-                                <div style="color: #36C; padding-top: 15px; font-size: medium; font-weight: bold;">
-                                    Get started with WiseMatches
-                                </div>
+                                <div class="group label"><@message code="account.register.group.getstarted.label"/></div>
                             </td>
                         </tr>
                         <tr>
@@ -106,8 +128,14 @@
                                         <option value="ru" <#if (locale=="ru")>selected="selected"</#if>>Русский
                                         </option>
                                     </select>
+                                <#list spring.status.errorMessages as msg>
+                                    <div class="x-form-invalid-msg">${msg}</div>
+                                </#list>
                                 </div>
-                                <input type="hidden" id="timezone" name="timezone" value="">
+                                <input type="hidden" id="timezone" name="timezone" value="0">
+                                <script type="text/javascript">
+                                    document.getElementById('timezone').value = new Date().getTimezoneOffset();
+                                </script>
                                 <span class="sample"><@message code="account.register.language.description"/></span>
                             </td>
                         </tr>
@@ -151,3 +179,9 @@
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    Ext.onReady(function() {
+        wm.account.loadTermsPage('terms');
+    });
+</script>
