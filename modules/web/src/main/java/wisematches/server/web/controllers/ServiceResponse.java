@@ -2,7 +2,9 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.accoint.dwr.service;
+package wisematches.server.web.controllers;
+
+import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.Map;
@@ -54,6 +56,14 @@ public final class ServiceResponse {
 
 	public static ServiceResponse failure(String summary, Map<String, String> errors) {
 		return new ServiceResponse(false, summary, errors);
+	}
+
+	public static ServiceResponse convert(BindingResult errors) {
+		if (errors.hasErrors()) {
+			return FAILURE;
+//			return new ServiceResponse(false, null, errors);
+		}
+		return SUCCESS;
 	}
 
 	@Override

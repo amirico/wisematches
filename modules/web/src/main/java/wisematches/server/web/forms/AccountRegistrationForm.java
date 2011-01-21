@@ -4,27 +4,35 @@
 
 package wisematches.server.web.forms;
 
-import org.springmodules.validation.bean.conf.loader.annotation.handler.Email;
-import org.springmodules.validation.bean.conf.loader.annotation.handler.Length;
-import org.springmodules.validation.bean.conf.loader.annotation.handler.NotBlank;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class AccountRegistrationForm {
-	@NotBlank(errorCode = "account.register.email.err.blank")
-	@Length(max = 50, errorCode = "account.register.email.err.max", args = "50")
-	@Email(errorCode = "account.register.email.err.format")
+	@NotEmpty(message = "account.register.email.err.blank")
+	@Length(max = 150, message = "account.register.email.err.max")
+	@Email(message = "account.register.email.err.format")
 	private String email;
 
+	@NotEmpty(message = "account.register.nickname.err.blank")
+	@Length(max = 100, message = "account.register.nickname.err.max")
 	private String nickname;
 
+	@NotEmpty(message = "account.register.pwd.err.blank")
+	@Length(max = 100, message = "account.register.pwd.err.max")
 	private String password;
 
+	@NotEmpty(message = "account.register.pwd-cfr.err.blank")
+	@Length(max = 100, message = "account.register.pwd-cfr.err.max")
 	private String confirm;
 
+	@NotEmpty(message = "account.register.language.err.blank")
 	private String language;
 
+	@NotEmpty(message = "account.register.timezone.err.blank")
 	private String timezone;
 
 	private boolean rememberMe = true;

@@ -27,11 +27,32 @@ wm.account = new function() {
             }
         });
     };
-};
 
-Ext.onReady(function() {
-    wm.account.loadTermsPage('terms');
-});
+    this.checkAvailability = function(button) {
+        button.disabled = true;
+
+        Ext.Ajax.request(
+        {
+            url: '/account/checkAvailability.html',
+            params: {
+                email: Ext.get('email').getValue(),
+                nickname: Ext.get('nickname').getValue()
+            },
+            success: function(response, options) {
+                var status = Ext.decode(response.responseText);
+                alert('success:' + status.success);
+                if (!status.success) {
+                    alert('success:' + status.errors.nickname);
+                }
+                button.disabled = false;
+            },
+            failure: function(response, options) {
+                alert('failure:' + response);
+                button.disabled = false;
+            }
+        });
+    };
+};
 
 /*
 

@@ -6,28 +6,21 @@ package wisematches.server.web.controllers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.directwebremoting.annotations.RemoteMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import wisematches.server.accoint.dwr.service.ServiceResponse;
 import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
 import wisematches.server.web.forms.AccountRecoveryForm;
 import wisematches.server.web.forms.AccountRegistrationForm;
 
-import java.util.HashMap;
+import javax.validation.Valid;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,28 +28,19 @@ import java.util.Set;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-//@Service
 @Controller
-//@RemoteProxy
 @RequestMapping(value = "/account")
-//@SessionAttributes(value = "registration", types = wisematches.server.web.forms.AccountRegistrationForm.class)
 public class AccountController extends AbstractInfoController {
-	private Validator validator;
 	private AccountManager accountManager;
 	private PlayerSecurityService playerSecurityService;
 
 	private int defaultRating = 1200;
 	private Membership defaultMembership = Membership.BASIC;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.accoint.dwr.account");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 
 	public AccountController() {
 		super("classpath:/i18n/server/account/");
-	}
-
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
-//		dataBinder.setDisallowedFields("id");
 	}
 
 	@RequestMapping("login")
@@ -66,16 +50,6 @@ public class AccountController extends AbstractInfoController {
 		}
 		model.addAttribute("accountBodyPageName", "login");
 		return "/content/account/layout";
-	}
-
-	/**
-	 * This is fake method. Implementation is provided by Spring Security.
-	 *
-	 * @return always null
-	 */
-	@RequestMapping("authMember")
-	public String authMember() {
-		return null;
 	}
 
 	/**
@@ -91,10 +65,12 @@ public class AccountController extends AbstractInfoController {
 		return "/content/account/layout";
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String createAccountAction(Model model, @ModelAttribute("registration") AccountRegistrationForm registration, BindingResult result, SessionStatus status, Locale locale) {
-		validator.validate(registration, result);
+	public String createAccountAction(Model model, @Valid @ModelAttribute("registration") AccountRegistrationForm registration,
+									  BindingResult result, SessionStatus status) {
+		// Validate before next steps
+		validateRegistrationForm(registration, result);
 
 		// Create account if no errors
 		if (!result.hasErrors()) {
@@ -139,25 +115,34 @@ public class AccountController extends AbstractInfoController {
 		}
 	}
 
-	@RemoteMethod
+	@ResponseBody
 	@RequestMapping(value = "checkAvailability")
-	public Map<String, String> getAvailabilityStatus(@ModelAttribute("email") String email, @ModelAttribute("nickname") String nickname) {
+	private ServiceResponse getAvailabilityStatus(@RequestParam("email") String email, @RequestParam("nickname") String nickname, BindingResult result) {
 		final AccountAvailability a = accountManager.checkAccountAvailable(nickname, email);
 		if (a.isAvailable()) {
-			return null;
+			return ServiceResponse.success();
 		} else {
-			Map<String, String> checks = new HashMap<String, String>();
 			if (!a.isEmailAvailable()) {
-				checks.put("email", "account.register.email.err.busy");
+				result.rejectValue("email", "account.register.email.err.busy");
 			}
 			if (!a.isUsernameAvailable()) {
-				checks.put("nickname", "account.register.nickname.err.busy");
+				result.rejectValue("nickname", "account.register.nickname.err.busy");
 			}
 			if (!a.isUsernameProhibited()) {
-				checks.put("nickname", "account.register.nickname.err.incorrect");
+				result.rejectValue("nickname", "account.register.nickname.err.incorrect");
 			}
-			return checks;
+			return ServiceResponse.convert(result);
 		}
+	}
+
+	/**
+	 * This is fake method. Implementation is provided by Spring Security.
+	 *
+	 * @return always null
+	 */
+	@RequestMapping("authMember")
+	public String authMember() {
+		return null;
 	}
 
 	private ServiceResponse generateRecoveryToken(String tokenEmail) {
@@ -199,8 +184,10 @@ public class AccountController extends AbstractInfoController {
 		this.playerSecurityService = playerSecurityService;
 	}
 
-	@Autowired
-	public void setValidator(Validator validator) {
-		this.validator = validator;
+	private void validateRegistrationForm(AccountRegistrationForm form, BindingResult result) {
+		if (!form.getPassword().equals(form.getConfirm())) {
+			result.rejectValue("confirm", "account.register.pwd-cfr.err.mismatch");
+		}
+		getAvailabilityStatus(form.getEmail(), form.getNickname(), result);
 	}
 }

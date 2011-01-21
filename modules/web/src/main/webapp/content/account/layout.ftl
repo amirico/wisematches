@@ -3,9 +3,7 @@
 
 <#assign headerTitle="account.header"/>
 
-<@wisematches.html
-scripts=["/dwr/interface/problemsReportService.js"]
-styles=["/content/info/info.css", "/content/account/account.css"] >
+<@wisematches.html styles=["/content/info/info.css", "/content/account/account.css"] >
     <#include "../common/header.ftl">
     <#include "pages/${accountBodyPageName}.ftl">
     <#include "../common/footer.ftl">

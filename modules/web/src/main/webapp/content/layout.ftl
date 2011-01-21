@@ -13,7 +13,6 @@
         <link rel="stylesheet" href="${style}">
     </#list>
 
-    <script type="text/javascript" src="/i18n/common/<@message code="locale"/>.js"></script>
     <#list i18n as i>
         <script type="text/javascript" src="/i18n/${i}/<@message code="locale"/>.js"></script>
     </#list>
@@ -25,9 +24,6 @@
 
     <!-- Some extension. TODO: add only for a few pages where it's really required. &ndash;&gt; -->
     <script type="text/javascript" src="/content/account/account.js"></script>
-
-    <script type="text/javascript" src="/dwr/engine.js"></script>
-    <script type="text/javascript" src="/dwr/util.js"></script>
 
     <#list scripts as script>
         <script type="text/javascript" src="${script}"></script>
