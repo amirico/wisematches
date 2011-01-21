@@ -70,7 +70,7 @@ public class AccountController extends AbstractInfoController {
 	public String createAccountAction(Model model, @Valid @ModelAttribute("registration") AccountRegistrationForm registration,
 									  BindingResult result, SessionStatus status) {
 		// Validate before next steps
-		validateRegistrationForm(registration, result);
+//		validateRegistrationForm(registration, result);
 
 		// Create account if no errors
 		if (!result.hasErrors()) {
@@ -106,12 +106,13 @@ public class AccountController extends AbstractInfoController {
 		if (result.hasErrors()) {
 			return createAccountPage(model, registration);
 		} else {
-			model.addAttribute("j_username", registration.getEmail());
-			model.addAttribute("j_password", registration.getPassword());
-
 			status.setComplete();
+
+//			model.addAttribute("j_username", registration.getEmail());
+//			model.addAttribute("j_password", registration.getPassword());
+
 			//noinspection SpringMVCViewInspection
-			return "redirect:/account/authMember.html";
+			return "forward:/account/authMember.html?j_username=" + registration.getEmail() + "&j_password=" + registration.getPassword();
 		}
 	}
 
