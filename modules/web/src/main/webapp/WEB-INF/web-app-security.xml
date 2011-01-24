@@ -21,11 +21,12 @@
 
         <remember-me services-ref="ipTokenBasedRememberMeServicesBean"/>
 
-        <form-login login-processing-url="/account/authMember.html"
-                    login-page="/account/authRequired.html"/>
+        <form-login login-page="/account/login.html"
+                    default-target-url="/game/dashboard.html"
+                    authentication-failure-url="/account/login.html"/>
 
-        <logout invalidate-session="true"
+        <logout logout-url="/account/logout.html"
                 logout-success-url="/"
-                logout-url="/account/logout.html"/>
+                invalidate-session="true"/>
     </http>
 </beans:beans>

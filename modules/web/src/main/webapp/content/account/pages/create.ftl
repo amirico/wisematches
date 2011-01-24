@@ -18,34 +18,22 @@
                         </tr>
                         <tr>
                             <td>
+                            <#--@declare id="email"-->
                                 <label for="email"><@message code="account.register.email.label"/>:</label>
                             </td>
                             <td>
-                                <div class="x-form-invalid-msg field">
-                                <@spring.bind "registration.email"/>
-                                    <input type="text" id="email" name="email" size="30"
-                                           value="${spring.stringStatusValue}"/>
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="x-form-invalid-msg">${msg}</div>
-                                </#list>
-                                </div>
+                            <@wisematches.fieldInput path="registration.email"/>
                                 <span class="sample"><@message code="account.register.email.description"/></span>
                             </td>
                         </tr>
 
                         <tr>
                             <td>
+                            <#--@declare id="nickname"-->
                                 <label for="nickname"><@message code="account.register.nickname.label"/>:</label>
                             </td>
                             <td>
-                                <div class="field">
-                                <@spring.bind "registration.nickname"/>
-                                    <input type="text" id="nickname" name="nickname" size="30"
-                                           value="${spring.stringStatusValue}"/>
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="x-form-invalid-msg">${msg}</div>
-                                </#list>
-                                </div>
+                            <@wisematches.fieldInput path="registration.nickname"/>
                                 <span class="sample"><@message code="account.register.nickname.description"/></span>
                             </td>
                         </tr>
@@ -63,44 +51,30 @@
 
                         <tr>
                             <td>
+                            <#--@declare id="password"-->
                                 <label for="password"><@message code="account.register.pwd.label"/>:</label>
                             </td>
                             <td>
-                                <div class="field">
-                                <@spring.bind "registration.password"/>
-                                    <input type="password" id="password" name="password" size="30"/>
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="x-form-invalid-msg">${msg}</div>
-                                </#list>
-                                </div>
+                            <@wisematches.fieldInput path="registration.password" fieldType="password"/>
                             </td>
                         </tr>
                         <tr>
                             <td>
+                            <#--@declare id="confirm"-->
                                 <label for="confirm"><@message code="account.register.pwd-cfr.label"/>:</label>
                             </td>
                             <td>
-                                <div class="field">
-                                <@spring.bind "registration.confirm"/>
-                                    <input type="password" id="confirm" name="confirm" size="30"/>
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="x-form-invalid-msg">${msg}</div>
-                                </#list>
-                                </div>
+                            <@wisematches.fieldInput path="registration.confirm" fieldType="password"/>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                <div class="field">
-                                <@spring.bind "registration.rememberMe"/>
-                                    <input type="checkbox" id="rememberMe" name="rememberMe"
-                                           <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
-                                    <label for="rememberMe"><@message code="account.login.remember.label"/></label>
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="x-form-invalid-msg">${msg}</div>
-                                </#list>
-                                </div>
+                            <@wisematches.field path="registration.rememberMe">
+                                <input type="checkbox" id="rememberMe" name="rememberMe"
+                                       <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
+                                <label for="rememberMe"><@message code="account.login.remember.label"/></label>
+                            </@wisematches.field>
                             </td>
                         </tr>
 
@@ -120,18 +94,14 @@
                                 <label for="language"><@message code="account.register.language.label"/>:</label>
                             </td>
                             <td>
-                                <div class="field">
-                                <@spring.bind "registration.language"/>
-                                    <select id="language" name="language" style="width: 170px;">
-                                        <option value="en" <#if (locale=="en")>selected="selected"</#if>>English
-                                        </option>
-                                        <option value="ru" <#if (locale=="ru")>selected="selected"</#if>>Русский
-                                        </option>
-                                    </select>
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="x-form-invalid-msg">${msg}</div>
-                                </#list>
-                                </div>
+                            <@wisematches.field path="registration.language">
+                                <select id="language" name="language" style="width: 170px;">
+                                    <option value="en" <#if (locale=="en")>selected="selected"</#if>>English
+                                    </option>
+                                    <option value="ru" <#if (locale=="ru")>selected="selected"</#if>>Русский
+                                    </option>
+                                </select>
+                            </@wisematches.field>
                                 <input type="hidden" id="timezone" name="timezone" value="0">
                                 <script type="text/javascript">
                                     document.getElementById('timezone').value = new Date().getTimezoneOffset();
@@ -145,14 +115,12 @@
                                 <label><@message code='account.register.terms.label'/>:</label>
                             </td>
                             <td align="center">
-                                <span><@message code="account.register.terms.description"/></span>
+                                <div style="padding-bottom: 10px;"><@message code="account.register.terms.description"/></div>
 
-                                <div class="field">
-                                    <button id="createAccount"
-                                            name="createAccount"
-                                            type="submit"
-                                            value="submit"><@message code='account.register.submit.label'/></button>
-                                </div>
+                                <button id="createAccount"
+                                        name="createAccount"
+                                        type="submit"
+                                        value="submit"><@message code='account.register.submit.label'/></button>
                             </td>
                         </tr>
                     </table>

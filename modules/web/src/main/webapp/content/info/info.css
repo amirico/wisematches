@@ -41,7 +41,7 @@
     padding: 0 0 0 15px;
 }
 
-#info-navigation .separator {
+#info-navigation .separator li {
     height: 1px;
     padding-right: 0;
     margin-top: 6px;

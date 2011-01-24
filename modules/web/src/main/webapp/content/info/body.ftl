@@ -50,7 +50,8 @@
                         </ul>
                     </li>
 
-                    <li class="x-panel-body-noheader separator" style="border-color: #dad7d7;"></li>
+                    <li class="x-panel-body-noheader separator"
+                        style="border-color: #dad7d7; padding-bottom: 5px;"></li>
                 <@security.authorize access="isAuthenticated()">
                     <li>
                         <b><@message code="info.continue.label"/></b>
@@ -71,9 +72,9 @@
                                 <@message code="account.register.label"/>
                                 </button>
                             </li>
-                            <li style="color: gray; font-size: small;"><@message code="separator.or"/></li>
+                            <li class="separator"><@message code="separator.or"/></li>
                             <li><a href="/account/login.html"><@message code="account.signin.label"/></a></li>
-                            <li style="color: gray; font-size: small;"><@message code="separator.or"/></li>
+                            <li class="separator"><@message code="separator.or"/></li>
                             <li><a href="/account/authGuest.html"><@message code="account.guest.label"/></a></li>
                         </ul>
                     </li>

@@ -38,3 +38,24 @@
 </body>
 </html>
 </#macro>
+
+<#macro field path>
+<@spring.bind path/>
+<div class="<#if spring.status.error>x-form-invalid-msg field-error<#else>field-ok</#if>">
+    <#assign status=spring.status>
+    <#assign statusValue=spring.stringStatusValue>
+
+    <#nested >
+
+    <#list status.errorMessages as msg>
+        <div class="x-form-invalid-msg error-msg">${msg}</div>
+    </#list>
+</div>
+</#macro>
+
+<#macro fieldInput path attributes="" fieldType="text" size=30>
+<@field path=path>
+<input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
+       value="<#if fieldType!="password">${spring.stringStatusValue}</#if>" ${attributes}>
+</@field>
+</#macro>
