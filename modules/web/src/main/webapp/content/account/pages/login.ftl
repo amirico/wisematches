@@ -7,40 +7,42 @@
         </td>
 
         <td style="vertical-align: top;">
-            <div id="navigation" style="width: 270px;">
-            <@ext.roundPanel><@ext.roundPanel>
+            <div id="login-navigation" style="width: 270px;">
+            <@ext.roundPanel>
+            <@ext.roundPanel>
                 <div id="login-panel">
-                    <form id="login-form" method="post" action="/account/authMember.html">
+                    <div id="login-title"><@message code="account.login.title"/></div>
+                    <div id="login-type"><@message code="account.header"/></div>
+
+                    <form id="login-form" method="post" action="/account/loginAuth.html">
                         <table cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                                <td colspan="2">
-
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
+                                <#--@declare id="j_username"-->
                                     <label for="j_username"><@message code="account.login.email.label"/>:</label>
                                 </td>
                                 <td>
-                                    <input id="j_username" name="j_username" type="text"/>
+                                <@wisematches.fieldInput path="login.j_username" size="0"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
+                                <#--@declare id="j_password"-->
                                     <label for="j_password"><@message code="account.login.password.label"/>:</label>
                                 </td>
                                 <td>
-                                    <input id="j_password" name="j_password" type="password"/>
+                                <@wisematches.fieldInput path="login.j_password" fieldType="password" size="0"/>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">
-                                    <input id="_remember_me" name="_remember_me" type="checkbox"
-                                           checked="checked"
-                                           value="true">
+                                <td align="right" valign="middle" style="text-align: right; vertical-align: middle;">
+                                <@wisematches.field path="login.j_remember_me">
+                                    <input type="checkbox" id="j_remember_me" name="j_remember_me" value="true"
+                                           <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
+                                </@wisematches.field>
                                 </td>
-                                <td align="left">
-                                    <label for="_remember_me"><@message code="account.login.remember.label"/></label>
+                                <td align="left" valign="middle" style="text-align: left; vertical-align: middle;">
+                                    <label for="j_remember_me"><@message code="account.login.remember.label"/></label>
                                 </td>
                             </tr>
                             <tr>
@@ -50,33 +52,38 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" height="33.0" align="center" valign="bottom">
-                                    <a href=""><@message code="account.login.restore.label"/></a>
+                                <td colspan="2" height="33.0" align="center" valign="bottom"
+                                    style="text-align: center; vertical-align: bottom;">
+                                    <span>
+                                        <a href="/account/recovery.html"><@message code="account.login.recovery.label"/></a>
+                                    </span>
                                 </td>
                             </tr>
                         </table>
                     </form>
                 </div>
-            </@ext.roundPanel></@ext.roundPanel>
-
-            <@ext.roundPanel id="register-panel">
-                <input type="button" id="register-link" onclick="wm.account.showRegistrationWindow();"
-                       value="<@message code="login.info.register.label"/>">
-            <#--<div id="register-link"></div>-->
-                <div class="navigation-separator"><@message code="separator.or"/></div>
-                <div id="login-guest-link">
-                    <a href="/accounts/loginGuest.html"><@message code="login.info.guest.label"/></a>
-                </div>
-                <div class="navigation-separator"><@message code="separator.or"/></div>
-                <div id="info-links">
-                <@message code="login.info.readmore.label"/>
-                    <a href="/info/about.html">
-                    <@message code="login.info.about.label"/> <@message code="wisematches.label"/>
-                    </a>
-                <@message code="separator.and"/><br>
-                    <a href="/info/features.html">
-                    <@message code="login.info.features.label"/>
-                    </a>
+            </@ext.roundPanel>
+            </@ext.roundPanel>
+                <div style="height:10px;"></div>
+            <@ext.roundPanel>
+                <div id="register-panel">
+                    <div id="register-link">
+                        <button id="createAnAccount" class="account-button"
+                                onclick="wm.util.url.redirect('/account/create.html')">
+                        <@message code="account.register.label"/>
+                        </button>
+                    </div>
+                    <div class="separator"><@message code="separator.or"/></div>
+                    <div id="login-guest-link">
+                        <a href="/account/authGuest.html"><@message code="account.guest.label"/></a>
+                    </div>
+                    <div class="separator"><@message code="separator.or"/></div>
+                    <div id="info-links">
+                    <@message code="info.readmore.label"/>
+                        <a href="/info/about.html"><@message code="info.principles.label"/></a>
+                    <@message code="separator.and"/><br>
+                        <a href="/info/features.html"><@message code="info.features.label"/></a>
+                    </div>
                 </div>
             </@ext.roundPanel>
             </div>

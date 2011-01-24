@@ -20,9 +20,8 @@ table {
     border-spacing: 0;
 }
 
-{
-    padding: 3px
-;
+form label {
+    white-space: nowrap;
 }
 
 /* Header CSS declaration */
@@ -93,6 +92,10 @@ table {
     background-image: none !important;
 }
 
+.field-error, .field-ok {
+    padding: 0 !important;
+}
+
 .button-wait-icon {
     padding-left: 22px !important;
     background-image: url('/resources/images/wait.gif');
@@ -104,3 +107,8 @@ div.space-line {
     padding: 0;
     width: auto;
 }
+
+.separator {
+    color: gray;
+}
+
