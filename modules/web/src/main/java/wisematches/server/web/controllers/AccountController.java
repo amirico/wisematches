@@ -7,10 +7,6 @@ package wisematches.server.web.controllers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.WebAttributes;
-import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
-import wisematches.server.web.forms.AccountLoginForm;
 import wisematches.server.web.forms.AccountRegistrationForm;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -36,7 +29,7 @@ import java.util.Set;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@RequestMapping(value = "/account")
+@RequestMapping("/account")
 public class AccountController extends AbstractInfoController {
 	private AccountManager accountManager;
 	private PlayerSecurityService playerSecurityService;
@@ -51,70 +44,6 @@ public class AccountController extends AbstractInfoController {
 	}
 
 	/**
-	 * This is basic login page that shows small information about the site and login form.
-	 *
-	 * @param form   the empty login form. Required for FTL page.
-	 * @param model  the original model
-	 * @param locale the locale to get a info page
-	 * @return the appropriate FTL layout page.
-	 */
-	@RequestMapping("login")
-	public String loginPage(@ModelAttribute("login") AccountLoginForm form, Model model, Locale locale) {
-		if (!processInfoPage("login", model, locale)) {
-			return null;
-		}
-		model.addAttribute("accountBodyPageName", "login");
-		return "/content/account/layout";
-	}
-
-	@RequestMapping("loginAuth")
-	public String loginAction(@Valid @ModelAttribute("login") AccountLoginForm form,
-							  BindingResult result,
-							  HttpSession session, Model model, Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Try authenticate user: " + form);
-		}
-		if (!result.hasErrors()) {
-			final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-			if (log.isInfoEnabled()) {
-				log.info("User can't be authenticated: " + ex);
-			}
-
-			if (ex != null) {
-				if (ex instanceof BadCredentialsException) {
-					result.rejectValue("j_password", "account.login.err.mismatch");
-				} else if (ex instanceof RememberMeAuthenticationException) {
-					//noinspection SpringMVCViewInspection
-					return "redirect:/account/loginExpired.html";
-				} else {
-					result.rejectValue("j_password", "account.login.err.system");
-				}
-
-			}
-		}
-		if (!result.hasErrors()) {
-			//noinspection SpringMVCViewInspection
-			return "forward:/j_spring_security_check";
-		}
-		return loginPage(form, model, locale);
-	}
-
-	/**
-	 * This is fake method. Implementation is provided by Spring Security.
-	 *
-	 * @return always null
-	 */
-	@RequestMapping("authMember")
-	public String authMemberAction() {
-		return null;
-	}
-
-	@RequestMapping("logout")
-	public String logoutMemberAction() {
-		return null;
-	}
-
-	/**
 	 * This is basic form form. Just forward it to appropriate FTL page.
 	 *
 	 * @param model the associated model where {@code accountBodyPageName} parameter will be stored.
@@ -125,7 +54,7 @@ public class AccountController extends AbstractInfoController {
 	public String createAccountPage(Model model,
 									@ModelAttribute("registration")
 									AccountRegistrationForm form) {
-		model.addAttribute("accountBodyPageName", "create");
+		model.addAttribute("infoId", "create");
 		return "/content/account/layout";
 	}
 
@@ -188,10 +117,10 @@ public class AccountController extends AbstractInfoController {
 				b.append("&");
 				b.append("j_password=").append(URLEncoder.encode(form.getPassword(), "UTF-8"));
 				if (form.isRememberMe()) {
-					b.append("&").append("_remember_me=true");
+					b.append("&").append("rememberMe=true");
 				}
 				//noinspection SpringMVCViewInspection
-				return "forward:/j_spring_security_check";
+				return "forward:/account/loginProcessing.html?" + b;
 			} catch (UnsupportedEncodingException ex) {
 				log.error("Very strange exception that mustn't be here", ex);
 				//noinspection SpringMVCViewInspection

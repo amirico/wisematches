@@ -26,7 +26,10 @@
         </bean>
 
         <mvc:interceptor>
+            <mvc:mapping path="/game/**"/>
+
             <mvc:mapping path="/account/create.html"/>
+            <mvc:mapping path="/account/modify.html"/>
 
             <bean id="hibernateSessionInterceptor"
                   class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
