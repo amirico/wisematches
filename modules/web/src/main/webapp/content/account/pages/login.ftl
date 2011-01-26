@@ -14,12 +14,13 @@
                     <div id="login-title"><@message code="account.login.title"/></div>
                     <div id="login-type"><@message code="account.header"/></div>
 
-                    <form id="login-form" method="post" action="/account/loginAuth.html">
+                    <form id="login-form" method="post" action="/account/loginProcessing.html">
                         <table cellpadding="0" cellspacing="0" border="0">
                             <tr>
                                 <td>
                                 <#--@declare id="j_username"-->
-                                    <label for="j_username"><@message code="account.login.email.label"/>:</label>
+                                    <label style="white-space: nowrap;"
+                                           for="j_username"><@message code="account.login.email.label"/>:</label>
                                 </td>
                                 <td>
                                 <@wisematches.fieldInput path="login.j_username" size="0"/>
@@ -28,7 +29,8 @@
                             <tr>
                                 <td>
                                 <#--@declare id="j_password"-->
-                                    <label for="j_password"><@message code="account.login.password.label"/>:</label>
+                                    <label style="white-space: nowrap;"
+                                           for="j_password"><@message code="account.login.password.label"/>:</label>
                                 </td>
                                 <td>
                                 <@wisematches.fieldInput path="login.j_password" fieldType="password" size="0"/>
@@ -36,13 +38,13 @@
                             </tr>
                             <tr>
                                 <td align="right" valign="middle" style="text-align: right; vertical-align: middle;">
-                                <@wisematches.field path="login.j_remember_me">
-                                    <input type="checkbox" id="j_remember_me" name="j_remember_me" value="true"
+                                <@wisematches.field path="login.rememberMe">
+                                    <input type="checkbox" id="rememberMe" name="rememberMe" value="true"
                                            <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
                                 </@wisematches.field>
                                 </td>
                                 <td align="left" valign="middle" style="text-align: left; vertical-align: middle;">
-                                    <label for="j_remember_me"><@message code="account.login.remember.label"/></label>
+                                    <label for="rememberMe"><@message code="account.login.remember.label"/></label>
                                 </td>
                             </tr>
                             <tr>

@@ -9,6 +9,88 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd"
              default-destroy-method="destroy">
 
+    <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
+        <beans:property name="accountManager" ref="accountManager"/>
+        <beans:property name="lockAccountManager" ref="lockAccountManager"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="saltSource" ref="saltSource"/>
+        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+    </beans:bean>
+
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
+
+    <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+        <beans:property name="userPropertyToUse" value="nickname"/>
+    </beans:bean>
+
+    <beans:bean id="rememberMeServices"
+                class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+        <beans:property name="key" value="${security.remember.token}"/>
+        <beans:property name="userDetailsService" ref="userDetailsService"/>
+        <beans:property name="parameter" value="rememberMe"/>
+        <beans:property name="cookieName" value="REMEMBER_ME"/>
+
+        <beans:property name="tokenRepository">
+            <beans:bean class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+                <beans:property name="dataSource" ref="dataSource"/>
+                <beans:property name="createTableOnStartup" value="false"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.spring.security.WMRedirectStrategy">
+        <beans:property name="redirectParameters">
+            <beans:set>
+                <beans:value>rememberMe</beans:value>
+            </beans:set>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="authenticationSuccessHandler"
+                class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="/game/dashboard.html"/>
+        <beans:property name="targetUrlParameter" value="followup"/>
+    </beans:bean>
+
+    <beans:bean id="authenticationFailureHandler"
+                class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+        <beans:property name="redirectStrategy" ref="redirectStrategy"/>
+        <beans:property name="defaultFailureUrl" value="/account/loginAuth.html?error=undefined"/>
+        <beans:property name="exceptionMappings">
+            <beans:map>
+                <beans:entry
+                        key="org.springframework.security.authentication.BadCredentialsException"
+                        value="/account/loginAuth.html?error=credential"/>
+
+                <beans:entry
+                        key="org.springframework.security.core.userdetails.UsernameNotFoundException"
+                        value="/account/loginAuth.html?error=credential"/>
+
+                <beans:entry
+                        key="org.springframework.security.authentication.InsufficientAuthenticationException"
+                        value="/account/loginAuth.html?error=insufficient"/>
+
+                <beans:entry
+                        key="org.springframework.security.authentication.AccountStatusException"
+                        value="/account/loginAuth.html?error=status"/>
+
+                <beans:entry
+                        key="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException"
+                        value="/account/loginAuth.html?error=expired"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+
+    <global-method-security jsr250-annotations="enabled"/>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder ref="passwordEncoder">
+                <salt-source ref="saltSource"/>
+            </password-encoder>
+        </authentication-provider>
+    </authentication-manager>
+
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/game/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/modify.html" access="isFullyAuthenticated()"/>
@@ -19,11 +101,12 @@
 
         <intercept-url pattern="/**" access="permitAll"/>
 
-        <remember-me services-ref="ipTokenBasedRememberMeServicesBean"/>
+        <remember-me services-ref="rememberMeServices"/>
 
         <form-login login-page="/account/login.html"
-                    default-target-url="/game/dashboard.html"
-                    authentication-failure-url="/account/login.html"/>
+                    login-processing-url="/account/loginProcessing.html"
+                    authentication-success-handler-ref="authenticationSuccessHandler"
+                    authentication-failure-handler-ref="authenticationFailureHandler"/>
 
         <logout logout-url="/account/logout.html"
                 logout-success-url="/"

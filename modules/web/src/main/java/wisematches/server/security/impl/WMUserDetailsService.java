@@ -38,6 +38,9 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 
 	private final TheUserDetailsService externalListeners = new TheUserDetailsService();
 
+	public WMUserDetailsService() {
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
 		final Player p = accountManager.findByEmail(username);
@@ -48,7 +51,6 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 		return new WMUserDetails(p, !locked, WMAuthorities.forMembership(p.getMembership()));
 	}
 
-	@Override
 	public void authenticatePlayer(Player player, String password) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		if (currentUser == null) {
