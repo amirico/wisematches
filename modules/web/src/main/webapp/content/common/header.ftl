@@ -4,7 +4,7 @@
 <table id="header">
     <tr>
         <td>
-            <img id="header-image" src="/resources/images/logo.png"/>
+            <img id="header-image" src="/resources/images/logo.png" width="178" height="72"/>
         </td>
         <td style="width: 100%">
         <@ext.topRoundPanel id="header-panel">

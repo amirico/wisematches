@@ -9,19 +9,11 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd"
              default-destroy-method="destroy">
 
-    <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
-        <beans:property name="accountManager" ref="accountManager"/>
-        <beans:property name="lockAccountManager" ref="lockAccountManager"/>
-        <beans:property name="authenticationManager" ref="authenticationManager"/>
-        <beans:property name="saltSource" ref="saltSource"/>
-        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
-    </beans:bean>
-
-    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
-
     <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
         <beans:property name="userPropertyToUse" value="nickname"/>
     </beans:bean>
+
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
 
     <beans:bean id="rememberMeServices"
                 class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
@@ -38,18 +30,18 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="redirectStrategy" class="wisematches.server.web.spring.security.WMRedirectStrategy">
-        <beans:property name="redirectParameters">
-            <beans:set>
-                <beans:value>rememberMe</beans:value>
-            </beans:set>
-        </beans:property>
+    <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
+        <beans:property name="accountManager" ref="accountManager"/>
+        <beans:property name="lockAccountManager" ref="lockAccountManager"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="saltSource" ref="saltSource"/>
+        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
     </beans:bean>
 
     <beans:bean id="authenticationSuccessHandler"
                 class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/game/dashboard.html"/>
-        <beans:property name="targetUrlParameter" value="followup"/>
+        <beans:property name="targetUrlParameter" value="continue"/>
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler"
@@ -81,9 +73,29 @@
         </beans:property>
     </beans:bean>
 
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.spring.security.WMRedirectStrategy">
+        <beans:property name="redirectParameters">
+            <beans:set>
+                <beans:value>rememberMe</beans:value>
+            </beans:set>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="guestFilter" class="wisematches.server.web.spring.security.guest.WMGuestAuthenticationFilter">
+        <beans:property name="guestProcessingUrl" value="/account/loginGuest.html"/>
+        <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
+        <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
+    </beans:bean>
+
+    <beans:bean id="guestAuthenticationProvider"
+                class="wisematches.server.web.spring.security.guest.WMGuestAuthenticationProvider">
+    </beans:bean>
+
     <global-method-security jsr250-annotations="enabled"/>
 
     <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="guestAuthenticationProvider"/>
+
         <authentication-provider user-service-ref="userDetailsService">
             <password-encoder ref="passwordEncoder">
                 <salt-source ref="saltSource"/>
@@ -100,6 +112,8 @@
         <intercept-url pattern="/i18n/**" filters="none"/>
 
         <intercept-url pattern="/**" access="permitAll"/>
+
+        <custom-filter ref="guestFilter" before="ANONYMOUS_FILTER"/>
 
         <remember-me services-ref="rememberMeServices"/>
 

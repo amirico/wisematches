@@ -2,6 +2,7 @@ package wisematches.server.web.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import wisematches.server.security.WMAuthorities;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -14,6 +15,9 @@ public class MainPageController {
 
 	@RequestMapping("index")
 	public String mainPage() {
-		return "redirect:/game/dashboard.html";
+		if (WMAuthorities.USER.isAuthorityGranted()) {
+			return "redirect:/game/dashboard.html";
+		}
+		return "redirect:/account/login.html";
 	}
 }

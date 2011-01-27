@@ -77,7 +77,7 @@
                     </div>
                     <div class="separator"><@message code="separator.or"/></div>
                     <div id="login-guest-link">
-                        <a href="/account/authGuest.html"><@message code="account.guest.label"/></a>
+                        <a href="/account/loginGuest.html"><@message code="account.guest.label"/></a>
                     </div>
                     <div class="separator"><@message code="separator.or"/></div>
                     <div id="info-links">

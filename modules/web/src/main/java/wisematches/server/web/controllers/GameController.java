@@ -20,6 +20,8 @@ import java.util.Locale;
 public class GameController {
 	@RequestMapping("/{pageName}")
 	public String gamePages(@PathVariable String pageName, Model model, Locale locale, WebRequest webRequest) {
+
+
 		model.addAttribute("pageName", pageName);
 		return "/content/game/layout";
 	}

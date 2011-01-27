@@ -1,12 +1,10 @@
 package wisematches.server.security.impl;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import wisematches.server.player.Language;
 import wisematches.server.player.Membership;
 import wisematches.server.player.Player;
-
-import java.util.Collection;
+import wisematches.server.security.WMAuthorities;
 
 /**
  * This is implementation of Spring Security {@code UserDetails} interface that extends {@code Player} interface as
@@ -17,8 +15,9 @@ import java.util.Collection;
 public class WMUserDetails extends User implements Player {
 	private final Player originalPlayer;
 
-	public WMUserDetails(Player originalPlayer, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-		super(originalPlayer.getNickname(), originalPlayer.getPassword(), true, true, true, accountNonLocked, authorities);
+	public WMUserDetails(Player originalPlayer, boolean accountNonLocked) {
+		super(originalPlayer.getNickname(), originalPlayer.getPassword(), true, true, true, accountNonLocked,
+				WMAuthorities.forMembership(originalPlayer.getMembership()));
 		this.originalPlayer = originalPlayer;
 	}
 
