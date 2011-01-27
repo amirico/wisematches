@@ -1,7 +1,7 @@
 package wisematches.server.web.modules.app.playboard;
 
 import wisematches.server.core.sessions.ImplementationBean;
-import wisematches.server.games.board.GameBoard;
+import wisematches.server.gameplaying.board.GameBoard;
 
 import java.util.Collection;
 

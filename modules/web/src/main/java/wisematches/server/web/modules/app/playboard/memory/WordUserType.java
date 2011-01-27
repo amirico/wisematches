@@ -2,10 +2,10 @@ package wisematches.server.web.modules.app.playboard.memory;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
-import wisematches.server.games.scribble.Direction;
-import wisematches.server.games.scribble.Tile;
-import wisematches.server.games.scribble.Word;
-import wisematches.server.games.scribble.Position;
+import wisematches.server.gameplaying.scribble.Direction;
+import wisematches.server.gameplaying.scribble.Position;
+import wisematches.server.gameplaying.scribble.Tile;
+import wisematches.server.gameplaying.scribble.Word;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -42,92 +42,92 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public final class WordUserType implements UserType {
-    private static final Pattern TILES_PATTERN = Pattern.compile("((\\d{1,3})([^\\d])(\\d{1,2})\\|?)");
+	private static final Pattern TILES_PATTERN = Pattern.compile("((\\d{1,3})([^\\d])(\\d{1,2})\\|?)");
 
-    private static final int[] SQL_TYPES = new int[]{Types.TINYINT, Types.TINYINT, Types.TINYINT, Types.VARCHAR};
+	private static final int[] SQL_TYPES = new int[]{Types.TINYINT, Types.TINYINT, Types.TINYINT, Types.VARCHAR};
 
-    public WordUserType() {
-    }
+	public WordUserType() {
+	}
 
-    public int[] sqlTypes() {
-        return SQL_TYPES;
-    }
+	public int[] sqlTypes() {
+		return SQL_TYPES;
+	}
 
-    public Class returnedClass() {
-        return Word.class;
-    }
+	public Class returnedClass() {
+		return Word.class;
+	}
 
-    public boolean equals(Object x, Object y) throws HibernateException {
-        return x.equals(y);
-    }
+	public boolean equals(Object x, Object y) throws HibernateException {
+		return x.equals(y);
+	}
 
-    public int hashCode(Object x) throws HibernateException {
-        return x.hashCode();
-    }
+	public int hashCode(Object x) throws HibernateException {
+		return x.hashCode();
+	}
 
-    public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
-        final String tilesString = rs.getString(names[3]);
+	public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
+		final String tilesString = rs.getString(names[3]);
 
-        final List<Tile> tiles = new ArrayList<Tile>(15);
-        final Matcher matcher = TILES_PATTERN.matcher(tilesString);
+		final List<Tile> tiles = new ArrayList<Tile>(15);
+		final Matcher matcher = TILES_PATTERN.matcher(tilesString);
 
-        while (matcher.find()) {
-            final String s1 = matcher.group(2);
-            final String s2 = matcher.group(3);
-            final String s3 = matcher.group(4);
+		while (matcher.find()) {
+			final String s1 = matcher.group(2);
+			final String s2 = matcher.group(3);
+			final String s3 = matcher.group(4);
 
-            tiles.add(new Tile(Integer.valueOf(s1), s2.charAt(0), Integer.valueOf(s3)));
-        }
+			tiles.add(new Tile(Integer.valueOf(s1), s2.charAt(0), Integer.valueOf(s3)));
+		}
 
-        return new Word(
-                new Position(rs.getInt(names[0]), rs.getInt(names[1])),
-                Direction.values()[rs.getInt(names[2])],
-                tiles.toArray(new Tile[tiles.size()]));
-    }
+		return new Word(
+				new Position(rs.getInt(names[0]), rs.getInt(names[1])),
+				Direction.values()[rs.getInt(names[2])],
+				tiles.toArray(new Tile[tiles.size()]));
+	}
 
-    public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
-        final Word w = (Word) value;
+	public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
+		final Word w = (Word) value;
 
-        int i = index;
-        st.setInt(i++, w.getPosition().row);
-        st.setInt(i++, w.getPosition().column);
-        st.setInt(i++, w.getDirection().ordinal());
+		int i = index;
+		st.setInt(i++, w.getPosition().row);
+		st.setInt(i++, w.getPosition().column);
+		st.setInt(i++, w.getDirection().ordinal());
 
-        String s = "";
-        final Tile[] tiles = w.getTiles();
-        for (Tile tile : tiles) {
-            s += tile.getNumber() + "" + tile.getLetter() + "" + tile.getCost() + "|";
-        }
+		String s = "";
+		final Tile[] tiles = w.getTiles();
+		for (Tile tile : tiles) {
+			s += tile.getNumber() + "" + tile.getLetter() + "" + tile.getCost() + "|";
+		}
 
-        final int length = s.length();
-        if (length == 0) {
-            st.setString(i, s);
-        } else {
-            st.setString(i, s.substring(0, length - 1));
-        }
-    }
+		final int length = s.length();
+		if (length == 0) {
+			st.setString(i, s);
+		} else {
+			st.setString(i, s.substring(0, length - 1));
+		}
+	}
 
-    public Object deepCopy(Object value) throws HibernateException {
-        if (value == null) {
-            return null;
-        }
-        final Word w = (Word) value;
-        return new Word(w.getPosition(), w.getDirection(), w.getTiles().clone());
-    }
+	public Object deepCopy(Object value) throws HibernateException {
+		if (value == null) {
+			return null;
+		}
+		final Word w = (Word) value;
+		return new Word(w.getPosition(), w.getDirection(), w.getTiles().clone());
+	}
 
-    public boolean isMutable() {
-        return false;
-    }
+	public boolean isMutable() {
+		return false;
+	}
 
-    public Serializable disassemble(Object value) throws HibernateException {
-        return (Word) value;
-    }
+	public Serializable disassemble(Object value) throws HibernateException {
+		return (Word) value;
+	}
 
-    public Object assemble(Serializable cached, Object owner) throws HibernateException {
-        return cached;
-    }
+	public Object assemble(Serializable cached, Object owner) throws HibernateException {
+		return cached;
+	}
 
-    public Object replace(Object original, Object target, Object owner) throws HibernateException {
-        return original;
-    }
+	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+		return original;
+	}
 }

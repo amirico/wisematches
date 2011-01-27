@@ -15,9 +15,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wisematches.server.player.AccountManager;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerListener;
-import wisematches.server.player.lock.LockAccountListener;
-import wisematches.server.player.lock.LockAccountManager;
 import wisematches.server.security.PlayerSecurityService;
+import wisematches.server.testimonial.lock.LockAccountListener;
+import wisematches.server.testimonial.lock.LockAccountManager;
 
 import java.util.Date;
 

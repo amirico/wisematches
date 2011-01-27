@@ -1,6 +1,6 @@
 package wisematches.server.web.modules.app.events.producers;
 
-import wisematches.server.player.rating.PlayerRatingsManager;
+import wisematches.server.testimonial.rating.PlayerRatingsManager;
 import wisematches.server.web.modules.app.events.EventNotificator;
 import wisematches.server.web.modules.app.events.EventProducer;
 
