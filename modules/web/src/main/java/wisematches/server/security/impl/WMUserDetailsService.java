@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +19,6 @@ import wisematches.server.player.lock.LockAccountListener;
 import wisematches.server.player.lock.LockAccountManager;
 import wisematches.server.security.PlayerSecurityService;
 
-import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -48,7 +46,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 			throw new UsernameNotFoundException("User with email " + username + " not found in the system");
 		}
 		final boolean locked = lockAccountManager.isAccountLocked(p);
-		return new WMUserDetails(p, !locked, WMAuthorities.forMembership(p.getMembership()));
+		return new WMUserDetails(p, !locked);
 	}
 
 	public void authenticatePlayer(Player player, String password) {
@@ -77,8 +75,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 
 	@Override
 	public String encodePlayerPassword(Player player, String password) {
-		final WMUserDetails details = new WMUserDetails(player, false, Collections.<GrantedAuthority>emptySet());
-		return passwordEncoder.encodePassword(password, saltSource.getSalt(details));
+		return passwordEncoder.encodePassword(password, saltSource.getSalt(new WMUserDetails(player, false)));
 	}
 
 	protected Authentication createNewAuthentication(Player player) {

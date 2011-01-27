@@ -75,7 +75,7 @@
                             <li class="separator"><@message code="separator.or"/></li>
                             <li><a href="/account/login.html"><@message code="account.signin.label"/></a></li>
                             <li class="separator"><@message code="separator.or"/></li>
-                            <li><a href="/account/authGuest.html"><@message code="account.guest.label"/></a></li>
+                            <li><a href="/account/loginGuest.html"><@message code="account.guest.label"/></a></li>
                         </ul>
                     </li>
                 </@security.authorize>

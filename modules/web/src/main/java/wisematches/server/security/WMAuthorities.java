@@ -1,6 +1,9 @@
-package wisematches.server.security.impl;
+package wisematches.server.security;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import wisematches.server.player.Membership;
 
 import java.util.*;
@@ -31,6 +34,27 @@ public enum WMAuthorities implements GrantedAuthority {
 	@Override
 	public String getAuthority() {
 		return name().toLowerCase();
+	}
+
+	/**
+	 * Checks is this authority granted.
+	 * <p/>
+	 * This method uses {@code SecurityContextHolder#getContext()} to get a {@code Authentication}
+	 * object and check the authorities.
+	 *
+	 * @return {@code true} if the authority granted; {@code false} - otherwise.
+	 * @see SecurityContext
+	 * @see SecurityContextHolder#getContext()
+	 */
+	public boolean isAuthorityGranted() {
+		final SecurityContext context = SecurityContextHolder.getContext();
+		if (context != null) {
+			final Authentication authentication = context.getAuthentication();
+			if (authentication != null && authentication.isAuthenticated()) {
+				return authentication.getAuthorities().contains(this);
+			}
+		}
+		return false;
 	}
 
 	public static Collection<? extends GrantedAuthority> forMembership(Membership membership) {
