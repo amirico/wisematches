@@ -2,10 +2,10 @@ package wisematches.server.web.modules.app.playboard.memory;
 
 import org.junit.Assert;
 import org.junit.Test;
-import wisematches.server.games.scribble.Direction;
-import wisematches.server.games.scribble.Position;
-import wisematches.server.games.scribble.Tile;
-import wisematches.server.games.scribble.Word;
+import wisematches.server.gameplaying.scribble.Direction;
+import wisematches.server.gameplaying.scribble.Position;
+import wisematches.server.gameplaying.scribble.Tile;
+import wisematches.server.gameplaying.scribble.Word;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

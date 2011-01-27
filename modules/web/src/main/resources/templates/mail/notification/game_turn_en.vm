@@ -1,7 +1,7 @@
 #* @vtlmacrolibrary path="/templates/mail/notification/game_common_en.vm" *#
 
-#* @vtlvariable name="board" type="wisematches.server.games.board.GameBoard" *#
-#* @vtlvariable name="move" type="wisematches.server.games.board.PlayerMove" *#
+#* @vtlvariable name="board" type="wisematches.server.gameplaying.board.GameBoard" *#
+#* @vtlvariable name="move" type="wisematches.server.gameplaying.board.PlayerMove" *#
 #* @vtlvariable name="points" type="java.lang.Integer" *#
 #* @vtlvariable name="movedPlayer" type="wisematches.server.player.Player" *#
 #* @vtlvariable name="nextPlayer" type="wisematches.server.player.Player" *#

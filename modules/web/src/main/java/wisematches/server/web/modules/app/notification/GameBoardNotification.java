@@ -1,6 +1,6 @@
 package wisematches.server.web.modules.app.notification;
 
-import wisematches.server.player.notice.PlayerNotification;
+import wisematches.server.testimonial.notice.PlayerNotification;
 
 /**
  * Enum of notification types. {@code NotificationsSender} can fires only predefined numbers of notifications.

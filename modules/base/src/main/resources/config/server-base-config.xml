@@ -3,18 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="lockAccountManager" class="wisematches.server.player.lock.impl.HibernateLockAccountManager">
+    <bean id="lockAccountManager" class="wisematches.server.testimonial.lock.impl.HibernateLockAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="accountManager" class="wisematches.server.player.impl.HibernateAccountManager">
+    <bean id="accountManager" class="wisematches.server.player.member.HibernateAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="lockAccountManager" ref="lockAccountManager"/>
     </bean>
 
     <alias alias="playerManager" name="accountManager"/>
 
-    <!--    <bean id="ratingsManagerDao" class="wisematches.server.player.rating.impl.RatingsManagerDao">
+    <!--    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -43,7 +43,7 @@
         <property name="defaultPlayerRating" value="1200"/>
     </bean>
 
-    <bean id="statisticsManager" class="wisematches.server.player.statistic.impl.HibernatePlayerStatisticsManager">
+    <bean id="statisticsManager" class="wisematches.server.testimonial.statistic.impl.HibernatePlayerStatisticsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -51,7 +51,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="countriesManager" class="wisematches.server.player.profile.counties.impl.CSVCountriesManager">
+    <bean id="countriesManager" class="wisematches.server.testimonial.profile.counties.impl.CSVCountriesManager">
         <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
     </bean>-->
 </beans>

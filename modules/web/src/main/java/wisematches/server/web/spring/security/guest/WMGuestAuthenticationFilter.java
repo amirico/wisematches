@@ -6,7 +6,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
-import wisematches.server.guest.GuestPlayer;
+import wisematches.server.player.guest.GuestPlayer;
 import wisematches.server.security.impl.WMUserDetails;
 
 import javax.servlet.FilterChain;

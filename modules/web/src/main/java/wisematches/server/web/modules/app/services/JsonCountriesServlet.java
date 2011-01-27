@@ -3,8 +3,8 @@ package wisematches.server.web.modules.app.services;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import wisematches.server.player.Language;
-import wisematches.server.player.profile.counties.CountriesManager;
-import wisematches.server.player.profile.counties.Country;
+import wisematches.server.testimonial.profile.counties.CountriesManager;
+import wisematches.server.testimonial.profile.counties.Country;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
