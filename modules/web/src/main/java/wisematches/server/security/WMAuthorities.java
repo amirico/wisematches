@@ -24,7 +24,6 @@ public enum WMAuthorities implements GrantedAuthority {
 	private static final Map<Membership, EnumSet<WMAuthorities>> authoritiesCache = new HashMap<Membership, EnumSet<WMAuthorities>>();
 
 	static {
-		authoritiesCache.put(Membership.GUEST, EnumSet.of(USER, GUEST));
 		authoritiesCache.put(Membership.BASIC, EnumSet.of(USER, MEMBER));
 		authoritiesCache.put(Membership.SILVER, EnumSet.of(USER, MEMBER, SILVER));
 		authoritiesCache.put(Membership.GOLD, EnumSet.of(USER, MEMBER, GOLD));

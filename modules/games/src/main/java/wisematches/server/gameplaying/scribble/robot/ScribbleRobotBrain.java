@@ -182,7 +182,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 		switch (type) {
 			case DULL:
 				return (word.length() <= 6);
-			case STAGER:
+			case TRAINEE:
 				return (word.length() <= 8);
 			case EXPERT:
 				return true;
@@ -200,7 +200,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 			case DULL:
 				word = searchDullWord(words);
 				break;
-			case STAGER:
+			case TRAINEE:
 				word = searchFineWord(words);
 				break;
 			case EXPERT:

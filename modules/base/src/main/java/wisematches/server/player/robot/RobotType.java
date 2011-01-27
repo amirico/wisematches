@@ -14,7 +14,7 @@ public enum RobotType {
 	/**
 	 * Medium brain robot.
 	 */
-	STAGER(1200),
+	TRAINEE(1200),
 
 	/**
 	 * Very intelligent robot.
@@ -27,6 +27,11 @@ public enum RobotType {
 		this.rating = rating;
 	}
 
+	/**
+	 * Returns predefined rating for this robot type
+	 *
+	 * @return the rating for this robot
+	 */
 	public int getRating() {
 		return rating;
 	}

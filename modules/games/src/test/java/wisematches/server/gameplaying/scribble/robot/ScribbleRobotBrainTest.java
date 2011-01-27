@@ -47,7 +47,7 @@ public class ScribbleRobotBrainTest {
 	@Test
 	public void test_selectResultWordStager() {
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
-		final Word word = brain.selectResultWord(Arrays.asList(w1, w2, w3, w4), RobotType.STAGER, null, null);
+		final Word word = brain.selectResultWord(Arrays.asList(w1, w2, w3, w4), RobotType.TRAINEE, null, null);
 		assertSame(w2, word);
 	}
 
@@ -145,7 +145,7 @@ public class ScribbleRobotBrainTest {
 		replay(scribbleBoard);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
-		brain.putInAction(scribbleBoard, RobotType.STAGER);
+		brain.putInAction(scribbleBoard, RobotType.TRAINEE);
 
 		verify(scribbleBoard);
 	}

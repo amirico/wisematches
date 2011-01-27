@@ -40,7 +40,7 @@ public final class GuestPlayer implements Player {
 
 	@Override
 	public Membership getMembership() {
-		return Membership.GUEST;
+		return null;
 	}
 
 	@Override

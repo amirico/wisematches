@@ -1,4 +1,4 @@
-package wisematches.server.player.member;
+package wisematches.server.player.member.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;

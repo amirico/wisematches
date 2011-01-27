@@ -9,10 +9,6 @@ package wisematches.server.player;
  */
 public enum Membership {
 	/**
-	 * This is a guest player who has not own account.
-	 */
-	GUEST,
-	/**
 	 * This is regular player without any specific features.
 	 */
 	BASIC,

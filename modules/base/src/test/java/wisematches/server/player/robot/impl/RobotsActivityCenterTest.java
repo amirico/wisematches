@@ -65,15 +65,15 @@ public class RobotsActivityCenterTest {
 		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(1L));
 		replay(gameBoard);
 
-		final RobotPlayer player = createRobotPlayer(1L, RobotType.STAGER);
+		final RobotPlayer player = createRobotPlayer(1L, RobotType.TRAINEE);
 
 		final RobotBrain robotBrain = createStrictMock(RobotBrain.class);
-		robotBrain.putInAction(gameBoard, RobotType.STAGER);
+		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
 		expect(brainManager.isRobotPlayer(1L)).andReturn(true);
 		expect(brainManager.getPlayer(1L)).andReturn(player);
-		expect(brainManager.getRobotBrain(ROOM, RobotType.STAGER)).andReturn(robotBrain);
+		expect(brainManager.getRobotBrain(ROOM, RobotType.TRAINEE)).andReturn(robotBrain);
 		replay(brainManager);
 
 		replay(roomManager);
@@ -95,7 +95,7 @@ public class RobotsActivityCenterTest {
 
 	@Test
 	public void initializeManager() throws BoardLoadingException {
-		final RobotPlayer p1 = createRobotPlayer(1L, RobotType.STAGER);
+		final RobotPlayer p1 = createRobotPlayer(1L, RobotType.TRAINEE);
 		final RobotPlayer p2 = createRobotPlayer(2L, RobotType.DULL);
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
