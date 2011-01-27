@@ -8,6 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.player.*;
+import wisematches.server.player.member.impl.HibernatePlayerImpl;
 
 import java.util.UUID;
 
@@ -164,7 +165,7 @@ public class HibernateAccountManagerTest {
 		assertEquals(op.getNickname(), mock.getNickname());
 		assertEquals(op.getPassword(), mock.getPassword());
 		assertEquals(Language.DEFAULT, mock.getLanguage());
-		assertEquals(Membership.GUEST, mock.getMembership());
+		assertEquals(Membership.BASIC, mock.getMembership());
 		assertEquals(1200, mock.getRating());
 		return mock;
 	}

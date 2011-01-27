@@ -7,7 +7,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.player.Player;
-import wisematches.server.player.member.HibernatePlayerImpl;
+import wisematches.server.player.member.impl.HibernatePlayerImpl;
 import wisematches.server.testimonial.rating.PlayerRatingsManager;
 
 import java.sql.SQLException;

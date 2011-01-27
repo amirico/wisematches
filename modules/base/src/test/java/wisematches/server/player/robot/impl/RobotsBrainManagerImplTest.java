@@ -40,15 +40,15 @@ public class RobotsBrainManagerImplTest {
 		final Room room2 = Room.valueOf("room2");
 
 		final RobotBrain b1 = createBrain(room1, RobotType.DULL, RobotType.EXPERT);
-		final RobotBrain b2 = createBrain(room1, RobotType.STAGER);
-		final RobotBrain b3 = createBrain(room2, RobotType.STAGER);
-		final RobotBrain b4 = createBrain(room2, RobotType.DULL, RobotType.STAGER);
+		final RobotBrain b2 = createBrain(room1, RobotType.TRAINEE);
+		final RobotBrain b3 = createBrain(room2, RobotType.TRAINEE);
+		final RobotBrain b4 = createBrain(room2, RobotType.DULL, RobotType.TRAINEE);
 
 		impl.setRobotBrains(Arrays.asList(b1, b2));
 		assertEquals(3, impl.getRobotTypes(room1).size());
 		assertSame(b1, impl.getRobotBrain(room1, RobotType.DULL));
 		assertSame(b1, impl.getRobotBrain(room1, RobotType.EXPERT));
-		assertSame(b2, impl.getRobotBrain(room1, RobotType.STAGER));
+		assertSame(b2, impl.getRobotBrain(room1, RobotType.TRAINEE));
 
 
 		impl.addRobotBrain(b3);
@@ -63,7 +63,7 @@ public class RobotsBrainManagerImplTest {
 		}
 
 		assertEquals(1, impl.getRobotTypes(room2).size());
-		assertSame(b3, impl.getRobotBrain(room2, RobotType.STAGER));
+		assertSame(b3, impl.getRobotBrain(room2, RobotType.TRAINEE));
 		assertNull(impl.getRobotBrain(room2, RobotType.DULL));
 
 		impl.removeRobotBrain(b1);

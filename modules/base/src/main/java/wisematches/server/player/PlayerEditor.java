@@ -9,7 +9,7 @@ public class PlayerEditor {
 	private String nickname;
 	private String password;
 	private Language language = Language.DEFAULT;
-	private Membership membership = Membership.GUEST;
+	private Membership membership = Membership.BASIC;
 	private int rating = 1200;
 
 	public PlayerEditor() {

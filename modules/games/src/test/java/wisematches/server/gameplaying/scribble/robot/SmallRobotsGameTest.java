@@ -116,11 +116,11 @@ public class SmallRobotsGameTest extends AbstractTransactionalDataSourceSpringCo
 		if (log.isDebugEnabled()) {
 			log.debug("Moves count: " + board.getGameMoves().size());
 			log.debug("Players points: DULL - " + dullPoints +
-					", STAGER - " + stagerPoints +
+					", TRAINEE - " + stagerPoints +
 					", EXPERT - " + expertPoints);
 			log.debug("Tiles in hands:");
 			log.debug("     DULL - " + Arrays.toString(board.getPlayerHand(1L).getTiles()));
-			log.debug("     STAGER - " + Arrays.toString(board.getPlayerHand(2L).getTiles()));
+			log.debug("     TRAINEE - " + Arrays.toString(board.getPlayerHand(2L).getTiles()));
 			log.debug("     EXPERT - " + Arrays.toString(board.getPlayerHand(3L).getTiles()));
 		}
 

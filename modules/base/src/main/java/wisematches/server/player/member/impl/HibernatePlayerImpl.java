@@ -1,14 +1,14 @@
-package wisematches.server.player.member;
+package wisematches.server.player.member.impl;
 
 import org.hibernate.annotations.*;
 import wisematches.server.player.Language;
 import wisematches.server.player.Membership;
 import wisematches.server.player.Player;
+import wisematches.server.player.member.MemberPlayer;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 /**
  * Implementation of player that contains Hibernate annotations and can be stored into database using Hibernate
@@ -53,7 +53,7 @@ import java.io.Serializable;
 				)
 		}
 )
-public class HibernatePlayerImpl implements Player, Serializable {
+public class HibernatePlayerImpl implements MemberPlayer {
 	@Id
 	@Column(name = "id", nullable = false, updatable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)

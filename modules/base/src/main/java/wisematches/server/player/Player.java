@@ -59,8 +59,12 @@ public interface Player extends Serializable {
 
 	/**
 	 * Returns this membership for the player.
+	 * <p/>
+	 * For system users this method returns {@code null}. It means that such user can't be modified,
+	 * his rating is not updated and so on.
 	 *
-	 * @return the membership for the player.
+	 * @return the membership for the player or {@code null} if this is a system user
+	 *         and has some limitations.
 	 */
 	Membership getMembership();
 

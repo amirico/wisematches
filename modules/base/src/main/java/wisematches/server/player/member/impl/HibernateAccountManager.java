@@ -1,4 +1,4 @@
-package wisematches.server.player.member;
+package wisematches.server.player.member.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -27,7 +27,7 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 
 	private static final String CHECK_ACCOUNT_AVAILABILITY = "" +
 			"select player.username, player.email " +
-			"from wisematches.server.player.member.HibernatePlayerImpl player " +
+			"from wisematches.server.player.member.impl.HibernatePlayerImpl player " +
 			"where player.username = :username or player.email = :email";
 
 	public HibernateAccountManager() {
@@ -69,7 +69,7 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	@Override
 	public Player findByEmail(String email) {
 		final HibernateTemplate template = getHibernateTemplate();
-		List l = template.find("from wisematches.server.player.member.HibernatePlayerImpl user where user.email=?", email);
+		List l = template.find("from wisematches.server.player.member.impl.HibernatePlayerImpl user where user.email=?", email);
 		if (l.size() != 1) {
 			return null;
 		}
@@ -79,7 +79,7 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	@Override
 	public Player findByUsername(String username) {
 		final HibernateTemplate template = getHibernateTemplate();
-		List l = template.find("from wisematches.server.player.member.HibernatePlayerImpl user where user.username=?", username);
+		List l = template.find("from wisematches.server.player.member.impl.HibernatePlayerImpl user where user.username=?", username);
 		if (l.size() != 1) {
 			return null;
 		}
