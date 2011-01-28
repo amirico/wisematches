@@ -58,6 +58,12 @@ public class AccountController extends AbstractInfoController {
 		return "/content/account/layout";
 	}
 
+	@RequestMapping(value = "modify", method = RequestMethod.GET)
+	public String modifyAccountPage(Model model) {
+		model.addAttribute("infoId", "modify");
+		return "/content/account/layout";
+	}
+
 	/**
 	 * This is action processor for new account. Get model from HTTP POST request and creates new account, if possible.	 *
 	 *

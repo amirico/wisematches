@@ -72,7 +72,7 @@ public class ComputerPlayer implements Player {
 	 */
 	@Override
 	public String getPassword() {
-		return null;
+		return nickname;
 	}
 
 	/**
