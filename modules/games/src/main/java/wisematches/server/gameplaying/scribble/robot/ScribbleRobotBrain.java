@@ -6,6 +6,7 @@ import wisematches.server.gameplaying.board.GameMoveException;
 import wisematches.server.gameplaying.board.PassTurnMove;
 import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.IterableDictionary;
+import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.room.Room;
 import wisematches.server.gameplaying.scribble.Position;
 import wisematches.server.gameplaying.scribble.Tile;
@@ -17,8 +18,7 @@ import wisematches.server.gameplaying.scribble.board.TilesPlacement;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
 import wisematches.server.gameplaying.scribble.scores.ScoreCalculation;
 import wisematches.server.gameplaying.scribble.scores.ScoreEngine;
-import wisematches.server.player.robot.RobotBrain;
-import wisematches.server.player.robot.RobotType;
+import wisematches.server.player.computer.robot.RobotType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -89,7 +89,7 @@
         <property name="playerManager" ref="playerManager"/>
     </bean>
 
-    <bean id="playerSessionsManager" class="wisematches.server.core.sessions.impl.PlayerSessionsManagerImpl">
+    <bean id="playerSessionsManager" class="wisematches.server.utils.sessions.impl.PlayerSessionsManagerImpl">
         <property name="playerManager" ref="playerManager"/>
 
         <property name="playerCustomHouses">

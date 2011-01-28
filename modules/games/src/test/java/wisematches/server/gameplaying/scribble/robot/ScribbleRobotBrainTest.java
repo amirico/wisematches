@@ -14,7 +14,7 @@ import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
 import wisematches.server.gameplaying.scribble.board.TilesPlacement;
 import wisematches.server.gameplaying.scribble.scores.ScoreCalculation;
 import wisematches.server.gameplaying.scribble.scores.ScoreEngine;
-import wisematches.server.player.robot.RobotType;
+import wisematches.server.player.computer.robot.RobotType;
 
 import java.io.BufferedReader;
 import java.io.IOException;

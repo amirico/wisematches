@@ -1,14 +1,5 @@
 package wisematches.server.web.modules.app.events;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-import wisematches.server.web.modules.app.sessions.PlayerEventsQueueBean;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.*;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
@@ -40,11 +31,11 @@ public class EventRouter {
 
     */
 /**
-     * This method just offers specified event to all {@code PlayerEventsQueueBean}s taken from
-     * {@code PlayerSessionsManager}.
-     *
-     * @param event the event to be processed.
-     *//*
+ * This method just offers specified event to all {@code PlayerEventsQueueBean}s taken from
+ * {@code PlayerSessionsManager}.
+ *
+ * @param event the event to be processed.
+ *//*
 
     private void processEvent(Event event) {
         if (log.isDebugEnabled()) {
@@ -59,11 +50,11 @@ public class EventRouter {
 
     */
 /**
-     * Changes number of event engines that can process a events. One engine has it own thread for event processing.
-     *
-     * @param count number of engines. Number of engines must equals or be grate that one.
-     * @throws IllegalArgumentException if {@code count < 1}
-     *//*
+ * Changes number of event engines that can process a events. One engine has it own thread for event processing.
+ *
+ * @param count number of engines. Number of engines must equals or be grate that one.
+ * @throws IllegalArgumentException if {@code count < 1}
+ *//*
 
     public void setEventEnginesCount(int count) {
         if (count < 1) {

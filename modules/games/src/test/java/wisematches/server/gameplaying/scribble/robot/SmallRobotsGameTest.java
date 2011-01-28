@@ -9,13 +9,13 @@ import wisematches.server.gameplaying.board.GamePlayerHand;
 import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.board.GameStateListener;
 import wisematches.server.gameplaying.dictionary.impl.file.FileDictionaryManager;
+import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.BoardCreationException;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
-import wisematches.server.player.robot.RobotPlayer;
-import wisematches.server.player.robot.RobotsBrainManager;
+import wisematches.server.player.computer.robot.RobotPlayer;
 
 import java.io.File;
 import java.net.URL;
@@ -38,7 +38,7 @@ public class SmallRobotsGameTest extends AbstractTransactionalDataSourceSpringCo
 	@Autowired
 	private RoomsManager roomsManager;
 	@Autowired
-	private RobotsBrainManager robotsBrainManager;
+	private RobotBrainManager robotBrainManager;
 
 	private final Lock gameFinishedLock = new ReentrantLock();
 	private final Condition gameFinishedCondition = gameFinishedLock.newCondition();
@@ -66,11 +66,11 @@ public class SmallRobotsGameTest extends AbstractTransactionalDataSourceSpringCo
 		long currentTime = System.currentTimeMillis();
 
 		assertNotNull("No room manager", roomsManager);
-		assertNotNull("No robots brain manager", robotsBrainManager);
+		assertNotNull("No robots brain manager", robotBrainManager);
 
-		final RobotPlayer r1 = robotsBrainManager.getPlayer(1L);
-		final RobotPlayer r2 = robotsBrainManager.getPlayer(2L);
-		final RobotPlayer r3 = robotsBrainManager.getPlayer(3L);
+		final RobotPlayer r1 = RobotPlayer.DULL;
+		final RobotPlayer r2 = RobotPlayer.TRAINEE;
+		final RobotPlayer r3 = RobotPlayer.EXPERT;
 
 		final ScribbleRoomManager roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
 
@@ -133,8 +133,8 @@ public class SmallRobotsGameTest extends AbstractTransactionalDataSourceSpringCo
 		this.roomsManager = roomsManager;
 	}
 
-	public void setRobotsBrainManager(RobotsBrainManager robotsBrainManager) {
-		this.robotsBrainManager = robotsBrainManager;
+	public void setRobotBrainManager(RobotBrainManager robotBrainManager) {
+		this.robotBrainManager = robotBrainManager;
 	}
 
 	private void notifyGameFInished() {

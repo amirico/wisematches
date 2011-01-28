@@ -1,10 +1,10 @@
 package wisematches.server.testimonial.statistic.impl;
 
-import wisematches.server.core.system.ServerPropertiesManager;
 import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.testimonial.statistic.PlayerStatisticsManager;
+import wisematches.server.utils.system.ServerPropertiesManager;
 
 import java.util.Calendar;
 import java.util.Collection;

@@ -12,7 +12,19 @@
         <property name="lockAccountManager" ref="lockAccountManager"/>
     </bean>
 
-    <alias alias="playerManager" name="accountManager"/>
+    <bean id="computerPlayerManager" class="wisematches.server.player.computer.ComputerPlayerManager"/>
+
+    <bean id="playerManager" class="wisematches.server.player.CompositePlayerManager">
+        <property name="playerManagers">
+            <list>
+                <!-- must be first because very fast -->
+                <ref bean="computerPlayerManager"/>
+                <ref bean="accountManager"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--<alias alias="playerManager" name="accountManager"/>-->
 
     <!--    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -47,7 +59,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="serverPropertiesManager" class="wisematches.server.core.system.impl.HibernateServerPropertiesManager">
+    <bean id="serverPropertiesManager" class="wisematches.server.utils.system.impl.HibernateServerPropertiesManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

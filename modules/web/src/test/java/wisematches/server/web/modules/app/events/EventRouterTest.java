@@ -1,20 +1,5 @@
 package wisematches.server.web.modules.app.events;
 
-import org.easymock.IAnswer;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-import wisematches.server.core.sessions.PlayerSessionBean;
-import wisematches.server.core.sessions.PlayerSessionsManager;
-import wisematches.server.web.modules.app.sessions.PlayerEventsQueueBean;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

@@ -1,8 +1,8 @@
 package wisematches.server.web.server.sessions;
 
-import wisematches.server.core.sessions.chouse.AbstractPlayerCustomHouse;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
+import wisematches.server.utils.sessions.chouse.AbstractPlayerCustomHouse;
 
 import javax.servlet.http.HttpSession;
 

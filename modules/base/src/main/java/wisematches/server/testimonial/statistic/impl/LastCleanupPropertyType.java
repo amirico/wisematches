@@ -1,6 +1,6 @@
 package wisematches.server.testimonial.statistic.impl;
 
-import wisematches.server.core.system.ServerPropertyType;
+import wisematches.server.utils.system.ServerPropertyType;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
