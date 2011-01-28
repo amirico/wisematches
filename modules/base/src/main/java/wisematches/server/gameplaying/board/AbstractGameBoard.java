@@ -284,7 +284,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * This method is invoked only once: when all players are connected to new game.
 	 * Method isn't invoked during restoring saved game.
 	 * <p/>
-	 * This method select first player and fires <code>playerTurnTransmited</code> and <code>gameStarted</code> events.
+	 * This method select first player and fires <code>playerTurnTransmitted</code> and <code>gameStarted</code> events.
 	 */
 	protected void processGameStarting() {
 		final P p = selectFirstPlayer(gameSettings, playersIterator.getPlayerHands());

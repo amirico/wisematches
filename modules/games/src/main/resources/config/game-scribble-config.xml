@@ -47,7 +47,7 @@
         <property name="ratingsManagerDao" ref="ratingsManagerDao"/>
     </bean>
 
-    <bean id="robotsBrainManager" class="wisematches.server.player.robot.impl.RobotsBrainManagerImpl">
+    <bean id="robotsBrainManager" class="wisematches.server.gameplaying.robot.impl.RobotBrainManagerImpl">
         <property name="robotBrains">
             <list>
                 <bean class="wisematches.server.gameplaying.scribble.robot.ScribbleRobotBrain"/>
@@ -57,7 +57,7 @@
 
     <bean id="guestPlayerManager" class="wisematches.server.core.guest.GuestPlayerManager"/>
 
-    <bean id="playerManager" class="wisematches.server.player.robot.impl.CompositePlayerManager">
+    <bean id="playerManager" class="wisematches.server.player.computer.robot.impl.CompositePlayerManager">
         <property name="realPlayerManager" ref="accountManager"/>
         <property name="robotsBrainManager" ref="robotsBrainManager"/>
         <property name="guestPlayerManager" ref="guestPlayerManager"/>
@@ -70,9 +70,9 @@
         <property name="keepAliveSeconds" value="60"/>
     </bean>
 
-    <bean id="robotsActivityManager" class="wisematches.server.player.robot.impl.RobotsActivityCenter">
+    <bean id="robotsActivityManager" class="wisematches.server.gameplaying.robot.impl.RobotActivityCenter">
         <property name="roomsManager" ref="roomsManager"/>
-        <property name="robotsBrainManager" ref="robotsBrainManager"/>
+        <property name="robotBrainManager" ref="robotsBrainManager"/>
         <property name="movesExecutor" ref="robotMovesExecutor"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>

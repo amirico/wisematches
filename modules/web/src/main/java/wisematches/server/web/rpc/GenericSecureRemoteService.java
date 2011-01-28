@@ -24,7 +24,7 @@ public class GenericSecureRemoteService extends GenericRemoteService implements 
  *
  * @param <T> the result type of {@code PlayerSessionBean}.
  * @return the player session bean interface
- * @see wisematches.server.core.sessions.PlayerSessionsManager#getPlayerSessionBean(String)
+ * @see wisematches.server.utils.sessions.PlayerSessionsManager#getPlayerSessionBean(String)
  *//*
 
     @SuppressWarnings("unchecked")

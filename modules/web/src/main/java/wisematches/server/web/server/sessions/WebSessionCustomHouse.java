@@ -1,7 +1,7 @@
 package wisematches.server.web.server.sessions;
 
-import wisematches.server.core.sessions.chouse.PlayerCustomHouse;
 import wisematches.server.player.Player;
+import wisematches.server.utils.sessions.chouse.PlayerCustomHouse;
 
 import javax.servlet.http.HttpSession;
 

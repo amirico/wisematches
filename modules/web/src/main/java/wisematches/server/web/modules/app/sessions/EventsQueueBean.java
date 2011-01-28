@@ -1,8 +1,6 @@
 package wisematches.server.web.modules.app.sessions;
 
-import wisematches.server.core.sessions.ImplementationBean;
-
-import java.util.Queue;
+import wisematches.server.utils.sessions.ImplementationBean;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
