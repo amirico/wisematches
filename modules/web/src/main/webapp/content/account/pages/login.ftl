@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="loginErrorType" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <table>
@@ -23,7 +24,14 @@
                                            for="j_username"><@message code="account.login.email.label"/>:</label>
                                 </td>
                                 <td>
-                                <@wisematches.fieldInput path="login.j_username" size="0"/>
+                                    <#if "insufficient"=loginErrorType!"">
+                                    <@spring.bind "login.j_username"/>
+                                        <span><b>${spring.stringStatusValue}</b></span>
+                                        <#else>
+                                        <@wisematches.fieldInput path="login.j_username" size="0"/>
+                                    </#if>
+                                    <input type="hidden" id="j_username" name="j_username"
+                                           value="${spring.stringStatusValue}"/>
                                 </td>
                             </tr>
                             <tr>

@@ -9,6 +9,8 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd"
              default-destroy-method="destroy">
 
+    <global-method-security jsr250-annotations="enabled"/>
+
     <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
         <beans:property name="userPropertyToUse" value="nickname"/>
     </beans:bean>
@@ -36,6 +38,14 @@
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="saltSource" ref="saltSource"/>
         <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+    </beans:bean>
+
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.spring.security.WMRedirectStrategy">
+        <beans:property name="redirectParameters">
+            <beans:set>
+                <beans:value>rememberMe</beans:value>
+            </beans:set>
+        </beans:property>
     </beans:bean>
 
     <beans:bean id="authenticationSuccessHandler"
@@ -73,14 +83,6 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="redirectStrategy" class="wisematches.server.web.spring.security.WMRedirectStrategy">
-        <beans:property name="redirectParameters">
-            <beans:set>
-                <beans:value>rememberMe</beans:value>
-            </beans:set>
-        </beans:property>
-    </beans:bean>
-
     <beans:bean id="guestFilter" class="wisematches.server.web.spring.security.guest.WMGuestAuthenticationFilter">
         <beans:property name="guestProcessingUrl" value="/account/loginGuest.html"/>
         <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
@@ -91,7 +93,10 @@
                 class="wisematches.server.web.spring.security.guest.WMGuestAuthenticationProvider">
     </beans:bean>
 
-    <global-method-security jsr250-annotations="enabled"/>
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.spring.security.WMAccessDeniedHandler">
+        <beans:property name="restrictedErrorPage" value="/account/loginAuth.html?error=restricted"/>
+        <beans:property name="insufficientErrorPage" value="/account/loginAuth.html?error=insufficient"/>
+    </beans:bean>
 
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="guestAuthenticationProvider"/>
@@ -105,6 +110,7 @@
 
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/game/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/admin/**" access="hasRole('admin') and isFullyAuthenticated()"/>
         <intercept-url pattern="/account/modify.html" access="isFullyAuthenticated()"/>
 
         <intercept-url pattern="/ext/**" filters="none"/>
@@ -115,7 +121,9 @@
 
         <custom-filter ref="guestFilter" before="ANONYMOUS_FILTER"/>
 
-        <remember-me services-ref="rememberMeServices"/>
+        <remember-me services-ref="rememberMeServices" key="${security.remember.token}"/>
+
+        <access-denied-handler ref="accessDeniedHandler"/>
 
         <form-login login-page="/account/login.html"
                     login-processing-url="/account/loginProcessing.html"
