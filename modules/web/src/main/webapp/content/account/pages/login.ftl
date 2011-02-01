@@ -1,4 +1,6 @@
-<#-- @ftlvariable name="loginErrorType" type="java.lang.String" -->
+<#-- @ftlvariable name="showRememberMe" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="showRegistration" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="showPredefinedUsername" type="java.lang.Boolean" -->
 <#include "/core.ftl">
 
 <table>
@@ -24,14 +26,14 @@
                                            for="j_username"><@message code="account.login.email.label"/>:</label>
                                 </td>
                                 <td>
-                                    <#if "insufficient"=loginErrorType!"">
+                                    <#if showPredefinedUsername>
                                     <@spring.bind "login.j_username"/>
                                         <span><b>${spring.stringStatusValue}</b></span>
+                                        <input type="hidden" id="j_username" name="j_username"
+                                               value="${spring.stringStatusValue}"/>
                                         <#else>
                                         <@wisematches.fieldInput path="login.j_username" size="0"/>
                                     </#if>
-                                    <input type="hidden" id="j_username" name="j_username"
-                                           value="${spring.stringStatusValue}"/>
                                 </td>
                             </tr>
                             <tr>
@@ -44,17 +46,26 @@
                                 <@wisematches.fieldInput path="login.j_password" fieldType="password" size="0"/>
                                 </td>
                             </tr>
-                            <tr>
-                                <td align="right" valign="middle" style="text-align: right; vertical-align: middle;">
-                                <@wisematches.field path="login.rememberMe">
-                                    <input type="checkbox" id="rememberMe" name="rememberMe" value="true"
-                                           <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
-                                </@wisematches.field>
-                                </td>
-                                <td align="left" valign="middle" style="text-align: left; vertical-align: middle;">
-                                    <label for="rememberMe"><@message code="account.login.remember.label"/></label>
-                                </td>
-                            </tr>
+                            <#if showRememberMe>
+                                <tr>
+                                    <td align="right" valign="middle"
+                                        style="text-align: right; vertical-align: middle;">
+                                    <@wisematches.field path="login.rememberMe">
+                                        <input type="checkbox" id="rememberMe" name="rememberMe" value="true"
+                                               <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
+                                    </@wisematches.field>
+                                    </td>
+                                    <td align="left" valign="middle" style="text-align: left; vertical-align: middle;">
+                                        <label for="rememberMe"><@message code="account.login.remember.label"/></label>
+                                    </td>
+                                </tr>
+                                <#else>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type="hidden" id="rememberMe" name="rememberMe" value="true"/>
+                                        </td>
+                                    </tr>
+                            </#if>
                             <tr>
                                 <td></td>
                                 <td align="left">
@@ -64,9 +75,14 @@
                             <tr>
                                 <td colspan="2" height="33.0" align="center" valign="bottom"
                                     style="text-align: center; vertical-align: bottom;">
-                                    <span>
+                                    <div>
                                         <a href="/account/recovery.html"><@message code="account.login.recovery.label"/></a>
-                                    </span>
+                                    </div>
+                                    <#if showPredefinedUsername>
+                                        <div>
+                                            <a href="/account/login.html"><@message code="account.login.another.label"/></a>
+                                        </div>
+                                    </#if>
                                 </td>
                             </tr>
                         </table>
@@ -74,6 +90,7 @@
                 </div>
             </@ext.roundPanel>
             </@ext.roundPanel>
+            <#if showRegistration>
                 <div style="height:10px;"></div>
             <@ext.roundPanel>
                 <div id="register-panel">
@@ -96,6 +113,7 @@
                     </div>
                 </div>
             </@ext.roundPanel>
+            </#if>
             </div>
         </td>
     </tr>

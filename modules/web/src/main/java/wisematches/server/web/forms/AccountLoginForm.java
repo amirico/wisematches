@@ -37,6 +37,10 @@ public class AccountLoginForm {
 		this.rememberMe = rememberMe;
 	}
 
+	public boolean hasUsername() {
+		return j_username != null && j_username.trim().length() != 0;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

@@ -39,6 +39,17 @@ form label {
     color: #003333;
 }
 
+#language-combobox {
+    background-color: #DFE8F6;
+    border-color: transparent;
+    width: 130px;
+}
+
+#language-combobox option {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
 /* Footer CSS declaration */
 #footer {
     padding-top: 10px;

@@ -27,7 +27,7 @@
                     </li>
                     <li>
                         <ul id="main">
-                            <li <@markSelected "ratabouting"/>>
+                            <li <@markSelected "about"/>>
                                 <a href="/info/about.html"><@messageCap code="info.principles.label"/></a>
                             </li>
                             <li <@markSelected "features"/>>
@@ -58,7 +58,6 @@
                         <ul id="continue">
                             <li><a href="/game/dashboard.html"><@message code="info.open.dashboard.label"/></a></li>
                             <li><a href="/game/gameboard.html"><@message code="info.open.gameboard.label"/></a></li>
-                            <li><a href="/game/playboard.html"><@message code="info.open.playboard.label"/></a></li>
                         </ul>
                     </li>
                 </@security.authorize>

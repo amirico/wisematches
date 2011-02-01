@@ -13,6 +13,11 @@
     text-align: right;
 }
 
+.info-login-item li {
+    list-style: circle inside !important;
+    padding-left: 15px;
+}
+
 #registration .label {
     font-weight: bold;
     font-size: large;

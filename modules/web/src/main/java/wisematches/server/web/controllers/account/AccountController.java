@@ -2,7 +2,7 @@
  * Copyright (c) 2011, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.web.controllers;
+package wisematches.server.web.controllers.account;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
+import wisematches.server.web.controllers.AbstractInfoController;
+import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.forms.AccountRegistrationForm;
 
 import javax.validation.Valid;

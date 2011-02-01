@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers;
+package wisematches.server.web.controllers.info;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
