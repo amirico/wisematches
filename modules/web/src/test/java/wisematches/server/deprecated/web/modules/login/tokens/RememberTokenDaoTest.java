@@ -1,4 +1,4 @@
-package wisematches.server.web.modules.login.tokens;
+package wisematches.server.deprecated.web.modules.login.tokens;
 
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 import wisematches.server.player.Player;
