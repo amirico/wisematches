@@ -10,7 +10,8 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="languageChangeInterceptor" class="wisematches.server.web.server.language.QueryLanguageInterceptor">
+    <bean id="languageChangeInterceptor"
+          class="wisematches.server.deprecated.web.server.language.QueryLanguageInterceptor">
         <property name="visibleUrls">
             <set>
                 <value>/app</value>
@@ -19,19 +20,20 @@
         </property>
     </bean>
 
-    <bean id="playerAuthenticationInterceptor" class="wisematches.server.web.server.PlayerAuthenticationInterceptor">
+    <bean id="playerAuthenticationInterceptor"
+          class="wisematches.server.deprecated.web.server.PlayerAuthenticationInterceptor">
         <property name="accountManager" ref="accountManager"/>
         <property name="cookiesTokenDao" ref="rememberTokenDao"/>
         <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
     </bean>
 
-    <bean name="remoteServiceHandlerAdapter" class="wisematches.server.web.rpc.RemoteServiceHandlerAdapter">
+    <bean name="remoteServiceHandlerAdapter" class="wisematches.server.deprecated.web.rpc.RemoteServiceHandlerAdapter">
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
     </bean>
 
     <bean name="controllerHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
 
-    <bean name="abstractUrlMapping" class="wisematches.server.web.server.TransactionalUrlHandlerMapping"
+    <bean name="abstractUrlMapping" class="wisematches.server.deprecated.web.server.TransactionalUrlHandlerMapping"
           abstract="true">
         <property name="alwaysUseFullPath" value="true"/>
 
@@ -57,7 +59,8 @@
         <property name="allowedType" value="NOT_TRANSACTION_ONLY"/>
     </bean>
 
-    <bean name="/rpc/CheckPointService" class="wisematches.server.web.modules.login.services.CheckPointServiceImpl">
+    <bean name="/rpc/CheckPointService"
+          class="wisematches.server.deprecated.web.modules.login.services.CheckPointServiceImpl">
         <property name="accountManager" ref="accountManager"/>
         <property name="mailSender" ref="mailSender"/>
 
@@ -67,12 +70,12 @@
     </bean>
 
     <bean name="/rpc/VersionedDocumentService"
-          class="wisematches.server.web.modules.core.services.VersionedDocumentServiceImpl">
+          class="wisematches.server.deprecated.web.modules.core.services.VersionedDocumentServiceImpl">
         <property name="documentsPath" value="/resources"/>
     </bean>
 
     <bean name="/rpc/ProblemsReportService"
-          class="wisematches.server.web.modules.core.services.ProblemsReportServiceImpl">
+          class="wisematches.server.deprecated.web.modules.core.services.ProblemsReportServiceImpl">
         <property name="mailSender" ref="mailSender"/>
 
         <property name="problemsReportDao" ref="problemsReportDao"/>
@@ -84,39 +87,43 @@
         </property>
     </bean>
 
-    <bean name="/rpc/DashboardService" class="wisematches.server.web.modules.app.services.DashboardServiceImpl">
+    <bean name="/rpc/DashboardService"
+          class="wisematches.server.deprecated.web.modules.app.services.DashboardServiceImpl">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="playerManager" ref="playerManager"/>
     </bean>
 
     <bean name="/rpc/ApplicationSettingsService"
-          class="wisematches.server.web.modules.app.services.ApplicationSettingsServiceImpl">
+          class="wisematches.server.deprecated.web.modules.app.services.ApplicationSettingsServiceImpl">
         <property name="playerSettingsDao" ref="playerSettingsDao"/>
     </bean>
 
     <bean name="/rpc/EventsDispatcherService"
-          class="wisematches.server.web.modules.app.services.EventsDispatcherServiceImpl"/>
+          class="wisematches.server.deprecated.web.modules.app.services.EventsDispatcherServiceImpl"/>
 
-    <bean name="/rpc/PlayboardService" class="wisematches.server.web.modules.app.services.PlayboardServiceImpl">
+    <bean name="/rpc/PlayboardService"
+          class="wisematches.server.deprecated.web.modules.app.services.PlayboardServiceImpl">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="playerManager" ref="playerManager"/>
     </bean>
 
-    <bean name="/rpc/PlayerInfoService" class="wisematches.server.web.modules.app.services.PlayerInfoServiceImpl">
+    <bean name="/rpc/PlayerInfoService"
+          class="wisematches.server.deprecated.web.modules.app.services.PlayerInfoServiceImpl">
         <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="playerManager" ref="playerManager"/>
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
     </bean>
 
     <bean name="/rpc/ApplicationStatisticService"
-          class="wisematches.server.web.modules.app.services.ApplicationStatisticServiceImpl">
+          class="wisematches.server.deprecated.web.modules.app.services.ApplicationStatisticServiceImpl">
         <property name="ratingsManager" ref="ratingsManager"/>
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
         <property name="accountManager" ref="accountManager"/>
         <property name="roomManagerFacade" ref="scribbleRoomManagerFacade"/>
     </bean>
 
-    <bean name="/rpc/ProfileService" class="wisematches.server.web.modules.app.services.PlayerProfileServiceImpl">
+    <bean name="/rpc/ProfileService"
+          class="wisematches.server.deprecated.web.modules.app.services.PlayerProfileServiceImpl">
         <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="playerManager" ref="playerManager"/>
         <property name="ratingsManager" ref="ratingsManager"/>
@@ -124,23 +131,27 @@
         <property name="roomsManager" ref="roomsManager"/>
     </bean>
 
-    <bean name="/rpc/GameboardService" class="wisematches.server.web.modules.app.services.GameboardServiceImpl">
+    <bean name="/rpc/GameboardService"
+          class="wisematches.server.deprecated.web.modules.app.services.GameboardServiceImpl">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="playerManager" ref="playerManager"/>
     </bean>
 
-    <bean name="/rpc/MemoryWordsService" class="wisematches.server.web.modules.app.services.MemoryWordsServiceImpl">
+    <bean name="/rpc/MemoryWordsService"
+          class="wisematches.server.deprecated.web.modules.app.services.MemoryWordsServiceImpl">
         <property name="memoryWordsDao" ref="memoryWordsDao"/>
         <property name="roomsManager" ref="roomsManager"/>
     </bean>
 
-    <bean name="/rpc/PlayerImagesService" class="wisematches.server.web.modules.app.services.PlayerImagesServiceImpl">
+    <bean name="/rpc/PlayerImagesService"
+          class="wisematches.server.deprecated.web.modules.app.services.PlayerImagesServiceImpl">
         <property name="playerImagesManager" ref="playerImagesManager"/>
         <property name="noImageImageUrl" value="images/noPlayerIcon.png"/>
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
     </bean>
 
-    <bean name="/rpc/JSONCountriesList" class="wisematches.server.web.modules.app.services.JsonCountriesServlet">
+    <bean name="/rpc/JSONCountriesList"
+          class="wisematches.server.deprecated.web.modules.app.services.JsonCountriesServlet">
         <property name="countriesManager" ref="countriesManager"/>
     </bean>
 
@@ -154,11 +165,11 @@
 
         <property name="pagePreProcessors">
             <list>
-                <bean class="wisematches.server.web.server.pproc.google.GoogleAnaliyticsPreProcessor">
+                <bean class="wisematches.server.deprecated.web.server.pproc.google.GoogleAnaliyticsPreProcessor">
                     <property name="trackerCode" value="${google.analiytics.trackcode}"/>
                 </bean>
 
-                <bean class="wisematches.server.web.server.pproc.google.GoogleAdSensePreProcessor">
+                <bean class="wisematches.server.deprecated.web.server.pproc.google.GoogleAdSensePreProcessor">
                     <property name="clientId" value="${google.adsense.client}"/>
                     <property name="dashboardSlot" value="${google.adsense.dashboard}"/>
                     <property name="gameboardSlot" value="${google.adsense.gameboard}"/>
@@ -166,8 +177,8 @@
                     <property name="searchId" value="${google.adsense.search}"/>
                 </bean>
 
-                <bean class="wisematches.server.web.server.pproc.common.GWTPropertiesPreProcessor"/>
-                <bean class="wisematches.server.web.server.pproc.common.SearchEnginesPreProcessor"/>
+                <bean class="wisematches.server.deprecated.web.server.pproc.common.GWTPropertiesPreProcessor"/>
+                <bean class="wisematches.server.deprecated.web.server.pproc.common.SearchEnginesPreProcessor"/>
             </list>
         </property>
     </bean>

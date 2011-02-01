@@ -5,32 +5,8 @@
 
     <import resource="classpath:/config/game-scribble-config.xml"/>
 
-    <bean id="webSessionFactory" parent="modulesSessionFactory">
-        <property name="annotatedClasses">
-            <list merge="true">
-                <value>wisematches.server.web.modules.login.tokens.AbstractToken</value>
-                <value>wisematches.server.web.modules.login.tokens.RememberToken</value>
-                <value>wisematches.server.web.modules.login.tokens.RestoreToken</value>
-                <value>wisematches.server.web.modules.core.problems.ProblemsReport</value>
-                <value>wisematches.server.web.modules.app.playboard.memory.MemoryWordDo</value>
-            </list>
-        </property>
-    </bean>
 
-    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="${server.mail.host}"/>
-        <property name="port" value="${server.mail.port}"/>
-        <property name="nickname" value="${server.mail.nickname}"/>
-        <property name="password" value="${server.mail.password}"/>
-
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtp.auth">${server.mail.auth}</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="defaultMailSender" class="wisematches.server.web.mail.impl.MailSenderImpl">
+    <bean id="defaultMailSender" class="wisematches.server.deprecated.web.mail.impl.MailSenderImpl">
         <property name="teamAddresses">
             <map>
                 <entry key="BUGS_TEAM" value="smklimenko@gmail.com"/>
@@ -51,8 +27,9 @@
         <property name="mailSender" ref="springMailSender"/>
     </bean>
 
-    <bean id="mailSender" class="wisematches.server.web.mail.impl.ThreadMailSenderImpl" destroy-method="destroy">
-        <property name="originalMailSender" ref="defaultMailSender"/>
+    <bean id="mailSender" class="wisematches.server.deprecated.web.mail.impl.ThreadMailSenderImpl"
+          destroy-method="destroy">
+        <property name="originalMailService" ref="defaultMailSender"/>
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
@@ -66,23 +43,23 @@
         </property>
     </bean>
 
-    <bean id="rememberTokenDao" class="wisematches.server.web.modules.login.tokens.RememberTokenDao">
+    <bean id="rememberTokenDao" class="wisematches.server.deprecated.web.modules.login.tokens.RememberTokenDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="restoreTokenDao" class="wisematches.server.web.modules.login.tokens.RestoreTokenDao">
+    <bean id="restoreTokenDao" class="wisematches.server.deprecated.web.modules.login.tokens.RestoreTokenDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="problemsReportDao" class="wisematches.server.web.modules.core.problems.ProblemsReportDao">
+    <bean id="problemsReportDao" class="wisematches.server.deprecated.web.modules.core.problems.ProblemsReportDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="playerSettingsDao" class="wisematches.server.web.modules.app.settings.ApplicationSettingsDao">
+    <bean id="playerSettingsDao" class="wisematches.server.deprecated.web.modules.app.settings.ApplicationSettingsDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="sessionCustomHouse" class="wisematches.server.web.server.sessions.WebSessionCustomHouseImpl">
+    <bean id="sessionCustomHouse" class="wisematches.server.deprecated.web.server.sessions.WebSessionCustomHouseImpl">
         <property name="loginSessionTimeout" value="300"/>
         <property name="logoutSessionTimeout" value="1800"/>
 
@@ -100,36 +77,40 @@
 
         <property name="playerSessionBeanInterfaces">
             <list>
-                <value>wisematches.server.web.modules.app.sessions.PlayerEventsQueueBean</value>
-                <value>wisematches.server.web.modules.app.playboard.PlayerOpenBoardsBean</value>
+                <value>wisematches.server.deprecated.web.modules.app.sessions.PlayerEventsQueueBean</value>
+                <value>wisematches.server.deprecated.web.modules.app.playboard.PlayerOpenBoardsBean</value>
             </list>
         </property>
     </bean>
 
-    <bean id="memoryWordsDao" class="wisematches.server.web.modules.app.playboard.memory.MemoryWordsDao">
+    <bean id="memoryWordsDao" class="wisematches.server.deprecated.web.modules.app.playboard.memory.MemoryWordsDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="playerImagesManager" class="wisematches.server.web.modules.app.images.impl.FilePlayerImagesManager">
+    <bean id="playerImagesManager"
+          class="wisematches.server.deprecated.web.modules.app.images.impl.FilePlayerImagesManager">
         <property name="imagesFolder" value="${server.images.path}/players"/>
     </bean>
 
     <bean id="gameboardEventProducer"
-          class="wisematches.server.web.modules.app.events.producers.GameBoardEventProducer">
+          class="wisematches.server.deprecated.web.modules.app.events.producers.GameBoardEventProducer">
         <property name="playerManager" ref="playerManager"/>
         <property name="roomManagerFacade" ref="scribbleRoomManagerFacade"/>
     </bean>
 
-    <bean id="playerEventProducer" class="wisematches.server.web.modules.app.events.producers.PlayerEventProducer">
+    <bean id="playerEventProducer"
+          class="wisematches.server.deprecated.web.modules.app.events.producers.PlayerEventProducer">
         <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="lockAccountManager" ref="lockAccountManager"/>
     </bean>
 
-    <bean id="projectEventProducer" class="wisematches.server.web.modules.app.events.producers.ProjectEventProducer">
+    <bean id="projectEventProducer"
+          class="wisematches.server.deprecated.web.modules.app.events.producers.ProjectEventProducer">
         <property name="ratingsManager" ref="ratingsManager"/>
     </bean>
 
-    <bean id="eventRouter" class="wisematches.server.web.modules.app.events.EventRouter" destroy-method="close">
+    <bean id="eventRouter" class="wisematches.server.deprecated.web.modules.app.events.EventRouter"
+          destroy-method="close">
         <property name="eventEnginesCount" value="1"/>
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
 
@@ -142,7 +123,8 @@
         </property>
     </bean>
 
-    <bean id="notificationsSender" class="wisematches.server.web.modules.app.notification.EMailNotificationsSender"
+    <bean id="notificationsSender"
+          class="wisematches.server.deprecated.web.modules.app.notification.EMailNotificationsSender"
           destroy-method="destroy">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="mailSender" ref="mailSender"/>
@@ -152,10 +134,10 @@
         <property name="transactionTemplate" ref="transactionTemplateRequiredNew"/>
     </bean>
 
-    <bean id="sessionNotificationBean" class="wisematches.server.web.sessions.SessionNotificationBean">
+    <bean id="sessionNotificationBean" class="wisematches.server.deprecated.web.sessions.SessionNotificationBean">
         <property name="httpSessionListeners">
             <list>
-                <bean class="wisematches.server.web.modules.app.sessions.impl.HttpSessionCustomHouse">
+                <bean class="wisematches.server.deprecated.web.modules.app.sessions.impl.HttpSessionCustomHouse">
                     <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
                 </bean>
             </list>
