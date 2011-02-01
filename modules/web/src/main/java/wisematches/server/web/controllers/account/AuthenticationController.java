@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.server.web.controllers.AbstractInfoController;
-import wisematches.server.web.forms.AccountLoginForm;
 
 import javax.servlet.http.HttpSession;
 import java.util.Locale;

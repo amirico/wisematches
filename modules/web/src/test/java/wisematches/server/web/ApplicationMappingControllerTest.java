@@ -1,9 +1,9 @@
 package wisematches.server.web;
 
 import junit.framework.TestCase;
+import wisematches.server.deprecated.web.server.pproc.PagePreProcessor;
+import wisematches.server.deprecated.web.server.sessions.WebSessionCustomHouse;
 import wisematches.server.player.Player;
-import wisematches.server.web.server.pproc.PagePreProcessor;
-import wisematches.server.web.server.sessions.WebSessionCustomHouse;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;

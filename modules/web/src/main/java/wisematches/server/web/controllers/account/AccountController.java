@@ -18,7 +18,6 @@ import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
 import wisematches.server.web.controllers.AbstractInfoController;
 import wisematches.server.web.controllers.ServiceResponse;
-import wisematches.server.web.forms.AccountRegistrationForm;
 
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
@@ -57,12 +56,6 @@ public class AccountController extends AbstractInfoController {
 									@ModelAttribute("registration")
 									AccountRegistrationForm form) {
 		model.addAttribute("infoId", "create");
-		return "/content/account/layout";
-	}
-
-	@RequestMapping(value = "modify", method = RequestMethod.GET)
-	public String modifyAccountPage(Model model) {
-		model.addAttribute("infoId", "modify");
 		return "/content/account/layout";
 	}
 
@@ -135,6 +128,57 @@ public class AccountController extends AbstractInfoController {
 				return "redirect:/account/login.html";
 			}
 		}
+	}
+
+	@RequestMapping(value = "recovery")
+	public String recoveryAccountPage(Model model,
+									  @ModelAttribute("recovery") AccountRecoveryForm form) {
+		model.addAttribute("infoId", "recovery");
+		return "/content/account/layout";
+	}
+
+	@RequestMapping(value = "recovered")
+	public String recoveryAccountPage(Model model) {
+		model.addAttribute("infoId", "recovered");
+		return "/content/account/layout";
+	}
+
+	@RequestMapping(value = "recovery", method = RequestMethod.POST)
+	public String recoveryAccountAction(Model model,
+										@Valid @ModelAttribute("recovery") AccountRecoveryForm form,
+										BindingResult result) {
+		if (log.isInfoEnabled()) {
+			log.info("Recovery password for: " + form);
+		}
+
+		if (!result.hasErrors()) {
+			final Player player = accountManager.findByEmail(form.getEmail());
+			if (player == null) {
+				if (log.isDebugEnabled()) {
+					log.debug("Account for specified email not found");
+				}
+				result.reject("email", "account.recovery.err.unknown");
+				return recoveryAccountPage(model, form);
+			} else {
+				if (true) {
+					throw new UnsupportedOperationException("Not implemented");
+				}
+
+				//noinspection SpringMVCViewInspection
+				return "redirect:/account/recovered.html";
+			}
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug("Account form is not correct: " + result.toString());
+			}
+			return recoveryAccountPage(model, form);
+		}
+	}
+
+	@RequestMapping(value = "modify")
+	public String modifyAccountPage(Model model) {
+		model.addAttribute("infoId", "modify");
+		return "/content/account/layout";
 	}
 
 	/**

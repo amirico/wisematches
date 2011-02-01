@@ -1,4 +1,4 @@
-#* @vtlvariable name="report" type="wisematches.server.web.modules.core.problems.ProblemsReport" *#
+#* @vtlvariable name="report" type="wisematches.server.deprecated.web.modules.core.problems.ProblemsReport" *#
 <html>
 <body>
 <p>

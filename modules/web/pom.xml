@@ -68,9 +68,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.6</version>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
         </dependency>
 
         <dependency>
@@ -92,13 +92,8 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1</version>
-        </dependency>
 
+        <!--
         &lt;!&ndash; This dependency required for Velocity but hibernate import 2.1.1 version &ndash;&gt;
         <dependency>
             <groupId>commons-collections</groupId>
