@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers;
+package wisematches.server.web.controllers.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
-	public AdminController() {
+public class AdministrationController {
+	public AdministrationController() {
 	}
 
 	@RequestMapping("test")

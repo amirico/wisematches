@@ -238,25 +238,6 @@ if (wm.problems == null) wm.problems = new function() {
     };
 };
 
-Ext.ux.wm.LanguageComboBox = Ext.extend(Ext.form.ComboBox, {
-    store: new Ext.data.ArrayStore({
-        fields: ['code', 'name'],
-        data : [
-            ['ru', 'Русский'],
-            ['en', 'English']
-        ]
-    }),
-    editable: false,
-    valueField: 'code',
-    displayField:'name',
-    typeAhead: true,
-    mode: 'local',
-    triggerAction: 'all',
-    selectOnFocus:true,
-    style: 'background: transparent;',
-    value: _('locale')
-});
-
 // turn on validation errors beside the field globally
 Ext.form.Field.prototype.msgTarget = 'side';
 
@@ -264,36 +245,6 @@ Ext.apply(Ext.form.VTypes, {
     'emailText' : _('email.err.format')
 });
 
-Ext.apply(Ext.ux.dwr.config.Action, {
-    failureTitle: _('failure.unknown.label'),
-    failureMsg: _('failure.unknown.description'),
-    failureConnectionTitle: _('failure.connection.label'),
-    failureConnectionMsg: _('failure.connection.description'),
-
-    // I18N response converter. Set it by default
-    dwrResponseConverter: function(response) {
-        if (response.summary) {
-            response.summary = _(response.summary);
-        }
-        if (response.errors && typeof response.errors == 'object') {
-            for (var p in response.errors) {
-                response.errors[p] = _(response.errors[p]);
-            }
-        }
-        return response;
-    }
-});
-
 Ext.onReady(function() {
     Ext.QuickTips.init();
-
-    var languageCombo = new Ext.ux.wm.LanguageComboBox({
-        applyTo:'language-combobox'
-    });
-    languageCombo.on('select', function(como, rec, index) {
-        var new_lang = rec.get('code');
-        if (new_lang != _('locale')) {
-            location.href = wm.util.url.extend(null, 'language', new_lang, true);
-        }
-    });
 });

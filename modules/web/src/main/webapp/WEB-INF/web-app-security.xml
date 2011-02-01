@@ -57,30 +57,45 @@
     <beans:bean id="authenticationFailureHandler"
                 class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
-        <beans:property name="defaultFailureUrl" value="/account/loginAuth.html?error=undefined"/>
+        <beans:property name="defaultFailureUrl" value="/account/loginAuth.html?error=system"/>
         <beans:property name="exceptionMappings">
             <beans:map>
                 <beans:entry
                         key="org.springframework.security.authentication.BadCredentialsException"
                         value="/account/loginAuth.html?error=credential"/>
-
                 <beans:entry
                         key="org.springframework.security.core.userdetails.UsernameNotFoundException"
                         value="/account/loginAuth.html?error=credential"/>
 
                 <beans:entry
+                        key="org.springframework.security.web.authentication.session.SessionAuthenticationException"
+                        value="/account/loginAuth.html?error=session"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.www.NonceExpiredException"
+                        value="/account/loginAuth.html?error=session"/>
+                <beans:entry
+                        key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException"
+                        value="/account/loginAuth.html?error=session"/>
+                <beans:entry
                         key="org.springframework.security.authentication.InsufficientAuthenticationException"
-                        value="/account/loginAuth.html?error=insufficient"/>
+                        value="/account/loginAuth.html?error=session"/>
 
                 <beans:entry
                         key="org.springframework.security.authentication.AccountStatusException"
                         value="/account/loginAuth.html?error=status"/>
 
                 <beans:entry
+                        key="org.springframework.security.authentication.InsufficientAuthenticationException"
+                        value="/account/loginAuth.html?error=insufficient"/>
+                <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException"
-                        value="/account/loginAuth.html?error=expired"/>
+                        value="/account/loginAuth.html?error=insufficient"/>
             </beans:map>
         </beans:property>
+    </beans:bean>
+
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.spring.security.WMAccessDeniedHandler">
+        <beans:property name="insufficientErrorPage" value="/account/loginAuth.html?error=insufficient"/>
     </beans:bean>
 
     <beans:bean id="guestFilter" class="wisematches.server.web.spring.security.guest.WMGuestAuthenticationFilter">
@@ -92,12 +107,6 @@
     <beans:bean id="guestAuthenticationProvider"
                 class="wisematches.server.web.spring.security.guest.WMGuestAuthenticationProvider">
     </beans:bean>
-
-    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.spring.security.WMAccessDeniedHandler">
-        <beans:property name="restrictedErrorPage" value="/account/loginAuth.html?error=restricted"/>
-        <beans:property name="insufficientErrorPage" value="/account/loginAuth.html?error=insufficient"/>
-    </beans:bean>
-
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="guestAuthenticationProvider"/>
 

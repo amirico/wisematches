@@ -14,7 +14,11 @@
                     <@message code="${headerTitle!'wisematches.title'}"/>
                     </td>
                     <td style="text-align: right;">
-                        <input id="language-combobox" type="text" size="20"/>
+                        <select id="language-combobox" size="1"
+                                onchange="location.href = wm.util.url.extend(null, 'language', this.options[this.selectedIndex].value, true)">
+                            <option value="ru" <#if locale="ru">selected="selected"</#if>>Русский</option>
+                            <option value="en" <#if locale="en">selected="selected"</#if>>English</option>
+                        </select>
                     </td>
                 </tr>
             </table>

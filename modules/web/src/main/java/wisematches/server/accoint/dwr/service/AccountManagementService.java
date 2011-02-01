@@ -4,7 +4,7 @@
 
 package wisematches.server.accoint.dwr.service;
 
-import wisematches.server.web.controllers.AccountController;
+import wisematches.server.web.controllers.account.AccountController;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

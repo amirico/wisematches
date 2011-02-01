@@ -21,8 +21,14 @@ public class WMRedirectStrategy extends DefaultRedirectStrategy {
 	public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
 		final StringBuilder b = new StringBuilder();
 		b.append(url);
+		if (url.indexOf((int) '?') == 0) {
+			b.append("?");
+		}
 		for (String p : redirectParameters) {
-			b.append("&").append(p).append("=").append(request.getParameter(p));
+			final String parameter = request.getParameter(p);
+			if (parameter != null) {
+				b.append("&").append(p).append("=").append(parameter);
+			}
 		}
 		super.sendRedirect(request, response, b.toString());
 	}
