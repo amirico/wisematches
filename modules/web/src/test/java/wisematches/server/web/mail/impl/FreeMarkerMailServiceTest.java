@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FreeMarkerMailServiceTest {
+	private static final String LS = System.getProperty("line.separator");
 	private JavaMailSender javaMailSender;
 	private FreeMarkerMailService markerMailService;
 
@@ -81,8 +82,8 @@ public class FreeMarkerMailServiceTest {
 		message.setFrom(new InternetAddress("sender@mock.wm"));
 		message.setRecipient(Message.RecipientType.TO, new InternetAddress("recipient@mock.wm"));
 		message.setSubject("Mock Subject");
-		message.setContent("En Subject" + System.getProperty("line.separator") +
-				System.getProperty("line.separator") + "En body", "text/html");
+		message.setContent("En Subject" + LS +
+				LS + "En body", "text/html");
 		replay(message);
 
 		MimeMessagePreparator preparator = markerMailService.prepareSupportMessage("Mock Subject", "mock", null);
@@ -102,8 +103,13 @@ public class FreeMarkerMailServiceTest {
 		final MimeMessage message = createMock(MimeMessage.class);
 		message.setFrom(new InternetAddress("support@mock.wm", "Mock Support", "UTF-8"));
 		message.setRecipient(Message.RecipientType.TO, new InternetAddress("player@mock.wm", "Mock Player", "UTF-8"));
-		message.setSubject("Ru Subject");
-		message.setContent(System.getProperty("line.separator") + "Ru body", "text/html");
+		message.setSubject("Ru Subject", "UTF-8");
+		message.setContent("<html>" + LS +
+				"<head>" + LS +
+				"    <title>Ru Subject</title>" + LS +
+				"</head>" + LS +
+				"<body>Ru body</body>" + LS +
+				"</html>", "text/html;charset=UTF-8");
 		replay(message);
 
 		MimeMessagePreparator preparator = markerMailService.preparePlayerMessage(SenderAccount.SUPPORT, p, "mock", null);

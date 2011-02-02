@@ -23,11 +23,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FreeMarkerMailService implements MailService {
+	private String serverHostName = "wisematches.net";
 	private JavaMailSender mailSender;
 	private MessageSource messageSource;
 	private Configuration freeMarkerConfig;
@@ -35,11 +38,11 @@ public class FreeMarkerMailService implements MailService {
 	private String supportSenderAddress = "support@wisematches.net";
 	private String supportRecipientAddress = "support@wisematches.net";
 
-	private final Map<SenderAccount, InternetAddress> addressesCache = new HashMap<SenderAccount, InternetAddress>();
+	private final Map<SenderKey, InternetAddress> addressesCache = new HashMap<SenderKey, InternetAddress>();
+
+	private static final Pattern TITLE = Pattern.compile("\\s*<title>(.*)</title>\\s*");
 
 	protected static final Log log = LogFactory.getLog("wisematches.server.mail");
-
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	public FreeMarkerMailService() {
 	}
@@ -124,24 +127,27 @@ public class FreeMarkerMailService implements MailService {
 
 					final Map<String, Object> variables = new HashMap<String, Object>();
 					variables.put("player", player);
+					variables.put("messageCode", msgCode);
+					variables.put("serverHostName", serverHostName);
+					variables.put("sender", sender.getDefaultName());
 					if (model != null) {
 						variables.putAll(model);
 					}
 
 					final String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, variables);
-					int firstLine = text.indexOf(LINE_SEPARATOR);
-					if (firstLine < 0) {
+					final Matcher matcher = TITLE.matcher(text);
+					if (!matcher.find()) {
 						throw new MailTemplateException("Template does not have subject line at a top");
 					}
 
 					final InternetAddress to = new InternetAddress(player.getEmail(), player.getNickname(), "UTF-8");
-					final InternetAddress from = getInternetAddress(sender);
+					final InternetAddress from = getInternetAddress(sender, language);
 
 					final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 					message.setFrom(from);
 					message.setTo(to);
-					message.setSubject(text.substring(0, firstLine));
-					message.setText(text.substring(firstLine + LINE_SEPARATOR.length()), true);
+					message.setSubject(matcher.group(1));
+					message.setText(text, true);
 				} catch (MailTemplateException ex) {
 					throw ex;
 				} catch (Exception ex) {
@@ -160,8 +166,34 @@ public class FreeMarkerMailService implements MailService {
 		return freeMarkerConfig.getTemplate(msgCode + ".ftl", language.locale(), "UTF-8");
 	}
 
-	protected InternetAddress getInternetAddress(SenderAccount sender) {
-		return addressesCache.get(sender);
+	protected InternetAddress getInternetAddress(SenderAccount sender, Language language) {
+		return addressesCache.get(new SenderKey(language, sender));
+	}
+
+	private void validateAddressesCache() {
+		addressesCache.clear();
+
+		if (messageSource == null || serverHostName == null) {
+			return;
+		}
+
+		for (SenderAccount sender : SenderAccount.values()) {
+			for (Language language : Language.values()) {
+				try {
+					final String address = messageSource.getMessage("mail.address." + sender.getDefaultName(),
+							null, sender.getDefaultName() + "@" + serverHostName, language.locale());
+
+					final String personal = messageSource.getMessage("mail.personal." + sender.getDefaultName(),
+							null, sender.name(), language.locale());
+
+					addressesCache.put(
+							new SenderKey(language, sender),
+							new InternetAddress(address, personal, "UTF-8"));
+				} catch (UnsupportedEncodingException ex) {
+					log.fatal("JAVA SYSTEM ERROR - NOT UTF8!", ex);
+				}
+			}
+		}
 	}
 
 	public void setMailSender(JavaMailSender mailSender) {
@@ -174,22 +206,7 @@ public class FreeMarkerMailService implements MailService {
 
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
-
-		addressesCache.clear();
-		for (SenderAccount sender : SenderAccount.values()) {
-			for (Language language : Language.values()) {
-				try {
-					addressesCache.put(sender, new InternetAddress(
-							messageSource.getMessage("mail.address." + sender.name().toLowerCase(), null,
-									"support@wisematches.net", language.locale()),
-							messageSource.getMessage("mail.personal." + sender.name().toLowerCase(), null,
-									"WiseMatches Support", language.locale()),
-							"UTF-8"));
-				} catch (UnsupportedEncodingException ex) {
-					log.fatal("JAVA SYSTEM ERROR - NOT UTF8!", ex);
-				}
-			}
-		}
+		validateAddressesCache();
 	}
 
 	public void setSupportSenderAddress(String supportSenderAddress) {
@@ -198,5 +215,36 @@ public class FreeMarkerMailService implements MailService {
 
 	public void setSupportRecipientAddress(String supportRecipientAddress) {
 		this.supportRecipientAddress = supportRecipientAddress;
+	}
+
+	public void setServerHostName(String serverHostName) {
+		this.serverHostName = serverHostName;
+		validateAddressesCache();
+	}
+
+	private static final class SenderKey {
+		private final Language language;
+		private final SenderAccount senderAccount;
+
+		private SenderKey(Language language, SenderAccount senderAccount) {
+			this.language = language;
+			this.senderAccount = senderAccount;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			SenderKey senderKey = (SenderKey) o;
+			return language == senderKey.language && senderAccount == senderKey.senderAccount;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = language.hashCode();
+			result = 31 * result + senderAccount.hashCode();
+			return result;
+		}
 	}
 }

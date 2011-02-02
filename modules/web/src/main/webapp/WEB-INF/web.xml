@@ -17,8 +17,8 @@
             classpath:/config/server-base-config.xml
             classpath:/config/message-source-config.xml
             classpath:/config/mail-sender-config.xml
+            classpath:/config/web-app-config.xml
             /WEB-INF/web-app-security.xml
-            /config/web-app-config.xml
         </param-value>
     </context-param>
 

@@ -148,6 +148,15 @@ public class HibernatePlayerImpl implements MemberPlayer {
 		return (int) (id ^ (id >>> 32));
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("HibernatePlayerImpl");
+		sb.append("{id=").append(id);
+		sb.append('}');
+		return sb.toString();
+	}
+
 	/**
 	 * Private method. Allows update player info without creation new object.
 	 *

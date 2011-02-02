@@ -7,13 +7,30 @@ public enum SenderAccount {
 	/**
 	 * This is abstract e-mail notification.
 	 */
-	UNDEFINED,
+	UNDEFINED("noreplay"),
+
 	/**
 	 * From address is bugs reporter.
 	 */
-	SUPPORT,
+	SUPPORT("support"),
+
+	/**
+	 * Mail was sent from game state notifications team
+	 */
+	GAME("game-noreplay"),
+
 	/**
 	 * Mail was sent from accounts support team.
 	 */
-	ACCOUNTS
+	ACCOUNTS("account-noreplay");
+
+	private final String defaultName;
+
+	SenderAccount(String defaultName) {
+		this.defaultName = defaultName;
+	}
+
+	public String getDefaultName() {
+		return defaultName;
+	}
 }
