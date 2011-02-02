@@ -42,11 +42,10 @@ public class FreeMarkerMailServiceTest {
 		final FreeMarkerConfigurer config = new FreeMarkerConfigurer();
 		config.setDefaultEncoding("UTF-8");
 		config.setTemplateLoaderPath("classpath:/i18n/server/mail");
-		config.afterPropertiesSet();
 
 		markerMailService = new FreeMarkerMailService();
 		markerMailService.setMailSender(javaMailSender);
-		markerMailService.setFreeMarkerConfig(config);
+		markerMailService.setFreeMarkerConfig(config.createConfiguration());
 		markerMailService.setMessageSource(messageSource);
 		markerMailService.setSupportSenderAddress("sender@mock.wm");
 		markerMailService.setSupportRecipientAddress("recipient@mock.wm");

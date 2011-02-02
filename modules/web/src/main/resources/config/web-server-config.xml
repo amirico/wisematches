@@ -6,43 +6,6 @@
     <import resource="classpath:/config/game-scribble-config.xml"/>
 
 
-    <bean id="defaultMailSender" class="wisematches.server.deprecated.web.mail.impl.MailSenderImpl">
-        <property name="teamAddresses">
-            <map>
-                <entry key="BUGS_TEAM" value="smklimenko@gmail.com"/>
-                <entry key="PROBLEMS_TEA" value="smklimenko@gmail.com"/>
-                <entry key="SUPPORT_TEAM" value="smklimenko@gmail.com"/>
-            </map>
-        </property>
-
-        <property name="templateParameters">
-            <map>
-                <entry key="site-url" value="${site.url}"/>
-                <entry key="site-name" value="${site.name}"/>
-            </map>
-        </property>
-
-        <property name="velocityEngine" ref="velocityEngine"/>
-
-        <property name="mailSender" ref="springMailSender"/>
-    </bean>
-
-    <bean id="mailSender" class="wisematches.server.deprecated.web.mail.impl.ThreadMailSenderImpl"
-          destroy-method="destroy">
-        <property name="originalMailService" ref="defaultMailSender"/>
-    </bean>
-
-    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-        <property name="velocityProperties">
-            <props>
-                <prop key="resource.loader">class</prop>
-                <prop key="class.resource.loader.class">
-                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
-                </prop>
-            </props>
-        </property>
-    </bean>
-
     <bean id="rememberTokenDao" class="wisematches.server.deprecated.web.modules.login.tokens.RememberTokenDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>

@@ -1,4 +1,4 @@
-#* @vtlvariable name="token" type="java.lang.String" *#
+Восстановление паролья WiseMatches
 <html>
 <body>
 <p>
@@ -6,7 +6,7 @@
 </p>
 
 <p>
-    <a href="${site-url}/signin?rp=${token}&locale=${player.language}">${site-url}/signin?rp=${token}
+    <a href="${siteurl!""}/signin?rp=${token!""}&locale=${player.language}">${siteurl!""}/signin?rp=${token!""}
         &locale=${player.language}</a>
     <br>
     Если эта ссылка не работает, откройте новое окно браузера, а затем скопируйте и вставьте URL-адрес в адресную
