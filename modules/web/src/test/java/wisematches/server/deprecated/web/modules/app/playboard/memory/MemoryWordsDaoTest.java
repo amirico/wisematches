@@ -27,7 +27,7 @@ public class MemoryWordsDaoTest extends AbstractTransactionalDataSourceSpringCon
 	private ScribblePlayerHand hand2;
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-web-server-config.xml"};
+		return new String[]{"classpath:/config/test-web-app-config.xml"};
 	}
 
 	@Override

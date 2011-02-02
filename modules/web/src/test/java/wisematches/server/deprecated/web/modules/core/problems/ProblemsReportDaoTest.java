@@ -10,7 +10,7 @@ public class ProblemsReportDaoTest extends AbstractTransactionalDataSourceSpring
     private ProblemsReportDao problemsReportDao;
 
     protected String[] getConfigLocations() {
-        return new String[]{"classpath:/config/test-web-server-config.xml"};
+        return new String[]{"classpath:/config/test-web-app-config.xml"};
     }
 
     public void test() throws InterruptedException {

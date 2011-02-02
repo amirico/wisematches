@@ -18,7 +18,7 @@
 
     <bean id="mailFreemarkerConfig" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
         <property name="defaultEncoding" value="UTF-8"/>
-        <property name="templateLoaderPath" value="classpath:/i18n/mail"/>
+        <property name="templateLoaderPath" value="classpath:/i18n/server/mail"/>
     </bean>
 
     <bean id="freeMarkerMailService" class="wisematches.server.web.mail.impl.FreeMarkerMailService">

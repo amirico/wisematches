@@ -13,7 +13,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 import wisematches.server.web.mail.*;
@@ -31,7 +30,7 @@ import java.util.Map;
 public class FreeMarkerMailService implements MailService {
 	private JavaMailSender mailSender;
 	private MessageSource messageSource;
-	private FreeMarkerConfig freeMarkerConfig;
+	private Configuration freeMarkerConfig;
 
 	private String supportSenderAddress = "support@wisematches.net";
 	private String supportRecipientAddress = "support@wisematches.net";
@@ -66,6 +65,8 @@ public class FreeMarkerMailService implements MailService {
 
 	protected void sendMail(MimeMessagePreparator preparator) throws MailException {
 		try {
+			log.info("Sending email message " + preparator);
+
 			mailSender.send(preparator);
 		} catch (MailPreparationException ex) {
 			throw new MailTemplateException("", ex);
@@ -105,6 +106,12 @@ public class FreeMarkerMailService implements MailService {
 					throw new MailTemplateException("Mail template can't be created", ex);
 				}
 			}
+
+
+			@Override
+			public String toString() {
+				return "Support EMail message with subject: " + subject + ",msgCode: " + msgCode;
+			}
 		};
 	}
 
@@ -128,9 +135,9 @@ public class FreeMarkerMailService implements MailService {
 					}
 
 					final InternetAddress to = new InternetAddress(player.getEmail(), player.getNickname(), "UTF-8");
-					final InternetAddress from = getInternetAddress(sender, language);
+					final InternetAddress from = getInternetAddress(sender);
 
-					final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+					final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 					message.setFrom(from);
 					message.setTo(to);
 					message.setSubject(text.substring(0, firstLine));
@@ -141,15 +148,19 @@ public class FreeMarkerMailService implements MailService {
 					throw new MailTemplateException("Mail template can't be created", ex);
 				}
 			}
+
+			@Override
+			public String toString() {
+				return "Player EMail message from: " + sender + ",to: " + player + ",msgCode:" + msgCode;
+			}
 		};
 	}
 
 	protected Template getTemplate(String msgCode, Language language) throws IOException {
-		final Configuration configuration = freeMarkerConfig.getConfiguration();
-		return configuration.getTemplate(msgCode + ".ftl", language.locale(), "UTF-8");
+		return freeMarkerConfig.getTemplate(msgCode + ".ftl", language.locale(), "UTF-8");
 	}
 
-	protected InternetAddress getInternetAddress(SenderAccount sender, Language language) {
+	protected InternetAddress getInternetAddress(SenderAccount sender) {
 		return addressesCache.get(sender);
 	}
 
@@ -157,7 +168,7 @@ public class FreeMarkerMailService implements MailService {
 		this.mailSender = mailSender;
 	}
 
-	public void setFreeMarkerConfig(FreeMarkerConfig freeMarkerConfig) {
+	public void setFreeMarkerConfig(Configuration freeMarkerConfig) {
 		this.freeMarkerConfig = freeMarkerConfig;
 	}
 

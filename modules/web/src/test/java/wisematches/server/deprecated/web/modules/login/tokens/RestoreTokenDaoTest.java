@@ -12,7 +12,7 @@ public class RestoreTokenDaoTest extends AbstractTransactionalDataSourceSpringCo
 	private RestoreTokenDao restoreTokenDao;
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-web-server-config.xml"};
+		return new String[]{"classpath:/config/test-web-app-config.xml"};
 	}
 
 	public void test_token() {

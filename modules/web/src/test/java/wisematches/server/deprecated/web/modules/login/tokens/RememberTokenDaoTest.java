@@ -12,7 +12,7 @@ public class RememberTokenDaoTest extends AbstractTransactionalDataSourceSpringC
 	private RememberTokenDao rememberTokenDao;
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-web-server-config.xml"};
+		return new String[]{"classpath:/config/test-web-app-config.xml"};
 	}
 
 	public void test_token() {
