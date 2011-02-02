@@ -7,6 +7,7 @@ package wisematches.server.web.controllers.account;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +19,16 @@ import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
 import wisematches.server.web.controllers.AbstractInfoController;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.mail.MailException;
+import wisematches.server.web.mail.MailService;
+import wisematches.server.web.mail.SenderAccount;
 
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * TODO: java docs
@@ -32,6 +38,7 @@ import java.util.Set;
 @Controller
 @RequestMapping("/account")
 public class AccountController extends AbstractInfoController {
+	private MailService mailService;
 	private AccountManager accountManager;
 	private PlayerSecurityService playerSecurityService;
 
@@ -137,12 +144,6 @@ public class AccountController extends AbstractInfoController {
 		return "/content/account/layout";
 	}
 
-	@RequestMapping(value = "recovered")
-	public String recoveryAccountPage(Model model) {
-		model.addAttribute("infoId", "recovered");
-		return "/content/account/layout";
-	}
-
 	@RequestMapping(value = "recovery", method = RequestMethod.POST)
 	public String recoveryAccountAction(Model model,
 										@Valid @ModelAttribute("recovery") AccountRecoveryForm form,
@@ -157,15 +158,21 @@ public class AccountController extends AbstractInfoController {
 				if (log.isDebugEnabled()) {
 					log.debug("Account for specified email not found");
 				}
-				result.reject("email", "account.recovery.err.unknown");
+				result.rejectValue("email", "account.recovery.err.unknown");
 				return recoveryAccountPage(model, form);
 			} else {
-				if (true) {
-					throw new UnsupportedOperationException("Not implemented");
-				}
+				try {
+					final UUID recoveryToken = UUID.randomUUID();
+					mailService.sendWarrantyMail(SenderAccount.ACCOUNTS, player, "account/recovery",
+							Collections.singletonMap("recoveryToken", recoveryToken.toString()));
+					//noinspection SpringMVCViewInspection
+					return "redirect:/account/recovered.html";
+				} catch (MailException ex) {
+					log.error("Recovery password email can't be delivered", ex);
 
-				//noinspection SpringMVCViewInspection
-				return "redirect:/account/recovered.html";
+					result.rejectValue("email", "account.recovery.err.transport");
+					return recoveryAccountPage(model, form);
+				}
 			}
 		} else {
 			if (log.isDebugEnabled()) {
@@ -173,6 +180,12 @@ public class AccountController extends AbstractInfoController {
 			}
 			return recoveryAccountPage(model, form);
 		}
+	}
+
+	@RequestMapping(value = "recovered")
+	public String recoveryAccountPage(Model model) {
+		model.addAttribute("infoId", "recovered");
+		return "/content/account/layout";
 	}
 
 	@RequestMapping(value = "modify")
@@ -238,8 +251,10 @@ public class AccountController extends AbstractInfoController {
 	 *
 	 * @param registration the new account form
 	 * @return the create player
-	 * @throws DuplicateAccountException	 if account with the same email or nickname already exist
-	 * @throws InadmissibleUsernameException if nickname can't be used.
+	 * @throws wisematches.server.player.DuplicateAccountException
+	 *          if account with the same email or nickname already exist
+	 * @throws wisematches.server.player.InadmissibleUsernameException
+	 *          if nickname can't be used.
 	 */
 	private Player createAccount(AccountRegistrationForm registration) throws DuplicateAccountException, InadmissibleUsernameException {
 		final PlayerEditor editor = new PlayerEditor();
@@ -267,6 +282,11 @@ public class AccountController extends AbstractInfoController {
 
 	public void setDefaultMembership(String defaultMembership) {
 		this.defaultMembership = Membership.valueOf(defaultMembership.toUpperCase());
+	}
+
+	@Autowired
+	public void setMailService(@Qualifier("mailService") MailService mailService) {
+		this.mailService = mailService;
 	}
 
 	@Autowired

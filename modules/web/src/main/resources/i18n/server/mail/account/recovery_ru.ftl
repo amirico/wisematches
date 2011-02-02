@@ -1,21 +1,18 @@
-#* @vtlvariable name="token" type="java.lang.String" *#
-<html>
-<body>
+<#-- @ftlvariable name="recoveryToken" type="java.lang.String" -->
+<#import "../macro.ftl" as mail>
+
+<@mail.html subject="WiseMatches Account Assistance">
 <p>
-    Чтобы изменить пароль аккаунта WiseMatches ${player.nickname} нажмите на расположенную ниже ссылку:
+    Чтобы изменить пароль аккаунта WiseMatches ${player.nickname} нажмите на расположенную ниже ссылку
 </p>
 
 <p>
-    <a href="${site-url}/signin?rp=${token}&locale=${player.language}">${site-url}/signin?rp=${token}
-        &locale=${player.language}</a>
-    <br>
+<@mail.url path='account/validation.html?language=${player.language.code()}&action=recovery&token=${recoveryToken}'/>
+</p>
+<p>
     Если эта ссылка не работает, откройте новое окно браузера, а затем скопируйте и вставьте URL-адрес в адресную
     строку.
-    Спасибо, что пользуетесь WiseMatches.
+    Спасибо за то, использование WiseMatches.
 </p>
 
-<p>
-    Это письмо было отправлено автоматически. Не отвечайте на это письмо – мы не получим ваш ответ.
-</p>
-</body>
-</html>
+</@mail.html>

@@ -43,7 +43,7 @@ public class MailServiceTest {
 		final Map<String, Object> model = new HashMap<String, Object>();
 
 		Assert.assertNotNull(mailService);
-		mailService.sendWarrantyMail(SenderAccount.SUPPORT, p, "account/recovery", model);
+		mailService.sendWarrantyMail(SenderAccount.ACCOUNTS, p, "account/recovery", model);
 	}
 
 	public void setMailService(MailService mailService) {
