@@ -46,7 +46,7 @@
         <property name="mailSender" ref="mailSender"/>
 
         <property name="rememberTokenDao" ref="rememberTokenDao"/>
-        <property name="restoreTokenDao" ref="restoreTokenDao"/>
+        <property name="accountRecoveryManager" ref="accountRecoveryManager"/>
         <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
     </bean>
 

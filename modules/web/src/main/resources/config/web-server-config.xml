@@ -10,7 +10,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="restoreTokenDao" class="wisematches.server.deprecated.web.modules.login.tokens.RestoreTokenDao">
+    <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

@@ -45,7 +45,7 @@ public class VersionedDocumentServiceImplTest extends TestCase {
 
     public void testGetVersionedDocument_Errors() {
         expectLocale(Language.ENGLISH);
-        assertNull(documentService.getVersionedDocument("doc1", "f1", "asd"));
+        assertNull(documentService.getVersionedDocument("doc1", "f1", "testManager"));
 
         expectLocale(Language.ENGLISH);
         assertNull(documentService.getVersionedDocument("doc1", "f1/f2", "xml"));

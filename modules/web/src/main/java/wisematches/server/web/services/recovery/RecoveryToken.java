@@ -1,4 +1,6 @@
-package wisematches.server.deprecated.web.modules.login.tokens;
+package wisematches.server.web.services.recovery;
+
+import wisematches.server.player.Player;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -7,63 +9,56 @@ import java.util.UUID;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-@MappedSuperclass
-public class AbstractToken {
+@Entity
+@Table(name = "persistent_recoveries")
+public final class RecoveryToken {
 	@Id
-	protected long playerId;
+	private long playerId;
 
 	@Column(nullable = false)
-	protected String token;
+	private String token;
 
 	@Basic
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date date;
+	private Date date;
 
-	protected AbstractToken() {
+	@Transient
+	private Player player;
+
+	/**
+	 * Hibernate constructor
+	 */
+	RecoveryToken() {
 	}
 
-	public AbstractToken(long playerId) {
-		this(playerId, generateToken(), new Date());
-	}
-
-	public AbstractToken(long playerId, String token, Date date) {
-		if (token == null) {
-			throw new IllegalArgumentException("token can't be null");
+	RecoveryToken(Player player) {
+		if (player == null) {
+			throw new IllegalArgumentException("Player can't be null");
 		}
-		if (date == null) {
-			throw new IllegalArgumentException("date can't be null");
-		}
-		this.playerId = playerId;
-		this.token = token;
-		this.date = date;
+		this.player = player;
+		this.playerId = player.getId();
+		this.token = generateToken();
+		this.date = new Date();
 	}
 
-	public long getPlayerId() {
-		return playerId;
-	}
-
-	public void setPlayerId(long playerId) {
-		this.playerId = playerId;
+	public Player getPlayer() {
+		return player;
 	}
 
 	public String getToken() {
 		return token;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	void setPlayer(Player player) {
+		this.player = player;
 	}
 
-	protected static String generateToken() {
+	private static String generateToken() {
 		return UUID.randomUUID().toString();
 	}
 
@@ -76,7 +71,7 @@ public class AbstractToken {
 			return false;
 		}
 
-		AbstractToken that = (AbstractToken) o;
+		RecoveryToken that = (RecoveryToken) o;
 		return playerId == that.playerId && date.equals(that.date) && token.equals(that.token);
 	}
 
