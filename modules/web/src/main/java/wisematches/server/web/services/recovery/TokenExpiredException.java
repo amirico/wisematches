@@ -1,14 +1,19 @@
 package wisematches.server.web.services.recovery;
 
+import java.util.Date;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class TokenExpiredException extends Exception {
-	public TokenExpiredException(String message) {
+	private final Date generationDate;
+
+	public TokenExpiredException(String message, Date generationDate) {
 		super(message);
+		this.generationDate = generationDate;
 	}
 
-	public TokenExpiredException(String message, Throwable cause) {
-		super(message, cause);
+	public Date getGenerationDate() {
+		return generationDate;
 	}
 }

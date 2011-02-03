@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
 import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
@@ -83,10 +84,11 @@ public class CreateAccountController extends AbstractInfoController {
 		// Validate before next steps
 		validateRegistrationForm(form, result);
 
+		Player player = null;
 		// Create account if no errors
 		if (!result.hasErrors()) {
 			try {
-				createAccount(form);
+				player = createAccount(form);
 			} catch (DuplicateAccountException ex) {
 				final Set<String> fieldNames = ex.getFieldNames();
 				if (fieldNames.contains("email")) {
@@ -103,7 +105,7 @@ public class CreateAccountController extends AbstractInfoController {
 			}
 		}
 
-		if (result.hasErrors()) {
+		if (result.hasErrors() || player == null) {
 			if (log.isInfoEnabled()) {
 				log.info("Account form is not correct: " + result.toString());
 			}
@@ -114,22 +116,26 @@ public class CreateAccountController extends AbstractInfoController {
 			}
 
 			status.setComplete();
+			mailService.sendMail(MailSender.ACCOUNTS, player, "account/created", null);
+			return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
+		}
+	}
 
-			try {
-				final StringBuilder b = new StringBuilder();
-				b.append("j_username=").append(URLEncoder.encode(form.getEmail(), "UTF-8"));
-				b.append("&");
-				b.append("j_password=").append(URLEncoder.encode(form.getPassword(), "UTF-8"));
-				if (form.isRememberMe()) {
-					b.append("&").append("rememberMe=true");
-				}
-				//noinspection SpringMVCViewInspection
-				return "forward:/account/loginProcessing.html?" + b;
-			} catch (UnsupportedEncodingException ex) {
-				log.error("Very strange exception that mustn't be here", ex);
-				//noinspection SpringMVCViewInspection
-				return "redirect:/account/login.html";
+	protected static String forwardToAuthentication(final String email, final String password, final boolean rememberMe) {
+		try {
+			final StringBuilder b = new StringBuilder();
+			b.append("j_username=").append(URLEncoder.encode(email, "UTF-8"));
+			b.append("&");
+			b.append("j_password=").append(URLEncoder.encode(password, "UTF-8"));
+			if (rememberMe) {
+				b.append("&").append("rememberMe=true");
 			}
+			//noinspection SpringMVCViewInspection
+			return "forward:/account/loginProcessing.html?" + b;
+		} catch (UnsupportedEncodingException ex) {
+			log.error("Very strange exception that mustn't be here", ex);
+			//noinspection SpringMVCViewInspection
+			return "redirect:/account/login.html";
 		}
 	}
 

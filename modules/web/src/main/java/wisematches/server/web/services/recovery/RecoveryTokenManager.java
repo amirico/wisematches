@@ -44,7 +44,7 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 		// check that token still alive
 		if (token.getDate().getTime() + tokenExpirationTime < System.currentTimeMillis()) {
 			removeToken(token);
-			throw new TokenExpiredException("Token expired exception");
+			throw new TokenExpiredException("Token expired exception: " + token.getDate(), token.getDate());
 		}
 		token.setPlayer(player);
 		return token;
@@ -56,6 +56,9 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 	 * @param token the token to be removed
 	 */
 	public void removeToken(RecoveryToken token) {
+		if (token == null) {
+			throw new IllegalArgumentException("Removing token can't be null");
+		}
 		if (token != null) {
 			getHibernateTemplate().delete(token);
 		}

@@ -18,36 +18,31 @@
     padding-left: 15px;
 }
 
-#registration .label {
+#registration .group, #recovery .group {
+    color: #36C;
     font-weight: bold;
     font-size: large;
-    padding-top: 10px;
-    padding-bottom: 15px;
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 #registration .description {
     padding-bottom: 15px;
 }
 
-#registration td, #login-panel td {
+#registration td, #login-panel td, #recovery td {
     text-align: left;
     vertical-align: top;
 }
 
-#registration form table, #login-panel form table {
+#registration form table, #recovery form table, #login-panel form table {
     border-width: 2px;
     border-spacing: 5px;
 }
 
-#registration form td {
+#registration form td, #recovery form td {
     padding-top: 3px;
     padding-bottom: 3px;
-}
-
-#registration form .label {
-    color: #36C;
-    padding: 0;
-    font-size: medium;
 }
 
 #registration #checkAvailability {

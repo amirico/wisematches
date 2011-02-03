@@ -14,6 +14,8 @@
 </html>
 </#macro>
 
-<#macro url path>
-<a href="http://www.${serverHostName}/${path}">http://www.${serverHostName}/${path}</a>
-</#macro>
+<#macro host>${serverHostName}</#macro>
+
+<#macro mailto box><a href="mailto:${box}@${serverHostName}">${box}@${serverHostName}</a></#macro>
+
+<#macro url path><a href="http://www.${serverHostName}/${path}">http://www.${serverHostName}/${path}</a></#macro>

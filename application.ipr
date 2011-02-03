@@ -366,6 +366,7 @@
         <w>interpolator</w>
         <w>iterable</w>
         <w>junit</w>
+        <w>mailto</w>
         <w>noreplay</w>
         <w>playboard</w>
       </words>
