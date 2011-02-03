@@ -4,7 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.codec.Base64;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,12 +18,15 @@ import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
 import wisematches.server.player.AccountManager;
 import wisematches.server.player.Player;
+import wisematches.server.player.PlayerEditor;
 import wisematches.server.security.PlayerSecurityService;
+import wisematches.server.web.services.recovery.RecoveryToken;
+import wisematches.server.web.services.recovery.RecoveryTokenManager;
+import wisematches.server.web.services.recovery.TokenExpiredException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -30,6 +36,7 @@ import java.util.UUID;
 public class RecoveryController {
 	private MailService mailService;
 	private AccountManager accountManager;
+	private RecoveryTokenManager recoveryTokenManager;
 	private PlayerSecurityService playerSecurityService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
@@ -45,7 +52,7 @@ public class RecoveryController {
 	}
 
 	@RequestMapping(value = "request", method = RequestMethod.POST)
-	public String recoveryAccountAction(Model model,
+	public String recoveryRequestAction(Model model,
 										@Valid @ModelAttribute("recovery") RecoveryRequestForm form,
 										BindingResult result) {
 		if (log.isInfoEnabled()) {
@@ -62,37 +69,108 @@ public class RecoveryController {
 				return recoveryRequestPage(model, form);
 			} else {
 				try {
-					final UUID recoveryToken = UUID.randomUUID();
+					final RecoveryToken token = recoveryTokenManager.createToken(player);
 
+					final byte[] encode = Base64.encode(token.getToken().getBytes("UTF-8"));
 					final Map<String, String> mailModel = new HashMap<String, String>();
-					mailModel.put("recoveryToken", recoveryToken.toString());
-					mailModel.put("confirmationUrl", "/account/recovery/confirmation.html");
+					mailModel.put("recoveryToken", new String(encode));
+					mailModel.put("confirmationUrl", "account/recovery/confirmation.html");
 
-					mailService.sendWarrantyMail(
-							MailSender.ACCOUNTS, player, "account/recovery", mailModel);
+					mailService.sendWarrantyMail(MailSender.ACCOUNTS, player, "account/recovery", mailModel);
+
 					//noinspection SpringMVCViewInspection
-					return "redirect:/account/recovery/validation.html";
+					return "redirect:/account/recovery/expectation.html";
 				} catch (MailException ex) {
 					log.error("Recovery password email can't be delivered", ex);
 
 					result.rejectValue("email", "account.recovery.err.transport");
 					return recoveryRequestPage(model, form);
+				} catch (Exception ex) {
+					result.rejectValue("email", "account.recovery.err.system");
+					return recoveryRequestPage(model, form);
 				}
 			}
 		} else {
 			if (log.isDebugEnabled()) {
-				log.debug("Account form is not correct: " + result.toString());
+				log.debug("Account form is not correct: " + result);
 			}
 			return recoveryRequestPage(model, form);
 		}
 	}
 
-	@RequestMapping(value = "validation")
-	public String recoveredValidationPage(Model model) {
-		model.addAttribute("infoId", "recovery/validation");
+	@RequestMapping(value = "confirmation")
+	public String recoveredConfirmationPage(Model model,
+											@ModelAttribute("recovery") RecoveryConfirmationForm form) {
+		model.addAttribute("infoId", "recovery/confirmation");
 		return "/content/account/layout";
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@RequestMapping(value = "confirmation", method = RequestMethod.POST)
+	public String recoveredConfirmationAction(Model model,
+											  @Valid @ModelAttribute("recovery") RecoveryConfirmationForm form,
+											  BindingResult result) {
+		if (log.isInfoEnabled()) {
+			log.info("Process recovery confirmation: " + form);
+		}
+
+		if (!form.getPassword().equals(form.getConfirm())) {
+			result.rejectValue("confirm", "account.register.pwd-cfr.err.mismatch");
+		}
+
+		Player player = null;
+		if (!result.hasErrors()) {
+			try {
+				player = accountManager.findByEmail(form.getEmail());
+				if (player == null) {
+					result.rejectValue("email", "account.recovery.err.unknown");
+				} else {
+					final RecoveryToken token = recoveryTokenManager.getToken(player);
+					if (token == null) {
+						result.rejectValue("email", "account.recovery.err.expired");
+					} else if (!token.getToken().equals(new String(Base64.decode(form.getToken().getBytes()), "UTF-8"))) {
+						result.rejectValue("email", "account.recovery.err.expired");
+					}
+				}
+			} catch (TokenExpiredException ex) {
+				result.rejectValue("email", "account.recovery.err.expired");
+			} catch (Exception ex) {
+				result.rejectValue("email", "account.recovery.err.system");
+			}
+		}
+
+		if (result.hasErrors()) {
+			if (log.isDebugEnabled()) {
+				log.debug("Confirmation form is not correct: " + result);
+			}
+			return recoveredConfirmationPage(model, form);
+		}
+
+		final PlayerEditor e = new PlayerEditor(player);
+		if (playerSecurityService != null) {
+			e.setPassword(playerSecurityService.encodePlayerPassword(player, form.getPassword()));
+		} else {
+			e.setPassword(form.getPassword());
+		}
+
+		try {
+			accountManager.updatePlayer(e.createPlayer());
+			mailService.sendMail(MailSender.ACCOUNTS, player, "account/updated", null);
+			return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
+		} catch (Exception e1) {
+			if (log.isDebugEnabled()) {
+				log.debug("Player password can't be updated by internal error", e1);
+			}
+			result.rejectValue("email", "account.recovery.err.system");
+			return recoveredConfirmationPage(model, form);
+		}
+	}
+
+	@RequestMapping(value = "expectation")
+	public String recoveredExpectationPage(Model model) {
+		model.addAttribute("infoId", "recovery/expectation");
+		return "/content/account/layout";
+	}
 
 	@Autowired
 	public void setMailService(@Qualifier("mailService") MailService mailService) {
@@ -102,6 +180,11 @@ public class RecoveryController {
 	@Autowired
 	public void setAccountManager(AccountManager accountManager) {
 		this.accountManager = accountManager;
+	}
+
+	@Autowired
+	public void setRecoveryTokenManager(RecoveryTokenManager recoveryTokenManager) {
+		this.recoveryTokenManager = recoveryTokenManager;
 	}
 
 	@Autowired

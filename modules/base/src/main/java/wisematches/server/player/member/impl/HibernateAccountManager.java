@@ -104,22 +104,24 @@ public class HibernateAccountManager extends HibernateDaoSupport implements Play
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException {
-		final AccountAvailability a = checkAccountAvailable(player.getNickname(), player.getEmail());
-		if (!a.isEmailAvailable()) {
-			throw new DuplicateAccountException(player, "email");
-		}
-
 		Player oldPlayer = getPlayer(player.getId());
 		if (oldPlayer == null) {
 			throw new UnknownAccountException(player);
 		}
+
+		if (!oldPlayer.getEmail().equals(player.getEmail())) {
+			if (!checkAccountAvailable(player.getNickname(), player.getEmail()).isEmailAvailable()) {
+				throw new DuplicateAccountException(player, "email");
+			}
+		}
+
 		// Copy previous state
 		oldPlayer = new PlayerEditor(oldPlayer).createPlayer();
 
 		// merge and update
 		final HibernateTemplate hibernateTemplate = getHibernateTemplate();
 		final Player p = hibernateTemplate.merge(new HibernatePlayerImpl(player));
-		hibernateTemplate.flush();
+
 		for (PlayerListener playerListener : playerListeners) {
 			playerListener.playerUpdated(oldPlayer, p);
 		}

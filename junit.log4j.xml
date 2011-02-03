@@ -17,11 +17,11 @@
     </logger>
 
     <logger name="org.springframework.transaction">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
 
     <logger name="org.springframework.security">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
 
     <root>
