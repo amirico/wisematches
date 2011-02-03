@@ -3,8 +3,8 @@ package wisematches.server.deprecated.web.modules.app.services;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import wisematches.server.player.Language;
-import wisematches.server.testimonial.profile.counties.CountriesManager;
-import wisematches.server.testimonial.profile.counties.Country;
+import wisematches.server.standing.profile.counties.CountriesManager;
+import wisematches.server.standing.profile.counties.Country;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

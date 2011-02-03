@@ -50,15 +50,6 @@
     font-size: medium;
 }
 
-#registration form label {
-    font-weight: bold;
-}
-
-#registration form .sample {
-    color: #666666;
-    line-height: normal;
-}
-
 #registration #checkAvailability {
     padding-left: 20px;
     padding-right: 20px;
@@ -134,44 +125,6 @@
     font-weight: bold;
 }
 
-/* Navigation CSS declaration */
-/*
-#register-form-label {
-    font-size: larger;
-    font-weight: bold;
-    color: #003333;
-    padding-bottom: 10px;
+#info-recovery-footer {
+    padding-top: 10px;
 }
-
-
-
-#login-panel-form .x-form-check-wrap {
-    text-align: center;
-}
-
-.login-remember-checkbox {
-    text-align: center;
-}
-
-
-#restore-password-link {
-    text-align: center;
-}
-
-#info-links {
-    text-align: center;
-}
-
-.account-available button {
-    font-weight: bold !important;
-    color: green !important;
-}
-
-.account-unavailable button {
-    font-weight: bold !important;
-    color: red !important;
-}
-
-#recoveryEmail, #recoveryToken {
-    color: black !important;
-}*/

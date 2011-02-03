@@ -20,30 +20,11 @@
         </property>
     </bean>
 
-    <bean id="playerAuthenticationInterceptor"
-          class="wisematches.server.deprecated.web.server.PlayerAuthenticationInterceptor">
-        <property name="accountManager" ref="accountManager"/>
-        <property name="cookiesTokenDao" ref="rememberTokenDao"/>
-        <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
-    </bean>
-
     <bean name="remoteServiceHandlerAdapter" class="wisematches.server.deprecated.web.rpc.RemoteServiceHandlerAdapter">
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
     </bean>
 
     <bean name="controllerHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
-
-    <bean name="abstractUrlMapping" class="wisematches.server.deprecated.web.server.TransactionalUrlHandlerMapping"
-          abstract="true">
-        <property name="alwaysUseFullPath" value="true"/>
-
-        <property name="interceptors">
-            <list>
-                <ref bean="languageChangeInterceptor"/>
-                <ref bean="playerAuthenticationInterceptor"/>
-            </list>
-        </property>
-    </bean>
 
     <bean name="transactionalUrlMapping" parent="abstractUrlMapping">
         <property name="allowedType" value="TRANSACTIONAL_ONLY"/>

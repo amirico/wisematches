@@ -21,7 +21,7 @@
         <property name="templateLoaderPath" value="classpath:/i18n/server/mail"/>
     </bean>
 
-    <bean id="freeMarkerMailService" class="wisematches.server.web.mail.impl.FreeMarkerMailService">
+    <bean id="freeMarkerMailService" class="wisematches.server.mail.impl.FreeMarkerMailService">
         <property name="mailSender" ref="springMailSender"/>
         <property name="messageSource" ref="messageSource"/>
         <property name="serverHostName" value="${server.hostname}"/>
@@ -31,7 +31,7 @@
         <property name="supportRecipientAddress" value="${mail.support.recipient}"/>
     </bean>
 
-    <bean id="mailService" class="wisematches.server.web.mail.impl.AsynchronousMailService">
+    <bean id="mailService" class="wisematches.server.mail.impl.AsynchronousMailService">
         <property name="originalMailService" ref="freeMarkerMailService"/>
     </bean>
 </beans>

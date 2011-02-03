@@ -15,7 +15,7 @@ import wisematches.server.gameplaying.cleaner.GameTimeoutTerminator;
 import wisematches.server.gameplaying.room.*;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
-import wisematches.server.testimonial.notice.PlayerNotification;
+import wisematches.server.standing.notice.PlayerNotification;
 import wisematches.server.utils.sessions.PlayerSessionsManager;
 
 import java.util.Collection;

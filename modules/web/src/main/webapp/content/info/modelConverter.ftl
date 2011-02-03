@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="infoModel" type="freemarker.ext.dom.NodeModel" -->
 
 <div id="info-${infoId}">
-    <div id="info-${infoId}" class="info-header">
+    <div id="info-${infoId}-header" class="info-header">
     <#if infoModel.label[0]??>
         <div id="info-${infoId}-label" class="info-label">${infoModel.label}</div>
     </#if>

@@ -2,7 +2,6 @@ package wisematches.server.web;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
-import wisematches.server.deprecated.web.server.pproc.PagePreProcessor;
 import wisematches.server.deprecated.web.server.sessions.WebSessionCustomHouse;
 import wisematches.server.player.Player;
 
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.Collection;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -21,7 +19,6 @@ public class ApplicationMappingController implements Controller {
 	private String applicationPageUrl;
 
 	private WebSessionCustomHouse sessionCustomHouse;
-	private Collection<PagePreProcessor> pagePreProcessors;
 
 	protected static final String APP_MAPPING = "/app";
 	protected static final String SIGNIN_MAPPING = "/signin";
@@ -76,13 +73,6 @@ public class ApplicationMappingController implements Controller {
 
 			writer.println(line);
 
-			if (pagePreProcessors != null) {
-				for (PagePreProcessor pagePreProcessor : pagePreProcessors) {
-					if (pagePreProcessor.isPreProcessorEnabled(line)) {
-						pagePreProcessor.processPageContent(writer, request, response);
-					}
-				}
-			}
 		} while (true);
 		writer.flush();
 	}
@@ -97,9 +87,5 @@ public class ApplicationMappingController implements Controller {
 
 	public void setSessionCustomHouse(WebSessionCustomHouse sessionCustomHouse) {
 		this.sessionCustomHouse = sessionCustomHouse;
-	}
-
-	public void setPagePreProcessors(Collection<PagePreProcessor> pagePreProcessors) {
-		this.pagePreProcessors = pagePreProcessors;
 	}
 }
