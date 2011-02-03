@@ -150,7 +150,7 @@ public class PlayboardServiceImplTest {
 
     @Test
     public void test_openBoard_Error2() throws BoardLoadingException {
-        expect(roomManager.openBoard(13L)).andThrow(new BoardLoadingException("asd"));
+        expect(roomManager.openBoard(13L)).andThrow(new BoardLoadingException("testManager"));
         replay(roomManager);
 
         assertNull(service.openBoard(13L));
@@ -206,7 +206,7 @@ public class PlayboardServiceImplTest {
                 service.convertException(new GameFinishedException(GameState.FINISHED)).getErrorCode());
 
         assertEquals(PlayerMoveException.ErrorCode.UNKNOWN_WORD,
-                service.convertException(new UnknownWordException("asd")).getErrorCode());
+                service.convertException(new UnknownWordException("testManager")).getErrorCode());
 
         assertEquals(PlayerMoveException.ErrorCode.CELL_ALREADY_BUSY,
                 service.convertException(new IncorrectTilesException(new Tile(1, 'a', 1), new Tile(2, 'b', 2), new Position(7, 7))).getErrorCode());

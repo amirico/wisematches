@@ -33,7 +33,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/account")
-public class CreationController extends AbstractInfoController {
+public class CreateAccountController extends AbstractInfoController {
 	private MailService mailService;
 	private AccountManager accountManager;
 	private PlayerSecurityService playerSecurityService;
@@ -43,7 +43,7 @@ public class CreationController extends AbstractInfoController {
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 
-	public CreationController() {
+	public CreateAccountController() {
 		super("classpath:/i18n/server/account/");
 	}
 

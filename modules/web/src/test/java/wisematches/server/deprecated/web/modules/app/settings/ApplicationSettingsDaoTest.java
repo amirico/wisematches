@@ -12,7 +12,7 @@ public class ApplicationSettingsDaoTest extends AbstractTransactionalDataSourceS
 	private ApplicationSettingsDao playerSettingsDao;
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-web-app-config.xml"};
+		return new String[]{"classpath:/config/test-application-settings.xml"};
 	}
 
 	@Override

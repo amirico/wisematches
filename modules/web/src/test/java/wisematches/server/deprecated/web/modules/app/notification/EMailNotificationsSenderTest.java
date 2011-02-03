@@ -115,7 +115,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 	}
 
 	protected String[] getConfigLocations() {
-		return new String[]{"classpath:/config/test-web-app-config.xml"};
+		return new String[]{"classpath:/config/test-application-settings.xml"};
 	}
 
 	public void setNotificationsSender(EMailNotificationsSender notificationsSender) {

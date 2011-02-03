@@ -23,7 +23,7 @@ import static org.easymock.EasyMock.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/web-app-config.xml",
+		"classpath:/config/application-settings.xml",
 		"classpath:/config/message-source-config.xml",
 		"classpath:/config/mail-sender-config.xml"
 })

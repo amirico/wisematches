@@ -8,7 +8,7 @@ import wisematches.server.deprecated.web.rpc.GenericRemoteService;
 public class CheckPointServiceImpl extends GenericRemoteService { //implements CheckPointService {
 /*    private AccountManager accountManager;
     private RememberTokenDao cookiesTokenDao;
-    private RestoreTokenDao restoreTokenDao;
+    private RecoveryTokenManager restoreTokenDao;
 
     private MailSender mailSender;
     private WebSessionCustomHouse sessionCustomHouse;
@@ -135,12 +135,12 @@ public class CheckPointServiceImpl extends GenericRemoteService { //implements C
         }
 
         //If previous token exist just remove it
-        final RestoreToken oldToken = restoreTokenDao.getToken(player);
+        final RecoveryToken oldToken = restoreTokenDao.getToken(player);
         if (oldToken != null) {
             restoreTokenDao.removeToken(oldToken);
         }
 
-        final RestoreToken token = restoreTokenDao.createToken(player);
+        final RecoveryToken token = restoreTokenDao.createToken(player);
         final String resetToken = token.getToken() + '-' + player.getId();
         if (log.isDebugEnabled()) {
             log.debug("Player fount " + player.getId() + ". Generated reset token: " + resetToken + ". Sending mail.");
@@ -156,7 +156,7 @@ public class CheckPointServiceImpl extends GenericRemoteService { //implements C
         final Player player = accountManager.getPlayer(playerId);
         if (player != null) {
 
-            final RestoreToken token1 = restoreTokenDao.getToken(player);
+            final RecoveryToken token1 = restoreTokenDao.getToken(player);
             if (token1 == null || !token1.getToken().equals(token)) {
                 res = RestorePasswordResult.INVALID_TOKEN;
             } else if ((System.currentTimeMillis() - token1.getDate().getTime()) > TOKEN_EXPIRE_TIMEOUT) {
@@ -182,7 +182,7 @@ public class CheckPointServiceImpl extends GenericRemoteService { //implements C
         this.cookiesTokenDao = cookiesTokenDao;
     }
 
-    public void setRestoreTokenDao(RestoreTokenDao restoreTokenDao) {
+    public void setAccountRecoveryManager(RecoveryTokenManager restoreTokenDao) {
         this.restoreTokenDao = restoreTokenDao;
     }
 
