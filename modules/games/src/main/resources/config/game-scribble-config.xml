@@ -32,16 +32,16 @@
         </property>
     </bean>
 
-    <bean id="ratingsCaculationManager" class="wisematches.server.testimonial.rating.impl.RatingsCalculationCenter">
+    <bean id="ratingsCaculationManager" class="wisematches.server.standing.rating.impl.RatingsCalculationCenter">
         <property name="ratingSystem">
-            <bean class="wisematches.server.testimonial.rating.impl.systems.ELORatingSystem"/>
+            <bean class="wisematches.server.standing.rating.impl.systems.ELORatingSystem"/>
         </property>
         <property name="playerManager" ref="playerManager"/>
         <property name="roomsManager" ref="roomsManager"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="ratingsManager" class="wisematches.server.testimonial.rating.impl.RatingsManagerImpl">
+    <bean id="ratingsManager" class="wisematches.server.standing.rating.impl.RatingsManagerImpl">
         <property name="topPlayersCount" value="5"/>
         <property name="ratingsCalculationManager" ref="ratingsCaculationManager"/>
         <property name="ratingsManagerDao" ref="ratingsManagerDao"/>
@@ -77,14 +77,14 @@
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="statisticsCleanerCenter" class="wisematches.server.testimonial.statistic.impl.StatisticCleanerCenter">
+    <bean id="statisticsCleanerCenter" class="wisematches.server.standing.statistic.impl.StatisticCleanerCenter">
         <property name="playerStatisticsManager" ref="statisticsManager"/>
         <property name="roomsManager" ref="roomsManager"/>
         <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
     </bean>
 
     <bean id="statisticCalculationCenter"
-          class="wisematches.server.testimonial.statistic.impl.StatisticCalculationCenter">
+          class="wisematches.server.standing.statistic.impl.StatisticCalculationCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="playerStatisticsManager" ref="statisticsManager"/>
         <property name="transactionManager" ref="transactionManager"/>

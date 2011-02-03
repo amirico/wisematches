@@ -76,7 +76,7 @@
                                 <td colspan="2" height="33.0" align="center" valign="bottom"
                                     style="text-align: center; vertical-align: bottom;">
                                     <div>
-                                        <a href="/account/recovery.html"><@message code="account.login.recovery.label"/></a>
+                                        <a href="/account/recovery/request.html"><@message code="account.login.recovery.label"/></a>
                                     </div>
                                     <#if showPredefinedUsername>
                                         <div>

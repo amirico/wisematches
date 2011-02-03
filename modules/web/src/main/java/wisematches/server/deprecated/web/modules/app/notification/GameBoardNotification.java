@@ -1,6 +1,6 @@
 package wisematches.server.deprecated.web.modules.app.notification;
 
-import wisematches.server.testimonial.notice.PlayerNotification;
+import wisematches.server.standing.notice.PlayerNotification;
 
 /**
  * Enum of notification types. {@code NotificationsSender} can fires only predefined numbers of notifications.

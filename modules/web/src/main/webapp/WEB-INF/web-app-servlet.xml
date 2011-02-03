@@ -40,7 +40,7 @@
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="messageInterpolator">
-            <bean class="wisematches.server.web.spring.i18n.SpringMessageInterpolator">
+            <bean class="wisematches.server.web.i18n.SpringMessageInterpolator">
                 <property name="messageSource" ref="serverMessageSource"/>
             </bean>
         </property>
