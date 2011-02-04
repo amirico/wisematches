@@ -368,6 +368,7 @@
         <w>junit</w>
         <w>mailto</w>
         <w>noreplay</w>
+        <w>onclick</w>
         <w>playboard</w>
         <w>recaptcha</w>
       </words>
