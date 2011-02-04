@@ -20,10 +20,13 @@ import wisematches.server.player.AccountManager;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerEditor;
 import wisematches.server.security.PlayerSecurityService;
+import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +39,7 @@ import java.util.Map;
 public class RecoveryController {
 	private MailService mailService;
 	private AccountManager accountManager;
+	private CaptchaService captchaService;
 	private RecoveryTokenManager recoveryTokenManager;
 	private PlayerSecurityService playerSecurityService;
 
@@ -107,15 +111,18 @@ public class RecoveryController {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "confirmation", method = RequestMethod.POST)
-	public String recoveredConfirmationAction(Model model,
+	public String recoveredConfirmationAction(HttpServletRequest request, HttpServletResponse response,
 											  @Valid @ModelAttribute("recovery") RecoveryConfirmationForm form,
-											  BindingResult result) {
+											  BindingResult result, Model model) {
 		if (log.isInfoEnabled()) {
 			log.info("Process recovery confirmation: " + form);
 		}
 
 		if (!form.getPassword().equals(form.getConfirm())) {
 			result.rejectValue("confirm", "account.register.pwd-cfr.err.mismatch");
+		}
+		if (captchaService != null) {
+			captchaService.validateCaptcha(request, response, result);
 		}
 
 		Player player = null;
@@ -170,6 +177,11 @@ public class RecoveryController {
 	public String recoveredExpectationPage(Model model) {
 		model.addAttribute("infoId", "recovery/expectation");
 		return "/content/account/layout";
+	}
+
+	@Autowired
+	public void setCaptchaService(CaptchaService captchaService) {
+		this.captchaService = captchaService;
 	}
 
 	@Autowired

@@ -1,4 +1,4 @@
-package wisematches.server.web.security.guest;
+package wisematches.server.web.security.spring.guest;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.context.SecurityContextHolder;

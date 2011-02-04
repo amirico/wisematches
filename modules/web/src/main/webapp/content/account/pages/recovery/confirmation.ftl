@@ -11,7 +11,7 @@
 
     <div id="info-recovery-form">
         <form id="recoveryForm" action="confirmation.html" method="post">
-            <table class="x-panel" style="padding-left: 10px; padding-right: 10px">
+            <table class="x-panel" style="padding-left: 10px; padding-right: 10px; width: 400px;">
                 <tr>
                     <td colspan="2">
                         <div class="group label"><@message code="account.recovery.check.email.label"/></div>
@@ -69,6 +69,27 @@
                                <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
                         <label for="rememberMe"><@message code="account.login.remember.label"/></label>
                     </@wisematches.field>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td colspan="2">
+                        <hr>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <div class="group label"><@message code="captcha.label"/></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style="float: right;">
+                        <@wisematches.captcha path="recovery.captcha"/>
+                            <span class="sample"><@message code="captcha.description"/></span>
+                        </div>
                     </td>
                 </tr>
 

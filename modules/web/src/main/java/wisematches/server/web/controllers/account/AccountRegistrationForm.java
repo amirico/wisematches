@@ -7,11 +7,12 @@ package wisematches.server.web.controllers.account;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import wisematches.server.web.security.captcha.CaptchaForm;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class AccountRegistrationForm {
+public class AccountRegistrationForm extends CaptchaForm {
 	@NotEmpty(message = "account.register.email.err.blank")
 	@Length(max = 150, message = "account.register.email.err.max")
 	@Email(message = "account.register.email.err.format")
