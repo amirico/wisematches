@@ -40,7 +40,7 @@
         <beans:property name="passwordEncoder" ref="passwordEncoder"/>
     </beans:bean>
 
-    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.WMRedirectStrategy">
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.spring.WMRedirectStrategy">
         <beans:property name="redirectParameters">
             <beans:set>
                 <beans:value>rememberMe</beans:value>
@@ -94,18 +94,18 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.WMAccessDeniedHandler">
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.spring.WMAccessDeniedHandler">
         <beans:property name="insufficientErrorPage" value="/account/loginAuth.html?error=insufficient"/>
     </beans:bean>
 
-    <beans:bean id="guestFilter" class="wisematches.server.web.security.guest.WMGuestAuthenticationFilter">
+    <beans:bean id="guestFilter" class="wisematches.server.web.security.spring.guest.WMGuestAuthenticationFilter">
         <beans:property name="guestProcessingUrl" value="/account/loginGuest.html"/>
         <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
         <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
     </beans:bean>
 
     <beans:bean id="guestAuthenticationProvider"
-                class="wisematches.server.web.security.guest.WMGuestAuthenticationProvider">
+                class="wisematches.server.web.security.spring.guest.WMGuestAuthenticationProvider">
     </beans:bean>
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="guestAuthenticationProvider"/>

@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <import resource="classpath:/config/web-server-config.xml"/>
+    <import resource="classpath:/config/OLD-web-server-config-OLD.xml"/>
 
     <bean id="hibernateSessionInterceptor"
           class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">

@@ -369,6 +369,7 @@
         <w>mailto</w>
         <w>noreplay</w>
         <w>playboard</w>
+        <w>recaptcha</w>
       </words>
     </dictionary>
   </component>

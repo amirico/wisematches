@@ -59,3 +59,7 @@
        value="<#if fieldType!="password">${spring.stringStatusValue}</#if>" ${attributes}>
 </@field>
 </#macro>
+
+<#macro captcha path>
+    <#if captchaService??><@field path>${captchaService.createCaptchaScript(locale)}</@field></#if>
+</#macro>

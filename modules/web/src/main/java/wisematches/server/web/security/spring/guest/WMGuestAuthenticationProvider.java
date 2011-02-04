@@ -1,4 +1,4 @@
-package wisematches.server.web.security.guest;
+package wisematches.server.web.security.spring.guest;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

@@ -4,7 +4,7 @@
 
 package wisematches.server.web.controllers;
 
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 
 import java.util.Collections;
 import java.util.Map;
@@ -58,7 +58,7 @@ public final class ServiceResponse {
 		return new ServiceResponse(false, summary, errors);
 	}
 
-	public static ServiceResponse convert(BindingResult errors) {
+	public static ServiceResponse convert(Errors errors) {
 		if (errors.hasErrors()) {
 			return FAILURE;
 //			return new ServiceResponse(false, null, errors);

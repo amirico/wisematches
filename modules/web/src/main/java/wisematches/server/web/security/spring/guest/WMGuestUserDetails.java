@@ -1,4 +1,4 @@
-package wisematches.server.web.security.guest;
+package wisematches.server.web.security.spring.guest;
 
 import wisematches.server.player.computer.guest.GuestPlayer;
 import wisematches.server.security.WMAuthorities;
