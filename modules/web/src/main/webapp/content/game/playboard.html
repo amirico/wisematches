@@ -89,136 +89,364 @@
 </style>
 
 <script type="text/javascript">
-    wm = {};
+wm = {};
 
-    wm.scribble = {};
+wm.dnd = new function() {
+    var fixEvent = function(e) {
+        e = e || window.event;
 
-    wm.scribble.ScoreEngine = function() {
-        var bonuses = new Array(15);
-        var emptyHandBonus;
-
-        for (var i = 0; i < 15; i++) {
-            bonuses[i] = new Array(15);
+        if (e.pageX == null && e.clientX != null) {
+            var html = document.documentElement;
+            var body = document.body;
+            e.pageX = e.clientX + (html && html.scrollLeft || body && body.scrollLeft || 0) - (html.clientLeft || 0);
+            e.pageY = e.clientY + (html && html.scrollTop || body && body.scrollTop || 0) - (html.clientTop || 0);
         }
 
-        this.BonusType = { DL: {name: '2l'}, TL: {name: '3l'}, DW: {name: '2w'}, TW: {name: '3w'} };
+        if (!e.which && e.button) {
+            e.which = e.button & 1 ? 1 : ( e.button & 2 ? 3 : ( e.button & 4 ? 2 : 0 ) );
+        }
+        return e;
+    };
 
-        bonuses[0][0] = this.BonusType.DL;
-        bonuses[1][3] = this.BonusType.TL;
-        bonuses[3][3] = this.BonusType.DW;
-        bonuses[7][5] = this.BonusType.TW;
-
-        this.init = function(bonuses, emptyHandBonus) {
-            this.bonuses = bonuses;
-            this.emptyHandBonus = emptyHandBonus;
-        };
-
-        this.getCellBonus = function(row, col) {
-            return bonuses[row][col];
+    var getOffset = function(elem) {
+        if (elem.getBoundingClientRect) {
+            return getOffsetRect(elem);
+        } else {
+            return getOffsetSum(elem);
         }
     };
 
-    wm.scribble.Tile = function(letter, cost) {
-        var element;
-        var pinned = false;
-        var selected = false;
-        var tile = this;
+    var getOffsetRect = function (elem) {
+        var box = elem.getBoundingClientRect();
 
-        var backgroundPosition = 0;
+        var body = document.body;
+        var docElem = document.documentElement;
 
-        var validateTile = function() {
-            element.style.backgroundPosition = "-" + (cost * 22) + "px " + backgroundPosition + "px";
+        var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+        var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+        var clientTop = docElem.clientTop || body.clientTop || 0;
+        var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+        var top = box.top + scrollTop - clientTop;
+        var left = box.left + scrollLeft - clientLeft;
+
+        return { top: Math.round(top), left: Math.round(left) };
+    };
+
+    var getOffsetSum = function (elem) {
+        var top = 0, left = 0;
+        while (elem) {
+            top = top + parseInt(elem.offsetTop);
+            left = left + parseInt(elem.offsetLeft);
+            elem = elem.offsetParent;
+        }
+        return {top: top, left: left};
+    };
+
+    this.DragObject = function(element) {
+        element.dragObject = this;
+
+        dragMaster.makeDraggable(element);
+
+        var mouseOffset;
+        var rememberPosition;
+
+        this.onDragStart = function(offset) {
+            var s = element.style;
+            rememberPosition = {top: s.top, left: s.left, position: s.position};
+            s.position = 'absolute';
+
+            mouseOffset = offset;
         };
 
-        this.select = function() {
-            this.selected = true;
-            backgroundPosition -= 22;
-            validateTile();
+        this.hide = function() {
+            element.style.display = 'none';
         };
 
-        this.deselect = function() {
-            this.selected = false;
-            backgroundPosition += 22;
-            validateTile();
+        this.show = function() {
+            element.style.display = '';
         };
 
-        this.pin = function() {
-            this.pinned = true;
-            backgroundPosition -= 44;
-            validateTile();
+        this.onDragMove = function(x, y) {
+            element.style.top = y - mouseOffset.y + 'px';
+            element.style.left = x - mouseOffset.x + 'px';
         };
 
-        this.getElement = function() {
-            return element;
+        this.onDragSuccess = function(dropTarget) {
         };
 
-        element = function() {
-            var element = document.createElement('div');
-            element.onclick = function() {
-                if (tile.selected) {
-                    tile.deselect();
-                } else {
-                    tile.select();
+        this.onDragFail = function() {
+            var s = element.style;
+            s.top = rememberPosition.top;
+            s.left = rememberPosition.left;
+            s.position = rememberPosition.position;
+        };
+
+        this.toString = function() {
+            return element.id;
+        };
+    };
+
+    this.DropTarget = function (element) {
+        element.dropTarget = this;
+
+        this.canAccept = function(dragObject) {
+            return true
+        };
+
+        this.accept = function(dragObject) {
+            this.onLeave();
+            dragObject.hide();
+        };
+
+        this.onLeave = function() {
+            element.className = ''
+        };
+
+        this.onEnter = function() {
+            element.className = 'uponMe'
+        };
+
+        this.toString = function() {
+            return element.id
+        };
+    };
+
+
+    var dragMaster = (function() {
+        var dragObject;
+        var mouseDownAt;
+
+        var currentDropTarget;
+
+        var mouseDown = function (e) {
+            e = fixEvent(e);
+            if (e.which != 1) return;
+            mouseDownAt = { x: e.pageX, y: e.pageY, element: this };
+            addDocumentEventHandlers();
+            return false;
+        };
+
+        var mouseMove = function (e) {
+            e = fixEvent(e);
+            if (mouseDownAt) {
+                if (Math.abs(mouseDownAt.x - e.pageX) < 5 && Math.abs(mouseDownAt.y - e.pageY) < 5) {
+                    return false
                 }
-            };
-            element.id = "tile12";
-            element.className = "tile";
-            if (letter != null) {
-                element.innerHTML = letter;
+                var elem = mouseDownAt.element;
+                dragObject = elem.dragObject;
+
+                var mouseOffset = getMouseOffset(elem, mouseDownAt.x, mouseDownAt.y);
+                mouseDownAt = null;
+
+                dragObject.onDragStart(mouseOffset);
             }
-            return element;
-        }();
+            dragObject.onDragMove(e.pageX, e.pageY);
+            var newTarget = getCurrentTarget(e);
+            if (currentDropTarget != newTarget) {
+                if (currentDropTarget) {
+                    currentDropTarget.onLeave()
+                }
+                if (newTarget) {
+                    newTarget.onEnter()
+                }
+                currentDropTarget = newTarget
+
+            }
+            return false
+        };
+
+        function mouseUp() {
+            if (!dragObject) { // (1)
+                mouseDownAt = null
+            } else {
+                // (2)
+                if (currentDropTarget) {
+                    currentDropTarget.accept(dragObject)
+                    dragObject.onDragSuccess(currentDropTarget)
+                } else {
+                    dragObject.onDragFail()
+                }
+
+                dragObject = null
+            }
+            removeDocumentEventHandlers()
+        }
+
+
+        function getMouseOffset(target, x, y) {
+            var docPos = getOffset(target)
+            return {x:x - docPos.left, y:y - docPos.top}
+        }
+
+
+        var getCurrentTarget = function (e) {
+            if (navigator.userAgent.match('MSIE') || navigator.userAgent.match('Gecko')) {
+                var x = e.clientX, y = e.clientY;
+            } else {
+                var x = e.pageX, y = e.pageY
+            }
+            dragObject.hide()
+            var elem = document.elementFromPoint(x, y)
+            dragObject.show()
+
+            while (elem) {
+                if (elem.dropTarget && elem.dropTarget.canAccept(dragObject)) {
+                    return elem.dropTarget
+                }
+                elem = elem.parentNode
+            }
+            return null
+        }
+
+        function addDocumentEventHandlers() {
+            document.onmousemove = mouseMove
+            document.onmouseup = mouseUp
+            document.ondragstart = document.body.onselectstart = function() {
+                return false
+            }
+        }
+
+        function removeDocumentEventHandlers() {
+            document.onmousemove = document.onmouseup = document.ondragstart = document.body.onselectstart = null
+        }
+
+
+        return {
+            makeDraggable: function(element) {
+                element.onmousedown = mouseDown
+            }
+        }
+    }());
+};
+
+wm.scribble = {};
+
+wm.scribble.ScoreEngine = function() {
+    var bonuses = new Array(15);
+    var emptyHandBonus;
+
+    for (var i = 0; i < 15; i++) {
+        bonuses[i] = new Array(15);
+    }
+
+    this.BonusType = { DL: {name: '2l'}, TL: {name: '3l'}, DW: {name: '2w'}, TW: {name: '3w'} };
+
+    bonuses[0][0] = this.BonusType.DL;
+    bonuses[1][3] = this.BonusType.TL;
+    bonuses[3][3] = this.BonusType.DW;
+    bonuses[7][5] = this.BonusType.TW;
+
+    this.init = function(bonuses, emptyHandBonus) {
+        this.bonuses = bonuses;
+        this.emptyHandBonus = emptyHandBonus;
+    };
+
+    this.getCellBonus = function(row, col) {
+        return bonuses[row][col];
+    }
+};
+
+wm.scribble.Tile = function(letter, cost) {
+    var element;
+    var pinned = false;
+    var selected = false;
+    var tile = this;
+
+    var backgroundPosition = 0;
+
+    var validateTile = function() {
+        element.style.backgroundPosition = "-" + (cost * 22) + "px " + backgroundPosition + "px";
+    };
+
+    this.select = function() {
+        this.selected = true;
+        backgroundPosition -= 22;
         validateTile();
     };
 
-    wm.scribble.Board = function() {
-        var scoreEngine = new wm.scribble.ScoreEngine();
+    this.deselect = function() {
+        this.selected = false;
+        backgroundPosition += 22;
+        validateTile();
+    };
 
-        this.init = function() {
-            var board = document.getElementById('board');
-            for (var i = 0; i < 15; i++) {
-                var row = document.createElement('tr');
-                board.appendChild(row);
-                for (var j = 0; j < 15; j++) {
-                    var cell = createCellElement(i, j);
+    this.pin = function() {
+        this.pinned = true;
+        backgroundPosition -= 44;
+        validateTile();
+    };
+
+    this.getElement = function() {
+        return element;
+    };
+
+    element = function() {
+        var element = document.createElement('div');
+        element.onclick = function() {
+            if (tile.selected) {
+                tile.deselect();
+            } else {
+                tile.select();
+            }
+        };
+        element.id = "tile12";
+        element.className = "tile";
+        if (letter != null) {
+            element.innerHTML = letter;
+        }
+        return element;
+    }();
+    validateTile();
+};
+
+wm.scribble.Board = function() {
+    var scoreEngine = new wm.scribble.ScoreEngine();
+
+    this.init = function() {
+        var board = document.getElementById('board');
+        for (var i = 0; i < 15; i++) {
+            var row = document.createElement('tr');
+            board.appendChild(row);
+            for (var j = 0; j < 15; j++) {
+                var cell = createCellElement(i, j);
 //                    var t1 = new wm.scribble.Tile('A', 4);
 //                    cell.appendChild(t1.getElement());
-                    row.appendChild(cell);
-                }
+                row.appendChild(cell);
             }
+        }
 
-            var hand = document.getElementById('hand');
-            for (var k = 0; k < 7; k++) {
-                var t2 = new wm.scribble.Tile('', k);
-                t2.pin();
-                hand.appendChild(t2.getElement());
-            }
-        };
-
-        this.getScoreEngine = function() {
-            return scoreEngine;
-        };
-
-        var createCellElement = function(row, col) {
-            var bonus = scoreEngine.getCellBonus(row, col);
-
-            var cell = document.createElement('td');
-            cell.id = "cell_" + row + "_" + col;
-            cell.className = "cell" + (bonus != null ? " bonus-cell-" + bonus.name : "");
-            return cell;
-        };
-
-        var createTileElement = function(letter, cost) {
-            var cell = document.createElement('div');
-            cell.id = "tile12";
-            cell.className = "tile";
-            if (letter != null) {
-                cell.innerHTML = letter;
-            }
-            cell.style.backgroundPosition = "-" + (cost * 22) + "px 0px";
-            return cell;
+        var hand = document.getElementById('hand');
+        for (var k = 0; k < 7; k++) {
+            var t2 = new wm.scribble.Tile('', k);
+            t2.pin();
+            hand.appendChild(t2.getElement());
         }
     };
+
+    this.getScoreEngine = function() {
+        return scoreEngine;
+    };
+
+    var createCellElement = function(row, col) {
+        var bonus = scoreEngine.getCellBonus(row, col);
+
+        var cell = document.createElement('td');
+        cell.id = "cell_" + row + "_" + col;
+        cell.className = "cell" + (bonus != null ? " bonus-cell-" + bonus.name : "");
+        return cell;
+    };
+
+    var createTileElement = function(letter, cost) {
+        var cell = document.createElement('div');
+        cell.id = "tile12";
+        cell.className = "tile";
+        if (letter != null) {
+            cell.innerHTML = letter;
+        }
+        cell.style.backgroundPosition = "-" + (cost * 22) + "px 0px";
+        return cell;
+    }
+};
 </script>
 
 <div id="playboard">
