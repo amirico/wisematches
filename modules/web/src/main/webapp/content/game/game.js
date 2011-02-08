@@ -9,36 +9,42 @@ print = function(msg) {
 };
 
 wm = {};
-
+wm.g = {};
 wm.scribble = {};
 
-wm.scribble.utils = new function() {
-    this.mouseCoords = function(ev) {
-        ev = ev || window.event;
-        if (ev.pageX || ev.pageY) {
-            return {x:ev.pageX, y:ev.pageY};
+wm.g.mouse = new function() {
+    this.getAbsolutePosition = function(event) {
+        event = event || window.event;
+        if (event.pageX || event.pageY) {
+            return {x:event.pageX, y:event.pageY};
         }
         return {
-            x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
-            y:ev.clientY + document.body.scrollTop - document.body.clientTop
+            x:event.clientX + document.body.scrollLeft - document.body.clientLeft,
+            y:event.clientY + document.body.scrollTop - document.body.clientTop
         };
     };
 
-    this.getMouseOffset = function (target, ev) {
-        var docPos = this.getPosition(target);
-        var mousePos = this.mouseCoords(ev);
+    this.getRelativityPosition = function (element, event) {
+        var docPos = wm.g.element.getLocation(element);
+        var mousePos = this.getAbsolutePosition(event);
         return {x:mousePos.x - docPos.x, y:mousePos.y - docPos.y};
     };
 
-    this.getPosition = function(e) {
+    this.containsRelativity = function(event, rect) {
+
+    };
+};
+
+wm.g.element = new function() {
+    this.getLocation = function(element) {
         var top = 0;
         var left = 0;
 
         do {
-            top += e.offsetTop;
-            left += e.offsetLeft;
-            e = e.offsetParent;
-        } while (e.offsetParent);
+            top += element.offsetTop;
+            left += element.offsetLeft;
+            element = element.offsetParent;
+        } while (element.offsetParent);
         return {x:left, y:top};
     };
 };

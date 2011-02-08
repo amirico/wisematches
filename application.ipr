@@ -368,6 +368,11 @@
         <w>recaptcha</w>
       </words>
     </dictionary>
+    <dictionary name="sergey">
+      <words>
+        <w>rect</w>
+      </words>
+    </dictionary>
   </component>
   <component name="ProjectLibrariesConfigurable.UI">
     <splitter-proportions>
