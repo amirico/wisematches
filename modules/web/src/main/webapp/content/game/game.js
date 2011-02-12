@@ -9,11 +9,50 @@ print = function(msg) {
 };
 
 wm = {};
-wm.g = {};
 wm.scribble = {};
 
-wm.g.mouse = new function() {
-    this.getAbsolutePosition = function(event) {
+wm.g = new function() {
+    this.Events = function() {
+        var events = [];
+
+        this.addEventListener = function(event, callback) {
+            this.events[event] = this.events[event] || [];
+            if (this.events[event]) {
+                this.events[event].push(callback);
+            }
+        };
+
+        this.removeEventListener = function(event, callback) {
+            if (this.events[event]) {
+                var listeners = this.events[event];
+                for (var i = listeners.length - 1; i >= 0; --i) {
+                    if (listeners[i] === callback) {
+                        listeners.splice(i, 1);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        this.dispatch = function(event) {
+            if (this.events[event]) {
+                var listeners = this.events[event], len = listeners.length;
+                while (len--) {
+                    listeners[len](this);	//callback with self
+                }
+            }
+        };
+    };
+
+
+    this.getPosition = function (element, event) {
+        var loc = this.getLocation(element);
+        var pos = this.getPositionOnScreen(event);
+        return {x:pos.x - loc.x, y:pos.y - loc.y};
+    };
+
+    this.getPositionOnScreen = function(event) {
         event = event || window.event;
         if (event.pageX || event.pageY) {
             return {x:event.pageX, y:event.pageY};
@@ -24,18 +63,7 @@ wm.g.mouse = new function() {
         };
     };
 
-    this.getRelativityPosition = function (element, event) {
-        var docPos = wm.g.element.getLocation(element);
-        var mousePos = this.getAbsolutePosition(event);
-        return {x:mousePos.x - docPos.x, y:mousePos.y - docPos.y};
-    };
 
-    this.containsRelativity = function(event, rect) {
-
-    };
-};
-
-wm.g.element = new function() {
     this.getLocation = function(element) {
         var top = 0;
         var left = 0;
@@ -47,15 +75,41 @@ wm.g.element = new function() {
         } while (element.offsetParent);
         return {x:left, y:top};
     };
+
+    this.getBounds = function(element) {
+        var loc = this.getLocation(element);
+        loc.width = element.offsetWidth;
+        loc.height = element.offsetHeight;
+        return loc;
+    };
+
+
+    this.containsPoint = function(rect, point) {
+        return (rect.x >= point.x) && (rect.x + rect.width <= point.x) &&
+                (rect.y >= point.y) && (rect.y + rect.height <= point.y);
+    }
 };
 
-wm.scribble.Tile = function(letter, cost) {
+wm.scribble.Tile = function(number, letter, cost) {
     var element;
-    var pinned = false;
-    var selected = false;
+
     var tile = this;
+    var fastened = false;
+    var selected = false;
 
     var backgroundPosition = 0;
+
+    wm.g.Events.call(this);
+
+    var registerSelectionListener = function() {
+        element.onclick = function() {
+            if (tile.selected) {
+                tile.deselect();
+            } else {
+                tile.select();
+            }
+        };
+    };
 
     var updateTileImage = function() {
         element.style.backgroundPosition = "-" + (cost * 22) + "px " + backgroundPosition + "px";
@@ -65,18 +119,30 @@ wm.scribble.Tile = function(letter, cost) {
         this.selected = true;
         backgroundPosition -= 22;
         updateTileImage();
+        this.dispatch('selected');
     };
 
     this.deselect = function() {
         this.selected = false;
         backgroundPosition += 22;
         updateTileImage();
+        this.dispatch('deselected');
     };
 
-    this.pin = function() {
-        this.pinned = true;
+    this.fasten = function() {
+        this.fastened = true;
         backgroundPosition -= 44;
+        registerSelectionListener();
         updateTileImage();
+        this.dispatch('fastened');
+    };
+
+    this.isSelected = function() {
+        return this.selected;
+    };
+
+    this.isFasten = function() {
+        return this.fastened;
     };
 
     this.getElement = function() {
@@ -85,14 +151,7 @@ wm.scribble.Tile = function(letter, cost) {
 
     element = function() {
         var element = document.createElement('div');
-        element.onclick = function() {
-            if (tile.selected) {
-                tile.deselect();
-            } else {
-                tile.select();
-            }
-        };
-        element.id = "tile12";
+        element.id = "tile" + number;
         element.className = "tile cost" + cost;
         if (letter != null) {
             element.innerHTML = '<span style="position: relative; top: 3px;">' + letter + '</span>';
@@ -101,6 +160,7 @@ wm.scribble.Tile = function(letter, cost) {
     }();
     updateTileImage();
 };
+wm.scribble.Tile.prototype = new wm.g.Events();
 
 wm.scribble.ScoreEngine = function() {
     var emptyHandBonus = 33;
@@ -128,95 +188,126 @@ wm.scribble.ScoreEngine = function() {
     }
 };
 
+wm.scribble.Highlighting = function() {
+    var element = document.getElementById("highlighting");
+    var previousCell = null;
+
+    this.highlight = function(cell) {
+        if (cell != null) {
+            element.style.top = cell.container.offsetTop + cell.y * 22;
+            element.style.left = cell.container.offsetLeft + cell.x * 22;
+            element.style.visibility = 'visible';
+        } else {
+            element.style.visibility = 'hidden';
+            element.style.top = 0;
+            element.style.left = 0;
+        }
+    };
+};
+
 wm.scribble.Board = function() {
     var draggingTile = null;
 
-    var board = document.getElementById('tiles');
-
+    var hand = document.getElementById('hand');
+    var board = document.getElementById('board');
     var scoreEngine = new wm.scribble.ScoreEngine();
+    var highlighting = new wm.scribble.Highlighting();
 
+    var handTiles = new Array(7);
     var boardTiles = function() {
-        var bonuses = new Array(15);
-
+        var cells = new Array(15);
         for (var i = 0; i < 15; i++) {
-            bonuses[i] = new Array(15);
+            cells[i] = new Array(15);
         }
-        return bonuses;
+        return cells;
     }();
-
-    var isBoardPosition = function(pos) {
-        var p = wm.scribble.utils.getPosition(board);
-        return
-    };
 
     var mouseDown = function(ev) {
         draggingTile = this;
-        draggingTile.mouseOffset = wm.scribble.utils.getMouseOffset(this, ev);
-        draggingTile.initialPosition = {x:draggingTile.style.left, y:draggingTile.style.top, z:draggingTile.style.zIndex};
+        draggingTile.mouseOffset = wm.g.getPosition(draggingTile, ev);
+        draggingTile.initialState = {
+            x:draggingTile.style.left,
+            y:draggingTile.style.top,
+            z:draggingTile.style.zIndex,
+            cell:getRelatedCell(ev)};
         draggingTile.style.zIndex = 333;
         return false;
     };
 
     var mouseUp = function(ev) {
         if (draggingTile != null) {
-            var cell = getBoardCell(ev);
-            if (cell != null && boardTiles[cell.x][cell.y] == undefined) {
-                print("Drop position: " + cell.x + "," + cell.y);
-
-                draggingTile.style.top = cell.y * 22;
-                draggingTile.style.left = cell.x * 22;
-
-                boardTiles[cell.x][cell.y] = draggingTile;
-            } else {
+            var cell = getRelatedCell(ev);
+            if (cell == null ||
+                    (cell.container == board && boardTiles[cell.x][cell.y] != undefined) ||
+                    (cell.container == hand && handTiles[cell.x] != undefined)) {
                 print("Drop position incorrect. Revert.");
 
-                draggingTile.style.top = draggingTile.initialPosition.y;
-                draggingTile.style.left = draggingTile.initialPosition.x;
+                draggingTile.style.top = draggingTile.initialState.y;
+                draggingTile.style.left = draggingTile.initialState.x;
+            } else {
+                // clear original position
+                if (draggingTile.initialState.cell.container == board) {
+                    boardTiles[draggingTile.initialState.cell.x][draggingTile.initialState.cell.y] = null;
+                } else if (draggingTile.initialState.cell.container == hand) {
+                    handTiles[draggingTile.initialState.cell.x] = null;
+                }
+
+                // move to new position
+                if (draggingTile.parentNode != cell.container) {
+                    draggingTile.parentNode.removeChild(draggingTile);
+                    draggingTile.style.top = cell.y * 22;
+                    draggingTile.style.left = cell.x * 22;
+                    cell.container.appendChild(draggingTile);
+                } else {
+                    draggingTile.style.top = cell.y * 22;
+                    draggingTile.style.left = cell.x * 22;
+                }
+
+                // mark new position
+                if (cell.container == board) {
+                    boardTiles[cell.x][cell.y] = draggingTile;
+                    draggingTile.style.backgroundPosition = "0 -22px";
+                } else if (cell.container == hand) {
+                    handTiles[cell.x] = draggingTile;
+                    draggingTile.style.backgroundPosition = "0 0px";
+                }
             }
 
-            draggingTile.style.zIndex = draggingTile.initialPosition.z;
+            highlighting.highlight(null);
 
+            draggingTile.style.zIndex = draggingTile.initialState.z;
             draggingTile.mouseOffset = null;
-            draggingTile.initialPosition = null;
+            draggingTile.initialState = null;
 
             draggingTile = null;
-
-            var b = document.getElementById('cellH');
-            b.style.visibility = 'hidden';
         }
     };
 
     var mouseMove = function(ev) {
         if (draggingTile != null) {
-            var pos = wm.scribble.utils.getMouseOffset(board, ev);
+            var pos = wm.g.getPosition(draggingTile.parentNode, ev);
 
-            draggingTile.style.position = 'absolute';
             draggingTile.style.top = pos.y - draggingTile.mouseOffset.y;
             draggingTile.style.left = pos.x - draggingTile.mouseOffset.x;
 
-            var cell = getBoardCell(ev);
-            if (cell != null) {
-                var b = document.getElementById('cellH');
-                b.style.top = cell.y * 22;
-                b.style.left = cell.x * 22;
-                b.style.visibility = 'visible';
-            }
+            highlighting.highlight(getRelatedCell(ev));
         }
         return false;
     };
 
-    var getBoardCell = function(ev) {
-        var pos = wm.scribble.utils.getMouseOffset(board, ev);
-        print("P: " + pos.x + "," + pos.y);
-
-        if (pos.x >= 0 && pos.x <= 330 && pos.y >= 0 && pos.y <= 330) {
-            var x = (((pos.x) / 22) | 0);
-            var y = (((pos.y) / 22) | 0);
-            return {x:x, y:y, type:'board'};
-        } else if (pos.x > 88 && pos.x < 242 && pos.y >= 336 && pos.y <= 352) {
-            var x = (((pos.x) / 22) | 0);
-            var y = (((pos.y) / 22) | 0);
-            return {x:x, y:y, type:'hand'};
+    var getRelatedCell = function(ev) {
+        var boardPos = wm.g.getPosition(board, ev);
+        if (boardPos.x >= 0 && boardPos.x < 330 && boardPos.y >= 0 && boardPos.y < 330) {
+            x = (((boardPos.x) / 22) | 0);
+            y = (((boardPos.y) / 22) | 0);
+            return {x:x, y:y, container: board};
+        } else {
+            var handPos = wm.g.getPosition(hand, ev);
+            if (handPos.x >= 0 && handPos.x < 154 && handPos.y >= 0 && handPos.y < 22) {
+                x = (((handPos.x) / 22) | 0);
+                y = (((handPos.y) / 22) | 0);
+                return {x:x, y:y, container: hand};
+            }
         }
         return null;
     };
@@ -233,7 +324,6 @@ wm.scribble.Board = function() {
                 if (b != null) {
                     var e = document.createElement('div');
                     e.className = "cell bonus-cell-" + b.name;
-                    e.style.position = "absolute";
                     e.style.top = i * 22 + "px";
                     e.style.left = j * 22 + "px";
                     bonuses.appendChild(e);
@@ -241,21 +331,29 @@ wm.scribble.Board = function() {
             }
         }
 
-        var hand = document.getElementById('tiles');
-        for (var k = 0; k < 7; k++) {
-            var t2 = new wm.scribble.Tile('F', k);
-            t2.getElement().style.position = 'absolute';
-            t2.getElement().style.top = 22 * 15 + 4 + "px";
-            t2.getElement().style.left = 22 * 4 + 22 * k + "px";
+        var tiles = hand.getElementsByTagName('div');
+        for (var i = 0; i < tiles.length; i++) {
+            var handTile = tiles[i];
+            print("Found hand tile: " + handTile.id);
 
-            t2.getElement().onmousedown = mouseDown;
-            hand.appendChild(t2.getElement());
+            handTiles[i] = handTile;
+            handTile.onmousedown = mouseDown;
+        }
+
+        var tiles = board.getElementsByTagName('div');
+        for (var i = 0; i < tiles.length; i++) {
+            var boardTile = tiles[i];
+            print("Found board tile: " + boardTile.id);
+
+            var y = boardTile.offsetTop / 22;
+            var x = boardTile.offsetLeft / 22;
+            print("Tile position: " + x + ", " + y);
+            boardTiles[x][y] = boardTile;
         }
     };
 
     this.getScoreEngine = function() {
         return scoreEngine;
     };
-
 };
 

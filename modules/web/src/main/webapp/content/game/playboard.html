@@ -1,130 +1,36 @@
 <html>
+<head>
+    <link type="text/css" rel="stylesheet" href="game.css">
+    <script type="text/javascript" src="game.js"></script>
+</head>
 <body>
 
-<!--http://javascript.ru/ui/draganddrop#vizualnoe-peremeshchenie-elementa-->
-<!--http://javascript.ru/tutorial/object/inheritance#factory-->
-
-
-<style type="text/css">
-    #playboard {
-        position: relative;
-        width: 342px !important;
-        height: 366px !important;
-        background-image: url('../../resources/images/scribble/board/scribble_field.png');
-    }
-
-    #board {
-        position: absolute;
-        top: 6px !important;
-        left: 6px !important;
-        width: 332px !important;
-        height: 332px !important;
-    }
-
-    #board #bonuses {
-        position: absolute;
-        z-index: 1;
-    }
-
-    #board #tiles {
-        position: absolute;
-        z-index: 2;
-        width: 330px !important;
-        height: 354px !important;
-
-    }
-
-    #hand {
-        position: relative;
-        left: 95px;
-        top: 9px;
-    }
-
-    .cell, .tile {
-        width: 22px !important;
-        height: 22px !important;
-    }
-
-    .tile {
-        cursor: default;
-        color: white;
-        z-index: 3;
-
-        font-size: 12px;
-        font-family: arial serif;
-
-        -moz-user-select: none;
-        -khtml-user-select: none;
-        user-select: none;
-
-        vertical-align: middle;
-        text-align: center;
-        display: table-cell;
-
-        background: url(../../resources/images/scribble/board/tiles.png) no-repeat;
-    }
-
-    .tile sub {
-        font-family: serif;
-        font-size: 70%;
-        font-weight: normal;
-    }
-
-    .cost0 {
-        color: black;
-    }
-
-    .tile1, .tile2, .tile3, .tile4, .tile5, .tile6, .tile7, .tile8, .tile9, .tile10 {
-        color: white;
-    }
-
-    .tile-selected {
-        font-weight: bold;
-    }
-
-    .bonus-cell-2l {
-        background: url(../../resources/images/scribble/board/bonus_2l.gif) no-repeat center;
-    }
-
-    .bonus-cell-3l {
-        background: url(../../resources/images/scribble/board/bonus_3l.gif) no-repeat center;
-    }
-
-    .bonus-cell-2w {
-        background: url(../../resources/images/scribble/board/bonus_2w.gif) no-repeat center;
-    }
-
-    .bonus-cell-3w {
-        background: url(../../resources/images/scribble/board/bonus_3w.gif) no-repeat center;
-    }
-
-    .bonus-cell-center {
-        background: url(../../resources/images/scribble/board/bonus_center.png) no-repeat center;
-    }
-</style>
-
-<script type="text/javascript" src="game.js"></script>
 
 asdfsaf<br>
 asdfsaf<br>
 asdfsaf<br>
 asdfsaf<br>
 
-<div id="playboard">
+<div id="scribble">
+    <div id="playboard">
+        <div id="highlighting"></div>
 
-    <div id="board">
-        <div id="cellH"
-             style="width: 22px; height: 22px; background-color: rgba(100%, 50%, 0%, 0.8); position: absolute; visibility: hidden;"></div>
+        <div id="bonuses">
+            <div class="cell bonus-cell-2l" style="left: 44px; top: 0"></div>
+        </div>
 
-        <div id="bonuses"></div>
+        <div id="board">
+            <div id="tile-12" class="tile cost0" style="left: 22px; top: 0;"><span
+                    style="position: relative; top: 3px;">T</span></div>
+        </div>
 
-        <div id="tiles">
+        <div id="hand">
+            <div id="tile-43" class="tile cost0" style="left: 0; top: 0;"><span
+                    style="position: relative; top: 3px;">T</span></div>
+            <div id="tile-78" class="tile cost0" style="left: 22px; top: 0;"><span
+                    style="position: relative; top: 3px;">M</span></div>
         </div>
     </div>
-
-    <!--<div id="hand">-->
-    <!--<div class="tile cost0" style="position: absolute; left: 22px; top: 22px;"><span style="position: relative; top: 3px;">J</span></div>-->
-    <!--</div>-->
 </div>
 
 <div id="console" style="height: 200px; overflow: auto; border: 1px solid red">
