@@ -21,8 +21,10 @@
 }
 
 #board {
-    position: absolute;
+    top: 1px;
+    left: 1px;
     z-index: 2;
+    position: absolute;
     width: 330px !important;
     height: 330px !important;
 }
@@ -34,23 +36,18 @@
 }
 
 #highlighting {
+    z-index: 3;
     width: 22px !important;
     height: 22px !important;
-    background-color: rgba(100%, 50%, 0%, 0.8);
+    background: url(../../resources/images/scribble/board/tiles.png) no-repeat;
     position: absolute;
     visibility: hidden;
-}
-
-.cell, .tile {
-    width: 22px !important;
-    height: 22px !important;
-    position: absolute !important;
 }
 
 .tile {
     cursor: default;
     color: white;
-    z-index: 3;
+    z-index: 4;
 
     font-size: 12px;
     font-family: arial serif;
@@ -64,6 +61,17 @@
     display: table-cell;
 
     background: url(../../resources/images/scribble/board/tiles.png) no-repeat;
+}
+
+.tile span {
+    top: 3px;
+    position: relative;
+}
+
+.cell, .tile {
+    width: 22px !important;
+    height: 22px !important;
+    position: absolute !important;
 }
 
 .cost0 {

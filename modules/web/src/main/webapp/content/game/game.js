@@ -12,37 +12,16 @@ wm = {};
 wm.scribble = {};
 
 wm.g = new function() {
-    this.Events = function() {
-        var events = [];
+    this.addClass = function (ele, cls) {
+        if (!this.hasClass(ele, cls)) ele.className += " " + cls;
+    };
 
-        this.addEventListener = function(event, callback) {
-            this.events[event] = this.events[event] || [];
-            if (this.events[event]) {
-                this.events[event].push(callback);
-            }
-        };
+    this.removeClass = function (ele, cls) {
+        ele.className = ele.className.replace(new RegExp('(\\s|^)' + cls + '(\\s|$)'), ' ');
+    };
 
-        this.removeEventListener = function(event, callback) {
-            if (this.events[event]) {
-                var listeners = this.events[event];
-                for (var i = listeners.length - 1; i >= 0; --i) {
-                    if (listeners[i] === callback) {
-                        listeners.splice(i, 1);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        };
-
-        this.dispatch = function(event) {
-            if (this.events[event]) {
-                var listeners = this.events[event], len = listeners.length;
-                while (len--) {
-                    listeners[len](this);	//callback with self
-                }
-            }
-        };
+    this.hasClass = function (ele, cls) {
+        return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
     };
 
 
@@ -90,77 +69,79 @@ wm.g = new function() {
     }
 };
 
-wm.scribble.Tile = function(number, letter, cost) {
-    var element;
-
-    var tile = this;
-    var fastened = false;
-    var selected = false;
-
-    var backgroundPosition = 0;
-
-    wm.g.Events.call(this);
-
-    var registerSelectionListener = function() {
-        element.onclick = function() {
-            if (tile.selected) {
-                tile.deselect();
-            } else {
-                tile.select();
-            }
-        };
-    };
-
-    var updateTileImage = function() {
-        element.style.backgroundPosition = "-" + (cost * 22) + "px " + backgroundPosition + "px";
-    };
-
-    this.select = function() {
-        this.selected = true;
-        backgroundPosition -= 22;
-        updateTileImage();
-        this.dispatch('selected');
-    };
-
-    this.deselect = function() {
-        this.selected = false;
-        backgroundPosition += 22;
-        updateTileImage();
-        this.dispatch('deselected');
-    };
-
-    this.fasten = function() {
-        this.fastened = true;
-        backgroundPosition -= 44;
-        registerSelectionListener();
-        updateTileImage();
-        this.dispatch('fastened');
-    };
-
-    this.isSelected = function() {
-        return this.selected;
-    };
-
-    this.isFasten = function() {
-        return this.fastened;
-    };
-
-    this.getElement = function() {
-        return element;
-    };
-
-    element = function() {
-        var element = document.createElement('div');
-        element.id = "tile" + number;
-        element.className = "tile cost" + cost;
-        if (letter != null) {
-            element.innerHTML = '<span style="position: relative; top: 3px;">' + letter + '</span>';
+wm.Events = function() {
+    this.addListener = function(type, listener) {
+        if (typeof this._listeners[type] == "undefined") {
+            this._listeners[type] = [];
         }
-        return element;
-    }();
-    updateTileImage();
+
+        this._listeners[type].push(listener);
+    };
+
+    this.removeListener = function(type, listener) {
+        if (this._listeners[type] instanceof Array) {
+            var listeners = this._listeners[type];
+            for (var i = 0, len = listeners.length; i < len; i++) {
+                if (listeners[i] === listener) {
+                    listeners.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    };
+
+    this.fireEvent = function(event) {
+        if (typeof event == "string") {
+            event = { type: event };
+        }
+        if (!event.target) {
+            event.target = this;
+        }
+
+        if (!event.type) {  //falsy
+            throw new Error("Event object missing 'type' property.");
+        }
+
+        if (this._listeners[event.type] instanceof Array) {
+            var listeners = this._listeners[event.type];
+            for (var i = 0, len = listeners.length; i < len; i++) {
+                listeners[i].call(this, event);
+            }
+        }
+    };
 };
-wm.scribble.Tile.prototype = new wm.g.Events();
+
+wm.scribble.tile = new function() {
+    this.parseTileInfo = function(tile) {
+        tile.cost = tile.className.match(/cost([0-9]*)/i)[1];
+        tile.number = tile.id.match(/tile([0-9]*)/i)[1];
+        return tile;
+    };
+
+    this.selectTile = function(tile) {
+        var k = 22;
+        if (tile.pinned) {
+            k += 44;
+        }
+        wm.g.addClass(tile, "tile-selected");
+        tile.style.backgroundPosition = tile.cost * -22 + "px" + " -" + k + "px";
+        tile.selected = true;
+    };
+
+    this.deselectTile = function(tile) {
+        var k = 0;
+        if (tile.pinned) {
+            k += 44;
+        }
+        wm.g.removeClass(tile, "tile-selected");
+        tile.style.backgroundPosition = tile.cost * -22 + "px" + " -" + k + "px";
+        tile.selected = null;
+    };
+
+    this.isTileSelected = function(tile) {
+        return tile.selected;
+    };
+};
 
 wm.scribble.ScoreEngine = function() {
     var emptyHandBonus = 33;
@@ -190,7 +171,10 @@ wm.scribble.ScoreEngine = function() {
 
 wm.scribble.Highlighting = function() {
     var element = document.getElementById("highlighting");
-    var previousCell = null;
+
+    this.init = function(tile) {
+        element.style.backgroundPosition = -tile.cost * 22 + "px -88px";
+    };
 
     this.highlight = function(cell) {
         if (cell != null) {
@@ -198,9 +182,9 @@ wm.scribble.Highlighting = function() {
             element.style.left = cell.container.offsetLeft + cell.x * 22;
             element.style.visibility = 'visible';
         } else {
-            element.style.visibility = 'hidden';
             element.style.top = 0;
             element.style.left = 0;
+            element.style.visibility = 'hidden';
         }
     };
 };
@@ -222,7 +206,20 @@ wm.scribble.Board = function() {
         return cells;
     }();
 
-    var mouseDown = function(ev) {
+    var _listeners = {};
+    wm.g.Events.call(this);
+
+    var onTileSelected = function() {
+        if (wm.scribble.tile.isTileSelected(this)) {
+            wm.scribble.tile.deselectTile(this);
+            events.dispatch('deselected', this);
+        } else {
+            events.dispatch('selected', this);
+            wm.scribble.tile.selectTile(this);
+        }
+    };
+
+    var onTileDown = function(ev) {
         draggingTile = this;
         draggingTile.mouseOffset = wm.g.getPosition(draggingTile, ev);
         draggingTile.initialState = {
@@ -231,59 +228,61 @@ wm.scribble.Board = function() {
             z:draggingTile.style.zIndex,
             cell:getRelatedCell(ev)};
         draggingTile.style.zIndex = 333;
+        highlighting.init(draggingTile);
         return false;
     };
 
-    var mouseUp = function(ev) {
-        if (draggingTile != null) {
-            var cell = getRelatedCell(ev);
-            if (cell == null ||
-                    (cell.container == board && boardTiles[cell.x][cell.y] != undefined) ||
-                    (cell.container == hand && handTiles[cell.x] != undefined)) {
-                print("Drop position incorrect. Revert.");
+    var onTileUp = function(ev) {
+        if (draggingTile == null) {
+            return true;
+        }
+        var cell = getRelatedCell(ev);
+        if (cell == null ||
+                (cell.container == board && boardTiles[cell.x][cell.y] != undefined) ||
+                (cell.container == hand && handTiles[cell.x] != undefined)) {
+            print("Drop position incorrect. Revert.");
 
-                draggingTile.style.top = draggingTile.initialState.y;
-                draggingTile.style.left = draggingTile.initialState.x;
-            } else {
-                // clear original position
-                if (draggingTile.initialState.cell.container == board) {
-                    boardTiles[draggingTile.initialState.cell.x][draggingTile.initialState.cell.y] = null;
-                } else if (draggingTile.initialState.cell.container == hand) {
-                    handTiles[draggingTile.initialState.cell.x] = null;
-                }
-
-                // move to new position
-                if (draggingTile.parentNode != cell.container) {
-                    draggingTile.parentNode.removeChild(draggingTile);
-                    draggingTile.style.top = cell.y * 22;
-                    draggingTile.style.left = cell.x * 22;
-                    cell.container.appendChild(draggingTile);
-                } else {
-                    draggingTile.style.top = cell.y * 22;
-                    draggingTile.style.left = cell.x * 22;
-                }
-
-                // mark new position
-                if (cell.container == board) {
-                    boardTiles[cell.x][cell.y] = draggingTile;
-                    draggingTile.style.backgroundPosition = "0 -22px";
-                } else if (cell.container == hand) {
-                    handTiles[cell.x] = draggingTile;
-                    draggingTile.style.backgroundPosition = "0 0px";
-                }
+            draggingTile.style.top = draggingTile.initialState.y;
+            draggingTile.style.left = draggingTile.initialState.x;
+        } else {
+            // clear original position
+            if (draggingTile.initialState.cell.container == board) {
+                boardTiles[draggingTile.initialState.cell.x][draggingTile.initialState.cell.y] = null;
+            } else if (draggingTile.initialState.cell.container == hand) {
+                handTiles[draggingTile.initialState.cell.x] = null;
             }
 
-            highlighting.highlight(null);
+            // move to new position
+            if (draggingTile.parentNode != cell.container) {
+                draggingTile.parentNode.removeChild(draggingTile);
+                draggingTile.style.top = cell.y * 22;
+                draggingTile.style.left = cell.x * 22;
+                cell.container.appendChild(draggingTile);
+            } else {
+                draggingTile.style.top = cell.y * 22;
+                draggingTile.style.left = cell.x * 22;
+            }
 
-            draggingTile.style.zIndex = draggingTile.initialState.z;
-            draggingTile.mouseOffset = null;
-            draggingTile.initialState = null;
-
-            draggingTile = null;
+            // mark new position
+            if (cell.container == board) {
+                boardTiles[cell.x][cell.y] = draggingTile;
+                wm.scribble.tile.selectTile(draggingTile);
+            } else if (cell.container == hand) {
+                handTiles[cell.x] = draggingTile;
+                wm.scribble.tile.deselectTile(draggingTile);
+            }
         }
+
+        highlighting.highlight(null);
+
+        draggingTile.style.zIndex = draggingTile.initialState.z;
+        draggingTile.mouseOffset = null;
+        draggingTile.initialState = null;
+
+        draggingTile = null;
     };
 
-    var mouseMove = function(ev) {
+    var onTileMove = function(ev) {
         if (draggingTile != null) {
             var pos = wm.g.getPosition(draggingTile.parentNode, ev);
 
@@ -312,10 +311,11 @@ wm.scribble.Board = function() {
         return null;
     };
 
+
     this.init = function() {
         print("start");
-        document.onmouseup = mouseUp;
-        document.onmousemove = mouseMove;
+        document.onmouseup = onTileUp;
+        document.onmousemove = onTileMove;
 
         var bonuses = document.getElementById('bonuses');
         for (var i = 0; i < 15; i++) {
@@ -333,20 +333,25 @@ wm.scribble.Board = function() {
 
         var tiles = hand.getElementsByTagName('div');
         for (var i = 0; i < tiles.length; i++) {
-            var handTile = tiles[i];
-            print("Found hand tile: " + handTile.id);
+            var handTile = wm.scribble.tile.parseTileInfo(tiles[i]);
+            print("Found hand tile: " + handTile.id + ", " + handTile.number + ", " + handTile.cost);
 
             handTiles[i] = handTile;
-            handTile.onmousedown = mouseDown;
+            handTile.onmousedown = onTileDown;
         }
 
         var tiles = board.getElementsByTagName('div');
         for (var i = 0; i < tiles.length; i++) {
-            var boardTile = tiles[i];
-            print("Found board tile: " + boardTile.id);
+            var boardTile = wm.scribble.tile.parseTileInfo(tiles[i]);
+            print("Found board tile: " + boardTile.id + ", " + boardTile.number + ", " + boardTile.cost);
+
+
+            boardTile.pinned = true;
+            boardTile.onclick = onTileSelected;
 
             var y = boardTile.offsetTop / 22;
             var x = boardTile.offsetLeft / 22;
+
             print("Tile position: " + x + ", " + y);
             boardTiles[x][y] = boardTile;
         }
@@ -356,4 +361,4 @@ wm.scribble.Board = function() {
         return scoreEngine;
     };
 };
-
+wm.scribble.Board.prototype = new wm.g.Events();
