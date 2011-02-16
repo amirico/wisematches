@@ -69,18 +69,19 @@ wm.g = new function() {
     }
 };
 
-wm.Events = function() {
-    this.addListener = function(type, listener) {
-        if (typeof this._listeners[type] == "undefined") {
-            this._listeners[type] = [];
-        }
+wm.EventSupport = function() {
+    var _listeners = {};
 
-        this._listeners[type].push(listener);
+    this.addListener = function(type, listener) {
+        if (typeof _listeners[type] == "undefined") {
+            _listeners[type] = [];
+        }
+        _listeners[type].push(listener);
     };
 
     this.removeListener = function(type, listener) {
-        if (this._listeners[type] instanceof Array) {
-            var listeners = this._listeners[type];
+        if (_listeners[type] instanceof Array) {
+            var listeners = _listeners[type];
             for (var i = 0, len = listeners.length; i < len; i++) {
                 if (listeners[i] === listener) {
                     listeners.splice(i, 1);
@@ -102,14 +103,15 @@ wm.Events = function() {
             throw new Error("Event object missing 'type' property.");
         }
 
-        if (this._listeners[event.type] instanceof Array) {
-            var listeners = this._listeners[event.type];
+        if (_listeners[event.type] instanceof Array) {
+            var listeners = _listeners[event.type];
             for (var i = 0, len = listeners.length; i < len; i++) {
                 listeners[i].call(this, event);
             }
         }
     };
 };
+
 
 wm.scribble.tile = new function() {
     this.parseTileInfo = function(tile) {
@@ -140,6 +142,10 @@ wm.scribble.tile = new function() {
 
     this.isTileSelected = function(tile) {
         return tile.selected;
+    };
+
+    this.getLetter = function(tile) {
+        return tile.innerText;
     };
 };
 
@@ -194,6 +200,9 @@ wm.scribble.Board = function() {
 
     var hand = document.getElementById('hand');
     var board = document.getElementById('board');
+    var selectedTiles = [];
+
+    var eventSupport = new wm.EventSupport();
     var scoreEngine = new wm.scribble.ScoreEngine();
     var highlighting = new wm.scribble.Highlighting();
 
@@ -206,16 +215,12 @@ wm.scribble.Board = function() {
         return cells;
     }();
 
-    var _listeners = {};
-    wm.g.Events.call(this);
 
     var onTileSelected = function() {
         if (wm.scribble.tile.isTileSelected(this)) {
-            wm.scribble.tile.deselectTile(this);
-            events.dispatch('deselected', this);
+            changeTileSelection(this, false);
         } else {
-            events.dispatch('selected', this);
-            wm.scribble.tile.selectTile(this);
+            changeTileSelection(this, true);
         }
     };
 
@@ -233,9 +238,10 @@ wm.scribble.Board = function() {
     };
 
     var onTileUp = function(ev) {
-        if (draggingTile == null) {
+        if (draggingTile == null || draggingTile == undefined) {
             return true;
         }
+
         var cell = getRelatedCell(ev);
         if (cell == null ||
                 (cell.container == board && boardTiles[cell.x][cell.y] != undefined) ||
@@ -265,11 +271,13 @@ wm.scribble.Board = function() {
 
             // mark new position
             if (cell.container == board) {
+                draggingTile.cell = cell;
                 boardTiles[cell.x][cell.y] = draggingTile;
-                wm.scribble.tile.selectTile(draggingTile);
+                changeTileSelection(draggingTile, true);
             } else if (cell.container == hand) {
+                draggingTile.cell = null;
                 handTiles[cell.x] = draggingTile;
-                wm.scribble.tile.deselectTile(draggingTile);
+                changeTileSelection(draggingTile, false);
             }
         }
 
@@ -311,6 +319,31 @@ wm.scribble.Board = function() {
         return null;
     };
 
+    var removeTileFromSelected = function(tile) {
+        for (var i = 0, len = selectedTiles.length; i < len; i++) {
+            if (selectedTiles[i] == tile) {
+                break;
+            }
+        }
+        if (i != selectedTiles.length) {
+            selectedTiles.splice(i, 1);
+            return true;
+        }
+        return false;
+    };
+
+    var changeTileSelection = function(tile, select) {
+        if (select) {
+            removeTileFromSelected(tile);
+            selectedTiles.push(tile);
+            wm.scribble.tile.selectTile(tile);
+            eventSupport.fireEvent({type:"selected", tile: tile});
+        } else {
+            removeTileFromSelected(tile);
+            wm.scribble.tile.deselectTile(tile);
+            eventSupport.fireEvent({type:"deselected", tile: tile});
+        }
+    };
 
     this.init = function() {
         print("start");
@@ -336,8 +369,10 @@ wm.scribble.Board = function() {
             var handTile = wm.scribble.tile.parseTileInfo(tiles[i]);
             print("Found hand tile: " + handTile.id + ", " + handTile.number + ", " + handTile.cost);
 
-            handTiles[i] = handTile;
+            handTile.pinned = false;
             handTile.onmousedown = onTileDown;
+
+            handTiles[i] = handTile;
         }
 
         var tiles = board.getElementsByTagName('div');
@@ -345,20 +380,83 @@ wm.scribble.Board = function() {
             var boardTile = wm.scribble.tile.parseTileInfo(tiles[i]);
             print("Found board tile: " + boardTile.id + ", " + boardTile.number + ", " + boardTile.cost);
 
-
             boardTile.pinned = true;
             boardTile.onclick = onTileSelected;
 
-            var y = boardTile.offsetTop / 22;
-            var x = boardTile.offsetLeft / 22;
-
-            print("Tile position: " + x + ", " + y);
-            boardTiles[x][y] = boardTile;
+            boardTile.cell = {x:boardTile.offsetLeft / 22, y:boardTile.offsetTop / 22};
+            boardTiles[boardTile.cell.x][boardTile.cell.y] = boardTile;
         }
+    };
+
+    this.addListener = function(type, listener) {
+        return eventSupport.addListener(type, listener);
+    };
+
+    this.removeListener = function(type, listener) {
+        return event.removeListener(type, listener);
     };
 
     this.getScoreEngine = function() {
         return scoreEngine;
     };
+
+    this.getSelectedTiles = function() {
+        return selectedTiles;
+    };
+
+    this.getSelectedWord = function() {
+        if (selectedTiles instanceof Array && selectedTiles.length > 1) {
+            var v = true;
+            var h = true;
+            for (i = 1,len = selectedTiles.length; i < len; i++) {
+                if (selectedTiles[0].cell.x != selectedTiles[i].cell.x) {
+                    v = false;
+                }
+                if (selectedTiles[0].cell.y != selectedTiles[i].cell.y) {
+                    h = false;
+                }
+            }
+
+            var direction, stopper;
+            if (!v && !h) {
+                return null;
+            } else if (!v) {
+                direction = 'x';
+                stopper = 'y';
+            } else {
+                direction = 'y';
+                stopper = 'x';
+            }
+
+            var sortedTiles = selectedTiles.sort(function(a, b) {
+                return a.cell[direction] - b.cell[direction];
+            });
+            var cell = sortedTiles[0];
+            var word = wm.scribble.tile.getLetter(cell);
+            for (var i = 1, len = sortedTiles.length; i < len; i++) {
+                if (cell.cell[stopper] != sortedTiles[i].cell[stopper]) {
+                    return null;
+                }
+                if (Math.abs(cell.cell[direction] - sortedTiles[i].cell[direction]) != 1) {
+                    return null;
+                }
+                cell = sortedTiles[i];
+                word += wm.scribble.tile.getLetter(cell);
+            }
+            return {
+                start: { row: sortedTiles[0].cell.y, col: sortedTiles[0].cell.x},
+                end: {row: sortedTiles[sortedTiles.length - 1].cell.y, col: sortedTiles[sortedTiles.length - 1].cell.x},
+                word: word
+            };
+        }
+        return null;
+    };
+
+    this.clearSelection = function() {
+        for (var i = 0, len = selectedTiles.length; i < len; i++) {
+            if (selectedTiles[i].pinned) {
+                changeTileSelection(selectedTiles[i], false);
+            }
+        }
+    };
 };
-wm.scribble.Board.prototype = new wm.g.Events();

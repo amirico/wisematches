@@ -53,6 +53,8 @@ asdfsaf<br>
     </tr>
 </table>
 
+<button onclick="board.clearSelection();">Clear</button>
+
 
 <!--
 <div id="playboard">
@@ -64,9 +66,18 @@ asdfsaf<br>
     var board = new wm.scribble.Board();
     board.init();
 
-    board.addListener('selected', function(a, b) {
-        alert('asd')
-    });
+    var f = function(evt) {
+        var word = board.getSelectedWord();
+        if (word != null) {
+            print("start: {" + word.start.row + ", " + word.start.col + "}, end: {" + word.end.row + ", " + word.end.col + "}" + ", " + word.word);
+        } else {
+            print("No selected word");
+        }
+    };
+
+
+    board.addListener('selected', f);
+    board.addListener('deselected', f);
 </script>
 
 </body>
