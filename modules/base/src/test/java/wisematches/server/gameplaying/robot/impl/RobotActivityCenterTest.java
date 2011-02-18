@@ -16,6 +16,7 @@ import wisematches.server.player.computer.robot.RobotType;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.Executor;
 
 import static org.easymock.EasyMock.*;
@@ -159,7 +160,7 @@ public class RobotActivityCenterTest {
 		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
 		replay(executor, brainManager, gameBoard, roomManager);
 
-		gameMoveListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, 1), createPlayerHand(1L)));
+		gameMoveListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(1L)));
 
 		verify(gameBoard, brainManager, roomManager, executor);
 	}

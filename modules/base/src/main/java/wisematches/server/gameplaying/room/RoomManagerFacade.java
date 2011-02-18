@@ -24,15 +24,15 @@ import wisematches.server.gameplaying.board.*;
  *            board.addGamePlayersListener(...);
  *            board.addGameMoveListener(...);
  *            board.addGameStateListener(...);
- *		   } catch(BoardLoadingException ex) {
+ *			} catch(BoardLoadingException ex) {
  *             ; // ignore exception
- *		   }
+ *			}
  *   }
- * <p/>
+ *
  *   public void boardClosed(Room room, long boardId) {
  *   }
  * });
- * <p/>
+ *
  * </pre>
  * <p/>
  * All this code now can be replaced by:
@@ -94,7 +94,7 @@ public interface RoomManagerFacade<B extends GameBoard<S, ?>, S extends GameSett
 	/**
 	 * @param gameId the game id to be opened
 	 * @return the game by specified id
-	 * @throws BoardLoadingException if board can't be loaded by some reasones
+	 * @throws BoardLoadingException if board can't be loaded by some reason
 	 * @see RoomManager#openBoard(long)
 	 */
 	B openBoard(long gameId) throws BoardLoadingException;

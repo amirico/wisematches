@@ -24,24 +24,24 @@
         </property>
     </bean>
 
-    <!--<alias alias="playerManager" name="accountManager"/>-->
-
-    <!--    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="lexicalDictionary" class="wisematches.server.games.dictionary.impl.file.FileDictionaryManager">
+    <bean id="lexicalDictionary" class="wisematches.server.gameplaying.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>
 
-    <bean id="slanglyDictionary" class="wisematches.server.games.dictionary.impl.file.FileDictionaryManager">
+    <bean id="slanglyDictionary" class="wisematches.server.gameplaying.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
         <property name="createEmptyDictionary" value="true"/>
     </bean>
 
-    <bean id="wordGamesDictionaries" class="wisematches.server.games.dictionary.impl.WordGamesDictionariesImpl">
+    <bean id="wordGamesDictionaries" class="wisematches.server.gameplaying.dictionary.impl.WordGamesDictionariesImpl">
         <property name="lexicalManager" ref="lexicalDictionary"/>
         <property name="slanglyManager" ref="slanglyDictionary"/>
+    </bean>
+
+    <!--<alias alias="playerManager" name="accountManager"/>-->
+
+    <!--    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="lockAccountManager" class="wisematches.server.player.locks.impl.HibernateLockAccountManager">

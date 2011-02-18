@@ -37,7 +37,7 @@ public class PlayerInfoServiceImpl extends GenericSecureRemoteService { //implem
         final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
 
         final ShortPlayerInfo bean = new ShortPlayerInfo(playerId, player.getNickname(), getMemberType(player), player.getRating());
-        bean.setMaxRatings(statistic.getNinetyDaysRaingInfo().getHighestRating());
+        bean.setMaxRatings(statistic.getNinetyDaysRatingInfo().getHighestRating());
         bean.setAverageTimePerMove(statistic.getAverageTurnTime());
         bean.setFinishedGames(statistic.getFinishedGames());
         return bean;

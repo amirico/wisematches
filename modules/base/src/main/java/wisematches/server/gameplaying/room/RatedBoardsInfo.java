@@ -1,5 +1,6 @@
 package wisematches.server.gameplaying.room;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -10,10 +11,10 @@ import java.util.NoSuchElementException;
  */
 public class RatedBoardsInfo implements Iterable<RatedBoardsInfo.Record> {
 	private long[] boardIds;
-	private long[] times;
+	private Date[] times;
 	private int[] ratings;
 
-	public RatedBoardsInfo(long[] boardIds, long[] times, int[] ratings) {
+	public RatedBoardsInfo(long[] boardIds, Date[] times, int[] ratings) {
 		if (boardIds == null) {
 			throw new NullPointerException("BoardIds array can't be null");
 		}
@@ -75,13 +76,13 @@ public class RatedBoardsInfo implements Iterable<RatedBoardsInfo.Record> {
 	 */
 	public static final class Record implements Cloneable {
 		private long boardId;
-		private long time;
+		private Date time;
 		private int rating;
 
 		public Record() {
 		}
 
-		private Record(long boardId, long time, int rating) {
+		private Record(long boardId, Date time, int rating) {
 			this.boardId = boardId;
 			this.time = time;
 			this.rating = rating;
@@ -91,7 +92,7 @@ public class RatedBoardsInfo implements Iterable<RatedBoardsInfo.Record> {
 			return boardId;
 		}
 
-		public long getTime() {
+		public Date getTime() {
 			return time;
 		}
 
@@ -101,21 +102,22 @@ public class RatedBoardsInfo implements Iterable<RatedBoardsInfo.Record> {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
 
 			Record record = (Record) o;
-			return boardId == record.boardId && rating == record.rating && time == record.time;
+
+			if (boardId != record.boardId) return false;
+			if (rating != record.rating) return false;
+			if (time != null ? !time.equals(record.time) : record.time != null) return false;
+
+			return true;
 		}
 
 		@Override
 		public int hashCode() {
 			int result = (int) (boardId ^ (boardId >>> 32));
-			result = 31 * result + (int) (time ^ (time >>> 32));
+			result = 31 * result + (time != null ? time.hashCode() : 0);
 			result = 31 * result + rating;
 			return result;
 		}

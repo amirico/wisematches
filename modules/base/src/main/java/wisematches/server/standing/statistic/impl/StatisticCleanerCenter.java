@@ -55,7 +55,7 @@ public class StatisticCleanerCenter {
 //                playerStatisticsManager.lockPlayerStatistic(playerId);
 //                try {
 //                    final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(playerId);
-//                    final PlayerRatingInfo ratingInfo = statistic.getYearRaingInfo();
+//                    final PlayerRatingInfo ratingInfo = statistic.getYearRatingInfo();
 //
 ///*
 //                    final long cleanupTime = statistic.getLastCleanupTime();

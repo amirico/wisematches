@@ -3,6 +3,8 @@ package wisematches.server.standing.rating;
 import org.junit.Test;
 import wisematches.server.gameplaying.room.RatedBoardsInfo;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -17,13 +19,14 @@ public class RatingsHistoryTest {
 		final long[] boardIds = {
 				100, 101, 102, 103, 104, 105, 106
 		};
-		final long[] longs = {
-				12, 13, 114, 15, 16, 17, 18
+		final Date[] times = {
+				new Timestamp(12), new Timestamp(13), new Timestamp(114),
+				new Timestamp(15), new Timestamp(16), new Timestamp(17), new Timestamp(18)
 		};
 		final int[] ints = {
 				1, 2, 3, 4, 5, 6, 7
 		};
-		RatedBoardsInfo history = new RatedBoardsInfo(boardIds, longs, ints);
+		RatedBoardsInfo history = new RatedBoardsInfo(boardIds, times, ints);
 
 		final Iterator<RatedBoardsInfo.Record> recordIterator = history.iterator();
 		for (int i = 0; i < 7; i++) {
@@ -31,7 +34,7 @@ public class RatingsHistoryTest {
 
 			final RatedBoardsInfo.Record ratingRecord = recordIterator.next();
 			assertEquals(boardIds[i], ratingRecord.getBoardId());
-			assertEquals(longs[i], ratingRecord.getTime());
+			assertEquals(times[i], ratingRecord.getTime());
 			assertEquals(ints[i], ratingRecord.getRating());
 		}
 

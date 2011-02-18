@@ -1,5 +1,7 @@
 package wisematches.server.gameplaying.cleaner;
 
+import java.util.Date;
+
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
@@ -34,12 +36,12 @@ public enum RemainderType {
 		return reminderPeriod;
 	}
 
-	public long getDelayToRemainder(int daysPerMove, long lastMoveTime) {
+	public long getDelayToRemainder(int daysPerMove, Date lastMoveTime) {
 		final long millisecondsPerMove = daysPerMove * MILLISECOND_IN_DAY;
-		return lastMoveTime + millisecondsPerMove - reminderPeriod - System.currentTimeMillis();
+		return lastMoveTime.getTime() + millisecondsPerMove - reminderPeriod - System.currentTimeMillis();
 	}
 
-	public static RemainderType getNextReminderType(int daysPerMove, long lastMoveTime) {
+	public static RemainderType getNextReminderType(int daysPerMove, Date lastMoveTime) {
 		final RemainderType[] remainedTimes = RemainderType.values();
 		for (RemainderType remainedTime : remainedTimes) {
 			if (remainedTime.getDelayToRemainder(daysPerMove, lastMoveTime) > 0) {

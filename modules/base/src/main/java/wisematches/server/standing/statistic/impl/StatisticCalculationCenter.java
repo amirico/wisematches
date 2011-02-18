@@ -13,6 +13,7 @@ import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticsManager;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -156,10 +157,10 @@ public class StatisticCalculationCenter {
 	}
 
 	protected void updateRatingsInfo(GameBoard board, GamePlayerHand hand, PlayerStatistic statistic) {
-		updateRatingInfo(statistic, statistic.getAllGamesRaingInfo(), board, hand);
-		updateRatingInfo(statistic, statistic.getNinetyDaysRaingInfo(), board, hand);
-		updateRatingInfo(statistic, statistic.getYearRaingInfo(), board, hand);
-		updateRatingInfo(statistic, statistic.getThirtyDaysRaingInfo(), board, hand);
+		updateRatingInfo(statistic, statistic.getAllGamesRatingInfo(), board, hand);
+		updateRatingInfo(statistic, statistic.getNinetyDaysRatingInfo(), board, hand);
+		updateRatingInfo(statistic, statistic.getYearRatingInfo(), board, hand);
+		updateRatingInfo(statistic, statistic.getThirtyDaysRatingInfo(), board, hand);
 	}
 
 	protected void updateRatingInfo(PlayerStatistic statistic, PlayerRatingInfo ri, GameBoard board, GamePlayerHand hand) {
@@ -243,24 +244,24 @@ public class StatisticCalculationCenter {
 	 * @param previousMoveTime the time of previous move
 	 * @param currentMoveTime  the current move time.
 	 */
-	protected void updateTurnsStatistic(PlayerStatistic statistic, long previousMoveTime, long currentMoveTime) {
+	protected void updateTurnsStatistic(PlayerStatistic statistic, Date previousMoveTime, Date currentMoveTime) {
 		statistic.setTurnsCount(statistic.getTurnsCount() + 1);
 		if (log.isDebugEnabled()) {
 			log.debug("Increase turns count for player " + statistic.getPlayerId() + " to " + statistic.getTurnsCount());
 		}
 
+		if (previousMoveTime == null) {
+			return;
+		}
+
 		final int turnsCount = statistic.getTurnsCount();
-		final int turnTime = (int) (currentMoveTime - previousMoveTime);
+		final int turnTime = (int) (currentMoveTime.getTime() - previousMoveTime.getTime());
 		if (log.isDebugEnabled()) {
 			log.debug("Turn move time for " + statistic.getPlayerId() + ": " + turnTime);
 		}
 
 		final int averageTurnTime = statistic.getAverageTurnTime();
-		if (previousMoveTime != 0) {
-			statistic.setAverageTurnTime(average(statistic.getAverageTurnTime(), turnTime, turnsCount));
-		} else {
-			statistic.setAverageTurnTime(turnTime);
-		}
+		statistic.setAverageTurnTime(average(averageTurnTime, turnTime, turnsCount));
 
 		if (log.isDebugEnabled()) {
 			log.debug("Update averageTurnTime for player " + statistic.getPlayerId() + " from " + averageTurnTime + " to " +
@@ -282,7 +283,7 @@ public class StatisticCalculationCenter {
 	 * @param board the board to get move.
 	 * @return the previous move time for specified player or start time of player has made no one
 	 */
-	protected long getPreviousMoveTime(GameBoard board) {
+	protected Date getPreviousMoveTime(GameBoard board) {
 		@SuppressWarnings("unchecked")
 		final List<GameMove> list = board.getGameMoves();
 		if (list.size() <= 1) {

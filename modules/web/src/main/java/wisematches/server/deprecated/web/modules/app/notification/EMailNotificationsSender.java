@@ -190,7 +190,7 @@ public class EMailNotificationsSender {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
 			model.put("turnOwnerPlayer", turnOwnerPlayer);
-			model.put("timeoutTime", System.currentTimeMillis() - board.getLastMoveTime());
+			model.put("timeoutTime", System.currentTimeMillis() - board.getLastMoveTime().getTime());
 
 			for (GamePlayerHand hand : playersHands) {
 				if (hand == playerTurn) {

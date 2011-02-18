@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -24,13 +25,13 @@ public class PlayerStatistic implements Serializable {
 	 * The time when this statistic was updated
 	 */
 	@Column(name = "updateTime")
-	private long updateTime;
+	private Date updateTime;
 
 	/**
 	 * Time when last cleanup was performed.
 	 */
 	@Column(name = "lastCleanupTime")
-	private long lastCleanupTime;
+	private Date lastCleanupTime;
 
 	@Column(name = "activeGames")
 	private int activeGames;
@@ -71,7 +72,7 @@ public class PlayerStatistic implements Serializable {
 	 * Time when last move was maden
 	 */
 	@Column(name = "lastMoveTime")
-	private long lastMoveTime;
+	private Date lastMoveTime;
 
 	@Embedded
 	@AttributeOverrides({
@@ -85,7 +86,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "thirtyLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "thirtyAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo thirtyDaysRaingInfo = new PlayerRatingInfo();
+	private PlayerRatingInfo thirtyDaysRatingInfo = new PlayerRatingInfo();
 
 	@Embedded
 	@AttributeOverrides({
@@ -99,7 +100,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "ninetyLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "ninetyAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo ninetyDaysRaingInfo = new PlayerRatingInfo();
+	private PlayerRatingInfo ninetyDaysRatingInfo = new PlayerRatingInfo();
 
 	@Embedded
 	@AttributeOverrides({
@@ -113,7 +114,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "yearLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "yearAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo yearRaingInfo = new PlayerRatingInfo();
+	private PlayerRatingInfo yearRatingInfo = new PlayerRatingInfo();
 
 	@Embedded
 	@AttributeOverrides({
@@ -127,7 +128,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "allLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "allAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo allGamesRaingInfo = new PlayerRatingInfo();
+	private PlayerRatingInfo allGamesRatingInfo = new PlayerRatingInfo();
 
 	/**
 	 * This is Hibernate constructor
@@ -143,11 +144,11 @@ public class PlayerStatistic implements Serializable {
 		return playerId;
 	}
 
-	public long getUpdateTime() {
+	public Date getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(long updateTime) {
+	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -216,35 +217,35 @@ public class PlayerStatistic implements Serializable {
 		this.averageTurnTime = averageTurnTime;
 	}
 
-	public long getLastMoveTime() {
+	public Date getLastMoveTime() {
 		return lastMoveTime;
 	}
 
-	public void setLastMoveTime(long lastMoveTime) {
+	public void setLastMoveTime(Date lastMoveTime) {
 		this.lastMoveTime = lastMoveTime;
 	}
 
-	public PlayerRatingInfo getThirtyDaysRaingInfo() {
-		return thirtyDaysRaingInfo;
+	public PlayerRatingInfo getThirtyDaysRatingInfo() {
+		return thirtyDaysRatingInfo;
 	}
 
-	public PlayerRatingInfo getNinetyDaysRaingInfo() {
-		return ninetyDaysRaingInfo;
+	public PlayerRatingInfo getNinetyDaysRatingInfo() {
+		return ninetyDaysRatingInfo;
 	}
 
-	public PlayerRatingInfo getYearRaingInfo() {
-		return yearRaingInfo;
+	public PlayerRatingInfo getYearRatingInfo() {
+		return yearRatingInfo;
 	}
 
-	public PlayerRatingInfo getAllGamesRaingInfo() {
-		return allGamesRaingInfo;
+	public PlayerRatingInfo getAllGamesRatingInfo() {
+		return allGamesRatingInfo;
 	}
 
-	public long getLastCleanupTime() {
+	public Date getLastCleanupTime() {
 		return lastCleanupTime;
 	}
 
-	public void setLastCleanupTime(long lastCleanupTime) {
+	public void setLastCleanupTime(Date lastCleanupTime) {
 		this.lastCleanupTime = lastCleanupTime;
 	}
 }

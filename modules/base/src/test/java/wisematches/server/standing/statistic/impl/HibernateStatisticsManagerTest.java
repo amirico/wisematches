@@ -12,6 +12,7 @@ import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticListener;
 import wisematches.server.standing.statistic.PlayerStatisticsManager;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -115,7 +116,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 
 		statistic.setAverageTurnTime(1);
 		statistic.setDrawGames(2);
-		statistic.setLastMoveTime(3);
+		statistic.setLastMoveTime(new Date(3));
 		statistic.setLostGames(4);
 		statistic.setTimeouts(5);
 		statistic.setTurnsCount(6);
@@ -123,7 +124,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		statistic.setActiveGames(8);
 		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final PlayerRatingInfo ri1 = statistic.getAllGamesRaingInfo();
+		final PlayerRatingInfo ri1 = statistic.getAllGamesRatingInfo();
 		ri1.setHighestRating(1);
 		ri1.setLowestRating(2);
 		ri1.setAverageMovesPerGame(3);
@@ -135,7 +136,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri1.setLowestLostOpponentId(9);
 		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final PlayerRatingInfo ri2 = statistic.getNinetyDaysRaingInfo();
+		final PlayerRatingInfo ri2 = statistic.getNinetyDaysRatingInfo();
 		ri2.setHighestRating(10);
 		ri2.setLowestRating(20);
 		ri2.setAverageMovesPerGame(30);
@@ -147,7 +148,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri2.setLowestLostOpponentId(90);
 		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final PlayerRatingInfo ri3 = statistic.getThirtyDaysRaingInfo();
+		final PlayerRatingInfo ri3 = statistic.getThirtyDaysRatingInfo();
 		ri3.setHighestRating(100);
 		ri3.setLowestRating(200);
 		ri3.setAverageMovesPerGame(300);
@@ -159,7 +160,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		ri3.setLowestLostOpponentId(900);
 		playerStatisticsManager.updatePlayerStatistic(statistic);
 
-		final PlayerRatingInfo ri4 = statistic.getYearRaingInfo();
+		final PlayerRatingInfo ri4 = statistic.getYearRatingInfo();
 		ri4.setHighestRating(1000);
 		ri4.setLowestRating(2000);
 		ri4.setAverageMovesPerGame(3000);
@@ -182,9 +183,9 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(6, s.getTurnsCount());
 		assertEquals(7, s.getWonGames());
 		assertEquals(8, s.getActiveGames());
-		assertTrue(s.getUpdateTime() >= time);
+		assertTrue(s.getUpdateTime().getTime() >= time);
 
-		final PlayerRatingInfo sri1 = s.getAllGamesRaingInfo();
+		final PlayerRatingInfo sri1 = s.getAllGamesRatingInfo();
 		assertEquals(1, sri1.getHighestRating());
 		assertEquals(2, sri1.getLowestRating());
 		assertEquals(3, sri1.getAverageMovesPerGame());
@@ -195,7 +196,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(8, sri1.getLowestLostOpponentRating());
 		assertEquals(9, sri1.getLowestLostOpponentId());
 
-		final PlayerRatingInfo sri2 = s.getNinetyDaysRaingInfo();
+		final PlayerRatingInfo sri2 = s.getNinetyDaysRatingInfo();
 		assertEquals(10, sri2.getHighestRating());
 		assertEquals(20, sri2.getLowestRating());
 		assertEquals(30, sri2.getAverageMovesPerGame());
@@ -206,7 +207,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(80, sri2.getLowestLostOpponentRating());
 		assertEquals(90, sri2.getLowestLostOpponentId());
 
-		final PlayerRatingInfo sri3 = s.getThirtyDaysRaingInfo();
+		final PlayerRatingInfo sri3 = s.getThirtyDaysRatingInfo();
 		assertEquals(100, sri3.getHighestRating());
 		assertEquals(200, sri3.getLowestRating());
 		assertEquals(300, sri3.getAverageMovesPerGame());
@@ -217,7 +218,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		assertEquals(800, sri3.getLowestLostOpponentRating());
 		assertEquals(900, sri3.getLowestLostOpponentId());
 
-		final PlayerRatingInfo sri4 = statistic.getYearRaingInfo();
+		final PlayerRatingInfo sri4 = statistic.getYearRatingInfo();
 		assertEquals(1000, sri4.getHighestRating());
 		assertEquals(2000, sri4.getLowestRating());
 		assertEquals(3000, sri4.getAverageMovesPerGame());

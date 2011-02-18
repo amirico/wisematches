@@ -66,7 +66,7 @@ public class PlayerInfoServiceImplTest {
         value.setLostGames(1);
         value.setDrawGames(0);
         value.setAverageTurnTime(2);
-        value.getNinetyDaysRaingInfo().setHighestRating(1); // 90days
+        value.getNinetyDaysRatingInfo().setHighestRating(1); // 90days
 
         expect(statisticsManager.getPlayerStatistic(13L)).andReturn(value);
         replay(statisticsManager);

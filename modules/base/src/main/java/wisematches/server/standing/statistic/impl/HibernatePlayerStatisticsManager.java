@@ -9,6 +9,7 @@ import wisematches.server.standing.statistic.PlayerStatisticListener;
 import wisematches.server.standing.statistic.PlayerStatisticsManager;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -58,7 +59,7 @@ public class HibernatePlayerStatisticsManager extends HibernateDaoSupport implem
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = false)
 	public void updatePlayerStatistic(PlayerStatistic statistic) {
 		final HibernateTemplate template = getHibernateTemplate();
-		statistic.setUpdateTime(System.currentTimeMillis());
+		statistic.setUpdateTime(new Date());
 		template.saveOrUpdate(statistic);
 		template.flush();
 

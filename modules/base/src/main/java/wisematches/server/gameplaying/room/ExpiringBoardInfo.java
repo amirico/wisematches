@@ -2,6 +2,8 @@ package wisematches.server.gameplaying.room;
 
 import wisematches.server.gameplaying.board.GameBoard;
 
+import java.util.Date;
+
 /**
  * Contains information about expiring board.
  *
@@ -10,13 +12,13 @@ import wisematches.server.gameplaying.board.GameBoard;
 public final class ExpiringBoardInfo {
 	private final long boardId;
 	private final int daysPerMove;
-	private final long lastMoveTime;
+	private final Date lastMoveTime;
 
 	public ExpiringBoardInfo(GameBoard board) {
 		this(board.getBoardId(), board.getGameSettings().getDaysPerMove(), board.getLastMoveTime());
 	}
 
-	public ExpiringBoardInfo(long boardId, int daysPerMove, long lastMoveTime) {
+	public ExpiringBoardInfo(long boardId, int daysPerMove, Date lastMoveTime) {
 		this.boardId = boardId;
 		this.daysPerMove = daysPerMove;
 		this.lastMoveTime = lastMoveTime;
@@ -30,7 +32,7 @@ public final class ExpiringBoardInfo {
 		return daysPerMove;
 	}
 
-	public long getLastMoveTime() {
+	public Date getLastMoveTime() {
 		return lastMoveTime;
 	}
 

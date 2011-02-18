@@ -467,7 +467,7 @@ public class ScribbleBoardTest extends TestCase {
 		ScribblePlayerHand hand = board.getPlayerTrun();
 
 		final MakeWordMove wordMove = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
-		board.processMoveFinished(hand, new GameMove(wordMove, 0, 0, System.currentTimeMillis()));
+		board.processMoveFinished(hand, new GameMove(wordMove, 0, 0, new Date()));
 		assertTrue(board.isBoardTile(0));
 		assertTrue(board.isBoardTile(1));
 		assertTrue(board.isBoardTile(2));

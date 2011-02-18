@@ -41,10 +41,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	protected final List<GameMove> moves = new ArrayList<GameMove>(0);
 
 	@Column(name = "startedDate")
-	private long startedDate;
+	private Date startedDate;
 
 	@Column(name = "finishedDate")
-	private long finishedDate;
+	private Date finishedDate;
 
 	/**
 	 * List of players for this board.
@@ -64,7 +64,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * Time when last move was maden.
 	 */
 	@Column(name = "lastMoveTime")
-	private long lastMoveTime;
+	private Date lastMoveTime;
 
 	/**
 	 * The state of this game.
@@ -121,11 +121,11 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		return boardId;
 	}
 
-	public long getStartedTime() {
+	public Date getStartedTime() {
 		return startedDate;
 	}
 
-	public long getFinishedTime() {
+	public Date getFinishedTime() {
 		return finishedDate;
 	}
 
@@ -290,8 +290,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		final P p = selectFirstPlayer(gameSettings, playersIterator.getPlayerHands());
 		playersIterator.setPlayerTurn(p);
 
-		lastMoveTime = System.currentTimeMillis();
-		startedDate = System.currentTimeMillis();
+		lastMoveTime = new Date();
+		startedDate = new Date();
 
 		fireGameStarted(p);
 	}
@@ -315,7 +315,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		final int points = calculateMovePoints(move);
 		playersIterator.getPlayerTurn().increasePoints(points);
-		lastMoveTime = System.currentTimeMillis();
+		lastMoveTime = new Date();
 
 
 		if (move instanceof PassTurnMove) {
@@ -332,7 +332,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		if (checkGameFinished() || checkGamePassed()) {
 			firePlayerMoved(player, gameMove, null);
 
-			finilizeGame();
+			finalizeGame();
 			final P won = getWonPlayer(playersIterator.getPlayerHands());
 			if (won == null) {
 				fireGameDraw();
@@ -350,8 +350,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 *
 	 * @see #processGameFinished()
 	 */
-	private void finilizeGame() {
-		finishedDate = System.currentTimeMillis();
+	private void finalizeGame() {
+		finishedDate = new Date();
 
 		final int[] ints = processGameFinished();
 		final List<P> list = playersIterator.getPlayerHands();
@@ -379,7 +379,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 				;
 		}
 
-		if (System.currentTimeMillis() - lastMoveTime > gameSettings.getDaysPerMove() * 86400000) {
+		if (System.currentTimeMillis() - lastMoveTime.getTime() > gameSettings.getDaysPerMove() * 86400000) {
 			throw new GameExpiredException();
 		}
 	}
@@ -468,7 +468,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 *
 	 * @return the time of last move in milliseconds.
 	 */
-	public long getLastMoveTime() {
+	public Date getLastMoveTime() {
 		return lastMoveTime;
 	}
 
@@ -541,9 +541,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		if (gameState == GameState.IN_PROGRESS) {
 			gameState = GameState.INTERRUPTED;
-			finilizeGame();
+			finalizeGame();
 
-			//According to requiremens if game was interrupted when terminator should be set as a current player.
+			//According to requirements if game was interrupted when terminator should be set as a current player.
 			playersIterator.setPlayerTurn(hand);
 
 			fireGameInterrupted(hand, byTimeout);
