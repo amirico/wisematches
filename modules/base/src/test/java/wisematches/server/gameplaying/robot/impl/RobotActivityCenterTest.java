@@ -62,13 +62,14 @@ public class RobotActivityCenterTest {
 
 	@Test
 	public void makeTurnTask() throws BoardLoadingException, GameMoveException {
+		final RobotPlayer player = RobotPlayer.valueOf(RobotType.TRAINEE);
+
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(1L));
+		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(player.getId()));
 		replay(gameBoard);
 
-		final RobotPlayer player = createRobotPlayer(1L, RobotType.TRAINEE);
-
-		final RobotBrain robotBrain = createStrictMock(RobotBrain.class);
+		@SuppressWarnings("unchecked")
+		final RobotBrain<GameBoard> robotBrain = createStrictMock(RobotBrain.class);
 		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
@@ -94,14 +95,14 @@ public class RobotActivityCenterTest {
 
 	@Test
 	public void initializeManager() throws BoardLoadingException {
-		final RobotPlayer p1 = createRobotPlayer(1L, RobotType.TRAINEE);
-		final RobotPlayer p2 = createRobotPlayer(2L, RobotType.DULL);
+		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.TRAINEE);
+		final RobotPlayer p2 = RobotPlayer.valueOf(RobotType.DULL);
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
 		expectGameMoveListener(gameBoard);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(1L));
+		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(p1.getId()));
 		expectGameMoveListener(gameBoard);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(2L));
+		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(p2.getId()));
 		replay(gameBoard);
 
 		expect(brainManager.getRobotPlayers()).andReturn(Arrays.asList(p1, p2));
@@ -126,6 +127,8 @@ public class RobotActivityCenterTest {
 
 	@Test
 	public void robotMove() throws BoardLoadingException {
+		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.TRAINEE);
+
 		expect(brainManager.getRobotPlayers()).andReturn(Collections.<RobotPlayer>emptyList());
 		replay(brainManager);
 
@@ -150,7 +153,7 @@ public class RobotActivityCenterTest {
 		expect(roomManager.openBoard(1L)).andReturn(gameBoard);
 		replay(roomManager);
 
-		replay(executor);
+		replay(brainManager, executor);
 
 		boardsListener.boardOpened(ROOM, 1L);
 		verify(gameBoard, brainManager, roomManager, executor);
@@ -160,7 +163,7 @@ public class RobotActivityCenterTest {
 		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
 		replay(executor, brainManager, gameBoard, roomManager);
 
-		gameMoveListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(1L)));
+		gameMoveListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(p1.getId())));
 
 		verify(gameBoard, brainManager, roomManager, executor);
 	}
@@ -191,14 +194,6 @@ public class RobotActivityCenterTest {
 				return null;
 			}
 		});
-	}
-
-	private RobotPlayer createRobotPlayer(long id, RobotType type) {
-		RobotPlayer mock = createMock("Robot" + id, RobotPlayer.class);
-		expect(mock.getId()).andReturn(id).anyTimes();
-		expect(mock.getRobotType()).andReturn(type).anyTimes();
-		replay(mock);
-		return mock;
 	}
 
 	private GamePlayerHand createPlayerHand(long id) {

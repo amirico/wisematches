@@ -67,14 +67,6 @@
         <property name="ratingsManagerDao" ref="ratingsManagerDao"/>
     </bean>
 
-    <bean id="guestPlayerManager" class="wisematches.server.core.guest.GuestPlayerManager"/>
-
-    <bean id="playerManager" class="wisematches.server.player.computer.robot.impl.CompositePlayerManager">
-        <property name="realPlayerManager" ref="accountManager"/>
-        <property name="robotsBrainManager" ref="robotsBrainManager"/>
-        <property name="guestPlayerManager" ref="guestPlayerManager"/>
-    </bean>
-
     <bean id="statisticsCleanerCenter" class="wisematches.server.standing.statistic.impl.StatisticCleanerCenter">
         <property name="playerStatisticsManager" ref="statisticsManager"/>
         <property name="roomsManager" ref="roomsManager"/>
@@ -101,10 +93,5 @@
         &lt;!&ndash; run every morning at 3 AM &ndash;&gt;
         <property name="cronExpression" value="0 0 3 * * ?"/>
     </bean>
-
-    <bean id="gameTimeoutProcessor" class="wisematches.server.gameplaying.cleaner.GameTimeoutTerminator"
-          destroy-method="destroy">
-        <property name="roomsManager" ref="roomsManager"/>
-        <property name="transactionTemplate" ref="transactionTemplateRequiredNew"/>
-    </bean>-->
+    -->
 </beans>
