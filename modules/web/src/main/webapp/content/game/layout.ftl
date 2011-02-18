@@ -3,7 +3,7 @@
 
 <#assign headerTitle="game.header"/>
 
-<@wisematches.html i18n=["login"] scripts=["/content/game/scribble.js"] styles=["/content/game/scribble.css"] title=headerTitle>
+<@wisematches.html scripts=["/content/game/scribble.js"] styles=["/content/game/scribble.css"] title=headerTitle>
     <#include "header.ftl">
     <#include "pages/${pageName}.ftl">
 </@wisematches.html>
