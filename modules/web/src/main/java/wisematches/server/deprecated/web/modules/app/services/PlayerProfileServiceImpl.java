@@ -61,10 +61,10 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
 
         updateBeanInfo(player, bean.getPlayerSettingsBean());
 
-        bean.setAllGamesInfo(cratePlayerRating(statistic.getAllGamesRaingInfo()));
-        bean.setNinetyDaysRaing(cratePlayerRating(statistic.getNinetyDaysRaingInfo()));
-        bean.setThirtyDaysRaing(cratePlayerRating(statistic.getThirtyDaysRaingInfo()));
-        bean.setYearRaing(cratePlayerRating(statistic.getYearRaingInfo()));
+        bean.setAllGamesInfo(cratePlayerRating(statistic.getAllGamesRatingInfo()));
+        bean.setNinetyDaysRaing(cratePlayerRating(statistic.getNinetyDaysRatingInfo()));
+        bean.setThirtyDaysRaing(cratePlayerRating(statistic.getThirtyDaysRatingInfo()));
+        bean.setYearRaing(cratePlayerRating(statistic.getYearRatingInfo()));
 
         bean.setRatingHistoryBean(createRatingsHistory(playerId));
 

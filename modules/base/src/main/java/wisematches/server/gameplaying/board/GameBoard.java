@@ -2,6 +2,7 @@ package wisematches.server.gameplaying.board;
 
 import wisematches.server.player.Player;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,21 +36,21 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @return return time when game was started or {@code null} if game was not started yet.
 	 */
-	long getStartedTime();
+	Date getStartedTime();
 
 	/**
 	 * Returns time when game was finished.
 	 *
 	 * @return return time when game was finished or {@code null} if game is not finished yet.
 	 */
-	long getFinishedTime();
+	Date getFinishedTime();
 
 	/**
 	 * Return time of last move in millisecods.
 	 *
 	 * @return the time of last move in milliseconds.
 	 */
-	long getLastMoveTime();
+	Date getLastMoveTime();
 
 	/**
 	 * Indicates should this game be rated after finished.

@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 /**
- * This implementation of {@code TilesBankingHouse} loades tiles from XML file of following structure:
+ * This implementation of {@code TilesBankingHouse} loaders tiles from XML file of following structure:
  * <pre>
  * &lt;?xml version="1.0" encoding="UTF-8"?&gt;
  * &lt;bank version="1.0"&gt;

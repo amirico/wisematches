@@ -9,6 +9,7 @@ import wisematches.server.standing.statistic.PlayerRatingInfo;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -35,9 +36,9 @@ public class StatisticCalculationCenterTest {
 		replay(move1, move2);
 
 		final GameBoard gb = createStrictMock(GameBoard.class);
-		expect(gb.getGameMoves()).andReturn(Arrays.asList(new GameMove(move1, 0, 0, time - 5000)));
-		expect(gb.getStartedTime()).andReturn(time - 1000);
-		expect(gb.getGameMoves()).andReturn(Arrays.asList(new GameMove(move2, 0, 0, time - 15000), new GameMove(move2, 0, 0, time - 5000)));
+		expect(gb.getGameMoves()).andReturn(Arrays.asList(new GameMove(move1, 0, 0, new Date(time - 5000))));
+		expect(gb.getStartedTime()).andReturn(new Date(time - 1000));
+		expect(gb.getGameMoves()).andReturn(Arrays.asList(new GameMove(move2, 0, 0, new Date(time - 15000)), new GameMove(move2, 0, 0, new Date(time - 5000))));
 		replay(gb);
 
 		// No one move. Returns started time
@@ -52,17 +53,17 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic statistic = new PlayerStatistic(12L);
 		final long moveTime = System.currentTimeMillis();
 
-		calculationCenter.updateTurnsStatistic(statistic, moveTime - 1000, moveTime);
+		calculationCenter.updateTurnsStatistic(statistic, new Date(moveTime - 1000), new Date(moveTime));
 		assertEquals(1, statistic.getTurnsCount());
 		assertEquals(moveTime, statistic.getLastMoveTime());
 		assertEquals(1000, statistic.getAverageTurnTime());
 
-		calculationCenter.updateTurnsStatistic(statistic, moveTime, moveTime + 3000);
+		calculationCenter.updateTurnsStatistic(statistic, new Date(moveTime), new Date(moveTime + 3000));
 		assertEquals(2, statistic.getTurnsCount());
 		assertEquals(moveTime + 3000, statistic.getLastMoveTime());
 		assertEquals((1000 + 3000) / 2, statistic.getAverageTurnTime());
 
-		calculationCenter.updateTurnsStatistic(statistic, moveTime + 3000, moveTime + 8000);
+		calculationCenter.updateTurnsStatistic(statistic, new Date(moveTime + 3000), new Date(moveTime + 8000));
 		assertEquals(3, statistic.getTurnsCount());
 		assertEquals(moveTime + 8000, statistic.getLastMoveTime());
 		assertEquals((1000 + 3000 + 5000) / 3, statistic.getAverageTurnTime());
@@ -71,7 +72,7 @@ public class StatisticCalculationCenterTest {
 	@Test
 	public void test_updateRatingInfo() {
 		final PlayerStatistic statistic = new PlayerStatistic(12L);
-		final PlayerRatingInfo ri = statistic.getAllGamesRaingInfo();
+		final PlayerRatingInfo ri = statistic.getAllGamesRatingInfo();
 
 		{
 			statistic.setLostGames(1);
@@ -79,12 +80,12 @@ public class StatisticCalculationCenterTest {
 			final GamePlayerHand hand2 = new GamePlayerHand(14L, 200, 1400, 3);
 			final GamePlayerHand hand3 = new GamePlayerHand(15L, 300, 1800, 12);
 
-			final GameMove move1 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move2 = new GameMove(new MakeTurnMove(15L), 0, 0, 1);
-			final GameMove move3 = new GameMove(new MakeTurnMove(13L), 0, 0, 1);
-			final GameMove move4 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move5 = new GameMove(new MakeTurnMove(15L), 0, 0, 1);
-			final GameMove move6 = new GameMove(new MakeTurnMove(13L), 0, 0, 1);
+			final GameMove move1 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move2 = new GameMove(new MakeTurnMove(15L), 0, 0, new Date());
+			final GameMove move3 = new GameMove(new MakeTurnMove(13L), 0, 0, new Date());
+			final GameMove move4 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move5 = new GameMove(new MakeTurnMove(15L), 0, 0, new Date());
+			final GameMove move6 = new GameMove(new MakeTurnMove(13L), 0, 0, new Date());
 
 			final GameBoard board = createMock(GameBoard.class);
 			expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();
@@ -110,10 +111,10 @@ public class StatisticCalculationCenterTest {
 			final GamePlayerHand hand2 = new GamePlayerHand(14L, 300, 1400, 25);
 			final GamePlayerHand hand3 = new GamePlayerHand(15L, 100, 1800, -18);
 
-			final GameMove move1 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move2 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move3 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move4 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
+			final GameMove move1 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move2 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move3 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move4 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
 
 			final GameBoard board = createMock(GameBoard.class);
 			expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();
@@ -139,10 +140,10 @@ public class StatisticCalculationCenterTest {
 			final GamePlayerHand hand2 = new GamePlayerHand(14L, 100, 1400, -8);
 			final GamePlayerHand hand3 = new GamePlayerHand(15L, 200, 1800, -18);
 
-			final GameMove move1 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move2 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move3 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
-			final GameMove move4 = new GameMove(new MakeTurnMove(14L), 0, 0, 1);
+			final GameMove move1 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move2 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move3 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
+			final GameMove move4 = new GameMove(new MakeTurnMove(14L), 0, 0, new Date());
 
 			final GameBoard board = createMock(GameBoard.class);
 			expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();

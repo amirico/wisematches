@@ -6,9 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import wisematches.server.gameplaying.board.GameMoveException;
 import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.board.PassTurnMove;
@@ -21,7 +22,7 @@ import wisematches.server.gameplaying.scribble.Word;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
 import wisematches.server.player.Player;
 
-import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.util.*;
 
 import static org.easymock.EasyMock.*;
@@ -31,25 +32,34 @@ import static org.junit.Assert.*;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/config/test-game-modules-config.xml"})
-public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
-	@Resource
+@ContextConfiguration(locations = {
+		"classpath:/config/database-config.xml",
+		"classpath:/config/server-base-config.xml",
+		"classpath:/config/game-scribble-config.xml",
+		"classpath:/config/test-game-modules-config.xml"})
+public class ScribbleBoardDaoTest {
+	@Autowired
+	private DataSource dataSource;
+	@Autowired
 	private SessionFactory sessionFactory;
 	@Autowired
 	private ScribbleBoardDao scribbleBoardDao;
 
 	private static final Locale LOCALE = new Locale("ru");
 
+	public ScribbleBoardDaoTest() {
+	}
+
 	@Before
 	public void onSetUp() throws Exception {
 		// This test clear scribble_board and scribble_player tables after execution.
-		deleteFromTables("scribble_board", "scribble_player");
+		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_board", "scribble_player");
 	}
 
 	@After
 	public void onTearDown() throws Exception {
 		// This test clear scribble_board and scribble_player tables after execution.
-		deleteFromTables("scribble_board", "scribble_player");
+		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_board", "scribble_player");
 	}
 
 	@Test
@@ -178,7 +188,7 @@ public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringConte
 		final ExpiringBoardInfo info = collection.iterator().next();
 		assertEquals(sb1.getBoardId(), info.getBoardId());
 		assertEquals(sb1.getGameSettings().getDaysPerMove(), info.getDaysPerMove());
-		assertEquals(sb1.getLastMoveTime(), info.getLastMoveTime());
+		assertDates(sb1.getLastMoveTime(), info.getLastMoveTime());
 	}
 
 	@Test
@@ -217,7 +227,7 @@ public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringConte
 
 		final RatedBoardsInfo.Record record = iter.next();
 		assertEquals(sb1.getBoardId(), record.getBoardId());
-		assertEquals(sb1.getFinishedTime(), record.getTime());
+		assertDates(sb1.getFinishedTime(), record.getTime());
 		assertEquals(sb1.getPlayerHand(p1.getId()).getRating(), record.getRating());
 
 		assertFalse(iter.hasNext());
@@ -276,9 +286,6 @@ public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringConte
 		loaded.makeMove(move4);
 		scribbleBoardDao.saveScribbleBoard(loaded);
 
-		//Test loading board from storage after clearing
-		sessionFactory.getCurrentSession().clear();
-
 		ScribbleBoard loaded2 = checkLoadedDatabase2(loaded);
 		scribbleBoardDao.getHibernateTemplate().delete(loaded2);
 	}
@@ -321,10 +328,10 @@ public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringConte
 		assertEquals(originalSettings.getMaxPlayers(), loadedSettings.getMaxPlayers());
 		assertEquals(originalSettings.getMaxRating(), loadedSettings.getMaxRating());
 		assertEquals(originalSettings.getMinRating(), loadedSettings.getMinRating());
-		assertEquals(originalSettings.getCreateDate(), loadedSettings.getCreateDate());
+		assertDates(originalSettings.getCreateDate(), loadedSettings.getCreateDate());
 
 		assertEquals(originalBoard.getPassesCount(), loadedBoard.getPassesCount());
-		assertEquals(originalBoard.getLastMoveTime(), loadedBoard.getLastMoveTime());
+		assertDates(originalBoard.getLastMoveTime(), loadedBoard.getLastMoveTime());
 		assertEquals(originalBoard.getBoardId(), loadedBoard.getBoardId());
 		assertEquals(originalBoard.getGameState(), loadedBoard.getGameState());
 		assertEquals(GameState.IN_PROGRESS, loadedBoard.getGameState());
@@ -342,12 +349,11 @@ public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringConte
 
 		assertEquals(1, loadedBoard.getGameMoves().size());
 		assertEquals(originalBoard.getGameMoves().get(0), loadedBoard.getGameMoves().get(0));
-		assertTrue(loadedBoard.getGameMoves().get(0).getMoveTime() != 0);
+		assertNotNull(loadedBoard.getGameMoves().get(0).getMoveTime());
 
 		assertEquals("75 tiles must be n bank after restoring", 75, tilesBank.getTilesLimit());
 		return loadedBoard;
 	}
-
 
 	private void checkPlayer(final ScribbleBoard originalBoard, final ScribbleBoard loadedBoard, final long playerId) {
 		assertArrayEquals(originalBoard.getPlayerHand(playerId).getTiles(), loadedBoard.getPlayerHand(playerId).getTiles());
@@ -361,6 +367,10 @@ public class ScribbleBoardDaoTest extends AbstractTransactionalJUnit4SpringConte
 		expect(p.getRating()).andReturn(rating).anyTimes();
 		replay(p);
 		return p;
+	}
+
+	private void assertDates(Date d1, Date d2) {
+		assertEquals((d1.getTime() / 1000) * 1000, (d2.getTime() / 1000) * 1000);
 	}
 }
 

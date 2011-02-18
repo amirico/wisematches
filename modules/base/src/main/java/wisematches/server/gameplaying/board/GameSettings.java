@@ -17,7 +17,7 @@ public abstract class GameSettings implements Serializable {
 	private String title;
 
 	@Column(name = "createDate", updatable = false)
-	private long createDate;
+	private Date createDate;
 
 	@Column(name = "daysPerMove", updatable = false)
 	private int daysPerMove = 3;
@@ -35,8 +35,11 @@ public abstract class GameSettings implements Serializable {
 	@Transient
 	private boolean ratedGame;
 
+	@Transient
+	private boolean scratch;
+
 	public static final int DEFAULT_TIMEOUT_DAYS = 3;
-	private static final int MIN_PLAYERS_COUNT = 2;
+	public static final int MIN_PLAYERS_COUNT = 2;
 
 	/**
 	 * This is Hibernate only constructor. In parent classes it must be declared with package visibility.
@@ -71,10 +74,10 @@ public abstract class GameSettings implements Serializable {
 	}
 
 	protected GameSettings(String title, Date createDate, int maxPlayers, int daysPerMove, int maxRating, int minRating) {
-		this(title, createDate, maxPlayers, daysPerMove, maxRating, minRating, true);
+		this(title, createDate, maxPlayers, daysPerMove, maxRating, minRating, true, false);
 	}
 
-	protected GameSettings(String title, Date createDate, int maxPlayers, int daysPerMove, int maxRating, int minRating, boolean ratedGame) {
+	protected GameSettings(String title, Date createDate, int maxPlayers, int daysPerMove, int maxRating, int minRating, boolean ratedGame, boolean scratch) {
 		if (daysPerMove < 0) {
 			throw new IllegalArgumentException("Turn timeout can't be less than zero.");
 		}
@@ -82,12 +85,13 @@ public abstract class GameSettings implements Serializable {
 			throw new IllegalArgumentException("Minimum player can't be less than two");
 		}
 		this.title = title;
-		this.createDate = createDate.getTime();
+		this.createDate = createDate;
 		this.daysPerMove = daysPerMove;
 		this.maxPlayers = maxPlayers;
 		this.maxRating = maxRating;
 		this.minRating = minRating;
 		this.ratedGame = ratedGame;
+		this.scratch = scratch;
 	}
 
 	/**
@@ -124,7 +128,7 @@ public abstract class GameSettings implements Serializable {
 	 *
 	 * @return the start date for game.
 	 */
-	public long getCreateDate() {
+	public Date getCreateDate() {
 		return createDate;
 	}
 
@@ -166,6 +170,18 @@ public abstract class GameSettings implements Serializable {
 		return ratedGame;
 	}
 
+	/**
+	 * Indicates should be we game stored in database or only in memory.
+	 * <p/>
+	 * Usually games that created by guest mustn't be stored and returns {@code true}. Also blitz games
+	 * can be scratched.
+	 *
+	 * @return {@code true} if game should be stored only in memory and mustn't be stored in a storage.
+	 */
+	public boolean isScratch() {
+		return scratch;
+	}
+
 	protected abstract static class Builder {
 		protected String title;
 		protected Date startDate;
@@ -175,6 +191,7 @@ public abstract class GameSettings implements Serializable {
 		protected int maxRating;
 		protected int minRating;
 		protected boolean ratedGame;
+		protected boolean scratch;
 
 		public abstract GameSettings build();
 
@@ -232,6 +249,14 @@ public abstract class GameSettings implements Serializable {
 
 		public void setRatedGame(boolean ratedGame) {
 			this.ratedGame = ratedGame;
+		}
+
+		public boolean isScratch() {
+			return scratch;
+		}
+
+		public void setScratch(boolean scratch) {
+			this.scratch = scratch;
 		}
 	}
 }

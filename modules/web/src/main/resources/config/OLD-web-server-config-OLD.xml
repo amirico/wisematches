@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <import resource="classpath:/config/game-scribble-config.xml"/>
+    <import resource="classpath:/config/game-scribble-config-old.xml"/>
 
 
     <bean id="rememberTokenDao" class="wisematches.server.deprecated.web.modules.login.tokens.RememberTokenDao">

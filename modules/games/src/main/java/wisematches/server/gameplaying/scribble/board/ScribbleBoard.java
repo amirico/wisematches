@@ -19,6 +19,7 @@ import javax.persistence.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static wisematches.server.gameplaying.scribble.Direction.HORIZONTAL;
@@ -322,7 +323,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			} else {
 				throw new IllegalStateException("Board state can't be restored. Unknown move type: " + type);
 			}
-			moves.add(new GameMove(playerMove, points, moves.size(), time));
+			moves.add(new GameMove(playerMove, points, moves.size(), new Date(time)));
 		}
 	}
 
@@ -375,7 +376,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			boardMoves.put((byte) 0);
 		}
 		boardMoves.putShort((short) gameMove.getPoints());
-		boardMoves.putLong(gameMove.getMoveTime());
+		boardMoves.putLong(gameMove.getMoveTime().getTime());
 	}
 
 	private int byteToInt(byte b) {

@@ -49,7 +49,7 @@ public class WordGamesDictionariesImpl implements WordGamesDictionaries {
 	}
 
 	public Iterator<String> iterateSlanglyWords(Locale locale) throws DictionaryNotFoundException {
-		final IterableDictionary dictionary = (IterableDictionary) slanglyManager.getDictionary(locale);
+		final IterableDictionary dictionary = slanglyManager.getDictionary(locale);
 		return dictionary.iterator();
 	}
 

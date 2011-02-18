@@ -100,7 +100,7 @@ public class AbstractGameBoardTest {
 		board.addPlayer(new MockPlayer(2, 1000));
 		assertEquals(2, board.getPlayersHands().size());
 		assertEquals(GameState.WAITING, board.getGameState());
-		assertTrue(board.getLastMoveTime() == 0);
+		assertNull(board.getLastMoveTime());
 
 		try {
 			board.removePlayer(new MockPlayer(3, 1000));
@@ -115,7 +115,7 @@ public class AbstractGameBoardTest {
 		board.addPlayer(new MockPlayer(2, 1000));
 		board.addPlayer(new MockPlayer(3, 1000));
 		assertEquals(GameState.IN_PROGRESS, board.getGameState());
-		assertTrue(board.getLastMoveTime() != 0);
+		assertNotNull(board.getLastMoveTime());
 
 		try {
 			board.addPlayer(new MockPlayer(4, 1000));
@@ -180,7 +180,7 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_movesListeners() {
-		final GameMove gm = new GameMove(createMock(PlayerMove.class), 10, 1, 1);
+		final GameMove gm = new GameMove(createMock(PlayerMove.class), 10, 1, new Date());
 
 		final GameMoveListener l = createStrictMock(GameMoveListener.class);
 		l.playerMoved(cmp(new GameMoveEvent(board, h1, gm, h3), GMEC, LogicalOperator.EQUAL));
@@ -300,7 +300,7 @@ public class AbstractGameBoardTest {
 		final GameMoveListener l = createStrictMock(GameMoveListener.class);
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTrun().getPlayerId());
-		final GameMove gm1 = new GameMove(m1, 10, 1, System.currentTimeMillis());
+		final GameMove gm1 = new GameMove(m1, 10, 1, new Date());
 		l.playerMoved(cmp(new GameMoveEvent(board, board.getPlayerTrun(), gm1, p.next()), GMEC, LogicalOperator.EQUAL));
 		replay(l);
 
@@ -321,7 +321,7 @@ public class AbstractGameBoardTest {
 		//move passed
 		reset(l);
 		PlayerMove m2 = new PassTurnMove(board.getPlayerTrun().getPlayerId());
-		GameMove gm2 = new GameMove(m2, 2, 2, System.currentTimeMillis());
+		GameMove gm2 = new GameMove(m2, 2, 2, new Date());
 		l.playerMoved(cmp(new GameMoveEvent(board, board.getPlayerTrun(), gm2, p.next()), GMEC, LogicalOperator.EQUAL));
 		replay(l);
 
@@ -370,7 +370,7 @@ public class AbstractGameBoardTest {
 		board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
 
 		assertEquals(GameState.FINISHED, board.getGameState());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 
 		verify(l);
 		assertNull(board.getFinishScore());
@@ -397,7 +397,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameState.DRAW, board.getGameState());
 		assertNull(board.getPlayerTrun());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 
 		verify(l);
 	}
@@ -418,7 +418,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameState.DRAW, board.getGameState());
 		assertNull(board.getPlayerTrun());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 
 		verify(l);
 	}
@@ -444,7 +444,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameState.INTERRUPTED, board.getGameState());
 		assertSame(h1, board.getPlayerTrun());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 	}
 
 	@Test
@@ -461,7 +461,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameState.INTERRUPTED, board.getGameState());
 		assertSame(playerTurn, board.getPlayerTrun());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 	}
 
 	@Test
@@ -473,7 +473,7 @@ public class AbstractGameBoardTest {
 
 		assertFalse(board.isRatedGame());
 		assertEquals(GameState.INTERRUPTED, board.getGameState());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 	}
 
 	@Test
@@ -496,7 +496,7 @@ public class AbstractGameBoardTest {
 
 		assertTrue(board.isRatedGame());
 		assertEquals(GameState.INTERRUPTED, board.getGameState());
-		assertFalse(board.getFinishedTime() == 0);
+		assertNotNull(board.getFinishedTime());
 	}
 
 	public static void increasePlayerPoints(GamePlayerHand h, int points) {

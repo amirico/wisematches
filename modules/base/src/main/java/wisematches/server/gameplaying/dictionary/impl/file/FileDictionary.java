@@ -17,19 +17,15 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileDictionary extends AbstractExtensibleDictionary implements IterableDictionary {
+	private final File source;
 	private final Map<String, Word> words;
 
-	private static final float LOAD_FACTOR = 0.75f;
-	private static final int AVERAGE_WORD_LENGTH = 5;
-
 	private final Lock lockChanges = new ReentrantLock();
-	private final File source;
 
 	public FileDictionary(Locale locale, File source) {
 		super(locale, source.getAbsolutePath());
 		this.source = source;
 
-//        words = new TreeMap<String, Word>((int) ((source.length() / AVERAGE_WORD_LENGTH) * LOAD_FACTOR), LOAD_FACTOR);
 		words = new TreeMap<String, Word>();
 		loadDictionary();
 	}

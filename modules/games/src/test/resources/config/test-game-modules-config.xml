@@ -4,10 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="propertiesPlaceholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:/config/games-server-settings.properties"/>
+        <property name="location" value="classpath:/config/test-games-settings.properties"/>
     </bean>
 
-    <alias name="modulesSessionFactory" alias="sessionFactory"/>
-
-    <import resource="classpath:/config/game-scribble-config.xml"/>
+    <bean id="wordGamesDictionaries"
+          class="wisematches.server.gameplaying.dictionary.impl.resource.ResourceDictionaryManager">
+        <property name="filePostfix" value="properties"/>
+        <property name="filePrefix" value="dictionary"/>
+        <property name="dictionariesPath" value="classpath:/dicts/*"/>
+    </bean>
 </beans>

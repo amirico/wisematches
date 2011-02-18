@@ -18,7 +18,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 
 	public ScribbleBoard getScribbleBoard(long boardId) {
 		final HibernateTemplate template = getHibernateTemplate();
-		return (ScribbleBoard) template.get(ScribbleBoard.class, boardId);
+		return template.get(ScribbleBoard.class, boardId);
 	}
 
 	public void saveScribbleBoard(ScribbleBoard scribbleBoard) {
@@ -121,13 +121,13 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 				});
 
 		final long boardIds[] = new long[list.size()];
-		final long time[] = new long[list.size()];
+		final Date time[] = new Date[list.size()];
 		final int rating[] = new int[list.size()];
 
 		for (int i = 0; i < list.size(); i++) {
 			final Object[] values = list.get(i);
 			boardIds[i] = (Long) values[0];
-			time[i] = (Long) values[1];
+			time[i] = (Date) values[1];
 			rating[i] = (Integer) values[2];
 		}
 		return new RatedBoardsInfo(boardIds, time, rating);

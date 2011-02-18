@@ -32,6 +32,7 @@ public class ScribbleRoomManagerTest {
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 	private ScribbleBoardDao scribbleBoardDao;
+
 	private static final Locale LOCALE = new Locale("en");
 
 	@Before

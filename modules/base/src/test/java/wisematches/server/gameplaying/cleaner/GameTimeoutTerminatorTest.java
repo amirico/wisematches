@@ -10,6 +10,7 @@ import wisematches.server.gameplaying.room.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -44,8 +45,8 @@ public class GameTimeoutTerminatorTest {
 
 		final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
 		expect(searchesEngine.findExpiringBoards()).andReturn(Arrays.asList(
-				new ExpiringBoardInfo(1L, 2, currentTime - 2 * ONE_DAY - 4000),  // more when 2 days
-				new ExpiringBoardInfo(2L, 2, currentTime - 2 * ONE_DAY + 4000)  // not more when 2 days
+				new ExpiringBoardInfo(1L, 2, new Date(currentTime - 2 * ONE_DAY - 4000)),  // more when 2 days
+				new ExpiringBoardInfo(2L, 2, new Date(currentTime - 2 * ONE_DAY + 4000))  // not more when 2 days
 		));
 		replay(searchesEngine);
 
@@ -101,7 +102,7 @@ public class GameTimeoutTerminatorTest {
 
 		final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
 		expect(searchesEngine.findExpiringBoards()).andReturn(Arrays.asList(
-				new ExpiringBoardInfo(1L, 2, currentTime - 2 * ONE_DAY + ONE_HOUR + 4000)
+				new ExpiringBoardInfo(1L, 2, new Date(currentTime - 2 * ONE_DAY + ONE_HOUR + 4000))
 		));
 		replay(searchesEngine);
 

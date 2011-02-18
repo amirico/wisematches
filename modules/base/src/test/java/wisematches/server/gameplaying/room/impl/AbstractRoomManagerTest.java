@@ -302,7 +302,7 @@ public class AbstractRoomManagerTest {
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(GAME_PLAYER_HAND));
 		replay(board);
 
-		final GameMoveEvent moveEvent = new GameMoveEvent(board, new GamePlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, 1), new GamePlayerHand(14L));
+		final GameMoveEvent moveEvent = new GameMoveEvent(board, new GamePlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), new GamePlayerHand(14L));
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
 		expect(dao.loadBoard(1L)).andReturn(board);

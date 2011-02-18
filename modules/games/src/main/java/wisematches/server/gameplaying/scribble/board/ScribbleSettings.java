@@ -58,8 +58,8 @@ public final class ScribbleSettings extends GameSettings {
 		this.language = language;
 	}
 
-	public ScribbleSettings(String title, Date startDate, int maxPlayers, String language, int daysPerMove, int minRating, int maxRating, boolean ratedGame) {
-		super(title, startDate, maxPlayers, daysPerMove, maxRating, minRating, ratedGame);
+	public ScribbleSettings(String title, Date startDate, int maxPlayers, String language, int daysPerMove, int minRating, int maxRating, boolean ratedGame, boolean scratch) {
+		super(title, startDate, maxPlayers, daysPerMove, maxRating, minRating, ratedGame, scratch);
 		this.language = language;
 	}
 
@@ -77,7 +77,7 @@ public final class ScribbleSettings extends GameSettings {
 
 		@Override
 		public ScribbleSettings build() {
-			return new ScribbleSettings(title, startDate, maxPlayers, language, daysPerMove, minRating, maxRating, ratedGame);
+			return new ScribbleSettings(title, startDate, maxPlayers, language, daysPerMove, minRating, maxRating, ratedGame, scratch);
 		}
 
 		public String getLanguage() {

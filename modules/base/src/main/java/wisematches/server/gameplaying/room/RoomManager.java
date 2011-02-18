@@ -13,7 +13,6 @@ import java.util.Collection;
  * from users.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see wisematches.server.core.game.GameController
  */
 public interface RoomManager<B extends GameBoard<S, ?>, S extends GameSettings> {
 	void addRoomSeatesListener(RoomSeatesListener roomListener);

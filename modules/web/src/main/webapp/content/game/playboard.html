@@ -1,7 +1,7 @@
 <html>
 <head>
-    <link type="text/css" rel="stylesheet" href="game.css">
-    <script type="text/javascript" src="game.js"></script>
+    <link type="text/css" rel="stylesheet" href="scribble.css">
+    <script type="text/javascript" src="scribble.js"></script>
 </head>
 <body>
 
@@ -16,8 +16,6 @@ asdfsaf<br>
         <td width="350">
             <div id="scribble">
                 <div id="playboard">
-                    <div id="highlighting"></div>
-
                     <div id="bonuses">
                         <div class="cell bonus-cell-2l" style="left: 44px; top: 0"></div>
                     </div>
@@ -54,6 +52,10 @@ asdfsaf<br>
 </table>
 
 <button onclick="board.clearSelection();">Clear</button>
+<button onclick="board.pinSelectedWord([{number:10, cost:3, letter:'F'}, {number:12, cost:6, letter:'R'}]);">Mark
+    Accepted
+</button>
+<!--<button onclick="board.clearSelection();">Add New Tiles</button>-->
 
 
 <!--
@@ -63,13 +65,22 @@ asdfsaf<br>
 -->
 
 <script type="text/javascript">
+    {
+        {
+            number = 10,cost = 3,letter = 'F'
+        }
+        {
+            number = 12,cost = 6,letter = 'R'
+        }
+    }
+
     var board = new wm.scribble.Board();
     board.init();
 
     var f = function(evt) {
         var word = board.getSelectedWord();
         if (word != null) {
-            print("start: {" + word.start.row + ", " + word.start.col + "}, end: {" + word.end.row + ", " + word.end.col + "}" + ", " + word.word);
+            print("start: {" + word.start.row + ", " + word.start.col + "}, end: {" + word.end.row + ", " + word.end.col + "}" + ", " + word.text + ", " + word.numbers.join());
         } else {
             print("No selected word");
         }
