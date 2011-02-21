@@ -6,7 +6,7 @@
 <table>
     <tr>
         <td style="width: 100%; vertical-align: top; text-align: left;">
-        <#include "/content/info/modelConverter.ftl">
+        <#include "/content/resources.ftl">
         </td>
 
         <td style="vertical-align: top;">

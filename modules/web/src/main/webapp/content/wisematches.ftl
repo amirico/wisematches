@@ -7,7 +7,8 @@
     <title id="page-title"><@message code="${title}"/></title>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 
-    <link rel="stylesheet" type="text/css" href="/content/common/common.css">
+    <link rel="stylesheet" type="text/css" href="/content/resources.css">
+    <link rel="stylesheet" type="text/css" href="/content/wisematches.css">
     <link rel="stylesheet" type="text/css" href="/ext/resources/css/ext-all.css">
     <#list styles as style>
         <link rel="stylesheet" href="${style}">
@@ -20,7 +21,7 @@
     <script type="text/javascript" src="/ext/debug/ext-all-debug.js"></script>
 
     <script type="text/javascript" src="/ext/ext-ux-wm.js"></script>
-    <script type="text/javascript" src="/content/common/common.js"></script>
+    <script type="text/javascript" src="/content/wisematches.js"></script>
 
     <!-- Some extension. TODO: add only for a few pages where it's really required. &ndash;&gt; -->
     <script type="text/javascript" src="/content/account/account.js"></script>

@@ -16,9 +16,11 @@
                             <li <@markSelected "rules"/>>
                                 <a href="/info/rules.html"><@messageCap code="info.rules.scribble.label"/></a>
                             </li>
+                        <#--
                             <li <@markSelected "tournament"/>>
                                 <a href="/info/tournament.html"><@messageCap code="info.rules.tournament.label"/></a>
                             </li>
+-->
                             <li <@markSelected "rating"/>>
                                 <a href="/info/rating.html"><@messageCap code="info.rules.rating.label"/></a>
                             </li>
@@ -82,7 +84,7 @@
             </div>
         </td>
         <td id="info-content" class="x-panel" style="vertical-align: top;">
-        <#include "/content/info/modelConverter.ftl">
+        <#include "/content/resources.ftl">
         </td>
     </tr>
 </table>
