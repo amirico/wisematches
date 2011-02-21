@@ -8,10 +8,10 @@ print = function(msg) {
     c.appendChild(m);
 };
 
-wm = {};
-wm.scribble = {};
+if (wm == null) wm = {};
+if (wm.scribble == null) wm.scribble = {};
 
-wm.g = new function() {
+if (wm.g == null) wm.g = new function() {
     this.createMatrix = function() {
         var m = new Array(15);
         for (var i = 0; i < 15; i++) {

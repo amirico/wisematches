@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<table id="header">
+<table id="game-header">
     <tr>
         <td width="178px" height="72px">
             <img id="header-image" src="/resources/images/logo.png" width="178px" height="72px"/>
@@ -24,7 +24,7 @@
                     <td valign="bottom" align="right" style="white-space: nowrap;">
                         <a class="mb" href="/account/modify.html">Settings</a>
                         |
-                        <a href="/info/index.html">Help</a>
+                        <a href="/info/general.html">Help</a>
                     </td>
                 </tr>
             </table>

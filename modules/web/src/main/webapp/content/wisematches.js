@@ -82,10 +82,10 @@ if (wm.i18n == null) wm.i18n = new function() {
 };
 if (_ == null) var _ = wm.i18n.t;
 
-// Define some utility functions
-if (wm.util == null) wm.util = {};
+wm.util = {};
 
-if (wm.util.url == null) wm.util.url = new function() {
+// Define some utility functions
+wm.util.url = new function() {
     this.redirect = function(url) {
         window.location = url;
     };

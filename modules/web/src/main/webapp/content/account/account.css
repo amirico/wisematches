@@ -1,23 +1,6 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-/* Index styles */
-.info-login-image {
-    float: left;
-    text-align: left;
-    padding-left: 15px;
-}
-
-.info-login-links {
-    font-size: x-small;
-    text-align: right;
-}
-
-.info-login-item li {
-    list-style: circle inside !important;
-    padding-left: 15px;
-}
-
 #registration .group, #recovery .group {
     color: #36C;
     font-weight: bold;

@@ -73,7 +73,7 @@
         <property name="mappings">
             <props>
                 <prop key="/ext/**">extjsResourcesHandler</prop>
-                <prop key="/i18n/game/*.js">clientGameMessageSource</prop>
+                <prop key="/i18n/*.js">clientGameMessageSource</prop>
             </props>
         </property>
     </bean>

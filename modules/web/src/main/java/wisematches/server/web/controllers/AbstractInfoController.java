@@ -37,6 +37,7 @@ public class AbstractInfoController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.info");
 
 	public AbstractInfoController() {
+		this("classpath:/i18n/server/");
 	}
 
 	public AbstractInfoController(String... resourcesPaths) {
