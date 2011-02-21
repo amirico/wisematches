@@ -78,30 +78,30 @@
 }
 
 /* Terms & Policy & Naming styles */
-#info-terms-items li, #info-policy-items li, #info-naming-items li {
+#info-terms-items li, #info-policy-items li, #info-naming-items li, #info-rules-items li {
     list-style: decimal inside;
     padding-bottom: 5px;
 }
 
-.info-terms-item li, .info-policy-item li, .info-naming-item li {
+.info-terms-item li, .info-policy-item li, .info-naming-item li, .info-rules-item li {
     list-style: square inside !important;
     padding-left: 15px;
 }
 
-.info-terms-item .info-terms-item li, .info-policy-item .info-policy-item li, .info-naming-item .info-naming-item li {
+.info-terms-item .info-terms-item li, .info-policy-item .info-policy-item li, .info-naming-item .info-naming-item li, .info-rules-item .info-rules-item li {
     list-style: circle inside !important;
     padding-left: 10px;
 }
 
-.info-terms-item, .info-policy-item, .info-naming-item {
+.info-terms-item, .info-policy-item, .info-naming-item, .info-rules-item {
     display: inline;
 }
 
-.info-terms-label, .info-policy-label, .info-naming-label {
+.info-terms-label, .info-policy-label, .info-naming-label, .info-rules-label {
     display: inline;
 }
 
-.info-terms-description, .info-policy-description, .info-naming-description {
+.info-terms-description, .info-policy-description, .info-naming-description, .info-rules-description {
     display: inline;
 }
 

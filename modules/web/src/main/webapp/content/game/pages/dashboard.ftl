@@ -1,14 +1,14 @@
 <#include "/core.ftl">
 
-This is dashboard
+<table width="100%">
+    <tr>
+        <td width="150px">
+            Adds will be here. Also other information.
+        </td>
+        <td>
+            <div id="dashboard-grid"></div>
+        </td>
+    </tr>
+</table>
 
-<br>
-
-<@security.authorize access="hasRole(\"guest\")">
-<font color="red">asd</font>
-</@security.authorize>
-
-<br>
-
-
-<a href="/account/modify.html">Modify Account</a>
+<script type="text/javascript" src="/content/game/pages/dashboard.js"></script>
