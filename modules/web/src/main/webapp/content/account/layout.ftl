@@ -3,7 +3,7 @@
 
 <#assign headerTitle="account.header" />
 
-<@wisematches.html styles=["/content/account/account.css"] title=headerTitle>
+<@wisematches.html title=headerTitle>
     <#include "header.ftl">
     <#include "pages/${infoId}.ftl">
     <#include "footer.ftl">

@@ -26,7 +26,6 @@ public class AuthenticationController extends AbstractInfoController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 
 	public AuthenticationController() {
-		super("classpath:/i18n/server/account/");
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class AuthenticationController extends AbstractInfoController {
 		enableFullView(model);
 		form.setRememberMe("true"); // by default remember me enabled
 
-		return processLoginPage("info", model, locale);
+		return processLoginPage("info/general", model, locale);
 	}
 
 	@RequestMapping("loginAuth")
@@ -62,7 +61,7 @@ public class AuthenticationController extends AbstractInfoController {
 		} else {
 			result.rejectValue("j_password", "account.login.err.credential");
 		}
-		return processLoginPage("info", model, locale);
+		return processLoginPage("info/general", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=session")
@@ -71,7 +70,7 @@ public class AuthenticationController extends AbstractInfoController {
 		restoreAccountLoginForm(form, session);
 		enableShortView(form, model, true);
 
-		return processLoginPage("session", model, locale);
+		return processLoginPage("account/session", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=status")
@@ -92,7 +91,7 @@ public class AuthenticationController extends AbstractInfoController {
 				result.rejectValue("j_password", "account.login.err.status.expired");
 			}
 		}
-		return processLoginPage("status", model, locale);
+		return processLoginPage("account/status", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=insufficient")
@@ -101,7 +100,7 @@ public class AuthenticationController extends AbstractInfoController {
 		restoreAccountLoginForm(form, session);
 		enableShortView(form, model, false);
 
-		return processLoginPage("insufficient", model, locale);
+		return processLoginPage("account/insufficient", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=system")
@@ -113,7 +112,7 @@ public class AuthenticationController extends AbstractInfoController {
 		final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		log.error("Unknown authentication exception received for " + form, ex);
 
-		return processLoginPage("system", model, locale);
+		return processLoginPage("account/system", model, locale);
 	}
 
 	private void restoreAccountLoginForm(AccountLoginForm form, HttpSession session) {
@@ -144,9 +143,9 @@ public class AuthenticationController extends AbstractInfoController {
 	private String processLoginPage(String page, Model model, Locale locale) {
 		if (!processInfoPage(page, model, locale)) { // process page with a error
 			// if appropriate content for error page not found - process with default value
-			processInfoPage("login", model, locale);
+			processInfoPage("info/general", model, locale);
 		}
-		model.addAttribute("infoId", "login"); // this is CSS class name and FTL page name. Always login.
+		model.addAttribute("infoId", "general"); // this is CSS class name and FTL page name. Always login.
 		return "/content/account/layout";
 	}
 }

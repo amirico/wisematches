@@ -20,7 +20,6 @@ import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
 import wisematches.server.player.*;
 import wisematches.server.security.PlayerSecurityService;
-import wisematches.server.web.controllers.AbstractInfoController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.security.captcha.CaptchaService;
 
@@ -38,7 +37,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/account")
-public class CreateAccountController extends AbstractInfoController {
+public class CreateAccountController {
 	private MailService mailService;
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
@@ -47,10 +46,9 @@ public class CreateAccountController extends AbstractInfoController {
 	private int defaultRating = 1200;
 	private Membership defaultMembership = Membership.BASIC;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
 
 	public CreateAccountController() {
-		super("classpath:/i18n/server/account/");
 	}
 
 	/**
@@ -151,8 +149,8 @@ public class CreateAccountController extends AbstractInfoController {
 
 	@RequestMapping(value = "modify")
 	public String modifyAccountPage(Model model) {
-		model.addAttribute("infoId", "modify");
-		return "/content/account/layout";
+		model.addAttribute("pageName", "modifyAccount");
+		return "/content/game/layout";
 	}
 
 	/**
