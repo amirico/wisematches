@@ -3,8 +3,8 @@
 
 <#assign headerTitle="account.header" />
 
-<@wisematches.html styles=["/content/info/info.css", "/content/account/account.css"] title=headerTitle>
-    <#include "../common/header.ftl">
+<@wisematches.html styles=["/content/account/account.css"] title=headerTitle>
+    <#include "header.ftl">
     <#include "pages/${infoId}.ftl">
-    <#include "../common/footer.ftl">
+    <#include "footer.ftl">
 </@wisematches.html>

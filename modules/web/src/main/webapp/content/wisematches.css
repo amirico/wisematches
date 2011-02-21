@@ -2,13 +2,14 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 body {
-    padding: 10px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
     background-color: white;
     color: black;
     margin: 8px;
 }
 
-body, div, label, span {
+body, div, label, span, td {
     font-family: arial, sans-serif;
     font-size: small;
     line-height: 1.5;

@@ -26,7 +26,7 @@ public class InformationController extends AbstractInfoController {
 		}
 
 		if (webRequest.getParameter("plain") != null) {
-			return "/content/info/modelConverter";
+			return "content/resources";
 		} else {
 			return "/content/info/layout";
 		}

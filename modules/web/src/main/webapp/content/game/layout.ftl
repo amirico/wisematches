@@ -3,8 +3,7 @@
 
 <#assign headerTitle="game.header"/>
 
-<@wisematches.html scripts=["/content/game/scribble.js"] styles=["/content/game/scribble.css"] title=headerTitle>
+<@wisematches.html styles=["/content/game/scribble.css"]  scripts=["/content/game/scribble.js"] title=headerTitle>
     <#include "header.ftl">
     <#include "pages/${pageName}.ftl">
 </@wisematches.html>
-

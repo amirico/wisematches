@@ -18,6 +18,6 @@ import java.util.Locale;
 public class TestController {
 	@RequestMapping("/test")
 	public String infoPages(WebRequest webRequest, Model model, Locale locale) {
-		return "/content/test";
+		return "content/aaaa";
 	}
 }

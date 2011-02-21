@@ -70,11 +70,6 @@
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
-        <url-pattern>/dwr/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>web-app</servlet-name>
         <url-pattern>/ext/*</url-pattern>
     </servlet-mapping>
 

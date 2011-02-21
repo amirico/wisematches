@@ -1,9 +1,19 @@
+<#-- @ftlvariable name="pageName" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <#assign headerTitle="info.header"/>
 
-<@wisematches.html scripts=["/dwr/interface/problemsReportService.js"] styles=["/content/info/info.css"] title=headerTitle>
-    <#include "../common/header.ftl">
-    <#include "body.ftl">
-    <#include "../common/footer.ftl">
+<@wisematches.html title=headerTitle>
+<@security.authorize ifAllGranted="user">
+    <#include "/content/game/header.ftl">
+</@security.authorize>
+<@security.authorize ifNotGranted="user">
+    <#include "/content/account/header.ftl">
+</@security.authorize>
+
+    <#include "helpCenter.ftl">
+
+<@security.authorize ifNotGranted="user">
+    <#include "/content/account/footer.ftl">
+</@security.authorize>
 </@wisematches.html>

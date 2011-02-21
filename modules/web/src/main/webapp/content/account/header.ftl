@@ -1,9 +1,9 @@
 <#-- @ftlvariable name="headerTitle" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<table id="header">
+<table id="header" width="100%" cellpadding="0" cellspacing="0">
     <tr>
-        <td>
+        <td width="178px">
             <img id="header-image" src="/resources/images/logo.png" width="178" height="72"/>
         </td>
         <td style="width: 100%">
