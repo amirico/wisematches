@@ -56,23 +56,12 @@
 
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
 
-    <bean name="extjsResourcesHandler"
-          class="org.springframework.web.servlet.resource.ResourceHttpRequestHandler">
-        <property name="locations">
-            <array>
-                <value>/ext/*</value>
-                <value>classpath:/ext</value>
-            </array>
-        </property>
-    </bean>
-
     <bean id="mappingDriven"
           class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="alwaysUseFullPath" value="true"/>
 
         <property name="mappings">
             <props>
-                <prop key="/ext/**">extjsResourcesHandler</prop>
                 <prop key="/i18n/*.js">clientGameMessageSource</prop>
             </props>
         </property>

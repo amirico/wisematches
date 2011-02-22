@@ -3,14 +3,14 @@
 <#-- @ftlvariable name="showPredefinedUsername" type="java.lang.Boolean" -->
 <#include "/core.ftl">
 
-<table>
+<table width="100%">
     <tr>
-        <td style="width: 100%; vertical-align: top; text-align: left;">
+        <td width="100%" style="vertical-align: top; text-align: left;">
         <#include "/content/resources.ftl">
         </td>
 
-        <td style="vertical-align: top;">
-            <div id="login-navigation" style="width: 270px;">
+        <td width="270" style="vertical-align: top;">
+            <div id="login-navigation">
             <@ext.roundPanel>
             <@ext.roundPanel>
                 <div id="login-panel">

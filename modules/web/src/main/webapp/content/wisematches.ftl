@@ -8,17 +8,16 @@
 
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 
-    <link rel="stylesheet" type="text/css" href="/content/resources.css">
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css">
     <link rel="stylesheet" type="text/css" href="/content/account/account.css">
     <link rel="stylesheet" type="text/css" href="/content/game/scribble.css">
-    <link rel="stylesheet" type="text/css" href="/ext/resources/css/ext-all.css">
-
-    <script type="text/javascript" src="/ext/debug/ext-base-debug.js"></script>
-    <script type="text/javascript" src="/ext/debug/ext-all-debug.js"></script>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui-1.8.9.custom.css"/>
 
     <script type="text/javascript" src="/i18n/${locale}.js"></script>
-    <script type="text/javascript" src="/ext/ext-ux-wm.js"></script>
+
+    <script type="text/javascript" src="/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-ui.js"></script>
+
     <script type="text/javascript" src="/content/wisematches.js"></script>
     <script type="text/javascript" src="/content/game/scribble.js"></script>
     <script type="text/javascript" src="/content/account/account.js"></script>
@@ -31,14 +30,14 @@
 
 <#macro field path>
 <@spring.bind path/>
-<div class="<#if spring.status.error>x-form-invalid-msg field-error<#else>field-ok</#if>">
+<div class="<#if spring.status.error>field-error<#else>field-ok</#if>">
     <#assign status=spring.status>
     <#assign statusValue=spring.stringStatusValue>
 
     <#nested >
 
     <#list status.errorMessages as msg>
-        <div class="x-form-invalid-msg error-msg">${msg}</div>
+        <div class="ui-state-error-text error-msg">${msg}</div>
     </#list>
 </div>
 </#macro>
