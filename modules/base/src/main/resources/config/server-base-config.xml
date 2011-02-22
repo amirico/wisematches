@@ -38,9 +38,8 @@
         <property name="slanglyManager" ref="slanglyDictionary"/>
     </bean>
 
-    <!--<alias alias="playerManager" name="accountManager"/>-->
-
-    <!--    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
+    <!--
+    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -65,5 +64,6 @@
 
     <bean id="countriesManager" class="wisematches.server.testimonial.profile.counties.impl.CSVCountriesManager">
         <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
-    </bean>-->
+    </bean>
+    -->
 </beans>
