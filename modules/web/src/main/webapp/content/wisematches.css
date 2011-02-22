@@ -1,18 +1,17 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
+body, div, label, span, td {
+    font: 13px Arial, sans-serif;
+    line-height: 1.5;
+}
+
 body {
     padding-left: 10px !important;
     padding-right: 10px !important;
     background-color: white;
     color: black;
     margin: 8px;
-}
-
-body, div, label, span, td {
-    font-family: arial, sans-serif;
-    font-size: small;
-    line-height: 1.5;
 }
 
 table {
@@ -42,7 +41,7 @@ form .sample {
 
 #header-welcome-label {
     font-weight: bold;
-    font-size: medium;
+    font-size: 16px;
     color: #003333;
 }
 
@@ -59,8 +58,7 @@ form .sample {
 
 /* Footer CSS declaration */
 #footer {
-    padding-top: 10px;
-    font-size: 1em;
+    margin-top: 10px;
     white-space: nowrap;
     text-align: center;
     height: auto;
@@ -70,38 +68,14 @@ form .sample {
     color: #666666;
 }
 
-.x-panel-round-top .x-panel-tl, .x-panel-round .x-panel-tl {
-    border-bottom: 0 none;
-}
-
-.x-panel-round-top .x-panel-tc, .x-panel-round .x-panel-tc {
-    height: 3px;
-    font-size: 0;
-}
-
-.x-panel-round-top .x-panel-bl {
-    background: transparent url('/ext/resources/images/default/panel/left-right.gif') repeat-y scroll 0 0;
-    padding-left: 1px;
-}
-
-.x-panel-round-top .x-panel-br {
-    background: transparent url('/ext/resources/images/default/panel/left-right.gif') repeat-y scroll right 0;
-    padding-right: 1px;
-}
-
-.msg .x-box-mc {
-    font-size: 14px;
+.ui-widget-content {
+    padding: 5px;
+    background: #DFE8F6 none !important;
 }
 
 .x-btn-text {
     padding-left: 5px !important;
     padding-right: 5px !important;
-}
-
-#msg-div {
-    position: absolute;
-    width: 95%;
-    z-index: 20000;
 }
 
 .x-form-invalid-msg {
@@ -130,3 +104,139 @@ div.space-line {
     color: gray;
 }
 
+.account-button {
+    width: 100%;
+}
+
+#info-page {
+    padding: 10px 3px 3px;
+}
+
+#info-navigation {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#info-navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: nowrap;
+}
+
+#info-navigation ul ul {
+    padding-left: 15px;
+}
+
+#info-navigation ul ul li {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 25px;
+}
+
+#info-navigation #start {
+    text-align: center;
+    line-height: normal;
+    padding: 0;
+}
+
+#info-navigation #start li {
+    padding: 0 0 0 15px;
+}
+
+#info-navigation .separator li {
+    height: 1px;
+    padding-right: 0;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+#info-navigation .selected a {
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+#info-content {
+    padding-left: 0.4em; /*border-left-width: 1px;*/
+}
+
+.info-label {
+    font-weight: bold;
+}
+
+.info-header .info-label {
+    font-size: 26px;
+    color: #551f1f;
+    padding-bottom: 15px;
+    line-height: normal;
+}
+
+.info-description {
+    padding-bottom: 10px;
+}
+
+.info-items {
+    text-align: justify;
+}
+
+/* Terms & Policy & Naming styles */
+#info-terms-items li, #info-policy-items li, #info-naming-items li, #info-rules-items li {
+    list-style: decimal inside;
+    padding-bottom: 5px;
+}
+
+.info-terms-item li, .info-policy-item li, .info-naming-item li, .info-rules-item li {
+    list-style: square inside !important;
+    padding-left: 15px;
+}
+
+.info-terms-item .info-terms-item li, .info-policy-item .info-policy-item li, .info-naming-item .info-naming-item li, .info-rules-item .info-rules-item li {
+    list-style: circle inside !important;
+    padding-left: 10px;
+}
+
+.info-terms-item, .info-policy-item, .info-naming-item, .info-rules-item {
+    display: inline;
+}
+
+.info-terms-label, .info-policy-label, .info-naming-label, .info-rules-label {
+    display: inline;
+}
+
+.info-terms-description, .info-policy-description, .info-naming-description, .info-rules-description {
+    display: inline;
+}
+
+/* About & features styles */
+.info-about-item, .info-features-item {
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.info-about-image, .info-features-image {
+    float: left;
+    width: 48px;
+    height: 48px;
+    padding-right: 10px;
+}
+
+.info-features-description {
+    padding-left: 10px;
+}
+
+.info-general-image {
+    float: left;
+    text-align: left;
+    padding-left: 15px;
+}
+
+.info-general-links {
+    font-size: 11px;
+    text-align: right;
+}
+
+.info-general-item li {
+    list-style: circle inside !important;
+    padding-left: 15px;
+}

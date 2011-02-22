@@ -237,14 +237,3 @@ if (wm.problems == null) wm.problems = new function() {
         problemsWindow.show(this);
     };
 };
-
-// turn on validation errors beside the field globally
-Ext.form.Field.prototype.msgTarget = 'side';
-
-Ext.apply(Ext.form.VTypes, {
-    'emailText' : _('email.err.format')
-});
-
-Ext.onReady(function() {
-    Ext.QuickTips.init();
-});

@@ -1,10 +1,14 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
+#registration form .ui-widget-content {
+    background: none !important;
+}
+
 #registration .group, #recovery .group {
     color: #36C;
     font-weight: bold;
-    font-size: large;
+    font-size: 18px;
     padding-top: 5px;
     padding-bottom: 10px;
 }
@@ -39,30 +43,30 @@
 
 #registration #terms_tabs {
     background-color: #EBEFF9;
-    border-bottom-width: 2px;
-    padding-left: 10px;
+    border-bottom-width: 2px !important; /*padding-left: 10px !important;*/
 }
 
 #registration #terms_panel {
     height: 100%;
-    overflow: auto;
-    border-width: 0 2px 2px 0;
-    padding-left: 5px;
+    overflow: auto; /*padding-left: 5px !important;*/
+    border-width: 0 2px 2px 0 !important;
+    background-color: transparent !important;
 }
 
 #registration #terms_tabs .tab {
     float: left;
-    margin: 5px 10px 3px 10px;
+    margin: 5px 10px 2px 10px;
+    border-width: 0;
 }
 
 #registration #terms_tabs .active {
     text-decoration: none;
     color: black;
-    margin: 0 5px -2px 0;
-    padding: 3px 10px 5px 10px;
     border-width: 2px 2px 0 2px;
+    margin: 0 5px -2px 0;
+    padding: 3px 10px 5px 10px !important;
     font-weight: bold;
-    background-color: white;
+    background-color: white !important;
 }
 
 #login-navigation {
@@ -75,7 +79,7 @@
 
 #login-panel #login-type {
     text-align: center;
-    font-size: larger;
+    font-size: 18px;
     font-weight: bold;
     color: #7a2c2c;
 }
@@ -94,7 +98,7 @@
     padding: 3px;
     cursor: pointer;
     width: 100%;
-    font-size: large;
+    font-size: 18px;
     color: #6a2525;
 }
 

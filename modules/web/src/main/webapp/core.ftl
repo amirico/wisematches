@@ -1,7 +1,7 @@
 <#ftl encoding="UTF-8">
 
 <#import "spring.ftl" as spring />
-<#import "/ext/custom-element.ftl" as ext />
+<#import "/jquery/custom-element.ftl" as ext />
 <#import "/content/wisematches.ftl" as wisematches />
 
 <#macro message code args=[]><#if args?size == 0>${springMacroRequestContext.getMessage(code)}<#else>${springMacroRequestContext.getMessage(code, args)}</#if></#macro>
