@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.server.gameplaying.room.BoardCreationException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
+import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.player.Player;
+import wisematches.server.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/game/dashboard")
 public class DashboardController {
+	private PlayerManager playerManager;
 	private RoomManager<ScribbleBoard, ScribbleSettings> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
@@ -56,21 +59,11 @@ public class DashboardController {
 
 	@ResponseBody
 	@RequestMapping("active")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<DashboardGameForm> loadPlayerGames() {
 		final Player player = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading games for player: " + player);
 		}
-
-/*
-		final CreateScribbleForm form = new CreateScribbleForm();
-		form.setTitle("Test game");
-		form.setDaysPerMove(3);
-		form.setMaxPlayers(2);
-		form.setLanguage("ru");
-		createNewGame(form, null, null);
-*/
 
 		final Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getActiveBoards(player);
 		if (log.isDebugEnabled()) {
@@ -78,14 +71,29 @@ public class DashboardController {
 		}
 
 		List<DashboardGameForm> res = new ArrayList<DashboardGameForm>(activeBoards.size());
-		for (ScribbleBoard activeBoard : activeBoards) {
-			res.add(new DashboardGameForm(activeBoard));
+		for (ScribbleBoard board : activeBoards) {
+			final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
+			final List<PlayerGameForm> players = new ArrayList<PlayerGameForm>(playersHands.size());
+			for (ScribblePlayerHand hand : playersHands) {
+				if (hand != null) {
+					final Player p = playerManager.getPlayer(hand.getPlayerId());
+					players.add(new PlayerGameForm(p.getId(), p.getNickname(), p.getRating(),
+							hand.getPlayerIndex(), hand.getPoints()));
+				}
+			}
+			res.add(new DashboardGameForm(board.getBoardId(), board.getGameSettings(), players));
 		}
 		return res;
 	}
 
 	private Player getCurrentPlayer() {
 		return (Player) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	@Autowired
+	@Qualifier("playerManager")
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	@Autowired
