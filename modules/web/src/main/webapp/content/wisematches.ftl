@@ -15,8 +15,8 @@
 
     <script type="text/javascript" src="/i18n/${locale}.js"></script>
 
-    <script type="text/javascript" src="/jquery/jquery.js"></script>
-    <script type="text/javascript" src="/jquery/jquery-ui.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-1.5.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-ui-1.8.9.custom.min.js"></script>
 
     <script type="text/javascript" src="/content/wisematches.js"></script>
     <script type="text/javascript" src="/content/game/scribble.js"></script>
