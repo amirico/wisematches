@@ -49,7 +49,7 @@
             <element id="library" level="project" name="Maven: org.hibernate:hibernate:3.2.6.ga" />
             <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache:1.6.0" />
             <element id="library" level="project" name="Maven: commons-collections:commons-collections:2.1.1" />
-            <element id="library" level="project" name="Maven: javax.transaction:jta:1.0.1B" />
+            <element id="library" level="project" name="Maven: javax.transaction:jta:1.1" />
             <element id="library" level="project" name="Maven: asm:asm-attrs:1.5.3" />
             <element id="library" level="project" name="Maven: antlr:antlr:2.7.6" />
             <element id="library" level="project" name="Maven: cglib:cglib:2.1_3" />
@@ -668,15 +668,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: javax.transaction:jta:1.0.1B">
+    <library name="Maven: javax.transaction:jta:1.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.0.1B/jta-1.0.1B.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.0.1B/jta-1.0.1B-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.0.1B/jta-1.0.1B-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javax.validation:validation-api:1.0.0.GA">
