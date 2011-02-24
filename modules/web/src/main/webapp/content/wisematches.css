@@ -30,6 +30,14 @@ form .sample {
     line-height: normal;
 }
 
+.css_right {
+    float: right;
+}
+
+.css_left {
+    float: left;
+}
+
 /* Header CSS declaration */
 #header {
     width: 100%

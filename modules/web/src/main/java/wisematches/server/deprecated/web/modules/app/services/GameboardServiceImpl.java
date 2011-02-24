@@ -9,7 +9,7 @@ public class GameboardServiceImpl extends GenericSecureRemoteService { //impleme
     private static final GameboardItemBean[] EMTY_BEANS_ARRAY = new GameboardItemBean[0];
 
     @Transactional(readOnly = true)
-    public GameboardItemBean[] loadPlayerGames(long playerId) {
+    public GameboardItemBean[] showActiveGames(long playerId) {
         final Player player = playerManager.getPlayer(playerId);
 
         final Collection<ScribbleBoard> activeBoards = roomManager.getActiveBoards(player);

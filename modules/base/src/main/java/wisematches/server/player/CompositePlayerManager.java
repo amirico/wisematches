@@ -35,7 +35,7 @@ public class CompositePlayerManager implements PlayerManager {
 		for (Iterator<PlayerManager> iterator = playerManagers.iterator(); iterator.hasNext() && player == null;) {
 			player = iterator.next().getPlayer(playerId);
 		}
-		return null;
+		return player;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class CompositePlayerManager implements PlayerManager {
 		for (Iterator<PlayerManager> iterator = playerManagers.iterator(); iterator.hasNext() && player == null;) {
 			player = iterator.next().findByEmail(email);
 		}
-		return null;
+		return player;
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class CompositePlayerManager implements PlayerManager {
 		for (Iterator<PlayerManager> iterator = playerManagers.iterator(); iterator.hasNext() && player == null;) {
 			player = iterator.next().findByUsername(username);
 		}
-		return null;
+		return player;
 	}
 
 	private final class ThePlayerListener implements PlayerListener {
