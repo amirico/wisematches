@@ -22,7 +22,7 @@ public class PlayboardController {
 	private RoomManager<ScribbleBoard, ScribbleSettings> scribbleRoomManager;
 
 	@RequestMapping("/playboard")
-	public String showPlayboard(@RequestParam("gameId") long gameId, Model model, Locale locale) {
+	public String showPlayboard(@RequestParam("boardId") long gameId, Model model, Locale locale) {
 		try {
 			model.addAttribute("board", scribbleRoomManager.openBoard(gameId));
 		} catch (BoardLoadingException ex) {

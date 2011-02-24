@@ -6,7 +6,7 @@ package wisematches.server.deprecated.web.modules.app.services;
 public class GameboardServiceImplTest {
 /*
     @Test
-    public void loadPlayerGames() {
+    public void showActiveGames() {
         final Player player = createMock(Player.class);
 
         final ScribbleSettings settings = new ScribbleSettings("Title", new Date(), 3, "en", 3, 1000, 3000);
@@ -42,7 +42,7 @@ public class GameboardServiceImplTest {
         service.setPlayerManager(playerManager);
         service.setRoomsManager(roomsManager);
 
-        final GameboardItemBean[] beans = service.loadPlayerGames(13L);
+        final GameboardItemBean[] beans = service.showActiveGames(13L);
         assertEquals(1, beans.length);
 
         verify(roomManager, roomsManager);
