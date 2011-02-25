@@ -1,9 +1,27 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
+#create-game .description {
+    padding-bottom: 15px;
+}
 
-.mb {
-    margin-left: .5em;
+#create-game .ui-widget-content {
+    margin-bottom: 10px;
+}
+
+#create-game .ui-widget-header {
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#create-game .ui-widget-content table {
+    border-spacing: 5px;
+}
+
+#create-game .ui-widget-content td {
+    text-align: left;
+    vertical-align: top;
 }
 
 #game-header {
@@ -15,7 +33,7 @@
     position: relative;
     width: 342px !important;
     height: 366px !important;
-    background-image: url('../../resources/images/scribble/board/scribble_field.png');
+    background-image: url('/resources/images/scribble/board/scribble_field.png');
 }
 
 #playboard {
@@ -48,7 +66,7 @@
     z-index: 3;
     width: 22px !important;
     height: 22px !important;
-    background: url(../../resources/images/scribble/board/tiles.png) no-repeat;
+    background: url(/resources/images/scribble/board/tiles.png) no-repeat;
     position: absolute;
     visibility: hidden;
 }
@@ -69,7 +87,7 @@
     text-align: center;
     display: table-cell;
 
-    background: url(../../resources/images/scribble/board/tiles.png) no-repeat;
+    background: url(/resources/images/scribble/board/tiles.png) no-repeat;
 }
 
 .tile span {
@@ -96,21 +114,36 @@
 }
 
 .bonus-cell-2l {
-    background: url(../../resources/images/scribble/board/bonus_2l.gif) no-repeat center;
+    background: url(/resources/images/scribble/board/bonus_2l.gif) no-repeat center;
 }
 
 .bonus-cell-3l {
-    background: url(../../resources/images/scribble/board/bonus_3l.gif) no-repeat center;
+    background: url(/resources/images/scribble/board/bonus_3l.gif) no-repeat center;
 }
 
 .bonus-cell-2w {
-    background: url(../../resources/images/scribble/board/bonus_2w.gif) no-repeat center;
+    background: url(/resources/images/scribble/board/bonus_2w.gif) no-repeat center;
 }
 
 .bonus-cell-3w {
-    background: url(../../resources/images/scribble/board/bonus_3w.gif) no-repeat center;
+    background: url(/resources/images/scribble/board/bonus_3w.gif) no-repeat center;
 }
 
 .bonus-cell-center {
-    background: url(../../resources/images/scribble/board/bonus_center.png) no-repeat center;
+    background: url(/resources/images/scribble/board/bonus_center.png) no-repeat center;
+}
+
+.dashboard-image-robot {
+    padding-left: 20px;
+    background: url(/resources/images/scribble/dashboard/robot.png) no-repeat left;
+}
+
+.dashboard-image-human {
+    padding-left: 20px;
+    background: url(/resources/images/scribble/dashboard/user.png) transparent no-repeat left;
+}
+
+.dashboard-image-waiting {
+    padding-left: 20px;
+    background: url(/resources/images/scribble/dashboard/waitOpponent.png) no-repeat left;
 }
