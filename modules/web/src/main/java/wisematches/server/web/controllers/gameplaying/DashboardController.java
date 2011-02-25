@@ -69,6 +69,8 @@ public class DashboardController {
 		Collection<ScribbleBoard> b = new ArrayList<ScribbleBoard>();
 		b.addAll(activeBoards);
 		b.addAll(activeBoards);
+		b.addAll(activeBoards);
+		b.addAll(activeBoards);
 		model.addAttribute("player", player);
 		model.addAttribute("activeBoards", b);
 		model.addAttribute("playerManager", playerManager);

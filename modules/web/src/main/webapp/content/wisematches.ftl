@@ -11,12 +11,12 @@
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css">
     <link rel="stylesheet" type="text/css" href="/content/account/account.css">
     <link rel="stylesheet" type="text/css" href="/content/game/scribble.css">
-    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui-1.8.9.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
 
     <script type="text/javascript" src="/i18n/${locale}.js"></script>
 
-    <script type="text/javascript" src="/jquery/jquery-1.5.js"></script>
-    <script type="text/javascript" src="/jquery/jquery-ui-1.8.9.custom.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
 
     <script type="text/javascript" src="/content/wisematches.js"></script>
     <script type="text/javascript" src="/content/game/scribble.js"></script>
