@@ -102,8 +102,6 @@ table.display thead th div.DataTables_sort_wrapper span {
 
 .dataTables_wrapper {
     position: relative;
-    min-height: 302px;
-    _height: 302px;
     clear: both;
 }
 
@@ -252,11 +250,11 @@ table.display tr.even.gradeU {
     background-color: #eee;
 }
 
-tr.odd {
+tr.odd td {
     background-color: #E2E4FF;
 }
 
-tr.even {
+tr.even td {
     background-color: white;
 }
 

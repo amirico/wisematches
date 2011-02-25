@@ -4,45 +4,29 @@
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
 <#include "/core.ftl">
 
-<style type="text/css" title="currentStyle">
-    @import "/jquery/css/table_jui.css";
-    @import "/jquery/css/table_col_reorder.css";
-    @import "/jquery/css/table_cov_vis.css";
-
-    .dataTables_length {
-        width: auto;
-    }
-
-    .dataTables_info {
-        padding-top: 0;
-        width: auto !important;
-    }
-
-    .dataTables_paginate {
-    /*padding-top: 0;*/
-    }
-
-    #dashboard_wrapper .fg-toolbar {
-        font-size: 0.8em
-    }
-
-    #theme_links span {
-        float: left;
-        padding: 2px 10px;
+<style type="text/css">
+    #dashboard th, #dashboard td {
+        padding: 2px 5px;
+        vertical-align: top;
+        white-space: nowrap;
     }
 </style>
 
-<script type="text/javascript" src="/jquery/dataTables.min.js"></script>
-<script type="text/javascript" src="/jquery/dataTables-colVis.min.js"></script>
-<script type="text/javascript" src="/jquery/dataTables-colReorder.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $("#refreshDashboard").button({icons: {primary: 'ui-icon-refresh'}});
 
         $('#dashboard').dataTable({
             "bJQueryUI": true,
             "bStateSave": true,
+            "bFilter": false,
+            "bSort": false,
+            "bSortClasses": false,
             "sDom": '<"H"lCr>t<"F"ip>',
-            "sPaginationType": "full_numbers"
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sEmptyTable": "There are no any games to play.<br> You can <a href='/game/create.html'>create new game</a> or <a href='/game/gameboard.html'>joint to exist game.</a> "
+            }
         });
     });
 </script>
@@ -59,20 +43,16 @@
     </#if>
 </#macro>
 
-<style type="text/css">
-    #dashboard th, #dashboard td {
-        padding: 2px 5px;
-        vertical-align: top;
-        white-space: nowrap;
-    }
-</style>
-
 <table width="100%">
     <tr>
-        <td width="150px">
+        <td width="150px" valign="top">
             Adds will be here. Also other information.
         </td>
-        <td>
+        <td valign="top">
+            <div style="float: right;">
+                <button id="refreshDashboard" onclick="window.location.reload()">Refresh Table</button>
+            </div>
+
             <table id="dashboard" width="100%">
                 <thead>
                 <tr>
@@ -107,7 +87,7 @@
                             <div><b><@message code="game.status.waiting"/></b></div>
                         </#list>
                     </td>
-                    <td>
+                    <td class="center">
                         <#list board.playersHands as hand>
                             <div>${hand.points}</div>
                         </#list>
@@ -118,7 +98,7 @@
                             <div>-</div>
                         </#list>
                     </td>
-                    <td>
+                    <td class="center">
                         <#list board.playersHands as hand>
                             <div>3d</div>
                         </#list>
