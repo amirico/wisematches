@@ -12,19 +12,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.server.gameplaying.room.BoardCreationException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
+import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
-import wisematches.server.web.controllers.ServiceResponse;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -41,22 +40,58 @@ public class DashboardController {
 	}
 
 	@RequestMapping("create")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse createNewGame(@ModelAttribute("gameForm") CreateScribbleForm form,
-										 BindingResult result, Model model) {
-		final Player player = getCurrentPlayer();
-		try {
-			final ScribbleSettings ru = new ScribbleSettings(form.getTitle(), new Date(), form.getMaxPlayers(),
-					form.getLanguage(), form.getDaysPerMove());
-			scribbleRoomManager.createBoard(player, ru);
-		} catch (BoardCreationException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+	public String createGamePage(@ModelAttribute("create") CreateScribbleForm form, Model model) {
+		if (form.getTitle() == null) {
+			form.setTitle("ASDASDF AS");
 		}
-		return ServiceResponse.SUCCESS;
+		model.addAttribute("pageName", "create");
+		return "/content/game/layout";
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
+								   BindingResult result, Model model) {
+		if (log.isInfoEnabled()) {
+			log.info("Create new game: " + form);
+		}
+		final Player player = getCurrentPlayer();
+		if (player == null) {
+			log.info("Player is not authenticated. Redirect to main page.");
+			return "redirect:/account/login.html";
+		}
+
+		if (form.getMaxPlayers() < 2) {
+			result.reject("maxPlayers", "game.create.players.err.min");
+		} else if (form.getMaxPlayers() > 4) {
+			result.reject("maxPlayers", "game.create.players.err.max");
+		}
+
+		if (form.getDaysPerMove() < 2) {
+			result.reject("daysPerMove", "game.create.daysPerMove.err.min");
+		} else if (form.getDaysPerMove() > 14) {
+			result.reject("daysPerMove", "game.create.daysPerMove.err.max");
+		}
+
+		if (Language.byCode(form.getLanguage()) == null) {
+			result.reject("language", "game.create.language.err.unsupported");
+		}
+
+		if (!result.hasErrors()) {
+			try {
+				final ScribbleSettings ru = new ScribbleSettings(form.getTitle(), new Date(), form.getMaxPlayers(), form.getLanguage(), form.getDaysPerMove());
+				final ScribbleBoard board = scribbleRoomManager.createBoard(player, ru);
+				return "redirect:/game/playboard.html?boardId" + board.getBoardId();
+			} catch (BoardCreationException e) {
+				log.error("Board can't be created from " + form, e);
+				return createGamePage(form, model);
+			}
+		}
+		return createGamePage(form, model);
 	}
 
 	@RequestMapping("/dashboard")
-	public String showActiveGames(Model model, Locale locale, WebRequest request) {
+	public String showActiveGames(Model model) {
 		final Player player = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading games for player: " + player);
@@ -66,13 +101,8 @@ public class DashboardController {
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + activeBoards.size() + " active games");
 		}
-		Collection<ScribbleBoard> b = new ArrayList<ScribbleBoard>();
-		b.addAll(activeBoards);
-		b.addAll(activeBoards);
-		b.addAll(activeBoards);
-		b.addAll(activeBoards);
 		model.addAttribute("player", player);
-		model.addAttribute("activeBoards", b);
+		model.addAttribute("activeBoards", activeBoards);
 		model.addAttribute("playerManager", playerManager);
 		model.addAttribute("pageName", "dashboard");
 		return "/content/game/layout";

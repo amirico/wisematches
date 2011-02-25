@@ -1,5 +1,11 @@
 <#include "/core.ftl">
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        wm.account.loadTermsPage('terms');
+    });
+</script>
+
 <div id="registration">
     <div class="info-header">
         <div class="info-label"><@message code="account.register.label"/></div>
@@ -99,10 +105,11 @@
                             <td>
                             <@wisematches.field path="registration.language">
                                 <select id="language" name="language" style="width: 170px;">
-                                    <option value="en" <#if (locale=="en")>selected="selected"</#if>>English
-                                    </option>
-                                    <option value="ru" <#if (locale=="ru")>selected="selected"</#if>>Русский
-                                    </option>
+                                    <#list ["en", "ru"] as l>
+                                        <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
+                                        <@message code="language.${l}"/>
+                                        </option>
+                                    </#list>
                                 </select>
                             </@wisematches.field>
                                 <input type="hidden" id="timezone" name="timezone" value="0">
@@ -165,9 +172,3 @@
         </tbody>
     </table>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        wm.account.loadTermsPage('terms');
-    });
-</script>

@@ -1,15 +1,25 @@
 package wisematches.server.web.controllers.gameplaying;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class CreateScribbleForm {
+	@NotEmpty(message = "game.create.title.err.blank")
+	@Length(max = 150, message = "game.create.title.err.max")
 	private String title;
+	@NotEmpty(message = "game.create.language.err.blank")
 	private String language;
 	private int daysPerMove;
 	private int maxPlayers;
 	private int minRating;
 	private int maxRating;
+	private String opponents;
+
+	public CreateScribbleForm() {
+	}
 
 	public String getTitle() {
 		return title;
@@ -57,6 +67,14 @@ public class CreateScribbleForm {
 
 	public void setMaxRating(int maxRating) {
 		this.maxRating = maxRating;
+	}
+
+	public String getOpponents() {
+		return opponents;
+	}
+
+	public void setOpponents(String opponents) {
+		this.opponents = opponents;
 	}
 
 	@Override
