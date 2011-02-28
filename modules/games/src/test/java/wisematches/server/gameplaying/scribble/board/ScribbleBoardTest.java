@@ -1,7 +1,10 @@
 package wisematches.server.gameplaying.scribble.board;
 
 import junit.framework.TestCase;
-import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.board.GameMove;
+import wisematches.server.gameplaying.board.GameMoveException;
+import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.board.PassTurnMove;
 import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
 import wisematches.server.gameplaying.scribble.Direction;
@@ -33,47 +36,41 @@ public class ScribbleBoardTest extends TestCase {
 	private static final Locale LOCALE = new Locale("en");
 
 	protected void setUp() throws Exception {
-		settings = new ScribbleSettings("test", new Date(), 3, "en", 3);
+		settings = new ScribbleSettings("test", "en", 3);
 	}
 
 	public void test_initializeBoard() {
 		final Dictionary dict = createDictionary();
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 103, 1));
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dict);
-		board.setTilesBank(tilesBank);
-
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-
-		assertEquals(0, h1.getTiles().length);
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dict);
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		assertEquals(LETTERS_IN_HAND, h1.getTiles().length);
 		assertEquals(LETTERS_IN_HAND, h2.getTiles().length);
 		assertEquals(LETTERS_IN_HAND, h3.getTiles().length);
-		assertEquals(GameState.IN_PROGRESS, board.getGameState());
+		assertEquals(GameState.ACTIVE, board.getGameState());
 	}
 
 	public void test_smallGamePlay() throws GameMoveException {
 		final Dictionary dictionary = createDictionary("abcde", "qrdts", "skel");
 		final TilesBank tilesBank = createTilesBank("abcd*qrt*1kelt", 19);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setTilesBank(tilesBank);
-		board.setDictionary(dictionary);
-
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		assertEquals(7, h1.getTiles().length);
 		assertEquals(7, h2.getTiles().length);
 		assertEquals(7, h3.getTiles().length);
 		assertEquals(12, tilesBank.getTilesLimit());
 
-		ScribblePlayerHand hand = board.getPlayerTrun();
+		ScribblePlayerHand hand = board.getPlayerTurn();
 		hand.setTiles(tilesBank.getTiles(0, 1, 2, 3, 4, 14, 15));
 		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(4, 7), Direction.VERTICAL,
 				tilesBank.getTile(0),
@@ -85,7 +82,7 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(7, tilesBank.getTilesLimit());
 
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		hand.setTiles(tilesBank.getTiles(5, 6, 7, 8, 9, 16, 17));
 
 		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 5), Direction.HORIZONTAL,
@@ -98,7 +95,7 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(3, tilesBank.getTilesLimit());
 
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		hand.setTiles(tilesBank.getTiles(10, 11, 12, 18, 19, 20, 21));
 		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 9), Direction.VERTICAL,
 				tilesBank.getTile(8).redefine('s'),
@@ -116,33 +113,8 @@ public class ScribbleBoardTest extends TestCase {
 		final Dictionary dictionary = createDictionary();
 		final TilesBank tilesBank = createTilesBank("", 19);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		try {
-			board.checkState();
-			fail("Exception must be here");
-		} catch (GameNotReadyException ex) {
-			;
-		}
-
-		board.setDictionary(dictionary);
-		try {
-			board.checkState();
-			fail("Exception must be here");
-		} catch (GameNotReadyException ex) {
-			;
-		}
-
-		board.setTilesBank(tilesBank);
-		try {
-			board.checkState();
-			fail("Exception must be here");
-		} catch (GameNotReadyException ex) {
-			;
-		}
-
-		board.addPlayer(createMockPlayer(1, 800));
-		board.addPlayer(createMockPlayer(2, 800));
-		board.addPlayer(createMockPlayer(3, 800));
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 		board.checkState();
 	}
 
@@ -150,16 +122,14 @@ public class ScribbleBoardTest extends TestCase {
 		final Dictionary dictionary = createDictionary("abc");
 		final TilesBank tilesBank = createTilesBank("abcabcd", 19);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
-
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		//=============== first move not in center 1
-		ScribblePlayerHand hand = board.getPlayerTrun();
+		ScribblePlayerHand hand = board.getPlayerTurn();
 		MakeWordMove move = new MakeWordMove(hand.getPlayerId(),
 				new Word(new Position(0, 0), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2)));
 		try {
@@ -170,7 +140,7 @@ public class ScribbleBoardTest extends TestCase {
 		}
 
 		//=============== first move not in center 2
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		move = new MakeWordMove(hand.getPlayerId(),
 				new Word(new Position(5, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2)));
 		try {
@@ -181,7 +151,7 @@ public class ScribbleBoardTest extends TestCase {
 		}
 
 		//=============== first move not in center 3
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		move = new MakeWordMove(hand.getPlayerId(),
 				new Word(new Position(7, 5), Direction.VERTICAL, tilesBank.getTiles(0, 1, 2)));
 		try {
@@ -197,7 +167,7 @@ public class ScribbleBoardTest extends TestCase {
 				new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2))));
 		assertEquals(1, board.getGameMoves().size());
 
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		hand.setTiles(tilesBank.getTiles(3, 4, 5));
 		try {
 			board.makeMove(new MakeWordMove(hand.getPlayerId(),
@@ -285,19 +255,18 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 3, 6, 9, 12, 15, 18)); //abcdefg
 		h2.setTiles(tilesBank.getTiles(1, 4, 7, 10, 13, 16, 19));  //abcdefg
 		h3.setTiles(tilesBank.getTiles(2, 5, 8, 11, 14, 17, 20));  //abcdefg
 
-		ScribblePlayerHand hand = board.getPlayerTrun();
+		ScribblePlayerHand hand = board.getPlayerTurn();
 		final Tile[] moveTiles1 = Arrays.copyOf(hand.getTiles(), 4);
 		board.makeMove(new MakeWordMove(hand.getPlayerId(),
 				new Word(new Position(7, 7), Direction.HORIZONTAL, moveTiles1))  //abcd
@@ -307,7 +276,7 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(10, hand.getPoints());
 
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		final Tile[] moveTiles2 = new Tile[3];
 		moveTiles2[0] = moveTiles1[3]; //last 'd' letter
 		System.arraycopy(hand.getTiles(), 4, moveTiles2, 1, 2);
@@ -319,7 +288,7 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(30, hand.getPoints());
 
-		hand = board.getPlayerTrun();
+		hand = board.getPlayerTurn();
 		final Tile[] moveTiles3 = new Tile[8];
 		moveTiles3[0] = moveTiles2[2];// last 'f' letter
 		System.arraycopy(hand.getTiles(), 4, moveTiles3, 1, 3);
@@ -345,13 +314,12 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 3, 6, 9, 12, 15, 18)); //abcdefg
 		h2.setTiles(tilesBank.getTiles(1, 4, 7, 10, 13, 16, 19));  //abcdefg
@@ -367,7 +335,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		assertEquals(13, tilesBank.getTilesLimit());
 
-		final ScribblePlayerHand hand = board.getPlayerTrun();
+		final ScribblePlayerHand hand = board.getPlayerTurn();
 		final Tile[] tiles = hand.getTiles().clone();
 		board.makeMove(new ExchangeTilesMove(hand.getPlayerId(), new int[]{
 				tiles[0].getNumber(), tiles[1].getNumber(), tiles[2].getNumber()
@@ -404,19 +372,18 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 3, 6, 9, 12, 15, 18)); //abcdefg
 		h2.setTiles(tilesBank.getTiles(1, 4, 7, 10, 13, 16, 19));  //abcdefg
 		h3.setTiles(tilesBank.getTiles(2, 5, 8, 11, 14, 17, 20));  //abcdefg
 
-		final ScribblePlayerHand hand = board.getPlayerTrun();
+		final ScribblePlayerHand hand = board.getPlayerTurn();
 		board.makeMove(new PassTurnMove(hand.getPlayerId()));
 
 		assertEquals(7, hand.getTiles().length);
@@ -424,25 +391,24 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(PassTurnMove.class, board.getGameMoves().get(0).getPlayerMove().getClass());
 		assertEquals(13, tilesBank.getTilesLimit());
 
-		assertNotSame(hand, board.getPlayerTrun());
+		assertNotSame(hand, board.getPlayerTurn());
 	}
 
 	public void test_calculateMovePoints() {
 		final Dictionary dictionary = createDictionary();
 		final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 1, 2, 3, 4, 5, 6));
 		h2.setTiles(tilesBank.getTiles(7, 8, 9, 10, 11, 12, 13));
 		h2.setTiles(tilesBank.getTiles(14, 15, 16, 17, 18, 19, 20));
-		ScribblePlayerHand hand = board.getPlayerTrun();
+		ScribblePlayerHand hand = board.getPlayerTurn();
 
 		final MakeWordMove wordMove = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
 		final int points = board.calculateMovePoints(wordMove);
@@ -453,18 +419,17 @@ public class ScribbleBoardTest extends TestCase {
 		final Dictionary dictionary = createDictionary();
 		final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 1, 2, 3, 4, 5, 6));
 		h2.setTiles(tilesBank.getTiles(7, 8, 9, 10, 11, 12, 13));
 		h2.setTiles(tilesBank.getTiles(14, 15, 16, 17, 18, 19, 20));
-		ScribblePlayerHand hand = board.getPlayerTrun();
+		ScribblePlayerHand hand = board.getPlayerTurn();
 
 		final MakeWordMove wordMove = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
 		board.processMoveFinished(hand, new GameMove(wordMove, 0, 0, new Date()));
@@ -478,13 +443,12 @@ public class ScribbleBoardTest extends TestCase {
 		final Dictionary dictionary = createDictionary();
 		final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		//not finished
 		assertFalse(board.checkGameFinished());
@@ -515,13 +479,12 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 3, 6, 9));// abcd: 10 points
 		h2.setTiles(tilesBank.getTiles(9, 12, 15, 18));//defg: 22 points
@@ -554,13 +517,12 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
 
-		final ScribbleBoard board = new ScribbleBoard(settings);
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		final ScribbleBoard board = new ScribbleBoard(settings,
+				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
 
-		h1 = board.addPlayer(createMockPlayer(1, 800));
-		h2 = board.addPlayer(createMockPlayer(2, 800));
-		h3 = board.addPlayer(createMockPlayer(3, 800));
+		h1 = board.getPlayerHand(1);
+		h2 = board.getPlayerHand(2);
+		h3 = board.getPlayerHand(3);
 
 		h1.setTiles(tilesBank.getTiles(0, 3, 6, 9));// abcd: 10 points - should be winner
 		h2.setTiles(tilesBank.getTiles(9, 12, 15, 18));//defg: 22 points
@@ -605,7 +567,7 @@ public class ScribbleBoardTest extends TestCase {
 		return new TilesBank(infos);
 	}
 
-	private Player createMockPlayer(long id, int rating) {
+	public static Player createMockPlayer(long id, int rating) {
 		Player p = createMock(Player.class);
 		expect(p.getId()).andReturn(id).anyTimes();
 		expect(p.getRating()).andReturn(rating).anyTimes();

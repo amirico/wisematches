@@ -52,7 +52,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 					" at " + currentTime);
 		}
 
-		final ScribblePlayerHand robotHand = board.getPlayerTrun();
+		final ScribblePlayerHand robotHand = board.getPlayerTurn();
 
 		final Dictionary dict = board.getDictionary();
 		if (!(dict instanceof IterableDictionary)) {

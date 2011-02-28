@@ -67,9 +67,9 @@ public final class GameMoveEvent {
 	}
 
 	/**
-	 * Returns maden move or {@code null} if turn was passed.
+	 * Returns done move or {@code null} if turn was passed.
 	 *
-	 * @return the maden move or {@code null} if turn was passed.
+	 * @return done move or {@code null} if turn was passed.
 	 */
 	public GameMove getGameMove() {
 		return gameMove;

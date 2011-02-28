@@ -19,7 +19,7 @@ public class GameboardServiceImplTest {
         expect(board.getGameSettings()).andReturn(settings);
         expect(board.getStartedTime()).andReturn(100000L);
         expect(board.getFinishedTime()).andReturn(200000L);
-        expect(board.getPlayerTrun()).andReturn(hand2);
+        expect(board.getPlayerTurn()).andReturn(hand2);
         expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2));
         expect(board.getLastMoveTime()).andReturn(System.currentTimeMillis() - 1000 * 60 * 3); // 3 minutes
         replay(board);
@@ -70,7 +70,7 @@ public class GameboardServiceImplTest {
         expect(board.getGameSettings()).andReturn(settings);
         expect(board.getStartedTime()).andReturn(100000L);
         expect(board.getFinishedTime()).andReturn(200000L);
-        expect(board.getPlayerTrun()).andReturn(hand2);
+        expect(board.getPlayerTurn()).andReturn(hand2);
         expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2));
         expect(board.getLastMoveTime()).andReturn(12323131312321L);
         replay(board);

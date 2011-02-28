@@ -70,7 +70,7 @@ public class GameBoardEventProducer {//implements EventProducer {
 
     public void setRoomManagerFacade(RoomManagerFacade roomManagerFacade) {
         if (this.roomManagerFacade != null) {
-            this.roomManagerFacade.removeGameStateListener(gameBoardListener);
+            this.roomManagerFacade.removeGameBoardListener(gameBoardListener);
             this.roomManagerFacade.removeGameMoveListener(gameBoardListener);
             this.roomManagerFacade.removeGamePlayersListener(gameBoardListener);
         }
@@ -78,7 +78,7 @@ public class GameBoardEventProducer {//implements EventProducer {
         this.roomManagerFacade = roomManagerFacade;
 
         if (this.roomManagerFacade != null) {
-            this.roomManagerFacade.addGameStateListener(gameBoardListener);
+            this.roomManagerFacade.addGameBoardListener(gameBoardListener);
             this.roomManagerFacade.addGameMoveListener(gameBoardListener);
             this.roomManagerFacade.addGamePlayersListener(gameBoardListener);
         }
@@ -89,7 +89,7 @@ public class GameBoardEventProducer {//implements EventProducer {
     }
 
 
-    private class GameBoardListener implements GameMoveListener, GameStateListener, GamePlayersListener {
+    private class GameBoardListener implements GameMoveListener, GameBoardListener, GamePlayersListener {
         public void playerAdded(GameBoard board, Player player) {
             if (notificator == null) {
                 return;

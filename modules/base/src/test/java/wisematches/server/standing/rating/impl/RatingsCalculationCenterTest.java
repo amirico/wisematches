@@ -15,8 +15,8 @@ public class RatingsCalculationCenterTest {
 	private PlayerManager playerManager;
 
 	private RatingSystem ratingSystem;
-	private RoomBoardsListener boardsListener;
-	private GameStateListener gameStateListener;
+	private RoomListener boardsListener;
+	private GameBoardListener gameStateListener;
 
 	private RatingsCalculationCenter calculationCenter;
 
@@ -25,14 +25,14 @@ public class RatingsCalculationCenterTest {
 	@Before
 	public void setUp() {
 		final GameBoard openedBoard = createStrictMock(GameBoard.class);
-		openedBoard.addGameStateListener(isA(GameStateListener.class));
+		openedBoard.addGameBoardListener(isA(GameBoardListener.class));
 		replay(openedBoard);
 
 		roomManager = createStrictMock(RoomManager.class);
-		roomManager.addRoomBoardsListener(isA(RoomBoardsListener.class));
+		roomManager.addRoomBoardsListener(isA(RoomListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				boardsListener = (RoomBoardsListener) getCurrentArguments()[0];
+				boardsListener = (RoomListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -74,10 +74,10 @@ public class RatingsCalculationCenterTest {
 		p3.setRating(1200);
 
 		final GameBoard board = createStrictMock(GameBoard.class);
-		board.addGameStateListener(isA(GameStateListener.class));
+		board.addGameBoardListener(isA(GameBoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				gameStateListener = (GameStateListener) getCurrentArguments()[0];
+				gameStateListener = (GameBoardListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -138,10 +138,10 @@ public class RatingsCalculationCenterTest {
 	@Test
 	public void test_passNoRatedGame() throws BoardLoadingException {
 		final GameBoard board = createStrictMock(GameBoard.class);
-		board.addGameStateListener(isA(GameStateListener.class));
+		board.addGameBoardListener(isA(GameBoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				gameStateListener = (GameStateListener) getCurrentArguments()[0];
+				gameStateListener = (GameBoardListener) getCurrentArguments()[0];
 				return null;
 			}
 		});

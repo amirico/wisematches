@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import wisematches.server.gameplaying.room.BoardCreationException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
@@ -23,7 +22,6 @@ import wisematches.server.player.PlayerManager;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -78,14 +76,14 @@ public class DashboardController {
 		}
 
 		if (!result.hasErrors()) {
-			try {
-				final ScribbleSettings ru = new ScribbleSettings(form.getTitle(), new Date(), form.getMaxPlayers(), form.getLanguage(), form.getDaysPerMove());
-				final ScribbleBoard board = scribbleRoomManager.createBoard(player, ru);
-				return "redirect:/game/playboard.html?boardId" + board.getBoardId();
-			} catch (BoardCreationException e) {
-				log.error("Board can't be created from " + form, e);
-				return createGamePage(form, model);
-			}
+//			try {
+			final ScribbleSettings ru = new ScribbleSettings(form.getTitle(), form.getLanguage(), form.getDaysPerMove());
+//				final ScribbleBoard board = scribbleRoomManager.createBoard(player, ru);
+			return "redirect:/game/playboard.html?boardId" + 12;
+//			} catch (BoardCreationException e) {
+//				log.error("Board can't be created from " + form, e);
+//				return createGamePage(form, model);
+//			}
 		}
 		return createGamePage(form, model);
 	}

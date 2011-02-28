@@ -8,7 +8,10 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.deprecated.web.mail.FromTeam;
 import wisematches.server.deprecated.web.mail.MailSender;
-import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameBoardListener;
+import wisematches.server.gameplaying.board.GameMoveEvent;
+import wisematches.server.gameplaying.board.GamePlayerHand;
 import wisematches.server.gameplaying.cleaner.GameTimeoutEvent;
 import wisematches.server.gameplaying.cleaner.GameTimeoutListener;
 import wisematches.server.gameplaying.cleaner.GameTimeoutTerminator;
@@ -39,7 +42,7 @@ public class EMailNotificationsSender {
 	private GameTimeoutTerminator gameTimeoutProcessor;
 	private PlayerSessionsManager playerSessionsManager;
 
-	private final RoomBoardsListener roomBoardsListener = new TheRoomBoardsListener();
+	private final RoomListener roomListener = new TheRoomListener();
 	private final GameTimeoutListener gameTimeoutListener = new TheGameTimeoutListener();
 	private final ExecutorService executor = Executors.newSingleThreadExecutor(new CustomizableThreadFactory("NotificationsSender"));
 
@@ -103,13 +106,6 @@ public class EMailNotificationsSender {
 //		return p.getPlayerNotifications().isNotificationEnabled(notification);
 	}
 
-	private void listenBoardEvents(GameBoard board) {
-		final TheBoardListener l = new TheBoardListener();
-		board.addGameStateListener(l);
-		board.addGameMoveListener(l);
-		board.addGamePlayersListener(l);
-	}
-
 	public void destroy() {
 		executor.shutdown();
 	}
@@ -118,7 +114,7 @@ public class EMailNotificationsSender {
 		if (this.roomsManager != null) {
 			final Collection<RoomManager> roomManagerCollection = this.roomsManager.getRoomManagers();
 			for (RoomManager roomManager : roomManagerCollection) {
-				roomManager.removeRoomBoardsListener(roomBoardsListener);
+				roomManager.removeRoomBoardsListener(roomListener);
 			}
 		}
 
@@ -130,9 +126,9 @@ public class EMailNotificationsSender {
 				@SuppressWarnings("unchecked")
 				final Collection<GameBoard> collection = roomManager.getOpenedBoards();
 				for (GameBoard board : collection) {
-					listenBoardEvents(board);
+					board.addGameBoardListener(new TheBoardListener());
 				}
-				roomManager.addRoomBoardsListener(roomBoardsListener);
+				roomManager.addRoomBoardsListener(roomListener);
 			}
 		}
 	}
@@ -165,12 +161,15 @@ public class EMailNotificationsSender {
 		this.transactionTemplate = transactionTemplate;
 	}
 
-	private class TheRoomBoardsListener implements RoomBoardsListener {
+	private class TheRoomListener implements RoomListener {
+		@Override
+		public void boardCreated(Room room, long boardId) {
+		}
+
 		public void boardOpened(Room room, long boardId) {
 			try {
 				final GameBoard board = roomsManager.getRoomManager(room).openBoard(boardId);
-
-				listenBoardEvents(board);
+				board.addGameBoardListener(new TheBoardListener());
 			} catch (BoardLoadingException ex) {
 				log.error("Error opening game in boardOpened event processor", ex);
 			}
@@ -181,7 +180,7 @@ public class EMailNotificationsSender {
 		}
 	}
 
-	private class TheBoardListener implements GameStateListener, GameMoveListener, GamePlayersListener {
+	private class TheBoardListener implements GameBoardListener {
 		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
 			@SuppressWarnings("unchecked")
 			final List<GamePlayerHand> playersHands = board.getPlayersHands();
@@ -285,36 +284,6 @@ public class EMailNotificationsSender {
 				sentNotification(GameBoardNotification.PLAYER_MOVED, "app.game.turn.other", hand, model);
 			}
 		}
-
-		public void playerAdded(GameBoard board, Player player) {
-			if (board.getGameSettings().getMaxPlayers() == board.getPlayersHands().size()) {
-				return;
-			}
-			playerChanged(board, player, true, GameBoardNotification.PLAYER_ADDED);
-		}
-
-		public void playerRemoved(GameBoard board, Player player) {
-			playerChanged(board, player, false, GameBoardNotification.PLAYER_REMOVED);
-		}
-
-		private void playerChanged(GameBoard board, Player player, final boolean joined, final GameBoardNotification type) {
-			final Map<String, Object> model = new HashMap<String, Object>();
-			model.put("board", board);
-			model.put("changedPlayer", player);
-			model.put("joined", joined);
-
-			@SuppressWarnings("unchecked")
-			final List<GamePlayerHand> hands = board.getPlayersHands();
-			for (GamePlayerHand hand : hands) {
-				if (hand != null && hand.getPlayerId() != player.getId()) {
-					if (joined) {
-						sentNotification(type, "app.game.player.joined", hand, model);
-					} else {
-						sentNotification(type, "app.game.player.left", hand, model);
-					}
-				}
-			}
-		}
 	}
 
 	private class TheGameTimeoutListener implements GameTimeoutListener {
@@ -326,7 +295,7 @@ public class EMailNotificationsSender {
 				model.put("board", board);
 				model.put("remainderTime", event.getRemainderType());
 
-				final GamePlayerHand turn = board.getPlayerTrun();
+				final GamePlayerHand turn = board.getPlayerTurn();
 				if (turn != null) {
 					sentNotification(GameBoardNotification.TIME_IS_RUNNING, "app.game.time.running", turn, model);
 				}

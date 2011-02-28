@@ -1,6 +1,8 @@
 package wisematches.server.gameplaying.room;
 
-import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameBoardListener;
+import wisematches.server.gameplaying.board.GameSettings;
 
 /**
  * {@code RoomManagerFacade} is a interface according to {@code Facade} design pattern which simplified
@@ -13,20 +15,16 @@ import wisematches.server.gameplaying.board.*;
  *  RoomManager roomManager = ...;
  *  Collection<GameBoard> boards = roomManager.getOpenedBoards();
  *  for (board: boards) {
- *     board.addGamePlayersListener(...);
- *     board.addGameMoveListener(...);
- *     board.addGameStateListener(...);
+ *     board.addGameBoardListener(...);
  *  }
- * roomManager.addRoomBoardsListener(new RoomBoardsListener() {
+ * roomManager.addRoomBoardsListener(new RoomListener() {
  *   public void boardOpened(Room room, long boardId) {
  *        try {
  *            GameBoard board = roomManager.openBoard(boardId);
- *            board.addGamePlayersListener(...);
- *            board.addGameMoveListener(...);
- *            board.addGameStateListener(...);
- *			} catch(BoardLoadingException ex) {
+ *            board.addGameBoardListener(...);
+ *				} catch(BoardLoadingException ex) {
  *             ; // ignore exception
- *			}
+ *				}
  *   }
  *
  *   public void boardClosed(Room room, long boardId) {
@@ -38,9 +36,7 @@ import wisematches.server.gameplaying.board.*;
  * All this code now can be replaced by:
  * <pre>
  *  RoomManagerFacade facade = ...;
- *  facade.addGamePlayersListener(...);
- *  facade.addGameMoveListener(...);
- *  facade.addGameStateListener(...);
+ *  facade.addGameBoardListener(...);
  * </pre>
  * <p/>
  * Instance of this object can be taken from configuration file.
@@ -49,46 +45,16 @@ import wisematches.server.gameplaying.board.*;
  */
 public interface RoomManagerFacade<B extends GameBoard<S, ?>, S extends GameSettings> {
 	/**
-	 * This method equals to {@code RoomManager#addRoomSeatesListener(RoomSeatesListener)}.
-	 *
-	 * @param listener the players listener to be added
-	 * @see RoomManager#addRoomSeatesListener(RoomSeatesListener)
-	 */
-	void addGamePlayersListener(GamePlayersListener listener);
-
-	/**
-	 * This method equals to {@code RoomManager#addRoomSeatesListener(RoomSeatesListener)}.
-	 *
-	 * @param listener the players listener to be removed
-	 * @see RoomManager#removeRoomSeatesListener(RoomSeatesListener)
-	 */
-	void removeGamePlayersListener(GamePlayersListener listener);
-
-
-	/**
-	 * @param listener the game moves listener to be added
-	 * @see wisematches.server.gameplaying.board.GameBoard#addGameMoveListener(wisematches.server.gameplaying.board.GameMoveListener)
-	 */
-	void addGameMoveListener(GameMoveListener listener);
-
-	/**
-	 * @param listener the game moves listener to be removed
-	 * @see wisematches.server.gameplaying.board.GameBoard#removeGameMoveListener(wisematches.server.gameplaying.board.GameMoveListener)
-	 */
-	void removeGameMoveListener(GameMoveListener listener);
-
-
-	/**
 	 * @param listener the game state listener to be added
-	 * @see wisematches.server.gameplaying.board.GameBoard#addGameStateListener(wisematches.server.gameplaying.board.GameStateListener)
+	 * @see wisematches.server.gameplaying.board.GameBoard#addGameBoardListener(wisematches.server.gameplaying.board.GameBoardListener)
 	 */
-	void addGameStateListener(GameStateListener listener);
+	void addGameBoardListener(GameBoardListener listener);
 
 	/**
 	 * @param listener the game state listener to be removed
-	 * @see wisematches.server.gameplaying.board.GameBoard#removeGameStateListener(wisematches.server.gameplaying.board.GameStateListener)
+	 * @see wisematches.server.gameplaying.board.GameBoard#removeGameBoardListener(wisematches.server.gameplaying.board.GameBoardListener)
 	 */
-	void removeGameStateListener(GameStateListener listener);
+	void removeGameBoardListener(GameBoardListener listener);
 
 
 	/**

@@ -7,14 +7,9 @@ package wisematches.server.gameplaying.board;
  */
 public enum GameState {
 	/**
-	 * Game isn't ready for play and waiting new players.
-	 */
-	WAITING,
-
-	/**
 	 * Game in progress now
 	 */
-	IN_PROGRESS,
+	ACTIVE,
 
 	/**
 	 * Game was finished and someone has won

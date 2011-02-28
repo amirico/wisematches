@@ -11,6 +11,9 @@ import java.util.Map;
 public class RoomsManager {
 	private final Map<Room, RoomManager> roomManagers = new HashMap<Room, RoomManager>(0);
 
+	public RoomsManager() {
+	}
+
 	public void setRoomManagers(Collection<RoomManager> roomManagers) {
 		this.roomManagers.clear();
 

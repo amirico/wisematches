@@ -7,20 +7,17 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GamePlayerHand;
-import wisematches.server.gameplaying.board.GameState;
-import wisematches.server.gameplaying.board.GameStateListener;
+import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.BoardCreationException;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
+import wisematches.server.player.Player;
 import wisematches.server.player.computer.robot.RobotPlayer;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -67,13 +64,17 @@ public class SmallRobotsGameTest {
 
 		final ScribbleRoomManager roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
 
-		final ScribbleBoard board = roomManager.createBoard(r1, new ScribbleSettings("This is robots game", new Date(), 3, "en", 3, 0, Integer.MAX_VALUE, false, true));
-		board.addGameStateListener(new GameStateListener() {
-			public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
-			}
-
+		final ScribbleBoard board = roomManager.createBoard(
+				new ScribbleSettings("This is robots game", "en", 3, false, true),
+				Arrays.<Player>asList(r1, r2, r3));
+		board.addGameBoardListener(new GameBoardListener() {
 			public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
 				notifyGameFinished();
+			}
+
+			@Override
+			public void playerMoved(GameMoveEvent event) {
+
 			}
 
 			public void gameDraw(GameBoard board) {
@@ -84,13 +85,10 @@ public class SmallRobotsGameTest {
 				notifyGameFinished();
 			}
 		});
-		board.addPlayer(r2);
-		board.addPlayer(r3);
-
-		assertEquals("Game is not in progress state", GameState.IN_PROGRESS, board.getGameState());
+		assertEquals("Game is not in progress state", GameState.ACTIVE, board.getGameState());
 
 		gameFinishedLock.lock();
-		if (board.getGameState() == GameState.IN_PROGRESS) {
+		if (board.getGameState() == GameState.ACTIVE) {
 			gameFinishedCondition.await();
 		}
 		gameFinishedLock.unlock();
@@ -100,7 +98,7 @@ public class SmallRobotsGameTest {
 		assertTrue("Board is not saved", board.getBoardId() > 0);
 		assertEquals("Board is not finished", GameState.FINISHED, board.getGameState());
 		assertTrue("Board has no one move", board.getGameMoves().size() > 0);
-		assertNull("Board has a player who has a turn", board.getPlayerTrun());
+		assertNull("Board has a player who has a turn", board.getPlayerTurn());
 
 		final int dullPoints = board.getPlayerHand(r1.getId()).getPoints();
 		final int stagerPoints = board.getPlayerHand(r2.getId()).getPoints();

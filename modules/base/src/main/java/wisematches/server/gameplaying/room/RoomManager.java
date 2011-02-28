@@ -2,6 +2,7 @@ package wisematches.server.gameplaying.room;
 
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameSettings;
+import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
 import wisematches.server.player.Player;
 
 import java.util.Collection;
@@ -15,14 +16,9 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface RoomManager<B extends GameBoard<S, ?>, S extends GameSettings> {
-	void addRoomSeatesListener(RoomSeatesListener roomListener);
+	void addRoomBoardsListener(RoomListener roomListener);
 
-	void removeRoomSeatesListener(RoomSeatesListener roomListener);
-
-
-	void addRoomBoardsListener(RoomBoardsListener roomBoardsListener);
-
-	void removeRoomBoardsListener(RoomBoardsListener roomBoardsListener);
+	void removeRoomBoardsListener(RoomListener roomListener);
 
 
 	/**
@@ -33,17 +29,17 @@ public interface RoomManager<B extends GameBoard<S, ?>, S extends GameSettings> 
 	Room getRoomType();
 
 	/**
-	 * Creates new game board with specified settings. Specified player authomatical added to the game.
+	 * Creates new game board with specified settings.
 	 *
-	 * @param owner		player who creating this game
 	 * @param gameSettings the settings for new game
+	 * @param players	  the list of players.
 	 * @return the created game.
 	 * @throws BoardCreationException if board can't be created by some reasones.
 	 */
-	B createBoard(Player owner, S gameSettings) throws BoardCreationException;
+	B createBoard(S gameSettings, Collection<Player> players) throws BoardCreationException;
 
 	/**
-	 * Retruns game by it's id.
+	 * Returns game by it's id.
 	 *
 	 * @param gameId the game id
 	 * @return the game by specified id or <code>null</code> if game is unknown.
@@ -61,14 +57,6 @@ public interface RoomManager<B extends GameBoard<S, ?>, S extends GameSettings> 
 	 * @param board the board to be updated.
 	 */
 	void updateBoard(B board);
-
-	/**
-	 * Returns list of games with <code>GameState.WAITING</code>
-	 *
-	 * @return the list of waiting games.
-	 * @see wisematches.server.gameplaying.board.GameState#WAITING
-	 */
-	Collection<B> getWaitingBoards();
 
 	/**
 	 * Returns collection of all opened boards at this moment. This methods returns copy of boards
@@ -89,12 +77,11 @@ public interface RoomManager<B extends GameBoard<S, ?>, S extends GameSettings> 
 	 */
 	Collection<B> getActiveBoards(Player player);
 
-
 	/**
 	 * Returns searches engine for this room. Searches engine allow do boards search by some criteria,
 	 * for example expired boards.
 	 *
 	 * @return the search engine.
 	 */
-	SearchesEngine<B> getSearchesEngine();
+	BoardsSearchEngine<B> getSearchesEngine();
 }

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class StatisticCalculationCenterTest {
 	private StatisticCalculationCenter calculationCenter;
 
-	private RoomBoardsListener roomBoardsListener;
+	private RoomListener roomListener;
 
 	@Before
 	public void init() {
@@ -375,20 +375,18 @@ public class StatisticCalculationCenterTest {
 		final Room room = Room.valueOf("MOCK");
 
 		final GameBoard board = createStrictMock(GameBoard.class);
-		board.addGameStateListener(isA(GameStateListener.class));
-		board.addGameMoveListener(isA(GameMoveListener.class));
+		board.addGameBoardListener(isA(GameBoardListener.class));
 		replay(board);
 
 		final GameBoard openedBoard = createStrictMock(GameBoard.class);
-		openedBoard.addGameStateListener(isA(GameStateListener.class));
-		openedBoard.addGameMoveListener(isA(GameMoveListener.class));
+		openedBoard.addGameBoardListener(isA(GameBoardListener.class));
 		replay(openedBoard);
 
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
-		roomManager.addRoomBoardsListener(isA(RoomBoardsListener.class));
+		roomManager.addRoomBoardsListener(isA(RoomListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				roomBoardsListener = (RoomBoardsListener) getCurrentArguments()[0];
+				roomListener = (RoomListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -403,7 +401,7 @@ public class StatisticCalculationCenterTest {
 
 		calculationCenter.setRoomsManager(rm);
 
-		roomBoardsListener.boardOpened(room, 13L);
+		roomListener.boardOpened(room, 13L);
 
 		verify(board, roomManager, rm, openedBoard);
 	}

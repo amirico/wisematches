@@ -3,7 +3,7 @@ package wisematches.server.gameplaying.board;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class GameFinishedException extends GameMoveException {
+public class GameFinishedException extends GameStateException {
 	private final GameState gameState;
 
 	public GameFinishedException(GameState gameState) {

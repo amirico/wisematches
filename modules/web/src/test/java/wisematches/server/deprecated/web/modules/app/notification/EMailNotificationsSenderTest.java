@@ -12,11 +12,11 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 		throw new UnsupportedOperationException("Commented");
 	}
 /*
-	private Capture<RoomBoardsListener> roomBoardsListener = new Capture<RoomBoardsListener>();
+	private Capture<RoomListener> roomBoardsListener = new Capture<RoomListener>();
 	private EMailNotificationsSender notificationsSender;
 
 	private Capture<GamePlayersListener> gamePlayersListener = new Capture<GamePlayersListener>();
-	private Capture<GameStateListener> gameStateListener = new Capture<GameStateListener>();
+	private Capture<GameBoardListener> gameStateListener = new Capture<GameBoardListener>();
 	private Capture<GameMoveListener> gameMoveListener = new Capture<GameMoveListener>();
 
 	private Capture<GameTimeoutListener> gameTimeoutListener = new Capture<GameTimeoutListener>();
@@ -50,7 +50,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 
 	public void real_testGameStarted() throws BoardLoadingException {
 		final GameBoard board = createMock(GameBoard.class);
-		board.addGameStateListener(capture(gameStateListener));
+		board.addGameBoardListener(capture(gameStateListener));
 		board.addGameMoveListener(capture(gameMoveListener));
 		board.addGamePlayersListener(capture(gamePlayersListener));
 		replay(board);
@@ -100,7 +100,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 		expect(board.getPlayerHand(h2.getPlayerId())).andReturn(h2).anyTimes();
 		expect(board.getPlayerHand(h3.getPlayerId())).andReturn(h3).anyTimes();
 		expect(board.getWonPlayer()).andReturn(h3).anyTimes();
-		expect(board.getPlayerTrun()).andReturn(h2).anyTimes();
+		expect(board.getPlayerTurn()).andReturn(h2).anyTimes();
 		expect(board.getGameSettings()).andReturn(new ScribbleSettings("This is title", new Date(), 3, "en", 3)).anyTimes();
 		replay(board);
 

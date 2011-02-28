@@ -1,7 +1,5 @@
 package wisematches.server.gameplaying.board;
 
-import wisematches.server.player.Player;
-
 import java.util.Date;
 import java.util.List;
 
@@ -9,19 +7,9 @@ import java.util.List;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
-	void addGamePlayersListener(GamePlayersListener listener);
+	void addGameBoardListener(GameBoardListener listener);
 
-	void removeGamePlayersListener(GamePlayersListener listener);
-
-
-	void addGameMoveListener(GameMoveListener listener);
-
-	void removeGameMoveListener(GameMoveListener listener);
-
-
-	void addGameStateListener(GameStateListener listener);
-
-	void removeGameStateListener(GameStateListener listener);
+	void removeGameBoardListener(GameBoardListener listener);
 
 
 	/**
@@ -62,25 +50,6 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	boolean isRatedGame();
 
 	/**
-	 * Adds specified player to this game.
-	 *
-	 * @param player the player to be added.
-	 * @return the player hand in this game.
-	 * @throws TooManyPlayersException game already full.
-	 */
-	P addPlayer(Player player) throws TooManyPlayersException;
-
-	/**
-	 * Removes player from a game board. Player can be removed only if game has not been started.
-	 *
-	 * @param player the player who must be removed.
-	 * @return hand of removed player
-	 * @throws IllegalStateException	if game has been started.
-	 * @throws IllegalArgumentException if removing player is unknown.
-	 */
-	P removePlayer(Player player);
-
-	/**
 	 * Returns settings of this game.
 	 *
 	 * @return the settings of this game.
@@ -96,7 +65,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @return the active player, player who has terminate a game or {@code null} if game has finished correct.
 	 */
-	P getPlayerTrun();
+	P getPlayerTurn();
 
 	/**
 	 * Makes move for active player and returns points for this turn.

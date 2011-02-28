@@ -5,22 +5,13 @@ package wisematches.server.gameplaying.board;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameStateListener {
+public interface GameBoardListener {
 	/**
-	 * Indicates that game was started
+	 * Indicates that player has made move.
 	 *
-	 * @param board	  the board that was started.
-	 * @param playerTurn the player who has a turn.
+	 * @param event the move event
 	 */
-	void gameStarted(GameBoard board, GamePlayerHand playerTurn);
-
-	/**
-	 * Game was finished and someone has won
-	 *
-	 * @param board	 the board game that was finished
-	 * @param wonPlayer the player who won  @see wisematches.server.games.board.GameState#FINISHED
-	 */
-	void gameFinished(GameBoard board, GamePlayerHand wonPlayer);
+	void playerMoved(GameMoveEvent event);
 
 	/**
 	 * No one player has won.
@@ -29,6 +20,14 @@ public interface GameStateListener {
 	 * @see GameState#DRAW
 	 */
 	void gameDraw(GameBoard board);
+
+	/**
+	 * Game was finished and someone has won
+	 *
+	 * @param board	 the board game that was finished
+	 * @param wonPlayer the player who won  @see wisematches.server.games.board.GameState#FINISHED
+	 */
+	void gameFinished(GameBoard board, GamePlayerHand wonPlayer);
 
 	/**
 	 * Game was interrupted by specified player.

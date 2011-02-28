@@ -7,8 +7,11 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
+import wisematches.server.gameplaying.room.search.ExpiringBoardInfo;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,9 +26,10 @@ public class GameTimeoutTerminator {
 	private final Lock terminatorLock = new ReentrantLock();
 
 	private final Map<Long, GameTerminationTask> scheduledBoards = new HashMap<Long, GameTerminationTask>();
+	private final Map<Room, GameBoardListener> listenerMap = new ConcurrentHashMap<Room, GameBoardListener>();
 
 	private final Timer terminatorTimer = new Timer("GameTimeoutTerminator");
-	private final TheRoomBoardsListener roomBoardsListener = new TheRoomBoardsListener();
+	private final TheRoomListener roomBoardsListener = new TheRoomListener();
 	private final Collection<GameTimeoutListener> listeners = new CopyOnWriteArraySet<GameTimeoutListener>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.terminator");
@@ -57,9 +61,9 @@ public class GameTimeoutTerminator {
 				log.debug("Initialize termination for room " + room);
 			}
 			@SuppressWarnings("unchecked")
-			final SearchesEngine<GameBoard<?, ?>> searchesEngine = manager.getSearchesEngine();
+			final BoardsSearchEngine<GameBoard<?, ?>> boardsSearchEngine = manager.getSearchesEngine();
 
-			final Collection<ExpiringBoardInfo> infoCollection = searchesEngine.findExpiringBoards();
+			final Collection<ExpiringBoardInfo> infoCollection = boardsSearchEngine.findExpiringBoards();
 			for (ExpiringBoardInfo info : infoCollection) {
 				startBoardTerminationTask(room, info);
 			}
@@ -68,10 +72,8 @@ public class GameTimeoutTerminator {
 
 	private void listenBoardChanges(Room room, GameBoard board) {
 		final GameState state = board.getGameState();
-		if (state == GameState.WAITING || state == GameState.IN_PROGRESS) {
-			final TheBoardListener l = new TheBoardListener(room);
-			board.addGameMoveListener(l);
-			board.addGameStateListener(l);
+		if (state == GameState.ACTIVE) {
+			board.addGameBoardListener(new TheBoardListener(room));
 		}
 	}
 
@@ -146,7 +148,7 @@ public class GameTimeoutTerminator {
 
 			final RoomManager roomManager = roomsManager.getRoomManager(room);
 			final GameBoard board = roomManager.openBoard(boardId);
-			if (board.getGameState() == GameState.IN_PROGRESS) {
+			if (board.getGameState() == GameState.ACTIVE) {
 				if (log.isInfoEnabled()) {
 					log.info("Board " + board + " terminated");
 				}
@@ -155,7 +157,7 @@ public class GameTimeoutTerminator {
 			}
 
 			if (log.isInfoEnabled()) {
-				log.info("Board can't be terminated because it's state is not IN_PROGRESS");
+				log.info("Board can't be terminated because it's state is not ACTIVE");
 			}
 		} catch (BoardLoadingException ex) {
 			log.error("Terminator can't load board " + boardId + " for termination ", ex);
@@ -266,10 +268,23 @@ public class GameTimeoutTerminator {
 		}
 	}
 
-	private class TheRoomBoardsListener implements RoomBoardsListener {
+	private class TheRoomListener implements RoomListener {
+		private TheRoomListener() {
+		}
+
+		@Override
+		public void boardCreated(Room room, long boardId) {
+			final RoomManager roomManager = roomsManager.getRoomManager(room);
+			try {
+				final GameBoard board = roomManager.openBoard(boardId);
+				startBoardTerminationTask(room, new ExpiringBoardInfo(board));
+			} catch (BoardLoadingException ex) {
+				log.error("Board can't be loaded in boardOpened event", ex);
+			}
+		}
+
 		public void boardOpened(Room room, long boardId) {
 			final RoomManager roomManager = roomsManager.getRoomManager(room);
-
 			try {
 				final GameBoard board = roomManager.openBoard(boardId);
 				listenBoardChanges(room, board);
@@ -282,7 +297,7 @@ public class GameTimeoutTerminator {
 		}
 	}
 
-	private class TheBoardListener implements GameMoveListener, GameStateListener {
+	private class TheBoardListener implements GameBoardListener {
 		private final Room room;
 
 		private TheBoardListener(Room room) {
@@ -291,10 +306,6 @@ public class GameTimeoutTerminator {
 
 		public void playerMoved(GameMoveEvent event) {
 			startBoardTerminationTask(room, new ExpiringBoardInfo(event.getGameBoard()));
-		}
-
-		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
-			startBoardTerminationTask(room, new ExpiringBoardInfo(board));
 		}
 
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {

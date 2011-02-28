@@ -70,9 +70,9 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
             siteStatisticBean.setOnlinePlayers(playerSessionsManager.getOnlinePlayers().size());
             siteStatisticBean.setRegistredPlayers(accountManager.getRegistredPlayersCount());
 
-            final SearchesEngine searchesEngine = roomManagerFacade.getRoomManager().getSearchesEngine();
+            final BoardsSearchEngine searchesEngine = roomManagerFacade.getRoomManager().getSearchesEngine();
             siteStatisticBean.setCompletedGames(searchesEngine.getGamesCount(EnumSet.of(GameState.INTERRUPTED, GameState.DRAW, GameState.FINISHED)));
-            siteStatisticBean.setGamesInProgress(searchesEngine.getGamesCount(EnumSet.of(GameState.IN_PROGRESS)));
+            siteStatisticBean.setGamesInProgress(searchesEngine.getGamesCount(EnumSet.of(GameState.ACTIVE)));
         } finally {
             statisticLock.writeLock().unlock();
         }
@@ -122,13 +122,13 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
 
     public void setRoomManagerFacade(RoomManagerFacade roomManagerFacade) {
         if (this.roomManagerFacade != null) {
-            this.roomManagerFacade.removeGameStateListener(statisticListener);
+            this.roomManagerFacade.removeGameBoardListener(statisticListener);
         }
 
         this.roomManagerFacade = roomManagerFacade;
 
         if (this.roomManagerFacade != null) {
-            this.roomManagerFacade.addGameStateListener(statisticListener);
+            this.roomManagerFacade.addGameBoardListener(statisticListener);
         }
 
         initSiteStatistics();
@@ -140,7 +140,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
         }
     }
 
-    private class TheStatisticListener implements AccountListener, PlayerOnlineStateListener, GameStateListener {
+    private class TheStatisticListener implements AccountListener, PlayerOnlineStateListener, GameBoardListener {
         @Override
         public void accountCreated(Player player) {
             statisticLock.writeLock().lock();

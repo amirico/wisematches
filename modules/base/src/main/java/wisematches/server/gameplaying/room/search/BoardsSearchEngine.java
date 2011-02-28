@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room;
+package wisematches.server.gameplaying.room.search;
 
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameState;
@@ -13,7 +13,7 @@ import java.util.EnumSet;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface SearchesEngine<B extends GameBoard<?, ?>> {
+public interface BoardsSearchEngine<B extends GameBoard<?, ?>> {
 	/**
 	 * Searches boards which is active now and can be expired. This methods returns
 	 * only games with {@code IN_PROGRESS} state.

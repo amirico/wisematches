@@ -147,7 +147,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         bean.setRating(rating);
 
         final RoomManager roomManager = roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
-        final SearchesEngine searchesEngine = roomManager.getSearchesEngine();
+        final BoardsSearchEngine searchesEngine = roomManager.getSearchesEngine();
         final RatedBoardsInfo history = searchesEngine.getRatedBoards(playerId, new Date(startDate), null);
         final Iterator<RatedBoardsInfo.Record> recordIterator = history.iterator();
         if (recordIterator.hasNext()) {

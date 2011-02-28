@@ -36,7 +36,7 @@ public class GameboardServiceImpl extends GenericSecureRemoteService { //impleme
         bean.setStartedTime(board.getStartedTime());
         bean.setFinishedTime(board.getFinishedTime());
 
-        final ScribblePlayerHand playerTurn = board.getPlayerTrun();
+        final ScribblePlayerHand playerTurn = board.getPlayerTurn();
         if (playerTurn != null) {
             bean.setPlayerMove(playerTurn.getPlayerId());
 

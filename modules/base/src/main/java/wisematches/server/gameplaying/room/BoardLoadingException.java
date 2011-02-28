@@ -6,7 +6,7 @@ package wisematches.server.gameplaying.room;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class BoardLoadingException extends RoomException {
+public class BoardLoadingException extends Exception {
 	/**
 	 * {@inheritDoc}
 	 */

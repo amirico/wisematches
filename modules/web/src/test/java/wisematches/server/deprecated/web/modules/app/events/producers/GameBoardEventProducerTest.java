@@ -6,7 +6,7 @@ package wisematches.server.deprecated.web.modules.app.events.producers;
 public class GameBoardEventProducerTest {
 /*
     private GameMoveListener gameMoveListener;
-    private GameStateListener gameStateListener;
+    private GameBoardListener gameStateListener;
     private GamePlayersListener gamePlayersListener;
 
     private ScribbleBoard board;
@@ -109,10 +109,10 @@ public class GameBoardEventProducerTest {
     @Test
     public void test_setRoomManagerFacade() throws BoardLoadingException {
         final RoomManagerFacade roomManagerFacade = createStrictMock(RoomManagerFacade.class);
-        roomManagerFacade.addGameStateListener(isA(GameStateListener.class));
+        roomManagerFacade.addGameBoardListener(isA(GameBoardListener.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                gameStateListener = (GameStateListener) getCurrentArguments()[0];
+                gameStateListener = (GameBoardListener) getCurrentArguments()[0];
                 return null;
             }
         });
@@ -229,21 +229,21 @@ public class GameBoardEventProducerTest {
         final GameStartedEvent e1 = (GameStartedEvent) notifiedEvents.poll();
         assertEquals(123L, e1.getBoardId());
         assertEquals(30000000L, e1.getStartTime());
-        assertEquals(14L, e1.getPlayerTrun());
+        assertEquals(14L, e1.getPlayerTurn());
         assertEquals(13L, e1.getPlayerHand());
         assertSame(tiles1, e1.getPlayerTiles());
 
         final GameStartedEvent e2 = (GameStartedEvent) notifiedEvents.poll();
         assertEquals(123L, e2.getBoardId());
         assertEquals(30000000L, e2.getStartTime());
-        assertEquals(14L, e2.getPlayerTrun());
+        assertEquals(14L, e2.getPlayerTurn());
         assertEquals(14L, e2.getPlayerHand());
         assertSame(tiles2, e2.getPlayerTiles());
 
         final GameStartedEvent e3 = (GameStartedEvent) notifiedEvents.poll();
         assertEquals(123L, e3.getBoardId());
         assertEquals(30000000L, e3.getStartTime());
-        assertEquals(14L, e3.getPlayerTrun());
+        assertEquals(14L, e3.getPlayerTurn());
         assertEquals(0, e3.getPlayerHand());
         assertNull(e3.getPlayerTiles());
 

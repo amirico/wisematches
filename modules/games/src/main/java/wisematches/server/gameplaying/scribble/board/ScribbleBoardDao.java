@@ -3,11 +3,14 @@ package wisematches.server.gameplaying.scribble.board;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.gameplaying.board.GameState;
-import wisematches.server.gameplaying.room.ExpiringBoardInfo;
-import wisematches.server.gameplaying.room.RatedBoardsInfo;
+import wisematches.server.gameplaying.room.search.ExpiringBoardInfo;
+import wisematches.server.gameplaying.room.search.RatedBoardsInfo;
 import wisematches.server.player.Player;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -42,62 +45,26 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 		template.flush();
 	}
 
-	public Collection<Long> getWaitingBoards() {
-		final HibernateTemplate template = getHibernateTemplate();
-		return (List<Long>) template.find("select board.boardId from " + ScribbleBoard.class.getName() + " board where board.gameState = ?", GameState.WAITING);
-	}
-
+	@SuppressWarnings("unchecked")
 	public Collection<Long> getActiveBoards(Player player) {
 		final HibernateTemplate template = getHibernateTemplate();
 		return (List<Long>) template.find("select board.boardId from " + ScribbleBoard.class.getName() +
-				" board join board.playersIterator.playerHands hands where (board.gameState = ? or board.gameState = ?) and hands.playerId = ?",
+				" board join board.playersIterator.playerHands hands where board.gameState = ? and hands.playerId = ?",
 				new Object[]{
-						GameState.IN_PROGRESS,
-						GameState.WAITING,
+						GameState.ACTIVE,
 						player.getId()
 				});
 	}
 
-	public Collection<ScribbleBoard> findBoards(EnumSet<GameState> statuses, long fromDate, long toDate) {
-		final HibernateTemplate template = getHibernateTemplate();
-
-		final List<Object> values = new ArrayList<Object>();
-
-		final StringBuilder query = new StringBuilder();
-		query.append("from ");
-		query.append(ScribbleBoard.class.getName());
-		query.append(" board ");
-
-		values.add(fromDate);
-		query.append(" and board.finishedDate >= ?");
-
-		values.add(toDate);
-		query.append(" and  board.finishedDate <= ?");
-
-		if (statuses != null && statuses.size() != 0) {
-			query.append(" and  board.gameState in ( ");
-			boolean first = true;
-			for (GameState statuse : statuses) {
-				if (!first) {
-					query.append(", ");
-				}
-				query.append("?");
-				first = false;
-				values.add(statuse);
-			}
-			query.append(")");
-		}
-		final String s = query.toString().replaceFirst(" and ", " where ");
-		return template.find(s, values.toArray());
-	}
-
+	@SuppressWarnings("unchecked")
 	public Collection<ExpiringBoardInfo> findExpiringBoards() {
 		final HibernateTemplate template = getHibernateTemplate();
 		return template.find("select new " + ExpiringBoardInfo.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
-				ScribbleBoard.class.getName() + " board where board.gameState = ?", new Object[]{GameState.IN_PROGRESS}
+				ScribbleBoard.class.getName() + " board where board.gameState = ?", new Object[]{GameState.ACTIVE}
 		);
 	}
 
+	@SuppressWarnings("unchecked")
 	public RatedBoardsInfo getRatedBoards(long playerId, Date startDate, Date endDate) {
 		final HibernateTemplate template = getHibernateTemplate();
 

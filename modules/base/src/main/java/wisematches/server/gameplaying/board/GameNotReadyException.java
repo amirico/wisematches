@@ -5,7 +5,7 @@ package wisematches.server.gameplaying.board;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class GameNotReadyException extends GameMoveException {
+public class GameNotReadyException extends GameStateException {
 	public GameNotReadyException(String message) {
 		super(message);
 	}
