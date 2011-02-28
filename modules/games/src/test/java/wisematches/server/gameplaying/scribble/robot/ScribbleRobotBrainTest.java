@@ -133,7 +133,7 @@ public class ScribbleRobotBrainTest {
 
 		final ScribbleBoard scribbleBoard = createStrictMock(ScribbleBoard.class);
 		expect(scribbleBoard.getBoardId()).andReturn(1L);
-		expect(scribbleBoard.getPlayerTrun()).andReturn(hand);
+		expect(scribbleBoard.getPlayerTurn()).andReturn(hand);
 		expect(scribbleBoard.getDictionary()).andReturn(dictionary);
 		expect(scribbleBoard.getBoardTile(anyInt(), anyInt())).andAnswer(new IAnswer<Tile>() {
 			public Tile answer() throws Throwable {

@@ -141,7 +141,7 @@ public class PlayboardServiceImpl extends GenericSecureRemoteService {//implemen
 
     private long getNextPlayerTurnId(ScribbleBoard board) {
         long playerTurn = 0;
-        final ScribblePlayerHand hand = board.getPlayerTrun();
+        final ScribblePlayerHand hand = board.getPlayerTurn();
         if (hand != null) {
             playerTurn = hand.getPlayerId();
         }

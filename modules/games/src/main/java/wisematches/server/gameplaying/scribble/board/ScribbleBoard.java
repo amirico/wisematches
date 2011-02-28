@@ -17,10 +17,7 @@ import wisematches.server.player.Player;
 
 import javax.persistence.*;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static wisematches.server.gameplaying.scribble.Direction.HORIZONTAL;
 import static wisematches.server.gameplaying.scribble.Direction.VERTICAL;
@@ -149,57 +146,42 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	ScribbleBoard() {
 	}
 
-	/**
-	 * Creates new scribble game with specified settings. Game created with this constructor is rated.
-	 *
-	 * @param gameSettings the scribble game settings.
-	 * @throws NullPointerException if setting is {@code null}
-	 */
-	public ScribbleBoard(ScribbleSettings gameSettings) {
-		super(gameSettings);
+	public ScribbleBoard(ScribbleSettings gameSettings, Collection<Player> players, TilesBank tilesBank, Dictionary dictionary) {
+		super(gameSettings, players);
+		if (log.isDebugEnabled()) {
+			log.debug("Game started: " + getBoardId());
+		}
+
+		this.tilesBank = tilesBank;
+		this.dictionary = dictionary;
+		positions = new Position[tilesBank.getBankCapacity()];
+
+		final List<ScribblePlayerHand> playerHands = getPlayersHands();
+		for (ScribblePlayerHand hand : playerHands) {
+			hand.addTiles(tilesBank.requestTiles(LETTERS_IN_HAND));
+			if (log.isDebugEnabled()) {
+				log.debug("Initialize player " + hand + " hand with tiles: " + Arrays.toString(hand.getTiles()));
+			}
+			updateHandTilesBuffer(hand);
+		}
 	}
 
-	/**
-	 * Changes dictionary for this game.
-	 *
-	 * @param dictionary new dictionary.
-	 * @throws NullPointerException	 if dictionary is null
-	 * @throws IllegalArgumentException if dictionary has another language that was specified in game settings.
-	 */
+	@Deprecated
+	public void initGameAfterLoading(TilesBank tilesBank, Dictionary dictionary) {
+		this.dictionary = dictionary;
+
+		this.tilesBank = tilesBank;
+		positions = new Position[tilesBank.getBankCapacity()];
+		restoreBoardState();
+	}
+
+	@Deprecated
 	public void setDictionary(Dictionary dictionary) {
-		if (dictionary == null) {
-			throw new NullPointerException("Dictionary is null");
-		}
-		if (!dictionary.getLocale().toString().equals(getGameSettings().getLanguage())) {
-			throw new IllegalArgumentException("Language of dictionary is not coincide with language of the game.");
-		}
 		this.dictionary = dictionary;
 	}
 
 	public Dictionary getDictionary() {
 		return dictionary;
-	}
-
-	/**
-	 * Changes tiles bank for this game. Tiles bank can be specified only once for one object.
-	 * <p/>
-	 * When this method is called
-	 *
-	 * @param tilesBank the fresh tiles bank.
-	 * @throws NullPointerException  if tiles bank is {@code null}
-	 * @throws IllegalStateException if tiles bank was already specified for this object.
-	 */
-	public void setTilesBank(TilesBank tilesBank) {
-		if (tilesBank == null) {
-			throw new NullPointerException("TilesBank is null");
-		}
-		if (this.tilesBank != null) {
-			throw new IllegalStateException("Game already has a tiles bank");
-		}
-
-		this.tilesBank = tilesBank;
-		positions = new Position[tilesBank.getBankCapacity()];
-		restoreBoardState();
 	}
 
 	/**
@@ -213,27 +195,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		return new ScribblePlayerHand(player.getId());
 	}
 
-	/**
-	 * When game is started when initial tiles is taken from tiles bank and putted into player's hands.
-	 */
-	@Override
-	protected void processGameStarting() {
-		if (log.isDebugEnabled()) {
-			log.debug("Game started: " + getBoardId());
-		}
-		final List<ScribblePlayerHand> playerHands = getPlayersHands();
-		for (ScribblePlayerHand hand : playerHands) {
-			hand.addTiles(tilesBank.requestTiles(LETTERS_IN_HAND));
-			if (log.isDebugEnabled()) {
-				log.debug("Initialize player " + hand + " hand with tiles: " + Arrays.toString(hand.getTiles()));
-			}
-			updateHandTilesBuffer(hand);
-		}
-		super.processGameStarting();
-	}
-
 	private void restoreBoardState() {
-		// Process redifinitions
 		int b;
 		while ((b = byteToInt(tilesRedifinitions.get())) != 0) {
 			tilesBank.redefineTile(b - 1, tilesRedifinitions.getChar());
@@ -244,7 +206,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		restoreBoardTiles();
 		restoreMoves();
 	}
-
 
 	private void restorePlayerHands() {
 		// Process player hands
@@ -392,7 +353,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * @see #setDictionary(wisematches.server.gameplaying.dictionary.Dictionary)
 	 * @see #setTilesBank(wisematches.server.gameplaying.scribble.bank.TilesBank)
 	 */
-	protected void checkState() throws GameMoveException {
+	protected void checkState() throws GameStateException {
 		if (dictionary == null || tilesBank == null) {
 			throw new GameNotReadyException("Dictionary or TilesBank isn't initialized");
 		}
@@ -546,7 +507,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			throw new IncorrectMoveException("Not required tiles to in bank");
 		}
 
-		final Tile[] tiles = getPlayerTrun().getTiles();
+		final Tile[] tiles = getPlayerTurn().getTiles();
 
 		for (int tileNumber : ints) {
 			boolean found = false;

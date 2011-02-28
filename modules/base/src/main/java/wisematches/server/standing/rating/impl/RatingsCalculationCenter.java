@@ -7,8 +7,9 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameBoardListener;
+import wisematches.server.gameplaying.board.GameMoveEvent;
 import wisematches.server.gameplaying.board.GamePlayerHand;
-import wisematches.server.gameplaying.board.GameStateListener;
 import wisematches.server.gameplaying.room.*;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
@@ -32,7 +33,7 @@ public class RatingsCalculationCenter {
 	private PlayerManager playerManager;
 
 	private RatingSystem ratingSystem = new ELORatingSystem();
-	private final RoomBoardsListener roomBoardsListener = new TheRoomBoardsListener();
+	private final RoomListener roomListener = new TheRoomListener();
 
 	private final Collection<PlayerRatingListener> listeners = new CopyOnWriteArraySet<PlayerRatingListener>();
 
@@ -130,14 +131,14 @@ public class RatingsCalculationCenter {
 
 		final Collection<RoomManager> collection = roomsManager.getRoomManagers();
 		for (RoomManager roomManager : collection) {
-			roomManager.addRoomBoardsListener(roomBoardsListener);
+			roomManager.addRoomBoardsListener(roomListener);
 
 			final Room type = roomManager.getRoomType();
 
 			@SuppressWarnings("unchecked")
 			final Collection<GameBoard> openedBoards = roomManager.getOpenedBoards();
 			for (GameBoard openedBoard : openedBoards) {
-				openedBoard.addGameStateListener(new TheGameStateListener(type));
+				openedBoard.addGameBoardListener(new TheGameBoardListener(type));
 			}
 		}
 	}
@@ -150,41 +151,50 @@ public class RatingsCalculationCenter {
 		this.transactionManager = transactionManager;
 	}
 
-	private final class TheRoomBoardsListener implements RoomBoardsListener {
+	private final class TheRoomListener implements RoomListener {
+		@Override
+		public void boardCreated(Room room, long boardId) {
+		}
+
+		@Override
 		public void boardOpened(Room room, long boardId) {
 			try {
 				final GameBoard board = roomsManager.getRoomManager(room).openBoard(boardId);
-				board.addGameStateListener(new TheGameStateListener(room));
+				board.addGameBoardListener(new TheGameBoardListener(room));
 			} catch (BoardLoadingException ex) {
-				log.error("Board can't loaded in boardOpened method of RoomBoardsListener", ex);
+				log.error("Board can't loaded in boardOpened method of RoomListener", ex);
 			}
 		}
 
+		@Override
 		public void boardClosed(Room room, long boardId) {
 		}
 	}
 
-	private final class TheGameStateListener implements GameStateListener {
+	private final class TheGameBoardListener implements GameBoardListener {
 		private final Room room;
 
-		private TheGameStateListener(Room room) {
+		private TheGameBoardListener(Room room) {
 			this.room = room;
 		}
 
-		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
-			// Nothing to do
-		}
-
+		@Override
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
 			updatePlayerRatings(room, board, null);
 		}
 
+		@Override
 		public void gameDraw(GameBoard board) {
 			updatePlayerRatings(room, board, null);
 		}
 
+		@Override
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
 			updatePlayerRatings(room, board, interrupterPlayer);
+		}
+
+		@Override
+		public void playerMoved(GameMoveEvent event) {
 		}
 	}
 }

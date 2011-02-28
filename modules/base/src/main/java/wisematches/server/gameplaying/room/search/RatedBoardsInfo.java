@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room;
+package wisematches.server.gameplaying.room.search;
 
 import java.util.Date;
 import java.util.Iterator;

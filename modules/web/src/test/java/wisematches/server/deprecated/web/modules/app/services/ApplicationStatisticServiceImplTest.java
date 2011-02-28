@@ -79,18 +79,18 @@ public class ApplicationStatisticServiceImplTest {
         expect(playerSessionsManager.getOnlinePlayers()).andReturn(Arrays.<Player>asList(null, null, null));
         replay(playerSessionsManager);
 
-        final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
+        final BoardsSearchEngine searchesEngine = createStrictMock(BoardsSearchEngine.class);
         expect(searchesEngine.getGamesCount(EnumSet.of(GameState.DRAW, GameState.FINISHED, GameState.INTERRUPTED))).andReturn(4);
-        expect(searchesEngine.getGamesCount(EnumSet.of(GameState.IN_PROGRESS))).andReturn(8);
+        expect(searchesEngine.getGamesCount(EnumSet.of(GameState.ACTIVE))).andReturn(8);
         replay(searchesEngine);
 
         final RoomManager roomManager = createStrictMock(RoomManager.class);
         expect(roomManager.getSearchesEngine()).andReturn(searchesEngine);
         replay(roomManager);
 
-        final Capture<GameStateListener> gameStateListener = new Capture<GameStateListener>();
+        final Capture<GameBoardListener> gameStateListener = new Capture<GameBoardListener>();
         final RoomManagerFacade roomManagerFacade = createStrictMock(RoomManagerFacade.class);
-        roomManagerFacade.addGameStateListener(capture(gameStateListener));
+        roomManagerFacade.addGameBoardListener(capture(gameStateListener));
         expect(roomManagerFacade.getRoomManager()).andReturn(roomManager);
         replay(roomManagerFacade);
 

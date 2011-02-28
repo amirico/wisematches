@@ -61,7 +61,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	private int passesCount;
 
 	/**
-	 * Time when last move was maden.
+	 * Time when last move was done.
 	 */
 	@Column(name = "lastMoveTime")
 	private Date lastMoveTime;
@@ -70,7 +70,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * The state of this game.
 	 */
 	@Column(name = "gameState")
-	private GameState gameState = GameState.WAITING;
+	private GameState gameState = GameState.ACTIVE;
 
 	@Column(name = "rated")
 	private boolean rated = true;
@@ -82,11 +82,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	private S gameSettings;
 
 	@Transient
-	private final Collection<GameMoveListener> moveListeners = new CopyOnWriteArrayList<GameMoveListener>();
-	@Transient
-	private final Collection<GameStateListener> stateListeners = new CopyOnWriteArrayList<GameStateListener>();
-	@Transient
-	private final Collection<GamePlayersListener> playersListeners = new CopyOnWriteArrayList<GamePlayersListener>();
+	private final Collection<GameBoardListener> boardListeners = new CopyOnWriteArrayList<GameBoardListener>();
 
 	private static final int MAX_PASSED_TURNS = 2;
 
@@ -102,16 +98,38 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * Creates new board with specified settings. Game created with this constructor is rated.
 	 *
 	 * @param gameSettings the game settings.
+	 * @param players	  the collection of all players.
 	 * @throws NullPointerException if setting is {@code null}
 	 */
-	protected AbstractGameBoard(S gameSettings) {
+	@SuppressWarnings("unchecked")
+	protected AbstractGameBoard(S gameSettings, Collection<Player> players) {
 		if (gameSettings == null) {
-			throw new NullPointerException("Settings can't be null");
+			throw new IllegalArgumentException("Settings can't be null");
+		}
+		if (players == null) {
+			throw new IllegalArgumentException("Players can't be null");
+		}
+		if (players.size() < 2) {
+			throw new IllegalArgumentException("Game can't have less than 2 players");
 		}
 
 		this.gameSettings = gameSettings;
 		this.rated = gameSettings.isRatedGame();
-		playersIterator = new PlayersIterator<P>(new ArrayList<P>(gameSettings.getMaxPlayers()));
+
+		startedDate = lastMoveTime = new Date();
+
+		int index = 0;
+		final List<P> hands = new ArrayList<P>(players.size());
+		for (Player player : players) {
+			if (player == null) {
+				throw new IllegalArgumentException("Players list can't contain null players");
+			}
+			final P hand = createPlayerHand(player);
+			hand.setPlayerIndex(index++);
+			hand.setGameBoard(this);
+			hands.add(hand);
+		}
+		playersIterator = new PlayersIterator<P>(hands, selectFirstPlayer(gameSettings, hands));
 	}
 
 	/**
@@ -129,172 +147,44 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		return finishedDate;
 	}
 
-	/* ========== Start Listeners and Fires ================ */
-	public void addGamePlayersListener(GamePlayersListener listener) {
-		if (!playersListeners.contains(listener)) {
-			playersListeners.add(listener);
+	public void addGameBoardListener(GameBoardListener listener) {
+		if (!boardListeners.contains(listener)) {
+			boardListeners.add(listener);
 		}
 	}
 
-	public void removeGamePlayersListener(GamePlayersListener listener) {
-		playersListeners.remove(listener);
-	}
-
-	public void addGameMoveListener(GameMoveListener listener) {
-		if (!moveListeners.contains(listener)) {
-			moveListeners.add(listener);
-		}
-	}
-
-	public void removeGameMoveListener(GameMoveListener listener) {
-		moveListeners.remove(listener);
-	}
-
-	public void addGameStateListener(GameStateListener listener) {
-		if (!stateListeners.contains(listener)) {
-			stateListeners.add(listener);
-		}
-	}
-
-	public void removeGameStateListener(GameStateListener listener) {
-		stateListeners.remove(listener);
-	}
-
-	protected void firePlayerAdded(Player player) {
-		for (GamePlayersListener playersListener : playersListeners) {
-			playersListener.playerAdded(this, player);
-		}
-	}
-
-	protected void firePlayerRemoved(Player player) {
-		for (GamePlayersListener playersListener : playersListeners) {
-			playersListener.playerRemoved(this, player);
-		}
+	public void removeGameBoardListener(GameBoardListener listener) {
+		boardListeners.remove(listener);
 	}
 
 	protected void firePlayerMoved(P movedPlayer, GameMove move, P nextPlayer) {
-		GameMoveEvent e = new GameMoveEvent(this, movedPlayer, move, nextPlayer);
-		for (GameMoveListener moveListener : moveListeners) {
-			moveListener.playerMoved(e);
-		}
-	}
-
-	protected void fireGameStarted(P playerTurn) {
-		gameState = GameState.IN_PROGRESS;
-		for (GameStateListener stateListener : stateListeners) {
-			stateListener.gameStarted(this, playerTurn);
+		final GameMoveEvent e = new GameMoveEvent(this, movedPlayer, move, nextPlayer);
+		for (GameBoardListener boardListener : boardListeners) {
+			boardListener.playerMoved(e);
 		}
 	}
 
 	protected void fireGameFinished(P wonPlayer) {
 		gameState = GameState.FINISHED;
-		for (GameStateListener stateListener : stateListeners) {
-			stateListener.gameFinished(this, wonPlayer);
+		for (GameBoardListener boardListener : boardListeners) {
+			boardListener.gameFinished(this, wonPlayer);
 		}
 	}
 
 	protected void fireGameDraw() {
 		gameState = GameState.DRAW;
-		for (GameStateListener stateListener : stateListeners) {
-			stateListener.gameDraw(this);
+		for (GameBoardListener boardListener : boardListeners) {
+			boardListener.gameDraw(this);
 		}
 	}
 
 	protected void fireGameInterrupted(P interrupterPlayer, boolean byTimeout) {
 		gameState = GameState.INTERRUPTED;
-		for (GameStateListener stateListener : stateListeners) {
-			stateListener.gameInterrupted(this, interrupterPlayer, byTimeout);
+		for (GameBoardListener boardListener : boardListeners) {
+			boardListener.gameInterrupted(this, interrupterPlayer, byTimeout);
 		}
 	}
 	/* ========== End Listeners and Fires ================ */
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws NullPointerException	 is player if {@code null}
-	 * @throws TooManyPlayersException  if all players already joined to board and game started.
-	 * @throws IllegalArgumentException if specified player already joined to board
-	 * @throws IllegalStateException	if player can't be added by unknown error.
-	 */
-	public P addPlayer(Player player) {
-		if (player == null) {
-			throw new NullPointerException("Player can't be null");
-		}
-
-		final List<P> hands = playersIterator.getPlayerHands();
-		if (gameSettings.getMaxPlayers() < hands.size() + 1) {
-			throw new TooManyPlayersException(gameSettings.getMaxPlayers());
-		}
-		for (P hand : hands) {
-			if (hand.getPlayerId() == player.getId()) {
-				throw new IllegalArgumentException("The same player registred more than once");
-			}
-		}
-
-
-		final int playerRating = player.getRating();
-		final int minRating = gameSettings.getMinRating();
-		if (minRating != 0 && playerRating < minRating) {
-			throw new IllegalArgumentException("Too low player rating: " + playerRating + ". Min allowed rating: " + minRating);
-		}
-		final int maxRating = gameSettings.getMaxRating();
-		if (maxRating != 0 && playerRating > maxRating) {
-			throw new IllegalArgumentException("Too high player rating: " + playerRating + ". Max allowed rating: " + maxRating);
-		}
-
-		final P hand = createPlayerHand(player);
-		if (hand == null) {
-			throw new IllegalStateException("Player hand can't be created for specified player");
-		}
-
-		playersIterator.addPlayerHand(hand);
-		hand.setGameBoard(this);
-
-		firePlayerAdded(player);
-
-		if (playersIterator.size() == gameSettings.getMaxPlayers()) {
-			processGameStarting();
-		}
-		return hand;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public P removePlayer(Player player) {
-		if (player == null) {
-			throw new NullPointerException("Player can't be null");
-		}
-
-		if (gameState != GameState.WAITING) {
-			throw new IllegalStateException("Game already started. Player can't be removed.");
-		}
-
-		final P hand = getPlayerHand(player.getId());
-		if (hand == null) {
-			throw new IllegalArgumentException("Player " + player + " is unknown in this game");
-		}
-
-		playersIterator.removePlayerHand(hand);
-		firePlayerRemoved(player);
-		return hand;
-	}
-
-	/**
-	 * This method is invoked only once: when all players are connected to new game.
-	 * Method isn't invoked during restoring saved game.
-	 * <p/>
-	 * This method select first player and fires <code>playerTurnTransmitted</code> and <code>gameStarted</code> events.
-	 */
-	protected void processGameStarting() {
-		final P p = selectFirstPlayer(gameSettings, playersIterator.getPlayerHands());
-		playersIterator.setPlayerTurn(p);
-
-		lastMoveTime = new Date();
-		startedDate = new Date();
-
-		fireGameStarted(p);
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -307,8 +197,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			throw new UnsuitablePlayerException("make turn", 0);
 		}
 
-		if (player != getPlayerTrun()) {
-			throw new UnsuitablePlayerException("make turn", getPlayerTrun().getPlayerId(), player.getPlayerId());
+		if (player != getPlayerTurn()) {
+			throw new UnsuitablePlayerException("make turn", getPlayerTurn().getPlayerId(), player.getPlayerId());
 		}
 
 		checkMove(move);
@@ -365,12 +255,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	/**
 	 * Checks that board is ready for game and player can make a move.
 	 *
-	 * @throws GameMoveException if game state is not <code>IN_PROGRESS</code>.
+	 * @throws GameStateException if game state is not <code>ACTIVE</code>.
 	 */
-	protected void checkState() throws GameMoveException {
+	protected void checkState() throws GameStateException {
 		switch (gameState) {
-			case WAITING:
-				throw new GameNotReadyException("Game isn't ready for play. Not all players joined");
 			case DRAW:
 			case FINISHED:
 			case INTERRUPTED:
@@ -436,7 +324,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 *                               or {@code GameState.WAITING}.
 	 */
 	public P getWonPlayer() {
-		if (gameState == GameState.IN_PROGRESS || gameState == GameState.WAITING) {
+		if (gameState == GameState.ACTIVE) {
 			throw new IllegalStateException("Game not finished yet");
 		}
 		return getWonPlayer(playersIterator.getPlayerHands());
@@ -452,7 +340,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	/**
 	 * {@inheritDoc}
 	 */
-	public P getPlayerTrun() {
+	public P getPlayerTurn() {
 		return playersIterator.getPlayerTurn();
 	}
 
@@ -513,7 +401,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * {@inheritDoc}
 	 */
 	public void terminate() throws GameMoveException {
-		final P p = getPlayerTrun();
+		final P p = getPlayerTurn();
 		if (p != null) {
 			closeImpl(p, true);
 		}
@@ -535,11 +423,11 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		hand.increasePoints(-hand.getPoints()); // Clear player points...
 
-		if (rated && moves.size() + passesCount < gameSettings.getMaxPlayers() * 2) {
+		if (rated && moves.size() + passesCount < playersIterator.size() * 2) {
 			rated = false;
 		}
 
-		if (gameState == GameState.IN_PROGRESS) {
+		if (gameState == GameState.ACTIVE) {
 			gameState = GameState.INTERRUPTED;
 			finalizeGame();
 

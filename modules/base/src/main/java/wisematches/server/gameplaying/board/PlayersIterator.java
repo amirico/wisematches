@@ -25,17 +25,6 @@ final class PlayersIterator<P extends GamePlayerHand> implements Iterator<P> {
 	}
 
 	/**
-	 * Creates new iterator without start element. If iterator doesn't have start element {@link #hasNext()} method
-	 * will be always return <code>false</code>.
-	 *
-	 * @param playerHands the players hands. The copy of this list will be used.
-	 * @see #setPlayerTurn(GamePlayerHand)
-	 */
-	public PlayersIterator(List<P> playerHands) {
-		this(playerHands, null);
-	}
-
-	/**
 	 * Creates new iterator with specified start player.
 	 *
 	 * @param playerHands  the players hands. The copy of this list will be used.
@@ -46,19 +35,6 @@ final class PlayersIterator<P extends GamePlayerHand> implements Iterator<P> {
 
 		if (startElement != null) {
 			setPlayerTurn(startElement);
-		}
-	}
-
-	public void addPlayerHand(P hand) {
-		this.playerHands.add(hand);
-		hand.setPlayerIndex(this.playerHands.indexOf(hand));
-	}
-
-	public void removePlayerHand(P hand) {
-		this.playerHands.remove(hand);
-		int index = 0;
-		for (P playerHand : playerHands) {
-			playerHand.setPlayerIndex(index++);
 		}
 	}
 

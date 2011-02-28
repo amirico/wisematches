@@ -5,16 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
+import wisematches.server.gameplaying.room.AbstractRoomManager;
 import wisematches.server.gameplaying.room.BoardCreationException;
 import wisematches.server.gameplaying.room.BoardLoadingException;
 import wisematches.server.gameplaying.room.Room;
-import wisematches.server.gameplaying.room.SearchesEngine;
-import wisematches.server.gameplaying.room.impl.AbstractRoomManager;
+import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
 import wisematches.server.gameplaying.scribble.bank.TilesBankingHouse;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoardDao;
-import wisematches.server.gameplaying.scribble.board.ScribbleSearchesEngine;
+import wisematches.server.gameplaying.scribble.board.ScribbleSearchesEngineBoards;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.player.Player;
 
@@ -32,7 +32,7 @@ public class ScribbleRoomManager extends AbstractRoomManager<ScribbleBoard, Scri
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 	private ScribbleBoardDao scribbleBoardDao;
-	private ScribbleSearchesEngine scribbleSearchesEngine;
+	private ScribbleSearchesEngineBoards scribbleSearchesEngine;
 
 	private static final Log log = LogFactory.getLog("wisematches.room.scribble");
 
@@ -41,50 +41,38 @@ public class ScribbleRoomManager extends AbstractRoomManager<ScribbleBoard, Scri
 	}
 
 	@Override
-	protected ScribbleBoard loadBoard(long gameId) throws BoardLoadingException {
-		try {
-			final ScribbleBoard board = scribbleBoardDao.getScribbleBoard(gameId);
-			final ScribbleSettings gameSettings = board.getGameSettings();
-			final Locale locale = new Locale(gameSettings.getLanguage());
-
-			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, gameSettings.getMaxPlayers(), true);
-
-			board.setDictionary(dictionary);
-			board.setTilesBank(tilesBank);
-
-			return board;
-		} catch (DictionaryNotFoundException e) {
-			throw new BoardLoadingException("Dictionary for required board not found", e);
-		} catch (Throwable th) {
-			throw new BoardLoadingException("Board can't be loaded by unknown error", th);
-		}
-	}
-
-	@Override
-	protected ScribbleBoard createBoard(ScribbleSettings gameSettings) throws BoardCreationException {
+	protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<Player> players) throws BoardCreationException {
 		final Locale locale = new Locale(gameSettings.getLanguage());
 
 		try {
 			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, gameSettings.getMaxPlayers(), true);
+			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, players.size(), true);
 
-			final ScribbleBoard board = new ScribbleBoard(gameSettings);
-			board.setDictionary(dictionary);
-			board.setTilesBank(tilesBank);
-
-			return board;
+			return new ScribbleBoard(gameSettings, players, tilesBank, dictionary);
 		} catch (DictionaryNotFoundException e) {
 			throw new BoardCreationException("", e);
 		}
 	}
 
-	public SearchesEngine<ScribbleBoard> getSearchesEngine() {
-		return scribbleSearchesEngine;
+	@Override
+	protected ScribbleBoard loadBoardImpl(long gameId) throws BoardLoadingException {
+		try {
+			final ScribbleBoard board = scribbleBoardDao.getScribbleBoard(gameId);
+			if (board == null) {
+				return null;
+			}
+			final Locale locale = new Locale(board.getGameSettings().getLanguage());
+			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
+			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, board.getPlayersHands().size(), true);
+			board.initGameAfterLoading(tilesBank, dictionary);
+			return board;
+		} catch (DictionaryNotFoundException e) {
+			throw new BoardLoadingException("", e);
+		}
 	}
 
 	@Override
-	protected void saveBoard(ScribbleBoard board) {
+	protected void saveBoardImpl(ScribbleBoard board) {
 		scribbleBoardDao.saveScribbleBoard(board);
 	}
 
@@ -93,15 +81,14 @@ public class ScribbleRoomManager extends AbstractRoomManager<ScribbleBoard, Scri
 		return scribbleBoardDao.getActiveBoards(player);
 	}
 
-	@Override
-	protected Collection<Long> loadWaitingBoards() {
-		return scribbleBoardDao.getWaitingBoards();
+	public BoardsSearchEngine<ScribbleBoard> getSearchesEngine() {
+		return scribbleSearchesEngine;
 	}
 
 	public void setScribbleBoardDao(ScribbleBoardDao scribbleBoardDao) {
 		this.scribbleBoardDao = scribbleBoardDao;
 
-		scribbleSearchesEngine = new ScribbleSearchesEngine(scribbleBoardDao);
+		scribbleSearchesEngine = new ScribbleSearchesEngineBoards(scribbleBoardDao);
 	}
 
 	public void setDictionaryManager(DictionaryManager dictionaryManager) {

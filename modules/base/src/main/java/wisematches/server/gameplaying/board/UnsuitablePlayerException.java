@@ -8,7 +8,7 @@ import wisematches.server.player.Player;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class UnsuitablePlayerException extends GameMoveException {
+public class UnsuitablePlayerException extends IncorrectMoveException {
 	private final long expectedPlayerId;
 	private final long specifiedPlayerId;
 

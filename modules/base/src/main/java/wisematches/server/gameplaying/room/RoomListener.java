@@ -7,7 +7,17 @@ package wisematches.server.gameplaying.room;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface RoomBoardsListener {
+public interface RoomListener {
+	/**
+	 * Indicates that a board was created. The board can be received from <code>RoomManager</code> using
+	 * <code>openBoard</code> method.
+	 *
+	 * @param room	the room where board has been opened.
+	 * @param boardId the id of opened board.
+	 * @see RoomManager#openBoard(long)
+	 */
+	void boardCreated(Room room, long boardId);
+
 	/**
 	 * Indicates that a board was opened. The board can be received from <code>RoomManager</code> using
 	 * <code>openBoard</code> method.

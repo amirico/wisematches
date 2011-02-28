@@ -33,10 +33,10 @@
 
 <#macro gameStatus board>
     <#if board.getGameState() == "IN_PROGRESS">
-        <#if board.getPlayerTrun().getPlayerId() == player.getId()>
+        <#if board.getPlayerTurn().getPlayerId() == player.getId()>
         <@message code="game.status.move_you"/>
             <#else>
-            <@message code="game.status.move_opp" args="${playerManager.getPlayer(board.getPlayerTrun().getPlayerId()).nickname!}"/>
+            <@message code="game.status.move_opp" args="${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"/>
         </#if>
         <#else>
         <@message code="game.status.${board.getGameState().name()?lower_case}"/>

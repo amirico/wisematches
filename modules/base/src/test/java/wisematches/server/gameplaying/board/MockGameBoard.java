@@ -3,6 +3,7 @@ package wisematches.server.gameplaying.board;
 import wisematches.server.player.Player;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -16,8 +17,8 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private boolean moveFinished;
 	private int[] finishScore;
 
-	MockGameBoard(GameSettings gameSettings) {
-		super(gameSettings);
+	MockGameBoard(GameSettings gameSettings, Collection<Player> players) {
+		super(gameSettings, players);
 	}
 
 	protected GamePlayerHand createPlayerHand(Player player) {

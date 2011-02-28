@@ -5,8 +5,13 @@ import org.easymock.IAnswer;
 import org.junit.Test;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
-import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameBoardListener;
+import wisematches.server.gameplaying.board.GameMoveException;
+import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
+import wisematches.server.gameplaying.room.search.ExpiringBoardInfo;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +34,7 @@ public class GameTimeoutTerminatorTest {
 		final long currentTime = System.currentTimeMillis();
 
 		final GameBoard board1 = createStrictMock(GameBoard.class);
-		expect(board1.getGameState()).andReturn(GameState.IN_PROGRESS);
+		expect(board1.getGameState()).andReturn(GameState.ACTIVE);
 		board1.terminate();
 		replay(board1);
 
@@ -43,20 +48,20 @@ public class GameTimeoutTerminatorTest {
 		listener.timeIsUp(capture(event));
 		replay(listener);
 
-		final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
-		expect(searchesEngine.findExpiringBoards()).andReturn(Arrays.asList(
+		final BoardsSearchEngine boardsSearchEngine = createStrictMock(BoardsSearchEngine.class);
+		expect(boardsSearchEngine.findExpiringBoards()).andReturn(Arrays.asList(
 				new ExpiringBoardInfo(1L, 2, new Date(currentTime - 2 * ONE_DAY - 4000)),  // more when 2 days
 				new ExpiringBoardInfo(2L, 2, new Date(currentTime - 2 * ONE_DAY + 4000))  // not more when 2 days
 		));
-		replay(searchesEngine);
+		replay(boardsSearchEngine);
 
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
 		makeThreadSafe(roomManager, true);
 		expect(roomManager.getRoomType()).andReturn(ROOM);
 		expect(roomManager.getOpenedBoards()).andReturn(Collections.emptyList());
-		roomManager.addRoomBoardsListener(isA(RoomBoardsListener.class));
+		roomManager.addRoomBoardsListener(isA(RoomListener.class));
 		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getSearchesEngine()).andReturn(searchesEngine);
+		expect(roomManager.getSearchesEngine()).andReturn(boardsSearchEngine);
 		expect(roomManager.openBoard(1L)).andReturn(board1);
 		expect(roomManager.openBoard(2L)).andReturn(board2);
 		replay(roomManager);
@@ -87,7 +92,7 @@ public class GameTimeoutTerminatorTest {
 		assertEquals(RemainderType.TIME_IS_UP, event.getValue().getRemainderType());
 
 		Thread.sleep(4200); // second board should be removed but no events because already finished
-		verify(board1, board2, listener, searchesEngine, roomManager, roomsManager, transactionTemplate);
+		verify(board1, board2, listener, boardsSearchEngine, roomManager, roomsManager, transactionTemplate);
 	}
 
 	@Test
@@ -100,19 +105,19 @@ public class GameTimeoutTerminatorTest {
 		listener.timeIsRunningOut(capture(event));
 		replay(listener);
 
-		final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
-		expect(searchesEngine.findExpiringBoards()).andReturn(Arrays.asList(
+		final BoardsSearchEngine boardsSearchEngine = createStrictMock(BoardsSearchEngine.class);
+		expect(boardsSearchEngine.findExpiringBoards()).andReturn(Arrays.asList(
 				new ExpiringBoardInfo(1L, 2, new Date(currentTime - 2 * ONE_DAY + ONE_HOUR + 4000))
 		));
-		replay(searchesEngine);
+		replay(boardsSearchEngine);
 
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
 		makeThreadSafe(roomManager, true);
 		expect(roomManager.getRoomType()).andReturn(ROOM);
 		expect(roomManager.getOpenedBoards()).andReturn(Collections.emptyList());
-		roomManager.addRoomBoardsListener(isA(RoomBoardsListener.class));
+		roomManager.addRoomBoardsListener(isA(RoomListener.class));
 		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getSearchesEngine()).andReturn(searchesEngine);
+		expect(roomManager.getSearchesEngine()).andReturn(boardsSearchEngine);
 		replay(roomManager);
 
 		final RoomsManager roomsManager = createMock(RoomsManager.class);
@@ -130,27 +135,20 @@ public class GameTimeoutTerminatorTest {
 		assertEquals(1L, event.getValue().getBoardId());
 		assertEquals(RemainderType.ONE_HOUR, event.getValue().getRemainderType());
 
-		verify(listener, searchesEngine, roomManager, roomsManager);
+		verify(listener, boardsSearchEngine, roomManager, roomsManager);
 	}
 
 	@Test
 	public void test_setRoomsManager_attachListeners() throws BoardLoadingException {
-		final Capture<RoomBoardsListener> listener = new Capture<RoomBoardsListener>();
+		final Capture<RoomListener> listener = new Capture<RoomListener>();
 
-		final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
-		expect(searchesEngine.findExpiringBoards()).andReturn(Collections.emptyList());
-		replay(searchesEngine);
-
-		final GameBoard board1 = createStrictMock(GameBoard.class);
-		expect(board1.getGameState()).andReturn(GameState.WAITING);
-		board1.addGameMoveListener(isA(GameMoveListener.class));
-		board1.addGameStateListener(isA(GameStateListener.class));
-		replay(board1);
+		final BoardsSearchEngine boardsSearchEngine = createStrictMock(BoardsSearchEngine.class);
+		expect(boardsSearchEngine.findExpiringBoards()).andReturn(Collections.emptyList());
+		replay(boardsSearchEngine);
 
 		final GameBoard board2 = createStrictMock(GameBoard.class);
-		expect(board2.getGameState()).andReturn(GameState.IN_PROGRESS);
-		board2.addGameMoveListener(isA(GameMoveListener.class));
-		board2.addGameStateListener(isA(GameStateListener.class));
+		expect(board2.getGameState()).andReturn(GameState.ACTIVE);
+		board2.addGameBoardListener(isA(GameBoardListener.class));
 		replay(board2);
 
 		final GameBoard board3 = createStrictMock(GameBoard.class);
@@ -158,18 +156,17 @@ public class GameTimeoutTerminatorTest {
 		replay(board3);
 
 		final GameBoard board4 = createStrictMock(GameBoard.class);
-		expect(board4.getGameState()).andReturn(GameState.IN_PROGRESS);
-		board4.addGameMoveListener(isA(GameMoveListener.class));
-		board4.addGameStateListener(isA(GameStateListener.class));
+		expect(board4.getGameState()).andReturn(GameState.ACTIVE);
+		board4.addGameBoardListener(isA(GameBoardListener.class));
 		replay(board4);
 
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
 		makeThreadSafe(roomManager, true);
 		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getOpenedBoards()).andReturn(Arrays.asList(board1, board2, board3));
+		expect(roomManager.getOpenedBoards()).andReturn(Arrays.asList(board2, board3));
 		roomManager.addRoomBoardsListener(capture(listener));
 		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getSearchesEngine()).andReturn(searchesEngine);
+		expect(roomManager.getSearchesEngine()).andReturn(boardsSearchEngine);
 		expect(roomManager.openBoard(4L)).andReturn(board4);
 		replay(roomManager);
 
@@ -185,6 +182,6 @@ public class GameTimeoutTerminatorTest {
 
 		listener.getValue().boardOpened(ROOM, 4L);
 
-		verify(board1, board2, board3, board4, searchesEngine, roomManager, roomsManager);
+		verify(board2, board3, board4, boardsSearchEngine, roomManager, roomsManager);
 	}
 }

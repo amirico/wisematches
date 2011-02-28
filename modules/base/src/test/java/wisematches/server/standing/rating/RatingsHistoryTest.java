@@ -1,7 +1,7 @@
 package wisematches.server.standing.rating;
 
 import org.junit.Test;
-import wisematches.server.gameplaying.room.RatedBoardsInfo;
+import wisematches.server.gameplaying.room.search.RatedBoardsInfo;
 
 import java.sql.Timestamp;
 import java.util.Date;

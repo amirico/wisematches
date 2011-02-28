@@ -55,7 +55,7 @@ public class PlayboardServiceImplTest {
         expect(board.getGameSettings()).andReturn(settings).times(2);
         expect(board.getStartedTime()).andReturn(startedTime).times(2);
         expect(board.getFinishedTime()).andReturn(finishedTime).times(2);
-        expect(board.getPlayerTrun()).andReturn(hand14);
+        expect(board.getPlayerTurn()).andReturn(hand14);
         expect(board.getPlayersHands()).andReturn(Arrays.asList(hand13, hand14)).times(2);
         expect(board.getLastMoveTime()).andReturn(12323131312321L); // 3 minutes
         expect(board.getGameMoves()).andReturn(Arrays.<GameMove>asList(move1, move2, move3, move4));
@@ -260,7 +260,7 @@ public class PlayboardServiceImplTest {
         expect(board.makeMove(isA(MakeWordMove.class))).andThrow(new GameMoveException(""));
         expect(board.makeMove(isA(MakeWordMove.class))).andReturn(98);
         expect(board.getPlayerHand(14L)).andReturn(new ScribblePlayerHand(14L, new Tile(1, 'a', 1), new Tile(2, 'a', 1)));
-        expect(board.getPlayerTrun()).andReturn(new ScribblePlayerHand(18L, new Tile[0]));
+        expect(board.getPlayerTurn()).andReturn(new ScribblePlayerHand(18L, new Tile[0]));
         replay(board);
 
         try {
@@ -304,7 +304,7 @@ public class PlayboardServiceImplTest {
         reset(board);
         expect(board.makeMove(new PassTurnMove(14L))).andThrow(new GameMoveException(""));
         expect(board.makeMove(new PassTurnMove(14L))).andReturn(12);
-        expect(board.getPlayerTrun()).andReturn(new ScribblePlayerHand(18L));
+        expect(board.getPlayerTurn()).andReturn(new ScribblePlayerHand(18L));
         replay(board);
 
         try {
@@ -350,7 +350,7 @@ public class PlayboardServiceImplTest {
         reset(board);
         expect(board.makeMove(new ExchangeTilesMove(14L, tiles))).andThrow(new GameMoveException(""));
         expect(board.makeMove(new ExchangeTilesMove(14L, tiles))).andReturn(-2);
-        expect(board.getPlayerTrun()).andReturn(new ScribblePlayerHand(18L));
+        expect(board.getPlayerTurn()).andReturn(new ScribblePlayerHand(18L));
         expect(board.getPlayerHand(14L)).andReturn(new ScribblePlayerHand(14L, new Tile(1, 'a', 1), new Tile(2, 'a', 1)));
         replay(board);
 

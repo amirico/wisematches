@@ -26,7 +26,7 @@ public class StatisticCalculationCenter {
 
 	private final TheBoardListener boardListener = new TheBoardListener();
 
-	private final RoomBoardsListener roomBoardsListener = new TheRoomBoardsListener();
+	private final RoomListener roomListener = new TheRoomListener();
 	private static final Log log = LogFactory.getLog(StatisticCalculationCenter.class);
 
 	protected void processGameStarted(GameBoard board) {
@@ -313,7 +313,7 @@ public class StatisticCalculationCenter {
 		if (this.roomsManager != null) {
 			final Collection<RoomManager> managers = this.roomsManager.getRoomManagers();
 			for (RoomManager manager : managers) {
-				manager.removeRoomBoardsListener(roomBoardsListener);
+				manager.removeRoomBoardsListener(roomListener);
 			}
 		}
 
@@ -322,13 +322,12 @@ public class StatisticCalculationCenter {
 		if (roomsManager != null) {
 			final Collection<RoomManager> roomManagerCollection = roomsManager.getRoomManagers();
 			for (RoomManager roomManager : roomManagerCollection) {
-				roomManager.addRoomBoardsListener(roomBoardsListener);
+				roomManager.addRoomBoardsListener(roomListener);
 
 				@SuppressWarnings("unchecked")
 				final Collection<GameBoard> openedBoards = roomManager.getOpenedBoards();
 				for (GameBoard openedBoard : openedBoards) {
-					openedBoard.addGameStateListener(boardListener);
-					openedBoard.addGameMoveListener(boardListener);
+					openedBoard.addGameBoardListener(boardListener);
 				}
 			}
 		}
@@ -342,14 +341,16 @@ public class StatisticCalculationCenter {
 		this.transactionManager = transactionManager;
 	}
 
+	private class TheRoomListener implements RoomListener {
+		@Override
+		public void boardCreated(Room room, long boardId) {
+		}
 
-	private class TheRoomBoardsListener implements RoomBoardsListener {
 		public void boardOpened(Room room, long boardId) {
 			final RoomManager roomManager = roomsManager.getRoomManager(room);
 			try {
 				final GameBoard board = roomManager.openBoard(boardId);
-				board.addGameStateListener(boardListener);
-				board.addGameMoveListener(boardListener);
+				board.addGameBoardListener(boardListener);
 			} catch (BoardLoadingException ex) {
 				log.error("Board can't be loaded in boardOpened event processing", ex);
 			}
@@ -359,7 +360,7 @@ public class StatisticCalculationCenter {
 		}
 	}
 
-	private class TheBoardListener implements GameStateListener, GameMoveListener {
+	private class TheBoardListener implements GameBoardListener {
 		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
 			final TransactionStatus status = newTrasaction();
 			try {

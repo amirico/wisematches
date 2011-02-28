@@ -309,7 +309,7 @@ public class PlayerProfileServiceImplTest {
                         1000, 1100, 1200
                 });
 
-        final SearchesEngine searchesEngine = createStrictMock(SearchesEngine.class);
+        final BoardsSearchEngine searchesEngine = createStrictMock(BoardsSearchEngine.class);
         expect(searchesEngine.getRatedBoards(13L, instance.getTime(), null)).andReturn(history);
         replay(searchesEngine);
 

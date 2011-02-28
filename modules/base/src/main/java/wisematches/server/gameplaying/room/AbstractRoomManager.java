@@ -1,23 +1,25 @@
-package wisematches.server.gameplaying.room.impl;
+package wisematches.server.gameplaying.room;
 
 import org.apache.commons.logging.Log;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.*;
 import wisematches.server.player.Player;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * This class implements base methods of <code>RoomManager</code> class, like works with listeners and so on.
+ * This class implements base methods of <code>RoomManager</code> class, like works with roomListeners and so on.
  * <p/>
- * This implementation of <code>RoomManager</code> contains map of all opened boards with attached listeners with
- * attached listeners. This map is weak map and boards are removed from it automatical when board doesn't required
+ * This implementation of <code>RoomManager</code> contains map of all opened boards with attached roomListeners with
+ * attached roomListeners. This map is weak map and boards are removed from it automatical when board doesn't required
  * any more.
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -27,18 +29,11 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	private final Room room;
 
 	private final BoardsMap<B> boardsMap;
-	private final Collection<B> waitingGameBoards = Collections.synchronizedCollection(new ArrayList<B>());
 
 	private final Lock openBoardLock = new ReentrantLock();
-	private final Lock initialazingWaitingsLock = new ReentrantLock();
 
-	private volatile boolean waitingGameInitialized = false;
-
-	private final Collection<RoomSeatesListener> seatesListeners = new CopyOnWriteArraySet<RoomSeatesListener>();
-	private final Collection<RoomBoardsListener> boardsListeners = new CopyOnWriteArraySet<RoomBoardsListener>();
-	private final Collection<GamePlayersListener> playersListeners = new CopyOnWriteArraySet<GamePlayersListener>();
-	private final Collection<GameMoveListener> movesListeners = new CopyOnWriteArraySet<GameMoveListener>();
-	private final Collection<GameStateListener> statesListeners = new CopyOnWriteArraySet<GameStateListener>();
+	private final Collection<RoomListener> roomListeners = new CopyOnWriteArraySet<RoomListener>();
+	private final Collection<GameBoardListener> boardListeners = new CopyOnWriteArraySet<GameBoardListener>();
 
 	/**
 	 * Creates new room manager for specified room.
@@ -56,44 +51,20 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 		boardsMap = new BoardsMap<B>(this);
 	}
 
-	public void addRoomSeatesListener(RoomSeatesListener roomListener) {
-		seatesListeners.add(roomListener);
+	public void addRoomBoardsListener(RoomListener roomListener) {
+		roomListeners.add(roomListener);
 	}
 
-	public void removeRoomSeatesListener(RoomSeatesListener roomListener) {
-		seatesListeners.remove(roomListener);
+	public void removeRoomBoardsListener(RoomListener roomListener) {
+		roomListeners.remove(roomListener);
 	}
 
-	public void addRoomBoardsListener(RoomBoardsListener roomBoardsListener) {
-		boardsListeners.add(roomBoardsListener);
+	public void addGameBoardListener(GameBoardListener listener) {
+		boardListeners.add(listener);
 	}
 
-	public void removeRoomBoardsListener(RoomBoardsListener roomBoardsListener) {
-		boardsListeners.remove(roomBoardsListener);
-	}
-
-	public void addGamePlayersListener(GamePlayersListener listener) {
-		playersListeners.add(listener);
-	}
-
-	public void removeGamePlayersListener(GamePlayersListener listener) {
-		playersListeners.remove(listener);
-	}
-
-	public void addGameMoveListener(GameMoveListener listener) {
-		movesListeners.add(listener);
-	}
-
-	public void removeGameMoveListener(GameMoveListener listener) {
-		movesListeners.remove(listener);
-	}
-
-	public void addGameStateListener(GameStateListener listener) {
-		statesListeners.add(listener);
-	}
-
-	public void removeGameStateListener(GameStateListener listener) {
-		statesListeners.remove(listener);
+	public void removeGameBoardListener(GameBoardListener listener) {
+		boardListeners.remove(listener);
 	}
 
 	public Room getRoomType() {
@@ -104,22 +75,21 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 		return this;
 	}
 
-	public B createBoard(Player owner, S gameSettings) throws BoardCreationException {
-		if (log.isInfoEnabled()) {
-			log.info("Creating new board: settings - " + gameSettings + ", owner - " + owner);
+	@Override
+	public B createBoard(S gameSettings, Collection<Player> players) throws BoardCreationException {
+		if (log.isDebugEnabled()) {
+			log.debug("Creating new board: settings - " + gameSettings + ", players - " + players);
 		}
-		final B board = createBoard(gameSettings);
-		board.addPlayer(owner);
+		final B board = createBoardImpl(gameSettings, players);
 
 		openBoardLock.lock();
 		try {
-			saveBoard(board);
+			saveBoardImpl(board);
 			initializeBoard(board);
-			processPlayerAdded(board, owner);
+			fireBoardCreated(board.getBoardId());
 		} finally {
 			openBoardLock.unlock();
 		}
-
 		return board;
 	}
 
@@ -142,7 +112,7 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 				return board;
 			}
 
-			final B loaded = loadBoard(gameId);
+			final B loaded = loadBoardImpl(gameId);
 			if (loaded == null) {
 				if (log.isDebugEnabled()) {
 					log.debug("Board is inknown");
@@ -169,44 +139,7 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	}
 
 	public void updateBoard(B board) {
-		saveBoard(board);
-	}
-
-	/**
-	 * Returns waiting boards. When this method is invoked first time it calls <code>loadWaitingBoards</code>
-	 * to load waiting boards from storage. And save its in memory. Any later invokations just returns memory
-	 * copy of these boards.
-	 *
-	 * @return unmodifiabled collection of waiting boards.
-	 */
-	public Collection<B> getWaitingBoards() {
-		if (!waitingGameInitialized) {
-			initialazingWaitingsLock.lock();
-			try {
-				if (!waitingGameInitialized) {
-					final Collection<Long> longCollection = loadWaitingBoards();
-					if (log.isInfoEnabled()) {
-						log.info("Loading waiting games from storage for ids: " + longCollection);
-					}
-					for (Long boardId : longCollection) {
-						try {
-							final B b = openBoard(boardId);
-							if (b != null) {
-								waitingGameBoards.add(b);
-							} else {
-								log.warn("Id of waiting board was loaded but board is unknown.");
-							}
-						} catch (BoardLoadingException ex) {
-							log.error("Board can't be loadded", ex);
-						}
-					}
-					waitingGameInitialized = true;
-				}
-			} finally {
-				initialazingWaitingsLock.unlock();
-			}
-		}
-		return Collections.unmodifiableCollection(waitingGameBoards);
+		saveBoardImpl(board);
 	}
 
 	/**
@@ -240,79 +173,37 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	 * @param board the board to be initializing.
 	 */
 	private void initializeBoard(B board) {
-		TheBoardListener boardListener = new TheBoardListener(board);
-
-		board.addGameMoveListener(boardListener);
-		board.addGamePlayersListener(boardListener);
-		board.addGameStateListener(boardListener);
-
+		board.addGameBoardListener(new TheBoardListener(board));
 		boardsMap.addBoard(board);
 	}
 
-	/**
-	 * Helper method that is called when board seats are appeared. This method adds
-	 * board to waiting collection and invokes <code>boardSeatsAppeared</code> method for each listener.
-	 *
-	 * @param board  the board that has a seates.
-	 * @param player the player who enter a game
-	 */
-	private void processPlayerAdded(B board, Player player) {
-		final int maxPlayers = board.getGameSettings().getMaxPlayers();
-		final int playersCount = board.getPlayersHands().size();
-
-		if (playersCount == 1) {
-			waitingGameBoards.add(board);
-		} else if (playersCount == maxPlayers) {
-			waitingGameBoards.remove(board);
-		}
-
-		final RoomSeatesEvent event = new RoomSeatesEvent(room, board, player);
-		for (RoomSeatesListener listener : seatesListeners) {
-			listener.playerSitDown(event);
-		}
-
-		for (GamePlayersListener playersListener : playersListeners) {
-			playersListener.playerAdded(board, player);
-		}
-	}
-
-	/**
-	 * Helper method that is called when board seats are ended. This method removes
-	 * board from waiting collection and invokes <code>boardSeatsEnded</code> method for each listener.
-	 *
-	 * @param board  the board that does not have seats any more.
-	 * @param player the player who leave a game.
-	 */
-	private void processPlayerRemoved(B board, Player player) {
-		if (board.getPlayersHands().size() == 0) {
-			waitingGameBoards.remove(board);
-		} else {
-			waitingGameBoards.add(board);
-		}
-
-		final RoomSeatesEvent event = new RoomSeatesEvent(room, board, player);
-		for (RoomSeatesListener listener : seatesListeners) {
-			listener.playerStandUp(event);
-		}
-
-		for (GamePlayersListener playersListener : playersListeners) {
-			playersListener.playerRemoved(board, player);
+	private void fireBoardCreated(long boardId) {
+		for (RoomListener listener : roomListeners) {
+			listener.boardCreated(room, boardId);
 		}
 	}
 
 	private void fireBoardOpened(long boardId) {
-		for (RoomBoardsListener boardsListener : boardsListeners) {
-			boardsListener.boardOpened(room, boardId);
+		for (RoomListener listener : roomListeners) {
+			listener.boardOpened(room, boardId);
 		}
 	}
 
 	private void fireBoardClosed(long boardId) {
-		for (RoomBoardsListener boardsListener : boardsListeners) {
-			boardsListener.boardClosed(room, boardId);
+		for (RoomListener listener : roomListeners) {
+			listener.boardClosed(room, boardId);
 		}
 	}
 
-	/** ========== Definitions of abstract methods ================= */
+	/**
+	 * Creates new board with specified settings.
+	 *
+	 * @param gameSettings the game settings.
+	 * @param players	  the list of board players.
+	 * @return the created game board.
+	 * @throws BoardCreationException if board can't be created by some reasones.
+	 */
+	protected abstract B createBoardImpl(S gameSettings, Collection<Player> players) throws BoardCreationException;
 
 	/**
 	 * Loads game board frome storage by specified game id.
@@ -325,23 +216,14 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	 * @throws wisematches.server.gameplaying.room.BoardLoadingException
 	 *          if board can't be loaded by some reasones.
 	 */
-	protected abstract B loadBoard(long gameId) throws BoardLoadingException;
-
-	/**
-	 * Creates new board with specified settings.
-	 *
-	 * @param gameSettings the game settings.
-	 * @return the created game board.
-	 * @throws BoardCreationException if board can't be created by some reasones.
-	 */
-	protected abstract B createBoard(S gameSettings) throws BoardCreationException;
+	protected abstract B loadBoardImpl(long gameId) throws BoardLoadingException;
 
 	/**
 	 * Saves specified board to the storage.
 	 *
 	 * @param board the board to be saved.
 	 */
-	protected abstract void saveBoard(B board);
+	protected abstract void saveBoardImpl(B board);
 
 	/**
 	 * Loads ids of active boards for specified player.
@@ -351,16 +233,9 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	 */
 	protected abstract Collection<Long> loadActivePlayerBoards(Player player);
 
-	/**
-	 * Loads ids of waiting boards.
-	 *
-	 * @return the collection of board's ids that waiting players or empty collection.
-	 */
-	protected abstract Collection<Long> loadWaitingBoards();
-
 	/* ======================== Inner classes defenitions. ================ */
 
-	private class TheBoardListener implements GameMoveListener, GameStateListener, GamePlayersListener {
+	private class TheBoardListener implements GameBoardListener {
 		private final B gameBoard;
 
 		TheBoardListener(B gameBoard) {
@@ -368,57 +243,37 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 		}
 
 		public void playerMoved(GameMoveEvent event) {
-			saveBoard(gameBoard);
+			saveBoardImpl(gameBoard);
 
-			for (GameMoveListener movesListener : movesListeners) {
-				movesListener.playerMoved(event);
-			}
-		}
-
-		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
-			saveBoard(gameBoard);
-
-			for (GameStateListener statesListener : statesListeners) {
-				statesListener.gameStarted(board, playerTurn);
+			for (GameBoardListener statesListener : boardListeners) {
+				statesListener.playerMoved(event);
 			}
 		}
 
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
-			saveBoard(gameBoard);
+			saveBoardImpl(gameBoard);
 
 
-			for (GameStateListener statesListener : statesListeners) {
+			for (GameBoardListener statesListener : boardListeners) {
 				statesListener.gameFinished(board, wonPlayer);
 			}
 		}
 
 		public void gameDraw(GameBoard board) {
-			saveBoard(gameBoard);
+			saveBoardImpl(gameBoard);
 
-			for (GameStateListener statesListener : statesListeners) {
+			for (GameBoardListener statesListener : boardListeners) {
 				statesListener.gameDraw(board);
 			}
 		}
 
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
-			saveBoard(gameBoard);
+			saveBoardImpl(gameBoard);
 
 
-			for (GameStateListener statesListener : statesListeners) {
+			for (GameBoardListener statesListener : boardListeners) {
 				statesListener.gameInterrupted(board, interrupterPlayer, byTimeout);
 			}
-		}
-
-		public void playerAdded(GameBoard board, Player player) {
-			saveBoard(gameBoard);
-
-			processPlayerAdded(gameBoard, player);
-		}
-
-		public void playerRemoved(GameBoard board, Player player) {
-			saveBoard(gameBoard);
-
-			processPlayerRemoved(gameBoard, player);
 		}
 	}
 

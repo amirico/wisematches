@@ -13,8 +13,8 @@ import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import wisematches.server.gameplaying.board.GameMoveException;
 import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.board.PassTurnMove;
-import wisematches.server.gameplaying.room.ExpiringBoardInfo;
-import wisematches.server.gameplaying.room.RatedBoardsInfo;
+import wisematches.server.gameplaying.room.search.ExpiringBoardInfo;
+import wisematches.server.gameplaying.room.search.RatedBoardsInfo;
 import wisematches.server.gameplaying.scribble.Direction;
 import wisematches.server.gameplaying.scribble.Position;
 import wisematches.server.gameplaying.scribble.Tile;
@@ -63,50 +63,6 @@ public class ScribbleBoardDaoTest {
 	}
 
 	@Test
-	public void test_getWaitingGames() {
-		final Player p1 = createMockPlayer(1L, 800);
-		final Player p2 = createMockPlayer(2L, 800);
-
-		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
-		expect(dictionary.getLocale()).andReturn(LOCALE);
-		expect(dictionary.getLocale()).andReturn(LOCALE);
-		replay(dictionary);
-
-		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru", 3, 100, 1000);
-		final ScribbleBoard sb1 = new ScribbleBoard(ss1);
-		sb1.setTilesBank(tilesBank);
-		sb1.setDictionary(dictionary);
-		sb1.addPlayer(p1);
-		sb1.addPlayer(p2);
-		scribbleBoardDao.saveScribbleBoard(sb1);
-
-		final Collection<Long> ids1 = scribbleBoardDao.getWaitingBoards();
-		assertEquals(GameState.WAITING, sb1.getGameState());
-		assertEquals(1, ids1.size());
-		assertEquals(sb1.getBoardId(), ids1.toArray()[0]);
-
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p1).size());
-
-		// Next boards
-		final ScribbleSettings ss2 = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru");
-		final ScribbleBoard sb2 = new ScribbleBoard(ss2);
-		sb2.setTilesBank(tilesBank);
-		sb2.setDictionary(dictionary);
-		sb2.addPlayer(p1);
-		sb2.addPlayer(p2);
-		scribbleBoardDao.saveScribbleBoard(sb2);
-
-		final Collection<Long> idss = scribbleBoardDao.getWaitingBoards();
-		assertEquals(GameState.WAITING, sb2.getGameState());
-		assertEquals(2, idss.size());
-		assertEquals(sb1.getBoardId(), idss.toArray()[0]);
-		assertEquals(sb2.getBoardId(), idss.toArray()[1]);
-
-		assertEquals(2, scribbleBoardDao.getActiveBoards(p1).size());
-	}
-
-	@Test
 	public void test_activeGames() {
 		final Player p1 = createMockPlayer(1L, 800);
 		final Player p2 = createMockPlayer(2L, 800);
@@ -119,43 +75,23 @@ public class ScribbleBoardDaoTest {
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
-		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru", 3, 100, 1000);
-		final ScribbleBoard sb1 = new ScribbleBoard(ss1);
-		sb1.setTilesBank(tilesBank);
-		sb1.setDictionary(dictionary);
-		sb1.addPlayer(p1);
-		sb1.addPlayer(p2);
-		sb1.addPlayer(p3);
+		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p2, p3, p4), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb1);
 
-		assertEquals(GameState.IN_PROGRESS, sb1.getGameState());
-		assertEquals(0, scribbleBoardDao.getWaitingBoards().size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p1).size());
+		assertEquals(GameState.ACTIVE, sb1.getGameState());
+		assertEquals(0, scribbleBoardDao.getActiveBoards(p1).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p2).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
-		assertEquals(0, scribbleBoardDao.getActiveBoards(p4).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoards(p4).size());
 
 		// Next boards
-		final ScribbleSettings ss2 = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru", 3, 100, 1000);
-		final ScribbleBoard sb2 = new ScribbleBoard(ss2);
-		sb2.setTilesBank(tilesBank);
-		sb2.setDictionary(dictionary);
-		sb2.addPlayer(p1);
-		sb2.addPlayer(p2);
+		final ScribbleSettings ss2 = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb2 = new ScribbleBoard(ss2, Arrays.asList(p1, p2), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb2);
 
-		assertEquals(GameState.WAITING, sb2.getGameState());
-		assertEquals(1, scribbleBoardDao.getWaitingBoards().size());
-		assertEquals(2, scribbleBoardDao.getActiveBoards(p1).size());
-		assertEquals(2, scribbleBoardDao.getActiveBoards(p2).size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
-		assertEquals(0, scribbleBoardDao.getActiveBoards(p4).size());
-
-		sb2.addPlayer(p4);
-		scribbleBoardDao.saveScribbleBoard(sb2);
-		assertEquals(GameState.IN_PROGRESS, sb1.getGameState());
-		assertEquals(0, scribbleBoardDao.getWaitingBoards().size());
-		assertEquals(2, scribbleBoardDao.getActiveBoards(p1).size());
+		assertEquals(GameState.ACTIVE, sb2.getGameState());
+		assertEquals(1, scribbleBoardDao.getActiveBoards(p1).size());
 		assertEquals(2, scribbleBoardDao.getActiveBoards(p2).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p4).size());
@@ -172,14 +108,8 @@ public class ScribbleBoardDaoTest {
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
-		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru", 3, 100, 1000);
-		final ScribbleBoard sb1 = new ScribbleBoard(ss1);
-		sb1.setTilesBank(tilesBank);
-		sb1.setDictionary(dictionary);
-		sb1.addPlayer(p1);
-		sb1.addPlayer(p2);
-		sb1.addPlayer(p3);
-
+		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p1, p2, p3), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb1);
 
 		final Collection<ExpiringBoardInfo> collection = scribbleBoardDao.findExpiringBoards();
@@ -209,13 +139,8 @@ public class ScribbleBoardDaoTest {
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
-		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru", 3, 100, 1000);
-		final ScribbleBoard sb1 = new ScribbleBoard(ss1);
-		sb1.setTilesBank(tilesBank);
-		sb1.setDictionary(dictionary);
-		sb1.addPlayer(p1);
-		sb1.addPlayer(p2);
-		sb1.addPlayer(p3);
+		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p1, p2, p3), tilesBank, dictionary);
 
 		sb1.terminate();
 
@@ -244,26 +169,14 @@ public class ScribbleBoardDaoTest {
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
-		expect(dictionary.getLocale()).andReturn(LOCALE);
 		expect(dictionary.getWord("aaaa")).andReturn(new wisematches.server.gameplaying.dictionary.Word("aaaa", LOCALE));
 		replay(dictionary);
 
-		final ScribbleSettings ss = new ScribbleSettings("This is scribble board game", new Date(), 3, "ru", 3, 100, 1000);
-		final ScribbleBoard sb = new ScribbleBoard(ss);
-		sb.setTilesBank(tilesBank);
-		sb.setDictionary(dictionary);
+		final ScribbleSettings ss = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb = new ScribbleBoard(ss, Arrays.asList(p1, p2, p3), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb);
 
-		sb.addPlayer(p1);
-		scribbleBoardDao.saveScribbleBoard(sb);
-
-		sb.addPlayer(p2);
-		scribbleBoardDao.saveScribbleBoard(sb);
-
-		sb.addPlayer(p3);
-		scribbleBoardDao.saveScribbleBoard(sb);
-
-		ScribblePlayerHand hand = sb.getPlayerTrun();
+		ScribblePlayerHand hand = sb.getPlayerTurn();
 		final MakeWordMove move1 = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 6), Direction.HORIZONTAL, Arrays.copyOfRange(hand.getTiles(), 0, 4)));
 		sb.makeMove(move1);
 		scribbleBoardDao.saveScribbleBoard(sb);
@@ -273,15 +186,15 @@ public class ScribbleBoardDaoTest {
 		scribbleBoardDao.getHibernateTemplate().clear();
 
 		final ScribbleBoard loaded = checkLoadedDatabase(sb);
-		Tile[] tiles = Arrays.copyOfRange(loaded.getPlayerTrun().getTiles(), 0, 4);
+		Tile[] tiles = Arrays.copyOfRange(loaded.getPlayerTurn().getTiles(), 0, 4);
 		tiles[1] = move1.getWord().getTiles()[2];
-		final MakeWordMove move2 = new MakeWordMove(loaded.getPlayerTrun().getPlayerId(), new Word(new Position(6, 8), Direction.VERTICAL, tiles));
+		final MakeWordMove move2 = new MakeWordMove(loaded.getPlayerTurn().getPlayerId(), new Word(new Position(6, 8), Direction.VERTICAL, tiles));
 		loaded.makeMove(move2);
-		final PassTurnMove move3 = new PassTurnMove(loaded.getPlayerTrun().getPlayerId());
+		final PassTurnMove move3 = new PassTurnMove(loaded.getPlayerTurn().getPlayerId());
 		loaded.makeMove(move3);
-		final ExchangeTilesMove move4 = new ExchangeTilesMove(loaded.getPlayerTrun().getPlayerId(), new int[]{
-				loaded.getPlayerTrun().getTiles()[0].getNumber(),
-				loaded.getPlayerTrun().getTiles()[1].getNumber()
+		final ExchangeTilesMove move4 = new ExchangeTilesMove(loaded.getPlayerTurn().getPlayerId(), new int[]{
+				loaded.getPlayerTurn().getTiles()[0].getNumber(),
+				loaded.getPlayerTurn().getTiles()[1].getNumber()
 		});
 		loaded.makeMove(move4);
 		scribbleBoardDao.saveScribbleBoard(loaded);
@@ -298,8 +211,7 @@ public class ScribbleBoardDaoTest {
 		replay(dictionary);
 
 		final ScribbleBoard board = scribbleBoardDao.getScribbleBoard(sb.getBoardId());
-		board.setDictionary(dictionary);
-		board.setTilesBank(tilesBank);
+		board.initGameAfterLoading(tilesBank, dictionary);
 
 		assertEquals(4, board.getGameMoves().size());
 		for (int i = 0; i < 4; i++) {
@@ -311,13 +223,11 @@ public class ScribbleBoardDaoTest {
 	private ScribbleBoard checkLoadedDatabase(ScribbleBoard originalBoard) {
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
-		expect(dictionary.getLocale()).andReturn(LOCALE);
 		expect(dictionary.getWord("aaaa")).andReturn(new wisematches.server.gameplaying.dictionary.Word("aaaa", LOCALE));
 		replay(dictionary);
 
 		final ScribbleBoard loadedBoard = scribbleBoardDao.getScribbleBoard(originalBoard.getBoardId());
-		loadedBoard.setDictionary(dictionary);
-		loadedBoard.setTilesBank(tilesBank);
+		loadedBoard.initGameAfterLoading(tilesBank, dictionary);
 		assertNotNull(loadedBoard);
 
 		final ScribbleSettings originalSettings = originalBoard.getGameSettings();
@@ -325,17 +235,13 @@ public class ScribbleBoardDaoTest {
 		assertEquals(originalSettings.getTitle(), loadedSettings.getTitle());
 		assertEquals(originalSettings.getLanguage(), loadedSettings.getLanguage());
 		assertEquals(originalSettings.getDaysPerMove(), loadedSettings.getDaysPerMove());
-		assertEquals(originalSettings.getMaxPlayers(), loadedSettings.getMaxPlayers());
-		assertEquals(originalSettings.getMaxRating(), loadedSettings.getMaxRating());
-		assertEquals(originalSettings.getMinRating(), loadedSettings.getMinRating());
-		assertDates(originalSettings.getCreateDate(), loadedSettings.getCreateDate());
 
 		assertEquals(originalBoard.getPassesCount(), loadedBoard.getPassesCount());
 		assertDates(originalBoard.getLastMoveTime(), loadedBoard.getLastMoveTime());
 		assertEquals(originalBoard.getBoardId(), loadedBoard.getBoardId());
 		assertEquals(originalBoard.getGameState(), loadedBoard.getGameState());
-		assertEquals(GameState.IN_PROGRESS, loadedBoard.getGameState());
-		assertEquals(originalBoard.getPlayerTrun().getPlayerId(), loadedBoard.getPlayerTrun().getPlayerId());
+		assertEquals(GameState.ACTIVE, loadedBoard.getGameState());
+		assertEquals(originalBoard.getPlayerTurn().getPlayerId(), loadedBoard.getPlayerTurn().getPlayerId());
 
 		final List<ScribblePlayerHand> playerHands = loadedBoard.getPlayersHands();
 		assertEquals(3, playerHands.size());

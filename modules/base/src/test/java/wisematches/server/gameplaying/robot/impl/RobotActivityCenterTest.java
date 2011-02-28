@@ -25,9 +25,8 @@ import static org.easymock.EasyMock.*;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RobotActivityCenterTest {
-	private RoomBoardsListener boardsListener;
-	private GameMoveListener gameMoveListener;
-	private GameStateListener gameStateListener;
+	private RoomListener listener;
+	private GameBoardListener gameBoardListener;
 
 	private RoomManager roomManager;
 	private RobotBrainManager brainManager;
@@ -65,7 +64,7 @@ public class RobotActivityCenterTest {
 		final RobotPlayer player = RobotPlayer.valueOf(RobotType.TRAINEE);
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(player.getId()));
+		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(player.getId()));
 		replay(gameBoard);
 
 		@SuppressWarnings("unchecked")
@@ -100,9 +99,9 @@ public class RobotActivityCenterTest {
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
 		expectGameMoveListener(gameBoard);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(p1.getId()));
+		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
 		expectGameMoveListener(gameBoard);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(p2.getId()));
+		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p2.getId()));
 		replay(gameBoard);
 
 		expect(brainManager.getRobotPlayers()).andReturn(Arrays.asList(p1, p2));
@@ -147,7 +146,6 @@ public class RobotActivityCenterTest {
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
 
 		expectGameMoveListener(gameBoard);
-		expect(gameBoard.getPlayerTrun()).andReturn(createPlayerHand(10023L));
 		replay(gameBoard);
 
 		expect(roomManager.openBoard(1L)).andReturn(gameBoard);
@@ -155,24 +153,25 @@ public class RobotActivityCenterTest {
 
 		replay(brainManager, executor);
 
-		boardsListener.boardOpened(ROOM, 1L);
+		listener.boardOpened(ROOM, 1L);
 		verify(gameBoard, brainManager, roomManager, executor);
 
 		// Test move transfered
 		reset(gameBoard, brainManager, roomManager, executor);
+		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
 		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
 		replay(executor, brainManager, gameBoard, roomManager);
 
-		gameMoveListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(p1.getId())));
+		gameBoardListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(p1.getId())));
 
 		verify(gameBoard, brainManager, roomManager, executor);
 	}
 
 	private void expectRoomBoardsListener() {
-		roomManager.addRoomBoardsListener(isA(RoomBoardsListener.class));
+		roomManager.addRoomBoardsListener(isA(RoomListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				boardsListener = (RoomBoardsListener) getCurrentArguments()[0];
+				listener = (RoomListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -180,17 +179,10 @@ public class RobotActivityCenterTest {
 
 	@SuppressWarnings("unchecked")
 	private void expectGameMoveListener(GameBoard gameBoard) {
-		gameBoard.addGameMoveListener(isA(GameMoveListener.class));
+		gameBoard.addGameBoardListener(isA(GameBoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				gameMoveListener = (GameMoveListener) getCurrentArguments()[0];
-				return null;
-			}
-		});
-		gameBoard.addGameStateListener(isA(GameStateListener.class));
-		expectLastCall().andAnswer(new IAnswer<Object>() {
-			public Object answer() throws Throwable {
-				gameStateListener = (GameStateListener) getCurrentArguments()[0];
+				gameBoardListener = (GameBoardListener) getCurrentArguments()[0];
 				return null;
 			}
 		});

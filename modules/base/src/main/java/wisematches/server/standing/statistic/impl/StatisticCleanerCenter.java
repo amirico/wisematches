@@ -40,7 +40,7 @@ public class StatisticCleanerCenter {
 //        final DatesRange ninetyDays = getDatesRange(Calendar.MONTH, -3, currentTime, lastCleanupTime);
 //        final DatesRange lastYear = getDatesRange(Calendar.YEAR, -1, currentTime, lastCleanupTime);
 //
-//        final SearchesEngine searchesEngine = roomManager.getSearchesEngine();
+//        final BoardsSearchEngine searchesEngine = roomManager.getSearchesEngine();
 //
 //        @SuppressWarnings("unchecked")
 //        final Collection<GameBoard> boards = searchesEngine.findBoards(STATUSES, ninetyDays, thirtyDays, lastYear);
