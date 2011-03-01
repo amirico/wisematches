@@ -20,6 +20,7 @@ import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
+import wisematches.server.player.computer.robot.RobotPlayer;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -44,6 +45,7 @@ public class DashboardController {
 			form.setTitle("ASDASDF AS");
 		}
 		model.addAttribute("pageName", "create");
+		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		return "/content/game/layout";
 	}
 
