@@ -157,10 +157,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		boardListeners.remove(listener);
 	}
 
-	protected void firePlayerMoved(P movedPlayer, GameMove move, P nextPlayer) {
-		final GameMoveEvent e = new GameMoveEvent(this, movedPlayer, move, nextPlayer);
+	protected void firePlayerMoved(GameMove move) {
 		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.playerMoved(e);
+			boardListener.gameMoveMade(this, move);
 		}
 	}
 
@@ -172,9 +171,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	}
 
 	protected void fireGameDraw() {
-		gameState = GameState.DRAW;
+		gameState = GameState.DREW;
 		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameDraw(this);
+			boardListener.gameDrew(this);
 		}
 	}
 
@@ -220,9 +219,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		processMoveFinished(player, gameMove);
 
 		if (checkGameFinished() || checkGamePassed()) {
-			firePlayerMoved(player, gameMove, null);
-
 			finalizeGame();
+			firePlayerMoved(gameMove);
+
 			final P won = getWonPlayer(playersIterator.getPlayerHands());
 			if (won == null) {
 				fireGameDraw();
@@ -230,7 +229,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 				fireGameFinished(won);
 			}
 		} else {
-			firePlayerMoved(player, gameMove, playersIterator.next());
+			firePlayerMoved(gameMove);
 		}
 		return points;
 	}
@@ -259,7 +258,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 */
 	protected void checkState() throws GameStateException {
 		switch (gameState) {
-			case DRAW:
+			case DREW:
 			case FINISHED:
 			case INTERRUPTED:
 				throw new GameFinishedException(gameState);

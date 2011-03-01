@@ -7,7 +7,7 @@ import wisematches.server.deprecated.web.rpc.GenericSecureRemoteService;
  */
 public class DashboardServiceImpl extends GenericSecureRemoteService {//implements DashboardService {
 /*    private PlayerManager playerManager;
-    private ScribbleRoomManager roomManager;
+    private ScribbleBoardManager roomManager;
 
     private static final DashboardItemBean[] EMPTY_BEANS_ARRAY = new DashboardItemBean[0];
 
@@ -124,7 +124,7 @@ public class DashboardServiceImpl extends GenericSecureRemoteService {//implemen
     }
 
     public void setRoomsManager(RoomsManager roomsManager) {
-        roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
+        roomManager = (ScribbleBoardManager) roomsManager.getRoomManager(ScribbleBoardManager.ROOM);
     }
 
     public void setPlayerManager(PlayerManager playerManager) {

@@ -1,19 +1,17 @@
 package wisematches.server.gameplaying.robot.impl;
 
 import org.junit.Test;
-import wisematches.server.gameplaying.robot.RobotBrain;
-import wisematches.server.gameplaying.room.Room;
-import wisematches.server.player.computer.robot.RobotType;
-
-import java.util.Arrays;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RobotBrainManagerImplTest {
+
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
 	@Test
 	public void testGetBrains() {
 		RobotBrainManagerImpl impl = new RobotBrainManagerImpl();
@@ -60,4 +58,5 @@ public class RobotBrainManagerImplTest {
 		replay(brain);
 		return brain;
 	}
+*/
 }

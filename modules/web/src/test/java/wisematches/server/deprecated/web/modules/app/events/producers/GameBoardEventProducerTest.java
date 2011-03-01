@@ -264,7 +264,7 @@ public class GameBoardEventProducerTest {
         replay(board);
 
         gameStateListener.gameFinished(board, new ScribblePlayerHand(13L));
-        gameStateListener.gameDraw(board);
+        gameStateListener.gameDrew(board);
         gameStateListener.gameInterrupted(board, new ScribblePlayerHand(13L), false);
         gameStateListener.gameInterrupted(board, new ScribblePlayerHand(13L), true);
 
@@ -303,7 +303,7 @@ public class GameBoardEventProducerTest {
 
         final Word word = new Word(new Position(3, 9), Direction.VERTICAL, new Tile(1, 'a', 1), new Tile(2, 'b', 2));
         final PlayerMove move = new MakeWordMove(13L, word);
-        gameMoveListener.playerMoved(
+        gameMoveListener.gameMoveMade(
                 new GameMoveEvent(board,
                         new ScribblePlayerHand(13L, new Tile(3, 'c', 3)),
                         new GameMove(move, 1, 2, 3),

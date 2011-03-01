@@ -134,7 +134,7 @@ public class GameBoardEventProducer {//implements EventProducer {
             notificator.fireEvent(new GameStartedEvent(boardId, playerTrun, startedTime));
         }
 
-        public void playerMoved(GameMoveEvent event) {
+        public void gameMoveMade(GameMoveEvent event) {
             if (notificator == null) {
                 return;
             }
@@ -157,7 +157,7 @@ public class GameBoardEventProducer {//implements EventProducer {
             fireGameFinishedEvent(board, GameFinishedEvent.Type.FINISHED, wonPlayer);
         }
 
-        public void gameDraw(GameBoard board) {
+        public void gameDrew(GameBoard board) {
             fireGameFinishedEvent(board, GameFinishedEvent.Type.FINISHED, null);
         }
 

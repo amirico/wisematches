@@ -1,25 +1,17 @@
 package wisematches.server.gameplaying.room;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.easymock.IAnswer;
 import org.junit.Test;
-import wisematches.server.core.MockPlayer;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
-import wisematches.server.player.Player;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class AbstractRoomManagerTest {
+
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
 	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
 	private static final Room ROOM = Room.valueOf("mock");
 
@@ -35,9 +27,9 @@ public class AbstractRoomManagerTest {
 		expect(board2.getBoardId()).andReturn(2L).anyTimes();
 		replay(board2);
 
-		AbstractRoomManager roomManager = new MockRoomManager(createNiceMock(GameBoardDao.class));
+		AbstractBoardManager boardManager = new MockBoardManager(createNiceMock(GameBoardDao.class));
 
-		AbstractRoomManager.BoardsMap<GameBoard> board = new AbstractRoomManager.BoardsMap<GameBoard>(roomManager);
+		AbstractBoardManager.BoardsMap<GameBoard> board = new AbstractBoardManager.BoardsMap<GameBoard>(boardManager);
 		assertEquals(0, board.size());
 
 		board.addBoard(board1);
@@ -86,7 +78,7 @@ public class AbstractRoomManagerTest {
 		dao.saveBoard(board);
 		replay(dao);
 
-		final MockRoomManager mock = new MockRoomManager(dao);
+		final MockBoardManager mock = new MockBoardManager(dao);
 
 		final GameBoard<?, ?> newBoard = mock.createBoard(gameSettings, players);
 		assertSame(board, newBoard);
@@ -106,7 +98,7 @@ public class AbstractRoomManagerTest {
 		expect(dao.loadBoard(1L)).andReturn(board);
 		replay(dao);
 
-		final MockRoomManager mock = new MockRoomManager(dao);
+		final MockBoardManager mock = new MockBoardManager(dao);
 
 		final GameBoard<?, ?> newBoard = mock.openBoard(1L);
 		assertSame(board, newBoard);
@@ -145,7 +137,7 @@ public class AbstractRoomManagerTest {
 		expect(dao.loadBoard(2L)).andReturn(board2);
 		replay(dao);
 
-		final MockRoomManager mock = new MockRoomManager(dao);
+		final MockBoardManager mock = new MockBoardManager(dao);
 
 		final Collection<GameBoard<GameSettings, GamePlayerHand>> waitingBoards = mock.getActiveBoards(player);
 		assertEquals(2, waitingBoards.size());
@@ -175,20 +167,20 @@ public class AbstractRoomManagerTest {
 		replay(dao);
 
 		final GameBoardListener boardListener = createStrictMock(GameBoardListener.class);
-		boardListener.playerMoved(moveEvent);
-		boardListener.gameDraw(board);
+		boardListener.gameMoveMade(moveEvent);
+		boardListener.gameDrew(board);
 		boardListener.gameFinished(board, null);
 		boardListener.gameInterrupted(board, null, false);
 		replay(boardListener);
 
-		final MockRoomManager mock = new MockRoomManager(dao);
+		final MockBoardManager mock = new MockBoardManager(dao);
 		mock.addGameBoardListener(boardListener);
 
 		mock.openBoard(1L);
 
-		boardListener.playerMoved(moveEvent);
+		boardListener.gameMoveMade(moveEvent);
 
-		gameBoardListener.gameDraw(board);
+		gameBoardListener.gameDrew(board);
 		gameBoardListener.gameFinished(board, null);
 		gameBoardListener.gameInterrupted(board, null, false);
 
@@ -223,10 +215,10 @@ public class AbstractRoomManagerTest {
 		}
 	}
 
-	private static class MockRoomManager extends AbstractRoomManager<GameBoard<GameSettings, GamePlayerHand>, GameSettings> {
+	private static class MockBoardManager extends AbstractBoardManager<GameBoard<GameSettings, GamePlayerHand>, GameSettings> {
 		private final GameBoardDao gameBoardDao;
 
-		private MockRoomManager(GameBoardDao gameBoardDao) {
+		private MockBoardManager(GameBoardDao gameBoardDao) {
 			super(ROOM, log);
 			this.gameBoardDao = gameBoardDao;
 		}
@@ -255,4 +247,5 @@ public class AbstractRoomManagerTest {
 			return null;
 		}
 	}
+*/
 }

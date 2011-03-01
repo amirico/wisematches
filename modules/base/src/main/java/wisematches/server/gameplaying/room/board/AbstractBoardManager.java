@@ -1,7 +1,8 @@
-package wisematches.server.gameplaying.room;
+package wisematches.server.gameplaying.room.board;
 
 import org.apache.commons.logging.Log;
 import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.room.propose.GameProposal;
 import wisematches.server.player.Player;
 
 import java.lang.ref.Reference;
@@ -16,63 +17,44 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * This class implements base methods of <code>RoomManager</code> class, like works with roomListeners and so on.
+ * This class implements base methods of <code>BoardManager</code> class, like works with boardListeners and so on.
  * <p/>
- * This implementation of <code>RoomManager</code> contains map of all opened boards with attached roomListeners with
- * attached roomListeners. This map is weak map and boards are removed from it automatical when board doesn't required
+ * This implementation of <code>BoardManager</code> contains map of all opened boards with attached boardListeners with
+ * attached boardListeners. This map is weak map and boards are removed from it automatical when board doesn't required
  * any more.
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends GameSettings> implements RoomManager<B, S>, RoomManagerFacade<B, S> {
+public abstract class AbstractBoardManager<P extends GameProposal, S extends GameSettings, B extends GameBoard<S, ?>> implements BoardManager<S, B> {
 	private final Log log;
-	private final Room room;
 
 	private final BoardsMap<B> boardsMap;
 
 	private final Lock openBoardLock = new ReentrantLock();
 
-	private final Collection<RoomListener> roomListeners = new CopyOnWriteArraySet<RoomListener>();
-	private final Collection<GameBoardListener> boardListeners = new CopyOnWriteArraySet<GameBoardListener>();
+	private final GameBoardListener gameBoardListener = new TheBoardListener();
+	private final Collection<BoardStateListener> boardStateListeners = new CopyOnWriteArraySet<BoardStateListener>();
 
 	/**
 	 * Creates new room manager for specified room.
 	 *
-	 * @param room the room that this manager is implemented.
-	 * @param log  logger for this room.
+	 * @param log logger for this room.
 	 */
-	protected AbstractRoomManager(Room room, Log log) {
-		if (room == null) {
-			throw new NullPointerException("Room is null");
-		}
+	protected AbstractBoardManager(Log log) {
 		this.log = log;
-		this.room = room;
-
-		boardsMap = new BoardsMap<B>(this);
+		boardsMap = new BoardsMap<B>(log);
 	}
 
-	public void addRoomBoardsListener(RoomListener roomListener) {
-		roomListeners.add(roomListener);
+	@Override
+	public void addBoardStateListener(BoardStateListener l) {
+		if (l != null) {
+			boardStateListeners.add(l);
+		}
 	}
 
-	public void removeRoomBoardsListener(RoomListener roomListener) {
-		roomListeners.remove(roomListener);
-	}
-
-	public void addGameBoardListener(GameBoardListener listener) {
-		boardListeners.add(listener);
-	}
-
-	public void removeGameBoardListener(GameBoardListener listener) {
-		boardListeners.remove(listener);
-	}
-
-	public Room getRoomType() {
-		return room;
-	}
-
-	public RoomManager<B, S> getRoomManager() {
-		return this;
+	@Override
+	public void removeBoardStateListener(BoardStateListener l) {
+		boardStateListeners.remove(l);
 	}
 
 	@Override
@@ -85,14 +67,19 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 		openBoardLock.lock();
 		try {
 			saveBoardImpl(board);
-			initializeBoard(board);
-			fireBoardCreated(board.getBoardId());
+			board.addGameBoardListener(gameBoardListener);
+			boardsMap.addBoard(board);
+
+			for (BoardStateListener listener : boardStateListeners) {
+				listener.gameStarted(board);
+			}
 		} finally {
 			openBoardLock.unlock();
 		}
 		return board;
 	}
 
+	@Override
 	public B openBoard(long gameId) throws BoardLoadingException {
 		if (log.isInfoEnabled()) {
 			log.info("Opening board: " + gameId);
@@ -122,13 +109,15 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 			if (log.isDebugEnabled()) {
 				log.debug("Board loaded from storage");
 			}
-			initializeBoard(loaded);
+			loaded.addGameBoardListener(gameBoardListener);
+			boardsMap.addBoard(loaded);
 			return loaded;
 		} finally {
 			openBoardLock.unlock();
 		}
 	}
 
+	@Override
 	public Collection<B> getOpenedBoards() {
 		openBoardLock.lock();
 		try {
@@ -138,13 +127,12 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 		}
 	}
 
+	@Override
 	public void updateBoard(B board) {
 		saveBoardImpl(board);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public Collection<B> getActiveBoards(Player player) {
 		if (log.isDebugEnabled()) {
 			log.debug("get active boards for player: " + player);
@@ -166,36 +154,6 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	}
 
 	/**
-	 * Attaches a board listener to specified board and adds it to boards map.
-	 * <p/>
-	 * This is not synchronized method and should be synchronized externally.
-	 *
-	 * @param board the board to be initializing.
-	 */
-	private void initializeBoard(B board) {
-		board.addGameBoardListener(new TheBoardListener(board));
-		boardsMap.addBoard(board);
-	}
-
-	private void fireBoardCreated(long boardId) {
-		for (RoomListener listener : roomListeners) {
-			listener.boardCreated(room, boardId);
-		}
-	}
-
-	private void fireBoardOpened(long boardId) {
-		for (RoomListener listener : roomListeners) {
-			listener.boardOpened(room, boardId);
-		}
-	}
-
-	private void fireBoardClosed(long boardId) {
-		for (RoomListener listener : roomListeners) {
-			listener.boardClosed(room, boardId);
-		}
-	}
-
-	/**
 	 * Creates new board with specified settings.
 	 *
 	 * @param gameSettings the game settings.
@@ -213,7 +171,7 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 	 *
 	 * @param gameId the id of game that must be loaded.
 	 * @return the loaded game board or <code>null</code> if no game with specified id.
-	 * @throws wisematches.server.gameplaying.room.BoardLoadingException
+	 * @throws wisematches.server.gameplaying.room.board.BoardLoadingException
 	 *          if board can't be loaded by some reasones.
 	 */
 	protected abstract B loadBoardImpl(long gameId) throws BoardLoadingException;
@@ -235,48 +193,6 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 
 	/* ======================== Inner classes defenitions. ================ */
 
-	private class TheBoardListener implements GameBoardListener {
-		private final B gameBoard;
-
-		TheBoardListener(B gameBoard) {
-			this.gameBoard = gameBoard;
-		}
-
-		public void playerMoved(GameMoveEvent event) {
-			saveBoardImpl(gameBoard);
-
-			for (GameBoardListener statesListener : boardListeners) {
-				statesListener.playerMoved(event);
-			}
-		}
-
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
-			saveBoardImpl(gameBoard);
-
-
-			for (GameBoardListener statesListener : boardListeners) {
-				statesListener.gameFinished(board, wonPlayer);
-			}
-		}
-
-		public void gameDraw(GameBoard board) {
-			saveBoardImpl(gameBoard);
-
-			for (GameBoardListener statesListener : boardListeners) {
-				statesListener.gameDraw(board);
-			}
-		}
-
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
-			saveBoardImpl(gameBoard);
-
-
-			for (GameBoardListener statesListener : boardListeners) {
-				statesListener.gameInterrupted(board, interrupterPlayer, byTimeout);
-			}
-		}
-	}
-
 	/**
 	 * Weak boards map. It contains weak references to boards and automatical cleared when board doesn't required
 	 * any more.
@@ -294,12 +210,10 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 		private final ReferenceQueue<B> boardsQueue = new ReferenceQueue<B>();
 		private final Map<Long, BoardWeakReference<B>> boardsReferences = new HashMap<Long, BoardWeakReference<B>>();
 
-		private AbstractRoomManager roomManager;
 		private final Log log;
 
-		BoardsMap(AbstractRoomManager roomManager) {
-			this.roomManager = roomManager;
-			this.log = roomManager.log;
+		BoardsMap(Log log) {
+			this.log = log;
 		}
 
 		/**
@@ -318,7 +232,6 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 				log.debug("Add board to boards map: " + id);
 			}
 			boardsReferences.put(id, value);
-			roomManager.fireBoardOpened(id);
 		}
 
 		Collection<B> values() {
@@ -363,8 +276,6 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 					log.info("Board is expired and removed from map: " + id);
 				}
 				boardsReferences.remove(id);
-				roomManager.fireBoardClosed(id);
-
 				reference = boardsQueue.poll();
 			}
 		}
@@ -387,6 +298,48 @@ public abstract class AbstractRoomManager<B extends GameBoard<S, ?>, S extends G
 
 		public long getBoardId() {
 			return boardId;
+		}
+	}
+
+	private class TheBoardListener implements GameBoardListener {
+		TheBoardListener() {
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public void gameMoveMade(GameBoard board, GameMove move) {
+			saveBoardImpl((B) board);
+
+			for (GameBoardListener statesListener : boardStateListeners) {
+				statesListener.gameMoveMade(board, move);
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+			saveBoardImpl((B) board);
+
+			for (GameBoardListener statesListener : boardStateListeners) {
+				statesListener.gameFinished(board, wonPlayer);
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		public void gameDrew(GameBoard board) {
+			saveBoardImpl((B) board);
+
+			for (GameBoardListener statesListener : boardStateListeners) {
+				statesListener.gameDrew(board);
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+			saveBoardImpl((B) board);
+
+			for (GameBoardListener statesListener : boardStateListeners) {
+				statesListener.gameInterrupted(board, interrupterPlayer, byTimeout);
+			}
 		}
 	}
 }

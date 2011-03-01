@@ -9,17 +9,18 @@ public interface GameBoardListener {
 	/**
 	 * Indicates that player has made move.
 	 *
-	 * @param event the move event
+	 * @param board the board
+	 * @param move  the made move
 	 */
-	void playerMoved(GameMoveEvent event);
+	void gameMoveMade(GameBoard board, GameMove move);
 
 	/**
 	 * No one player has won.
 	 *
 	 * @param board the board game that was finished
-	 * @see GameState#DRAW
+	 * @see GameState#DREW
 	 */
-	void gameDraw(GameBoard board);
+	void gameDrew(GameBoard board);
 
 	/**
 	 * Game was finished and someone has won

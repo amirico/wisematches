@@ -23,12 +23,12 @@ public class MemoryWordsServiceImplTest {
         expect(board.getPlayerHand(13L)).andReturn(playerHand).anyTimes();
         replay(board);
 
-        final ScribbleRoomManager roomManager = createMock(ScribbleRoomManager.class);
+        final ScribbleBoardManager roomManager = createMock(ScribbleBoardManager.class);
         expect(roomManager.openBoard(123L)).andReturn(board).anyTimes();
         replay(roomManager);
 
         final RoomsManager roomsManager = createMock(RoomsManager.class);
-        expect(roomsManager.getRoomManager(ScribbleRoomManager.ROOM)).andReturn(roomManager).anyTimes();
+        expect(roomsManager.getRoomManager(ScribbleBoardManager.ROOM)).andReturn(roomManager).anyTimes();
         replay(roomsManager);
 
         player = createNiceMock(Player.class);

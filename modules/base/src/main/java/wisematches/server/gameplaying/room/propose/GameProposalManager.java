@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.waiting;
+package wisematches.server.gameplaying.room.propose;
 
 import wisematches.server.player.Player;
 
@@ -10,17 +10,17 @@ import java.util.Collection;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface WaitingGameManager<I extends WaitingGameInfo> {
-	void addWaitingGameListener(WaitingGameListener l);
+public interface GameProposalManager<P extends GameProposal> {
+	void addGameProposalListener(GameProposalListener l);
 
-	void removeWaitingGameListener(WaitingGameListener l);
+	void removeGameProposalListener(GameProposalListener l);
 
 	/**
 	 * Opens new waiting game in this manager.
 	 *
-	 * @param waitingInfo the waiting game info.
+	 * @param proposal the waiting game info.
 	 */
-	void openWaitingGame(I waitingInfo);
+	void initiateGameProposal(P proposal);
 
 	/**
 	 * Attaches specified player to the waiting game.
@@ -28,32 +28,32 @@ public interface WaitingGameManager<I extends WaitingGameInfo> {
 	 * If game is marked as a ready after attachment the waiting info
 	 * is removed from the manager so the returned waiting info must be checked after this method execution.
 	 *
-	 * @param waitingId the waiting game id
-	 * @param player	the player to be added.
+	 * @param proposalId the waiting game id
+	 * @param player	 the player to be added.
 	 * @return the modified waiting game info.
 	 */
-	I attachPlayer(long waitingId, Player player);
+	P attachPlayer(long proposalId, Player player);
 
 	/**
 	 * Detaches specified player from the waiting game.
 	 *
-	 * @param waitingId the waiting game id.
-	 * @param player	the player to be attached.
+	 * @param proposalId the waiting game id.
+	 * @param player	 the player to be attached.
 	 * @return the modified waiting game info.
 	 */
-	I detachPlayer(long waitingId, Player player);
+	P detachPlayer(long proposalId, Player player);
 
 	/**
 	 * Close specified waiting game.
 	 *
-	 * @param waitingGame the waiting game to be closed.
+	 * @param proposal the waiting game to be closed.
 	 */
-	void closeWaitingGame(I waitingGame);
+	void closeGameProposal(P proposal);
 
 	/**
 	 * Returns list of all waiting games.
 	 *
 	 * @return the list of all waiting games.
 	 */
-	Collection<I> getWaitingGames();
+	Collection<P> getActiveProposals();
 }

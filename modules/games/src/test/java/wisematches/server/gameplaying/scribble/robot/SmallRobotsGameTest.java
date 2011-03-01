@@ -1,28 +1,9 @@
 package wisematches.server.gameplaying.scribble.robot;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.robot.RobotBrainManager;
-import wisematches.server.gameplaying.room.BoardCreationException;
-import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
-import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
-import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
-import wisematches.server.player.Player;
-import wisematches.server.player.computer.robot.RobotPlayer;
-
-import java.util.Arrays;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static org.junit.Assert.*;
 
 /**
  * This is integration test and demonstrates how two robots can play a game...
@@ -40,7 +21,11 @@ import static org.junit.Assert.*;
 		"classpath:/config/game-scribble-config.xml",
 		"classpath:/config/test-game-modules-config.xml"})
 public class SmallRobotsGameTest {
-	@Autowired
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*	@Autowired
 	private RoomsManager roomsManager;
 
 	@Autowired
@@ -62,7 +47,7 @@ public class SmallRobotsGameTest {
 		final RobotPlayer r2 = RobotPlayer.TRAINEE;
 		final RobotPlayer r3 = RobotPlayer.EXPERT;
 
-		final ScribbleRoomManager roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
+		final ScribbleBoardManager roomManager = (ScribbleBoardManager) roomsManager.getRoomManager(ScribbleBoardManager.ROOM);
 
 		final ScribbleBoard board = roomManager.createBoard(
 				new ScribbleSettings("This is robots game", "en", 3, false, true),
@@ -77,7 +62,7 @@ public class SmallRobotsGameTest {
 
 			}
 
-			public void gameDraw(GameBoard board) {
+			public void gameDrew(GameBoard board) {
 				notifyGameFinished();
 			}
 
@@ -124,5 +109,5 @@ public class SmallRobotsGameTest {
 		gameFinishedLock.lock();
 		gameFinishedCondition.signalAll();
 		gameFinishedLock.unlock();
-	}
+	}*/
 }

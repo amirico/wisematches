@@ -15,7 +15,7 @@ import wisematches.server.gameplaying.scribble.board.MakeWordMove;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
 import wisematches.server.gameplaying.scribble.board.TilesPlacement;
-import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
+import wisematches.server.gameplaying.scribble.room.ScribbleRoom;
 import wisematches.server.gameplaying.scribble.scores.ScoreCalculation;
 import wisematches.server.gameplaying.scribble.scores.ScoreEngine;
 import wisematches.server.player.computer.robot.RobotType;
@@ -36,7 +36,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 	}
 
 	public Room getRoom() {
-		return ScribbleRoomManager.ROOM;
+		return ScribbleRoom.name;
 	}
 
 	public RobotType[] getRobotTypes() {

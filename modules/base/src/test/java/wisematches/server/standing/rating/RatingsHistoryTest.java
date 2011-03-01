@@ -1,19 +1,17 @@
 package wisematches.server.standing.rating;
 
 import org.junit.Test;
-import wisematches.server.gameplaying.room.search.RatedBoardsInfo;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RatingsHistoryTest {
+
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
 	@Test
 	public void test_Iterator() {
 		final long[] boardIds = {
@@ -46,4 +44,5 @@ public class RatingsHistoryTest {
 			;
 		}
 	}
+*/
 }

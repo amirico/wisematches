@@ -24,7 +24,7 @@ public class GameboardServiceImplTest {
         expect(board.getLastMoveTime()).andReturn(System.currentTimeMillis() - 1000 * 60 * 3); // 3 minutes
         replay(board);
 
-        final ScribbleRoomManager roomManager = createStrictMock(ScribbleRoomManager.class);
+        final ScribbleBoardManager roomManager = createStrictMock(ScribbleBoardManager.class);
         expect(roomManager.getActiveBoards(player)).andReturn(Arrays.asList(board));
         replay(roomManager);
 
@@ -35,7 +35,7 @@ public class GameboardServiceImplTest {
         replay(playerManager);
 
         final RoomsManager roomsManager = createMock(RoomsManager.class);
-        expect(roomsManager.getRoomManager(ScribbleRoomManager.ROOM)).andReturn(roomManager);
+        expect(roomsManager.getRoomManager(ScribbleBoardManager.ROOM)).andReturn(roomManager);
         replay(roomsManager);
 
         final GameboardServiceImpl service = new GameboardServiceImpl();

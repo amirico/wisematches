@@ -2,17 +2,16 @@ package wisematches.server.gameplaying.room;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RoomsManagerTest {
+
 	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*	@Test
 	public void testRoomsManager() {
 		RoomsManager rm = new RoomsManager();
 		assertEquals(0, rm.getRoomManagers().size());
@@ -36,5 +35,5 @@ public class RoomsManagerTest {
 		expect(mock.getRoomType()).andReturn(room).times(times);
 		replay(mock);
 		return mock;
-	}
+	}*/
 }

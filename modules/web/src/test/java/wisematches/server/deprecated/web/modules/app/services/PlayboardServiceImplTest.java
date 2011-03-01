@@ -13,7 +13,7 @@ public class PlayboardServiceImplTest {
     private Word word2;
 
     private PlayerManager playerManager;
-    private ScribbleRoomManager roomManager;
+    private ScribbleBoardManager roomManager;
 
     private PlayboardServiceImpl service;
 
@@ -22,7 +22,7 @@ public class PlayboardServiceImplTest {
 
     @Before
     public void setUp() {
-        roomManager = createStrictMock(ScribbleRoomManager.class);
+        roomManager = createStrictMock(ScribbleBoardManager.class);
 
         playerManager = createStrictMock(PlayerManager.class);
         expect(playerManager.getPlayer(13L)).andReturn(createMockPlayer(13L));
@@ -30,7 +30,7 @@ public class PlayboardServiceImplTest {
         replay(playerManager);
 
         final RoomsManager roomsManager = createStrictMock(RoomsManager.class);
-        expect(roomsManager.getRoomManager(ScribbleRoomManager.ROOM)).andReturn(roomManager);
+        expect(roomsManager.getRoomManager(ScribbleBoardManager.ROOM)).andReturn(roomManager);
         replay(roomsManager);
 
         service = new PlayboardServiceImpl();

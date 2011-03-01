@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.waiting;
+package wisematches.server.gameplaying.room.propose;
 
 import wisematches.server.player.Player;
 
@@ -9,24 +9,26 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class WaitingGameInfo {
+public abstract class GameProposal {
 	private long id;
 	private String title;
 	private int timeLimits;
 	private int playersCount;
 	private int minRating = 0;
 	private int maxRating = Integer.MAX_VALUE;
+	private long gameOwner;
 	private List<Long> acceptedPlayers = new ArrayList<Long>(2);
 
-	protected WaitingGameInfo() {
+	protected GameProposal() {
 	}
 
-	protected WaitingGameInfo(long id, String title, int timeLimits, int playersCount, Player player) {
+	protected GameProposal(long id, String title, int timeLimits, int playersCount, Player player) {
 		this.id = id;
 		this.title = title;
 		this.timeLimits = timeLimits;
 		this.playersCount = playersCount;
-		acceptedPlayers.add(player.getId());
+		this.gameOwner = player.getId();
+		acceptedPlayers.add(gameOwner);
 	}
 
 	public long getId() {
@@ -37,12 +39,12 @@ public abstract class WaitingGameInfo {
 		return title;
 	}
 
-	public int getTimeLimits() {
-		return timeLimits;
+	public long getGameOwner() {
+		return gameOwner;
 	}
 
-	public void setTimeLimits(int timeLimits) {
-		this.timeLimits = timeLimits;
+	public int getTimeLimits() {
+		return timeLimits;
 	}
 
 	public int getPlayersCount() {
@@ -66,7 +68,7 @@ public abstract class WaitingGameInfo {
 	}
 
 	public void attachPlayer(Player player) {
-		if (isSuitPlayer(player)) {
+		if (isSuitablePlayer(player)) {
 			acceptedPlayers.add(player.getId());
 		}
 	}
@@ -75,7 +77,7 @@ public abstract class WaitingGameInfo {
 		acceptedPlayers.remove(player.getId());
 	}
 
-	public boolean isSuitPlayer(Player p) {
+	public boolean isSuitablePlayer(Player p) {
 		return p.getRating() > minRating && p.getRating() < maxRating;
 	}
 

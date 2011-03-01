@@ -1,30 +1,18 @@
 package wisematches.server.gameplaying.scribble.room;
 
-import org.junit.Before;
 import org.junit.Test;
-import wisematches.server.gameplaying.dictionary.Dictionary;
-import wisematches.server.gameplaying.dictionary.DictionaryManager;
-import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
-import wisematches.server.gameplaying.room.BoardCreationException;
-import wisematches.server.gameplaying.room.BoardLoadingException;
-import wisematches.server.gameplaying.scribble.bank.TilesBank;
-import wisematches.server.gameplaying.scribble.bank.TilesBankingHouse;
-import wisematches.server.gameplaying.scribble.board.*;
-import wisematches.server.player.Player;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Locale;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribbleRoomManagerTest {
-	private ScribbleRoomManager scribbleRoomManager;
+
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
+	private ScribbleBoardManager scribbleRoomManager;
 
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
@@ -38,7 +26,7 @@ public class ScribbleRoomManagerTest {
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
 		scribbleBoardDao = createStrictMock(ScribbleBoardDao.class);
 
-		scribbleRoomManager = new ScribbleRoomManager();
+		scribbleRoomManager = new ScribbleBoardManager();
 		scribbleRoomManager.setDictionaryManager(dictionaryManager);
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
 		scribbleRoomManager.setScribbleBoardDao(scribbleBoardDao);
@@ -138,4 +126,5 @@ public class ScribbleRoomManagerTest {
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}
+*/
 }

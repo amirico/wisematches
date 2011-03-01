@@ -6,13 +6,13 @@ package wisematches.server.deprecated.web.modules.app.services;
 public class DashboardServiceImplTest {
 /*
     private RoomsManager roomsManager;
-    private ScribbleRoomManager manager;
+    private ScribbleBoardManager manager;
 
-    private static final Room ROOM = ScribbleRoomManager.ROOM;
+    private static final Room ROOM = ScribbleBoardManager.ROOM;
 
     @Before
     public void init() {
-        manager = createStrictMock(ScribbleRoomManager.class);
+        manager = createStrictMock(ScribbleBoardManager.class);
 
         roomsManager = createStrictMock(RoomsManager.class);
         expect(roomsManager.getRoomManager(ROOM)).andReturn(manager);

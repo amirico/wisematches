@@ -1,19 +1,19 @@
-package wisematches.server.gameplaying.scribble.room.waiting;
+package wisematches.server.gameplaying.scribble.room.proposal;
 
-import wisematches.server.gameplaying.room.waiting.WaitingGameInfo;
+import wisematches.server.gameplaying.room.propose.GameProposal;
 import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WaitingScribbleInfo extends WaitingGameInfo {
+public class ScribbleProposal extends GameProposal {
 	private Language language;
 
-	public WaitingScribbleInfo() {
+	protected ScribbleProposal() {
 	}
 
-	public WaitingScribbleInfo(long id, String title, int timeLimits, int playersCount, Language language, Player player) {
+	public ScribbleProposal(long id, String title, int timeLimits, int playersCount, Language language, Player player) {
 		super(id, title, timeLimits, playersCount, player);
 		this.language = language;
 	}

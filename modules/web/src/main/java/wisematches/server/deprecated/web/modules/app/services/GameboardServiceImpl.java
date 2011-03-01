@@ -3,7 +3,7 @@ package wisematches.server.deprecated.web.modules.app.services;
 import wisematches.server.deprecated.web.rpc.GenericSecureRemoteService;
 
 public class GameboardServiceImpl extends GenericSecureRemoteService { //implements GameboardService {
-/*    private ScribbleRoomManager roomManager;
+/*    private ScribbleBoardManager roomManager;
     private PlayerManager playerManager;
 
     private static final GameboardItemBean[] EMTY_BEANS_ARRAY = new GameboardItemBean[0];
@@ -68,7 +68,7 @@ public class GameboardServiceImpl extends GenericSecureRemoteService { //impleme
     }
 
     public void setRoomsManager(RoomsManager roomsManager) {
-        roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
+        roomManager = (ScribbleBoardManager) roomsManager.getRoomManager(ScribbleBoardManager.ROOM);
     }
 
     public void setPlayerManager(PlayerManager playerManager) {

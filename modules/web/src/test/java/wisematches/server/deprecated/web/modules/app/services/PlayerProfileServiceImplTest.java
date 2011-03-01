@@ -318,7 +318,7 @@ public class PlayerProfileServiceImplTest {
         replay(roomManager);
 
         final RoomsManager roomsManager = createStrictMock(RoomsManager.class);
-        expect(roomsManager.getRoomManager(ScribbleRoomManager.ROOM)).andReturn(roomManager);
+        expect(roomsManager.getRoomManager(ScribbleBoardManager.ROOM)).andReturn(roomManager);
         replay(roomsManager);
 
         service.setRoomsManager(roomsManager);
