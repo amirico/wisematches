@@ -1,9 +1,29 @@
 package wisematches.server.gameplaying.scribble.robot;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.robot.RobotBrainManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardCreationException;
+import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
+import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
+import wisematches.server.gameplaying.scribble.room.ScribbleRoom;
+import wisematches.server.gameplaying.scribble.room.board.ScribbleBoardManager;
+import wisematches.server.player.Player;
+import wisematches.server.player.computer.robot.RobotPlayer;
+
+import java.util.Arrays;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static org.junit.Assert.*;
 
 /**
  * This is integration test and demonstrates how two robots can play a game...
@@ -21,11 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 		"classpath:/config/game-scribble-config.xml",
 		"classpath:/config/test-game-modules-config.xml"})
 public class SmallRobotsGameTest {
-	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("Test has been commented");
-	}
-/*	@Autowired
+	@Autowired
 	private RoomsManager roomsManager;
 
 	@Autowired
@@ -35,6 +51,9 @@ public class SmallRobotsGameTest {
 	private final Condition gameFinishedCondition = gameFinishedLock.newCondition();
 
 	private static final Log log = LogFactory.getLog("wisematches.scribble.robot.test");
+
+	public SmallRobotsGameTest() {
+	}
 
 	@Test
 	public void test_makeSmallGame() throws BoardCreationException, InterruptedException {
@@ -47,7 +66,7 @@ public class SmallRobotsGameTest {
 		final RobotPlayer r2 = RobotPlayer.TRAINEE;
 		final RobotPlayer r3 = RobotPlayer.EXPERT;
 
-		final ScribbleBoardManager roomManager = (ScribbleBoardManager) roomsManager.getRoomManager(ScribbleBoardManager.ROOM);
+		final ScribbleBoardManager roomManager = roomsManager.getBoardManager(ScribbleRoom.name);
 
 		final ScribbleBoard board = roomManager.createBoard(
 				new ScribbleSettings("This is robots game", "en", 3, false, true),
@@ -58,8 +77,7 @@ public class SmallRobotsGameTest {
 			}
 
 			@Override
-			public void playerMoved(GameMoveEvent event) {
-
+			public void gameMoveMade(GameBoard board, GameMove move) {
 			}
 
 			public void gameDrew(GameBoard board) {
@@ -109,5 +127,5 @@ public class SmallRobotsGameTest {
 		gameFinishedLock.lock();
 		gameFinishedCondition.signalAll();
 		gameFinishedLock.unlock();
-	}*/
+	}
 }

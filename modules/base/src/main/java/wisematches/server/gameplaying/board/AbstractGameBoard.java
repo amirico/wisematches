@@ -203,7 +203,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		checkMove(move);
 
 		final int points = calculateMovePoints(move);
-		playersIterator.getPlayerTurn().increasePoints(points);
+		player.increasePoints(points);
 		lastMoveTime = new Date();
 
 
@@ -229,6 +229,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 				fireGameFinished(won);
 			}
 		} else {
+			playersIterator.next();
 			firePlayerMoved(gameMove);
 		}
 		return points;

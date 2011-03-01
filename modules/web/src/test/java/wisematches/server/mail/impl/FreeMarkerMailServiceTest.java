@@ -30,6 +30,9 @@ public class FreeMarkerMailServiceTest {
 
 	private static StaticMessageSource messageSource = new StaticMessageSource();
 
+	public FreeMarkerMailServiceTest() {
+	}
+
 	@BeforeClass
 	public static void initMessageSource() {
 		messageSource.addMessage("mail.address.support", Language.RUSSIAN.locale(), "support@mock.wm");
@@ -82,8 +85,12 @@ public class FreeMarkerMailServiceTest {
 		message.setFrom(new InternetAddress("sender@mock.wm"));
 		message.setRecipient(Message.RecipientType.TO, new InternetAddress("recipient@mock.wm"));
 		message.setSubject("Mock Subject");
-		message.setContent("En Subject" + LS +
-				LS + "En body", "text/html");
+		message.setContent("<html>" + LS +
+				"<head>" + LS +
+				"    <title>En Subject</title>" + LS +
+				"</head>" + LS +
+				"<body>En body</body>" + LS +
+				"</html>", "text/html");
 		replay(message);
 
 		MimeMessagePreparator preparator = markerMailService.prepareSupportMessage("Mock Subject", "mock", null);

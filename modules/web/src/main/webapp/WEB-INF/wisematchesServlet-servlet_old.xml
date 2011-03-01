@@ -50,11 +50,6 @@
         <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
     </bean>
 
-    <bean name="/rpc/VersionedDocumentService"
-          class="wisematches.server.deprecated.web.modules.core.services.VersionedDocumentServiceImpl">
-        <property name="documentsPath" value="/resources"/>
-    </bean>
-
     <bean name="/rpc/ProblemsReportService"
           class="wisematches.server.deprecated.web.modules.core.services.ProblemsReportServiceImpl">
         <property name="mailSender" ref="mailSender"/>

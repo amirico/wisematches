@@ -1,21 +1,39 @@
 package wisematches.server.gameplaying.cleaner;
 
+import org.easymock.Capture;
+import org.easymock.IAnswer;
 import org.junit.Test;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameMoveException;
+import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.room.MockRoom;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardLoadingException;
+import wisematches.server.gameplaying.room.board.BoardManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
+import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
+import wisematches.server.gameplaying.room.search.ExpiringBoard;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
+@SuppressWarnings("unchecked")
 public class GameTimeoutTerminatorTest {
-
-	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("Test has been commented");
-	}
-/*
-	private static final Room ROOM = Room.valueOf("MOCK");
-
 	private static final long ONE_HOUR = 60 * 60 * 1000;
 	private static final long ONE_DAY = 24 * ONE_HOUR;
+
+	public GameTimeoutTerminatorTest() {
+	}
 
 	@Test
 	public void test_setRoomsManager_terminateExpired() throws GameMoveException, InterruptedException, BoardLoadingException {
@@ -43,21 +61,25 @@ public class GameTimeoutTerminatorTest {
 		));
 		replay(boardsSearchEngine);
 
+		final BoardManager boardManager = createStrictMock(BoardManager.class);
+		boardManager.addBoardStateListener(isA(BoardStateListener.class));
+		expect(boardManager.openBoard(1L)).andReturn(board1);
+		expect(boardManager.openBoard(2L)).andReturn(board2);
+		replay(boardManager);
+
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
 		makeThreadSafe(roomManager, true);
-		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getOpenedBoards()).andReturn(Collections.emptyList());
-		roomManager.addRoomBoardsListener(isA(BoardListener.class));
-		expect(roomManager.getRoomType()).andReturn(ROOM);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
+		expect(roomManager.getBoardManager()).andReturn(boardManager);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
 		expect(roomManager.getSearchesEngine()).andReturn(boardsSearchEngine);
-		expect(roomManager.openBoard(1L)).andReturn(board1);
-		expect(roomManager.openBoard(2L)).andReturn(board2);
 		replay(roomManager);
 
 		final RoomsManager roomsManager = createMock(RoomsManager.class);
 		makeThreadSafe(roomsManager, true);
 		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager)).anyTimes();
-		expect(roomsManager.getRoomManager(ROOM)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getRoomManager(MockRoom.type)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getBoardManager(MockRoom.type)).andReturn(boardManager).anyTimes();
 		replay(roomsManager);
 
 		final TransactionTemplate transactionTemplate = createStrictMock(TransactionTemplate.class);
@@ -80,7 +102,7 @@ public class GameTimeoutTerminatorTest {
 		assertEquals(RemainderType.TIME_IS_UP, event.getValue().getRemainderType());
 
 		Thread.sleep(4200); // second board should be removed but no events because already finished
-		verify(board1, board2, listener, boardsSearchEngine, roomManager, roomsManager, transactionTemplate);
+		verify(board1, board2, listener, boardsSearchEngine, boardManager, roomManager, roomsManager, transactionTemplate);
 	}
 
 	@Test
@@ -99,19 +121,23 @@ public class GameTimeoutTerminatorTest {
 		));
 		replay(boardsSearchEngine);
 
+		final BoardManager boardManager = createStrictMock(BoardManager.class);
+		boardManager.addBoardStateListener(isA(BoardStateListener.class));
+		replay(boardManager);
+
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
 		makeThreadSafe(roomManager, true);
-		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getOpenedBoards()).andReturn(Collections.emptyList());
-		roomManager.addRoomBoardsListener(isA(BoardListener.class));
-		expect(roomManager.getRoomType()).andReturn(ROOM);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
+		expect(roomManager.getBoardManager()).andReturn(boardManager);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
 		expect(roomManager.getSearchesEngine()).andReturn(boardsSearchEngine);
 		replay(roomManager);
 
 		final RoomsManager roomsManager = createMock(RoomsManager.class);
 		makeThreadSafe(roomsManager, true);
 		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager)).anyTimes();
-		expect(roomsManager.getRoomManager(ROOM)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getRoomManager(MockRoom.type)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getBoardManager(MockRoom.type)).andReturn(boardManager).anyTimes();
 		replay(roomsManager);
 
 		final GameTimeoutTerminator terminator = new GameTimeoutTerminator();
@@ -128,49 +154,45 @@ public class GameTimeoutTerminatorTest {
 
 	@Test
 	public void test_setRoomsManager_attachListeners() throws BoardLoadingException {
-		final Capture<BoardListener> listener = new Capture<BoardListener>();
+		final Capture<BoardStateListener> listener = new Capture<BoardStateListener>();
 
 		final BoardsSearchEngine boardsSearchEngine = createStrictMock(BoardsSearchEngine.class);
 		expect(boardsSearchEngine.findExpiringBoards()).andReturn(Collections.emptyList());
 		replay(boardsSearchEngine);
 
 		final GameBoard board2 = createStrictMock(GameBoard.class);
-		expect(board2.getGameState()).andReturn(GameState.ACTIVE);
-		board2.addGameBoardListener(isA(GameBoardListener.class));
 		replay(board2);
 
 		final GameBoard board3 = createStrictMock(GameBoard.class);
-		expect(board3.getGameState()).andReturn(GameState.FINISHED);
 		replay(board3);
 
 		final GameBoard board4 = createStrictMock(GameBoard.class);
-		expect(board4.getGameState()).andReturn(GameState.ACTIVE);
-		board4.addGameBoardListener(isA(GameBoardListener.class));
 		replay(board4);
+
+		final BoardManager boardManager = createStrictMock(BoardManager.class);
+		boardManager.addBoardStateListener(isA(BoardStateListener.class));
+		expect(boardManager.openBoard(4L)).andReturn(board4);
+		replay(boardManager);
 
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
 		makeThreadSafe(roomManager, true);
-		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getOpenedBoards()).andReturn(Arrays.asList(board2, board3));
-		roomManager.addRoomBoardsListener(capture(listener));
-		expect(roomManager.getRoomType()).andReturn(ROOM);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
+		expect(roomManager.getBoardManager()).andReturn(boardManager);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
 		expect(roomManager.getSearchesEngine()).andReturn(boardsSearchEngine);
-		expect(roomManager.openBoard(4L)).andReturn(board4);
 		replay(roomManager);
 
 		final RoomsManager roomsManager = createMock(RoomsManager.class);
 		makeThreadSafe(roomsManager, true);
 		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager)).anyTimes();
-		expect(roomsManager.getRoomManager(ROOM)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getRoomManager(MockRoom.type)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getBoardManager(MockRoom.type)).andReturn(boardManager).anyTimes();
 		replay(roomsManager);
 
 		final GameTimeoutTerminator terminator = new GameTimeoutTerminator();
 		terminator.setRoomsManager(roomsManager);
 		terminator.setTransactionTemplate(createNiceMock(TransactionTemplate.class));
 
-		listener.getValue().boardOpened(ROOM, 4L);
-
 		verify(board2, board3, board4, boardsSearchEngine, roomManager, roomsManager);
 	}
-*/
 }
