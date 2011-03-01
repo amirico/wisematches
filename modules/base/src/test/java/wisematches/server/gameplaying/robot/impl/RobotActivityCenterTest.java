@@ -7,9 +7,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameMoveException;
-import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.MockRoom;
@@ -22,6 +20,9 @@ import wisematches.server.player.computer.robot.RobotPlayer;
 import wisematches.server.player.computer.robot.RobotType;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.concurrent.Executor;
 
 import static org.easymock.EasyMock.*;
 
@@ -36,6 +37,9 @@ public class RobotActivityCenterTest {
 
 	private BoardStateListener listener;
 
+	public RobotActivityCenterTest() {
+	}
+
 	@Before
 	@SuppressWarnings("unchecked")
 	public void setUp() {
@@ -47,7 +51,7 @@ public class RobotActivityCenterTest {
 
 		final RoomsManager roomsManager = createStrictMock(RoomsManager.class);
 		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager)).anyTimes();
-		expect(roomsManager.getRoomManager(MockRoom.room)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getRoomManager(MockRoom.type)).andReturn(roomManager).anyTimes();
 		replay(roomsManager);
 
 		activityManager.setRoomsManager(roomsManager);
@@ -76,7 +80,7 @@ public class RobotActivityCenterTest {
 		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
-		expect(brainManager.getRobotBrain(MockRoom.room, RobotType.TRAINEE)).andReturn(robotBrain);
+		expect(brainManager.getRobotBrain(MockRoom.type, RobotType.TRAINEE)).andReturn(robotBrain);
 		replay(brainManager);
 
 		replay(roomManager);
@@ -90,33 +94,26 @@ public class RobotActivityCenterTest {
 
 		activityManager.setTransactionManager(transaction);
 
-		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(MockRoom.room, gameBoard);
+		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(MockRoom.type, gameBoard);
 		task.run();
 
 		verify(brainManager, roomManager, robotBrain, transaction);
 	}
 
 	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("Test has been commented");
-	}
-/*
-	@Test
 	public void initializeManager() throws BoardLoadingException {
 		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.TRAINEE);
 		final RobotPlayer p2 = RobotPlayer.valueOf(RobotType.DULL);
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
-		expectGameMoveListener(gameBoard);
 		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
-		expectGameMoveListener(gameBoard);
 		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p2.getId()));
 		replay(gameBoard);
 
 		expect(brainManager.getRobotPlayers()).andReturn(Arrays.asList(p1, p2));
 		replay(brainManager);
 
-		expect(roomManager.getRoomType()).andReturn(MockRoom.room);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
 		expect(roomManager.getBoardManager()).andReturn(boardManager);
 		expectRoomBoardsListener();
 		expect(boardManager.getActiveBoards(p1)).andReturn(Arrays.asList(gameBoard));
@@ -141,42 +138,40 @@ public class RobotActivityCenterTest {
 		expect(brainManager.getRobotPlayers()).andReturn(Collections.<RobotPlayer>emptyList());
 		replay(brainManager);
 
-		expect(roomManager.getRoomType()).andReturn(MockRoom.room);
 		expectRoomBoardsListener();
+		replay(boardManager);
+
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
+		expect(roomManager.getBoardManager()).andReturn(boardManager);
 		replay(roomManager);
 
 		final Executor executor = createStrictMock(Executor.class);
 		replay(executor);
 
 		activityManager.setMovesExecutor(executor);
-		verify(brainManager, roomManager, executor);
+		verify(brainManager, roomManager, boardManager, executor);
 
-		//Test room game opened
-		reset(brainManager, roomManager, executor);
-		final GameBoard gameBoard = createStrictMock(GameBoard.class);
+		//Test room game started
+		reset(brainManager, roomManager, boardManager, executor);
 
-		expectGameMoveListener(gameBoard);
-		replay(gameBoard);
+		final GameBoard board = createStrictMock(GameBoard.class);
+		expect(board.getPlayerTurn()).andReturn(null);
 
-		expect(roomManager.openBoard(1L)).andReturn(gameBoard);
-		replay(roomManager);
+		replay(board, roomManager, boardManager, brainManager, executor);
 
-		replay(brainManager, executor);
-
-		listener.boardOpened(MockRoom.room, 1L);
-		verify(gameBoard, brainManager, roomManager, executor);
+		listener.gameStarted(board);
+		verify(board, brainManager, boardManager, roomManager, executor);
 
 		// Test move transfered
-		reset(gameBoard, brainManager, roomManager, executor);
-		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
+		reset(board, brainManager, roomManager, executor);
+		expect(board.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
 		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
-		replay(executor, brainManager, gameBoard, roomManager);
+		replay(executor, brainManager, board, roomManager);
 
-		boardStateListener.gameMoveMade(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(p1.getId())));
+		listener.gameMoveMade(board, new GameMove(new PassTurnMove(13L), 0, 0, new Date()));
 
-		verify(gameBoard, brainManager, roomManager, executor);
+		verify(board, brainManager, roomManager, executor);
 	}
-*/
 
 	private void expectRoomBoardsListener() {
 		boardManager.addBoardStateListener(isA(BoardStateListener.class));

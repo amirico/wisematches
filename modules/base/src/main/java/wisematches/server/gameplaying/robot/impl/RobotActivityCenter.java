@@ -43,12 +43,13 @@ public class RobotActivityCenter {
 	private void initializeGames() {
 		final Collection<RoomManager> roomManagerCollection = roomsManager.getRoomManagers();
 
+		final Collection<RobotPlayer> robotPlayers = robotBrainManager.getRobotPlayers();
 		for (RoomManager roomManager : roomManagerCollection) {
 			final Room roomType = roomManager.getRoomType();
 			final BoardManager boardManager = roomManager.getBoardManager();
 			boardManager.addBoardStateListener(new TheBoardStateListener(roomType));
 
-			for (RobotPlayer player : RobotPlayer.getRobotPlayers()) {
+			for (RobotPlayer player : robotPlayers) {
 				@SuppressWarnings("unchecked")
 				final Collection<GameBoard> activeBoards = boardManager.getActiveBoards(player);
 				for (GameBoard activeBoard : activeBoards) {
@@ -81,6 +82,7 @@ public class RobotActivityCenter {
 		if (hand != null) {
 			final RobotPlayer robot = RobotPlayer.getComputerPlayer(hand.getPlayerId(), RobotPlayer.class);
 			if (robot != null) {
+				log.info("Initialize robot activity: " + room + ", " + robot);
 				movesExecutor.execute(new MakeTurnTask(room, gameBoard));
 				return true;
 			}

@@ -1,18 +1,25 @@
 package wisematches.server.gameplaying.board;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.Test;
+import wisematches.server.core.MockPlayer;
+import wisematches.server.player.Player;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @SuppressWarnings("unchecked")
 public class AbstractGameBoardTest {
-
-	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("Test has been commented");
-	}
-/*
 	private GameSettings gameSettings;
 
 	private GamePlayerHand h1;
@@ -21,17 +28,8 @@ public class AbstractGameBoardTest {
 
 	private MockGameBoard board;
 
-	private Comparator<GameMoveEvent> GMEC = new Comparator<GameMoveEvent>() {
-		public int compare(GameMoveEvent o1, GameMoveEvent o2) {
-			final GameMove move1 = o1.getGameMove();
-			final GameMove move2 = o2.getGameMove();
-			if (o1.getPlayer() == o1.getPlayer() && o1.getGameBoard() == o2.getGameBoard() &&
-					move1.getPlayerMove() == move2.getPlayerMove() && o1.getNextPlayer() == o2.getNextPlayer()) {
-				return 0;
-			}
-			return -1;
-		}
-	};
+	public AbstractGameBoardTest() {
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -108,7 +106,7 @@ public class AbstractGameBoardTest {
 		l.gameDrew(board);
 		l.gameFinished(board, h1);
 		l.gameInterrupted(board, h2, false);
-		l.gameMoveMade(cmp(new GameMoveEvent(board, h1, gm, h3), GMEC, LogicalOperator.EQUAL));
+		l.gameMoveMade(board, gm);
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -117,12 +115,12 @@ public class AbstractGameBoardTest {
 		board.fireGameDraw();
 		board.fireGameFinished(h1);
 		board.fireGameInterrupted(h2, false);
-		board.firePlayerMoved(h1, gm, h3);
+		board.firePlayerMoved(gm);
 
 		//no any calles after removing must be
 		board.removeGameBoardListener(l);
 		board.fireGameDraw();
-		board.firePlayerMoved(h1, gm, h3);
+		board.firePlayerMoved(gm);
 
 		verify(l);
 	}
@@ -206,8 +204,8 @@ public class AbstractGameBoardTest {
 		final GameBoardListener l = createStrictMock(GameBoardListener.class);
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
-		final GameMove gm1 = new GameMove(m1, 10, 1, new Date());
-		l.gameMoveMade(cmp(new GameMoveEvent(board, board.getPlayerTurn(), gm1, p.next()), GMEC, LogicalOperator.EQUAL));
+		final Capture<GameMove> move = new Capture<GameMove>();
+		l.gameMoveMade(same(board), capture(move));
 		replay(l);
 
 		board.setPoints(10);
@@ -215,6 +213,7 @@ public class AbstractGameBoardTest {
 		board.addGameBoardListener(l);
 
 		board.makeMove(m1);
+		assertEquals(10, move.getValue().getPoints());
 		assertEquals(1, board.getGameMoves().size());
 		assertSame(m1, board.getGameMoves().get(0).getPlayerMove());
 		assertSame(10, board.getGameMoves().get(0).getPoints());
@@ -227,8 +226,8 @@ public class AbstractGameBoardTest {
 		//move passed
 		reset(l);
 		PlayerMove m2 = new PassTurnMove(board.getPlayerTurn().getPlayerId());
-		GameMove gm2 = new GameMove(m2, 2, 2, new Date());
-		l.gameMoveMade(cmp(new GameMoveEvent(board, board.getPlayerTurn(), gm2, p.next()), GMEC, LogicalOperator.EQUAL));
+		final Capture<GameMove> gm2 = new Capture<GameMove>();
+		l.gameMoveMade(same(board), capture(gm2));
 		replay(l);
 
 		board.setPoints(2);
@@ -265,8 +264,8 @@ public class AbstractGameBoardTest {
 		h1.increasePoints(1);
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
-		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
 		l.gameFinished(board, h1);
 		replay(l);
 
@@ -293,8 +292,8 @@ public class AbstractGameBoardTest {
 		PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
-		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
 		l.gameDrew(board);
 		replay(l);
 
@@ -315,8 +314,8 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_finishByDraw_NoMoves() throws GameMoveException {
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
-		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
 		l.gameDrew(board);
 		replay(l);
 
@@ -414,5 +413,4 @@ public class AbstractGameBoardTest {
 	public static void increasePlayerPoints(GamePlayerHand h, int points) {
 		h.increasePoints(points);
 	}
-*/
 }

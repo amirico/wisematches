@@ -32,7 +32,14 @@ public class MailServiceTest {
 	@Autowired(required = true)
 	private MailService mailService;
 
+	public MailServiceTest() {
+	}
+
 	@Test
+	public void mock() throws MailException {
+//		asd();
+	}
+
 	public void asd() throws MailException {
 		final Player p = createMock(Player.class);
 		expect(p.getLanguage()).andReturn(Language.RUSSIAN).anyTimes();

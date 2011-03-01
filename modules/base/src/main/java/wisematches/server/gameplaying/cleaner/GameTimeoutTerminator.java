@@ -200,7 +200,7 @@ public class GameTimeoutTerminator {
 			for (RoomManager manager : managers) {
 				final Room type = manager.getRoomType();
 
-				BoardStateListener listener = boardStateListeners.get(manager.getRoomType());
+				BoardStateListener listener = boardStateListeners.get(type);
 				if (listener == null) {
 					listener = new TheBoardStateListener(type);
 					boardStateListeners.put(type, listener);

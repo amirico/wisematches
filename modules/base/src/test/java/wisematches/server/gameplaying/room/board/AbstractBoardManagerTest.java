@@ -1,21 +1,32 @@
-package wisematches.server.gameplaying.room;
+package wisematches.server.gameplaying.room.board;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.easymock.IAnswer;
 import org.junit.Test;
+import wisematches.server.core.MockPlayer;
+import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.room.propose.GameProposal;
+import wisematches.server.player.Player;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class AbstractRoomManagerTest {
-
-	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("Test has been commented");
-	}
-/*
+@SuppressWarnings("unchecked")
+public class AbstractBoardManagerTest {
 	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
-	private static final Room ROOM = Room.valueOf("mock");
 
 	private GameBoardListener gameBoardListener;
+
+	public AbstractBoardManagerTest() {
+	}
 
 	@Test
 	public void testBoardsMap() throws InterruptedException {
@@ -27,9 +38,7 @@ public class AbstractRoomManagerTest {
 		expect(board2.getBoardId()).andReturn(2L).anyTimes();
 		replay(board2);
 
-		AbstractBoardManager boardManager = new MockBoardManager(createNiceMock(GameBoardDao.class));
-
-		AbstractBoardManager.BoardsMap<GameBoard> board = new AbstractBoardManager.BoardsMap<GameBoard>(boardManager);
+		AbstractBoardManager.BoardsMap<GameBoard> board = new AbstractBoardManager.BoardsMap<GameBoard>(log);
 		assertEquals(0, board.size());
 
 		board.addBoard(board1);
@@ -70,7 +79,7 @@ public class AbstractRoomManagerTest {
 
 		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
 		expectListeners(board);
-		expect(board.getBoardId()).andReturn(1L).times(2);
+		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
@@ -151,14 +160,10 @@ public class AbstractRoomManagerTest {
 
 	@Test
 	public void testSaveListeners() throws BoardLoadingException {
-		final GameSettings gameSettings = new MockGameSettings("test", 2);
-
 		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
-
-		final GameMoveEvent moveEvent = new GameMoveEvent(board, new GamePlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), new GamePlayerHand(14L));
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
 		expect(dao.loadBoard(1L)).andReturn(board);
@@ -166,19 +171,21 @@ public class AbstractRoomManagerTest {
 		expectLastCall().times(3);
 		replay(dao);
 
-		final GameBoardListener boardListener = createStrictMock(GameBoardListener.class);
-		boardListener.gameMoveMade(moveEvent);
+		final GameMove move = new GameMove(new PassTurnMove(13L), 0, 0, new Date());
+
+		final BoardStateListener boardListener = createStrictMock(BoardStateListener.class);
+		boardListener.gameMoveMade(board, move);
 		boardListener.gameDrew(board);
 		boardListener.gameFinished(board, null);
 		boardListener.gameInterrupted(board, null, false);
 		replay(boardListener);
 
 		final MockBoardManager mock = new MockBoardManager(dao);
-		mock.addGameBoardListener(boardListener);
+		mock.addBoardStateListener(boardListener);
 
 		mock.openBoard(1L);
 
-		boardListener.gameMoveMade(moveEvent);
+		boardListener.gameMoveMade(board, move);
 
 		gameBoardListener.gameDrew(board);
 		gameBoardListener.gameFinished(board, null);
@@ -205,8 +212,6 @@ public class AbstractRoomManagerTest {
 		void saveBoard(GameBoard board);
 
 		Collection<Long> loadActivePlayerBoards(Player player);
-
-		Collection<Long> loadWaitingBoards();
 	}
 
 	private static class MockGameSettings extends GameSettings {
@@ -215,11 +220,12 @@ public class AbstractRoomManagerTest {
 		}
 	}
 
-	private static class MockBoardManager extends AbstractBoardManager<GameBoard<GameSettings, GamePlayerHand>, GameSettings> {
+	@SuppressWarnings("unchecked")
+	private static class MockBoardManager extends AbstractBoardManager<GameProposal, GameSettings, GameBoard<GameSettings, GamePlayerHand>> {
 		private final GameBoardDao gameBoardDao;
 
 		private MockBoardManager(GameBoardDao gameBoardDao) {
-			super(ROOM, log);
+			super(log);
 			this.gameBoardDao = gameBoardDao;
 		}
 
@@ -242,10 +248,5 @@ public class AbstractRoomManagerTest {
 		protected Collection<Long> loadActivePlayerBoards(Player player) {
 			return gameBoardDao.loadActivePlayerBoards(player);
 		}
-
-		public BoardsSearchEngine<GameBoard<GameSettings, GamePlayerHand>> getSearchesEngine() {
-			return null;
-		}
 	}
-*/
 }
