@@ -7,10 +7,14 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameBoardListener;
-import wisematches.server.gameplaying.board.GameMoveEvent;
+import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
-import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.Room;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
+import wisematches.server.gameplaying.room.board.BoardUpdatingException;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.standing.rating.PlayerRatingEvent;
@@ -33,7 +37,6 @@ public class RatingsCalculationCenter {
 	private PlayerManager playerManager;
 
 	private RatingSystem ratingSystem = new ELORatingSystem();
-	private final RoomListener roomListener = new TheRoomListener();
 
 	private final Collection<PlayerRatingListener> listeners = new CopyOnWriteArraySet<PlayerRatingListener>();
 
@@ -105,17 +108,21 @@ public class RatingsCalculationCenter {
 		}
 
 		for (int i = 0; i < players.length; i++) {
-			firePlayerRaitingChanged(players[i], board, oldRatings[i], newRatings[i]);
+			firePlayerRatingChanged(players[i], board, oldRatings[i], newRatings[i]);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private void updateGameBoard(Room room, GameBoard board) {
-		final RoomManager roomManager = roomsManager.getRoomManager(room);
-		roomManager.updateBoard(board);
+		final BoardManager boardManager = roomsManager.getBoardManager(room);
+		try {
+			boardManager.updateBoard(board);
+		} catch (BoardUpdatingException e) {
+			log.fatal("Game board can't be updated", e);
+		}
 	}
 
-	protected void firePlayerRaitingChanged(Player player, GameBoard board, int oldRating, int newRating) {
+	protected void firePlayerRatingChanged(Player player, GameBoard board, int oldRating, int newRating) {
 		final PlayerRatingEvent e = new PlayerRatingEvent(player, board, oldRating, newRating);
 		for (PlayerRatingListener listener : listeners) {
 			listener.playerRaitingChanged(e);
@@ -131,15 +138,8 @@ public class RatingsCalculationCenter {
 
 		final Collection<RoomManager> collection = roomsManager.getRoomManagers();
 		for (RoomManager roomManager : collection) {
-			roomManager.addRoomBoardsListener(roomListener);
-
 			final Room type = roomManager.getRoomType();
-
-			@SuppressWarnings("unchecked")
-			final Collection<GameBoard> openedBoards = roomManager.getOpenedBoards();
-			for (GameBoard openedBoard : openedBoards) {
-				openedBoard.addGameBoardListener(new TheGameBoardListener(type));
-			}
+			roomManager.getBoardManager().addBoardStateListener(new TheBoardStateListener(type));
 		}
 	}
 
@@ -151,31 +151,19 @@ public class RatingsCalculationCenter {
 		this.transactionManager = transactionManager;
 	}
 
-	private final class TheRoomListener implements RoomListener {
-		@Override
-		public void boardCreated(Room room, long boardId) {
-		}
-
-		@Override
-		public void boardOpened(Room room, long boardId) {
-			try {
-				final GameBoard board = roomsManager.getRoomManager(room).openBoard(boardId);
-				board.addGameBoardListener(new TheGameBoardListener(room));
-			} catch (BoardLoadingException ex) {
-				log.error("Board can't loaded in boardOpened method of RoomListener", ex);
-			}
-		}
-
-		@Override
-		public void boardClosed(Room room, long boardId) {
-		}
-	}
-
-	private final class TheGameBoardListener implements GameBoardListener {
+	private final class TheBoardStateListener implements BoardStateListener {
 		private final Room room;
 
-		private TheGameBoardListener(Room room) {
+		private TheBoardStateListener(Room room) {
 			this.room = room;
+		}
+
+		@Override
+		public void gameStarted(GameBoard board) {
+		}
+
+		@Override
+		public void gameMoveMade(GameBoard board, GameMove move) {
 		}
 
 		@Override
@@ -184,17 +172,13 @@ public class RatingsCalculationCenter {
 		}
 
 		@Override
-		public void gameDraw(GameBoard board) {
+		public void gameDrew(GameBoard board) {
 			updatePlayerRatings(room, board, null);
 		}
 
 		@Override
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
 			updatePlayerRatings(room, board, interrupterPlayer);
-		}
-
-		@Override
-		public void playerMoved(GameMoveEvent event) {
 		}
 	}
 }

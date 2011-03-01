@@ -71,7 +71,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
             siteStatisticBean.setRegistredPlayers(accountManager.getRegistredPlayersCount());
 
             final BoardsSearchEngine searchesEngine = roomManagerFacade.getRoomManager().getSearchesEngine();
-            siteStatisticBean.setCompletedGames(searchesEngine.getGamesCount(EnumSet.of(GameState.INTERRUPTED, GameState.DRAW, GameState.FINISHED)));
+            siteStatisticBean.setCompletedGames(searchesEngine.getGamesCount(EnumSet.of(GameState.INTERRUPTED, GameState.DREW, GameState.FINISHED)));
             siteStatisticBean.setGamesInProgress(searchesEngine.getGamesCount(EnumSet.of(GameState.ACTIVE)));
         } finally {
             statisticLock.writeLock().unlock();
@@ -208,7 +208,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
         }
 
         @Override
-        public void gameDraw(GameBoard board) {
+        public void gameDrew(GameBoard board) {
             gameCompleted();
         }
 

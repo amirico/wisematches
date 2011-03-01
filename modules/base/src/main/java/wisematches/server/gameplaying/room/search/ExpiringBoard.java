@@ -9,16 +9,16 @@ import java.util.Date;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public final class ExpiringBoardInfo {
+public final class ExpiringBoard {
 	private final long boardId;
 	private final int daysPerMove;
 	private final Date lastMoveTime;
 
-	public ExpiringBoardInfo(GameBoard board) {
+	public ExpiringBoard(GameBoard board) {
 		this(board.getBoardId(), board.getGameSettings().getDaysPerMove(), board.getLastMoveTime());
 	}
 
-	public ExpiringBoardInfo(long boardId, int daysPerMove, Date lastMoveTime) {
+	public ExpiringBoard(long boardId, int daysPerMove, Date lastMoveTime) {
 		this.boardId = boardId;
 		this.daysPerMove = daysPerMove;
 		this.lastMoveTime = lastMoveTime;
@@ -38,7 +38,7 @@ public final class ExpiringBoardInfo {
 
 	@Override
 	public String toString() {
-		return "ExpiringBoardInfo{" +
+		return "ExpiringBoard{" +
 				"boardId=" + boardId +
 				", daysPerMove=" + daysPerMove +
 				", lastMoveTime=" + lastMoveTime +

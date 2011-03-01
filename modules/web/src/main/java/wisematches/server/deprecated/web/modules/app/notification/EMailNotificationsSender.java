@@ -9,13 +9,15 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.deprecated.web.mail.FromTeam;
 import wisematches.server.deprecated.web.mail.MailSender;
 import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameBoardListener;
-import wisematches.server.gameplaying.board.GameMoveEvent;
+import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
 import wisematches.server.gameplaying.cleaner.GameTimeoutEvent;
 import wisematches.server.gameplaying.cleaner.GameTimeoutListener;
 import wisematches.server.gameplaying.cleaner.GameTimeoutTerminator;
-import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardLoadingException;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.standing.notice.PlayerNotification;
@@ -42,7 +44,7 @@ public class EMailNotificationsSender {
 	private GameTimeoutTerminator gameTimeoutProcessor;
 	private PlayerSessionsManager playerSessionsManager;
 
-	private final RoomListener roomListener = new TheRoomListener();
+	private final BoardStateListener boardListener = new TheBoardStateListener();
 	private final GameTimeoutListener gameTimeoutListener = new TheGameTimeoutListener();
 	private final ExecutorService executor = Executors.newSingleThreadExecutor(new CustomizableThreadFactory("NotificationsSender"));
 
@@ -114,7 +116,7 @@ public class EMailNotificationsSender {
 		if (this.roomsManager != null) {
 			final Collection<RoomManager> roomManagerCollection = this.roomsManager.getRoomManagers();
 			for (RoomManager roomManager : roomManagerCollection) {
-				roomManager.removeRoomBoardsListener(roomListener);
+				roomManager.getBoardManager().removeBoardStateListener(boardListener);
 			}
 		}
 
@@ -123,12 +125,7 @@ public class EMailNotificationsSender {
 		if (roomsManager != null) {
 			final Collection<RoomManager> roomManagerCollection = roomsManager.getRoomManagers();
 			for (RoomManager roomManager : roomManagerCollection) {
-				@SuppressWarnings("unchecked")
-				final Collection<GameBoard> collection = roomManager.getOpenedBoards();
-				for (GameBoard board : collection) {
-					board.addGameBoardListener(new TheBoardListener());
-				}
-				roomManager.addRoomBoardsListener(roomListener);
+				roomManager.getBoardManager().addBoardStateListener(boardListener);
 			}
 		}
 	}
@@ -161,30 +158,12 @@ public class EMailNotificationsSender {
 		this.transactionTemplate = transactionTemplate;
 	}
 
-	private class TheRoomListener implements RoomListener {
+	private class TheBoardStateListener implements BoardStateListener {
 		@Override
-		public void boardCreated(Room room, long boardId) {
-		}
-
-		public void boardOpened(Room room, long boardId) {
-			try {
-				final GameBoard board = roomsManager.getRoomManager(room).openBoard(boardId);
-				board.addGameBoardListener(new TheBoardListener());
-			} catch (BoardLoadingException ex) {
-				log.error("Error opening game in boardOpened event processor", ex);
-			}
-
-		}
-
-		public void boardClosed(Room room, long boardId) {
-		}
-	}
-
-	private class TheBoardListener implements GameBoardListener {
-		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
+		public void gameStarted(GameBoard board) {
 			@SuppressWarnings("unchecked")
 			final List<GamePlayerHand> playersHands = board.getPlayersHands();
-			final Player turnOwnerPlayer = playerManager.getPlayer(playerTurn.getPlayerId());
+			final Player turnOwnerPlayer = playerManager.getPlayer(board.getPlayerTurn().getPlayerId());
 
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
@@ -192,14 +171,15 @@ public class EMailNotificationsSender {
 			model.put("timeoutTime", System.currentTimeMillis() - board.getLastMoveTime().getTime());
 
 			for (GamePlayerHand hand : playersHands) {
-				if (hand == playerTurn) {
+				if (hand == board.getPlayerTurn()) {
 					continue;
 				}
 				sentNotification(GameBoardNotification.GAME_STARTED, "app.game.started.other", hand, model);
 			}
-			sentNotification(GameBoardNotification.GAME_STARTED, "app.game.started.you", playerTurn, model);
+			sentNotification(GameBoardNotification.GAME_STARTED, "app.game.started.you", board.getPlayerTurn(), model);
 		}
 
+		@Override
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
@@ -218,7 +198,8 @@ public class EMailNotificationsSender {
 		}
 
 		@SuppressWarnings("unchecked")
-		public void gameDraw(GameBoard board) {
+		@Override
+		public void gameDrew(GameBoard board) {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
 			model.put("rated", board.isRatedGame());
@@ -227,6 +208,7 @@ public class EMailNotificationsSender {
 		}
 
 		@SuppressWarnings("unchecked")
+		@Override
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
@@ -258,15 +240,15 @@ public class EMailNotificationsSender {
 			}
 		}
 
-		public void playerMoved(GameMoveEvent event) {
-			final GameBoard board = event.getGameBoard();
-			final GamePlayerHand nextPlayer = event.getNextPlayer();
+		@Override
+		public void gameMoveMade(GameBoard board, GameMove move) {
+			final GamePlayerHand nextPlayer = board.getPlayerTurn();
 
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
-			model.put("move", event.getGameMove().getPlayerMove());
-			model.put("points", event.getGameMove().getPoints());
-			model.put("movedPlayer", playerManager.getPlayer(event.getPlayer().getPlayerId()));
+			model.put("move", move);
+			model.put("points", move.getPoints());
+			model.put("movedPlayer", playerManager.getPlayer(move.getPlayerMove().getPlayerId()));
 
 			if (nextPlayer != null) {
 				model.put("nextPlayer", playerManager.getPlayer(nextPlayer.getPlayerId()));
@@ -278,7 +260,7 @@ public class EMailNotificationsSender {
 			@SuppressWarnings("unchecked")
 			final List<GamePlayerHand> hands = board.getPlayersHands();
 			for (GamePlayerHand hand : hands) {
-				if (hand == nextPlayer || hand == event.getPlayer()) {
+				if (hand == nextPlayer || hand.getPlayerId() == move.getPlayerMove().getPlayerId()) {
 					continue;
 				}
 				sentNotification(GameBoardNotification.PLAYER_MOVED, "app.game.turn.other", hand, model);
@@ -291,7 +273,7 @@ public class EMailNotificationsSender {
 			final Map<String, Object> model = new HashMap<String, Object>();
 
 			try {
-				GameBoard board = roomsManager.getRoomManager(event.getRoom()).openBoard(event.getBoardId());
+				final GameBoard board = roomsManager.getBoardManager(event.getRoom()).openBoard(event.getBoardId());
 				model.put("board", board);
 				model.put("remainderTime", event.getRemainderType());
 

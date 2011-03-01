@@ -1,22 +1,18 @@
 package wisematches.server.gameplaying.board;
 
-import org.easymock.EasyMock;
-import org.easymock.LogicalOperator;
-import org.junit.Before;
 import org.junit.Test;
-import wisematches.server.core.MockPlayer;
-import wisematches.server.player.Player;
-
-import java.util.*;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @SuppressWarnings("unchecked")
 public class AbstractGameBoardTest {
+
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
 	private GameSettings gameSettings;
 
 	private GamePlayerHand h1;
@@ -109,10 +105,10 @@ public class AbstractGameBoardTest {
 		final GameMove gm = new GameMove(createMock(PlayerMove.class), 10, 1, new Date());
 
 		final GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameDraw(board);
+		l.gameDrew(board);
 		l.gameFinished(board, h1);
 		l.gameInterrupted(board, h2, false);
-		l.playerMoved(cmp(new GameMoveEvent(board, h1, gm, h3), GMEC, LogicalOperator.EQUAL));
+		l.gameMoveMade(cmp(new GameMoveEvent(board, h1, gm, h3), GMEC, LogicalOperator.EQUAL));
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -211,7 +207,7 @@ public class AbstractGameBoardTest {
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
 		final GameMove gm1 = new GameMove(m1, 10, 1, new Date());
-		l.playerMoved(cmp(new GameMoveEvent(board, board.getPlayerTurn(), gm1, p.next()), GMEC, LogicalOperator.EQUAL));
+		l.gameMoveMade(cmp(new GameMoveEvent(board, board.getPlayerTurn(), gm1, p.next()), GMEC, LogicalOperator.EQUAL));
 		replay(l);
 
 		board.setPoints(10);
@@ -232,7 +228,7 @@ public class AbstractGameBoardTest {
 		reset(l);
 		PlayerMove m2 = new PassTurnMove(board.getPlayerTurn().getPlayerId());
 		GameMove gm2 = new GameMove(m2, 2, 2, new Date());
-		l.playerMoved(cmp(new GameMoveEvent(board, board.getPlayerTurn(), gm2, p.next()), GMEC, LogicalOperator.EQUAL));
+		l.gameMoveMade(cmp(new GameMoveEvent(board, board.getPlayerTurn(), gm2, p.next()), GMEC, LogicalOperator.EQUAL));
 		replay(l);
 
 		board.setPoints(2);
@@ -269,8 +265,8 @@ public class AbstractGameBoardTest {
 		h1.increasePoints(1);
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.playerMoved(EasyMock.<GameMoveEvent>anyObject());
-		l.playerMoved(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
 		l.gameFinished(board, h1);
 		replay(l);
 
@@ -297,9 +293,9 @@ public class AbstractGameBoardTest {
 		PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.playerMoved(EasyMock.<GameMoveEvent>anyObject());
-		l.playerMoved(EasyMock.<GameMoveEvent>anyObject());
-		l.gameDraw(board);
+		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameDrew(board);
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -309,7 +305,7 @@ public class AbstractGameBoardTest {
 		board.setFinishScore(new int[]{0, 0, 0});
 		board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
 
-		assertEquals(GameState.DRAW, board.getGameState());
+		assertEquals(GameState.DREW, board.getGameState());
 		assertNull(board.getPlayerTurn());
 		assertNotNull(board.getFinishedTime());
 
@@ -319,9 +315,9 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_finishByDraw_NoMoves() throws GameMoveException {
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.playerMoved(EasyMock.<GameMoveEvent>anyObject());
-		l.playerMoved(EasyMock.<GameMoveEvent>anyObject());
-		l.gameDraw(board);
+		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameMoveMade(EasyMock.<GameMoveEvent>anyObject());
+		l.gameDrew(board);
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -332,7 +328,7 @@ public class AbstractGameBoardTest {
 		board.makeMove(new PassTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGamePassed(false);
 
-		assertEquals(GameState.DRAW, board.getGameState());
+		assertEquals(GameState.DREW, board.getGameState());
 		assertNull(board.getPlayerTurn());
 		assertNotNull(board.getFinishedTime());
 
@@ -418,4 +414,5 @@ public class AbstractGameBoardTest {
 	public static void increasePlayerPoints(GamePlayerHand h, int points) {
 		h.increasePoints(points);
 	}
+*/
 }

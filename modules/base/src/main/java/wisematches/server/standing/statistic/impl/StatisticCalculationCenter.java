@@ -6,8 +6,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameMove;
+import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.standing.statistic.PlayerRatingInfo;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticsManager;
@@ -24,9 +28,8 @@ public class StatisticCalculationCenter {
 	private PlayerStatisticsManager playerStatisticsManager;
 	private PlatformTransactionManager transactionManager;
 
-	private final TheBoardListener boardListener = new TheBoardListener();
+	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
-	private final RoomListener roomListener = new TheRoomListener();
 	private static final Log log = LogFactory.getLog(StatisticCalculationCenter.class);
 
 	protected void processGameStarted(GameBoard board) {
@@ -140,12 +143,12 @@ public class StatisticCalculationCenter {
 		}
 	}
 
-	protected void processPlayerMoved(GameBoard board, GamePlayerHand movedPlayer, GameMove move) {
+	protected void processPlayerMoved(GameBoard board, GameMove move) {
 		if (!board.isRatedGame()) { //If game is not rated just ignore it
 			return;
 		}
 
-		final long playerId = movedPlayer.getPlayerId();
+		final long playerId = move.getPlayerMove().getPlayerId();
 		playerStatisticsManager.lockPlayerStatistic(playerId);
 		try {
 			final PlayerStatistic statistic = getPlayerStatistic(playerId);
@@ -308,27 +311,20 @@ public class StatisticCalculationCenter {
 		return playerStatisticsManager.getPlayerStatistic(playerId);
 	}
 
-
 	public void setRoomsManager(RoomsManager roomsManager) {
 		if (this.roomsManager != null) {
 			final Collection<RoomManager> managers = this.roomsManager.getRoomManagers();
 			for (RoomManager manager : managers) {
-				manager.removeRoomBoardsListener(roomListener);
+				manager.getBoardManager().removeBoardStateListener(boardStateListener);
 			}
 		}
 
 		this.roomsManager = roomsManager;
 
-		if (roomsManager != null) {
-			final Collection<RoomManager> roomManagerCollection = roomsManager.getRoomManagers();
-			for (RoomManager roomManager : roomManagerCollection) {
-				roomManager.addRoomBoardsListener(roomListener);
-
-				@SuppressWarnings("unchecked")
-				final Collection<GameBoard> openedBoards = roomManager.getOpenedBoards();
-				for (GameBoard openedBoard : openedBoards) {
-					openedBoard.addGameBoardListener(boardListener);
-				}
+		if (this.roomsManager != null) {
+			final Collection<RoomManager> managers = this.roomsManager.getRoomManagers();
+			for (RoomManager manager : managers) {
+				manager.getBoardManager().addBoardStateListener(boardStateListener);
 			}
 		}
 	}
@@ -341,28 +337,10 @@ public class StatisticCalculationCenter {
 		this.transactionManager = transactionManager;
 	}
 
-	private class TheRoomListener implements RoomListener {
+	private class TheBoardStateListener implements BoardStateListener {
 		@Override
-		public void boardCreated(Room room, long boardId) {
-		}
-
-		public void boardOpened(Room room, long boardId) {
-			final RoomManager roomManager = roomsManager.getRoomManager(room);
-			try {
-				final GameBoard board = roomManager.openBoard(boardId);
-				board.addGameBoardListener(boardListener);
-			} catch (BoardLoadingException ex) {
-				log.error("Board can't be loaded in boardOpened event processing", ex);
-			}
-		}
-
-		public void boardClosed(Room room, long boardId) {
-		}
-	}
-
-	private class TheBoardListener implements GameBoardListener {
-		public void gameStarted(GameBoard board, GamePlayerHand playerTurn) {
-			final TransactionStatus status = newTrasaction();
+		public void gameStarted(GameBoard board) {
+			final TransactionStatus status = newTransaction();
 			try {
 				processGameStarted(board);
 				transactionManager.commit(status);
@@ -372,8 +350,9 @@ public class StatisticCalculationCenter {
 			}
 		}
 
+		@Override
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
-			final TransactionStatus status = newTrasaction();
+			final TransactionStatus status = newTransaction();
 			try {
 				processGameFinished(board, wonPlayer);
 				transactionManager.commit(status);
@@ -383,8 +362,9 @@ public class StatisticCalculationCenter {
 			}
 		}
 
-		public void gameDraw(GameBoard board) {
-			final TransactionStatus status = newTrasaction();
+		@Override
+		public void gameDrew(GameBoard board) {
+			final TransactionStatus status = newTransaction();
 			try {
 				processGameDraw(board);
 				transactionManager.commit(status);
@@ -394,8 +374,9 @@ public class StatisticCalculationCenter {
 			}
 		}
 
+		@Override
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
-			final TransactionStatus status = newTrasaction();
+			final TransactionStatus status = newTransaction();
 			try {
 				processGameInterrupted(board, interrupterPlayer, byTimeout);
 				transactionManager.commit(status);
@@ -405,11 +386,11 @@ public class StatisticCalculationCenter {
 			}
 		}
 
-		public void playerMoved(GameMoveEvent event) {
-			final TransactionStatus status = newTrasaction();
+		@Override
+		public void gameMoveMade(GameBoard board, GameMove move) {
+			final TransactionStatus status = newTransaction();
 			try {
-				final GameMove gameMove = event.getGameMove();
-				processPlayerMoved(event.getGameBoard(), event.getPlayer(), gameMove);
+				processPlayerMoved(board, move);
 				transactionManager.commit(status);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated", th);
@@ -417,7 +398,7 @@ public class StatisticCalculationCenter {
 			}
 		}
 
-		private TransactionStatus newTrasaction() {
+		private TransactionStatus newTransaction() {
 			return transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 		}
 	}

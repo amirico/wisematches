@@ -21,7 +21,7 @@ public class StatisticCleanerCenter {
 	private ServerPropertiesManager serverPropertiesManager;
 
 	private final ThreadLocal<Calendar> localCalendar = new ThreadLocal<Calendar>();
-	private static final EnumSet<GameState> STATUSES = EnumSet.of(GameState.FINISHED, GameState.DRAW, GameState.INTERRUPTED);
+	private static final EnumSet<GameState> STATUSES = EnumSet.of(GameState.FINISHED, GameState.DREW, GameState.INTERRUPTED);
 
 	public void performClean() {
 		final Collection<RoomManager> collection = roomsManager.getRoomManagers();

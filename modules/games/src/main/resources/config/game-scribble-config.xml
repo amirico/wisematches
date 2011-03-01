@@ -11,14 +11,25 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="scribbleRoomManager" class="wisematches.server.gameplaying.scribble.room.ScribbleRoomManager">
+    <bean id="scribbleBoardManager" class="wisematches.server.gameplaying.scribble.room.board.ScribbleBoardManager">
         <property name="dictionaryManager" ref="wordGamesDictionaries"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
-    <bean id="scribbleRoomManagerFacade" class="wisematches.server.gameplaying.scribble.room.ScribbleRoomManagerFacade">
-        <constructor-arg index="0" ref="scribbleRoomManager"/>
+    <bean id="scribbleProposalManager"
+          class="wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposalManager">
+    </bean>
+
+    <bean id="scribbleSearchEngineManager"
+          class="wisematches.server.gameplaying.scribble.room.search.ScribbleSearchesEngine">
+        <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
+    </bean>
+
+    <bean id="scribbleRoomManager" class="wisematches.server.gameplaying.scribble.room.ScribbleRoomManager">
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
+        <property name="searchEngine" ref="scribbleSearchEngineManager"/>
     </bean>
 
     <bean id="roomsManager" class="wisematches.server.gameplaying.room.RoomsManager">

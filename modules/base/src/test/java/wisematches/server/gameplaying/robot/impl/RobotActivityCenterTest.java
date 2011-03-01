@@ -7,17 +7,21 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameMoveException;
+import wisematches.server.gameplaying.board.GamePlayerHand;
 import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
-import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.MockRoom;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardLoadingException;
+import wisematches.server.gameplaying.room.board.BoardManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.player.computer.robot.RobotPlayer;
 import wisematches.server.player.computer.robot.RobotType;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.concurrent.Executor;
 
 import static org.easymock.EasyMock.*;
 
@@ -25,25 +29,25 @@ import static org.easymock.EasyMock.*;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RobotActivityCenterTest {
-	private RoomListener listener;
-	private GameBoardListener gameBoardListener;
-
 	private RoomManager roomManager;
+	private BoardManager boardManager;
 	private RobotBrainManager brainManager;
 	private RobotActivityCenter activityManager;
 
-	private static final Room ROOM = Room.valueOf("mock");
+	private BoardStateListener listener;
 
 	@Before
+	@SuppressWarnings("unchecked")
 	public void setUp() {
 		activityManager = new RobotActivityCenter();
 
-		brainManager = createStrictMock(RobotBrainManager.class);
 		roomManager = createStrictMock(RoomManager.class);
+		brainManager = createStrictMock(RobotBrainManager.class);
+		boardManager = createStrictMock(BoardManager.class);
 
 		final RoomsManager roomsManager = createStrictMock(RoomsManager.class);
 		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager)).anyTimes();
-		expect(roomsManager.getRoomManager(ROOM)).andReturn(roomManager).anyTimes();
+		expect(roomsManager.getRoomManager(MockRoom.room)).andReturn(roomManager).anyTimes();
 		replay(roomsManager);
 
 		activityManager.setRoomsManager(roomsManager);
@@ -72,7 +76,7 @@ public class RobotActivityCenterTest {
 		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
-		expect(brainManager.getRobotBrain(ROOM, RobotType.TRAINEE)).andReturn(robotBrain);
+		expect(brainManager.getRobotBrain(MockRoom.room, RobotType.TRAINEE)).andReturn(robotBrain);
 		replay(brainManager);
 
 		replay(roomManager);
@@ -86,12 +90,17 @@ public class RobotActivityCenterTest {
 
 		activityManager.setTransactionManager(transaction);
 
-		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(ROOM, gameBoard);
+		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(MockRoom.room, gameBoard);
 		task.run();
 
 		verify(brainManager, roomManager, robotBrain, transaction);
 	}
 
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
 	@Test
 	public void initializeManager() throws BoardLoadingException {
 		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.TRAINEE);
@@ -107,11 +116,12 @@ public class RobotActivityCenterTest {
 		expect(brainManager.getRobotPlayers()).andReturn(Arrays.asList(p1, p2));
 		replay(brainManager);
 
-		expect(roomManager.getRoomType()).andReturn(ROOM);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.room);
+		expect(roomManager.getBoardManager()).andReturn(boardManager);
 		expectRoomBoardsListener();
-		expect(roomManager.getActiveBoards(p1)).andReturn(Arrays.asList(gameBoard));
-		expect(roomManager.getActiveBoards(p2)).andReturn(Arrays.asList(gameBoard));
-		replay(roomManager);
+		expect(boardManager.getActiveBoards(p1)).andReturn(Arrays.asList(gameBoard));
+		expect(boardManager.getActiveBoards(p2)).andReturn(Arrays.asList(gameBoard));
+		replay(roomManager, boardManager);
 
 		// Where is two robots and two tasks must be executed.
 		final Executor executor = createStrictMock(Executor.class);
@@ -121,7 +131,7 @@ public class RobotActivityCenterTest {
 
 		activityManager.setMovesExecutor(executor);
 
-		verify(gameBoard, brainManager, roomManager, executor);
+		verify(gameBoard, brainManager, roomManager, boardManager, executor);
 	}
 
 	@Test
@@ -131,7 +141,7 @@ public class RobotActivityCenterTest {
 		expect(brainManager.getRobotPlayers()).andReturn(Collections.<RobotPlayer>emptyList());
 		replay(brainManager);
 
-		expect(roomManager.getRoomType()).andReturn(ROOM);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.room);
 		expectRoomBoardsListener();
 		replay(roomManager);
 
@@ -153,7 +163,7 @@ public class RobotActivityCenterTest {
 
 		replay(brainManager, executor);
 
-		listener.boardOpened(ROOM, 1L);
+		listener.boardOpened(MockRoom.room, 1L);
 		verify(gameBoard, brainManager, roomManager, executor);
 
 		// Test move transfered
@@ -162,27 +172,17 @@ public class RobotActivityCenterTest {
 		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
 		replay(executor, brainManager, gameBoard, roomManager);
 
-		gameBoardListener.playerMoved(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(p1.getId())));
+		boardStateListener.gameMoveMade(new GameMoveEvent(gameBoard, createPlayerHand(13L), new GameMove(new PassTurnMove(13L), 0, 0, new Date()), createPlayerHand(p1.getId())));
 
 		verify(gameBoard, brainManager, roomManager, executor);
 	}
+*/
 
 	private void expectRoomBoardsListener() {
-		roomManager.addRoomBoardsListener(isA(RoomListener.class));
+		boardManager.addBoardStateListener(isA(BoardStateListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				listener = (RoomListener) getCurrentArguments()[0];
-				return null;
-			}
-		});
-	}
-
-	@SuppressWarnings("unchecked")
-	private void expectGameMoveListener(GameBoard gameBoard) {
-		gameBoard.addGameBoardListener(isA(GameBoardListener.class));
-		expectLastCall().andAnswer(new IAnswer<Object>() {
-			public Object answer() throws Throwable {
-				gameBoardListener = (GameBoardListener) getCurrentArguments()[0];
+				listener = (BoardStateListener) getCurrentArguments()[0];
 				return null;
 			}
 		});

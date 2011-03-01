@@ -15,7 +15,7 @@ public class RatingsCalculationCenterTest {
 	private PlayerManager playerManager;
 
 	private RatingSystem ratingSystem;
-	private RoomListener boardsListener;
+	private BoardListener boardsListener;
 	private GameBoardListener gameStateListener;
 
 	private RatingsCalculationCenter calculationCenter;
@@ -29,10 +29,10 @@ public class RatingsCalculationCenterTest {
 		replay(openedBoard);
 
 		roomManager = createStrictMock(RoomManager.class);
-		roomManager.addRoomBoardsListener(isA(RoomListener.class));
+		roomManager.addRoomBoardsListener(isA(BoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				boardsListener = (RoomListener) getCurrentArguments()[0];
+				boardsListener = (BoardListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -118,7 +118,7 @@ public class RatingsCalculationCenterTest {
 		calculationCenter.setTransactionManager(transaction);
 
 		boardsListener.boardOpened(ROOM, 1L);
-		gameStateListener.gameDraw(board);
+		gameStateListener.gameDrew(board);
 
 		assertEquals(1050, p1.getRating());
 		assertEquals(1600, p2.getRating());
@@ -161,7 +161,7 @@ public class RatingsCalculationCenterTest {
 
 		calculationCenter.addRatingsChangeListener(listener);
 		boardsListener.boardOpened(ROOM, 1L);
-		gameStateListener.gameDraw(board);
+		gameStateListener.gameDrew(board);
 
 		verify(board, playerManager, roomManager, listener);
 	}

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
+import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
@@ -30,7 +31,7 @@ import java.util.Collection;
 @RequestMapping("/game")
 public class DashboardController {
 	private PlayerManager playerManager;
-	private RoomManager<ScribbleBoard, ScribbleSettings> scribbleRoomManager;
+	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -95,7 +96,7 @@ public class DashboardController {
 			log.debug("Loading games for player: " + player);
 		}
 
-		Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getActiveBoards(player);
+		Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getBoardManager().getActiveBoards(player);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + activeBoards.size() + " active games");
 		}
@@ -117,8 +118,7 @@ public class DashboardController {
 	}
 
 	@Autowired
-	@Qualifier("scribbleRoomManager")
-	public void setScribbleRoomManager(RoomManager<ScribbleBoard, ScribbleSettings> scribbleRoomManager) {
+	public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
 		this.scribbleRoomManager = scribbleRoomManager;
 	}
 }

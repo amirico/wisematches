@@ -11,7 +11,6 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 
 	void removeGameBoardListener(GameBoardListener listener);
 
-
 	/**
 	 * Returns id of this board.
 	 *

@@ -128,7 +128,7 @@ public class PlayboardServiceImpl extends GenericSecureRemoteService {//implemen
 	 *
 	 * @param boardId the board to load
 	 * @return the loaded board.
-	 * @throws wisematches.server.gameplaying.room.BoardLoadingException	 if board can't be loaded.
+	 * @throws wisematches.server.gameplaying.room.board.BoardLoadingException	 if board can't be loaded.
 	 * @throws wisematches.server.gameplaying.board.UnsuitablePlayerException if current player can't change a board.
 	 *//*
     private ScribbleBoard getScribbleBoard(long boardId) throws BoardLoadingException, UnsuitablePlayerException {
@@ -219,7 +219,7 @@ public class PlayboardServiceImpl extends GenericSecureRemoteService {//implemen
     }
 
     public void setRoomsManager(RoomsManager roomsManager) {
-        roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
+        roomManager = (ScribbleBoardManager) roomsManager.getRoomManager(ScribbleBoardManager.ROOM);
     }
 
     public void setPlayerManager(PlayerManager playerManager) {

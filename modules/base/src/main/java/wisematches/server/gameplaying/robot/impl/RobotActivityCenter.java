@@ -7,10 +7,16 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameMove;
+import wisematches.server.gameplaying.board.GamePlayerHand;
 import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
-import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.Room;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.player.computer.robot.RobotPlayer;
 import wisematches.server.player.computer.robot.RobotType;
 
@@ -29,28 +35,24 @@ public class RobotActivityCenter {
 	private RobotBrainManager robotBrainManager;
 	private TransactionTemplate transactionTemplate;
 
-	private final RoomListener roomListener = new TheRoomListener();
-
 	private static final Log log = LogFactory.getLog("wisematches.server.robot.activity");
 
 	public RobotActivityCenter() {
 	}
 
 	private void initializeGames() {
-		final Collection<RobotPlayer> collection = robotBrainManager.getRobotPlayers();
 		final Collection<RoomManager> roomManagerCollection = roomsManager.getRoomManagers();
 
 		for (RoomManager roomManager : roomManagerCollection) {
-			final Room room = roomManager.getRoomType();
-			roomManager.addRoomBoardsListener(roomListener);
+			final Room roomType = roomManager.getRoomType();
+			final BoardManager boardManager = roomManager.getBoardManager();
+			boardManager.addBoardStateListener(new TheBoardStateListener(roomType));
 
-			final TheGameMoveListener listener = new TheGameMoveListener(room);
-			for (RobotPlayer player : collection) {
+			for (RobotPlayer player : RobotPlayer.getRobotPlayers()) {
 				@SuppressWarnings("unchecked")
-				final Collection<GameBoard<GameSettings, GamePlayerHand>> boards = roomManager.getActiveBoards(player);
-				for (GameBoard<GameSettings, GamePlayerHand> board : boards) {
-					board.addGameBoardListener(listener);
-					processRobotMove(room, board);
+				final Collection<GameBoard> activeBoards = boardManager.getActiveBoards(player);
+				for (GameBoard activeBoard : activeBoards) {
+					processRobotMove(roomType, activeBoard);
 				}
 			}
 		}
@@ -137,54 +139,32 @@ public class RobotActivityCenter {
 		}
 	}
 
-	private final class TheRoomListener implements RoomListener {
-		private TheRoomListener() {
+	private final class TheBoardStateListener implements BoardStateListener {
+		private Room room;
+
+		private TheBoardStateListener(Room room) {
+			this.room = room;
 		}
 
 		@Override
-		public void boardCreated(Room room, long boardId) {
-			final RoomManager roomManager = roomsManager.getRoomManager(room);
-			try {
-				final GameBoard board = roomManager.openBoard(boardId);
-				processRobotMove(room, board);
-			} catch (BoardLoadingException ex) {
-				log.fatal("Board can't be opened in boardOpened event!!!", ex);
-			}
+		public void gameStarted(GameBoard board) {
+			processRobotMove(room, board);
 		}
 
 		@Override
-		public void boardOpened(Room room, long boardId) {
-			final RoomManager roomManager = roomsManager.getRoomManager(room);
-			try {
-				final GameBoard board = roomManager.openBoard(boardId);
-				board.addGameBoardListener(new TheGameMoveListener(room));
-			} catch (BoardLoadingException ex) {
-				log.fatal("Board can't be opened in boardOpened event!!!", ex);
-			}
+		public void gameMoveMade(GameBoard board, GameMove move) {
+			processRobotMove(room, board);
 		}
 
 		@Override
-		public void boardClosed(Room room, long boardId) {
-		}
-	}
-
-	private final class TheGameMoveListener implements GameBoardListener {
-		private final Room roomType;
-
-		private TheGameMoveListener(Room roomType) {
-			this.roomType = roomType;
+		public void gameDrew(GameBoard board) {
 		}
 
-		public void playerMoved(GameMoveEvent event) {
-			processRobotMove(roomType, event.getGameBoard());
-		}
-
+		@Override
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
 		}
 
-		public void gameDraw(GameBoard board) {
-		}
-
+		@Override
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
 		}
 	}

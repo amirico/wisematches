@@ -1,26 +1,20 @@
 package wisematches.server.standing.statistic.impl;
 
-import org.easymock.IAnswer;
-import org.junit.Before;
 import org.junit.Test;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.*;
-import wisematches.server.standing.statistic.PlayerRatingInfo;
-import wisematches.server.standing.statistic.PlayerStatistic;
-
-import java.util.Arrays;
-import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class StatisticCalculationCenterTest {
+
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Test has been commented");
+	}
+/*
 	private StatisticCalculationCenter calculationCenter;
 
-	private RoomListener roomListener;
+	private BoardListener boardListener;
 
 	@Before
 	public void init() {
@@ -319,9 +313,11 @@ public class StatisticCalculationCenterTest {
 		verify(mi, board);
 	}
 
-	/**
-	 * If game is not rated count of active games should be decreased but other things should not be changed.
-	 */
+	*/
+/**
+ * If game is not rated count of active games should be decreased but other things should not be changed.
+ *//*
+
 	@Test
 	public void test_processGameFinished_NotRated() {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
@@ -383,10 +379,10 @@ public class StatisticCalculationCenterTest {
 		replay(openedBoard);
 
 		final RoomManager roomManager = createStrictMock(RoomManager.class);
-		roomManager.addRoomBoardsListener(isA(RoomListener.class));
+		roomManager.addRoomBoardsListener(isA(BoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				roomListener = (RoomListener) getCurrentArguments()[0];
+				boardListener = (BoardListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -401,8 +397,9 @@ public class StatisticCalculationCenterTest {
 
 		calculationCenter.setRoomsManager(rm);
 
-		roomListener.boardOpened(room, 13L);
+		boardListener.boardOpened(room, 13L);
 
 		verify(board, roomManager, rm, openedBoard);
 	}
+*/
 }

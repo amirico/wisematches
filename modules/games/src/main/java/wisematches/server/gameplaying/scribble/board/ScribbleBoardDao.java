@@ -3,12 +3,10 @@ package wisematches.server.gameplaying.scribble.board;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.gameplaying.board.GameState;
-import wisematches.server.gameplaying.room.search.ExpiringBoardInfo;
-import wisematches.server.gameplaying.room.search.RatedBoardsInfo;
+import wisematches.server.gameplaying.room.search.ExpiringBoard;
 import wisematches.server.player.Player;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -57,12 +55,13 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<ExpiringBoardInfo> findExpiringBoards() {
+	public Collection<ExpiringBoard> findExpiringBoards() {
 		final HibernateTemplate template = getHibernateTemplate();
-		return template.find("select new " + ExpiringBoardInfo.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
+		return template.find("select new " + ExpiringBoard.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
 				ScribbleBoard.class.getName() + " board where board.gameState = ?", new Object[]{GameState.ACTIVE}
 		);
 	}
+/*
 
 	@SuppressWarnings("unchecked")
 	public RatedBoardsInfo getRatedBoards(long playerId, Date startDate, Date endDate) {
@@ -84,7 +83,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 		@SuppressWarnings("unchecked")
 		final List<Object[]> list = template.find(query.toString(),
 				new Object[]{
-						GameState.FINISHED, GameState.DRAW, GameState.INTERRUPTED, playerId
+						GameState.FINISHED, GameState.DREW, GameState.INTERRUPTED, playerId
 				});
 
 		final long boardIds[] = new long[list.size()];
@@ -99,6 +98,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 		}
 		return new RatedBoardsInfo(boardIds, time, rating);
 	}
+*/
 
 	public int getGamesCount(EnumSet<GameState> states) {
 		if (states == null || states.size() == 0) {

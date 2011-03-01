@@ -80,7 +80,7 @@ public class ApplicationStatisticServiceImplTest {
         replay(playerSessionsManager);
 
         final BoardsSearchEngine searchesEngine = createStrictMock(BoardsSearchEngine.class);
-        expect(searchesEngine.getGamesCount(EnumSet.of(GameState.DRAW, GameState.FINISHED, GameState.INTERRUPTED))).andReturn(4);
+        expect(searchesEngine.getGamesCount(EnumSet.of(GameState.DREW, GameState.FINISHED, GameState.INTERRUPTED))).andReturn(4);
         expect(searchesEngine.getGamesCount(EnumSet.of(GameState.ACTIVE))).andReturn(8);
         replay(searchesEngine);
 
@@ -118,7 +118,7 @@ public class ApplicationStatisticServiceImplTest {
         playerStateListener.getValue().playerIsOffline(null);
         assertEquals(3, service.getSiteStatisticBean().getOnlinePlayers());
 
-        gameStateListener.getValue().gameDraw(null);
+        gameStateListener.getValue().gameDrew(null);
         assertEquals(5, bean.getCompletedGames());
         assertEquals(7, bean.getGamesInProgress());
 

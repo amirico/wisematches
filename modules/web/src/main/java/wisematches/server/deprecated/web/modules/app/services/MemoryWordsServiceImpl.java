@@ -77,7 +77,7 @@ public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implem
     }
 
     private ScribbleBoard getScribbleBoard(long boardId) {
-        final ScribbleRoomManager roomManager = (ScribbleRoomManager) roomsManager.getRoomManager(ScribbleRoomManager.ROOM);
+        final ScribbleBoardManager roomManager = (ScribbleBoardManager) roomsManager.getRoomManager(ScribbleBoardManager.ROOM);
         try {
             return roomManager.openBoard(boardId);
         } catch (BoardLoadingException ex) {

@@ -6,12 +6,16 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.*;
+import wisematches.server.gameplaying.room.Room;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardLoadingException;
+import wisematches.server.gameplaying.room.board.BoardManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
-import wisematches.server.gameplaying.room.search.ExpiringBoardInfo;
+import wisematches.server.gameplaying.room.search.ExpiringBoard;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,10 +30,9 @@ public class GameTimeoutTerminator {
 	private final Lock terminatorLock = new ReentrantLock();
 
 	private final Map<Long, GameTerminationTask> scheduledBoards = new HashMap<Long, GameTerminationTask>();
-	private final Map<Room, GameBoardListener> listenerMap = new ConcurrentHashMap<Room, GameBoardListener>();
+	private final Map<Room, BoardStateListener> boardStateListeners = new HashMap<Room, BoardStateListener>();
 
 	private final Timer terminatorTimer = new Timer("GameTimeoutTerminator");
-	private final TheRoomListener roomBoardsListener = new TheRoomListener();
 	private final Collection<GameTimeoutListener> listeners = new CopyOnWriteArraySet<GameTimeoutListener>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.terminator");
@@ -63,17 +66,10 @@ public class GameTimeoutTerminator {
 			@SuppressWarnings("unchecked")
 			final BoardsSearchEngine<GameBoard<?, ?>> boardsSearchEngine = manager.getSearchesEngine();
 
-			final Collection<ExpiringBoardInfo> infoCollection = boardsSearchEngine.findExpiringBoards();
-			for (ExpiringBoardInfo info : infoCollection) {
+			final Collection<ExpiringBoard> infoCollection = boardsSearchEngine.findExpiringBoards();
+			for (ExpiringBoard info : infoCollection) {
 				startBoardTerminationTask(room, info);
 			}
-		}
-	}
-
-	private void listenBoardChanges(Room room, GameBoard board) {
-		final GameState state = board.getGameState();
-		if (state == GameState.ACTIVE) {
-			board.addGameBoardListener(new TheBoardListener(room));
 		}
 	}
 
@@ -81,32 +77,32 @@ public class GameTimeoutTerminator {
 		terminatorTimer.cancel();
 	}
 
-	private void startBoardTerminationTask(Room room, ExpiringBoardInfo expiringBoardInfo) {
+	private void startBoardTerminationTask(Room room, ExpiringBoard expiringBoard) {
 		terminatorLock.lock();
 		try {
 			if (log.isDebugEnabled()) {
-				log.debug("Start new board termination task for board " + expiringBoardInfo.getBoardId());
+				log.debug("Start new board termination task for board " + expiringBoard.getBoardId());
 			}
 
-			final GameTerminationTask interruptor = new GameTerminationTask(room, expiringBoardInfo);
-			final GameTerminationTask previousTask = scheduledBoards.put(expiringBoardInfo.getBoardId(), interruptor);
-			final long remainder = interruptor.getDelayToRemainder();
+			final GameTerminationTask interrupter = new GameTerminationTask(room, expiringBoard);
+			final GameTerminationTask previousTask = scheduledBoards.put(expiringBoard.getBoardId(), interrupter);
+			final long remainder = interrupter.getDelayToRemainder();
 			if (previousTask != null) { // previous previousTask exist
 				if (previousTask.cancel()) { // if it was canceled: schedule new one
 					if (log.isDebugEnabled()) {
-						log.debug("Previous task found and was canceled successfully for board " + expiringBoardInfo.getBoardId() + " with delay " + remainder + "ms");
+						log.debug("Previous task found and was canceled successfully for board " + expiringBoard.getBoardId() + " with delay " + remainder + "ms");
 					}
-					terminatorTimer.schedule(interruptor, remainder);
+					terminatorTimer.schedule(interrupter, remainder);
 				} else {
 					if (log.isDebugEnabled()) {
-						log.debug("Previous task found but it can't be canceled for board " + expiringBoardInfo.getBoardId());
+						log.debug("Previous task found but it can't be canceled for board " + expiringBoard.getBoardId());
 					}
 				}
 			} else {
 				if (log.isDebugEnabled()) {
-					log.debug("Schedule new deactivation task for board " + expiringBoardInfo.getBoardId() + " with delay " + remainder + "ms");
+					log.debug("Schedule new deactivation task for board " + expiringBoard.getBoardId() + " with delay " + remainder + "ms");
 				}
-				terminatorTimer.schedule(interruptor, remainder);
+				terminatorTimer.schedule(interrupter, remainder);
 			}
 		} finally {
 			terminatorLock.unlock();
@@ -146,8 +142,9 @@ public class GameTimeoutTerminator {
 				task.cancel();
 			}
 
-			final RoomManager roomManager = roomsManager.getRoomManager(room);
-			final GameBoard board = roomManager.openBoard(boardId);
+			@SuppressWarnings("unchecked")
+			final BoardManager boardManager = roomsManager.getBoardManager(room);
+			final GameBoard board = boardManager.openBoard(boardId);
 			if (board.getGameState() == GameState.ACTIVE) {
 				if (log.isInfoEnabled()) {
 					log.info("Board " + board + " terminated");
@@ -189,7 +186,10 @@ public class GameTimeoutTerminator {
 		if (this.roomsManager != null) {
 			final Collection<RoomManager> managers = this.roomsManager.getRoomManagers();
 			for (RoomManager manager : managers) {
-				manager.removeRoomBoardsListener(roomBoardsListener);
+				final BoardManager boardManager = manager.getBoardManager();
+				if (boardManager != null) {
+					boardManager.removeBoardStateListener(boardStateListeners.get(manager.getRoomType()));
+				}
 			}
 		}
 
@@ -200,12 +200,12 @@ public class GameTimeoutTerminator {
 			for (RoomManager manager : managers) {
 				final Room type = manager.getRoomType();
 
-				@SuppressWarnings("unchecked")
-				final Collection<GameBoard> openedBoards = manager.getOpenedBoards();
-				for (GameBoard openedBoard : openedBoards) {
-					listenBoardChanges(type, openedBoard);
+				BoardStateListener listener = boardStateListeners.get(manager.getRoomType());
+				if (listener == null) {
+					listener = new TheBoardStateListener(type);
+					boardStateListeners.put(type, listener);
 				}
-				manager.addRoomBoardsListener(roomBoardsListener);
+				manager.getBoardManager().addBoardStateListener(listener);
 			}
 		}
 		initializeTerminator();
@@ -218,36 +218,36 @@ public class GameTimeoutTerminator {
 
 	private class GameTerminationTask extends TimerTask {
 		private final Room room;
-		private final ExpiringBoardInfo expiringInfo;
+		private final ExpiringBoard expiring;
 
-		private GameTerminationTask(Room room, ExpiringBoardInfo expiringInfo) {
+		private GameTerminationTask(Room room, ExpiringBoard expiring) {
 			this.room = room;
-			this.expiringInfo = expiringInfo;
+			this.expiring = expiring;
 		}
 
 		public void run() {
 			terminatorLock.lock();
 			try {
-				final RemainderType nextReminderType = RemainderType.getNextReminderType(expiringInfo.getDaysPerMove(), expiringInfo.getLastMoveTime());
+				final RemainderType nextReminderType = RemainderType.getNextReminderType(expiring.getDaysPerMove(), expiring.getLastMoveTime());
 				if (nextReminderType == null) {
-					final boolean terminated = (Boolean) transactionTemplate.execute(new TransactionCallback() {
+					final boolean terminated = transactionTemplate.execute(new TransactionCallback<Boolean>() {
 						@Override
-						public Object doInTransaction(TransactionStatus status) {
-							return terminateGameBoard(room, expiringInfo.getBoardId());
+						public Boolean doInTransaction(TransactionStatus status) {
+							return terminateGameBoard(room, expiring.getBoardId());
 						}
 					});
 					if (terminated) {
-						fireGameTimeoutEvent(room, expiringInfo.getBoardId(), RemainderType.TIME_IS_UP);
+						fireGameTimeoutEvent(room, expiring.getBoardId(), RemainderType.TIME_IS_UP);
 					}
 				} else { // schedule next termination point...
 					if (log.isDebugEnabled()) {
 						log.debug("Reschedule termination task for next period: " + nextReminderType);
 					}
-					final GameTerminationTask interruptor = new GameTerminationTask(room, expiringInfo);
-					scheduledBoards.put(expiringInfo.getBoardId(), interruptor);
-					terminatorTimer.schedule(interruptor, interruptor.getDelayToRemainder());
+					final GameTerminationTask interrupter = new GameTerminationTask(room, expiring);
+					scheduledBoards.put(expiring.getBoardId(), interrupter);
+					terminatorTimer.schedule(interrupter, interrupter.getDelayToRemainder());
 
-					fireGameTimeoutEvent(room, expiringInfo.getBoardId(), nextReminderType.getPreviousRemainderType());
+					fireGameTimeoutEvent(room, expiring.getBoardId(), nextReminderType.getPreviousRemainderType());
 				}
 			} finally {
 				terminatorLock.unlock();
@@ -255,7 +255,7 @@ public class GameTimeoutTerminator {
 		}
 
 		private RemainderType getNextRemainderType() {
-			return RemainderType.getNextReminderType(expiringInfo.getDaysPerMove(), expiringInfo.getLastMoveTime());
+			return RemainderType.getNextReminderType(expiring.getDaysPerMove(), expiring.getLastMoveTime());
 		}
 
 		private long getDelayToRemainder() {
@@ -263,59 +263,39 @@ public class GameTimeoutTerminator {
 			if (type == null) {
 				return 0;
 			} else {
-				return type.getDelayToRemainder(expiringInfo.getDaysPerMove(), expiringInfo.getLastMoveTime());
+				return type.getDelayToRemainder(expiring.getDaysPerMove(), expiring.getLastMoveTime());
 			}
 		}
 	}
 
-	private class TheRoomListener implements RoomListener {
-		private TheRoomListener() {
-		}
-
-		@Override
-		public void boardCreated(Room room, long boardId) {
-			final RoomManager roomManager = roomsManager.getRoomManager(room);
-			try {
-				final GameBoard board = roomManager.openBoard(boardId);
-				startBoardTerminationTask(room, new ExpiringBoardInfo(board));
-			} catch (BoardLoadingException ex) {
-				log.error("Board can't be loaded in boardOpened event", ex);
-			}
-		}
-
-		public void boardOpened(Room room, long boardId) {
-			final RoomManager roomManager = roomsManager.getRoomManager(room);
-			try {
-				final GameBoard board = roomManager.openBoard(boardId);
-				listenBoardChanges(room, board);
-			} catch (BoardLoadingException ex) {
-				log.error("Board can't be loaded in boardOpened event", ex);
-			}
-		}
-
-		public void boardClosed(Room room, long boardId) {
-		}
-	}
-
-	private class TheBoardListener implements GameBoardListener {
+	private class TheBoardStateListener implements BoardStateListener {
 		private final Room room;
 
-		private TheBoardListener(Room room) {
+		private TheBoardStateListener(Room room) {
 			this.room = room;
 		}
 
-		public void playerMoved(GameMoveEvent event) {
-			startBoardTerminationTask(room, new ExpiringBoardInfo(event.getGameBoard()));
+		@Override
+		public void gameStarted(GameBoard board) {
+			startBoardTerminationTask(room, new ExpiringBoard(board));
 		}
 
+		@Override
+		public void gameMoveMade(GameBoard board, GameMove move) {
+			startBoardTerminationTask(room, new ExpiringBoard(board));
+		}
+
+		@Override
 		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
 			cancelBoardTermination(board);
 		}
 
-		public void gameDraw(GameBoard board) {
+		@Override
+		public void gameDrew(GameBoard board) {
 			cancelBoardTermination(board);
 		}
 
+		@Override
 		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
 			cancelBoardTermination(board);
 		}
