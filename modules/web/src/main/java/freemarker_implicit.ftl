@@ -2,4 +2,5 @@
 [#-- @implicitly included --]
 [#-- @ftlvariable name="serverHostname" type="java.lang.String" --]
 [#-- @ftlvariable name="player" type="wisematches.server.player.Player" --]
+[#-- @ftlvariable name="playerManager" type="wisematches.server.player.PlayerManager" --]
 [#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.captcha.CaptchaService" --]
