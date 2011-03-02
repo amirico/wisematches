@@ -15,9 +15,9 @@ import java.util.Collection;
 public class RobotPlayer extends ComputerPlayer {
 	private final RobotType robotType;
 
-	public static final RobotPlayer DULL = new RobotPlayer(2, "Robot Dull", 800, RobotType.DULL);
-	public static final RobotPlayer TRAINEE = new RobotPlayer(3, "Robot Trainee", 1200, RobotType.TRAINEE);
-	public static final RobotPlayer EXPERT = new RobotPlayer(4, "Robot Expert", 1600, RobotType.EXPERT);
+	public static final RobotPlayer DULL = new RobotPlayer(2, "dull", 800, RobotType.DULL);
+	public static final RobotPlayer TRAINEE = new RobotPlayer(3, "trainee", 1200, RobotType.TRAINEE);
+	public static final RobotPlayer EXPERT = new RobotPlayer(4, "expert", 1600, RobotType.EXPERT);
 
 	private RobotPlayer(long id, String nickname, int rating, RobotType robotType) {
 		super(id, nickname, rating);

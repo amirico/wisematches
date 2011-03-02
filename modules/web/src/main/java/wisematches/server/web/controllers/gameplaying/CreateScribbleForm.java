@@ -11,12 +11,13 @@ public class CreateScribbleForm {
 	@Length(max = 150, message = "game.create.title.err.max")
 	private String title;
 	@NotEmpty(message = "game.create.language.err.blank")
-	private String language;
-	private int daysPerMove;
-	private int maxPlayers;
-	private int minRating;
-	private int maxRating;
-	private String opponents;
+	private String boardLanguage;
+	private String opponent1;
+	private String opponent2 = "no";
+	private String opponent3 = "no";
+	private int daysPerMove = 3;
+	private int minRating = 0;
+	private int maxRating = 0;
 
 	public CreateScribbleForm() {
 	}
@@ -29,12 +30,12 @@ public class CreateScribbleForm {
 		this.title = title;
 	}
 
-	public String getLanguage() {
-		return language;
+	public String getBoardLanguage() {
+		return boardLanguage;
 	}
 
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setBoardLanguage(String boardLanguage) {
+		this.boardLanguage = boardLanguage;
 	}
 
 	public int getDaysPerMove() {
@@ -43,14 +44,6 @@ public class CreateScribbleForm {
 
 	public void setDaysPerMove(int daysPerMove) {
 		this.daysPerMove = daysPerMove;
-	}
-
-	public int getMaxPlayers() {
-		return maxPlayers;
-	}
-
-	public void setMaxPlayers(int maxPlayers) {
-		this.maxPlayers = maxPlayers;
 	}
 
 	public int getMinRating() {
@@ -69,12 +62,28 @@ public class CreateScribbleForm {
 		this.maxRating = maxRating;
 	}
 
-	public String getOpponents() {
-		return opponents;
+	public String getOpponent1() {
+		return opponent1;
 	}
 
-	public void setOpponents(String opponents) {
-		this.opponents = opponents;
+	public void setOpponent1(String opponent1) {
+		this.opponent1 = opponent1;
+	}
+
+	public String getOpponent2() {
+		return opponent2;
+	}
+
+	public void setOpponent2(String opponent2) {
+		this.opponent2 = opponent2;
+	}
+
+	public String getOpponent3() {
+		return opponent3;
+	}
+
+	public void setOpponent3(String opponent3) {
+		this.opponent3 = opponent3;
 	}
 
 	@Override
@@ -82,9 +91,11 @@ public class CreateScribbleForm {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("CreateScribbleForm");
 		sb.append("{title='").append(title).append('\'');
-		sb.append(", language='").append(language).append('\'');
+		sb.append(", boardLanguage='").append(boardLanguage).append('\'');
+		sb.append(", opponent1='").append(opponent1).append('\'');
+		sb.append(", opponent2='").append(opponent2).append('\'');
+		sb.append(", opponent3='").append(opponent3).append('\'');
 		sb.append(", daysPerMove=").append(daysPerMove);
-		sb.append(", maxPlayers=").append(maxPlayers);
 		sb.append(", minRating=").append(minRating);
 		sb.append(", maxRating=").append(maxRating);
 		sb.append('}');

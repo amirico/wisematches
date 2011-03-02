@@ -17,7 +17,6 @@ import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
-import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.player.computer.robot.RobotPlayer;
@@ -41,11 +40,12 @@ public class DashboardController {
 
 	@RequestMapping("create")
 	public String createGamePage(@ModelAttribute("create") CreateScribbleForm form, Model model) {
-		if (form.getTitle() == null) {
-			form.setTitle("ASDASDF AS");
+		if (form.getBoardLanguage() == null) {
+			form.setBoardLanguage(getCurrentPlayer().getLanguage().code());
 		}
 		model.addAttribute("pageName", "create");
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
+		model.addAttribute("playerManager", playerManager);
 		return "/content/game/layout";
 	}
 
@@ -56,16 +56,12 @@ public class DashboardController {
 		if (log.isInfoEnabled()) {
 			log.info("Create new game: " + form);
 		}
+		result.reject("boardLanguage", "game.create.language.err.unsupported");
+
 		final Player player = getCurrentPlayer();
 		if (player == null) {
 			log.info("Player is not authenticated. Redirect to main page.");
 			return "redirect:/account/login.html";
-		}
-
-		if (form.getMaxPlayers() < 2) {
-			result.reject("maxPlayers", "game.create.players.err.min");
-		} else if (form.getMaxPlayers() > 4) {
-			result.reject("maxPlayers", "game.create.players.err.max");
 		}
 
 		if (form.getDaysPerMove() < 2) {
@@ -74,13 +70,12 @@ public class DashboardController {
 			result.reject("daysPerMove", "game.create.daysPerMove.err.max");
 		}
 
-		if (Language.byCode(form.getLanguage()) == null) {
-			result.reject("language", "game.create.language.err.unsupported");
-		}
+//		if (Language.byCode(form.getBoardLanguage()) == null) {
+//		}
 
 		if (!result.hasErrors()) {
 //			try {
-			final ScribbleSettings ru = new ScribbleSettings(form.getTitle(), form.getLanguage(), form.getDaysPerMove());
+			final ScribbleSettings ru = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
 //				final ScribbleBoard board = scribbleRoomManager.createBoard(player, ru);
 			return "redirect:/game/playboard.html?boardId" + 12;
 //			} catch (BoardCreationException e) {
