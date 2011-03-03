@@ -35,7 +35,7 @@ public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, 
 	}
 
 	@Override
-	public GameProposalManager<ScribbleProposal> getGameProposalManager() {
+	public GameProposalManager<ScribbleProposal> getProposalManager() {
 		return gameProposalManager;
 	}
 

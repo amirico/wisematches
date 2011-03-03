@@ -43,5 +43,5 @@ public interface RoomManager<P extends GameProposal, S extends GameSettings, B e
 	 *
 	 * @return the games proposals manager.
 	 */
-	GameProposalManager<P> getGameProposalManager();
+	GameProposalManager<P> getProposalManager();
 }

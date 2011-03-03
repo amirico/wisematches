@@ -1,28 +1,25 @@
 package wisematches.server.gameplaying.scribble.room.proposal;
 
 import wisematches.server.gameplaying.room.propose.GameProposal;
-import wisematches.server.player.Language;
 import wisematches.server.player.Player;
+
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ScribbleProposal extends GameProposal {
-	private Language language;
+	private String language;
 
 	protected ScribbleProposal() {
 	}
 
-	public ScribbleProposal(long id, String title, int timeLimits, int playersCount, Language language, Player player) {
-		super(id, title, timeLimits, playersCount, player);
+	public ScribbleProposal(String title, String language, int timeLimits, int opponentsCount, int minRating, int maxRating, Player player, List<Player> opponents) {
+		super(title, timeLimits, opponentsCount, minRating, maxRating, player, opponents);
 		this.language = language;
 	}
 
-	public Language getLanguage() {
+	public String getLanguage() {
 		return language;
-	}
-
-	public void setLanguage(Language language) {
-		this.language = language;
 	}
 }

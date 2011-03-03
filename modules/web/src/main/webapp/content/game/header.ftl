@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<script>
+<script type="text/javascript">
     $(function() {
         $("#game-toolbar div").buttonset();
         var activeButton = $("#${pageName!}Button");
@@ -20,7 +20,7 @@
 <table id="game-header">
     <tr>
         <td width="178px" height="72px">
-            <img id="header-image" src="/resources/images/logo.png" width="178" height="72"/>
+            <img id="header-image" src="/resources/images/logo.png" width="178" height="72" alt="logo"/>
         </td>
         <td width="100%" height="72px">
             <table style="height: 100%; width: 100%">
