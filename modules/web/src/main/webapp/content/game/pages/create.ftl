@@ -30,7 +30,6 @@
         if (i1.is(':visible') && i2.is(':visible')) {
             $('#oia').hide();
         }
-        return false;
     }
 
     function changeOpponent(pos, player) {
@@ -43,7 +42,6 @@
             $("#oi" + pos).val(player.id);
             $("#on" + pos).html(player.name + " (" + player.rating + ")");
         }
-        return false;
     }
 
     function removeOpponent(pos) {
@@ -73,7 +71,7 @@
     }
 </script>
 
-<table>
+<table width="100%">
 <tr>
 <td width="160" valign="top">
     Adds will be here. Also other information.
@@ -91,13 +89,14 @@
                 <tr>
                     <td>
                     <#--@declare id="title"-->
-                        <label for="title"><@message code="game.create.title.label"/>:</label>
+                        <label for="title"><@message code="game.title.label"/>:</label>
                     </td>
                     <td><@wisematches.fieldInput path="create.title" value="game.create.title.default"/></td>
                 </tr>
+
                 <tr>
                     <td>
-                        <label for="boardLanguage"><@message code="game.create.language.label"/>:</label>
+                        <label for="boardLanguage"><@message code="game.language.label"/>:</label>
                     </td>
                     <td>
                     <@wisematches.field path="create.boardLanguage">
@@ -115,7 +114,7 @@
                 <tr>
                     <td>
                         <label for="daysPerMove">
-                        <@message code="game.create.daysPerMove.label"/>:
+                        <@message code="game.time.label"/>:
                         </label>
                     </td>
                     <td>
@@ -123,19 +122,17 @@
                         <select id="daysPerMove" name="daysPerMove" style="width: 170px;">
                             <#list [2,3,4,5,7,10,14] as l>
                                 <option value="${l}"
-                                        <#if (l==(wisematches.statusValue)?number)>selected="selected"</#if>>
-                                <@utils.daysAsString days=l/>
-                                </option>
+                                        <#if (l==(wisematches.statusValue)?number)>selected="selected"</#if>><@utils.daysAsString days=l/></option>
                             </#list>
                         </select>
                     </@wisematches.field>
-                        <span class="sample"><@message code="game.create.daysPerMove.description"/></span>
+                        <span class="sample"><@message code="game.create.time.description"/></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td>
-                        <label><@message code="game.create.opponents.label"/>:</label>
+                        <label><@message code="game.opponents.label"/>:</label>
                     </td>
                     <td>
                         <span><@message code="game.create.opponents.description"/>:</span>
@@ -144,13 +141,14 @@
 
             <#assign visibleOpponents = 0/>
             <#list 1..3 as n>
-            <@wisematches.field path="create.opponent${n}">
-                <#assign visible=wisematches.statusValue != "no"/>
+            <@spring.bind path="create.opponent${n}"/>
+                <#assign visible=spring.stringStatusValue != "no"/>
                 <#if visible><#assign visibleOpponents=visibleOpponents+1/></#if>
                 <tr id="op${n}" <#if !visible>style="display: none;"</#if>>
                     <td></td>
                     <td>
-                        <input type="hidden" id="oi${n}" name="opponent${n}" value="${wisematches.statusValue}">
+                    <@wisematches.field path="create.opponent${n}">
+                        <input type="hidden" id="oi${n}" name="opponent${n}" value="${wisematches.statusValue}"/>
                         &raquo;
                         <span class="player">
                         <span id="on${n}" class="nickname">
@@ -165,64 +163,71 @@
                         <span id="wao${n}"
                               <#if !visible || !wisematches.statusValue?has_content>style="display: none;"</#if>>
                             <@message code="separator.or"/>
-                                <a href="javascript: changeOpponent(${n}, null);"><@message code="game.create.opponents.wait.human.label"/></a>
+                                <a href="javascript: changeOpponent(${n}, null)"><@message code="game.create.opponents.wait.human.label"/></a>
                         </span>
                     <@message code="separator.or"/>
                         <#if n==1>
-                            <span id="selectRobotPlayer">
-                            <a href="#"><@message code="game.create.opponents.wait.robot.label"/></a>
+                            <div id="selectRobotPlayer">
+                                <a href="#"><@message code="game.create.opponents.wait.robot.label"/></a>
                                 <ul id="robotsList">
                                     <#list robotPlayers as robot>
                                         <li>&raquo;
-                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wisematches.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating?string.computer}'});">
+                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wisematches.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating?string.computer}'})">
                                             <@game.player player=robot showType=false/>
                                             </a>
                                         </li>
                                     </#list>
                                 </ul>
-                                </span>
+                            </div>
                             <#else>
-                                <a href="javascript: removeOpponent(${n});"><@message code="game.create.opponents.wait.clear.label"/></a>
+                                <a href="javascript: removeOpponent(${n})"><@message code="game.create.opponents.wait.clear.label"/></a>
                         </#if>
+                    </@wisematches.field>
                     </td>
                 </tr>
-            </@wisematches.field>
             </#list>
 
                 <tr id="oia" <#if visibleOpponents==3>style="display: none"</#if>>
                     <td></td>
                     <td>
-                        <a href="javascript: addOneMoreOpponent();"><@message code="game.create.opponents.wait.more.label"/></a>
+                        <a href="javascript: addOneMoreOpponent()"><@message code="game.create.opponents.wait.more.label"/></a>
                     </td>
                 </tr>
 
                 <tr>
                     <td>
-                        <label>Limitations:</label>
+                        <label><@message code="game.create.limits.label"/>:</label>
                     </td>
                     <td>
-                        <span>You can play with one robot or from one to three real people:</span>
+                        <span><@message code="game.create.limits.description"/>:</span>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <div>
-                            <label>Rating limits:</label>
-                            min
+                            <label><@message code="game.create.limits.rating.label"/>:</label>
+                        <@wisematches.field path="create.minRating" id="minRatingDiv">
+                        <@message code="game.create.limits.rating.min"/>
                             <select name="minRating">
-                                <option value="0">no limit</option>
-                            <#list ['900','950','1000','1050','1100','1150','1200','1250'] as r>
-                                <option value="${r}">${r}</option>
-                            </#list>
+                                <option value="0"
+                                        <#if "0"==wisematches.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
+                                <#list ['900','950','1000','1050','1100','1150','1200','1250'] as r>
+                                    <option value="${r}">${r}</option>
+                                </#list>
                             </select>
-                            , max
+                        </@wisematches.field>
+                        <@wisematches.field path="create.maxRating" id="maxRatingDiv">
+                            , <@message code="game.create.limits.rating.max"/>
                             <select name="maxRating">
-                            <#list ['1350','1400','1450','1500','1550','1600','1650','1700','1750','1800'] as r>
-                                <option value="${r}">${r}</option>
-                            </#list>
-                                <option value="0">no limit</option>
+                                <#list ['1350','1400','1450','1500','1550','1600','1650','1700','1750','1800'] as r>
+                                    <option value="${r}"
+                                            <#if r==wisematches.statusValue>selected="selected"</#if>>${r}</option>
+                                </#list>
+                                <option value="0"
+                                        <#if "0"==wisematches.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
                             </select>
+                        </@wisematches.field>
                         </div>
                     </td>
                 </tr>
@@ -230,7 +235,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <button>Create Game</button>
+                        <button><@message code="game.create.submit"/></button>
                     </td>
                 </tr>
             </table>
@@ -238,58 +243,59 @@
     </div>
 </div>
 
-<div>
-    <div class="ui-widget-header ui-corner-top">
-        Invite a Friend
-    </div>
-    <div class="ui-widget-content ui-corner-bottom">
-        <div class="info-description">
-            If you'd like to play with someone and they don't have an account on GameKnot yet, please
-            enter their e-mail address below. They won't even have to create an account to play a game
-            with you!
-        </div>
-        <form action="">
-            <table>
-                <tr>
-                    <td style="text-align: right;">
-                    <#--@declare id="title"-->
-                        <label for="title">Player's email address:</label>
-                    </td>
-                    <td>
-                        <input size="20" type="text" value="">
-                        <span class="sample">no WiseMatches account required!</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">
-                    <#--@declare id="title"-->
-                        <label for="title">Your real name:</label>
-                    </td>
-                    <td>
-                        <input size="20" type="text" value="">
-                        <span class="sample">for the invitation e-mail</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">
-                    <#--@declare id="title"-->
-                        <label for="title">Message to the player:</label>
-                    </td>
-                    <td>
-                        <textarea rows="2" cols="40"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button>Challenge</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>
+<#--<div>-->
+<#--<div class="ui-widget-header ui-corner-top">-->
+<#--Invite a Friend-->
+<#--</div>-->
+<#--<div class="ui-widget-content ui-corner-bottom">-->
+<#--<div class="info-description">-->
+<#--If you'd like to play with someone and they don't have an account on GameKnot yet, please-->
+<#--enter their e-mail address below. They won't even have to create an account to play a game-->
+<#--with you!-->
+<#--</div>-->
+<#--<form action="">-->
+<#--<table>-->
+<#--<tr>-->
+<#--<td style="text-align: right;">-->
+<#--&lt;#&ndash;@declare id="title"&ndash;&gt;-->
+<#--<label for="title">Player's email address:</label>-->
+<#--</td>-->
+<#--<td>-->
+<#--<input size="20" type="text" value="">-->
+<#--<span class="sample">no WiseMatches account required!</span>-->
+<#--</td>-->
+<#--</tr>-->
+<#--<tr>-->
+<#--<td style="text-align: right;">-->
+<#--&lt;#&ndash;@declare id="title"&ndash;&gt;-->
+<#--<label for="title">Your real name:</label>-->
+<#--</td>-->
+<#--<td>-->
+<#--<input size="20" type="text" value="">-->
+<#--<span class="sample">for the invitation e-mail</span>-->
+<#--</td>-->
+<#--</tr>-->
+<#--<tr>-->
+<#--<td style="text-align: right;">-->
+<#--&lt;#&ndash;@declare id="title"&ndash;&gt;-->
+<#--<label for="title">Message to the player:</label>-->
+<#--</td>-->
+<#--<td>-->
+<#--<textarea rows="2" cols="40"></textarea>-->
+<#--</td>-->
+<#--</tr>-->
+<#--<tr>-->
+<#--<td></td>-->
+<#--<td>-->
+<#--<button>Challenge</button>-->
+<#--</td>-->
+<#--</tr>-->
+<#--</table>-->
+<#--</form>-->
+<#--</div>-->
+<#--</div>-->
 </div>
 </td>
+<td width="160" valign="top"></td>
 </tr>
 </table>

@@ -164,7 +164,7 @@ public class HibernatePlayerImpl implements MemberPlayer {
 	 */
 	final void updatePlayerInfo(Player player) {
 		if (player.getId() != id) {
-			throw new IllegalArgumentException("Players ids are not equals.");
+			throw new IllegalArgumentException("Player ids are not equals.");
 		}
 		this.password = player.getPassword();
 		this.email = player.getEmail();

@@ -2,22 +2,23 @@
 <#include "/core.ftl">
 
 <#macro html title='wisematches.title'>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title id="page-title"><@message code="${title}"/></title>
+    <title><@message code="${title}"/></title>
 
-    <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
 
-    <link rel="stylesheet" type="text/css" href="/content/wisematches.css">
-    <link rel="stylesheet" type="text/css" href="/content/account/account.css">
-    <link rel="stylesheet" type="text/css" href="/content/game/scribble.css">
-    <link rel="stylesheet" type="text/css" href="/content/game/scribble-board.css">
+    <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
+    <link rel="stylesheet" type="text/css" href="/content/account/account.css"/>
+    <link rel="stylesheet" type="text/css" href="/content/game/scribble.css"/>
+    <link rel="stylesheet" type="text/css" href="/content/game/scribble-board.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
 
     <script type="text/javascript" src="/i18n/${locale}.js"></script>
 
     <script type="text/javascript" src="/jquery/jquery.js"></script>
     <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.blockUI.js"></script>
 
     <script type="text/javascript" src="/content/wisematches.js"></script>
     <script type="text/javascript" src="/content/account/account.js"></script>
@@ -29,9 +30,9 @@
 </html>
 </#macro>
 
-<#macro field path>
+<#macro field path id="">
 <@spring.bind path/>
-<div class="<#if spring.status.error>field-error<#else>field-ok</#if>">
+<div <#if id?has_content>id="${id}"</#if> class="<#if spring.status.error>field-error<#else>field-ok</#if>">
     <#assign status=spring.status>
     <#assign statusValue=spring.stringStatusValue>
 
@@ -46,7 +47,7 @@
 <#macro fieldInput path attributes="" fieldType="text" size=30 value="">
 <@field path=path>
 <input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
-       value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>" ${attributes}>
+       value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>" ${attributes}/>
 </@field>
 </#macro>
 

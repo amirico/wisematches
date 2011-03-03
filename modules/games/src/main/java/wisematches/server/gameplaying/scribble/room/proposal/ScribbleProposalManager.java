@@ -6,30 +6,37 @@ import wisematches.server.player.Player;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ScribbleProposalManager extends AbstractProposalManager<ScribbleProposal> {
+	private final AtomicLong proposalIds = new AtomicLong();
+
 	private final Map<Long, ScribbleProposal> proposals = new ConcurrentHashMap<Long, ScribbleProposal>();
 
 	public ScribbleProposalManager() {
 	}
 
 	@Override
-	public synchronized void initiateGameProposal(ScribbleProposal proposal) {
-		proposals.put(proposal.getId(), proposal);
+	public synchronized ScribbleProposal initiateGameProposal(ScribbleProposal proposal) {
+		long id = proposalIds.incrementAndGet();
+		proposal.setId(id);
+		proposals.put(id, proposal);
 		fireGameProposalInitiated(proposal);
+		return proposal;
 	}
 
 	@Override
 	public synchronized ScribbleProposal attachPlayer(long proposalId, Player player) {
 		final ScribbleProposal info = proposals.get(proposalId);
 		if (info == null) {
-			throw new UnsupportedOperationException("Checking is not implemented");
+			return null;
 		}
-		if (!info.isSuitablePlayer(player)) {
-			throw new UnsupportedOperationException("Checking is not implemented");
+		final String unsuitableMessage = info.getUnsuitableMessage(player);
+		if (unsuitableMessage != null) {
+			throw new IllegalStateException(unsuitableMessage);
 		}
 		info.attachPlayer(player);
 		fireGameProposalUpdated(info);

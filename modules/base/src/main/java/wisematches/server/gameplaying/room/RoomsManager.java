@@ -87,6 +87,6 @@ public class RoomsManager {
 		if (roomManager == null) {
 			throw new IllegalArgumentException("There is no room for specified type");
 		}
-		return (R) roomManager.getGameProposalManager();
+		return (R) roomManager.getProposalManager();
 	}
 }

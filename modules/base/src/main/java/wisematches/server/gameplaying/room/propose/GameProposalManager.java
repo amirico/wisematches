@@ -19,8 +19,9 @@ public interface GameProposalManager<P extends GameProposal> {
 	 * Opens new waiting game in this manager.
 	 *
 	 * @param proposal the waiting game info.
+	 * @return returns the proposal (possible new or modified).
 	 */
-	void initiateGameProposal(P proposal);
+	P initiateGameProposal(P proposal);
 
 	/**
 	 * Attaches specified player to the waiting game.
@@ -56,4 +57,12 @@ public interface GameProposalManager<P extends GameProposal> {
 	 * @return the list of all waiting games.
 	 */
 	Collection<P> getActiveProposals();
+
+	/**
+	 * Returns list of all active proposals for specified player
+	 *
+	 * @param player the player who's proposals should be returned
+	 * @return unmodifiable list of all active player's proposals.
+	 */
+	Collection<P> getPlayerProposals(Player player);
 }

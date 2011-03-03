@@ -2,15 +2,10 @@
 <#-- @ftlvariable name="playerManager" type="wisematches.server.player.PlayerManager" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal>" -->
 <#include "/core.ftl">
-
-<style type="text/css">
-    #dashboard th, #dashboard td {
-        padding: 2px 5px;
-        vertical-align: top;
-        white-space: nowrap;
-    }
-</style>
+<#import "../macros.ftl" as game>
+<#import "/content/utils.ftl" as utils>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -25,16 +20,17 @@
             "sDom": '<"H"lCr>t<"F"ip>',
             "sPaginationType": "full_numbers",
             "oLanguage": {
-                "sEmptyTable": "There are no any games to play.<br> You can <a href='/game/create.html'>create new game</a> or <a href='/game/gameboard.html'>joint to exist game.</a> "
+                "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
             }
         });
     });
 </script>
 
 <#macro gameStatus board>
-    <#if board.getGameState() == "IN_PROGRESS">
+    <#if board.getGameState() == "ACTIVE">
         <#if board.getPlayerTurn().getPlayerId() == player.getId()>
-        <@message code="game.status.move_you"/>
+        <span class="player"><a
+                href="/game/playboard.html?boardId=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
             <#else>
             <@message code="game.status.move_opp" args="${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"/>
         </#if>
@@ -45,23 +41,25 @@
 
 <table width="100%">
     <tr>
-        <td width="150px" valign="top">
+        <td width="160px" valign="top">
             Adds will be here. Also other information.
         </td>
         <td valign="top">
             <div style="float: right;">
-                <button id="refreshDashboard" onclick="window.location.reload()">Refresh Table</button>
+                <button id="refreshDashboard" onclick="window.location.reload()">
+                <@message code="refresh.label"/>
+                </button>
             </div>
 
             <table id="dashboard" width="100%">
                 <thead>
                 <tr>
-                    <th width="100%">Title</th>
-                    <th>Language</th>
-                    <th>Status</th>
-                    <th>Opponent</th>
-                    <th>Score</th>
-                    <th>Time</th>
+                    <th width="100%"><@message code="game.title.label"/></th>
+                    <th><@message code="game.language.label"/></th>
+                    <th><@message code="game.status.label"/></th>
+                    <th><@message code="game.opponents.label"/></th>
+                    <th><@message code="game.scores.label"/></th>
+                    <th><@message code="game.time.label"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -77,42 +75,57 @@
                         <#list board.playersHands as hand>
                             <#assign player=playerManager.getPlayer(hand.getPlayerId())!/>
                             <div>
-                                <a href="/game/profile.html?player=${player.id}"><b>${player.nickname}</b></a>
+                            <@game.player player=player showRating=false/>
                             </div>
-                        </#list>
-
-                        <#assign waitingCount = board.gameSettings.maxPlayers - board.playersHands?size/>
-                        <#list 0..waitingCount as i>
-                            <#if !i_has_next><#break/></#if>
-                            <div><b><@message code="game.status.waiting"/></b></div>
                         </#list>
                     </td>
                     <td class="center">
                         <#list board.playersHands as hand>
                             <div>${hand.points}</div>
                         </#list>
-
-                        <#assign waitingCount = board.gameSettings.maxPlayers - board.playersHands?size/>
-                        <#list 0..waitingCount as i>
-                            <#if !i_has_next><#break/></#if>
-                            <div>-</div>
-                        </#list>
                     </td>
                     <td class="center">
                         <#list board.playersHands as hand>
-                            <div>3d</div>
+                            <div>3d (!!!!)</div>
                         </#list>
+                    </td>
+                </tr>
+                </#list>
 
-                        <#assign waitingCount = board.gameSettings.maxPlayers - board.playersHands?size/>
-                        <#list 0..waitingCount as i>
-                            <#if !i_has_next><#break/></#if>
-                            <div>-</div>
+                <#list activeProposals as proposal>
+                <tr>
+                    <td>${proposal.title}</td>
+                    <td><@message code="language.${proposal.language}"/></td>
+                    <td>
+                        <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
+                    </td>
+                    <td>
+                        <#list proposal.allPlayers as p>
+                            <div>
+                                <#if p??>
+                                    <#assign player=playerManager.getPlayer(p)/>
+                                <@game.player player=player showRating=false/>
+                                    <#else>
+                                        <span class="player">
+                                            <span class="waiting"><@message code="game.status.waiting"/></span>
+                                        </span>
+                                </#if>
+                            </div>
                         </#list>
+                    </td>
+                    <td class="center">
+                        <#list proposal.allPlayers as p>
+                            <div>0</div></#list>
+                    </td>
+                    <td class="center">
+                        <#list proposal.allPlayers as p>
+                            <div><@utils.daysAsString days=proposal.timeLimits/></div></#list>
                     </td>
                 </tr>
                 </#list>
                 </tbody>
             </table>
         </td>
+        <td width="160px" valign="top"></td>
     </tr>
 </table>
