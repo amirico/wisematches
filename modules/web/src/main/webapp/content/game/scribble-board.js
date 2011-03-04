@@ -32,7 +32,6 @@ if (wm.g == null) wm.g = new function() {
         return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
     };
 
-
     this.getPosition = function (element, event) {
         var loc = this.getLocation(element);
         var pos = this.getPositionOnScreen(event);
@@ -49,7 +48,6 @@ if (wm.g == null) wm.g = new function() {
             y:event.clientY + document.body.scrollTop - document.body.clientTop
         };
     };
-
 
     this.getLocation = function(element) {
         var top = 0;
@@ -69,7 +67,6 @@ if (wm.g == null) wm.g = new function() {
         loc.height = element.offsetHeight;
         return loc;
     };
-
 
     this.containsPoint = function(rect, point) {
         return (rect.x >= point.x) && (rect.x + rect.width <= point.x) &&
@@ -137,6 +134,7 @@ wm.scribble.tile = new function() {
         tile.number = tile.id.match(/tile([0-9]*)/i)[1];
         tile.selected = false;
         tile.pinned = false;
+        tile.letter = tile.innerText;
         updateTileImage(tile);
         return tile;
     };
@@ -186,7 +184,6 @@ wm.scribble.ScoreEngine = function() {
             var y = bonus.offsetTop / 22;
 
             bonuses[x][y] = this.BonusType[bonus.className.match(/bonus-cell-([0-9][a-z])/i)[1]];
-            print("Found bonus: " + bonuses[x][y]);
         }
     };
 
@@ -268,8 +265,6 @@ wm.scribble.Board = function() {
         if (cell == null ||
                 (cell.container == board && boardTiles[cell.x][cell.y] != undefined) ||
                 (cell.container == hand && handTiles[cell.x] != undefined)) {
-            print("Drop position incorrect. Revert.");
-
             draggingTile.style.top = draggingTile.initialState.y;
             draggingTile.style.left = draggingTile.initialState.x;
         } else {
@@ -386,7 +381,6 @@ wm.scribble.Board = function() {
     };
 
     this.init = function() {
-        print("start");
         document.onmouseup = onTileUp;
         document.onmousemove = onTileMove;
 
@@ -395,8 +389,6 @@ wm.scribble.Board = function() {
         var tiles = hand.getElementsByTagName('div');
         for (var i = 0; i < tiles.length; i++) {
             var handTile = wm.scribble.tile.parseTileInfo(tiles[i]);
-            print("Found hand tile: " + handTile.id + ", " + handTile.number + ", " + handTile.cost);
-
             handTile.onmousedown = onTileDown;
 
             handTile.cell = {x:i, y:0, container: hand};
@@ -406,8 +398,6 @@ wm.scribble.Board = function() {
         tiles = board.getElementsByTagName('div');
         for (i = 0; i < tiles.length; i++) {
             var boardTile = wm.scribble.tile.parseTileInfo(tiles[i]);
-            print("Found board tile: " + boardTile.id + ", " + boardTile.number + ", " + boardTile.cost);
-
             wm.scribble.tile.pinTile(boardTile);
             boardTile.onclick = onTileSelected;
 

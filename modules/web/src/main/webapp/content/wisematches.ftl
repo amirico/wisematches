@@ -8,18 +8,23 @@
 
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
 
+    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/table_col_reorder.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/table_cov_vis.css"/>
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <link rel="stylesheet" type="text/css" href="/content/account/account.css"/>
     <link rel="stylesheet" type="text/css" href="/content/game/scribble.css"/>
     <link rel="stylesheet" type="text/css" href="/content/game/scribble-board.css"/>
-    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
-
-    <script type="text/javascript" src="/i18n/${locale}.js"></script>
 
     <script type="text/javascript" src="/jquery/jquery.js"></script>
     <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/jquery/dataTables.min.js"></script>
+    <script type="text/javascript" src="/jquery/dataTables-colVis.min.js"></script>
+    <script type="text/javascript" src="/jquery/dataTables-colReorder.min.js"></script>
     <script type="text/javascript" src="/jquery/jquery.blockUI.js"></script>
 
+    <script type="text/javascript" src="/i18n/${locale}.js"></script>
     <script type="text/javascript" src="/content/wisematches.js"></script>
     <script type="text/javascript" src="/content/account/account.js"></script>
     <script type="text/javascript" src="/content/game/scribble-board.js"></script>
