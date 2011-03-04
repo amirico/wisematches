@@ -83,8 +83,6 @@ if (wm.i18n == null) wm.i18n = new function() {
 if (_ == null) var _ = wm.i18n.t;
 
 wm.util = {};
-
-// Define some utility functions
 wm.util.url = new function() {
     this.redirect = function(url) {
         window.location = url;
@@ -126,114 +124,24 @@ wm.util.url = new function() {
     }
 };
 
-// Define problems notification/report and so one functions
-if (wm.problems == null) wm.problems = new function() {
-    var problemsWindow;
-    this.showReportWindow = function () {
-        if (!problemsWindow) {
-            var problemsForm = new Ext.form.FormPanel({
-                frame: true,
-                labelWidth: 120,
-                defaults: { msgTarget: 'side' },
-                defaultType: 'textfield',
-                items:[
-                    {
-                        fieldLabel: _('problems.report.field.email.label'),
-                        name: 'email',
-                        anchor:'-20',
-                        vtype: 'email',
-                        allowBlank: false,
-                        emptyText: _('problems.report.field.email.err.empty'),
-                        blankText: _('problems.report.field.email.err.empty')
-                    },
-                    {
-                        fieldLabel: _('problems.report.field.username.label'),
-                        name: 'username',
-                        anchor : '-20',
-                        allowBlank: false,
-                        emptyText: _('problems.report.field.username.err.empty'),
-                        blankText: _('problems.report.field.username.err.empty')
-                    },
-                    {
-                        fieldLabel: _('problems.report.field.subject.label'),
-                        name: 'subject',
-                        anchor : '-20',
-                        allowBlank: false,
-                        emptyText: _('problems.report.field.subject.err.empty'),
-                        blankText: _('problems.report.field.subject.err.empty')
-                    },
-                    {
-                        fieldLabel: _('problems.report.field.message.label'),
-                        xtype:'htmleditor',
-                        name: 'message',
-                        anchor : '-20',
-                        height: 300,
-                        enableSourceEdit: false,
-                        enableFont: false,
-                        allowBlank: false
-                    },
-                    {
-                        xtype: 'box',
-                        style: 'padding-left: 125px', // see labelWidth + 5
-                        html: _('problems.report.field.notice.description')
-                    }
-                ],
+wm.ui = new function() {
+    $.blockUI.defaults.css = {
+        padding:    0,
+        margin:        0,
+        width:        '30%',
+        top:        '40%',
+        left:        '35%',
+        textAlign:    'center',
+        'border-width': '3px'
+    };
 
-                buttons: [
-                    {
-                        text: _('submit.label'),
-                        handler: function() {
-                            if (problemsForm.form.isValid()) {
-                                var report = {
-                                    email:null,
-                                    subject:null,
-                                    message:null, // are taken from form
-                                    page:document.location.href,
-                                    os:navigator.platform + ": " + navigator.userAgent,
-                                    browser:navigator.appName + ": " + navigator.appVersion };
-
-                                problemsForm.form.submit({
-                                    reset: true,
-                                    waitMsg: _('problems.report.submit.wait.description'),
-                                    waitTitle: _('problems.report.submit.wait.label'),
-                                    failureTitle: _('problems.report.submit.err.label'),
-
-                                    dwrFunction: problemsReportService.reportProblem,
-                                    dwrValuesObject: report,
-
-                                    success: function(form, action) {
-                                        problemsWindow.hide();
-                                        Ext.ux.wm.msg({
-                                            title: _('problems.report.submit.done.label'),
-                                            message: _('problems.report.submit.done.description'),
-                                            pause: 7
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    } ,
-                    {
-                        text: _('cancel.label'),
-                        handler : function() {
-                            problemsWindow.hide();
-                        }
-                    }
-                ]});
-
-            problemsWindow = new Ext.Window({
-                title: _('problems.report.label'),
-                modal: true,
-                width: 600,
-                border: false,
-                autoHeight: true,
-                resizable: false,
-                closable: true,
-                closeAction: 'hide',
-
-                items: [ problemsForm ]
-            });
-        }
-        problemsWindow.show(this);
+    this.showMessage = function(opts) {
+        var v = $.extend(opts || {}, {
+            message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
+            blockMsgClass: 'ui-widget-content ui-corner-all' + (opts.error ? ' ui-state-error' : ''),
+            draggable: false
+        });
+        $.blockUI(v);
     };
 };
+

@@ -20,6 +20,10 @@
     display: inline-block;
 }
 
+.player .rating {
+    padding-left: 3px;
+}
+
 .player.member .mod {
     background: url("/resources/images/player/memberships.png") no-repeat left top;
 }
@@ -85,4 +89,22 @@
     padding: 2px 5px;
     vertical-align: top;
     white-space: nowrap;
+}
+
+.playerInfo {
+    margin-bottom: 5px;
+}
+
+#movesHistory .ui-state-default {
+    border: 0;
+}
+
+#movesHistory tr.odd td, #movesHistory tr.even td {
+    border: 0;
+    background-color: #DFE8F6;
+}
+
+#movesHistory tr.even:hover td, #movesHistory tr.odd:hover td {
+    border: 0;
+    background-color: #A6C9E2;
 }

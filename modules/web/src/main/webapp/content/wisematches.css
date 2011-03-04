@@ -76,22 +76,27 @@ form .sample {
     color: #666666;
 }
 
+.ui-widget-header {
+    padding: 5px;
+    font-weight: bold;
+}
+
 .ui-widget-content {
     padding: 5px;
-    background: #DFE8F6 none !important;
+    background: #DFE8F6 none;
 }
 
-.fg-toolbar {
-    line-height: 0 !important;
-}
+/*.fg-toolbar {*/
+/*line-height: 0 !important;*/
+/*}*/
 
 tr.odd td, tr.even td {
-    background-color: white !important;
+    background-color: white;
     border-bottom: 1px #DFE8F6 dashed;
 }
 
 tr.even:hover td, tr.odd:hover td {
-    background-color: #DFE8F6 !important;
+    background-color: #DFE8F6;
 }
 
 .field-error, .field-ok {
@@ -116,6 +121,17 @@ div.space-line {
 
 .account-button {
     width: 100%;
+}
+
+.closeButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.closeButton a {
+    border: none !important;
+    text-decoration: none !important;
 }
 
 #info-page {

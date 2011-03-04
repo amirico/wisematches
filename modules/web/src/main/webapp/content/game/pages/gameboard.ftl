@@ -25,25 +25,18 @@
         });
 
         /*
-        $.blockUI({
-            message: $('img#ProcessingBar'),
-            css: {
-                border: 'none',
-                padding: '15px',
-                backgroundColor: '#000',
-                '-webkit-border-radius': '10px',
-                '-moz-border-radius': '10px',
-                opacity: '.5'
-            }
-        });
+        wm.ui.showMessage({
+            message: 'The game has already been started so you can not join to it anymore.<br> Please select another game or <a href="/game/create.html">create new one</a>',
+            error: true});
+*/
+
+        /*
+        wm.ui.showMessage({
+            message: '<img src="/resources/images/wait.gif" style="vertical-align: middle; padding-right: 4px;"><span style="vertical-align: middle;">Joining to the game</span>',
+            error: false});
 */
     });
 </script>
-
-
-<div id="processing-EventListing">
-    <img id="ProcessingBar" src="/resources/images/logo.png" style="display:none"/>
-</div>
 
 <table width="100%">
     <tr>
@@ -75,10 +68,10 @@
                     <td><@message code="language.${proposal.language}"/></td>
                     <td><@utils.daysAsString days=proposal.timeLimits/></td>
                     <td>
-                        <#list proposal.allPlayers as playerId>
+                        <#list proposal.allPlayers as pId>
                             <div>
                                 <#if pId??>
-                                    <#assign playerProposed=playerManager.getPlayer(playerId)/>
+                                    <#assign playerProposed=playerManager.getPlayer(pId)/>
                                 <@game.player player=playerProposed showRating=false/>
                                     <#else>
                                         <span class="player">
