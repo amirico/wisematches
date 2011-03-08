@@ -1,3 +1,31 @@
+#create-game .description {
+    padding-bottom: 15px;
+}
+
+#create-game .ui-widget-content {
+    margin-bottom: 10px;
+}
+
+#create-game .ui-widget-header {
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#create-game .ui-widget-content table {
+    border-spacing: 5px;
+}
+
+#create-game .ui-widget-content td {
+    text-align: left;
+    vertical-align: top;
+}
+
+#game-header {
+    border-bottom: 1px solid #C9D7F1;
+    margin-bottom: 20px;
+}
+
 .player {
     white-space: nowrap;
     display: inline-block;
@@ -92,19 +120,68 @@
 }
 
 .playerInfo {
+    padding: 3px;
     margin-bottom: 5px;
+    background-image: none !important;
 }
 
 #movesHistory .ui-state-default {
     border: 0;
 }
 
-#movesHistory tr.odd td, #movesHistory tr.even td {
+#playboard tr.odd td, #playboard tr.even td {
     border: 0;
     background-color: #DFE8F6;
+    cursor: pointer;
 }
 
-#movesHistory tr.even:hover td, #movesHistory tr.odd:hover td {
+#playboard tr.even:hover td, #playboard tr.odd:hover td {
     border: 0;
     background-color: #A6C9E2;
+    cursor: pointer;
+}
+
+#memoryWords th, #memoryWords td {
+    white-space: nowrap;
+}
+
+#boardsNavigationToolbar button {
+    margin: -.2em !important;
+}
+
+#bankInfo td {
+    padding-left: 5px;
+    white-space: nowrap;
+}
+
+#scribbleBoard {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+}
+
+.playerInfo td {
+    white-space: nowrap;
+}
+
+.ui-widget-separator {
+    padding: 0;
+    height: 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+}
+
+.ui-table-left, .ui-table-middle {
+    border-right-width: 0 !important;
+}
+
+.ui-table-right, .ui-table-middle {
+    border-left-width: 0 !important;
+}
+
+.passive td {
+    color: gray !important;
+    border-color: transparent !important;
+    background: none !important;
 }
