@@ -19,9 +19,9 @@
 
     <script type="text/javascript" src="/jquery/jquery.js"></script>
     <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/jquery/dataTables.min.js"></script>
-    <script type="text/javascript" src="/jquery/dataTables-colVis.min.js"></script>
-    <script type="text/javascript" src="/jquery/dataTables-colReorder.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-table.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-table_col_vis.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery-table__col_reorder.min.js"></script>
     <script type="text/javascript" src="/jquery/jquery.blockUI.js"></script>
 
     <script type="text/javascript" src="/i18n/${locale}.js"></script>

@@ -177,7 +177,7 @@ wm.scribble.ScoreEngine = function() {
     this.BonusType = { DL: {name: '2l'}, TL: {name: '3l'}, DW: {name: '2w'}, TW: {name: '3w'} };
 
     this.init = function() {
-        var bonuses = document.getElementById('playboard').getElementsByTagName('bonuses');
+        var bonuses = document.getElementById('container').getElementsByTagName('bonuses');
         for (var i = 0; i < bonuses.length; i++) {
             var bonus = bonuses[i];
             var x = bonus.offsetLeft / 22;
@@ -196,7 +196,7 @@ wm.scribble.Highlighting = function() {
     var element = document.createElement('div');
     element.id = 'highlighting';
 
-    var playboard = document.getElementById("playboard");
+    var playboard = document.getElementById("container");
 
     this.start = function(tile) {
         element.style.backgroundPosition = -tile.cost * 22 + "px -88px";
@@ -467,7 +467,7 @@ wm.scribble.Board = function() {
                 start: { row: sortedTiles[0].cell.y, col: sortedTiles[0].cell.x},
                 end: {row: sortedTiles[sortedTiles.length - 1].cell.y, col: sortedTiles[sortedTiles.length - 1].cell.x},
                 text: word,
-                numbers: numbers
+                tiles: sortedTiles
             };
         }
         return null;
