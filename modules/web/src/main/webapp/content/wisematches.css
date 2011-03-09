@@ -86,9 +86,26 @@ form .sample {
     background: #DFE8F6 none;
 }
 
-/*.fg-toolbar {*/
-/*line-height: 0 !important;*/
-/*}*/
+.ui-button-disabled {
+    opacity: 0.80 !important;
+    color: gray !important;
+}
+
+.ui-widget-separator {
+    padding: 0;
+    height: 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+}
+
+.ui-table-left, .ui-table-middle {
+    border-right-width: 0 !important;
+}
+
+.ui-table-right, .ui-table-middle {
+    border-left-width: 0 !important;
+}
 
 tr.odd td, tr.even td {
     background-color: white;
@@ -146,6 +163,7 @@ div.space-line {
 #info-navigation ul {
     margin: 0;
     padding: 0;
+    padding-top: 10px;
     list-style: none;
     white-space: nowrap;
 }

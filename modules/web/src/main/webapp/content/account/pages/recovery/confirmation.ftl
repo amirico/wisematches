@@ -23,11 +23,11 @@
                         <label for="email"><@message code="account.register.email.label"/>:</label>
                     </td>
                     <td>
-                    <@wisematches.field path="recovery.token">
+                    <@wm.field path="recovery.token">
                         <input type="hidden" id="token" name="token" value="${wisematches.statusValue}">
-                    </@wisematches.field>
+                    </@wm.field>
 
-                    <@wisematches.fieldInput path="recovery.email"/>
+                    <@wm.fieldInput path="recovery.email"/>
                         <span class="sample"><@message code="account.recovery.email.description"/></span>
                     </td>
                 </tr>
@@ -49,7 +49,7 @@
                         <label for="password"><@message code="account.register.pwd.label"/>:</label>
                     </td>
                     <td>
-                    <@wisematches.fieldInput path="recovery.password" fieldType="password"/>
+                    <@wm.fieldInput path="recovery.password" fieldType="password"/>
                     </td>
                 </tr>
                 <tr>
@@ -58,17 +58,17 @@
                         <label for="confirm"><@message code="account.register.pwd-cfr.label"/>:</label>
                     </td>
                     <td>
-                    <@wisematches.fieldInput path="recovery.confirm" fieldType="password"/>
+                    <@wm.fieldInput path="recovery.confirm" fieldType="password"/>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
-                    <@wisematches.field path="recovery.rememberMe">
+                    <@wm.field path="recovery.rememberMe">
                         <input type="checkbox" id="rememberMe" name="rememberMe"
                                <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
                         <label for="rememberMe"><@message code="account.login.remember.label"/></label>
-                    </@wisematches.field>
+                    </@wm.field>
                     </td>
                 </tr>
 
@@ -87,7 +87,7 @@
                 <tr>
                     <td colspan="2">
                         <div style="float: right;">
-                        <@wisematches.captcha path="recovery.captcha"/>
+                        <@wm.captcha path="recovery.captcha"/>
                             <span class="sample"><@message code="captcha.description"/></span>
                         </div>
                     </td>

@@ -46,6 +46,7 @@ public class AccountLoginForm {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("AccountLoginForm");
 		sb.append("{j_username='").append(j_username).append('\'');
+		sb.append("{j_password='").append("<<PROHIBITED>>").append('\'');
 		sb.append(", rememberMe='").append(rememberMe).append('\'');
 		sb.append('}');
 		return sb.toString();

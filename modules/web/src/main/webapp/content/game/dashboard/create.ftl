@@ -1,7 +1,5 @@
 <#-- @ftlvariable name="robotPlayers" type="wisematches.server.player.computer.robot.RobotPlayer[]" -->
 <#include "/core.ftl">
-<#import "../macros.ftl" as game>
-<#import "/content/utils.ftl" as utils>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -91,7 +89,7 @@
                     <#--@declare id="title"-->
                         <label for="title"><@message code="game.title.label"/>:</label>
                     </td>
-                    <td><@wisematches.fieldInput path="create.title" value="game.create.title.default"/></td>
+                    <td><@wm.fieldInput path="create.title" value="game.create.title.default"/></td>
                 </tr>
 
                 <tr>
@@ -99,15 +97,15 @@
                         <label for="boardLanguage"><@message code="game.language.label"/>:</label>
                     </td>
                     <td>
-                    <@wisematches.field path="create.boardLanguage">
+                    <@wm.field path="create.boardLanguage">
                         <select id="boardLanguage" name="boardLanguage" style="width: 170px;">
                             <#list ["en", "ru"] as l>
-                                <option value="${l}" <#if (l==wisematches.statusValue)>selected="selected"</#if>>
+                                <option value="${l}" <#if (l==wm.statusValue)>selected="selected"</#if>>
                                 <@message code="language.${l}"/>
                                 </option>
                             </#list>
                         </select>
-                    </@wisematches.field>
+                    </@wm.field>
                     </td>
                 </tr>
 
@@ -118,14 +116,14 @@
                         </label>
                     </td>
                     <td>
-                    <@wisematches.field path="create.daysPerMove">
+                    <@wm.field path="create.daysPerMove">
                         <select id="daysPerMove" name="daysPerMove" style="width: 170px;">
                             <#list [2,3,4,5,7,10,14] as l>
                                 <option value="${l}"
-                                        <#if (l==(wisematches.statusValue)?number)>selected="selected"</#if>><@utils.daysAsString days=l/></option>
+                                        <#if (l==(wm.statusValue)?number)>selected="selected"</#if>><@dates.daysAsString days=l/></option>
                             </#list>
                         </select>
-                    </@wisematches.field>
+                    </@wm.field>
                         <span class="sample"><@message code="game.create.time.description"/></span>
                     </td>
                 </tr>
@@ -147,13 +145,13 @@
                 <tr id="op${n}" <#if !visible>style="display: none;"</#if>>
                     <td></td>
                     <td>
-                    <@wisematches.field path="create.opponent${n}">
-                        <input type="hidden" id="oi${n}" name="opponent${n}" value="${wisematches.statusValue}"/>
+                    <@wm.field path="create.opponent${n}">
+                        <input type="hidden" id="oi${n}" name="opponent${n}" value="${wm.statusValue}"/>
                         &raquo;
                         <span class="player">
                         <span id="on${n}" class="nickname">
-                            <#if visible && wisematches.statusValue?has_content>
-                                <#assign player=playerManager.getPlayer(wisematches.statusValue?number)/>
+                            <#if visible && wm.statusValue?has_content>
+                                <#assign player=playerManager.getPlayer(wm.statusValue?number)/>
                             <@message code="game.player.${player.nickname}"/> (${player.rating?string.computer})
                                 <#else>
                                 <@message code="game.create.opponents.wait.human.label"/>
@@ -161,19 +159,19 @@
                         </span>
                             </span>
                         <span id="wao${n}"
-                              <#if !visible || !wisematches.statusValue?has_content>style="display: none;"</#if>>
+                              <#if !visible || !wm.statusValue?has_content>style="display: none;"</#if>>
                             <@message code="separator.or"/>
                                 <a href="javascript: changeOpponent(${n}, null)"><@message code="game.create.opponents.wait.human.label"/></a>
                         </span>
                     <@message code="separator.or"/>
                         <#if n==1>
                             <div id="selectRobotPlayer">
-                                <a href="#"><@message code="game.create.opponents.wait.robot.label"/></a>
+                                <a href="create.ftl#"><@message code="game.create.opponents.wait.robot.label"/></a>
                                 <ul id="robotsList">
                                     <#list robotPlayers as robot>
                                         <li>&raquo;
-                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wisematches.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating?string.computer}'})">
-                                            <@game.player player=robot showType=false/>
+                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wm.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating?string.computer}'})">
+                                            <@wm.player player=robot showType=false/>
                                             </a>
                                         </li>
                                     </#list>
@@ -182,7 +180,7 @@
                             <#else>
                                 <a href="javascript: removeOpponent(${n})"><@message code="game.create.opponents.wait.clear.label"/></a>
                         </#if>
-                    </@wisematches.field>
+                    </@wm.field>
                     </td>
                 </tr>
             </#list>
@@ -207,27 +205,27 @@
                     <td>
                         <div>
                             <label><@message code="game.create.limits.rating.label"/>:</label>
-                        <@wisematches.field path="create.minRating" id="minRatingDiv">
+                        <@wm.field path="create.minRating" id="minRatingDiv">
                         <@message code="game.create.limits.rating.min"/>
                             <select name="minRating">
                                 <option value="0"
-                                        <#if "0"==wisematches.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
+                                        <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
                                 <#list ['900','950','1000','1050','1100','1150','1200','1250'] as r>
                                     <option value="${r}">${r}</option>
                                 </#list>
                             </select>
-                        </@wisematches.field>
-                        <@wisematches.field path="create.maxRating" id="maxRatingDiv">
+                        </@wm.field>
+                        <@wm.field path="create.maxRating" id="maxRatingDiv">
                             , <@message code="game.create.limits.rating.max"/>
                             <select name="maxRating">
                                 <#list ['1350','1400','1450','1500','1550','1600','1650','1700','1750','1800'] as r>
                                     <option value="${r}"
-                                            <#if r==wisematches.statusValue>selected="selected"</#if>>${r}</option>
+                                            <#if r==wm.statusValue>selected="selected"</#if>>${r}</option>
                                 </#list>
                                 <option value="0"
-                                        <#if "0"==wisematches.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
+                                        <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
                             </select>
-                        </@wisematches.field>
+                        </@wm.field>
                         </div>
                     </td>
                 </tr>

@@ -49,10 +49,8 @@ public class RecoveryController {
 	}
 
 	@RequestMapping(value = "request")
-	public String recoveryRequestPage(Model model,
-									  @ModelAttribute("recovery") RecoveryRequestForm form) {
-		model.addAttribute("infoId", "recovery/request");
-		return "/content/account/layout";
+	public String recoveryRequestPage(Model model, @ModelAttribute("recovery") RecoveryRequestForm form) {
+		return "/content/account/pages/recovery/request";
 	}
 
 	@RequestMapping(value = "request", method = RequestMethod.POST)
@@ -105,8 +103,7 @@ public class RecoveryController {
 	@RequestMapping(value = "confirmation")
 	public String recoveredConfirmationPage(Model model,
 											@ModelAttribute("recovery") RecoveryConfirmationForm form) {
-		model.addAttribute("infoId", "recovery/confirmation");
-		return "/content/account/layout";
+		return "/content/account/pages/recovery/confirmation";
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -176,7 +173,7 @@ public class RecoveryController {
 	@RequestMapping(value = "expectation")
 	public String recoveredExpectationPage(Model model) {
 		model.addAttribute("infoId", "recovery/expectation");
-		return "/content/account/layout";
+		return "/content/account/pages/recovery/expectation";
 	}
 
 	@Autowired

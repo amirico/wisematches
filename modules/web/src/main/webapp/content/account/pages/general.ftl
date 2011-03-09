@@ -6,13 +6,13 @@
 <table width="100%">
     <tr>
         <td width="100%" style="vertical-align: top; text-align: left;">
-        <#include "/content/resources.ftl">
+        <#include "/content/templates/resources.ftl">
         </td>
 
         <td width="270" style="vertical-align: top;">
             <div id="login-navigation">
-            <@ext.roundPanel>
-            <@ext.roundPanel>
+            <@wm.roundPanel>
+            <@wm.roundPanel>
                 <div id="login-panel">
                     <div id="login-title"><@message code="account.login.title"/></div>
                     <div id="login-type"><@message code="account.header"/></div>
@@ -32,7 +32,7 @@
                                         <input type="hidden" id="j_username" name="j_username"
                                                value="${spring.stringStatusValue}"/>
                                         <#else>
-                                        <@wisematches.fieldInput path="login.j_username" size="0"/>
+                                        <@wm.fieldInput path="login.j_username" size="0"/>
                                     </#if>
                                 </td>
                             </tr>
@@ -43,17 +43,17 @@
                                            for="j_password"><@message code="account.login.password.label"/>:</label>
                                 </td>
                                 <td>
-                                <@wisematches.fieldInput path="login.j_password" fieldType="password" size="0"/>
+                                <@wm.fieldInput path="login.j_password" fieldType="password" size="0"/>
                                 </td>
                             </tr>
                             <#if showRememberMe>
                                 <tr>
                                     <td align="right" valign="middle"
                                         style="text-align: right; vertical-align: middle;">
-                                    <@wisematches.field path="login.rememberMe">
+                                    <@wm.field path="login.rememberMe">
                                         <input type="checkbox" id="rememberMe" name="rememberMe" value="true"
                                                <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
-                                    </@wisematches.field>
+                                    </@wm.field>
                                     </td>
                                     <td align="left" valign="middle" style="text-align: left; vertical-align: middle;">
                                         <label for="rememberMe"><@message code="account.login.remember.label"/></label>
@@ -88,11 +88,11 @@
                         </table>
                     </form>
                 </div>
-            </@ext.roundPanel>
-            </@ext.roundPanel>
+            </@wm.roundPanel>
+            </@wm.roundPanel>
             <#if showRegistration>
                 <div style="height:10px;"></div>
-            <@ext.roundPanel>
+            <@wm.roundPanel>
                 <div id="register-panel">
                     <div id="register-link">
                         <button id="createAnAccount" class="account-button"
@@ -112,7 +112,7 @@
                         <a href="/info/features.html"><@message code="info.features.label"/></a>
                     </div>
                 </div>
-            </@ext.roundPanel>
+            </@wm.roundPanel>
             </#if>
             </div>
         </td>

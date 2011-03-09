@@ -91,6 +91,7 @@
         <property name="suffix" value=".ftl"/>
         <property name="exposeSpringMacroHelpers" value="true"/>
         <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="viewClass" value="wisematches.server.web.view.WMSingleFreeMarkerView"/>
     </bean>
 
     <alias alias="viewResolver" name="freemarkerViewResolver"/>

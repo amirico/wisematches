@@ -47,10 +47,9 @@ public class DashboardController {
 		if (form.getBoardLanguage() == null) {
 			form.setBoardLanguage(getCurrentPlayer().getLanguage().code());
 		}
-		model.addAttribute("pageName", "create");
-		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		model.addAttribute("playerManager", playerManager);
-		return "/content/game/layout";
+		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
+		return "/content/game/dashboard/create";
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -146,10 +145,8 @@ public class DashboardController {
 			log.debug("Found " + proposals.size() + " proposals for player: " + player);
 		}
 		model.addAttribute("activeProposals", proposals);
-
 		model.addAttribute("playerManager", playerManager);
-		model.addAttribute("pageName", "dashboard");
-		return "/content/game/layout";
+		return "/content/game/dashboard/active";
 	}
 
 	@RequestMapping("gameboard")
@@ -170,10 +167,9 @@ public class DashboardController {
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + proposals.size() + " proposals for player: " + player);
 		}
-		model.addAttribute("pageName", "gameboard");
 		model.addAttribute("activeProposals", proposals);
 		model.addAttribute("playerManager", playerManager);
-		return "/content/game/layout";
+		return "/content/game/dashboard/join";
 	}
 
 	private Player getCurrentPlayer() {

@@ -1,8 +1,20 @@
 <#include "/core.ftl">
 
+<#assign termsPages = ["terms", "policy", "naming"]/>
 <script type="text/javascript">
+    function loadTermsPage(name) {
+        $('#terms_tabs a').removeClass('active');
+        $('#terms-' + name + '-page-link').addClass('active');
+
+        $.get('/info/' + name + '.html?plain=true', function(data) {
+            var el = $('#terms_panel');
+            el.height($('#form').height() - $('#terms_tabs').height() - 5);
+            el.html(data);
+        });
+    }
+
     $(document).ready(function() {
-        wm.account.loadTermsPage('terms');
+        loadTermsPage('${termsPages[0]}');
     });
 </script>
 
@@ -30,7 +42,7 @@
                                 <label for="email"><@message code="account.register.email.label"/>:</label>
                             </td>
                             <td>
-                            <@wisematches.fieldInput path="registration.email"/>
+                            <@wm.fieldInput path="registration.email"/>
                                 <span class="sample"><@message code="account.register.email.description"/></span>
                             </td>
                         </tr>
@@ -41,7 +53,7 @@
                                 <label for="nickname"><@message code="account.register.nickname.label"/>:</label>
                             </td>
                             <td>
-                            <@wisematches.fieldInput path="registration.nickname"/>
+                            <@wm.fieldInput path="registration.nickname"/>
                                 <span class="sample"><@message code="account.register.nickname.description"/></span>
                             </td>
                         </tr>
@@ -63,7 +75,7 @@
                                 <label for="password"><@message code="account.register.pwd.label"/>:</label>
                             </td>
                             <td>
-                            <@wisematches.fieldInput path="registration.password" fieldType="password"/>
+                            <@wm.fieldInput path="registration.password" fieldType="password"/>
                             </td>
                         </tr>
                         <tr>
@@ -72,17 +84,17 @@
                                 <label for="confirm"><@message code="account.register.pwd-cfr.label"/>:</label>
                             </td>
                             <td>
-                            <@wisematches.fieldInput path="registration.confirm" fieldType="password"/>
+                            <@wm.fieldInput path="registration.confirm" fieldType="password"/>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                            <@wisematches.field path="registration.rememberMe">
+                            <@wm.field path="registration.rememberMe">
                                 <input type="checkbox" id="rememberMe" name="rememberMe"
                                        <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
                                 <label for="rememberMe"><@message code="account.login.remember.label"/></label>
-                            </@wisematches.field>
+                            </@wm.field>
                             </td>
                         </tr>
 
@@ -103,7 +115,7 @@
                                 <label for="language"><@message code="account.register.language.label"/>:</label>
                             </td>
                             <td>
-                            <@wisematches.field path="registration.language">
+                            <@wm.field path="registration.language">
                                 <select id="language" name="language" style="width: 170px;">
                                     <#list ["en", "ru"] as l>
                                         <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
@@ -111,7 +123,7 @@
                                         </option>
                                     </#list>
                                 </select>
-                            </@wisematches.field>
+                            </@wm.field>
                                 <input type="hidden" id="timezone" name="timezone" value="0">
                                 <script type="text/javascript">
                                     document.getElementById('timezone').value = new Date().getTimezoneOffset();
@@ -126,7 +138,7 @@
                                 <label for="captcha"><@message code="captcha.label"/>:</label>
                             </td>
                             <td>
-                            <@wisematches.captcha path="registration.captcha"/>
+                            <@wm.captcha path="registration.captcha"/>
                                 <span class="sample"><@message code="captcha.description"/></span>
                             </td>
                         </tr>
@@ -150,19 +162,13 @@
             <td>
                 <div id="terms">
                     <div id="terms_tabs" class="ui-widget-content" style="padding: 0 0 0 10px;">
-                        <a id="terms-page-link" class="ui-widget-content tab active" style="padding: 0"
-                           href="javascript: wm.account.loadTermsPage('terms');">
-                        <@message code="info.policies.terms_of_use.label"/>
+                    <#list termsPages as page>
+                        <a id="terms-${page}-page-link" class="ui-widget-content tab <#if page_index == 0>active</#if>"
+                           style="padding: 0"
+                           href="javascript: loadTermsPage('${page}');">
+                        <@message code="info.policies.${page}.label"/>
                         </a>
-                        <a id="policy-page-link" class="ui-widget-content tab" style="padding: 0"
-                           href="javascript: wm.account.loadTermsPage('policy');">
-                        <@message code="info.policies.privacy_policy.label"/>
-                        </a>
-                        <a id="naming-page-link" class="ui-widget-content tab" style="padding: 0"
-                           href="javascript: wm.account.loadTermsPage('naming');">
-                        <@message code="info.policies.naming.label"/>
-                        </a>
-
+                    </#list>
                         <div style="clear: left;"></div>
                     </div>
                     <div id="terms_panel" class="ui-widget-content" style="padding: 0 0 0 5px;"></div>

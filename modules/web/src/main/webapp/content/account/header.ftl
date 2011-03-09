@@ -7,7 +7,7 @@
             <img id="header-image" src="/resources/images/logo.png" width="178" height="72"/>
         </td>
         <td style="width: 100%">
-        <@ext.topRoundPanel id="header-panel">
+        <@wm.topRoundPanel id="header-panel">
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
@@ -22,7 +22,7 @@
                     </td>
                 </tr>
             </table>
-        </@ext.topRoundPanel>
+        </@wm.topRoundPanel>
         </td>
     </tr>
 </table>

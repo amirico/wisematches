@@ -71,7 +71,6 @@ public class AbstractInfoController {
 
 		model.addAttribute("infoId", pageName.toLowerCase());
 		model.addAttribute("infoModel", nodeModel);
-		model.addAttribute("infoConverter", "/content/common/resources.ftl");
 		return true;
 	}
 

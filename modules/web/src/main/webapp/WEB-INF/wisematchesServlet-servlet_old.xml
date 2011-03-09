@@ -131,41 +131,4 @@
         <property name="countriesManager" ref="countriesManager"/>
     </bean>
 
-
-    <!-- Common URLs processing: signin, app and index.html -->
-    <bean id="applicationMappingServlet" class="wisematches.server.web.ApplicationMappingController">
-        <property name="signinPageUrl" value="/wisematches.client.gwt.login.Login/Login.html"/>
-        <property name="applicationPageUrl" value="/wisematches.client.gwt.app.Application/Application.html"/>
-
-        <property name="sessionCustomHouse" ref="sessionCustomHouse"/>
-
-        <property name="pagePreProcessors">
-            <list>
-                <bean class="wisematches.server.deprecated.web.server.pproc.google.GoogleAnaliyticsPreProcessor">
-                    <property name="trackerCode" value="${google.analiytics.trackcode}"/>
-                </bean>
-
-                <bean class="wisematches.server.deprecated.web.server.pproc.google.GoogleAdSensePreProcessor">
-                    <property name="clientId" value="${google.adsense.client}"/>
-                    <property name="dashboardSlot" value="${google.adsense.dashboard}"/>
-                    <property name="gameboardSlot" value="${google.adsense.gameboard}"/>
-                    <property name="playboardSlot" value="${google.adsense.playboard}"/>
-                    <property name="searchId" value="${google.adsense.search}"/>
-                </bean>
-
-                <bean class="wisematches.server.deprecated.web.server.pproc.common.GWTPropertiesPreProcessor"/>
-                <bean class="wisematches.server.deprecated.web.server.pproc.common.SearchEnginesPreProcessor"/>
-            </list>
-        </property>
-    </bean>
-
-    <alias alias="/" name="applicationMappingServlet"/>
-
-    <alias alias="/app" name="applicationMappingServlet"/>
-
-    <alias alias="/app/*" name="applicationMappingServlet"/>
-
-    <alias alias="/signin" name="applicationMappingServlet"/>
-
-    <alias alias="/signin/*" name="applicationMappingServlet"/>
 </beans>

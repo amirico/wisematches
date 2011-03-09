@@ -4,8 +4,6 @@
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal>" -->
 <#include "/core.ftl">
-<#import "../macros.ftl" as game>
-<#import "/content/utils.ftl" as utils>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -75,7 +73,7 @@
                         <#list board.playersHands as hand>
                             <#assign player=playerManager.getPlayer(hand.getPlayerId())!/>
                             <div>
-                            <@game.player player=player showRating=false/>
+                            <@wm.player player=player showRating=false/>
                             </div>
                         </#list>
                     </td>
@@ -104,7 +102,7 @@
                             <div>
                                 <#if p??>
                                     <#assign player=playerManager.getPlayer(p)/>
-                                <@game.player player=player showRating=false/>
+                                <@wm.player player=player showRating=false/>
                                     <#else>
                                         <span class="player">
                                             <span class="waiting"><@message code="game.status.waiting"/></span>
@@ -119,7 +117,7 @@
                     </td>
                     <td class="center">
                         <#list proposal.allPlayers as p>
-                            <div><@utils.daysAsString days=proposal.timeLimits/></div></#list>
+                            <div><@dates.daysAsString days=proposal.timeLimits/></div></#list>
                     </td>
                 </tr>
                 </#list>

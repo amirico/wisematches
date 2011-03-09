@@ -41,10 +41,10 @@
                     <li>
                         <ul id="policies">
                             <li <@markSelected "terms"/>>
-                                <a href="/info/terms.html"><@message code="info.policies.terms_of_use.label"/></a>
+                                <a href="/info/terms.html"><@message code="info.policies.terms.label"/></a>
                             </li>
                             <li <@markSelected "policy"/>>
-                                <a href="/info/policy.html"><@message code="info.policies.privacy_policy.label"/></a>
+                                <a href="/info/policy.html"><@message code="info.policies.policy.label"/></a>
                             </li>
                             <li <@markSelected "naming"/>>
                                 <a href="/info/naming.html"><@message code="info.policies.naming.label"/></a>
@@ -83,8 +83,8 @@
                 </ul>
             </div>
         </td>
-        <td id="info-content" class="x-panel" style="vertical-align: top;">
-        <#include "/content/resources.ftl">
+        <td id="info-content" style="vertical-align: top;">
+        <#include "/content/templates/resources.ftl">
         </td>
     </tr>
 </table>

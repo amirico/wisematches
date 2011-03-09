@@ -42,7 +42,7 @@ public class RecoveryTokenManagerTest {
 	public void testManager() throws InterruptedException, TokenExpiredException, InadmissibleUsernameException, DuplicateAccountException, UnknownAccountException {
 		final PlayerEditor editor = new PlayerEditor();
 		editor.setNickname("mock");
-		editor.setEmail("mock@wisematches.net");
+		editor.setEmail("mock@wm.net");
 		editor.setPassword("mock");
 
 		final Player p = accountManager.createPlayer(editor.createPlayer());
