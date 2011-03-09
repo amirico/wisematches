@@ -63,7 +63,7 @@ public class CreateAccountController {
 									@ModelAttribute("registration")
 									AccountRegistrationForm form) {
 		model.addAttribute("infoId", "create");
-		return "/content/account/layout";
+		return "/content/account/pages/create";
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class CreateAccountController {
 	@RequestMapping(value = "modify")
 	public String modifyAccountPage(Model model) {
 		model.addAttribute("pageName", "modifyAccount");
-		return "/content/game/layout";
+		return "/content/account/pages/modify";
 	}
 
 	/**

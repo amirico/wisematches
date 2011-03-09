@@ -125,8 +125,10 @@
     background-image: none !important;
 }
 
-#movesHistory .ui-state-default {
-    border: 0;
+#playboard #scribbleBoard {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
 }
 
 #playboard tr.odd td, #playboard tr.even td {
@@ -141,46 +143,62 @@
     cursor: pointer;
 }
 
-#memoryWords th, #memoryWords td {
+#playboard #memoryWords th, #playboard #memoryWords td {
     white-space: nowrap;
 }
 
-#boardsNavigationToolbar button {
-    margin: -.2em !important;
+#playboard #movesHistory .ui-state-default {
+    border: 0;
 }
 
-#bankInfo td {
+#playboard #bankInfo td {
     padding-left: 5px;
     white-space: nowrap;
 }
 
-#scribbleBoard {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 15px;
+#playboard button {
+    padding-left: 12px;
+    background-repeat: no-repeat;
+    background-position: 5px center;
 }
 
-.playerInfo td {
+.icon-make-turn {
+    background-image: url('/resources/images/scribble/playboard/makeTurn.png') !important;
+}
+
+.icon-clear-word {
+    background-image: url('/resources/images/scribble/playboard/clearWord.png') !important;
+}
+
+.icon-exchange-tiles {
+    background-image: url('/resources/images/scribble/playboard/exchangeTiles.png') !important;
+}
+
+.icon-pass-turn {
+    background-image: url('/resources/images/scribble/playboard/passTurn.png') !important;
+}
+
+.icon-memory-add {
+    background-image: url('/resources/images/scribble/playboard/memoryAdd.png') !important;
+}
+
+.icon-memory-remove {
+    background-image: url('/resources/images/scribble/playboard/memoryRemove.png') !important;
+}
+
+.icon-memory-select {
+    background-image: url('/resources/images/scribble/playboard/memorySelect.png') !important;
+}
+
+.icon-memory-clear {
+    background-image: url('/resources/images/scribble/playboard/memoryClear.png') !important;
+}
+
+#playboard .playerInfo td {
     white-space: nowrap;
 }
 
-.ui-widget-separator {
-    padding: 0;
-    height: 1px;
-    border-width: 0;
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
-}
-
-.ui-table-left, .ui-table-middle {
-    border-right-width: 0 !important;
-}
-
-.ui-table-right, .ui-table-middle {
-    border-left-width: 0 !important;
-}
-
-.passive td {
+#playboard .passive td {
     color: gray !important;
     border-color: transparent !important;
     background: none !important;

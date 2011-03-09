@@ -172,6 +172,6 @@ public class HibernateAccountManagerTest {
 
 	private PlayerEditor createMockEditor() {
 		final String id = UUID.randomUUID().toString();
-		return new PlayerEditor(id + "@wisematches.net", id, id + "_password");
+		return new PlayerEditor(id + "@wm.net", id, id + "_password");
 	}
 }

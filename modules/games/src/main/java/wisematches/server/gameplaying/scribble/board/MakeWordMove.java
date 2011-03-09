@@ -4,7 +4,7 @@ import wisematches.server.gameplaying.board.MakeTurnMove;
 import wisematches.server.gameplaying.scribble.Word;
 
 /**
- * Scrable move has a few parameters: letters of the putted word, start position and word direction.
+ * Scribble move has a few parameters: letters of the putted word, start position and word direction.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */

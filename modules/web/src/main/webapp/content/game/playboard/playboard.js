@@ -1,121 +1,8 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-print = function(msg) {
-    var c = document.getElementById('console');
-    var m = document.createElement('div');
-    m.innerHTML = msg;
-    c.appendChild(m);
-};
-
 if (wm == null) wm = {};
 if (wm.scribble == null) wm.scribble = {};
-
-if (wm.g == null) wm.g = new function() {
-    this.createMatrix = function() {
-        var m = new Array(15);
-        for (var i = 0; i < 15; i++) {
-            m[i] = new Array(15);
-        }
-        return m;
-    };
-
-    this.addClass = function (ele, cls) {
-        if (!this.hasClass(ele, cls)) ele.className += " " + cls;
-    };
-
-    this.removeClass = function (ele, cls) {
-        ele.className = ele.className.replace(new RegExp('(\\s|^)' + cls + '(\\s|$)'), ' ');
-    };
-
-    this.hasClass = function (ele, cls) {
-        return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
-    };
-
-    this.getPosition = function (element, event) {
-        var loc = this.getLocation(element);
-        var pos = this.getPositionOnScreen(event);
-        return {x:pos.x - loc.x, y:pos.y - loc.y};
-    };
-
-    this.getPositionOnScreen = function(event) {
-        event = event || window.event;
-        if (event.pageX || event.pageY) {
-            return {x:event.pageX, y:event.pageY};
-        }
-        return {
-            x:event.clientX + document.body.scrollLeft - document.body.clientLeft,
-            y:event.clientY + document.body.scrollTop - document.body.clientTop
-        };
-    };
-
-    this.getLocation = function(element) {
-        var top = 0;
-        var left = 0;
-
-        do {
-            top += element.offsetTop;
-            left += element.offsetLeft;
-            element = element.offsetParent;
-        } while (element.offsetParent);
-        return {x:left, y:top};
-    };
-
-    this.getBounds = function(element) {
-        var loc = this.getLocation(element);
-        loc.width = element.offsetWidth;
-        loc.height = element.offsetHeight;
-        return loc;
-    };
-
-    this.containsPoint = function(rect, point) {
-        return (rect.x >= point.x) && (rect.x + rect.width <= point.x) &&
-                (rect.y >= point.y) && (rect.y + rect.height <= point.y);
-    }
-};
-
-wm.EventSupport = function() {
-    var _listeners = {};
-
-    this.addListener = function(type, listener) {
-        if (typeof _listeners[type] == "undefined") {
-            _listeners[type] = [];
-        }
-        _listeners[type].push(listener);
-    };
-
-    this.removeListener = function(type, listener) {
-        if (_listeners[type] instanceof Array) {
-            var listeners = _listeners[type];
-            for (var i = 0, len = listeners.length; i < len; i++) {
-                if (listeners[i] === listener) {
-                    listeners.splice(i, 1);
-                    break;
-                }
-            }
-        }
-    };
-
-    this.fireEvent = function(event) {
-        if (typeof event == "string") {
-            event = { type: event };
-        }
-        if (!event.target) {
-            event.target = this;
-        }
-
-        if (!event.type) {  //falsy
-            throw new Error("Event object missing 'type' property.");
-        }
-
-        if (_listeners[event.type] instanceof Array) {
-            var listeners = _listeners[event.type];
-            for (var i = 0, len = listeners.length; i < len; i++) {
-                listeners[i].call(this, event);
-            }
-        }
-    };
-};
 
 wm.scribble.tile = new function() {
     var updateTileImage = function(tile) {
@@ -140,13 +27,13 @@ wm.scribble.tile = new function() {
     };
 
     this.selectTile = function(tile) {
-        wm.g.addClass(tile, "tile-selected");
+        $(tile).addClass("tile-selected");
         tile.selected = true;
         updateTileImage(tile);
     };
 
     this.deselectTile = function(tile) {
-        wm.g.removeClass(tile, "tile-selected");
+        $(tile).removeClass("tile-selected");
         tile.selected = false;
         updateTileImage(tile);
     };
@@ -172,7 +59,7 @@ wm.scribble.tile = new function() {
 wm.scribble.ScoreEngine = function() {
     var emptyHandBonus = 33;
 
-    var bonuses = wm.g.createMatrix();
+    var bonuses = wm.util.createMatrix(15);
 
     this.BonusType = { DL: {name: '2l'}, TL: {name: '3l'}, DW: {name: '2w'}, TW: {name: '3w'} };
 
@@ -193,48 +80,80 @@ wm.scribble.ScoreEngine = function() {
 };
 
 wm.scribble.Highlighting = function() {
-    var element = document.createElement('div');
-    element.id = 'highlighting';
-
-    var playboard = document.getElementById("container");
+    var element = $('<div></div>').attr('id', 'highlighting');
+    var playboard = $('#container');
 
     this.start = function(tile) {
-        element.style.backgroundPosition = -tile.cost * 22 + "px -88px";
-        element.style.top = tile.parentNode.offsetTop + tile.offsetTop;
-        element.style.left = tile.parentNode.offsetLeft + tile.offsetLeft;
-        playboard.appendChild(element);
+        element.css('backgroundPosition', -tile.cost * 22 + "px -88px");
+        element.css('top', tile.parentNode.offsetTop + tile.offsetTop + 'px');
+        element.css('left', tile.parentNode.offsetLeft + tile.offsetLeft + 'px');
+        element.appendTo(playboard);
     };
 
     this.stop = function(tile) {
-        playboard.removeChild(element);
+        element.detach();
     };
 
     this.highlight = function(cell) {
         if (cell != null) {
-            element.style.top = cell.container.offsetTop + cell.y * 22;
-            element.style.left = cell.container.offsetLeft + cell.x * 22;
-            element.style.visibility = 'visible';
+            element.css('top', cell.container.offsetTop + cell.y * 22 + 'px');
+            element.css('left', cell.container.offsetLeft + cell.x * 22 + 'px');
+            element.show();
         } else {
-            element.style.top = 0;
-            element.style.left = 0;
-            element.style.visibility = 'hidden';
+            element.hide();
+            element.offset({top:0, left:0});
         }
     };
 };
 
 wm.scribble.Board = function() {
-    var draggingTile = null;
+    var scribble;
+    var hand;
+    var board;
 
-    var hand = document.getElementById('hand');
-    var board = document.getElementById('board');
-
-    var eventSupport = new wm.EventSupport();
-    var scoreEngine = new wm.scribble.ScoreEngine();
-    var highlighting = new wm.scribble.Highlighting();
+    var scoreEngine;
+    var highlighting;
 
     var handTiles = new Array(7);
-    var boardTiles = wm.g.createMatrix();
+    var boardTiles = wm.util.createMatrix(15);
+
     var selectedTiles = [];
+    var draggingTile = null;
+
+    var playboard = this;
+
+    this.init = function() {
+        scribble = $('#scribble');
+        hand = document.getElementById('hand');
+        board = document.getElementById('board');
+
+        scoreEngine = new wm.scribble.ScoreEngine();
+        highlighting = new wm.scribble.Highlighting();
+
+        document.onmouseup = onTileUp;
+        document.onmousemove = onTileMove;
+
+        scoreEngine.init();
+
+        var tiles = hand.getElementsByTagName('div');
+        for (var i = 0; i < tiles.length; i++) {
+            var handTile = wm.scribble.tile.parseTileInfo(tiles[i]);
+            handTile.onmousedown = onTileDown;
+
+            handTile.cell = {x:i, y:0, container: hand};
+            handTiles[i] = handTile;
+        }
+
+        tiles = board.getElementsByTagName('div');
+        for (i = 0; i < tiles.length; i++) {
+            var boardTile = wm.scribble.tile.parseTileInfo(tiles[i]);
+            wm.scribble.tile.pinTile(boardTile);
+            boardTile.onclick = onTileSelected;
+
+            boardTile.cell = {x:boardTile.offsetLeft / 22, y:boardTile.offsetTop / 22, container: board};
+            boardTiles[boardTile.cell.x][boardTile.cell.y] = boardTile;
+        }
+    };
 
     var onTileSelected = function() {
         if (wm.scribble.tile.isTileSelected(this)) {
@@ -246,7 +165,7 @@ wm.scribble.Board = function() {
 
     var onTileDown = function(ev) {
         draggingTile = this;
-        draggingTile.mouseOffset = wm.g.getPosition(draggingTile, ev);
+        draggingTile.mouseOffset = wm.ui.getPosition(draggingTile, ev);
         draggingTile.initialState = {
             x:draggingTile.style.left,
             y:draggingTile.style.top,
@@ -310,7 +229,7 @@ wm.scribble.Board = function() {
 
     var onTileMove = function(ev) {
         if (draggingTile != null) {
-            var pos = wm.g.getPosition(draggingTile.parentNode, ev);
+            var pos = wm.ui.getPosition(draggingTile.parentNode, ev);
 
             draggingTile.style.top = pos.y - draggingTile.mouseOffset.y;
             draggingTile.style.left = pos.x - draggingTile.mouseOffset.x;
@@ -321,13 +240,13 @@ wm.scribble.Board = function() {
     };
 
     var getRelatedCell = function(ev) {
-        var boardPos = wm.g.getPosition(board, ev);
+        var boardPos = wm.ui.getPosition(board, ev);
         if (boardPos.x >= 0 && boardPos.x < 330 && boardPos.y >= 0 && boardPos.y < 330) {
             x = (((boardPos.x) / 22) | 0);
             y = (((boardPos.y) / 22) | 0);
             return {x:x, y:y, container: board};
         } else {
-            var handPos = wm.g.getPosition(hand, ev);
+            var handPos = wm.ui.getPosition(hand, ev);
             if (handPos.x >= 0 && handPos.x < 154 && handPos.y >= 0 && handPos.y < 22) {
                 x = (((handPos.x) / 22) | 0);
                 y = (((handPos.y) / 22) | 0);
@@ -359,11 +278,11 @@ wm.scribble.Board = function() {
         if (select) {
             addTileToSelected(tile);
             wm.scribble.tile.selectTile(tile);
-            eventSupport.fireEvent({type:"selected", tile: tile});
+            scribble.trigger('selected', [tile, playboard.getSelectedTiles(), playboard.getSelectedWord()]);
         } else {
             removeTileFromSelected(tile);
             wm.scribble.tile.deselectTile(tile);
-            eventSupport.fireEvent({type:"deselected", tile: tile});
+            scribble.trigger('deselected', [tile, playboard.getSelectedTiles(), playboard.getSelectedWord()]);
         }
     };
 
@@ -378,40 +297,6 @@ wm.scribble.Board = function() {
         tile.style.left = j * 22;
         tile.cell.container.appendChild(tile);
         handTiles[j] = tile;
-    };
-
-    this.init = function() {
-        document.onmouseup = onTileUp;
-        document.onmousemove = onTileMove;
-
-        scoreEngine.init();
-
-        var tiles = hand.getElementsByTagName('div');
-        for (var i = 0; i < tiles.length; i++) {
-            var handTile = wm.scribble.tile.parseTileInfo(tiles[i]);
-            handTile.onmousedown = onTileDown;
-
-            handTile.cell = {x:i, y:0, container: hand};
-            handTiles[i] = handTile;
-        }
-
-        tiles = board.getElementsByTagName('div');
-        for (i = 0; i < tiles.length; i++) {
-            var boardTile = wm.scribble.tile.parseTileInfo(tiles[i]);
-            wm.scribble.tile.pinTile(boardTile);
-            boardTile.onclick = onTileSelected;
-
-            boardTile.cell = {x:boardTile.offsetLeft / 22, y:boardTile.offsetTop / 22, container: board};
-            boardTiles[boardTile.cell.x][boardTile.cell.y] = boardTile;
-        }
-    };
-
-    this.addListener = function(type, listener) {
-        return eventSupport.addListener(type, listener);
-    };
-
-    this.removeListener = function(type, listener) {
-        return event.removeListener(type, listener);
     };
 
     this.getScoreEngine = function() {

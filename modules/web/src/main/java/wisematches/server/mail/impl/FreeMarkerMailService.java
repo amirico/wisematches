@@ -35,8 +35,8 @@ public class FreeMarkerMailService implements MailService {
 	private MessageSource messageSource;
 	private Configuration freeMarkerConfig;
 
-	private String supportSenderAddress = "support@wisematches.net";
-	private String supportRecipientAddress = "support@wisematches.net";
+	private String supportSenderAddress = "support@wm.net";
+	private String supportRecipientAddress = "support@wm.net";
 
 	private final Map<SenderKey, InternetAddress> addressesCache = new HashMap<SenderKey, InternetAddress>();
 

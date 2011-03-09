@@ -82,7 +82,16 @@ if (wm.i18n == null) wm.i18n = new function() {
 };
 if (_ == null) var _ = wm.i18n.t;
 
-wm.util = {};
+wm.util = new function() {
+    this.createMatrix = function(size) {
+        var m = new Array(size);
+        for (var i = 0; i < size; i++) {
+            m[i] = new Array(size);
+        }
+        return m;
+    };
+};
+
 wm.util.url = new function() {
     this.redirect = function(url) {
         window.location = url;
@@ -113,15 +122,6 @@ wm.util.url = new function() {
 
         return urlParts[0] + newQueryString;
     };
-
-    this.params = function() {
-        return Ext.urlDecode(location.search.substring(1));
-    };
-
-    this.param = function(name) {
-        var params = this.params();
-        return name ? params[name] : params;
-    }
 };
 
 wm.ui = new function() {
@@ -133,6 +133,47 @@ wm.ui = new function() {
         left:        '35%',
         textAlign:    'center',
         'border-width': '3px'
+    };
+
+    this.getPosition = function (element, event) {
+        var loc = this.getLocation(element);
+        var pos = this.getPositionOnScreen(event);
+        return {x:pos.x - loc.x, y:pos.y - loc.y};
+    };
+
+    this.getPositionOnScreen = function(event) {
+        event = event || window.event;
+        if (event.pageX || event.pageY) {
+            return {x:event.pageX, y:event.pageY};
+        }
+        return {
+            x:event.clientX + document.body.scrollLeft - document.body.clientLeft,
+            y:event.clientY + document.body.scrollTop - document.body.clientTop
+        };
+    };
+
+    this.getLocation = function(element) {
+        var top = 0;
+        var left = 0;
+
+        do {
+            top += element.offsetTop;
+            left += element.offsetLeft;
+            element = element.offsetParent;
+        } while (element.offsetParent);
+        return {x:left, y:top};
+    };
+
+    this.getBounds = function(element) {
+        var loc = this.getLocation(element);
+        loc.width = element.offsetWidth;
+        loc.height = element.offsetHeight;
+        return loc;
+    };
+
+    this.containsPoint = function(rect, point) {
+        return (rect.x >= point.x) && (rect.x + rect.width <= point.x) &&
+                (rect.y >= point.y) && (rect.y + rect.height <= point.y);
     };
 
     this.showMessage = function(opts) {

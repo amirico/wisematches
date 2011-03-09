@@ -54,8 +54,7 @@ public class PlayboardController {
 		} catch (BoardLoadingException ex) {
 			ex.printStackTrace();
 		}
-		model.addAttribute("pageName", "playboard");
-		return "/content/game/layout";
+		return "/content/game/playboard/playboard";
 	}
 
 	@Autowired

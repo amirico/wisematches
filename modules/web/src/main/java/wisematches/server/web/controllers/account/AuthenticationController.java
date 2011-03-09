@@ -146,6 +146,6 @@ public class AuthenticationController extends AbstractInfoController {
 			processInfoPage("info/general", model, locale);
 		}
 		model.addAttribute("infoId", "general"); // this is CSS class name and FTL page name. Always login.
-		return "/content/account/layout";
+		return "/content/account/pages/general";
 	}
 }

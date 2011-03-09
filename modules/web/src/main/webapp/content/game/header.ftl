@@ -4,16 +4,6 @@
 <script type="text/javascript">
     $(function() {
         $("#game-toolbar div").buttonset();
-        var activeButton = $("#${pageName!}Button");
-        if (activeButton != undefined) {
-            var b = activeButton.button().addClass("ui-state-active");
-            b.bind("mouseleave.button", function() {
-                $(this).addClass("ui-state-active");
-            });
-            b.bind("mouseup.button", function() {
-                $(this).addClass("ui-state-active");
-            });
-        }
     });
 </script>
 
@@ -56,7 +46,7 @@
                                     Tournaments
                                 </button>
                             </div>
-                            <div>
+                            <div style="margin: 0">
                                 <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify.html')">
                                     Settings
                                 </button>

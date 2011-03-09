@@ -57,6 +57,7 @@
     float: left;
     margin: 5px 10px 2px 10px;
     border-width: 0;
+    background-color: transparent !important;
 }
 
 #registration #terms_tabs .active {
