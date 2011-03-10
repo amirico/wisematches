@@ -1,5 +1,6 @@
 package wisematches.server.player.computer.guest;
 
+import wisematches.server.player.Membership;
 import wisematches.server.player.Player;
 import wisematches.server.player.computer.ComputerPlayer;
 
@@ -10,6 +11,6 @@ public final class GuestPlayer extends ComputerPlayer {
 	public static final Player BASIC = new GuestPlayer(1, "guest", 1200);
 
 	public GuestPlayer(long id, String nickname, int rating) {
-		super(id, nickname, rating);
+		super(id, nickname, Membership.GUEST, rating);
 	}
 }

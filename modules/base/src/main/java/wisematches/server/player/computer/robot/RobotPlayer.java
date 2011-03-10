@@ -1,5 +1,6 @@
 package wisematches.server.player.computer.robot;
 
+import wisematches.server.player.Membership;
 import wisematches.server.player.computer.ComputerPlayer;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class RobotPlayer extends ComputerPlayer {
 	public static final RobotPlayer EXPERT = new RobotPlayer(4, "expert", 1600, RobotType.EXPERT);
 
 	private RobotPlayer(long id, String nickname, int rating, RobotType robotType) {
-		super(id, nickname, rating);
+		super(id, nickname, Membership.ROBOT, rating);
 		this.robotType = robotType;
 	}
 

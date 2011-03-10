@@ -12,8 +12,8 @@ import java.util.Iterator;
  */
 public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 	private Tile[] tiles;
-	private Direction direction;
 	private Position position;
+	private Direction direction;
 
 	private String stringWord;
 

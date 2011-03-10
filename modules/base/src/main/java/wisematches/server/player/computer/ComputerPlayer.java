@@ -21,21 +21,24 @@ public class ComputerPlayer implements Player {
 	protected final long id;
 	protected final int rating;
 	protected final String nickname;
+	protected final Membership membership;
 
 	private static final Map<Long, ComputerPlayer> computerPlayerMap = new HashMap<Long, ComputerPlayer>();
 
 	/**
 	 * Creates new computer player with specified parameters.
 	 *
-	 * @param id	   the computer player id. The id must be between 1 and 1000. This ids are
-	 *                 reserved for computer players.
-	 * @param nickname the player nickname.
-	 * @param rating   the player's rating.
+	 * @param id		 the computer player id. The id must be between 1 and 1000. This ids are
+	 *                   reserved for computer players.
+	 * @param nickname   the player's nickname.
+	 * @param membership the player's membership
+	 * @param rating	 the player's rating.
 	 */
-	protected ComputerPlayer(long id, String nickname, int rating) {
+	protected ComputerPlayer(long id, String nickname, Membership membership, int rating) {
 		this.id = id;
 		this.rating = rating;
 		this.nickname = nickname;
+		this.membership = membership;
 
 		synchronized (computerPlayerMap) {
 			if (computerPlayerMap.containsKey(id)) {
@@ -92,7 +95,7 @@ public class ComputerPlayer implements Player {
 	 */
 	@Override
 	public Membership getMembership() {
-		return null;
+		return membership;
 	}
 
 	@Override

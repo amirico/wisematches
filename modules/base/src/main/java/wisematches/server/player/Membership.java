@@ -8,6 +8,9 @@ package wisematches.server.player;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum Membership {
+	GUEST,
+
+	ROBOT,
 	/**
 	 * This is regular player without any specific features.
 	 */

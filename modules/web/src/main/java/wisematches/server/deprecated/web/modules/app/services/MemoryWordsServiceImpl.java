@@ -5,9 +5,9 @@ import wisematches.server.deprecated.web.rpc.GenericSecureRemoteService;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implements MemoryWordsService {
+public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implements MemoryWordsManager {
 /*    private RoomsManager roomsManager;
-    private MemoryWordsDao memoryWordsDao;
+    private MemoryWordsManager memoryWordsDao;
 
     private static final MemoryWord[] EMPTY_MEMORY_WORDS = new MemoryWord[0];
     private static final Log log = LogFactory.getLog("wisematches.server.web.controlles.memorywords");
@@ -73,7 +73,7 @@ public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implem
         if (hand == null) {
             throw new IllegalArgumentException("Your does not belongs to this board");
         }
-        memoryWordsDao.removeMemoryWords(board, hand);
+        memoryWordsDao.clearMemoryWords(board, hand);
     }
 
     private ScribbleBoard getScribbleBoard(long boardId) {
@@ -85,7 +85,7 @@ public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implem
         }
     }
 
-    public void setMemoryWordsDao(MemoryWordsDao memoryWordsDao) {
+    public void setMemoryWordsManager(MemoryWordsManager memoryWordsDao) {
         this.memoryWordsDao = memoryWordsDao;
     }
 

@@ -1,4 +1,4 @@
-package wisematches.server.deprecated.web.modules.app.playboard.memory;
+package wisematches.server.gameplaying.scribble.memory;
 
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
@@ -25,7 +25,7 @@ import java.io.Serializable;
 				)
 		}
 )
-class MemoryWordDo {
+class MemoryWord {
 	@EmbeddedId
 	private PK wordId;
 
@@ -42,10 +42,10 @@ class MemoryWordDo {
 	 * This is Hibernate only constructor.
 	 */
 	@Deprecated
-	MemoryWordDo() {
+	MemoryWord() {
 	}
 
-	MemoryWordDo(long boardId, long playerId, int number, Word word) {
+	MemoryWord(long boardId, long playerId, int number, Word word) {
 		wordId = new PK(boardId, playerId, number);
 		this.word = word;
 	}
