@@ -1,4 +1,4 @@
-package wisematches.server.deprecated.web.modules.app.playboard.memory;
+package wisematches.server.gameplaying.scribble.memory;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -13,7 +13,10 @@ import java.util.List;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class MemoryWordsDao extends HibernateDaoSupport {
+public class MemoryWordsManager extends HibernateDaoSupport {
+	public MemoryWordsManager() {
+	}
+
 	/**
 	 * Adds specified word into players memory in specified board.
 	 *
@@ -38,9 +41,9 @@ public class MemoryWordsDao extends HibernateDaoSupport {
 		}
 
 		final HibernateTemplate template = getHibernateTemplate();
-		MemoryWordDo mwdo = (MemoryWordDo) template.get(MemoryWordDo.class, new MemoryWordDo.PK(board.getBoardId(), hand.getPlayerId(), word.getNumber()));
+		MemoryWord mwdo = template.get(MemoryWord.class, new MemoryWord.PK(board.getBoardId(), hand.getPlayerId(), word.getNumber()));
 		if (mwdo == null) {
-			mwdo = new MemoryWordDo(board.getBoardId(), hand.getPlayerId(), word.getNumber(), word.getWord());
+			mwdo = new MemoryWord(board.getBoardId(), hand.getPlayerId(), word.getNumber(), word.getWord());
 			template.save(mwdo);
 		} else {
 			mwdo.setWord(word.getWord());
@@ -61,14 +64,14 @@ public class MemoryWordsDao extends HibernateDaoSupport {
 		}
 
 		final HibernateTemplate template = getHibernateTemplate();
-		final Object o = template.get(MemoryWordDo.class, new MemoryWordDo.PK(board.getBoardId(), hand.getPlayerId(), wordNumber));
+		final Object o = template.get(MemoryWord.class, new MemoryWord.PK(board.getBoardId(), hand.getPlayerId(), wordNumber));
 		if (o != null) {
 			template.delete(o);
 			template.flush();
 		}
 	}
 
-	public void removeMemoryWords(ScribbleBoard board, ScribblePlayerHand hand) {
+	public void clearMemoryWords(ScribbleBoard board, ScribblePlayerHand hand) {
 		if (board == null) {
 			throw new NullPointerException("Board is null");
 		}
@@ -80,7 +83,7 @@ public class MemoryWordsDao extends HibernateDaoSupport {
 		}
 
 		final HibernateTemplate template = getHibernateTemplate();
-		template.bulkUpdate("delete from " + MemoryWordDo.class.getName() + " memory " +
+		template.bulkUpdate("delete from " + MemoryWord.class.getName() + " memory " +
 				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?",
 				new Object[]{
 						board.getBoardId(), hand.getPlayerId()
@@ -102,7 +105,7 @@ public class MemoryWordsDao extends HibernateDaoSupport {
 		final HibernateTemplate template = getHibernateTemplate();
 
 		@SuppressWarnings("unchecked")
-		final List<MemoryWordDo> list = template.find("from " + MemoryWordDo.class.getName() + " memory " +
+		final List<MemoryWord> list = template.find("from " + MemoryWord.class.getName() + " memory " +
 				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?",
 				new Object[]{
 						board.getBoardId(), hand.getPlayerId()
@@ -113,8 +116,8 @@ public class MemoryWordsDao extends HibernateDaoSupport {
 			return Collections.emptyList();
 		}
 		final Collection<MemoryWord> res = new ArrayList<MemoryWord>(list.size());
-		for (MemoryWordDo word : list) {
-			res.add(new MemoryWord(word.getNumber(), word.getWord()));
+		for (MemoryWord word : list) {
+//			res.add(new MemoryWord(word.getNumber(), word.getWord()));
 		}
 		return res;
 	}

@@ -115,7 +115,7 @@
 
     <bean name="/rpc/MemoryWordsService"
           class="wisematches.server.deprecated.web.modules.app.services.MemoryWordsServiceImpl">
-        <property name="memoryWordsDao" ref="memoryWordsDao"/>
+        <property name="memoryWordsManager" ref="memoryWordsManager"/>
         <property name="roomsManager" ref="roomsManager"/>
     </bean>
 

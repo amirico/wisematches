@@ -135,47 +135,6 @@ wm.ui = new function() {
         'border-width': '3px'
     };
 
-    this.getPosition = function (element, event) {
-        var loc = this.getLocation(element);
-        var pos = this.getPositionOnScreen(event);
-        return {x:pos.x - loc.x, y:pos.y - loc.y};
-    };
-
-    this.getPositionOnScreen = function(event) {
-        event = event || window.event;
-        if (event.pageX || event.pageY) {
-            return {x:event.pageX, y:event.pageY};
-        }
-        return {
-            x:event.clientX + document.body.scrollLeft - document.body.clientLeft,
-            y:event.clientY + document.body.scrollTop - document.body.clientTop
-        };
-    };
-
-    this.getLocation = function(element) {
-        var top = 0;
-        var left = 0;
-
-        do {
-            top += element.offsetTop;
-            left += element.offsetLeft;
-            element = element.offsetParent;
-        } while (element.offsetParent);
-        return {x:left, y:top};
-    };
-
-    this.getBounds = function(element) {
-        var loc = this.getLocation(element);
-        loc.width = element.offsetWidth;
-        loc.height = element.offsetHeight;
-        return loc;
-    };
-
-    this.containsPoint = function(rect, point) {
-        return (rect.x >= point.x) && (rect.x + rect.width <= point.x) &&
-                (rect.y >= point.y) && (rect.y + rect.height <= point.y);
-    };
-
     this.showMessage = function(opts) {
         var v = $.extend(opts || {}, {
             message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',

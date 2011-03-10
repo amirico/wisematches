@@ -7,7 +7,7 @@ public class MemoryWordsServiceImplTest {
 /*
     private Player player;
 
-    private MemoryWordsDao memoryWordsDao;
+    private MemoryWordsManager memoryWordsDao;
     private MemoryWordsServiceImpl service;
 
     private ScribbleBoard board;
@@ -15,7 +15,7 @@ public class MemoryWordsServiceImplTest {
 
     @Before
     public void setUp() throws BoardLoadingException {
-        memoryWordsDao = createStrictMock(MemoryWordsDao.class);
+        memoryWordsDao = createStrictMock(MemoryWordsManager.class);
 
         playerHand = new ScribblePlayerHand(13L);
 
@@ -36,7 +36,7 @@ public class MemoryWordsServiceImplTest {
         replay(player);
 
         service = new MemoryWordsServiceImpl();
-        service.setMemoryWordsDao(memoryWordsDao);
+        service.setMemoryWordsManager(memoryWordsDao);
         service.setRoomsManager(roomsManager);
     }
 
@@ -70,7 +70,7 @@ public class MemoryWordsServiceImplTest {
     @Test
     public void test_removeMemoryWords() {
         RemoteServiceContextAccessor.expectPlayer(player);
-        memoryWordsDao.removeMemoryWords(board, playerHand);
+        memoryWordsDao.clearMemoryWords(board, playerHand);
         replay(memoryWordsDao);
 
         service.clearMemoryWords(123);

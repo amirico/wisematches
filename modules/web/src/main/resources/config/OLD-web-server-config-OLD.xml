@@ -46,7 +46,7 @@
         </property>
     </bean>
 
-    <bean id="memoryWordsDao" class="wisematches.server.deprecated.web.modules.app.playboard.memory.MemoryWordsDao">
+    <bean id="memoryWordsManager" class="wisematches.server.gameplaying.scribble.memory.MemoryWordsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

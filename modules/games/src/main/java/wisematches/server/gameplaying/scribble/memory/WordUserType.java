@@ -1,4 +1,4 @@
-package wisematches.server.deprecated.web.modules.app.playboard.memory;
+package wisematches.server.gameplaying.scribble.memory;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * Each word encoded by following rule:
  * <pre>
  *   WORD := (TILE_NUMBER TILE_LETTER TILE_COST|){2,+}
- * <p/>
+ *
  *   TILE_NUMBER := INTEGER{1,3}
  *   TILE_LETTER := CHARACTER
  *   TILE_COSE := INTEGER

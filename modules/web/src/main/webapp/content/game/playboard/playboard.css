@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-#scribble {
+.scribble {
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -10,18 +10,18 @@
     background-image: url('/resources/images/scribble/board/field.png');
 }
 
-#scribble #container {
+.scribble .field {
     position: absolute;
     top: 6px !important;
     left: 6px !important;
 }
 
-#scribble #bonuses {
+.scribble .field {
     position: absolute;
     z-index: 1;
 }
 
-#scribble #board {
+.scribble .board {
     top: 1px;
     left: 1px;
     z-index: 2;
@@ -30,13 +30,13 @@
     height: 330px !important;
 }
 
-#scribble #hand {
+.scribble .hand {
     position: absolute;
     left: 88px !important;
     top: 335px !important;
 }
 
-#scribble #highlighting {
+.scribble .highlighting {
     z-index: 3;
     width: 22px !important;
     height: 22px !important;

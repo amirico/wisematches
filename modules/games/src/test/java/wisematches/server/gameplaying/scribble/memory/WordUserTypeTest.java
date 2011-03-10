@@ -1,4 +1,4 @@
-package wisematches.server.deprecated.web.modules.app.playboard.memory;
+package wisematches.server.gameplaying.scribble.memory;
 
 import org.junit.Test;
 import wisematches.server.gameplaying.scribble.Direction;
