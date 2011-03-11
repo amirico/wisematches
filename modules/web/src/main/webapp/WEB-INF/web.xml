@@ -70,17 +70,17 @@
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
-        <url-pattern>/ext/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>web-app</servlet-name>
         <url-pattern>/i18n/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
         <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>web-app</servlet-name>
+        <url-pattern>*.ajax</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

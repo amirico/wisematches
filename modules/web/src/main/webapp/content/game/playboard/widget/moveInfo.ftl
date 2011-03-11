@@ -48,19 +48,26 @@
             }
         }
 
+    }
+
+    board.bind("wordChanged", function(event, word) {
         var swi = $("#selectedWordInfo").empty();
         if (word != null) {
-            for (var i = 0, len = word.tiles.length; i < len; i++) {
-                var newTile = createTileWidget(word.tiles[i]);
-                newTile.offset({left: (i * 22), top: 0});
-                newTile.appendTo(swi);
-            }
+            $.each(word.tiles, function(i, t) {
+                wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(swi);
+            });
         } else {
             swi.text('no word selected');
         }
-    }
+    });
 
-    $(document).ready(function() {
-        $("#scribble").bind('selected', updateMoveInfo).bind('deselected', updateMoveInfo);
+    board.bind("tileSelected", function(event, tile) {
+        print("Tile selected: " + new String(tile));
+    });
+    board.bind("tileDeselected", function(event, tile) {
+        print("Tile deselected: " + new String(tile));
+    });
+    board.bind("tileMoved", function(event, tile) {
+        print("Tile moved: " + new String(tile));
     });
 </script>

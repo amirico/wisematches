@@ -58,11 +58,7 @@
         ]
     });
 
-    function updateMemoryButtons(event, tile, tiles, word) {
+    board.bind('wordChanged', function(event, word) {
         $("#memoryAddButton").button(word == null ? "disable" : "enable");
-    }
-
-    $(document).ready(function() {
-        $("#scribble").bind('selected', updateMemoryButtons).bind('deselected', updateMemoryButtons);
     });
 </script>

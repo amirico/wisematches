@@ -72,12 +72,13 @@
         <@wm.widget id="scribbleBoard" title="Scribble Board">
             <div id="boardActionsToolbar" style="float: right; padding-top: 3px">
                 <div style="display: inline-block; margin: 0;">
-                    <button id="makeTurnButton" class="icon-make-turn" onclick="makeTurn()">Ходить</button>
-                    <button id="clearSelectionButton" class="icon-clear-word" onclick="clearSelection()">Сбросить
+                    <button id="makeTurnButton" class="icon-make-turn" onclick="board.makeTurn()">Ходить</button>
+                    <button id="clearSelectionButton" class="icon-clear-word" onclick="board.clearSelection()">Сбросить
                     </button>
-                    <button id="exchangeTilesButton" class="icon-exchange-tiles" onclick="exchangeTiles()">Обменять
+                    <button id="exchangeTilesButton" class="icon-exchange-tiles" onclick="board.exchangeTiles()">
+                        Обменять
                     </button>
-                    <button id="passTurnButton" class="icon-pass-turn" onclick="passTurn()">Пропустить</button>
+                    <button id="passTurnButton" class="icon-pass-turn" onclick="board.passTurn()">Пропустить</button>
                 </div>
             </div>
         </@wm.widget>
@@ -94,28 +95,21 @@
 </table>
 
 <script type="text/javascript">
+    $("#boardActionsToolbar div").buttonset();
+    $("#boardActionsToolbar button").button("disable");
+
     $("#scribbleBoard").prepend(board.getBoardElement());
-    //    $("#boardActionsToolbar div").buttonset();
-    //    $("#boardActionsToolbar button").button("disable");
-    <#---->
-    //    board.init();
 
-    /*
-    if (playerId == playerMove) {
-        $("#exchangeTilesButton").button("enable");
-        $("#passTurnButton").button("enable");
-    }
-*/
-
-    /*
-    function boardStateChanged(event, tile, tiles, word) {
-        $("#makeTurnButton").button((word == null ? "disable" : "enable"));
-        $("#clearSelectionButton").button((tiles.length == 0 ? "disable" : "enable"));
-    }
-
-    $(document).ready(function() {
-        $("#scribble").bind('selected', boardStateChanged).bind('deselected', boardStateChanged);
+    board.bind('tileSelected', function(event, tile) {
+        $("#clearSelectionButton").button("enable");
     });
-*/
+    board.bind('tileDeselected', function(event, tile) {
+        if (board.getSelectedTiles().length == 0) {
+            $("#clearSelectionButton").button("disable");
+        }
+    });
+    board.bind('wordChanged', function(event, word) {
+        $("#makeTurnButton").button(word == null ? "disable" : "enable");
+    });
 </script>
 
