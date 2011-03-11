@@ -14,17 +14,17 @@
     position: absolute;
     top: 6px !important;
     left: 6px !important;
+    z-index: 1;
 }
 
-.scribble .field {
+.scribble .bonuses {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
 }
 
 .scribble .board {
     top: 1px;
     left: 1px;
-    z-index: 2;
     position: absolute;
     width: 330px !important;
     height: 330px !important;
@@ -42,11 +42,10 @@
     height: 22px !important;
     background: url(/resources/images/scribble/board/tiles.png) no-repeat;
     position: absolute;
-    display: none;
 }
 
 .tile {
-    cursor: default;
+    cursor: pointer;
     color: white;
     z-index: 4;
 
@@ -57,15 +56,15 @@
     -khtml-user-select: none;
     user-select: none;
 
-    vertical-align: middle;
     text-align: center;
-    display: table-cell;
+    vertical-align: middle;
 
     background: url(/resources/images/scribble/board/tiles.png) no-repeat;
 }
 
 .tile span {
     top: 3px;
+    cursor: pointer;
     position: relative;
 }
 

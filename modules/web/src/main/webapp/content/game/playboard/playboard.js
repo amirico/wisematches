@@ -2,7 +2,7 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 function print(msg) {
-    $("<div></div>").text(msg).appendTo("#console");
+    $("#console").prepend($("<div></div>").text(msg));
 }
 
 if (wm == null) wm = {};
@@ -78,27 +78,46 @@ wm.scribble.ScoreEngine = function() {
 };
 
 wm.scribble.Highlighting = function(gameField) {
-    var element = $('<div></div>').addClass('highlighting').appendTo(gameField);
+    var element = $('<div></div>').addClass('highlighting').hide().appendTo(gameField);
+    var previousCell = null;
 
-    this.start = function(tileWidget) {
-        element.css('backgroundPosition', -tileWidget.data('tile').cost * 22 + "px -88px");
-        element.offset(tileWidget.offset());
+    var updatePosition = function(cell) {
+        var offset = cell.container.offset();
+        element.offset({left: offset.left + cell.x * 22, top: offset.top + cell.y * 22});
     };
 
-    this.stop = function(tile) {
+    this.start = function(tileWidget, cell) {
+        element.css('backgroundPosition', -tileWidget.data('tile').cost * 22 + "px -88px");
+        if (cell != null) {
+            element.show();
+            updatePosition(cell);
+        }
+        previousCell = cell;
+    };
+
+    this.stop = function() {
         element.hide();
         element.offset({top:0, left:0});
+        previousCell = null;
     };
 
     this.highlight = function(cell) {
         if (cell != null) {
-            var offset = cell.container.offset();
-            element.offset({left: offset.left + cell.x * 22, top: offset.top + cell.y * 22});
-            element.show();
+            if (previousCell == null) {
+                element.show();
+                updatePosition(cell);
+            } else {
+                if (previousCell.x != cell.x || previousCell.y != cell.y) {
+                    updatePosition(cell);
+                }
+            }
         } else {
-            element.hide();
-            element.offset({top:0, left:0});
+            if (previousCell != null) {
+                element.hide();
+                element.offset({top:0, left:0});
+            }
         }
+        previousCell = cell;
     };
 };
 
@@ -128,21 +147,24 @@ wm.scribble.Board = function() {
     };
 
     var onTileDown = function(ev) {
-        print("Start");
         draggingTile = $(this);
         var offset = draggingTile.offset();
+        var relatedCell = getRelatedCell(ev, {left:0, top: 0});
         draggingTile.data('mouseOffset', {left: ev.pageX - offset.left, top: ev.pageY - offset.top});
-        draggingTile.data('initialState', { offset: offset, zIndex: draggingTile.css('zIndex')});
+        draggingTile.data('originalState', {offset: offset, cell: relatedCell, zIndex: draggingTile.css('zIndex')});
         draggingTile.css('zIndex', 333);
-        highlighting.start(draggingTile);
+        highlighting.start(draggingTile, relatedCell);
+        ev.preventDefault();
     };
 
     var onTileMove = function(ev) {
-        if (draggingTile != null) {
+        if (draggingTile != null && draggingTile != undefined) {
             var tileOffset = draggingTile.data('mouseOffset');
-            $(draggingTile).offset({left: ev.pageX - tileOffset.left, top: ev.pageY - tileOffset.top});
-            highlighting.highlight(getRelatedCell(ev));
+            var relatedCell = getRelatedCell(ev, {left:tileOffset.left - 5, top: tileOffset.top - 5});
+            draggingTile.offset({left: ev.pageX - tileOffset.left, top: ev.pageY - tileOffset.top});
+            highlighting.highlight(relatedCell);
         }
+        ev.preventDefault();
     };
 
     var onTileUp = function(ev) {
@@ -150,60 +172,64 @@ wm.scribble.Board = function() {
             return true;
         }
 
-        var cell = getRelatedCell(ev);
-        if (cell == null ||
-                (cell.container == board && boardTiles[cell.x][cell.y] != undefined) ||
-                (cell.container == hand && handTiles[cell.x] != undefined)) {
-            draggingTile.offset(draggingTile.data('initialState').offset);
+        var tileOffset = draggingTile.data('mouseOffset');
+        var relatedCell = getRelatedCell(ev, {left:tileOffset.left - 5, top: tileOffset.top - 5});
+        var originalState = draggingTile.data('originalState');
+        if (relatedCell == null ||
+                (relatedCell.container == board && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
+                (relatedCell.container == hand && handTiles[relatedCell.x] != undefined)) {
+            draggingTile.offset(originalState.offset);
         } else {
             // clear original position
-            if (draggingTile.cell.container == board) {
-                boardTiles[draggingTile.cell.x][draggingTile.cell.y] = null;
-            } else if (draggingTile.cell.container == hand) {
-                handTiles[draggingTile.cell.x] = null;
+            var originalCell = originalState.cell;
+            if (originalCell.container == board) {
+                boardTiles[originalCell.x][originalCell.y] = null;
+            } else if (originalCell.container == hand) {
+                handTiles[originalCell.x] = null;
             }
 
             // move to new position
-            if (draggingTile.parentNode != cell.container) {
-                draggingTile.parentNode.removeChild(draggingTile);
-                draggingTile.style.top = cell.y * 22;
-                draggingTile.style.left = cell.x * 22;
-                cell.container.appendChild(draggingTile);
+            if (originalCell.container != relatedCell.container) {
+                draggingTile.detach();
+                draggingTile.css('top', relatedCell.y * 22);
+                draggingTile.css('left', relatedCell.x * 22);
+                draggingTile.appendTo(relatedCell.container);
             } else {
-                draggingTile.style.top = cell.y * 22;
-                draggingTile.style.left = cell.x * 22;
+                draggingTile.css('top', relatedCell.y * 22);
+                draggingTile.css('left', relatedCell.x * 22);
             }
 
-            // mark new position
-            if (cell.container == board) {
-                boardTiles[cell.x][cell.y] = draggingTile;
+            if (relatedCell.container == board) {
+                boardTiles[relatedCell.x][relatedCell.y] = draggingTile;
 //                changeTileSelection(draggingTile, true);
-            } else if (cell.container == hand) {
-                handTiles[cell.x] = draggingTile;
+            } else if (relatedCell.container == hand) {
+                handTiles[relatedCell.x] = draggingTile;
 //                changeTileSelection(draggingTile, false);
             }
         }
 
-        highlighting.stop(draggingTile);
+        highlighting.stop();
 
-        draggingTile.css('zIndex', draggingTile.data('initialState').zIndex);
+        draggingTile.css('zIndex', originalState.zIndex);
         draggingTile.removeData('mouseOffset');
-        draggingTile.removeData('initialState');
+        draggingTile.removeData('originalState');
 
         draggingTile = null;
+
+        ev.preventDefault();
     };
 
-    var getRelatedCell = function(ev) {
+    var getRelatedCell = function(ev, tileOffset) {
         var bo = board.offset();
-        var x = (((ev.pageX - bo.left) / 22) | 0);
-        var y = (((ev.pageY - bo.top) / 22) | 0);
+        var x = (((ev.pageX - bo.left - tileOffset.left) / 22) | 0);
+        var y = (((ev.pageY - bo.top - tileOffset.top) / 22) | 0);
         if (x >= 0 && x <= 14 && y >= 0 && y <= 14) {
             return {x:x, y:y, container: board};
         }
 
         var ho = hand.offset();
-        x = (((ev.pageX - ho.left) / 22) | 0);
-        y = (((ev.pageY - ho.top) / 22) | 0);
+        x = (((ev.pageX - ho.left - tileOffset.left) / 22) | 0);
+        y = (((ev.pageY - ho.top - tileOffset.top) / 22) | 0);
         if (x >= 0 && x <= 6 && y == 0) {
             return {x:x, y:y, container: hand};
         }
@@ -271,8 +297,7 @@ wm.scribble.Board = function() {
         $(hand).empty();
         for (i = 0,count = gameInfo.handTiles.length; i < count; i++) {
             var tile = gameInfo.handTiles[i];
-            var handTile = wm.scribble.tile.createTileWidget(tile).offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
-            handTiles[i] = handTile;
+            handTiles[i] = wm.scribble.tile.createTileWidget(tile).offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
         }
 
         return this.getBoardElement();
