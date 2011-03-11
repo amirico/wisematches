@@ -68,6 +68,10 @@
     position: relative;
 }
 
+.tile-selected span {
+    font-weight: bold;
+}
+
 .cell, .tile {
     width: 22px !important;
     height: 22px !important;
@@ -80,10 +84,6 @@
 
 .cost1, .cost2, .cost3, .cost4, .cost5, .cost6, .cost7, .cost8, .cost9, .cost10 {
     color: white;
-}
-
-.tile-selected {
-    font-weight: bold;
 }
 
 .bonus-cell-2l {

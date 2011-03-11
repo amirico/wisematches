@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
     <script type="text/javascript" src="/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/jquery/json.min.js"></script>
     <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/jquery/jquery.blockUI.js"></script>
 

@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
@@ -14,7 +16,9 @@ import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.PlayerManager;
+import wisematches.server.web.controllers.ServiceResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
@@ -25,6 +29,9 @@ import java.util.Locale;
 public class PlayboardController {
 	private PlayerManager playerManager;
 	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
+
+	public PlayboardController() {
+	}
 
 	@RequestMapping("/playboard")
 	public String showPlayboard(@RequestParam("boardId") long gameId, Model model, Locale locale) {
@@ -55,6 +62,13 @@ public class PlayboardController {
 			ex.printStackTrace();
 		}
 		return "/content/game/playboard/playboard";
+	}
+
+	@ResponseBody
+	@RequestMapping("/playboard/move")
+	public ServiceResponse makeTurnAjax(@RequestBody MakeTurnForm form, HttpServletResponse response) {
+		System.out.println(form);
+		return ServiceResponse.SUCCESS;
 	}
 
 	@Autowired
