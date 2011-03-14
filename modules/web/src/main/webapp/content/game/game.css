@@ -125,6 +125,16 @@
     background-image: none !important;
 }
 
+.playerInfo td {
+    white-space: nowrap;
+}
+
+.playerInfo.passive td {
+    color: gray !important;
+    border-color: transparent !important;
+    background: none !important;
+}
+
 #playboard #scribbleBoard {
     padding-left: 10px;
     padding-right: 10px;
@@ -144,6 +154,10 @@
 }
 
 #playboard #memoryWords th, #playboard #memoryWords td {
+    white-space: nowrap;
+}
+
+#playboard #movesHistory th, #playboard #movesHistory td {
     white-space: nowrap;
 }
 
@@ -192,14 +206,4 @@
 
 .icon-memory-clear {
     background-image: url('/resources/images/scribble/playboard/memoryClear.png') !important;
-}
-
-#playboard .playerInfo td {
-    white-space: nowrap;
-}
-
-#playboard .passive td {
-    color: gray !important;
-    border-color: transparent !important;
-    background: none !important;
 }

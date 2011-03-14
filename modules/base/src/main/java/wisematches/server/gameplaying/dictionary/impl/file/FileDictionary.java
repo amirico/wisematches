@@ -32,10 +32,10 @@ public class FileDictionary extends AbstractExtensibleDictionary implements Iter
 
 	private void loadDictionary() {
 		try {
-			final BufferedReader bufferedReader = new BufferedReader(new FileReader(source));
+			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(source), "UTF-8"));
 			String word = bufferedReader.readLine();
 			while (word != null) {
-				words.put(word, null);
+				words.put(word.toLowerCase(), null);
 				word = bufferedReader.readLine();
 			}
 			bufferedReader.close();
@@ -45,7 +45,7 @@ public class FileDictionary extends AbstractExtensibleDictionary implements Iter
 	}
 
 	public Word getWord(CharSequence chars) {
-		String s = chars.toString();
+		String s = chars.toString().toLowerCase();
 		Word word = words.get(s);
 		if (word == null && words.containsKey(s)) {
 			Word word1 = new Word(s, locale);

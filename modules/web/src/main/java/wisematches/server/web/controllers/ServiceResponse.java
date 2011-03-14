@@ -15,15 +15,15 @@ import java.util.Map;
 public final class ServiceResponse {
 	private final boolean success;
 	private final String summary;
-	private final Map<String, String> errors;
+	private final Map<String, Object> data;
 
 	public static final ServiceResponse SUCCESS = new ServiceResponse(true, null, null);
 	public static final ServiceResponse FAILURE = new ServiceResponse(false, null, null);
 
-	private ServiceResponse(boolean success, String summary, Map<String, String> errors) {
+	private ServiceResponse(boolean success, String summary, Map<String, Object> data) {
 		this.success = success;
 		this.summary = summary;
-		this.errors = errors;
+		this.data = data;
 	}
 
 	public boolean isSuccess() {
@@ -34,8 +34,8 @@ public final class ServiceResponse {
 		return summary;
 	}
 
-	public Map<String, String> getErrors() {
-		return errors;
+	public Map<String, Object> getData() {
+		return data;
 	}
 
 	public static ServiceResponse success() {
@@ -46,22 +46,34 @@ public final class ServiceResponse {
 		return FAILURE;
 	}
 
+	public static ServiceResponse success(String summary) {
+		return new ServiceResponse(true, summary, null);
+	}
+
+	public static ServiceResponse success(String summary, String errorKey, Object errorValue) {
+		return new ServiceResponse(true, summary, Collections.singletonMap(errorKey, errorValue));
+	}
+
+	public static ServiceResponse success(String summary, Map<String, Object> errors) {
+		return new ServiceResponse(true, summary, errors);
+	}
+
 	public static ServiceResponse failure(String summary) {
 		return new ServiceResponse(false, summary, null);
 	}
 
-	public static ServiceResponse failure(String summary, String errorKey, String errorValue) {
+	public static ServiceResponse failure(String summary, String errorKey, Object errorValue) {
 		return new ServiceResponse(false, summary, Collections.singletonMap(errorKey, errorValue));
 	}
 
-	public static ServiceResponse failure(String summary, Map<String, String> errors) {
+	public static ServiceResponse failure(String summary, Map<String, Object> errors) {
 		return new ServiceResponse(false, summary, errors);
 	}
 
 	public static ServiceResponse convert(Errors errors) {
 		if (errors.hasErrors()) {
 			return FAILURE;
-//			return new ServiceResponse(false, null, errors);
+//			return new ServiceResponse(false, null, data);
 		}
 		return SUCCESS;
 	}
@@ -72,7 +84,7 @@ public final class ServiceResponse {
 		sb.append("ServiceResponse");
 		sb.append("{success=").append(success);
 		sb.append(", summary='").append(summary).append('\'');
-		sb.append(", errors=").append(errors);
+		sb.append(", errors=").append(data);
 		sb.append('}');
 		return sb.toString();
 	}

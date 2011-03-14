@@ -13,6 +13,7 @@
 
 <script type="text/javascript">
     var gameInfo = {
+        boardId: ${board.getBoardId()},
         bonuses: [
         <#list board.getScoreEngine().getScoreBonuses() as bonus>
             {row: ${bonus.row}, column: ${bonus.column}, type: '${bonus.type.displayName}'}<#if bonus_has_next>,</#if>
@@ -24,7 +25,7 @@
             <#list 0..14 as j>
                 <#assign tile=board.getBoardTile(i, j)!"">
                 <#if tile?has_content>
-                    <#if separatorRequired>,</#if>{number: ${tile.number}, letter: '${tile.letter?string?upper_case}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string}, row: ${i}, column: ${j} }
+                    <#if separatorRequired>,</#if>{number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string}, row: ${i}, column: ${j} }
                     <#assign separatorRequired=true/>
                 </#if>
             </#list>
@@ -35,7 +36,7 @@
         <#if playerHand??>
             <#list playerHand.tiles as tile>
                 <#if tile?has_content>
-                    {number: ${tile.number}, letter: '${tile.letter?string?upper_case}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }<#if tile_has_next>,</#if>
+                    {number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }<#if tile_has_next>,</#if>
                 </#if>
             </#list>
         </#if>
