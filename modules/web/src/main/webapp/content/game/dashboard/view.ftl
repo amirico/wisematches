@@ -30,7 +30,7 @@
         <span class="player"><a
                 href="/game/playboard.html?boardId=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
             <#else>
-            <@message code="game.status.move_opp" args="${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"/>
+            <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
         <#else>
         <@message code="game.status.${board.getGameState().name()?lower_case}"/>
@@ -71,10 +71,7 @@
                     <td><@gameStatus board=board/></td>
                     <td>
                         <#list board.playersHands as hand>
-                            <#assign player=playerManager.getPlayer(hand.getPlayerId())!/>
-                            <div>
-                            <@wm.player player=player showRating=false/>
-                            </div>
+                            <div><@wm.player player=playerManager.getPlayer(hand.getPlayerId()) showRating=false/></div>
                         </#list>
                     </td>
                     <td class="center">
@@ -101,8 +98,7 @@
                         <#list proposal.allPlayers as p>
                             <div>
                                 <#if p??>
-                                    <#assign player=playerManager.getPlayer(p)/>
-                                <@wm.player player=player showRating=false/>
+                                <@wm.player player=playerManager.getPlayer(p) showRating=false/>
                                     <#else>
                                         <span class="player">
                                             <span class="waiting"><@message code="game.status.waiting"/></span>

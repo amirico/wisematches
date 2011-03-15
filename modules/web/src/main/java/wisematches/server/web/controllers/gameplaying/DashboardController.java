@@ -146,7 +146,7 @@ public class DashboardController {
 		}
 		model.addAttribute("activeProposals", proposals);
 		model.addAttribute("playerManager", playerManager);
-		return "content/game/dashboard/view";
+		return "/content/game/dashboard/view";
 	}
 
 	@RequestMapping("gameboard")

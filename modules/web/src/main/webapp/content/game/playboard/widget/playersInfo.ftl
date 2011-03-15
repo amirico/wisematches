@@ -1,8 +1,10 @@
+<#-- @ftlvariable name="lastMoveMillis" type="java.lang.Long" -->
+<#-- @ftlvariable name="currentTimeMillis" type="java.lang.Long" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
 
 <@wm.widget id="playersInfo" title="Players Info">
-<table cellpadding="5">
+<table cellpadding="5" width="100%">
     <#list board.playersHands as hand>
         <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
         <#assign active=(board.getPlayerTurn() == hand)/>
@@ -12,8 +14,10 @@
                 <img align="top" src="/resources/images/player/noPlayerIcon.png" width="31" height="28" alt=""/>
             </td>
             <td class="player-name ${playerStyle} ui-table-middle"><@wm.player player=p showRating=false/></td>
-            <td class="player-points ${playerStyle} ui-table-middle" align="center" width="40">${hand.getPoints()}</td>
-            <td class="player-time ui-corner-right ${playerStyle} ui-table-right" align="left" width="60">3d 21m</td>
+            <td class="player-points ${playerStyle} ui-table-middle" align="center">${hand.getPoints()}</td>
+            <td class="player-time ui-corner-right ${playerStyle} ui-table-right" align="left">
+                <#if active><@wm.gameTimeout elapsedTime=(currentTimeMillis - lastMoveMillis) daysPerMove=board.gameSettings.daysPerMove/></#if>
+            </td>
         </tr>
     </#list>
 </table>

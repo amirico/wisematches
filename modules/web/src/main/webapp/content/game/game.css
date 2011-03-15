@@ -165,7 +165,7 @@
     border: 0;
 }
 
-#playboard #bankInfo td {
+#playboard #gameInfo td {
     padding-left: 5px;
     white-space: nowrap;
 }
