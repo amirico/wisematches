@@ -70,6 +70,8 @@ public class PlayboardController {
 
 			model.addAttribute("tilesBankInfo", r);
 			model.addAttribute("player", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+			model.addAttribute("lastMoveMillis", board.getLastMoveTime().getTime());
+			model.addAttribute("currentTimeMillis", System.currentTimeMillis());
 			model.addAttribute("playerManager", playerManager);
 		} catch (BoardLoadingException ex) {
 			ex.printStackTrace();

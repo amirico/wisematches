@@ -1,14 +1,32 @@
-<#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
-
 <#include "/core.ftl">
+<#include "../playboardModel.ftl">
 
-<@wm.widget id="boardLegend" title="Board's Legend">
+<script type="text/javascript">
+    wm.boardlegend = new function() {
+        this.showLegend = function() {
+            $('#boardLegend').parent().slideToggle('slow');
+            $('#showLegendButton').slideToggle('slow');
+        };
+
+        this.hideLegend = function() {
+            $('#boardLegend').parent().slideToggle('slow');
+            $('#showLegendButton').slideToggle('slow');
+        };
+    };
+
+    $(document).ready(function() {
+        var link = $("<a></a>").attr('id', 'showLegendButton').attr('href', 'javascript: wm.boardlegend.showLegend()').html('<@message code="game.legend.show.label"/> &raquo;');
+        $("<div></div>").css("width", "100%").css('text-align', 'right').append(link).appendTo('#gameInfo');
+    });
+</script>
+
+<@wm.widget id="boardLegend" title="game.legend.label" style="display: none; padding-top: 10px;">
 <table>
     <tr>
         <td width="22px">
             <div class="cell bonus-cell-center" style="position: static;"></div>
         </td>
-        <td> - center position</td>
+        <td> - <@message code='game.legend.center'/></td>
     </tr>
 </table>
 <div class="ui-widget-content ui-widget-separator"></div>
@@ -17,21 +35,21 @@
         <td width="22px">
             <div class="cell bonus-cell-2l" style="position: static;"></div>
         </td>
-        <td> - double letter</td>
+        <td> - <@message code='game.legend.double.letter'/></td>
         <td>
             <div class="cell bonus-cell-2w" style="position: static;"></div>
         </td>
-        <td> - double word</td>
+        <td> - <@message code='game.legend.double.word'/></td>
     </tr>
     <tr>
         <td>
             <div class="cell bonus-cell-3l" style="position: static;"></div>
         </td>
-        <td> - tripple letter</td>
+        <td> - <@message code='game.legend.triple.letter'/></td>
         <td>
             <div class="cell bonus-cell-3l" style="position: static;"></div>
         </td>
-        <td> - tripple word</td>
+        <td> - <@message code='game.legend.triple.word'/></td>
     </tr>
 </table>
 <div class="ui-widget-content ui-widget-separator"></div>
@@ -56,4 +74,8 @@
         </#list>
     </tbody>
 </table>
+
+<div style="width: 100%; text-align: right;">
+    <a href="javascript: wm.boardlegend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
+</div>
 </@wm.widget>

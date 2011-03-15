@@ -120,7 +120,7 @@
                         <select id="daysPerMove" name="daysPerMove" style="width: 170px;">
                             <#list [2,3,4,5,7,10,14] as l>
                                 <option value="${l}"
-                                        <#if (l==(wm.statusValue)?number)>selected="selected"</#if>><@dates.daysAsString days=l/></option>
+                                        <#if (l==(wm.statusValue)?number)>selected="selected"</#if>><@declension.days value=l/></option>
                             </#list>
                         </select>
                     </@wm.field>

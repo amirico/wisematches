@@ -1,19 +1,15 @@
-<#-- @ftlvariable name="tilesBankInfo" type="char[][]" -->
-<#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
-
-<#macro tilePlain number cost letter i j>
-<div <#if number??>id="tile${number}"</#if> class="tile cost${cost}"
-     style="left: ${i*22}px; top: ${j*22}px; background-position: -${cost*22}px -${j*22}px">
-    <span>${letter?upper_case}</span>
-</div>
-</#macro>
-
-<#macro tileObject tile i j><@tilePlain number=tile.number cost=tile.cost letter=tile.letter i=i j=j/></#macro>
+<#include "playboardModel.ftl">
 
 <script type="text/javascript">
     var gameInfo = {
         boardId: ${board.getBoardId()},
+        daysPerMove: ${board.getGameSettings().daysPerMove},
+        gameState: '${board.getGameState()}',
+        boardViewer: ${player.getId()},
+        playerTurn: ${board.getPlayerTurn().getPlayerId()},
+        lastMoveTime: ${lastMoveMillis?string.computer},
+        <#if board.gameState != "ACTIVE">wonPlayer:${board.getWonPlayer().getPlayerId()},</#if>
         bonuses: [
         <#list board.getScoreEngine().getScoreBonuses() as bonus>
             {row: ${bonus.row}, column: ${bonus.column}, type: '${bonus.type.displayName}'}<#if bonus_has_next>,</#if>
@@ -46,31 +42,27 @@
             <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
             {id: ${hand.getPlayerId()}, points: ${hand.getPoints()}, index: ${hand.getPlayerIndex()}, nickname: '${p.nickname}', membership: '${p.membership!""}'}<#if hand_has_next>,</#if>
         </#list>
-        ],
-        playerTurn: ${board.getPlayerTurn().getPlayerId()}
+        ]
     };
 
     var board = new wm.scribble.Board();
     board.initializeGame(gameInfo);
-    <#--var playerId = ${player.getId()};-->
-    <#--var playerMove = <#if board.getPlayerTurn()??>${board.getPlayerTurn().getPlayerId()}<#else>undefined</#if>;-->
 </script>
 
-<div id="console" style="height: 100px; width: 100%; border: 1px solid red; overflow:auto; ">
-</div>
+<#--<div id="console" style="height: 100px; width: 100%; border: 1px solid red; overflow:auto; ">-->
+<#--</div>-->
 
 <table id="playboard" cellpadding="5" align="center">
     <tr>
         <td style="vertical-align: top; width: 250px">
-        <#include "widget/bankInfo.ftl"/>
-        <#--<div style="height: 10px"></div>-->
-        <#--<#include "widget/boardLegend.ftl"/>-->
+        <#include "widget/gameInfo.ftl"/>
+        <#include "widget/boardLegend.ftl"/>
             <div style="height: 10px"></div>
         <#include "widget/movesHistory.ftl"/>
         </td>
 
         <td style="vertical-align: top;">
-        <@wm.widget id="scribbleBoard" title="Scribble Board">
+        <@wm.widget id="scribbleBoard" title="<center>${board.gameSettings.title} #${board.boardId}</center>">
             <div id="boardActionsToolbar" style="float: right; padding-top: 3px">
                 <div style="display: inline-block; margin: 0;">
                     <button id="makeTurnButton" class="icon-make-turn" onclick="board.makeTurn()">Ходить</button>

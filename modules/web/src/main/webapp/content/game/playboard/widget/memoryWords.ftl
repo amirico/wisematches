@@ -27,12 +27,9 @@
 </table>
 
 <div id="memoryWordsToolbar" style="padding-top: 5px;">
-    <div style="margin: 0">
-        <button id="memoryAddButton" class="icon-memory-add">
-            Remember Word
-        </button>
-        <button id="memoryClearButton" class="icon-memory-clear" style="float: right;">
-            Clear Memory
+    <div style="margin: 0;">
+        <button id="memoryAddButton" class="icon-memory-add">Remember Word</button>
+        <button id="memoryClearButton" class="icon-memory-clear">Clear Memory
         </button>
     </div>
 </div>
