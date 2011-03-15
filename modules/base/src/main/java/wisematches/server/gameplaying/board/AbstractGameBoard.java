@@ -188,7 +188,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	/**
 	 * {@inheritDoc}
 	 */
-	public int makeMove(PlayerMove move) throws GameMoveException {
+	public GameMove makeMove(PlayerMove move) throws GameMoveException {
 		checkState();
 
 		final P player = getPlayerHand(move.getPlayerId());
@@ -232,7 +232,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			playersIterator.next();
 			firePlayerMoved(gameMove);
 		}
-		return points;
+		return gameMove;
 	}
 
 	/**

@@ -15,7 +15,7 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 	private Position position;
 	private Direction direction;
 
-	private String stringWord;
+	private String text;
 
 	/**
 	 * This is GWT Serialization constructor.
@@ -24,7 +24,7 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 		tiles = null;
 		direction = null;
 		position = null;
-		stringWord = null;
+		text = null;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 			}
 			sb.append(tile.getLetter());
 		}
-		stringWord = sb.toString();
+		text = sb.toString();
 	}
 
 	/**
@@ -100,8 +100,12 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 		return tiles.length;
 	}
 
+	public String getText() {
+		return text;
+	}
+
 	public String toStringWord() {
-		return stringWord;
+		return text;
 	}
 
 	/**
@@ -159,14 +163,14 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 		}
 
 		Word word = (Word) o;
-		return direction == word.direction && position.equals(word.position) && stringWord.equals(word.stringWord);
+		return direction == word.direction && position.equals(word.position) && text.equals(word.text);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = direction.hashCode();
 		result = 31 * result + position.hashCode();
-		result = 31 * result + stringWord.hashCode();
+		result = 31 * result + text.hashCode();
 		return result;
 	}
 
@@ -176,7 +180,7 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 				"tiles=" + (tiles == null ? null : Arrays.asList(tiles)) +
 				", direction=" + direction +
 				", position=" + position +
-				", stringWord='" + stringWord + '\'' +
+				", text='" + text + '\'' +
 				'}';
 	}
 

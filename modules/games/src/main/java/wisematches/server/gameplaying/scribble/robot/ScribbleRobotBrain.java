@@ -2,6 +2,7 @@ package wisematches.server.gameplaying.scribble.robot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GameMoveException;
 import wisematches.server.gameplaying.board.PassTurnMove;
 import wisematches.server.gameplaying.dictionary.Dictionary;
@@ -85,9 +86,9 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 		try {
 			if (word != null) {
 				try {
-					final int i = board.makeMove(new MakeWordMove(robotHand.getPlayerId(), word));
+					final GameMove move = board.makeMove(new MakeWordMove(robotHand.getPlayerId(), word));
 					if (log.isDebugEnabled()) {
-						log.debug("Robot make a word and took " + i + " points");
+						log.debug("Robot made a word and took " + move.getPoints() + " points");
 					}
 				} catch (GameMoveException ex) {
 					log.error("Move can't be maden", ex);

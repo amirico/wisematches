@@ -3,18 +3,12 @@
 <#macro player player showType=true showRating=true>
     <#assign computerPlayer=(player.membership == "GUEST") || (player.membership == "ROBOT")/>
 <span class="player <#if computerPlayer>computer<#else>member</#if>">
-    <#if computerPlayer>
-        <span class="nickname"><@wm.message code="game.player.${player.nickname}"/></span>
-        <#if showType><span class="mod ${player.nickname} ${player.membership!""?lower_case}"></span></#if>
-        <#if showRating><span class="rating">(${player.rating?string.computer})</span></#if>
-        <#else>
-            <a href="/game/profile.html?playerId=${player.id}">
-                <span class="nickname">${player.nickname}</span>
-                <#if showType && player.getMembership() != "BASIC"><span
-                        class="mod ${player.getMembership().name()?lower_case}"></span></#if>
-                <#if showRating><span class="rating">(${player.rating?string.computer})</span></#if>
-            </a>
-    </#if>
+    <span class="nickname">${gameMessageSource.getPlayerNick(player, locale)}</span>
+    <#if !computerPlayer><a href="/game/profile.html?playerId=${player.id}"></#if>
+    <#if showType && player.getMembership() != "BASIC"><span
+            class="mod ${player.nickname} ${player.membership!""?lower_case}"></span></#if>
+    <#if showRating><span class="rating">(${player.rating?string.computer})</span></#if>
+    <#if !computerPlayer></a></#if>
 </span>
 </#macro>
 
@@ -75,18 +69,4 @@
      <#if style?has_content>style="${style}"</#if>>
     <#nested>
 </div>
-</#macro>
-
-<#macro gameTimeout elapsedTime daysPerMove>
-    <#assign minutesPerMove = daysPerMove * 24 * 60/>
-    <#assign minutesElapsed = elapsedTime / 1000 / 60/>
-    <#assign time=minutesPerMove - minutesElapsed/>
-
-    <#assign days = (time / 60 / 24)?floor/>
-    <#assign hours = ((time - (days * 24 * 60)) / 60)?floor/>
-    <#assign minutes = (time % 60)?round/>
-
-    <#if (days > 0)>${days}<@message code="time.notation.day"/></#if>
-    <#if (hours > 0)>${hours}<@message code="time.notation.hour"/></#if>
-    <#if (days == 0) && (minutes > 0)>${minutes}<@message code="time.notation.minute"/></#if>
 </#macro>

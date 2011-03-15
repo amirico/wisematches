@@ -54,7 +54,7 @@
 
     <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
 
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+    <bean id="localeResolver" class="wisematches.server.web.i18n.WMPlayerLocaleResolver"/>
 
     <bean id="mappingDriven"
           class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -67,6 +67,10 @@
         </property>
     </bean>
 
+    <bean id="smartTimeConverter" class="wisematches.server.web.i18n.GameMessageSource">
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
     <bean id="freemarkerConfig"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/"/>
@@ -74,6 +78,7 @@
         <property name="freemarkerVariables">
             <map>
                 <entry key="captchaService" value-ref="captchaService"/>
+                <entry key="gameMessageSource" value-ref="smartTimeConverter"/>
             </map>
         </property>
         <property name="freemarkerSettings">
@@ -91,7 +96,7 @@
         <property name="suffix" value=".ftl"/>
         <property name="exposeSpringMacroHelpers" value="true"/>
         <property name="contentType" value="text/html;charset=UTF-8"/>
-        <property name="viewClass" value="wisematches.server.web.view.WMSingleFreeMarkerView"/>
+        <property name="viewClass" value="wisematches.server.web.view.WMFreeMarkerView"/>
     </bean>
 
     <alias alias="viewResolver" name="freemarkerViewResolver"/>

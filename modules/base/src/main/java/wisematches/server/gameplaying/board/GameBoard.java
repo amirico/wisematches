@@ -70,10 +70,10 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * Makes move for active player and returns points for this turn.
 	 *
 	 * @param move the move.
-	 * @return points for maden move.
-	 * @throws GameMoveException if move can't be maden
+	 * @return points the appropriate game move object
+	 * @throws GameMoveException if move can't be done
 	 */
-	int makeMove(PlayerMove move) throws GameMoveException;
+	GameMove makeMove(PlayerMove move) throws GameMoveException;
 
 	/**
 	 * Returns unmodifiable collection of maden moves.

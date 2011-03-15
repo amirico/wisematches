@@ -13,8 +13,8 @@ import java.io.IOException;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WMSingleFreeMarkerView extends FreeMarkerView {
-	public WMSingleFreeMarkerView() {
+public class WMFreeMarkerView extends FreeMarkerView {
+	public WMFreeMarkerView() {
 	}
 
 	@Override

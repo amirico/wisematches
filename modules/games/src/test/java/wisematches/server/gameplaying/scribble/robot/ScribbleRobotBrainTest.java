@@ -2,7 +2,9 @@ package wisematches.server.gameplaying.scribble.robot;
 
 import org.easymock.IAnswer;
 import org.junit.Test;
+import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GameMoveException;
+import wisematches.server.gameplaying.board.PlayerMove;
 import wisematches.server.gameplaying.dictionary.IterableDictionary;
 import wisematches.server.gameplaying.scribble.Direction;
 import wisematches.server.gameplaying.scribble.Position;
@@ -20,10 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -141,7 +140,7 @@ public class ScribbleRobotBrainTest {
 			}
 		}).anyTimes();
 		expect(scribbleBoard.getScoreEngine()).andReturn(null);
-		expect(scribbleBoard.makeMove(isA(MakeWordMove.class))).andReturn(3);
+		expect(scribbleBoard.makeMove(isA(MakeWordMove.class))).andReturn(new GameMove(createMock(PlayerMove.class), 12, 1, new Date()));
 		replay(scribbleBoard);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
