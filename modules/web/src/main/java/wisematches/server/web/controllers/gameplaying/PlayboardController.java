@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.server.gameplaying.board.GameMoveException;
-import wisematches.server.gameplaying.board.PassTurnMove;
-import wisematches.server.gameplaying.board.PlayerMove;
+import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
@@ -27,6 +25,7 @@ import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.i18n.GameMessageSource;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,6 +38,7 @@ import java.util.Map;
 @RequestMapping("/game")
 public class PlayboardController {
 	private PlayerManager playerManager;
+	private GameMessageSource gameMessageSource;
 	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
@@ -83,11 +83,10 @@ public class PlayboardController {
 	@RequestMapping("/playboard/move")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse makeTurnAjax(@RequestParam("boardId") long gameId,
-										@RequestBody ScribbleWordEditor word,
-										Locale locale) {
+										@RequestBody ScribbleWordEditor word, Locale locale) {
 		final Player currentPlayer = getCurrentPlayer();
 		try {
-			return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()));
+			return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
 		} catch (Exception ex) {
 			return ServiceResponse.failure("Word can't be created or player unknown");
 		}
@@ -96,18 +95,20 @@ public class PlayboardController {
 	@ResponseBody
 	@RequestMapping("/playboard/pass")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse passTurnAjax(@RequestParam("boardId") long gameId, Locale locale) {
+	public ServiceResponse passTurnAjax(@RequestParam("boardId") long gameId,
+										Locale locale) {
 		Player currentPlayer = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's pass: " + gameId);
 		}
-		return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()));
+		return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
 	}
 
 	@ResponseBody
 	@RequestMapping("/playboard/exchange")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse exchangeTilesAjax(@RequestParam("boardId") long gameId, ScribbleWordEditor.TileEditor[] tiles, Locale locale) {
+	public ServiceResponse exchangeTilesAjax(@RequestParam("boardId") long gameId,
+											 ScribbleWordEditor.TileEditor[] tiles, Locale locale) {
 		Player currentPlayer = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's exchange: " + gameId);
@@ -117,7 +118,7 @@ public class PlayboardController {
 			for (int i = 0; i < tiles.length; i++) {
 				t[i] = tiles[i].getNumber();
 			}
-			return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t));
+			return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
 		} catch (Exception ex) {
 			return ServiceResponse.failure("Tiles can't be taken from a list");
 		}
@@ -126,7 +127,8 @@ public class PlayboardController {
 	@ResponseBody
 	@RequestMapping("/playboard/resign")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse resignGameAjax(@RequestParam("boardId") long gameId, Locale locale) {
+	public ServiceResponse resignGameAjax(@RequestParam("boardId") long gameId,
+										  Locale locale) {
 		Player currentPlayer = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's resign: " + gameId);
@@ -134,6 +136,7 @@ public class PlayboardController {
 		try {
 			final ScribbleBoard scribbleBoard = scribbleRoomManager.getBoardManager().openBoard(gameId);
 			scribbleBoard.close(scribbleBoard.getPlayerHand(currentPlayer.getId()));
+			// TODO: convertGameMove must be returned.
 			return ServiceResponse.success();
 		} catch (BoardLoadingException e) {
 			return ServiceResponse.failure(e.getMessage());
@@ -142,20 +145,21 @@ public class PlayboardController {
 		}
 	}
 
-	private ServiceResponse processGameMove(long gameId, final PlayerMove move) {
+	private ServiceResponse processGameMove(long gameId, final PlayerMove move, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's move: " + gameId + "@" + move);
 		}
 		try {
 			final Player currentPlayer = getCurrentPlayer();
-			final ScribbleBoard scribbleBoard = scribbleRoomManager.getBoardManager().openBoard(gameId);
-			final int points = scribbleBoard.makeMove(move);
+			if (move.getPlayerId() != currentPlayer.getId()) {
+				throw new UnsuitablePlayerException("make turn", currentPlayer);
+			}
 
-			final Map<String, Object> response = new HashMap<String, Object>();
-			response.put("points", points);
-			response.put("handTiles", scribbleBoard.getPlayerHand(currentPlayer.getId()).getTiles());
-			response.put("playerTurn", currentPlayer.getId());
-			response.put("nextPlayerTurn", scribbleBoard.getPlayerTurn().getPlayerId());
+			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+			final GameMove gameMove = board.makeMove(move);
+
+			final Map<String, Object> response = convertPlayerMove(board, gameMove, locale);
+			response.put("handTiles", board.getPlayerHand(currentPlayer.getId()).getTiles());
 			return ServiceResponse.success("Your move has been accepted", response);
 		} catch (BoardLoadingException e) {
 			log.info("Board " + gameId + " can't be loaded", e);
@@ -166,6 +170,18 @@ public class PlayboardController {
 			log.error("Strange move exception", e);
 			return ServiceResponse.failure(e.getMessage());
 		}
+	}
+
+	private Map<String, Object> convertPlayerMove(final ScribbleBoard board, final GameMove move, final Locale locale) {
+		final Map<String, Object> response = new HashMap<String, Object>();
+		response.put("finished", board.getGameState() != GameState.ACTIVE);
+		response.put("stateMessage", gameMessageSource.formatGameState(board.getGameState(), locale));
+		response.put("move", move);
+		response.put("moveType", move.getPlayerMove().getClass().getSimpleName());
+		response.put("moveTimeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
+		response.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));
+		response.put("nextPlayerId", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
+		return response;
 	}
 
 	private Player getCurrentPlayer() {
@@ -180,5 +196,10 @@ public class PlayboardController {
 	@Autowired
 	public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
 		this.scribbleRoomManager = scribbleRoomManager;
+	}
+
+	@Autowired
+	public void setGameMessageSource(GameMessageSource gameMessageSource) {
+		this.gameMessageSource = gameMessageSource;
 	}
 }

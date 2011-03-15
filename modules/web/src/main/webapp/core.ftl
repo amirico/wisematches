@@ -1,6 +1,6 @@
 <#ftl encoding="UTF-8">
 
-<#assign locale="${springMacroRequestContext.getMessage('locale')}"/>
+<#assign locale=springMacroRequestContext.getMessage('locale')/>
 <#assign security=JspTaglibs["http://www.springframework.org/security/tags"] />
 
 <#macro message code args=[]><#if args?size == 0>${springMacroRequestContext.getMessage(code)}<#else>${springMacroRequestContext.getMessage(code, args)}</#if></#macro>

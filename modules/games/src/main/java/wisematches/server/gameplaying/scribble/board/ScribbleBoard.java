@@ -458,7 +458,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			}
 		}
 
-		final String w = move.getWord().toStringWord();
+		final String w = move.getWord().getText();
 		if (dictionary.getWord(w) == null) {
 			throw new UnknownWordException(w);
 		}

@@ -16,18 +16,25 @@
             <td class="player-name ${playerStyle} ui-table-middle"><@wm.player player=p showRating=false/></td>
             <td class="player-points ${playerStyle} ui-table-middle" align="center">${hand.getPoints()}</td>
             <td class="player-time ui-corner-right ${playerStyle} ui-table-right" align="left">
-                <#if active><@wm.gameTimeout elapsedTime=(currentTimeMillis - lastMoveMillis) daysPerMove=board.gameSettings.daysPerMove/></#if>
+                <#if active>${gameMessageSource.getRemainedTime(board, locale)}</#if>
             </td>
         </tr>
     </#list>
 </table>
 
 <script type="text/javascript">
-    board.bind('playerMoved', function(event, move) {
-        var v = $("#playerInfo" + move.playerTurn + " .player-points");
-        v.text(parseInt(v.text()) + move.points);
-        $("#playerInfo" + move.playerTurn).addClass("passive");
-        $("#playerInfo" + move.nextPlayerTurn).removeClass("passive");
+    board.bind('playerMoved', function(event, gameMove) {
+        var moveType = gameMove.moveType;
+        var playerMove = gameMove.move.playerMove;
+        if (moveType = 'MakeWordMove') {
+            var v = $("#playerInfo" + playerMove.playerId + " .player-points");
+            v.text(parseInt(v.text()) + gameMove.move.points);
+        }
+        $("#playerInfo" + playerMove.playerId).addClass("passive");
+        $("#playerInfo" + playerMove.playerId + " .player-time").text("");
+
+        $("#playerInfo" + gameMove.nextPlayerId).removeClass("passive");
+        $("#playerInfo" + gameMove.nextPlayerId + " .player-time").text(gameMove.remainedTimeMessage);
     });
 </script>
 </@wm.widget>

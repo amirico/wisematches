@@ -40,7 +40,7 @@
         players: [
         <#list board.getPlayersHands() as hand>
             <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
-            {id: ${hand.getPlayerId()}, points: ${hand.getPoints()}, index: ${hand.getPlayerIndex()}, nickname: '${p.nickname}', membership: '${p.membership!""}'}<#if hand_has_next>,</#if>
+            {id: ${hand.getPlayerId()}, points: ${hand.getPoints()}, index: ${hand.getPlayerIndex()}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}'}<#if hand_has_next>,</#if>
         </#list>
         ]
     };
@@ -55,10 +55,10 @@
 <table id="playboard" cellpadding="5" align="center">
     <tr>
         <td style="vertical-align: top; width: 250px">
-        <#include "widget/gameInfo.ftl"/>
-        <#include "widget/boardLegend.ftl"/>
+        <#include "widget/state.ftl"/>
+        <#include "widget/legend.ftl"/>
             <div style="height: 10px"></div>
-        <#include "widget/movesHistory.ftl"/>
+        <#include "widget/history.ftl"/>
         </td>
 
         <td style="vertical-align: top;">
@@ -78,11 +78,11 @@
         </td>
 
         <td style="vertical-align: top;">
-        <#include "widget/playersInfo.ftl"/>
+        <#include "widget/players.ftl"/>
             <div style="height: 10px"></div>
-        <#include "widget/moveInfo.ftl"/>
+        <#include "widget/selection.ftl"/>
             <div style="height: 10px"></div>
-        <#include "widget/memoryWords.ftl"/>
+        <#include "widget/memory.ftl"/>
         </td>
     </tr>
 </table>

@@ -265,28 +265,32 @@ wm.scribble.Board = function() {
     };
 
     var addTileToBoard = function(tile) {
-        alert("Not implemented");
+        if (boardTiles[tile.column][tile.row] == null || boardTiles[tile.column][tile.row] == undefined) {
+            var w = wm.scribble.tile.createTileWidget(tile).
+                    offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
+            wm.scribble.tile.pinTile(w.get(0));
+            boardTiles[tile.column][tile.row] = w.appendTo(board);
+        }
     };
 
     var addTileToHand = function(tile) {
-        alert("Not implemented");
-        /*
-         $.each(handTiles, function(i, v) {
-         if (handTiles[i] == undefined) {
-         */
-        /*
-         tile.cell = {x:j, y:0, container: hand};
-         tile.style.top = 0;
-         tile.style.left = j * 22;
-         tile.cell.container.appendChild(tile);
-         */
-        /*
+        $.each(handTiles, function(i, handTile) {
+            if (handTile == null || handTile == undefined) {
+                handTiles[i] = wm.scribble.tile.createTileWidget(tile).
+                        offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
+                return false;
+            }
+        });
+    };
 
-         handTiles[i] = v;
-         return false;
-         }
-         });
-         */
+    var isHandTile = function(tileNumber) {
+        for (var i = 0, count = handTiles.length; i < count; i++) {
+            var tile = handTiles[i];
+            if (tile != null && tile != undefined && $(tile).data('tile').number == tileNumber) {
+                return true;
+            }
+        }
+        return false;
     };
 
     this.initializeGame = function (gameInfo) {
@@ -307,16 +311,12 @@ wm.scribble.Board = function() {
 
         $(hand).empty();
         $.each(gameInfo.handTiles, function(i, tile) {
-            handTiles[i] = wm.scribble.tile.createTileWidget(tile).
-                    offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
+            addTileToHand(tile);
         });
 
         $(board).empty();
         $.each(gameInfo.boardTiles, function(i, tile) {
-            var w = wm.scribble.tile.createTileWidget(tile).
-                    offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
-            wm.scribble.tile.pinTile(w.get(0));
-            boardTiles[tile.column][tile.row] = w.appendTo(board);
+            addTileToBoard(tile);
         });
 
         players = {};
@@ -417,7 +417,11 @@ wm.scribble.Board = function() {
                             wm.scribble.tile.pinTile(tileWidget);
                         }
                     });
-                    response.data.word = word;
+                    $.each(response.data.handTiles, function(i, tile) {
+                        if (!isHandTile(tile.number)) {
+                            addTileToHand(tile);
+                        }
+                    });
                     scribble.trigger('playerMoved', [response.data]);
                 }
                 wm.ui.showMessage({message: response.summary, error: !response.success});
