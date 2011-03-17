@@ -25,6 +25,7 @@ import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.gameplaying.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class PlayboardController {
 	@RequestMapping("/playboard/move")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse makeTurnAjax(@RequestParam("boardId") long gameId,
-										@RequestBody ScribbleWordEditor word, Locale locale) {
+										@RequestBody ScribbleWordForm word, Locale locale) {
 		final Player currentPlayer = getCurrentPlayer();
 		try {
 			return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
@@ -108,7 +109,7 @@ public class PlayboardController {
 	@RequestMapping("/playboard/exchange")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse exchangeTilesAjax(@RequestParam("boardId") long gameId,
-											 ScribbleWordEditor.TileEditor[] tiles, Locale locale) {
+											 ScribbleWordForm.TileEditor[] tiles, Locale locale) {
 		Player currentPlayer = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's exchange: " + gameId);
@@ -127,8 +128,7 @@ public class PlayboardController {
 	@ResponseBody
 	@RequestMapping("/playboard/resign")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse resignGameAjax(@RequestParam("boardId") long gameId,
-										  Locale locale) {
+	public ServiceResponse resignGameAjax(@RequestParam("boardId") long gameId, Locale locale) {
 		Player currentPlayer = getCurrentPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's resign: " + gameId);
@@ -173,14 +173,33 @@ public class PlayboardController {
 	}
 
 	private Map<String, Object> convertPlayerMove(final ScribbleBoard board, final GameMove move, final Locale locale) {
+		final PlayerMove playerMove = move.getPlayerMove();
+
+		final Map<String, Object> gameInfo = new HashMap<String, Object>();
+		gameInfo.put("state", board.getGameState());
+		gameInfo.put("stateMessage", gameMessageSource.formatGameState(board.getGameState(), locale));
+		gameInfo.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
+		gameInfo.put("remainedTimeMillis", gameMessageSource.getRemainedTimeMillis(board));
+		gameInfo.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));
+
+		final Map<String, Object> moveInfo = new HashMap<String, Object>();
+		moveInfo.put("number", move.getMoveNumber());
+		moveInfo.put("points", move.getPoints());
+		moveInfo.put("player", playerMove.getPlayerId());
+		moveInfo.put("timeMillis", move.getMoveTime().getTime());
+		if (playerMove instanceof PassTurnMove) {
+			moveInfo.put("type", "pass");
+		} else if (playerMove instanceof MakeWordMove) {
+			moveInfo.put("type", "make");
+			moveInfo.put("word", ((MakeWordMove) playerMove).getWord());
+		} else if (playerMove instanceof ExchangeTilesMove) {
+			moveInfo.put("type", "exchange");
+			moveInfo.put("tilesCount", ((ExchangeTilesMove) playerMove).getTilesIds().length);
+		}
+
 		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put("finished", board.getGameState() != GameState.ACTIVE);
-		response.put("stateMessage", gameMessageSource.formatGameState(board.getGameState(), locale));
-		response.put("move", move);
-		response.put("moveType", move.getPlayerMove().getClass().getSimpleName());
-		response.put("moveTimeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
-		response.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));
-		response.put("nextPlayerId", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
+		response.put("game", gameInfo);
+		response.put("move", moveInfo);
 		return response;
 	}
 

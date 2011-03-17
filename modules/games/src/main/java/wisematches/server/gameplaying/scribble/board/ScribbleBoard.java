@@ -682,6 +682,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		return tilesBank.getBankCapacity();
 	}
 
+	public int getBankRemained() {
+		return tilesBank.getTilesLimit();
+	}
+
 	/**
 	 * Returns collection of {@code TilesBank.TilesInfo} that describes using tiles bank.
 	 * <p/>

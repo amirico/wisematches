@@ -24,17 +24,15 @@
 
 <script type="text/javascript">
     board.bind('playerMoved', function(event, gameMove) {
-        var moveType = gameMove.moveType;
-        var playerMove = gameMove.move.playerMove;
-        if (moveType = 'MakeWordMove') {
-            var v = $("#playerInfo" + playerMove.playerId + " .player-points");
+        if (gameMove.move.type = 'make') {
+            var v = $("#playerInfo" + gameMove.move.player + " .player-points");
             v.text(parseInt(v.text()) + gameMove.move.points);
         }
-        $("#playerInfo" + playerMove.playerId).addClass("passive");
-        $("#playerInfo" + playerMove.playerId + " .player-time").text("");
+        $("#playerInfo" + gameMove.move.player).addClass("passive");
+        $("#playerInfo" + gameMove.move.player + " .player-time").text("");
 
-        $("#playerInfo" + gameMove.nextPlayerId).removeClass("passive");
-        $("#playerInfo" + gameMove.nextPlayerId + " .player-time").text(gameMove.remainedTimeMessage);
+        $("#playerInfo" + gameMove.game.playerTurn).removeClass("passive");
+        $("#playerInfo" + gameMove.game.playerTurn + " .player-time").text(gameMove.game.remainedTimeMessage);
     });
 </script>
 </@wm.widget>

@@ -24,6 +24,7 @@ import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.player.computer.ComputerPlayer;
 import wisematches.server.player.computer.robot.RobotPlayer;
+import wisematches.server.web.controllers.gameplaying.form.CreateScribbleForm;
 
 import javax.validation.Valid;
 import java.util.*;

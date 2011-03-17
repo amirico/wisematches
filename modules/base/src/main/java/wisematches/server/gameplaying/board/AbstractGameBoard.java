@@ -143,6 +143,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		return startedDate;
 	}
 
+	public Date getLastMoveTime() {
+		return lastMoveTime;
+	}
+
 	public Date getFinishedTime() {
 		return finishedDate;
 	}
@@ -349,15 +353,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 */
 	public List<GameMove> getGameMoves() {
 		return Collections.unmodifiableList(moves);
-	}
-
-	/**
-	 * Return time of last move in millisecods.
-	 *
-	 * @return the time of last move in milliseconds.
-	 */
-	public Date getLastMoveTime() {
-		return lastMoveTime;
 	}
 
 	/**

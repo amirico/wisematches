@@ -1,6 +1,8 @@
 <#include "/core.ftl">
 <#include "playboardModel.ftl">
 
+<#macro tileToJS tile><#if tile?has_content>{number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }</#if></#macro>
+
 <script type="text/javascript">
     var gameInfo = {
         boardId: ${board.getBoardId()},
@@ -8,6 +10,7 @@
         gameState: '${board.getGameState()}',
         boardViewer: ${player.getId()},
         playerTurn: ${board.getPlayerTurn().getPlayerId()},
+        bankCapacity: ${board.bankCapacity},
         lastMoveTime: ${lastMoveMillis?string.computer},
         <#if board.gameState != "ACTIVE">wonPlayer:${board.getWonPlayer().getPlayerId()},</#if>
         bonuses: [
@@ -15,32 +18,36 @@
             {row: ${bonus.row}, column: ${bonus.column}, type: '${bonus.type.displayName}'}<#if bonus_has_next>,</#if>
         </#list>
         ],
-        boardTiles: [
-        <#assign separatorRequired=false/>
-        <#list 0..14 as i>
-            <#list 0..14 as j>
-                <#assign tile=board.getBoardTile(i, j)!"">
-                <#if tile?has_content>
-                    <#if separatorRequired>,</#if>{number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string}, row: ${i}, column: ${j} }
-                    <#assign separatorRequired=true/>
-                </#if>
-            </#list>
+        players: [
+        <#list board.getPlayersHands() as hand>
+            <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
+            {id: ${hand.getPlayerId()}, points: ${hand.getPoints()}, index: ${hand.getPlayerIndex()}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}'}<#if hand_has_next>,</#if>
         </#list>
         ],
         handTiles:[
         <#assign playerHand=board.getPlayerHand(player.getId())!""/>
         <#if playerHand??>
-            <#list playerHand.tiles as tile>
-                <#if tile?has_content>
-                    {number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }<#if tile_has_next>,</#if>
-                </#if>
-            </#list>
+            <#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>
         </#if>
         ],
-        players: [
-        <#list board.getPlayersHands() as hand>
-            <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
-            {id: ${hand.getPlayerId()}, points: ${hand.getPoints()}, index: ${hand.getPlayerIndex()}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}'}<#if hand_has_next>,</#if>
+        moves: [
+        <#list board.gameMoves as move>
+            <#assign playerMove = move.playerMove/>
+            {number: ${move.moveNumber}, points: ${move.points}, player: ${playerMove.playerId},
+                <#if playerMove.class.simpleName == "MakeWordMove">
+                    <#assign word=playerMove.word/>
+                    type: 'make',
+                    word: {
+                        position: { row: ${word.position.row}, column: ${word.position.column}},
+                        direction: '${word.direction}', text: '${word.text}',
+                        tiles: [ <#list word.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list> ]
+                    }
+                    <#elseif playerMove.class.simpleName == "ExchangeTilesMove">
+                        type: 'exchange'
+                    <#else>
+                        type: 'pass'
+                </#if>
+            }<#if move_has_next>,</#if>
         </#list>
         ]
     };
@@ -48,9 +55,6 @@
     var board = new wm.scribble.Board();
     board.initializeGame(gameInfo);
 </script>
-
-<#--<div id="console" style="height: 100px; width: 100%; border: 1px solid red; overflow:auto; ">-->
-<#--</div>-->
 
 <table id="playboard" cellpadding="5" align="center">
     <tr>
@@ -101,8 +105,14 @@
             $("#clearSelectionButton").button("disable");
         }
     });
+
+    <#if board.getPlayerTurn().getPlayerId() == player.getId()>
+    $("#passTurnButton").button("enable");
+    $("#exchangeTilesButton").button("enable");
     board.bind('wordChanged', function(event, word) {
         $("#makeTurnButton").button(word == null ? "disable" : "enable");
     });
+    </#if>
 </script>
+
 

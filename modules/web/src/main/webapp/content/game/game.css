@@ -165,6 +165,19 @@
     border: 0;
 }
 
+#playboard #movesHistory .moveMade {
+}
+
+#playboard #movesHistory .movePassed {
+    color: gray;
+    font-style: italic;
+}
+
+#playboard #movesHistory .moveExchange {
+    color: gray;
+    font-style: italic;
+}
+
 #playboard #gameInfo td {
     padding-left: 5px;
     white-space: nowrap;
