@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.gameplaying;
+package wisematches.server.web.controllers.gameplaying.form;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;

@@ -62,13 +62,17 @@ public class GameMessageSource {
 		return getRemainedTime(board, Language.byCode(language).locale());
 	}
 
-	public String getRemainedTime(GameBoard board, Locale locale) {
+	public long getRemainedTimeMillis(GameBoard board) {
 		final int daysPerMove = board.getGameSettings().getDaysPerMove();
 		final long elapsedTime = System.currentTimeMillis() - board.getLastMoveTime().getTime();
 
 		final long minutesPerMove = daysPerMove * 24 * 60;
 		final long minutesElapsed = (elapsedTime / 1000 / 60);
-		final long time = minutesPerMove - minutesElapsed;
+		return minutesPerMove - minutesElapsed;
+	}
+
+	public String getRemainedTime(GameBoard board, Locale locale) {
+		final long time = getRemainedTimeMillis(board);
 
 		final int days = (int) (time / 60 / 24);
 		final int hours = (int) ((time - (days * 24 * 60)) / 60);

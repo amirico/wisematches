@@ -131,6 +131,8 @@ wm.scribble.Board = function() {
     var bonuses = $("<div></div>").addClass('bonuses').appendTo($(gameField));
 
     var boardId;
+    var bankCapacity;
+
     var players;
     var handTiles = new Array(7);
     var boardTiles = wm.util.createMatrix(15);
@@ -295,6 +297,7 @@ wm.scribble.Board = function() {
 
     this.initializeGame = function (gameInfo) {
         boardId = gameInfo.boardId;
+        bankCapacity = gameInfo.bankCapacity;
 
         $(bonuses).empty();
         $.each(gameInfo.bonuses, function(i, bonus) {
@@ -315,8 +318,14 @@ wm.scribble.Board = function() {
         });
 
         $(board).empty();
-        $.each(gameInfo.boardTiles, function(i, tile) {
-            addTileToBoard(tile);
+        $.each(gameInfo.moves, function(i, move) {
+            if (move.type == 'make') {
+                $.each(move.word.tiles, function(i, tile) {
+                    tile.row = move.word.position.row + (move.word.direction == 'VERTICAL' ? i : 0 );
+                    tile.column = move.word.position.column + (move.word.direction == 'VERTICAL' ? 0 : i );
+                    addTileToBoard(tile);
+                });
+            }
         });
 
         players = {};
@@ -433,7 +442,32 @@ wm.scribble.Board = function() {
     };
 
     this.passTurn = function() {
-        alert("Not implemented");
+        $.ajax({
+            type: 'post',
+            url: '/game/playboard/pass.ajax?boardId=' + boardId,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    $.each(selectedTileWidgets, function(i, tileWidget) {
+                        if (!wm.scribble.tile.isTilePined(tileWidget)) {
+                            $(tileWidget).unbind('mousedown', onTileDown).click(onTileSelected);
+                            wm.scribble.tile.pinTile(tileWidget);
+                        }
+                    });
+                    $.each(response.data.handTiles, function(i, tile) {
+                        if (!isHandTile(tile.number)) {
+                            addTileToHand(tile);
+                        }
+                    });
+                    scribble.trigger('playerMoved', [response.data]);
+                }
+                wm.ui.showMessage({message: response.summary, error: !response.success});
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus);
+            }
+        });
     };
 
     this.exchangeTiles = function(tiles) {
@@ -482,6 +516,10 @@ wm.scribble.Board = function() {
             }
         }
         scribble.trigger('wordChanged', null);
+    };
+
+    this.getBankCapacity = function() {
+        return bankCapacity;
     };
 
     $(document).mouseup(onTileUp);

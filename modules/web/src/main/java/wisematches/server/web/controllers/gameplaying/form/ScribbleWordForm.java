@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.gameplaying;
+package wisematches.server.web.controllers.gameplaying.form;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import wisematches.server.gameplaying.scribble.Direction;
@@ -12,12 +12,12 @@ import java.util.Arrays;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ScribbleWordEditor {
+public class ScribbleWordForm {
 	private String direction;
 	private PositionEditor position;
 	private TileEditor[] tiles;
 
-	public ScribbleWordEditor() {
+	public ScribbleWordForm() {
 	}
 
 	public Word createWord() {
@@ -56,7 +56,7 @@ public class ScribbleWordEditor {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("ScribbleWordEditor");
+		sb.append("ScribbleWordForm");
 		sb.append("{direction='").append(direction).append('\'');
 		sb.append(", position=").append(position);
 		sb.append(", tiles=").append(tiles == null ? "null" : Arrays.asList(tiles).toString());

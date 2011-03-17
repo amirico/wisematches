@@ -33,7 +33,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	Date getFinishedTime();
 
 	/**
-	 * Return time of last move in millisecods.
+	 * Return time of last move in milliseconds.
 	 *
 	 * @return the time of last move in milliseconds.
 	 */
@@ -44,7 +44,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * <p/>
 	 * Any game can be created as no rated or this flag can be enabled if game was terminated and should not be rated.
 	 *
-	 * @return {@code true} is game should be reated; {@code false} - otherwise.
+	 * @return {@code true} is game should be rated; {@code false} - otherwise.
 	 */
 	boolean isRatedGame();
 
@@ -126,7 +126,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	public void terminate() throws GameMoveException;
 
 	/**
-	 * Closes this game. State changed to iterrupted.
+	 * Closes this game. State changed to interrupted.
 	 *
 	 * @param player the player who closed the game
 	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
