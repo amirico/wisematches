@@ -24,7 +24,7 @@ public class GameMessageSource {
 
 	static {
 		for (Language lang : Language.values()) {
-			FORMAT_MAP.put(lang.locale(), new SimpleDateFormat("MMM dd, yyyy HH:mm", lang.locale()));
+			FORMAT_MAP.put(lang.locale(), new SimpleDateFormat("MMM dd, yyyy HH:mm z", lang.locale()));
 		}
 	}
 

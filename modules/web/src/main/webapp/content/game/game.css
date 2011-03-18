@@ -161,6 +161,11 @@
     white-space: nowrap;
 }
 
+#playboard #movesHistory td {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
 #playboard #movesHistory .ui-state-default {
     border: 0;
 }
@@ -176,6 +181,60 @@
 #playboard #movesHistory .moveExchange {
     color: gray;
     font-style: italic;
+}
+
+#gameProgressAction, #gameProgressFinished {
+    width: 100%;
+}
+
+.game-progress {
+    height: 16px;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    position: relative;
+}
+
+.game-progress div {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.game-progress .game-progress-board {
+    float: left;
+    background-color: #1aa21a;
+    border: 1px solid #137c13;
+    border-right-width: 0;
+}
+
+.game-progress .game-progress-bank {
+    float: left;
+    background-color: #ec7500;
+    border: 1px solid #c46100;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+.game-progress .game-progress-hand {
+    float: left;
+    background-color: #dcd900;
+    border: 1px solid #a19e01;
+    border-left-width: 0;
+}
+
+.game-progress .game-progress-finished {
+    float: left;
+    color: white !important;
+    background-color: #66cc00;
+    border: 1px solid #4b9600;
+}
+
+.game-progress .game-progress-caption {
+    width: 100%;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
 }
 
 #playboard #gameInfo td {
