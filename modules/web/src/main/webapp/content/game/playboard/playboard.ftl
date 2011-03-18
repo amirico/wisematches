@@ -69,13 +69,18 @@
         <@wm.widget id="scribbleBoard" title="<center>${board.gameSettings.title} #${board.boardId}</center>">
             <div id="boardActionsToolbar" style="float: right; padding-top: 3px">
                 <div style="display: inline-block; margin: 0;">
-                    <button id="makeTurnButton" class="icon-make-turn" onclick="board.makeTurn()">Ходить</button>
-                    <button id="clearSelectionButton" class="icon-clear-word" onclick="board.clearSelection()">Сбросить
+                    <button id="makeTurnButton" class="icon-make-turn" onclick="board.makeTurn()">
+                    <@message code="game.play.make"/>
+                    </button>
+                    <button id="clearSelectionButton" class="icon-clear-word" onclick="board.clearSelection()">
+                    <@message code="game.play.clear"/>
                     </button>
                     <button id="exchangeTilesButton" class="icon-exchange-tiles" onclick="board.exchangeTiles()">
-                        Обменять
+                    <@message code="game.play.exchange"/>
                     </button>
-                    <button id="passTurnButton" class="icon-pass-turn" onclick="board.passTurn()">Пропустить</button>
+                    <button id="passTurnButton" class="icon-pass-turn" onclick="board.passTurn()">
+                    <@message code="game.play.pass"/>
+                    </button>
                 </div>
             </div>
         </@wm.widget>

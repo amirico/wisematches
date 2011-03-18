@@ -131,6 +131,8 @@ wm.scribble.Board = function() {
     var bonuses = $("<div></div>").addClass('bonuses').appendTo($(gameField));
 
     var boardId;
+    var playerTurn;
+    var boardViewer;
     var bankCapacity;
 
     var players = new Array();
@@ -144,9 +146,9 @@ wm.scribble.Board = function() {
 
     var onTileSelected = function() {
         if (wm.scribble.tile.isTileSelected(this)) {
-            tileStateChanged(this, false, true);
+            changeTileSelection(this, false, true);
         } else {
-            tileStateChanged(this, true, true);
+            changeTileSelection(this, true, true);
         }
     };
 
@@ -206,10 +208,10 @@ wm.scribble.Board = function() {
                 tile.row = relatedCell.y;
                 tile.column = relatedCell.x;
                 boardTiles[relatedCell.x][relatedCell.y] = draggingTile;
-                tileStateChanged(draggingTile.get(0), true, true);
+                changeTileSelection(draggingTile.get(0), true, true);
             } else if (relatedCell.container == hand) {
                 handTiles[relatedCell.x] = draggingTile;
-                tileStateChanged(draggingTile.get(0), false, true);
+                changeTileSelection(draggingTile.get(0), false, true);
             }
         }
 
@@ -241,7 +243,7 @@ wm.scribble.Board = function() {
         return null;
     };
 
-    var tileStateChanged = function(tileWidget, select, notifyWord) {
+    var changeTileSelection = function(tileWidget, select, notifyWord) {
         var tile = $(tileWidget).data('tile');
         if (wm.scribble.tile.isTileSelected(tileWidget) != select) {
             if (select) {
@@ -295,9 +297,46 @@ wm.scribble.Board = function() {
         return false;
     };
 
+    var makeMove = function(type, move) {
+        var cfg = {
+            type: 'post',
+            url: '/game/playboard/' + type + '.ajax?boardId=' + boardId,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    $.each(selectedTileWidgets, function(i, tileWidget) {
+                        if (!wm.scribble.tile.isTilePined(tileWidget)) {
+                            $(tileWidget).unbind('mousedown', onTileDown).click(onTileSelected);
+                            wm.scribble.tile.pinTile(tileWidget);
+                        }
+                    });
+                    $.each(response.data.handTiles, function(i, tile) {
+                        if (!isHandTile(tile.number)) {
+                            addTileToHand(tile);
+                        }
+                    });
+                    scribble.trigger('playerMoved', [response.data]);
+                    wm.ui.showGrowl('Mave accepted', 'You move has been accepted', 3000);
+                } else {
+                    wm.ui.showMessage({message: response.summary, error: true});
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                wm.ui.showMessage({message: textStatus, error: true});
+            }
+        };
+        if (move != null && move != undefined) {
+            cfg.data = $.toJSON(move);
+        }
+        $.ajax(cfg);
+    };
+
     this.initializeGame = function (gameInfo) {
         boardId = gameInfo.boardId;
         bankCapacity = gameInfo.bankCapacity;
+        playerTurn = gameInfo.playerTurn;
+        boardViewer = gameInfo.boardViewer;
 
         $(bonuses).empty();
         $.each(gameInfo.bonuses, function(i, bonus) {
@@ -357,7 +396,6 @@ wm.scribble.Board = function() {
 
     this.getSelectedTiles = function() {
         var tiles = new Array(selectedTileWidgets.length);
-        // get tiles
         $.each(selectedTileWidgets, function(i, v) {
             tiles[i] = $(v).data('tile');
         });
@@ -406,72 +444,23 @@ wm.scribble.Board = function() {
     };
 
     this.makeTurn = function() {
-        var word = this.getSelectedWord();
-        if (word == null) {
-            wm.ui.showMessage({message: "No word selected", error: true});
-            return false;
-        }
-
-        $.ajax({
-            type: 'post',
-            url: '/game/playboard/move.ajax?boardId=' + boardId,
-            dataType: 'json',
-            data: $.toJSON(word),
-            contentType: 'application/json',
-            success: function(response) {
-                if (response.success) {
-                    $.each(selectedTileWidgets, function(i, tileWidget) {
-                        if (!wm.scribble.tile.isTilePined(tileWidget)) {
-                            $(tileWidget).unbind('mousedown', onTileDown).click(onTileSelected);
-                            wm.scribble.tile.pinTile(tileWidget);
-                        }
-                    });
-                    $.each(response.data.handTiles, function(i, tile) {
-                        if (!isHandTile(tile.number)) {
-                            addTileToHand(tile);
-                        }
-                    });
-                    scribble.trigger('playerMoved', [response.data]);
-                }
-                wm.ui.showMessage({message: response.summary, error: !response.success});
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert(textStatus);
-            }
-        });
+        makeMove('move', this.getSelectedWord());
     };
 
     this.passTurn = function() {
-        $.ajax({
-            type: 'post',
-            url: '/game/playboard/pass.ajax?boardId=' + boardId,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function(response) {
-                if (response.success) {
-                    $.each(selectedTileWidgets, function(i, tileWidget) {
-                        if (!wm.scribble.tile.isTilePined(tileWidget)) {
-                            $(tileWidget).unbind('mousedown', onTileDown).click(onTileSelected);
-                            wm.scribble.tile.pinTile(tileWidget);
-                        }
-                    });
-                    $.each(response.data.handTiles, function(i, tile) {
-                        if (!isHandTile(tile.number)) {
-                            addTileToHand(tile);
-                        }
-                    });
-                    scribble.trigger('playerMoved', [response.data]);
-                }
-                wm.ui.showMessage({message: response.summary, error: !response.success});
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert(textStatus);
-            }
-        });
+        makeMove('pass', null);
     };
 
     this.exchangeTiles = function(tiles) {
-        alert("Not implemented");
+        var a = new Array(tiles);
+        $.each(tiles, function(i, v) {
+            a[i] = v.number;
+        });
+        makeMove('exchange', a);
+    };
+
+    this.resign = function() {
+        makeMove('resign', null);
     };
 
     this.selectWord = function(word) {
@@ -492,7 +481,7 @@ wm.scribble.Board = function() {
             columnK = 1;
         }
         for (var i = 0, count = word.length; i < count; i++) {
-            tileStateChanged(boardTiles[column + i * columnK][row + i * rowK].get(0), true, false);
+            changeTileSelection(boardTiles[column + i * columnK][row + i * rowK].get(0), true, false);
         }
         scribble.trigger('wordChanged', [playboard.getSelectedWord()]);
     };
@@ -509,10 +498,10 @@ wm.scribble.Board = function() {
                     }
                 });
                 var tile = $(widget).data('tile');
-                tileStateChanged(widget, false, false);
+                changeTileSelection(widget, false, false);
                 boardTiles[tile.column][tile.row] = null;
             } else {
-                tileStateChanged(widget, false, false);
+                changeTileSelection(widget, false, false);
             }
         }
         scribble.trigger('wordChanged', null);
@@ -549,6 +538,10 @@ wm.scribble.Board = function() {
     this.getBankTilesCount = function() {
         var v = playboard.getBankCapacity() - playboard.getBoardTilesCount() - playboard.getHandTilesCount();
         return v < 0 ? 0 : v;
+    };
+
+    this.isEnabled = function() {
+        return boardViewer == playerTurn;
     };
 
     $(document).mouseup(onTileUp);
