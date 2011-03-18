@@ -50,21 +50,15 @@
             </tr>
     </#if>
 </table>
-
 </@wm.widget>
 
+<#if active>
 <script type="text/javascript">
     wm.scribble.state = new function() {
         this.updateProgressBar = function() {
             var count = board.getBankCapacity();
-            var bo = board.getBoardTilesCount();
-            var ha = board.getHandTilesCount();
-            var ba = board.getBankTilesCount();
-
-            var p3 = Math.round(100 * ha / count);
-            var p2 = Math.round(100 * ba / count);
-            var p1 = 100 - p3 - p2;
-
+            var bo = board.getBoardTilesCount(), ha = board.getHandTilesCount(), ba = board.getBankTilesCount();
+            var p3 = Math.round(100 * ha / count), p2 = Math.round(100 * ba / count), p1 = 100 - p3 - p2;
             $("#gameProgressAction .game-progress-board").css('width', p1 + '%');
             $("#gameProgressAction .game-progress-bank").css('width', p2 + '%');
             $("#gameProgressAction .game-progress-hand").css('width', p3 + '%');
@@ -88,3 +82,4 @@
         }
     });
 </script>
+</#if>
