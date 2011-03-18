@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.dictionary.Dictionary;
+import wisematches.server.gameplaying.dictionary.DictionaryManager;
+import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
@@ -40,6 +43,7 @@ import java.util.Map;
 public class PlayboardController {
 	private PlayerManager playerManager;
 	private GameMessageSource gameMessageSource;
+	private DictionaryManager dictionaryManager;
 	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
@@ -49,6 +53,8 @@ public class PlayboardController {
 
 	@RequestMapping("/playboard")
 	public String showPlayboard(@RequestParam("boardId") long gameId, Model model, Locale locale) {
+		final Player player = getCurrentPlayer();
+
 		try {
 			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
 			model.addAttribute("board", board);
@@ -69,15 +75,29 @@ public class PlayboardController {
 				}
 			}
 
+			model.addAttribute("viewMode", board.getGameState() != GameState.ACTIVE || player == null || board.getPlayerHand(player.getId()) == null);
 			model.addAttribute("tilesBankInfo", r);
+
 			model.addAttribute("player", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-			model.addAttribute("lastMoveMillis", board.getLastMoveTime().getTime());
-			model.addAttribute("currentTimeMillis", System.currentTimeMillis());
 			model.addAttribute("playerManager", playerManager);
 		} catch (BoardLoadingException ex) {
 			ex.printStackTrace();
 		}
 		return "/content/game/playboard/playboard";
+	}
+
+	@ResponseBody
+	@RequestMapping("/playboard/check")
+	public ServiceResponse makeTurnAjax(@RequestParam("word") String word, @RequestParam("lang") String lang) {
+		try {
+			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(lang));
+			if (dictionary.getWord(word) == null) {
+				return ServiceResponse.failure();
+			}
+			return ServiceResponse.success();
+		} catch (DictionaryNotFoundException e) {
+			return ServiceResponse.failure();
+		}
 	}
 
 	@ResponseBody
@@ -211,6 +231,11 @@ public class PlayboardController {
 	@Autowired
 	public void setPlayerManager(@Qualifier("playerManager") PlayerManager playerManager) {
 		this.playerManager = playerManager;
+	}
+
+	@Autowired
+	public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
+		this.dictionaryManager = dictionaryManager;
 	}
 
 	@Autowired

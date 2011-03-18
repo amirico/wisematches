@@ -327,7 +327,7 @@ div.space-line {
     z-index: 1;
 }
 
-.freeow-type-checkmark .icon {
+.freeow-type-correct .icon {
     width: 48px;
     height: 48px;
     background-image: url('/resources/images/status/correct.png');

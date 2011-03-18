@@ -53,27 +53,79 @@ wm.scribble.tile = new function() {
     };
 };
 
-wm.scribble.ScoreEngine = function() {
+wm.scribble.ScoreEngine = function(board) {
     var emptyHandBonus = 33;
 
     var bonuses = wm.util.createMatrix(15);
 
-    this.BonusType = { DL: {name: '2l'}, TL: {name: '3l'}, DW: {name: '2w'}, TW: {name: '3w'} };
-
-    this.init = function() {
-        var bonuses = document.getElementById('container').getElementsByTagName('bonuses');
-        for (var i = 0; i < bonuses.length; i++) {
-            var bonus = bonuses[i];
-            var x = bonus.offsetLeft / 22;
-            var y = bonus.offsetTop / 22;
-
-            bonuses[x][y] = this.BonusType[bonus.className.match(/bonus-cell-([0-9][a-z])/i)[1]];
-        }
+    this.initializeEngine = function(gameInfo) {
+        $.each(gameInfo.bonuses, function(i, bonus) {
+            bonuses[bonus.column][bonus.row] = bonus.type;
+            bonuses[bonus.column][14 - bonus.row] = bonus.type;
+            bonuses[14 - bonus.column][bonus.row] = bonus.type;
+            bonuses[14 - bonus.column][14 - bonus.row] = bonus.type;
+        });
     };
 
     this.getCellBonus = function(row, col) {
         return bonuses[row][col];
-    }
+    };
+
+    this.getWordBonus = function(word) {
+        var points = 0;
+        var pointsRaw = 0;
+        var pointsMult = 1;
+
+        var formula = '';
+        var formulaRaw = '';
+        var formulaMult = '';
+
+        $.each(word.tiles, function(i, tile) {
+            var row = word.position.row + (word.direction == 'VERTICAL' ? i : 0 );
+            var column = word.position.column + (word.direction == 'VERTICAL' ? 0 : i );
+            var bonus = bonuses[column][row];
+            if ((bonus == null || bonus == undefined) || board.isBoardTile(column, row)) {
+                bonus = 1;
+            } else {
+                switch (bonus) {
+                    case '2l':
+                        bonus = 2;
+                        break;
+                    case '3l':
+                        bonus = 3;
+                        break;
+                    case '2w':
+                        bonus = 1;
+                        pointsMult *= 2;
+                        formulaMult += '*2';
+                        break;
+                    case '3w':
+                        bonus = 1;
+                        pointsMult *= 3;
+                        formulaMult += '*3';
+                        break;
+                }
+            }
+            pointsRaw += tile.cost * bonus;
+            if (formulaRaw.length != 0) {
+                formulaRaw += '+';
+            }
+            formulaRaw += tile.cost;
+            if (bonus != 1) {
+                formulaRaw += '*' + bonus;
+            }
+        });
+
+        if (formulaMult.length != 0) {
+            formula = '(' + formulaRaw + ')' + formulaMult;
+        } else {
+            formula = formulaRaw;
+        }
+        points = pointsRaw * pointsMult;
+        formula += '=' + points;
+
+        return {points: points, formula: formula};
+    };
 };
 
 wm.scribble.Highlighting = function(gameField) {
@@ -142,6 +194,7 @@ wm.scribble.Board = function() {
     var draggingTile = null;
     var selectedTileWidgets = [];
 
+    var scoreEngine = new wm.scribble.ScoreEngine(this);
     var highlighting = new wm.scribble.Highlighting(gameField);
 
     var onTileSelected = function() {
@@ -305,6 +358,8 @@ wm.scribble.Board = function() {
             contentType: 'application/json',
             success: function(response) {
                 if (response.success) {
+                    var gameMove = response.data;
+                    playerTurn = gameMove.game.playerTurn;
                     $.each(selectedTileWidgets, function(i, tileWidget) {
                         if (!wm.scribble.tile.isTilePined(tileWidget)) {
                             $(tileWidget).unbind('mousedown', onTileDown).click(onTileSelected);
@@ -317,7 +372,7 @@ wm.scribble.Board = function() {
                         }
                     });
                     scribble.trigger('playerMoved', [response.data]);
-                    wm.ui.showGrowl('Mave accepted', 'You move has been accepted', 3000);
+                    wm.ui.showGrowl('Your move accepted', response.summary, 'correct', 2000);
                 } else {
                     wm.ui.showMessage({message: response.summary, error: true});
                 }
@@ -338,7 +393,15 @@ wm.scribble.Board = function() {
         playerTurn = gameInfo.playerTurn;
         boardViewer = gameInfo.boardViewer;
 
+        scoreEngine.initializeEngine(gameInfo);
         $(bonuses).empty();
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                var bonus = scoreEngine.getCellBonus(i, j);
+                $("<div></div>").addClass('cell').addClass('bonus-cell-' + bonus).offset({left: j * 22, top: i * 22}).appendTo(bonuses);
+            }
+        }
+
         $.each(gameInfo.bonuses, function(i, bonus) {
             var b = $("<div></div>").addClass('cell').addClass('bonus-cell-' + bonus.type);
             if (bonus.column != 7 && bonus.row != 7) {
@@ -391,7 +454,12 @@ wm.scribble.Board = function() {
     };
 
     this.getScoreEngine = function() {
-        return null;
+        return scoreEngine;
+    };
+
+    this.isBoardTile = function(row, column) {
+        var tile = boardTiles[row][column];
+        return tile != null && wm.scribble.tile.isTilePined(tile);
     };
 
     this.getSelectedTiles = function() {
@@ -540,7 +608,7 @@ wm.scribble.Board = function() {
         return v < 0 ? 0 : v;
     };
 
-    this.isEnabled = function() {
+    this.isPlayerActive = function() {
         return boardViewer == playerTurn;
     };
 
