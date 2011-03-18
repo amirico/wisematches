@@ -144,4 +144,3 @@ wm.ui = new function() {
         $.blockUI(v);
     };
 };
-

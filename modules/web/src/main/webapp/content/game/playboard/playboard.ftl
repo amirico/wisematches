@@ -59,7 +59,7 @@
 <table id="playboard" cellpadding="5" align="center">
     <tr>
         <td style="vertical-align: top; width: 250px">
-        <#include "widget/state.ftl"/>
+        <#include "widget/progress.ftl"/>
         <#include "widget/legend.ftl"/>
             <div style="height: 10px"></div>
         <#include "widget/history.ftl"/>
@@ -85,8 +85,8 @@
         <#include "widget/players.ftl"/>
             <div style="height: 10px"></div>
         <#include "widget/selection.ftl"/>
-            <div style="height: 10px"></div>
-        <#include "widget/memory.ftl"/>
+        <#--<div style="height: 10px"></div>-->
+        <#--<#include "widget/memory.ftl"/>-->
         </td>
     </tr>
 </table>

@@ -133,7 +133,7 @@ wm.scribble.Board = function() {
     var boardId;
     var bankCapacity;
 
-    var players;
+    var players = new Array();
     var handTiles = new Array(7);
     var boardTiles = wm.util.createMatrix(15);
 
@@ -328,9 +328,9 @@ wm.scribble.Board = function() {
             }
         });
 
-        players = {};
+        players = new Array(gameInfo.players.length);
         $.each(gameInfo.players, function(i, player) {
-            players[player.id] = player;
+            players['player' + player.id] = player;
         });
         return playboard.getBoardElement();
     };
@@ -348,7 +348,7 @@ wm.scribble.Board = function() {
     };
 
     this.getPlayerInfo = function(playerId) {
-        return players[playerId];
+        return players['player' + playerId];
     };
 
     this.getScoreEngine = function() {
@@ -520,6 +520,35 @@ wm.scribble.Board = function() {
 
     this.getBankCapacity = function() {
         return bankCapacity;
+    };
+
+    this.getBoardTilesCount = function() {
+        var count = 0;
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                if (boardTiles[i][j] != null && boardTiles[i][j] != undefined) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    };
+
+    this.getHandTilesCount = function() {
+        var bankCapacity = playboard.getBankCapacity();
+        var boardTiles = playboard.getBoardTilesCount();
+        var handTiles = 7 * players.length;
+
+        var cof = bankCapacity - boardTiles - handTiles;
+        if (cof < 0) {
+            handTiles += cof;
+        }
+        return handTiles;
+    };
+
+    this.getBankTilesCount = function() {
+        var v = playboard.getBankCapacity() - playboard.getBoardTilesCount() - playboard.getHandTilesCount();
+        return v < 0 ? 0 : v;
     };
 
     $(document).mouseup(onTileUp);

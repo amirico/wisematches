@@ -187,6 +187,7 @@ public class PlayboardController {
 		moveInfo.put("points", move.getPoints());
 		moveInfo.put("player", playerMove.getPlayerId());
 		moveInfo.put("timeMillis", move.getMoveTime().getTime());
+		moveInfo.put("timeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
 		if (playerMove instanceof PassTurnMove) {
 			moveInfo.put("type", "pass");
 		} else if (playerMove instanceof MakeWordMove) {
