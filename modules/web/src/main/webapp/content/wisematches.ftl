@@ -13,6 +13,7 @@
     <script type="text/javascript" src="/jquery/json.min.js"></script>
     <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/jquery/jquery.blockUI.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.freeow.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/table_col_reorder.css"/>
@@ -32,6 +33,7 @@
     <script type="text/javascript" src="/content/game/playboard/playboard.js"></script>
 </head>
 <body>
+<div id="freeow" class="freeow freeow-top-right"></div>
 <@security.authorize ifAllGranted="user">
     <#include "game/header.ftl"/>
 </@security.authorize>

@@ -138,9 +138,16 @@ wm.ui = new function() {
     this.showMessage = function(opts) {
         var v = $.extend(opts || {}, {
             message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
-            blockMsgClass: 'ui-widget-content ui-corner-all' + (opts.error ? ' ui-state-error' : ''),
+            blockMsgClass: 'ui-corner-all' + (opts.error ? ' ui-state-error' : 'ui-state-default'),
             draggable: false
         });
         $.blockUI(v);
     };
+
+    this.showGrowl = function(title, message, type, timeout) {
+        $("#freeow").freeow(title, message, {
+            classes: [ type == 'error' ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "freeow-type-" + type],
+            showStyle: {opacity: .95}
+        });
+    }
 };
