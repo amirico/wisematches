@@ -138,7 +138,6 @@
 #playboard #scribbleBoard {
     padding-left: 10px;
     padding-right: 10px;
-    padding-bottom: 15px;
 }
 
 #playboard tr.odd td, #playboard tr.even td {
@@ -256,12 +255,20 @@
     background-image: url('/resources/images/scribble/playboard/clearWord.png') !important;
 }
 
+.icon-check-word {
+    background-image: url('/resources/images/scribble/playboard/checkWord.png') !important;
+}
+
 .icon-exchange-tiles {
     background-image: url('/resources/images/scribble/playboard/exchangeTiles.png') !important;
 }
 
 .icon-pass-turn {
     background-image: url('/resources/images/scribble/playboard/passTurn.png') !important;
+}
+
+.icon-resign-game {
+    background-image: url('/resources/images/scribble/playboard/resignGame.png') !important;
 }
 
 .icon-memory-add {

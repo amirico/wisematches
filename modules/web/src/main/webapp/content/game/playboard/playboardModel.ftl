@@ -1,5 +1,4 @@
 <#-- @ftlvariable name="tilesBankInfo" type="char[][]" -->
-<#-- @ftlvariable name="lastMoveMillis" type="java.lang.Number" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 
 <#macro tilePlain number cost letter i j>

@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
 
@@ -7,7 +8,7 @@
         <td height="22" valign="bottom"><b>Tiles:</b></td>
         <td height="22" valign="bottom" style="padding-left: 5px">
             <div id="selectedTilesInfo" style="position: relative; height: 22px;">
-                <span class="sample">no tiles selected</span>
+                no tiles selected
             </div>
         </td>
     </tr>
@@ -15,7 +16,7 @@
         <td height="22" valign="bottom"><b>Word:</b></td>
         <td height="22" valign="bottom" style="padding-left: 5px">
             <div id="selectedWordInfo" style="position: relative; height: 22px;">
-                <span class="sample">no tiles selected</span>
+                no word selected
             </div>
         </td>
     </tr>
@@ -23,51 +24,67 @@
         <td height="22" valign="bottom"><b>Points:</b></td>
         <td height="22" valign="bottom">
             <div id="selectedWordCost" style="position: relative; padding-left: 5px">
-                (1x<b>2</b> + 2 + 7 + 9)x<b>2</b>=12
+                no word selected
             </div>
         </td>
     </tr>
 </table>
 </@wm.widget>
+<div id="selectionActionsToolbar" class="ui-widget-content ui-corner-bottom" style="border-top: 0" align="right">
+    <div style="margin: 0;">
+        <button id="clearSelectionButton" class="icon-clear-word" onclick="board.clearSelection()">
+            Сбросить
+        </button>
+        <button id="checkWordButton" class="icon-check-word">
+            Проверить
+        </button>
+    </div>
+</div>
 
 <script type="text/javascript">
-    function updateMoveInfo(event, tile, tiles, word) {
-        var sti = $("#selectedTilesInfo");
-        if (tiles.length == 0) {
-            sti.empty();
-            sti.text('no tiles selected');
-        } else {
-            if (tiles.length == 1) {
-                sti.empty();
-            }
-            if (sti.children("#selectedTile" + tile.number).length == 0) {
-                var newTile = createTileWidget(tile);
-                newTile.attr('id', 'selectedTile' + tile.number);
-                newTile.offset({left: ((tiles.length - 1) * 22), top: 0});
-                newTile.appendTo(sti);
-            }
-        }
-
-    }
+    $("#selectionActionsToolbar div").buttonset();
+    $("#selectionActionsToolbar button").button("disable");
 
     board.bind("wordChanged", function(event, word) {
         var swi = $("#selectedWordInfo").empty();
+        var swc = $("#selectedWordCost").empty();
         if (word != null) {
+            swc.text(board.getScoreEngine().getWordBonus(word).formula);
             $.each(word.tiles, function(i, t) {
                 wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(swi);
             });
+            $("#checkWordButton").button('enable');
         } else {
             swi.text('no word selected');
+            swc.text('no word selected');
+            $("#checkWordButton").button('disable').removeClass("ui-state-hover");
         }
     });
 
     board.bind("tileSelected", function(event, tile) {
-        print("Tile selected: " + new String(tile));
+        var length = $("#selectedTilesInfo div").length;
+        if (length == 0) {
+            $("#selectedTilesInfo").empty();
+            $("#clearSelectionButton").button('enable');
+        }
+        wm.scribble.tile.createTileWidget(tile).offset({left: (length * 22), top: 0}).appendTo('#selectedTilesInfo');
     });
+
     board.bind("tileDeselected", function(event, tile) {
-        print("Tile deselected: " + new String(tile));
-    });
-    board.bind("tileMoved", function(event, tile) {
-        print("Tile moved: " + new String(tile));
+        var tiles = $("#selectedTilesInfo div");
+        var updateOffset = false;
+        $.each(tiles, function(i, tileWidget) {
+            var v = $(tileWidget);
+            if (v.data('tile').number == tile.number) {
+                updateOffset = true;
+                v.remove();
+            } else if (updateOffset) {
+                v.css('left', (i - 1) * 22);
+            }
+        });
+        if (tiles.length == 1) {
+            $("#selectedTilesInfo").text('no tiles selected');
+            $("#clearSelectionButton").button('disable').removeClass("ui-state-hover");
+        }
     });
 </script>
