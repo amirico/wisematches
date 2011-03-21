@@ -39,8 +39,8 @@
 
 <#macro widget title id="" class="" style="">
 <div class="ui-widget" <#if style??>style="${style}"</#if>>
-    <div class="ui-widget-header ui-corner-top"><@message code=title/></div>
-    <div <#if id??>id="${id}"</#if> class="ui-widget-content">
+    <div class="ui-widget-header ui-corner-all"><@message code=title/></div>
+    <div <#if id??>id="${id}"</#if> class="ui-widget-content ui-corner-all">
         <#nested/>
     </div>
 </div>

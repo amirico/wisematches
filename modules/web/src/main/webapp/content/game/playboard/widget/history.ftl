@@ -45,7 +45,7 @@
         };
     };
 
-    $.each(gameInfo.moves, function(i, move) {
+    $.each(scribbleBoard.moves, function(i, move) {
         wm.scribble.history.addMoveToHistory(move)
     });
     board.bind('playerMoved', function(event, gameMove) {

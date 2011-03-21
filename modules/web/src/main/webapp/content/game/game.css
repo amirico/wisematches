@@ -247,6 +247,18 @@
     background-position: 5px center;
 }
 
+#checkWordStatus {
+    padding-left: 20px;
+}
+
+#checkWordStatus.wordValid {
+    color: green !important;
+}
+
+#checkWordStatus.wordInvalid {
+    color: red !important;
+}
+
 .icon-make-turn {
     background-image: url('/resources/images/scribble/playboard/makeTurn.png') !important;
 }
@@ -285,4 +297,16 @@
 
 .icon-memory-clear {
     background-image: url('/resources/images/scribble/playboard/memoryClear.png') !important;
+}
+
+.icon-wait {
+    background: url("/resources/images/wait.gif") no-repeat left center !important;
+}
+
+.icon-word-valid {
+    background: url("/resources/images/status/accept.png") no-repeat left center !important;
+}
+
+.icon-word-invalid {
+    background: url("/resources/images/status/decline.png") no-repeat left center !important;
 }
