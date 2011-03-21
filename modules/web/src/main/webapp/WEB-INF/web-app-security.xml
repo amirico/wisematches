@@ -90,6 +90,12 @@
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException"
                         value="/account/loginAuth.html?error=insufficient"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.rememberme.CookieTheftException"
+                        value="/account/loginAuth.html?error=insufficient"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.rememberme.InvalidCookieException"
+                        value="/account/loginAuth.html?error=insufficient"/>
             </beans:map>
         </beans:property>
     </beans:bean>
