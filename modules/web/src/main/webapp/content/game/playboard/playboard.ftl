@@ -59,8 +59,6 @@
     board.initializeGame(scribbleBoard);
 </script>
 
-<div id="asdqwesq" style="display: none;">qweqwrwe</div>
-
 <table id="playboard" cellpadding="5" align="center">
     <tr>
         <td style="vertical-align: top; width: 250px">
@@ -141,5 +139,6 @@
             $("#clearSelectionButton").button('disable').removeClass("ui-state-hover");
         }
     });
+    board.monitorUpdates();
     </#if>
 </script>

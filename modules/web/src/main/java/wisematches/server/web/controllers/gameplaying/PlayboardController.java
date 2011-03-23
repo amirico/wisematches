@@ -31,9 +31,7 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -97,6 +95,36 @@ public class PlayboardController {
 			return ServiceResponse.success();
 		} catch (DictionaryNotFoundException e) {
 			return ServiceResponse.failure();
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping("/playboard/changes")
+	public ServiceResponse makeTurnAjax(@RequestParam("bid") long gameId, @RequestParam("mvs") int movesCount, Locale locale) {
+		if (log.isDebugEnabled()) {
+			log.debug("Load board changed for: " + gameId + "@" + movesCount);
+		}
+		try {
+			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+
+			List<GameMove> gameMoves = board.getGameMoves();
+			int count = gameMoves.size() - movesCount;
+			if (count <= 0) {
+				return ServiceResponse.success(null, "moves", Collections.<Object>emptyList());
+			}
+
+			final List<GameMove> gameMoves1 = gameMoves.subList(movesCount, gameMoves.size());
+			final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
+			for (GameMove gameMove : gameMoves1) {
+				moves.add(convertPlayerMove(board, gameMove, locale));
+			}
+			return ServiceResponse.success(null, "moves", moves);
+		} catch (BoardLoadingException e) {
+			log.info("Board " + gameId + " can't be loaded", e);
+			return ServiceResponse.failure(e.getMessage());
+		} catch (Exception e) {
+			log.error("Strange move exception", e);
+			return ServiceResponse.failure(e.getMessage());
 		}
 	}
 

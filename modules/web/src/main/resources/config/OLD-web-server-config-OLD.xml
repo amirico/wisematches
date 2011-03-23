@@ -50,11 +50,6 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="playerImagesManager"
-          class="wisematches.server.deprecated.web.modules.app.images.impl.FilePlayerImagesManager">
-        <property name="imagesFolder" value="${server.images.path}/players"/>
-    </bean>
-
     <bean id="gameboardEventProducer"
           class="wisematches.server.deprecated.web.modules.app.events.producers.GameBoardEventProducer">
         <property name="playerManager" ref="playerManager"/>

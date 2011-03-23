@@ -1,4 +1,4 @@
-package wisematches.server.deprecated.web.modules.app.images;
+package wisematches.server.web.services.images;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

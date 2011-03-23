@@ -1,4 +1,4 @@
-package wisematches.server.deprecated.web.modules.app.images;
+package wisematches.server.web.services.images;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;

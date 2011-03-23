@@ -1,12 +1,12 @@
-package wisematches.server.deprecated.web.modules.app.images.impl;
+package wisematches.server.web.services.images.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
-import wisematches.server.deprecated.web.modules.app.images.PlayerImageType;
-import wisematches.server.deprecated.web.modules.app.images.PlayerImagesListener;
-import wisematches.server.deprecated.web.modules.app.images.PlayerImagesManager;
-import wisematches.server.deprecated.web.modules.app.images.UnsupportedImageException;
+import wisematches.server.web.services.images.PlayerImageType;
+import wisematches.server.web.services.images.PlayerImagesListener;
+import wisematches.server.web.services.images.PlayerImagesManager;
+import wisematches.server.web.services.images.UnsupportedImageException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;

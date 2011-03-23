@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/table_col_reorder.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/table_cov_vis.css"/>
-    <script type="text/javascript" src="/jquery/jquery-table.min.js"></script>
-    <script type="text/javascript" src="/jquery/jquery-table_col_vis.min.js"></script>
-    <script type="text/javascript" src="/jquery/jquery-table_col_reorder.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.table.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.table_col_vis.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.table_col_reorder.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.timers.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/i18n/${locale}.js"></script>

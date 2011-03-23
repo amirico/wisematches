@@ -183,6 +183,7 @@ wm.scribble.Board = function() {
     var bonuses = $("<div></div>").addClass('bonuses').appendTo($(gameField));
 
     var boardId;
+    var movesCount;
     var playerTurn;
     var boardViewer;
     var bankCapacity;
@@ -358,6 +359,7 @@ wm.scribble.Board = function() {
             contentType: 'application/json',
             success: function(response) {
                 if (response.success) {
+                    movesCount++;
                     var gameMove = response.data;
                     playerTurn = gameMove.game.playerTurn;
                     $.each(selectedTileWidgets, function(i, tileWidget) {
@@ -392,6 +394,7 @@ wm.scribble.Board = function() {
         bankCapacity = gameInfo.bankCapacity;
         playerTurn = gameInfo.playerTurn;
         boardViewer = gameInfo.boardViewer;
+        movesCount = gameInfo.moves.length;
 
         scoreEngine.initializeEngine(gameInfo);
         $(bonuses).empty();
@@ -435,6 +438,43 @@ wm.scribble.Board = function() {
             players['player' + player.id] = player;
         });
         return playboard.getBoardElement();
+    };
+
+    this.monitorUpdates = function() {
+        $(scribble).everyTime(10000, 'board' + boardId + 'Monitoring', function() {
+            var cfg = {
+                type: 'post',
+                url: '/game/playboard/changes.ajax?bid=' + boardId + '&mvs=' + movesCount,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.success) {
+                        var loadedMovesCount = response.data.moves.length;
+                        if (loadedMovesCount > 0) {
+                            playboard.clearSelection();
+                            movesCount += loadedMovesCount;
+                            $.each(response.data.moves, function(i, gameMove) {
+                                if (gameMove.move.type == 'make') {
+                                    $.each(gameMove.move.word.tiles, function(i, tile) {
+                                        tile.row = gameMove.move.word.position.row + (gameMove.move.word.direction == 'VERTICAL' ? i : 0 );
+                                        tile.column = gameMove.move.word.position.column + (gameMove.move.word.direction == 'VERTICAL' ? 0 : i );
+                                        addTileToBoard(tile);
+                                    });
+                                }
+                                scribble.trigger('playerMoved', [gameMove]);
+                            });
+                            wm.ui.showGrowl('Board State Updated', 'Opponent\'s has moved', 'correct', 2000);
+                        }
+                    } else {
+                        wm.ui.showMessage({message: response.summary, error: true});
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    wm.ui.showMessage({message: textStatus, error: true});
+                }
+            };
+            $.ajax(cfg);
+        });
     };
 
     this.getBoardElement = function() {
