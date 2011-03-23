@@ -53,14 +53,14 @@
             }
             $("#checkWordButton").button('disable').removeClass("ui-state-hover");
             $("#checkWordStatus").addClass('icon-wait').removeClass('icon-word-valid icon-word-invalid wordValid wordInvalid').text('<@message code="game.selection.checking"/>');
-            $.post('/game/playboard/check.ajax', {word: word.text, lang: '${board.dictionary.locale}'},
-                    function(response) {
-                        if (response.success) {
-                            $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-valid wordValid").text('<@message code="game.selection.valid"/>');
-                        } else {
-                            $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-invalid wordInvalid").text('<@message code="game.selection.invalid"/>');
-                        }
-                    }, 'json');
+            $.post('/game/playboard/check.ajax', {w: word.text, l: '${board.dictionary.locale}'},
+                  function(response) {
+                      if (response.success) {
+                          $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-valid wordValid").text('<@message code="game.selection.valid"/>');
+                      } else {
+                          $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-invalid wordInvalid").text('<@message code="game.selection.invalid"/>');
+                      }
+                  }, 'json');
         };
 
         board.bind("wordChanged", function(event, word) {

@@ -382,6 +382,7 @@
     </dictionary>
     <dictionary name="sergey">
       <words>
+        <w>millis</w>
         <w>rect</w>
       </words>
     </dictionary>

@@ -10,8 +10,8 @@
 <script type="text/javascript">
     var scribbleBoard = {
         boardId: ${board.getBoardId()},
-        daysPerMove: ${board.getGameSettings().daysPerMove},
         gameState: '${board.getGameState()}',
+        daysPerMove: ${board.getGameSettings().daysPerMove},
         boardViewer: ${player.getId()},
         playerTurn: ${board.getPlayerTurn().getPlayerId()},
         bankCapacity: ${board.bankCapacity},
@@ -139,6 +139,8 @@
             $("#clearSelectionButton").button('disable').removeClass("ui-state-hover");
         }
     });
-    board.monitorUpdates();
     </#if>
+    if (board.isBoardActive()) {
+        board.startBoardMonitoring();
+    }
 </script>

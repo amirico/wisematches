@@ -135,8 +135,11 @@ wm.ui = new function() {
         'border-width': '3px'
     };
 
-    // unblock after ajax by default
-    $(document).ajaxStop($.unblockUI);
+    $.ajaxSetup({
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json'
+    });
 
     this.performAfterConfirm = function(title, msg, action) {
         $("#asdqwesq").dialog({
