@@ -5,7 +5,7 @@
 <@wm.widget id="moveInfo" title="game.selection.label">
 <table width="100%">
     <tr>
-        <td height="22" valign="bottom"><b>Tiles:</b></td>
+        <td height="22" valign="bottom"><b><@message code="game.selection.tiles"/>:</b></td>
         <td height="22" width="100%" valign="bottom" style="padding-left: 5px">
             <div id="selectedTilesInfo" style="position: relative; height: 22px;">
             <@message code="game.selection.notiles"/>
@@ -13,7 +13,7 @@
         </td>
     </tr>
     <tr>
-        <td height="22" valign="bottom"><b>Word:</b></td>
+        <td height="22" valign="bottom"><b><@message code="game.selection.word"/>:</b></td>
         <td height="22" valign="bottom" style="padding-left: 5px">
             <div id="selectedWordInfo" style="position: relative; height: 22px;">
             <@message code="game.selection.noword"/>
@@ -21,7 +21,7 @@
         </td>
     </tr>
     <tr>
-        <td height="22" valign="bottom"><b>Points:</b></td>
+        <td height="22" valign="bottom"><b><@message code="game.selection.points"/>:</b></td>
         <td height="22" valign="bottom">
             <div id="selectedWordCost" style="position: relative; padding-left: 5px">
             <@message code="game.selection.noword"/>

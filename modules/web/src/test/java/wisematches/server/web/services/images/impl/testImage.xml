@@ -1,10 +1,10 @@
-package wisematches.server.deprecated.web.modules.app.images.impl;
+package wisematches.server.web.services.images.impl;
 
         import org.junit.After;
         import static org.junit.Assert.*;
         import org.junit.Before;
         import org.junit.Test;
-        import wisematches.server.deprecated.web.modules.app.images.PlayerImageType;
+        import wisematches.server.web.services.images.PlayerImageType;
 
         import javax.imageio.ImageIO;
         import java.awt.image.BufferedImage;

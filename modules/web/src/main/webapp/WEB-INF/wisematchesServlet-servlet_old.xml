@@ -119,13 +119,6 @@
         <property name="roomsManager" ref="roomsManager"/>
     </bean>
 
-    <bean name="/rpc/PlayerImagesService"
-          class="wisematches.server.deprecated.web.modules.app.services.PlayerImagesServiceImpl">
-        <property name="playerImagesManager" ref="playerImagesManager"/>
-        <property name="noImageImageUrl" value="images/noPlayerIcon.png"/>
-        <property name="playerSessionsManager" ref="playerSessionsManager"/>
-    </bean>
-
     <bean name="/rpc/JSONCountriesList"
           class="wisematches.server.deprecated.web.modules.app.services.JsonCountriesServlet">
         <property name="countriesManager" ref="countriesManager"/>
