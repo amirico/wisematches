@@ -13,8 +13,18 @@
             "bJQueryUI": true,
             "bStateSave": true,
             "bFilter": false,
-            "bSort": false,
             "bSortClasses": false,
+            "aaSorting": [
+                [3,'asc']
+            ],
+            "aoColumns": [
+                null,
+                null,
+                null,
+                null,
+                { "bSortable": false },
+                { "bSortable": false }
+            ],
             "sDom": '<"H"lCr>t<"F"ip>',
             "sPaginationType": "full_numbers",
             "oLanguage": {
@@ -28,7 +38,7 @@
     <#if board.getGameState() == "ACTIVE">
         <#if board.getPlayerTurn().getPlayerId() == player.getId()>
         <span class="player"><a
-                href="/game/playboard.html?boardId=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
+                href="/game/playboard.html?b=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
             <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
@@ -55,9 +65,9 @@
                     <th width="100%"><@message code="game.title.label"/></th>
                     <th><@message code="game.language.label"/></th>
                     <th><@message code="game.status.label"/></th>
+                    <th><@message code="game.remained.label"/></th>
                     <th><@message code="game.opponents.label"/></th>
                     <th><@message code="game.scores.label"/></th>
-                    <th><@message code="game.time.label"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,10 +75,13 @@
                 <tr>
                     <#assign settings=board.gameSettings/>
                     <td>
-                        <a href="/game/playboard.html?boardId=${board.boardId}">${settings.title}</a>
+                        <a href="/game/playboard.html?b=${board.boardId}">${settings.title}</a>
                     </td>
                     <td><@message code="language.${settings.language}"/></td>
                     <td><@gameStatus board=board/></td>
+                    <td class="center">
+                    ${gameMessageSource.getRemainedTime(board, locale)}
+                    </td>
                     <td>
                         <#list board.playersHands as hand>
                             <div><@wm.player player=playerManager.getPlayer(hand.getPlayerId()) showRating=false/></div>
@@ -77,11 +90,6 @@
                     <td class="center">
                         <#list board.playersHands as hand>
                             <div>${hand.points}</div>
-                        </#list>
-                    </td>
-                    <td class="center">
-                        <#list board.playersHands as hand>
-                            <div>3d (!!!!)</div>
                         </#list>
                     </td>
                 </tr>
@@ -93,6 +101,9 @@
                     <td><@message code="language.${proposal.language}"/></td>
                     <td>
                         <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
+                    </td>
+                    <td class="center">
+                    ${gameMessageSource.getRemainedTime(proposal.timeLimits *24 * 60, locale)}
                     </td>
                     <td>
                         <#list proposal.allPlayers as p>
@@ -109,11 +120,8 @@
                     </td>
                     <td class="center">
                         <#list proposal.allPlayers as p>
-                            <div>0</div></#list>
-                    </td>
-                    <td class="center">
-                        <#list proposal.allPlayers as p>
-                            <div><@dates.daysAsString days=proposal.timeLimits/></div></#list>
+                            <div>0</div>
+                        </#list>
                     </td>
                 </tr>
                 </#list>

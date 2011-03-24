@@ -44,7 +44,6 @@ public enum Language {
 		return code;
 	}
 
-
 	/**
 	 * Returns locale for this language.
 	 *

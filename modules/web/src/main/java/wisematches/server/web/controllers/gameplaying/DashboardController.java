@@ -94,7 +94,7 @@ public class DashboardController {
 				players.add(0, player); // also add current player as a first one
 				final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
 				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(s, players);
-				return "redirect:/game/playboard.html?boardId=" + board.getBoardId();
+				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			} else {
 				final ScribbleProposal p = new ScribbleProposal(form.getTitle(), form.getBoardLanguage(),
 						form.getDaysPerMove(), opponents, form.getMinRating(), form.getMaxRating(), player, players);

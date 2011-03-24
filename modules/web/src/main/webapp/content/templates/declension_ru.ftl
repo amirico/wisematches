@@ -1,1 +1,0 @@
-<#macro days value>${value} <#if value==0>дней<#elseif value==1>дней<#elseif (value<5)>дня<#elseif (value<20)>дней<#else><@days value=value%10/></#if></#macro>

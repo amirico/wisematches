@@ -21,18 +21,6 @@
                 "sEmptyTable": "<@message code="game.gameboard.empty" args=["/game/create.html"]/>"
             }
         });
-
-        /*
-        wm.ui.showMessage({
-            message: 'The game has already been started so you can not join to it anymore.<br> Please select another game or <a href="/game/create.html">create new one</a>',
-            error: true});
-*/
-
-        /*
-        wm.ui.showMessage({
-            message: '<img src="/resources/images/wait.gif" style="vertical-align: middle; padding-right: 4px;"><span style="vertical-align: middle;">Joining to the game</span>',
-            error: false});
-*/
     });
 </script>
 
@@ -64,7 +52,7 @@
                 <tr>
                     <td>${proposal.title}</td>
                     <td><@message code="language.${proposal.language}"/></td>
-                    <td><@dates.daysAsString days=proposal.timeLimits/></td>
+                    <td align="center">${gameMessageSource.getRemainedTime(proposal.timeLimits*24*60,locale)}</td>
                     <td>
                         <#list proposal.allPlayers as pId>
                             <div>
