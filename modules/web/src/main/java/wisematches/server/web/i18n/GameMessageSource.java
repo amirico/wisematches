@@ -115,4 +115,8 @@ public class GameMessageSource {
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
+
+	public MessageSource getMessageSource() {
+		return messageSource;
+	}
 }

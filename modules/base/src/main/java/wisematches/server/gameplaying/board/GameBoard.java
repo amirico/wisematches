@@ -118,7 +118,6 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * Terminates this game. This method is used to terminate game by timeout.
 	 *
 	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
-	 * @throws GameNotReadyException	 if game wasn't created yet.
 	 * @throws GameFinishedException	 if game already finished.
 	 * @throws IllegalStateException	 if timeout is not expired by this method was called.
 	 * @see GameState#INTERRUPTED
@@ -130,7 +129,6 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @param player the player who closed the game
 	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
-	 * @throws GameNotReadyException	 if game wasn't created yet.
 	 * @throws GameFinishedException	 if game already finished.
 	 * @see GameState#INTERRUPTED
 	 */
