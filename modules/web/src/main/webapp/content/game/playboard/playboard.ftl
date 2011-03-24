@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="tilesBankInfo" type="char[][]" -->
+<#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 
 <#include "/core.ftl">
@@ -53,11 +54,7 @@
         ]
     };
 
-    var board = new wm.scribble.Board();
-    board.initializeGame(scribbleBoard);
-    $(document).ready(function() {
-        board.startBoardMonitoring();
-    });
+    var board = new wm.scribble.Board(scribbleBoard);
 </script>
 
 <table id="playboard" cellpadding="5" align="center">
@@ -70,7 +67,8 @@
         </td>
 
         <td style="vertical-align: top;">
-        <#include "widget/board.ftl"/>
+        <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"/>
+        <#if !viewMode><#include "widget/controls.ftl"/></#if>
         </td>
 
         <td style="vertical-align: top; width: 280px">
@@ -82,3 +80,11 @@
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+    $("#scribbleBoard").prepend(board.getBoardElement());
+
+    $(document).ready(function() {
+        board.startBoardMonitoring();
+    });
+</script>
