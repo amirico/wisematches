@@ -72,11 +72,32 @@ public class GameMessageSource {
 	}
 
 	public String getRemainedTime(GameBoard board, Locale locale) {
-		final long time = getRemainedTimeMillis(board);
+		return getRemainedTime(getRemainedTimeMillis(board), locale);
+	}
 
+	public String getRemainedTime(long time, String language) {
+		return getRemainedTime(time, Language.byCode(language).locale());
+	}
+
+	public String getRemainedTime(long time, Locale locale) {
 		final int days = (int) (time / 60 / 24);
 		final int hours = (int) ((time - (days * 24 * 60)) / 60);
 		final int minutes = (int) (time % 60);
+
+		if (days <= 0 && hours <= 0 && minutes <= 0) {
+			return "";
+		}
+
+		final TimeDeclension declension = TimeDeclension.declension(Language.byCode(locale.getLanguage()));
+		if (hours <= 0 && minutes <= 0) {
+			return days + " " + declension.days(days);
+		}
+		if (days <= 0 && minutes <= 0) {
+			return hours + " " + declension.hours(hours);
+		}
+		if (days <= 0 && hours <= 0) {
+			return minutes + " " + declension.minutes(minutes);
+		}
 
 		final StringBuilder b = new StringBuilder();
 		if (days > 0) {
@@ -85,7 +106,7 @@ public class GameMessageSource {
 		if (hours > 0) {
 			b.append(hours).append(messageSource.getMessage("time.notation.hour", null, locale)).append(" ");
 		}
-		if ((days == 0) && (minutes > 0)) {
+		if ((days == 0 || hours == 0) && (minutes > 0)) {
 			b.append(minutes).append(messageSource.getMessage("time.notation.minute", null, locale)).append(" ");
 		}
 		return b.toString();

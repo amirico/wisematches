@@ -11,5 +11,4 @@
 
 <#import "spring.ftl" as spring />
 <#import "/content/templates/common.ftl" as wm />
-<#import "/content/templates/declension.ftl" as declension />
 

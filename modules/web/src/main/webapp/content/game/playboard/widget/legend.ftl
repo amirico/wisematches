@@ -1,8 +1,7 @@
 <#include "/core.ftl">
-<#include "../playboardModel.ftl">
 
 <script type="text/javascript">
-    wm.boardlegend = new function() {
+    wm.scribble.legend = new function() {
         this.showLegend = function() {
             $('#boardLegend').parent().slideToggle('slow');
             $('#showLegendButton').slideToggle('slow');
@@ -15,7 +14,7 @@
     };
 
     $(document).ready(function() {
-        var link = $("<a></a>").attr('id', 'showLegendButton').attr('href', 'javascript: wm.boardlegend.showLegend()').html('<@message code="game.legend.show.label"/> &raquo;');
+        var link = $("<a></a>").attr('id', 'showLegendButton').attr('href', 'javascript: wm.scribble.legend.showLegend()').html('<@message code="game.legend.show.label"/> &raquo;');
         $("<div></div>").css("width", "100%").css('text-align', 'right').append(link).appendTo('#gameInfo');
     });
 </script>
@@ -76,6 +75,6 @@
 </table>
 
 <div style="width: 100%; text-align: right;">
-    <a href="javascript: wm.boardlegend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
+    <a href="javascript: wm.scribble.legend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
 </div>
 </@wm.widget>
