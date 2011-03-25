@@ -141,6 +141,24 @@ wm.ui = new function() {
         contentType: 'application/json'
     });
 
+    this.showConfirm = function(title, msg, approvedAction) {
+        $('<div></div>').html(msg).dialog({
+            title: title,
+            draggable: false,
+            modal: true,
+            resizable: false,
+            width: 400,
+            buttons: {
+                "Ok": function() {
+                    $(this).dialog("close");
+                    approvedAction();
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                } }
+        });
+    };
+
     this.performAfterConfirm = function(title, msg, action) {
         $("#asdqwesq").dialog({
             resizable: false,
@@ -169,7 +187,8 @@ wm.ui = new function() {
     };
 
     this.showMessage = function(opts) {
-        var v = $.extend(opts || {}, {
+        opts = opts || {};
+        var v = $.extend(opts, {
             message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
             blockMsgClass: 'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
             draggable: false
@@ -178,11 +197,13 @@ wm.ui = new function() {
         $('.blockOverlay').click($.unblockUI);
     };
 
-    this.showGrowl = function(title, message, type, timeout) {
-        $("#freeow").freeow(title, message, {
-            classes: [ type == 'error' ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "freeow-type-" + type],
+    this.showGrowl = function(title, message, type, opts) {
+        opts = opts || {};
+        var v = $.extend(opts, {
+            classes: [ opts.error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
             showStyle: {opacity: .95},
             autoHideDelay: 10000
         });
+        $("#freeow").freeow(title, message, v);
     }
 };

@@ -310,3 +310,32 @@
 .icon-word-invalid {
     background: url("/resources/images/status/decline.png") no-repeat left center !important;
 }
+
+.freeow .your-turn .content span {
+    color: #a52a2a;
+    font-weight: bold;
+}
+
+.freeow .your-turn .icon {
+    width: 48px;
+    height: 48px;
+    background: url("/resources/images/scribble/playboard/yourTurn.png") no-repeat left center !important;
+}
+
+.freeow .move-accepted .icon {
+    width: 48px;
+    height: 48px;
+    background: url("/resources/images/status/correct.png") no-repeat left center !important;
+}
+
+.freeow .opponent-turn .icon {
+    width: 48px;
+    height: 48px;
+    background: url("/resources/images/scribble/playboard/opponentTurn.png") no-repeat left center !important;
+}
+
+.freeow .game-finished .icon {
+    width: 48px;
+    height: 48px;
+    background: url("/resources/images/scribble/playboard/checkered.png") no-repeat left center !important;
+}
