@@ -36,6 +36,14 @@
             backgroundColor:'#DFEFFC'
         };
 
+        var showMoveResult = function(success, message, error) {
+            if (success) {
+                wm.ui.showGrowl("Move Accepted", "Your move has been accepted and turn has been transferred to next player", 'move-accepted');
+            } else {
+                wm.ui.showMessage({message: message, error:true});
+            }
+        };
+
         this.blockBoard = function() {
             $(board.getBoardElement()).parent().block({ message: null, overlayCSS: overlayCSS });
             $("#boardActionsToolbar").block({ message: null, overlayCSS: overlayCSS });
@@ -49,7 +57,7 @@
         };
 
         this.updateSelectionState = function() {
-            $("#clearSelectionButton").removeClass("ui-state-hover").button(board.getSelectedTiles().length == 0 ? "disable" : "enabled");
+            $("#clearSelectionButton").removeClass("ui-state-hover").button(board.getSelectedTiles().length == 0 ? "disable" : "enable");
         };
 
         this.updateControlsState = function() {
@@ -64,27 +72,23 @@
         };
 
         this.makeTurn = function() {
-            board.makeTurn(function(success, message, error) {
-                if (!success) {
-                    wm.ui.showMessage({message: message, error:true});
-                } else {
-                    wm.ui.showGrowl('asd: ' + state, message);
-                }
-            });
+            board.makeTurn(showMoveResult);
         };
 
         this.passTurn = function() {
-            board.passTurn(function(success, message, error) {
+            wm.ui.showConfirm("Pass Turn", "<b>Are you sure to pass the turn?</b> After passing your scores won't be changed and the move will be transferred to next player.", function() {
+                board.passTurn(showMoveResult);
             });
         };
 
         this.exchangeTiles = function() {
-            board.exchangeTiles(function(success, message, error) {
-            });
+            alert("Not Implemented YET");
+//            board.exchangeTiles(showMoveResult);
         };
 
         this.resignGame = function() {
-            board.resign(function(success, message, error) {
+            wm.ui.showConfirm("Resign Game", "<b>Are you sure to resign the game?</b> The game will be finished, your score will be cleared and your rating will be decreased.", function() {
+                board.resign(showMoveResult);
             });
         };
 
@@ -99,35 +103,27 @@
             .bind('wordSelection',
             function(event, selected, word) {
                 wm.scribble.controls.updateControlsState();
-            }).bind('gameMoves',
-            function(event, move) {
-                wm.scribble.controls.updateControlsState();
-
-                if (move.player != ${player.getId()}) {
-                    if (move.type == 'pass') {
-                        wm.ui.showGrowl("Board State Updated", "Player '" + board.getPlayerInfo(move.player).nickname + "' has passed a move");
-                    } else {
-                        wm.ui.showGrowl("Board State Updated", "Player '" + board.getPlayerInfo(move.player).nickname + "' has made a move: " + move.word.text);
-                    }
-                }
-            }).bind('gameState',
+            }).bind('gameTurn',
             function(event, state) {
                 wm.scribble.controls.updateControlsState();
 
                 if (board.isPlayerActive()) {
-                    wm.ui.showGrowl("Board State Updated", "<b>It's you turn again!</b>");
+                    wm.ui.showGrowl("Board State Updated", "<span>It's you turn again!</span> Please select your word and press 'Make Turn' button.", 'your-turn');
                 } else {
-                    wm.ui.showGrowl("Board State Updated", "Move has been transferred to player '" + board.getPlayerInfo(state.playerTurn).nickname + "'.");
+                    wm.ui.showGrowl("Board State Updated", "Move has been transferred to the player <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.", 'opponent-turn');
                 }
             }).bind('gameFinalization',
             function(event, state) {
                 $("#boardActionsToolbar").hide();
                 $("#boardActionsToolbar button").button({disabled: true});
+                var msg;
+                var opts = {autoHide: false};
                 if (state.state == 'INTERRUPTED') {
-                    wm.ui.showMessage({title: "Board State Updated", message: "Game has been interrupted by '" + board.getPlayerInfo(state.playerTurn).nickname + "'.", error: false});
+                    msg = "Game has been interrupted by <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
                 } else {
-                    wm.ui.showGrowl("Board State Updated", "Game has been finished.");
+                    msg = "Game has been finished.";
                 }
+                wm.ui.showGrowl("Game Finished", msg + "<div class='closeInfo'>click to close</div>", 'game-finished', opts);
             }).bind('boardState',
             function(event, enabled) {
                 if (!enabled) {
@@ -137,5 +133,3 @@
                 }
             });
 </script>
-
-

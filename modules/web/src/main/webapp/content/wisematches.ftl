@@ -30,8 +30,8 @@
     <link rel="stylesheet" type="text/css" href="/content/account/account.css"/>
 
     <link rel="stylesheet" type="text/css" href="/content/game/game.css"/>
-    <link rel="stylesheet" type="text/css" href="/content/game/playboard/playboard.css"/>
-    <script type="text/javascript" src="/content/game/playboard/playboard.js"></script>
+    <link rel="stylesheet" type="text/css" href="/content/game/playboard/scribble.css"/>
+    <script type="text/javascript" src="/content/game/playboard/scribble.js"></script>
 </head>
 <body>
 <div id="freeow" class="freeow freeow-top-right"></div>

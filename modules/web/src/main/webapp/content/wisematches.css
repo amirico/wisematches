@@ -99,6 +99,10 @@ form label {
     border-bottom-style: dotted;
 }
 
+a.ui-dialog-titlebar-close {
+    border: 0 !important;
+}
+
 .ui-table-left, .ui-table-middle {
     border-right-width: 0 !important;
 }
@@ -327,10 +331,9 @@ div.space-line {
     z-index: 1;
 }
 
-.freeow-type-correct .icon {
-    width: 48px;
-    height: 48px;
-    background-image: url('/resources/images/status/correct.png');
+.freeow .closeInfo {
+    text-align: right;
+    font-size: 10px;
 }
 
 .freeow .close {

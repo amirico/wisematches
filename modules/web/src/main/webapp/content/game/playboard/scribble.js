@@ -404,15 +404,17 @@ wm.scribble.Board = function(gameInfo) {
     };
 
     var updateGameState = function(stateEvent) {
-        if (gameState != stateEvent.state) {
+        if (stateEvent.state != 'ACTIVE') {
             playerTurn = null;
             gameState = stateEvent.state;
             playboard.stopBoardMonitoring();
 
             scribble.trigger('gameFinalization', [stateEvent]);
-        } else {
+        } else if (playerTurn != stateEvent.playerTurn) {
             playerTurn = stateEvent.playerTurn;
-            scribble.trigger('gameState', [stateEvent]);
+            scribble.trigger('gameTurn', [stateEvent]);
+        } else {
+            scribble.trigger('gameInfo', [stateEvent]);
         }
     };
 
@@ -479,8 +481,8 @@ wm.scribble.Board = function(gameInfo) {
                                 addBoardMove(move);
                                 scribble.trigger('gameMoves', [move]);
                             });
-                            updateGameState(response.data.state);
                         }
+                        updateGameState(response.data.state);
                     } else {
                         handler.call(playboard, false, response.summary);
                     }
@@ -494,7 +496,7 @@ wm.scribble.Board = function(gameInfo) {
     };
 
     this.stopBoardMonitoring = function() {
-        $(scribble).stopTime(10000, 'board' + boardId + 'Monitoring');
+        $(scribble).stopTime('board' + boardId + 'Monitoring');
     };
 
     this.getBoardElement = function() {
