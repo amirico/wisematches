@@ -25,66 +25,67 @@ import java.util.Locale;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribbleBoardManager extends AbstractBoardManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> {
-	private ScribbleBoardDao scribbleBoardDao;
-	private DictionaryManager dictionaryManager;
-	private TilesBankingHouse tilesBankingHouse;
+    private ScribbleBoardDao scribbleBoardDao;
+    private DictionaryManager dictionaryManager;
+    private TilesBankingHouse tilesBankingHouse;
 
-	private static final Log log = LogFactory.getLog("wisematches.room.scribble");
+    private static final Log log = LogFactory.getLog("wisematches.room.scribble");
 
-	public ScribbleBoardManager() {
-		super(log);
-	}
+    public ScribbleBoardManager() {
+        super(log);
+    }
 
-	@Override
-	protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<Player> players) throws BoardCreationException {
-		final Locale locale = new Locale(gameSettings.getLanguage());
+    @Override
+    protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<Player> players) throws BoardCreationException {
+        final Locale locale = new Locale(gameSettings.getLanguage());
 
-		try {
-			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, players.size(), true);
+        try {
+            final Dictionary dictionary = dictionaryManager.getDictionary(locale);
+            final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, players.size(), true);
 
-			return new ScribbleBoard(gameSettings, players, tilesBank, dictionary);
-		} catch (DictionaryNotFoundException e) {
-			throw new BoardCreationException("", e);
-		}
-	}
+            return new ScribbleBoard(gameSettings, players, tilesBank, dictionary);
+        } catch (DictionaryNotFoundException e) {
+            throw new BoardCreationException("", e);
+        }
+    }
 
-	@Override
-	protected ScribbleBoard loadBoardImpl(long gameId) throws BoardLoadingException {
-		try {
-			final ScribbleBoard board = scribbleBoardDao.getScribbleBoard(gameId);
-			if (board == null) {
-				return null;
-			}
-			final Locale locale = new Locale(board.getGameSettings().getLanguage());
-			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, board.getPlayersHands().size(), true);
-			board.initGameAfterLoading(tilesBank, dictionary);
-			return board;
-		} catch (DictionaryNotFoundException e) {
-			throw new BoardLoadingException("", e);
-		}
-	}
+    @Override
+    protected ScribbleBoard loadBoardImpl(long gameId) throws BoardLoadingException {
+        Locale locale = null;
+        try {
+            final ScribbleBoard board = scribbleBoardDao.getScribbleBoard(gameId);
+            if (board == null) {
+                return null;
+            }
+            locale = new Locale(board.getGameSettings().getLanguage());
+            final Dictionary dictionary = dictionaryManager.getDictionary(locale);
+            final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, board.getPlayersHands().size(), true);
+            board.initGameAfterLoading(tilesBank, dictionary);
+            return board;
+        } catch (DictionaryNotFoundException e) {
+            throw new BoardLoadingException("No dictionary for locale " + locale, e);
+        }
+    }
 
-	@Override
-	protected void saveBoardImpl(ScribbleBoard board) {
-		scribbleBoardDao.saveScribbleBoard(board);
-	}
+    @Override
+    protected void saveBoardImpl(ScribbleBoard board) {
+        scribbleBoardDao.saveScribbleBoard(board);
+    }
 
-	@Override
-	protected Collection<Long> loadActivePlayerBoards(Player player) {
-		return scribbleBoardDao.getActiveBoards(player);
-	}
+    @Override
+    protected Collection<Long> loadActivePlayerBoards(Player player) {
+        return scribbleBoardDao.getActiveBoards(player);
+    }
 
-	public void setScribbleBoardDao(ScribbleBoardDao scribbleBoardDao) {
-		this.scribbleBoardDao = scribbleBoardDao;
-	}
+    public void setScribbleBoardDao(ScribbleBoardDao scribbleBoardDao) {
+        this.scribbleBoardDao = scribbleBoardDao;
+    }
 
-	public void setDictionaryManager(DictionaryManager dictionaryManager) {
-		this.dictionaryManager = dictionaryManager;
-	}
+    public void setDictionaryManager(DictionaryManager dictionaryManager) {
+        this.dictionaryManager = dictionaryManager;
+    }
 
-	public void setTilesBankingHouse(TilesBankingHouse tilesBankingHouse) {
-		this.tilesBankingHouse = tilesBankingHouse;
-	}
+    public void setTilesBankingHouse(TilesBankingHouse tilesBankingHouse) {
+        this.tilesBankingHouse = tilesBankingHouse;
+    }
 }
