@@ -14,6 +14,7 @@
         boardViewer: ${player.getId()},
         playerTurn: ${board.getPlayerTurn().getPlayerId()},
         bankCapacity: ${board.bankCapacity},
+        bankLetters: [<#list board.getTilesBankInfo() as tbi>'${tbi.getLetter()}'<#if tbi_has_next>,</#if></#list>],
         <#if board.gameState != "ACTIVE">wonPlayer:${board.getWonPlayer().getPlayerId()},</#if>
         bonuses: [
         <#list board.getScoreEngine().getScoreBonuses() as bonus>
@@ -54,21 +55,19 @@
         ]
     };
 
+    var wildcardSelectionDialog = $('#wildcardSelectionPanel').dialog({
+        title: "Wildcard Letter Replacement",
+        autoOpen: false,
+        draggable: false,
+        modal: true,
+        resizable: false,
+        width: 400
+    });
+
     var board = new wm.scribble.Board(scribbleBoard, function(tile, replacer) {
-        var panel = $($("#wildcardSelectionPanel div").get(1));
-        panel.empty();
+        var panel = $($("#wildcardSelectionPanel div").get(1)).empty();
 
-        var dialog = $('#wildcardSelectionPanel').dialog({
-            title: "Wildcard Letter Replacement",
-            autoOpen: false,
-            draggable: false,
-            modal: true,
-            resizable: false,
-            width: 400
-        });
-
-        var letters = [<#list board.getTilesBankInfo() as tbi>'${tbi.getLetter()}'<#if tbi_has_next>,</#if></#list>];
-        $.each(letters, function(i, letter) {
+        $.each(scribbleBoard.bankLetters, function(i, letter) {
             var row = Math.floor(i / 15);
             var col = (i - row * 15);
             var t = wm.scribble.tile.createTileWidget({number:0, letter: letter, cost: 0}).offset({top: row * 22, left: col * 22});
@@ -80,11 +79,11 @@
                         wm.scribble.tile.deselectTile(this);
                     }).click(
                     function() {
-                        dialog.dialog("close");
                         replacer($(this).data('tile').letter);
+                        wildcardSelectionDialog.dialog("close");
                     }).appendTo(panel);
         });
-        dialog.dialog("open");
+        wildcardSelectionDialog.dialog("open");
     });
 </script>
 
