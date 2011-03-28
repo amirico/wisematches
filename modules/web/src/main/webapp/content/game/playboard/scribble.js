@@ -731,6 +731,10 @@ wm.scribble.Board = function(gameInfo, wildcardHandler) {
         return v < 0 ? 0 : v;
     };
 
+    this.getPlayerTurn = function() {
+        return playerTurn;
+    };
+
     this.isPlayerActive = function() {
         return boardViewer == playerTurn;
     };

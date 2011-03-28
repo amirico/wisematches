@@ -109,10 +109,10 @@
         </td>
 
         <td style="vertical-align: top; width: 280px">
-        <#--<#include "widget/players.ftl"/>-->
-            <#--<div style="height: 10px"></div>-->
+        <#include "widget/players.ftl"/>
+            <div style="height: 10px"></div>
         <#--<#include "widget/selection.ftl"/>-->
-            <#--<div style="height: 10px"></div>-->
+        <#--<div style="height: 10px"></div>-->
         <#--<#include "widget/memory.ftl"/>-->
         </td>
     </tr>
