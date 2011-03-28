@@ -24,6 +24,7 @@ import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.gameplaying.form.CheckWordForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleTileForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
@@ -71,10 +72,10 @@ public class PlayboardController {
 
 	@ResponseBody
 	@RequestMapping("/playboard/check")
-	public ServiceResponse checkWordAjax(@RequestParam("w") String word, @RequestParam("l") String lang) {
+	public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
 		try {
-			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(lang));
-			if (dictionary.getWord(word) == null) {
+			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
+			if (dictionary.getWord(form.getWord()) == null) {
 				return ServiceResponse.failure();
 			}
 			return ServiceResponse.success();

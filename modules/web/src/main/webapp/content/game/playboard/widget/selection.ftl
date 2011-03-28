@@ -53,56 +53,58 @@
             }
             $("#checkWordButton").button('disable').removeClass("ui-state-hover");
             $("#checkWordStatus").addClass('icon-wait').removeClass('icon-word-valid icon-word-invalid wordValid wordInvalid').text('<@message code="game.selection.checking"/>');
-            $.post('/game/playboard/check.ajax', {w: word.text, l: '${board.dictionary.locale}'},
-                  function(response) {
-                      if (response.success) {
-                          $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-valid wordValid").text('<@message code="game.selection.valid"/>');
-                      } else {
-                          $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-invalid wordInvalid").text('<@message code="game.selection.invalid"/>');
-                      }
-                  }, 'json');
+            $.post('/game/playboard/check.ajax', $.toJSON({word:word.text, lang:'${board.dictionary.locale}'}),
+                    function(response) {
+                        if (response.success) {
+                            $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-valid wordValid").text('<@message code="game.selection.valid"/>');
+                        } else {
+                            $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-invalid wordInvalid").text('<@message code="game.selection.invalid"/>');
+                        }
+                    }, 'json');
         };
 
-        board.bind("wordChanged", function(event, word) {
-            var swi = $("#selectedWordInfo").empty();
-            var swc = $("#selectedWordCost").empty();
-            if (word != null) {
-                swc.text(board.getScoreEngine().getWordBonus(word).formula);
-                $.each(word.tiles, function(i, t) {
-                    wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(swi);
+        board.bind("tileSelection",
+                function(event, selected, tile) {
+                    var tiles = $("#selectedTilesInfo div");
+                    var length = board.getSelectedTiles().length;
+                    if (selected && length == 1) {
+                        $("#selectedTilesInfo").empty();
+                    }
+                    if (selected) {
+                        wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo('#selectedTilesInfo');
+                    } else {
+                        var updateOffset = false;
+                        $.each(tiles, function(i, tileWidget) {
+                            var v = $(tileWidget);
+                            if (v.data('tile').number == tile.number) {
+                                updateOffset = true;
+                                v.remove();
+                            } else if (updateOffset) {
+                                v.css('left', (i - 1) * 22);
+                            }
+                        });
+                    }
+                    if (length == 0) {
+                        $("#selectedTilesInfo").text('<@message code="game.selection.notiles"/>');
+                    }
+                })
+                .bind('wordSelection',
+                function(event, word) {
+                    var swi = $("#selectedWordInfo");
+                    var swc = $("#selectedWordCost");
+                    if (word != null) {
+                        swc.empty().text(board.getScoreEngine().getWordBonus(word).formula);
+                        swi.empty();
+                        $.each(word.tiles, function(i, t) {
+                            wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(swi);
+                        });
+                        $("#checkWordButton").button('enable');
+                    } else {
+                        swi.text('<@message code="game.selection.noword"/>');
+                        swc.text('<@message code="game.selection.noword"/>');
+                        $("#checkWordButton").button('disable').removeClass("ui-state-hover");
+                    }
+                    $("#checkWordStatus").text("").attr('class', '');
                 });
-                $("#checkWordButton").button('enable');
-            } else {
-                swi.text('<@message code="game.selection.noword"/>');
-                swc.text('<@message code="game.selection.noword"/>');
-                $("#checkWordButton").button('disable').removeClass("ui-state-hover");
-            }
-            $("#checkWordStatus").text("").attr('class', '');
-        });
-
-        board.bind("tileSelected", function(event, tile) {
-            var length = $("#selectedTilesInfo div").length;
-            if (length == 0) {
-                $("#selectedTilesInfo").empty();
-            }
-            wm.scribble.tile.createTileWidget(tile).offset({left: (length * 22), top: 0}).appendTo('#selectedTilesInfo');
-        });
-
-        board.bind("tileDeselected", function(event, tile) {
-            var tiles = $("#selectedTilesInfo div");
-            var updateOffset = false;
-            $.each(tiles, function(i, tileWidget) {
-                var v = $(tileWidget);
-                if (v.data('tile').number == tile.number) {
-                    updateOffset = true;
-                    v.remove();
-                } else if (updateOffset) {
-                    v.css('left', (i - 1) * 22);
-                }
-            });
-            if (tiles.length == 1) {
-                $("#selectedTilesInfo").text('<@message code="game.selection.notiles"/>');
-            }
-        });
     };
 </script>
