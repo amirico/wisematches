@@ -86,22 +86,22 @@
     color: white;
 }
 
-.bonus-cell-2l {
-    background: url(/resources/images/scribble/board/bonus_2l.gif) no-repeat center;
+.bonus-cell-center {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat 0 0;
 }
 
-.bonus-cell-3l {
-    background: url(/resources/images/scribble/board/bonus_3l.gif) no-repeat center;
+.bonus-cell-2l {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -22px 0;
 }
 
 .bonus-cell-2w {
-    background: url(/resources/images/scribble/board/bonus_2w.gif) no-repeat center;
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -44px 0;
+}
+
+.bonus-cell-3l {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -66px 0;
 }
 
 .bonus-cell-3w {
-    background: url(/resources/images/scribble/board/bonus_3w.gif) no-repeat center;
-}
-
-.bonus-cell-center {
-    background: url(/resources/images/scribble/board/bonus_center.png) no-repeat center;
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -88px 0;
 }

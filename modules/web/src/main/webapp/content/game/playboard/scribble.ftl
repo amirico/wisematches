@@ -54,8 +54,44 @@
         ]
     };
 
-    var board = new wm.scribble.Board(scribbleBoard);
+    var board = new wm.scribble.Board(scribbleBoard, function(tile, replacer) {
+        var panel = $($("#wildcardSelectionPanel div").get(1));
+        panel.empty();
+
+        var dialog = $('#wildcardSelectionPanel').dialog({
+            title: "Wildcard Letter Replacement",
+            autoOpen: false,
+            draggable: false,
+            modal: true,
+            resizable: false,
+            width: 400
+        });
+
+        var letters = [<#list board.getTilesBankInfo() as tbi>'${tbi.getLetter()}'<#if tbi_has_next>,</#if></#list>];
+        $.each(letters, function(i, letter) {
+            var row = Math.floor(i / 15);
+            var col = (i - row * 15);
+            var t = wm.scribble.tile.createTileWidget({number:0, letter: letter, cost: 0}).offset({top: row * 22, left: col * 22});
+            t.hover(
+                    function() {
+                        wm.scribble.tile.selectTile(this);
+                    },
+                    function() {
+                        wm.scribble.tile.deselectTile(this);
+                    }).click(
+                    function() {
+                        dialog.dialog("close");
+                        replacer($(this).data('tile').letter);
+                    }).appendTo(panel);
+        });
+        dialog.dialog("open");
+    });
 </script>
+
+<div id="wildcardSelectionPanel" style="display: none;">
+    <div>Please select a tile from the following list which should be used instead of wildcard tile:</div>
+    <div style="position: relative; height: ${(((board.tilesBankInfo?size)/15)?ceiling)*22}px;"></div>
+</div>
 
 <table id="playboard" cellpadding="5" align="center">
     <tr>
