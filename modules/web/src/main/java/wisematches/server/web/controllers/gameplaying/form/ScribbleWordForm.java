@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class ScribbleWordForm {
 	private String direction;
 	private PositionEditor position;
-	private TileEditor[] tiles;
+	private ScribbleTileForm[] tiles;
 
 	public ScribbleWordForm() {
 	}
@@ -37,11 +37,11 @@ public class ScribbleWordForm {
 		this.direction = direction;
 	}
 
-	public TileEditor[] getTiles() {
+	public ScribbleTileForm[] getTiles() {
 		return tiles;
 	}
 
-	public void setTiles(TileEditor[] tiles) {
+	public void setTiles(ScribbleTileForm[] tiles) {
 		this.tiles = tiles;
 	}
 
@@ -62,55 +62,6 @@ public class ScribbleWordForm {
 		sb.append(", tiles=").append(tiles == null ? "null" : Arrays.asList(tiles).toString());
 		sb.append('}');
 		return sb.toString();
-	}
-
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class TileEditor {
-		private int cost;
-		private int number;
-		private char letter;
-
-		public TileEditor() {
-		}
-
-		public int getCost() {
-			return cost;
-		}
-
-		public void setCost(int cost) {
-			this.cost = cost;
-		}
-
-		public int getNumber() {
-			return number;
-		}
-
-		public void setNumber(int number) {
-			this.number = number;
-		}
-
-		public char getLetter() {
-			return letter;
-		}
-
-		public void setLetter(char letter) {
-			this.letter = letter;
-		}
-
-		public Tile createTile() {
-			return new Tile(number, letter, cost);
-		}
-
-		@Override
-		public String toString() {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("TileEditor");
-			sb.append("{cost=").append(cost);
-			sb.append(", number=").append(number);
-			sb.append(", letter=").append(letter);
-			sb.append('}');
-			return sb.toString();
-		}
 	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)

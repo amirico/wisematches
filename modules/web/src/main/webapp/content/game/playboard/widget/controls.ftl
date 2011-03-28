@@ -25,6 +25,11 @@
     </div>
 </div>
 
+<div id="exchangeTilesPanel" style="display: none;">
+    <div>Please select tiles for exchanging and press "Exchange Tiles" button below.</div>
+    <div style="height: 16px; position: relative;"></div>
+</div>
+
 <script type="text/javascript">
     wm.scribble.controls = new function() {
         $("#boardActionsToolbar button").button({disabled: true});
@@ -34,6 +39,14 @@
             '-webkit-border-radius': '5px',
             'border-radius': '5px',
             backgroundColor:'#DFEFFC'
+        };
+
+        var onTileSelected = function() {
+            if (wm.scribble.tile.isTileSelected(this)) {
+                wm.scribble.tile.deselectTile(this);
+            } else {
+                wm.scribble.tile.selectTile(this);
+            }
         };
 
         var showMoveResult = function(success, message, error) {
@@ -82,8 +95,33 @@
         };
 
         this.exchangeTiles = function() {
-            alert("Not Implemented YET");
-//            board.exchangeTiles(showMoveResult);
+            var tilesPanel = $($('#exchangeTilesPanel div').get(1));
+            tilesPanel.empty();
+            $.each(board.getHandTiles(), function(i, tile) {
+                wm.scribble.tile.createTileWidget(tile).offset({top: 0, left: i * 22}).click(onTileSelected).appendTo(tilesPanel);
+            });
+
+            $('#exchangeTilesPanel').dialog({
+                title: "Exchange Tiles",
+                draggable: false,
+                modal: true,
+                resizable: false,
+                width: 400,
+                buttons: {
+                    "Exchange": function() {
+                        $(this).dialog("close");
+                        var tiles = new Array();
+                        $.each(tilesPanel.children(), function(i, tw) {
+                            if (wm.scribble.tile.isTileSelected(tw)) {
+                                tiles.push($(tw).data('tile'));
+                            }
+                        });
+                        board.exchangeTiles(tiles, showMoveResult);
+                    },
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                    } }
+            });
         };
 
         this.resignGame = function() {
@@ -91,8 +129,6 @@
                 board.resign(showMoveResult);
             });
         };
-
-        // init state
         this.updateControlsState();
     };
 
@@ -120,8 +156,10 @@
                 var opts = {autoHide: false};
                 if (state.state == 'INTERRUPTED') {
                     msg = "Game has been interrupted by <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
+                } else if (state.state == 'DREW') {
+                    msg = "Game has been finished in a drawn.";
                 } else {
-                    msg = "Game has been finished.";
+                    msg = "Game has been finished. The winner is <b>" + board.getPlayerInfo((state.winner)).nickname + "</b>.";
                 }
                 wm.ui.showGrowl("Game Finished", msg + "<div class='closeInfo'>click to close</div>", 'game-finished', opts);
             }).bind('boardState',

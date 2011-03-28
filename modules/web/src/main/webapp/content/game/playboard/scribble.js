@@ -41,7 +41,13 @@ wm.scribble.tile = new function() {
     };
 
     this.getLetter = function(tileWidget) {
-        return $(tileWidget).get(0).innerText;
+        return $(tileWidget).data('tile').letter;
+    };
+
+    this.setLetter = function(tileWidget, letter) {
+        var v = $(tileWidget);
+        v.data('tile').letter = letter;
+        return v.children().get(0).innerText = letter.toUpperCase();
     };
 
     this.isTilePined = function(tileWidget) {
@@ -121,7 +127,7 @@ wm.scribble.ScoreEngine = function(gameBonuses, board) {
     };
 };
 
-wm.scribble.Board = function(gameInfo) {
+wm.scribble.Board = function(gameInfo, wildcardHandler) {
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');
@@ -299,13 +305,22 @@ wm.scribble.Board = function(gameInfo) {
                 draggingTile.css('top', relatedCell.y * 22).css('left', relatedCell.x * 22);
             }
 
+            var tile = draggingTile.data('tile');
             if (relatedCell.container == board) {
-                var tile = draggingTile.data('tile');
+                if (tile.wildcard) {
+                    var replacingTile = draggingTile;
+                    wildcardHandler(tile, function(letter) {
+                        wm.scribble.tile.setLetter(replacingTile, letter);
+                    });
+                }
                 tile.row = relatedCell.y;
                 tile.column = relatedCell.x;
                 boardTiles[relatedCell.x][relatedCell.y] = draggingTile;
                 changeTileSelection(draggingTile.get(0), true, true);
             } else if (relatedCell.container == hand) {
+                if (tile.wildcard) {
+                    wm.scribble.tile.setLetter(draggingTile, '*');
+                }
                 handTiles[relatedCell.x] = draggingTile;
                 changeTileSelection(draggingTile.get(0), false, true);
             }
@@ -367,6 +382,15 @@ wm.scribble.Board = function(gameInfo) {
             if (handTile == null || handTile == undefined) {
                 handTiles[i] = wm.scribble.tile.createTileWidget(tile).
                         offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
+                return false;
+            }
+        });
+    };
+
+    var removeHandTile = function(tile) {
+        $.each(handTiles, function(i, handTile) {
+            if (handTile != null && handTile != undefined && handTile.data('tile').number == tile.number) {
+                handTiles[i] = null;
                 return false;
             }
         });
@@ -591,11 +615,17 @@ wm.scribble.Board = function(gameInfo) {
         if (!enabled) {
             return;
         }
-        var a = new Array(tiles);
-        $.each(tiles, function(i, v) {
-            a[i] = v.number;
+        $.each(tiles, function(i, tile) {
+            removeHandTile(tile);
         });
-        makeMove('exchange', a, handler);
+        makeMove('exchange', tiles, function(success, message, error) {
+            if (!success) {
+                $.each(tiles, function(i, tile) {
+                    addHandTile(tile);
+                });
+            }
+            handler.call(this, success, message, error);
+        });
     };
 
     this.resign = function(handler) {
@@ -672,6 +702,14 @@ wm.scribble.Board = function(gameInfo) {
             }
         }
         return count;
+    };
+
+    this.getHandTiles = function() {
+        var res = new Array(handTiles.length);
+        $.each(handTiles, function(i, tw) {
+            res[i] = tw.data('tile');
+        });
+        return res;
     };
 
     this.getHandTilesCount = function() {

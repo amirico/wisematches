@@ -159,23 +159,6 @@ wm.ui = new function() {
         });
     };
 
-    this.performAfterConfirm = function(title, msg, action) {
-        $("#asdqwesq").dialog({
-            resizable: false,
-            height:140,
-            modal: true,
-            buttons: {
-                Apply: function() {
-                    action();
-                    $(this).dialog("close");
-                },
-                Close: function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    };
-
     this.showWaitMessage = function(message) {
         $.blockUI({
             blockMsgClass: 'ui-corner-all ui-state-default',

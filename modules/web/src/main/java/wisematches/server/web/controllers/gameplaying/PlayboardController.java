@@ -25,6 +25,7 @@ import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.gameplaying.form.ScribbleTileForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
@@ -167,7 +168,7 @@ public class PlayboardController {
 	@RequestMapping("/playboard/exchange")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
-											 final ScribbleWordForm.TileEditor[] tiles, final Locale locale) {
+											 @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
 		}
