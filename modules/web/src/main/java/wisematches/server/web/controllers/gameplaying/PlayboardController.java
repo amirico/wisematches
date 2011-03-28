@@ -212,15 +212,9 @@ public class PlayboardController {
 		if (board.getGameState() != GameState.ACTIVE) {
 			final ScribblePlayerHand winner = board.getWonPlayer();
 			state.put("winner", winner != null ? winner.getPlayerId() : null);
+			state.put("playerHands", board.getPlayersHands());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
-
-			final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
-			final Map<Long, Integer> points = new HashMap<Long, Integer>(playersHands.size());
-			for (ScribblePlayerHand hand : playersHands) {
-				points.put(hand.getPlayerId(), hand.getPoints());
-			}
-			state.put("finalPoints", points);
 		} else {
 			state.put("remainedTimeMillis", gameMessageSource.getRemainedTimeMillis(board));
 			state.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));

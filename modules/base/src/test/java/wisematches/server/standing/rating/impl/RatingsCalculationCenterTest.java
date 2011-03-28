@@ -1,52 +1,73 @@
 package wisematches.server.standing.rating.impl;
 
+import org.easymock.IAnswer;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import wisematches.server.core.MockPlayer;
+import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.room.MockRoom;
+import wisematches.server.gameplaying.room.RoomManager;
+import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.gameplaying.room.board.BoardLoadingException;
+import wisematches.server.gameplaying.room.board.BoardManager;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
+import wisematches.server.gameplaying.room.board.BoardUpdatingException;
+import wisematches.server.player.Player;
+import wisematches.server.player.PlayerManager;
+import wisematches.server.standing.rating.PlayerRatingEvent;
+import wisematches.server.standing.rating.PlayerRatingListener;
+import wisematches.server.standing.rating.RatingSystem;
+
+import java.util.Arrays;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RatingsCalculationCenterTest {
-	@Test
-	public void test() {
-		throw new UnsupportedOperationException("Commented");
-	}
-/*
 	private RoomManager roomManager;
+	private BoardManager boardManager;
 	private PlayerManager playerManager;
 
 	private RatingSystem ratingSystem;
-	private BoardListener boardsListener;
-	private GameBoardListener gameStateListener;
+	private BoardStateListener boardListener;
 
 	private RatingsCalculationCenter calculationCenter;
 
-	private static final Room ROOM = Room.valueOf("MOCK");
+	public RatingsCalculationCenterTest() {
+	}
 
 	@Before
 	public void setUp() {
-		final GameBoard openedBoard = createStrictMock(GameBoard.class);
-		openedBoard.addGameBoardListener(isA(GameBoardListener.class));
-		replay(openedBoard);
-
-		roomManager = createStrictMock(RoomManager.class);
-		roomManager.addRoomBoardsListener(isA(BoardListener.class));
+		boardManager = createMock(BoardManager.class);
+		boardManager.addBoardStateListener(isA(BoardStateListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				boardsListener = (BoardListener) getCurrentArguments()[0];
+				boardListener = (BoardStateListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
-		expect(roomManager.getRoomType()).andReturn(ROOM);
-		expect(roomManager.getOpenedBoards()).andReturn(Arrays.asList(openedBoard));
+		replay(boardManager);
+
+		roomManager = createStrictMock(RoomManager.class);
+		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
+		expect(roomManager.getBoardManager()).andReturn(boardManager);
 		replay(roomManager);
 
 		playerManager = createStrictMock(PlayerManager.class);
 
 		ratingSystem = createStrictMock(RatingSystem.class);
 
-		RoomsManager roomsManager = createMock(RoomsManager.class);
-		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager));
-		expect(roomsManager.getRoomManager(ROOM)).andReturn(roomManager).anyTimes();
+		final RoomsManager roomsManager = createMock(RoomsManager.class);
+		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager)).anyTimes();
+		expect(roomsManager.getBoardManager(MockRoom.type)).andReturn(boardManager).anyTimes();
 		replay(roomsManager);
 
 		calculationCenter = new RatingsCalculationCenter();
@@ -54,33 +75,26 @@ public class RatingsCalculationCenterTest {
 		calculationCenter.setRoomsManager(roomsManager);
 		calculationCenter.setRatingSystem(ratingSystem);
 
-		verify(roomManager, openedBoard);
-		reset(roomManager);
+		verify(roomManager, boardManager, roomsManager);
+		reset(roomManager, boardManager);
 	}
 
 	@Test
-	public void test_ratingCalculation() throws BoardLoadingException {
+	public void test_ratingCalculation() throws BoardLoadingException, BoardUpdatingException {
 		final GamePlayerHand hand1 = new GamePlayerHand(1L, 100);
 		final GamePlayerHand hand2 = new GamePlayerHand(2L, 200);
 		final GamePlayerHand hand3 = new GamePlayerHand(3L, 100);
 
-		final Player p1 = new MockPlayer(1L);
+		final MockPlayer p1 = new MockPlayer(1L);
 		p1.setRating(1000);
 
-		final Player p2 = new MockPlayer(2L);
+		final MockPlayer p2 = new MockPlayer(2L);
 		p2.setRating(1500);
 
-		final Player p3 = new MockPlayer(3L);
+		final MockPlayer p3 = new MockPlayer(3L);
 		p3.setRating(1200);
 
 		final GameBoard board = createStrictMock(GameBoard.class);
-		board.addGameBoardListener(isA(GameBoardListener.class));
-		expectLastCall().andAnswer(new IAnswer<Object>() {
-			public Object answer() throws Throwable {
-				gameStateListener = (GameBoardListener) getCurrentArguments()[0];
-				return null;
-			}
-		});
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3));
 		replay(board);
@@ -88,13 +102,13 @@ public class RatingsCalculationCenterTest {
 		expect(playerManager.getPlayer(1L)).andReturn(p1);
 		expect(playerManager.getPlayer(2L)).andReturn(p2);
 		expect(playerManager.getPlayer(3L)).andReturn(p3);
-		playerManager.updatePlayer(p1);
-		playerManager.updatePlayer(p2);
-		playerManager.updatePlayer(p3);
+//		playerManager.updatePlayer(p1);
+//		playerManager.updatePlayer(p2);
+//		playerManager.updatePlayer(p3);
 		replay(playerManager);
 
-		expect(roomManager.openBoard(1L)).andReturn(board);
-		roomManager.updateBoard(board);
+		expect(boardManager.openBoard(1L)).andReturn(board);
+		boardManager.updateBoard(board);
 		replay(roomManager);
 
 		expect(ratingSystem.calculateRatings(aryEq(new Player[]{p1, p2, p3}), aryEq(new int[]{100, 200, 100}))).andReturn(
@@ -117,12 +131,11 @@ public class RatingsCalculationCenterTest {
 		calculationCenter.addRatingsChangeListener(listener);
 		calculationCenter.setTransactionManager(transaction);
 
-		boardsListener.boardOpened(ROOM, 1L);
-		gameStateListener.gameDrew(board);
+		boardListener.gameDrew(board);
 
-		assertEquals(1050, p1.getRating());
-		assertEquals(1600, p2.getRating());
-		assertEquals(1000, p3.getRating());
+//		assertEquals(1050, p1.getRating());
+//		assertEquals(1600, p2.getRating());
+//		assertEquals(1000, p3.getRating());
 
 		assertEquals(1000, hand1.getPreviousRating());
 		assertEquals(1500, hand2.getPreviousRating());
@@ -138,20 +151,12 @@ public class RatingsCalculationCenterTest {
 	@Test
 	public void test_passNoRatedGame() throws BoardLoadingException {
 		final GameBoard board = createStrictMock(GameBoard.class);
-		board.addGameBoardListener(isA(GameBoardListener.class));
-		expectLastCall().andAnswer(new IAnswer<Object>() {
-			public Object answer() throws Throwable {
-				gameStateListener = (GameBoardListener) getCurrentArguments()[0];
-				return null;
-			}
-		});
-
 		replay(playerManager);
 
 		expect(board.isRatedGame()).andReturn(false);
 		replay(board);
 
-		expect(roomManager.openBoard(1L)).andReturn(board);
+		expect(boardManager.openBoard(1L)).andReturn(board);
 		replay(roomManager);
 
 		replay(ratingSystem);
@@ -160,8 +165,7 @@ public class RatingsCalculationCenterTest {
 		replay(listener);
 
 		calculationCenter.addRatingsChangeListener(listener);
-		boardsListener.boardOpened(ROOM, 1L);
-		gameStateListener.gameDrew(board);
+		boardListener.gameDrew(board);
 
 		verify(board, playerManager, roomManager, listener);
 	}
@@ -178,5 +182,4 @@ public class RatingsCalculationCenterTest {
 			}
 		});
 	}
-*/
 }

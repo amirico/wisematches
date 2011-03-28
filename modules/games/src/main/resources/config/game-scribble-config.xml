@@ -62,16 +62,16 @@
         </property>
     </bean>
 
-    <!--
-    <bean id="ratingsCaculationManager" class="wisematches.server.standing.rating.impl.RatingsCalculationCenter">
+    <bean id="ratingsCalculationManager" class="wisematches.server.standing.rating.impl.RatingsCalculationCenter">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="transactionManager" ref="transactionManager"/>
         <property name="ratingSystem">
             <bean class="wisematches.server.standing.rating.impl.systems.ELORatingSystem"/>
         </property>
-        <property name="playerManager" ref="playerManager"/>
-        <property name="roomsManager" ref="roomsManager"/>
-        <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
+    <!--
     <bean id="ratingsManager" class="wisematches.server.standing.rating.impl.RatingsManagerImpl">
         <property name="topPlayersCount" value="5"/>
         <property name="ratingsCalculationManager" ref="ratingsCaculationManager"/>
