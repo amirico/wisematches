@@ -55,34 +55,37 @@
         ]
     };
 
-    var wildcardSelectionDialog = $('#wildcardSelectionPanel').dialog({
-        title: '<@message code="game.play.wildcard.label"/>',
-        autoOpen: false,
-        draggable: false,
-        modal: true,
-        resizable: false,
-        width: 400
-    });
-
+    var wildcardSelectionDialog = null;
     var board = new wm.scribble.Board(scribbleBoard, function(tile, replacer) {
-        var panel = $($("#wildcardSelectionPanel div").get(1)).empty();
+        if (wildcardSelectionDialog == null) {
+            wildcardSelectionDialog = $('#wildcardSelectionPanel').dialog({
+                title: '<@message code="game.play.wildcard.label"/>',
+                autoOpen: false,
+                draggable: false,
+                modal: true,
+                resizable: false,
+                width: 400
+            });
 
-        $.each(scribbleBoard.bankLetters, function(i, letter) {
-            var row = Math.floor(i / 15);
-            var col = (i - row * 15);
-            var t = wm.scribble.tile.createTileWidget({number:0, letter: letter, cost: 0}).offset({top: row * 22, left: col * 22});
-            t.hover(
-                    function() {
-                        wm.scribble.tile.selectTile(this);
-                    },
-                    function() {
-                        wm.scribble.tile.deselectTile(this);
-                    }).click(
-                    function() {
-                        replacer($(this).data('tile').letter);
-                        wildcardSelectionDialog.dialog("close");
-                    }).appendTo(panel);
-        });
+            var panel = $($("#wildcardSelectionPanel div").get(1)).empty();
+            $.each(scribbleBoard.bankLetters, function(i, letter) {
+                var row = Math.floor(i / 15);
+                var col = (i - row * 15);
+                var t = wm.scribble.tile.createTileWidget({number:0, letter: letter, cost: 0}).offset({top: row * 22, left: col * 22});
+                t.hover(
+                        function() {
+                            wm.scribble.tile.selectTile(this);
+                        },
+                        function() {
+                            wm.scribble.tile.deselectTile(this);
+                        }).click(
+                        function() {
+                            wildcardSelectionDialog.replacer($(this).data('tile').letter);
+                            wildcardSelectionDialog.dialog("close");
+                        }).appendTo(panel);
+            });
+        }
+        wildcardSelectionDialog.replacer = replacer;
         wildcardSelectionDialog.dialog("open");
     });
 </script>
@@ -95,7 +98,7 @@
 <table id="playboard" cellpadding="5" align="center">
     <tr>
         <td style="vertical-align: top; width: 250px">
-        <#--<#include "widget/progress.ftl"/>-->
+        <#include "widget/progress.ftl"/>
         <#--<#include "widget/legend.ftl"/>-->
             <#--<div style="height: 10px"></div>-->
         <#--<#include "widget/history.ftl"/>-->

@@ -437,9 +437,8 @@ wm.scribble.Board = function(gameInfo, wildcardHandler) {
         } else if (playerTurn != stateEvent.playerTurn) {
             playerTurn = stateEvent.playerTurn;
             scribble.trigger('gameTurn', [stateEvent]);
-        } else {
-            scribble.trigger('gameInfo', [stateEvent]);
         }
+        scribble.trigger('gameInfo', [stateEvent]);
     };
 
     var makeMove = function(type, move, handler) {
@@ -679,6 +678,9 @@ wm.scribble.Board = function(gameInfo, wildcardHandler) {
                     }
                 });
                 var tile = $(widget).data('tile');
+                if (tile.wildcard) {
+                    wm.scribble.tile.setLetter(widget, '*');
+                }
                 changeTileSelection(widget, false, false);
                 boardTiles[tile.column][tile.row] = null;
             } else {

@@ -75,13 +75,13 @@
 
     wm.scribble.state.updateProgressBar();
 
-    board.bind('playerMoved', function(event, gameMove) {
-        $($("#gameInfo table td").get(6)).text(gameMove.move.timeMessage);
-        if (gameMove.game.state != 'ACTIVE') {
-            wm.scribble.state.markAsFinished();
-        } else {
-            wm.scribble.state.updateProgressBar();
-        }
-    });
+    board.bind('gameFinalization',
+            function(event, state) {
+                wm.scribble.state.markAsFinished();
+            }).bind('gameMoves',
+            function(event, move) {
+                $($("#gameInfo table td").get(6)).text(move.timeMessage);
+                wm.scribble.state.updateProgressBar();
+            });
 </script>
 </#if>
