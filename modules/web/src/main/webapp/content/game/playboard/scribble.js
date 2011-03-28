@@ -488,7 +488,7 @@ wm.scribble.Board = function(gameInfo, wildcardHandler) {
 
         this.stopBoardMonitoring();
 
-        $(scribble).everyTime(10000, 'board' + boardId + 'Monitoring', function() {
+        $(scribble).everyTime(60000, 'board' + boardId + 'Monitoring', function() {
             var cfg = {
                 type: 'post',
                 url: '/game/playboard/changes.ajax?b=' + boardId + '&m=' + movesCount,

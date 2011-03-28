@@ -136,7 +136,7 @@
                 wm.scribble.controls.updateSelectionState();
             })
             .bind('wordSelection',
-            function(event, selected, word) {
+            function(event, word) {
                 wm.scribble.controls.updateControlsState();
             }).bind('gameTurn',
             function(event, state) {
