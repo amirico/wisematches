@@ -292,7 +292,7 @@ div.space-line {
 /* Outermost Container */
 .freeow {
     position: fixed;
-    width: 300px;
+    width: 350px;
     z-index: 9999;
 }
 
