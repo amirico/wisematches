@@ -48,8 +48,8 @@
     $.each(scribbleBoard.moves, function(i, move) {
         wm.scribble.history.addMoveToHistory(move)
     });
-    board.bind('playerMoved', function(event, gameMove) {
-        wm.scribble.history.addMoveToHistory(gameMove.move)
+    board.bind('gameMoves', function(event, move) {
+        wm.scribble.history.addMoveToHistory(move)
     });
 </script>
 </@wm.widget>
