@@ -22,16 +22,23 @@
 </table>
 
 <script type="text/javascript">
-    board.bind('playerMoved', function(event, gameMove) {
-        if (gameMove.move.type = 'make') {
-            var v = $("#playerInfo" + gameMove.move.player + " .player-points");
-            v.text(parseInt(v.text()) + gameMove.move.points);
-        }
-        $("#playerInfo" + gameMove.move.player).addClass("passive");
-        $("#playerInfo" + gameMove.move.player + " .player-time").text("");
-
-        $("#playerInfo" + gameMove.game.playerTurn).removeClass("passive");
-        $("#playerInfo" + gameMove.game.playerTurn + " .player-time").text(gameMove.game.remainedTimeMessage);
-    });
+    var lastPlayerTurn = board.getPlayerTurn();
+    board.bind('gameMoves',
+            function(event, move) {
+                if (move.type = 'make') {
+                    var v = $("#playerInfo" + move.player + " .player-points");
+                    v.text(parseInt(v.text()) + move.points);
+                }
+            })
+            .bind('gameInfo',
+            function(event, info) {
+                if (lastPlayerTurn != info.playerTurn) {
+                    $("#playerInfo" + lastPlayerTurn).addClass("passive");
+                    $("#playerInfo" + lastPlayerTurn + " .player-time").text("");
+                    $("#playerInfo" + info.playerTurn).removeClass("passive");
+                    lastPlayerTurn = info.playerTurn;
+                }
+                $("#playerInfo" + info.playerTurn + " .player-time").text(info.remainedTimeMessage);
+            });
 </script>
 </@wm.widget>
