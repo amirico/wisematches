@@ -7,8 +7,7 @@
         <button id="makeTurnButton" class="icon-make-turn" onclick="wm.scribble.controls.makeTurn()">
         <@message code="game.play.make"/>
         </button>
-        <button id="clearSelectionButton" class="icon-clear-word"
-                onclick="board.clearSelection()">
+        <button id="clearSelectionButton" class="icon-clear-word" onclick="board.clearSelection()">
         <@message code="game.play.clear"/>
         </button>
         <button id="exchangeTilesButton" class="icon-exchange-tiles" onclick="wm.scribble.controls.exchangeTiles()">
@@ -26,7 +25,7 @@
 </div>
 
 <div id="exchangeTilesPanel" style="display: none;">
-    <div>Please select tiles for exchanging and press "Exchange Tiles" button below.</div>
+    <div><@message code="game.play.exchange.description"/></div>
     <div style="height: 16px; position: relative;"></div>
 </div>
 
@@ -51,9 +50,9 @@
 
         var showMoveResult = function(success, message, error) {
             if (success) {
-                wm.ui.showGrowl("Move Accepted", "Your move has been accepted and turn has been transferred to next player", 'move-accepted');
+                wm.ui.showGrowl("<@message code="game.move.accepted.label"/>", "<@message code="game.move.accepted.description"/>", 'move-accepted');
             } else {
-                wm.ui.showMessage({message: message, error:true});
+                wm.ui.showMessage({message: message + (error != null ? error : ''), error:true});
             }
         };
 
@@ -89,8 +88,14 @@
         };
 
         this.passTurn = function() {
-            wm.ui.showConfirm("Pass Turn", "<b>Are you sure to pass the turn?</b> After passing your scores won't be changed and the move will be transferred to next player.", function() {
+            wm.ui.showConfirm("<@message code="game.move.pass.label"/>", "<@message code="game.move.pass.description"/>", function() {
                 board.passTurn(showMoveResult);
+            });
+        };
+
+        this.resignGame = function() {
+            wm.ui.showConfirm("<@message code="game.move.resign.label"/>", "<@message code="game.move.resign.description"/>", function() {
+                board.resign(showMoveResult);
             });
         };
 
@@ -102,13 +107,13 @@
             });
 
             $('#exchangeTilesPanel').dialog({
-                title: "Exchange Tiles",
+                title: "<@message code="game.play.exchange.label"/>",
                 draggable: false,
                 modal: true,
                 resizable: false,
                 width: 400,
                 buttons: {
-                    "Exchange": function() {
+                    "<@message code="game.play.exchange.label"/>": function() {
                         $(this).dialog("close");
                         var tiles = new Array();
                         $.each(tilesPanel.children(), function(i, tw) {
@@ -118,15 +123,9 @@
                         });
                         board.exchangeTiles(tiles, showMoveResult);
                     },
-                    "Cancel": function() {
+                    "<@message code="cancel.label"/>": function() {
                         $(this).dialog("close");
                     } }
-            });
-        };
-
-        this.resignGame = function() {
-            wm.ui.showConfirm("Resign Game", "<b>Are you sure to resign the game?</b> The game will be finished, your score will be cleared and your rating will be decreased.", function() {
-                board.resign(showMoveResult);
             });
         };
         this.updateControlsState();
@@ -144,9 +143,9 @@
                 wm.scribble.controls.updateControlsState();
 
                 if (board.isPlayerActive()) {
-                    wm.ui.showGrowl("Board State Updated", "<span>It's you turn again!</span> Please select your word and press 'Make Turn' button.", 'your-turn');
+                    wm.ui.showGrowl("<@message code="game.move.updated.label"/>", "<@message code="game.move.updated.you"/>", 'your-turn');
                 } else {
-                    wm.ui.showGrowl("Board State Updated", "Move has been transferred to the player <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.", 'opponent-turn');
+                    wm.ui.showGrowl("<@message code="game.move.updated.label"/>", "<@message code="game.move.updated.other"/> " + "<b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.", 'opponent-turn');
                 }
             }).bind('gameFinalization',
             function(event, state) {
@@ -155,13 +154,13 @@
                 var msg;
                 var opts = {autoHide: false};
                 if (state.state == 'INTERRUPTED') {
-                    msg = "Game has been interrupted by <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
+                    msg = "<@message code="game.move.finished.interrupted"/> <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
                 } else if (state.state == 'DREW') {
-                    msg = "Game has been finished in a drawn.";
+                    msg = "<@message code="game.move.finished.drew"/>";
                 } else {
-                    msg = "Game has been finished. The winner is <b>" + board.getPlayerInfo((state.winner)).nickname + "</b>.";
+                    msg = "<@message code="game.move.finished.won"/> <b>" + board.getPlayerInfo((state.winner)).nickname + "</b>.";
                 }
-                wm.ui.showGrowl("Game Finished", msg + "<div class='closeInfo'>click to close</div>", 'game-finished', opts);
+                wm.ui.showGrowl("<@message code="game.move.finished.label"/>", msg + "<div class='closeInfo'><@message code="game.move.clickToClose"/></div>", 'game-finished', opts);
             }).bind('boardState',
             function(event, enabled) {
                 if (!enabled) {

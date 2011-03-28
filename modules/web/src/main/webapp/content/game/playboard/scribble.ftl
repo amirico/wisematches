@@ -56,7 +56,7 @@
     };
 
     var wildcardSelectionDialog = $('#wildcardSelectionPanel').dialog({
-        title: "Wildcard Letter Replacement",
+        title: '<@message code="game.play.wildcard.label"/>',
         autoOpen: false,
         draggable: false,
         modal: true,
@@ -88,7 +88,7 @@
 </script>
 
 <div id="wildcardSelectionPanel" style="display: none;">
-    <div>Please select a tile from the following list which should be used instead of wildcard tile:</div>
+    <div><@message code="game.play.wildcard.description"/></div>
     <div style="position: relative; height: ${(((board.tilesBankInfo?size)/15)?ceiling)*22}px;"></div>
 </div>
 
@@ -120,6 +120,7 @@
     $("#scribbleBoard").prepend(board.getBoardElement());
 
     $(document).ready(function() {
-        board.startBoardMonitoring();
+        board.startBoardMonitoring(function(state, message, error) {
+        });
     });
 </script>
