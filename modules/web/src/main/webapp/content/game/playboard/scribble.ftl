@@ -99,8 +99,8 @@
         <td style="vertical-align: top; width: 250px">
         <#include "widget/progress.ftl"/>
         <#include "widget/legend.ftl"/>
-            <#--<div style="height: 10px"></div>-->
-        <#--<#include "widget/history.ftl"/>-->
+            <div style="height: 10px"></div>
+        <#include "widget/history.ftl"/>
         </td>
 
         <td style="vertical-align: top;">
