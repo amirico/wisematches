@@ -225,8 +225,8 @@
 .game-progress .game-progress-finished {
     float: left;
     color: white !important;
-    background-color: #66cc00;
-    border: 1px solid #4b9600;
+    background-color: #cccccc;
+    border: 1px solid #999999;
 }
 
 .game-progress .game-progress-caption {
