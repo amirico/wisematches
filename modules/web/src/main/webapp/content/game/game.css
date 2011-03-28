@@ -127,12 +127,27 @@
 
 .playerInfo td {
     white-space: nowrap;
+    vertical-align: top;
+}
+
+.playerInfo .winner {
+    color: #009933;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 .playerInfo.passive td {
     color: gray !important;
     border-color: transparent !important;
     background: none !important;
+}
+
+.playerInfo .player-rating {
+    padding-left: 10px;
+}
+
+.playerInfo .player-rating div {
+    display: inline-block;
 }
 
 #playboard #scribbleBoard {
@@ -309,6 +324,24 @@
 
 .icon-word-invalid {
     background: url("/resources/images/status/decline.png") no-repeat left center !important;
+}
+
+.icon-rating-down {
+    width: 38px;
+    height: 10px;
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat 0 0 !important;
+}
+
+.icon-rating-up {
+    width: 38px;
+    height: 10px;
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -38px 0 !important;
+}
+
+.icon-rating-same {
+    width: 38px;
+    height: 10px;
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -76px 0 !important;
 }
 
 .freeow .your-turn .content span {

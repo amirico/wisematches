@@ -3,9 +3,6 @@ package wisematches.server.standing.rating.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
@@ -77,7 +74,7 @@ public class RatingsCalculationCenter {
 		final int[] oldRatings = new int[players.length];
 		final int[] newRatings = ratingSystem.calculateRatings(players, points);
 
-		final TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+//		final TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 		try {
 			for (int i = 0; i < players.length; i++) {
 				final Player player = players[i];
@@ -93,18 +90,17 @@ public class RatingsCalculationCenter {
 				oldRatings[i] = oldRating;
 
 				// TODO: commented
-/*
-				player.setRating(newRating);
+//				player.setRating(newRating);
 				hand.updateRating(oldRating, ratingDelta);
 
-				playerManager.updatePlayer(player);
-*/
+				// TODO: commented
+//				playerManager.updatePlayer(player);
 			}
 			updateGameBoard(room, board);
-			transactionManager.commit(status);
+//			transactionManager.commit(status);
 		} catch (Throwable th) {
 			log.fatal("Player ratings can't be updated", th);
-			transactionManager.rollback(status);
+//			transactionManager.rollback(status);
 		}
 
 		for (int i = 0; i < players.length; i++) {
