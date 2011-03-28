@@ -19,7 +19,6 @@ import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
-import wisematches.server.gameplaying.scribble.bank.TilesBank;
 import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.player.Player;
@@ -58,25 +57,7 @@ public class PlayboardController {
 			}
 
 			model.addAttribute("board", board);
-
-			final String[] a = new String[11];
-			final TilesBank.TilesInfo[] tilesBankInfo = board.getTilesBankInfo();
-			for (TilesBank.TilesInfo tilesInfo : tilesBankInfo) {
-				String s = a[tilesInfo.getCost()];
-				if (s == null) {
-					s = "";
-				}
-				a[tilesInfo.getCost()] = s + Character.toUpperCase(tilesInfo.getLetter());
-			}
-			char[][] r = new char[11][];
-			for (int i = 0, aLength = a.length; i < aLength; i++) {
-				if (a[i] != null) {
-					r[i] = a[i].toCharArray();
-				}
-			}
-
 			model.addAttribute("viewMode", board.getGameState() != GameState.ACTIVE || player == null || board.getPlayerHand(player.getId()) == null);
-			model.addAttribute("tilesBankInfo", r);
 
 			model.addAttribute("player", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 			model.addAttribute("playerManager", playerManager);

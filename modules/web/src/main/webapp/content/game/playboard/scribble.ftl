@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="tilesBankInfo" type="char[][]" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 
@@ -14,7 +13,7 @@
         boardViewer: ${player.getId()},
         playerTurn: ${board.getPlayerTurn().getPlayerId()},
         bankCapacity: ${board.bankCapacity},
-        bankLetters: [<#list board.getTilesBankInfo() as tbi>'${tbi.getLetter()}'<#if tbi_has_next>,</#if></#list>],
+        bankTilesInfo: [<#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>],
         <#if board.gameState != "ACTIVE">wonPlayer:${board.getWonPlayer().getPlayerId()},</#if>
         bonuses: [
         <#list board.getScoreEngine().getScoreBonuses() as bonus>
@@ -68,10 +67,10 @@
             });
 
             var panel = $($("#wildcardSelectionPanel div").get(1)).empty();
-            $.each(scribbleBoard.bankLetters, function(i, letter) {
+            $.each(scribbleBoard.bankTilesInfo, function(i, bti) {
                 var row = Math.floor(i / 15);
                 var col = (i - row * 15);
-                var t = wm.scribble.tile.createTileWidget({number:0, letter: letter, cost: 0}).offset({top: row * 22, left: col * 22});
+                var t = wm.scribble.tile.createTileWidget({number:0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
                 t.hover(
                         function() {
                             wm.scribble.tile.selectTile(this);
@@ -99,7 +98,7 @@
     <tr>
         <td style="vertical-align: top; width: 250px">
         <#include "widget/progress.ftl"/>
-        <#--<#include "widget/legend.ftl"/>-->
+        <#include "widget/legend.ftl"/>
             <#--<div style="height: 10px"></div>-->
         <#--<#include "widget/history.ftl"/>-->
         </td>

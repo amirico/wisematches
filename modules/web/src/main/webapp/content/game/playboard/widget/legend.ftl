@@ -52,25 +52,8 @@
     </tr>
 </table>
 <div class="ui-widget-content ui-widget-separator"></div>
-<table>
+<table class="tilesInfoTable">
     <tbody>
-        <#list tilesBankInfo as i>
-            <#if i??>
-            <tr>
-                <td>
-                    <div style="position: relative; height: 22px; width:22px">
-                    <@tilePlain number="" cost=i_index letter="<b>" + i_index?string + "</b>" i=0 j=0 />
-                    </div>
-                </td>
-                <td>&nbsp;-&nbsp;</td>
-                <td>
-                    <div style="position: relative; height: 22px; width: ${(i?size)*22}px">
-                        <#list i as c><@tilePlain number="" cost=i_index letter=c?upper_case i=c_index j=0 /></#list>
-                    </div>
-                </td>
-            </tr>
-            </#if>
-        </#list>
     </tbody>
 </table>
 
@@ -78,3 +61,25 @@
     <a href="javascript: wm.scribble.legend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
 </div>
 </@wm.widget>
+
+<script type="text/javascript">
+    var infoTable = $("table .tilesInfoTable");
+    for (var i = 0; i < 12; i++) {
+        var count = 0;
+        var e = $("<tr></tr>");
+        $('<td></td>').append($('<div style="position: relative; height: 22px; width:22px"></div>').append(wm.scribble.tile.createTileWidget({letter: '' + i, cost: i}))).appendTo(e);
+        $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
+        var d = $('<div style="position: relative; height: 22px;"></div>');
+        $('<td></td>').append(d).appendTo(e);
+        $.each(scribbleBoard.bankTilesInfo, function(j, bti) {
+            if (bti.cost == i) {
+                d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: i}).offset({left: count * 22, top: 0}));
+                count++;
+            }
+        });
+        d.width(count * 22);
+        if (count > 0) {
+            e.appendTo(infoTable);
+        }
+    }
+</script>
