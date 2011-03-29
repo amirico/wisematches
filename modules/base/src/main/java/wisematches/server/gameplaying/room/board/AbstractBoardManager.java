@@ -2,7 +2,6 @@ package wisematches.server.gameplaying.room.board;
 
 import org.apache.commons.logging.Log;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.propose.GameProposal;
 import wisematches.server.player.Player;
 
 import java.lang.ref.Reference;
@@ -25,7 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public abstract class AbstractBoardManager<P extends GameProposal, S extends GameSettings, B extends GameBoard<S, ?>> implements BoardManager<S, B> {
+public abstract class AbstractBoardManager<S extends GameSettings, B extends GameBoard<S, ?>> implements BoardManager<S, B> {
 	private final Log log;
 
 	private final BoardsMap<B> boardsMap;
@@ -315,26 +314,19 @@ public abstract class AbstractBoardManager<P extends GameProposal, S extends Gam
 			}
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 			saveBoardImpl((B) board);
 
 			for (GameBoardListener statesListener : boardStateListeners) {
-				statesListener.gameFinished(board, wonPlayer);
+				statesListener.gameFinished(board, wonPlayers);
 			}
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
-		public void gameDrew(GameBoard board) {
-			saveBoardImpl((B) board);
-
-			for (GameBoardListener statesListener : boardStateListeners) {
-				statesListener.gameDrew(board);
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 			saveBoardImpl((B) board);
 
 			for (GameBoardListener statesListener : boardStateListeners) {

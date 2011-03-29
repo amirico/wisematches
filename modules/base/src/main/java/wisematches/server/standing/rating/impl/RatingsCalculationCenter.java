@@ -6,6 +6,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.room.Room;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
@@ -34,11 +35,10 @@ public class RatingsCalculationCenter {
 	private PlayerManager playerManager;
 
 	private RatingSystem ratingSystem = new ELORatingSystem();
+	private PlatformTransactionManager transactionManager;
 
 	private final Collection<PlayerRatingListener> listeners = new CopyOnWriteArraySet<PlayerRatingListener>();
-
 	private static final Log log = LogFactory.getLog(RatingsCalculationCenter.class);
-	private PlatformTransactionManager transactionManager;
 
 	public RatingsCalculationCenter() {
 	}
@@ -163,17 +163,12 @@ public class RatingsCalculationCenter {
 		}
 
 		@Override
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 			updatePlayerRatings(room, board, null);
 		}
 
 		@Override
-		public void gameDrew(GameBoard board) {
-			updatePlayerRatings(room, board, null);
-		}
-
-		@Override
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 			updatePlayerRatings(room, board, interrupterPlayer);
 		}
 	}

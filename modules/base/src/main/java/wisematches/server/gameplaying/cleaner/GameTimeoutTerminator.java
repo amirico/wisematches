@@ -286,17 +286,12 @@ public class GameTimeoutTerminator {
 		}
 
 		@Override
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 			cancelBoardTermination(board);
 		}
 
 		@Override
-		public void gameDrew(GameBoard board) {
-			cancelBoardTermination(board);
-		}
-
-		@Override
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 			cancelBoardTermination(board);
 		}
 	}

@@ -1,5 +1,7 @@
 package wisematches.server.gameplaying.board;
 
+import java.util.Collection;
+
 /**
  * The listeners of the state a game.
  *
@@ -12,23 +14,15 @@ public interface GameBoardListener {
 	 * @param board the board
 	 * @param move  the made move
 	 */
-	void gameMoveMade(GameBoard board, GameMove move);
-
-	/**
-	 * No one player has won.
-	 *
-	 * @param board the board game that was finished
-	 * @see GameState#DREW
-	 */
-	void gameDrew(GameBoard board);
+	<S extends GameSettings, P extends GamePlayerHand> void gameMoveMade(GameBoard<S, P> board, GameMove move);
 
 	/**
 	 * Game was finished and someone has won
 	 *
-	 * @param board	 the board game that was finished
-	 * @param wonPlayer the player who won  @see wisematches.server.games.board.GameState#FINISHED
+	 * @param board	  the board game that was finished
+	 * @param wonPlayers the list of players who won  @see wisematches.server.games.board.GameState#FINISHED
 	 */
-	void gameFinished(GameBoard board, GamePlayerHand wonPlayer);
+	<S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers);
 
 	/**
 	 * Game was interrupted by specified player.
@@ -37,5 +31,5 @@ public interface GameBoardListener {
 	 * @param interrupterPlayer the interrupter.  @see wisematches.server.games.board.GameState#INTERRUPTED
 	 * @param byTimeout		 indicates that game was interrupted by timeout.
 	 */
-	void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout);
+	<S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout);
 }

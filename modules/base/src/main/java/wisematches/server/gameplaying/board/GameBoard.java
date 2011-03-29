@@ -1,5 +1,6 @@
 package wisematches.server.gameplaying.board;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -98,14 +99,11 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	List<P> getPlayersHands();
 
 	/**
-	 * Returns won player for this game. This method throws {@code java.lang.IllegalStateException}
-	 * if game is not finished yet.
+	 * Returns list of winners for this game.
 	 *
-	 * @return the won player or {@code null} if game was finished with draw.
-	 * @throws IllegalStateException if game is not finished yet (has state {@code GameState.IN_PROGRESS}
-	 *                               or {@code GameState.WAITING}.
+	 * @return the list of winners or empty list for draw or {@code null} if game is not finished.
 	 */
-	P getWonPlayer();
+	Collection<P> getWonPlayers();
 
 	/**
 	 * Returns state of this game.

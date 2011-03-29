@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.Room;
@@ -159,15 +160,11 @@ public class RobotActivityCenter {
 		}
 
 		@Override
-		public void gameDrew(GameBoard board) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 		}
 
 		@Override
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
-		}
-
-		@Override
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 		}
 	}
 }

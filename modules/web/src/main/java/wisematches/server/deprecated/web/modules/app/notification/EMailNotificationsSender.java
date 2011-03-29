@@ -11,6 +11,7 @@ import wisematches.server.deprecated.web.mail.MailSender;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.cleaner.GameTimeoutEvent;
 import wisematches.server.gameplaying.cleaner.GameTimeoutListener;
 import wisematches.server.gameplaying.cleaner.GameTimeoutTerminator;
@@ -180,36 +181,26 @@ public class EMailNotificationsSender {
 		}
 
 		@Override
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
-			model.put("wonPlayer", playerManager.getPlayer(wonPlayer.getPlayerId()));
+//			model.put("wonPlayer", playerManager.getPlayer(wonPlayer.getPlayerId()));
 			model.put("rated", board.isRatedGame());
 
 			@SuppressWarnings("unchecked")
-			final List<GamePlayerHand> hands = board.getPlayersHands();
-			for (GamePlayerHand hand : hands) {
-				if (hand == wonPlayer) {
+			final List<P> hands = board.getPlayersHands();
+			for (P hand : hands) {
+				if (!wonPlayers.contains(hand)) {
 					continue;
 				}
 				sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.lost", hand, model);
 			}
-			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.won", wonPlayer, model);
+//			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.won", wonPlayer, model);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		public void gameDrew(GameBoard board) {
-			final Map<String, Object> model = new HashMap<String, Object>();
-			model.put("board", board);
-			model.put("rated", board.isRatedGame());
-
-			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.draw", board.getPlayersHands(), model);
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
+/*
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
 			model.put("timeouted", byTimeout);
@@ -219,8 +210,8 @@ public class EMailNotificationsSender {
 			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.lost", interrupterPlayer, model);
 
 			@SuppressWarnings("unchecked")
-			final List<GamePlayerHand> hands = board.getPlayersHands();
-			final GamePlayerHand wonPlayer = board.getWonPlayer();
+			final List<P> hands = board.getPlayersHands();
+			final Collection<P> wonPlayer = board.getWonPlayers();
 			if (wonPlayer != null) {
 				model.put("wonPlayer", playerManager.getPlayer(wonPlayer.getPlayerId()));
 				sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.won", wonPlayer, model);
@@ -238,6 +229,7 @@ public class EMailNotificationsSender {
 					sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.draw", board.getPlayersHands(), model);
 				}
 			}
+*/
 		}
 
 		@Override

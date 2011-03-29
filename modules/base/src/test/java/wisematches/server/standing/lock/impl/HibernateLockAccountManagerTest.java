@@ -19,6 +19,7 @@ import wisematches.server.standing.lock.LockAccountManager;
 import wisematches.server.standing.lock.LockUsernameListener;
 
 import java.util.Date;
+import java.util.UUID;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -47,7 +48,8 @@ public class HibernateLockAccountManagerTest {
 
 	@Before
 	public void createPlayer() throws Exception {
-		player = accountManager.createPlayer(new PlayerEditor("asd@qwe.ru", "qwe", "asd").createPlayer());
+		UUID uuid = UUID.randomUUID();
+		player = accountManager.createPlayer(new PlayerEditor(uuid + "@qwe.ru", uuid.toString(), "asd").createPlayer());
 	}
 
 	@After

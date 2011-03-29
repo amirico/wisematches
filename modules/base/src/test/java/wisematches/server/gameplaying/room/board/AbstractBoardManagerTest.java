@@ -6,7 +6,6 @@ import org.easymock.IAnswer;
 import org.junit.Test;
 import wisematches.server.core.MockPlayer;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.propose.GameProposal;
 import wisematches.server.player.Player;
 
 import java.util.Arrays;
@@ -168,14 +167,13 @@ public class AbstractBoardManagerTest {
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
 		expect(dao.loadBoard(1L)).andReturn(board);
 		dao.saveBoard(board);
-		expectLastCall().times(3);
+		expectLastCall().times(2);
 		replay(dao);
 
 		final GameMove move = new GameMove(new PassTurnMove(13L), 0, 0, new Date());
 
 		final BoardStateListener boardListener = createStrictMock(BoardStateListener.class);
 		boardListener.gameMoveMade(board, move);
-		boardListener.gameDrew(board);
 		boardListener.gameFinished(board, null);
 		boardListener.gameInterrupted(board, null, false);
 		replay(boardListener);
@@ -187,7 +185,6 @@ public class AbstractBoardManagerTest {
 
 		boardListener.gameMoveMade(board, move);
 
-		gameBoardListener.gameDrew(board);
 		gameBoardListener.gameFinished(board, null);
 		gameBoardListener.gameInterrupted(board, null, false);
 
@@ -221,7 +218,7 @@ public class AbstractBoardManagerTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static class MockBoardManager extends AbstractBoardManager<GameProposal, GameSettings, GameBoard<GameSettings, GamePlayerHand>> {
+	private static class MockBoardManager extends AbstractBoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> {
 		private final GameBoardDao gameBoardDao;
 
 		private MockBoardManager(GameBoardDao gameBoardDao) {

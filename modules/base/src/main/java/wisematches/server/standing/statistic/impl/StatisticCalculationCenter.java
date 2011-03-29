@@ -9,6 +9,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
@@ -32,6 +33,9 @@ public class StatisticCalculationCenter {
 
 	private static final Log log = LogFactory.getLog(StatisticCalculationCenter.class);
 
+	public StatisticCalculationCenter() {
+	}
+
 	protected void processGameStarted(GameBoard board) {
 		@SuppressWarnings("unchecked")
 		final List<GamePlayerHand> hands = board.getPlayersHands();
@@ -54,11 +58,11 @@ public class StatisticCalculationCenter {
 		}
 	}
 
-	protected void processGameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+	protected <S extends GameSettings, P extends GamePlayerHand> void processGameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 		final boolean ratedGame = board.isRatedGame();
 		@SuppressWarnings("unchecked")
-		final List<GamePlayerHand> hands = board.getPlayersHands();
-		for (GamePlayerHand hand : hands) {
+		final List<P> hands = board.getPlayersHands();
+		for (P hand : hands) {
 			final long playerId = hand.getPlayerId();
 
 			playerStatisticsManager.lockPlayerStatistic(playerId);
@@ -70,15 +74,23 @@ public class StatisticCalculationCenter {
 				}
 
 				if (ratedGame) { // If game is not rated just ignore it
-					if (hand == wonPlayer) {
-						statistic.setWonGames(statistic.getWonGames() + 1);
+					statistic.setDrawGames(statistic.getDrawGames() + 1);
+					if (wonPlayers.size() == board.getPlayersHands().size()) { // draw
+						statistic.setDrawGames(statistic.getDrawGames() + 1);
 						if (log.isDebugEnabled()) {
-							log.debug("Increase won games for player " + playerId + " to " + statistic.getWonGames());
+							log.debug("Increase draw games for player " + playerId + " to " + statistic.getLostGames());
 						}
 					} else {
-						statistic.setLostGames(statistic.getLostGames() + 1);
-						if (log.isDebugEnabled()) {
-							log.debug("Increase lost games for player " + playerId + " to " + statistic.getLostGames());
+						if (wonPlayers.contains(hand)) {
+							statistic.setWonGames(statistic.getWonGames() + 1);
+							if (log.isDebugEnabled()) {
+								log.debug("Increase won games for player " + playerId + " to " + statistic.getWonGames());
+							}
+						} else {
+							statistic.setLostGames(statistic.getLostGames() + 1);
+							if (log.isDebugEnabled()) {
+								log.debug("Increase lost games for player " + playerId + " to " + statistic.getLostGames());
+							}
 						}
 					}
 					updateRatingsInfo(board, hand, statistic);
@@ -90,37 +102,7 @@ public class StatisticCalculationCenter {
 		}
 	}
 
-	protected void processGameDraw(GameBoard board) {
-		final boolean ratedGame = board.isRatedGame();
-
-		@SuppressWarnings("unchecked")
-		final List<GamePlayerHand> hands = board.getPlayersHands();
-		for (GamePlayerHand hand : hands) {
-			final long playerId = hand.getPlayerId();
-
-			playerStatisticsManager.lockPlayerStatistic(playerId);
-			try {
-				final PlayerStatistic statistic = getPlayerStatistic(playerId);
-				statistic.setActiveGames(statistic.getActiveGames() - 1);
-				if (log.isDebugEnabled()) {
-					log.debug("Decrease active games for player " + playerId + " to " + statistic.getActiveGames());
-				}
-
-				if (ratedGame) {
-					statistic.setDrawGames(statistic.getDrawGames() + 1);
-					if (log.isDebugEnabled()) {
-						log.debug("Increate draw games for player " + playerId + " to " + statistic.getDrawGames());
-					}
-					updateRatingsInfo(board, hand, statistic);
-				}
-				playerStatisticsManager.updatePlayerStatistic(statistic);
-			} finally {
-				playerStatisticsManager.unlockPlayerStatistic(playerId);
-			}
-		}
-	}
-
-	protected void processGameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+	protected <S extends GameSettings, P extends GamePlayerHand> void processGameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 		if (board.isRatedGame() && byTimeout) {
 			final long playerId = interrupterPlayer.getPlayerId();
 			playerStatisticsManager.lockPlayerStatistic(playerId);
@@ -128,19 +110,13 @@ public class StatisticCalculationCenter {
 				final PlayerStatistic statistic = getPlayerStatistic(playerId);
 				statistic.setTimeouts(statistic.getTimeouts() + 1);
 				if (log.isDebugEnabled()) {
-					log.debug("Increate by timeouts games for player " + playerId + " to " + statistic.getTimeouts());
+					log.debug("Increase interrupted by timeouts games for player " + playerId + " to " + statistic.getTimeouts());
 				}
 			} finally {
 				playerStatisticsManager.unlockPlayerStatistic(playerId);
 			}
 		}
-
-		final GamePlayerHand wonPlayer = board.getWonPlayer();
-		if (wonPlayer == null) {
-			processGameDraw(board);
-		} else {
-			processGameFinished(board, wonPlayer);
-		}
+		processGameFinished(board, board.getWonPlayers());
 	}
 
 	protected void processPlayerMoved(GameBoard board, GameMove move) {
@@ -338,6 +314,9 @@ public class StatisticCalculationCenter {
 	}
 
 	private class TheBoardStateListener implements BoardStateListener {
+		private TheBoardStateListener() {
+		}
+
 		@Override
 		public void gameStarted(GameBoard board) {
 			final TransactionStatus status = newTransaction();
@@ -351,10 +330,10 @@ public class StatisticCalculationCenter {
 		}
 
 		@Override
-		public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 			final TransactionStatus status = newTransaction();
 			try {
-				processGameFinished(board, wonPlayer);
+				processGameFinished(board, wonPlayers);
 				transactionManager.commit(status);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated", th);
@@ -363,19 +342,7 @@ public class StatisticCalculationCenter {
 		}
 
 		@Override
-		public void gameDrew(GameBoard board) {
-			final TransactionStatus status = newTransaction();
-			try {
-				processGameDraw(board);
-				transactionManager.commit(status);
-			} catch (Throwable th) {
-				log.error("Statistic can't be updated", th);
-				transactionManager.rollback(status);
-			}
-		}
-
-		@Override
-		public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 			final TransactionStatus status = newTransaction();
 			try {
 				processGameInterrupted(board, interrupterPlayer, byTimeout);

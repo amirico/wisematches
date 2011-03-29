@@ -24,6 +24,7 @@ import wisematches.server.standing.rating.PlayerRatingListener;
 import wisematches.server.standing.rating.RatingSystem;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -131,7 +132,7 @@ public class RatingsCalculationCenterTest {
 		calculationCenter.addRatingsChangeListener(listener);
 		calculationCenter.setTransactionManager(transaction);
 
-		boardListener.gameDrew(board);
+		boardListener.gameFinished(board, Collections.<GamePlayerHand>emptyList());
 
 //		assertEquals(1050, p1.getRating());
 //		assertEquals(1600, p2.getRating());
@@ -149,6 +150,7 @@ public class RatingsCalculationCenterTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void test_passNoRatedGame() throws BoardLoadingException {
 		final GameBoard board = createStrictMock(GameBoard.class);
 		replay(playerManager);
@@ -165,7 +167,7 @@ public class RatingsCalculationCenterTest {
 		replay(listener);
 
 		calculationCenter.addRatingsChangeListener(listener);
-		boardListener.gameDrew(board);
+		boardListener.gameFinished(board, Collections.<GamePlayerHand>emptyList());
 
 		verify(board, playerManager, roomManager, listener);
 	}

@@ -123,8 +123,8 @@ public class ScribbleBoardDaoTest {
 	@Test
 	public void test_getGamesCount() {
 		assertEquals(0, scribbleBoardDao.getGamesCount(null));
-		scribbleBoardDao.getGamesCount(EnumSet.of(GameState.DREW));
-		scribbleBoardDao.getGamesCount(EnumSet.of(GameState.DREW, GameState.INTERRUPTED));
+		scribbleBoardDao.getGamesCount(EnumSet.of(GameState.FINISHED));
+		scribbleBoardDao.getGamesCount(EnumSet.of(GameState.FINISHED, GameState.INTERRUPTED));
 	}
 /*
 
