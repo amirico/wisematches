@@ -294,7 +294,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.isRatedGame()).andReturn(true).times(2);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2)).anyTimes();
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
-		expect(board.getWonPlayer()).andReturn(hand2);
+		expect(board.getWonPlayers()).andReturn(hand2);
 		replay(board);
 
 		calculationCenter.setPlayerStatisticsManager(mi);
@@ -342,7 +342,7 @@ public class StatisticCalculationCenterTest {
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(false).times(4);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2)).times(3);
-		expect(board.getWonPlayer()).andReturn(null);
+		expect(board.getWonPlayers()).andReturn(null);
 		replay(board);
 
 		calculationCenter.setPlayerStatisticsManager(mi);

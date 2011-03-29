@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertNotNull;
 public class AbstractInfoControllerTest {
 	@Test
 	public void testparseInfoHolder() throws Exception {
-		final Resource r = new ClassPathResource("/i18n/info/parsingTest.properties");
+		final Resource r = new ClassPathResource("/i18n/server/info/parsingTest.properties");
 
 		final AbstractInfoController c = new AbstractInfoController();
 		final NodeModel holder = c.parseInfoHolder(r);
@@ -56,7 +56,7 @@ public class AbstractInfoControllerTest {
 	@Test
 	public void testgetInfoHolder() throws Exception {
 		final AbstractInfoController c = new AbstractInfoController();
-		c.setResourcesPaths("classpath:/i18n/info/");
+		c.setResourcesPaths("classpath:/i18n/server/info/");
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("en")), "L_default", "I_default", "D_default", 0);
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("jp")), "L_default", "I_default", "D_default", 0);
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("ru")), "L_ru", "I_ru", "D_ru", 0);

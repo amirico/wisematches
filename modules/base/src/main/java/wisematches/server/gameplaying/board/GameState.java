@@ -17,11 +17,6 @@ public enum GameState {
 	FINISHED,
 
 	/**
-	 * Game was finished and no one has won
-	 */
-	DREW,
-
-	/**
 	 * Game wasn't finished but was canceled.
 	 */
 	INTERRUPTED,

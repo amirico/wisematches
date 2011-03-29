@@ -210,8 +210,7 @@ public class PlayboardController {
 		state.put("stateMessage", gameMessageSource.formatGameState(board.getGameState(), locale));
 		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
 		if (board.getGameState() != GameState.ACTIVE) {
-			final ScribblePlayerHand winner = board.getWonPlayer();
-			state.put("winner", winner != null ? winner.getPlayerId() : null);
+			state.put("winners", board.getWonPlayers());
 			state.put("playerHands", board.getPlayersHands());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));

@@ -167,17 +167,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		}
 	}
 
-	protected void fireGameFinished(P wonPlayer) {
+	protected void fireGameFinished(List<P> wonPlayers) {
 		gameState = GameState.FINISHED;
 		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameFinished(this, wonPlayer);
-		}
-	}
-
-	protected void fireGameDraw() {
-		gameState = GameState.DREW;
-		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameDrew(this);
+			boardListener.gameFinished(this, wonPlayers);
 		}
 	}
 
@@ -225,13 +218,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		if (checkGameFinished() || checkGamePassed()) {
 			finalizeGame();
 			firePlayerMoved(gameMove);
-
-			final P won = getWonPlayer(playersIterator.getPlayerHands());
-			if (won == null) {
-				fireGameDraw();
-			} else {
-				fireGameFinished(won);
-			}
+			fireGameFinished(getWonPlayers(playersIterator.getPlayerHands()));
 		} else {
 			playersIterator.next();
 			firePlayerMoved(gameMove);
@@ -263,7 +250,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 */
 	protected void checkState() throws GameStateException {
 		switch (gameState) {
-			case DREW:
 			case FINISHED:
 			case INTERRUPTED:
 				throw new GameFinishedException(gameState);
@@ -301,19 +287,17 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @param players players
 	 * @return won player or {@code null} if no one is won.
 	 */
-	protected P getWonPlayer(List<P> players) {
-		P won;
+	protected List<P> getWonPlayers(List<P> players) {
+		final List<P> won = new ArrayList<P>(players.size());
 
-		final Iterator<P> i = players.iterator();
-		won = i.next();
-		int points = won.getPoints();
-		while (i.hasNext()) {
-			final P p = i.next();
-			if (p.getPoints() > points) {
-				points = p.getPoints();
-				won = p;
-			} else if (p.getPoints() == points) {
-				won = null;
+		int points = Integer.MIN_VALUE;
+		for (P player : players) {
+			if (player.getPoints() == points) {
+				won.add(player);
+			} else if (player.getPoints() > points) {
+				won.clear();
+				won.add(player);
+				points = player.getPoints();
 			}
 		}
 		return won;
@@ -327,11 +311,11 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @throws IllegalStateException if game is not finished yet (has state {@code GameState.IN_PROGRESS}
 	 *                               or {@code GameState.WAITING}.
 	 */
-	public P getWonPlayer() {
+	public List<P> getWonPlayers() {
 		if (gameState == GameState.ACTIVE) {
-			throw new IllegalStateException("Game not finished yet");
+			return null;
 		}
-		return getWonPlayer(playersIterator.getPlayerHands());
+		return getWonPlayers(playersIterator.getPlayerHands());
 	}
 
 	/**

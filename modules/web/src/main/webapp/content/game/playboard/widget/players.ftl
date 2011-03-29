@@ -11,7 +11,7 @@
             <#assign finished = false/>
             <#assign playerStyle="ui-state-active"/>
             <#else>
-                <#assign active=(board.getWonPlayer() == hand) || board.gameState == 'DREW'/>
+                <#assign active=(board.getWonPlayers() == hand) || board.gameState == 'DREW'/>
                 <#assign finished = true/>
                 <#assign playerStyle="ui-state-highlight"/>
         </#if>

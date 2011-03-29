@@ -99,7 +99,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 		expect(board.getPlayerHand(h1.getPlayerId())).andReturn(h1).anyTimes();
 		expect(board.getPlayerHand(h2.getPlayerId())).andReturn(h2).anyTimes();
 		expect(board.getPlayerHand(h3.getPlayerId())).andReturn(h3).anyTimes();
-		expect(board.getWonPlayer()).andReturn(h3).anyTimes();
+		expect(board.getWonPlayers()).andReturn(h3).anyTimes();
 		expect(board.getPlayerTurn()).andReturn(h2).anyTimes();
 		expect(board.getGameSettings()).andReturn(new ScribbleSettings("This is title", new Date(), 3, "en", 3)).anyTimes();
 		replay(board);

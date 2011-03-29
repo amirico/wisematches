@@ -19,6 +19,7 @@ import wisematches.server.player.Player;
 import wisematches.server.player.computer.robot.RobotPlayer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -72,19 +73,17 @@ public class SmallRobotsGameTest {
 				new ScribbleSettings("This is robots game", "en", 3, false, true),
 				Arrays.<Player>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
-			public void gameFinished(GameBoard board, GamePlayerHand wonPlayer) {
-				notifyGameFinished();
-			}
-
 			@Override
 			public void gameMoveMade(GameBoard board, GameMove move) {
 			}
 
-			public void gameDrew(GameBoard board) {
+			@Override
+			public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 				notifyGameFinished();
 			}
 
-			public void gameInterrupted(GameBoard board, GamePlayerHand interrupterPlayer, boolean byTimeout) {
+			@Override
+			public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 				notifyGameFinished();
 			}
 		});
@@ -120,7 +119,8 @@ public class SmallRobotsGameTest {
 
 		assertTrue("Dull won a stager???", dullPoints < stagerPoints);
 		assertTrue("Stager won a expert???", stagerPoints < expertPoints);
-		assertEquals("EXPERT didn't win???", r3.getId(), board.getWonPlayer().getPlayerId());
+		assertEquals("More that one winner???", 1, board.getWonPlayers().size());
+		assertEquals("EXPERT didn't win???", r3.getId(), board.getWonPlayers().get(0).getPlayerId());
 	}
 
 	private void notifyGameFinished() {
