@@ -127,11 +127,6 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	}
 
 	@Override
-	public void updateBoard(B board) {
-		saveBoardImpl(board);
-	}
-
-	@Override
 	public Collection<B> getActiveBoards(Player player) {
 		if (log.isDebugEnabled()) {
 			log.debug("get active boards for player: " + player);
@@ -306,31 +301,21 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameMoveMade(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard board, GameMove move) {
 			saveBoardImpl((B) board);
 
 			for (GameBoardListener statesListener : boardStateListeners) {
-				statesListener.gameMoveMade(board, move);
+				statesListener.gameMoveDone(board, move);
 			}
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 			saveBoardImpl((B) board);
 
 			for (GameBoardListener statesListener : boardStateListeners) {
-				statesListener.gameFinished(board, wonPlayers);
-			}
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
-			saveBoardImpl((B) board);
-
-			for (GameBoardListener statesListener : boardStateListeners) {
-				statesListener.gameInterrupted(board, interrupterPlayer, byTimeout);
+				statesListener.gameFinished(board, resolution, wonPlayers);
 			}
 		}
 	}

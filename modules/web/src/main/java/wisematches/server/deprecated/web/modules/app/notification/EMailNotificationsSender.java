@@ -8,10 +8,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.deprecated.web.mail.FromTeam;
 import wisematches.server.deprecated.web.mail.MailSender;
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameMove;
-import wisematches.server.gameplaying.board.GamePlayerHand;
-import wisematches.server.gameplaying.board.GameSettings;
+import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.cleaner.GameTimeoutEvent;
 import wisematches.server.gameplaying.cleaner.GameTimeoutListener;
 import wisematches.server.gameplaying.cleaner.GameTimeoutTerminator;
@@ -26,7 +23,6 @@ import wisematches.server.utils.sessions.PlayerSessionsManager;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,7 +52,7 @@ public class EMailNotificationsSender {
 
 	private void sentNotification(PlayerNotification notificationType,
 								  String resource,
-								  List<GamePlayerHand> players, Map<String, ?> model) {
+								  Collection<GamePlayerHand> players, Map<String, ?> model) {
 		for (GamePlayerHand hand : players) {
 			sentNotification(notificationType, resource, hand, model);
 		}
@@ -163,7 +159,7 @@ public class EMailNotificationsSender {
 		@Override
 		public void gameStarted(GameBoard board) {
 			@SuppressWarnings("unchecked")
-			final List<GamePlayerHand> playersHands = board.getPlayersHands();
+			final Collection<GamePlayerHand> playersHands = board.getPlayersHands();
 			final Player turnOwnerPlayer = playerManager.getPlayer(board.getPlayerTurn().getPlayerId());
 
 			final Map<String, Object> model = new HashMap<String, Object>();
@@ -181,14 +177,14 @@ public class EMailNotificationsSender {
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
 //			model.put("wonPlayer", playerManager.getPlayer(wonPlayer.getPlayerId()));
 			model.put("rated", board.isRatedGame());
 
 			@SuppressWarnings("unchecked")
-			final List<P> hands = board.getPlayersHands();
+			final Collection<P> hands = board.getPlayersHands();
 			for (P hand : hands) {
 				if (!wonPlayers.contains(hand)) {
 					continue;
@@ -196,10 +192,6 @@ public class EMailNotificationsSender {
 				sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.lost", hand, model);
 			}
 //			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.won", wonPlayer, model);
-		}
-
-		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
 /*
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
@@ -233,7 +225,7 @@ public class EMailNotificationsSender {
 		}
 
 		@Override
-		public void gameMoveMade(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard board, GameMove move) {
 			final GamePlayerHand nextPlayer = board.getPlayerTurn();
 
 			final Map<String, Object> model = new HashMap<String, Object>();
@@ -250,7 +242,7 @@ public class EMailNotificationsSender {
 				sentNotification(GameBoardNotification.PLAYER_MOVED, "app.game.turn.you", nextPlayer, model);
 			}
 			@SuppressWarnings("unchecked")
-			final List<GamePlayerHand> hands = board.getPlayersHands();
+			final Collection<GamePlayerHand> hands = board.getPlayersHands();
 			for (GamePlayerHand hand : hands) {
 				if (hand == nextPlayer || hand.getPlayerId() == move.getPlayerMove().getPlayerId()) {
 					continue;

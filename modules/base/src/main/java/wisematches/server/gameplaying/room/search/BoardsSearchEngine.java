@@ -1,7 +1,7 @@
 package wisematches.server.gameplaying.room.search;
 
 import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.board.GameResolution;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -22,10 +22,11 @@ public interface BoardsSearchEngine<B extends GameBoard<?, ?>> {
 	Collection<ExpiringBoard> findExpiringBoards();
 
 	/**
-	 * Returns count of games with specified states.
+	 * Returns count of games with specified resolution. If specified resolutions set is null when
+	 * number of active games will be returned.
 	 *
-	 * @param states the set of states
+	 * @param resolutions the set of states or null to get number of active games.
 	 * @return the count of games with specified states.
 	 */
-	int getGamesCount(EnumSet<GameState> states);
+	int getGamesCount(EnumSet<GameResolution> resolutions);
 }

@@ -112,7 +112,7 @@ public class PlayboardServiceImpl extends GenericSecureRemoteService {//implemen
             if (hand == null) {
                 throw new IllegalArgumentException("You are not in specified game: " + boardId);
             }
-            board.close(hand);
+            board.resign(hand);
         } catch (GameMoveException e) {
             throw convertException(e);
         } catch (BoardLoadingException ex) {

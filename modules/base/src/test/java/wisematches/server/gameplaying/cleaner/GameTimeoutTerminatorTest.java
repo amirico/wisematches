@@ -7,7 +7,6 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameMoveException;
-import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.room.MockRoom;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
@@ -40,12 +39,12 @@ public class GameTimeoutTerminatorTest {
 		final long currentTime = System.currentTimeMillis();
 
 		final GameBoard board1 = createStrictMock(GameBoard.class);
-		expect(board1.getGameState()).andReturn(GameState.ACTIVE);
+		expect(board1.isGameActive()).andReturn(true);
 		board1.terminate();
 		replay(board1);
 
 		final GameBoard board2 = createStrictMock(GameBoard.class);
-		expect(board2.getGameState()).andReturn(GameState.FINISHED);
+		expect(board2.isGameActive()).andReturn(false);
 		replay(board2);
 
 		final Capture<GameTimeoutEvent> event = new Capture<GameTimeoutEvent>();

@@ -40,7 +40,7 @@ public class ScribbleProposalManager extends AbstractProposalManager<ScribblePro
 		}
 		info.attachPlayer(player);
 		fireGameProposalUpdated(info);
-		if (info.isGameReady()) { // if game is ready - close it.
+		if (info.isGameReady()) { // if game is ready - resign it.
 			closeGameProposal(info);
 		}
 		return info;

@@ -84,7 +84,7 @@ CREATE TABLE `scribble_board` (
   `language` char(2) NOT NULL,
   `passesCount` tinyint(4) NOT NULL,
   `lastMoveTime` bigint(20) NOT NULL,
-  `gameState` tinyint(4) NOT NULL,
+  `resolution` tinyint(4) NOT NULL,
   `boardTiles` tinyblob NOT NULL,
   `handTiles` tinyblob NOT NULL,
   `moves` blob NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE `scribble_board` (
   `finishedDate` bigint(20) default NULL,
   `rated` tinyint(3) default '1',
   PRIMARY KEY  (`boardId`),
-  KEY `state` (`gameState`)
+  KEY `state` (`gameResolution`)
 ) ENGINE=MyISAM AUTO_INCREMENT=459 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 

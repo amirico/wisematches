@@ -2,7 +2,7 @@
 
 <#include "/core.ftl">
 
-<#assign active=board.gameState == "ACTIVE"/>
+<#assign active=board.gameResolution == "ACTIVE"/>
 <@wm.widget id="gameInfo" title="game.state.label">
 <table width="100%" border="0">
     <tr>

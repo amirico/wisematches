@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import wisematches.server.gameplaying.board.GameMoveException;
-import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.board.PassTurnMove;
 import wisematches.server.gameplaying.room.search.ExpiringBoard;
 import wisematches.server.gameplaying.scribble.Direction;
@@ -78,7 +78,7 @@ public class ScribbleBoardDaoTest {
 		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p2, p3, p4), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb1);
 
-		assertEquals(GameState.ACTIVE, sb1.getGameState());
+		assertTrue(sb1.isGameActive());
 		assertEquals(0, scribbleBoardDao.getActiveBoards(p1).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p2).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
@@ -89,7 +89,7 @@ public class ScribbleBoardDaoTest {
 		final ScribbleBoard sb2 = new ScribbleBoard(ss2, Arrays.asList(p1, p2), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb2);
 
-		assertEquals(GameState.ACTIVE, sb2.getGameState());
+		assertTrue(sb2.isGameActive());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p1).size());
 		assertEquals(2, scribbleBoardDao.getActiveBoards(p2).size());
 		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
@@ -122,9 +122,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_getGamesCount() {
-		assertEquals(0, scribbleBoardDao.getGamesCount(null));
-		scribbleBoardDao.getGamesCount(EnumSet.of(GameState.FINISHED));
-		scribbleBoardDao.getGamesCount(EnumSet.of(GameState.FINISHED, GameState.INTERRUPTED));
+		scribbleBoardDao.getGamesCount(null);
+		scribbleBoardDao.getGamesCount(EnumSet.of(GameResolution.FINISHED));
+		scribbleBoardDao.getGamesCount(EnumSet.of(GameResolution.TIMEOUT, GameResolution.RESIGNED));
 	}
 /*
 
@@ -240,9 +240,9 @@ public class ScribbleBoardDaoTest {
 		assertEquals(originalBoard.getPassesCount(), loadedBoard.getPassesCount());
 		assertDates(originalBoard.getLastMoveTime(), loadedBoard.getLastMoveTime());
 		assertEquals(originalBoard.getBoardId(), loadedBoard.getBoardId());
-		assertEquals(originalBoard.getGameState(), loadedBoard.getGameState());
-		assertEquals(GameState.ACTIVE, loadedBoard.getGameState());
+		assertEquals(originalBoard.getGameResolution(), loadedBoard.getGameResolution());
 		assertEquals(originalBoard.getPlayerTurn().getPlayerId(), loadedBoard.getPlayerTurn().getPlayerId());
+		assertTrue(loadedBoard.isGameActive());
 
 		final List<ScribblePlayerHand> playerHands = loadedBoard.getPlayersHands();
 		assertEquals(3, playerHands.size());

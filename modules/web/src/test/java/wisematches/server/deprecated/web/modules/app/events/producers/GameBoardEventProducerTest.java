@@ -303,7 +303,7 @@ public class GameBoardEventProducerTest {
 
         final Word word = new Word(new Position(3, 9), Direction.VERTICAL, new Tile(1, 'a', 1), new Tile(2, 'b', 2));
         final PlayerMove move = new MakeWordMove(13L, word);
-        gameMoveListener.gameMoveMade(
+        gameMoveListener.gameMoveDone(
                 new GameMoveEvent(board,
                         new ScribblePlayerHand(13L, new Tile(3, 'c', 3)),
                         new GameMove(move, 1, 2, 3),

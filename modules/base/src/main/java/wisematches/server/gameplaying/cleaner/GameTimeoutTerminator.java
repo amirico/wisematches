@@ -145,7 +145,7 @@ public class GameTimeoutTerminator {
 			@SuppressWarnings("unchecked")
 			final BoardManager boardManager = roomsManager.getBoardManager(room);
 			final GameBoard board = boardManager.openBoard(boardId);
-			if (board.getGameState() == GameState.ACTIVE) {
+			if (board.isGameActive()) {
 				if (log.isInfoEnabled()) {
 					log.info("Board " + board + " terminated");
 				}
@@ -281,17 +281,12 @@ public class GameTimeoutTerminator {
 		}
 
 		@Override
-		public void gameMoveMade(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard board, GameMove move) {
 			startBoardTerminationTask(room, new ExpiringBoard(board));
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
-			cancelBoardTermination(board);
-		}
-
-		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution gameResolution, Collection<P> wonPlayers) {
 			cancelBoardTermination(board);
 		}
 	}

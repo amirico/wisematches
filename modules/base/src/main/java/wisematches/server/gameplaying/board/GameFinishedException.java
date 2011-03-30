@@ -4,14 +4,14 @@ package wisematches.server.gameplaying.board;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class GameFinishedException extends GameStateException {
-	private final GameState gameState;
+	private final GameResolution gameResolution;
 
-	public GameFinishedException(GameState gameState) {
-		super("Game already finished with status " + gameState);
-		this.gameState = gameState;
+	public GameFinishedException(GameResolution gameResolution) {
+		super("Game already finished with resolution: " + gameResolution);
+		this.gameResolution = gameResolution;
 	}
 
-	public GameState getGameState() {
-		return gameState;
+	public GameResolution getGameResolution() {
+		return gameResolution;
 	}
 }

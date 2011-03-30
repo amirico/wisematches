@@ -5,13 +5,13 @@
 <table cellpadding="5" width="100%">
     <#list board.playersHands as hand>
         <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
-        <#if board.gameState == 'ACTIVE'>
+        <#if board.gameResolution == 'ACTIVE'>
             <#assign active=(board.getPlayerTurn() == hand)/>
             <#assign winner = false/>
             <#assign finished = false/>
             <#assign playerStyle="ui-state-active"/>
             <#else>
-                <#assign active=(board.getWonPlayers() == hand) || board.gameState == 'DREW'/>
+                <#assign active=(board.getWonPlayers() == hand) || board.gameResolution == 'DREW'/>
                 <#assign finished = true/>
                 <#assign playerStyle="ui-state-highlight"/>
         </#if>

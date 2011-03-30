@@ -74,23 +74,18 @@ public class SmallRobotsGameTest {
 				Arrays.<Player>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
 			@Override
-			public void gameMoveMade(GameBoard board, GameMove move) {
+			public void gameMoveDone(GameBoard board, GameMove move) {
 			}
 
 			@Override
-			public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
-				notifyGameFinished();
-			}
-
-			@Override
-			public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
+			public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 				notifyGameFinished();
 			}
 		});
-		assertEquals("Game is not in progress state", GameState.ACTIVE, board.getGameState());
+		assertTrue("Game is not in progress state", board.isGameActive());
 
 		gameFinishedLock.lock();
-		if (board.getGameState() == GameState.ACTIVE) {
+		while (board.isGameActive()) {
 			gameFinishedCondition.await();
 		}
 		gameFinishedLock.unlock();
@@ -98,7 +93,7 @@ public class SmallRobotsGameTest {
 		log.info("Game was finished at " + (System.currentTimeMillis() - currentTime) + "ms");
 
 		assertTrue("Board is not saved", board.getBoardId() > 0);
-		assertEquals("Board is not finished", GameState.FINISHED, board.getGameState());
+		assertFalse("Board is not finished", board.isGameActive());
 		assertTrue("Board has no one move", board.getGameMoves().size() > 0);
 		assertNull("Board has a player who has a turn", board.getPlayerTurn());
 

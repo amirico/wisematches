@@ -3,7 +3,6 @@ package wisematches.server.gameplaying.scribble.board;
 import junit.framework.TestCase;
 import wisematches.server.gameplaying.board.GameMove;
 import wisematches.server.gameplaying.board.GameMoveException;
-import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.board.PassTurnMove;
 import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
@@ -52,7 +51,7 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(LETTERS_IN_HAND, h1.getTiles().length);
 		assertEquals(LETTERS_IN_HAND, h2.getTiles().length);
 		assertEquals(LETTERS_IN_HAND, h3.getTiles().length);
-		assertEquals(GameState.ACTIVE, board.getGameState());
+		assertNull(board.getGameResolution());
 	}
 
 	public void test_smallGamePlay() throws GameMoveException {

@@ -69,8 +69,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	/**
 	 * The state of this game.
 	 */
-	@Column(name = "gameState")
-	private GameState gameState = GameState.ACTIVE;
+	@Column(name = "resolution")
+	private GameResolution gameResolution = null;
 
 	@Column(name = "rated")
 	private boolean rated = true;
@@ -132,21 +132,22 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		playersIterator = new PlayersIterator<P>(hands, selectFirstPlayer(gameSettings, hands));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public long getBoardId() {
 		return boardId;
 	}
 
+	@Override
 	public Date getStartedTime() {
 		return startedDate;
 	}
 
+	@Override
 	public Date getLastMoveTime() {
 		return lastMoveTime;
 	}
 
+	@Override
 	public Date getFinishedTime() {
 		return finishedDate;
 	}
@@ -163,21 +164,13 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 	protected void firePlayerMoved(GameMove move) {
 		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameMoveMade(this, move);
+			boardListener.gameMoveDone(this, move);
 		}
 	}
 
-	protected void fireGameFinished(List<P> wonPlayers) {
-		gameState = GameState.FINISHED;
+	protected void fireGameFinished() {
 		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameFinished(this, wonPlayers);
-		}
-	}
-
-	protected void fireGameInterrupted(P interrupterPlayer, boolean byTimeout) {
-		gameState = GameState.INTERRUPTED;
-		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameInterrupted(this, interrupterPlayer, byTimeout);
+			boardListener.gameFinished(this, gameResolution, getWonPlayers());
 		}
 	}
 	/* ========== End Listeners and Fires ================ */
@@ -215,10 +208,12 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		processMoveFinished(player, gameMove);
 
-		if (checkGameFinished() || checkGamePassed()) {
-			finalizeGame();
+		boolean finished = checkGameFinished();
+		boolean passed = checkGameStalemate();
+		if (finished || passed) {
+			finalizeGame(finished ? GameResolution.FINISHED : GameResolution.STALEMATE);
 			firePlayerMoved(gameMove);
-			fireGameFinished(getWonPlayers(playersIterator.getPlayerHands()));
+			fireGameFinished();
 		} else {
 			playersIterator.next();
 			firePlayerMoved(gameMove);
@@ -229,10 +224,12 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	/**
 	 * This method process game finished and increases players points.
 	 *
+	 * @param resolution returns the game resolution
 	 * @see #processGameFinished()
 	 */
-	private void finalizeGame() {
+	private void finalizeGame(GameResolution resolution) {
 		finishedDate = new Date();
+		gameResolution = resolution;
 
 		final int[] ints = processGameFinished();
 		final List<P> list = playersIterator.getPlayerHands();
@@ -249,12 +246,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @throws GameStateException if game state is not <code>ACTIVE</code>.
 	 */
 	protected void checkState() throws GameStateException {
-		switch (gameState) {
-			case FINISHED:
-			case INTERRUPTED:
-				throw new GameFinishedException(gameState);
-			default:
-				;
+		if (gameResolution != null) {
+			throw new GameFinishedException(gameResolution);
 		}
 
 		if (System.currentTimeMillis() - lastMoveTime.getTime() > gameSettings.getDaysPerMove() * 86400000) {
@@ -276,18 +269,12 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		return players.get(index);
 	}
 
-	/**
-	 * Returns won player for this board.
-	 * <p/>
-	 * Player is won if it has more points. If two or more players has the same points no one is one and
-	 * method returns {@code null}.
-	 * <p/>
-	 * This method does not check state of game and can return current leader.
-	 *
-	 * @param players players
-	 * @return won player or {@code null} if no one is won.
-	 */
-	protected List<P> getWonPlayers(List<P> players) {
+	@Override
+	public List<P> getWonPlayers() {
+		if (isGameActive()) {
+			return null;
+		}
+		final List<P> players = playersIterator.getPlayerHands();
 		final List<P> won = new ArrayList<P>(players.size());
 
 		int points = Integer.MIN_VALUE;
@@ -300,48 +287,23 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 				points = player.getPoints();
 			}
 		}
+		if (won.size() == players.size()) {
+			return Collections.emptyList();
+		}
 		return won;
 	}
 
-	/**
-	 * Returns won player for this game. This method throws {@code java.lang.IllegalStateException}
-	 * if game is not finished yet.
-	 *
-	 * @return the won player or {@code null} if game was finished with draw.
-	 * @throws IllegalStateException if game is not finished yet (has state {@code GameState.IN_PROGRESS}
-	 *                               or {@code GameState.WAITING}.
-	 */
-	public List<P> getWonPlayers() {
-		if (gameState == GameState.ACTIVE) {
-			return null;
-		}
-		return getWonPlayers(playersIterator.getPlayerHands());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public GameState getGameState() {
-		return gameState;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public P getPlayerTurn() {
 		return playersIterator.getPlayerTurn();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public List<GameMove> getGameMoves() {
 		return Collections.unmodifiableList(moves);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public P getPlayerHand(long playerId) {
 		for (P playerHand : playersIterator.getPlayerHands()) {
 			if (playerHand.getPlayerId() == playerId) {
@@ -351,34 +313,32 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public List<P> getPlayersHands() {
 		return playersIterator.getPlayerHands();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public S getGameSettings() {
 		return gameSettings;
 	}
 
-	/**
-	 * Game is rated if it's was creted as rated.
-	 * <p/>
-	 * Game is not rated if any player has made less than two moves.
-	 *
-	 * @return {@code true} if game is rated; {@code false} - otherwise.
-	 */
+	@Override
 	public boolean isRatedGame() {
 		return rated;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public boolean isGameActive() {
+		return gameResolution == null;
+	}
+
+	@Override
+	public GameResolution getGameResolution() {
+		return gameResolution;
+	}
+
+	@Override
 	public void terminate() throws GameMoveException {
 		final P p = getPlayerTurn();
 		if (p != null) {
@@ -386,18 +346,19 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void close(P player) throws GameMoveException {
+	@Override
+	public void resign(P player) throws GameMoveException {
 		closeImpl(player, false);
 	}
 
 	private void closeImpl(P player, boolean byTimeout) throws GameMoveException {
+		if (gameResolution != null) {
+			return;
+		}
 		final long playerId = player.getPlayerId();
 		final P hand = getPlayerHand(playerId);
 		if (hand != player) {
-			throw new UnsuitablePlayerException("close game", playerId);
+			throw new UnsuitablePlayerException("Player does not belong to this game and can't resign it", playerId);
 		}
 
 		hand.increasePoints(-hand.getPoints()); // Clear player points...
@@ -406,15 +367,11 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			rated = false;
 		}
 
-		if (gameState == GameState.ACTIVE) {
-			gameState = GameState.INTERRUPTED;
-			finalizeGame();
+		finalizeGame(byTimeout ? GameResolution.TIMEOUT : GameResolution.RESIGNED);
 
-			//According to requirements if game was interrupted when terminator should be set as a current player.
-			playersIterator.setPlayerTurn(hand);
-
-			fireGameInterrupted(hand, byTimeout);
-		}
+		//According to requirements if game was interrupted when terminator should be set as a current player.
+		playersIterator.setPlayerTurn(hand);
+		fireGameFinished();
 	}
 
 	/**
@@ -433,7 +390,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 *
 	 * @return <code>true</code> if game was passed; <code>otherwise</code>
 	 */
-	protected boolean checkGamePassed() {
+	protected boolean checkGameStalemate() {
 		return passesCount / playersIterator.getPlayerHands().size() >= MAX_PASSED_TURNS;
 	}
 

@@ -95,7 +95,7 @@ public class PlayboardServiceImplTest {
         assertEquals(14L, bean.getPlayerMove());
         assertEquals(startedTime, bean.getStartedTime());
         assertEquals(finishedTime, bean.getFinishedTime());
-        assertEquals(PlayboardItemBean.GameState.FINISHED, bean.getGameState());
+        assertEquals(PlayboardItemBean.GameState.FINISHED, bean.getGameResolution());
         assertEquals(12323131312321L, bean.getLastMoveTime());
 
         assertArrayEquals(hand13.getTiles(), bean.getHandTiles());
@@ -184,12 +184,12 @@ public class PlayboardServiceImplTest {
 
         reset(board, roomManager);
         replay(board, roomManager);
-        service.closeBoard(14L); //close unknown game
+        service.closeBoard(14L); //resign unknown game
         verify(board, roomManager);
 
         reset(board, roomManager);
         replay(board, roomManager);
-        service.closeBoard(14L); //close unknown game
+        service.closeBoard(14L); //resign unknown game
 
         verify(board, roomManager, bean);
     }
@@ -396,10 +396,10 @@ public class PlayboardServiceImplTest {
 
         reset(board);
         expect(board.getPlayerHand(13L)).andReturn(hand);
-        board.close(hand);
+        board.resign(hand);
         expectLastCall().andThrow(new GameMoveException(""));
         expect(board.getPlayerHand(13L)).andReturn(hand);
-        board.close(hand);
+        board.resign(hand);
         replay(board);
 
         try {

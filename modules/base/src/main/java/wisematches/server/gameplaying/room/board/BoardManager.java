@@ -34,18 +34,6 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	B openBoard(long gameId) throws BoardLoadingException;
 
 	/**
-	 * Updates specified board in boards storage. Save all changes in board to storage.
-	 * <p/>
-	 * This operation should be used only if {@code GamePlayerHand} is changed. In other cases
-	 * {@code wisematches.server.core.room.RoomManager} automatical store board into storage after
-	 * any changes.
-	 *
-	 * @param board the board to be updated.
-	 * @throws BoardUpdatingException if board can't be loaded by some reasons.
-	 */
-	void updateBoard(B board) throws BoardUpdatingException;
-
-	/**
 	 * Returns collection of all opened boards at this moment. This methods returns copy of boards
 	 * and should not be used in time/memory critical operations.
 	 * <p/>
