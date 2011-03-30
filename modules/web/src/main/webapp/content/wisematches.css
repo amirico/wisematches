@@ -65,11 +65,17 @@ form label {
 }
 
 /* Footer CSS declaration */
-#footer {
+.footer {
     margin-top: 10px;
     white-space: nowrap;
     text-align: center;
     height: auto;
+}
+
+#betaConfirmation {
+    white-space: normal;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .copyrights {

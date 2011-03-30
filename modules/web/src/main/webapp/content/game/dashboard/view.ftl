@@ -35,15 +35,13 @@
 </script>
 
 <#macro gameStatus board>
-    <#if board.getGameState() == "ACTIVE">
+    <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == player.getId()>
         <span class="player"><a
                 href="/game/playboard.html?b=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
             <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
-        <#else>
-        <@message code="game.status.${board.getGameState().name()?lower_case}"/>
     </#if>
 </#macro>
 

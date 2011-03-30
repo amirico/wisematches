@@ -42,12 +42,12 @@ public class GameMessageSource {
 		return p.getNickname();
 	}
 
-	public String formatGameState(GameResolution gameState, String language) {
-		return formatGameState(gameState, Language.byCode(language).locale());
+	public String formatGameResolution(GameResolution resolution, String language) {
+		return formatGameResolution(resolution, Language.byCode(language).locale());
 	}
 
-	public String formatGameState(GameResolution gameState, Locale locale) {
-		return messageSource.getMessage("game.status." + gameState.name().toLowerCase(), null, locale);
+	public String formatGameResolution(GameResolution resolution, Locale locale) {
+		return messageSource.getMessage("game.resolution." + resolution.name().toLowerCase(), null, locale);
 	}
 
 	public String formatDate(Date date, String language) {

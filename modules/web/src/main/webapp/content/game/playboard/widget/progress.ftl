@@ -2,13 +2,12 @@
 
 <#include "/core.ftl">
 
-<#assign active=board.gameResolution == "ACTIVE"/>
 <@wm.widget id="gameInfo" title="game.state.label">
 <table width="100%" border="0">
     <tr>
         <td valign="top"><b><@message code="game.state.progress.label"/>:</b></td>
         <td width="100%" style="padding-top: 2px;">
-            <#if active>
+            <#if board.gameActive>
                 <div id="gameProgressAction">
                     <div class="ui-progressbar game-progress">
                         <div class="ui-progressbar-value ui-corner-left game-progress-board" style="width:0"></div>
@@ -20,7 +19,7 @@
                           style="font-size: smaller;"><@message code="game.state.progress.sample"/></span>
                 </div>
             </#if>
-            <div id="gameProgressFinished" <#if active>style="display: none;"</#if>>
+            <div id="gameProgressFinished" <#if board.gameActive>style="display: none;"</#if>>
                 <div class="ui-progressbar game-progress">
                     <div class="ui-progressbar-value ui-corner-all game-progress-finished game-progress-caption sample"
                          style="width: 100%;"><@message code="game.state.finished.label"/></div>
@@ -38,7 +37,7 @@
         <td><b><@message code="game.state.started.label"/>:</b></td>
         <td width="100%">${gameMessageSource.formatDate(board.startedTime, locale)}</td>
     </tr>
-    <#if active>
+    <#if board.gameActive>
         <tr>
             <td><b><@message code="game.state.moved.label"/>:</b></td>
             <td width="100%">${gameMessageSource.formatDate(board.lastMoveTime, locale)}</td>
@@ -52,7 +51,7 @@
 </table>
 </@wm.widget>
 
-<#if active>
+<#if board.gameActive>
 <script type="text/javascript">
     wm.scribble.state = new function() {
         this.updateProgressBar = function() {
@@ -75,9 +74,11 @@
 
     wm.scribble.state.updateProgressBar();
 
-    board.bind('gameFinalization',
-            function(event, state) {
-                wm.scribble.state.markAsFinished();
+    board.bind('gameState',
+            function(event, type, state) {
+                if (type === 'finished') {
+                    wm.scribble.state.markAsFinished();
+                }
             }).bind('gameMoves',
             function(event, move) {
                 $($("#gameInfo table td").get(6)).text(move.timeMessage);
