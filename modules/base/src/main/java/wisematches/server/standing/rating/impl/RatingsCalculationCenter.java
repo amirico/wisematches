@@ -3,16 +3,11 @@ package wisematches.server.standing.rating.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.PlatformTransactionManager;
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameMove;
-import wisematches.server.gameplaying.board.GamePlayerHand;
-import wisematches.server.gameplaying.board.GameSettings;
+import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.room.Room;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.room.board.BoardManager;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
-import wisematches.server.gameplaying.room.board.BoardUpdatingException;
 import wisematches.server.player.Player;
 import wisematches.server.player.PlayerManager;
 import wisematches.server.standing.rating.PlayerRatingEvent;
@@ -21,7 +16,6 @@ import wisematches.server.standing.rating.RatingSystem;
 import wisematches.server.standing.rating.impl.systems.ELORatingSystem;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -57,18 +51,15 @@ public class RatingsCalculationCenter {
 		}
 
 		@SuppressWarnings("unchecked")
-		final List<GamePlayerHand> hands = board.getPlayersHands();
+		final Collection<GamePlayerHand> hands = board.getPlayersHands();
 
+		int index = 0;
 		final int[] points = new int[hands.size()];
 		final Player[] players = new Player[hands.size()];
-
-		for (int i = 0; i < hands.size(); i++) {
-			final GamePlayerHand hand = hands.get(i);
-			points[i] = hand.getPoints();
-			if (interrupterPlayer == hand) {
-				points[i] = 0;
-			}
-			players[i] = playerManager.getPlayer(hand.getPlayerId());
+		for (GamePlayerHand hand : hands) {
+			points[index] = (interrupterPlayer == hand ? 0 : hand.getPoints());
+			players[index] = playerManager.getPlayer(hand.getPlayerId());
+			index++;
 		}
 
 		final int[] oldRatings = new int[players.length];
@@ -78,7 +69,7 @@ public class RatingsCalculationCenter {
 		try {
 			for (int i = 0; i < players.length; i++) {
 				final Player player = players[i];
-				final GamePlayerHand hand = hands.get(i);
+//				final GamePlayerHand hand = hands.get(i);
 
 				final int oldRating = player.getRating();
 				int newRating = newRatings[i];
@@ -91,12 +82,12 @@ public class RatingsCalculationCenter {
 
 				// TODO: commented
 //				player.setRating(newRating);
-				hand.updateRating(oldRating, ratingDelta);
+//				hand.updateRating(oldRating, ratingDelta);
 
 				// TODO: commented
 //				playerManager.updatePlayer(player);
 			}
-			updateGameBoard(room, board);
+//			updateGameBoard(room, board);
 //			transactionManager.commit(status);
 		} catch (Throwable th) {
 			log.fatal("Player ratings can't be updated", th);
@@ -107,6 +98,7 @@ public class RatingsCalculationCenter {
 			firePlayerRatingChanged(players[i], board, oldRatings[i], newRatings[i]);
 		}
 	}
+/*
 
 	@SuppressWarnings("unchecked")
 	private void updateGameBoard(Room room, GameBoard board) {
@@ -117,6 +109,7 @@ public class RatingsCalculationCenter {
 			log.fatal("Game board can't be updated", e);
 		}
 	}
+*/
 
 	protected void firePlayerRatingChanged(Player player, GameBoard board, int oldRating, int newRating) {
 		final PlayerRatingEvent e = new PlayerRatingEvent(player, board, oldRating, newRating);
@@ -159,17 +152,12 @@ public class RatingsCalculationCenter {
 		}
 
 		@Override
-		public void gameMoveMade(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard board, GameMove move) {
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 			updatePlayerRatings(room, board, null);
-		}
-
-		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
-			updatePlayerRatings(room, board, interrupterPlayer);
 		}
 	}
 }

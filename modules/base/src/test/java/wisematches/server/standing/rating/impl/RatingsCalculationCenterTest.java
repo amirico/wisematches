@@ -10,6 +10,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import wisematches.server.core.MockPlayer;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GamePlayerHand;
+import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.room.MockRoom;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
@@ -109,7 +110,7 @@ public class RatingsCalculationCenterTest {
 		replay(playerManager);
 
 		expect(boardManager.openBoard(1L)).andReturn(board);
-		boardManager.updateBoard(board);
+//		boardManager.updateBoard(board);
 		replay(roomManager);
 
 		expect(ratingSystem.calculateRatings(aryEq(new Player[]{p1, p2, p3}), aryEq(new int[]{100, 200, 100}))).andReturn(
@@ -132,7 +133,7 @@ public class RatingsCalculationCenterTest {
 		calculationCenter.addRatingsChangeListener(listener);
 		calculationCenter.setTransactionManager(transaction);
 
-		boardListener.gameFinished(board, Collections.<GamePlayerHand>emptyList());
+		boardListener.gameFinished(board, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 
 //		assertEquals(1050, p1.getRating());
 //		assertEquals(1600, p2.getRating());
@@ -167,7 +168,7 @@ public class RatingsCalculationCenterTest {
 		replay(listener);
 
 		calculationCenter.addRatingsChangeListener(listener);
-		boardListener.gameFinished(board, Collections.<GamePlayerHand>emptyList());
+		boardListener.gameFinished(board, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 
 		verify(board, playerManager, roomManager, listener);
 	}

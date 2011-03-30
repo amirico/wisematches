@@ -168,7 +168,7 @@ public class RobotActivityCenterTest {
 		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
 		replay(executor, brainManager, board, roomManager);
 
-		listener.gameMoveMade(board, new GameMove(new PassTurnMove(13L), 0, 0, new Date()));
+		listener.gameMoveDone(board, new GameMove(new PassTurnMove(13L), 0, 0, new Date()));
 
 		verify(board, brainManager, roomManager, executor);
 	}

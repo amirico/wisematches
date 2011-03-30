@@ -6,10 +6,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameMove;
-import wisematches.server.gameplaying.board.GamePlayerHand;
-import wisematches.server.gameplaying.board.GameSettings;
+import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
@@ -38,7 +35,7 @@ public class StatisticCalculationCenter {
 
 	protected void processGameStarted(GameBoard board) {
 		@SuppressWarnings("unchecked")
-		final List<GamePlayerHand> hands = board.getPlayersHands();
+		final Collection<GamePlayerHand> hands = board.getPlayersHands();
 		for (GamePlayerHand hand : hands) {
 			final long playerId = hand.getPlayerId();
 			playerStatisticsManager.lockPlayerStatistic(playerId);
@@ -61,7 +58,7 @@ public class StatisticCalculationCenter {
 	protected <S extends GameSettings, P extends GamePlayerHand> void processGameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
 		final boolean ratedGame = board.isRatedGame();
 		@SuppressWarnings("unchecked")
-		final List<P> hands = board.getPlayersHands();
+		final Collection<P> hands = board.getPlayersHands();
 		for (P hand : hands) {
 			final long playerId = hand.getPlayerId();
 
@@ -144,7 +141,7 @@ public class StatisticCalculationCenter {
 
 	protected void updateRatingInfo(PlayerStatistic statistic, PlayerRatingInfo ri, GameBoard board, GamePlayerHand hand) {
 		@SuppressWarnings("unchecked")
-		final List<GamePlayerHand> hands = board.getPlayersHands();
+		final Collection<GamePlayerHand> hands = board.getPlayersHands();
 		final int rating = hand.getRating();
 
 		// Update average moves per game
@@ -330,7 +327,7 @@ public class StatisticCalculationCenter {
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers) {
+		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution gameResolution, Collection<P> wonPlayers) {
 			final TransactionStatus status = newTransaction();
 			try {
 				processGameFinished(board, wonPlayers);
@@ -342,19 +339,7 @@ public class StatisticCalculationCenter {
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout) {
-			final TransactionStatus status = newTransaction();
-			try {
-				processGameInterrupted(board, interrupterPlayer, byTimeout);
-				transactionManager.commit(status);
-			} catch (Throwable th) {
-				log.error("Statistic can't be updated", th);
-				transactionManager.rollback(status);
-			}
-		}
-
-		@Override
-		public void gameMoveMade(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard board, GameMove move) {
 			final TransactionStatus status = newTransaction();
 			try {
 				processPlayerMoved(board, move);

@@ -1,6 +1,5 @@
 package wisematches.server.standing.statistic.impl;
 
-import wisematches.server.gameplaying.board.GameState;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.standing.statistic.PlayerStatisticsManager;
@@ -8,7 +7,6 @@ import wisematches.server.utils.system.ServerPropertiesManager;
 
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.EnumSet;
 
 /**
  * TODO: not implemented
@@ -21,7 +19,6 @@ public class StatisticCleanerCenter {
 	private ServerPropertiesManager serverPropertiesManager;
 
 	private final ThreadLocal<Calendar> localCalendar = new ThreadLocal<Calendar>();
-	private static final EnumSet<GameState> STATUSES = EnumSet.of(GameState.FINISHED, GameState.INTERRUPTED);
 
 	public void performClean() {
 		final Collection<RoomManager> collection = roomsManager.getRoomManagers();
@@ -48,7 +45,7 @@ public class StatisticCleanerCenter {
 //            final long lastMoveTime = board.getPreviousMoveTime();
 //
 //            @SuppressWarnings("unchecked")
-//            final List<GamePlayerHand> hands = board.getPlayersHands();
+//            final Collection<GamePlayerHand> hands = board.getPlayersHands();
 //            for (GamePlayerHand hand : hands) {
 //                final long playerId = hand.getPlayerId();
 //

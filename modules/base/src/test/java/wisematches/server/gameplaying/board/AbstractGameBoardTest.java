@@ -7,7 +7,10 @@ import org.junit.Test;
 import wisematches.server.core.MockPlayer;
 import wisematches.server.player.Player;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -87,7 +90,8 @@ public class AbstractGameBoardTest {
 	public void test_defaultValues() {
 		assertNotNull(board.getPlayerTurn());
 		assertSame(gameSettings, board.getGameSettings());
-		assertSame(GameState.ACTIVE, board.getGameState());
+		assertNull(board.getGameResolution());
+		assertTrue(board.isGameActive());
 		assertEquals(0, board.getGameMoves().size());
 		assertSame(h1, board.getPlayerHand(1));
 		assertSame(h2, board.getPlayerHand(2));
@@ -100,16 +104,14 @@ public class AbstractGameBoardTest {
 		final GameMove gm = new GameMove(createMock(PlayerMove.class), 10, 1, new Date());
 
 		final GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameFinished(board, Collections.singletonList(h1));
-		l.gameInterrupted(board, h2, false);
-		l.gameMoveMade(board, gm);
+		l.gameFinished(board, null, null);
+		l.gameMoveDone(board, gm);
 		replay(l);
 
 		board.addGameBoardListener(l);
 		board.addGameBoardListener(l);
 
-		board.fireGameFinished(Collections.singletonList(h1));
-		board.fireGameInterrupted(h2, false);
+		board.fireGameFinished();
 		board.firePlayerMoved(gm);
 
 		//no any calles after removing must be
@@ -199,7 +201,7 @@ public class AbstractGameBoardTest {
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
 		final Capture<GameMove> move = new Capture<GameMove>();
-		l.gameMoveMade(same(board), capture(move));
+		l.gameMoveDone(same(board), capture(move));
 		replay(l);
 
 		board.setPoints(10);
@@ -221,7 +223,7 @@ public class AbstractGameBoardTest {
 		reset(l);
 		PlayerMove m2 = new PassTurnMove(board.getPlayerTurn().getPlayerId());
 		final Capture<GameMove> gm2 = new Capture<GameMove>();
-		l.gameMoveMade(same(board), capture(gm2));
+		l.gameMoveDone(same(board), capture(gm2));
 		replay(l);
 
 		board.setPoints(2);
@@ -237,19 +239,21 @@ public class AbstractGameBoardTest {
 	}
 
 	@Test
-	public void test_getWonPlayer() {
-		final List<GamePlayerHand> gamePlayerHandList = Arrays.asList(h1, h2, h3);
+	public void test_getWonPlayer() throws GameMoveException {
+		final Collection<GamePlayerHand> gamePlayerHandList = Arrays.asList(h1, h2, h3);
 
-		assertEquals(3, board.getWonPlayers(gamePlayerHandList).size());
+		board.setFinishScore(new int[]{0, 0, 0});
+		board.terminate();
+		assertEquals(0, board.getWonPlayers().size());
 
 		h1.increasePoints(1);
-		assertEquals(Arrays.asList(h1), board.getWonPlayers(gamePlayerHandList));
+		assertEquals(Arrays.asList(h1), board.getWonPlayers());
 
 		h2.increasePoints(2);
-		assertEquals(Arrays.asList(h2), board.getWonPlayers(gamePlayerHandList));
+		assertEquals(Arrays.asList(h2), board.getWonPlayers());
 
 		h3.increasePoints(2);
-		assertEquals(Arrays.asList(h2, h3), board.getWonPlayers(gamePlayerHandList));
+		assertEquals(Arrays.asList(h2, h3), board.getWonPlayers());
 	}
 
 	@Test
@@ -258,9 +262,9 @@ public class AbstractGameBoardTest {
 		h1.increasePoints(1);
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
-		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
-		l.gameFinished(board, Collections.singletonList(h1));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameFinished(board, GameResolution.FINISHED, Collections.singletonList(h1));
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -270,7 +274,7 @@ public class AbstractGameBoardTest {
 		board.setFinishScore(new int[]{10, 3, 4});
 		board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
 
-		assertEquals(GameState.FINISHED, board.getGameState());
+		assertEquals(GameResolution.FINISHED, board.getGameResolution());
 		assertNotNull(board.getFinishedTime());
 
 		verify(l);
@@ -286,9 +290,9 @@ public class AbstractGameBoardTest {
 		PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
-		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
-		l.gameFinished(board, p.getPlayerHands());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameFinished(board, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -298,10 +302,10 @@ public class AbstractGameBoardTest {
 		board.setFinishScore(new int[]{0, 0, 0});
 		board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
 
-		assertEquals(GameState.FINISHED, board.getGameState());
+		assertEquals(GameResolution.FINISHED, board.getGameResolution());
 		assertNull(board.getPlayerTurn());
 		assertNotNull(board.getFinishedTime());
-		assertEquals(p.getPlayerHands(), board.getWonPlayers());
+		assertEquals(0, board.getWonPlayers().size());
 
 		verify(l);
 	}
@@ -309,9 +313,9 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_finishByDraw_NoMoves() throws GameMoveException {
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
-		l.gameMoveMade(same(board), EasyMock.<GameMove>anyObject());
-		l.gameFinished(board, board.getPlayersHands());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameFinished(board, GameResolution.STALEMATE, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -322,10 +326,10 @@ public class AbstractGameBoardTest {
 		board.makeMove(new PassTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGamePassed(false);
 
-		assertEquals(GameState.FINISHED, board.getGameState());
+		assertEquals(GameResolution.STALEMATE, board.getGameResolution());
 		assertNull(board.getPlayerTurn());
 		assertNotNull(board.getFinishedTime());
-		assertEquals(board.getPlayersHands(), board.getWonPlayers());
+		assertEquals(Collections.<GamePlayerHand>emptyList(), board.getWonPlayers());
 
 		verify(l);
 	}
@@ -333,23 +337,23 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_finishByClose() throws GameMoveException {
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameInterrupted(board, h1, false);
+		l.gameFinished(board, GameResolution.RESIGNED, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
 		board.addGameBoardListener(l);
 		board.setFinishScore(new int[]{0, 0, 0});
 
 		try {
-			board.close(new GamePlayerHand(13L));
+			board.resign(new GamePlayerHand(13L));
 			fail("Exception must be here");
 		} catch (UnsuitablePlayerException ex) {
 			;
 		}
 
-		board.close(h1);
+		board.resign(h1);
 		verify(l);
 
-		assertEquals(GameState.INTERRUPTED, board.getGameState());
+		assertEquals(GameResolution.RESIGNED, board.getGameResolution());
 		assertSame(h1, board.getPlayerTurn());
 		assertNotNull(board.getFinishedTime());
 	}
@@ -358,7 +362,7 @@ public class AbstractGameBoardTest {
 	public void test_finishByTermination() throws GameMoveException {
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
 		final GamePlayerHand playerTurn = board.getPlayerTurn();
-		l.gameInterrupted(board, playerTurn, true);
+		l.gameFinished(board, GameResolution.TIMEOUT, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
 		board.addGameBoardListener(l);
@@ -366,20 +370,8 @@ public class AbstractGameBoardTest {
 		board.terminate();
 		verify(l);
 
-		assertEquals(GameState.INTERRUPTED, board.getGameState());
+		assertEquals(GameResolution.TIMEOUT, board.getGameResolution());
 		assertSame(playerTurn, board.getPlayerTurn());
-		assertNotNull(board.getFinishedTime());
-	}
-
-	@Test
-	public void test_isRated_NoRequiredMoves() throws GameMoveException {
-		board.setFinishScore(new int[]{0, 0, 0});
-		assertTrue(board.isRatedGame());
-
-		board.terminate();
-
-		assertFalse(board.isRatedGame());
-		assertEquals(GameState.INTERRUPTED, board.getGameState());
 		assertNotNull(board.getFinishedTime());
 	}
 
@@ -388,7 +380,7 @@ public class AbstractGameBoardTest {
 		board.setFinishScore(new int[]{0, 0, 0});
 		assertTrue(board.isRatedGame());
 
-		final List<GamePlayerHand> playersHands = board.getPlayersHands();
+		final Collection<GamePlayerHand> playersHands = board.getPlayersHands();
 		for (GamePlayerHand playersHand : playersHands) { //make turns for each player
 			board.setPoints(10);
 			board.setMoveFinished(false);
@@ -402,7 +394,7 @@ public class AbstractGameBoardTest {
 		board.terminate();
 
 		assertTrue(board.isRatedGame());
-		assertEquals(GameState.INTERRUPTED, board.getGameState());
+		assertEquals(GameResolution.TIMEOUT, board.getGameResolution());
 		assertNotNull(board.getFinishedTime());
 	}
 

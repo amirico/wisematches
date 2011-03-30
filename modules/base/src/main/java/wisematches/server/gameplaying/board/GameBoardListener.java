@@ -13,23 +13,19 @@ public interface GameBoardListener {
 	 *
 	 * @param board the board
 	 * @param move  the made move
+	 * @param <S>   the game settings type
+	 * @param <P>   the player's hand type
 	 */
-	<S extends GameSettings, P extends GamePlayerHand> void gameMoveMade(GameBoard<S, P> board, GameMove move);
+	<S extends GameSettings, P extends GamePlayerHand> void gameMoveDone(GameBoard<S, P> board, GameMove move);
 
 	/**
-	 * Game was finished and someone has won
+	 * Indicates that game has been finished
 	 *
-	 * @param board	  the board game that was finished
-	 * @param wonPlayers the list of players who won  @see wisematches.server.games.board.GameState#FINISHED
+	 * @param board		  the game board
+	 * @param gameResolution the game finalization resolution
+	 * @param wonPlayers	 the winners list or empty list if no winners (draw).
+	 * @param <S>            the game settings type
+	 * @param <P>            the player's hand type
 	 */
-	<S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, Collection<P> wonPlayers);
-
-	/**
-	 * Game was interrupted by specified player.
-	 *
-	 * @param board			 the interrupted board.
-	 * @param interrupterPlayer the interrupter.  @see wisematches.server.games.board.GameState#INTERRUPTED
-	 * @param byTimeout		 indicates that game was interrupted by timeout.
-	 */
-	<S extends GameSettings, P extends GamePlayerHand> void gameInterrupted(GameBoard<S, P> board, P interrupterPlayer, boolean byTimeout);
+	<S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers);
 }

@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.scribble.room.search;
 
-import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
 import wisematches.server.gameplaying.room.search.ExpiringBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
@@ -38,8 +38,8 @@ public class ScribbleSearchesEngine implements BoardsSearchEngine<ScribbleBoard>
 */
 
 	@Override
-	public int getGamesCount(EnumSet<GameState> states) {
-		return scribbleBoardDao.getGamesCount(states);
+	public int getGamesCount(EnumSet<GameResolution> resolutions) {
+		return scribbleBoardDao.getGamesCount(resolutions);
 	}
 
 	public void setScribbleBoardDao(ScribbleBoardDao scribbleBoardDao) {

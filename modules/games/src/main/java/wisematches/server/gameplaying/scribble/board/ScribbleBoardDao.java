@@ -2,7 +2,7 @@ package wisematches.server.gameplaying.scribble.board;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.room.search.ExpiringBoard;
 import wisematches.server.player.Player;
 
@@ -47,19 +47,14 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	public Collection<Long> getActiveBoards(Player player) {
 		final HibernateTemplate template = getHibernateTemplate();
 		return (List<Long>) template.find("select board.boardId from " + ScribbleBoard.class.getName() +
-				" board join board.playersIterator.playerHands hands where board.gameState = ? and hands.playerId = ?",
-				new Object[]{
-						GameState.ACTIVE,
-						player.getId()
-				});
+				" board join board.playersIterator.playerHands hands where board.gameResolution is null and hands.playerId = ?", player.getId());
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<ExpiringBoard> findExpiringBoards() {
 		final HibernateTemplate template = getHibernateTemplate();
 		return template.find("select new " + ExpiringBoard.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
-				ScribbleBoard.class.getName() + " board where board.gameState = ?", new Object[]{GameState.ACTIVE}
-		);
+				ScribbleBoard.class.getName() + " board where board.gameResolution is null");
 	}
 /*
 
@@ -100,8 +95,8 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 */
 
-	public int getGamesCount(EnumSet<GameState> states) {
-		if (states == null || states.size() == 0) {
+	public int getGamesCount(EnumSet<GameResolution> states) {
+		if (states != null && states.size() == 0) {
 			return 0;
 		}
 
@@ -112,19 +107,24 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 		query.append(ScribbleBoard.class.getName());
 		query.append(" board ");
 
-		int index = 0;
-		final Object[] values = new Object[states.size()];
-		query.append(" where board.gameState in ( ");
-		boolean first = true;
-		for (GameState state : states) {
-			if (!first) {
-				query.append(", ");
+		if (states == null) {
+			query.append(" where board.gameResolution is null ");
+			return ((Number) template.find(query.toString()).get(0)).intValue();
+		} else {
+			int index = 0;
+			final Object[] values = new Object[states.size()];
+			query.append(" where board.gameResolution in ( ");
+			boolean first = true;
+			for (GameResolution state : states) {
+				if (!first) {
+					query.append(", ");
+				}
+				query.append("?");
+				first = false;
+				values[index++] = state;
 			}
-			query.append("?");
-			first = false;
-			values[index++] = state;
+			query.append(")");
+			return ((Number) template.find(query.toString(), values).get(0)).intValue();
 		}
-		query.append(")");
-		return ((Number) template.find(query.toString(), values).get(0)).intValue();
 	}
 }

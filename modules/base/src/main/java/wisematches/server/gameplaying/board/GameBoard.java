@@ -20,6 +20,13 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	long getBoardId();
 
 	/**
+	 * Returns settings of this game.
+	 *
+	 * @return the settings of this game.
+	 */
+	S getGameSettings();
+
+	/**
 	 * Returns time when game was started.
 	 *
 	 * @return return time when game was started or {@code null} if game was not started yet.
@@ -50,11 +57,18 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	boolean isRatedGame();
 
 	/**
-	 * Returns settings of this game.
+	 * Returns {@code true} if game is active and {@code false} if it's finished.
 	 *
-	 * @return the settings of this game.
+	 * @return {@code true} if game is active; {@code false} - otherwise.
 	 */
-	S getGameSettings();
+	boolean isGameActive();
+
+	/**
+	 * Returns the game resolution after finish or {@code null} if game is active.
+	 *
+	 * @return the game resolution if game has been finished or {@code null} if it still active.
+	 */
+	GameResolution getGameResolution();
 
 	/**
 	 * Returns player that has a turn.
@@ -68,6 +82,13 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	P getPlayerTurn();
 
 	/**
+	 * Returns unmodifiable collection of maden moves.
+	 *
+	 * @return the unmodifiable collection of maden moves.
+	 */
+	List<GameMove> getGameMoves();
+
+	/**
 	 * Makes move for active player and returns points for this turn.
 	 *
 	 * @param move the move.
@@ -75,13 +96,6 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * @throws GameMoveException if move can't be done
 	 */
 	GameMove makeMove(PlayerMove move) throws GameMoveException;
-
-	/**
-	 * Returns unmodifiable collection of maden moves.
-	 *
-	 * @return the unmodifiable collection of maden moves.
-	 */
-	List<GameMove> getGameMoves();
 
 	/**
 	 * Returns player's hand by player's id.
@@ -96,31 +110,17 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @return the list of all players on this board.
 	 */
-	List<P> getPlayersHands();
+	Collection<P> getPlayersHands();
 
 	/**
-	 * Returns list of winners for this game.
+	 * Returns list of winners for this game, empty list if no winners (draw) or {@code null} if game still active.
+	 * <p/>
+	 * Draw means that all players have the same points. If all players have the same points except at least one, who
+	 * has less points, all other players will be marked as winners.
 	 *
-	 * @return the list of winners or empty list for draw or {@code null} if game is not finished.
+	 * @return the list of winners, empty list if no winners (draw) or {@code null} if game is not finished.
 	 */
 	Collection<P> getWonPlayers();
-
-	/**
-	 * Returns state of this game.
-	 *
-	 * @return the game's state
-	 */
-	GameState getGameState();
-
-	/**
-	 * Terminates this game. This method is used to terminate game by timeout.
-	 *
-	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
-	 * @throws GameFinishedException	 if game already finished.
-	 * @throws IllegalStateException	 if timeout is not expired by this method was called.
-	 * @see GameState#INTERRUPTED
-	 */
-	public void terminate() throws GameMoveException;
 
 	/**
 	 * Closes this game. State changed to interrupted.
@@ -128,7 +128,17 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * @param player the player who closed the game
 	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
 	 * @throws GameFinishedException	 if game already finished.
-	 * @see GameState#INTERRUPTED
+	 * @see GameResolution#RESIGNED
 	 */
-	void close(P player) throws GameMoveException;
+	void resign(P player) throws GameMoveException;
+
+	/**
+	 * Terminates this game. This method is used to terminate game by timeout.
+	 *
+	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
+	 * @throws GameFinishedException	 if game already finished.
+	 * @throws IllegalStateException	 if timeout is not expired by this method was called.
+	 * @see GameResolution#TIMEOUT
+	 */
+	void terminate() throws GameMoveException;
 }

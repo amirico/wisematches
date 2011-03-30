@@ -134,7 +134,7 @@ public class GameBoardEventProducer {//implements EventProducer {
             notificator.fireEvent(new GameStartedEvent(boardId, playerTrun, startedTime));
         }
 
-        public void gameMoveMade(GameMoveEvent event) {
+        public void gameMoveDone(GameMoveEvent event) {
             if (notificator == null) {
                 return;
             }
@@ -174,7 +174,7 @@ public class GameBoardEventProducer {//implements EventProducer {
                 return;
             }
             @SuppressWarnings("unchecked")
-            final List<GamePlayerHand> hands = board.getPlayersHands();
+            final Collection<GamePlayerHand> hands = board.getPlayersHands();
             final GameFinishedEvent.FinalPoint[] points = new GameFinishedEvent.FinalPoint[hands.size()];
             for (int i = 0, handsSize = hands.size(); i < handsSize; i++) {
                 final GamePlayerHand hand = hands.get(i);

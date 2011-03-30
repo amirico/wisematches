@@ -14,7 +14,7 @@
         playerTurn: ${board.getPlayerTurn().getPlayerId()},
         bankCapacity: ${board.bankCapacity},
         bankTilesInfo: [<#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>],
-        <#if board.gameState != "ACTIVE">wonPlayer:${board.getWonPlayers().getPlayerId()},</#if>
+        <#if board.gameResolution != "ACTIVE">wonPlayer:${board.getWonPlayers().getPlayerId()},</#if>
         bonuses: [
         <#list board.getScoreEngine().getScoreBonuses() as bonus>
             {row: ${bonus.row}, column: ${bonus.column}, type: '${bonus.type.displayName}'}<#if bonus_has_next>,</#if>

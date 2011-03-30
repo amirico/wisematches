@@ -58,7 +58,7 @@ public class PlayboardController {
 			}
 
 			model.addAttribute("board", board);
-			model.addAttribute("viewMode", board.getGameState() != GameState.ACTIVE || player == null || board.getPlayerHand(player.getId()) == null);
+			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
 
 			model.addAttribute("player", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 			model.addAttribute("playerManager", playerManager);
@@ -179,7 +179,7 @@ public class PlayboardController {
 			public Map<String, Object> call() throws Exception {
 				Player currentPlayer = getCurrentPlayer();
 				final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-				board.close(board.getPlayerHand(currentPlayer.getId()));
+				board.resign(board.getPlayerHand(currentPlayer.getId()));
 
 				final Map<String, Object> res = new HashMap<String, Object>();
 				res.put("state", convertGameState(board, locale));
@@ -206,10 +206,10 @@ public class PlayboardController {
 
 	private Map<String, Object> convertGameState(final ScribbleBoard board, final Locale locale) {
 		final Map<String, Object> state = new HashMap<String, Object>();
-		state.put("state", board.getGameState());
-		state.put("stateMessage", gameMessageSource.formatGameState(board.getGameState(), locale));
+		state.put("state", board.getGameResolution());
+		state.put("stateMessage", gameMessageSource.formatGameState(board.getGameResolution(), locale));
 		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
-		if (board.getGameState() != GameState.ACTIVE) {
+		if (!board.isGameActive()) {
 			state.put("winners", board.getWonPlayers());
 			state.put("playerHands", board.getPlayersHands());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());

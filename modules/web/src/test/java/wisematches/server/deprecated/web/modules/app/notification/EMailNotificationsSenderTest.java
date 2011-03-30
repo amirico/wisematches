@@ -110,7 +110,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 //        final ScribbleMove move = new ScribbleMove(14L, 4000,
 //                new Word(new Position(7, 7), Direction.HORIZONTAL,
 //                        new Tile(1, 'a', 1), new Tile(2, 'b', 1), new Tile(3, 'c', 2)));
-//        gameMoveListener.gameMoveMade(new GameMoveEvent(board, h2, h3, move, 0));
+//        gameMoveListener.gameMoveDone(new GameMoveEvent(board, h2, h3, move, 0));
 //        gamePlayersListener.playerRemoved(board, createMockPlayer(13L));
 	}
 

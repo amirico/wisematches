@@ -20,7 +20,7 @@ public class EventRouter {
     }
 
 
-    public void close() {
+    public void resign() {
         log.info("Stop event router and destroy all waiting threads...");
 
         blockingQueue.clear();

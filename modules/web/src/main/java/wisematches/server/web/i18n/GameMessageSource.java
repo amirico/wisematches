@@ -2,7 +2,7 @@ package wisematches.server.web.i18n;
 
 import org.springframework.context.MessageSource;
 import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameState;
+import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.player.Language;
 import wisematches.server.player.Player;
 import wisematches.server.player.computer.ComputerPlayer;
@@ -42,11 +42,11 @@ public class GameMessageSource {
 		return p.getNickname();
 	}
 
-	public String formatGameState(GameState gameState, String language) {
+	public String formatGameState(GameResolution gameState, String language) {
 		return formatGameState(gameState, Language.byCode(language).locale());
 	}
 
-	public String formatGameState(GameState gameState, Locale locale) {
+	public String formatGameState(GameResolution gameState, Locale locale) {
 		return messageSource.getMessage("game.status." + gameState.name().toLowerCase(), null, locale);
 	}
 
