@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<@wm.bottomRoundPanel id="footer">
+<@wm.bottomRoundPanel class="footer">
 <span class="copyrights"><@message "copyrights.label"/></span>
 &nbsp;-&nbsp;
 <a href="/info/terms.html"><@message "info.policies.terms.label"/></a>

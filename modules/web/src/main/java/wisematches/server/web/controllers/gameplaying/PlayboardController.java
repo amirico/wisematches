@@ -71,49 +71,6 @@ public class PlayboardController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/playboard/check")
-	public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
-		try {
-			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
-			if (dictionary.getWord(form.getWord()) == null) {
-				return ServiceResponse.failure();
-			}
-			return ServiceResponse.success();
-		} catch (DictionaryNotFoundException e) {
-			return ServiceResponse.failure();
-		}
-	}
-
-	@ResponseBody
-	@RequestMapping("/playboard/changes")
-	public ServiceResponse loadChangesAjax(@RequestParam("b") final long gameId,
-										   @RequestParam("m") final int movesCount, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Load board changes for: " + gameId + "@" + movesCount);
-		}
-		return processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-
-				final Map<String, Object> res = new HashMap<String, Object>();
-				res.put("state", convertGameState(board, locale));
-
-				final List<GameMove> gameMoves = board.getGameMoves();
-				final int madeMoves = gameMoves.size() - movesCount;
-				if (madeMoves > 0) {
-					final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
-					for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
-						moves.add(convertPlayerMove(move, locale));
-					}
-					res.put("moves", moves);
-				}
-				return res;
-			}
-		}, locale);
-	}
-
-	@ResponseBody
 	@RequestMapping("/playboard/make")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
@@ -183,9 +140,59 @@ public class PlayboardController {
 
 				final Map<String, Object> res = new HashMap<String, Object>();
 				res.put("state", convertGameState(board, locale));
+				if (!board.isGameActive()) {
+					res.put("players", board.getPlayersHands());
+				}
 				return res;
 			}
 		}, locale);
+	}
+
+	@ResponseBody
+	@RequestMapping("/playboard/changes")
+	public ServiceResponse loadChangesAjax(@RequestParam("b") final long gameId,
+										   @RequestParam("m") final int movesCount, final Locale locale) {
+		if (log.isDebugEnabled()) {
+			log.debug("Load board changes for: " + gameId + "@" + movesCount);
+		}
+		return processSafeAction(new Callable<Map<String, Object>>() {
+			@Override
+			public Map<String, Object> call() throws Exception {
+				final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+
+				final Map<String, Object> res = new HashMap<String, Object>();
+				res.put("state", convertGameState(board, locale));
+
+				if (!board.isGameActive()) {
+					res.put("players", board.getPlayersHands());
+				}
+
+				final List<GameMove> gameMoves = board.getGameMoves();
+				final int madeMoves = gameMoves.size() - movesCount;
+				if (madeMoves > 0) {
+					final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
+					for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
+						moves.add(convertPlayerMove(move, locale));
+					}
+					res.put("moves", moves);
+				}
+				return res;
+			}
+		}, locale);
+	}
+
+	@ResponseBody
+	@RequestMapping("/playboard/check")
+	public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
+		try {
+			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
+			if (dictionary.getWord(form.getWord()) == null) {
+				return ServiceResponse.failure();
+			}
+			return ServiceResponse.success();
+		} catch (DictionaryNotFoundException e) {
+			return ServiceResponse.failure();
+		}
 	}
 
 	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
@@ -201,17 +208,26 @@ public class PlayboardController {
 		res.put("state", convertGameState(board, locale));
 		res.put("move", convertPlayerMove(gameMove, locale));
 		res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
+		if (!board.isGameActive()) {
+			res.put("players", board.getPlayersHands());
+		}
 		return res;
 	}
 
 	private Map<String, Object> convertGameState(final ScribbleBoard board, final Locale locale) {
 		final Map<String, Object> state = new HashMap<String, Object>();
-		state.put("state", board.getGameResolution());
-		state.put("stateMessage", gameMessageSource.formatGameState(board.getGameResolution(), locale));
+		state.put("active", board.isGameActive());
 		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
 		if (!board.isGameActive()) {
-			state.put("winners", board.getWonPlayers());
-			state.put("playerHands", board.getPlayersHands());
+			final List<ScribblePlayerHand> wonPlayers = board.getWonPlayers();
+			int index = 0;
+			final long[] res = new long[wonPlayers.size()];
+			for (ScribblePlayerHand wonPlayer : wonPlayers) {
+				res[index++] = wonPlayer.getPlayerId();
+			}
+			state.put("winners", res);
+			state.put("resolution", board.getGameResolution());
+			state.put("resolutionMessage", gameMessageSource.formatGameResolution(board.getGameResolution(), locale));
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
 		} else {

@@ -150,11 +150,11 @@ wm.ui = new function() {
             width: 400,
             buttons: {
                 "Ok": function() {
-                    $(this).dialog("resign");
+                    $(this).dialog("close");
                     approvedAction();
                 },
                 "Cancel": function() {
-                    $(this).dialog("resign");
+                    $(this).dialog("close");
                 } }
         });
     };
@@ -172,7 +172,7 @@ wm.ui = new function() {
     this.showMessage = function(opts) {
         opts = opts || {};
         var v = $.extend(opts, {
-            message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/resign.png"></a></div>',
+            message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
             blockMsgClass: 'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
             draggable: false
         });

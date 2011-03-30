@@ -30,8 +30,7 @@
     <link rel="stylesheet" type="text/css" href="/content/account/account.css"/>
 
     <link rel="stylesheet" type="text/css" href="/content/game/game.css"/>
-    <link rel="stylesheet" type="text/css" href="/content/game/playboard/scribble.css"/>
-    <script type="text/javascript" src="/content/game/playboard/scribble.js"></script>
+    <script type="text/javascript" src="/content/game/scribble.js"></script>
 </head>
 <body>
 <div id="freeow" class="freeow freeow-top-right"></div>
@@ -44,6 +43,9 @@
 
 <#include "${originalTemplateName}"/>
 
+<@security.authorize ifAllGranted="user">
+    <#include "game/footer.ftl"/>
+</@security.authorize>
 <@security.authorize ifNotGranted="user">
     <#include "account/footer.ftl"/>
 </@security.authorize>

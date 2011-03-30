@@ -83,6 +83,39 @@
             $("#resignGameButton").button(board.isBoardActive() ? "enable" : "disable");
         };
 
+        this.updateGameState = function(type, state) {
+            if (type === 'turn') {
+                wm.scribble.controls.updateControlsState();
+
+                if (board.isPlayerActive()) {
+                    wm.ui.showGrowl("<@message code="game.move.updated.label"/>", "<@message code="game.move.updated.you"/>", 'your-turn');
+                } else {
+                    wm.ui.showGrowl("<@message code="game.move.updated.label"/>", "<@message code="game.move.updated.other"/> " + "<b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.", 'opponent-turn');
+                }
+            } else if (type === 'finished') {
+                $("#boardActionsToolbar").hide();
+                $("#boardActionsToolbar button").button({disabled: true});
+                var msg;
+                var opts = {autoHide: false};
+                if (state.resolution == 'RESIGNED') {
+                    msg = "<@message code="game.move.finished.interrupted"/> <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
+                } else {
+                    if (state.winners == undefined || state.winners.length == 0) {
+                        msg = "<@message code="game.move.finished.drew"/>";
+                    } else {
+                        msg = "<@message code="game.move.finished.won"/> ";
+                        $.each(state.winners, function(i, pid) {
+                            if (i != 0) {
+                                msg += ", ";
+                            }
+                            msg += "<b>" + board.getPlayerInfo(pid).nickname + "</b>";
+                        });
+                    }
+                }
+                wm.ui.showGrowl("<@message code="game.move.finished.label"/>", msg + "<div class='closeInfo'><@message code="game.move.clickToClose"/></div>", 'game-finished', opts);
+            }
+        };
+
         this.makeTurn = function() {
             board.makeTurn(showMoveResult);
         };
@@ -138,29 +171,9 @@
             .bind('wordSelection',
             function(event, word) {
                 wm.scribble.controls.updateControlsState();
-            }).bind('gameTurn',
-            function(event, state) {
-                wm.scribble.controls.updateControlsState();
-
-                if (board.isPlayerActive()) {
-                    wm.ui.showGrowl("<@message code="game.move.updated.label"/>", "<@message code="game.move.updated.you"/>", 'your-turn');
-                } else {
-                    wm.ui.showGrowl("<@message code="game.move.updated.label"/>", "<@message code="game.move.updated.other"/> " + "<b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.", 'opponent-turn');
-                }
-            }).bind('gameFinalization',
-            function(event, state) {
-                $("#boardActionsToolbar").hide();
-                $("#boardActionsToolbar button").button({disabled: true});
-                var msg;
-                var opts = {autoHide: false};
-                if (state.state == 'INTERRUPTED') {
-                    msg = "<@message code="game.move.finished.interrupted"/> <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
-                } else if (state.state == 'DREW') {
-                    msg = "<@message code="game.move.finished.drew"/>";
-                } else {
-                    msg = "<@message code="game.move.finished.won"/> <b>" + board.getPlayerInfo((state.winner)).nickname + "</b>.";
-                }
-                wm.ui.showGrowl("<@message code="game.move.finished.label"/>", msg + "<div class='closeInfo'><@message code="game.move.clickToClose"/></div>", 'game-finished', opts);
+            }).bind('gameState',
+            function(event, type, state) {
+                wm.scribble.controls.updateGameState(type, state);
             }).bind('boardState',
             function(event, enabled) {
                 if (!enabled) {

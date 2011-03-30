@@ -71,7 +71,7 @@
         $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
         var d = $('<div style="position: relative; height: 22px;"></div>');
         $('<td></td>').append(d).appendTo(e);
-        $.each(scribbleBoard.bankTilesInfo, function(j, bti) {
+        $.each(board.getBankTilesInfo(), function(j, bti) {
             if (bti.cost == i) {
                 d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: i}).offset({left: count * 22, top: 0}));
                 count++;

@@ -15,20 +15,7 @@
 
 <script type="text/javascript">
     wm.scribble.history = new function() {
-        var movesHistoryTable = $("#movesHistory table").dataTable({
-            "bJQueryUI": true,
-            "bSort": true,
-            "bSortClasses": false,
-            "aaSorting": [
-                [0,'desc']
-            ],
-            "bPaginate": false,
-            "sScrollY": "300px",
-            "bStateSave": true,
-            "sDom": 't'
-        });
-
-        this.addMoveToHistory = function(move) {
+        var addMoveToHistory = function(move) {
             var link = '';
             if (move.type == 'make') {
                 var word = move.word;
@@ -43,13 +30,27 @@
             }
             movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
         };
-    };
 
-    $.each(scribbleBoard.moves, function(i, move) {
-        wm.scribble.history.addMoveToHistory(move)
-    });
-    board.bind('gameMoves', function(event, move) {
-        wm.scribble.history.addMoveToHistory(move)
-    });
+        var movesHistoryTable = $("#movesHistory table").dataTable({
+            "bJQueryUI": true,
+            "bSort": true,
+            "bSortClasses": false,
+            "aaSorting": [
+                [0,'desc']
+            ],
+            "bPaginate": false,
+            "sScrollY": "300px",
+            "bStateSave": true,
+            "sDom": 't'
+        });
+
+        $.each(board.getGameMoves(), function(i, move) {
+            addMoveToHistory(move)
+        });
+
+        board.bind('gameMoves', function(event, move) {
+            addMoveToHistory(move)
+        });
+    };
 </script>
 </@wm.widget>
