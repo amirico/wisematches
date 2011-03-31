@@ -2,12 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="webPlayerManager" class="wisematches.server.web.player.impl.WebPlayerManagerImpl">
+        <property name="playerManager" ref="playerManager"/>
+        <!--<property name="ratingManager" ref="ratingsCalculationManager"/>-->
+    </bean>
+
     <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-
-    <!--<bean id="noPlayerImageResource" >-->
-    <!--</bean>-->
 
     <bean id="playerImagesManager" class="wisematches.server.web.services.images.impl.FilePlayerImagesManager">
         <property name="imagesFolder" value="${server.images.path}/players"/>

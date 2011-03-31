@@ -59,7 +59,7 @@ public class PlayerEventProducer {//implements EventProducer {
         } else if (player instanceof GuestPlayer) {
             return MemberType.GUEST;
         }
-        return MemberType.BASIC;
+        return MemberType.GUEST;
     }
 
     private class ThePlayerStatisticListener implements PlayerStatisticListener {

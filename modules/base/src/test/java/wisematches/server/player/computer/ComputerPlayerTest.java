@@ -37,6 +37,6 @@ public class ComputerPlayerTest {
 	@Test
 	public void testGetComputerPlayers() {
 		assertEquals(RobotPlayer.getRobotPlayers(), ComputerPlayer.getComputerPlayers(RobotPlayer.class));
-		assertEquals(Arrays.asList(GuestPlayer.BASIC), ComputerPlayer.getComputerPlayers(GuestPlayer.class));
+		assertEquals(Arrays.asList(GuestPlayer.GUEST), ComputerPlayer.getComputerPlayers(GuestPlayer.class));
 	}
 }

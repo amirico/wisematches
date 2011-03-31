@@ -62,6 +62,7 @@
         </property>
     </bean>
 
+    <!--
     <bean id="ratingsCalculationManager" class="wisematches.server.standing.old.rating.impl.RatingsCalculationCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="playerManager" ref="playerManager"/>
@@ -70,6 +71,7 @@
             <bean class="wisematches.server.standing.old.rating.impl.systems.ELORatingSystem"/>
         </property>
     </bean>
+-->
 
     <!--
     <bean id="ratingsManager" class="wisematches.server.standing.old.rating.impl.RatingsManagerImpl">

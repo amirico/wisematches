@@ -171,20 +171,20 @@ public class DashboardServiceImplTest {
         }
 
         try {
-            impl.assertGuestPlayer(new PlayerInfoBean[]{new PlayerInfoBean(12L, "testManager", MemberType.BASIC, 123)});
+            impl.assertGuestPlayer(new PlayerInfoBean[]{new PlayerInfoBean(12L, "testManager", MemberType.GUEST, 123)});
             fail("Exception must be here: opponent is not robot");
         } catch (GuestRestrictionException ex) {
             ;
         }
 
         try {
-            impl.assertGuestPlayer(new PlayerInfoBean[]{new PlayerInfoBean(12L, "testManager", MemberType.BASIC, 123)});
+            impl.assertGuestPlayer(new PlayerInfoBean[]{new PlayerInfoBean(12L, "testManager", MemberType.GUEST, 123)});
             fail("Exception must be here: robot is not dull");
         } catch (GuestRestrictionException ex) {
             ;
         }
 
-        impl.assertGuestPlayer(new PlayerInfoBean[]{new PlayerInfoBean(12L, "testManager", MemberType.BASIC, 123)});
+        impl.assertGuestPlayer(new PlayerInfoBean[]{new PlayerInfoBean(12L, "testManager", MemberType.GUEST, 123)});
     }
 
     private Player createMockPlayer() {
