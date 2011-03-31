@@ -150,7 +150,6 @@ public class HibernateAccountManagerTest {
 		assertEquals(e.getPassword(), player.getPassword());
 		assertEquals(e.getLanguage(), player.getLanguage());
 		assertEquals(e.getMembership(), player.getMembership());
-		assertEquals(e.getRating(), player.getRating());
 		sessionFactory.getCurrentSession().flush();
 	}
 
@@ -166,7 +165,6 @@ public class HibernateAccountManagerTest {
 		assertEquals(op.getPassword(), mock.getPassword());
 		assertEquals(Language.DEFAULT, mock.getLanguage());
 		assertEquals(Membership.BASIC, mock.getMembership());
-		assertEquals(1200, mock.getRating());
 		return mock;
 	}
 

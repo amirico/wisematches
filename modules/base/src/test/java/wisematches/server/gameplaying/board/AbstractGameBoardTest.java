@@ -45,7 +45,7 @@ public class AbstractGameBoardTest {
 		gameSettings = new MockGameSettingsBuilder().build();
 
 		board = new MockGameBoard(gameSettings,
-				Arrays.<Player>asList(new MockPlayer(1, 1000), new MockPlayer(2, 1000), new MockPlayer(3, 1000)));
+				Arrays.<Player>asList(new MockPlayer(1), new MockPlayer(2), new MockPlayer(3)));
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
 		h3 = board.getPlayerHand(3);
@@ -71,7 +71,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, Arrays.<Player>asList(new MockPlayer(1, 1000)));
+			new MockGameBoard(gameSettings, Arrays.<Player>asList(new MockPlayer(1)));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;
@@ -79,7 +79,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, Arrays.<Player>asList(new MockPlayer(1, 1000), null));
+			new MockGameBoard(gameSettings, Arrays.<Player>asList(new MockPlayer(1), null));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;

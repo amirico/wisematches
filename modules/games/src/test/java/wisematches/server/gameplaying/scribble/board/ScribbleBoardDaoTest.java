@@ -63,10 +63,10 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_activeGames() {
-		final Player p1 = createMockPlayer(1L, 800);
-		final Player p2 = createMockPlayer(2L, 800);
-		final Player p3 = createMockPlayer(3L, 800);
-		final Player p4 = createMockPlayer(4L, 800);
+		final Player p1 = createMockPlayer(1L);
+		final Player p2 = createMockPlayer(2L);
+		final Player p3 = createMockPlayer(3L);
+		final Player p4 = createMockPlayer(4L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -98,9 +98,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_findExpiringBoards() {
-		final Player p1 = createMockPlayer(1L, 800);
-		final Player p2 = createMockPlayer(2L, 800);
-		final Player p3 = createMockPlayer(3L, 800);
+		final Player p1 = createMockPlayer(1L);
+		final Player p2 = createMockPlayer(2L);
+		final Player p3 = createMockPlayer(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -130,9 +130,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_getRatedBoards() throws GameMoveException {
-		final Player p1 = createMockPlayer(1L, 800);
-		final Player p2 = createMockPlayer(2L, 800);
-		final Player p3 = createMockPlayer(3L, 800);
+		final Player p1 = createMockPlayer(1L);
+		final Player p2 = createMockPlayer(2L);
+		final Player p3 = createMockPlayer(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -164,9 +164,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_saveLoadScribbleBoard() throws GameMoveException {
-		final Player p1 = createMockPlayer(1L, 800);
-		final Player p2 = createMockPlayer(2L, 800);
-		final Player p3 = createMockPlayer(3L, 800);
+		final Player p1 = createMockPlayer(1L);
+		final Player p2 = createMockPlayer(2L);
+		final Player p3 = createMockPlayer(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -268,10 +268,9 @@ public class ScribbleBoardDaoTest {
 		assertEquals(originalBoard.getPlayerHand(playerId).getPoints(), loadedBoard.getPlayerHand(playerId).getPoints());
 	}
 
-	private Player createMockPlayer(long id, int rating) {
+	private Player createMockPlayer(long id) {
 		Player p = createMock(Player.class);
 		expect(p.getId()).andReturn(id).anyTimes();
-		expect(p.getRating()).andReturn(rating).anyTimes();
 		replay(p);
 		return p;
 	}

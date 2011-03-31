@@ -1,8 +1,8 @@
-package wisematches.server.standing.statistic.impl;
+package wisematches.server.standing.old.statistic.impl;
 
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.standing.statistic.PlayerStatisticsManager;
+import wisematches.server.standing.old.statistic.PlayerStatisticsManager;
 import wisematches.server.utils.system.ServerPropertiesManager;
 
 import java.util.Calendar;

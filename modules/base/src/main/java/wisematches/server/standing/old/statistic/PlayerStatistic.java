@@ -1,4 +1,4 @@
-package wisematches.server.standing.statistic;
+package wisematches.server.standing.old.statistic;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

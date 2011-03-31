@@ -1,4 +1,4 @@
-package wisematches.server.standing.rating;
+package wisematches.server.standing.old.rating;
 
 import wisematches.server.player.Player;
 

@@ -1,6 +1,4 @@
-package wisematches.server.standing.rating;
-
-import wisematches.server.standing.old.rating.PlayerRatingEvent;
+package wisematches.server.standing.old.rating;
 
 /**
  * This listener is used in {@code RatingsManager} to notify clients about players ratings.

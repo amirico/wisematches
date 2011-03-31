@@ -30,8 +30,9 @@ public interface AccountManager extends PlayerManager {
 	 * Updates specified player. The player must be
 	 *
 	 * @param player the player with new information.
-	 * @throws UnknownAccountException   if an account for specified player is unknown.
-	 * @throws DuplicateAccountException if account with specified username or email already exist.
+	 * @throws UnknownAccountException	   if an account for specified player is unknown.
+	 * @throws DuplicateAccountException	 if account with specified username or email already exist.
+	 * @throws InadmissibleUsernameException if username is not correct and can't be used
 	 */
 	void updatePlayer(Player player) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException;
 

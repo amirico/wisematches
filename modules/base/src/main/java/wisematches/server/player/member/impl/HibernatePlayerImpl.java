@@ -71,10 +71,6 @@ public class HibernatePlayerImpl implements MemberPlayer {
 	@Column(name = "email", nullable = false, length = 150)
 	private String email;
 
-	@Basic
-	@Column(name = "rating")
-	private int rating;
-
 	@Type(type = "language")
 	@Column(name = "language")
 	private Language language;
@@ -126,11 +122,6 @@ public class HibernatePlayerImpl implements MemberPlayer {
 	}
 
 	@Override
-	public int getRating() {
-		return rating;
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -170,6 +161,5 @@ public class HibernatePlayerImpl implements MemberPlayer {
 		this.email = player.getEmail();
 		this.language = player.getLanguage();
 		this.membership = player.getMembership();
-		this.rating = player.getRating();
 	}
 }

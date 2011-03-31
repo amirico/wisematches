@@ -8,9 +8,9 @@ import wisematches.server.player.computer.ComputerPlayer;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class GuestPlayer extends ComputerPlayer {
-	public static final Player BASIC = new GuestPlayer(1, "guest", 1200);
+	public static final Player BASIC = new GuestPlayer(1, "guest");
 
-	public GuestPlayer(long id, String nickname, int rating) {
-		super(id, nickname, Membership.GUEST, rating);
+	public GuestPlayer(long id, String nickname) {
+		super(id, nickname, Membership.GUEST);
 	}
 }

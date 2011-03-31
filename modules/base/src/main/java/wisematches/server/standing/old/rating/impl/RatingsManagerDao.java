@@ -1,4 +1,4 @@
-package wisematches.server.standing.rating.impl;
+package wisematches.server.standing.old.rating.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -8,7 +8,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.player.Player;
 import wisematches.server.player.member.impl.HibernatePlayerImpl;
-import wisematches.server.standing.rating.PlayerRatingsManager;
+import wisematches.server.standing.old.rating.PlayerRatingsManager;
 
 import java.sql.SQLException;
 import java.util.List;

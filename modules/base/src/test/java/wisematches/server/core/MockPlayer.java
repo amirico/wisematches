@@ -11,15 +11,9 @@ import java.util.Date;
  */
 public class MockPlayer implements Player {
 	private final long id;
-	private int rating;
 
 	public MockPlayer(long id) {
 		this.id = id;
-	}
-
-	public MockPlayer(long id, int rating) {
-		this.id = id;
-		this.rating = rating;
 	}
 
 	public long getId() {
@@ -69,19 +63,9 @@ public class MockPlayer implements Player {
 
 
 	@Override
-	public int getRating() {
-		return rating;
-	}
-
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
-
-	@Override
 	public String toString() {
 		return "MockPlayer{" +
 				"id=" + id +
-				", rating=" + rating +
 				'}';
 	}
 }

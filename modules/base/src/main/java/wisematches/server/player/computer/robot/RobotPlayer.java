@@ -16,12 +16,12 @@ import java.util.Collection;
 public class RobotPlayer extends ComputerPlayer {
 	private final RobotType robotType;
 
-	public static final RobotPlayer DULL = new RobotPlayer(2, "dull", 800, RobotType.DULL);
-	public static final RobotPlayer TRAINEE = new RobotPlayer(3, "trainee", 1200, RobotType.TRAINEE);
-	public static final RobotPlayer EXPERT = new RobotPlayer(4, "expert", 1600, RobotType.EXPERT);
+	public static final RobotPlayer DULL = new RobotPlayer(2, "dull", RobotType.DULL);
+	public static final RobotPlayer TRAINEE = new RobotPlayer(3, "trainee", RobotType.TRAINEE);
+	public static final RobotPlayer EXPERT = new RobotPlayer(4, "expert", RobotType.EXPERT);
 
-	private RobotPlayer(long id, String nickname, int rating, RobotType robotType) {
-		super(id, nickname, Membership.ROBOT, rating);
+	private RobotPlayer(long id, String nickname, RobotType robotType) {
+		super(id, nickname, Membership.ROBOT);
 		this.robotType = robotType;
 	}
 
