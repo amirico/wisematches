@@ -11,6 +11,6 @@ import java.util.EnumSet;
  */
 public class WMGuestUserDetails extends WMUserDetails {
 	public WMGuestUserDetails() {
-		super(GuestPlayer.BASIC, EnumSet.of(WMAuthorities.USER, WMAuthorities.GUEST), true);
+		super(GuestPlayer.GUEST, EnumSet.of(WMAuthorities.USER, WMAuthorities.GUEST), true);
 	}
 }

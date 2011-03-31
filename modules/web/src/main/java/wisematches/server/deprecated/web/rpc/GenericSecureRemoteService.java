@@ -48,7 +48,7 @@ public class GenericSecureRemoteService extends GenericRemoteService implements 
         } else if (player instanceof GuestPlayer) {
             return MemberType.GUEST;
         }
-        return MemberType.BASIC;
+        return MemberType.GUEST;
     }
 */
 

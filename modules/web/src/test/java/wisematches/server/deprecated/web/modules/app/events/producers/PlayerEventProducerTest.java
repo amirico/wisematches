@@ -18,7 +18,7 @@ public class PlayerEventProducerTest {
         final PlayerInfoBean bean = PlayerEventProducer.convertPlayer(13L, manager);
         assertEquals(13L, bean.getPlayerId());
         assertEquals("test", bean.getPlayerName());
-        assertEquals(MemberType.BASIC, bean.getMemberType());
+        assertEquals(MemberType.GUEST, bean.getMemberType());
         assertEquals(123, bean.getCurrentRating());
 
         verify(player, manager);

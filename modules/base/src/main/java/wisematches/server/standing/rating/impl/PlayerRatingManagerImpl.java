@@ -7,25 +7,31 @@ import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.rating.RatingHistory;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class PlayerRatingManagerImpl implements PlayerRatingManager {
-	private final Map<Player, Short> ratings = new WeakHashMap<Player, Short>();
-
 	private PlayerRatingsDao playerRatingsDao;
+
+	private final Map<Player, Short> ratings = new WeakHashMap<Player, Short>();
+	private final Collection<PlayerRatingListener> ratingListeners = new CopyOnWriteArraySet<PlayerRatingListener>();
+
+	public PlayerRatingManagerImpl() {
+	}
 
 	@Override
 	public void addRatingsChangeListener(PlayerRatingListener l) {
-		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+		ratingListeners.add(l);
 	}
 
 	@Override
 	public void removeRatingsChangeListener(PlayerRatingListener l) {
-		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+		ratingListeners.remove(l);
 	}
 
 	@Override
@@ -40,7 +46,7 @@ public class PlayerRatingManagerImpl implements PlayerRatingManager {
 
 	@Override
 	public long getPosition(Player player) {
-		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+		return playerRatingsDao.getPosition(player.getId());
 	}
 
 	@Override

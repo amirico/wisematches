@@ -16,7 +16,7 @@ public enum Membership {
 	 */
 	BASIC,
 	/**
-	 * Silver player. It's more well than the <i>BASIC<i> player.
+	 * Silver player. It's more well than the <i>GUEST<i> player.
 	 */
 	SILVER,
 	/**

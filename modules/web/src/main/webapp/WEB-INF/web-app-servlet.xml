@@ -77,6 +77,7 @@
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="freemarkerVariables">
             <map>
+                <entry key="playerManager" value-ref="webPlayerManager"/>
                 <entry key="captchaService" value-ref="captchaService"/>
                 <entry key="gameMessageSource" value-ref="smartTimeConverter"/>
             </map>

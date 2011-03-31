@@ -31,7 +31,7 @@ public class PlayerInfoServiceImplTest {
         assertEquals("mock", player1.getPlayerName());
         assertEquals(123, player1.getCurrentRating());
         assertEquals("/rpc/PlayerImagesService?playerId=13", player1.getPlayerIconUrl());
-        assertEquals(MemberType.BASIC, player1.getMemberType());
+        assertEquals(MemberType.GUEST, player1.getMemberType());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class PlayerInfoServiceImplTest {
         assertEquals(321, info.getCurrentRating());
         assertEquals(13L, info.getPlayerId());
         assertEquals("Test Name", info.getPlayerName());
-        assertEquals(MemberType.BASIC, info.getMemberType());
+        assertEquals(MemberType.GUEST, info.getMemberType());
 
         verify(player, statisticsManager, playerManager);
     }
