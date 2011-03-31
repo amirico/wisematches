@@ -61,9 +61,4 @@ public class WMUserDetails extends User implements Player {
 	public Membership getMembership() {
 		return originalPlayer.getMembership();
 	}
-
-	@Override
-	public int getRating() {
-		return originalPlayer.getRating();
-	}
 }

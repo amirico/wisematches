@@ -7,6 +7,9 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="attributesProvider" class="wisematches.server.attributes.impl.AnnotationSpringAttributesProvider">
+    </bean>
+
     <bean id="accountManager" class="wisematches.server.player.member.impl.HibernateAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="lockAccountManager" ref="lockAccountManager"/>

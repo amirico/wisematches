@@ -22,7 +22,6 @@ public class PlayerEditor {
 		this.email = player.getEmail();
 		this.language = player.getLanguage();
 		this.membership = player.getMembership();
-		this.rating = player.getRating();
 	}
 
 	public PlayerEditor(String email, String nickname, String password) {
@@ -141,11 +140,6 @@ public class PlayerEditor {
 		@Override
 		public Membership getMembership() {
 			return membership;
-		}
-
-		@Override
-		public int getRating() {
-			return rating;
 		}
 	}
 }

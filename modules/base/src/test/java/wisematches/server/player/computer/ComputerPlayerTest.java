@@ -15,9 +15,9 @@ import static org.junit.Assert.*;
 public class ComputerPlayerTest {
 	@Test
 	public void testNotUniquePlayers() {
-		new ComputerPlayer(0, "mock", Membership.ROBOT, 100);
+		new ComputerPlayer(0, "mock", Membership.ROBOT);
 		try {
-			new ComputerPlayer(0, "mock", Membership.ROBOT, 100);
+			new ComputerPlayer(0, "mock", Membership.ROBOT);
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;
@@ -26,8 +26,8 @@ public class ComputerPlayerTest {
 
 	@Test
 	public void testGetComputerPlayer() {
-		ComputerPlayer p1 = new ComputerPlayer(999, "mock", Membership.ROBOT, 100);
-		ComputerPlayer p2 = new ComputerPlayer(998, "mock", Membership.ROBOT, 101);
+		ComputerPlayer p1 = new ComputerPlayer(999, "mock", Membership.ROBOT);
+		ComputerPlayer p2 = new ComputerPlayer(998, "mock", Membership.ROBOT);
 
 		assertSame(p1, ComputerPlayer.<ComputerPlayer>getComputerPlayer(999));
 		assertSame(p2, ComputerPlayer.<ComputerPlayer>getComputerPlayer(998));

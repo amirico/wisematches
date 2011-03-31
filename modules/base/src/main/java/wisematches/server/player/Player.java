@@ -67,11 +67,4 @@ public interface Player extends Serializable {
 	 *         and has some limitations.
 	 */
 	Membership getMembership();
-
-	/**
-	 * Returns current rating of the player.
-	 *
-	 * @return the current rating of the player.
-	 */
-	int getRating();
 }

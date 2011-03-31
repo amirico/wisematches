@@ -1,4 +1,4 @@
-package wisematches.server.standing.statistic;
+package wisematches.server.standing.old.statistic;
 
 /**
  * Statistics manager allows get statistic for specified player. This manager can use database or any

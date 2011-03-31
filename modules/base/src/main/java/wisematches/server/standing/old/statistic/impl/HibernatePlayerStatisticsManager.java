@@ -1,12 +1,12 @@
-package wisematches.server.standing.statistic.impl;
+package wisematches.server.standing.old.statistic.impl;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.standing.statistic.PlayerStatistic;
-import wisematches.server.standing.statistic.PlayerStatisticListener;
-import wisematches.server.standing.statistic.PlayerStatisticsManager;
+import wisematches.server.standing.old.statistic.PlayerStatistic;
+import wisematches.server.standing.old.statistic.PlayerStatisticListener;
+import wisematches.server.standing.old.statistic.PlayerStatisticsManager;
 
 import java.util.Collection;
 import java.util.Date;

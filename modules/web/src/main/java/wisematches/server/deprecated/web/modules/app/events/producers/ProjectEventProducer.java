@@ -2,7 +2,7 @@ package wisematches.server.deprecated.web.modules.app.events.producers;
 
 import wisematches.server.deprecated.web.modules.app.events.EventNotificator;
 import wisematches.server.deprecated.web.modules.app.events.EventProducer;
-import wisematches.server.standing.rating.PlayerRatingsManager;
+import wisematches.server.standing.old.rating.PlayerRatingsManager;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

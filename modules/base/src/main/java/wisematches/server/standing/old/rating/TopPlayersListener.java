@@ -1,4 +1,4 @@
-package wisematches.server.standing.rating;
+package wisematches.server.standing.old.rating;
 
 /**
  * This listener is used in {@code RatingsManager} to notify clients about changes in top players.

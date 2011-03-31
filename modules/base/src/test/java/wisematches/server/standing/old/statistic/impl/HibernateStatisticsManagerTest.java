@@ -1,4 +1,4 @@
-package wisematches.server.standing.statistic.impl;
+package wisematches.server.standing.old.statistic.impl;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.persister.collection.AbstractCollectionPersister;
@@ -7,10 +7,10 @@ import org.springframework.test.AbstractTransactionalDataSourceSpringContextTest
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.server.standing.statistic.PlayerRatingInfo;
-import wisematches.server.standing.statistic.PlayerStatistic;
-import wisematches.server.standing.statistic.PlayerStatisticListener;
-import wisematches.server.standing.statistic.PlayerStatisticsManager;
+import wisematches.server.standing.old.statistic.PlayerRatingInfo;
+import wisematches.server.standing.old.statistic.PlayerStatistic;
+import wisematches.server.standing.old.statistic.PlayerStatisticListener;
+import wisematches.server.standing.old.statistic.PlayerStatisticsManager;
 
 import java.util.Date;
 import java.util.Map;

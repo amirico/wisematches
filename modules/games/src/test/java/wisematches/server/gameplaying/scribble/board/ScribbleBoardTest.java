@@ -43,7 +43,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 103, 1));
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dict);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dict);
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
 		h3 = board.getPlayerHand(3);
@@ -59,7 +59,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = createTilesBank("abcd*qrt*1kelt", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
 		h3 = board.getPlayerHand(3);
@@ -113,7 +113,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = createTilesBank("", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 		board.checkState();
 	}
 
@@ -122,7 +122,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = createTilesBank("abcabcd", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
 		h3 = board.getPlayerHand(3);
@@ -255,7 +255,7 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -314,7 +314,7 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -372,7 +372,7 @@ public class ScribbleBoardTest extends TestCase {
 				new TilesBank.TilesInfo('m', 13, 0)
 		);
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -398,7 +398,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -419,7 +419,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -443,7 +443,7 @@ public class ScribbleBoardTest extends TestCase {
 		final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -479,7 +479,7 @@ public class ScribbleBoardTest extends TestCase {
 		);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -517,7 +517,7 @@ public class ScribbleBoardTest extends TestCase {
 		);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
-				Arrays.asList(createMockPlayer(1, 800), createMockPlayer(2, 800), createMockPlayer(3, 800)), tilesBank, dictionary);
+				Arrays.asList(createMockPlayer(1), createMockPlayer(2), createMockPlayer(3)), tilesBank, dictionary);
 
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
@@ -566,10 +566,9 @@ public class ScribbleBoardTest extends TestCase {
 		return new TilesBank(infos);
 	}
 
-	public static Player createMockPlayer(long id, int rating) {
+	public static Player createMockPlayer(long id) {
 		Player p = createMock(Player.class);
 		expect(p.getId()).andReturn(id).anyTimes();
-		expect(p.getRating()).andReturn(rating).anyTimes();
 		replay(p);
 		return p;
 	}

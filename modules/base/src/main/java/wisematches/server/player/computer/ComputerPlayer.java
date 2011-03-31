@@ -19,7 +19,6 @@ import java.util.Map;
  */
 public class ComputerPlayer implements Player {
 	protected final long id;
-	protected final int rating;
 	protected final String nickname;
 	protected final Membership membership;
 
@@ -32,11 +31,9 @@ public class ComputerPlayer implements Player {
 	 *                   reserved for computer players.
 	 * @param nickname   the player's nickname.
 	 * @param membership the player's membership
-	 * @param rating	 the player's rating.
 	 */
-	protected ComputerPlayer(long id, String nickname, Membership membership, int rating) {
+	protected ComputerPlayer(long id, String nickname, Membership membership) {
 		this.id = id;
-		this.rating = rating;
 		this.nickname = nickname;
 		this.membership = membership;
 
@@ -99,11 +96,6 @@ public class ComputerPlayer implements Player {
 	}
 
 	@Override
-	public int getRating() {
-		return rating;
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -125,7 +117,6 @@ public class ComputerPlayer implements Player {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ComputerPlayer");
 		sb.append("{id=").append(id);
-		sb.append(", rating=").append(rating);
 		sb.append(", nickname='").append(nickname).append('\'');
 		sb.append('}');
 		return sb.toString();

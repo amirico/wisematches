@@ -1,4 +1,4 @@
-package wisematches.server.standing.statistic.impl;
+package wisematches.server.standing.old.statistic.impl;
 
 import org.junit.Ignore;
 import org.junit.Test;

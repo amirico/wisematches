@@ -11,7 +11,7 @@
             overflowToDisk="false"
             memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="wisematches.server.standing.statistic.PlayerStatistic"
+    <cache name="wisematches.server.standing.old.statistic.PlayerStatistic"
            maxElementsInMemory="1000"
            eternal="true"
            diskPersistent="false"

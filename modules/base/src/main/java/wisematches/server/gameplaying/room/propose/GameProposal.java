@@ -80,12 +80,12 @@ public abstract class GameProposal implements Serializable {
 		if (opponentsCount + 1 == acceptedPlayers.size()) {
 			return "full";
 		}
-		if (minRating != 0 && p.getRating() < minRating) {
-			return "rating < " + minRating;
-		}
-		if (maxRating != 0 && p.getRating() > maxRating) {
-			return "rating > " + maxRating;
-		}
+//		if (minRating != 0 && p.getRating() < minRating) {
+//			return "rating < " + minRating;
+//		}
+//		if (maxRating != 0 && p.getRating() > maxRating) {
+//			return "rating > " + maxRating;
+//		}
 		return null;
 	}
 

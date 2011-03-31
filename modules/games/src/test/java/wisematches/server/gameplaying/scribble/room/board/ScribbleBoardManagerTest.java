@@ -95,7 +95,7 @@ public class ScribbleBoardManagerTest {
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
 
 		final ScribbleBoard board1 = scribbleRoomManager.createBoardImpl(settings,
-				Arrays.asList(ScribbleBoardTest.createMockPlayer(1, 300), ScribbleBoardTest.createMockPlayer(2, 400)));
+				Arrays.asList(ScribbleBoardTest.createMockPlayer(1), ScribbleBoardTest.createMockPlayer(2)));
 		assertNotNull(board1);
 
 		verify(dictionaryManager);

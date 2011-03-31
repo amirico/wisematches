@@ -74,7 +74,7 @@ public class AbstractBoardManagerTest {
 	public void testCreateBoard() throws BoardCreationException {
 		final GameSettings gameSettings = new MockGameSettings("test", 3);
 
-		final Collection<Player> players = Arrays.<Player>asList(new MockPlayer(1, 1), new MockPlayer(2, 2));
+		final Collection<Player> players = Arrays.<Player>asList(new MockPlayer(1), new MockPlayer(2));
 
 		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
 		expectListeners(board);
