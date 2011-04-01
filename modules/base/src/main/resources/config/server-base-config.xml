@@ -12,18 +12,6 @@
         <property name="accountLockManager" ref="lockAccountManager"/>
     </bean>
 
-    <bean id="computerPlayerManager" class="wisematches.server.player.computer.ComputerPlayerManager"/>
-
-    <bean id="playerManager" class="wisematches.server.player.CompositePlayerManager">
-        <property name="playerManagers">
-            <list>
-                <!-- must be first because very fast -->
-                <ref bean="computerPlayerManager"/>
-                <!--<ref bean="accountManager"/>-->
-            </list>
-        </property>
-    </bean>
-
     <bean id="lexicalDictionary" class="wisematches.server.gameplaying.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>
@@ -37,6 +25,15 @@
         <property name="lexicalManager" ref="lexicalDictionary"/>
         <property name="slanglyManager" ref="slanglyDictionary"/>
     </bean>
+
+    <bean id="ratingManager" class="wisematches.server.standing.rating.impl.PlayerRatingManagerImpl">
+    </bean>
+
+    <bean id="playerManager" class="wisematches.server.personality.player.StandingPlayerManager">
+        <property name="ratingManager" ref="ratingManager"/>
+        <property name="accountManager" ref="accountManager"/>
+    </bean>
+
 
     <!--
     <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
