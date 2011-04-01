@@ -4,9 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.IAnswer;
 import org.junit.Test;
-import wisematches.server.core.MockPlayer;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,7 +73,7 @@ public class AbstractBoardManagerTest {
 	public void testCreateBoard() throws BoardCreationException {
 		final GameSettings gameSettings = new MockGameSettings("test", 3);
 
-		final Collection<Player> players = Arrays.<Player>asList(new MockPlayer(1), new MockPlayer(2));
+		final Collection<Personality> players = Arrays.<Personality>asList(Personality.person(1), Personality.person(2));
 
 		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
 		expectListeners(board);
@@ -127,7 +126,7 @@ public class AbstractBoardManagerTest {
 
 	@Test
 	public void testGetActiveBoards() throws BoardLoadingException {
-		final Player player = createMock(Player.class);
+		final Personality player = Personality.person(1);
 
 		final GameBoard<GameSettings, GamePlayerHand> board1 = createStrictMock(GameBoard.class);
 		expectListeners(board1);
@@ -204,11 +203,11 @@ public class AbstractBoardManagerTest {
 	private interface GameBoardDao {
 		GameBoard loadBoard(long gameId) throws BoardLoadingException;
 
-		GameBoard createBoard(GameSettings gameSettings, Collection<Player> players) throws BoardCreationException;
+		GameBoard createBoard(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
 
 		void saveBoard(GameBoard board);
 
-		Collection<Long> loadActivePlayerBoards(Player player);
+		Collection<Long> loadActivePlayerBoards(Personality player);
 	}
 
 	private static class MockGameSettings extends GameSettings {
@@ -232,7 +231,7 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected GameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings gameSettings, Collection<Player> players) throws BoardCreationException {
+		protected GameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
 			return gameBoardDao.createBoard(gameSettings, players);
 		}
 
@@ -242,7 +241,7 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected Collection<Long> loadActivePlayerBoards(Player player) {
+		protected Collection<Long> loadActivePlayerBoards(Personality player) {
 			return gameBoardDao.loadActivePlayerBoards(player);
 		}
 	}

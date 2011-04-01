@@ -352,7 +352,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         this.playerManager = playerManager;
     }
 
-    public void setRatingsManager(PlayerRatingsManager ratingsManager) {
+    public void setRatingManager(PlayerRatingsManager ratingsManager) {
         this.ratingsManager = ratingsManager;
     }
 

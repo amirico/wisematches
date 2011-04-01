@@ -1,7 +1,7 @@
 package wisematches.server.gameplaying.scribble.room.proposal;
 
 import wisematches.server.gameplaying.room.propose.AbstractProposalManager;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class ScribbleProposalManager extends AbstractProposalManager<ScribblePro
 	}
 
 	@Override
-	public synchronized ScribbleProposal attachPlayer(long proposalId, Player player) {
+	public synchronized ScribbleProposal attachPlayer(long proposalId, Personality player) {
 		final ScribbleProposal info = proposals.get(proposalId);
 		if (info == null) {
 			return null;
@@ -47,7 +47,7 @@ public class ScribbleProposalManager extends AbstractProposalManager<ScribblePro
 	}
 
 	@Override
-	public synchronized ScribbleProposal detachPlayer(long proposalId, Player player) {
+	public synchronized ScribbleProposal detachPlayer(long proposalId, Personality player) {
 		final ScribbleProposal info = proposals.get(proposalId);
 		if (info == null) {
 			throw new UnsupportedOperationException("Checking is not implemented");

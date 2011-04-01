@@ -1,7 +1,7 @@
 package wisematches.server.standing.rating.impl;
 
 import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 import wisematches.server.standing.rating.PlayerRatingListener;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class PlayerRatingManagerImpl implements PlayerRatingManager {
 	private PlayerRatingsDao playerRatingsDao;
 
-	private final Map<Player, Short> ratings = new WeakHashMap<Player, Short>();
+	private final Map<Personality, Short> ratings = new WeakHashMap<Personality, Short>();
 	private final Collection<PlayerRatingListener> ratingListeners = new CopyOnWriteArraySet<PlayerRatingListener>();
 
 	public PlayerRatingManagerImpl() {
@@ -35,7 +35,7 @@ public class PlayerRatingManagerImpl implements PlayerRatingManager {
 	}
 
 	@Override
-	public short getRating(Player player) {
+	public short getRating(Personality player) {
 		Short rating = ratings.get(player);
 		if (rating == null) {
 			rating = playerRatingsDao.getRating(player.getId());
@@ -45,12 +45,13 @@ public class PlayerRatingManagerImpl implements PlayerRatingManager {
 	}
 
 	@Override
-	public long getPosition(Player player) {
-		return playerRatingsDao.getPosition(player.getId());
+	public long getPosition(Personality player) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+//		return playerRatingsDao.getPosition(player.getId());
 	}
 
 	@Override
-	public RatingChange getRatingChange(Player player, GameBoard board) {
+	public RatingChange getRatingChange(Personality player, GameBoard board) {
 		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 
@@ -60,7 +61,7 @@ public class PlayerRatingManagerImpl implements PlayerRatingManager {
 	}
 
 	@Override
-	public RatingHistory getRatingHistory(Player player) {
+	public RatingHistory getRatingHistory(Personality player) {
 		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

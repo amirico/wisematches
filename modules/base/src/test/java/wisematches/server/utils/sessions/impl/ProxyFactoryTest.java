@@ -1,18 +1,16 @@
 package wisematches.server.utils.sessions.impl;
 
 import org.junit.Test;
-import wisematches.server.player.Player;
-import wisematches.server.utils.sessions.PlayerSessionBean;
-
-import java.util.Arrays;
-
-import static org.easymock.EasyMock.createNiceMock;
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ProxyFactoryTest {
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("commented");
+	}
+/*
 	@Test
 	public void createPlayerSessionBean() {
 		final ProxyFactory factory = new ProxyFactory(Arrays.asList(ValidInterface1.class, ValidInterface2.class));
@@ -49,4 +47,5 @@ public class ProxyFactoryTest {
 		assertSame(player, i2.getPlayer());
 		assertEquals("key", i2.getSessionKey());
 	}
+*/
 }

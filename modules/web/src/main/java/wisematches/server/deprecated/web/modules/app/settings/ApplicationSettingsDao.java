@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.player.Player;
+import wisematches.server.personality.player.Player;
 
 import java.sql.SQLException;
 

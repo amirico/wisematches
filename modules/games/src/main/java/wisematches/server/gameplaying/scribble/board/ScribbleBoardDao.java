@@ -4,7 +4,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.room.search.ExpiringBoard;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -44,7 +44,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Long> getActiveBoards(Player player) {
+	public Collection<Long> getActiveBoards(Personality player) {
 		final HibernateTemplate template = getHibernateTemplate();
 		return (List<Long>) template.find("select board.boardId from " + ScribbleBoard.class.getName() +
 				" board join board.playersIterator.playerHands hands where board.gameResolution is null and hands.playerId = ?", player.getId());

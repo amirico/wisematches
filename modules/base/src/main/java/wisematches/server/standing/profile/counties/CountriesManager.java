@@ -1,6 +1,6 @@
 package wisematches.server.standing.profile.counties;
 
-import wisematches.server.player.Language;
+import wisematches.server.personality.account.Language;
 
 import java.util.Collection;
 import java.util.List;

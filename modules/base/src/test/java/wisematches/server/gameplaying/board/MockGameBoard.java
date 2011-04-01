@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.board;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -17,11 +17,11 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private boolean moveFinished;
 	private int[] finishScore;
 
-	MockGameBoard(GameSettings gameSettings, Collection<Player> players) {
+	MockGameBoard(GameSettings gameSettings, Collection<Personality> players) {
 		super(gameSettings, players);
 	}
 
-	protected GamePlayerHand createPlayerHand(Player player) {
+	protected GamePlayerHand createPlayerHand(Personality player) {
 		return new GamePlayerHand(player.getId());
 	}
 

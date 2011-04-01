@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.room.propose;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public abstract class AbstractProposalManager<P extends GameProposal> implements
 	}
 
 	@Override
-	public synchronized Collection<P> getPlayerProposals(Player player) {
+	public synchronized Collection<P> getPlayerProposals(Personality player) {
 		final Long id = player.getId();
 		Collection<P> res = new ArrayList<P>();
 		for (P scribbleProposal : getActiveProposals()) {

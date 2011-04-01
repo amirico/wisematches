@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.player.*;
+import wisematches.server.personality.account.*;
 
 import static org.junit.Assert.*;
 
@@ -40,12 +40,12 @@ public class RecoveryTokenManagerTest {
 
 	@Test
 	public void testManager() throws InterruptedException, TokenExpiredException, InadmissibleUsernameException, DuplicateAccountException, UnknownAccountException {
-		final PlayerEditor editor = new PlayerEditor();
+		final AccountEditor editor = new AccountEditor();
 		editor.setNickname("mock");
 		editor.setEmail("mock@wm.net");
 		editor.setPassword("mock");
 
-		final Player p = accountManager.createPlayer(editor.createPlayer());
+		final Account p = accountManager.createAccount(editor.createAccount());
 
 		final RecoveryToken token = recoveryTokenManager.createToken(p);
 		assertNotNull(token);
@@ -76,6 +76,6 @@ public class RecoveryTokenManagerTest {
 		recoveryTokenManager.removeToken(token2);
 		assertNull(recoveryTokenManager.getToken(p));
 
-		accountManager.removePlayer(p);
+		accountManager.removeAccount(p);
 	}
 }

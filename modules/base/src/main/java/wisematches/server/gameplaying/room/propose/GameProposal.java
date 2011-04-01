@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.room.propose;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public abstract class GameProposal implements Serializable {
 	protected GameProposal() {
 	}
 
-	protected GameProposal(String title, int timeLimits, int opponentsCount, int minRating, int maxRating, Player player, List<Player> opponents) {
+	protected GameProposal(String title, int timeLimits, int opponentsCount, int minRating, int maxRating, Personality player, List<? extends Personality> opponents) {
 		this.title = title;
 		this.timeLimits = timeLimits;
 		this.opponentsCount = opponentsCount;
@@ -33,7 +33,7 @@ public abstract class GameProposal implements Serializable {
 
 		acceptedPlayers.add(gameOwner);
 		if (opponents != null) {
-			for (Player opponent : opponents) {
+			for (Personality opponent : opponents) {
 				if (opponent != null) {
 					acceptedPlayers.add(opponent.getId());
 				}
@@ -69,11 +69,11 @@ public abstract class GameProposal implements Serializable {
 		return maxRating;
 	}
 
-	public boolean isSuitablePlayer(Player p) {
+	public boolean isSuitablePlayer(Personality p) {
 		return getUnsuitableMessage(p) == null;
 	}
 
-	public String getUnsuitableMessage(Player p) {
+	public String getUnsuitableMessage(Personality p) {
 		if (acceptedPlayers.contains(p.getId())) {
 			return "exist";
 		}
@@ -110,11 +110,11 @@ public abstract class GameProposal implements Serializable {
 		return acceptedPlayers.size() == opponentsCount;
 	}
 
-	public void attachPlayer(Player player) {
+	public void attachPlayer(Personality player) {
 		acceptedPlayers.add(player.getId());
 	}
 
-	public void detachPlayer(Player player) {
+	public void detachPlayer(Personality player) {
 		acceptedPlayers.remove(player.getId());
 	}
 

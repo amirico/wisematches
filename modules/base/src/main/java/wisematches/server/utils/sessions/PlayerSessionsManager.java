@@ -1,6 +1,6 @@
 package wisematches.server.utils.sessions;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 
@@ -68,7 +68,7 @@ public interface PlayerSessionsManager {
 	 * @param <T>
 	 * @return
 	 */
-	<T extends PlayerSessionBean> Collection<T> getPlayerSessionBeans(Player player);
+	<T extends PlayerSessionBean> Collection<T> getPlayerSessionBeans(Personality player);
 
 	/**
 	 * Returns collection of all session beans.
@@ -83,7 +83,7 @@ public interface PlayerSessionsManager {
 	 *
 	 * @return the unmodifiable collection of players
 	 */
-	Collection<Player> getOnlinePlayers();
+	Collection<Personality> getOnlinePlayers();
 
 	/**
 	 * Checks that specified player is online at this moment.
@@ -91,5 +91,5 @@ public interface PlayerSessionsManager {
 	 * @param player the player to be checked
 	 * @return {@code true} if player is online at this moment; {@code false} - otherwise.
 	 */
-	boolean isPlayerOnline(Player player);
+	boolean isPlayerOnline(Personality player);
 }

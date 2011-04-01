@@ -3,8 +3,8 @@ package wisematches.server.gameplaying.robot.impl;
 import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.Room;
-import wisematches.server.player.computer.robot.RobotPlayer;
-import wisematches.server.player.computer.robot.RobotType;
+import wisematches.server.personality.player.computer.robot.RobotPlayer;
+import wisematches.server.personality.player.computer.robot.RobotType;
 
 import java.util.Collection;
 import java.util.Collections;

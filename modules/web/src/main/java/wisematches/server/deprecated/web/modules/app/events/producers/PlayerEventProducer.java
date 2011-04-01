@@ -9,9 +9,9 @@ public class PlayerEventProducer {//implements EventProducer {
 
     private PlayerStatisticsManager statisticsManager;
 
-    private final LockAccountListener lockAccountListener = new TheLockAccountListener();
+    private final AccountLockListener lockAccountListener = new TheLockAccountListener();
     private final PlayerStatisticListener playerStatisticListener = new ThePlayerStatisticListener();
-    private LockAccountManager lockAccountManager;
+    private AccountLockManager lockAccountManager;
 
     public void activateProducer(EventNotificator notificator) {
         this.notificator = notificator;
@@ -33,15 +33,15 @@ public class PlayerEventProducer {//implements EventProducer {
         }
     }
 
-    public void setLockAccountManager(LockAccountManager lockAccountManager) {
+    public void setAccountLockManager(AccountLockManager lockAccountManager) {
         if (this.lockAccountManager != null) {
-            this.lockAccountManager.removeLockAccountListener(lockAccountListener);
+            this.lockAccountManager.removeAccountLockListener(lockAccountListener);
         }
 
         this.lockAccountManager = lockAccountManager;
 
         if (this.lockAccountManager != null) {
-            this.lockAccountManager.addLockAccountListener(lockAccountListener);
+            this.lockAccountManager.addAccountLockListener(lockAccountListener);
         }
     }
 
@@ -70,7 +70,7 @@ public class PlayerEventProducer {//implements EventProducer {
         }
     }
 
-    private class TheLockAccountListener implements LockAccountListener {
+    private class TheLockAccountListener implements AccountLockListener {
         public void accountLocked(Player player, String publicReason, String privateReason, Date unlockdate) {
             if (notificator != null) {
                 notificator.fireEvent(new PlayerLockedEvent(player.getId(), publicReason, unlockdate.getTime()));

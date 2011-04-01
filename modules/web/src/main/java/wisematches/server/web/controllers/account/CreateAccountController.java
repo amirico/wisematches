@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
-import wisematches.server.player.*;
+import wisematches.server.personality.account.*;
 import wisematches.server.security.PlayerSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.security.captcha.CaptchaService;
@@ -43,7 +43,6 @@ public class CreateAccountController {
 	private CaptchaService captchaService;
 	private PlayerSecurityService playerSecurityService;
 
-	private int defaultRating = 1200;
 	private Membership defaultMembership = Membership.BASIC;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
@@ -92,7 +91,7 @@ public class CreateAccountController {
 		// Validate before next steps
 		validateRegistrationForm(form, result);
 
-		Player player = null;
+		Account player = null;
 		// Create account if no errors
 		if (!result.hasErrors()) {
 			try {
@@ -210,34 +209,27 @@ public class CreateAccountController {
 	 *
 	 * @param registration the new account form
 	 * @return the create player
-	 * @throws wisematches.server.player.DuplicateAccountException
-	 *          if account with the same email or nickname already exist
-	 * @throws wisematches.server.player.InadmissibleUsernameException
-	 *          if nickname can't be used.
+	 * @throws DuplicateAccountException	 if account with the same email or nickname already exist
+	 * @throws InadmissibleUsernameException if nickname can't be used.
 	 */
-	private Player createAccount(AccountRegistrationForm registration) throws DuplicateAccountException, InadmissibleUsernameException {
-		final PlayerEditor editor = new PlayerEditor();
+	private Account createAccount(AccountRegistrationForm registration) throws DuplicateAccountException, InadmissibleUsernameException {
+		final AccountEditor editor = new AccountEditor();
 		editor.setEmail(registration.getEmail());
 		editor.setNickname(registration.getNickname());
 		editor.setPassword(registration.getPassword());
 		editor.setMembership(defaultMembership);
-		editor.setRating(defaultRating);
 		editor.setLanguage(Language.byCode(registration.getLanguage()));
 
 		if (playerSecurityService != null) {
-			editor.setPassword(playerSecurityService.encodePlayerPassword(editor.createPlayer(), registration.getPassword()));
+			editor.setPassword(playerSecurityService.encodePlayerPassword(editor.createAccount(), registration.getPassword()));
 		}
-		return accountManager.createPlayer(editor.createPlayer());
+		return accountManager.createAccount(editor.createAccount());
 	}
 
 
 	// ==========================
 	// Public Bean methods
 	// ==========================
-
-	public void setDefaultRating(int defaultRating) {
-		this.defaultRating = defaultRating;
-	}
 
 	public void setDefaultMembership(String defaultMembership) {
 		this.defaultMembership = Membership.valueOf(defaultMembership.toUpperCase());

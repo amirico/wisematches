@@ -1,6 +1,6 @@
 package wisematches.server.standing.old.rating;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ public interface PlayerRatingsManager {
 	 *
 	 * @return unmodifiable collection of top rated players.
 	 */
-	List<Player> getTopRatedPlayers();
+	List<Personality> getTopRatedPlayers();
 
 	/**
 	 * Returns ratings of players by specified parameters.
@@ -80,7 +80,7 @@ public interface PlayerRatingsManager {
 	 *         specified sort type.
 	 * @see #getTopRatedPlayers()
 	 */
-	List<Player> getPlayersRating(long fromPosition, int playersCount, SortType sortType);
+	List<Personality> getPlayersRating(long fromPosition, int playersCount, SortType sortType);
 
 	/**
 	 * Type of sort

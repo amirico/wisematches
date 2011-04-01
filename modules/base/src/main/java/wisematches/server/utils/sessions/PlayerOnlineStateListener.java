@@ -4,7 +4,7 @@
 
 package wisematches.server.utils.sessions;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 /**
  * Instance of this interface can be added to {@code PlayerSessionsManager} to listen state
@@ -18,12 +18,12 @@ public interface PlayerOnlineStateListener {
 	 *
 	 * @param player the player who is online now
 	 */
-	void playerIsOnline(Player player);
+	void playerIsOnline(Personality player);
 
 	/**
 	 * Indicates that specified player does not have any active sessions any more.
 	 *
 	 * @param player the player who is offline
 	 */
-	void playerIsOffline(Player player);
+	void playerIsOffline(Personality player);
 }

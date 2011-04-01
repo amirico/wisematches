@@ -1,20 +1,20 @@
 package wisematches.server.utils.sessions;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public final class PlayerSessionsEvent {
-	private final Player player;
+	private final Personality player;
 	private final String sessionKey;
 
-	public PlayerSessionsEvent(Player player, String sessionKey) {
+	public PlayerSessionsEvent(Personality player, String sessionKey) {
 		this.player = player;
 		this.sessionKey = sessionKey;
 	}
 
-	public Player getPlayer() {
+	public Personality getPlayer() {
 		return player;
 	}
 

@@ -2,7 +2,7 @@ package wisematches.server.gameplaying.room.board;
 
 import org.apache.commons.logging.Log;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -57,7 +57,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	}
 
 	@Override
-	public B createBoard(S gameSettings, Collection<Player> players) throws BoardCreationException {
+	public B createBoard(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
 		if (log.isDebugEnabled()) {
 			log.debug("Creating new board: settings - " + gameSettings + ", players - " + players);
 		}
@@ -127,7 +127,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	}
 
 	@Override
-	public Collection<B> getActiveBoards(Player player) {
+	public Collection<B> getActiveBoards(Personality player) {
 		if (log.isDebugEnabled()) {
 			log.debug("get active boards for player: " + player);
 		}
@@ -155,7 +155,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	 * @return the created game board.
 	 * @throws BoardCreationException if board can't be created by some reasones.
 	 */
-	protected abstract B createBoardImpl(S gameSettings, Collection<Player> players) throws BoardCreationException;
+	protected abstract B createBoardImpl(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
 
 	/**
 	 * Loads game board frome storage by specified game id.
@@ -183,7 +183,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	 * @param player the player whos boards should be loaded.
 	 * @return the collection of board's ids for specified player or empty collection.
 	 */
-	protected abstract Collection<Long> loadActivePlayerBoards(Player player);
+	protected abstract Collection<Long> loadActivePlayerBoards(Personality player);
 
 	/* ======================== Inner classes defenitions. ================ */
 

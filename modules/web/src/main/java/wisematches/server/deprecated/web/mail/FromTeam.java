@@ -1,6 +1,6 @@
 package wisematches.server.deprecated.web.mail;
 
-import wisematches.server.player.Language;
+import wisematches.server.personality.account.Language;
 
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;

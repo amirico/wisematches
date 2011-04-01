@@ -9,8 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import wisematches.server.mail.MailSender;
-import wisematches.server.player.Language;
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
+import wisematches.server.personality.account.Language;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -57,7 +57,7 @@ public class FreeMarkerMailServiceTest {
 
 	@Test
 	public void testSendWarrantyMail() throws Exception {
-		final Player p = createMock(Player.class);
+		final Account p = createMock(Account.class);
 		replay(p);
 
 		javaMailSender.send(isA(MimeMessagePreparator.class));
@@ -69,7 +69,7 @@ public class FreeMarkerMailServiceTest {
 
 	@Test
 	public void testSendSupportMail() throws Exception {
-		final Player p = createMock(Player.class);
+		final Account p = createMock(Account.class);
 		replay(p);
 
 		javaMailSender.send(isA(MimeMessagePreparator.class));
@@ -101,7 +101,7 @@ public class FreeMarkerMailServiceTest {
 
 	@Test
 	public void testPreparePlayerMessage() throws Exception {
-		final Player p = createMock(Player.class);
+		final Account p = createMock(Account.class);
 		expect(p.getLanguage()).andReturn(Language.RUSSIAN);
 		expect(p.getNickname()).andReturn("Mock Player");
 		expect(p.getEmail()).andReturn("player@mock.wm");

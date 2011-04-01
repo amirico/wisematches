@@ -1,7 +1,7 @@
 package wisematches.server.gameplaying.scribble.room.proposal;
 
 import wisematches.server.gameplaying.room.propose.GameProposal;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class ScribbleProposal extends GameProposal {
 	protected ScribbleProposal() {
 	}
 
-	public ScribbleProposal(String title, String language, int timeLimits, int opponentsCount, int minRating, int maxRating, Player player, List<Player> opponents) {
+	public ScribbleProposal(String title, String language, int timeLimits, int opponentsCount, int minRating, int maxRating, Personality player, List<? extends Personality> opponents) {
 		super(title, timeLimits, opponentsCount, minRating, maxRating, player, opponents);
 		this.language = language;
 	}

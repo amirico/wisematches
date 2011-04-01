@@ -74,7 +74,7 @@
 -->
 
     <!--
-    <bean id="ratingsManager" class="wisematches.server.standing.old.rating.impl.RatingsManagerImpl">
+    <bean id="ratingManager" class="wisematches.server.standing.old.rating.impl.RatingsManagerImpl">
         <property name="topPlayersCount" value="5"/>
         <property name="ratingsCalculationManager" ref="ratingsCaculationManager"/>
         <property name="ratingsManagerDao" ref="ratingsManagerDao"/>

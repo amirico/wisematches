@@ -1,6 +1,6 @@
 package wisematches.server.web.i18n;
 
-import wisematches.server.player.Language;
+import wisematches.server.personality.account.Language;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

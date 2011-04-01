@@ -1,6 +1,6 @@
 package wisematches.server.deprecated.web.server.sessions;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.player.Player;
 import wisematches.server.utils.sessions.chouse.PlayerCustomHouse;
 
 import javax.servlet.http.HttpSession;

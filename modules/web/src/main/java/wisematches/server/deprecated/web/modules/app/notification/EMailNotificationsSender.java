@@ -16,8 +16,8 @@ import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
-import wisematches.server.player.Player;
-import wisematches.server.player.PlayerManager;
+import wisematches.server.personality.player.Player;
+import wisematches.server.personality.player.PlayerManager;
 import wisematches.server.standing.notice.PlayerNotification;
 import wisematches.server.utils.sessions.PlayerSessionsManager;
 

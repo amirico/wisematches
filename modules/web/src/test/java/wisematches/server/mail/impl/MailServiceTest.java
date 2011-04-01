@@ -10,8 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
-import wisematches.server.player.Language;
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
+import wisematches.server.personality.account.Language;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class MailServiceTest {
 	}
 
 	public void asd() throws MailException {
-		final Player p = createMock(Player.class);
+		final Account p = createMock(Account.class);
 		expect(p.getLanguage()).andReturn(Language.RUSSIAN).anyTimes();
 		expect(p.getEmail()).andReturn("support@127.0.0.1").anyTimes();
 		expect(p.getNickname()).andReturn("Mock").anyTimes();

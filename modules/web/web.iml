@@ -22,7 +22,6 @@
           <file>file://$MODULE_DIR$/../base/src/main/resources/config/database-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-security.xml</file>
           <file>file://$MODULE_DIR$/../base/src/main/resources/config/server-base-config.xml</file>
-          <file>file://$MODULE_DIR$/../games/src/main/resources/config/game-scribble-config-old.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/mail-sender-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/message-source-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/server-web-config.xml</file>
@@ -37,6 +36,13 @@
           <file>file://$MODULE_DIR$/../base/src/main/resources/config/server-base-config.xml</file>
           <file>file://$MODULE_DIR$/../games/src/main/resources/config/game-scribble-config.xml</file>
         </fileset>
+      </configuration>
+    </facet>
+    <facet type="hibernate" name="Hibernate">
+      <configuration>
+        <datasource-map>
+          <unit-entry name="sessionFactory" value="b26bc17d-8157-4738-82a6-f24bc4813782" />
+        </datasource-map>
       </configuration>
     </facet>
   </component>

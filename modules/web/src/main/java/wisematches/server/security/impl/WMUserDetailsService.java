@@ -12,12 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import wisematches.server.player.AccountManager;
-import wisematches.server.player.Player;
-import wisematches.server.player.PlayerListener;
+import wisematches.server.personality.account.*;
 import wisematches.server.security.PlayerSecurityService;
-import wisematches.server.standing.lock.LockAccountListener;
-import wisematches.server.standing.lock.LockAccountManager;
 
 import java.util.Date;
 
@@ -29,27 +25,27 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 	private PasswordEncoder passwordEncoder;
 
 	private AccountManager accountManager;
-	private LockAccountManager lockAccountManager;
+	private AccountLockManager accountLockManager;
 	private AuthenticationManager authenticationManager;
 
-	protected final Log log = LogFactory.getLog(getClass());
+	private final TheUserDetailsService userDetailsService = new TheUserDetailsService();
 
-	private final TheUserDetailsService externalListeners = new TheUserDetailsService();
+	protected final Log log = LogFactory.getLog(getClass());
 
 	public WMUserDetailsService() {
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-		final Player p = accountManager.findByEmail(username);
+		final Account p = accountManager.findByEmail(username);
 		if (p == null) {
 			throw new UsernameNotFoundException("User with email " + username + " not found in the system");
 		}
-		final boolean locked = lockAccountManager.isAccountLocked(p);
-		return new WMUserDetails(p, !locked);
+		final boolean locked = accountLockManager.isAccountLocked(p);
+		return new MemberUserDetails(p, !locked);
 	}
 
-	public void authenticatePlayer(Player player, String password) {
+	public void authenticatePlayer(Account player, String password) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		if (currentUser == null) {
 			// This would indicate bad coding somewhere
@@ -74,41 +70,40 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 	}
 
 	@Override
-	public String encodePlayerPassword(Player player, String password) {
-		return passwordEncoder.encodePassword(password, saltSource.getSalt(new WMUserDetails(player, false)));
+	public String encodePlayerPassword(Account player, String password) {
+		return passwordEncoder.encodePassword(password, saltSource.getSalt(new MemberUserDetails(player, false)));
 	}
 
-	protected Authentication createNewAuthentication(Player player) {
+	protected Authentication createNewAuthentication(Account player) {
 		final UserDetails user = loadUserByUsername(player.getEmail());
 
 		final UsernamePasswordAuthenticationToken newAuthentication =
 				new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 		newAuthentication.setDetails(user);
-
 		return newAuthentication;
 	}
 
 	public void setAccountManager(AccountManager accountManager) {
 		if (this.accountManager != null) {
-			this.accountManager.removePlayerListener(externalListeners);
+			this.accountManager.removeAccountListener(userDetailsService);
 		}
 
 		this.accountManager = accountManager;
 
 		if (this.accountManager != null) {
-			this.accountManager.addPlayerListener(externalListeners);
+			this.accountManager.addAccountListener(userDetailsService);
 		}
 	}
 
-	public void setLockAccountManager(LockAccountManager lockAccountManager) {
-		if (this.lockAccountManager != null) {
-			this.lockAccountManager.removeLockAccountListener(externalListeners);
+	public void setAccountLockManager(AccountLockManager accountLockManager) {
+		if (this.accountLockManager != null) {
+			this.accountLockManager.removeAccountLockListener(userDetailsService);
 		}
 
-		this.lockAccountManager = lockAccountManager;
+		this.accountLockManager = accountLockManager;
 
-		if (this.lockAccountManager != null) {
-			this.lockAccountManager.addLockAccountListener(externalListeners);
+		if (this.accountLockManager != null) {
+			this.accountLockManager.addAccountLockListener(userDetailsService);
 		}
 	}
 
@@ -124,19 +119,30 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	private class TheUserDetailsService implements PlayerListener, LockAccountListener {
+	private class TheUserDetailsService implements AccountListener, AccountLockListener {
+		private TheUserDetailsService() {
+		}
+
 		@Override
-		public void playerUpdated(Player oldInfo, Player newInfo) {
+		public void accountCreated(Account account) {
+		}
+
+		@Override
+		public void accountRemove(Account account) {
+		}
+
+		@Override
+		public void accountUpdated(Account oldAccount, Account newAccount) {
 //			authenticatePlayer(newInfo);
 		}
 
 		@Override
-		public void accountLocked(Player player, String publicReason, String privateReason, Date unlockdate) {
+		public void accountLocked(Account player, String publicReason, String privateReason, Date unlockdate) {
 //			authenticatePlayer(player);
 		}
 
 		@Override
-		public void accountUnlocked(Player player) {
+		public void accountUnlocked(Account player) {
 //			authenticatePlayer(player);
 		}
 	}

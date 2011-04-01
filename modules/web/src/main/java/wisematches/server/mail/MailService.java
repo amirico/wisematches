@@ -1,6 +1,6 @@
 package wisematches.server.mail;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public interface MailService {
 	 * {@code msgCode} that will be mapped to appropriate message sources.
 	 * <p/>
 	 * This is asynchronous method that returns immediately after mail template has been prepared. Please
-	 * check {@link #sendWarrantyMail(MailSender, wisematches.server.player.Player, String, java.util.Map)} to be
+	 * check {@link #sendWarrantyMail(MailSender, wisematches.server.personality.account.Account, String, java.util.Map)} to be
 	 * sure that email has been sent.
 	 *
 	 * @param from	required parameter that describes account name for sender.
@@ -24,7 +24,7 @@ public interface MailService {
 	 * @param model   the model with mail parameters. Can be null if no parameters required.
 	 * @throws IllegalArgumentException if {@code from} sender is null, {@code player} is null or {@code msgCode} is null
 	 */
-	public void sendMail(MailSender from, Player to, String msgCode, Map<String, ?> model);
+	public void sendMail(MailSender from, Account to, String msgCode, Map<String, ?> model);
 
 	/**
 	 * Sends mail from specified account to specified player. Each mail represented by special
@@ -38,7 +38,7 @@ public interface MailService {
 	 * @param model   the model with mail parameters. Can be null if no parameters required.
 	 * @throws MailException if msgCode can't be mapped to exist resources
 	 */
-	public void sendWarrantyMail(MailSender from, Player to, String msgCode, Map<String, ?> model) throws MailException;
+	public void sendWarrantyMail(MailSender from, Account to, String msgCode, Map<String, ?> model) throws MailException;
 
 	/**
 	 * Sends support request to support team. This method always send email to {@code support@} email for
