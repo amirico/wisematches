@@ -33,6 +33,11 @@ public class StandingPlayerManager implements PlayerManager {
 	}
 
 	@Override
+	public Player getPlayer(Personality personality) {
+		return getPlayer(personality.getId());
+	}
+
+	@Override
 	public Player findByEmail(String email) {
 		return getMemberPlayer(accountManager.findByEmail(email));
 	}

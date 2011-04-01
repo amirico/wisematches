@@ -38,6 +38,7 @@
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="saltSource" ref="saltSource"/>
         <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+        <beans:property name="playerManager" ref="playerManager"/>
     </beans:bean>
 
     <beans:bean id="redirectStrategy" class="wisematches.server.web.security.spring.WMRedirectStrategy">
@@ -113,15 +114,25 @@
     <beans:bean id="guestAuthenticationProvider"
                 class="wisematches.server.security.impl.GuestAuthenticationProvider">
     </beans:bean>
-    <authentication-manager alias="authenticationManager">
-        <authentication-provider ref="guestAuthenticationProvider"/>
 
-        <authentication-provider user-service-ref="userDetailsService">
-            <password-encoder ref="passwordEncoder">
-                <salt-source ref="saltSource"/>
-            </password-encoder>
-        </authentication-provider>
-    </authentication-manager>
+    <beans:bean id="org.springframework.security.authenticationManager"
+                class="wisematches.server.security.impl.WMProviderManager">
+        <beans:property name="providers">
+            <beans:list>
+                <beans:ref bean="guestAuthenticationProvider"/>
+
+                <beans:bean class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+                    <beans:property name="saltSource" ref="saltSource"/>
+                    <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+                    <beans:property name="userDetailsService" ref="userDetailsService"/>
+                </beans:bean>
+            </beans:list>
+        </beans:property>
+
+        <beans:property name="playerManager" ref="playerManager"/>
+    </beans:bean>
+
+    <beans:alias name="org.springframework.security.authenticationManager" alias="authenticationManager"/>
 
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/game/**" access="isAuthenticated()"/>

@@ -26,12 +26,12 @@ public class GuestUserDetails extends Personality implements UserDetails {
 	}
 
 	@Override
-	public String getPassword() {
-		return "guest";
+	public String getUsername() {
+		return GuestPlayer.GUEST.getNickname();
 	}
 
 	@Override
-	public String getUsername() {
+	public String getPassword() {
 		return "guest";
 	}
 

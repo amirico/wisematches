@@ -62,7 +62,7 @@ public class GuestAuthenticationFilter extends GenericFilterBean implements Init
 				session.setAttribute(PARAMETER_NAME, Boolean.TRUE);
 			}
 		}
-		return guestSession;
+		return !guestSession;
 	}
 
 	public void setGuestProcessingUrl(String guestProcessingUrl) {
