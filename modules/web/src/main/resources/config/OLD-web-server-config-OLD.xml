@@ -59,12 +59,12 @@
     <bean id="playerEventProducer"
           class="wisematches.server.deprecated.web.modules.app.events.producers.PlayerEventProducer">
         <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
-        <property name="lockAccountManager" ref="lockAccountManager"/>
+        <property name="accountLockManager" ref="accountLockManager"/>
     </bean>
 
     <bean id="projectEventProducer"
           class="wisematches.server.deprecated.web.modules.app.events.producers.ProjectEventProducer">
-        <property name="ratingsManager" ref="ratingsManager"/>
+        <property name="ratingManager" ref="ratingManager"/>
     </bean>
 
     <bean id="eventRouter" class="wisematches.server.deprecated.web.modules.app.events.EventRouter"

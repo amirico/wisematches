@@ -3,7 +3,7 @@ package wisematches.server.deprecated.web.modules.app.sessions.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wisematches.server.deprecated.web.server.sessions.WebSessionCustomHouse;
-import wisematches.server.player.Player;
+import wisematches.server.personality.player.Player;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;

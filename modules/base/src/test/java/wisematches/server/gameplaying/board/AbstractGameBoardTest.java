@@ -4,8 +4,7 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.server.core.MockPlayer;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,7 +44,7 @@ public class AbstractGameBoardTest {
 		gameSettings = new MockGameSettingsBuilder().build();
 
 		board = new MockGameBoard(gameSettings,
-				Arrays.<Player>asList(new MockPlayer(1), new MockPlayer(2), new MockPlayer(3)));
+				Arrays.<Personality>asList(Personality.person(1), Personality.person(2), Personality.person(3)));
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
 		h3 = board.getPlayerHand(3);
@@ -71,7 +70,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, Arrays.<Player>asList(new MockPlayer(1)));
+			new MockGameBoard(gameSettings, Arrays.<Personality>asList(Personality.person(1)));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;
@@ -79,7 +78,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, Arrays.<Player>asList(new MockPlayer(1), null));
+			new MockGameBoard(gameSettings, Arrays.<Personality>asList(Personality.person(1), null));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;

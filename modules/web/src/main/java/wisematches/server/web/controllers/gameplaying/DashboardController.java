@@ -3,7 +3,6 @@ package wisematches.server.web.controllers.gameplaying;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,10 +19,10 @@ import wisematches.server.gameplaying.room.propose.GameProposalManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
-import wisematches.server.player.Player;
-import wisematches.server.player.PlayerManager;
-import wisematches.server.player.computer.ComputerPlayer;
-import wisematches.server.player.computer.robot.RobotPlayer;
+import wisematches.server.personality.player.Player;
+import wisematches.server.personality.player.PlayerManager;
+import wisematches.server.personality.player.computer.ComputerPlayer;
+import wisematches.server.personality.player.computer.robot.RobotPlayer;
 import wisematches.server.web.controllers.gameplaying.form.CreateScribbleForm;
 
 import javax.validation.Valid;
@@ -201,7 +200,6 @@ public class DashboardController {
 	}
 
 	@Autowired
-	@Qualifier("playerManager")
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}

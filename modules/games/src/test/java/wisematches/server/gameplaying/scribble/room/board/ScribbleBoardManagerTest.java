@@ -9,8 +9,11 @@ import wisematches.server.gameplaying.room.board.BoardCreationException;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
 import wisematches.server.gameplaying.scribble.bank.TilesBankingHouse;
-import wisematches.server.gameplaying.scribble.board.*;
-import wisematches.server.player.Player;
+import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
+import wisematches.server.gameplaying.scribble.board.ScribbleBoardDao;
+import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
+import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
+import wisematches.server.personality.Personality;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -95,7 +98,7 @@ public class ScribbleBoardManagerTest {
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
 
 		final ScribbleBoard board1 = scribbleRoomManager.createBoardImpl(settings,
-				Arrays.asList(ScribbleBoardTest.createMockPlayer(1), ScribbleBoardTest.createMockPlayer(2)));
+				Arrays.asList(Personality.person(1), Personality.person(2)));
 		assertNotNull(board1);
 
 		verify(dictionaryManager);
@@ -121,17 +124,15 @@ public class ScribbleBoardManagerTest {
 
 	@Test
 	public void testLoadActivePlayerBoards() {
-		final Player player = createNiceMock(Player.class);
-
 		final Collection<Long> ids = Arrays.asList(1L, 2L, 3L);
 
-		expect(scribbleBoardDao.getActiveBoards(player)).andReturn(ids);
+		expect(scribbleBoardDao.getActiveBoards(Personality.person(1))).andReturn(ids);
 		replay(scribbleBoardDao);
 
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
 
-		final Collection<Long> longCollection = scribbleRoomManager.loadActivePlayerBoards(player);
+		final Collection<Long> longCollection = scribbleRoomManager.loadActivePlayerBoards(Personality.person(1));
 		assertSame(ids, longCollection);
 
 		verify(scribbleBoardDao);

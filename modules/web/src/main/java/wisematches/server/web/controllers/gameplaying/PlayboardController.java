@@ -21,13 +21,13 @@ import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
-import wisematches.server.player.Player;
+import wisematches.server.personality.player.Player;
+import wisematches.server.personality.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.gameplaying.form.CheckWordForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleTileForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.player.WebPlayerManager;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -38,7 +38,7 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/game")
 public class PlayboardController {
-	private WebPlayerManager playerManager;
+	private PlayerManager playerManager;
 	private GameMessageSource gameMessageSource;
 	private DictionaryManager dictionaryManager;
 	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
@@ -324,7 +324,7 @@ public class PlayboardController {
 	}
 
 	@Autowired
-	public void setPlayerManager(WebPlayerManager playerManager) {
+	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

@@ -1,6 +1,6 @@
 package wisematches.server.utils.sessions.chouse;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -19,11 +19,11 @@ public final class PlayerCustomHouseSupport implements PlayerCustomHouse {
 		pch.removePlayerCustomHouseListener(l);
 	}
 
-	public void firePlayerMoveIn(Player player, String sessionKey) {
+	public void firePlayerMoveIn(Personality player, String sessionKey) {
 		pch.firePlayerMoveIn(player, sessionKey);
 	}
 
-	public void firePlayerMoveOut(Player player, String sessionKey) {
+	public void firePlayerMoveOut(Personality player, String sessionKey) {
 		pch.firePlayerMoveOut(player, sessionKey);
 	}
 }

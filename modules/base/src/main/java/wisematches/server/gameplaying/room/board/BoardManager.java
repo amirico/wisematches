@@ -2,7 +2,7 @@ package wisematches.server.gameplaying.room.board;
 
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameSettings;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 
@@ -22,7 +22,7 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	 * @return the created game.
 	 * @throws BoardCreationException if board can't be created by some reasons.
 	 */
-	B createBoard(S gameSettings, Collection<Player> players) throws BoardCreationException;
+	B createBoard(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
 
 	/**
 	 * Returns game by it's id.
@@ -50,5 +50,5 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	 * @param player the player who games should be returned.
 	 * @return the list of player's games or empty collection.
 	 */
-	Collection<B> getActiveBoards(Player player);
+	Collection<B> getActiveBoards(Personality player);
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-
 package wisematches.server.gameplaying.tournament.subscription;
 
 import wisematches.server.gameplaying.tournament.Tournament;
 import wisematches.server.gameplaying.tournament.TournamentSection;
-import wisematches.server.player.Language;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
+import wisematches.server.personality.account.Language;
 
 /**
  * Additional manager for {@code TournamentManager} which manages players subscription for tournaments.
@@ -37,7 +36,7 @@ public interface TournamentSubscriptionManager {
 	 *                              done by internal error
 	 * @throws NullPointerException if any parameter is null
 	 */
-	void subscribe(Player player, TournamentSection tournamentSection, Language language) throws TournamentSubscriptionException;
+	void subscribe(Personality player, TournamentSection tournamentSection, Language language) throws TournamentSubscriptionException;
 
 	/**
 	 * Unsubscribe player from announced tournament. If player is not subscribed nothing will be happened.
@@ -46,7 +45,7 @@ public interface TournamentSubscriptionManager {
 	 * @throws TournamentSubscriptionException
 	 *          if subscription can't be done by internal error
 	 */
-	void unsubscribe(Player player) throws TournamentSubscriptionException;
+	void unsubscribe(Personality player) throws TournamentSubscriptionException;
 
 	/**
 	 * Checks is specified player subscribed for announced tournament or not.
@@ -54,7 +53,7 @@ public interface TournamentSubscriptionManager {
 	 * @param player the player to be checked.
 	 * @return {@code true} if player is subscribed; {@code false} - otherwise.
 	 */
-	boolean isSubscribed(Player player);
+	boolean isSubscribed(Personality player);
 
 	/**
 	 * Returns subscription information for specified player or {@code null} of player is not subscribed. It's
@@ -63,7 +62,7 @@ public interface TournamentSubscriptionManager {
 	 *
 	 * @param player the player
 	 * @return the subscription info or {@code null} if player is not subscribed to announced tournament.
-	 * @see #isSubscribed(wisematches.server.player.Player)
+	 * @see #isSubscribed(wisematches.server.personality.Personality)
 	 */
-	TournamentSubscription getSubscription(Player player);
+	TournamentSubscription getSubscription(Personality player);
 }

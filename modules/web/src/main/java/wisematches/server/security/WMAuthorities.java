@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import wisematches.server.player.Membership;
+import wisematches.server.personality.account.Membership;
 
 import java.util.*;
 
@@ -21,13 +21,13 @@ public enum WMAuthorities implements GrantedAuthority {
 	GOLD,
 	PLATINUM;
 
-	private static final Map<Membership, EnumSet<WMAuthorities>> authoritiesCache = new HashMap<Membership, EnumSet<WMAuthorities>>();
+	private static final Map<Membership, Set<GrantedAuthority>> authoritiesCache = new HashMap<Membership, Set<GrantedAuthority>>();
 
 	static {
-		authoritiesCache.put(Membership.BASIC, EnumSet.of(USER, MEMBER));
-		authoritiesCache.put(Membership.SILVER, EnumSet.of(USER, MEMBER, SILVER));
-		authoritiesCache.put(Membership.GOLD, EnumSet.of(USER, MEMBER, GOLD));
-		authoritiesCache.put(Membership.PLATINUM, EnumSet.of(USER, MEMBER, PLATINUM));
+		authoritiesCache.put(Membership.BASIC, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER)));
+		authoritiesCache.put(Membership.GOLD, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, GOLD)));
+		authoritiesCache.put(Membership.SILVER, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, SILVER)));
+		authoritiesCache.put(Membership.PLATINUM, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, PLATINUM)));
 	}
 
 	@Override
@@ -56,8 +56,8 @@ public enum WMAuthorities implements GrantedAuthority {
 		return false;
 	}
 
-	public static Collection<? extends GrantedAuthority> forMembership(Membership membership) {
-		final EnumSet<WMAuthorities> authorities = authoritiesCache.get(membership);
+	public static Collection<GrantedAuthority> forMembership(Membership membership) {
+		final Set<GrantedAuthority> authorities = authoritiesCache.get(membership);
 		if (authorities == null) {
 			return Collections.emptySet();
 		}

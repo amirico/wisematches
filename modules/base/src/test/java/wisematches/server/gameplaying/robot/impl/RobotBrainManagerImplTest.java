@@ -4,7 +4,7 @@ import org.junit.Test;
 import wisematches.server.gameplaying.robot.RobotBrain;
 import wisematches.server.gameplaying.room.MockRoom;
 import wisematches.server.gameplaying.room.Room;
-import wisematches.server.player.computer.robot.RobotType;
+import wisematches.server.personality.player.computer.robot.RobotType;
 
 import java.util.Arrays;
 

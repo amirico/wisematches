@@ -14,8 +14,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import wisematches.server.mail.*;
-import wisematches.server.player.Language;
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
+import wisematches.server.personality.account.Language;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -48,7 +48,7 @@ public class FreeMarkerMailService implements MailService {
 	}
 
 	@Override
-	public void sendMail(MailSender from, Player to, String msgCode, Map<String, ?> model) {
+	public void sendMail(MailSender from, Account to, String msgCode, Map<String, ?> model) {
 		try {
 			sendWarrantyMail(from, to, msgCode, model);
 		} catch (MailException ex) {
@@ -57,7 +57,7 @@ public class FreeMarkerMailService implements MailService {
 	}
 
 	@Override
-	public void sendWarrantyMail(MailSender from, Player to, String msgCode, Map<String, ?> model) throws MailException {
+	public void sendWarrantyMail(MailSender from, Account to, String msgCode, Map<String, ?> model) throws MailException {
 		sendMail(preparePlayerMessage(from, to, msgCode, model));
 	}
 
@@ -118,7 +118,7 @@ public class FreeMarkerMailService implements MailService {
 		};
 	}
 
-	protected MimeMessagePreparator preparePlayerMessage(final MailSender sender, final Player player, final String msgCode, final Map<String, ?> model) {
+	protected MimeMessagePreparator preparePlayerMessage(final MailSender sender, final Account player, final String msgCode, final Map<String, ?> model) {
 		return new MimeMessagePreparator() {
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				try {

@@ -115,7 +115,7 @@ public class PlayerProfileServiceImplTest {
 
         final PlayerProfileServiceImpl service = new PlayerProfileServiceImpl();
         service.setPlayerManager(playerManager);
-        service.setRatingsManager(ratingsManager);
+        service.setRatingManager(ratingsManager);
         service.setPlayerStatisticsManager(statisticsManager);
 
         expect(playerManager.getPlayer(1L)).andReturn(null);

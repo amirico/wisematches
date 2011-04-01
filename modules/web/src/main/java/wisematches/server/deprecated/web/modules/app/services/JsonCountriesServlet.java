@@ -2,7 +2,7 @@ package wisematches.server.deprecated.web.modules.app.services;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
-import wisematches.server.player.Language;
+import wisematches.server.personality.account.Language;
 import wisematches.server.standing.profile.counties.CountriesManager;
 import wisematches.server.standing.profile.counties.Country;
 

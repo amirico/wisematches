@@ -1,6 +1,6 @@
 package wisematches.server.utils.sessions.impl;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 import wisematches.server.utils.sessions.ImplementationBean;
 import wisematches.server.utils.sessions.ImplementationBeanType;
 import wisematches.server.utils.sessions.PlayerSessionBean;
@@ -28,7 +28,7 @@ class ProxyFactory {
 		}
 	}
 
-	PlayerSessionBean createNewInstance(String sessionKey, Player player) {
+	PlayerSessionBean createNewInstance(String sessionKey, Personality player) {
 		final PlayerSessionsInvocationHandler ih = new PlayerSessionsInvocationHandler(sessionKey, player, implementatations);
 		final Class[] objects = interfaces.toArray(new Class[interfaces.size()]);
 		return (PlayerSessionBean) Proxy.newProxyInstance(getClass().getClassLoader(), objects, ih);
@@ -59,7 +59,7 @@ class ProxyFactory {
 		private final Map<String, Object> values = new HashMap<String, Object>();
 		private final Map<Class<?>, Object> beansMap = new HashMap<Class<?>, Object>();
 
-		public PlayerSessionsInvocationHandler(String sessionKey, Player player, Map<Class<?>, Class<?>> implementatations) {
+		public PlayerSessionsInvocationHandler(String sessionKey, Personality player, Map<Class<?>, Class<?>> implementatations) {
 			values.put("sessionKey", sessionKey);
 			values.put("player", player);
 

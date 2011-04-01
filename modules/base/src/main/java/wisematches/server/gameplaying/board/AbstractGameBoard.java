@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.board;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import javax.persistence.*;
 import java.util.*;
@@ -102,7 +102,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @throws NullPointerException if setting is {@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractGameBoard(S gameSettings, Collection<Player> players) {
+	protected AbstractGameBoard(S gameSettings, Collection<? extends Personality> players) {
 		if (gameSettings == null) {
 			throw new IllegalArgumentException("Settings can't be null");
 		}
@@ -120,7 +120,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		int index = 0;
 		final List<P> hands = new ArrayList<P>(players.size());
-		for (Player player : players) {
+		for (Personality player : players) {
 			if (player == null) {
 				throw new IllegalArgumentException("Players list can't contain null players");
 			}
@@ -400,7 +400,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @param player the player for who hand must be crated.
 	 * @return the player's hand.
 	 */
-	protected abstract P createPlayerHand(Player player);
+	protected abstract P createPlayerHand(Personality player);
 
 	/**
 	 * Checks specified move. If move isn't correct or can't be maden appropriate exception will be thrown.

@@ -1,6 +1,6 @@
 package wisematches.server.deprecated.web.mail;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.player.Player;
 
 import java.util.EnumSet;
 import java.util.Map;

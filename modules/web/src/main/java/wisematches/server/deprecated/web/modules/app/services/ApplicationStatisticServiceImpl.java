@@ -79,7 +79,7 @@ public class ApplicationStatisticServiceImpl extends GenericSecureRemoteService 
     }
 
 
-    public void setRatingsManager(PlayerRatingsManager ratingsManager) {
+    public void setRatingManager(PlayerRatingsManager ratingsManager) {
         if (this.ratingsManager != null) {
             ratingsManager.removeTopPlayersListener(ratingsChangeListener);
         }

@@ -6,7 +6,7 @@ import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -25,12 +25,12 @@ public class AsynchronousMailService implements MailService {
 	}
 
 	@Override
-	public void sendMail(MailSender from, Player to, String msgCode, Map<String, ?> model) {
+	public void sendMail(MailSender from, Account to, String msgCode, Map<String, ?> model) {
 		executorService.submit(new PlayerMailJob(from, to, msgCode, model));
 	}
 
 	@Override
-	public void sendWarrantyMail(MailSender from, Player to, String msgCode, Map<String, ?> model) throws MailException {
+	public void sendWarrantyMail(MailSender from, Account to, String msgCode, Map<String, ?> model) throws MailException {
 		originalMailService.sendWarrantyMail(from, to, msgCode, model);
 	}
 
@@ -59,11 +59,11 @@ public class AsynchronousMailService implements MailService {
 
 	private class PlayerMailJob implements Runnable {
 		private final MailSender from;
-		private final Player to;
+		private final Account to;
 		private final String msgCode;
 		private final Map<String, ?> model;
 
-		private PlayerMailJob(MailSender from, Player to, String msgCode, Map<String, ?> model) {
+		private PlayerMailJob(MailSender from, Account to, String msgCode, Map<String, ?> model) {
 			this.from = from;
 			this.to = to;
 			this.msgCode = msgCode;

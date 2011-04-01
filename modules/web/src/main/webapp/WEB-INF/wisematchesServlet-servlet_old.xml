@@ -92,7 +92,7 @@
 
     <bean name="/rpc/ApplicationStatisticService"
           class="wisematches.server.deprecated.web.modules.app.services.ApplicationStatisticServiceImpl">
-        <property name="ratingsManager" ref="ratingsManager"/>
+        <property name="ratingManager" ref="ratingManager"/>
         <property name="playerSessionsManager" ref="playerSessionsManager"/>
         <property name="accountManager" ref="accountManager"/>
         <property name="roomManagerFacade" ref="scribbleRoomManagerFacade"/>
@@ -102,7 +102,7 @@
           class="wisematches.server.deprecated.web.modules.app.services.PlayerProfileServiceImpl">
         <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
         <property name="playerManager" ref="playerManager"/>
-        <property name="ratingsManager" ref="ratingsManager"/>
+        <property name="ratingManager" ref="ratingManager"/>
         <property name="countriesManager" ref="countriesManager"/>
         <property name="roomsManager" ref="roomsManager"/>
     </bean>

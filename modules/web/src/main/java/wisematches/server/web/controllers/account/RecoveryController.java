@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
-import wisematches.server.player.AccountManager;
-import wisematches.server.player.Player;
-import wisematches.server.player.PlayerEditor;
+import wisematches.server.personality.account.Account;
+import wisematches.server.personality.account.AccountEditor;
+import wisematches.server.personality.account.AccountManager;
 import wisematches.server.security.PlayerSecurityService;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.recovery.RecoveryToken;
@@ -62,7 +62,7 @@ public class RecoveryController {
 		}
 
 		if (!result.hasErrors()) {
-			final Player player = accountManager.findByEmail(form.getEmail());
+			final Account player = accountManager.findByEmail(form.getEmail());
 			if (player == null) {
 				if (log.isDebugEnabled()) {
 					log.debug("Account for specified email not found");
@@ -122,7 +122,7 @@ public class RecoveryController {
 			captchaService.validateCaptcha(request, response, result);
 		}
 
-		Player player = null;
+		Account player = null;
 		if (!result.hasErrors()) {
 			try {
 				player = accountManager.findByEmail(form.getEmail());
@@ -150,7 +150,7 @@ public class RecoveryController {
 			return recoveredConfirmationPage(model, form);
 		}
 
-		final PlayerEditor e = new PlayerEditor(player);
+		final AccountEditor e = new AccountEditor(player);
 		if (playerSecurityService != null) {
 			e.setPassword(playerSecurityService.encodePlayerPassword(player, form.getPassword()));
 		} else {
@@ -158,7 +158,7 @@ public class RecoveryController {
 		}
 
 		try {
-			accountManager.updatePlayer(e.createPlayer());
+			accountManager.updateAccount(e.createAccount());
 			mailService.sendMail(MailSender.ACCOUNTS, player, "account/updated", null);
 			return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 		} catch (Exception e1) {

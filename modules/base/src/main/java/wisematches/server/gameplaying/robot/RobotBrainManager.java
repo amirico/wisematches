@@ -1,8 +1,8 @@
 package wisematches.server.gameplaying.robot;
 
 import wisematches.server.gameplaying.room.Room;
-import wisematches.server.player.computer.robot.RobotPlayer;
-import wisematches.server.player.computer.robot.RobotType;
+import wisematches.server.personality.player.computer.robot.RobotPlayer;
+import wisematches.server.personality.player.computer.robot.RobotType;
 
 import java.util.Collection;
 

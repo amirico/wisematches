@@ -2,7 +2,7 @@ package wisematches.server.standing.profile.counties.impl;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import wisematches.server.player.Language;
+import wisematches.server.personality.account.Language;
 import wisematches.server.standing.profile.counties.Country;
 
 import java.io.IOException;

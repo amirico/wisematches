@@ -1,6 +1,6 @@
 package wisematches.server.web.services.recovery;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -24,7 +24,7 @@ public final class RecoveryToken {
 	private Date date;
 
 	@Transient
-	private Player player;
+	private Account player;
 
 	/**
 	 * Hibernate constructor
@@ -32,7 +32,7 @@ public final class RecoveryToken {
 	RecoveryToken() {
 	}
 
-	RecoveryToken(Player player) {
+	RecoveryToken(Account player) {
 		if (player == null) {
 			throw new IllegalArgumentException("Player can't be null");
 		}
@@ -42,7 +42,7 @@ public final class RecoveryToken {
 		this.date = new Date();
 	}
 
-	public Player getPlayer() {
+	public Account getPlayer() {
 		return player;
 	}
 
@@ -54,7 +54,7 @@ public final class RecoveryToken {
 		return date;
 	}
 
-	void setPlayer(Player player) {
+	void setPlayer(Account player) {
 		this.player = player;
 	}
 

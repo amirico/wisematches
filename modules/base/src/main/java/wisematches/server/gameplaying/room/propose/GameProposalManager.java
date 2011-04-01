@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.room.propose;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 
@@ -33,7 +33,7 @@ public interface GameProposalManager<P extends GameProposal> {
 	 * @param player	 the player to be added.
 	 * @return the modified waiting game info.
 	 */
-	P attachPlayer(long proposalId, Player player);
+	P attachPlayer(long proposalId, Personality player);
 
 	/**
 	 * Detaches specified player from the waiting game.
@@ -42,7 +42,7 @@ public interface GameProposalManager<P extends GameProposal> {
 	 * @param player	 the player to be attached.
 	 * @return the modified waiting game info.
 	 */
-	P detachPlayer(long proposalId, Player player);
+	P detachPlayer(long proposalId, Personality player);
 
 	/**
 	 * Close specified waiting game.
@@ -64,5 +64,5 @@ public interface GameProposalManager<P extends GameProposal> {
 	 * @param player the player who's proposals should be returned
 	 * @return unmodifiable list of all active player's proposals.
 	 */
-	Collection<P> getPlayerProposals(Player player);
+	Collection<P> getPlayerProposals(Personality player);
 }

@@ -15,8 +15,8 @@ import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoom;
 import wisematches.server.gameplaying.scribble.room.board.ScribbleBoardManager;
-import wisematches.server.player.Player;
-import wisematches.server.player.computer.robot.RobotPlayer;
+import wisematches.server.personality.Personality;
+import wisematches.server.personality.player.computer.robot.RobotPlayer;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,7 +71,7 @@ public class SmallRobotsGameTest {
 
 		final ScribbleBoard board = roomManager.createBoard(
 				new ScribbleSettings("This is robots game", "en", 3, false, true),
-				Arrays.<Player>asList(r1, r2, r3));
+				Arrays.<Personality>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
 			@Override
 			public void gameMoveDone(GameBoard board, GameMove move) {

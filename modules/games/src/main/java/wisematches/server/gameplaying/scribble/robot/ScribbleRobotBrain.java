@@ -19,7 +19,7 @@ import wisematches.server.gameplaying.scribble.board.TilesPlacement;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoom;
 import wisematches.server.gameplaying.scribble.scores.ScoreCalculation;
 import wisematches.server.gameplaying.scribble.scores.ScoreEngine;
-import wisematches.server.player.computer.robot.RobotType;
+import wisematches.server.personality.player.computer.robot.RobotType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -9,8 +9,8 @@ import wisematches.server.gameplaying.tournament.TournamentSection;
 import wisematches.server.gameplaying.tournament.subscription.TournamentSubscription;
 import wisematches.server.gameplaying.tournament.subscription.TournamentSubscriptionException;
 import wisematches.server.gameplaying.tournament.subscription.TournamentSubscriptionManager;
-import wisematches.server.player.Language;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
+import wisematches.server.personality.account.Language;
 
 /**
  * TODO: write description here
@@ -25,20 +25,20 @@ public class HibernateTournamentSubscriptionManager implements TournamentSubscri
 	}
 
 	@Override
-	public void subscribe(Player player, TournamentSection tournamentSection, Language language) throws TournamentSubscriptionException {
+	public void subscribe(Personality player, TournamentSection tournamentSection, Language language) throws TournamentSubscriptionException {
 	}
 
 	@Override
-	public void unsubscribe(Player player) throws TournamentSubscriptionException {
+	public void unsubscribe(Personality player) throws TournamentSubscriptionException {
 	}
 
 	@Override
-	public boolean isSubscribed(Player player) {
+	public boolean isSubscribed(Personality player) {
 		return false;
 	}
 
 	@Override
-	public TournamentSubscription getSubscription(Player player) {
+	public TournamentSubscription getSubscription(Personality player) {
 		return null;
 	}
 }

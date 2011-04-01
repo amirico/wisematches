@@ -16,8 +16,8 @@ import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.room.board.BoardManager;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
-import wisematches.server.player.computer.robot.RobotPlayer;
-import wisematches.server.player.computer.robot.RobotType;
+import wisematches.server.personality.player.computer.robot.RobotPlayer;
+import wisematches.server.personality.player.computer.robot.RobotType;
 
 import java.util.Arrays;
 import java.util.Collections;

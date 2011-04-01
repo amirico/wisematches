@@ -13,7 +13,7 @@ import wisematches.server.gameplaying.scribble.bank.TilesBankingHouse;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoardDao;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -35,7 +35,7 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	}
 
 	@Override
-	protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<Player> players) throws BoardCreationException {
+	protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
 		final Locale locale = new Locale(gameSettings.getLanguage());
 
 		try {
@@ -72,7 +72,7 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	}
 
 	@Override
-	protected Collection<Long> loadActivePlayerBoards(Player player) {
+	protected Collection<Long> loadActivePlayerBoards(Personality player) {
 		return scribbleBoardDao.getActiveBoards(player);
 	}
 

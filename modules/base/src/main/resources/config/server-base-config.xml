@@ -3,16 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="lockAccountManager" class="wisematches.server.standing.lock.impl.HibernateLockAccountManager">
+    <bean id="lockAccountManager" class="wisematches.server.personality.account.impl.HibernateAccountLockManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="attributesProvider" class="wisematches.server.attributes.impl.AnnotationSpringAttributesProvider">
-    </bean>
-
-    <bean id="accountManager" class="wisematches.server.player.member.impl.HibernateAccountManager">
+    <bean id="accountManager" class="wisematches.server.personality.account.impl.HibernateAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="lockAccountManager" ref="lockAccountManager"/>
+        <property name="accountLockManager" ref="lockAccountManager"/>
     </bean>
 
     <bean id="computerPlayerManager" class="wisematches.server.player.computer.ComputerPlayerManager"/>
@@ -22,7 +19,7 @@
             <list>
                 <!-- must be first because very fast -->
                 <ref bean="computerPlayerManager"/>
-                <ref bean="accountManager"/>
+                <!--<ref bean="accountManager"/>-->
             </list>
         </property>
     </bean>
@@ -44,17 +41,6 @@
     <!--
     <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
         <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="lockAccountManager" class="wisematches.server.player.locks.impl.HibernateLockAccountManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="accountManager" class="wisematches.server.core.account.impl.HibernateAccountManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-
-        <property name="lockAccountManager" ref="lockAccountManager"/>
-        <property name="defaultPlayerRating" value="1200"/>
     </bean>
 
     <bean id="statisticsManager" class="wisematches.server.testimonial.statistic.impl.HibernatePlayerStatisticsManager">

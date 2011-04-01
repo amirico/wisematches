@@ -1,25 +1,18 @@
 package wisematches.server.utils.sessions.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import wisematches.server.player.Player;
-import wisematches.server.player.PlayerManager;
-import wisematches.server.utils.sessions.*;
-import wisematches.server.utils.sessions.chouse.PlayerCustomHouse;
-import wisematches.server.utils.sessions.chouse.PlayerCustomHouseListener;
+import wisematches.server.personality.Personality;
+import wisematches.server.utils.sessions.PlayerOnlineStateListener;
+import wisematches.server.utils.sessions.PlayerSessionBean;
+import wisematches.server.utils.sessions.PlayerSessionsListener;
+import wisematches.server.utils.sessions.PlayerSessionsManager;
 
-import java.beans.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Collection;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class PlayerSessionsManagerImpl implements PlayerSessionsManager {
+/*
 	private PlayerManager playerManager;
 
 	private ProxyFactory proxyDescriptor;
@@ -331,5 +324,51 @@ public class PlayerSessionsManagerImpl implements PlayerSessionsManager {
 				firePlayerOffline(player);
 			}
 		}
+	}
+*/
+
+	@Override
+	public void addPlayerSessionsListener(PlayerSessionsListener l) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public void removePlayerSessionsListener(PlayerSessionsListener l) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public void addPlayerOnlineStateListener(PlayerOnlineStateListener l) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public void removePlayerOnlineStateListener(PlayerOnlineStateListener l) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public <T extends PlayerSessionBean> T getPlayerSessionBean(String sessionKey) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public <T extends PlayerSessionBean> Collection<T> getPlayerSessionBeans(Personality player) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public <T extends PlayerSessionBean> Collection<T> getPlayerSessionBeans() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public Collection<Personality> getOnlinePlayers() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public boolean isPlayerOnline(Personality player) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

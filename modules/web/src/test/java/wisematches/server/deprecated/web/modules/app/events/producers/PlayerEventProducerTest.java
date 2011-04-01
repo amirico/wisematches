@@ -4,7 +4,7 @@ package wisematches.server.deprecated.web.modules.app.events.producers;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class PlayerEventProducerTest {
-/*    private LockAccountListener lockAccountListener;
+/*    private AccountLockListener lockAccountListener;
     private PlayerStatisticListener playerStatisticListener;
 
     @Test
@@ -63,11 +63,11 @@ public class PlayerEventProducerTest {
     public void test_lockAccount() {
         final Date date = new Date(System.currentTimeMillis() + 10000000000L);
 
-        final LockAccountManager manager = createStrictMock(LockAccountManager.class);
-        manager.addLockAccountListener(isA(LockAccountListener.class));
+        final AccountLockManager manager = createStrictMock(AccountLockManager.class);
+        manager.addAccountLockListener(isA(AccountLockListener.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                lockAccountListener = (LockAccountListener) getCurrentArguments()[0];
+                lockAccountListener = (AccountLockListener) getCurrentArguments()[0];
                 return null;
             }
         });
@@ -96,7 +96,7 @@ public class PlayerEventProducerTest {
         replay(notificator);
 
         final PlayerEventProducer producer = new PlayerEventProducer();
-        producer.setLockAccountManager(manager);
+        producer.setAccountLockManager(manager);
 
         // nothing to do
         lockAccountListener.accountLocked(createMockPlayer(), "public lock", "private lock", date);

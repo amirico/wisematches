@@ -1,25 +1,20 @@
 package wisematches.server.standing.old.rating.impl;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.player.Player;
-import wisematches.server.player.member.impl.HibernatePlayerImpl;
+import wisematches.server.personality.Personality;
 import wisematches.server.standing.old.rating.PlayerRatingsManager;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RatingsManagerDao extends HibernateDaoSupport {
-	public List<Player> getPlayersRating(final long fromPosition,
-										 final int playersCount,
-										 final PlayerRatingsManager.SortType sortType) {
+	public List<Personality> getPlayersRating(final long fromPosition,
+											  final int playersCount,
+											  final PlayerRatingsManager.SortType sortType) {
+/*
 		final HibernateTemplate template = getHibernateTemplate();
 		final Object o = template.executeWithNativeSession(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
@@ -29,16 +24,21 @@ public class RatingsManagerDao extends HibernateDaoSupport {
 				return query.list();
 			}
 		});
-		return (List<Player>) o;
+		return (List<Personality>) o;
+*/
+		return null;
 	}
 
 	public long getPlayersCount() {
+/*
 		final HibernateTemplate template = getHibernateTemplate();
 		final List list = template.find("select count(*) from " + HibernatePlayerImpl.class.getName());
 		if (list.size() != 1) {
 			return 0;
 		}
 		return (Long) list.iterator().next();
+*/
+		return 0;
 	}
 
 	/**

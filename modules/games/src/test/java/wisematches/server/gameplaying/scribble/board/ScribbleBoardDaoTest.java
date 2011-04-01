@@ -19,7 +19,7 @@ import wisematches.server.gameplaying.scribble.Position;
 import wisematches.server.gameplaying.scribble.Tile;
 import wisematches.server.gameplaying.scribble.Word;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -63,10 +63,10 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_activeGames() {
-		final Player p1 = createMockPlayer(1L);
-		final Player p2 = createMockPlayer(2L);
-		final Player p3 = createMockPlayer(3L);
-		final Player p4 = createMockPlayer(4L);
+		final Personality p1 = Personality.person(1L);
+		final Personality p2 = Personality.person(2L);
+		final Personality p3 = Personality.person(3L);
+		final Personality p4 = Personality.person(4L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -98,9 +98,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_findExpiringBoards() {
-		final Player p1 = createMockPlayer(1L);
-		final Player p2 = createMockPlayer(2L);
-		final Player p3 = createMockPlayer(3L);
+		final Personality p1 = Personality.person(1L);
+		final Personality p2 = Personality.person(2L);
+		final Personality p3 = Personality.person(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -130,9 +130,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_getRatedBoards() throws GameMoveException {
-		final Player p1 = createMockPlayer(1L);
-		final Player p2 = createMockPlayer(2L);
-		final Player p3 = createMockPlayer(3L);
+		final Player p1 = Personality.person(1L);
+		final Player p2 = Personality.person(2L);
+		final Player p3 = Personality.person(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -164,9 +164,9 @@ public class ScribbleBoardDaoTest {
 
 	@Test
 	public void test_saveLoadScribbleBoard() throws GameMoveException {
-		final Player p1 = createMockPlayer(1L);
-		final Player p2 = createMockPlayer(2L);
-		final Player p3 = createMockPlayer(3L);
+		final Personality p1 = Personality.person(1L);
+		final Personality p2 = Personality.person(2L);
+		final Personality p3 = Personality.person(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
 		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
@@ -266,13 +266,6 @@ public class ScribbleBoardDaoTest {
 		assertArrayEquals(originalBoard.getPlayerHand(playerId).getTiles(), loadedBoard.getPlayerHand(playerId).getTiles());
 		assertEquals(originalBoard.getPlayerHand(playerId).getPlayerIndex(), loadedBoard.getPlayerHand(playerId).getPlayerIndex());
 		assertEquals(originalBoard.getPlayerHand(playerId).getPoints(), loadedBoard.getPlayerHand(playerId).getPoints());
-	}
-
-	private Player createMockPlayer(long id) {
-		Player p = createMock(Player.class);
-		expect(p.getId()).andReturn(id).anyTimes();
-		replay(p);
-		return p;
 	}
 
 	private void assertDates(Date d1, Date d2) {

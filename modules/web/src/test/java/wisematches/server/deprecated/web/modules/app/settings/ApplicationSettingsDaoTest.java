@@ -1,14 +1,16 @@
 package wisematches.server.deprecated.web.modules.app.settings;
 
-import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
-import wisematches.server.player.Player;
-
-import static org.easymock.EasyMock.*;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class ApplicationSettingsDaoTest extends AbstractTransactionalDataSourceSpringContextTests {
+public class ApplicationSettingsDaoTest {
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("commented");
+	}
+/*
 	private ApplicationSettingsDao playerSettingsDao;
 
 	protected String[] getConfigLocations() {
@@ -55,4 +57,5 @@ public class ApplicationSettingsDaoTest extends AbstractTransactionalDataSourceS
 	public void setPlayerSettingsDao(ApplicationSettingsDao playerSettingsDao) {
 		this.playerSettingsDao = playerSettingsDao;
 	}
+*/
 }

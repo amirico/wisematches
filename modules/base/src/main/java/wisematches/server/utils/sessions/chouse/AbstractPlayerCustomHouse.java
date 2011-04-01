@@ -1,6 +1,6 @@
 package wisematches.server.utils.sessions.chouse;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -22,13 +22,13 @@ public class AbstractPlayerCustomHouse implements PlayerCustomHouse {
 		listeners.remove(l);
 	}
 
-	protected void firePlayerMoveIn(Player player, String sessionKey) {
+	protected void firePlayerMoveIn(Personality player, String sessionKey) {
 		for (PlayerCustomHouseListener listener : listeners) {
 			listener.playerMoveIn(player, sessionKey);
 		}
 	}
 
-	protected void firePlayerMoveOut(Player player, String sessionKey) {
+	protected void firePlayerMoveOut(Personality player, String sessionKey) {
 		for (PlayerCustomHouseListener listener : listeners) {
 			listener.playerMoveOut(player, sessionKey);
 		}

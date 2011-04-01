@@ -2,7 +2,7 @@ package wisematches.server.gameplaying.robot;
 
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.room.Room;
-import wisematches.server.player.computer.robot.RobotType;
+import wisematches.server.personality.player.computer.robot.RobotType;
 
 /**
  * The robot's brain. This object can process for a move of robot.

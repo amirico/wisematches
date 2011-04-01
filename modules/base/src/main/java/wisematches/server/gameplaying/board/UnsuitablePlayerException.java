@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.board;
 
-import wisematches.server.player.Player;
+import wisematches.server.personality.Personality;
 
 /**
  * This exception is throw if player can't make a turn because turn belongs to other player or player
@@ -21,8 +21,8 @@ public class UnsuitablePlayerException extends IncorrectMoveException {
 	 * @param operation the doing operation.
 	 * @param player	the player who try do this operation.
 	 */
-	public UnsuitablePlayerException(String operation, Player player) {
-		super("Player " + player.getNickname() + "[" + player.getId() + "] can not perform " +
+	public UnsuitablePlayerException(String operation, Personality player) {
+		super("Player " + "[" + player.getId() + "] can not perform " +
 				operation + " operation because does not belongs to this game.");
 
 		expectedPlayerId = 0;
@@ -56,11 +56,9 @@ public class UnsuitablePlayerException extends IncorrectMoveException {
 	 * @param expectedPlayer  the player who expected.
 	 * @param specifiedPlayer the player who try to perform operation.
 	 */
-	public UnsuitablePlayerException(String operation, Player expectedPlayer, Player specifiedPlayer) {
-		super("For " + operation + " operation player " + expectedPlayer.getNickname() +
-				"[" + expectedPlayer.getId() + "]" + " expected but " +
-				"player " + specifiedPlayer.getNickname() + "[" + specifiedPlayer.getId() + "]" +
-				" was specified");
+	public UnsuitablePlayerException(String operation, Personality expectedPlayer, Personality specifiedPlayer) {
+		super("For " + operation + " operation player " + "[" + expectedPlayer.getId() + "]" +
+				" expected but " + "player " + "[" + specifiedPlayer.getId() + "]" + " was specified");
 		this.expectedPlayerId = expectedPlayer.getId();
 		this.specifiedPlayerId = specifiedPlayer.getId();
 	}

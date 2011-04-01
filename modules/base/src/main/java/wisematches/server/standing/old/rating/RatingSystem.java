@@ -1,6 +1,7 @@
 package wisematches.server.standing.old.rating;
 
-import wisematches.server.player.Player;
+
+import wisematches.server.personality.Personality;
 
 /**
  * Rating System is implementation of rating system that allows calculates rating of players
@@ -21,5 +22,5 @@ public interface RatingSystem {
 	 * @throws IllegalArgumentException if length of {@code points} array is not equals with
 	 *                                  {@code players} array length or any of {@code points} element is less than zero.
 	 */
-	int[] calculateRatings(Player[] players, int[] points);
+	int[] calculateRatings(Personality[] players, int[] points);
 }

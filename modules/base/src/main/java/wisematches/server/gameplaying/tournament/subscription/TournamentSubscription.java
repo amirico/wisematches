@@ -6,7 +6,7 @@ package wisematches.server.gameplaying.tournament.subscription;
 
 import wisematches.server.gameplaying.tournament.Tournament;
 import wisematches.server.gameplaying.tournament.TournamentSection;
-import wisematches.server.player.Language;
+import wisematches.server.personality.account.Language;
 
 /**
  * This class contains information about subscription for player.

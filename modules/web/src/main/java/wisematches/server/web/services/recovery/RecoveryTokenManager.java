@@ -1,7 +1,7 @@
 package wisematches.server.web.services.recovery;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.player.Player;
+import wisematches.server.personality.account.Account;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -14,7 +14,7 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 	public RecoveryTokenManager() {
 	}
 
-	public RecoveryToken createToken(Player player) {
+	public RecoveryToken createToken(Account player) {
 		try {
 			RecoveryToken token1 = getToken(player);
 			if (token1 != null) {
@@ -36,7 +36,7 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 	 * @return cookies token for specified player or <code>null</code> if player has no token.
 	 * @throws TokenExpiredException if token exist but already expired
 	 */
-	public RecoveryToken getToken(Player player) throws TokenExpiredException {
+	public RecoveryToken getToken(Account player) throws TokenExpiredException {
 		final RecoveryToken token = getHibernateTemplate().get(RecoveryToken.class, player.getId());
 		if (token == null) {
 			return null;

@@ -17,7 +17,7 @@ public class ApplicationStatisticServiceImplTest {
         replay(ratingsManager);
 
         final ApplicationStatisticServiceImpl impl = new ApplicationStatisticServiceImpl();
-        impl.setRatingsManager(ratingsManager);
+        impl.setRatingManager(ratingsManager);
 
         final PlayerInfoBean[] playerInfoBeans = impl.getTopRatedPlayers();
         assertEquals(3, playerInfoBeans.length);
@@ -52,7 +52,7 @@ public class ApplicationStatisticServiceImplTest {
         replay(ratingsManager);
 
         final ApplicationStatisticServiceImpl impl = new ApplicationStatisticServiceImpl();
-        impl.setRatingsManager(ratingsManager);
+        impl.setRatingManager(ratingsManager);
 
         topPlayersListener.getValue().topPlayersChanged();
 
