@@ -16,8 +16,11 @@
             <table style="height: 100%; width: 100%">
                 <tr>
                     <td valign="top" align="right">
-                        <b><@security.authentication property="principal.nickname"/>
-                            (<@security.authentication property="principal.username"/>)</b>
+                    <#if player.membership == 'GUEST'>
+                        This is a Guest player
+                        <#else>
+                        ${player.nickname} (${player.membership})
+                    </#if>
                         |
                         <a href="/account/logout.html">Logout</a>
                     </td>

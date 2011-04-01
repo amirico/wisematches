@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wisematches.server.personality.account.*;
+import wisematches.server.personality.player.PlayerManager;
 import wisematches.server.security.PlayerSecurityService;
 
 import java.util.Date;
@@ -24,6 +25,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 	private SaltSource saltSource;
 	private PasswordEncoder passwordEncoder;
 
+	private PlayerManager playerManager;
 	private AccountManager accountManager;
 	private AccountLockManager accountLockManager;
 	private AuthenticationManager authenticationManager;
@@ -79,7 +81,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 
 		final UsernamePasswordAuthenticationToken newAuthentication =
 				new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
-		newAuthentication.setDetails(user);
+		newAuthentication.setDetails(playerManager.getPlayer(player));
 		return newAuthentication;
 	}
 
@@ -105,6 +107,10 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 		if (this.accountLockManager != null) {
 			this.accountLockManager.addAccountLockListener(userDetailsService);
 		}
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {

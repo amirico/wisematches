@@ -1,5 +1,7 @@
 package wisematches.server.personality.player;
 
+import wisematches.server.personality.Personality;
+
 /**
  * Players manager interface. This
  *
@@ -13,6 +15,14 @@ public interface PlayerManager {
 	 * @return the player by it's id or <code>null</code> if player is unknown.
 	 */
 	Player getPlayer(long playerId);
+
+	/**
+	 * Returns player by it's id.
+	 *
+	 * @param personality the player's personality.
+	 * @return the player by it's id or <code>null</code> if player is unknown.
+	 */
+	Player getPlayer(Personality personality);
 
 	/**
 	 * Searches a player by specified email.

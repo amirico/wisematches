@@ -2,6 +2,7 @@ package wisematches.server.security.impl;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import wisematches.server.personality.player.computer.guest.GuestPlayer;
 
 import java.io.Serializable;
 
@@ -12,9 +13,9 @@ import java.io.Serializable;
  */
 public class GuestAuthenticationToken extends AbstractAuthenticationToken implements Serializable {
 	private final int keyHash;
-	private final Object principal;
+	private final UserDetails principal;
 
-	public GuestAuthenticationToken(String key, UserDetails principal) {
+	public GuestAuthenticationToken(String key, GuestUserDetails principal) {
 		super(principal.getAuthorities());
 
 		if ((key == null) || ("".equals(key))) {
@@ -27,8 +28,13 @@ public class GuestAuthenticationToken extends AbstractAuthenticationToken implem
 	}
 
 	@Override
+	public Object getDetails() {
+		return GuestPlayer.GUEST;
+	}
+
+	@Override
 	public Object getCredentials() {
-		return "";
+		return principal.getPassword();
 	}
 
 	@Override

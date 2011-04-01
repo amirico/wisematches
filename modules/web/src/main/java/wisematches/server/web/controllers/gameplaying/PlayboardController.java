@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,6 @@ import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
-import wisematches.server.personality.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.gameplaying.form.CheckWordForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleTileForm;
@@ -37,8 +35,7 @@ import java.util.concurrent.Callable;
  */
 @Controller
 @RequestMapping("/game")
-public class PlayboardController {
-	private PlayerManager playerManager;
+public class PlayboardController extends AbstractPlayerController {
 	private GameMessageSource gameMessageSource;
 	private DictionaryManager dictionaryManager;
 	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
@@ -51,7 +48,7 @@ public class PlayboardController {
 	@RequestMapping("/playboard")
 	public String showPlayboard(@RequestParam("b") long gameId, Model model) {
 		try {
-			final Player player = getCurrentPlayer();
+			final Player player = getPlayer();
 			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
 			if (board == null) { // unknown board
 				return "/content/game/playboard/unknown";
@@ -59,10 +56,6 @@ public class PlayboardController {
 
 			model.addAttribute("board", board);
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
-
-			model.addAttribute("player", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-			model.addAttribute("playerManager", playerManager);
-
 			return "/content/game/playboard/scribble";
 		} catch (BoardLoadingException ex) {
 			log.error("Board " + gameId + " can't be loaded", ex);
@@ -81,7 +74,7 @@ public class PlayboardController {
 		return processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player currentPlayer = getCurrentPlayer();
+				final Player currentPlayer = getPlayer();
 				return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
 			}
 		}, locale);
@@ -97,7 +90,7 @@ public class PlayboardController {
 		return processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player currentPlayer = getCurrentPlayer();
+				final Player currentPlayer = getPlayer();
 				return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
 			}
 		}, locale);
@@ -118,7 +111,7 @@ public class PlayboardController {
 				for (int i = 0; i < tiles.length; i++) {
 					t[i] = tiles[i].getNumber();
 				}
-				final Player currentPlayer = getCurrentPlayer();
+				final Player currentPlayer = getPlayer();
 				return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
 			}
 		}, locale);
@@ -134,7 +127,7 @@ public class PlayboardController {
 		return processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				Player currentPlayer = getCurrentPlayer();
+				Player currentPlayer = getPlayer();
 				final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
 				board.resign(board.getPlayerHand(currentPlayer.getId()));
 
@@ -196,7 +189,7 @@ public class PlayboardController {
 	}
 
 	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
-		final Player currentPlayer = getCurrentPlayer();
+		final Player currentPlayer = getPlayer();
 		if (move.getPlayerId() != currentPlayer.getId()) {
 			throw new UnsuitablePlayerException("make turn", currentPlayer);
 		}
@@ -317,15 +310,6 @@ public class PlayboardController {
 			return translateSystemException(e, locale);
 		}
 		return translateSystemException(e, locale);
-	}
-
-	private Player getCurrentPlayer() {
-		return (Player) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
 	}
 
 	@Autowired

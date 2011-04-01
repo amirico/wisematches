@@ -30,6 +30,10 @@ public class MemberUserDetails extends Personality implements UserDetails {
 		this.accountNonLocked = accountNonLocked;
 	}
 
+	public String getNickname() {
+		return account.getNickname();
+	}
+
 	@Override
 	public String getUsername() {
 		return account.getEmail();
