@@ -7,6 +7,7 @@ import wisematches.server.gameplaying.room.search.ExpiringBoard;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -14,48 +15,45 @@ import java.util.List;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribbleBoardDao extends HibernateDaoSupport {
-	public ScribbleBoardDao() {
-	}
+    public ScribbleBoardDao() {
+    }
 
-	public ScribbleBoard getScribbleBoard(long boardId) {
-		final HibernateTemplate template = getHibernateTemplate();
-		return template.get(ScribbleBoard.class, boardId);
-	}
+    public ScribbleBoard getScribbleBoard(long boardId) {
+        final HibernateTemplate template = getHibernateTemplate();
+        return template.get(ScribbleBoard.class, boardId);
+    }
 
-	public void saveScribbleBoard(ScribbleBoard scribbleBoard) {
-		final HibernateTemplate template = getHibernateTemplate();
+    public void saveScribbleBoard(ScribbleBoard scribbleBoard) {
+        final HibernateTemplate template = getHibernateTemplate();
 
-		// We call merge object because original can't be associated with another session
-		if (scribbleBoard.getBoardId() == 0) {
-			template.persist(scribbleBoard);
-		} else {
-			if (scribbleBoard.getGameMoves().isEmpty()) { // If no one move - it's possible that players list changed.
-				// Persist all unsaved. In other case merge brakes transient filed "tiles".
-				final List<ScribblePlayerHand> playersHands = scribbleBoard.getPlayersHands();
-				for (ScribblePlayerHand hand : playersHands) {
-					if (hand.getId() == 0) {
-						template.persist(hand);
-					}
-				}
-			}
-			template.merge(scribbleBoard);
-		}
-		template.flush();
-	}
+        // We call merge object because original can't be associated with another session
+        if (scribbleBoard.getBoardId() == 0) {
+            template.persist(scribbleBoard);
+        } else {
+            template.merge(scribbleBoard);
+        }
+        template.flush();
+    }
 
-	@SuppressWarnings("unchecked")
-	public Collection<Long> getActiveBoards(Personality player) {
-		final HibernateTemplate template = getHibernateTemplate();
-		return (List<Long>) template.find("select board.boardId from " + ScribbleBoard.class.getName() +
-				" board join board.playersIterator.playerHands hands where board.gameResolution is null and hands.playerId = ?", player.getId());
-	}
+    @SuppressWarnings("unchecked")
+    public Collection<Long> getActiveBoards(Personality player) {
+/*
+        final HibernateTemplate template = getHibernateTemplate();
+        return (List<Long>) template.find("select board.boardId from wisematches.server.gameplaying.scribble.board.ScribbleBoard " +
+                " board join board.playersIterator.playerHands hands where board.gameResolution is NULL and hands.playerId = ?", player.getId());
+*/
+//        final HibernateTemplate template = getHibernateTemplate();
+//        return (List<Long>) template.find("select board.boardId from wisematches.server.gameplaying.scribble.board.ScribbleBoard " +
+//                " board where board.gameResolution is null and board.playersIterator.playerHands.pk.playerId=?", player.getId());
+        return Collections.emptyList();
+    }
 
-	@SuppressWarnings("unchecked")
-	public Collection<ExpiringBoard> findExpiringBoards() {
-		final HibernateTemplate template = getHibernateTemplate();
-		return template.find("select new " + ExpiringBoard.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
-				ScribbleBoard.class.getName() + " board where board.gameResolution is null");
-	}
+    @SuppressWarnings("unchecked")
+    public Collection<ExpiringBoard> findExpiringBoards() {
+        final HibernateTemplate template = getHibernateTemplate();
+        return template.find("select new " + ExpiringBoard.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
+                ScribbleBoard.class.getName() + " board where board.gameResolution is null");
+    }
 /*
 
 	@SuppressWarnings("unchecked")
@@ -95,36 +93,36 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 */
 
-	public int getGamesCount(EnumSet<GameResolution> states) {
-		if (states != null && states.size() == 0) {
-			return 0;
-		}
+    public int getGamesCount(EnumSet<GameResolution> states) {
+        if (states != null && states.size() == 0) {
+            return 0;
+        }
 
-		final HibernateTemplate template = getHibernateTemplate();
+        final HibernateTemplate template = getHibernateTemplate();
 
-		final StringBuilder query = new StringBuilder();
-		query.append("select count(*) from ");
-		query.append(ScribbleBoard.class.getName());
-		query.append(" board ");
+        final StringBuilder query = new StringBuilder();
+        query.append("select count(*) from ");
+        query.append(ScribbleBoard.class.getName());
+        query.append(" board ");
 
-		if (states == null) {
-			query.append(" where board.gameResolution is null ");
-			return ((Number) template.find(query.toString()).get(0)).intValue();
-		} else {
-			int index = 0;
-			final Object[] values = new Object[states.size()];
-			query.append(" where board.gameResolution in ( ");
-			boolean first = true;
-			for (GameResolution state : states) {
-				if (!first) {
-					query.append(", ");
-				}
-				query.append("?");
-				first = false;
-				values[index++] = state;
-			}
-			query.append(")");
-			return ((Number) template.find(query.toString(), values).get(0)).intValue();
-		}
-	}
+        if (states == null) {
+            query.append(" where board.gameResolution is null ");
+            return ((Number) template.find(query.toString()).get(0)).intValue();
+        } else {
+            int index = 0;
+            final Object[] values = new Object[states.size()];
+            query.append(" where board.gameResolution in ( ");
+            boolean first = true;
+            for (GameResolution state : states) {
+                if (!first) {
+                    query.append(", ");
+                }
+                query.append("?");
+                first = false;
+                values[index++] = state;
+            }
+            query.append(")");
+            return ((Number) template.find(query.toString(), values).get(0)).intValue();
+        }
+    }
 }
