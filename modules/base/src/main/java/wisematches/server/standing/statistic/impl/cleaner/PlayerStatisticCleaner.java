@@ -1,8 +1,8 @@
-package wisematches.server.standing.old.statistic.impl;
+package wisematches.server.standing.statistic.impl.cleaner;
 
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.standing.statistic.PlayerStatisticsManager;
+import wisematches.server.standing.statistic.PlayerStatisticManager;
 import wisematches.server.utils.system.ServerPropertiesManager;
 
 import java.util.Calendar;
@@ -13,9 +13,9 @@ import java.util.Collection;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class StatisticCleanerCenter {
+public class PlayerStatisticCleaner {
 	private RoomsManager roomsManager;
-	private PlayerStatisticsManager playerStatisticsManager;
+	private PlayerStatisticManager playerStatisticManager;
 	private ServerPropertiesManager serverPropertiesManager;
 
 	private final ThreadLocal<Calendar> localCalendar = new ThreadLocal<Calendar>();
@@ -49,10 +49,10 @@ public class StatisticCleanerCenter {
 //            for (GamePlayerHand hand : hands) {
 //                final long playerId = hand.getPlayerId();
 //
-//                playerStatisticsManager.lockPlayerStatistic(playerId);
+//                playerStatisticManager.lockPlayerStatistic(playerId);
 //                try {
-//                    final PlayerStatistic statistic = playerStatisticsManager.getPlayerStatistic(playerId);
-//                    final PlayerRatingInfo ratingInfo = statistic.getYearRatingInfo();
+//                    final PlayerStatistic statistic = playerStatisticManager.getPlayerStatistic(playerId);
+//                    final PlayerStatisticRating ratingInfo = statistic.getYearRatingInfo();
 //
 ///*
 //                    final long cleanupTime = statistic.getLastCleanupTime();
@@ -62,7 +62,7 @@ public class StatisticCleanerCenter {
 //                    statistic.setLastCleanupTime(System.currentTimeMillis());
 //*/
 //                } finally {
-//                    playerStatisticsManager.lockPlayerStatistic(playerId);
+//                    playerStatisticManager.lockPlayerStatistic(playerId);
 //                }
 //            }
 //        }
@@ -96,8 +96,8 @@ public class StatisticCleanerCenter {
 		return calendar;
 	}
 
-	public void setPlayerStatisticsManager(PlayerStatisticsManager playerStatisticsManager) {
-		this.playerStatisticsManager = playerStatisticsManager;
+	public void setPlayerStatisticManager(PlayerStatisticManager playerStatisticManager) {
+		this.playerStatisticManager = playerStatisticManager;
 	}
 
 	public void setRoomsManager(RoomsManager roomsManager) {

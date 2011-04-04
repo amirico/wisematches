@@ -1,20 +1,109 @@
-package wisematches.server.standing.old.statistic.impl;
+package wisematches.server.standing.statistic.impl;
 
-import org.junit.Test;
+import org.hibernate.SessionFactory;
+import org.hibernate.persister.collection.AbstractCollectionPersister;
+import org.hibernate.persister.entity.EntityPersister;
+import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import wisematches.server.standing.statistic.PlayerStatisticRating;
+import wisematches.server.standing.statistic.PlayerStatistic;
+import wisematches.server.standing.statistic.PlayerStatisticListener;
+import wisematches.server.standing.statistic.PlayerStatisticManager;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class StatisticCalculationCenterTest {
-
-	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("Test has been commented");
-	}
+public class PlayerStatisticManagerImplTest {
 /*
+	private SessionFactory sessionFactory;
+	private PlayerStatisticManager playerStatisticManager;
 	private StatisticCalculationCenter calculationCenter;
 
 	private BoardListener boardListener;
+
+	protected String[] getConfigLocations() {
+		return new String[]{"classpath:/config/test-server-base-config.xml"};
+	}
+
+	@Override
+	protected void onTearDownInTransaction() throws Exception {
+		jdbcTemplate.update("delete from stats_info where playerId = 1");
+		jdbcTemplate.update("delete from stats_info where playerId = 2");
+
+		sessionFactory.getCurrentSession().clear();
+
+		//Clear hibernate second level cache
+		@SuppressWarnings("unchecked")
+		final Map<String, EntityPersister> classMetadata = sessionFactory.getAllClassMetadata();
+		for (EntityPersister ep : classMetadata.values()) {
+			if (ep.hasCache()) {
+//				sessionFactory.evictEntity(ep.getCache().getRegionName());
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		final Map<String, AbstractCollectionPersister> collMetadata = sessionFactory.getAllCollectionMetadata();
+		for (AbstractCollectionPersister acp : collMetadata.values()) {
+			if (acp.hasCache()) {
+//				sessionFactory.evictCollection(acp.getCache().getRegionName());
+			}
+		}
+	}
+
+	public void test_lockUnlock() throws InterruptedException {
+		final ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+		playerStatisticManager.lockPlayerStatistic(1L);
+		final Future<PlayerStatistic> future = executorService.submit(new Callable<PlayerStatistic>() {
+			public PlayerStatistic call() throws Exception {
+				final TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+				try {
+					final PlayerStatistic statistic = playerStatisticManager.getPlayerStatistic(1L);
+					transactionManager.commit(status);
+					return statistic;
+				} catch (Exception th) {
+					transactionManager.rollback(status);
+					th.printStackTrace();
+					throw th;
+				}
+			}
+		});
+		final Future<PlayerStatistic> future2 = executorService.submit(new Callable<PlayerStatistic>() {
+			public PlayerStatistic call() throws Exception {
+				final TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+				try {
+					final PlayerStatistic statistic = playerStatisticManager.getPlayerStatistic(2L);
+					transactionManager.commit(status);
+					return statistic;
+				} catch (Exception th) {
+					transactionManager.rollback(status);
+					th.printStackTrace();
+					throw th;
+				}
+			}
+		});
+		Thread.sleep(1000);
+		assertFalse(future.isDone());
+		assertTrue(future2.isDone());
+
+		final PlayerStatistic statistic = playerStatisticManager.getPlayerStatistic(1L);
+		assertNotNull(statistic);
+		playerStatisticManager.unlockPlayerStatistic(1L);
+
+		Thread.sleep(1000);
+		assertTrue(future.isDone());
+	}
 
 	@Before
 	public void init() {
@@ -66,7 +155,7 @@ public class StatisticCalculationCenterTest {
 	@Test
 	public void test_updateRatingInfo() {
 		final PlayerStatistic statistic = new PlayerStatistic(12L);
-		final PlayerRatingInfo ri = statistic.getAllGamesRatingInfo();
+		final PlayerStatisticRating ri = statistic.getAllGamesStatisticRating();
 
 		{
 			statistic.setLostGames(1);
@@ -164,7 +253,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
+		final HibernatePlayerStatisticManager mi = createStrictMock(HibernatePlayerStatisticManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.updatePlayerStatistic(s1);
@@ -183,7 +272,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
 		replay(board);
 
-		calculationCenter.setPlayerStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticManager(mi);
 		calculationCenter.processGameStarted(board);
 
 		assertEquals(1, s1.getActiveGames());
@@ -197,7 +286,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
+		final HibernatePlayerStatisticManager mi = createStrictMock(HibernatePlayerStatisticManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.updatePlayerStatistic(s1);
@@ -217,7 +306,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
 		replay(board);
 
-		calculationCenter.setPlayerStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticManager(mi);
 		calculationCenter.processGameFinished(board, hand1);
 
 		assertEquals(1, s1.getWonGames());
@@ -236,7 +325,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
+		final HibernatePlayerStatisticManager mi = createStrictMock(HibernatePlayerStatisticManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.updatePlayerStatistic(s1);
@@ -256,7 +345,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getGameMoves()).andReturn(Arrays.asList()).anyTimes();
 		replay(board);
 
-		calculationCenter.setPlayerStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticManager(mi);
 		calculationCenter.processGameDraw(board);
 
 		assertEquals(1, s1.getDrawGames());
@@ -273,7 +362,7 @@ public class StatisticCalculationCenterTest {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
+		final HibernatePlayerStatisticManager mi = createStrictMock(HibernatePlayerStatisticManager.class);
 		mi.lockPlayerStatistic(13L);
 		expect(mi.getPlayerStatistic(13L)).andReturn(s1);
 		mi.unlockPlayerStatistic(13L);
@@ -297,7 +386,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getWonPlayers()).andReturn(hand2);
 		replay(board);
 
-		calculationCenter.setPlayerStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticManager(mi);
 		calculationCenter.processGameInterrupted(board, hand1, true);
 
 		assertEquals(1, s1.getLostGames());
@@ -313,17 +402,12 @@ public class StatisticCalculationCenterTest {
 		verify(mi, board);
 	}
 
-	*/
-/**
- * If game is not rated count of active games should be decreased but other things should not be changed.
- *//*
-
 	@Test
 	public void test_processGameFinished_NotRated() {
 		final PlayerStatistic s1 = new PlayerStatistic(13L);
 		final PlayerStatistic s2 = new PlayerStatistic(14L);
 
-		final HibernatePlayerStatisticsManager mi = createStrictMock(HibernatePlayerStatisticsManager.class);
+		final HibernatePlayerStatisticManager mi = createStrictMock(HibernatePlayerStatisticManager.class);
 		for (int i = 0; i < 3; i++) {
 			mi.lockPlayerStatistic(13L);
 			expect(mi.getPlayerStatistic(13L)).andReturn(s1);
@@ -345,7 +429,7 @@ public class StatisticCalculationCenterTest {
 		expect(board.getWonPlayers()).andReturn(null);
 		replay(board);
 
-		calculationCenter.setPlayerStatisticsManager(mi);
+		calculationCenter.setPlayerStatisticManager(mi);
 
 		calculationCenter.processGameDraw(board);
 		calculationCenter.processGameFinished(board, null);

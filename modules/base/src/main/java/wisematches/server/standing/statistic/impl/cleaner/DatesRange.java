@@ -1,4 +1,4 @@
-package wisematches.server.standing.old.statistic.impl;
+package wisematches.server.standing.statistic.impl.cleaner;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

@@ -58,7 +58,7 @@
 
     <bean id="playerEventProducer"
           class="wisematches.server.deprecated.web.modules.app.events.producers.PlayerEventProducer">
-        <property name="playerStatisticsManager" ref="playerStatisticsManager"/>
+        <property name="playerStatisticManager" ref="playerStatisticManager"/>
         <property name="accountLockManager" ref="accountLockManager"/>
     </bean>
 

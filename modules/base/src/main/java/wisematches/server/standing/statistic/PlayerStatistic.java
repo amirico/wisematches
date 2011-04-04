@@ -2,6 +2,7 @@ package wisematches.server.standing.statistic;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import wisematches.server.personality.Personality;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,10 +12,10 @@ import java.util.Date;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @Entity
-@Table(name = "stats_info")
+@Table(name = "rating_statistic")
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class PlayerStatistic implements Serializable {
+public class PlayerStatistic implements Serializable, Cloneable {
 	/**
 	 * Id of player who this statistic belongs to
 	 */
@@ -25,12 +26,14 @@ public class PlayerStatistic implements Serializable {
 	 * The time when this statistic was updated
 	 */
 	@Column(name = "updateTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateTime;
 
 	/**
-	 * Time when last cleanup was performed.
+	 * Time when last cleanup was performed.        12
 	 */
 	@Column(name = "lastCleanupTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastCleanupTime;
 
 	@Column(name = "activeGames")
@@ -69,11 +72,13 @@ public class PlayerStatistic implements Serializable {
 	private int averageTurnTime;
 
 	/**
-	 * Time when last move was maden
+	 * Time when last move was made
 	 */
 	@Column(name = "lastMoveTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastMoveTime;
 
+/*
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride(name = "averageRating", column = @Column(name = "thirtyAverageRating")),
@@ -86,7 +91,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "thirtyLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "thirtyAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo thirtyDaysRatingInfo = new PlayerRatingInfo();
+	private PlayerStatisticRating thirtyDaysRatingInfo = new PlayerStatisticRating();
 
 	@Embedded
 	@AttributeOverrides({
@@ -100,7 +105,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "ninetyLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "ninetyAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo ninetyDaysRatingInfo = new PlayerRatingInfo();
+	private PlayerStatisticRating ninetyDaysRatingInfo = new PlayerStatisticRating();
 
 	@Embedded
 	@AttributeOverrides({
@@ -114,7 +119,8 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "yearLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "yearAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo yearRatingInfo = new PlayerRatingInfo();
+	private PlayerStatisticRating yearRatingInfo = new PlayerStatisticRating();
+*/
 
 	@Embedded
 	@AttributeOverrides({
@@ -128,7 +134,7 @@ public class PlayerStatistic implements Serializable {
 			@AttributeOverride(name = "lowestLostOpponentId", column = @Column(name = "allLowestLostOpponentId")),
 			@AttributeOverride(name = "averageMovesPerGame", column = @Column(name = "allAverageMovesPerGame"))
 	})
-	private PlayerRatingInfo allGamesRatingInfo = new PlayerRatingInfo();
+	private PlayerStatisticRating allGamesStatisticRating = new PlayerStatisticRating();
 
 	/**
 	 * This is Hibernate constructor
@@ -136,8 +142,8 @@ public class PlayerStatistic implements Serializable {
 	PlayerStatistic() {
 	}
 
-	public PlayerStatistic(long playerId) {
-		this.playerId = playerId;
+	public PlayerStatistic(Personality personality) {
+		this.playerId = personality.getId();
 	}
 
 	public long getPlayerId() {
@@ -225,20 +231,22 @@ public class PlayerStatistic implements Serializable {
 		this.lastMoveTime = lastMoveTime;
 	}
 
-	public PlayerRatingInfo getThirtyDaysRatingInfo() {
+/*
+	public PlayerStatisticRating getThirtyDaysRatingInfo() {
 		return thirtyDaysRatingInfo;
 	}
 
-	public PlayerRatingInfo getNinetyDaysRatingInfo() {
+	public PlayerStatisticRating getNinetyDaysRatingInfo() {
 		return ninetyDaysRatingInfo;
 	}
 
-	public PlayerRatingInfo getYearRatingInfo() {
+	public PlayerStatisticRating getYearRatingInfo() {
 		return yearRatingInfo;
 	}
+*/
 
-	public PlayerRatingInfo getAllGamesRatingInfo() {
-		return allGamesRatingInfo;
+	public PlayerStatisticRating getAllGamesStatisticRating() {
+		return allGamesStatisticRating;
 	}
 
 	public Date getLastCleanupTime() {
@@ -247,5 +255,36 @@ public class PlayerStatistic implements Serializable {
 
 	public void setLastCleanupTime(Date lastCleanupTime) {
 		this.lastCleanupTime = lastCleanupTime;
+	}
+
+	@Override
+	public PlayerStatistic clone() {
+		try {
+			PlayerStatistic clone = (PlayerStatistic) super.clone();
+			allGamesStatisticRating = allGamesStatisticRating.clone();
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PlayerStatistic");
+		sb.append("{playerId=").append(playerId);
+		sb.append(", updateTime=").append(updateTime);
+		sb.append(", lastCleanupTime=").append(lastCleanupTime);
+		sb.append(", activeGames=").append(activeGames);
+		sb.append(", wonGames=").append(wonGames);
+		sb.append(", lostGames=").append(lostGames);
+		sb.append(", drawGames=").append(drawGames);
+		sb.append(", timeouts=").append(timeouts);
+		sb.append(", turnsCount=").append(turnsCount);
+		sb.append(", averageTurnTime=").append(averageTurnTime);
+		sb.append(", lastMoveTime=").append(lastMoveTime);
+		sb.append(", allGamesStatisticRating=").append(allGamesStatisticRating);
+		sb.append('}');
+		return sb.toString();
 	}
 }

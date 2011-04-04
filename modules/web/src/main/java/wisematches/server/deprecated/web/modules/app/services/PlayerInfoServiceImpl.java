@@ -4,7 +4,7 @@ import wisematches.server.deprecated.web.rpc.GenericSecureRemoteService;
 
 public class PlayerInfoServiceImpl extends GenericSecureRemoteService { //implements PlayerInfoService {
 /*    private PlayerManager playerManager;
-    private PlayerStatisticsManager statisticsManager;
+    private PlayerStatisticManager statisticsManager;
     private PlayerSessionsManager playerSessionsManager;
 
     public PlayerInfoServiceImpl() {
@@ -53,7 +53,7 @@ public class PlayerInfoServiceImpl extends GenericSecureRemoteService { //implem
         return playerSessionsManager.isPlayerOnline(player) ? PlayerOnlineState.ONLINE : PlayerOnlineState.OFFLINE;
     }
 
-    public void setPlayerStatisticsManager(PlayerStatisticsManager statisticsManager) {
+    public void setPlayerStatisticManager(PlayerStatisticManager statisticsManager) {
         this.statisticsManager = statisticsManager;
     }
 

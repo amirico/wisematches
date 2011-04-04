@@ -35,6 +35,10 @@ public class RatingChange implements Comparable<RatingChange> {
 	@Column(name = "newRating", nullable = false, updatable = false)
 	private short newRating;
 
+	@Basic
+	@Column(name = "points", nullable = false, updatable = false)
+	private short points;
+
 	/**
 	 * Hibernate constructor only
 	 */
@@ -42,12 +46,13 @@ public class RatingChange implements Comparable<RatingChange> {
 	RatingChange() {
 	}
 
-	public RatingChange(long playerId, long boardId, Date changeDate, short oldRating, short newRating) {
+	public RatingChange(long playerId, long boardId, Date changeDate, short oldRating, short newRating, short points) {
 		this.playerId = playerId;
 		this.boardId = boardId;
 		this.changeDate = changeDate;
 		this.oldRating = oldRating;
 		this.newRating = newRating;
+		this.points = points;
 	}
 
 	public long getPlayerId() {
@@ -74,6 +79,10 @@ public class RatingChange implements Comparable<RatingChange> {
 		return (short) (newRating - oldRating);
 	}
 
+	public short getPoints() {
+		return points;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -83,6 +92,7 @@ public class RatingChange implements Comparable<RatingChange> {
 		sb.append(", changeDate=").append(changeDate);
 		sb.append(", oldRating=").append(oldRating);
 		sb.append(", newRating=").append(newRating);
+		sb.append(", points=").append(points);
 		sb.append('}');
 		return sb.toString();
 	}

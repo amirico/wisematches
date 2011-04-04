@@ -40,10 +40,10 @@ public class PlayerInfoServiceImplTest {
         expect(playerManager.getPlayer(13L)).andReturn(null);
         replay(playerManager);
 
-        final PlayerStatisticsManager statisticsManager = createStrictMock(PlayerStatisticsManager.class);
+        final PlayerStatisticManager statisticsManager = createStrictMock(PlayerStatisticManager.class);
 
         playerInfoService.setPlayerManager(playerManager);
-        playerInfoService.setPlayerStatisticsManager(statisticsManager);
+        playerInfoService.setPlayerStatisticManager(statisticsManager);
 
         try {
             playerInfoService.getShortPlayerInfo(13L);
