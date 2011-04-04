@@ -12,7 +12,7 @@ public interface ScoreCalculation {
 	 *
 	 * @return the word's points.
 	 */
-	int getPoints();
+	short getPoints();
 
 	/**
 	 * If all tiles from hand is used.

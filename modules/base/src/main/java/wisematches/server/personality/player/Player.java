@@ -3,7 +3,6 @@ package wisematches.server.personality.player;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
-import wisematches.server.standing.rating.RatingHistory;
 
 /**
  * The {@code Player} interface represents simple user. This interface is read-only
@@ -53,6 +52,4 @@ public abstract class Player extends Personality {
 
 
 	public abstract short getRating();
-
-	public abstract RatingHistory getRatingHistory();
 }

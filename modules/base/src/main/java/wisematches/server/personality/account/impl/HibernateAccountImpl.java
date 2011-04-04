@@ -1,8 +1,5 @@
 package wisematches.server.personality.account.impl;
 
-//import org.hibernate.annotations.Cache;
-//import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import wisematches.server.personality.account.Account;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;

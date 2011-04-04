@@ -373,7 +373,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 	@Override
-	protected int calculateMovePoints(PlayerMove move) {
+	protected short calculateMovePoints(PlayerMove move) {
 		if (move instanceof MakeWordMove) {
 			final MakeWordMove makeWordMove = (MakeWordMove) move;
 			return scoreEngine.calculateWordScore(makeWordMove.getWord(), this).getPoints();
@@ -587,15 +587,15 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		return false;
 	}
 
-	protected int[] processGameFinished() {
+	protected short[] processGameFinished() {
 		final List<ScribblePlayerHand> hands = getPlayersHands();
-		final int[] res = new int[hands.size()];
+		final short[] res = new short[hands.size()];
 
 		int index = 0;
-		int wonPoints = 0;
 		int wonIndex = -1;
+		short wonPoints = 0;
 		for (ScribblePlayerHand hand : hands) {
-			int losePoints = 0;
+			short losePoints = 0;
 			final Tile[] tiles = hand.getTiles();
 			if (tiles.length == 0) {
 				wonIndex = index;
@@ -605,7 +605,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 				}
 			}
 			wonPoints += losePoints;
-			res[index++] = -losePoints;
+			res[index++] = (short) -losePoints;
 		}
 
 		if (wonIndex != -1) {

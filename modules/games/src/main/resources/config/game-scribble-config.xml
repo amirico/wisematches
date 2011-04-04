@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
     <bean id="tilesBankingHouse" class="wisematches.server.gameplaying.scribble.bank.impl.XMLTilesBankingHouse">
         <property name="banksPath" value="classpath:/banks/*"/>
@@ -32,6 +34,21 @@
         <property name="searchEngine" ref="scribbleSearchEngineManager"/>
     </bean>
 
+    <util:list id="roomsManagerList">
+        <ref bean="scribbleRoomManager"/>
+    </util:list>
+
+    <util:list id="robotBrainsList">
+        <bean class="wisematches.server.gameplaying.scribble.robot.ScribbleRobotBrain"/>
+    </util:list>
+
+
+    <!--
+    <bean class="org.springframework.beans.factory.config.L">
+        <property name=""
+
+    </bean>
+
     <bean id="roomsManager" class="wisematches.server.gameplaying.room.RoomsManager">
         <property name="roomManagers">
             <list>
@@ -48,19 +65,7 @@
         </property>
     </bean>
 
-    <bean id="robotsActivityManager" class="wisematches.server.gameplaying.robot.impl.RobotActivityCenter">
-        <property name="roomsManager" ref="roomsManager"/>
-        <property name="robotBrainManager" ref="robotsBrainManager"/>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="movesExecutor">
-            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-                <property name="corePoolSize" value="1"/>
-                <property name="maxPoolSize" value="5"/>
-                <property name="waitForTasksToCompleteOnShutdown" value="false"/>
-                <property name="keepAliveSeconds" value="60"/>
-            </bean>
-        </property>
-    </bean>
+-->
 
     <!--
     <bean id="ratingsCalculationManager" class="wisematches.server.standing.old.rating.impl.RatingsCalculationCenter">

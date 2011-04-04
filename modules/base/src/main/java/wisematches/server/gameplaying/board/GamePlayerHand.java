@@ -20,7 +20,7 @@ public class GamePlayerHand {
 	private int playerIndex;
 
 	@Column(name = "points")
-	private int points;
+	private short points;
 
 	/**
 	 * This is Hibernate constructor. In subclasses in must be declared as package visibile.
@@ -38,6 +38,12 @@ public class GamePlayerHand {
 	protected GamePlayerHand(long playerId, int playerIndex) {
 		this.playerId = playerId;
 		this.playerIndex = playerIndex;
+	}
+
+	public GamePlayerHand(long playerId, int playerIndex, short points) {
+		this.playerId = playerId;
+		this.playerIndex = playerIndex;
+		this.points = points;
 	}
 
 	/**
@@ -65,7 +71,7 @@ public class GamePlayerHand {
 	 *
 	 * @return the player's points
 	 */
-	public int getPoints() {
+	public short getPoints() {
 		return points;
 	}
 
@@ -75,8 +81,8 @@ public class GamePlayerHand {
 	 * @param delta the delta
 	 * @return increased points.
 	 */
-	int increasePoints(int delta) {
-		points = points + delta;
+	short increasePoints(short delta) {
+		points = (short) (points + delta);
 		return points;
 	}
 

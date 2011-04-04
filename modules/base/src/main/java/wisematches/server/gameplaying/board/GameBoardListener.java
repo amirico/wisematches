@@ -21,11 +21,11 @@ public interface GameBoardListener {
 	/**
 	 * Indicates that game has been finished
 	 *
-	 * @param board		  the game board
-	 * @param gameResolution the game finalization resolution
-	 * @param wonPlayers	 the winners list or empty list if no winners (draw).
-	 * @param <S>            the game settings type
-	 * @param <P>            the player's hand type
+	 * @param board	  the game board
+	 * @param resolution the game finalization resolution
+	 * @param wonPlayers the winners list or empty list if no winners (draw).
+	 * @param <S>        the game settings type
+	 * @param <P>        the player's hand type
 	 */
 	<S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers);
 }

@@ -3,6 +3,8 @@ package wisematches.server.standing.rating;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.personality.Personality;
 
+import java.util.Collection;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -26,6 +28,7 @@ public interface PlayerRatingManager {
 	 *
 	 * @param person the player who's rating must be returned.
 	 * @return the player's rating.
+	 * @throws IllegalArgumentException if specified personality out of this manager.
 	 */
 	short getRating(Personality person);
 
@@ -36,27 +39,23 @@ public interface PlayerRatingManager {
 	 *
 	 * @param player the player id how position should be returned.
 	 * @return the player's position in ratings table starting from 1 or {@code 0} if player is unknown.
+	 * @throws IllegalArgumentException if specified personality out of this manager.
 	 */
 	long getPosition(Personality player);
 
 	/**
-	 * @param player
-	 * @param board
-	 * @return
-	 */
-	RatingChange getRatingChange(Personality player, GameBoard board);
-
-	/**
-	 * @param board
-	 * @return
-	 */
-	RatingChange[] getBoardRatings(GameBoard board);
-
-	/**
-	 * Returns rating history for specified player.
+	 * Returns collection of all changes for specified board.
 	 *
-	 * @param player the player who's rating history should be returned.
-	 * @return the rating changes for specified player.
+	 * @param board the board
+	 * @return collection of rating changes or null if board doesn't exist or not finished yet.
 	 */
-	RatingHistory getRatingHistory(Personality player);
+	Collection<RatingChange> getRatingChanges(GameBoard board);
+
+	/**
+	 * Returns history rating changes for specified player.
+	 *
+	 * @param player the player who's history must be returned.
+	 * @return the all changes for specified player.
+	 */
+	Collection<RatingChange> getRatingChanges(Personality player);
 }

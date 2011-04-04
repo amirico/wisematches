@@ -1,4 +1,4 @@
-package wisematches.server.standing.old.statistic;
+package wisematches.server.standing.statistic;
 
 /**
  * {@code PlayerStatisticListener} notifies clients that player statistic was changed.

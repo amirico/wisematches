@@ -489,7 +489,7 @@ public class ScribbleBoardTest extends TestCase {
 		h2.setTiles(tilesBank.getTiles(9, 12, 15, 18));//defg: 22 points
 		h3.setTiles(new Tile[0]); // winner
 
-		int[] ints = board.processGameFinished();
+		short[] ints = board.processGameFinished();
 		assertEquals(3, ints.length);
 
 		assertEquals(-10, ints[0]); // final points for h1: looser
@@ -532,7 +532,7 @@ public class ScribbleBoardTest extends TestCase {
 		method.setAccessible(true);
 		method.invoke(h3, 1); // Player h3 has 1 points and other have 0 points.
 
-		int[] ints = board.processGameFinished();
+		short[] ints = board.processGameFinished();
 		assertEquals(3, ints.length);
 
 		assertEquals(-10, ints[0]); // final points for h1: looser
