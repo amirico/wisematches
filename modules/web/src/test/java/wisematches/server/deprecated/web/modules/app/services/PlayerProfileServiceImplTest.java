@@ -111,12 +111,12 @@ public class PlayerProfileServiceImplTest {
     public void test_getPlayerStatisticBean() throws UnknownPlayerException {
         final PlayerManager playerManager = createStrictMock(PlayerManager.class);
         final PlayerRatingsManager ratingsManager = createStrictMock(PlayerRatingsManager.class);
-        final PlayerStatisticsManager statisticsManager = createStrictMock(PlayerStatisticsManager.class);
+        final PlayerStatisticManager statisticsManager = createStrictMock(PlayerStatisticManager.class);
 
         final PlayerProfileServiceImpl service = new PlayerProfileServiceImpl();
         service.setPlayerManager(playerManager);
         service.setRatingManager(ratingsManager);
-        service.setPlayerStatisticsManager(statisticsManager);
+        service.setPlayerStatisticManager(statisticsManager);
 
         expect(playerManager.getPlayer(1L)).andReturn(null);
         replay(playerManager);
@@ -181,7 +181,7 @@ public class PlayerProfileServiceImplTest {
         expect(playerManager.getPlayer(14L)).andReturn(p2);
         replay(playerManager);
 
-        final PlayerRatingInfo info = new PlayerRatingInfo();
+        final PlayerStatisticRating info = new PlayerStatisticRating();
         info.setAverageMovesPerGame(1);
         info.setAverageOpponentRating(2);
         info.setAverageRating(3);
@@ -222,7 +222,7 @@ public class PlayerProfileServiceImplTest {
         expect(playerManager.getPlayer(1L)).andReturn(null);
         replay(playerManager);
 
-        final PlayerRatingInfo info = new PlayerRatingInfo();
+        final PlayerStatisticRating info = new PlayerStatisticRating();
         info.setLowestLostOpponentRating(6);
         info.setLowestLostOpponentId(1L);
 

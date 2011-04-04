@@ -41,6 +41,16 @@
         </property>
     </bean>
 
+    <bean id="playerStatisticDao" class="wisematches.server.standing.statistic.impl.PlayerStatisticDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="statisticsManager" class="wisematches.server.standing.statistic.impl.PlayerStatisticManagerImpl">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="playerRatingManager" ref="ratingManager"/>
+        <property name="playerStatisticDao" ref="playerStatisticDao"/>
+    </bean>
+
     <bean id="robotsActivityManager" class="wisematches.server.gameplaying.robot.impl.RobotActivityCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="robotBrainManager" ref="robotsBrainManager"/>
@@ -68,14 +78,6 @@
     </bean>
 
     <!--
-    <bean id="ratingsManagerDao" class="wisematches.server.testimonial.rating.impl.RatingsManagerDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="statisticsManager" class="wisematches.server.testimonial.statistic.impl.HibernatePlayerStatisticsManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
     <bean id="serverPropertiesManager" class="wisematches.server.utils.system.impl.HibernateServerPropertiesManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>

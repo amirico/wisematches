@@ -6,7 +6,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
 /*    private RoomsManager roomsManager;
     private PlayerManager playerManager;
     private PlayerRatingsManager ratingsManager;
-    private PlayerStatisticsManager statisticsManager;
+    private PlayerStatisticManager statisticsManager;
     private CountriesManager countriesManager;
 
     private final Set<PlayerNotification> changeableNotifications;
@@ -61,7 +61,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
 
         updateBeanInfo(player, bean.getPlayerSettingsBean());
 
-        bean.setAllGamesInfo(cratePlayerRating(statistic.getAllGamesRatingInfo()));
+        bean.setAllGamesInfo(cratePlayerRating(statistic.getAllGamesStatisticRating()));
         bean.setNinetyDaysRaing(cratePlayerRating(statistic.getNinetyDaysRatingInfo()));
         bean.setThirtyDaysRaing(cratePlayerRating(statistic.getThirtyDaysRatingInfo()));
         bean.setYearRaing(cratePlayerRating(statistic.getYearRatingInfo()));
@@ -175,7 +175,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         return bean;
     }
 
-    protected PlayerRatingBean cratePlayerRating(PlayerRatingInfo ratingInfo) {
+    protected PlayerRatingBean cratePlayerRating(PlayerStatisticRating ratingInfo) {
         final PlayerRatingBean bean = new PlayerRatingBean();
         bean.setAverageMovesPerGame(ratingInfo.getAverageMovesPerGame());
         bean.setAverageOpponentRating(ratingInfo.getAverageOpponentRating());
@@ -344,7 +344,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
     }
 
 
-    public void setPlayerStatisticsManager(PlayerStatisticsManager statisticsManager) {
+    public void setPlayerStatisticManager(PlayerStatisticManager statisticsManager) {
         this.statisticsManager = statisticsManager;
     }
 

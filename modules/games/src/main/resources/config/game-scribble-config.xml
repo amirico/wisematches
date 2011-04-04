@@ -85,16 +85,16 @@
         <property name="ratingsManagerDao" ref="ratingsManagerDao"/>
     </bean>
 
-    <bean id="statisticsCleanerCenter" class="wisematches.server.standing.old.statistic.impl.StatisticCleanerCenter">
-        <property name="playerStatisticsManager" ref="statisticsManager"/>
+    <bean id="statisticsCleanerCenter" class="wisematches.server.standing.statistic.impl.cleaner.PlayerStatisticCleaner">
+        <property name="playerStatisticManager" ref="statisticsManager"/>
         <property name="roomsManager" ref="roomsManager"/>
         <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
     </bean>
 
     <bean id="statisticCalculationCenter"
-          class="wisematches.server.standing.old.statistic.impl.StatisticCalculationCenter">
+          class="wisematches.server.standing.statistic.impl.StatisticCalculationCenter">
         <property name="roomsManager" ref="roomsManager"/>
-        <property name="playerStatisticsManager" ref="statisticsManager"/>
+        <property name="playerStatisticManager" ref="statisticsManager"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 

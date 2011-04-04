@@ -104,7 +104,7 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 				player.getId());
 	}
 
-	private void processRatingChange(final long playerId, final GameBoard board, final short oldRating, final short newRating) {
+	private void processRatingChange(final long playerId, final GameBoard board, final short oldRating, final short newRating, final short points) {
 		final long boardId = board.getBoardId();
 		final ComputerPlayer computerPlayer = ComputerPlayer.getComputerPlayer(playerId);
 		if (computerPlayer != null) {
@@ -112,7 +112,7 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 		} else {
 			log.info("Process player's rating changed: " + playerId + " on board " + boardId + ": " + oldRating + "->" + newRating);
 
-			final RatingChange entity = new RatingChange(playerId, boardId, new Date(), oldRating, newRating);
+			final RatingChange entity = new RatingChange(playerId, boardId, new Date(), oldRating, newRating, points);
 			if (log.isDebugEnabled()) {
 				log.debug("RatingChange event: " + entity);
 			}
@@ -178,6 +178,10 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
+			if (!board.isRatedGame()) {
+				return;
+			}
+
 			final Collection<P> playersHands = board.getPlayersHands();
 			final GamePlayerHand[] hands = playersHands.toArray(new GamePlayerHand[playersHands.size()]);
 
@@ -192,7 +196,7 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 			final short[] newRatings = ratingSystem.calculateRatings(oldRatings, points);
 			for (int i = 0; i < hands.length; i++) {
 				final GamePlayerHand hand = hands[i];
-				processRatingChange(hand.getPlayerId(), board, oldRatings[i], newRatings[i]);
+				processRatingChange(hand.getPlayerId(), board, oldRatings[i], newRatings[i], hand.getPoints());
 			}
 		}
 	}

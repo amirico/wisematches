@@ -1,4 +1,4 @@
-package wisematches.server.standing.old.statistic.impl;
+package wisematches.server.standing.statistic.impl.cleaner;
 
 import wisematches.server.utils.system.ServerPropertyType;
 

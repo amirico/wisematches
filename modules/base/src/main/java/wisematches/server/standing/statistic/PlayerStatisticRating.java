@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @Embeddable
-public class PlayerRatingInfo implements Serializable {
+public class PlayerStatisticRating implements Serializable, Cloneable {
 	/**
 	 * Average player's rating
 	 */
@@ -45,7 +45,7 @@ public class PlayerRatingInfo implements Serializable {
 	 */
 	private int averageMovesPerGame;
 
-	public PlayerRatingInfo() {
+	public PlayerStatisticRating() {
 	}
 
 	public int getAverageRating() {
@@ -118,5 +118,31 @@ public class PlayerRatingInfo implements Serializable {
 
 	public void setLowestLostOpponentId(long lowestLostOpponentId) {
 		this.lowestLostOpponentId = lowestLostOpponentId;
+	}
+
+	@Override
+	public PlayerStatisticRating clone() {
+		try {
+			return (PlayerStatisticRating) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PlayerStatisticRating");
+		sb.append("{averageMovesPerGame=").append(averageMovesPerGame);
+		sb.append(", averageRating=").append(averageRating);
+		sb.append(", highestRating=").append(highestRating);
+		sb.append(", lowestRating=").append(lowestRating);
+		sb.append(", averageOpponentRating=").append(averageOpponentRating);
+		sb.append(", highestWonOpponentRating=").append(highestWonOpponentRating);
+		sb.append(", highestWonOpponentId=").append(highestWonOpponentId);
+		sb.append(", lowestLostOpponentRating=").append(lowestLostOpponentRating);
+		sb.append(", lowestLostOpponentId=").append(lowestLostOpponentId);
+		sb.append('}');
+		return sb.toString();
 	}
 }

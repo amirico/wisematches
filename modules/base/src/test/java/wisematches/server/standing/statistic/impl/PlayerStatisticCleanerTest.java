@@ -1,4 +1,4 @@
-package wisematches.server.standing.old.statistic.impl;
+package wisematches.server.standing.statistic.impl;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import java.util.Date;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @Ignore
-public class StatisticCleanerCenterTest {
+public class PlayerStatisticCleanerTest {
 	@Test
 	public void test() {
 		Calendar c = Calendar.getInstance();
