@@ -22,7 +22,7 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
     }
 
     protected GamePlayerHand createPlayerHand(Personality player, int i) {
-        return new GamePlayerHand(player.getId());
+        return new GamePlayerHand(player.getId(), 1);
     }
 
     protected boolean checkGameFinished() {

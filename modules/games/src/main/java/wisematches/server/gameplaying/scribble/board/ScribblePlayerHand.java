@@ -4,8 +4,6 @@ import wisematches.server.gameplaying.board.GamePlayerHand;
 import wisematches.server.gameplaying.scribble.Tile;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Arrays;
 
@@ -13,7 +11,7 @@ import java.util.Arrays;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Embeddable
-public final class ScribblePlayerHand extends GamePlayerHand<ScribbleBoard> {
+public final class ScribblePlayerHand extends GamePlayerHand {
     @Transient
     private Tile[] tiles = EMPTY_TILES;
 
@@ -22,8 +20,8 @@ public final class ScribblePlayerHand extends GamePlayerHand<ScribbleBoard> {
     ScribblePlayerHand() {
     }
 
-    public ScribblePlayerHand(long playerId) {
-        super(playerId);
+    public ScribblePlayerHand(long playerId, int playerIndex) {
+        super(playerId, playerIndex);
     }
 
     public Tile[] getTiles() {

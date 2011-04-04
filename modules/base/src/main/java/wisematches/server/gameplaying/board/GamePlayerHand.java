@@ -6,13 +6,11 @@ import javax.persistence.*;
  * <code>GamePlayerHand</code> is a hand of the player. It contains information about player on the board, like
  * it's point, it's items in hand and so on.
  *
- * @param <B> reference to GameBoard that can use this hand. This reference required for Hibernate mapping because
- *            each hand must have link to a board that contains it.
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Embeddable
 @MappedSuperclass
-public class GamePlayerHand<B extends GameBoard<?, ? extends GamePlayerHand<B>>> {
+public class GamePlayerHand {
     @Column(name = "playerId", updatable = false)
     private long playerId;
 
@@ -31,10 +29,12 @@ public class GamePlayerHand<B extends GameBoard<?, ? extends GamePlayerHand<B>>>
     /**
      * Creates new player hand with specified player id and statr points.
      *
-     * @param playerId the player id.
+     * @param playerId    the player id.
+     * @param playerIndex the player index.
      */
-    protected GamePlayerHand(long playerId) {
+    protected GamePlayerHand(long playerId, int playerIndex) {
         this.playerId = playerId;
+        this.playerIndex = playerIndex;
     }
 
     /**

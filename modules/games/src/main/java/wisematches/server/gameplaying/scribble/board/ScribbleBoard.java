@@ -187,13 +187,13 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
     /**
      * Creates new {@code ScrapplePlayerHand} for specified player.
      *
-     * @param player      the player for who hand must be crated.
-     * @param playerIndex
+     * @param player the player for who hand must be crated.
+     * @param index  the player's index
      * @return the created player hand.
      * @see wisematches.server.gameplaying.scribble.board.ScribblePlayerHand
      */
-    protected ScribblePlayerHand createPlayerHand(Personality player, int playerIndex) {
-        return new ScribblePlayerHand(player.getId());
+    protected ScribblePlayerHand createPlayerHand(Personality player, int index) {
+        return new ScribblePlayerHand(player.getId(), index);
     }
 
     private void restoreBoardState() {
