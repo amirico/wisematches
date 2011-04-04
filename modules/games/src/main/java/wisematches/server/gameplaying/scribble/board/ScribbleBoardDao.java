@@ -42,10 +42,9 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
         return (List<Long>) template.find("select board.boardId from wisematches.server.gameplaying.scribble.board.ScribbleBoard " +
                 " board join board.playersIterator.playerHands hands where board.gameResolution is NULL and hands.playerId = ?", player.getId());
 */
-//        final HibernateTemplate template = getHibernateTemplate();
-//        return (List<Long>) template.find("select board.boardId from wisematches.server.gameplaying.scribble.board.ScribbleBoard " +
-//                " board where board.gameResolution is null and board.playersIterator.playerHands.pk.playerId=?", player.getId());
-        return Collections.emptyList();
+        final HibernateTemplate template = getHibernateTemplate();
+        return (List<Long>) template.find("select board.boardId from wisematches.server.gameplaying.scribble.board.ScribbleBoard board" +
+                " where board.gameResolution is null and ? in elements(board.playersIterator.playerHands.playerId)", player.getId());
     }
 
     @SuppressWarnings("unchecked")

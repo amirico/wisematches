@@ -14,9 +14,9 @@ import java.util.*;
  */
 @Embeddable
 final class PlayersIterator<P extends GamePlayerHand> implements Iterator<P> {
+    @OrderBy("playerIndex asc")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "scribble_player", joinColumns = @JoinColumn(name = "boardId"))
-//    @org.hibernate.annotations.IndexColumn(name = "playerIndex")
     private List<P> playerHands;
 
     @Column(name = "currentPlayerIndex")

@@ -8,7 +8,7 @@ import wisematches.server.gameplaying.scribble.Tile;
  */
 public class ScribblePlayerHandTest extends TestCase {
     public void testTiles() {
-        ScribblePlayerHand ph = new ScribblePlayerHand(1);
+        ScribblePlayerHand ph = new ScribblePlayerHand(1, 1);
         ph.setTiles(new Tile[]{new Tile(1, 'A', 1)});
         assertEquals(1, ph.getTiles().length);
 
