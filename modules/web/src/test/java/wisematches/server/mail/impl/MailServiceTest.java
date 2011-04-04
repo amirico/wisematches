@@ -42,7 +42,7 @@ public class MailServiceTest {
 
 	public void asd() throws MailException {
 		final Account p = createMock(Account.class);
-		expect(p.getLanguage()).andReturn(Language.RUSSIAN).anyTimes();
+		expect(p.getLanguage()).andReturn(Language.RU).anyTimes();
 		expect(p.getEmail()).andReturn("support@127.0.0.1").anyTimes();
 		expect(p.getNickname()).andReturn("Mock").anyTimes();
 		replay(p);

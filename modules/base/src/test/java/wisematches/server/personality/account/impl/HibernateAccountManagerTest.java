@@ -131,7 +131,7 @@ public class HibernateAccountManagerTest {
 		final AccountEditor e = new AccountEditor(p);
 		e.setEmail("modified_" + e.getEmail());
 		e.setPassword("modified_" + e.getPassword());
-		e.setLanguage(Language.RUSSIAN);
+		e.setLanguage(Language.RU);
 		e.setMembership(Membership.PLATINUM);
 
 		accountManager.addAccountListener(l);

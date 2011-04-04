@@ -24,11 +24,11 @@ public class CSVCountriesManagerTest {
 		manager.setCsvCountriesFile(new ClassPathResource("/i18n/listOfCountries.csv"));
 
 		assertEquals(2, manager.getLanguages().size());
-		assertTrue(manager.getLanguages().contains(Language.ENGLISH));
-		assertTrue(manager.getLanguages().contains(Language.RUSSIAN));
+		assertTrue(manager.getLanguages().contains(Language.EN));
+		assertTrue(manager.getLanguages().contains(Language.RU));
 
-		assertEquals(244, manager.getCountries(Language.ENGLISH).size());
-		assertEquals(244, manager.getCountries(Language.RUSSIAN).size());
+		assertEquals(244, manager.getCountries(Language.EN).size());
+		assertEquals(244, manager.getCountries(Language.RU).size());
 		assertEquals(244, manager.getCountries(null).size());  // English locale
 
 		final Collection<Language> localeCollection = manager.getLanguages();
@@ -39,8 +39,8 @@ public class CSVCountriesManagerTest {
 					countries, manager.getCountries(locale));
 		}
 
-		assertEquals("Brazil", manager.getCountry("br", Language.ENGLISH).getName());
-		assertEquals("Бразилия", manager.getCountry("br", Language.RUSSIAN).getName());
+		assertEquals("Brazil", manager.getCountry("br", Language.EN).getName());
+		assertEquals("Бразилия", manager.getCountry("br", Language.RU).getName());
 		assertEquals("Brazil", manager.getCountry("br", null).getName());
 	}
 }

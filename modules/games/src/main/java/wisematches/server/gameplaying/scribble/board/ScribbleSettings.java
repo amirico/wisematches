@@ -60,6 +60,9 @@ public final class ScribbleSettings extends GameSettings {
 	public static class Builder extends GameSettings.Builder {
 		private String language;
 
+		public Builder() {
+		}
+
 		@Override
 		public ScribbleSettings build() {
 			return new ScribbleSettings(title, language, daysPerMove, ratedGame, scratch);

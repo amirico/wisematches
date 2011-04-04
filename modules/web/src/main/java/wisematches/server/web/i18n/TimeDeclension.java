@@ -58,7 +58,7 @@ public final class TimeDeclension {
 
 	public static TimeDeclension declension(Language l) {
 		switch (l) {
-			case RUSSIAN:
+			case RU:
 				return RUSSIAN;
 		}
 		return ENGLISH;

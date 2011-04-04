@@ -60,7 +60,7 @@ public class ComputerPlayer extends Player {
 	 */
 	@Override
 	public Language getLanguage() {
-		return Language.ENGLISH;
+		return Language.EN;
 	}
 
 	/**

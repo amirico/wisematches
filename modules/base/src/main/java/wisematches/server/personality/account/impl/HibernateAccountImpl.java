@@ -1,14 +1,13 @@
 package wisematches.server.personality.account.impl;
 
-import org.hibernate.annotations.*;
+//import org.hibernate.annotations.Cache;
+//import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import wisematches.server.personality.account.Account;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Implementation of player that contains Hibernate annotations and can be stored into database using Hibernate
@@ -21,38 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "account_personality")
-@org.hibernate.annotations.Table
-		(appliesTo = "account_personality",
-				indexes = {
-						@Index(name = "id", columnNames = {"id"}),
-						@Index(name = "email", columnNames = {"email"}),
-						@Index(name = "nickname", columnNames = {"nickname"})
-				}
-		)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-/*
-@NamedQueries({
-		@NamedQuery
-				(name = "PlayerPosition", query =
-						"SELECT count( a.id ), a.id " +
-								"FROM wisematches.server.core.account.impl.PlayerImpl a, wisematches.server.core.account.impl.PlayerImpl b " +
-								"WHERE a.id = ? AND (b.rating > a.rating OR (b.rating = a.rating AND b.id <= a.id)) GROUP BY a.id",
-						hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
-				)
-})
-*/
-@TypeDefs(
-		{
-				@TypeDef(
-						name = "language",
-						typeClass = LanguageUserType.class
-				),
-				@TypeDef(
-						name = "membership",
-						typeClass = MembershipUserType.class
-				)
-		}
-)
+@Cacheable(true)
 public class HibernateAccountImpl extends Account {
 	@Basic
 	@Column(name = "nickname", nullable = false, length = 100, updatable = false)
@@ -66,12 +34,12 @@ public class HibernateAccountImpl extends Account {
 	@Column(name = "email", nullable = false, length = 150)
 	private String email;
 
-	@Type(type = "language")
 	@Column(name = "language")
+	@Enumerated(EnumType.STRING)
 	private Language language;
 
-	@Type(type = "membership")
 	@Column(name = "membership")
+	@Enumerated(EnumType.STRING)
 	private Membership membership;
 
 	/**
