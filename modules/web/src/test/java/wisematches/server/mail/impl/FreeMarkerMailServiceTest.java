@@ -35,8 +35,8 @@ public class FreeMarkerMailServiceTest {
 
 	@BeforeClass
 	public static void initMessageSource() {
-		messageSource.addMessage("mail.address.support", Language.RUSSIAN.locale(), "support@mock.wm");
-		messageSource.addMessage("mail.personal.support", Language.RUSSIAN.locale(), "Mock Support");
+		messageSource.addMessage("mail.address.support", Language.RU.locale(), "support@mock.wm");
+		messageSource.addMessage("mail.personal.support", Language.RU.locale(), "Mock Support");
 	}
 
 	@Before
@@ -102,7 +102,7 @@ public class FreeMarkerMailServiceTest {
 	@Test
 	public void testPreparePlayerMessage() throws Exception {
 		final Account p = createMock(Account.class);
-		expect(p.getLanguage()).andReturn(Language.RUSSIAN);
+		expect(p.getLanguage()).andReturn(Language.RU);
 		expect(p.getNickname()).andReturn("Mock Player");
 		expect(p.getEmail()).andReturn("player@mock.wm");
 		replay(p);
@@ -128,6 +128,6 @@ public class FreeMarkerMailServiceTest {
 
 	@Test
 	public void testGetTemplate() throws Exception {
-		assertNotNull(markerMailService.getTemplate("mock", Language.ENGLISH));
+		assertNotNull(markerMailService.getTemplate("mock", Language.EN));
 	}
 }

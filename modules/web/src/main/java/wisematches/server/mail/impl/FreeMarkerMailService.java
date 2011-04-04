@@ -88,7 +88,7 @@ public class FreeMarkerMailService implements MailService {
 		return new MimeMessagePreparator() {
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				try {
-					final Language language = Language.ENGLISH;
+					final Language language = Language.EN;
 					final Template template = getTemplate(msgCode, language);
 
 					final Map<String, Object> variables = new HashMap<String, Object>();

@@ -16,16 +16,16 @@ public enum Language {
 	/**
 	 * English language.
 	 */
-	ENGLISH(new Locale("en")),
+	EN(new Locale("en")),
 	/**
 	 * Russian language.
 	 */
-	RUSSIAN(new Locale("ru"));
+	RU(new Locale("ru"));
 
 	/**
 	 * Default language which should be used if another is not specified.
 	 */
-	public static final Language DEFAULT = ENGLISH;
+	public static final Language DEFAULT = EN;
 
 	private final String code;
 	private final Locale locale;
@@ -63,10 +63,10 @@ public enum Language {
 		if (code == null) {
 			return null;
 		}
-		if (ENGLISH.code.equalsIgnoreCase(code)) {
-			return ENGLISH;
-		} else if (RUSSIAN.code.equalsIgnoreCase(code)) {
-			return RUSSIAN;
+		if (EN.code.equalsIgnoreCase(code)) {
+			return EN;
+		} else if (RU.code.equalsIgnoreCase(code)) {
+			return RU;
 		}
 		return null;
 	}

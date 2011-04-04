@@ -68,7 +68,7 @@ public class PlayerProfileServiceImplTest {
         player.setEmail("test@test.en");
         expect(player.getPlayerProfile()).andReturn(profile);
         expect(player.getPlayerNotifications()).andReturn(notifications);
-        player.setLanguage(Language.RUSSIAN);
+        player.setLanguage(Language.RU);
         replay(player);
 
         final PlayerSessionBean bean = createMock(PlayerSessionBean.class);
@@ -240,7 +240,7 @@ public class PlayerProfileServiceImplTest {
         final PlayerSettingsBean result = new PlayerSettingsBean();
 
         final CountriesManager manager = createStrictMock(CountriesManager.class);
-        expect(manager.getCountry("en", Language.ENGLISH)).andReturn(new Country("en", "Test Country", Language.ENGLISH));
+        expect(manager.getCountry("en", Language.EN)).andReturn(new Country("en", "Test Country", Language.EN));
         replay(manager);
 
         final PlayerProfileServiceImpl service = new PlayerProfileServiceImpl();
@@ -254,13 +254,13 @@ public class PlayerProfileServiceImplTest {
 
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         RemoteServiceContextAccessor.setRequest(request);
-        expect(request.getAttribute(Language.class.getSimpleName())).andReturn(Language.ENGLISH);
+        expect(request.getAttribute(Language.class.getSimpleName())).andReturn(Language.EN);
         replay(request);
 
 
-        final Player player = createPlayer(13L, Language.RUSSIAN, dateOfBird, Gender.FEMALE, 18, "en", disabled);
+        final Player player = createPlayer(13L, Language.RU, dateOfBird, Gender.FEMALE, 18, "en", disabled);
         service.updateBeanInfo(player, result);
-        checkPlayerSettingsBean(result, 13L, Language.RUSSIAN, "en", "Test Country", dateOfBird, PlayerGender.FEMALE, 18, disabled); //12 + 6
+        checkPlayerSettingsBean(result, 13L, Language.RU, "en", "Test Country", dateOfBird, PlayerGender.FEMALE, 18, disabled); //12 + 6
 
         verify(player, manager, request);
     }

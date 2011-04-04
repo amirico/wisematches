@@ -127,7 +127,7 @@ public class EMailNotificationsSenderTest extends AbstractTransactionalDataSourc
 		expect(p.getId()).andReturn(id).anyTimes();
 		expect(p.getNickname()).andReturn("MockPlayer" + id).anyTimes();
 		expect(p.getEmail()).andReturn("test@localhost");
-		expect(p.getLanguage()).andReturn(Language.RUSSIAN);
+		expect(p.getLanguage()).andReturn(Language.RU);
 		replay(p);
 		return p;
 	}

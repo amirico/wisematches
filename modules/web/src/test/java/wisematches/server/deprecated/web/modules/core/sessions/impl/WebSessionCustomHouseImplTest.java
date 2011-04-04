@@ -17,7 +17,7 @@ public class WebSessionCustomHouseImplTest {
 	@Test
 	public void test_playerLogin() {
 		final Player p = createMock(Player.class);
-		expect(p.getLanguage()).andReturn(Language.RUSSIAN);
+		expect(p.getLanguage()).andReturn(Language.RU);
 		p.setLastSigninDate(isA(Date.class));
 		replay(p);
 
@@ -25,7 +25,7 @@ public class WebSessionCustomHouseImplTest {
 		expect(ss.getId()).andReturn(SESSION_ID);
 		ss.setAttribute(Player.class.getName(), p);
 		ss.setMaxInactiveInterval(1000);
-		ss.setAttribute(Language.class.getName(), Language.RUSSIAN);
+		ss.setAttribute(Language.class.getName(), Language.RU);
 		replay(ss);
 
 		final PlayerManager playerManager = createStrictMock(PlayerManager.class);
