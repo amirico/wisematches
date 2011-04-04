@@ -7,10 +7,10 @@ import org.springframework.test.AbstractTransactionalDataSourceSpringContextTest
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import wisematches.server.standing.old.statistic.PlayerRatingInfo;
-import wisematches.server.standing.old.statistic.PlayerStatistic;
-import wisematches.server.standing.old.statistic.PlayerStatisticListener;
-import wisematches.server.standing.old.statistic.PlayerStatisticsManager;
+import wisematches.server.standing.statistic.PlayerRatingInfo;
+import wisematches.server.standing.statistic.PlayerStatistic;
+import wisematches.server.standing.statistic.PlayerStatisticListener;
+import wisematches.server.standing.statistic.PlayerStatisticsManager;
 
 import java.util.Date;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		final Map<String, EntityPersister> classMetadata = sessionFactory.getAllClassMetadata();
 		for (EntityPersister ep : classMetadata.values()) {
 			if (ep.hasCache()) {
-				sessionFactory.evictEntity(ep.getCache().getRegionName());
+//				sessionFactory.evictEntity(ep.getCache().getRegionName());
 			}
 		}
 
@@ -52,7 +52,7 @@ public class HibernateStatisticsManagerTest extends AbstractTransactionalDataSou
 		final Map<String, AbstractCollectionPersister> collMetadata = sessionFactory.getAllCollectionMetadata();
 		for (AbstractCollectionPersister acp : collMetadata.values()) {
 			if (acp.hasCache()) {
-				sessionFactory.evictCollection(acp.getCache().getRegionName());
+//				sessionFactory.evictCollection(acp.getCache().getRegionName());
 			}
 		}
 	}

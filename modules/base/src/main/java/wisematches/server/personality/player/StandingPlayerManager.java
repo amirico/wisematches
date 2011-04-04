@@ -6,7 +6,6 @@ import wisematches.server.personality.account.AccountManager;
 import wisematches.server.personality.player.computer.ComputerPlayer;
 import wisematches.server.personality.player.member.MemberPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
-import wisematches.server.standing.rating.RatingHistory;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -61,10 +60,6 @@ public class StandingPlayerManager implements PlayerManager {
 
 	short getRating(StandingPlayer player) {
 		return ratingManager.getRating(player);
-	}
-
-	RatingHistory getRatingHistory(StandingPlayer player) {
-		return ratingManager.getRatingHistory(player);
 	}
 
 	public void setAccountManager(AccountManager accountManager) {

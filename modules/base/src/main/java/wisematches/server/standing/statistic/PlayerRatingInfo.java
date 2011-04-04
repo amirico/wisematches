@@ -1,4 +1,4 @@
-package wisematches.server.standing.old.statistic;
+package wisematches.server.standing.statistic;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;

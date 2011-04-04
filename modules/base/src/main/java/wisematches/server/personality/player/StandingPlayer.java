@@ -2,7 +2,6 @@ package wisematches.server.personality.player;
 
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
-import wisematches.server.standing.rating.RatingHistory;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -29,10 +28,5 @@ public abstract class StandingPlayer extends Player {
 	@Override
 	public short getRating() {
 		return standingPlayerManager.getRating(this);
-	}
-
-	@Override
-	public RatingHistory getRatingHistory() {
-		return standingPlayerManager.getRatingHistory(this);
 	}
 }

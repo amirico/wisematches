@@ -51,7 +51,7 @@ public class AbstractScoreEngine implements ScoreEngine {
 
 		int index = 0;
 		int handTilesCount = 0;
-		int points = 0;
+		short points = 0;
 		int mult = 1;
 		for (Word.IteratorItem item : word) {
 			final int row = item.getRow();
@@ -118,19 +118,19 @@ public class AbstractScoreEngine implements ScoreEngine {
 	}
 
 	private static final class ScoreCalculationImpl implements ScoreCalculation {
-		private final int points;
+		private final short points;
 		private final boolean allFromHand;
 		private final ScoreBonus.Type[] bonuses;
 		private final String formula;
 
-		private ScoreCalculationImpl(int points, boolean allFromHand, ScoreBonus.Type[] bonuses, String formula) {
+		private ScoreCalculationImpl(short points, boolean allFromHand, ScoreBonus.Type[] bonuses, String formula) {
 			this.points = points;
 			this.allFromHand = allFromHand;
 			this.bonuses = bonuses;
 			this.formula = formula;
 		}
 
-		public int getPoints() {
+		public short getPoints() {
 			return points;
 		}
 

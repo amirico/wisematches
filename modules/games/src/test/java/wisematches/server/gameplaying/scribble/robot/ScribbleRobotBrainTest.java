@@ -36,6 +36,9 @@ public class ScribbleRobotBrainTest {
 	private Word w3 = new Word(new Position(9, 9), Direction.VERTICAL, new Tile(1, 'a', 1), new Tile(2, 'b', 2));
 	private Word w4 = new Word(new Position(10, 10), Direction.VERTICAL, new Tile(1, 'a', 1), new Tile(2, 'b', 2));
 
+	public ScribbleRobotBrainTest() {
+	}
+
 	@Test
 	public void test_selectResultWordDull() {
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
@@ -55,7 +58,7 @@ public class ScribbleRobotBrainTest {
 		final TilesPlacement tilesPlacement = createNiceMock(TilesPlacement.class);
 
 		final ScoreCalculation calculation = createStrictMock(ScoreCalculation.class);
-		expect(calculation.getPoints()).andReturn(10).andReturn(20).andReturn(30).andReturn(5);
+		expect(calculation.getPoints()).andReturn((short) 10).andReturn((short) 20).andReturn((short) 30).andReturn((short) 5);
 		replay(calculation);
 
 		final ScoreEngine scoreEngine = createStrictMock(ScoreEngine.class);

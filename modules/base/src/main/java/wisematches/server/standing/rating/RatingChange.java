@@ -1,5 +1,6 @@
 package wisematches.server.standing.rating;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -9,19 +10,41 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Entity
+@Table(name = "rating_history")
+@IdClass(RatingChangePK.class)
 public class RatingChange implements Comparable<RatingChange> {
+	@Id
+	@Column(name = "playerId", nullable = false, updatable = false)
 	private long playerId;
-	private long gameBoardId;
+
+	@Id
+	@Column(name = "boardId", nullable = false, updatable = false)
+	private long boardId;
+
+	@Basic
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "time", nullable = false, updatable = false)
 	private Date changeDate;
+
+	@Basic
+	@Column(name = "oldRating", nullable = false, updatable = false)
 	private short oldRating;
+
+	@Basic
+	@Column(name = "newRating", nullable = false, updatable = false)
 	private short newRating;
 
+	/**
+	 * Hibernate constructor only
+	 */
+	@Deprecated
 	RatingChange() {
 	}
 
-	public RatingChange(long playerId, long gameBoardId, Date changeDate, short oldRating, short newRating) {
+	public RatingChange(long playerId, long boardId, Date changeDate, short oldRating, short newRating) {
 		this.playerId = playerId;
-		this.gameBoardId = gameBoardId;
+		this.boardId = boardId;
 		this.changeDate = changeDate;
 		this.oldRating = oldRating;
 		this.newRating = newRating;
@@ -32,7 +55,7 @@ public class RatingChange implements Comparable<RatingChange> {
 	}
 
 	public long getGameBoardId() {
-		return gameBoardId;
+		return boardId;
 	}
 
 	public Date getChangeDate() {
@@ -56,7 +79,7 @@ public class RatingChange implements Comparable<RatingChange> {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("RatingChange");
 		sb.append("{playerId=").append(playerId);
-		sb.append(", gameBoardId=").append(gameBoardId);
+		sb.append(", gameBoardId=").append(boardId);
 		sb.append(", changeDate=").append(changeDate);
 		sb.append(", oldRating=").append(oldRating);
 		sb.append(", newRating=").append(newRating);
