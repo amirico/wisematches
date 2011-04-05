@@ -1,6 +1,7 @@
 package wisematches.server.standing.statistic;
 
 import wisematches.server.personality.Personality;
+import wisematches.server.standing.statistic.impl.HibernatePlayerStatistic;
 
 /**
  * Statistics manager allows get statistic for specified player. This manager can use database or any
@@ -21,5 +22,5 @@ public interface PlayerStatisticManager {
 	 * @param personality the player id.
 	 * @return the player statistic.
 	 */
-	PlayerStatistic getPlayerStatistic(Personality personality);
+	HibernatePlayerStatistic getPlayerStatistic(Personality personality);
 }

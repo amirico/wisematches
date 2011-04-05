@@ -39,20 +39,46 @@ public class PlayerStatisticDaoTest {
 	@Test
 	public void test_playerStatistic() throws InterruptedException {
 		final Personality person = Personality.person(1L);
-		final PlayerStatistic statistic = new PlayerStatistic(person);
+		final HibernatePlayerStatistic statistic = new HibernatePlayerStatistic(person);
 		final long time = System.currentTimeMillis() - 1000;
 
 		statistic.setAverageTurnTime(1);
-		statistic.setDrawGames(2);
+		statistic.incrementDrawGames();
+		statistic.incrementDrawGames();
 		statistic.setLastMoveTime(new Date(300000));
-		statistic.setLostGames(4);
-		statistic.setTimeouts(5);
-		statistic.setTurnsCount(6);
-		statistic.setWonGames(7);
-		statistic.setActiveGames(8);
+		statistic.incrementLostGames();
+		statistic.incrementLostGames();
+		statistic.incrementLostGames();
+		statistic.incrementLostGames();
+		statistic.incrementTimeouts();
+		statistic.incrementTimeouts();
+		statistic.incrementTimeouts();
+		statistic.incrementTimeouts();
+		statistic.incrementTimeouts();
+		statistic.incrementTurnsCount();
+		statistic.incrementTurnsCount();
+		statistic.incrementTurnsCount();
+		statistic.incrementTurnsCount();
+		statistic.incrementTurnsCount();
+		statistic.incrementTurnsCount();
+		statistic.incrementWonGames();
+		statistic.incrementWonGames();
+		statistic.incrementWonGames();
+		statistic.incrementWonGames();
+		statistic.incrementWonGames();
+		statistic.incrementWonGames();
+		statistic.incrementWonGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
+		statistic.incrementActiveGames();
 		playerStatisticDao.savePlayerStatistic(person, statistic);
 
-		final PlayerStatisticRating ri1 = statistic.getAllGamesStatisticRating();
+		final HibernatePlayerStatisticRating ri1 = statistic.getAllGamesStatisticRating();
 		ri1.setHighestRating(1);
 		ri1.setLowestRating(2);
 		ri1.setAverageMovesPerGame(3);
@@ -65,7 +91,7 @@ public class PlayerStatisticDaoTest {
 		playerStatisticDao.savePlayerStatistic(person, statistic);
 
 /*
-		final PlayerStatisticRating ri2 = statistic.getNinetyDaysRatingInfo();
+		final HibernatePlayerStatisticRating ri2 = statistic.getNinetyDaysRatingInfo();
 		ri2.setHighestRating(10);
 		ri2.setLowestRating(20);
 		ri2.setAverageMovesPerGame(30);
@@ -77,7 +103,7 @@ public class PlayerStatisticDaoTest {
 		ri2.setLowestLostOpponentId(90);
 		playerStatisticManager.updatePlayerStatistic(statistic);
 
-		final PlayerStatisticRating ri3 = statistic.getThirtyDaysRatingInfo();
+		final HibernatePlayerStatisticRating ri3 = statistic.getThirtyDaysRatingInfo();
 		ri3.setHighestRating(100);
 		ri3.setLowestRating(200);
 		ri3.setAverageMovesPerGame(300);
@@ -89,7 +115,7 @@ public class PlayerStatisticDaoTest {
 		ri3.setLowestLostOpponentId(900);
 		playerStatisticManager.updatePlayerStatistic(statistic);
 
-		final PlayerStatisticRating ri4 = statistic.getYearRatingInfo();
+		final HibernatePlayerStatisticRating ri4 = statistic.getYearRatingInfo();
 		ri4.setHighestRating(1000);
 		ri4.setLowestRating(2000);
 		ri4.setAverageMovesPerGame(3000);
@@ -127,7 +153,7 @@ public class PlayerStatisticDaoTest {
 		assertEquals(9, sri1.getLowestLostOpponentId());
 
 /*
-		final PlayerStatisticRating sri2 = s.getNinetyDaysRatingInfo();
+		final HibernatePlayerStatisticRating sri2 = s.getNinetyDaysRatingInfo();
 		assertEquals(10, sri2.getHighestRating());
 		assertEquals(20, sri2.getLowestRating());
 		assertEquals(30, sri2.getAverageMovesPerGame());
@@ -138,7 +164,7 @@ public class PlayerStatisticDaoTest {
 		assertEquals(80, sri2.getLowestLostOpponentRating());
 		assertEquals(90, sri2.getLowestLostOpponentId());
 
-		final PlayerStatisticRating sri3 = s.getThirtyDaysRatingInfo();
+		final HibernatePlayerStatisticRating sri3 = s.getThirtyDaysRatingInfo();
 		assertEquals(100, sri3.getHighestRating());
 		assertEquals(200, sri3.getLowestRating());
 		assertEquals(300, sri3.getAverageMovesPerGame());
@@ -149,7 +175,7 @@ public class PlayerStatisticDaoTest {
 		assertEquals(800, sri3.getLowestLostOpponentRating());
 		assertEquals(900, sri3.getLowestLostOpponentId());
 
-		final PlayerStatisticRating sri4 = statistic.getYearRatingInfo();
+		final HibernatePlayerStatisticRating sri4 = statistic.getYearRatingInfo();
 		assertEquals(1000, sri4.getHighestRating());
 		assertEquals(2000, sri4.getLowestRating());
 		assertEquals(3000, sri4.getAverageMovesPerGame());
