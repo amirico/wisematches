@@ -7,10 +7,12 @@ import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.personality.Personality;
+import wisematches.server.personality.account.Account;
+import wisematches.server.personality.account.AccountListener;
+import wisematches.server.personality.account.AccountManager;
 import wisematches.server.personality.player.computer.ComputerPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
-import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticListener;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
 
@@ -27,9 +29,11 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	private final Map<Personality, ReentrantLock> locksMap = new HashMap<Personality, ReentrantLock>();
 
 	private RoomsManager roomsManager;
+	private AccountManager accountManager;
 	private PlayerRatingManager ratingManager;
 	private PlayerStatisticDao playerStatisticDao;
 
+	private final TheAccountListener accountListener = new TheAccountListener();
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 	private final Collection<PlayerStatisticListener> listeners = new CopyOnWriteArraySet<PlayerStatisticListener>();
 
@@ -292,7 +296,7 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	protected void updatePlayerStatistic(Personality personality, HibernatePlayerStatistic statistic) {
 		statistic.setUpdateTime(new Date());
 
-		playerStatisticDao.savePlayerStatistic(personality, statistic);
+		playerStatisticDao.savePlayerStatistic(statistic);
 
 		for (PlayerStatisticListener listener : listeners) {
 			listener.playerStatisticUpdated(personality, statistic);
@@ -317,7 +321,19 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		}
 	}
 
-	public void setPlayerRatingManager(PlayerRatingManager ratingManager) {
+	public void setAccountManager(AccountManager accountManager) {
+		if (this.accountManager != null) {
+			this.accountManager.removeAccountListener(accountListener);
+		}
+
+		this.accountManager = accountManager;
+
+		if (this.accountManager != null) {
+			this.accountManager.addAccountListener(accountListener);
+		}
+	}
+
+	public void setRatingManager(PlayerRatingManager ratingManager) {
 		this.ratingManager = ratingManager;
 	}
 
@@ -342,6 +358,25 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 			processGameFinished(board, resolution, wonPlayers);
+		}
+	}
+
+	private class TheAccountListener implements AccountListener {
+		@Override
+		public void accountCreated(Account account) {
+			playerStatisticDao.savePlayerStatistic(new HibernatePlayerStatistic(account));
+		}
+
+		@Override
+		public void accountRemove(Account account) {
+			HibernatePlayerStatistic hibernatePlayerStatistic = playerStatisticDao.loadPlayerStatistic(account);
+			if (hibernatePlayerStatistic != null) {
+				playerStatisticDao.removePlayerStatistic(hibernatePlayerStatistic);
+			}
+		}
+
+		@Override
+		public void accountUpdated(Account oldAccount, Account newAccount) {
 		}
 	}
 }
