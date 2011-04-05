@@ -51,8 +51,8 @@ public class PlayerStatisticCleaner {
 //
 //                playerStatisticManager.lockPlayerStatistic(playerId);
 //                try {
-//                    final PlayerStatistic statistic = playerStatisticManager.getPlayerStatistic(playerId);
-//                    final PlayerStatisticRating ratingInfo = statistic.getYearRatingInfo();
+//                    final HibernatePlayerStatistic statistic = playerStatisticManager.getPlayerStatistic(playerId);
+//                    final HibernatePlayerStatisticRating ratingInfo = statistic.getYearRatingInfo();
 //
 ///*
 //                    final long cleanupTime = statistic.getLastCleanupTime();

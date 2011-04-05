@@ -40,7 +40,7 @@ public class PlayerEventProducerTest {
         producer.setPlayerStatisticManager(manager);
 
         // Nothing to do
-        playerStatisticListener.playerStatisticUpdated(12L, new PlayerStatistic(12L));
+        playerStatisticListener.playerStatisticUpdated(12L, new HibernatePlayerStatistic(12L));
 
         final EventNotificator notificator = createStrictMock(EventNotificator.class);
         notificator.fireEvent(cmp(new PlayerStatisticEvent(12L), new Comparator<PlayerStatisticEvent>() {
@@ -51,10 +51,10 @@ public class PlayerEventProducerTest {
         replay(notificator);
 
         producer.activateProducer(notificator);
-        playerStatisticListener.playerStatisticUpdated(12L, new PlayerStatistic(12L));
+        playerStatisticListener.playerStatisticUpdated(12L, new HibernatePlayerStatistic(12L));
 
         producer.deactivateProducer();
-        playerStatisticListener.playerStatisticUpdated(12L, new PlayerStatistic(12L));
+        playerStatisticListener.playerStatisticUpdated(12L, new HibernatePlayerStatistic(12L));
 
         verify(manager, notificator);
     }

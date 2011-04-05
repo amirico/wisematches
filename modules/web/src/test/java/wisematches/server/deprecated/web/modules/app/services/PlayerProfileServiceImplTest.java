@@ -132,7 +132,7 @@ public class PlayerProfileServiceImplTest {
         expect(playerManager.getPlayer(1L)).andReturn(player);
         replay(playerManager);
 
-        final PlayerStatistic statistic = new PlayerStatistic(1L);
+        final HibernatePlayerStatistic statistic = new HibernatePlayerStatistic(1L);
         statistic.setActiveGames(1);
         statistic.setAverageTurnTime(2);
         statistic.setDrawGames(3);
@@ -181,7 +181,7 @@ public class PlayerProfileServiceImplTest {
         expect(playerManager.getPlayer(14L)).andReturn(p2);
         replay(playerManager);
 
-        final PlayerStatisticRating info = new PlayerStatisticRating();
+        final HibernatePlayerStatisticRating info = new HibernatePlayerStatisticRating();
         info.setAverageMovesPerGame(1);
         info.setAverageOpponentRating(2);
         info.setAverageRating(3);
@@ -222,7 +222,7 @@ public class PlayerProfileServiceImplTest {
         expect(playerManager.getPlayer(1L)).andReturn(null);
         replay(playerManager);
 
-        final PlayerStatisticRating info = new PlayerStatisticRating();
+        final HibernatePlayerStatisticRating info = new HibernatePlayerStatisticRating();
         info.setLowestLostOpponentRating(6);
         info.setLowestLostOpponentId(1L);
 

@@ -5,7 +5,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.personality.Personality;
-import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.Date;
 
@@ -17,12 +16,12 @@ class PlayerStatisticDao extends HibernateDaoSupport {
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	PlayerStatistic loadPlayerStatistic(Personality personality) {
-		return getHibernateTemplate().get(PlayerStatistic.class, personality.getId());
+	HibernatePlayerStatistic loadPlayerStatistic(Personality personality) {
+		return getHibernateTemplate().get(HibernatePlayerStatistic.class, personality.getId());
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	void savePlayerStatistic(Personality personality, PlayerStatistic statistic) {
+	void savePlayerStatistic(Personality personality, HibernatePlayerStatistic statistic) {
 		statistic.setUpdateTime(new Date());
 
 		HibernateTemplate hibernateTemplate = getHibernateTemplate();

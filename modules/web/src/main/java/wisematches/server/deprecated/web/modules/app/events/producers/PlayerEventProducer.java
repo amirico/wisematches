@@ -63,7 +63,7 @@ public class PlayerEventProducer {//implements EventProducer {
     }
 
     private class ThePlayerStatisticListener implements PlayerStatisticListener {
-        public void playerStatisticUpdated(long playerId, PlayerStatistic statistic) {
+        public void playerStatisticUpdated(long playerId, HibernatePlayerStatistic statistic) {
             if (notificator != null) {
                 notificator.fireEvent(new PlayerStatisticEvent(playerId));
             }

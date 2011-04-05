@@ -61,7 +61,7 @@ public class PlayerInfoServiceImplTest {
         expect(playerManager.getPlayer(13L)).andReturn(player);
         replay(playerManager);
 
-        final PlayerStatistic value = new PlayerStatistic(13L);
+        final HibernatePlayerStatistic value = new HibernatePlayerStatistic(13L);
         value.setWonGames(2);
         value.setLostGames(1);
         value.setDrawGames(0);

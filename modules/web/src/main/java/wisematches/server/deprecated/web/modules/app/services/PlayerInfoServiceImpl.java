@@ -34,7 +34,7 @@ public class PlayerInfoServiceImpl extends GenericSecureRemoteService { //implem
             throw new UnknownPlayerException();
         }
 
-        final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
+        final HibernatePlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
 
         final ShortPlayerInfo bean = new ShortPlayerInfo(playerId, player.getNickname(), getMemberType(player), player.getRating());
         bean.setMaxRatings(statistic.getNinetyDaysRatingInfo().getHighestRating());

@@ -38,7 +38,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         }
 
         final long playerPosition = ratingsManager.getPlayerPosition(playerId);
-        final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
+        final HibernatePlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
 
         final PlayerProfileBean bean = new PlayerProfileBean();
         bean.setActiveGames(statistic.getActiveGames());
@@ -86,7 +86,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
             log.debug("Get player statistic info: " + playerId);
         }
 
-        final PlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
+        final HibernatePlayerStatistic statistic = statisticsManager.getPlayerStatistic(playerId);
 
         final PlayerStatisticBean bean = new PlayerStatisticBean();
         bean.setCurrentRating(player.getRating());
@@ -175,7 +175,7 @@ public class PlayerProfileServiceImpl extends GenericSecureRemoteService {//} im
         return bean;
     }
 
-    protected PlayerRatingBean cratePlayerRating(PlayerStatisticRating ratingInfo) {
+    protected PlayerRatingBean cratePlayerRating(HibernatePlayerStatisticRating ratingInfo) {
         final PlayerRatingBean bean = new PlayerRatingBean();
         bean.setAverageMovesPerGame(ratingInfo.getAverageMovesPerGame());
         bean.setAverageOpponentRating(ratingInfo.getAverageOpponentRating());
