@@ -33,40 +33,45 @@ public class AccountEditor {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public AccountEditor setEmail(String email) {
 		this.email = email;
+		return this;
 	}
 
 	public String getNickname() {
 		return nickname;
 	}
 
-	public void setNickname(String nickname) {
+	public AccountEditor setNickname(String nickname) {
 		this.nickname = nickname;
+		return this;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public AccountEditor setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 
 	public Language getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(Language language) {
+	public AccountEditor setLanguage(Language language) {
 		this.language = language;
+		return this;
 	}
 
 	public Membership getMembership() {
 		return membership;
 	}
 
-	public void setMembership(Membership membership) {
+	public AccountEditor setMembership(Membership membership) {
 		this.membership = membership;
+		return this;
 	}
 
 	public Account createAccount() {
