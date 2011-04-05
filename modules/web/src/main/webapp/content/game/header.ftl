@@ -17,12 +17,16 @@
                 <tr>
                     <td valign="top" align="right">
                     <#if player.membership == 'GUEST'>
-                        This is a Guest player
+                        <span class="player computer">Guest player</span>
                         <#else>
-                        ${player.nickname} (${player.membership})
+                            <span class="player member">
+                                <a href="/game/profile.html?p=${player.id}">
+                                    <span class="nickname">${player.nickname} (${player.account.email})</span>
+                                </a>
+                            </span>
                     </#if>
                         |
-                        <a href="/account/logout.html">Logout</a>
+                        <a href="/account/logout.html"><@message code="account.signout.label"/></a>
                     </td>
                 </tr>
                 <tr>

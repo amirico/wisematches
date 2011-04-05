@@ -290,8 +290,8 @@ div.space-line {
     text-align: right;
 }
 
-.info-general-item li {
-    list-style: circle inside !important;
+#info-general-items li {
+    list-style: none;
     padding-left: 15px;
 }
 

@@ -224,6 +224,17 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
+	public void destroy() {
+		lock.lock();
+		try {
+			for (ScheduledFuture scheduledFuture : scheduledExpirations.values()) {
+				scheduledFuture.cancel(false);
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
 	private class GameExpirationTask implements Runnable {
 		private final Room room;
 		private final long boardId;
