@@ -53,6 +53,18 @@
         <property name="playerStatisticDao" ref="playerStatisticDao"/>
     </bean>
 
+    <bean id="gameTimeoutTerminator" class="wisematches.server.gameplaying.expiration.impl.ExpiredGamesTerminator">
+        <property name="taskScheduler">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="threadGroupName" value="GameTimeoutTerminator"/>
+                <property name="threadNamePrefix" value="GameTimeoutTerminator"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
+    </bean>
+
     <bean id="robotsActivityManager" class="wisematches.server.gameplaying.robot.impl.RobotActivityCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="robotBrainManager" ref="robotsBrainManager"/>
@@ -86,6 +98,28 @@
 
     <bean id="countriesManager" class="wisematches.server.testimonial.profile.counties.impl.CSVCountriesManager">
         <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
+    </bean>
+    -->
+
+    <!--
+    <bean id="statisticsCleanerCenter" class="wisematches.server.standing.statistic.impl.cleaner.PlayerStatisticCleaner">
+        <property name="playerStatisticManager" ref="statisticsManager"/>
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
+    </bean>
+
+    <bean id="statisticsCleanerJobDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="statisticsCleanerCenter"/>
+        <property name="targetMethod" value="performClean"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="statisticsCleanerJobDetail"/>
+
+        &lt;!&ndash; run every morning at 3 AM &ndash;&gt;
+        <property name="cronExpression" value="0 0 3 * * ?"/>
     </bean>
     -->
 </beans>

@@ -9,9 +9,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.server.deprecated.web.mail.FromTeam;
 import wisematches.server.deprecated.web.mail.MailSender;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.cleaner.GameTimeoutEvent;
-import wisematches.server.gameplaying.cleaner.GameTimeoutListener;
-import wisematches.server.gameplaying.cleaner.GameTimeoutTerminator;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
@@ -33,6 +30,7 @@ import java.util.concurrent.Executors;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class EMailNotificationsSender {
+/*
 	private MailSender mailSender;
 	private PlayerManager playerManager;
 	private RoomsManager roomsManager;
@@ -192,6 +190,7 @@ public class EMailNotificationsSender {
 				sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.lost", hand, model);
 			}
 //			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.won", wonPlayer, model);
+*/
 /*
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
@@ -221,7 +220,8 @@ public class EMailNotificationsSender {
 					sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.draw", board.getPlayersHands(), model);
 				}
 			}
-*/
+*//*
+
 		}
 
 		@Override
@@ -273,4 +273,5 @@ public class EMailNotificationsSender {
 		public void timeIsUp(GameTimeoutEvent event) {
 		}
 	}
+*/
 }

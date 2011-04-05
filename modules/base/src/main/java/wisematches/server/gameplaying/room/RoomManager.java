@@ -36,7 +36,7 @@ public interface RoomManager<P extends GameProposal, S extends GameSettings, B e
 	 *
 	 * @return the search engine.
 	 */
-	BoardsSearchEngine<B> getSearchesEngine();
+	BoardsSearchEngine getSearchesEngine();
 
 	/**
 	 * Returns game proposals manager for this room.

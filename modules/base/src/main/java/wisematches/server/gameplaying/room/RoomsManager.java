@@ -66,7 +66,7 @@ public class RoomsManager {
 	 * @throws IllegalArgumentException if there is no room with specified type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <P extends GameProposal, S extends GameSettings, B extends GameBoard<S, ?>, R extends BoardsSearchEngine<B>> R getSearchesEngine(Room<P, S, B> room) {
+	public <P extends GameProposal, S extends GameSettings, B extends GameBoard<S, ?>, R extends BoardsSearchEngine> R getSearchesEngine(Room<P, S, B> room) {
 		final RoomManager<P, S, B> roomManager = getRoomManager(room);
 		if (roomManager == null) {
 			throw new IllegalArgumentException("There is no room for specified type");

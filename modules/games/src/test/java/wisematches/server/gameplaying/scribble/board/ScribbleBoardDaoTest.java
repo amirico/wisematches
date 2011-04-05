@@ -12,7 +12,7 @@ import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import wisematches.server.gameplaying.board.GameMoveException;
 import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.board.PassTurnMove;
-import wisematches.server.gameplaying.room.search.ExpiringBoard;
+import wisematches.server.gameplaying.room.search.BoardLastMoveInfo;
 import wisematches.server.gameplaying.scribble.Direction;
 import wisematches.server.gameplaying.scribble.Position;
 import wisematches.server.gameplaying.scribble.Tile;
@@ -108,10 +108,10 @@ public class ScribbleBoardDaoTest {
 		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p1, p2, p3), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb1);
 
-		final Collection<ExpiringBoard> collection = scribbleBoardDao.findExpiringBoards();
+		final Collection<BoardLastMoveInfo> collection = scribbleBoardDao.findExpiringBoards();
 		assertEquals(1, collection.size());
 
-		final ExpiringBoard info = collection.iterator().next();
+		final BoardLastMoveInfo info = collection.iterator().next();
 		assertEquals(sb1.getBoardId(), info.getBoardId());
 		assertEquals(sb1.getGameSettings().getDaysPerMove(), info.getDaysPerMove());
 		assertDates(sb1.getLastMoveTime(), info.getLastMoveTime());
