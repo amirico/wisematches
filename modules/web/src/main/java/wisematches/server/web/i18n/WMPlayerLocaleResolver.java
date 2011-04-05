@@ -25,8 +25,8 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 		} else {
 			Locale locale = (Locale) WebUtils.getSessionAttribute(request, LOCALE_SESSION_ATTRIBUTE_NAME);
 			if (locale == null) {
-				if (authentication.getPrincipal() instanceof Player) {
-					return ((Player) authentication.getPrincipal()).getLanguage().locale();
+				if (authentication.getDetails() instanceof Player) {
+					return ((Player) authentication.getDetails()).getLanguage().locale();
 				} else {
 					return resolveLocale(super.resolveLocale(request));
 				}

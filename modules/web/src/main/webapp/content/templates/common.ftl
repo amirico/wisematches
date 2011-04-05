@@ -3,11 +3,11 @@
 <#macro player player showType=true showRating=true>
     <#assign computerPlayer=(player.membership == "GUEST") || (player.membership == "ROBOT")/>
 <span class="player <#if computerPlayer>computer<#else>member</#if>">
-    <#if !computerPlayer><a href="/game/profile.html?playerId=${player.id}"></#if>
+    <#if !computerPlayer><a href="/game/profile.html?p=${player.id}"></#if>
     <span class="nickname">${gameMessageSource.getPlayerNick(player, locale)}</span>
     <#if showType && player.getMembership() != "BASIC"><span
-            class="mod ${player.nickname} ${player.membership!""?lower_case}"></span></#if>
-    <#if showRating><span class="rating">(${player.rating?string.computer})</span></#if>
+            class="mod ${player.membership!""?lower_case}"></span></#if><#if showRating><span
+        class="rating">(${player.rating?string.computer})</span></#if>
     <#if !computerPlayer></a></#if>
 </span>
 </#macro>

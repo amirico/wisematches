@@ -51,18 +51,15 @@ public class GuestAuthenticationFilter extends GenericFilterBean implements Init
 	}
 
 	protected boolean applyGuestForThisRequest(HttpServletRequest request) {
-		boolean guestSession = guestProcessingUrl.equals(request.getRequestURI());
-		final HttpSession session = request.getSession(false);
-		if (!guestSession) {
-			if (session != null) {
-				guestSession = session.getAttribute(PARAMETER_NAME) != null;
-			}
-		} else {
-			if (session != null) {
+		final boolean guestSession = guestProcessingUrl.equals(request.getRequestURI());
+		if (guestSession) {
+			final HttpSession session = request.getSession(true);
+			if (session.getAttribute(PARAMETER_NAME) == null) {
 				session.setAttribute(PARAMETER_NAME, Boolean.TRUE);
+				return true;
 			}
 		}
-		return !guestSession;
+		return false;
 	}
 
 	public void setGuestProcessingUrl(String guestProcessingUrl) {
