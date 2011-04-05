@@ -22,5 +22,5 @@ public interface PlayerStatisticManager {
 	 * @param personality the player id.
 	 * @return the player statistic.
 	 */
-	HibernatePlayerStatistic getPlayerStatistic(Personality personality);
+	PlayerStatistic getPlayerStatistic(Personality personality);
 }
