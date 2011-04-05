@@ -3,7 +3,7 @@ package wisematches.server.gameplaying.scribble.board;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.gameplaying.board.GameResolution;
-import wisematches.server.gameplaying.room.search.ExpiringBoard;
+import wisematches.server.gameplaying.room.search.BoardLastMoveInfo;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
@@ -42,9 +42,9 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<ExpiringBoard> findExpiringBoards() {
+	public Collection<BoardLastMoveInfo> findExpiringBoards() {
 		final HibernateTemplate template = getHibernateTemplate();
-		return template.find("select new " + ExpiringBoard.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
+		return template.find("select new " + BoardLastMoveInfo.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
 				ScribbleBoard.class.getName() + " board where board.gameResolution is null");
 	}
 /*

@@ -627,6 +627,26 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		return null;
 	}
 
+
+	public int getBankCapacity() {
+		return tilesBank.getBankCapacity();
+	}
+
+	public int getBankRemained() {
+		return tilesBank.getTilesLimit();
+	}
+
+	/**
+	 * Returns collection of {@code TilesBank.TilesInfo} that describes using tiles bank.
+	 * <p/>
+	 * Board does not returns {@code TilesBank} directly because user can modify it.
+	 *
+	 * @return the copy of bank info.
+	 */
+	public TilesBank.TilesInfo[] getTilesBankInfo() {
+		return tilesBank.getTilesInfos();
+	}
+
 	/**
 	 * Returns score engine for this board.
 	 *
@@ -677,24 +697,5 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		this.boardMoves.clear();
 		this.boardMoves.put(boardMoves);
 		this.boardMoves.rewind();
-	}
-
-	public int getBankCapacity() {
-		return tilesBank.getBankCapacity();
-	}
-
-	public int getBankRemained() {
-		return tilesBank.getTilesLimit();
-	}
-
-	/**
-	 * Returns collection of {@code TilesBank.TilesInfo} that describes using tiles bank.
-	 * <p/>
-	 * Board does not returns {@code TilesBank} directly because user can modify it.
-	 *
-	 * @return the copy of bank info.
-	 */
-	public TilesBank.TilesInfo[] getTilesBankInfo() {
-		return tilesBank.getTilesInfos();
 	}
 }

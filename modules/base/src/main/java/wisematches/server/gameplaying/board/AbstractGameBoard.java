@@ -5,6 +5,8 @@ import wisematches.server.personality.Personality;
 import javax.persistence.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This class contains information about game - game settings, all moves and so on.
@@ -80,6 +82,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 */
 	@Embedded
 	private S gameSettings;
+
+	@Transient
+	protected final Lock lock = new ReentrantLock();
 
 	@Transient
 	private final Collection<GameBoardListener> boardListeners = new CopyOnWriteArrayList<GameBoardListener>();
@@ -248,7 +253,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			throw new GameFinishedException(gameResolution);
 		}
 
-		if (System.currentTimeMillis() - lastMoveTime.getTime() > gameSettings.getDaysPerMove() * 86400000) {
+		if (checkGameExpired()) {
 			throw new GameExpiredException();
 		}
 	}
@@ -269,51 +274,76 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 	@Override
 	public List<P> getWonPlayers() {
-		if (isGameActive()) {
-			return null;
-		}
-		final List<P> players = playersIterator.getPlayerHands();
-		final List<P> won = new ArrayList<P>(players.size());
-
-		int points = Integer.MIN_VALUE;
-		for (P player : players) {
-			if (player.getPoints() == points) {
-				won.add(player);
-			} else if (player.getPoints() > points) {
-				won.clear();
-				won.add(player);
-				points = player.getPoints();
+		lock.lock();
+		try {
+			if (isGameActive()) {
+				return null;
 			}
+			final List<P> players = playersIterator.getPlayerHands();
+			final List<P> won = new ArrayList<P>(players.size());
+
+			int points = Integer.MIN_VALUE;
+			for (P player : players) {
+				if (player.getPoints() == points) {
+					won.add(player);
+				} else if (player.getPoints() > points) {
+					won.clear();
+					won.add(player);
+					points = player.getPoints();
+				}
+			}
+			if (won.size() == players.size()) {
+				return Collections.emptyList();
+			}
+			return won;
+		} finally {
+			lock.unlock();
 		}
-		if (won.size() == players.size()) {
-			return Collections.emptyList();
-		}
-		return won;
 	}
 
 	@Override
 	public P getPlayerTurn() {
-		return playersIterator.getPlayerTurn();
+		lock.lock();
+		try {
+			return playersIterator.getPlayerTurn();
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public List<GameMove> getGameMoves() {
-		return Collections.unmodifiableList(moves);
+		lock.lock();
+		try {
+			return Collections.unmodifiableList(moves);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public P getPlayerHand(long playerId) {
-		for (P playerHand : playersIterator.getPlayerHands()) {
-			if (playerHand.getPlayerId() == playerId) {
-				return playerHand;
+		lock.lock();
+		try {
+			for (P playerHand : playersIterator.getPlayerHands()) {
+				if (playerHand.getPlayerId() == playerId) {
+					return playerHand;
+				}
 			}
+			return null;
+		} finally {
+			lock.unlock();
 		}
-		return null;
 	}
 
 	@Override
 	public List<P> getPlayersHands() {
-		return playersIterator.getPlayerHands();
+		lock.lock();
+		try {
+			return playersIterator.getPlayerHands();
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -328,25 +358,51 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 	@Override
 	public boolean isGameActive() {
-		return gameResolution == null;
+		lock.lock();
+		try {
+			return gameResolution == null && !checkGameExpired();
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public GameResolution getGameResolution() {
-		return gameResolution;
+		lock.lock();
+		try {
+			return gameResolution;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public void terminate() throws GameMoveException {
-		final P p = getPlayerTurn();
-		if (p != null) {
-			closeImpl(p, true);
+		lock.lock();
+		try {
+			try {
+				checkState();
+			} catch (GameExpiredException ex) { //terminate if expired
+				final P p = getPlayerTurn();
+				if (p != null) {
+					closeImpl(p, true);
+				}
+			} catch (GameFinishedException ex) {
+				; // nothing to do
+			}
+		} finally {
+			lock.unlock();
 		}
 	}
 
 	@Override
 	public void resign(P player) throws GameMoveException {
-		closeImpl(player, false);
+		lock.lock();
+		try {
+			closeImpl(player, false);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	private void closeImpl(P player, boolean byTimeout) throws GameMoveException {
@@ -378,10 +434,18 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @return the number of passed turns.
 	 */
 	public int getPassesCount() {
-		return passesCount;
+		lock.lock();
+		try {
+			return passesCount;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/*================== Checks game state =================*/
+	protected boolean checkGameExpired() {
+		return System.currentTimeMillis() - lastMoveTime.getTime() > gameSettings.getDaysPerMove() * 86400000;
+	}
 
 	/**
 	 * Checks that game was passed.

@@ -1,6 +1,5 @@
 package wisematches.server.gameplaying.room.search;
 
-import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameResolution;
 
 import java.util.Collection;
@@ -12,14 +11,14 @@ import java.util.EnumSet;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface BoardsSearchEngine<B extends GameBoard<?, ?>> {
+public interface BoardsSearchEngine {
 	/**
 	 * Searches boards which is active now and can be expired. This methods returns
 	 * only games with {@code IN_PROGRESS} state.
 	 *
 	 * @return the boards which is active now and can be expired.
 	 */
-	Collection<ExpiringBoard> findExpiringBoards();
+	Collection<BoardLastMoveInfo> findExpiringBoards();
 
 	/**
 	 * Returns count of games with specified resolution. If specified resolutions set is null when

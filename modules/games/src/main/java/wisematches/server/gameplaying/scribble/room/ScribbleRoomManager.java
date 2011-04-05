@@ -12,7 +12,7 @@ import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> {
-	private BoardsSearchEngine<ScribbleBoard> searchEngine;
+	private BoardsSearchEngine searchEngine;
 	private GameProposalManager<ScribbleProposal> gameProposalManager;
 	private BoardManager<ScribbleSettings, ScribbleBoard> boardManager;
 
@@ -30,7 +30,7 @@ public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, 
 	}
 
 	@Override
-	public BoardsSearchEngine<ScribbleBoard> getSearchesEngine() {
+	public BoardsSearchEngine getSearchesEngine() {
 		return searchEngine;
 	}
 
@@ -39,7 +39,7 @@ public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, 
 		return gameProposalManager;
 	}
 
-	public void setSearchEngine(BoardsSearchEngine<ScribbleBoard> searchEngine) {
+	public void setSearchEngine(BoardsSearchEngine searchEngine) {
 		this.searchEngine = searchEngine;
 	}
 
