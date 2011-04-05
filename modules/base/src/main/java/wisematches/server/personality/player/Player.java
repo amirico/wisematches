@@ -3,6 +3,10 @@ package wisematches.server.personality.player;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
+import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.statistic.PlayerStatistic;
+
+import java.util.Collection;
 
 /**
  * The {@code Player} interface represents simple user. This interface is read-only
@@ -51,5 +55,39 @@ public abstract class Player extends Personality {
 	public abstract Membership getMembership();
 
 
+	/**
+	 * Returns current player's rating.
+	 * <p/>
+	 * For computer players always returns predefined constant.
+	 *
+	 * @return the current player's rating.
+	 */
 	public abstract short getRating();
+
+	/**
+	 * Returns current player's position.
+	 * <p/>
+	 * For computer players always returns zero.
+	 *
+	 * @return the current player's position.
+	 */
+	public abstract long getPosition();
+
+	/**
+	 * Returns player statistic.
+	 * <p/>
+	 * For computer players always returns null.
+	 *
+	 * @return the player's statistic or {@code null} if player is {@code ComputerPlayer}.
+	 */
+	public abstract PlayerStatistic getPlayerStatistic();
+
+	/**
+	 * Returns collection of rating changes.
+	 * <p/>
+	 * For computer players always returns null.
+	 *
+	 * @return the player's rating changes or {@code null} if player is {@code ComputerPlayer}.
+	 */
+	public abstract Collection<RatingChange> getRatingChanges();
 }

@@ -132,6 +132,7 @@ public class RobotActivityCenterTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void robotMove() throws BoardLoadingException {
 		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.TRAINEE);
 

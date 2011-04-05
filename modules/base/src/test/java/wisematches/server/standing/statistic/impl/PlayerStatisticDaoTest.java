@@ -14,6 +14,7 @@ import wisematches.server.standing.statistic.PlayerStatisticRating;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -76,7 +77,7 @@ public class PlayerStatisticDaoTest {
 		statistic.incrementActiveGames();
 		statistic.incrementActiveGames();
 		statistic.incrementActiveGames();
-		playerStatisticDao.savePlayerStatistic(person, statistic);
+		playerStatisticDao.savePlayerStatistic(statistic);
 
 		final HibernatePlayerStatisticRating ri1 = statistic.getAllGamesStatisticRating();
 		ri1.setHighestRating(1);
@@ -88,7 +89,7 @@ public class PlayerStatisticDaoTest {
 		ri1.setHighestWonOpponentId(7);
 		ri1.setLowestLostOpponentRating(8);
 		ri1.setLowestLostOpponentId(9);
-		playerStatisticDao.savePlayerStatistic(person, statistic);
+		playerStatisticDao.savePlayerStatistic(statistic);
 
 /*
 		final HibernatePlayerStatisticRating ri2 = statistic.getNinetyDaysRatingInfo();
@@ -130,7 +131,7 @@ public class PlayerStatisticDaoTest {
 
 		sessionFactory.getCurrentSession().clear();
 
-		final PlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
+		final HibernatePlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
 		assertEquals(1, s.getAverageTurnTime());
 		assertEquals(2, s.getDrawGames());
 		assertEquals(300000, s.getLastMoveTime().getTime());
@@ -186,5 +187,9 @@ public class PlayerStatisticDaoTest {
 		assertEquals(8000, sri4.getLowestLostOpponentRating());
 		assertEquals(9000, sri4.getLowestLostOpponentId());
 */
+
+		playerStatisticDao.removePlayerStatistic(s);
+		sessionFactory.getCurrentSession().clear();
+		assertNull(playerStatisticDao.loadPlayerStatistic(person));
 	}
 }

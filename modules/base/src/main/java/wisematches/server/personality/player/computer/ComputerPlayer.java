@@ -3,6 +3,8 @@ package wisematches.server.personality.player.computer;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 import wisematches.server.personality.player.Player;
+import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,6 +77,21 @@ public class ComputerPlayer extends Player {
 	@Override
 	public short getRating() {
 		return rating;
+	}
+
+	@Override
+	public long getPosition() {
+		return 0;
+	}
+
+	@Override
+	public PlayerStatistic getPlayerStatistic() {
+		return null;
+	}
+
+	@Override
+	public Collection<RatingChange> getRatingChanges() {
+		return null;
 	}
 
 	@Override

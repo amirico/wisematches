@@ -10,7 +10,7 @@ import wisematches.server.gameplaying.room.RoomsManager;
 import wisematches.server.gameplaying.room.board.BoardManager;
 import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.personality.Personality;
-import wisematches.server.personality.account.UnknownAccountException;
+import wisematches.server.personality.account.*;
 import wisematches.server.personality.player.computer.guest.GuestPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
@@ -61,8 +61,8 @@ public class PlayerStatisticManagerImplTest {
 		playerRatingManager = createMock(PlayerRatingManager.class);
 
 		playerStatisticManager = new PlayerStatisticManagerImpl();
+		playerStatisticManager.setRatingManager(playerRatingManager);
 		playerStatisticManager.setPlayerStatisticDao(playerStatisticDao);
-		playerStatisticManager.setPlayerRatingManager(playerRatingManager);
 		playerStatisticManager.setRoomsManager(roomsManager);
 
 		boardStateListener = capture.getValue();
@@ -71,6 +71,37 @@ public class PlayerStatisticManagerImplTest {
 	@After
 	public void removeUser() throws UnknownAccountException {
 		playerStatisticManager.setRoomsManager(null);
+	}
+
+	@Test
+	public void testAccountManager() {
+		final Capture<AccountListener> l = new Capture<AccountListener>();
+		final Capture<HibernatePlayerStatistic> ps = new Capture<HibernatePlayerStatistic>();
+
+		final AccountManager m = createMock(AccountManager.class);
+		m.addAccountListener(capture(l));
+		replay(m);
+
+		final Account a = new AccountEditor("asd", "qwe", "wqe").createAccount();
+
+		playerStatisticManager.setAccountManager(m);
+
+		playerStatisticDao.savePlayerStatistic(capture(ps));
+		replay(playerStatisticDao);
+		l.getValue().accountCreated(a);
+		verify(playerStatisticDao);
+
+		reset(playerStatisticDao);
+		replay(playerStatisticDao);
+		l.getValue().accountUpdated(a, a);
+		verify(playerStatisticDao);
+
+		reset(playerStatisticDao);
+		expect(playerStatisticDao.loadPlayerStatistic(a)).andReturn(ps.getValue());
+		playerStatisticDao.removePlayerStatistic(ps.getValue());
+		replay(playerStatisticDao);
+		l.getValue().accountRemove(a);
+		verify(playerStatisticDao);
 	}
 
 	@Test
@@ -150,7 +181,7 @@ public class PlayerStatisticManagerImplTest {
 		final HibernatePlayerStatistic statistic = new HibernatePlayerStatistic(Personality.person(13L));
 
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(13L))).andReturn(statistic).times(3);
-		playerStatisticDao.savePlayerStatistic(Personality.person(13L), statistic);
+		playerStatisticDao.savePlayerStatistic(statistic);
 		expectLastCall().times(3);
 		replay(playerStatisticDao);
 
@@ -270,9 +301,9 @@ public class PlayerStatisticManagerImplTest {
 		final HibernatePlayerStatistic s2 = new HibernatePlayerStatistic(Personality.person(14L));
 
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(13L))).andReturn(s1);
-		playerStatisticDao.savePlayerStatistic(Personality.person(13L), s1);
+		playerStatisticDao.savePlayerStatistic(s1);
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(14L))).andReturn(s2);
-		playerStatisticDao.savePlayerStatistic(Personality.person(14L), s2);
+		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
 		final GamePlayerHand hand1 = new GamePlayerHand(13L, 1, (short) 0);
@@ -312,9 +343,9 @@ public class PlayerStatisticManagerImplTest {
 		replay(board);
 
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(13L))).andReturn(s1);
-		playerStatisticDao.savePlayerStatistic(Personality.person(13L), s1);
+		playerStatisticDao.savePlayerStatistic(s1);
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(14L))).andReturn(s2);
-		playerStatisticDao.savePlayerStatistic(Personality.person(14L), s2);
+		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
 		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
@@ -358,9 +389,9 @@ public class PlayerStatisticManagerImplTest {
 		replay(board);
 
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(13L))).andReturn(s1);
-		playerStatisticDao.savePlayerStatistic(Personality.person(13L), s1);
+		playerStatisticDao.savePlayerStatistic(s1);
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(14L))).andReturn(s2);
-		playerStatisticDao.savePlayerStatistic(Personality.person(14L), s2);
+		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
 		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
@@ -404,9 +435,9 @@ public class PlayerStatisticManagerImplTest {
 		replay(board);
 
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(13L))).andReturn(s1);
-		playerStatisticDao.savePlayerStatistic(Personality.person(13L), s1);
+		playerStatisticDao.savePlayerStatistic(s1);
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(14L))).andReturn(s2);
-		playerStatisticDao.savePlayerStatistic(Personality.person(14L), s2);
+		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
 		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
@@ -452,9 +483,9 @@ public class PlayerStatisticManagerImplTest {
 		replay(board);
 
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(13L))).andReturn(s1);
-		playerStatisticDao.savePlayerStatistic(Personality.person(13L), s1);
+		playerStatisticDao.savePlayerStatistic(s1);
 		expect(playerStatisticDao.loadPlayerStatistic(Personality.person(14L))).andReturn(s2);
-		playerStatisticDao.savePlayerStatistic(Personality.person(14L), s2);
+		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
 		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
