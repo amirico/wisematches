@@ -4,6 +4,7 @@ import wisematches.server.personality.Personality;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -16,6 +17,7 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private short points = 0;
 	private boolean moveFinished;
 	private short[] finishScore;
+	private Date lastMoveTime = new Date();
 
 	MockGameBoard(GameSettings gameSettings, Collection<Personality> players) {
 		super(gameSettings, players);
@@ -114,5 +116,14 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 
 	public void setFinishScore(short[] finishScore) {
 		this.finishScore = finishScore;
+	}
+
+	public void setLastMoveTime(Date date) {
+		lastMoveTime = date;
+	}
+
+	@Override
+	public Date getLastMoveTime() {
+		return lastMoveTime;
 	}
 }

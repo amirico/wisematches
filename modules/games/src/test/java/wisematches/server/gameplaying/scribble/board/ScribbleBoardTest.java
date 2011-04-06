@@ -528,9 +528,9 @@ public class ScribbleBoardTest extends TestCase {
 		h3.setTiles(tilesBank.getTiles(16, 17, 19, 20)); // ffgg: 26 points
 
 		//we need increate player points to make it winner.
-		final Method method = h3.getClass().getSuperclass().getDeclaredMethod("increasePoints", int.class);
+		final Method method = h3.getClass().getSuperclass().getDeclaredMethod("increasePoints", short.class);
 		method.setAccessible(true);
-		method.invoke(h3, 1); // Player h3 has 1 points and other have 0 points.
+		method.invoke(h3, (short) 1); // Player h3 has 1 points and other have 0 points.
 
 		short[] ints = board.processGameFinished();
 		assertEquals(3, ints.length);

@@ -239,10 +239,8 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_getWonPlayer() throws GameMoveException {
-		final Collection<GamePlayerHand> gamePlayerHandList = Arrays.asList(h1, h2, h3);
-
 		board.setFinishScore(new short[]{0, 0, 0});
-		board.terminate();
+		board.resign(board.getPlayerTurn());
 		assertEquals(0, board.getWonPlayers().size());
 
 		h1.increasePoints((short) 1);
@@ -366,6 +364,7 @@ public class AbstractGameBoardTest {
 
 		board.addGameBoardListener(l);
 		board.setFinishScore(new short[]{0, 0, 0});
+		board.setLastMoveTime(new Date(System.currentTimeMillis() / 2));
 		board.terminate();
 		verify(l);
 
@@ -390,6 +389,7 @@ public class AbstractGameBoardTest {
 			board.makeMove(new PassTurnMove(board.getPlayerTurn().getPlayerId()));
 		}
 
+		board.setLastMoveTime(new Date(System.currentTimeMillis() / 2));
 		board.terminate();
 
 		assertTrue(board.isRatedGame());
