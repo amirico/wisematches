@@ -89,7 +89,7 @@ public class ScribbleRobotBrainTest {
 
 		final TilesPlacement board = new MockTilesPlacement(workTiles);
 
-		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, 1, new Tile[]{
+		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(7, 'b', 1),
 				new Tile(8, 'c', 1),
@@ -127,7 +127,7 @@ public class ScribbleRobotBrainTest {
 		replay(dictionary);
 
 
-		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, 1, new Tile[]{
+		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(9, 'd', 1),
 				new Tile(10, 'e', 1),
@@ -195,7 +195,7 @@ public class ScribbleRobotBrainTest {
 
 		final TilesPlacement board = new MockTilesPlacement(workTiles);
 
-		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, 1, new Tile[]{
+		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(7, 'b', 1),
 				new Tile(8, 'c', 1),

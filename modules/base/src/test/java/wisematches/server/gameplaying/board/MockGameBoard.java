@@ -21,8 +21,8 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 		super(gameSettings, players);
 	}
 
-	protected GamePlayerHand createPlayerHand(Personality player, int i) {
-		return new GamePlayerHand(player.getId(), 1);
+	protected GamePlayerHand createPlayerHand(Personality player) {
+		return new GamePlayerHand(player.getId());
 	}
 
 	protected boolean checkGameFinished() {

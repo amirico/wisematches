@@ -49,13 +49,13 @@ public class ScribbleBoardDaoTest {
 	@Before
 	public void onSetUp() throws Exception {
 		// This test clear scribble_board and scribble_player tables after execution.
-		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_board", "scribble_player");
+		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_player", "scribble_board");
 	}
 
 	@After
 	public void onTearDown() throws Exception {
 		// This test clear scribble_board and scribble_player tables after execution.
-		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_board", "scribble_player");
+		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_player", "scribble_board");
 	}
 
 	@Test
@@ -260,7 +260,6 @@ public class ScribbleBoardDaoTest {
 
 	private void checkPlayer(final ScribbleBoard originalBoard, final ScribbleBoard loadedBoard, final long playerId) {
 		assertArrayEquals(originalBoard.getPlayerHand(playerId).getTiles(), loadedBoard.getPlayerHand(playerId).getTiles());
-		assertEquals(originalBoard.getPlayerHand(playerId).getPlayerIndex(), loadedBoard.getPlayerHand(playerId).getPlayerIndex());
 		assertEquals(originalBoard.getPlayerHand(playerId).getPoints(), loadedBoard.getPlayerHand(playerId).getPoints());
 	}
 

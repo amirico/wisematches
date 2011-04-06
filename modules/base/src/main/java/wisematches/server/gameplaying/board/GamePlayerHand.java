@@ -2,6 +2,7 @@ package wisematches.server.gameplaying.board;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -16,9 +17,6 @@ public class GamePlayerHand {
 	@Column(name = "playerId", updatable = false)
 	private long playerId;
 
-	@Column(name = "playerIndex", updatable = false)
-	private int playerIndex;
-
 	@Column(name = "points")
 	private short points;
 
@@ -32,17 +30,14 @@ public class GamePlayerHand {
 	/**
 	 * Creates new player hand with specified player id and statr points.
 	 *
-	 * @param playerId	the player id.
-	 * @param playerIndex the player index.
+	 * @param playerId the player id.
 	 */
-	protected GamePlayerHand(long playerId, int playerIndex) {
+	protected GamePlayerHand(long playerId) {
 		this.playerId = playerId;
-		this.playerIndex = playerIndex;
 	}
 
-	public GamePlayerHand(long playerId, int playerIndex, short points) {
+	public GamePlayerHand(long playerId, short points) {
 		this.playerId = playerId;
-		this.playerIndex = playerIndex;
 		this.points = points;
 	}
 
@@ -53,17 +48,6 @@ public class GamePlayerHand {
 	 */
 	public long getPlayerId() {
 		return playerId;
-	}
-
-	/**
-	 * Returns permanent unique index of this player on the board.
-	 * <p/>
-	 * Each player has it own index that doesn't changed during restarting.
-	 *
-	 * @return the permanent unique player index.
-	 */
-	public int getPlayerIndex() {
-		return playerIndex;
 	}
 
 	/**
@@ -89,7 +73,6 @@ public class GamePlayerHand {
 	@Override
 	public String toString() {
 		return "playerId=" + getPlayerId() +
-				", playerIndex=" + playerIndex +
 				", points=" + points;
 	}
 }

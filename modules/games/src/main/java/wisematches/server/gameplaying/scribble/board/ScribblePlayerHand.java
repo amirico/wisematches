@@ -24,12 +24,12 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 	ScribblePlayerHand() {
 	}
 
-	public ScribblePlayerHand(long playerId, int playerIndex) {
-		this(playerId, playerIndex, null);
+	public ScribblePlayerHand(long playerId) {
+		this(playerId, null);
 	}
 
-	public ScribblePlayerHand(long playerId, int playerIndex, Tile[] tiles) {
-		super(playerId, playerIndex);
+	public ScribblePlayerHand(long playerId, Tile[] tiles) {
+		super(playerId);
 		if (tiles != null) {
 			this.tiles = tiles.clone();
 		}

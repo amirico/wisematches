@@ -36,6 +36,10 @@ public class WMUserDetails extends Personality implements UserDetails {
 		return authorities;
 	}
 
+	public String getNickname() {
+		return player.getNickname();
+	}
+
 	@Override
 	public String getPassword() {
 		return password;

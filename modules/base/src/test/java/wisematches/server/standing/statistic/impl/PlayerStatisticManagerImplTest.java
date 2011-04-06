@@ -306,9 +306,9 @@ public class PlayerStatisticManagerImplTest {
 		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
-		final GamePlayerHand hand1 = new GamePlayerHand(13L, 1, (short) 0);
-		final GamePlayerHand hand2 = new GamePlayerHand(14L, 2, (short) 0);
-		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), 3, (short) 0); // guest is not rated
+		final GamePlayerHand hand1 = new GamePlayerHand(13L, (short) 0);
+		final GamePlayerHand hand2 = new GamePlayerHand(14L, (short) 0);
+		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), (short) 0); // guest is not rated
 
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3));
@@ -328,9 +328,9 @@ public class PlayerStatisticManagerImplTest {
 		final HibernatePlayerStatistic s1 = new HibernatePlayerStatistic(Personality.person(13L));
 		final HibernatePlayerStatistic s2 = new HibernatePlayerStatistic(Personality.person(14L));
 
-		final GamePlayerHand hand1 = new GamePlayerHand(13L, 1, (short) 300);
-		final GamePlayerHand hand2 = new GamePlayerHand(14L, 2, (short) 100);
-		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), 3, (short) 0); // guest is not rated
+		final GamePlayerHand hand1 = new GamePlayerHand(13L, (short) 300);
+		final GamePlayerHand hand2 = new GamePlayerHand(14L, (short) 100);
+		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), (short) 0); // guest is not rated
 
 		final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 1025, (short) 300);
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
@@ -374,9 +374,9 @@ public class PlayerStatisticManagerImplTest {
 		final HibernatePlayerStatistic s1 = new HibernatePlayerStatistic(Personality.person(13L));
 		final HibernatePlayerStatistic s2 = new HibernatePlayerStatistic(Personality.person(14L));
 
-		final GamePlayerHand hand1 = new GamePlayerHand(13L, 1, (short) 300);
-		final GamePlayerHand hand2 = new GamePlayerHand(14L, 2, (short) 100);
-		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), 3, (short) 0); // guest is not rated
+		final GamePlayerHand hand1 = new GamePlayerHand(13L, (short) 300);
+		final GamePlayerHand hand2 = new GamePlayerHand(14L, (short) 100);
+		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), (short) 0); // guest is not rated
 
 		final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 1025, (short) 300);
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
@@ -420,9 +420,9 @@ public class PlayerStatisticManagerImplTest {
 		final HibernatePlayerStatistic s1 = new HibernatePlayerStatistic(Personality.person(13L));
 		final HibernatePlayerStatistic s2 = new HibernatePlayerStatistic(Personality.person(14L));
 
-		final GamePlayerHand hand1 = new GamePlayerHand(13L, 1, (short) 300);
-		final GamePlayerHand hand2 = new GamePlayerHand(14L, 2, (short) 100);
-		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), 3, (short) 0); // guest is not rated
+		final GamePlayerHand hand1 = new GamePlayerHand(13L, (short) 300);
+		final GamePlayerHand hand2 = new GamePlayerHand(14L, (short) 100);
+		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), (short) 0); // guest is not rated
 
 		final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 1025, (short) 300);
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
@@ -468,9 +468,9 @@ public class PlayerStatisticManagerImplTest {
 		final HibernatePlayerStatistic s1 = new HibernatePlayerStatistic(Personality.person(13L));
 		final HibernatePlayerStatistic s2 = new HibernatePlayerStatistic(Personality.person(14L));
 
-		final GamePlayerHand hand1 = new GamePlayerHand(13L, 1, (short) 300);
-		final GamePlayerHand hand2 = new GamePlayerHand(14L, 2, (short) 100);
-		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), 3, (short) 0); // guest is not rated
+		final GamePlayerHand hand1 = new GamePlayerHand(13L, (short) 300);
+		final GamePlayerHand hand2 = new GamePlayerHand(14L, (short) 100);
+		final GamePlayerHand hand3 = new GamePlayerHand(GuestPlayer.GUEST.getId(), (short) 0); // guest is not rated
 
 		final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 1025, (short) 300);
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
