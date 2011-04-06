@@ -1,5 +1,6 @@
 package wisematches.server.security;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.player.Player;
@@ -13,11 +14,19 @@ public final class WMSecurityContext {
 	}
 
 	public static Player getPlayer() {
-		WMUserDetails details = (WMUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return details.getPlayer();
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.getPrincipal() instanceof WMUserDetails) {
+			WMUserDetails details = (WMUserDetails) authentication.getPrincipal();
+			return details.getPlayer();
+		}
+		return null;
 	}
 
 	public static Personality getPersonality() {
-		return (Personality) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.getPrincipal() instanceof Personality) {
+			return (Personality) authentication.getPrincipal();
+		}
+		return null;
 	}
 }
