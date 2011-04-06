@@ -129,7 +129,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			if (player == null) {
 				throw new IllegalArgumentException("Players list can't contain null players");
 			}
-			final P hand = createPlayerHand(player, index++);
+			final P hand = createPlayerHand(player);
 			hands.add(hand);
 		}
 		playersIterator = new PlayersIterator<P>(hands, selectFirstPlayer(gameSettings, hands));
@@ -270,6 +270,14 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	protected P selectFirstPlayer(S gameSettings, List<P> players) {
 		int index = (int) (Math.random() * (players.size() - 1));
 		return players.get(index);
+	}
+
+	protected final int getPlayerCode(P player) {
+		return playersIterator.getPlayerCode(player);
+	}
+
+	protected final P getPlayerByCode(int code) {
+		return playersIterator.getPlayerHands().get(code);
 	}
 
 	@Override
@@ -460,10 +468,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * Creates a player hand for specified player.
 	 *
 	 * @param player the player for who hand must be crated.
-	 * @param index  the player's index
 	 * @return the player's hand.
 	 */
-	protected abstract P createPlayerHand(Personality player, int index);
+	protected abstract P createPlayerHand(Personality player);
 
 	/**
 	 * Checks specified move. If move isn't correct or can't be maden appropriate exception will be thrown.

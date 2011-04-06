@@ -188,12 +188,11 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * Creates new {@code ScrapplePlayerHand} for specified player.
 	 *
 	 * @param player the player for who hand must be crated.
-	 * @param index  the player's index
 	 * @return the created player hand.
 	 * @see wisematches.server.gameplaying.scribble.board.ScribblePlayerHand
 	 */
-	protected ScribblePlayerHand createPlayerHand(Personality player, int index) {
-		return new ScribblePlayerHand(player.getId(), index);
+	protected ScribblePlayerHand createPlayerHand(Personality player) {
+		return new ScribblePlayerHand(player.getId());
 	}
 
 	private void restoreBoardState() {
@@ -245,7 +244,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 				boardMoves.position(boardMoves.position() - 1); // roll position back
 				break;
 			}
-			final int playerIndex = (byte1 >> 1) & 0x7; // 0111
+			final int code = (byte1 >> 1) & 0x7; // 0111
 			final int type = (byte1 >> 4) & 0xF; // 1111
 
 			final int byte2 = byteToInt(boardMoves.get());
@@ -256,7 +255,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			int row = byte3 & 0xF;
 			int column = (byte3 >> 4) & 0xF;
 
-			final long playerId = getPlayersHands().get(playerIndex).getPlayerId();
+			final long playerId = getPlayerByCode(code).getPlayerId();
 			final int points = boardMoves.getShort();
 			final long time = boardMoves.getLong();
 
@@ -302,7 +301,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 
 		int moveInfo = 1; //indicates that it's move
-		moveInfo |= getPlayerHand(move.getPlayerId()).getPlayerIndex() << 1;
+		moveInfo |= getPlayerCode(getPlayerHand(move.getPlayerId())) << 1;
 		moveInfo |= moveType << 4;
 		boardMoves.put((byte) moveInfo);
 
@@ -561,7 +560,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * @param player the player who hand tiles buffer should be updated.
 	 */
 	private void updateHandTilesBuffer(ScribblePlayerHand player) {
-		final int playerIndex = player.getPlayerIndex();
+		final int playerIndex = getPlayerCode(player);
 		final Tile[] tiles = player.getTiles();
 		final byte[] bytes = this.handTiles;
 

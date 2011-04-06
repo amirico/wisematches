@@ -13,11 +13,11 @@ public final class WMSecurityContext {
 	}
 
 	public static Player getPlayer() {
-		WMUserDetails details = (WMUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+		WMUserDetails details = (WMUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return details.getPlayer();
 	}
 
 	public static Personality getPersonality() {
-		return (Personality) SecurityContextHolder.getContext().getAuthentication().getDetails();
+		return (Personality) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 }

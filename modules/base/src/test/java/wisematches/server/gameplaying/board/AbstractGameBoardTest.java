@@ -343,7 +343,7 @@ public class AbstractGameBoardTest {
 		board.setFinishScore(new short[]{0, 0, 0});
 
 		try {
-			board.resign(new GamePlayerHand(13L, 1));
+			board.resign(new GamePlayerHand(13L));
 			fail("Exception must be here");
 		} catch (UnsuitablePlayerException ex) {
 			;

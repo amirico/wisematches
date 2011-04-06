@@ -111,8 +111,8 @@ public class HibernatePlayerRatingManagerTest {
 		final GameBoard b = createMock(GameBoard.class);
 		expect(b.getBoardId()).andReturn(12L).anyTimes();
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
-				new GamePlayerHand(RobotPlayer.DULL.getId(), 1, (short) 100), // robot
-				new GamePlayerHand(account.getId(), 2, (short) 200))); // player
+				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
+				new GamePlayerHand(account.getId(), (short) 200))); // player
 		replay(b);
 
 		final PlayerRatingListener l = createMock(PlayerRatingListener.class);
@@ -136,8 +136,8 @@ public class HibernatePlayerRatingManagerTest {
 		final GameBoard b = createMock(GameBoard.class);
 		expect(b.getBoardId()).andReturn(12L).times(2).andReturn(13L).times(2).andReturn(14L).times(2);
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
-				new GamePlayerHand(RobotPlayer.DULL.getId(), 1, (short) 100), // robot
-				new GamePlayerHand(account.getId(), 2, (short) 200))).times(3); // player
+				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
+				new GamePlayerHand(account.getId(), (short) 200))).times(3); // player
 		replay(b);
 
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
@@ -157,8 +157,8 @@ public class HibernatePlayerRatingManagerTest {
 		final GameBoard b = createMock(GameBoard.class);
 		expect(b.getBoardId()).andReturn(12L).times(3);
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
-				new GamePlayerHand(RobotPlayer.DULL.getId(), 1, (short) 100), // robot
-				new GamePlayerHand(account.getId(), 2, (short) 200))); // player
+				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
+				new GamePlayerHand(account.getId(), (short) 200))); // player
 		replay(b);
 
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
