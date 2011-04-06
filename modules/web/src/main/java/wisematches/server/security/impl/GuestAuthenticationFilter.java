@@ -6,6 +6,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
+import wisematches.server.personality.player.computer.guest.GuestPlayer;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,7 +29,8 @@ public class GuestAuthenticationFilter extends GenericFilterBean implements Init
 	private static final String PARAMETER_NAME = "WM_GUEST_SESSION";
 	private static final String DEFAULT_GUEST_PROCESSING_URL = "/j_spring_security_guest";
 
-	private static final GuestAuthenticationToken GUEST_AUTHORIZATION = new GuestAuthenticationToken("guestAuthorizationKey", new GuestUserDetails());
+	private static final WMUserDetails USER_DETAILS = new WMUserDetails(GuestPlayer.GUEST, "guest", "guest", true);
+	private static final GuestAuthenticationToken GUEST_AUTHORIZATION = new GuestAuthenticationToken("guestAuthorizationKey", USER_DETAILS);
 
 	public GuestAuthenticationFilter() {
 	}

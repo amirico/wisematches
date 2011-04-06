@@ -3,19 +3,18 @@ package wisematches.server.security.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wisematches.server.personality.account.*;
+import wisematches.server.personality.player.Player;
 import wisematches.server.personality.player.PlayerManager;
 import wisematches.server.security.PlayerSecurityService;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -28,7 +27,6 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 	private PlayerManager playerManager;
 	private AccountManager accountManager;
 	private AccountLockManager accountLockManager;
-	private AuthenticationManager authenticationManager;
 
 	private final TheUserDetailsService userDetailsService = new TheUserDetailsService();
 
@@ -41,12 +39,17 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
 		final Account p = accountManager.findByEmail(username);
 		if (p == null) {
-			throw new UsernameNotFoundException("User with email " + username + " not found in the system");
+			throw new UsernameNotFoundException("Account with email " + username + " not found in the system");
+		}
+		Player player = playerManager.getPlayer(p);
+		if (player == null) {
+			throw new UsernameNotFoundException("Player for account " + p + " can't be created");
 		}
 		final boolean locked = accountLockManager.isAccountLocked(p);
-		return new MemberUserDetails(p, !locked);
+		return new WMUserDetails(player, p.getEmail(), p.getPassword(), !locked);
 	}
 
+/*
 	public void authenticatePlayer(Account player, String password) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		if (currentUser == null) {
@@ -70,11 +73,13 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 			}
 		}
 	}
+*/
 
 	@Override
 	public String encodePlayerPassword(Account player, String password) {
-		return passwordEncoder.encodePassword(password, saltSource.getSalt(new MemberUserDetails(player, false)));
+		return passwordEncoder.encodePassword(password, saltSource.getSalt(new SaltUserDetails(player)));
 	}
+/*
 
 	protected Authentication createNewAuthentication(Account player) {
 		final UserDetails user = loadUserByUsername(player.getEmail());
@@ -84,6 +89,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 		newAuthentication.setDetails(playerManager.getPlayer(player));
 		return newAuthentication;
 	}
+*/
 
 	public void setAccountManager(AccountManager accountManager) {
 		if (this.accountManager != null) {
@@ -111,10 +117,6 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
-	}
-
-	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-		this.authenticationManager = authenticationManager;
 	}
 
 	public void setSaltSource(SaltSource saltSource) {
@@ -150,6 +152,53 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 		@Override
 		public void accountUnlocked(Account player) {
 //			authenticatePlayer(player);
+		}
+	}
+
+	private static class SaltUserDetails implements UserDetails {
+		private final Account account;
+
+		public SaltUserDetails(Account account) {
+			this.account = account;
+		}
+
+		@Override
+		public Collection<GrantedAuthority> getAuthorities() {
+			return null;
+		}
+
+		@Override
+		public String getPassword() {
+			return account.getPassword();
+		}
+
+		public String getNickname() {
+			return account.getNickname();
+		}
+
+		@Override
+		public String getUsername() {
+			return account.getEmail();
+		}
+
+		@Override
+		public boolean isAccountNonExpired() {
+			return true;
+		}
+
+		@Override
+		public boolean isAccountNonLocked() {
+			return true;
+		}
+
+		@Override
+		public boolean isCredentialsNonExpired() {
+			return true;
+		}
+
+		@Override
+		public boolean isEnabled() {
+			return true;
 		}
 	}
 }

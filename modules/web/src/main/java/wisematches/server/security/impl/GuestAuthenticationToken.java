@@ -15,7 +15,7 @@ public class GuestAuthenticationToken extends AbstractAuthenticationToken implem
 	private final int keyHash;
 	private final UserDetails principal;
 
-	public GuestAuthenticationToken(String key, GuestUserDetails principal) {
+	public GuestAuthenticationToken(String key, WMUserDetails principal) {
 		super(principal.getAuthorities());
 
 		if ((key == null) || ("".equals(key))) {
