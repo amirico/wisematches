@@ -64,12 +64,36 @@ public class AbstractInfoController {
 	 *         {@code false} if there is no data for specified page or page unknown.
 	 */
 	public boolean processInfoPage(String pageName, Model model, Locale locale) {
+		return processInfoPage(pageName, pageName, model, locale);
+	}
+
+	/**
+	 * Loads resources for specified page and put loaded data into specified model. This handler
+	 * <p/>
+	 * The method adds two attributes to the model:
+	 * <ol>
+	 * <li><strong>infoId</strong> - name of the page. This id will be added to all ids and classes of the end HTML page.
+	 * <li><strong>infoModel</strong> - info model as a {@link NodeModel} object.
+	 * </ol>
+	 * <p/>
+	 * This method also adds {@code infoConverter} parameter that contains name of default
+	 * converter template. If required this parameter can be redefined or not used at all in
+	 * page where info is required.
+	 *
+	 * @param pageName the page name
+	 * @param infoId   the id of the information page. This id will be added to all HTML elements into class name.
+	 * @param model	the model to be modified
+	 * @param locale   the locale
+	 * @return {@code true} if data for specified page has been loaded and model has been updated;
+	 *         {@code false} if there is no data for specified page or page unknown.
+	 */
+	public boolean processInfoPage(String pageName, String infoId, Model model, Locale locale) {
 		final NodeModel nodeModel = getInfoHolder(pageName, locale);
 		if (nodeModel == null) {
 			return false;
 		}
 
-		model.addAttribute("infoId", pageName.toLowerCase());
+		model.addAttribute("infoId", infoId);
 		model.addAttribute("infoModel", nodeModel);
 		return true;
 	}

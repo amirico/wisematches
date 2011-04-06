@@ -1,4 +1,4 @@
-package wisematches.server.web.exceptions;
+package wisematches.server.web.controllers.errors;
 
 import org.springframework.security.web.authentication.rememberme.CookieTheftException;
 import org.springframework.stereotype.Controller;
