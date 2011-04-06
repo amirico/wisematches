@@ -452,7 +452,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 	/*================== Checks game state =================*/
 	protected boolean checkGameExpired() {
-		return System.currentTimeMillis() - lastMoveTime.getTime() > gameSettings.getDaysPerMove() * 86400000;
+		return System.currentTimeMillis() - getLastMoveTime().getTime() > gameSettings.getDaysPerMove() * 86400000;
 	}
 
 	/**
