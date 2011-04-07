@@ -21,4 +21,9 @@ public abstract class AbstractPlayerController {
 	public Personality getPersonality() {
 		return WMSecurityContext.getPersonality();
 	}
+
+	@ModelAttribute("headerTitle")
+	public String getHeaderTitle() {
+		return "title.playboard";
+	}
 }

@@ -1,10 +1,10 @@
-<#-- @ftlvariable name="originalTemplateName" type="java.lang.String" -->
 <#-- @ftlvariable name="headerTitle" type="java.lang.String" -->
+<#-- @ftlvariable name="originalTemplateName" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title><@message code="wisematches.title"/></title>
+    <title><@message code=headerTitle!"title.default"/></title>
 
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
 

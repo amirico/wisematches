@@ -21,6 +21,7 @@ import wisematches.server.mail.MailService;
 import wisematches.server.personality.account.*;
 import wisematches.server.security.PlayerSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -187,10 +188,6 @@ public class CreateAccountController {
 	}
 
 
-	// ==========================
-	// Private implementation
-	// ==========================
-
 	/**
 	 * Checks that specified form is valid. Otherwise fills specified errors object.
 	 *
@@ -227,12 +224,13 @@ public class CreateAccountController {
 	}
 
 
-	// ==========================
-	// Public Bean methods
-	// ==========================
-
 	public void setDefaultMembership(String defaultMembership) {
 		this.defaultMembership = Membership.valueOf(defaultMembership.toUpperCase());
+	}
+
+	@ModelAttribute("headerTitle")
+	public String getHeaderTitle() {
+		return "title.account";
 	}
 
 	@Autowired

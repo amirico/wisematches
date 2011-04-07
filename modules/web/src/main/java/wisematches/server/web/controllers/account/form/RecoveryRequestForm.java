@@ -2,7 +2,7 @@
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.server.web.controllers.account;
+package wisematches.server.web.controllers.account.form;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;

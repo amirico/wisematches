@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.account;
+package wisematches.server.web.controllers.account.form;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
