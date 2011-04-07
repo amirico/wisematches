@@ -20,6 +20,8 @@ import wisematches.server.personality.account.Account;
 import wisematches.server.personality.account.AccountEditor;
 import wisematches.server.personality.account.AccountManager;
 import wisematches.server.security.PlayerSecurityService;
+import wisematches.server.web.controllers.account.form.RecoveryConfirmationForm;
+import wisematches.server.web.controllers.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
@@ -174,6 +176,11 @@ public class RecoveryController {
 	public String recoveredExpectationPage(Model model) {
 		model.addAttribute("infoId", "recovery/expectation");
 		return "/content/account/pages/recovery/expectation";
+	}
+
+	@ModelAttribute("headerTitle")
+	public String getHeaderTitle() {
+		return "title.recovery";
 	}
 
 	@Autowired

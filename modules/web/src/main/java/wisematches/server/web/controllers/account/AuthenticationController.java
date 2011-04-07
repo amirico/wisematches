@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.server.web.controllers.AbstractInfoController;
+import wisematches.server.web.controllers.account.form.AccountLoginForm;
 
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
@@ -113,6 +114,12 @@ public class AuthenticationController extends AbstractInfoController {
 		log.error("Unknown authentication exception received for " + form, ex);
 
 		return processLoginPage("account/system", model, locale);
+	}
+
+
+	@ModelAttribute("headerTitle")
+	public String getHeaderTitle() {
+		return "title.authentication";
 	}
 
 	private void restoreAccountLoginForm(AccountLoginForm form, HttpSession session) {
