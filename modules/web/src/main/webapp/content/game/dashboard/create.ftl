@@ -11,7 +11,7 @@
                 function() {
                     $(this).find('ul').fadeOut('fast');
                 }
-                );
+        );
     });
 
     function addOneMoreOpponent() {
@@ -77,10 +77,10 @@
 <td valign="top">
 <div id="create-game">
 <div>
-    <div class="ui-widget-header ui-corner-top">
+    <div class="ui-widget-header ui-corner-all">
     <@message code="game.create.label"/>
     </div>
-    <div class="ui-widget-content ui-corner-bottom">
+    <div class="ui-widget-content ui-corner-all">
         <div class="info-description"><@message code="game.create.description"/></div>
         <form id="form" class="form" action="/game/create.html" method="post">
             <table>

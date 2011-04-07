@@ -25,6 +25,7 @@
                 <value>classpath:/i18n/common/common</value>
                 <value>classpath:/i18n/server/web</value>
                 <value>classpath:/i18n/server/mail</value>
+                <value>classpath:/i18n/server/exceptions</value>
             </array>
         </property>
     </bean>

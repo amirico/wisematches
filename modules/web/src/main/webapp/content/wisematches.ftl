@@ -43,11 +43,13 @@
 
 <#include "${originalTemplateName}"/>
 
+<#if !errorCode??>
 <@security.authorize ifAllGranted="user">
     <#include "game/footer.ftl"/>
 </@security.authorize>
 <@security.authorize ifNotGranted="user">
     <#include "account/footer.ftl"/>
 </@security.authorize>
+</#if>
 </body>
 </html>
