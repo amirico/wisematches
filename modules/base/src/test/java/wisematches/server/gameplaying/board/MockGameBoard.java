@@ -53,8 +53,8 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 		return a;
 	}
 
-	protected boolean checkGameStalemate() {
-		return gamePassed || super.checkGameStalemate();
+	protected boolean isGameStalemate() {
+		return gamePassed || super.isGameStalemate();
 	}
 
 	public boolean isAllowNextMove() {
