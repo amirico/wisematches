@@ -18,6 +18,7 @@ import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
+import wisematches.server.gameplaying.scribble.Tile;
 import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
@@ -72,12 +73,12 @@ public class PlayboardController extends AbstractPlayerController {
 			log.debug("Process player's move: " + gameId + ", word: " + word);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				final Player currentPlayer = getPlayer();
-				return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
-			}
-		}, locale);
+					@Override
+					public Map<String, Object> call() throws Exception {
+						final Player currentPlayer = getPlayer();
+						return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
+					}
+				}, locale);
 	}
 
 	@ResponseBody
@@ -88,12 +89,12 @@ public class PlayboardController extends AbstractPlayerController {
 			log.debug("Process player's pass: " + gameId);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				final Player currentPlayer = getPlayer();
-				return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
-			}
-		}, locale);
+					@Override
+					public Map<String, Object> call() throws Exception {
+						final Player currentPlayer = getPlayer();
+						return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
+					}
+				}, locale);
 	}
 
 	@ResponseBody
@@ -105,16 +106,16 @@ public class PlayboardController extends AbstractPlayerController {
 			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				int[] t = new int[tiles.length];
-				for (int i = 0; i < tiles.length; i++) {
-					t[i] = tiles[i].getNumber();
-				}
-				final Player currentPlayer = getPlayer();
-				return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
-			}
-		}, locale);
+					@Override
+					public Map<String, Object> call() throws Exception {
+						int[] t = new int[tiles.length];
+						for (int i = 0; i < tiles.length; i++) {
+							t[i] = tiles[i].getNumber();
+						}
+						final Player currentPlayer = getPlayer();
+						return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
+					}
+				}, locale);
 	}
 
 	@ResponseBody
@@ -125,20 +126,20 @@ public class PlayboardController extends AbstractPlayerController {
 			log.debug("Process player's resign: " + gameId);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				Player currentPlayer = getPlayer();
-				final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-				board.resign(board.getPlayerHand(currentPlayer.getId()));
+					@Override
+					public Map<String, Object> call() throws Exception {
+						Player currentPlayer = getPlayer();
+						final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+						board.resign(board.getPlayerHand(currentPlayer.getId()));
 
-				final Map<String, Object> res = new HashMap<String, Object>();
-				res.put("state", convertGameState(board, locale));
-				if (!board.isGameActive()) {
-					res.put("players", board.getPlayersHands());
-				}
-				return res;
-			}
-		}, locale);
+						final Map<String, Object> res = new HashMap<String, Object>();
+						res.put("state", convertGameState(board, locale));
+						if (!board.isGameActive()) {
+							res.put("players", board.getPlayersHands());
+						}
+						return res;
+					}
+				}, locale);
 	}
 
 	@ResponseBody
@@ -149,29 +150,29 @@ public class PlayboardController extends AbstractPlayerController {
 			log.debug("Load board changes for: " + gameId + "@" + movesCount);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+					@Override
+					public Map<String, Object> call() throws Exception {
+						final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
 
-				final Map<String, Object> res = new HashMap<String, Object>();
-				res.put("state", convertGameState(board, locale));
+						final Map<String, Object> res = new HashMap<String, Object>();
+						res.put("state", convertGameState(board, locale));
 
-				if (!board.isGameActive()) {
-					res.put("players", board.getPlayersHands());
-				}
+						if (!board.isGameActive()) {
+							res.put("players", board.getPlayersHands());
+						}
 
-				final List<GameMove> gameMoves = board.getGameMoves();
-				final int madeMoves = gameMoves.size() - movesCount;
-				if (madeMoves > 0) {
-					final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
-					for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
-						moves.add(convertPlayerMove(move, locale));
+						final List<GameMove> gameMoves = board.getGameMoves();
+						final int madeMoves = gameMoves.size() - movesCount;
+						if (madeMoves > 0) {
+							final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
+							for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
+								moves.add(convertPlayerMove(move, locale));
+							}
+							res.put("moves", moves);
+						}
+						return res;
 					}
-					res.put("moves", moves);
-				}
-				return res;
-			}
-		}, locale);
+				}, locale);
 	}
 
 	@ResponseBody
@@ -200,7 +201,9 @@ public class PlayboardController extends AbstractPlayerController {
 		final Map<String, Object> res = new HashMap<String, Object>();
 		res.put("state", convertGameState(board, locale));
 		res.put("move", convertPlayerMove(gameMove, locale));
-		res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
+		Tile[] tiles = board.getPlayerHand(currentPlayer.getId()).getTiles();
+		System.out.println("============ plyaer tiles: " + Arrays.toString(tiles) + ": " + Thread.currentThread());
+		res.put("hand", tiles);
 		if (!board.isGameActive()) {
 			res.put("players", board.getPlayersHands());
 		}

@@ -178,106 +178,53 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	}
 	/* ========== End Listeners and Fires ================ */
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public GameMove makeMove(PlayerMove move) throws GameMoveException {
-		checkState();
+		lock.lock();
+		try {
+			checkState();
 
-		final P player = getPlayerHand(move.getPlayerId());
-		if (player == null) {
-			throw new UnsuitablePlayerException("make turn", 0);
+			final P player = getPlayerHand(move.getPlayerId());
+			if (player == null) {
+				throw new UnsuitablePlayerException("make turn", 0);
+			}
+
+			if (player != getPlayerTurn()) {
+				throw new UnsuitablePlayerException("make turn", getPlayerTurn().getPlayerId(), player.getPlayerId());
+			}
+
+			checkMove(move);
+
+			final short points = calculateMovePoints(move);
+			player.increasePoints(points);
+			lastMoveTime = new Date();
+
+
+			if (move instanceof PassTurnMove) {
+				passesCount++;
+			} else {
+				passesCount = 0;
+			}
+
+			final GameMove gameMove = new GameMove(move, points, moves.size(), lastMoveTime);
+			moves.add(gameMove);
+
+			processMoveFinished(player, gameMove);
+
+			boolean finished = checkGameFinished();
+			boolean passed = isGameStalemate();
+			if (finished || passed) {
+				finalizeGame(finished ? GameResolution.FINISHED : GameResolution.STALEMATE);
+				firePlayerMoved(gameMove);
+				fireGameFinished();
+			} else {
+				playersIterator.next();
+				firePlayerMoved(gameMove);
+			}
+			return gameMove;
+		} finally {
+			lock.unlock();
 		}
-
-		if (player != getPlayerTurn()) {
-			throw new UnsuitablePlayerException("make turn", getPlayerTurn().getPlayerId(), player.getPlayerId());
-		}
-
-		checkMove(move);
-
-		final short points = calculateMovePoints(move);
-		player.increasePoints(points);
-		lastMoveTime = new Date();
-
-
-		if (move instanceof PassTurnMove) {
-			passesCount++;
-		} else {
-			passesCount = 0;
-		}
-
-		final GameMove gameMove = new GameMove(move, points, moves.size(), lastMoveTime);
-		moves.add(gameMove);
-
-		processMoveFinished(player, gameMove);
-
-		boolean finished = checkGameFinished();
-		boolean passed = checkGameStalemate();
-		if (finished || passed) {
-			finalizeGame(finished ? GameResolution.FINISHED : GameResolution.STALEMATE);
-			firePlayerMoved(gameMove);
-			fireGameFinished();
-		} else {
-			playersIterator.next();
-			firePlayerMoved(gameMove);
-		}
-		return gameMove;
-	}
-
-	/**
-	 * This method process game finished and increases players points.
-	 *
-	 * @param resolution returns the game resolution
-	 * @see #processGameFinished()
-	 */
-	private void finalizeGame(GameResolution resolution) {
-		finishedDate = new Date();
-		gameResolution = resolution;
-
-		final short[] ints = processGameFinished();
-		final List<P> list = playersIterator.getPlayerHands();
-		for (int i = 0; i < ints.length; i++) {
-			list.get(i).increasePoints(ints[i]);
-		}
-
-		playersIterator.setPlayerTurn(null);
-	}
-
-	/**
-	 * Checks that board is ready for game and player can make a move.
-	 *
-	 * @throws GameStateException if game state is not <code>ACTIVE</code>.
-	 */
-	protected void checkState() throws GameStateException {
-		if (gameResolution != null) {
-			throw new GameFinishedException(gameResolution);
-		}
-
-		if (checkGameExpired()) {
-			throw new GameExpiredException();
-		}
-	}
-
-	/**
-	 * Selects first player for the game.
-	 * <p/>
-	 * Implementation of this method selects random player from all players in specified list.
-	 *
-	 * @param gameSettings the game settings.
-	 * @param players	  the list of all players to select first.
-	 * @return the player who should be first.
-	 */
-	protected P selectFirstPlayer(S gameSettings, List<P> players) {
-		int index = (int) (Math.random() * (players.size() - 1));
-		return players.get(index);
-	}
-
-	protected final int getPlayerCode(P player) {
-		return playersIterator.getPlayerCode(player);
-	}
-
-	protected final P getPlayerByCode(int code) {
-		return playersIterator.getPlayerHands().get(code);
 	}
 
 	@Override
@@ -368,7 +315,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	public boolean isGameActive() {
 		lock.lock();
 		try {
-			return gameResolution == null && !checkGameExpired();
+			return gameResolution == null && !isGameExpired();
 		} finally {
 			lock.unlock();
 		}
@@ -413,6 +360,94 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		}
 	}
 
+	/**
+	 * Returns number of passed turns.
+	 *
+	 * @return the number of passed turns.
+	 */
+	public int getPassesCount() {
+		lock.lock();
+		try {
+			return passesCount;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * Checks that game is expired.
+	 *
+	 * @return the game is expired.
+	 */
+	protected boolean isGameExpired() {
+		return System.currentTimeMillis() - getLastMoveTime().getTime() > gameSettings.getDaysPerMove() * 86400000;
+	}
+
+	/**
+	 * Checks that game was passed.
+	 *
+	 * @return <code>true</code> if game was passed; <code>otherwise</code>
+	 */
+	protected boolean isGameStalemate() {
+		return passesCount / playersIterator.getPlayerHands().size() >= MAX_PASSED_TURNS;
+	}
+
+	/**
+	 * Checks that board is ready for game and player can make a move.
+	 *
+	 * @throws GameStateException if game state is not <code>ACTIVE</code>.
+	 */
+	protected void checkState() throws GameStateException {
+		if (gameResolution != null) {
+			throw new GameFinishedException(gameResolution);
+		}
+
+		if (isGameExpired()) {
+			throw new GameExpiredException();
+		}
+	}
+
+	/**
+	 * Selects first player for the game.
+	 * <p/>
+	 * Implementation of this method selects random player from all players in specified list.
+	 *
+	 * @param gameSettings the game settings.
+	 * @param players	  the list of all players to select first.
+	 * @return the player who should be first.
+	 */
+	protected P selectFirstPlayer(S gameSettings, List<P> players) {
+		int index = (int) (Math.random() * (players.size() - 1));
+		return players.get(index);
+	}
+
+	protected final P getPlayerByCode(int code) {
+		return playersIterator.getPlayerHands().get(code);
+	}
+
+	protected final int getPlayerCode(P player) {
+		return playersIterator.getPlayerCode(player);
+	}
+
+	/**
+	 * This method process game finished and increases players points.
+	 *
+	 * @param resolution returns the game resolution
+	 * @see #processGameFinished()
+	 */
+	private void finalizeGame(GameResolution resolution) {
+		finishedDate = new Date();
+		gameResolution = resolution;
+
+		final short[] ints = processGameFinished();
+		final List<P> list = playersIterator.getPlayerHands();
+		for (int i = 0; i < ints.length; i++) {
+			list.get(i).increasePoints(ints[i]);
+		}
+
+		playersIterator.setPlayerTurn(null);
+	}
+
 	private void closeImpl(P player, boolean byTimeout) throws GameMoveException {
 		if (gameResolution != null) {
 			return;
@@ -436,33 +471,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		fireGameFinished();
 	}
 
-	/**
-	 * Returns number of passed turns.
-	 *
-	 * @return the number of passed turns.
-	 */
-	public int getPassesCount() {
-		lock.lock();
-		try {
-			return passesCount;
-		} finally {
-			lock.unlock();
-		}
-	}
-
 	/*================== Checks game state =================*/
-	protected boolean checkGameExpired() {
-		return System.currentTimeMillis() - getLastMoveTime().getTime() > gameSettings.getDaysPerMove() * 86400000;
-	}
-
-	/**
-	 * Checks that game was passed.
-	 *
-	 * @return <code>true</code> if game was passed; <code>otherwise</code>
-	 */
-	protected boolean checkGameStalemate() {
-		return passesCount / playersIterator.getPlayerHands().size() >= MAX_PASSED_TURNS;
-	}
 
 	/**
 	 * Creates a player hand for specified player.

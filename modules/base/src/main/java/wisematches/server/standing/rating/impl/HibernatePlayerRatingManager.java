@@ -118,7 +118,6 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 			}
 
 			final HibernateTemplate template = getHibernateTemplate();
-			template.merge(new HibernatePlayerRating(playerId, newRating));
 			template.save(entity);
 			template.flush();
 

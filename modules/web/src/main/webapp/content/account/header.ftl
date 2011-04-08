@@ -11,7 +11,7 @@
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
-                    <@message code="${headerTitle!'wisematches.title'}"/>
+                    <@message code=headerTitle!"title.default"/>
                     </td>
                     <td style="text-align: right;">
                         <select id="language-combobox" size="1"
