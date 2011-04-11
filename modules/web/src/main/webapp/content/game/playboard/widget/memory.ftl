@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget id="memoryWords" title="Memory Words">
+<@wm.widget id="memoryWords" title="Memory Words" style="padding-top: 10px;">
 <table width="100%">
     <thead>
     <tr>
@@ -40,20 +40,20 @@
     $("#memoryWordsToolbar button").button("disable");
 
     $("#memoryWords table").dataTable({
-        "bJQueryUI": true,
-        "bFilter": false,
-        "bSort": true,
-        "bSortClasses": true,
-        "sDom": 't',
-        "aaSorting": [
-            [1,'desc']
-        ],
-        "aoColumns": [
-            null,
-            null,
-            { "bSortable": false }
-        ]
-    });
+                "bJQueryUI": true,
+                "bFilter": false,
+                "bSort": true,
+                "bSortClasses": true,
+                "sDom": 't',
+                "aaSorting": [
+                    [1,'desc']
+                ],
+                "aoColumns": [
+                    null,
+                    null,
+                    { "bSortable": false }
+                ]
+            });
 
     board.bind('wordChanged', function(event, word) {
         $("#memoryAddButton").button(word == null ? "disable" : "enable");

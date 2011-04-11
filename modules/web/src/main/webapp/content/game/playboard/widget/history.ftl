@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<@wm.widget id="movesHistory" title="game.history.label">
+<@wm.widget id="movesHistory" title="game.history.label" style="padding-top: 10px">
 <table width="100%">
     <thead>
     <tr>
@@ -32,17 +32,17 @@
         };
 
         var movesHistoryTable = $("#movesHistory table").dataTable({
-            "bJQueryUI": true,
-            "bSort": true,
-            "bSortClasses": false,
-            "aaSorting": [
-                [0,'desc']
-            ],
-            "bPaginate": false,
-            "sScrollY": "300px",
-            "bStateSave": true,
-            "sDom": 't'
-        });
+                    "bJQueryUI": true,
+                    "bSort": true,
+                    "bSortClasses": false,
+                    "aaSorting": [
+                        [0,'desc']
+                    ],
+                    "bPaginate": false,
+                    "sScrollY": "300px",
+                    "bStateSave": true,
+                    "sDom": 't'
+                });
 
         $.each(board.getGameMoves(), function(i, move) {
             addMoveToHistory(move)

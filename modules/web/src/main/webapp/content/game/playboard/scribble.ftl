@@ -3,6 +3,7 @@
 
 <#include "/core.ftl">
 
+<#if !viewMode>
 <script type="text/javascript">
     wm.scribble.wildcard = new function() {
         var wildcardSelectionDialog = null;
@@ -41,24 +42,26 @@
         }
     };
 </script>
+</#if>
 
 <#include "scribblejs.ftl"/>
 
 <script type="text/javascript">
-    var board = new wm.scribble.Board(scribbleGame, ${player.id?string.computer}, wm.scribble.wildcard.replaceHandler);
+    var board = new wm.scribble.Board(scribbleGame, ${player.id?string.computer}, <#if !viewMode>wm.scribble.wildcard.replaceHandler<#else>null</#if>);
 </script>
 
+<#if !viewMode>
 <div id="wildcardSelectionPanel" style="display: none;">
     <div><@message code="game.play.wildcard.description"/></div>
     <div style="position: relative; height: ${(((board.tilesBankInfo?size)/15)?ceiling)*22}px;"></div>
 </div>
+</#if>
 
 <table id="playboard" cellpadding="5" align="center">
     <tr>
         <td style="vertical-align: top; width: 250px">
         <#include "widget/progress.ftl"/>
         <#include "widget/legend.ftl"/>
-            <div style="height: 10px"></div>
         <#include "widget/history.ftl"/>
         </td>
 
@@ -69,10 +72,10 @@
 
         <td style="vertical-align: top; width: 280px">
         <#include "widget/players.ftl"/>
-            <div style="height: 10px"></div>
-        <#include "widget/selection.ftl"/>
-            <div style="height: 10px"></div>
-        <#include "widget/memory.ftl"/>
+<#if !viewMode>
+            <#include "widget/selection.ftl"/>
+            <#include "widget/memory.ftl"/>
+        </#if>
         </td>
     </tr>
 </table>
@@ -80,8 +83,10 @@
 <script type="text/javascript">
     $("#scribbleBoard").prepend(board.getBoardElement());
 
+    <#if !viewMode>
     $(document).ready(function() {
         board.startBoardMonitoring(function(state, message, error) {
         });
     });
+    </#if>
 </script>
