@@ -45,11 +45,11 @@
 
         var showPlayerRating = function(pid, delta) {
             if (delta == 0) {
-                updatePlayerInfo(pid, "<div class='rating'><div class='icon-rating-same'></div><div>+0</div></div>");
+                updatePlayerInfo(pid, "<div class='rating'><div>1212</div><div class='icon-rating-same'></div><div>1212</div></div>");
             } else if (delta > 0) {
-                updatePlayerInfo(pid, "<div class='rating'><div class='icon-rating-up'></div><div>+" + delta + "</div></div>");
+                updatePlayerInfo(pid, "<div class='rating'><div>1212</div><div class='icon-rating-up'></div><div>1234</div></div>");
             } else {
-                updatePlayerInfo(pid, "<div class='rating'><div class='icon-rating-down'></div><div>" + delta + "</div></div>");
+                updatePlayerInfo(pid, "<div class='rating'><div>1212</div><div class='icon-rating-down' style='size: 8px; color: #a52a2a;'>+ 12 =</div><div>1203</div></div>");
             }
         };
 

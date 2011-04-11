@@ -205,8 +205,13 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		}
 
 
+		final short averageOpponentsRating;
 		final short rating = currentRating.getNewRating();
-		final short averageOpponentsRating = (short) (opponentsRatings / (changes.size() - 1));
+		if (changes.size() < 2) {
+			averageOpponentsRating = (short) opponentsRatings;
+		} else {
+			averageOpponentsRating = (short) (opponentsRatings / (changes.size() - 1));
+		}
 		psr.setAverageOpponentRating(average(psr.getAverageOpponentRating(), averageOpponentsRating, gamesCount));
 		psr.setAverageRating(average(psr.getAverageRating(), rating, gamesCount));
 

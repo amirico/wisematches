@@ -27,8 +27,7 @@
         players: [
         <#list board.playersHands as hand>
             <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
-            {playerId: ${hand.playerId?string.computer}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}',
-                points: ${hand.points?string.computer} <#if !board.gameActive>, rating: ${hand.rating?string.computer}, ratingDelta: ${hand.ratingDelta?string.computer}</#if>}<#if hand_has_next>,</#if>
+            {playerId: ${hand.playerId?string.computer}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points?string.computer}}<#if hand_has_next>,</#if>
         </#list>],
 
         board: {
