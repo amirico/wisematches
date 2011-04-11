@@ -46,8 +46,6 @@ public class HibernatePlayerRatingManagerTest {
 	private BoardStateListener boardStateListener;
 
 	@Autowired
-	private DataSource dataSource;
-	@Autowired
 	private AccountManager accountManager;
 	@Autowired
 	private HibernatePlayerRatingManager playerRatingManager;
@@ -57,8 +55,6 @@ public class HibernatePlayerRatingManagerTest {
 
 	@Before
 	public void createUser() throws InadmissibleUsernameException, DuplicateAccountException {
-		SimpleJdbcTestUtils.deleteFromTables(new SimpleJdbcTemplate(dataSource), "scribble_board", "scribble_player");
-
 		final UUID uuid = UUID.randomUUID();
 		AccountEditor editor = new AccountEditor(uuid.toString(), "HibernatePlayerRatingManagerTest", "");
 		account = accountManager.createAccount(editor.createAccount());
@@ -110,6 +106,7 @@ public class HibernatePlayerRatingManagerTest {
 	public void test_updateRating() {
 		final GameBoard b = createMock(GameBoard.class);
 		expect(b.getBoardId()).andReturn(12L).anyTimes();
+		expect(b.isRatedGame()).andReturn(true);
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
 				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
 				new GamePlayerHand(account.getId(), (short) 200))); // player
@@ -134,7 +131,8 @@ public class HibernatePlayerRatingManagerTest {
 	@SuppressWarnings("unchecked")
 	public void test_getRatingChanges_personality() {
 		final GameBoard b = createMock(GameBoard.class);
-		expect(b.getBoardId()).andReturn(12L).times(2).andReturn(13L).times(2).andReturn(14L).times(2);
+		expect(b.getBoardId()).andReturn(22L).times(2).andReturn(23L).times(2).andReturn(24L).times(2);
+		expect(b.isRatedGame()).andReturn(true).times(3);
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
 				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
 				new GamePlayerHand(account.getId(), (short) 200))).times(3); // player
@@ -145,10 +143,11 @@ public class HibernatePlayerRatingManagerTest {
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 
 		final Object[] ratingChanges = playerRatingManager.getRatingChanges(account).toArray();
+		System.out.println(Arrays.toString(ratingChanges));
 		assertEquals(3, ratingChanges.length);
-		assertRatingChange((RatingChange) ratingChanges[0], account.getId(), 12L, 1200, 1203);
-		assertRatingChange((RatingChange) ratingChanges[1], account.getId(), 13L, 1203, 1206);
-		assertRatingChange((RatingChange) ratingChanges[2], account.getId(), 14L, 1206, 1209);
+		assertRatingChange((RatingChange) ratingChanges[0], account.getId(), 22L, 1200, 1203);
+		assertRatingChange((RatingChange) ratingChanges[1], account.getId(), 23L, 1203, 1206);
+		assertRatingChange((RatingChange) ratingChanges[2], account.getId(), 24L, 1206, 1209);
 	}
 
 	@Test
@@ -156,6 +155,7 @@ public class HibernatePlayerRatingManagerTest {
 	public void test_getRatingChanges_board() {
 		final GameBoard b = createMock(GameBoard.class);
 		expect(b.getBoardId()).andReturn(12L).times(3);
+		expect(b.isRatedGame()).andReturn(true);
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
 				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
 				new GamePlayerHand(account.getId(), (short) 200))); // player

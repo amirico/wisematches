@@ -48,13 +48,14 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	@Column(name = "finishedDate")
 	private Date finishedDate;
 
-	/**
-	 * List of players for this board.
-	 * <p/>
-	 * This is embedded Hibernate object.
-	 */
-	@Embedded
-	private PlayersIterator<P> playersIterator;
+	@OrderColumn(name = "playerIndex")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@CollectionTable(name = "scribble_player", joinColumns = @JoinColumn(name = "boardId"))
+	private List<P> playerHands;
+
+	@Column(name = "currentPlayerIndex")
+	private byte currentPlayerIndex = -1;
 
 	/**
 	 * Count of passed turns. If passed turns count grate three game is draw.
@@ -123,16 +124,15 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		startedDate = lastMoveTime = new Date();
 
-		int index = 0;
 		final List<P> hands = new ArrayList<P>(players.size());
 		for (Personality player : players) {
 			if (player == null) {
 				throw new IllegalArgumentException("Players list can't contain null players");
 			}
-			final P hand = createPlayerHand(player);
-			hands.add(hand);
+			hands.add(createPlayerHand(player));
 		}
-		playersIterator = new PlayersIterator<P>(hands, selectFirstPlayer(gameSettings, hands));
+		playerHands = hands;
+		currentPlayerIndex = selectFirstPlayer(gameSettings, hands);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 				firePlayerMoved(gameMove);
 				fireGameFinished();
 			} else {
-				playersIterator.next();
+				currentPlayerIndex = getNextPlayerIndex();
 				firePlayerMoved(gameMove);
 			}
 			return gameMove;
@@ -234,11 +234,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			if (isGameActive()) {
 				return null;
 			}
-			final List<P> players = playersIterator.getPlayerHands();
-			final List<P> won = new ArrayList<P>(players.size());
+			final List<P> won = new ArrayList<P>(playerHands.size());
 
 			int points = Integer.MIN_VALUE;
-			for (P player : players) {
+			for (P player : playerHands) {
 				if (player.getPoints() == points) {
 					won.add(player);
 				} else if (player.getPoints() > points) {
@@ -247,7 +246,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 					points = player.getPoints();
 				}
 			}
-			if (won.size() == players.size()) {
+			if (won.size() == playerHands.size()) {
 				return Collections.emptyList();
 			}
 			return won;
@@ -260,7 +259,17 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	public P getPlayerTurn() {
 		lock.lock();
 		try {
-			return playersIterator.getPlayerTurn();
+			return getPlayerByCode(currentPlayerIndex);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public P getNextPlayerTurn() {
+		lock.lock();
+		try {
+			return getPlayerByCode(getNextPlayerIndex());
 		} finally {
 			lock.unlock();
 		}
@@ -280,7 +289,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	public P getPlayerHand(long playerId) {
 		lock.lock();
 		try {
-			for (P playerHand : playersIterator.getPlayerHands()) {
+			for (P playerHand : playerHands) {
 				if (playerHand.getPlayerId() == playerId) {
 					return playerHand;
 				}
@@ -295,7 +304,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	public List<P> getPlayersHands() {
 		lock.lock();
 		try {
-			return playersIterator.getPlayerHands();
+			return Collections.unmodifiableList(playerHands);
 		} finally {
 			lock.unlock();
 		}
@@ -389,7 +398,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @return <code>true</code> if game was passed; <code>otherwise</code>
 	 */
 	protected boolean isGameStalemate() {
-		return passesCount / playersIterator.getPlayerHands().size() >= MAX_PASSED_TURNS;
+		return passesCount / playerHands.size() >= MAX_PASSED_TURNS;
 	}
 
 	/**
@@ -416,36 +425,41 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @param players	  the list of all players to select first.
 	 * @return the player who should be first.
 	 */
-	protected P selectFirstPlayer(S gameSettings, List<P> players) {
-		int index = (int) (Math.random() * (players.size() - 1));
-		return players.get(index);
+	protected byte selectFirstPlayer(S gameSettings, List<P> players) {
+		return (byte) (Math.random() * (players.size() - 1));
 	}
 
-	protected final P getPlayerByCode(int code) {
-		return playersIterator.getPlayerHands().get(code);
+	protected final P getPlayerByCode(byte code) {
+		if (code == -1) {
+			return null;
+		}
+		return playerHands.get(code);
 	}
 
-	protected final int getPlayerCode(P player) {
-		return playersIterator.getPlayerCode(player);
+	protected final byte getPlayerCode(P player) {
+		return (byte) playerHands.indexOf(player);
 	}
 
-	/**
-	 * This method process game finished and increases players points.
-	 *
-	 * @param resolution returns the game resolution
-	 * @see #processGameFinished()
-	 */
+
+	private byte getNextPlayerIndex() {
+		if (currentPlayerIndex == -1) {
+			return -1;
+		} else if (currentPlayerIndex + 1 == playerHands.size()) {
+			return 0;
+		} else {
+			return (byte) (currentPlayerIndex + 1);
+		}
+	}
+
 	private void finalizeGame(GameResolution resolution) {
 		finishedDate = new Date();
 		gameResolution = resolution;
 
 		final short[] ints = processGameFinished();
-		final List<P> list = playersIterator.getPlayerHands();
 		for (int i = 0; i < ints.length; i++) {
-			list.get(i).increasePoints(ints[i]);
+			playerHands.get(i).increasePoints(ints[i]);
 		}
-
-		playersIterator.setPlayerTurn(null);
+		currentPlayerIndex = -1;
 	}
 
 	private void closeImpl(P player, boolean byTimeout) throws GameMoveException {
@@ -460,14 +474,14 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		hand.increasePoints((short) -hand.getPoints()); // Clear player points...
 
-		if (rated && moves.size() + passesCount < playersIterator.size() * 2) {
+		if (rated && moves.size() + passesCount < playerHands.size() * 2) {
 			rated = false;
 		}
 
 		finalizeGame(byTimeout ? GameResolution.TIMEOUT : GameResolution.RESIGNED);
 
 		//According to requirements if game was interrupted when terminator should be set as a current player.
-		playersIterator.setPlayerTurn(hand);
+		currentPlayerIndex = getPlayerCode(hand);
 		fireGameFinished();
 	}
 

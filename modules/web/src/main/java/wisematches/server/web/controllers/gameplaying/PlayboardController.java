@@ -156,19 +156,25 @@ public class PlayboardController extends AbstractPlayerController {
 
 						final Map<String, Object> res = new HashMap<String, Object>();
 						res.put("state", convertGameState(board, locale));
-
-						if (!board.isGameActive()) {
-							res.put("players", board.getPlayersHands());
-						}
-
 						final List<GameMove> gameMoves = board.getGameMoves();
-						final int madeMoves = gameMoves.size() - movesCount;
-						if (madeMoves > 0) {
+						final int newMovesCount = gameMoves.size() - movesCount;
+						if (newMovesCount > 0) {
 							final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
 							for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
 								moves.add(convertPlayerMove(move, locale));
 							}
 							res.put("moves", moves);
+
+							final Player currentPlayer = getPlayer(); // update hand only if new moves found
+							if (currentPlayer != null) {
+								ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer.getId());
+								if (playerHand != null) {
+									res.put("hand", playerHand.getTiles());
+								}
+							}
+						}
+						if (!board.isGameActive()) {
+							res.put("players", board.getPlayersHands());
 						}
 						return res;
 					}
@@ -200,10 +206,8 @@ public class PlayboardController extends AbstractPlayerController {
 
 		final Map<String, Object> res = new HashMap<String, Object>();
 		res.put("state", convertGameState(board, locale));
-		res.put("move", convertPlayerMove(gameMove, locale));
-		Tile[] tiles = board.getPlayerHand(currentPlayer.getId()).getTiles();
-		System.out.println("============ plyaer tiles: " + Arrays.toString(tiles) + ": " + Thread.currentThread());
-		res.put("hand", tiles);
+		res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));
+		res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
 		if (!board.isGameActive()) {
 			res.put("players", board.getPlayersHands());
 		}

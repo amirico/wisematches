@@ -54,7 +54,6 @@ public class HibernateAccountLockManager extends HibernateDaoSupport implements 
 		} else {
 			template.persist(new HibernateAccountLockInfo(player, publicReason, privateReason, unlockDate));
 		}
-		template.flush();
 
 		for (AccountLockListener accountLockListener : accountLockListeners) {
 			accountLockListener.accountLocked(player, publicReason, privateReason, unlockDate);
@@ -68,7 +67,6 @@ public class HibernateAccountLockManager extends HibernateDaoSupport implements 
 		final AccountLockInfo lai = template.get(HibernateAccountLockInfo.class, player.getId());
 		if (lai != null) {
 			template.delete(lai);
-			template.flush();
 
 			for (AccountLockListener accountLockListener : accountLockListeners) {
 				accountLockListener.accountUnlocked(player);
@@ -115,8 +113,6 @@ public class HibernateAccountLockManager extends HibernateDaoSupport implements 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AccountLockInfo getAccountLockInfo(Account player) {
 		final HibernateTemplate template = getHibernateTemplate();
-		template.setCacheQueries(false);
-
 		HibernateAccountLockInfo accountInfo = template.get(HibernateAccountLockInfo.class, player.getId());
 		if (log.isDebugEnabled()) {
 			log.debug("Get account lock info: " + accountInfo);
@@ -135,9 +131,7 @@ public class HibernateAccountLockManager extends HibernateDaoSupport implements 
 					log.debug("Account already isn't locked. We can remove lock. Unlock date: " +
 							accountInfo.getUnlockDate().getTime() + ". Now time: " + System.currentTimeMillis());
 				}
-
 				template.delete(accountInfo);
-				template.flush();
 
 				for (AccountLockListener accountLockListener : accountLockListeners) {
 					accountLockListener.accountUnlocked(player);
@@ -170,7 +164,6 @@ public class HibernateAccountLockManager extends HibernateDaoSupport implements 
 			info.setReason(reason);
 			template.update(info);
 		}
-		template.flush();
 
 		for (AccountNicknameLockListener listenerAccountNickname : listenerAccountNicknames) {
 			listenerAccountNickname.usernameLocked(nickname, reason);

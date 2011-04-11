@@ -10,13 +10,13 @@
         this.replaceHandler = function(tile, replacer) {
             if (wildcardSelectionDialog == null) {
                 wildcardSelectionDialog = $('#wildcardSelectionPanel').dialog({
-                    title: '<@message code="game.play.wildcard.label"/>',
-                    autoOpen: false,
-                    draggable: false,
-                    modal: true,
-                    resizable: false,
-                    width: 400
-                });
+                            title: '<@message code="game.play.wildcard.label"/>',
+                            autoOpen: false,
+                            draggable: false,
+                            modal: true,
+                            resizable: false,
+                            width: 400
+                        });
 
                 var panel = $($("#wildcardSelectionPanel div").get(1)).empty();
                 $.each(scribbleGame.bank.tilesInfo, function(i, bti) {

@@ -19,26 +19,23 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 
 	public ScribbleBoard getScribbleBoard(long boardId) {
 		final HibernateTemplate template = getHibernateTemplate();
-		return template.get(ScribbleBoard.class, boardId);
+		ScribbleBoard scribbleBoard = template.get(ScribbleBoard.class, boardId);
+		template.evict(scribbleBoard);
+		return scribbleBoard;
 	}
 
 	public void saveScribbleBoard(ScribbleBoard scribbleBoard) {
 		final HibernateTemplate template = getHibernateTemplate();
-
-		// We call merge object because original can't be associated with another session
-		if (scribbleBoard.getBoardId() == 0) {
-			template.persist(scribbleBoard);
-		} else {
-			template.merge(scribbleBoard);
-		}
+		template.saveOrUpdate(scribbleBoard);
 		template.flush();
+		template.evict(scribbleBoard);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<Long> getActiveBoards(Personality player) {
 		final HibernateTemplate template = getHibernateTemplate();
 		return (List<Long>) template.find("select board.boardId from wisematches.server.gameplaying.scribble.board.ScribbleBoard " +
-				" board join board.playersIterator.playerHands hands where board.gameResolution is NULL and hands.playerId = ?", player.getId());
+				" board join board.playerHands hand where board.gameResolution is NULL and hand.playerId = ?", player.getId());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -18,6 +18,7 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 public abstract class Account extends Personality implements Serializable {
+	@Deprecated
 	protected Account() {
 	}
 

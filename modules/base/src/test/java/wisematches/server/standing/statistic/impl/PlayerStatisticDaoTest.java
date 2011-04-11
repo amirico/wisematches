@@ -129,6 +129,7 @@ public class PlayerStatisticDaoTest {
 		playerStatisticManager.updatePlayerStatistic(statistic);
 */
 
+		sessionFactory.getCurrentSession().flush();
 		sessionFactory.getCurrentSession().clear();
 
 		final HibernatePlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
@@ -189,6 +190,7 @@ public class PlayerStatisticDaoTest {
 */
 
 		playerStatisticDao.removePlayerStatistic(s);
+		sessionFactory.getCurrentSession().flush();
 		sessionFactory.getCurrentSession().clear();
 		assertNull(playerStatisticDao.loadPlayerStatistic(person));
 	}
