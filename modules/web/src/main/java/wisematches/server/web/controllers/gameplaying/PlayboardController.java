@@ -22,6 +22,9 @@ import wisematches.server.gameplaying.scribble.Tile;
 import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
+import wisematches.server.personality.player.computer.ComputerPlayer;
+import wisematches.server.standing.rating.PlayerRatingManager;
+import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.gameplaying.form.CheckWordForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleTileForm;
@@ -37,8 +40,9 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/game")
 public class PlayboardController extends AbstractPlayerController {
-	private GameMessageSource gameMessageSource;
+	private PlayerRatingManager ratingManager;
 	private DictionaryManager dictionaryManager;
+	private GameMessageSource gameMessageSource;
 	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
@@ -56,6 +60,9 @@ public class PlayboardController extends AbstractPlayerController {
 			}
 
 			model.addAttribute("board", board);
+			if (!board.isGameActive()) {
+				model.addAttribute("ratings", getRatingChanges(board));
+			}
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
 			return "/content/game/playboard/scribble";
 		} catch (BoardLoadingException ex) {
@@ -319,6 +326,36 @@ public class PlayboardController extends AbstractPlayerController {
 		return translateSystemException(e, locale);
 	}
 
+	private Map<String, RatingChange> getRatingChanges(ScribbleBoard board) {
+		final Collection<RatingChange> ratingChanges = ratingManager.getRatingChanges(board);
+		if (ratingChanges != null) {
+			final Map<String, RatingChange> ratings = new HashMap<String, RatingChange>(ratingChanges.size());
+			for (RatingChange change : ratingChanges) {
+				ratings.put(String.valueOf(change.getPlayerId()), change);
+			}
+			List<ScribblePlayerHand> playersHands = board.getPlayersHands();
+			for (ScribblePlayerHand hand : playersHands) {
+				ComputerPlayer cp = ComputerPlayer.getComputerPlayer(hand.getPlayerId());
+				if (cp != null) {
+					final RatingChange value = new RatingChange(cp.getId(), board.getBoardId(), board.getFinishedTime(), cp.getRating(), cp.getRating(), hand.getPoints());
+					ratings.put(String.valueOf(cp.getId()), value);
+				}
+			}
+			return ratings;
+		}
+		return null;
+	}
+
+	@Autowired
+	public void setRatingManager(PlayerRatingManager ratingManager) {
+		this.ratingManager = ratingManager;
+	}
+
+	@Autowired
+	public void setGameMessageSource(GameMessageSource gameMessageSource) {
+		this.gameMessageSource = gameMessageSource;
+	}
+
 	@Autowired
 	public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
 		this.dictionaryManager = dictionaryManager;
@@ -327,10 +364,5 @@ public class PlayboardController extends AbstractPlayerController {
 	@Autowired
 	public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
 		this.scribbleRoomManager = scribbleRoomManager;
-	}
-
-	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
 	}
 }

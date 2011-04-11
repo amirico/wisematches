@@ -43,14 +43,19 @@
             updatePlayerInfo(pid, time);
         };
 
-        var showPlayerRating = function(pid, delta) {
-            if (delta == 0) {
-                updatePlayerInfo(pid, "<div class='rating'><div>1212</div><div class='icon-rating-same'></div><div>1212</div></div>");
-            } else if (delta > 0) {
-                updatePlayerInfo(pid, "<div class='rating'><div>1212</div><div class='icon-rating-up'></div><div>1234</div></div>");
+        var showPlayerRating = function(pid, ratingDelta, ratingFinal) {
+            var iconClass;
+            if (ratingDelta == 0) {
+                ratingDelta = '+' + ratingDelta;
+                iconClass = "icon-rating-same";
+            } else if (ratingDelta > 0) {
+                ratingDelta = '+' + ratingDelta;
+                iconClass = "icon-rating-up";
             } else {
-                updatePlayerInfo(pid, "<div class='rating'><div>1212</div><div class='icon-rating-down' style='size: 8px; color: #a52a2a;'>+ 12 =</div><div>1203</div></div>");
+                ratingDelta = '' + ratingDelta;
+                iconClass = "icon-rating-down";
             }
+            updatePlayerInfo(pid, "<div class='rating'><div class='change " + iconClass + "'><sub>" + ratingDelta + "</sub></div><div class='value'>" + ratingFinal + "</div></div>");
         };
 
         var updatePlayerPoints = function(pid) {
@@ -67,7 +72,7 @@
                 showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime());
             } else {
                 $.each(board.getPlayerHands(), function(i, hand) {
-                    showPlayerRating(hand.playerId, hand.ratingDelta);
+                    showPlayerRating(hand.playerId, hand.ratingDelta, hand.ratingFinal);
                     updatePlayerPoints(hand.playerId);
                 });
                 selectWonPlayers(board.getWonPlayers());
