@@ -146,8 +146,7 @@ public class AbstractGameBoardTest {
 
 		//unsuitable player
 		try {
-			PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
-			board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
+			board.makeMove(new MakeTurnMove(board.getNextPlayerTurn().getPlayerId()));
 			fail("Exception must be here");
 		} catch (UnsuitablePlayerException e) {
 			;
@@ -193,9 +192,6 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_gameMoves() throws GameMoveException {
-		PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
-		PlayersIterator p2 = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
-
 		final GameBoardListener l = createStrictMock(GameBoardListener.class);
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
@@ -207,14 +203,17 @@ public class AbstractGameBoardTest {
 		board.setMoveFinished(false);
 		board.addGameBoardListener(l);
 
+		GamePlayerHand turn = board.getPlayerTurn();
+		GamePlayerHand nextTurn = board.getNextPlayerTurn();
+
 		board.makeMove(m1);
 		assertEquals(10, move.getValue().getPoints());
 		assertEquals(1, board.getGameMoves().size());
 		assertSame(m1, board.getGameMoves().get(0).getPlayerMove());
 		assertSame(10, board.getGameMoves().get(0).getPoints());
 		assertSame(0, board.getGameMoves().get(0).getMoveNumber());
-		assertEquals(10, p2.getPlayerTurn().getPoints());
-		assertSame(p2.next(), board.getPlayerTurn());
+		assertEquals(10, turn.getPoints());
+		assertSame(nextTurn, board.getPlayerTurn());
 		assertTrue(board.isMoveFinished());
 		verify(l);
 
@@ -225,11 +224,14 @@ public class AbstractGameBoardTest {
 		l.gameMoveDone(same(board), capture(gm2));
 		replay(l);
 
+		turn = board.getPlayerTurn();
+		nextTurn = board.getNextPlayerTurn();
+
 		board.setPoints((short) 2);
 		board.setMoveFinished(false);
 		board.makeMove(m2);
 		assertEquals(2, board.getGameMoves().size());
-		assertSame(p2.next(), board.getPlayerTurn());
+		assertSame(nextTurn, board.getPlayerTurn());
 		assertSame(m2, board.getGameMoves().get(1).getPlayerMove());
 		assertSame(2, board.getGameMoves().get(1).getPoints());
 		assertSame(1, board.getGameMoves().get(1).getMoveNumber());
@@ -255,7 +257,6 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_finishByWin() throws GameMoveException {
-		PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
 		h1.increasePoints((short) 1);
 
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
@@ -266,10 +267,10 @@ public class AbstractGameBoardTest {
 
 		board.addGameBoardListener(l);
 
-		board.makeMove(new MakeTurnMove(p.getPlayerTurn().getPlayerId()));
+		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGameFinished(true);
 		board.setFinishScore(new short[]{10, 3, 4});
-		board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
+		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 
 		assertEquals(GameResolution.FINISHED, board.getGameResolution());
 		assertNotNull(board.getFinishedTime());
@@ -284,8 +285,6 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_finishByDraw_NoWins() throws GameMoveException {
-		PlayersIterator p = new PlayersIterator(Arrays.asList(h1, h2, h3), board.getPlayerTurn());
-
 		GameBoardListener l = createStrictMock(GameBoardListener.class);
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
@@ -294,10 +293,10 @@ public class AbstractGameBoardTest {
 
 		board.addGameBoardListener(l);
 
-		board.makeMove(new MakeTurnMove(p.getPlayerTurn().getPlayerId()));
+		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGameFinished(true);
 		board.setFinishScore(new short[]{0, 0, 0});
-		board.makeMove(new MakeTurnMove(p.next().getPlayerId()));
+		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 
 		assertEquals(GameResolution.FINISHED, board.getGameResolution());
 		assertNull(board.getPlayerTurn());

@@ -26,13 +26,11 @@ class PlayerStatisticDao extends HibernateDaoSupport {
 
 		HibernateTemplate hibernateTemplate = getHibernateTemplate();
 		hibernateTemplate.saveOrUpdate(statistic);
-		hibernateTemplate.flush();
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
 	void removePlayerStatistic(HibernatePlayerStatistic statistic) {
 		HibernateTemplate hibernateTemplate = getHibernateTemplate();
 		hibernateTemplate.delete(statistic);
-		hibernateTemplate.flush();
 	}
 }

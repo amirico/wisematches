@@ -1,5 +1,6 @@
 package wisematches.server.personality.account.impl;
 
+import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,18 +38,26 @@ public class HibernateAccountLockManagerTest {
 
 	private Account player;
 
+	@Autowired
+	private SessionFactory sessionFactory;
+
 	private AccountLockListener accountLockListener;
 	private AccountNicknameLockListener listenerAccountNickname;
+
+	public HibernateAccountLockManagerTest() {
+	}
 
 	@Before
 	public void createAccount() throws Exception {
 		UUID uuid = UUID.randomUUID();
 		player = accountManager.createAccount(new AccountEditor(uuid + "@qwe.ru", uuid.toString(), "asd").createAccount());
+		sessionFactory.getCurrentSession().flush();
 	}
 
 	@After
 	public void removeAccount() throws Exception {
 		accountManager.removeAccount(player);
+		sessionFactory.getCurrentSession().flush();
 	}
 
 	@BeforeTransaction
@@ -118,6 +127,7 @@ public class HibernateAccountLockManagerTest {
 		replay(accountLockListener);
 
 		accountLockManager.lockAccount(player, "t1", "t2", unlockDate);
+		sessionFactory.getCurrentSession().flush();
 		assertNull(accountLockManager.getAccountLockInfo(new AccountEditor("asd", "qwe", "zc").createAccount()));
 		final AccountLockInfo lockInfo = accountLockManager.getAccountLockInfo(player);
 		assertEquals(player, lockInfo.getAccount());
@@ -129,6 +139,7 @@ public class HibernateAccountLockManagerTest {
 		//Now wait while lock timeout expired
 		Thread.sleep(1200);
 		assertNull(accountLockManager.getAccountLockInfo(player));
+		sessionFactory.getCurrentSession().flush();
 	}
 
 	@Test

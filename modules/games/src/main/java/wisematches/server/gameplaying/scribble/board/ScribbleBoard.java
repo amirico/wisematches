@@ -2,7 +2,6 @@ package wisematches.server.gameplaying.scribble.board;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.annotations.AccessType;
 import org.hibernate.annotations.Type;
 import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.dictionary.Dictionary;
@@ -63,7 +62,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Lob
 	@Type(type = "[B")
 	@Column(name = "boardTiles")
-	@AccessType("property")
+	@Access(AccessType.PROPERTY)
 	private final byte[] boardTiles = new byte[255];
 
 	/**
@@ -81,7 +80,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Lob
 	@Type(type = "[B")
 	@Column(name = "handTiles")
-	@AccessType("property")
+	@Access(AccessType.PROPERTY)
 	private final byte[] handTiles = new byte[42];
 
 	/**
@@ -103,7 +102,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Lob
 	@Type(type = "[B")
 	@Column(name = "redifinitions")
-	@AccessType("property")
+	@Access(AccessType.PROPERTY)
 	private final ByteBuffer tilesRedifinitions = ByteBuffer.allocate(255);
 
 	/**
@@ -127,7 +126,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Lob
 	@Type(type = "[B")
 	@Column(name = "moves")
-	@AccessType("property")
+	@Access(AccessType.PROPERTY)
 	private final ByteBuffer boardMoves = ByteBuffer.allocate(2912);
 
 	public static final int CELLS_NUMBER = 15;
@@ -244,7 +243,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 				boardMoves.position(boardMoves.position() - 1); // roll position back
 				break;
 			}
-			final int code = (byte1 >> 1) & 0x7; // 0111
+			final byte code = (byte) ((byte1 >> 1) & 0x7); // 0111
 			final int type = (byte1 >> 4) & 0xF; // 1111
 
 			final int byte2 = byteToInt(boardMoves.get());

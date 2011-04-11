@@ -121,14 +121,18 @@
         };
 
         this.passTurn = function() {
-            wm.ui.showConfirm("<@message code="game.move.pass.label"/>", "<@message code="game.move.pass.description"/>", function() {
-                board.passTurn(showMoveResult);
+            wm.ui.showConfirm("<@message code="game.move.pass.label"/>", "<@message code="game.move.pass.description"/>", function(approved) {
+                if (approved) {
+                    board.passTurn(showMoveResult);
+                }
             });
         };
 
         this.resignGame = function() {
-            wm.ui.showConfirm("<@message code="game.move.resign.label"/>", "<@message code="game.move.resign.description"/>", function() {
-                board.resign(showMoveResult);
+            wm.ui.showConfirm("<@message code="game.move.resign.label"/>", "<@message code="game.move.resign.description"/>", function(approved) {
+                if (approved) {
+                    board.resign(showMoveResult);
+                }
             });
         };
 
@@ -140,26 +144,26 @@
             });
 
             $('#exchangeTilesPanel').dialog({
-                title: "<@message code="game.play.exchange.label"/>",
-                draggable: false,
-                modal: true,
-                resizable: false,
-                width: 400,
-                buttons: {
-                    "<@message code="game.play.exchange.label"/>": function() {
-                        $(this).dialog("close");
-                        var tiles = new Array();
-                        $.each(tilesPanel.children(), function(i, tw) {
-                            if (wm.scribble.tile.isTileSelected(tw)) {
-                                tiles.push($(tw).data('tile'));
-                            }
-                        });
-                        board.exchangeTiles(tiles, showMoveResult);
-                    },
-                    "<@message code="cancel.label"/>": function() {
-                        $(this).dialog("close");
-                    } }
-            });
+                        title: "<@message code="game.play.exchange.label"/>",
+                        draggable: false,
+                        modal: true,
+                        resizable: false,
+                        width: 400,
+                        buttons: {
+                            "<@message code="game.play.exchange.label"/>": function() {
+                                $(this).dialog("close");
+                                var tiles = new Array();
+                                $.each(tilesPanel.children(), function(i, tw) {
+                                    if (wm.scribble.tile.isTileSelected(tw)) {
+                                        tiles.push($(tw).data('tile'));
+                                    }
+                                });
+                                board.exchangeTiles(tiles, showMoveResult);
+                            },
+                            "<@message code="cancel.label"/>": function() {
+                                $(this).dialog("close");
+                            } }
+                    });
         };
         this.updateControlsState();
     };

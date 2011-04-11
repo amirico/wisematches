@@ -22,14 +22,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 	 */
 	@Deprecated
 	ScribblePlayerHand() {
-		System.out.println("============== new hibernate tiles created");
-/*
-		try {
-			throw new Exception();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-*/
 	}
 
 	public ScribblePlayerHand(long playerId) {
@@ -38,7 +30,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 
 	public ScribblePlayerHand(long playerId, Tile[] tiles) {
 		super(playerId);
-		System.out.println("============== new tile created " + Thread.currentThread() + ", " + System.identityHashCode(this));
 		if (tiles != null) {
 			this.tiles = tiles.clone();
 		}
@@ -48,7 +39,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 		if (tiles == EMPTY_TILES) {
 			return EMPTY_TILES;
 		}
-		System.out.println("============== get tiles " + Arrays.toString(this.tiles) + ": " + Thread.currentThread() + ", " + System.identityHashCode(this));
 		return tiles.clone();
 	}
 
@@ -67,7 +57,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 		System.arraycopy(tiles, 0, res, this.tiles.length, tiles.length);
 
 		this.tiles = res;
-		System.out.println("============== add tiles " + Arrays.toString(this.tiles) + ": " + Thread.currentThread() + ", " + System.identityHashCode(this));
 	}
 
 	void removeTiles(Tile[] tiles) {
@@ -84,7 +73,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 				res[index++] = pt;
 			}
 		}
-		System.out.println("============== remove tiles " + Arrays.toString(this.tiles) + ": " + Thread.currentThread() + ", " + System.identityHashCode(this));
 		this.tiles = res;
 	}
 
@@ -93,7 +81,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 			throw new IllegalArgumentException("Letters can't be null");
 		}
 		this.tiles = tiles.clone();
-		System.out.println("============== set tiles " + Arrays.toString(this.tiles) + ": " + Thread.currentThread() + ", " + System.identityHashCode(this));
 	}
 
 	@Override

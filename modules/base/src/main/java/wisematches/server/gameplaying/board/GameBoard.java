@@ -83,6 +83,15 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	P getPlayerTurn();
 
 	/**
+	 * Returns player that will have turn next if game won't be finished.
+	 * <p/>
+	 * If game was finished correct method returns {@code null}
+	 *
+	 * @return player who will have next turn if game won't be finished.
+	 */
+	P getNextPlayerTurn();
+
+	/**
 	 * Returns unmodifiable collection of maden moves.
 	 *
 	 * @return the unmodifiable collection of maden moves.

@@ -105,32 +105,41 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 	}
 
 	private void processRatingChange(final long playerId, final GameBoard board, final short oldRating, final short newRating, final short points) {
-		final long boardId = board.getBoardId();
-		final ComputerPlayer computerPlayer = ComputerPlayer.getComputerPlayer(playerId);
-		if (computerPlayer != null) {
-			log.debug("Computer rating can't be changed: " + playerId + " on board " + boardId + ": " + oldRating + "->" + newRating);
-		} else {
-			log.info("Process player's rating changed: " + playerId + " on board " + boardId + ": " + oldRating + "->" + newRating);
+		ratingsLock.lock();
+		try {
+			final long boardId = board.getBoardId();
+			final ComputerPlayer computerPlayer = ComputerPlayer.getComputerPlayer(playerId);
+			if (computerPlayer != null) {
+				log.debug("Computer rating can't be changed: " + playerId + " on board " + boardId + ": " + oldRating + "->" + newRating);
+			} else {
+				log.info("Process player's rating changed: " + playerId + " on board " + boardId + ": " + oldRating + "->" + newRating);
 
-			final RatingChange entity = new RatingChange(playerId, boardId, new Date(), oldRating, newRating, points);
-			if (log.isDebugEnabled()) {
-				log.debug("RatingChange event: " + entity);
-			}
+				final Personality person = Personality.person(playerId);
+				final RatingChange entity = new RatingChange(playerId, boardId, new Date(), oldRating, newRating, points);
+				if (log.isDebugEnabled()) {
+					log.debug("RatingChange event: " + entity);
+				}
+				HibernateTemplate template = getHibernateTemplate();
 
-			final HibernateTemplate template = getHibernateTemplate();
-			template.save(entity);
-			template.flush();
+				HibernatePlayerRating rating = template.get(HibernatePlayerRating.class, playerId);
+				if (rating == null) {
+					rating = new HibernatePlayerRating(playerId, newRating);
+					template.save(rating);
+				} else {
+					rating.setRating(newRating);
+					template.update(rating);
+				}
 
-			final Personality person = Personality.person(playerId);
-			ratingsLock.lock();
-			try {
+				template.save(entity);
+
 				if (ratings.containsKey(person)) {
+					System.out.println("Put player's rating: " + newRating);
 					ratings.put(person, newRating);
 				}
-			} finally {
-				ratingsLock.unlock();
+				fireRatingChangedEvent(person, board, oldRating, newRating);
 			}
-			fireRatingChangedEvent(person, board, oldRating, newRating);
+		} finally {
+			ratingsLock.unlock();
 		}
 	}
 
