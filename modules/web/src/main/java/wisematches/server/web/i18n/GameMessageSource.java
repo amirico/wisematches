@@ -84,11 +84,11 @@ public class GameMessageSource {
 		final int hours = (int) ((time - (days * 24 * 60)) / 60);
 		final int minutes = (int) (time % 60);
 
+		final TimeDeclension declension = TimeDeclension.declension(Language.byCode(locale.getLanguage()));
 		if (days <= 0 && hours <= 0 && minutes <= 0) {
-			return "";
+			return "--" + declension.days(0) + " --" + declension.hours(0);
 		}
 
-		final TimeDeclension declension = TimeDeclension.declension(Language.byCode(locale.getLanguage()));
 		if (hours <= 0 && minutes <= 0) {
 			return days + " " + declension.days(days);
 		}
