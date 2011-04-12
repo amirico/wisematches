@@ -37,7 +37,7 @@ wm.scribble.tile = new function() {
     };
 
     this.isTileSelected = function(tileWidget) {
-        return $(tileWidget).get(0).selected == true;
+        return $(tileWidget).get(0).selected === true;
     };
 
     this.getLetter = function(tileWidget) {
@@ -51,7 +51,7 @@ wm.scribble.tile = new function() {
     };
 
     this.isTilePined = function(tileWidget) {
-        return $(tileWidget).get(0).pinned == true;
+        return tileWidget != null && tileWidget != undefined && $(tileWidget).get(0).pinned === true;
     };
 };
 
@@ -534,6 +534,26 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
                 });
     };
 
+    var wordIterator = function(word, handler) {
+        var rowK = 0, columnK = 0;
+        var row = word.position.row;
+        var column = word.position.column;
+        if (word.direction == 'VERTICAL') {
+            rowK = 1;
+        } else {
+            columnK = 1;
+        }
+        for (var i = 0, count = word.tiles.length; i < count; i++) {
+            var res = handler(i, word.tiles[i], row, column);
+            if (res === false) {
+                return false;
+            }
+            row += rowK;
+            column += columnK;
+        }
+        return true;
+    };
+
     this.getBoardId = function() {
         return id;
     };
@@ -671,33 +691,38 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
         }
     };
 
-    this.selectMemoryWord = function(word) {
-        if (!enabled) {
-            return;
-        }
+    this.checkWord = function(word) {
+        return wordIterator(word, function(i, tile, row, column) {
+            var boardTile = boardTiles[column][row];
+            if (wm.scribble.tile.isTilePined(boardTile)) {
+                if (tile.number != boardTile.data('tile').number) {
+                    return false;
+                }
+            } else {
+                if (getHandTileIndex(tile) == null) {
+                    return false;
+                }
+            }
+        });
+    };
 
+    this.selectWord = function(word) {
         clearSelectionImpl();
-        var rowK, columnK;
-        var row = word.position.row;
-        var column = word.position.column;
-        if (word.direction == 'VERTICAL') {
-            rowK = 1;
-            columnK = 0;
-        } else {
-            rowK = 0;
-            columnK = 1;
+        if (!playboard.checkWord(word)) {
+            return false;
         }
-        $.each(word.tiles, function(i, tile) {
-            if (playboard.isBoardTile(column, row)) {
-                changeTileSelection(boardTiles[column][row].get(0), true, false);
+        var res = wordIterator(word, function(i, tile, row, column) {
+            var boardTile = boardTiles[column][row];
+            if (wm.scribble.tile.isTilePined(boardTile)) {
+                if (tile.number != boardTile.data('tile').number) {
+                    return false;
+                }
+                changeTileSelection(boardTile.get(0), true, false);
             } else {
                 var tileIndex = getHandTileIndex(tile);
                 if (tileIndex == null) {
-                    alert("asdasd");
-                    clearSelectionImpl();
                     return false;
                 }
-
                 var tileWidget = handTiles[tileIndex];
                 tile = tileWidget.data('tile');
 
@@ -711,10 +736,10 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
                 tileWidget.detach().css('top', row * 22).css('left', column * 22).appendTo(board);
                 changeTileSelection(tileWidget.get(0), true, true);
             }
-            row += rowK;
-            column += columnK;
         });
-        scribble.trigger('wordSelection', [word]);
+        if (res) {
+            scribble.trigger('wordSelection', [word]);
+        }
     };
 
     this.selectHistoryWord = function(word) {

@@ -407,6 +407,13 @@
     background: url('/resources/images/scribble/playboard/memory.png') no-repeat -16px 0 !important;
 }
 
+.scribble-memory a {
+    border: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
 .icon-memory-select {
     background: url('/resources/images/scribble/playboard/memory.png') no-repeat -32px 0 !important;
 }

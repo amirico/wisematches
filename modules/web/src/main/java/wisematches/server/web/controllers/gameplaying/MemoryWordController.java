@@ -37,7 +37,7 @@ public class MemoryWordController extends AbstractPlayerController {
 
 	@ResponseBody
 	@RequestMapping("load")
-	public ServiceResponse loadMemoryWordAjax(@RequestParam("b") final long gameId) {
+	public ServiceResponse loadMemoryAjax(@RequestParam("b") final long gameId) {
 		final long id = getPersonality().getId();
 		if (log.isDebugEnabled()) {
 			log.debug("Load memory words for " + id + "@" + gameId);
@@ -55,6 +55,27 @@ public class MemoryWordController extends AbstractPlayerController {
 		}
 	}
 
+	@ResponseBody
+	@RequestMapping("clear")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse clearMemoryAjax(@RequestParam("b") final long gameId) {
+		final long id = getPersonality().getId();
+		if (log.isDebugEnabled()) {
+			log.debug("Clear memory words for " + id + "@" + gameId);
+		}
+		try {
+			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+			final ScribblePlayerHand playerHand = board.getPlayerHand(getPersonality().getId());
+			if (playerHand != null) {
+				memoryWordManager.clearMemoryWords(board, playerHand);
+				return ServiceResponse.SUCCESS;
+			}
+			return ServiceResponse.FAILURE;
+		} catch (BoardLoadingException ex) {
+			log.error("Memory word can't be loaded for board: " + gameId, ex);
+			return ServiceResponse.FAILURE;
+		}
+	}
 
 	@ResponseBody
 	@RequestMapping("add")
@@ -69,6 +90,28 @@ public class MemoryWordController extends AbstractPlayerController {
 			final ScribblePlayerHand playerHand = board.getPlayerHand(getPersonality().getId());
 			if (playerHand != null) {
 				memoryWordManager.addMemoryWord(board, playerHand, wordForm.createWord());
+				return ServiceResponse.SUCCESS;
+			}
+			return ServiceResponse.FAILURE;
+		} catch (BoardLoadingException ex) {
+			log.error("Memory word can't be loaded for board: " + gameId, ex);
+			return ServiceResponse.FAILURE;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping("remove")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse removeMemoryWordAjax(@RequestParam("b") final long gameId, @RequestBody ScribbleWordForm wordForm) {
+		final long id = getPersonality().getId();
+		if (log.isDebugEnabled()) {
+			log.debug("Remove memory words for " + id + "@" + gameId + ": " + wordForm);
+		}
+		try {
+			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+			final ScribblePlayerHand playerHand = board.getPlayerHand(getPersonality().getId());
+			if (playerHand != null) {
+				memoryWordManager.removeMemoryWord(board, playerHand, wordForm.createWord());
 				return ServiceResponse.SUCCESS;
 			}
 			return ServiceResponse.FAILURE;
