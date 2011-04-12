@@ -18,10 +18,7 @@ import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -90,10 +87,27 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<RatingChange> getRatingChanges(GameBoard board) {
-		return getHibernateTemplate().find(
+	public Map<Long, RatingChange> getRatingChanges(GameBoard board) {
+		final Collection<RatingChange> ratingChanges = getHibernateTemplate().find(
 				"from wisematches.server.standing.rating.RatingChange rating where rating.boardId = ?",
 				board.getBoardId());
+
+		if (ratingChanges != null) {
+			final Map<Long, RatingChange> ratings = new HashMap<Long, RatingChange>(ratingChanges.size());
+			for (RatingChange change : ratingChanges) {
+				ratings.put(change.getPlayerId(), change);
+			}
+			Collection<GamePlayerHand> playersHands = board.getPlayersHands();
+			for (GamePlayerHand hand : playersHands) {
+				ComputerPlayer cp = ComputerPlayer.getComputerPlayer(hand.getPlayerId());
+				if (cp != null) {
+					final RatingChange value = new RatingChange(cp.getId(), board.getBoardId(), board.getFinishedTime(), cp.getRating(), cp.getRating(), hand.getPoints());
+					ratings.put(cp.getId(), value);
+				}
+			}
+			return ratings;
+		}
+		return null;
 	}
 
 	@Override

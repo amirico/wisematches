@@ -117,7 +117,7 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	protected <S extends GameSettings, P extends GamePlayerHand> void processGameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 		final boolean ratedGame = board.isRatedGame();
 		final Collection<P> hands = board.getPlayersHands();
-		final Collection<RatingChange> ratingChanges = ratingManager.getRatingChanges(board);
+		final Collection<RatingChange> ratingChanges = ratingManager.getRatingChanges(board).values();
 		for (P hand : hands) {
 			if (isPlayerIgnored(hand)) {
 				continue;

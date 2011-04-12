@@ -16,9 +16,7 @@ import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -336,6 +334,11 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
+		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
+		changeMap.put(change1.getPlayerId(), change1);
+		changeMap.put(change2.getPlayerId(), change2);
+		changeMap.put(change3.getPlayerId(), change3);
+
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();
@@ -348,7 +351,7 @@ public class PlayerStatisticManagerImplTest {
 		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
-		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
+		expect(playerRatingManager.getRatingChanges(board)).andReturn(changeMap);
 		replay(playerRatingManager);
 
 		boardStateListener.gameFinished(board, GameResolution.FINISHED, Arrays.asList(hand1));
@@ -382,6 +385,11 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
+		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
+		changeMap.put(change1.getPlayerId(), change1);
+		changeMap.put(change2.getPlayerId(), change2);
+		changeMap.put(change3.getPlayerId(), change3);
+
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();
@@ -394,7 +402,7 @@ public class PlayerStatisticManagerImplTest {
 		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
-		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
+		expect(playerRatingManager.getRatingChanges(board)).andReturn(changeMap);
 		replay(playerRatingManager);
 
 		boardStateListener.gameFinished(board, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
@@ -428,6 +436,11 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
+		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
+		changeMap.put(change1.getPlayerId(), change1);
+		changeMap.put(change2.getPlayerId(), change2);
+		changeMap.put(change3.getPlayerId(), change3);
+
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();
@@ -440,7 +453,7 @@ public class PlayerStatisticManagerImplTest {
 		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
-		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
+		expect(playerRatingManager.getRatingChanges(board)).andReturn(changeMap);
 		replay(playerRatingManager);
 
 		boardStateListener.gameFinished(board, GameResolution.TIMEOUT, Collections.<GamePlayerHand>emptyList());
@@ -476,6 +489,11 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
+		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
+		changeMap.put(change1.getPlayerId(), change1);
+		changeMap.put(change2.getPlayerId(), change2);
+		changeMap.put(change3.getPlayerId(), change3);
+
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(false);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(hand1, hand2, hand3)).anyTimes();
@@ -488,7 +506,7 @@ public class PlayerStatisticManagerImplTest {
 		playerStatisticDao.savePlayerStatistic(s2);
 		replay(playerStatisticDao);
 
-		expect(playerRatingManager.getRatingChanges(board)).andReturn(Arrays.asList(change1, change2, change3));
+		expect(playerRatingManager.getRatingChanges(board)).andReturn(changeMap);
 		replay(playerRatingManager);
 
 		boardStateListener.gameFinished(board, GameResolution.TIMEOUT, Collections.<GamePlayerHand>emptyList());
