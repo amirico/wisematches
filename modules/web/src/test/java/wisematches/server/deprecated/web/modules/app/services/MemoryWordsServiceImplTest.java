@@ -7,7 +7,7 @@ public class MemoryWordsServiceImplTest {
 /*
     private Player player;
 
-    private MemoryWordsManager memoryWordsDao;
+    private MemoryWordManager memoryWordsDao;
     private MemoryWordsServiceImpl service;
 
     private ScribbleBoard board;
@@ -15,7 +15,7 @@ public class MemoryWordsServiceImplTest {
 
     @Before
     public void setUp() throws BoardLoadingException {
-        memoryWordsDao = createStrictMock(MemoryWordsManager.class);
+        memoryWordsDao = createStrictMock(MemoryWordManager.class);
 
         playerHand = new ScribblePlayerHand(13L);
 

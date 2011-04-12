@@ -369,6 +369,17 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
         });
     };
 
+    var getHandTileIndex = function(tile) {
+        var res = null;
+        $.each(handTiles, function(i, handTile) {
+            if (handTile != null && handTile != undefined && handTile.data('tile').number == tile.number) {
+                res = i;
+                return false;
+            }
+        });
+        return res;
+    };
+
     var removeHandTile = function(tile) {
         $.each(handTiles, function(i, handTile) {
             if (handTile != null && handTile != undefined && handTile.data('tile').number == tile.number) {
@@ -523,6 +534,10 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
                 });
     };
 
+    this.getBoardId = function() {
+        return id;
+    };
+
     this.startBoardMonitoring = function(handler) {
         if (!playboard.isBoardActive()) {
             return false;
@@ -578,8 +593,8 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
         return scoreEngine;
     };
 
-    this.isBoardTile = function(row, column) {
-        var tile = boardTiles[row][column];
+    this.isBoardTile = function(column, row) {
+        var tile = boardTiles[column][row];
         return tile != null && wm.scribble.tile.isTilePined(tile);
     };
 
@@ -660,7 +675,46 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
         if (!enabled) {
             return;
         }
-        alert("Not implemented");
+
+        clearSelectionImpl();
+        var rowK, columnK;
+        var row = word.position.row;
+        var column = word.position.column;
+        if (word.direction == 'VERTICAL') {
+            rowK = 1;
+            columnK = 0;
+        } else {
+            rowK = 0;
+            columnK = 1;
+        }
+        $.each(word.tiles, function(i, tile) {
+            if (playboard.isBoardTile(column, row)) {
+                changeTileSelection(boardTiles[column][row].get(0), true, false);
+            } else {
+                var tileIndex = getHandTileIndex(tile);
+                if (tileIndex == null) {
+                    alert("asdasd");
+                    clearSelectionImpl();
+                    return false;
+                }
+
+                var tileWidget = handTiles[tileIndex];
+                tile = tileWidget.data('tile');
+
+                if (tile.wildcard) {
+                    wm.scribble.tile.setLetter(tileWidget, tile.letter);
+                }
+                tile.row = row;
+                tile.column = column;
+                handTiles[tileIndex] = null;
+                boardTiles[column][row] = tileWidget;
+                tileWidget.detach().css('top', row * 22).css('left', column * 22).appendTo(board);
+                changeTileSelection(tileWidget.get(0), true, true);
+            }
+            row += rowK;
+            column += columnK;
+        });
+        scribble.trigger('wordSelection', [word]);
     };
 
     this.selectHistoryWord = function(word) {

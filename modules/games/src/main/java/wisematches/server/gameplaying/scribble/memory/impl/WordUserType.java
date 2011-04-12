@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.scribble.memory;
+package wisematches.server.gameplaying.scribble.memory.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;

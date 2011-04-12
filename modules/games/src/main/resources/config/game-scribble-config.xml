@@ -34,6 +34,10 @@
         <property name="searchEngine" ref="scribbleSearchEngineManager"/>
     </bean>
 
+    <bean id="memoryWordManager" class="wisematches.server.gameplaying.scribble.memory.impl.HibernateMemoryWordManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <util:list id="roomsManagerList">
         <ref bean="scribbleRoomManager"/>
     </util:list>

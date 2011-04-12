@@ -5,9 +5,9 @@ import wisematches.server.deprecated.web.rpc.GenericSecureRemoteService;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implements MemoryWordsManager {
+public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implements MemoryWordManager {
 /*    private RoomsManager roomsManager;
-    private MemoryWordsManager memoryWordsDao;
+    private MemoryWordManager memoryWordsDao;
 
     private static final MemoryWord[] EMPTY_MEMORY_WORDS = new MemoryWord[0];
     private static final Log log = LogFactory.getLog("wisematches.server.web.controlles.memorywords");
@@ -85,7 +85,7 @@ public class MemoryWordsServiceImpl extends GenericSecureRemoteService {//implem
         }
     }
 
-    public void setMemoryWordsManager(MemoryWordsManager memoryWordsDao) {
+    public void setMemoryWordsManager(MemoryWordManager memoryWordsDao) {
         this.memoryWordsDao = memoryWordsDao;
     }
 

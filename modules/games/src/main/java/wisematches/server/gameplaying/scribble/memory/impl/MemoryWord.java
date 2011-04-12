@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.scribble.memory;
+package wisematches.server.gameplaying.scribble.memory.impl;
 
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
@@ -45,8 +45,8 @@ class MemoryWord {
 	MemoryWord() {
 	}
 
-	MemoryWord(long boardId, long playerId, int number, Word word) {
-		wordId = new PK(boardId, playerId, number);
+	public MemoryWord(long boardId, long playerId, Word word) {
+		wordId = new PK(boardId, playerId, word);
 		this.word = word;
 	}
 
@@ -56,10 +56,6 @@ class MemoryWord {
 
 	public long getPlayerId() {
 		return wordId.playerId;
-	}
-
-	public int getNumber() {
-		return wordId.number;
 	}
 
 	public Word getWord() {
@@ -87,10 +83,10 @@ class MemoryWord {
 		protected PK() {
 		}
 
-		protected PK(long boardId, long playerId, int number) {
+		protected PK(long boardId, long playerId, Word word) {
 			this.boardId = boardId;
 			this.playerId = playerId;
-			this.number = number;
+			this.number = word.hashCode();
 		}
 
 		public long getBoardId() {
