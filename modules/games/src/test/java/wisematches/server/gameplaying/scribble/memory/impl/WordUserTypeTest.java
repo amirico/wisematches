@@ -1,10 +1,11 @@
-package wisematches.server.gameplaying.scribble.memory;
+package wisematches.server.gameplaying.scribble.memory.impl;
 
 import org.junit.Test;
 import wisematches.server.gameplaying.scribble.Direction;
 import wisematches.server.gameplaying.scribble.Position;
 import wisematches.server.gameplaying.scribble.Tile;
 import wisematches.server.gameplaying.scribble.Word;
+import wisematches.server.gameplaying.scribble.memory.impl.WordUserType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

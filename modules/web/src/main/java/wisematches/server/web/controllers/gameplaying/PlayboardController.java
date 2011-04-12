@@ -20,6 +20,7 @@ import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.Tile;
 import wisematches.server.gameplaying.scribble.board.*;
+import wisematches.server.gameplaying.scribble.memory.MemoryWordManager;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
 import wisematches.server.personality.player.computer.ComputerPlayer;

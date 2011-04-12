@@ -46,7 +46,7 @@
         </property>
     </bean>
 
-    <bean id="memoryWordsManager" class="wisematches.server.gameplaying.scribble.memory.MemoryWordsManager">
+    <bean id="memoryWordsManager" class="wisematches.server.gameplaying.scribble.memory.HibernateMemoryWordManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
