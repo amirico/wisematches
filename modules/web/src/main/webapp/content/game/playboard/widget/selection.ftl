@@ -31,9 +31,14 @@
 </table>
 <table width="100%">
     <tr>
-        <td valign="middle" nowrap="nowrap"><span id="checkWordStatus"></span></td>
+        <td valign="middle" nowrap="nowrap">
+            <div id="wordStatus">
+                <span id="wordStatusIcon"></span>
+                <span id="wordStatusMessage"></span>
+            </div>
+        </td>
         <td valign="middle" nowrap="nowrap" align="right">
-            <button id="checkWordButton" class="icon-check-word"
+            <button id="checkWordButton"
                     onclick="wm.scribble.selection.checkSelectedWord()">
             <@message code="game.selection.check"/>
             </button>
@@ -43,7 +48,7 @@
 </@wm.widget>
 
 <script type="text/javascript">
-    $("#checkWordButton").button({disabled: true});
+    $("#checkWordButton").button({disabled: true, icons: {primary:'icon-word-check'}});
 
     wm.scribble.selection = new function() {
         this.checkSelectedWord = function() {
@@ -52,13 +57,16 @@
                 return;
             }
             $("#checkWordButton").button('disable').removeClass("ui-state-hover");
-            $("#checkWordStatus").addClass('icon-wait').removeClass('icon-word-valid icon-word-invalid wordValid wordInvalid').text('<@message code="game.selection.checking"/>');
+            $("#wordStatusMessage").text('<@message code="game.selection.checking"/>');
+            $("#wordStatusIcon").addClass('icon-wait').removeClass('icon-word-valid icon-word-invalid wordValid wordInvalid');
             $.post('/game/playboard/check.ajax', $.toJSON({word:word.text, lang:'${board.dictionary.locale}'}),
                     function(response) {
                         if (response.success) {
-                            $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-valid wordValid").text('<@message code="game.selection.valid"/>');
+                            $("#wordStatusMessage").text('<@message code="game.selection.valid"/>');
+                            $("#wordStatusIcon").removeClass('icon-wait').addClass("icon-word-valid");
                         } else {
-                            $("#checkWordStatus").removeClass('icon-wait').addClass("icon-word-invalid wordInvalid").text('<@message code="game.selection.invalid"/>');
+                            $("#wordStatusMessage").text('<@message code="game.selection.invalid"/>');
+                            $("#wordStatusIcon").removeClass('icon-wait').addClass("icon-word-invalid");
                         }
                     }, 'json');
         };
@@ -104,7 +112,8 @@
                         swc.text('<@message code="game.selection.noword"/>');
                         $("#checkWordButton").button('disable').removeClass("ui-state-hover");
                     }
-                    $("#checkWordStatus").text("").attr('class', '');
+                    $("#wordStatusIcon").attr('class', '');
+                    $("#wordStatusMessage").text("");
                 });
     };
 </script>
