@@ -4,21 +4,21 @@
 
 <div id="boardActionsToolbar" class="ui-widget-content ui-corner-all" style="border-top: 0" align="center">
     <div>
-        <button id="makeTurnButton" class="icon-make-turn" onclick="wm.scribble.controls.makeTurn()">
+        <button id="makeTurnButton" onclick="wm.scribble.controls.makeTurn()">
         <@message code="game.play.make"/>
         </button>
-        <button id="clearSelectionButton" class="icon-clear-word" onclick="board.clearSelection()">
+        <button id="clearSelectionButton" onclick="board.clearSelection()">
         <@message code="game.play.clear"/>
         </button>
-        <button id="exchangeTilesButton" class="icon-exchange-tiles" onclick="wm.scribble.controls.exchangeTiles()">
+        <button id="exchangeTilesButton" onclick="wm.scribble.controls.exchangeTiles()">
         <@message code="game.play.exchange"/>
         </button>
     </div>
     <div>
-        <button id="passTurnButton" class="icon-pass-turn" onclick="wm.scribble.controls.passTurn()">
+        <button id="passTurnButton" onclick="wm.scribble.controls.passTurn()">
         <@message code="game.play.pass"/>
         </button>
-        <button id="resignGameButton" class="icon-resign-game" onclick="wm.scribble.controls.resignGame()">
+        <button id="resignGameButton" onclick="wm.scribble.controls.resignGame()">
         <@message code="game.play.resign"/>
         </button>
     </div>
@@ -31,7 +31,11 @@
 
 <script type="text/javascript">
     wm.scribble.controls = new function() {
-        $("#boardActionsToolbar button").button({disabled: true});
+        $("#makeTurnButton").button({disabled: true, icons: {primary: 'icon-controls-make'}});
+        $("#clearSelectionButton").button({disabled: true, icons: {primary: 'icon-controls-clear'}});
+        $("#exchangeTilesButton").button({disabled: true, icons: {primary: 'icon-controls-exchange'}});
+        $("#passTurnButton").button({disabled: true, icons: {primary: 'icon-controls-pass'}});
+        $("#resignGameButton").button({disabled: true, icons: {primary: 'icon-controls-resign'}});
 
         var overlayCSS = {
             '-moz-border-radius': '5px',

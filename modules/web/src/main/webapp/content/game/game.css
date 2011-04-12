@@ -256,16 +256,22 @@
     background-position: 5px center;
 }
 
-#checkWordStatus {
-    padding-left: 20px;
+#wordStatus {
+    position: relative;
 }
 
-#checkWordStatus.wordValid {
-    color: green !important;
+#wordStatusIcon {
+    width: 16px;
+    height: 16px;
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    left: .5em
 }
 
-#checkWordStatus.wordInvalid {
-    color: red !important;
+#wordStatusMessage {
+    padding-left: 24px;
 }
 
 .scribble {
@@ -373,56 +379,56 @@
     background: url(/resources/images/scribble/board/bonuses.png) no-repeat -88px 0;
 }
 
-.icon-make-turn {
-    background-image: url('/resources/images/scribble/playboard/makeTurn.png') !important;
+.icon-controls-make {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat 0 0 !important;
 }
 
-.icon-clear-word {
-    background-image: url('/resources/images/scribble/playboard/clearWord.png') !important;
+.icon-controls-pass {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -16px 0 !important;
 }
 
-.icon-check-word {
-    background-image: url('/resources/images/scribble/playboard/checkWord.png') !important;
+.icon-controls-resign {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -32px 0 !important;
 }
 
-.icon-exchange-tiles {
-    background-image: url('/resources/images/scribble/playboard/exchangeTiles.png') !important;
+.icon-controls-exchange {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -48px 0 !important;
 }
 
-.icon-pass-turn {
-    background-image: url('/resources/images/scribble/playboard/passTurn.png') !important;
-}
-
-.icon-resign-game {
-    background-image: url('/resources/images/scribble/playboard/resignGame.png') !important;
+.icon-controls-clear {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -64px 0 !important;
 }
 
 .icon-memory-add {
-    background-image: url('/resources/images/scribble/playboard/memoryAdd.png') !important;
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat 0 0 !important;
 }
 
 .icon-memory-remove {
-    background-image: url('/resources/images/scribble/playboard/memoryRemove.png') !important;
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat -16px 0 !important;
 }
 
 .icon-memory-select {
-    background-image: url('/resources/images/scribble/playboard/memorySelect.png') !important;
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat -32px 0 !important;
 }
 
 .icon-memory-clear {
-    background-image: url('/resources/images/scribble/playboard/memoryClear.png') !important;
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat -48px 0 !important;
+}
+
+.icon-word-check {
+    background: url("/resources/images/scribble/playboard/checks.png") no-repeat 0 0 !important;
+}
+
+.icon-word-valid {
+    background: url("/resources/images/scribble/playboard/checks.png") no-repeat -16px 0 !important;
+}
+
+.icon-word-invalid {
+    background: url("/resources/images/scribble/playboard/checks.png") no-repeat -32px 0 !important;
 }
 
 .icon-wait {
     background: url("/resources/images/wait.gif") no-repeat left center !important;
-}
-
-.icon-word-valid {
-    background: url("/resources/images/status/accept.png") no-repeat left center !important;
-}
-
-.icon-word-invalid {
-    background: url("/resources/images/status/decline.png") no-repeat left center !important;
 }
 
 .rating .change {
@@ -455,23 +461,27 @@
 .freeow .your-turn .icon {
     width: 48px;
     height: 48px;
-    background: url("/resources/images/scribble/playboard/yourTurn.png") no-repeat left center !important;
-}
-
-.freeow .move-accepted .icon {
-    width: 48px;
-    height: 48px;
-    background: url("/resources/images/status/correct.png") no-repeat left center !important;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat 0 0;
 }
 
 .freeow .opponent-turn .icon {
     width: 48px;
     height: 48px;
-    background: url("/resources/images/scribble/playboard/opponentTurn.png") no-repeat left center !important;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -48px 0;
+}
+
+.freeow .move-accepted .icon {
+    width: 48px;
+    height: 48px;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -96px 0;
 }
 
 .freeow .game-finished .icon {
     width: 48px;
     height: 48px;
-    background: url("/resources/images/scribble/playboard/checkered.png") no-repeat left center !important;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -144px 0;
+}
+
+.ui-button-text-icon-primary .ui-button-text {
+    padding-left: 16px !important;
 }

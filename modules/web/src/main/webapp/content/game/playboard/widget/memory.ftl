@@ -28,16 +28,16 @@
 
 <div id="memoryWordsToolbar" style="padding-top: 5px;">
     <div style="margin: 0;">
-        <button id="memoryAddButton" class="icon-memory-add">Remember Word</button>
-        <button id="memoryClearButton" class="icon-memory-clear">Clear Memory
-        </button>
+        <button id="memoryAddButton">Remember Word</button>
+        <button id="memoryClearButton">Clear Memory</button>
     </div>
 </div>
 </@wm.widget>
 
 <script type="text/javascript">
     $("#memoryWordsToolbar div").buttonset();
-    $("#memoryWordsToolbar button").button("disable");
+    $("#memoryAddButton").button({disabled: true, icons: {primary: 'icon-memory-add'}});
+    $("#memoryClearButton").button({disabled: true, icons: {primary: 'icon-memory-clear'}});
 
     $("#memoryWords table").dataTable({
                 "bJQueryUI": true,
