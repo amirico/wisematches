@@ -4,6 +4,7 @@ import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -49,7 +50,7 @@ public interface PlayerRatingManager {
 	 * @param board the board
 	 * @return collection of rating changes or null if board doesn't exist or not finished yet.
 	 */
-	Collection<RatingChange> getRatingChanges(GameBoard board);
+	Map<Long, RatingChange> getRatingChanges(GameBoard board);
 
 	/**
 	 * Returns history rating changes for specified player.

@@ -327,6 +327,7 @@ public class PlayboardController extends AbstractPlayerController {
 	}
 
 	private Map<String, RatingChange> getRatingChanges(ScribbleBoard board) {
+/*
 		final Collection<RatingChange> ratingChanges = ratingManager.getRatingChanges(board);
 		if (ratingChanges != null) {
 			final Map<String, RatingChange> ratings = new HashMap<String, RatingChange>(ratingChanges.size());
@@ -343,6 +344,7 @@ public class PlayboardController extends AbstractPlayerController {
 			}
 			return ratings;
 		}
+*/
 		return null;
 	}
 

@@ -6,10 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GamePlayerHand;
@@ -23,10 +21,7 @@ import wisematches.server.personality.player.computer.robot.RobotPlayer;
 import wisematches.server.standing.rating.PlayerRatingListener;
 import wisematches.server.standing.rating.RatingChange;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -154,18 +149,24 @@ public class HibernatePlayerRatingManagerTest {
 	@SuppressWarnings("unchecked")
 	public void test_getRatingChanges_board() {
 		final GameBoard b = createMock(GameBoard.class);
-		expect(b.getBoardId()).andReturn(12L).times(3);
+		expect(b.getBoardId()).andReturn(12L).times(4);
 		expect(b.isRatedGame()).andReturn(true);
+		expect(b.getFinishedTime()).andReturn(new Date());
 		expect(b.getPlayersHands()).andReturn(Arrays.asList(
 				new GamePlayerHand(RobotPlayer.DULL.getId(), (short) 100), // robot
-				new GamePlayerHand(account.getId(), (short) 200))); // player
+				new GamePlayerHand(account.getId(), (short) 200))).times(2); // player
 		replay(b);
 
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 
-		final Object[] ratingChanges = playerRatingManager.getRatingChanges(b).toArray();
-		assertEquals(1, ratingChanges.length); // no rating change for a robot
-		assertRatingChange((RatingChange) ratingChanges[0], account.getId(), 12L, 1200, 1203);
+		final Map<Long, RatingChange> ratingChanges = playerRatingManager.getRatingChanges(b);
+		assertEquals(2, ratingChanges.size());
+
+		final RatingChange c1 = ratingChanges.get(RobotPlayer.DULL.getId());
+		assertRatingChange(c1, RobotPlayer.DULL.getId(), 12L, RobotPlayer.DULL.getRating(), RobotPlayer.DULL.getRating());
+
+		final RatingChange c2 = ratingChanges.get(account.getId());
+		assertRatingChange(c2, account.getId(), 12L, 1200, 1203);
 	}
 
 	private void assertRatingChange(RatingChange r1, long pid, long bid, int oldR, int newR) {
