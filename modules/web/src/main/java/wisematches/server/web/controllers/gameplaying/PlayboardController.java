@@ -18,14 +18,12 @@ import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.board.BoardLoadingException;
-import wisematches.server.gameplaying.scribble.Tile;
 import wisematches.server.gameplaying.scribble.board.*;
-import wisematches.server.gameplaying.scribble.memory.MemoryWordManager;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
-import wisematches.server.personality.player.computer.ComputerPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.gameplaying.form.CheckWordForm;
 import wisematches.server.web.controllers.gameplaying.form.ScribbleTileForm;
@@ -41,293 +39,293 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/game")
 public class PlayboardController extends AbstractPlayerController {
-	private PlayerRatingManager ratingManager;
-	private DictionaryManager dictionaryManager;
-	private GameMessageSource gameMessageSource;
-	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
+    private PlayerRatingManager ratingManager;
+    private DictionaryManager dictionaryManager;
+    private GameMessageSource gameMessageSource;
+    private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
+    private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
-	public PlayboardController() {
-	}
+    public PlayboardController() {
+    }
 
-	@RequestMapping("/playboard")
-	public String showPlayboard(@RequestParam("b") long gameId, Model model) {
-		try {
-			final Player player = getPlayer();
-			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-			if (board == null) { // unknown board
-				return "/content/game/playboard/unknown";
-			}
+    @RequestMapping("/playboard")
+    public String showPlayboard(@RequestParam("b") long gameId, Model model) {
+        try {
+            final Player player = getPlayer();
+            final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+            if (board == null) { // unknown board
+                return "/content/game/playboard/unknown";
+            }
 
-			model.addAttribute("board", board);
-			if (!board.isGameActive()) {
-				model.addAttribute("ratings", getRatingChanges(board));
-			}
-			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
-			return "/content/game/playboard/scribble";
-		} catch (BoardLoadingException ex) {
-			log.error("Board " + gameId + " can't be loaded", ex);
-			return "/content/game/playboard/unknown";
-		}
-	}
+            model.addAttribute("board", board);
+            if (!board.isGameActive()) {
+                model.addAttribute("ratings", getRatingChanges(board));
+            }
+            model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
+            return "/content/game/playboard/scribble";
+        } catch (BoardLoadingException ex) {
+            log.error("Board " + gameId + " can't be loaded", ex);
+            return "/content/game/playboard/unknown";
+        }
+    }
 
-	@ResponseBody
-	@RequestMapping("/playboard/make")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
-										@RequestBody final ScribbleWordForm word, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's move: " + gameId + ", word: " + word);
-		}
-		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						final Player currentPlayer = getPlayer();
-						return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
-					}
-				}, locale);
-	}
+    @ResponseBody
+    @RequestMapping("/playboard/make")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
+                                        @RequestBody final ScribbleWordForm word, final Locale locale) {
+        if (log.isDebugEnabled()) {
+            log.debug("Process player's move: " + gameId + ", word: " + word);
+        }
+        return processSafeAction(new Callable<Map<String, Object>>() {
+                    @Override
+                    public Map<String, Object> call() throws Exception {
+                        final Player currentPlayer = getPlayer();
+                        return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
+                    }
+                }, locale);
+    }
 
-	@ResponseBody
-	@RequestMapping("/playboard/pass")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's pass: " + gameId);
-		}
-		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						final Player currentPlayer = getPlayer();
-						return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
-					}
-				}, locale);
-	}
+    @ResponseBody
+    @RequestMapping("/playboard/pass")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ServiceResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
+        if (log.isDebugEnabled()) {
+            log.debug("Process player's pass: " + gameId);
+        }
+        return processSafeAction(new Callable<Map<String, Object>>() {
+                    @Override
+                    public Map<String, Object> call() throws Exception {
+                        final Player currentPlayer = getPlayer();
+                        return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
+                    }
+                }, locale);
+    }
 
-	@ResponseBody
-	@RequestMapping("/playboard/exchange")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
-											 @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
-		}
-		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						int[] t = new int[tiles.length];
-						for (int i = 0; i < tiles.length; i++) {
-							t[i] = tiles[i].getNumber();
-						}
-						final Player currentPlayer = getPlayer();
-						return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
-					}
-				}, locale);
-	}
+    @ResponseBody
+    @RequestMapping("/playboard/exchange")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
+                                             @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
+        if (log.isDebugEnabled()) {
+            log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
+        }
+        return processSafeAction(new Callable<Map<String, Object>>() {
+                    @Override
+                    public Map<String, Object> call() throws Exception {
+                        int[] t = new int[tiles.length];
+                        for (int i = 0; i < tiles.length; i++) {
+                            t[i] = tiles[i].getNumber();
+                        }
+                        final Player currentPlayer = getPlayer();
+                        return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
+                    }
+                }, locale);
+    }
 
-	@ResponseBody
-	@RequestMapping("/playboard/resign")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's resign: " + gameId);
-		}
-		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						Player currentPlayer = getPlayer();
-						final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-						board.resign(board.getPlayerHand(currentPlayer.getId()));
+    @ResponseBody
+    @RequestMapping("/playboard/resign")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ServiceResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
+        if (log.isDebugEnabled()) {
+            log.debug("Process player's resign: " + gameId);
+        }
+        return processSafeAction(new Callable<Map<String, Object>>() {
+                    @Override
+                    public Map<String, Object> call() throws Exception {
+                        Player currentPlayer = getPlayer();
+                        final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+                        board.resign(board.getPlayerHand(currentPlayer.getId()));
 
-						final Map<String, Object> res = new HashMap<String, Object>();
-						res.put("state", convertGameState(board, locale));
-						if (!board.isGameActive()) {
-							res.put("players", board.getPlayersHands());
-						}
-						return res;
-					}
-				}, locale);
-	}
+                        final Map<String, Object> res = new HashMap<String, Object>();
+                        res.put("state", convertGameState(board, locale));
+                        if (!board.isGameActive()) {
+                            res.put("players", board.getPlayersHands());
+                        }
+                        return res;
+                    }
+                }, locale);
+    }
 
-	@ResponseBody
-	@RequestMapping("/playboard/changes")
-	public ServiceResponse loadChangesAjax(@RequestParam("b") final long gameId,
-										   @RequestParam("m") final int movesCount, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Load board changes for: " + gameId + "@" + movesCount);
-		}
-		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+    @ResponseBody
+    @RequestMapping("/playboard/changes")
+    public ServiceResponse loadChangesAjax(@RequestParam("b") final long gameId,
+                                           @RequestParam("m") final int movesCount, final Locale locale) {
+        if (log.isDebugEnabled()) {
+            log.debug("Load board changes for: " + gameId + "@" + movesCount);
+        }
+        return processSafeAction(new Callable<Map<String, Object>>() {
+                    @Override
+                    public Map<String, Object> call() throws Exception {
+                        final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
 
-						final Map<String, Object> res = new HashMap<String, Object>();
-						res.put("state", convertGameState(board, locale));
-						final List<GameMove> gameMoves = board.getGameMoves();
-						final int newMovesCount = gameMoves.size() - movesCount;
-						if (newMovesCount > 0) {
-							final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
-							for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
-								moves.add(convertPlayerMove(move, locale));
-							}
-							res.put("moves", moves);
+                        final Map<String, Object> res = new HashMap<String, Object>();
+                        res.put("state", convertGameState(board, locale));
+                        final List<GameMove> gameMoves = board.getGameMoves();
+                        final int newMovesCount = gameMoves.size() - movesCount;
+                        if (newMovesCount > 0) {
+                            final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
+                            for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
+                                moves.add(convertPlayerMove(move, locale));
+                            }
+                            res.put("moves", moves);
 
-							final Player currentPlayer = getPlayer(); // update hand only if new moves found
-							if (currentPlayer != null) {
-								ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer.getId());
-								if (playerHand != null) {
-									res.put("hand", playerHand.getTiles());
-								}
-							}
-						}
-						if (!board.isGameActive()) {
-							res.put("players", board.getPlayersHands());
-						}
-						return res;
-					}
-				}, locale);
-	}
+                            final Player currentPlayer = getPlayer(); // update hand only if new moves found
+                            if (currentPlayer != null) {
+                                ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer.getId());
+                                if (playerHand != null) {
+                                    res.put("hand", playerHand.getTiles());
+                                }
+                            }
+                        }
+                        if (!board.isGameActive()) {
+                            res.put("players", board.getPlayersHands());
+                        }
+                        return res;
+                    }
+                }, locale);
+    }
 
-	@ResponseBody
-	@RequestMapping("/playboard/check")
-	public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
-		try {
-			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
-			if (dictionary.getWord(form.getWord()) == null) {
-				return ServiceResponse.failure();
-			}
-			return ServiceResponse.success();
-		} catch (DictionaryNotFoundException e) {
-			return ServiceResponse.failure();
-		}
-	}
+    @ResponseBody
+    @RequestMapping("/playboard/check")
+    public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
+        try {
+            Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
+            if (dictionary.getWord(form.getWord()) == null) {
+                return ServiceResponse.failure();
+            }
+            return ServiceResponse.success();
+        } catch (DictionaryNotFoundException e) {
+            return ServiceResponse.failure();
+        }
+    }
 
-	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
-		final Player currentPlayer = getPlayer();
-		if (move.getPlayerId() != currentPlayer.getId()) {
-			throw new UnsuitablePlayerException("make turn", currentPlayer);
-		}
+    private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
+        final Player currentPlayer = getPlayer();
+        if (move.getPlayerId() != currentPlayer.getId()) {
+            throw new UnsuitablePlayerException("make turn", currentPlayer);
+        }
 
-		final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-		final GameMove gameMove = board.makeMove(move);
+        final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+        final GameMove gameMove = board.makeMove(move);
 
-		final Map<String, Object> res = new HashMap<String, Object>();
-		res.put("state", convertGameState(board, locale));
-		res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));
-		res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
-		if (!board.isGameActive()) {
-			res.put("players", board.getPlayersHands());
-		}
-		return res;
-	}
+        final Map<String, Object> res = new HashMap<String, Object>();
+        res.put("state", convertGameState(board, locale));
+        res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));
+        res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
+        if (!board.isGameActive()) {
+            res.put("players", board.getPlayersHands());
+        }
+        return res;
+    }
 
-	private Map<String, Object> convertGameState(final ScribbleBoard board, final Locale locale) {
-		final Map<String, Object> state = new HashMap<String, Object>();
-		state.put("active", board.isGameActive());
-		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
-		if (!board.isGameActive()) {
-			final List<ScribblePlayerHand> wonPlayers = board.getWonPlayers();
-			int index = 0;
-			final long[] res = new long[wonPlayers.size()];
-			for (ScribblePlayerHand wonPlayer : wonPlayers) {
-				res[index++] = wonPlayer.getPlayerId();
-			}
-			state.put("winners", res);
-			state.put("resolution", board.getGameResolution());
-			state.put("resolutionMessage", gameMessageSource.formatGameResolution(board.getGameResolution(), locale));
-			state.put("finishTimeMillis", board.getFinishedTime().getTime());
-			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
-		} else {
-			state.put("remainedTimeMillis", gameMessageSource.getRemainedTimeMillis(board));
-			state.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));
-		}
-		return state;
-	}
+    private Map<String, Object> convertGameState(final ScribbleBoard board, final Locale locale) {
+        final Map<String, Object> state = new HashMap<String, Object>();
+        state.put("active", board.isGameActive());
+        state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
+        if (!board.isGameActive()) {
+            final List<ScribblePlayerHand> wonPlayers = board.getWonPlayers();
+            int index = 0;
+            final long[] res = new long[wonPlayers.size()];
+            for (ScribblePlayerHand wonPlayer : wonPlayers) {
+                res[index++] = wonPlayer.getPlayerId();
+            }
+            state.put("winners", res);
+            state.put("resolution", board.getGameResolution());
+            state.put("resolutionMessage", gameMessageSource.formatGameResolution(board.getGameResolution(), locale));
+            state.put("finishTimeMillis", board.getFinishedTime().getTime());
+            state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
+        } else {
+            state.put("remainedTimeMillis", gameMessageSource.getRemainedTimeMillis(board));
+            state.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));
+        }
+        return state;
+    }
 
-	private Map<String, Object> convertPlayerMove(final GameMove move, final Locale locale) {
-		final PlayerMove playerMove = move.getPlayerMove();
+    private Map<String, Object> convertPlayerMove(final GameMove move, final Locale locale) {
+        final PlayerMove playerMove = move.getPlayerMove();
 
-		final Map<String, Object> moveInfo = new HashMap<String, Object>();
-		moveInfo.put("number", move.getMoveNumber());
-		moveInfo.put("points", move.getPoints());
-		moveInfo.put("player", playerMove.getPlayerId());
-		moveInfo.put("timeMillis", move.getMoveTime().getTime());
-		moveInfo.put("timeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
-		if (playerMove instanceof PassTurnMove) {
-			moveInfo.put("type", "pass");
-		} else if (playerMove instanceof MakeWordMove) {
-			moveInfo.put("type", "make");
-			moveInfo.put("word", ((MakeWordMove) playerMove).getWord());
-		} else if (playerMove instanceof ExchangeTilesMove) {
-			moveInfo.put("type", "exchange");
-			moveInfo.put("tilesCount", ((ExchangeTilesMove) playerMove).getTilesIds().length);
-		}
-		return moveInfo;
-	}
+        final Map<String, Object> moveInfo = new HashMap<String, Object>();
+        moveInfo.put("number", move.getMoveNumber());
+        moveInfo.put("points", move.getPoints());
+        moveInfo.put("player", playerMove.getPlayerId());
+        moveInfo.put("timeMillis", move.getMoveTime().getTime());
+        moveInfo.put("timeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
+        if (playerMove instanceof PassTurnMove) {
+            moveInfo.put("type", "pass");
+        } else if (playerMove instanceof MakeWordMove) {
+            moveInfo.put("type", "make");
+            moveInfo.put("word", ((MakeWordMove) playerMove).getWord());
+        } else if (playerMove instanceof ExchangeTilesMove) {
+            moveInfo.put("type", "exchange");
+            moveInfo.put("tilesCount", ((ExchangeTilesMove) playerMove).getTilesIds().length);
+        }
+        return moveInfo;
+    }
 
-	private ServiceResponse processSafeAction(Callable<Map<String, Object>> callable, Locale locale) {
-		try {
-			Map<String, Object> call = callable.call();
-			if (call != null) {
-				return ServiceResponse.success(null, call);
-			} else {
-				return ServiceResponse.success();
-			}
-		} catch (BoardLoadingException e) {
-			log.info("Board can't be loaded", e);
-			return ServiceResponse.failure(translateSystemException(e, locale));
-		} catch (GameMoveException e) {
-			return ServiceResponse.failure(translateBoardException(e, locale));
-		} catch (Exception e) {
-			log.error("System move exception", e);
-			return ServiceResponse.failure(translateSystemException(e, locale));
-		}
-	}
+    private ServiceResponse processSafeAction(Callable<Map<String, Object>> callable, Locale locale) {
+        try {
+            Map<String, Object> call = callable.call();
+            if (call != null) {
+                return ServiceResponse.success(null, call);
+            } else {
+                return ServiceResponse.success();
+            }
+        } catch (BoardLoadingException e) {
+            log.info("Board can't be loaded", e);
+            return ServiceResponse.failure(translateSystemException(e, locale));
+        } catch (GameMoveException e) {
+            return ServiceResponse.failure(translateBoardException(e, locale));
+        } catch (Exception e) {
+            log.error("System move exception", e);
+            return ServiceResponse.failure(translateSystemException(e, locale));
+        }
+    }
 
-	private String translateSystemException(Exception e, Locale locale) {
-		log.error("System exception found that can't be translated", e);
-		return gameMessageSource.getMessageSource().getMessage("game.error.expired", null, locale);
-	}
+    private String translateSystemException(Exception e, Locale locale) {
+        log.error("System exception found that can't be translated", e);
+        return gameMessageSource.getMessageSource().getMessage("game.error.expired", null, locale);
+    }
 
-	private String translateBoardException(GameMoveException e, Locale locale) {
-		try {
-			throw e;
-		} catch (GameExpiredException ex) {
-			return gameMessageSource.getMessageSource().getMessage("game.error.expired", null, locale);
-		} catch (GameFinishedException ex) {
-			return gameMessageSource.getMessageSource().getMessage("game.error.finished", null, locale);
-		} catch (UnsuitablePlayerException ex) {
-			return gameMessageSource.getMessageSource().getMessage("game.error.unsuitable", null, locale);
-		} catch (UnknownWordException ex) {
-			return gameMessageSource.getMessageSource().getMessage("game.error.word", new Object[]{ex.getWord()}, locale);
-		} catch (IncorrectTilesException ex) {
-			switch (ex.getType()) {
-				case CELL_ALREADY_BUSY:
-					return gameMessageSource.getMessageSource().getMessage("game.error.tiles.busy", null, locale);
-				case NO_BOARD_TILES:
-					return gameMessageSource.getMessageSource().getMessage("game.error.tiles.board", null, locale);
-				case NO_HAND_TILES:
-					return gameMessageSource.getMessageSource().getMessage("game.error.tiles.hand", null, locale);
-				case TILE_ALREADY_PLACED:
-					return gameMessageSource.getMessageSource().getMessage("game.error.tiles.placed", null, locale);
-				case UNKNOWN_TILE:
-					return gameMessageSource.getMessageSource().getMessage("game.error.tiles.unknown", null, locale);
-			}
-		} catch (IncorrectPositionException ex) {
-			if (ex.isMustBeInCenter()) {
-				return gameMessageSource.getMessageSource().getMessage("game.error.pos.center", null, locale);
-			} else {
-				return gameMessageSource.getMessageSource().getMessage("game.error.pos.general", null, locale);
-			}
-		} catch (GameMoveException ex) {
-			log.error("Unexpected game move exception found: " + ex.getClass(), ex);
-			return translateSystemException(e, locale);
-		}
-		return translateSystemException(e, locale);
-	}
+    private String translateBoardException(GameMoveException e, Locale locale) {
+        try {
+            throw e;
+        } catch (GameExpiredException ex) {
+            return gameMessageSource.getMessageSource().getMessage("game.error.expired", null, locale);
+        } catch (GameFinishedException ex) {
+            return gameMessageSource.getMessageSource().getMessage("game.error.finished", null, locale);
+        } catch (UnsuitablePlayerException ex) {
+            return gameMessageSource.getMessageSource().getMessage("game.error.unsuitable", null, locale);
+        } catch (UnknownWordException ex) {
+            return gameMessageSource.getMessageSource().getMessage("game.error.word", new Object[]{ex.getWord()}, locale);
+        } catch (IncorrectTilesException ex) {
+            switch (ex.getType()) {
+                case CELL_ALREADY_BUSY:
+                    return gameMessageSource.getMessageSource().getMessage("game.error.tiles.busy", null, locale);
+                case NO_BOARD_TILES:
+                    return gameMessageSource.getMessageSource().getMessage("game.error.tiles.board", null, locale);
+                case NO_HAND_TILES:
+                    return gameMessageSource.getMessageSource().getMessage("game.error.tiles.hand", null, locale);
+                case TILE_ALREADY_PLACED:
+                    return gameMessageSource.getMessageSource().getMessage("game.error.tiles.placed", null, locale);
+                case UNKNOWN_TILE:
+                    return gameMessageSource.getMessageSource().getMessage("game.error.tiles.unknown", null, locale);
+            }
+        } catch (IncorrectPositionException ex) {
+            if (ex.isMustBeInCenter()) {
+                return gameMessageSource.getMessageSource().getMessage("game.error.pos.center", null, locale);
+            } else {
+                return gameMessageSource.getMessageSource().getMessage("game.error.pos.general", null, locale);
+            }
+        } catch (GameMoveException ex) {
+            log.error("Unexpected game move exception found: " + ex.getClass(), ex);
+            return translateSystemException(e, locale);
+        }
+        return translateSystemException(e, locale);
+    }
 
-	private Map<String, RatingChange> getRatingChanges(ScribbleBoard board) {
+    private Map<String, RatingChange> getRatingChanges(ScribbleBoard board) {
 /*
 		final Collection<RatingChange> ratingChanges = ratingManager.getRatingChanges(board);
 		if (ratingChanges != null) {
@@ -346,26 +344,26 @@ public class PlayboardController extends AbstractPlayerController {
 			return ratings;
 		}
 */
-		return null;
-	}
+        return null;
+    }
 
-	@Autowired
-	public void setRatingManager(PlayerRatingManager ratingManager) {
-		this.ratingManager = ratingManager;
-	}
+    @Autowired
+    public void setRatingManager(PlayerRatingManager ratingManager) {
+        this.ratingManager = ratingManager;
+    }
 
-	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
-	}
+    @Autowired
+    public void setGameMessageSource(GameMessageSource gameMessageSource) {
+        this.gameMessageSource = gameMessageSource;
+    }
 
-	@Autowired
-	public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
-		this.dictionaryManager = dictionaryManager;
-	}
+    @Autowired
+    public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
+        this.dictionaryManager = dictionaryManager;
+    }
 
-	@Autowired
-	public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
-		this.scribbleRoomManager = scribbleRoomManager;
-	}
+    @Autowired
+    public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
+        this.scribbleRoomManager = scribbleRoomManager;
+    }
 }

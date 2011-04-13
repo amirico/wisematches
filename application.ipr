@@ -394,6 +394,7 @@
       <words>
         <w>millis</w>
         <w>rect</w>
+        <w>wisematches</w>
       </words>
     </dictionary>
   </component>
