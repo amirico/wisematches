@@ -12,6 +12,11 @@
 </span>
 </#macro>
 
+<#macro info>
+<img class="help-tooltip" style="vertical-align: text-bottom" src="/resources/images/help.png" width="16" height="16"
+     title="<#nested>"/>
+</#macro>
+
 <#macro field path id="">
 <@spring.bind path/>
 <div <#if id?has_content>id="${id}"</#if> class="<#if spring.status.error>field-error<#else>field-ok</#if>">

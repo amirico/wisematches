@@ -191,3 +191,7 @@ wm.ui = new function() {
         $("#freeow").freeow(title, message, v);
     }
 };
+
+$(document).ready(function() {
+    $("[title]").tooltip({ position: "bottom right", opacity: 0.97});
+});
