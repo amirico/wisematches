@@ -104,10 +104,6 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 		return text;
 	}
 
-	public String toStringWord() {
-		return text;
-	}
-
 	/**
 	 * Returns iterator for this word. This is read-only iterator and <code>Iterator.remove()</code>
 	 * method throws <code>UnsupportedOperationException</code>.
@@ -163,16 +159,39 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 		}
 
 		Word word = (Word) o;
+		return direction == word.direction && position.equals(word.position) && Arrays.equals(tiles, word.tiles);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Arrays.hashCode(tiles);
+		result = 31 * result + position.hashCode();
+		result = 31 * result + direction.ordinal();
+		return result;
+	}
+
+	/*
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Word word = (Word) o;
 		return direction == word.direction && position.equals(word.position) && text.equals(word.text);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = direction.hashCode();
+		int result = direction.ordinal();
 		result = 31 * result + position.hashCode();
 		result = 31 * result + text.hashCode();
 		return result;
 	}
+*/
 
 	@Override
 	public String toString() {

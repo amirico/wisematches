@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@RequestMapping("/membership")
+@RequestMapping("/account/membership")
 public class MembershipController {
-    public MembershipController() {
-    }
+	public MembershipController() {
+	}
 
-    @RequestMapping("view")
-    public String viewMembershipPages(Model model) {
-        return "/content/account/pages/membership/view.ftl";
-    }
+	@RequestMapping("view")
+	public String viewMembershipPages(Model model) {
+		return "/content/account/pages/membership/view.ftl";
+	}
 
-    @ModelAttribute("headerTitle")
-    public String getMembershipTitle() {
-        return "title.membership";
-    }
+	@ModelAttribute("headerTitle")
+	public String getMembershipTitle() {
+		return "title.membership";
+	}
 }

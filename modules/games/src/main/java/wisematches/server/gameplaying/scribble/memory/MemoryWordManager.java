@@ -14,7 +14,11 @@ public interface MemoryWordManager {
 
 	void removeMemoryWord(ScribbleBoard board, ScribblePlayerHand hand, Word word);
 
+	void clearMemoryWords(ScribbleBoard board);
+
 	void clearMemoryWords(ScribbleBoard board, ScribblePlayerHand hand);
+
+	int getMemoryWordsCount(ScribbleBoard board, ScribblePlayerHand hand);
 
 	Collection<Word> getMemoryWords(ScribbleBoard board, ScribblePlayerHand hand);
 }

@@ -1,6 +1,5 @@
 package wisematches.server.gameplaying.scribble.memory.impl;
 
-import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +35,6 @@ public class HibernateMemoryWordManagerTest {
 	@Autowired
 	private MemoryWordManager memoryWordManager;
 
-	@Autowired
-	private SessionFactory sessionFactory;
-
 	private final Word word1 = new Word(new Position(1, 3), Direction.HORIZONTAL, new Tile(1, 'a', 1), new Tile(2, 'b', 1), new Tile(12, 'c', 5));
 	private final Word word2 = new Word(new Position(9, 2), Direction.VERTICAL, new Tile(4, 'r', 2), new Tile(5, 'j', 4), new Tile(123, 'h', 5));
 
@@ -69,19 +65,27 @@ public class HibernateMemoryWordManagerTest {
 	@Test
 	public void test_addMemory() {
 		memoryWordManager.addMemoryWord(board, hand1, word1);
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand2));
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand2).size());
 
 		memoryWordManager.addMemoryWord(board, hand1, word2);
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand2));
 		assertEquals(2, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand2).size());
 
 		memoryWordManager.addMemoryWord(board, hand2, word1);
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 		assertEquals(2, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
 
 		// Add memory word twice. Word should be changed
 		memoryWordManager.addMemoryWord(board, hand2, word2);
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand2));
 		assertEquals(2, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(2, memoryWordManager.getMemoryWords(board, hand2).size());
 	}
@@ -93,27 +97,39 @@ public class HibernateMemoryWordManagerTest {
 		memoryWordManager.addMemoryWord(board, hand2, word1);
 		assertEquals(2, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		//Test remove unknown word
 		memoryWordManager.removeMemoryWord(board, hand1, word1);
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		memoryWordManager.removeMemoryWord(board, hand1, word1);
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		memoryWordManager.removeMemoryWord(board, hand2, word2);
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		memoryWordManager.removeMemoryWord(board, hand2, word1);
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		memoryWordManager.removeMemoryWord(board, hand1, word2);
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand2));
 	}
 
 	@Test
@@ -123,41 +139,72 @@ public class HibernateMemoryWordManagerTest {
 		memoryWordManager.addMemoryWord(board, hand2, word1);
 		assertEquals(2, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		memoryWordManager.clearMemoryWords(board, hand1);
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		//Test the same thing
 		memoryWordManager.clearMemoryWords(board, hand1);
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
 
 		memoryWordManager.clearMemoryWords(board, hand2);
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand1).size());
 		assertEquals(0, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand2));
 	}
 
 	@Test
 	public void test_getMemoryWords() {
 		final Collection<Word> words = memoryWordManager.getMemoryWords(board, hand1);
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand1));
 		assertEquals(0, words.size());
 
 		memoryWordManager.addMemoryWord(board, hand1, word1);
 		final Collection<Word> wc1 = memoryWordManager.getMemoryWords(board, hand1);
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
 		assertEquals(1, wc1.size());
 		assertTrue(wc1.contains(word1));
 
 		memoryWordManager.addMemoryWord(board, hand1, word2);
 		final Collection<Word> wc2 = memoryWordManager.getMemoryWords(board, hand1);
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
 		assertEquals(2, wc2.size());
 		assertTrue(wc2.contains(word1));
 		assertTrue(wc2.contains(word2));
 
 		memoryWordManager.removeMemoryWord(board, hand1, word1);
 		final Collection<Word> wc3 = memoryWordManager.getMemoryWords(board, hand1);
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand1));
 		assertEquals(1, wc3.size());
 		assertFalse(wc3.contains(word1));
 		assertTrue(wc3.contains(word2));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void test_clearMemoryWords_2() {
+		memoryWordManager.addMemoryWord(board, hand1, word1);
+		memoryWordManager.addMemoryWord(board, hand1, word2);
+		memoryWordManager.addMemoryWord(board, hand2, word1);
+		assertEquals(2, memoryWordManager.getMemoryWords(board, hand1).size());
+		assertEquals(1, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(2, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(1, memoryWordManager.getMemoryWordsCount(board, hand2));
+
+		memoryWordManager.clearMemoryWords(board);
+
+		assertEquals(0, memoryWordManager.getMemoryWords(board, hand1).size());
+		assertEquals(0, memoryWordManager.getMemoryWords(board, hand2).size());
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand1));
+		assertEquals(0, memoryWordManager.getMemoryWordsCount(board, hand2));
 	}
 }

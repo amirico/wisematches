@@ -161,10 +161,6 @@
     cursor: pointer;
 }
 
-#playboard #memoryWords th, #playboard #memoryWords td {
-    white-space: nowrap;
-}
-
 #playboard #movesHistory td {
     padding-left: 3px;
     padding-right: 3px;
@@ -407,7 +403,12 @@
     background: url('/resources/images/scribble/playboard/memory.png') no-repeat -16px 0 !important;
 }
 
-.scribble-memory a {
+#memoryWords_wrapper {
+    min-height: 20px;
+    _height: 20px;
+}
+
+#memoryWords .memory-controls a, #memoryWords .memory-controls span {
     border: 0;
     width: 16px;
     height: 16px;

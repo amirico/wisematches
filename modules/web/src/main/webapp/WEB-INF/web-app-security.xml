@@ -131,9 +131,8 @@
 
     <http use-expressions="true">
         <intercept-url pattern="/game/**" access="isAuthenticated()"/>
-        <intercept-url pattern="/membership/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/account/membership/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/modify.html" access="isFullyAuthenticated()"/>
-
         <intercept-url pattern="/admin/**" access="hasRole('admin') and isFullyAuthenticated()"/>
 
         <intercept-url pattern="/jquery/**" filters="none"/>

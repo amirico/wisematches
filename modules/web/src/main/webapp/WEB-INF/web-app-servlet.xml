@@ -28,7 +28,6 @@
 
         <mvc:interceptor>
             <mvc:mapping path="/game/**"/>
-
             <mvc:mapping path="/account/create.html"/>
             <mvc:mapping path="/account/modify.html"/>
 

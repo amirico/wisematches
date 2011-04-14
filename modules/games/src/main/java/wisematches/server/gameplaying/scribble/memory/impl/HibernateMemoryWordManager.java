@@ -5,10 +5,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.server.gameplaying.board.*;
+import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.gameplaying.scribble.Word;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
 import wisematches.server.gameplaying.scribble.memory.MemoryWordManager;
+import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,18 +29,10 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void addMemoryWord(ScribbleBoard board, ScribblePlayerHand hand, Word word) {
-		if (board == null) {
-			throw new NullPointerException("Board is null");
-		}
-		if (hand == null) {
-			throw new NullPointerException("Hand is null");
-		}
 		if (word == null) {
 			throw new NullPointerException("Word is null");
 		}
-		if (board.getPlayerHand(hand.getPlayerId()) != hand) {
-			throw new IllegalArgumentException("Specified hand does not belong to specified board");
-		}
+		checkMemoryParameters(board, hand);
 
 		if (log.isDebugEnabled()) {
 			log.debug("Add new memory word for user " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word + "@" + word.hashCode());
@@ -57,15 +52,7 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void removeMemoryWord(ScribbleBoard board, ScribblePlayerHand hand, Word word) {
-		if (board == null) {
-			throw new NullPointerException("Board is null");
-		}
-		if (hand == null) {
-			throw new NullPointerException("Hand is null");
-		}
-		if (board.getPlayerHand(hand.getPlayerId()) != hand) {
-			throw new IllegalArgumentException("Specified hand does not belong to specified board");
-		}
+		checkMemoryParameters(board, hand);
 		if (log.isDebugEnabled()) {
 			log.debug("Remove memory word for user " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word + "@" + word.hashCode());
 		}
@@ -80,15 +67,7 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void clearMemoryWords(ScribbleBoard board, ScribblePlayerHand hand) {
-		if (board == null) {
-			throw new NullPointerException("Board is null");
-		}
-		if (hand == null) {
-			throw new NullPointerException("Hand is null");
-		}
-		if (board.getPlayerHand(hand.getPlayerId()) != hand) {
-			throw new IllegalArgumentException("Specified hand does not belong to specified board");
-		}
+		checkMemoryParameters(board, hand);
 
 		if (log.isDebugEnabled()) {
 			log.debug("Clear memory for user " + hand.getPlayerId() + "@" + board.getBoardId());
@@ -101,17 +80,34 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 		);
 	}
 
-	@Override
-	public Collection<Word> getMemoryWords(ScribbleBoard board, ScribblePlayerHand hand) {
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void clearMemoryWords(ScribbleBoard board) {
 		if (board == null) {
 			throw new NullPointerException("Board is null");
 		}
-		if (hand == null) {
-			throw new NullPointerException("Hand is null");
+
+		if (log.isDebugEnabled()) {
+			log.debug("Clear all memory for board " + board.getBoardId());
 		}
-		if (board.getPlayerHand(hand.getPlayerId()) != hand) {
-			throw new IllegalArgumentException("Specified hand does not belong to specified board");
-		}
+
+		final HibernateTemplate template = getHibernateTemplate();
+		template.bulkUpdate("delete from wisematches.server.gameplaying.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ?", board.getBoardId());
+	}
+
+	@Override
+	public int getMemoryWordsCount(ScribbleBoard board, ScribblePlayerHand hand) {
+		checkMemoryParameters(board, hand);
+
+		final HibernateTemplate template = getHibernateTemplate();
+		return ((Number) template.find("select count(*) from wisematches.server.gameplaying.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?",
+				board.getBoardId(), hand.getPlayerId()).get(0)).intValue();
+	}
+
+	@Override
+	public Collection<Word> getMemoryWords(ScribbleBoard board, ScribblePlayerHand hand) {
+		checkMemoryParameters(board, hand);
 
 		final HibernateTemplate template = getHibernateTemplate();
 		@SuppressWarnings("unchecked")
@@ -123,5 +119,17 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 			return Collections.emptyList();
 		}
 		return list;
+	}
+
+	private void checkMemoryParameters(ScribbleBoard board, ScribblePlayerHand hand) {
+		if (board == null) {
+			throw new NullPointerException("Board is null");
+		}
+		if (hand == null) {
+			throw new NullPointerException("Hand is null");
+		}
+		if (board.getPlayerHand(hand.getPlayerId()) != hand) {
+			throw new IllegalArgumentException("Specified hand does not belong to specified board");
+		}
 	}
 }
