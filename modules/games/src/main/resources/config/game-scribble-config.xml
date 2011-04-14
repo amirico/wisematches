@@ -38,6 +38,11 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="memoryWordCleaner" class="wisematches.server.gameplaying.scribble.memory.impl.MemoryWordsCleaner">
+        <property name="memoryWordManager" ref="memoryWordManager"/>
+        <property name="scribbleRoomManager" ref="scribbleRoomManager"/>
+    </bean>
+
     <util:list id="roomsManagerList">
         <ref bean="scribbleRoomManager"/>
     </util:list>

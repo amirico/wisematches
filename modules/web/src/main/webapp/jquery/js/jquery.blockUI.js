@@ -46,11 +46,11 @@
         if (message) $m.append('<h2>' + message + '</h2>');
         if (timeout == undefined) timeout = 3000;
         $.blockUI({
-            message: $m, fadeIn: 700, fadeOut: 1000, centerY: false,
-            timeout: timeout, showOverlay: false,
-            onUnblock: onClose,
-            css: $.blockUI.defaults.growlCSS
-        });
+                    message: $m, fadeIn: 700, fadeOut: 1000, centerY: false,
+                    timeout: timeout, showOverlay: false,
+                    onUnblock: onClose,
+                    css: $.blockUI.defaults.growlCSS
+                });
     };
 
 // plugin method for blocking element content
@@ -283,9 +283,9 @@
 
         if (opts.theme && opts.draggable && $.fn.draggable) {
             lyr3.draggable({
-                handle: '.ui-dialog-titlebar',
-                cancel: 'li'
-            });
+                        handle: '.ui-dialog-titlebar',
+                        cancel: 'li'
+                    });
         }
 
         // ie7 must use absolute positioning in quirks mode and to account for activex issues (when scrolling)

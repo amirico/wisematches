@@ -70,7 +70,7 @@ wm.scribble.ScoreEngine = function(gameBonuses, board) {
         return bonuses[row][col];
     };
 
-    this.getWordBonus = function(word) {
+    this.getWordPoints = function(word) {
         var points = 0;
         var pointsRaw = 0;
         var pointsMult = 1;
@@ -694,7 +694,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
     this.checkWord = function(word) {
         return wordIterator(word, function(i, tile, row, column) {
             var boardTile = boardTiles[column][row];
-            if (wm.scribble.tile.isTilePined(boardTile)) {
+            if (boardTile != null && boardTile != undefined) {
                 if (tile.number != boardTile.data('tile').number) {
                     return false;
                 }

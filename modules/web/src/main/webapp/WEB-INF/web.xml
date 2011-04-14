@@ -102,4 +102,9 @@
         <error-code>500</error-code>
         <location>/error/500.html</location>
     </error-page>
+
+    <error-page>
+        <exception-type>org.springframework.security.web.authentication.rememberme.CookieTheftException</exception-type>
+        <location>/account/loginAuth.html?error=insufficient</location>
+    </error-page>
 </web-app>

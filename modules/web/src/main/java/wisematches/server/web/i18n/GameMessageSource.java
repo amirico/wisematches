@@ -42,6 +42,10 @@ public class GameMessageSource {
 		return p.getNickname();
 	}
 
+	public String getMessage(String code, Locale locale, Object... args) {
+		return messageSource.getMessage(code, args, locale);
+	}
+
 	public String formatGameResolution(GameResolution resolution, String language) {
 		return formatGameResolution(resolution, Language.byCode(language).locale());
 	}
@@ -114,9 +118,5 @@ public class GameMessageSource {
 
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
-	}
-
-	public MessageSource getMessageSource() {
-		return messageSource;
 	}
 }

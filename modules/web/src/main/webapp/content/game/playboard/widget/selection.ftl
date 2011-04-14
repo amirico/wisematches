@@ -101,7 +101,7 @@
                     var swi = $("#selectedWordInfo");
                     var swc = $("#selectedWordCost");
                     if (word != null) {
-                        swc.empty().text(board.getScoreEngine().getWordBonus(word).formula);
+                        swc.empty().text(board.getScoreEngine().getWordPoints(word).formula);
                         swi.empty();
                         $.each(word.tiles, function(i, t) {
                             wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(swi);
