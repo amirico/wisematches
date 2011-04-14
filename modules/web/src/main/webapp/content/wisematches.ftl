@@ -22,6 +22,7 @@
     <script type="text/javascript" src="/jquery/js/ColReorder.min.js"></script>
     <script type="text/javascript" src="/jquery/js/ColVis.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.tools.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/i18n/${locale}.js"></script>

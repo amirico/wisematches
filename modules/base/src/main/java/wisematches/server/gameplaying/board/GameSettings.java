@@ -123,6 +123,9 @@ public abstract class GameSettings implements Serializable {
 		protected boolean ratedGame;
 		protected boolean scratch;
 
+		protected Builder() {
+		}
+
 		public abstract GameSettings build();
 
 		public String getTitle() {
