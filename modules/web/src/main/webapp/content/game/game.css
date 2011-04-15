@@ -227,18 +227,21 @@
     border-left-width: 0;
 }
 
-.game-progress .game-progress-finished {
-    float: left;
-    color: white !important;
-    background-color: #cccccc;
-    border: 1px solid #999999;
-}
-
 .game-progress .game-progress-caption {
     width: 100%;
     position: absolute;
     font-weight: bold;
     text-align: center;
+}
+
+.game-progress .game-progress-finished {
+    float: left;
+    font-weight: bold;
+    text-align: center;
+    line-height: normal;
+    color: white !important;
+    background-color: #cccccc;
+    border: 1px solid #999999;
 }
 
 #playboard #gameInfo td {
