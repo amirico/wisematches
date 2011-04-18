@@ -87,25 +87,21 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map<Long, RatingChange> getRatingChanges(GameBoard board) {
+	public Collection<RatingChange> getRatingChanges(GameBoard board) {
 		final Collection<RatingChange> ratingChanges = getHibernateTemplate().find(
 				"from wisematches.server.standing.rating.RatingChange rating where rating.boardId = ?",
 				board.getBoardId());
 
 		if (ratingChanges != null) {
-			final Map<Long, RatingChange> ratings = new HashMap<Long, RatingChange>(ratingChanges.size());
-			for (RatingChange change : ratingChanges) {
-				ratings.put(change.getPlayerId(), change);
-			}
-			Collection<GamePlayerHand> playersHands = board.getPlayersHands();
-			for (GamePlayerHand hand : playersHands) {
-				ComputerPlayer cp = ComputerPlayer.getComputerPlayer(hand.getPlayerId());
+			final Collection<GamePlayerHand> hands = board.getPlayersHands();
+			for (GamePlayerHand hand : hands) {
+				final ComputerPlayer cp = ComputerPlayer.getComputerPlayer(hand.getPlayerId());
 				if (cp != null) {
 					final RatingChange value = new RatingChange(cp.getId(), board.getBoardId(), board.getFinishedTime(), cp.getRating(), cp.getRating(), hand.getPoints());
-					ratings.put(cp.getId(), value);
+					ratingChanges.add(value);
 				}
 			}
-			return ratings;
+			return ratingChanges;
 		}
 		return null;
 	}
@@ -133,18 +129,19 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 				if (log.isDebugEnabled()) {
 					log.debug("RatingChange event: " + entity);
 				}
-				HibernateTemplate template = getHibernateTemplate();
+				final HibernateTemplate template = getHibernateTemplate();
+				template.save(entity); // create new record
 
-				HibernatePlayerRating rating = template.get(HibernatePlayerRating.class, playerId);
-				if (rating == null) {
-					rating = new HibernatePlayerRating(playerId, newRating);
-					template.save(rating);
-				} else {
-					rating.setRating(newRating);
-					template.update(rating);
+				if (oldRating != newRating) { // update only if change is real
+					HibernatePlayerRating rating = template.get(HibernatePlayerRating.class, playerId);
+					if (rating == null) {
+						rating = new HibernatePlayerRating(playerId, newRating);
+						template.save(rating);
+					} else {
+						rating.setRating(newRating);
+						template.update(rating);
+					}
 				}
-
-				template.save(entity);
 
 				if (ratings.containsKey(person)) {
 					System.out.println("Put player's rating: " + newRating);
@@ -200,10 +197,6 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
-			if (!board.isRatedGame()) {
-				return;
-			}
-
 			final Collection<P> playersHands = board.getPlayersHands();
 			final GamePlayerHand[] hands = playersHands.toArray(new GamePlayerHand[playersHands.size()]);
 
@@ -215,7 +208,12 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 				oldRatings[i] = getRating(Personality.person(hand.getPlayerId()));
 			}
 
-			final short[] newRatings = ratingSystem.calculateRatings(oldRatings, points);
+			final short[] newRatings;
+			if (board.isRatedGame()) {
+				newRatings = ratingSystem.calculateRatings(oldRatings, points);
+			} else {
+				newRatings = oldRatings.clone(); // if game is not rated - no changes.
+			}
 			for (int i = 0; i < hands.length; i++) {
 				final GamePlayerHand hand = hands[i];
 				processRatingChange(hand.getPlayerId(), board, oldRatings[i], newRatings[i], hand.getPoints());

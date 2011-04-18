@@ -141,6 +141,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
     var state = gameInfo.state;
     var bank = gameInfo.bank;
     var players = gameInfo.players;
+    var ratings = gameInfo.ratings;
     var moves = gameInfo.board.moves;
 
     var enabled = true;
@@ -451,6 +452,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
         var oldState = state;
         state = newState;
         if (!state.active) {
+            ratings = state.ratings;
             playboard.stopBoardMonitoring();
             scribble.trigger('gameState', ['finished', state]);
         } else if (state.playerTurn != oldState.playerTurn) {
@@ -628,6 +630,23 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
                 return false;
             }
         });
+        return res;
+    };
+
+    this.getPlayerRatings = function() {
+        return ratings;
+    };
+
+    this.getPlayerRating = function(playerId) {
+        var res;
+        if (ratings != null && ratings != undefined) {
+            $.each(ratings, function(i, rating) {
+                if (rating.playerId == playerId) {
+                    res = rating;
+                    return false;
+                }
+            });
+        }
         return res;
     };
 

@@ -22,7 +22,6 @@ import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
 import wisematches.server.standing.rating.PlayerRatingManager;
-import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.gameplaying.form.CheckWordForm;
@@ -59,10 +58,10 @@ public class PlayboardController extends AbstractPlayerController {
 			}
 
 			model.addAttribute("board", board);
-			if (!board.isGameActive()) {
-				model.addAttribute("ratings", getRatingChanges(board));
-			}
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
+			if (!board.isGameActive()) {
+				model.addAttribute("ratings", ratingManager.getRatingChanges(board));
+			}
 			return "/content/game/playboard/scribble";
 		} catch (BoardLoadingException ex) {
 			log.error("Board " + gameId + " can't be loaded", ex);
@@ -234,6 +233,7 @@ public class PlayboardController extends AbstractPlayerController {
 				res[index++] = wonPlayer.getPlayerId();
 			}
 			state.put("winners", res);
+			state.put("ratings", ratingManager.getRatingChanges(board));
 			state.put("resolution", board.getGameResolution());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
@@ -324,28 +324,6 @@ public class PlayboardController extends AbstractPlayerController {
 			return translateSystemException(e, locale);
 		}
 		return translateSystemException(e, locale);
-	}
-
-	private Map<String, RatingChange> getRatingChanges(ScribbleBoard board) {
-/*
-		final Collection<RatingChange> ratingChanges = ratingManager.getRatingChanges(board);
-		if (ratingChanges != null) {
-			final Map<String, RatingChange> ratings = new HashMap<String, RatingChange>(ratingChanges.size());
-			for (RatingChange change : ratingChanges) {
-				ratings.put(String.valueOf(change.getPlayerId()), change);
-			}
-			List<ScribblePlayerHand> playersHands = board.getPlayersHands();
-			for (ScribblePlayerHand hand : playersHands) {
-				ComputerPlayer cp = ComputerPlayer.getComputerPlayer(hand.getPlayerId());
-				if (cp != null) {
-					final RatingChange value = new RatingChange(cp.getId(), board.getBoardId(), board.getFinishedTime(), cp.getRating(), cp.getRating(), hand.getPoints());
-					ratings.put(String.valueOf(cp.getId()), value);
-				}
-			}
-			return ratings;
-		}
-*/
-		return null;
 	}
 
 	@Autowired

@@ -7,8 +7,8 @@
         <#list board.playersHands as hand>
             <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
         <tr class="player-info-${p.id} player-info">
-            <td width="36px" class="icon ui-corner-left ui-table-left">
-                <img src="/game/player/image/view.html?pid=${p.id}" alt=""/>
+            <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">
+            <#--<img src="/game/player/image/view.html?pid=${p.id}" alt=""/>-->
             </td>
             <td class="nickname ui-table-middle">
             <@wm.player player=p showRating=false/>
@@ -36,6 +36,7 @@
             $("#playersInfo .player-info td").removeClass("ui-state-active");
             $.each(pids, function(i, pid) {
                 getPlayerInfoCells(pid, "td").addClass("ui-state-highlight");
+                getPlayerInfoCells(pid, "td.winner-icon").html("<img src='/resources/images/scribble/winner.png'>");
             });
         };
 
@@ -58,8 +59,8 @@
             updatePlayerInfo(pid, "<div class='rating'><div class='change " + iconClass + "'><sub>" + ratingDelta + "</sub></div><div class='value'>" + ratingFinal + "</div></div>");
         };
 
-        var updatePlayerPoints = function(pid) {
-            getPlayerInfoCells(pid, ".points").text(board.getPlayerInfo(pid).points);
+        var updatePlayerPoints = function(pid, points) {
+            getPlayerInfoCells(pid, ".points").text(points);
         };
 
         var updatePlayerInfo = function(pid, info) {
@@ -71,27 +72,28 @@
                 selectActivePlayer(board.getPlayerTurn());
                 showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime());
             } else {
-                $.each(board.getPlayerHands(), function(i, hand) {
-                    showPlayerRating(hand.playerId, hand.ratingDelta, hand.ratingFinal);
-                    updatePlayerPoints(hand.playerId);
+                $.each(board.getPlayerRatings(), function(i, rating) {
+                    showPlayerRating(rating.playerId, rating.ratingDelta, rating.newRating);
+                    updatePlayerPoints(rating.playerId, rating.points);
                 });
                 selectWonPlayers(board.getWonPlayers());
             }
         };
 
         updateBoardState();
-
-        board.bind('gameMoves',
-                function(event, move) {
-                    if (move.type = 'make') {
-                        updatePlayerPoints(move.player);
-                    }
-                })
-                .bind('gameState',
-                function(event, type, state) {
-                    updateBoardState();
-                });
-
+        <#if board.gameActive>
+            board.bind('gameMoves',
+                    function(event, move) {
+                        var playerInfo = board.getPlayerInfo(move.player);
+                        if (move.type = 'make') {
+                            updatePlayerPoints(playerInfo.playerId, playerInfo.points);
+                        }
+                    })
+                    .bind('gameState',
+                    function(event, type, state) {
+                        updateBoardState();
+                    });
+        </#if>
     };
 </script>
 </@wm.widget>

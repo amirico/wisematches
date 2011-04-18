@@ -159,19 +159,19 @@ public class HibernatePlayerRatingManagerTest {
 
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 
-		final Map<Long, RatingChange> ratingChanges = playerRatingManager.getRatingChanges(b);
+		final Collection<RatingChange> ratingChanges = playerRatingManager.getRatingChanges(b);
 		assertEquals(2, ratingChanges.size());
 
-		final RatingChange c1 = ratingChanges.get(RobotPlayer.DULL.getId());
+		final RatingChange c1 = (RatingChange) ratingChanges.toArray()[1];
 		assertRatingChange(c1, RobotPlayer.DULL.getId(), 12L, RobotPlayer.DULL.getRating(), RobotPlayer.DULL.getRating());
 
-		final RatingChange c2 = ratingChanges.get(account.getId());
+		final RatingChange c2 = (RatingChange) ratingChanges.toArray()[0];
 		assertRatingChange(c2, account.getId(), 12L, 1200, 1203);
 	}
 
 	private void assertRatingChange(RatingChange r1, long pid, long bid, int oldR, int newR) {
 		assertEquals(pid, r1.getPlayerId());
-		assertEquals(bid, r1.getGameBoardId());
+		assertEquals(bid, r1.getBoardId());
 		assertEquals(oldR, r1.getOldRating());
 		assertEquals(newR, r1.getNewRating());
 	}

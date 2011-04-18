@@ -334,10 +334,7 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
-		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
-		changeMap.put(change1.getPlayerId(), change1);
-		changeMap.put(change2.getPlayerId(), change2);
-		changeMap.put(change3.getPlayerId(), change3);
+		final Collection<RatingChange> changeMap = Arrays.asList(change1, change2, change3);
 
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(true);
@@ -385,10 +382,7 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
-		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
-		changeMap.put(change1.getPlayerId(), change1);
-		changeMap.put(change2.getPlayerId(), change2);
-		changeMap.put(change3.getPlayerId(), change3);
+		final Collection<RatingChange> changeMap = Arrays.asList(change1, change2, change3);
 
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(true);
@@ -436,10 +430,7 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
-		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
-		changeMap.put(change1.getPlayerId(), change1);
-		changeMap.put(change2.getPlayerId(), change2);
-		changeMap.put(change3.getPlayerId(), change3);
+		final Collection<RatingChange> changeMap = Arrays.asList(change1, change2, change3);
 
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(true);
@@ -489,10 +480,7 @@ public class PlayerStatisticManagerImplTest {
 		final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
 		final RatingChange change3 = new RatingChange(GuestPlayer.GUEST.getId(), 13L, new Date(), GuestPlayer.GUEST.getRating(), GuestPlayer.GUEST.getRating(), (short) 0);
 
-		final Map<Long, RatingChange> changeMap = new HashMap<Long, RatingChange>();
-		changeMap.put(change1.getPlayerId(), change1);
-		changeMap.put(change2.getPlayerId(), change2);
-		changeMap.put(change3.getPlayerId(), change3);
+		final Collection<RatingChange> changeMap = Arrays.asList(change1, change2, change3);
 
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.isRatedGame()).andReturn(false);
