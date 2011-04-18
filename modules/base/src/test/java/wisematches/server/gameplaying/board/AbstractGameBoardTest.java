@@ -274,10 +274,10 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameResolution.FINISHED, board.getGameResolution());
 		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getPlayerTurn());
 
 		verify(l);
 		assertNull(board.getFinishScore());
-		assertNull(board.getPlayerTurn());
 		assertEquals(11, h1.getPoints());
 		assertEquals(3, h2.getPoints());
 		assertEquals(4, h3.getPoints());
@@ -299,7 +299,7 @@ public class AbstractGameBoardTest {
 		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 
 		assertEquals(GameResolution.FINISHED, board.getGameResolution());
-		assertNull(board.getPlayerTurn());
+		assertNotNull(board.getPlayerTurn());
 		assertNotNull(board.getFinishedTime());
 		assertEquals(0, board.getWonPlayers().size());
 

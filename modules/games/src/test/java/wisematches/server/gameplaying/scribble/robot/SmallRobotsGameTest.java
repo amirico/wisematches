@@ -95,7 +95,11 @@ public class SmallRobotsGameTest {
 		assertTrue("Board is not saved", board.getBoardId() > 0);
 		assertFalse("Board is not finished", board.isGameActive());
 		assertTrue("Board has no one move", board.getGameMoves().size() > 0);
-		assertNull("Board has a player who has a turn", board.getPlayerTurn());
+		if (board.getGameResolution() == GameResolution.STALEMATE) {
+			assertNull("Board has a player who has a turn", board.getPlayerTurn());
+		} else {
+			assertNotNull("Board has a player who has a turn", board.getPlayerTurn());
+		}
 
 		final int dullPoints = board.getPlayerHand(r1.getId()).getPoints();
 		final int stagerPoints = board.getPlayerHand(r2.getId()).getPoints();

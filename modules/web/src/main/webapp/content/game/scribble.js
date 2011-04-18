@@ -127,7 +127,7 @@ wm.scribble.ScoreEngine = function(gameBonuses, board) {
     };
 };
 
-wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
+wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');
@@ -150,6 +150,8 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
 
     var draggingTile = null;
     var selectedTileWidgets = [];
+
+    var wildcardSelectionDialog = null;
 
     var highlighting = new function() {
         var element = $('<div></div>').addClass('highlighting').hide().appendTo(gameField);
@@ -552,6 +554,38 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandler) {
             column += columnK;
         }
         return true;
+    };
+
+    var wildcardHandler = function(tile, replacer) {
+        if (wildcardSelectionDialog == null) {
+            wildcardSelectionDialog = $('#' + wildcardHandlerElement).dialog({
+                        autoOpen: false,
+                        draggable: false,
+                        modal: true,
+                        resizable: false,
+                        width: 400
+                    });
+
+            var panel = $($('#' + wildcardHandlerElement + ' div').get(1)).empty();
+            $.each(bank.tilesInfo, function(i, bti) {
+                var row = Math.floor(i / 15);
+                var col = (i - row * 15);
+                var t = wm.scribble.tile.createTileWidget({number:0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
+                t.hover(
+                        function() {
+                            wm.scribble.tile.selectTile(this);
+                        },
+                        function() {
+                            wm.scribble.tile.deselectTile(this);
+                        }).click(
+                        function() {
+                            wildcardSelectionDialog.replacer($(this).data('tile').letter);
+                            wildcardSelectionDialog.dialog("close");
+                        }).appendTo(panel);
+            });
+        }
+        wildcardSelectionDialog.replacer = replacer;
+        wildcardSelectionDialog.dialog("open");
     };
 
     this.getBoardId = function() {

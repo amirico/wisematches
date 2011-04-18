@@ -72,13 +72,11 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	GameResolution getGameResolution();
 
 	/**
-	 * Returns player that has a turn.
-	 * <p/>
-	 * If game was terminated this method return player who terminate this game.
-	 * <p/>
-	 * If game was finished correct method returns {@code null}
+	 * Returns player that has a turn or player who made last turn. For finished stalemate games this method returns
+	 * {@code null}.
 	 *
-	 * @return the active player, player who has terminate a game or {@code null} if game has finished correct.
+	 * @return the player that has a turn or player who made last turn. For finished stalemate games this method returns
+	 *         {@code null}.
 	 */
 	P getPlayerTurn();
 
