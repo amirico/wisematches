@@ -50,7 +50,7 @@ public interface PlayerRatingManager {
 	 * @param board the board
 	 * @return collection of rating changes or null if board doesn't exist or not finished yet.
 	 */
-	Map<Long, RatingChange> getRatingChanges(GameBoard board);
+	Collection<RatingChange> getRatingChanges(GameBoard board);
 
 	/**
 	 * Returns history rating changes for specified player.

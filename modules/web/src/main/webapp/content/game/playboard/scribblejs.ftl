@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
-<#-- @ftlvariable name="ratings" type="java.util.Map<String, wisematches.server.standing.rating.RatingChange>" -->
+<#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.server.standing.rating.RatingChange>" -->
 
 <#include "/core.ftl">
 
@@ -33,9 +33,16 @@
         players: [
         <#list board.playersHands as hand>
             <#assign p = playerManager.getPlayer(hand.playerId)/>
-            <#if ratings??><#assign rating=ratings[hand.playerId?string]/></#if>
-            {playerId: ${hand.playerId?string.computer}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points?string.computer}<#if rating??>, ratingDelta: ${rating.ratingDelta?string.computer}, ratingFinal: ${rating.newRating?string.computer}</#if>}<#if hand_has_next>,</#if>
+            {playerId: ${hand.playerId?string.computer}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points?string.computer}}<#if hand_has_next>,</#if>
         </#list>],
+
+    <#if ratings??>
+        ratings: [
+            <#list ratings as rating>
+                {playerId: ${rating.playerId?string.computer}, boardId: ${rating.boardId?string.computer}, oldRating: ${rating.oldRating?string.computer}, newRating: ${rating.newRating?string.computer}, ratingDelta: ${rating.ratingDelta?string.computer}, points: ${rating.points?string.computer}}<#if rating_has_next>,</#if>
+            </#list>
+        ],
+    </#if>
 
         board: {
             bonuses: [

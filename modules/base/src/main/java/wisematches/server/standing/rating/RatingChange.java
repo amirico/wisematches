@@ -59,7 +59,7 @@ public class RatingChange implements Comparable<RatingChange> {
 		return playerId;
 	}
 
-	public long getGameBoardId() {
+	public long getBoardId() {
 		return boardId;
 	}
 
