@@ -11,18 +11,23 @@
         id: ${board.boardId?string.computer},
         readOnly: ${viewMode?string},
         daysPerMove: ${board.gameSettings.daysPerMove?string.computer},
+        startedMillis: ${gameMessageSource.getTimeMillis(board.startedTime)?string.computer},
+        startedMessage: '${gameMessageSource.formatDate(board.startedTime, locale)}',
 
         state: {
             active: ${board.gameActive?string},
+            spentTimeMillis: ${(gameMessageSource.getSpentMinutes(board)*1000*60)?string.computer},
+            spentTimeMessage: '${gameMessageSource.formatSpentTime(board, locale)}',
         playerTurn: <#if board.playerTurn??>${board.playerTurn.playerId?string.computer}<#else>null</#if>,
         <#if board.gameActive>
-            remainedTimeMillis: ${gameMessageSource.getRemainedTimeMillis(board)?string.computer},
-            remainedTimeMessage: '${gameMessageSource.getRemainedTime(board, locale)}'
-            <#else>
-                winners: [<#list board.wonPlayers as winner>${winner.playerId}<#if winner_has_next>,</#if></#list>],
-                resolution: '${board.gameResolution}',
-                resolutionMessage: '${gameMessageSource.formatGameResolution(board.gameResolution, locale)}',
-                finishTimeMessage: '${gameMessageSource.formatDate(board.finishedTime, locale)}'
+            remainedTimeMillis: ${(gameMessageSource.getRemainedMinutes(board)*1000*60)?string.computer},
+            remainedTimeMessage: '${gameMessageSource.formatRemainedTime(board, locale)}'
+        </#if>
+        <#if !board.gameActive>
+            winners: [<#list board.wonPlayers as winner>${winner.playerId}<#if winner_has_next>,</#if></#list>],
+            resolution: '${board.gameResolution}',
+            finishTimeMillis: ${gameMessageSource.getTimeMillis(board.finishedTime)?string.computer},
+            finishTimeMessage: '${gameMessageSource.formatDate(board.finishedTime, locale)}'
         </#if>},
 
         players: [
@@ -60,14 +65,16 @@
 
         bank: {
             capacity: ${board.bankCapacity?string.computer},
-            tilesInfo: [<#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
+            tilesInfo: [
+                <#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
         }
 
     <#assign playerHand=board.getPlayerHand(player.getId())!""/>
     <#if playerHand??>
-        , privacy: {
-        handTiles: [<#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
-    }
+        ,
+        privacy: {
+            handTiles: [<#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
+        }
     </#if>
     };
 </script>

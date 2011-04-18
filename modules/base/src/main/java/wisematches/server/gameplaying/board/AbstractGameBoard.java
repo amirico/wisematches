@@ -455,11 +455,14 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		finishedDate = new Date();
 		gameResolution = resolution;
 
+		if (resolution == GameResolution.STALEMATE) {
+			currentPlayerIndex = -1;
+		}
+
 		final short[] ints = processGameFinished();
 		for (int i = 0; i < ints.length; i++) {
 			playerHands.get(i).increasePoints(ints[i]);
 		}
-		currentPlayerIndex = -1;
 	}
 
 	private void closeImpl(P player, boolean byTimeout) throws GameMoveException {

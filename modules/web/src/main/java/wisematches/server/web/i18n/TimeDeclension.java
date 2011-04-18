@@ -2,29 +2,47 @@ package wisematches.server.web.i18n;
 
 import wisematches.server.personality.account.Language;
 
+import java.awt.datatransfer.StringSelection;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class TimeDeclension {
 	public static final TimeDeclension RUSSIAN = new TimeDeclension(
-			new String[]{"день", "дня", "дней"},
-			new String[]{"час", "часа", "часов"},
-			new String[]{"минута", "минуты", "минут"});
+			"одно мгновенье",
+			new String[]{"д", "день", "дня", "дней"},
+			new String[]{"ч", "час", "часа", "часов"},
+			new String[]{"м", "минута", "минуты", "минут"});
 
 	public static final TimeDeclension ENGLISH = new TimeDeclension(
-			new String[]{"day", "days", "days"},
-			new String[]{"hour", "hours", "hours"},
-			new String[]{"minute", "minutes", "minutes"}
+			"a moment",
+			new String[]{"d", "day", "days", "days"},
+			new String[]{"h", "hour", "hours", "hours"},
+			new String[]{"m", "minute", "minutes", "minutes"}
 	);
 
+	private String moment;
 	private final String[] DAYS;
 	private final String[] HOURS;
 	private final String[] MINUTES;
 
-	private TimeDeclension(String[] DAYS, String[] HOURS, String[] MINUTES) {
+	private TimeDeclension(String moment, String[] DAYS, String[] HOURS, String[] MINUTES) {
+		this.moment = moment;
 		this.DAYS = DAYS;
 		this.HOURS = HOURS;
 		this.MINUTES = MINUTES;
+	}
+
+	public String days() {
+		return DAYS[0];
+	}
+
+	public String hours() {
+		return HOURS[0];
+	}
+
+	public String minutes() {
+		return MINUTES[0];
 	}
 
 	public String days(int days) {
@@ -45,11 +63,11 @@ public final class TimeDeclension {
 			v %= 10;
 		}
 		if (v == 1) {
-			return 0;
-		} else if (v > 1 && v < 5) {
 			return 1;
+		} else if (v > 1 && v < 5) {
+			return 2;
 		}
-		return 2;
+		return 3;
 	}
 
 	public static TimeDeclension declension(String language) {
@@ -62,5 +80,9 @@ public final class TimeDeclension {
 				return RUSSIAN;
 		}
 		return ENGLISH;
+	}
+
+	public String momentAgo() {
+		return moment;
 	}
 }

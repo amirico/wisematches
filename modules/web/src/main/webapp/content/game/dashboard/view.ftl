@@ -10,27 +10,27 @@
         $("#refreshDashboard").button({icons: {primary: 'ui-icon-refresh'}});
 
         $('#dashboard').dataTable({
-            "bJQueryUI": true,
-            "bStateSave": true,
-            "bFilter": false,
-            "bSortClasses": false,
-            "aaSorting": [
-                [3,'asc']
-            ],
-            "aoColumns": [
-                null,
-                null,
-                null,
-                null,
-                { "bSortable": false },
-                { "bSortable": false }
-            ],
-            "sDom": '<"H"lCr>t<"F"ip>',
-            "sPaginationType": "full_numbers",
-            "oLanguage": {
-                "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
-            }
-        });
+                    "bJQueryUI": true,
+                    "bStateSave": true,
+                    "bFilter": false,
+                    "bSortClasses": false,
+                    "aaSorting": [
+                        [3,'asc']
+                    ],
+                    "aoColumns": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        { "bSortable": false },
+                        { "bSortable": false }
+                    ],
+                    "sDom": '<"H"lCr>t<"F"ip>',
+                    "sPaginationType": "full_numbers",
+                    "oLanguage": {
+                        "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
+                    }
+                });
     });
 </script>
 
@@ -78,7 +78,7 @@
                     <td><@message code="language.${settings.language}"/></td>
                     <td><@gameStatus board=board/></td>
                     <td class="center">
-                    ${gameMessageSource.getRemainedTime(board, locale)}
+                    ${gameMessageSource.formatRemainedTime(board, locale)}
                     </td>
                     <td>
                         <#list board.playersHands as hand>
@@ -101,7 +101,7 @@
                         <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
                     </td>
                     <td class="center">
-                    ${gameMessageSource.getRemainedTime(proposal.timeLimits *24 * 60, locale)}
+                    ${gameMessageSource.formatMinutes(proposal.timeLimits *24 * 60, locale)}
                     </td>
                     <td>
                         <#list proposal.allPlayers as p>

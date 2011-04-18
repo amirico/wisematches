@@ -2,13 +2,11 @@ package wisematches.server.web.i18n;
 
 import org.springframework.context.MessageSource;
 import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.player.Player;
 import wisematches.server.personality.player.computer.ComputerPlayer;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -20,13 +18,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameMessageSource {
 	private MessageSource messageSource;
 
-	private static final Map<Locale, DateFormat> FORMAT_MAP = new ConcurrentHashMap<Locale, DateFormat>();
+	private static final Map<Locale, DateFormat> DATE_FORMATTER = new ConcurrentHashMap<Locale, DateFormat>();
 
 	static {
 		for (Language lang : Language.values()) {
-			FORMAT_MAP.put(lang.locale(), DateFormat.getDateInstance(DateFormat.LONG, lang.locale()));
-//			FORMAT_MAP.put(lang.locale(), new SimpleDateFormat("dd-MMM-yyyy HH:mm", lang.locale()));
-//			FORMAT_MAP.put(lang.locale(), new SimpleDateFormat("MMM dd, yyyy HH:mm z", lang.locale()));
+			DATE_FORMATTER.put(lang.locale(), DateFormat.getDateInstance(DateFormat.LONG, lang.locale()));
+//			DATE_FORMATTER.put(lang.locale(), new SimpleDateFormat("dd-MMM-yyyy HH:mm", lang.locale()));
+//			DATE_FORMATTER.put(lang.locale(), new SimpleDateFormat("MMM dd, yyyy HH:mm z", lang.locale()));
 		}
 	}
 
@@ -48,27 +46,46 @@ public class GameMessageSource {
 		return messageSource.getMessage(code, args, locale);
 	}
 
-	public String formatGameResolution(GameResolution resolution, String language) {
-		return formatGameResolution(resolution, Language.byCode(language).locale());
-	}
-
-	public String formatGameResolution(GameResolution resolution, Locale locale) {
-		return messageSource.getMessage("game.resolution." + resolution.name().toLowerCase(), null, locale);
-	}
-
 	public String formatDate(Date date, String language) {
 		return formatDate(date, Language.byCode(language).locale());
 	}
 
 	public String formatDate(Date date, Locale locale) {
-		return FORMAT_MAP.get(locale).format(date);
+		return DATE_FORMATTER.get(locale).format(date);
 	}
 
-	public String getRemainedTime(GameBoard board, String language) {
-		return getRemainedTime(board, Language.byCode(language).locale());
+	public String formatSpentTime(GameBoard board, String language) {
+		return formatSpentTime(board, Language.byCode(language).locale());
 	}
 
-	public long getRemainedTimeMillis(GameBoard board) {
+	public String formatSpentTime(GameBoard board, Locale locale) {
+		return formatMinutes(getSpentMinutes(board), locale);
+	}
+
+	public String formatRemainedTime(GameBoard board, String language) {
+		return formatRemainedTime(board, Language.byCode(language).locale());
+	}
+
+	public String formatRemainedTime(GameBoard board, Locale locale) {
+		return formatMinutes(getRemainedMinutes(board), locale);
+	}
+
+	public long getTimeMillis(Date date) {
+		return date.getTime();
+	}
+
+	public long getSpentMinutes(GameBoard board) {
+		final long startTime = board.getStartedTime().getTime();
+		final long endTime;
+		if (board.isGameActive()) {
+			endTime = System.currentTimeMillis();
+		} else {
+			endTime = board.getFinishedTime().getTime();
+		}
+		return (endTime - startTime) / 1000 / 60;
+	}
+
+	public long getRemainedMinutes(GameBoard board) {
 		final int daysPerMove = board.getGameSettings().getDaysPerMove();
 		final long elapsedTime = System.currentTimeMillis() - board.getLastMoveTime().getTime();
 
@@ -77,22 +94,18 @@ public class GameMessageSource {
 		return minutesPerMove - minutesElapsed;
 	}
 
-	public String getRemainedTime(GameBoard board, Locale locale) {
-		return getRemainedTime(getRemainedTimeMillis(board), locale);
+	public String formatMinutes(long time, String language) {
+		return formatMinutes(time, Language.byCode(language).locale());
 	}
 
-	public String getRemainedTime(long time, String language) {
-		return getRemainedTime(time, Language.byCode(language).locale());
-	}
-
-	public String getRemainedTime(long time, Locale locale) {
+	public String formatMinutes(long time, Locale locale) {
 		final int days = (int) (time / 60 / 24);
 		final int hours = (int) ((time - (days * 24 * 60)) / 60);
 		final int minutes = (int) (time % 60);
 
 		final TimeDeclension declension = TimeDeclension.declension(Language.byCode(locale.getLanguage()));
-		if (days <= 0 && hours <= 0 && minutes <= 0) {
-			return "--" + declension.days(0) + " --" + declension.hours(0);
+		if (days == 0 && hours == 0 && minutes == 0) {
+			return declension.momentAgo();
 		}
 
 		if (hours <= 0 && minutes <= 0) {
@@ -107,13 +120,13 @@ public class GameMessageSource {
 
 		final StringBuilder b = new StringBuilder();
 		if (days > 0) {
-			b.append(days).append(messageSource.getMessage("time.notation.day", null, locale)).append(" ");
+			b.append(days).append(declension.days()).append(" ");
 		}
 		if (hours > 0) {
-			b.append(hours).append(messageSource.getMessage("time.notation.hour", null, locale)).append(" ");
+			b.append(hours).append(declension.hours()).append(" ");
 		}
 		if ((days == 0 || hours == 0) && (minutes > 0)) {
-			b.append(minutes).append(messageSource.getMessage("time.notation.minute", null, locale)).append(" ");
+			b.append(minutes).append(declension.minutes()).append(" ");
 		}
 		return b.toString();
 	}

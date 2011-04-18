@@ -10,17 +10,17 @@
         $("#refreshGameboard").button({icons: {primary: 'ui-icon-refresh'}});
 
         $('#gameboard').dataTable({
-            "bJQueryUI": true,
-            "bStateSave": true,
-            "bFilter": false,
-            "bSort": false,
-            "bSortClasses": false,
-            "sDom": '<"H"lCr>t<"F"ip>',
-            "sPaginationType": "full_numbers",
-            "oLanguage": {
-                "sEmptyTable": "<@message code="game.gameboard.empty" args=["/game/create.html"]/>"
-            }
-        });
+                    "bJQueryUI": true,
+                    "bStateSave": true,
+                    "bFilter": false,
+                    "bSort": false,
+                    "bSortClasses": false,
+                    "sDom": '<"H"lCr>t<"F"ip>',
+                    "sPaginationType": "full_numbers",
+                    "oLanguage": {
+                        "sEmptyTable": "<@message code="game.gameboard.empty" args=["/game/create.html"]/>"
+                    }
+                });
     });
 </script>
 
@@ -52,7 +52,7 @@
                 <tr>
                     <td>${proposal.title}</td>
                     <td><@message code="language.${proposal.language}"/></td>
-                    <td align="center">${gameMessageSource.getRemainedTime(proposal.timeLimits*24*60,locale)}</td>
+                    <td align="center">${gameMessageSource.formatMinutes(proposal.timeLimits*24*60,locale)}</td>
                     <td>
                         <#list proposal.allPlayers as pId>
                             <div>

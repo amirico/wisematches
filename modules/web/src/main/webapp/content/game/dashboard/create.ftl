@@ -120,7 +120,7 @@
                         <select id="daysPerMove" name="daysPerMove" style="width: 170px;">
                             <#list [2,3,4,5,7,10,14] as l>
                                 <option value="${l}"
-                                        <#if (l==(wm.statusValue)?number)>selected="selected"</#if>>${gameMessageSource.getRemainedTime(l*24*60, locale)}</option>
+                                        <#if (l==(wm.statusValue)?number)>selected="selected"</#if>>${gameMessageSource.formatMinutes(l*24*60, locale)}</option>
                             </#list>
                         </select>
                     </@wm.field>

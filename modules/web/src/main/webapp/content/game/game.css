@@ -244,6 +244,21 @@
     border: 1px solid #999999;
 }
 
+.game-resolution-player {
+    font-size: 10px;
+    text-align: right;
+    font-style: italic;
+}
+
+.game-state-scratch {
+    text-align: center;
+}
+
+.game-state-scratch span {
+    font-style: italic;
+    font-weight: bold;
+}
+
 #playboard #gameInfo td {
     padding-left: 5px;
     white-space: nowrap;

@@ -224,6 +224,8 @@ public class PlayboardController extends AbstractPlayerController {
 		final Map<String, Object> state = new HashMap<String, Object>();
 		state.put("active", board.isGameActive());
 		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
+		state.put("spentTimeMillis", gameMessageSource.getSpentMinutes(board) * 1000 * 60);
+		state.put("spentTimeMessage", gameMessageSource.formatSpentTime(board, locale));
 		if (!board.isGameActive()) {
 			final List<ScribblePlayerHand> wonPlayers = board.getWonPlayers();
 			int index = 0;
@@ -233,12 +235,11 @@ public class PlayboardController extends AbstractPlayerController {
 			}
 			state.put("winners", res);
 			state.put("resolution", board.getGameResolution());
-			state.put("resolutionMessage", gameMessageSource.formatGameResolution(board.getGameResolution(), locale));
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
 		} else {
-			state.put("remainedTimeMillis", gameMessageSource.getRemainedTimeMillis(board));
-			state.put("remainedTimeMessage", gameMessageSource.getRemainedTime(board, locale));
+			state.put("remainedTimeMillis", gameMessageSource.getRemainedMinutes(board) * 1000 * 60);
+			state.put("remainedTimeMessage", gameMessageSource.formatRemainedTime(board, locale));
 		}
 		return state;
 	}
