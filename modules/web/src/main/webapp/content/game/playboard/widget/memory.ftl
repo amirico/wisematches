@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget title="game.memory.label" style="padding-top: 10px;">
+<@wm.widget id="memoryWordsWidget" title="game.memory.label" style="padding-top: 10px;">
 <table id="memoryWords" width="100%">
     <thead>
     <tr>
@@ -170,9 +170,16 @@
     $("#memoryAddButton").button({disabled: true, icons: {primary: 'icon-memory-add'}}).click(wm.scribble.memory.remember);
     $("#memoryClearButton").button({disabled: true, icons: {primary: 'icon-memory-clear'}}).click(wm.scribble.memory.clear);
 
-    board.bind('wordSelection', function(event, word) {
-        $("#memoryAddButton").button(word == null ? "disable" : "enable");
-    });
+    board.bind('wordSelection',
+            function(event, word) {
+                $("#memoryAddButton").button(word == null ? "disable" : "enable");
+            })
+            .bind('gameState',
+            function(event, type, state) {
+                if (type === 'finished') {
+                    $("#memoryWordsWidget").parent().remove();
+                }
+            });
 
     wm.scribble.memory.reloadMemoryWords();
 </script>
