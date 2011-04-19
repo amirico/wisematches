@@ -132,7 +132,7 @@ public class MemoryWordController extends AbstractPlayerController {
 					log.debug("Add memory word for " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word);
 				}
 				int memoryWordsCount = wordManager.getMemoryWordsCount(board, hand);
-				if (memoryWordsCount > 3) {
+				if (memoryWordsCount >= 3) {
 					throw new MemoryActionException("game.memory.err.limit", 3);
 				}
 				wordManager.addMemoryWord(board, hand, word);

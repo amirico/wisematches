@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="memory" type="java.util.Collection<wisematches.server.gameplaying.scribble.Word>" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
 
@@ -6,7 +5,6 @@
 <table id="memoryWords" width="100%">
     <thead>
     <tr>
-        <th width="0"></th>
         <th><@message code="game.memory.word"/></th>
         <th width="60px"><@message code="game.memory.points"/></th>
         <th width="32px"></th>
@@ -41,34 +39,12 @@
             backgroundColor:'#DFEFFC'
         };
 
-        var controlsRenderer = function(obj) {
-            var id = obj.aData[0];
-            var e = '<div id="memoryWordControls' + id + '" class="memory-controls">';
-            if (!obj.aData[3]) {
-                e += '<span></span>';
-            } else {
-                e += '<a class="icon-memory-select" href="javascript: wm.scribble.memory.select(' + id + ')"></a>';
-            }
-            e += '<a class="icon-memory-remove" href="javascript: wm.scribble.memory.remove(' + id + ')"></a>';
-            e += '</div>';
-            return e;
-        };
-
-        var invalidRowRenderer = function(obj) {
-            var sReturn = obj.aData[ obj.iDataColumn ];
-            if (!obj.aData[3]) {
-                return "<del>" + sReturn + "</del>";
-            }
-            return sReturn;
-        };
-
         var addWord = function(word) {
-            var scoreEngine = board.getScoreEngine();
-
             memoryWordsCount++;
+
             var id = nextWordId++;
             memoryWords[id] = word;
-            memoryTable.fnAddData([id, word.text, scoreEngine.getWordPoints(word).points, board.checkWord(word)]);
+            memoryTable.fnAddData(createNewRecord(id, word));
             $("#memoryClearButton").button(memoryWordsCount == 0 ? "disable" : "enable");
         };
 
@@ -81,11 +57,32 @@
             if (word != null && word != undefined) {
                 memoryWordsCount--;
                 memoryWords[id] = null;
+
                 var row = $('#memoryWordControls' + id).closest('tr').get(0);
                 memoryTable.fnDeleteRow(memoryTable.fnGetPosition(row));
 
                 $("#memoryClearButton").button(memoryWordsCount == 0 ? "disable" : "enable");
             }
+        };
+
+        var createNewRecord = function(id, word) {
+            var scoreEngine = board.getScoreEngine();
+
+            var text = word.text;
+            var valid = board.checkWord(word);
+            var points = scoreEngine.getWordPoints(word).points.toString();
+
+            var e = '<div id="memoryWordControls' + id + '" class="memory-controls">';
+            if (!valid) {
+                e += '<span></span>';
+                text = "<del>" + text + "</del>";
+                points = "<del>" + points + "</del>";
+            } else {
+                e += '<a class="icon-memory-select" href="javascript: wm.scribble.memory.select(' + id + ')"></a>';
+            }
+            e += '<a class="icon-memory-remove" href="javascript: wm.scribble.memory.remove(' + id + ')"></a>';
+            e += '</div>';
+            return [text, points, e];
         };
 
         var executeRequest = function(type, data, successHandler) {
@@ -102,6 +99,16 @@
                     wm.ui.showMessage({message: result.summary, error:true});
                 }
                 $("#memoryWords").unblock();
+            });
+        };
+
+        this.validateWords = function() {
+            var scoreEngine = board.getScoreEngine();
+            $.each(memoryWords, function(id, word) {
+                if (word != null && word != undefined) {
+                    var row = $('#memoryWordControls' + id).closest('tr').get(0);
+                    memoryTable.fnUpdate(createNewRecord(id, word), memoryTable.fnGetPosition(row), 0);
+                }
             });
         };
 
@@ -152,19 +159,17 @@
                     "bSortClasses": true,
                     "sDom": 't',
                     "aaSorting": [
-                        [2,'desc']
+                        [1,'desc']
                     ],
                     "aoColumns": [
-                        { "bVisible": false },
-                        { "fnRender": invalidRowRenderer },
-                        { "fnRender": invalidRowRenderer, "sClass": "center"},
-                        { "fnRender": controlsRenderer, "bSortable": false }
+                        null,
+                        { "sClass": "center"},
+                        { "bSortable": false }
                     ],
                     "oLanguage": {
                         "sEmptyTable": "<@message code='game.memory.empty'/>"
                     }
                 });
-
     };
 
     $("#memoryAddButton").button({disabled: true, icons: {primary: 'icon-memory-add'}}).click(wm.scribble.memory.remember);
@@ -173,12 +178,14 @@
     board.bind('wordSelection',
             function(event, word) {
                 $("#memoryAddButton").button(word == null ? "disable" : "enable");
-            })
-            .bind('gameState',
+            }).bind('gameState',
             function(event, type, state) {
                 if (type === 'finished') {
                     $("#memoryWordsWidget").parent().remove();
                 }
+            }).bind('gameMoves',
+            function(event, move) {
+                wm.scribble.memory.validateWords();
             });
 
     wm.scribble.memory.reloadMemoryWords();
