@@ -1,36 +1,35 @@
 <#include "/core.ftl">
 
 <@wm.widget id="movesHistory" title="game.history.label" style="padding-top: 10px">
-<table width="100%" border="1">
+<table width="100%">
     <thead>
     <tr>
         <th>#</th>
         <th><@message code="game.history.player"/></th>
         <th><@message code="game.history.word"/></th>
-        <th><@message code="game.history.points"/></th>
+        <th width="30px"><@message code="game.history.points"/></th>
     </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+    </tbody>
 </table>
 
 <script type="text/javascript">
-    /*
-        wm.scribble.history = new function() {
-            var addMoveToHistory = function(move) {
-                var link = '';
-                if (move.type == 'make') {
-                    var word = move.word;
-                    link = '<span class="moveMade"><a href="javascript: board.selectHistoryWord(' +
-                            '{row: ' + word.position.row + ', column: ' + word.position.column +
-                            ', direction: \'' + word.direction + '\', length: ' + word.tiles.length + '})">' +
-                            word.text + '</a></span>';
-                } else if (move.type == 'exchange') {
-                    link = '<span class="moveExchange"><@message code="game.history.exchange.label"/></span>';
+    wm.scribble.history = new function() {
+        var addMoveToHistory = function(move) {
+            var link = '';
+            if (move.type == 'make') {
+                var word = move.word;
+                link = '<span class="moveMade"><a href="javascript: board.selectHistoryWord(' +
+                        '{row: ' + word.position.row + ', column: ' + word.position.column +
+                        ', direction: \'' + word.direction + '\', length: ' + word.tiles.length + '})">' +
+                        word.text + '</a></span>';
+            } else if (move.type == 'exchange') {
+                link = '<span class="moveExchange"><@message code="game.history.exchange.label"/></span>';
             } else if (move.type == 'pass') {
                 link = '<span class="movePassed"><@message code="game.history.passed.label"/></span>';
             }
-//            movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
-            movesHistoryTable.fnAddData([1 + move.number, 'qwe', 'asd', move.points]);
+            movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
         };
 
         var movesHistoryTable = $("#movesHistory table").dataTable({
@@ -40,8 +39,12 @@
                     "aaSorting": [
                         [0,'desc']
                     ],
+                    "bAutoWidth": false,
                     "bPaginate": false,
-                    "sScrollY": "300px",
+                    "bInfo": false,
+                    "bFilter": false,
+                    "sScrollY": 300,
+                    "sScrollX" : "100%",
                     "bStateSave": true,
                     "sDom": 't'
                 });
@@ -54,6 +57,5 @@
             addMoveToHistory(move)
         });
     };
-*/
 </script>
 </@wm.widget>

@@ -452,6 +452,8 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
         var oldState = state;
         state = newState;
         if (!state.active) {
+            enabled = false;
+            clearSelectionImpl();
             ratings = state.ratings;
             playboard.stopBoardMonitoring();
             scribble.trigger('gameState', ['finished', state]);

@@ -114,6 +114,12 @@
                     }
                     $("#wordStatusIcon").attr('class', '');
                     $("#wordStatusMessage").text("");
+                })
+                .bind('gameState',
+                function(event, type, state) {
+                    if (type === 'finished') {
+                        $("#moveInfo").parent().remove();
+                    }
                 });
     };
 </script>
