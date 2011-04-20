@@ -95,6 +95,7 @@
                 <entry key="playerManager" value-ref="playerManager"/>
                 <entry key="captchaService" value-ref="captchaService"/>
                 <entry key="gameMessageSource" value-ref="smartTimeConverter"/>
+                <entry key="analyticsCode" value="${analytics.trackcode}"/>
             </map>
         </property>
         <property name="freemarkerSettings">
