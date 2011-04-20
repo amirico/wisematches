@@ -55,6 +55,566 @@ wm.scribble.tile = new function() {
     };
 };
 
+wm.scribble.Memory = function(board, language) {
+    var nextWordId = 0;
+    var memoryWords = new Array();
+    var memoryWordsCount = 0;
+
+    var overlayCSS = {
+        '-moz-border-radius': '5px',
+        '-webkit-border-radius': '5px',
+        'border-radius': '5px',
+        backgroundColor:'#DFEFFC'
+    };
+
+    var addWord = function(word) {
+        memoryWordsCount++;
+
+        var id = nextWordId++;
+        memoryWords[id] = word;
+        memoryTable.fnAddData(createNewRecord(id, word));
+        $("#memoryClearButton").button(memoryWordsCount == 0 ? "disable" : "enable");
+    };
+
+    var getWord = function(id) {
+        return memoryWords[id];
+    };
+
+    var removeWord = function(id) {
+        var word = memoryWords[id];
+        if (word != null && word != undefined) {
+            memoryWordsCount--;
+            memoryWords[id] = null;
+
+            var row = $('#memoryWordControls' + id).closest('tr').get(0);
+            memoryTable.fnDeleteRow(memoryTable.fnGetPosition(row));
+
+            $("#memoryClearButton").button(memoryWordsCount == 0 ? "disable" : "enable");
+        }
+    };
+
+    var createNewRecord = function(id, word) {
+        var scoreEngine = board.getScoreEngine();
+
+        var text = word.text;
+        var valid = board.checkWord(word);
+        var points = scoreEngine.getWordPoints(word).points.toString();
+
+        var e = '<div id="memoryWordControls' + id + '" class="memory-controls">';
+        if (!valid) {
+            e += '<span></span>';
+            text = "<del>" + text + "</del>";
+            points = "<del>" + points + "</del>";
+        } else {
+            e += '<a class="icon-memory-select" href="javascript: memoryWords.select(' + id + ')"></a>';
+        }
+        e += '<a class="icon-memory-remove" href="javascript: memoryWords.remove(' + id + ')"></a>';
+        e += '</div>';
+        return [text, points, e];
+    };
+
+    var executeRequest = function(type, data, successHandler) {
+        $("#memoryWords").block({ message: null, overlayCSS: overlayCSS });
+
+        if (data != null) {
+            data = $.toJSON(data);
+        }
+
+        $.post('/game/memory/' + type + '.ajax?b=' + board.getBoardId(), data, function(result) {
+            if (result.success) {
+                successHandler(result.data);
+            } else {
+                wm.ui.showMessage({message: result.summary, error:true});
+            }
+            $("#memoryWords").unblock();
+        });
+    };
+
+    var reloadMemoryWords = function() {
+        memoryTable.fnClearTable();
+        executeRequest('load', null, function(data) {
+            $.each(data.words, function(i, word) {
+                addWord(word);
+            });
+        });
+    };
+
+    var validateWords = function() {
+        var scoreEngine = board.getScoreEngine();
+        $.each(memoryWords, function(id, word) {
+            if (word != null && word != undefined) {
+                var row = $('#memoryWordControls' + id).closest('tr').get(0);
+                memoryTable.fnUpdate(createNewRecord(id, word), memoryTable.fnGetPosition(row), 0);
+            }
+        });
+    };
+
+    this.select = function(id) {
+        var word = getWord(id);
+        if (word != null && word != undefined) {
+            board.selectWord(word);
+        }
+    };
+
+    this.remove = function(id) {
+        var word = getWord(id);
+        if (word != null && word != undefined) {
+            executeRequest('remove', word, function(data) {
+                removeWord(id);
+            });
+        }
+    };
+
+    this.clear = function() {
+        executeRequest('clear', null, function(data) {
+            memoryTable.fnClearTable();
+        });
+    };
+
+    this.remember = function() {
+        var word = board.getSelectedWord();
+        if (word != null || word != undefined) {
+            executeRequest('add', word, function(data) {
+                addWord(word);
+            });
+        }
+    };
+
+    var memoryTable = $("#memoryWords").dataTable({
+                "bJQueryUI": true,
+                "bFilter": false,
+                "bSort": true,
+                "bSortClasses": true,
+                "sDom": 't',
+                "aaSorting": [
+                    [1,'desc']
+                ],
+                "aoColumns": [
+                    null,
+                    { "sClass": "center"},
+                    { "bSortable": false }
+                ],
+                "oLanguage": language
+            });
+
+    $("#memoryAddButton").button({disabled: true, icons: {primary: 'icon-memory-add'}}).click(this.remember);
+    $("#memoryClearButton").button({disabled: true, icons: {primary: 'icon-memory-clear'}}).click(this.clear);
+
+    board.bind('wordSelection',
+            function(event, word) {
+                $("#memoryAddButton").button(word == null ? "disable" : "enable");
+            }).bind('gameState',
+            function(event, type, state) {
+                if (type === 'finished') {
+                    $("#memoryWordsWidget").parent().remove();
+                }
+            }).bind('gameMoves',
+            function(event, move) {
+                validateWords();
+            });
+
+    reloadMemoryWords();
+};
+
+wm.scribble.Selection = function(board, language) {
+    var selectedWordInfo = $("#selectedWordInfo").text();
+    var selectedWordCost = $("#selectedWordCost").text();
+    var selectedTilesInfo = $("#selectedTilesInfo").text();
+
+    this.checkSelectedWord = function() {
+        var word = board.getSelectedWord();
+        if (word == null || word == undefined) {
+            return;
+        }
+        $("#checkWordButton").button('disable').removeClass("ui-state-hover");
+        $("#wordStatusMessage").text(language['checking']);
+        $("#wordStatusIcon").addClass('icon-wait').removeClass('icon-word-valid icon-word-invalid wordValid wordInvalid');
+        $.post('/game/playboard/check.ajax', $.toJSON({word:word.text, lang: board.getLanguage()}),
+                function(response) {
+                    if (response.success) {
+                        $("#wordStatusMessage").text(language['valid']);
+                        $("#wordStatusIcon").removeClass('icon-wait').addClass("icon-word-valid");
+                    } else {
+                        $("#wordStatusMessage").text(language['invalid']);
+                        $("#wordStatusIcon").removeClass('icon-wait').addClass("icon-word-invalid");
+                    }
+                }, 'json');
+    };
+
+    $("#checkWordButton").button({disabled: true, icons: {primary:'icon-word-check'}});
+
+    board.bind("tileSelection",
+            function(event, selected, tile) {
+                var tiles = $("#selectedTilesInfo div");
+                var length = board.getSelectedTiles().length;
+                if (selected && length == 1) {
+                    $("#selectedTilesInfo").empty();
+                }
+                if (selected) {
+                    wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo('#selectedTilesInfo');
+                } else {
+                    var updateOffset = false;
+                    $.each(tiles, function(i, tileWidget) {
+                        var v = $(tileWidget);
+                        if (v.data('tile').number == tile.number) {
+                            updateOffset = true;
+                            v.remove();
+                        } else if (updateOffset) {
+                            v.css('left', (i - 1) * 22);
+                        }
+                    });
+                }
+                if (length == 0) {
+                    $("#selectedTilesInfo").text(selectedTilesInfo);
+                }
+            })
+            .bind('wordSelection',
+            function(event, word) {
+                var swi = $("#selectedWordInfo");
+                var swc = $("#selectedWordCost");
+                if (word != null) {
+                    swc.empty().text(board.getScoreEngine().getWordPoints(word).formula);
+                    swi.empty();
+                    $.each(word.tiles, function(i, t) {
+                        wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(swi);
+                    });
+                    $("#checkWordButton").button('enable');
+                } else {
+                    swi.text(selectedWordInfo);
+                    swc.text(selectedWordCost);
+                    $("#checkWordButton").button('disable').removeClass("ui-state-hover");
+                }
+                $("#wordStatusIcon").attr('class', '');
+                $("#wordStatusMessage").text("");
+            })
+            .bind('gameState',
+            function(event, type, state) {
+                if (type === 'finished') {
+                    $("#moveInfo").parent().remove();
+                }
+            });
+};
+
+wm.scribble.Legend = function(board) {
+    this.showLegend = function() {
+        $('#boardLegend').parent().slideToggle('slow');
+        $('#showLegendButton').slideToggle('slow');
+    };
+
+    this.hideLegend = function() {
+        $('#boardLegend').parent().slideToggle('slow');
+        $('#showLegendButton').slideToggle('slow');
+    };
+
+    var infoTable = $("table .tilesInfoTable");
+    for (var i = 0; i < 12; i++) {
+        var count = 0;
+        var e = $("<tr></tr>");
+        $('<td></td>').append($('<div style="position: relative; height: 22px; width:22px"></div>').append(wm.scribble.tile.createTileWidget({letter: '' + i, cost: i}))).appendTo(e);
+        $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
+        var d = $('<div style="position: relative; height: 22px;"></div>');
+        $('<td></td>').append(d).appendTo(e);
+        $.each(board.getBankTilesInfo(), function(j, bti) {
+            if (bti.cost == i) {
+                d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: i}).offset({left: count * 22, top: 0}));
+                count++;
+            }
+        });
+        d.width(count * 22);
+        if (count > 0) {
+            e.appendTo(infoTable);
+        }
+    }
+};
+
+wm.scribble.History = function(board, language) {
+    var addMoveToHistory = function(move) {
+        var link = '';
+        if (move.type == 'make') {
+            var word = move.word;
+            link = '<span class="moveMade"><a href="javascript: board.selectHistoryWord(' +
+                    '{row: ' + word.position.row + ', column: ' + word.position.column +
+                    ', direction: \'' + word.direction + '\', length: ' + word.tiles.length + '})">' +
+                    word.text + '</a></span>';
+        } else if (move.type == 'exchange') {
+            link = '<span class="moveExchange">' + language['exchange'] + '</span>';
+        } else if (move.type == 'pass') {
+            link = '<span class="movePassed">' + language['passed'] + '</span>';
+        }
+        movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
+    };
+
+    var movesHistoryTable = $("#movesHistory table").dataTable({
+                "bJQueryUI": true,
+                "bSort": true,
+                "bSortClasses": false,
+                "aaSorting": [
+                    [0,'desc']
+                ],
+                "bAutoWidth": false,
+                "bPaginate": false,
+                "bInfo": false,
+                "bFilter": false,
+                "sScrollY": 300,
+                "sScrollX" : "100%",
+                "bStateSave": true,
+                "sDom": 't'
+            });
+
+    $.each(board.getGameMoves(), function(i, move) {
+        addMoveToHistory(move)
+    });
+
+    board.bind('gameMoves', function(event, move) {
+        addMoveToHistory(move)
+    });
+};
+
+wm.scribble.Controls = function(board, language) {
+    $("#makeTurnButton").button({disabled: true, icons: {primary: 'icon-controls-make'}});
+    $("#clearSelectionButton").button({disabled: true, icons: {primary: 'icon-controls-clear'}});
+    $("#exchangeTilesButton").button({disabled: true, icons: {primary: 'icon-controls-exchange'}});
+    $("#passTurnButton").button({disabled: true, icons: {primary: 'icon-controls-pass'}});
+    $("#resignGameButton").button({disabled: true, icons: {primary: 'icon-controls-resign'}});
+
+    var overlayCSS = {
+        '-moz-border-radius': '5px',
+        '-webkit-border-radius': '5px',
+        'border-radius': '5px',
+        backgroundColor:'#DFEFFC'
+    };
+
+    var onTileSelected = function() {
+        if (wm.scribble.tile.isTileSelected(this)) {
+            wm.scribble.tile.deselectTile(this);
+        } else {
+            wm.scribble.tile.selectTile(this);
+        }
+    };
+
+    var showMoveResult = function(success, message, error) {
+        if (success) {
+            wm.ui.showGrowl(language['acceptedLabel'], language['acceptedDescription'], 'move-accepted');
+        } else {
+            wm.ui.showMessage({message: message + (error != null ? error : ''), error:true});
+        }
+    };
+
+    var blockBoard = function() {
+        $(board.getBoardElement()).parent().block({ message: null, overlayCSS: overlayCSS });
+        $("#boardActionsToolbar").block({ message: null, overlayCSS: overlayCSS });
+    };
+
+    var unblockBoard = function() {
+        updateControlsState();
+
+        $("#boardActionsToolbar").unblock();
+        $(board.getBoardElement()).parent().unblock();
+    };
+
+    var updateSelectionState = function() {
+        $("#clearSelectionButton").removeClass("ui-state-hover").button(board.getSelectedTiles().length == 0 ? "disable" : "enable");
+    };
+
+    var updateControlsState = function() {
+        $("#boardActionsToolbar button").removeClass("ui-state-hover");
+
+        updateSelectionState();
+
+        $("#makeTurnButton").button(board.isBoardActive() && board.isPlayerActive() && board.getSelectedWord() != null ? "enable" : "disable");
+        $("#passTurnButton").button(board.isBoardActive() && board.isPlayerActive() ? "enable" : "disable");
+        $("#exchangeTilesButton").button(board.isBoardActive() && board.isPlayerActive() ? "enable" : "disable");
+        $("#resignGameButton").button(board.isBoardActive() ? "enable" : "disable");
+    };
+
+    var updateGameState = function(type, state) {
+        if (type === 'turn') {
+            updateControlsState();
+
+            if (board.isPlayerActive()) {
+                wm.ui.showGrowl(language['updatedLabel'], language['updatedYour'], 'your-turn');
+            } else {
+                wm.ui.showGrowl(language['updatedLabel'], language['updatedOther'] + ' <b>' + board.getPlayerInfo(state.playerTurn).nickname + '</b>.', 'opponent-turn');
+            }
+        } else if (type === 'finished') {
+            $("#boardActionsToolbar").hide();
+            $("#boardActionsToolbar button").button({disabled: true});
+            var msg;
+            var opts = {autoHide: false};
+            if (state.resolution == 'RESIGNED') {
+                msg = language['finishedInterrupted'] + " <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
+            } else {
+                if (state.winners == undefined || state.winners.length == 0) {
+                    msg = language['finishedDrew'];
+                } else {
+                    msg = language['finishedWon'];
+                    $.each(state.winners, function(i, pid) {
+                        if (i != 0) {
+                            msg += ", ";
+                        }
+                        msg += "<b>" + board.getPlayerInfo(pid).nickname + "</b>";
+                    });
+                }
+            }
+            wm.ui.showGrowl(language['finishedLabel'], msg + "<div class='closeInfo'>" + language['clickToClose'] + "</div>", 'game-finished', opts);
+        }
+    };
+
+    this.makeTurn = function() {
+        board.makeTurn(showMoveResult);
+    };
+
+    this.passTurn = function() {
+        wm.ui.showConfirm(language['pass'], language['passDescription'], function(approved) {
+            if (approved) {
+                board.passTurn(showMoveResult);
+            }
+        });
+    };
+
+    this.resignGame = function() {
+        wm.ui.showConfirm(language['resignLabel'], language['resignDescription'], function(approved) {
+            if (approved) {
+                board.resign(showMoveResult);
+            }
+        });
+    };
+
+    this.exchangeTiles = function() {
+        var tilesPanel = $($('#exchangeTilesPanel div').get(1));
+        tilesPanel.empty();
+        $.each(board.getHandTiles(), function(i, tile) {
+            wm.scribble.tile.createTileWidget(tile).offset({top: 0, left: i * 22}).click(onTileSelected).appendTo(tilesPanel);
+        });
+
+        $('#exchangeTilesPanel').dialog({
+                    title: language['exchange'],
+                    draggable:false,
+                    modal: true,
+                    resizable: false,
+                    width: 400,
+                    buttons: [
+                        {
+                            text: language['exchange'],
+                            click: function() {
+                                $(this).dialog("close");
+                                var tiles = new Array();
+                                $.each(tilesPanel.children(), function(i, tw) {
+                                    if (wm.scribble.tile.isTileSelected(tw)) {
+                                        tiles.push($(tw).data('tile'));
+                                    }
+                                });
+                                board.exchangeTiles(tiles, showMoveResult);
+                            }
+                        },
+                        {
+                            text: language['cancel'],
+                            click: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
+                }
+        )
+    };
+
+    board.bind("tileSelection",
+            function(event, selected, tile) {
+                updateSelectionState();
+            })
+            .bind('wordSelection',
+            function(event, word) {
+                updateControlsState();
+            }).bind('gameState',
+            function(event, type, state) {
+                updateGameState(type, state);
+            }).bind('boardState',
+            function(event, enabled) {
+                if (!enabled) {
+                    blockBoard();
+                } else {
+                    unblockBoard();
+                }
+            });
+
+    updateControlsState();
+};
+
+wm.scribble.Players = function(board) {
+    var getPlayerInfoCells = function(pid, name) {
+        return $("#playersInfo .player-info-" + pid + " " + name);
+    };
+
+    var selectActivePlayer = function(pid) {
+        $("#playersInfo .player-info td").removeClass("ui-state-active");
+        $("#playersInfo .player-info .info").text("");
+        getPlayerInfoCells(pid, "td").addClass("ui-state-active");
+    };
+
+    var selectWonPlayers = function(pids) {
+        $("#playersInfo .player-info td").removeClass("ui-state-active");
+        $.each(pids, function(i, pid) {
+            getPlayerInfoCells(pid, "td").addClass("ui-state-highlight");
+            getPlayerInfoCells(pid, "td.winner-icon").html("<img src='/resources/images/scribble/winner.png'>");
+        });
+    };
+
+    var showPlayerTimeout = function(pid, time) {
+        updatePlayerInfo(pid, time);
+    };
+
+    var showPlayerRating = function(pid, ratingDelta, ratingFinal) {
+        var iconClass;
+        if (ratingDelta == 0) {
+            ratingDelta = '+' + ratingDelta;
+            iconClass = "icon-rating-same";
+        } else if (ratingDelta > 0) {
+            ratingDelta = '+' + ratingDelta;
+            iconClass = "icon-rating-up";
+        } else {
+            ratingDelta = '' + ratingDelta;
+            iconClass = "icon-rating-down";
+        }
+        updatePlayerInfo(pid, "<div class='rating'><div class='change " + iconClass + "'><sub>" + ratingDelta + "</sub></div><div class='value'>" + ratingFinal + "</div></div>");
+    };
+
+    var updatePlayerPoints = function(pid, points) {
+        getPlayerInfoCells(pid, ".points").text(points);
+    };
+
+    var updatePlayerInfo = function(pid, info) {
+        getPlayerInfoCells(pid, ".info").html(info);
+    };
+
+    var updateBoardState = function() {
+        if (board.isBoardActive()) {
+            selectActivePlayer(board.getPlayerTurn());
+            showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime());
+        } else {
+            $.each(board.getPlayerRatings(), function(i, rating) {
+                showPlayerRating(rating.playerId, rating.ratingDelta, rating.newRating);
+                updatePlayerPoints(rating.playerId, rating.points);
+            });
+            selectWonPlayers(board.getWonPlayers());
+        }
+    };
+
+    updateBoardState();
+
+    board.bind('gameMoves',
+            function(event, move) {
+                var playerInfo = board.getPlayerInfo(move.player);
+                if (move.type = 'make') {
+                    updatePlayerPoints(playerInfo.playerId, playerInfo.points);
+                }
+            })
+            .bind('gameState',
+            function(event, type, state) {
+                updateBoardState();
+            });
+};
+
+
 wm.scribble.ScoreEngine = function(gameBonuses, board) {
     var emptyHandBonus = 33;
 
@@ -143,6 +703,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
     var players = gameInfo.players;
     var ratings = gameInfo.ratings;
     var moves = gameInfo.board.moves;
+    var language = gameInfo.language;
 
     var enabled = true;
 
@@ -893,6 +1454,10 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
 
     this.isBoardEnabled = function() {
         return enabled;
+    };
+
+    this.getLanguage = function() {
+        return language;
     };
 
     initializeGame();

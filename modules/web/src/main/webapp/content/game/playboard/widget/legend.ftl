@@ -1,24 +1,5 @@
 <#include "/core.ftl">
 
-<script type="text/javascript">
-    wm.scribble.legend = new function() {
-        this.showLegend = function() {
-            $('#boardLegend').parent().slideToggle('slow');
-            $('#showLegendButton').slideToggle('slow');
-        };
-
-        this.hideLegend = function() {
-            $('#boardLegend').parent().slideToggle('slow');
-            $('#showLegendButton').slideToggle('slow');
-        };
-    };
-
-    $(document).ready(function() {
-        var link = $("<a></a>").attr('id', 'showLegendButton').attr('href', 'javascript: wm.scribble.legend.showLegend()').html('<@message code="game.legend.show.label"/> &raquo;');
-        $("<div></div>").css("width", "100%").css('text-align', 'right').append(link).appendTo('#gameInfo');
-    });
-</script>
-
 <@wm.widget id="boardLegend" title="game.legend.label" style="display: none; padding-top: 10px;">
 <table>
     <tr>
@@ -58,28 +39,15 @@
 </table>
 
 <div style="width: 100%; text-align: right;">
-    <a href="javascript: wm.scribble.legend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
+    <a href="javascript: boardLegend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
 </div>
 </@wm.widget>
 
 <script type="text/javascript">
-    var infoTable = $("table .tilesInfoTable");
-    for (var i = 0; i < 12; i++) {
-        var count = 0;
-        var e = $("<tr></tr>");
-        $('<td></td>').append($('<div style="position: relative; height: 22px; width:22px"></div>').append(wm.scribble.tile.createTileWidget({letter: '' + i, cost: i}))).appendTo(e);
-        $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
-        var d = $('<div style="position: relative; height: 22px;"></div>');
-        $('<td></td>').append(d).appendTo(e);
-        $.each(board.getBankTilesInfo(), function(j, bti) {
-            if (bti.cost == i) {
-                d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: i}).offset({left: count * 22, top: 0}));
-                count++;
-            }
-        });
-        d.width(count * 22);
-        if (count > 0) {
-            e.appendTo(infoTable);
-        }
-    }
+    var boardLegend = new wm.scribble.Legend(board);
+
+    $(document).ready(function() {
+        var link = $("<a></a>").attr('id', 'showLegendButton').attr('href', 'javascript: boardLegend.showLegend()').html('<@message code="game.legend.show.label"/> &raquo;');
+        $("<div></div>").css("width", "100%").css('text-align', 'right').append(link).appendTo('#gameInfo');
+    });
 </script>

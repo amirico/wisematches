@@ -28,10 +28,11 @@
     <script type="text/javascript" src="/i18n/${locale}.js"></script>
     <script type="text/javascript" src="/content/wisematches.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="/content/game/game.css"/>
     <link rel="stylesheet" type="text/css" href="/content/account/account.css"/>
 
-    <link rel="stylesheet" type="text/css" href="/content/game/game.css"/>
-    <script type="text/javascript" src="/content/game/scribble.js"></script>
+    <script type="text/javascript" src="/content/game/playboard/scribble.js"></script>
+    <link rel="stylesheet" type="text/css" href="/content/game/playboard/scribble.css"/>
 </head>
 <body>
 <div id="freeow" class="freeow freeow-top-right"></div>
