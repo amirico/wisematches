@@ -97,7 +97,7 @@ public class DashboardController extends AbstractPlayerController {
 				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			} else {
 				final ScribbleProposal p = new ScribbleProposal(form.getTitle(), form.getBoardLanguage(),
-						form.getDaysPerMove(), opponents, form.getMinRating(), form.getMaxRating(), personality, players);
+						form.getDaysPerMove(), opponents, personality, players);
 				final GameProposalManager<ScribbleProposal> gameProposalManager = scribbleRoomManager.getProposalManager();
 				gameProposalManager.initiateGameProposal(p);
 				return "redirect:/game/dashboard.html";

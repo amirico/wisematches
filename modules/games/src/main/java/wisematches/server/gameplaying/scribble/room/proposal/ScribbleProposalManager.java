@@ -1,6 +1,6 @@
 package wisematches.server.gameplaying.scribble.room.proposal;
 
-import wisematches.server.gameplaying.room.propose.AbstractProposalManager;
+import wisematches.server.gameplaying.room.propose.impl.AbstractProposalManager;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class ScribbleProposalManager extends AbstractProposalManager<ScribblePro
 		info.attachPlayer(player);
 		fireGameProposalUpdated(info);
 		if (info.isGameReady()) { // if game is ready - resign it.
-			closeGameProposal(info);
+			cancelGameProposal(info);
 		}
 		return info;
 	}
@@ -58,7 +58,7 @@ public class ScribbleProposalManager extends AbstractProposalManager<ScribblePro
 	}
 
 	@Override
-	public synchronized void closeGameProposal(ScribbleProposal proposal) {
+	public synchronized void cancelGameProposal(ScribbleProposal proposal) {
 		proposals.remove(proposal.getId());
 		fireGameProposalClosed(proposal);
 	}
