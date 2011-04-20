@@ -13,49 +13,11 @@
     <tbody>
     </tbody>
 </table>
+</@wm.widget>
 
 <script type="text/javascript">
-    wm.scribble.history = new function() {
-        var addMoveToHistory = function(move) {
-            var link = '';
-            if (move.type == 'make') {
-                var word = move.word;
-                link = '<span class="moveMade"><a href="javascript: board.selectHistoryWord(' +
-                        '{row: ' + word.position.row + ', column: ' + word.position.column +
-                        ', direction: \'' + word.direction + '\', length: ' + word.tiles.length + '})">' +
-                        word.text + '</a></span>';
-            } else if (move.type == 'exchange') {
-                link = '<span class="moveExchange"><@message code="game.history.exchange.label"/></span>';
-            } else if (move.type == 'pass') {
-                link = '<span class="movePassed"><@message code="game.history.passed.label"/></span>';
-            }
-            movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
-        };
-
-        var movesHistoryTable = $("#movesHistory table").dataTable({
-                    "bJQueryUI": true,
-                    "bSort": true,
-                    "bSortClasses": false,
-                    "aaSorting": [
-                        [0,'desc']
-                    ],
-                    "bAutoWidth": false,
-                    "bPaginate": false,
-                    "bInfo": false,
-                    "bFilter": false,
-                    "sScrollY": 300,
-                    "sScrollX" : "100%",
-                    "bStateSave": true,
-                    "sDom": 't'
-                });
-
-        $.each(board.getGameMoves(), function(i, move) {
-            addMoveToHistory(move)
-        });
-
-        board.bind('gameMoves', function(event, move) {
-            addMoveToHistory(move)
-        });
-    };
+    var movesHistory = new wm.scribble.History(board, {
+                "passed": "<@message code="game.history.passed.label"/>",
+                "exchange": "<@message code="game.history.exchange.label"/>"
+            });
 </script>
-</@wm.widget>

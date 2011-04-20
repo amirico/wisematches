@@ -49,12 +49,12 @@ public class PlayboardController extends AbstractPlayerController {
 	}
 
 	@RequestMapping("/playboard")
-	public String showPlayboard(@RequestParam("b") long gameId, Model model) {
+	public String showPlayboard(@RequestParam("b") long gameId, Model model) throws BoardLoadingException {
 		try {
 			final Player player = getPlayer();
 			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
 			if (board == null) { // unknown board
-				return "/content/game/playboard/unknown";
+				throw new BoardLoadingException("no");
 			}
 
 			model.addAttribute("board", board);
@@ -65,7 +65,7 @@ public class PlayboardController extends AbstractPlayerController {
 			return "/content/game/playboard/scribble";
 		} catch (BoardLoadingException ex) {
 			log.error("Board " + gameId + " can't be loaded", ex);
-			return "/content/game/playboard/unknown";
+			throw ex;
 		}
 	}
 
