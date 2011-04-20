@@ -9,4 +9,8 @@
     <bean id="playerImagesManager" class="wisematches.server.web.services.images.impl.FilePlayerImagesManager">
         <property name="imagesFolder" value="${server.images.path}/players"/>
     </bean>
+
+    <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
+        <property name="adsResource" value="${advertisement.providers.file}"/>
+    </bean>
 </beans>

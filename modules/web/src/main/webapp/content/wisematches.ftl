@@ -33,6 +33,8 @@
 
     <script type="text/javascript" src="/content/game/playboard/scribble.js"></script>
     <link rel="stylesheet" type="text/css" href="/content/game/playboard/scribble.css"/>
+
+<#include "ops/analytics.ftl">
 </head>
 <body>
 <div id="freeow" class="freeow freeow-top-right"></div>

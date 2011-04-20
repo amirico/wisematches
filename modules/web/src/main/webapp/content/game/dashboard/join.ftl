@@ -1,6 +1,3 @@
-<#-- @ftlvariable name="player" type="wisematches.server.player.Player" -->
-<#-- @ftlvariable name="playerManager" type="wisematches.server.player.PlayerManager" -->
-<#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal>" -->
 <#include "/core.ftl">
@@ -27,7 +24,7 @@
 <table width="100%">
     <tr>
         <td width="160px" valign="top">
-            Adds will be here. Also other information.
+        <#include "/content/ops/advertisement.ftl">
         </td>
         <td valign="top">
             <div style="float: right;">

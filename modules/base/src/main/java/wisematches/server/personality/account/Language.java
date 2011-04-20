@@ -70,4 +70,8 @@ public enum Language {
 		}
 		return null;
 	}
+
+	public static Language byLocale(Locale locale) {
+		return byCode(locale.getLanguage());
+	}
 }

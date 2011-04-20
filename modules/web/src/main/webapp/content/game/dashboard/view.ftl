@@ -48,7 +48,7 @@
 <table width="100%">
     <tr>
         <td width="160px" valign="top">
-            Adds will be here. Also other information.
+        <#include "/content/ops/advertisement.ftl">
         </td>
         <td valign="top">
             <div style="float: right;">
