@@ -49,7 +49,7 @@ public interface GameProposalManager<P extends GameProposal> {
 	 *
 	 * @param proposal the waiting game to be closed.
 	 */
-	void closeGameProposal(P proposal);
+	void cancelGameProposal(P proposal);
 
 	/**
 	 * Returns list of all waiting games.

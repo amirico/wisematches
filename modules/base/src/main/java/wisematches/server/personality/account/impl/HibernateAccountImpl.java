@@ -42,6 +42,7 @@ public class HibernateAccountImpl extends Account {
 	/**
 	 * Hibernate only constructor
 	 */
+	@Deprecated
 	HibernateAccountImpl() {
 	}
 

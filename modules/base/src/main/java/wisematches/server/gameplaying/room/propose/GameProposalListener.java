@@ -9,4 +9,6 @@ public interface GameProposalListener {
 	void gameProposalUpdated(GameProposal proposal);
 
 	void gameProposalClosed(GameProposal proposal);
+
+	void gameProposalCanceled(GameProposal proposal);
 }

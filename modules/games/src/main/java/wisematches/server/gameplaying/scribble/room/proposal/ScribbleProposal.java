@@ -11,11 +11,13 @@ import java.util.List;
 public class ScribbleProposal extends GameProposal {
 	private String language;
 
+	private static final long serialVersionUID = 3454838446204714710L;
+
 	protected ScribbleProposal() {
 	}
 
-	public ScribbleProposal(String title, String language, int timeLimits, int opponentsCount, int minRating, int maxRating, Personality player, List<? extends Personality> opponents) {
-		super(title, timeLimits, opponentsCount, minRating, maxRating, player, opponents);
+	public ScribbleProposal(String title, String language, int timeLimits, int opponentsCount, Personality player, List<? extends Personality> opponents) {
+		super(title, timeLimits, opponentsCount, player, opponents);
 		this.language = language;
 	}
 

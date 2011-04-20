@@ -13,22 +13,20 @@ import java.util.List;
 public abstract class GameProposal implements Serializable {
 	private long id;
 	private String title;
-	private int minRating;
-	private int maxRating;
 	private int timeLimits;
 	private long gameOwner;
 	private int opponentsCount;
 	private List<Long> acceptedPlayers = new ArrayList<Long>(2);
 
+	private static final long serialVersionUID = 5270630804990980276L;
+
 	protected GameProposal() {
 	}
 
-	protected GameProposal(String title, int timeLimits, int opponentsCount, int minRating, int maxRating, Personality player, List<? extends Personality> opponents) {
+	protected GameProposal(String title, int timeLimits, int opponentsCount, Personality player, List<? extends Personality> opponents) {
 		this.title = title;
 		this.timeLimits = timeLimits;
 		this.opponentsCount = opponentsCount;
-		this.minRating = minRating;
-		this.maxRating = maxRating;
 		this.gameOwner = player.getId();
 
 		acceptedPlayers.add(gameOwner);
@@ -61,14 +59,6 @@ public abstract class GameProposal implements Serializable {
 		return opponentsCount;
 	}
 
-	public int getMinRating() {
-		return minRating;
-	}
-
-	public int getMaxRating() {
-		return maxRating;
-	}
-
 	public boolean isSuitablePlayer(Personality p) {
 		return getUnsuitableMessage(p) == null;
 	}
@@ -80,12 +70,6 @@ public abstract class GameProposal implements Serializable {
 		if (opponentsCount + 1 == acceptedPlayers.size()) {
 			return "full";
 		}
-//		if (minRating != 0 && p.getRating() < minRating) {
-//			return "rating < " + minRating;
-//		}
-//		if (maxRating != 0 && p.getRating() > maxRating) {
-//			return "rating > " + maxRating;
-//		}
 		return null;
 	}
 

@@ -1,30 +1,38 @@
-package wisematches.server.gameplaying.room.propose;
+package wisematches.server.gameplaying.room.propose.impl;
 
+import wisematches.server.gameplaying.room.propose.GameProposal;
+import wisematches.server.gameplaying.room.propose.GameProposalListener;
+import wisematches.server.gameplaying.room.propose.GameProposalManager;
 import wisematches.server.personality.Personality;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public abstract class AbstractProposalManager<P extends GameProposal> implements GameProposalManager<P> {
+	private final AtomicLong proposalIds = new AtomicLong();
+	private final Map<Long, P> proposals = new ConcurrentHashMap<Long, P>();
+
 	private final Collection<GameProposalListener> proposalListeners = new CopyOnWriteArraySet<GameProposalListener>();
 
 	protected AbstractProposalManager() {
 	}
 
-
 	@Override
 	public void addGameProposalListener(GameProposalListener l) {
-		proposalListeners.remove(l);
+		proposalListeners.add(l);
 	}
 
 	@Override
 	public void removeGameProposalListener(GameProposalListener l) {
 		if (l != null) {
-			proposalListeners.add(l);
+			proposalListeners.remove(l);
 		}
 	}
 

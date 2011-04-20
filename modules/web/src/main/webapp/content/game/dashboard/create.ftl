@@ -192,6 +192,7 @@
                     </td>
                 </tr>
 
+            <#--
                 <tr>
                     <td>
                         <label><@message code="game.create.limits.label"/>:</label>
@@ -229,6 +230,7 @@
                         </div>
                     </td>
                 </tr>
+-->
 
                 <tr>
                     <td></td>
