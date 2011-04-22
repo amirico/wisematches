@@ -2,7 +2,6 @@ package wisematches.server.gameplaying.scribble.memory.impl;
 
 import org.apache.log4j.Logger;
 import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.memory.MemoryWordManager;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;

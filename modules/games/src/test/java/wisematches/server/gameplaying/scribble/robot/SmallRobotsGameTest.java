@@ -10,11 +10,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import wisematches.server.gameplaying.board.*;
 import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.room.board.BoardCreationException;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
+import wisematches.server.gameplaying.scribble.board.ScribbleBoardManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoom;
-import wisematches.server.gameplaying.scribble.room.board.ScribbleBoardManager;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.player.computer.robot.RobotPlayer;
 

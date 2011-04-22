@@ -13,18 +13,18 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="scribbleBoardManager" class="wisematches.server.gameplaying.scribble.room.board.ScribbleBoardManager">
+    <bean id="scribbleBoardManager" class="wisematches.server.gameplaying.scribble.board.ScribbleBoardManager">
         <property name="dictionaryManager" ref="wordGamesDictionaries"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
     <bean id="scribbleProposalManager"
-          class="wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposalManager">
+          class="wisematches.server.gameplaying.scribble.proposal.ScribbleProposalManager">
     </bean>
 
     <bean id="scribbleSearchEngineManager"
-          class="wisematches.server.gameplaying.scribble.room.search.ScribbleSearchesEngine">
+          class="wisematches.server.gameplaying.scribble.search.ScribbleSearchesEngine">
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 

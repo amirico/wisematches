@@ -13,11 +13,11 @@ import wisematches.server.gameplaying.expiration.GameExpirationType;
 import wisematches.server.gameplaying.room.Room;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.room.board.BoardLoadingException;
-import wisematches.server.gameplaying.room.board.BoardManager;
-import wisematches.server.gameplaying.room.board.BoardStateListener;
-import wisematches.server.gameplaying.room.search.BoardLastMoveInfo;
-import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
+import wisematches.server.gameplaying.board.BoardLoadingException;
+import wisematches.server.gameplaying.board.BoardManager;
+import wisematches.server.gameplaying.board.BoardStateListener;
+import wisematches.server.gameplaying.search.BoardLastMoveInfo;
+import wisematches.server.gameplaying.search.BoardsSearchEngine;
 
 import java.util.Collection;
 import java.util.Date;

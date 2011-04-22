@@ -1,20 +1,20 @@
 package wisematches.server.gameplaying.scribble.room;
 
+import wisematches.server.gameplaying.board.BoardManager;
 import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.board.BoardManager;
-import wisematches.server.gameplaying.room.propose.GameProposalManager;
-import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
+import wisematches.server.gameplaying.propose.GameProposalManager;
+import wisematches.server.gameplaying.scribble.proposal.ScribbleProposal;
+import wisematches.server.gameplaying.search.BoardsSearchEngine;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
-import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> {
+public final class ScribbleRoomManager implements RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> {
 	private BoardsSearchEngine searchEngine;
-	private GameProposalManager<ScribbleProposal> gameProposalManager;
 	private BoardManager<ScribbleSettings, ScribbleBoard> boardManager;
+	private GameProposalManager<ScribbleSettings, ScribbleProposal> gameProposalManager;
 
 	public ScribbleRoomManager() {
 	}
@@ -35,7 +35,7 @@ public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, 
 	}
 
 	@Override
-	public GameProposalManager<ScribbleProposal> getProposalManager() {
+	public GameProposalManager<ScribbleSettings, ScribbleProposal> getProposalManager() {
 		return gameProposalManager;
 	}
 
@@ -43,7 +43,7 @@ public final class ScribbleRoomManager implements RoomManager<ScribbleProposal, 
 		this.searchEngine = searchEngine;
 	}
 
-	public void setProposalManager(GameProposalManager<ScribbleProposal> gameProposalManager) {
+	public void setProposalManager(GameProposalManager<ScribbleSettings, ScribbleProposal> gameProposalManager) {
 		this.gameProposalManager = gameProposalManager;
 	}
 

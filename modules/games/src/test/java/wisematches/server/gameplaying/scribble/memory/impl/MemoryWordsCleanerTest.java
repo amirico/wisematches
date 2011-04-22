@@ -2,9 +2,9 @@ package wisematches.server.gameplaying.scribble.memory.impl;
 
 import org.easymock.Capture;
 import org.junit.Test;
+import wisematches.server.gameplaying.board.BoardManager;
+import wisematches.server.gameplaying.board.BoardStateListener;
 import wisematches.server.gameplaying.board.GameResolution;
-import wisematches.server.gameplaying.room.board.BoardManager;
-import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.memory.MemoryWordManager;
 import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;

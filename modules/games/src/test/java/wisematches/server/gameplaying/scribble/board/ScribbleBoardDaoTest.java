@@ -12,7 +12,7 @@ import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import wisematches.server.gameplaying.board.GameMoveException;
 import wisematches.server.gameplaying.board.GameResolution;
 import wisematches.server.gameplaying.board.PassTurnMove;
-import wisematches.server.gameplaying.room.search.BoardLastMoveInfo;
+import wisematches.server.gameplaying.search.BoardLastMoveInfo;
 import wisematches.server.gameplaying.scribble.Direction;
 import wisematches.server.gameplaying.scribble.Position;
 import wisematches.server.gameplaying.scribble.Tile;

@@ -1,18 +1,15 @@
-package wisematches.server.gameplaying.scribble.room.board;
+package wisematches.server.gameplaying.scribble.board;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import wisematches.server.gameplaying.board.AbstractBoardManager;
+import wisematches.server.gameplaying.board.BoardCreationException;
+import wisematches.server.gameplaying.board.BoardLoadingException;
 import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
-import wisematches.server.gameplaying.room.board.AbstractBoardManager;
-import wisematches.server.gameplaying.room.board.BoardCreationException;
-import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
 import wisematches.server.gameplaying.scribble.bank.TilesBankingHouse;
-import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
-import wisematches.server.gameplaying.scribble.board.ScribbleBoardDao;
-import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;

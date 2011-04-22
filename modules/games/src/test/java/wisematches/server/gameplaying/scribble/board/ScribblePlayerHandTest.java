@@ -7,6 +7,9 @@ import wisematches.server.gameplaying.scribble.Tile;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribblePlayerHandTest extends TestCase {
+	public ScribblePlayerHandTest() {
+	}
+
 	public void testTiles() {
 		ScribblePlayerHand ph = new ScribblePlayerHand(1);
 		ph.setTiles(new Tile[]{new Tile(1, 'A', 1)});

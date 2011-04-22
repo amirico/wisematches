@@ -1,7 +1,5 @@
-package wisematches.server.gameplaying.room.board;
+package wisematches.server.gameplaying.board;
 
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;

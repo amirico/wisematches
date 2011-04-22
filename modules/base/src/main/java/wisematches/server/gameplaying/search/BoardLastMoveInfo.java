@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.search;
+package wisematches.server.gameplaying.search;
 
 import wisematches.server.gameplaying.board.GameBoard;
 

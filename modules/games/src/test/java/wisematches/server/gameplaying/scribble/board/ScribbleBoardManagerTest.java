@@ -1,18 +1,15 @@
-package wisematches.server.gameplaying.scribble.room.board;
+package wisematches.server.gameplaying.scribble.board;
 
 import org.junit.Before;
 import org.junit.Test;
+import wisematches.server.gameplaying.board.BoardCreationException;
+import wisematches.server.gameplaying.board.BoardLoadingException;
 import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
-import wisematches.server.gameplaying.room.board.BoardCreationException;
-import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.bank.TilesBank;
 import wisematches.server.gameplaying.scribble.bank.TilesBankingHouse;
-import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
-import wisematches.server.gameplaying.scribble.board.ScribbleBoardDao;
-import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
-import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
+import wisematches.server.gameplaying.scribble.board.*;
 import wisematches.server.personality.Personality;
 
 import java.util.Arrays;
@@ -35,6 +32,9 @@ public class ScribbleBoardManagerTest {
 
 	private static final Locale LOCALE = new Locale("en");
 
+	public ScribbleBoardManagerTest() {
+	}
+
 	@Before
 	public void testSetUp() {
 		dictionaryManager = createStrictMock(DictionaryManager.class);
@@ -52,7 +52,7 @@ public class ScribbleBoardManagerTest {
 		final ScribbleSettings settings = new ScribbleSettings("Mock", "en", 3);
 
 		final Dictionary dictionary = createNiceMock(Dictionary.class);
-		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo[0]);
+		final TilesBank tilesBank = new TilesBank();
 
 		final ScribbleBoard board = createStrictMock(ScribbleBoard.class);
 		expect(board.getGameSettings()).andReturn(settings);
@@ -86,7 +86,7 @@ public class ScribbleBoardManagerTest {
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
-		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo[]{new TilesBank.TilesInfo('A', 100, 1)});
+		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('A', 100, 1));
 
 		expect(dictionaryManager.getDictionary(LOCALE)).andReturn(dictionary);
 		replay(dictionaryManager);

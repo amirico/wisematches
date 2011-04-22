@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.board;
+package wisematches.server.gameplaying.board;
 
 /**
  * This exception is thrown by <code>BoardManager</code> if game board can't be loaded

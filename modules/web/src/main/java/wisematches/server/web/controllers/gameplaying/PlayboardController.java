@@ -17,9 +17,8 @@ import wisematches.server.gameplaying.dictionary.Dictionary;
 import wisematches.server.gameplaying.dictionary.DictionaryManager;
 import wisematches.server.gameplaying.dictionary.DictionaryNotFoundException;
 import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.board.BoardLoadingException;
 import wisematches.server.gameplaying.scribble.board.*;
-import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
+import wisematches.server.gameplaying.scribble.proposal.ScribbleProposal;
 import wisematches.server.personality.player.Player;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.web.controllers.AbstractPlayerController;
@@ -41,7 +40,7 @@ public class PlayboardController extends AbstractPlayerController {
 	private PlayerRatingManager ratingManager;
 	private DictionaryManager dictionaryManager;
 	private GameMessageSource gameMessageSource;
-	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
+	private RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
@@ -342,7 +341,7 @@ public class PlayboardController extends AbstractPlayerController {
 	}
 
 	@Autowired
-	public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
+	public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager) {
 		this.scribbleRoomManager = scribbleRoomManager;
 	}
 }

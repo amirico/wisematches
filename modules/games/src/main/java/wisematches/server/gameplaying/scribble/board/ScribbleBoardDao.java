@@ -3,7 +3,7 @@ package wisematches.server.gameplaying.scribble.board;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.server.gameplaying.board.GameResolution;
-import wisematches.server.gameplaying.room.search.BoardLastMoveInfo;
+import wisematches.server.gameplaying.search.BoardLastMoveInfo;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;

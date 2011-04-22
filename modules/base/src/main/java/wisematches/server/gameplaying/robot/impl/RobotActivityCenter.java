@@ -13,8 +13,8 @@ import wisematches.server.gameplaying.robot.RobotBrainManager;
 import wisematches.server.gameplaying.room.Room;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.room.board.BoardManager;
-import wisematches.server.gameplaying.room.board.BoardStateListener;
+import wisematches.server.gameplaying.board.BoardManager;
+import wisematches.server.gameplaying.board.BoardStateListener;
 import wisematches.server.personality.player.computer.robot.RobotPlayer;
 import wisematches.server.personality.player.computer.robot.RobotType;
 

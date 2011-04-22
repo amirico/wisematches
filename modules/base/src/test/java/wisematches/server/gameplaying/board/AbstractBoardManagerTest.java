@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.board;
+package wisematches.server.gameplaying.board;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

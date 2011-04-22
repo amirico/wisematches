@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.board;
+package wisematches.server.gameplaying.board;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

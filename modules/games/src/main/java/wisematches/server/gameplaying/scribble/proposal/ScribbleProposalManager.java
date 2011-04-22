@@ -1,17 +1,16 @@
-package wisematches.server.gameplaying.scribble.room.proposal;
+package wisematches.server.gameplaying.scribble.proposal;
 
-import wisematches.server.gameplaying.room.propose.impl.AbstractProposalManager;
+import wisematches.server.gameplaying.propose.impl.AbstractProposalManager;
+import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleProposalManager extends AbstractProposalManager<ScribbleProposal> {
+public class ScribbleProposalManager extends AbstractProposalManager<ScribbleSettings, ScribbleProposal> {
+/*
 	private final AtomicLong proposalIds = new AtomicLong();
 
 	private final Map<Long, ScribbleProposal> proposals = new ConcurrentHashMap<Long, ScribbleProposal>();
@@ -66,5 +65,31 @@ public class ScribbleProposalManager extends AbstractProposalManager<ScribblePro
 	@Override
 	public synchronized Collection<ScribbleProposal> getActiveProposals() {
 		return proposals.values();
+	}
+*/
+
+	@Override
+	public ScribbleProposal initiateGameProposal(ScribbleProposal proposal) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public ScribbleProposal attachPlayer(long proposalId, Personality player) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public ScribbleProposal detachPlayer(long proposalId, Personality player) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public void cancelGameProposal(ScribbleProposal proposal) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public Collection<ScribbleProposal> getActiveProposals() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

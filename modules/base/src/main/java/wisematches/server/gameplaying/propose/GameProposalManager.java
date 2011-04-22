@@ -1,16 +1,18 @@
-package wisematches.server.gameplaying.room.propose;
+package wisematches.server.gameplaying.propose;
 
+import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
 
 /**
- * {@code WaitingGameManager} provide access to waiting games information. Waiting games don't have a board and can
- * be managed via this manager.
+ * {@code GameProposalManager} provide access to waiting games information.
+ * <p/>
+ * Waiting games don't have a board and can be managed via this manager only.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameProposalManager<P extends GameProposal> {
+public interface GameProposalManager<S extends GameSettings, P extends GameProposal<S>> {
 	void addGameProposalListener(GameProposalListener l);
 
 	void removeGameProposalListener(GameProposalListener l);

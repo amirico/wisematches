@@ -2,7 +2,7 @@ package wisematches.server.gameplaying.room;
 
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameSettings;
-import wisematches.server.gameplaying.room.propose.GameProposal;
+import wisematches.server.gameplaying.propose.GameProposal;
 
 /**
  * {@code Room} interface is marker interface that allows identify a room. There is no implementation for
@@ -10,8 +10,8 @@ import wisematches.server.gameplaying.room.propose.GameProposal;
  *
  * @param <P> the game proposal class name.
  * @param <S> the game settings class name.
- * @param <B> the
+ * @param <B> the game board
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface Room<P extends GameProposal, S extends GameSettings, B extends GameBoard<S, ?>> {
+public interface Room<S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>> {
 }
