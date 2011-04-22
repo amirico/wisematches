@@ -1,8 +1,8 @@
-package wisematches.server.gameplaying.scribble.room.search;
+package wisematches.server.gameplaying.scribble.search;
 
 import wisematches.server.gameplaying.board.GameResolution;
-import wisematches.server.gameplaying.room.search.BoardLastMoveInfo;
-import wisematches.server.gameplaying.room.search.BoardsSearchEngine;
+import wisematches.server.gameplaying.search.BoardLastMoveInfo;
+import wisematches.server.gameplaying.search.BoardsSearchEngine;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoardDao;
 
 import java.util.Collection;

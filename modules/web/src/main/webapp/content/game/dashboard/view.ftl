@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="playerManager" type="wisematches.server.player.PlayerManager" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.proposal.ScribbleProposal>" -->
 <#include "/core.ftl">
 
 <script type="text/javascript">

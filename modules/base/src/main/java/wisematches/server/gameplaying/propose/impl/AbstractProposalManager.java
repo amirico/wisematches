@@ -1,8 +1,9 @@
-package wisematches.server.gameplaying.room.propose.impl;
+package wisematches.server.gameplaying.propose.impl;
 
-import wisematches.server.gameplaying.room.propose.GameProposal;
-import wisematches.server.gameplaying.room.propose.GameProposalListener;
-import wisematches.server.gameplaying.room.propose.GameProposalManager;
+import wisematches.server.gameplaying.board.GameSettings;
+import wisematches.server.gameplaying.propose.GameProposal;
+import wisematches.server.gameplaying.propose.GameProposalListener;
+import wisematches.server.gameplaying.propose.GameProposalManager;
 import wisematches.server.personality.Personality;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractProposalManager<P extends GameProposal> implements GameProposalManager<P> {
+public abstract class AbstractProposalManager<S extends GameSettings, P extends GameProposal<S>> implements GameProposalManager<S, P> {
 	private final AtomicLong proposalIds = new AtomicLong();
 	private final Map<Long, P> proposals = new ConcurrentHashMap<Long, P>();
 
@@ -41,26 +42,26 @@ public abstract class AbstractProposalManager<P extends GameProposal> implements
 		final Long id = player.getId();
 		Collection<P> res = new ArrayList<P>();
 		for (P scribbleProposal : getActiveProposals()) {
-			if (scribbleProposal.getRegisteredPlayers().contains(id)) {
-				res.add(scribbleProposal);
-			}
+//			if (scribbleProposal.getRegisteredPlayers().contains(id)) {
+//				res.add(scribbleProposal);
+//			}
 		}
 		return res;
 	}
 
-	protected void fireGameProposalInitiated(GameProposal proposal) {
+	protected void fireGameProposalInitiated(OldGameProposal proposal) {
 		for (GameProposalListener proposalListener : proposalListeners) {
 			proposalListener.gameProposalInitiated(proposal);
 		}
 	}
 
-	protected void fireGameProposalUpdated(GameProposal proposal) {
+	protected void fireGameProposalUpdated(OldGameProposal proposal) {
 		for (GameProposalListener proposalListener : proposalListeners) {
 			proposalListener.gameProposalUpdated(proposal);
 		}
 	}
 
-	protected void fireGameProposalClosed(GameProposal proposal) {
+	protected void fireGameProposalClosed(OldGameProposal proposal) {
 		for (GameProposalListener proposalListener : proposalListeners) {
 			proposalListener.gameProposalClosed(proposal);
 		}

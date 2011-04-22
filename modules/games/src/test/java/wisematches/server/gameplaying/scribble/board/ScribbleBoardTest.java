@@ -34,6 +34,9 @@ public class ScribbleBoardTest extends TestCase {
 
 	private static final Locale LOCALE = new Locale("en");
 
+	public ScribbleBoardTest() {
+	}
+
 	protected void setUp() throws Exception {
 		settings = new ScribbleSettings("test", "en", 3);
 	}

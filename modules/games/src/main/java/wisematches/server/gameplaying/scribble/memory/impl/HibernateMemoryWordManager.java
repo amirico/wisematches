@@ -5,13 +5,10 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.board.BoardStateListener;
 import wisematches.server.gameplaying.scribble.Word;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribblePlayerHand;
 import wisematches.server.gameplaying.scribble.memory.MemoryWordManager;
-import wisematches.server.gameplaying.scribble.room.ScribbleRoomManager;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.propose.impl;
+package wisematches.server.gameplaying.propose.impl;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

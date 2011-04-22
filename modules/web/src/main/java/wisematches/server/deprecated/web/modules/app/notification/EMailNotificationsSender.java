@@ -1,28 +1,5 @@
 package wisematches.server.deprecated.web.modules.app.notification;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
-import wisematches.server.deprecated.web.mail.FromTeam;
-import wisematches.server.deprecated.web.mail.MailSender;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.room.board.BoardLoadingException;
-import wisematches.server.gameplaying.room.board.BoardStateListener;
-import wisematches.server.personality.player.Player;
-import wisematches.server.personality.player.PlayerManager;
-import wisematches.server.standing.notice.PlayerNotification;
-import wisematches.server.utils.sessions.PlayerSessionsManager;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * TODO: extract abstract notifications provider

@@ -1,4 +1,4 @@
-package wisematches.server.gameplaying.room.propose;
+package wisematches.server.gameplaying.propose.impl;
 
 import wisematches.server.personality.Personality;
 
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class GameProposal implements Serializable {
+public abstract class OldGameProposal implements Serializable {
 	private long id;
 	private String title;
 	private int timeLimits;
@@ -20,10 +20,10 @@ public abstract class GameProposal implements Serializable {
 
 	private static final long serialVersionUID = 5270630804990980276L;
 
-	protected GameProposal() {
+	protected OldGameProposal() {
 	}
 
-	protected GameProposal(String title, int timeLimits, int opponentsCount, Personality player, List<? extends Personality> opponents) {
+	protected OldGameProposal(String title, int timeLimits, int opponentsCount, Personality player, List<? extends Personality> opponents) {
 		this.title = title;
 		this.timeLimits = timeLimits;
 		this.opponentsCount = opponentsCount;

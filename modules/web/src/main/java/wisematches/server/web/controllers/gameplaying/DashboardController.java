@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import wisematches.server.gameplaying.board.BoardManagementException;
 import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.board.BoardManagementException;
-import wisematches.server.gameplaying.room.propose.GameProposalManager;
+import wisematches.server.gameplaying.propose.GameProposalManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
-import wisematches.server.gameplaying.scribble.room.proposal.ScribbleProposal;
+import wisematches.server.gameplaying.scribble.proposal.ScribbleProposal;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.player.Player;
@@ -40,7 +40,7 @@ public class DashboardController extends AbstractPlayerController {
 	private PlayerManager playerManager;
 	private AdvertisementManager advertisementManager;
 
-	private RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager;
+	private RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -96,11 +96,13 @@ public class DashboardController extends AbstractPlayerController {
 				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(s, players);
 				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			} else {
-				final ScribbleProposal p = new ScribbleProposal(form.getTitle(), form.getBoardLanguage(),
-						form.getDaysPerMove(), opponents, personality, players);
-				final GameProposalManager<ScribbleProposal> gameProposalManager = scribbleRoomManager.getProposalManager();
-				gameProposalManager.initiateGameProposal(p);
-				return "redirect:/game/dashboard.html";
+				throw new UnsupportedOperationException("Not implemented");
+
+//				final ScribbleProposal p = new ScribbleProposal(form.getTitle(), form.getBoardLanguage(),
+//						form.getDaysPerMove(), opponents, personality, players);
+//				final GameProposalManager<ScribbleProposal> gameProposalManager = scribbleRoomManager.getProposalManager();
+//				gameProposalManager.initiateGameProposal(p);
+//				return "redirect:/game/dashboard.html";
 			}
 		}
 		return createGamePage(form, model, locale);
@@ -118,7 +120,8 @@ public class DashboardController extends AbstractPlayerController {
 		Collections.sort(proposals, new Comparator<ScribbleProposal>() {
 			@Override
 			public int compare(ScribbleProposal o1, ScribbleProposal o2) {
-				return (o1.isSuitablePlayer(personality) ? 1 : 0) - (o2.isSuitablePlayer(personality) ? 1 : 0);
+				throw new UnsupportedOperationException("Not implemented");
+//				return (o1.isSuitablePlayer(personality) ? 1 : 0) - (o2.isSuitablePlayer(personality) ? 1 : 0);
 			}
 		});
 		if (log.isDebugEnabled()) {
@@ -207,7 +210,7 @@ public class DashboardController extends AbstractPlayerController {
 	}
 
 	@Autowired
-	public void setScribbleRoomManager(RoomManager<ScribbleProposal, ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
+	public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager) {
 		this.scribbleRoomManager = scribbleRoomManager;
 	}
 }

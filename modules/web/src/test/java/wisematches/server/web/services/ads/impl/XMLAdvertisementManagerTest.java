@@ -1,8 +1,5 @@
 package wisematches.server.web.services.ads.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.UrlResource;
@@ -14,7 +11,8 @@ import wisematches.server.web.services.ads.AdvertisementProvider;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

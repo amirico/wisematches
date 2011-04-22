@@ -1,7 +1,6 @@
-package wisematches.server.gameplaying.room.board;
+package wisematches.server.gameplaying.board;
 
 import org.apache.commons.logging.Log;
-import wisematches.server.gameplaying.board.*;
 import wisematches.server.personality.Personality;
 
 import java.lang.ref.Reference;
@@ -165,8 +164,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	 *
 	 * @param gameId the id of game that must be loaded.
 	 * @return the loaded game board or <code>null</code> if no game with specified id.
-	 * @throws wisematches.server.gameplaying.room.board.BoardLoadingException
-	 *          if board can't be loaded by some reasones.
+	 * @throws BoardLoadingException if board can't be loaded by some reasones.
 	 */
 	protected abstract B loadBoardImpl(long gameId) throws BoardLoadingException;
 

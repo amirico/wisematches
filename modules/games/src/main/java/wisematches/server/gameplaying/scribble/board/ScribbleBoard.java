@@ -101,9 +101,9 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 */
 	@Lob
 	@Type(type = "[B")
-	@Column(name = "redifinitions")
+	@Column(name = "redefinitions")
 	@Access(AccessType.PROPERTY)
-	private final ByteBuffer tilesRedifinitions = ByteBuffer.allocate(255);
+	private final ByteBuffer tilesRedefinitions = ByteBuffer.allocate(255);
 
 	/**
 	 * Arrays of maden moves. This filed must be stored info {@code BLOB} field because required
@@ -165,8 +165,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 	}
 
-	@Deprecated
-	public void initGameAfterLoading(TilesBank tilesBank, Dictionary dictionary) {
+	void initGameAfterLoading(TilesBank tilesBank, Dictionary dictionary) {
 		this.dictionary = dictionary;
 
 		this.tilesBank = tilesBank;
@@ -174,8 +173,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		restoreBoardState();
 	}
 
-	@Deprecated
-	public void setDictionary(Dictionary dictionary) {
+	void setDictionary(Dictionary dictionary) {
 		this.dictionary = dictionary;
 	}
 
@@ -196,10 +194,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	private void restoreBoardState() {
 		int b;
-		while ((b = byteToInt(tilesRedifinitions.get())) != 0) {
-			tilesBank.redefineTile(b - 1, tilesRedifinitions.getChar());
+		while ((b = byteToInt(tilesRedefinitions.get())) != 0) {
+			tilesBank.redefineTile(b - 1, tilesRedefinitions.getChar());
 		}
-		tilesRedifinitions.position(tilesRedifinitions.position() - 1);
+		tilesRedefinitions.position(tilesRedefinitions.position() - 1);
 
 		restorePlayerHands();
 		restoreBoardTiles();
@@ -317,8 +315,8 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 					boardTiles[item.getRow() * CELLS_NUMBER + item.getColumn()] = (byte) (number + 1);
 					if (tile.isWildcard()) {
-						tilesRedifinitions.put((byte) (number + 1));
-						tilesRedifinitions.putChar(tile.getLetter());
+						tilesRedefinitions.put((byte) (number + 1));
+						tilesRedefinitions.putChar(tile.getLetter());
 						tilesBank.redefineTile(number, tile.getLetter());
 					}
 				}
@@ -348,7 +346,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * <p/>
 	 * This method also invokes <code>super</code> method to check that game is right state.
 	 *
-	 * @throws GameMoveException if there is no dictionary or tiles bank.
+	 * @throws GameStateException if there is no dictionary or tiles bank.
 	 * @see #setDictionary(wisematches.server.gameplaying.dictionary.Dictionary)
 	 */
 	protected void checkState() throws GameStateException {
@@ -677,14 +675,14 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		System.arraycopy(handTiles, 0, this.handTiles, 0, handTiles.length);
 	}
 
-	byte[] getTilesRedifinitions() {
-		return tilesRedifinitions.array();
+	byte[] getTilesRedefinitions() {
+		return tilesRedefinitions.array();
 	}
 
-	void setTilesRedifinitions(byte[] tilesRedifinitions) {
-		this.tilesRedifinitions.clear();
-		this.tilesRedifinitions.put(tilesRedifinitions);
-		this.tilesRedifinitions.rewind();
+	void setTilesRedefinitions(byte[] tilesRedefinitions) {
+		this.tilesRedefinitions.clear();
+		this.tilesRedefinitions.put(tilesRedefinitions);
+		this.tilesRedefinitions.rewind();
 	}
 
 	byte[] getBoardMoves() {
