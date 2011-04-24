@@ -12,68 +12,70 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public final class ScribbleSettings extends GameSettings {
-	@Column(name = "language", updatable = false)
-	private String language;
+    @Column(name = "language", updatable = false)
+    private String language;
 
-	/**
-	 * This is Hibernate constructor.
-	 */
-	ScribbleSettings() {
-	}
+    private static final long serialVersionUID = -5153027839777003987L;
 
-	/**
-	 * Creates new scribble game settings with specified parameters and board language.
-	 *
-	 * @param title	the title of the game.
-	 * @param language the code of the language.
-	 */
-	public ScribbleSettings(String title, String language) {
-		this(title, language, DEFAULT_TIMEOUT_DAYS);
-	}
+    /**
+     * This is Hibernate constructor.
+     */
+    ScribbleSettings() {
+    }
 
-	/**
-	 * Creates new scribble game settings with specified parameters and board language.
-	 *
-	 * @param title	   the title of the game.
-	 * @param language	the code of the language.
-	 * @param daysPerMove days per move.
-	 */
-	public ScribbleSettings(String title, String language, int daysPerMove) {
-		super(title, daysPerMove);
-		this.language = language;
-	}
+    /**
+     * Creates new scribble game settings with specified parameters and board language.
+     *
+     * @param title    the title of the game.
+     * @param language the code of the language.
+     */
+    public ScribbleSettings(String title, String language) {
+        this(title, language, DEFAULT_TIMEOUT_DAYS);
+    }
 
-	public ScribbleSettings(String title, String language, int daysPerMove, boolean ratedGame, boolean scratch) {
-		super(title, daysPerMove, ratedGame, scratch);
-		this.language = language;
-	}
+    /**
+     * Creates new scribble game settings with specified parameters and board language.
+     *
+     * @param title       the title of the game.
+     * @param language    the code of the language.
+     * @param daysPerMove days per move.
+     */
+    public ScribbleSettings(String title, String language, int daysPerMove) {
+        super(title, daysPerMove);
+        this.language = language;
+    }
 
-	/**
-	 * Returns code of the language.
-	 *
-	 * @return code of the language.
-	 */
-	public String getLanguage() {
-		return language;
-	}
+    public ScribbleSettings(String title, String language, int daysPerMove, boolean ratedGame, boolean scratch) {
+        super(title, daysPerMove, ratedGame, scratch);
+        this.language = language;
+    }
 
-	public static class Builder extends GameSettings.Builder {
-		private String language;
+    /**
+     * Returns code of the language.
+     *
+     * @return code of the language.
+     */
+    public String getLanguage() {
+        return language;
+    }
 
-		public Builder() {
-		}
+    public static class Builder extends GameSettings.Builder {
+        private String language;
 
-		@Override
-		public ScribbleSettings build() {
-			return new ScribbleSettings(title, language, daysPerMove, ratedGame, scratch);
-		}
+        public Builder() {
+        }
 
-		public String getLanguage() {
-			return language;
-		}
+        @Override
+        public ScribbleSettings build() {
+            return new ScribbleSettings(title, language, daysPerMove, ratedGame, scratch);
+        }
 
-		public void setLanguage(String language) {
-			this.language = language;
-		}
-	}
+        public String getLanguage() {
+            return language;
+        }
+
+        public void setLanguage(String language) {
+            this.language = language;
+        }
+    }
 }

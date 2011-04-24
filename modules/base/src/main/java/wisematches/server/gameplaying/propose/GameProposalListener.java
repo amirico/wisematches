@@ -1,16 +1,29 @@
 package wisematches.server.gameplaying.propose;
 
-import wisematches.server.gameplaying.propose.impl.OldGameProposal;
-
 /**
+ * Listener interface for {@code wisematches.server.gameplaying.propose.GameProposalManager}.
+ *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface GameProposalListener {
-	void gameProposalInitiated(OldGameProposal proposal);
+    /**
+     * Indicates that new proposal has been initiated.
+     *
+     * @param proposal the initiated proposal.
+     */
+    void gameProposalInitiated(GameProposal proposal);
 
-	void gameProposalUpdated(OldGameProposal proposal);
+    /**
+     * Indicates that a proposal has been updated (usually, new player has joined)
+     *
+     * @param proposal the updated proposal.
+     */
+    void gameProposalUpdated(GameProposal proposal);
 
-	void gameProposalClosed(OldGameProposal proposal);
-
-	void gameProposalCanceled(OldGameProposal proposal);
+    /**
+     * Indicates that proposal has been closed because it's ready for play.
+     *
+     * @param proposal the closed proposal.
+     */
+    void gameProposalClosed(GameProposal proposal);
 }

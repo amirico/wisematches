@@ -21,6 +21,7 @@
 
     <bean id="scribbleProposalManager"
           class="wisematches.server.gameplaying.scribble.proposal.ScribbleProposalManager">
+        <property name="proposalsResource" ref="${server.proposals.file}"/>
     </bean>
 
     <bean id="scribbleSearchEngineManager"
