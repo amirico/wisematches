@@ -16,32 +16,32 @@ import wisematches.server.gameplaying.search.BoardsSearchEngine;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface RoomManager<S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>> {
-	/**
-	 * Returns type of this room.
-	 *
-	 * @return the type of this room.
-	 */
-	Room<S, P, B> getRoomType();
+    /**
+     * Returns type of this room.
+     *
+     * @return the type of this room.
+     */
+    Room<S, P, B> getRoomType();
 
-	/**
-	 * Returns board manager for this room manager.
-	 *
-	 * @return the board manager.
-	 */
-	BoardManager<S, B> getBoardManager();
+    /**
+     * Returns board manager for this room manager.
+     *
+     * @return the board manager.
+     */
+    BoardManager<S, B> getBoardManager();
 
-	/**
-	 * Returns searches engine for this room. Searches engine allow do boards search by some criteria,
-	 * for example expired boards.
-	 *
-	 * @return the search engine.
-	 */
-	BoardsSearchEngine getSearchesEngine();
+    /**
+     * Returns searches engine for this room. Searches engine allow do boards search by some criteria,
+     * for example expired boards.
+     *
+     * @return the search engine.
+     */
+    BoardsSearchEngine getSearchesEngine();
 
-	/**
-	 * Returns game proposals manager for this room.
-	 *
-	 * @return the games proposals manager.
-	 */
-	GameProposalManager<S, P> getProposalManager();
+    /**
+     * Returns game proposals manager for this room.
+     *
+     * @return the games proposals manager.
+     */
+    GameProposalManager<S> getProposalManager();
 }
