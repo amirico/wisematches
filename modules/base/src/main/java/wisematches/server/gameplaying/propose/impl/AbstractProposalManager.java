@@ -54,7 +54,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<GameRestriction> restrictions, Collection<Player> players) throws ViolatedRestrictionException {
+	public GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<GameRestriction> restrictions, Collection<Player> players) {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = new DefaultGameProposal<S>(proposalIds.incrementAndGet(), settings, playersCount, restrictions, players);

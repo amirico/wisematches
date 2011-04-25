@@ -62,17 +62,12 @@
                         </#list>
                     </td>
                     <td class="center">
-                    <#--<#assign msg=proposal.getUnsuitableMessage(player)!""/>-->
-                        <#--<#if msg?has_content>-->
-                            <#--<#assign index=msg?index_of(" ")/>-->
-                            <#--<#if (index > 0)>-->
-                            <#--<@message code="game.join.err.${msg?substring(0, index)}" args=[msg?substring(index)]/>-->
-                                <#--<#else>-->
-                                <#--<@message code="game.join.err.${msg}"/>-->
-                            <#--</#if>-->
-                            <#--<#else>-->
-                                <#--<a href="/game/gameboard.html?join=${proposal.id}">&raquo; <@message code="game.join.label"/></a>-->
-                        <#--</#if>-->
+                        <#assign msg=gameMessageSource.formatJoinException(proposal, player, locale)!""/>
+                        <#if msg?has_content>
+                            <span class="game-join-error">${msg}</span>
+                            <#else>
+                                <a href="/game/gameboard.html?join=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
+                        </#if>
                     </td>
                 </tr>
                 </#list>

@@ -155,7 +155,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 		}
 	}
 
-	private static class SaltUserDetails implements UserDetails {
+	public static class SaltUserDetails implements UserDetails {
 		private final Account account;
 
 		public SaltUserDetails(Account account) {
