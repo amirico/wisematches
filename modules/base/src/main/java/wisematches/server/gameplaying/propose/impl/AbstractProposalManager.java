@@ -39,6 +39,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			max = Math.max(max, proposal.getId());
 			proposals.put(proposal.getId(), proposal);
 		}
+		proposalIds.set(max + 1);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				return null;
 			}
 			proposal.attachPlayer(player);
-			if (proposal.getPlayersCount() == proposal.getPlayers().size()) {
+			if (proposal.isReady()) {
 				proposals.remove(proposalId);
 				removeGameProposal(proposal);
 				fireGameProposalClosed(proposal);

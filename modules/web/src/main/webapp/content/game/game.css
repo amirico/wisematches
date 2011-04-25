@@ -30,8 +30,12 @@
     display: inline-block;
 }
 
-.player a, .player .nickname, .player .rating, .player .waiting {
+.player a, .player .nickname, .player .rating {
     color: #a52a2a;
+}
+
+.player .waiting {
+    color: gray;
 }
 
 .player .nickname {

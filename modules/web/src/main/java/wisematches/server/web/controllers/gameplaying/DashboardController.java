@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.server.gameplaying.board.BoardManagementException;
 import wisematches.server.gameplaying.propose.GameProposal;
+import wisematches.server.gameplaying.propose.GameProposalManager;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
@@ -36,109 +37,109 @@ import java.util.*;
 @Controller
 @RequestMapping("/game")
 public class DashboardController extends AbstractPlayerController {
-    private PlayerManager playerManager;
-    private AdvertisementManager advertisementManager;
+	private PlayerManager playerManager;
+	private AdvertisementManager advertisementManager;
 
-    private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
+	private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
-    private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
-    public DashboardController() {
-    }
+	public DashboardController() {
+	}
 
-    @RequestMapping("create")
-    public String createGamePage(@ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
-        if (form.getBoardLanguage() == null) {
-            form.setBoardLanguage(locale.getLanguage());
-        }
-        model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-        model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
-        return "/content/game/dashboard/create";
-    }
+	@RequestMapping("create")
+	public String createGamePage(@ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
+		if (form.getBoardLanguage() == null) {
+			form.setBoardLanguage(locale.getLanguage());
+		}
+		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
+		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
+		return "/content/game/dashboard/create";
+	}
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @RequestMapping(value = "create", method = RequestMethod.POST)
-    public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
-                                   BindingResult result, Model model, Locale locale) throws BoardManagementException {
-        if (log.isInfoEnabled()) {
-            log.info("Create new game: " + form);
-        }
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
+								   BindingResult result, Model model, Locale locale) throws BoardManagementException {
+		if (log.isInfoEnabled()) {
+			log.info("Create new game: " + form);
+		}
 
-        final Personality personality = getPersonality();
+		final Personality personality = getPersonality();
 
-        if (form.getDaysPerMove() < 2) {
-            result.rejectValue("daysPerMove", "game.create.time.err.min");
-        } else if (form.getDaysPerMove() > 14) {
-            result.rejectValue("daysPerMove", "game.create.time.err.max");
-        }
+		if (form.getDaysPerMove() < 2) {
+			result.rejectValue("daysPerMove", "game.create.time.err.min");
+		} else if (form.getDaysPerMove() > 14) {
+			result.rejectValue("daysPerMove", "game.create.time.err.max");
+		}
 
-        int opponents = 0;
-        final List<Personality> players = new ArrayList<Personality>();
-        if (checkOpponent("opponent1", form.getOpponent1(), true, players, result)) {
-            opponents++;
-        }
-        if (checkOpponent("opponent2", form.getOpponent2(), false, players, result)) {
-            opponents++;
-        }
-        if (checkOpponent("opponent3", form.getOpponent3(), false, players, result)) {
-            opponents++;
-        }
+		int opponents = 0;
+		final List<Personality> players = new ArrayList<Personality>();
+		if (checkOpponent("opponent1", form.getOpponent1(), true, players, result)) {
+			opponents++;
+		}
+		if (checkOpponent("opponent2", form.getOpponent2(), false, players, result)) {
+			opponents++;
+		}
+		if (checkOpponent("opponent3", form.getOpponent3(), false, players, result)) {
+			opponents++;
+		}
 
-        if (opponents == 0) {
-            result.rejectValue("opponent1", "game.create.opponents.err.nofirst");
-        }
+		if (opponents == 0) {
+			result.rejectValue("opponent1", "game.create.opponents.err.nofirst");
+		}
 
-        if (!result.hasErrors()) {
-            if (players.size() == opponents) {
-                players.add(0, personality); // also add current personality as a first one
-                final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
-                final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(s, players);
-                return "redirect:/game/playboard.html?b=" + board.getBoardId();
-            } else {
-                throw new UnsupportedOperationException("Not implemented");
+		if (!result.hasErrors()) {
+			final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
+			if (players.size() == opponents) {
+				players.add(0, personality); // also add current personality as a first one
+				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(s, players);
+				return "redirect:/game/playboard.html?b=" + board.getBoardId();
+			} else {
+				final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
+				proposalManager.initiateGameProposal(s, opponents + 1, Arrays.asList(personality));
+				return "redirect:/game/dashboard.html";
+			}
+		}
+		return createGamePage(form, model, locale);
+	}
 
-//				final ScribbleProposal p = new ScribbleProposal(form.getTitle(), form.getBoardLanguage(),
-//						form.getDaysPerMove(), opponents, personality, players);
-//				final GameProposalManager<ScribbleProposal> gameProposalManager = scribbleRoomManager.getProposalManager();
-//				gameProposalManager.initiateGameProposal(p);
-//				return "redirect:/game/dashboard.html";
-            }
-        }
-        return createGamePage(form, model, locale);
-    }
+	@RequestMapping("gameboard")
+	public String showWaitingGames(Model model, Locale locale) {
+		final Personality personality = getPersonality();
+		if (log.isDebugEnabled()) {
+			log.debug("Loading waiting games for personality: " + personality);
+		}
+		model.addAttribute("personality", personality);
 
-    @RequestMapping("gameboard")
-    public String showWaitingGames(Model model, Locale locale) {
-        final Personality personality = getPersonality();
-        if (log.isDebugEnabled()) {
-            log.debug("Loading waiting games for personality: " + personality);
-        }
-        model.addAttribute("personality", personality);
+		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(scribbleRoomManager.getProposalManager().getActiveProposals());
+		Collections.sort(proposals, new Comparator<GameProposal<ScribbleSettings>>() {
+			@Override
+			public int compare(GameProposal<ScribbleSettings> o1, GameProposal<ScribbleSettings> o2) {
+				return 0; // TODO: Proposals sorting is not implemented
+			}
+		});
+		if (log.isDebugEnabled()) {
+			log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
+		}
+		model.addAttribute("activeProposals", proposals);
+		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
+		return "/content/game/dashboard/join";
+	}
 
-        final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(scribbleRoomManager.getProposalManager().getActiveProposals());
-        Collections.sort(proposals, new Comparator<GameProposal<ScribbleSettings>>() {
-            @Override
-            public int compare(GameProposal<ScribbleSettings> o1, GameProposal<ScribbleSettings> o2) {
-                throw new UnsupportedOperationException("Not implemented");
-//				return (o1.isSuitablePlayer(personality) ? 1 : 0) - (o2.isSuitablePlayer(personality) ? 1 : 0);
-            }
-        });
-        if (log.isDebugEnabled()) {
-            log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
-        }
-        model.addAttribute("activeProposals", proposals);
-        model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
-        return "/content/game/dashboard/join";
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @RequestMapping(value = "gameboard", params = "join")
-    public String joinGameAction(@RequestParam("join") String id, Model model, Locale locale) {
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@RequestMapping(value = "gameboard", params = "join")
+	public String joinGameAction(@RequestParam("join") String id, Model model, Locale locale) throws BoardManagementException {
+//		try {
+		final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
+		final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
+		if (proposal.isReady()) {
+			final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(proposal.getGameSettings(), proposal.getPlayers());
+			return "redirect:/game/playboard.html?b=" + board.getBoardId();
+		} else {
+			return showWaitingGames(model, locale);
+		}
 /*
-		try {
-			final Long proposalId = Long.valueOf(id);
-			final GameProposalManager<ScribbleProposal> proposalManager = scribbleRoomManager.getProposalManager();
-
 			final ScribbleProposal scribbleProposal = proposalManager.attachPlayer(proposalId, getCurrentPlayer());
 			if (scribbleProposal == null) {
 				result.reject("game.gameboard.err.full");
@@ -149,67 +150,66 @@ public class DashboardController extends AbstractPlayerController {
 			result.reject("game.gameboard.err.id");
 		}
 */
-        return showWaitingGames(model, locale);
-    }
+	}
 
-    @RequestMapping("dashboard")
-    public String showActiveGames(Model model, Locale locale) {
-        final Personality personality = getPersonality();
-        if (log.isDebugEnabled()) {
-            log.debug("Loading active games for personality: " + personality);
-        }
-        model.addAttribute("personality", personality);
+	@RequestMapping("dashboard")
+	public String showActiveGames(Model model, Locale locale) {
+		final Personality personality = getPersonality();
+		if (log.isDebugEnabled()) {
+			log.debug("Loading active games for personality: " + personality);
+		}
+		model.addAttribute("personality", personality);
 
-        final Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getBoardManager().getActiveBoards(personality);
-        if (log.isDebugEnabled()) {
-            log.debug("Found " + activeBoards.size() + " active games for personality: " + personality);
-        }
-        model.addAttribute("activeBoards", activeBoards);
+		final Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getBoardManager().getActiveBoards(personality);
+		if (log.isDebugEnabled()) {
+			log.debug("Found " + activeBoards.size() + " active games for personality: " + personality);
+		}
+		model.addAttribute("activeBoards", activeBoards);
 
-        final Collection<GameProposal<ScribbleSettings>> proposals = scribbleRoomManager.getProposalManager().getPlayerProposals(personality);
-        if (log.isDebugEnabled()) {
-            log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
-        }
-        model.addAttribute("activeProposals", proposals);
-        model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
-        return "/content/game/dashboard/view";
-    }
+		final Collection<GameProposal<ScribbleSettings>> proposals = scribbleRoomManager.getProposalManager().getPlayerProposals(personality);
+		if (log.isDebugEnabled()) {
+			log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
+		}
+		model.addAttribute("activeProposals", proposals);
+		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
+		return "/content/game/dashboard/view";
+	}
 
-    private boolean checkOpponent(String field, String opponent, boolean cpAllowed, List<Personality> players, BindingResult result) {
-        final String id = opponent.trim();
-        if (!"no".equalsIgnoreCase(id)) {
-            if (!id.isEmpty()) {
-                try {
-                    final Long playerId = Long.valueOf(id);
-                    final Player player1 = playerManager.getPlayer(playerId);
-                    if (player1 == null) {
-                        result.rejectValue(field, "game.create.opponents.err.unknown");
-                    } else if (!cpAllowed && player1 instanceof ComputerPlayer) {
-                        result.rejectValue(field, "game.create.opponents.err.manyrobots");
-                    } else {
-                        players.add(player1);
-                    }
-                } catch (NumberFormatException ex) {
-                    result.rejectValue(field, "game.create.opponents.err.badid");
-                }
-            }
-            return true;
-        }
-        return false;
-    }
+	private boolean checkOpponent(String field, String opponent, boolean cpAllowed, List<Personality> players, BindingResult result) {
+		final String id = opponent.trim();
+		if (!"no".equalsIgnoreCase(id)) {
+			if (!id.isEmpty()) {
+				try {
+					final Long playerId = Long.valueOf(id);
+					final Player player1 = playerManager.getPlayer(playerId);
+					if (player1 == null) {
+						result.rejectValue(field, "game.create.opponents.err.unknown");
+					} else if (!cpAllowed && player1 instanceof ComputerPlayer) {
+						result.rejectValue(field, "game.create.opponents.err.manyrobots");
+					} else {
+						players.add(player1);
+					}
+				} catch (NumberFormatException ex) {
+					result.rejectValue(field, "game.create.opponents.err.badid");
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
-    @Autowired
-    public void setPlayerManager(PlayerManager playerManager) {
-        this.playerManager = playerManager;
-    }
+	@Autowired
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
+	}
 
-    @Autowired
-    public void setAdvertisementManager(AdvertisementManager advertisementManager) {
-        this.advertisementManager = advertisementManager;
-    }
+	@Autowired
+	public void setAdvertisementManager(AdvertisementManager advertisementManager) {
+		this.advertisementManager = advertisementManager;
+	}
 
-    @Autowired
-    public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
-        this.scribbleRoomManager = scribbleRoomManager;
-    }
+	@Autowired
+	public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
+		this.scribbleRoomManager = scribbleRoomManager;
+	}
 }

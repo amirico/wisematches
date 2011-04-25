@@ -1,8 +1,6 @@
-<#-- @ftlvariable name="player" type="wisematches.server.player.Player" -->
-<#-- @ftlvariable name="playerManager" type="wisematches.server.player.PlayerManager" -->
 <#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.proposal.ScribbleProposal>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.propose.GameProposal<wisematches.server.gameplaying.scribble.board.ScribbleSettings>" -->
 <#include "/core.ftl">
 
 <script type="text/javascript">
@@ -95,30 +93,32 @@
 
                 <#list activeProposals as proposal>
                 <tr>
-                    <td>${proposal.title}</td>
-                    <td><@message code="language.${proposal.language}"/></td>
+                    <td>${proposal.gameSettings.title}</td>
+                    <td><@message code="language.${proposal.gameSettings.language}"/></td>
                     <td>
                         <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
                     </td>
                     <td class="center">
-                    ${gameMessageSource.formatMinutes(proposal.timeLimits *24 * 60, locale)}
+                    ${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove *24 * 60, locale)}
                     </td>
                     <td>
-                        <#list proposal.allPlayers as p>
+                        <#list proposal.players as p>
                             <div>
-                                <#if p??>
-                                <@wm.player player=playerManager.getPlayer(p) showRating=false/>
-                                    <#else>
-                                        <span class="player">
-                                            <span class="waiting"><@message code="game.status.waiting"/></span>
-                                        </span>
-                                </#if>
+                            <@wm.player player=playerManager.getPlayer(p) showRating=false/>
+                            </div>
+                        </#list>
+                        <#list (proposal.players?size)..(proposal.playersCount-1) as i>
+                            <div>
+                                <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
                             </div>
                         </#list>
                     </td>
                     <td class="center">
-                        <#list proposal.allPlayers as p>
+                        <#list proposal.players as p>
                             <div>0</div>
+                        </#list>
+                        <#list (proposal.players?size)..(proposal.playersCount-1) as i>
+                            <div>-</div>
                         </#list>
                     </td>
                 </tr>

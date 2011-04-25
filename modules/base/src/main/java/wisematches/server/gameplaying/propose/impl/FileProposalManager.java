@@ -28,7 +28,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	@SuppressWarnings("unchecked")
 	protected Collection<GameProposal<S>> loadGameProposals() {
 		try {
-			if (proposalFile.position() == 0) {
+			if (proposalFile.size() == 0) {
 				return Collections.emptyList();
 			}
 			proposalFile.position(0);
