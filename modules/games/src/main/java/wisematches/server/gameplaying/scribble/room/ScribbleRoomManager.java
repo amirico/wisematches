@@ -10,7 +10,7 @@ import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class ScribbleRoomManager implements RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> {
+public final class ScribbleRoomManager implements RoomManager<ScribbleSettings, ScribbleBoard> {
     private BoardsSearchEngine searchEngine;
     private BoardManager<ScribbleSettings, ScribbleBoard> boardManager;
     private GameProposalManager<ScribbleSettings> gameProposalManager;

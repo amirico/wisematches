@@ -7,7 +7,7 @@ import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class ScribbleRoom implements Room<ScribbleSettings, ScribbleProposal, ScribbleBoard> {
+public final class ScribbleRoom implements Room<ScribbleSettings, ScribbleBoard> {
     public static final ScribbleRoom name = new ScribbleRoom();
 
     private ScribbleRoom() {

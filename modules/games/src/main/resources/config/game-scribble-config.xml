@@ -20,7 +20,7 @@
     </bean>
 
     <bean id="scribbleProposalManager"
-          class="wisematches.server.gameplaying.scribble.proposal.ScribbleProposalManager">
+          class="wisematches.server.gameplaying.propose.impl.FileProposalManager">
         <property name="proposalsResource" ref="${server.proposals.file}"/>
     </bean>
 
