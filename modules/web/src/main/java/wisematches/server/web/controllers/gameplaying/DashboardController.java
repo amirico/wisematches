@@ -98,11 +98,7 @@ public class DashboardController extends AbstractPlayerController {
 				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			} else {
 				final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
-				try {
-					proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(player));
-				} catch (ViolatedRestrictionException e) {
-					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-				}
+				proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(player));
 				return "redirect:/game/dashboard.html";
 			}
 		}
@@ -111,21 +107,26 @@ public class DashboardController extends AbstractPlayerController {
 
 	@RequestMapping("gameboard")
 	public String showWaitingGames(Model model, Locale locale) {
-		final Personality personality = getPersonality();
+		final Player player = getPlayer();
 		if (log.isDebugEnabled()) {
-			log.debug("Loading waiting games for personality: " + personality);
+			log.debug("Loading waiting games for personality: " + player);
 		}
-		model.addAttribute("personality", personality);
+		model.addAttribute("personality", player);
 
 		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(scribbleRoomManager.getProposalManager().getActiveProposals());
 		Collections.sort(proposals, new Comparator<GameProposal<ScribbleSettings>>() {
 			@Override
 			public int compare(GameProposal<ScribbleSettings> o1, GameProposal<ScribbleSettings> o2) {
-				return 0; // TODO: Proposals sorting is not implemented
+				try {
+					o1.isSuitablePlayer(player);
+					return 1;
+				} catch (ViolatedRestrictionException ex) {
+					return -1;
+				}
 			}
 		});
 		if (log.isDebugEnabled()) {
-			log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
+			log.debug("Found " + proposals.size() + " proposals for personality: " + player);
 		}
 		model.addAttribute("activeProposals", proposals);
 		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
@@ -135,6 +136,11 @@ public class DashboardController extends AbstractPlayerController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "gameboard", params = "join")
 	public String joinGameAction(@RequestParam("join") String id, Model model, Locale locale) throws BoardManagementException {
+		if (log.isInfoEnabled()) {
+			log.info("Join to the game: " + id);
+		}
+		return showWaitingGames(model, locale);
+
 //		try {
 //		final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
 //		final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
@@ -155,7 +161,6 @@ public class DashboardController extends AbstractPlayerController {
 			result.reject("game.gameboard.err.id");
 		}
 */
-		return null;
 	}
 
 	@RequestMapping("dashboard")

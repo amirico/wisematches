@@ -152,6 +152,11 @@
     vertical-align: top;
 }
 
+.game-join-error {
+    color: gray;
+    font-style: italic;
+}
+
 /*
 
 .ui-button-text-icon-primary .ui-button-text {

@@ -2,6 +2,9 @@ package wisematches.server.web.i18n;
 
 import org.springframework.context.MessageSource;
 import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.gameplaying.board.GameSettings;
+import wisematches.server.gameplaying.propose.GameProposal;
+import wisematches.server.gameplaying.propose.ViolatedRestrictionException;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.player.Player;
 import wisematches.server.personality.player.computer.ComputerPlayer;
@@ -129,6 +132,15 @@ public class GameMessageSource {
 			b.append(minutes).append(declension.minutes()).append(" ");
 		}
 		return b.toString();
+	}
+
+	public String formatJoinException(GameProposal<? extends GameSettings> proposal, Player player, String language) {
+		try {
+			proposal.isSuitablePlayer(player);
+			return null;
+		} catch (ViolatedRestrictionException ex) {
+			return getMessage("game.error.restriction." + ex.getCode() + ".label", Language.byCode(language).locale(), ex.getExpectedValue(), ex.getActualValue());
+		}
 	}
 
 	public void setMessageSource(MessageSource messageSource) {

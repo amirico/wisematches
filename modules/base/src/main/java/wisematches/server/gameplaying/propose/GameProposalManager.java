@@ -26,12 +26,11 @@ public interface GameProposalManager<S extends GameSettings> {
 	 * @param restrictions the collection of restrictions. If there is no restrictions empty collection or {@code null} can be passed.
 	 * @param players	  current players count. List must contains at least one player (initiator)  @return returns the proposal (possible new or modified).
 	 * @return new game proposal object with information about the proposal.
-	 * @throws IllegalArgumentException	 if {@code settings} or {@code players} are null or if {@code playersCount}
-	 *                                      is less than two or if {@code players} collection size more than
-	 *                                      {@code playersCount} or contains null.
-	 * @throws ViolatedRestrictionException if game can't initialized because one of the players is not suitable: {@link GameProposal#isSuitablePlayer(wisematches.server.personality.player.Player)}
+	 * @throws IllegalArgumentException if {@code settings} or {@code players} are null or if {@code playersCount}
+	 *                                  is less than two or if {@code players} collection size more than
+	 *                                  {@code playersCount} or contains null.
 	 */
-	GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<GameRestriction> restrictions, Collection<Player> players) throws ViolatedRestrictionException;
+	GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<GameRestriction> restrictions, Collection<Player> players);
 
 	/**
 	 * Attaches specified player to the waiting game.
