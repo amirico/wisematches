@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.server.gameplaying.board.BoardManagementException;
 import wisematches.server.gameplaying.propose.GameProposal;
 import wisematches.server.gameplaying.propose.GameProposalManager;
+import wisematches.server.gameplaying.propose.ViolatedRestrictionException;
 import wisematches.server.gameplaying.room.RoomManager;
 import wisematches.server.gameplaying.scribble.board.ScribbleBoard;
 import wisematches.server.gameplaying.scribble.board.ScribbleSettings;
@@ -65,7 +66,7 @@ public class DashboardController extends AbstractPlayerController {
 			log.info("Create new game: " + form);
 		}
 
-		final Personality personality = getPersonality();
+		final Player player = getPlayer();
 
 		if (form.getDaysPerMove() < 2) {
 			result.rejectValue("daysPerMove", "game.create.time.err.min");
@@ -92,12 +93,16 @@ public class DashboardController extends AbstractPlayerController {
 		if (!result.hasErrors()) {
 			final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
 			if (players.size() == opponents) {
-				players.add(0, personality); // also add current personality as a first one
+				players.add(0, player); // also add current personality as a first one
 				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(s, players);
 				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			} else {
 				final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
-				proposalManager.initiateGameProposal(s, opponents + 1, Arrays.asList(personality));
+				try {
+					proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(player));
+				} catch (ViolatedRestrictionException e) {
+					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				}
 				return "redirect:/game/dashboard.html";
 			}
 		}
@@ -131,14 +136,14 @@ public class DashboardController extends AbstractPlayerController {
 	@RequestMapping(value = "gameboard", params = "join")
 	public String joinGameAction(@RequestParam("join") String id, Model model, Locale locale) throws BoardManagementException {
 //		try {
-		final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
-		final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
-		if (proposal.isReady()) {
-			final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(proposal.getGameSettings(), proposal.getPlayers());
-			return "redirect:/game/playboard.html?b=" + board.getBoardId();
-		} else {
-			return showWaitingGames(model, locale);
-		}
+//		final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
+//		final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
+//		if (proposal.isReady()) {
+//			final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(proposal.getGameSettings(), proposal.getPlayers());
+//			return "redirect:/game/playboard.html?b=" + board.getBoardId();
+//		} else {
+//			return showWaitingGames(model, locale);
+//		}
 /*
 			final ScribbleProposal scribbleProposal = proposalManager.attachPlayer(proposalId, getCurrentPlayer());
 			if (scribbleProposal == null) {
@@ -150,6 +155,7 @@ public class DashboardController extends AbstractPlayerController {
 			result.reject("game.gameboard.err.id");
 		}
 */
+		return null;
 	}
 
 	@RequestMapping("dashboard")

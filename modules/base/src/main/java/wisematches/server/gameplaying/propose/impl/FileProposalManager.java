@@ -2,7 +2,6 @@ package wisematches.server.gameplaying.propose.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
 import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.propose.GameProposal;
 

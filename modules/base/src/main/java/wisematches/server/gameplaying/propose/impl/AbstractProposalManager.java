@@ -2,10 +2,9 @@ package wisematches.server.gameplaying.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.server.gameplaying.board.GameSettings;
-import wisematches.server.gameplaying.propose.GameProposal;
-import wisematches.server.gameplaying.propose.GameProposalListener;
-import wisematches.server.gameplaying.propose.GameProposalManager;
+import wisematches.server.gameplaying.propose.*;
 import wisematches.server.personality.Personality;
+import wisematches.server.personality.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,10 +54,10 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<Personality> players) {
+	public GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<GameRestriction> restrictions, Collection<Player> players) throws ViolatedRestrictionException {
 		lock.lock();
 		try {
-			final DefaultGameProposal<S> proposal = new DefaultGameProposal<S>(proposalIds.incrementAndGet(), settings, playersCount, players);
+			final DefaultGameProposal<S> proposal = new DefaultGameProposal<S>(proposalIds.incrementAndGet(), settings, playersCount, restrictions, players);
 			proposals.put(proposal.getId(), proposal);
 			storeGameProposal(proposal);
 			fireGameProposalInitiated(proposal);
@@ -69,7 +68,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> attachPlayer(long proposalId, Personality player) {
+	public GameProposal<S> attachPlayer(long proposalId, Player player) throws ViolatedRestrictionException {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = (DefaultGameProposal<S>) proposals.get(proposalId);
@@ -92,7 +91,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> detachPlayer(long proposalId, Personality player) {
+	public GameProposal<S> detachPlayer(long proposalId, Player player) throws ViolatedRestrictionException {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = (DefaultGameProposal<S>) proposals.get(proposalId);
