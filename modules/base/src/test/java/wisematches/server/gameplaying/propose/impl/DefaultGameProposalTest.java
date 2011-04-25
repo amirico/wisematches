@@ -1,29 +1,37 @@
 package wisematches.server.gameplaying.propose.impl;
 
+import org.easymock.IMockBuilder;
 import org.junit.Test;
 import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.board.MockGameSettings;
-import wisematches.server.personality.Personality;
+import wisematches.server.gameplaying.propose.GameRestriction;
+import wisematches.server.gameplaying.propose.ViolatedRestrictionException;
+import wisematches.server.gameplaying.propose.restrictions.GameRestrictionNickname;
+import wisematches.server.personality.account.Account;
+import wisematches.server.personality.player.Player;
+import wisematches.server.personality.player.member.MemberPlayer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultGameProposalTest {
-	public static final Personality PERSON1 = Personality.person(1);
-	public static final Personality PERSON2 = Personality.person(2);
-	public static final Personality PERSON3 = Personality.person(3);
-	public static final Personality PERSON4 = Personality.person(4);
+	public static final Player PERSON1 = createPlayer(1);
+	public static final Player PERSON2 = createPlayer(2);
+	public static final Player PERSON3 = createPlayer(3);
+	public static final Player PERSON4 = createPlayer(4);
 
 	public DefaultGameProposalTest() {
 	}
 
 	@Test
-	public void constructor() {
+	public void constructor() throws ViolatedRestrictionException {
 		try {
 			new DefaultGameProposal<GameSettings>(0, new MockGameSettings("Mock", 3), 3, Arrays.asList(PERSON1));
 			fail("Exception must be here");
@@ -55,7 +63,7 @@ public class DefaultGameProposalTest {
 		}
 
 		try {
-			new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 3, Arrays.<Personality>asList(PERSON1, null));
+			new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 3, Arrays.<Player>asList(PERSON1, null));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 		}
@@ -67,7 +75,7 @@ public class DefaultGameProposalTest {
 		}
 
 		try {
-			new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 3, Collections.<Personality>emptyList());
+			new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 3, Collections.<Player>emptyList());
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 		}
@@ -87,13 +95,13 @@ public class DefaultGameProposalTest {
 	}
 
 	@Test
-	public void attachPlayer() {
+	public void attachPlayer() throws ViolatedRestrictionException {
 		final DefaultGameProposal<GameSettings> mock = new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 3, Arrays.asList(PERSON1));
 		assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
 		try {
 			mock.attachPlayer(PERSON1);
 			fail("Exception must be here");
-		} catch (IllegalArgumentException ex) {
+		} catch (ViolatedRestrictionException ex) {
 			assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
 		}
 
@@ -106,21 +114,43 @@ public class DefaultGameProposalTest {
 		try {
 			mock.attachPlayer(PERSON4);
 			fail("Exception must be here");
-		} catch (IllegalStateException ex) {
+		} catch (ViolatedRestrictionException ex) {
 			assertArrayEquals(Arrays.asList(PERSON1, PERSON2, PERSON3).toArray(), mock.getPlayers().toArray());
 		}
 	}
 
 	@Test
-	public void detachPlayer() {
+	public void detachPlayer() throws ViolatedRestrictionException {
 		final DefaultGameProposal<GameSettings> mock = new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 3, Arrays.asList(PERSON1));
 		try {
 			mock.detachPlayer(null);
 			fail("Exception must be here");
-		} catch (IllegalArgumentException ex) {
+		} catch (ViolatedRestrictionException ex) {
 			assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
 		}
 		mock.detachPlayer(PERSON1);
 		assertEquals(0, mock.getPlayers().size());
+	}
+
+	@Test
+	public void gameRestriction() throws ViolatedRestrictionException {
+		final Collection<GameRestriction> res = Arrays.<GameRestriction>asList(new GameRestrictionNickname("Player4"));
+
+		final DefaultGameProposal<GameSettings> mock = new DefaultGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), 2, res, Arrays.asList(PERSON1));
+		try {
+			mock.attachPlayer(PERSON2);
+			fail("Exception must be here");
+		} catch (ViolatedRestrictionException ex) {
+		}
+		mock.attachPlayer(PERSON4);
+	}
+
+	static Player createPlayer(long id) {
+		IMockBuilder<Account> mockBuilder = createMockBuilder(Account.class);
+		Account account = mockBuilder.withConstructor(id).createMock();
+		expect(account.getNickname()).andReturn("Player" + id).anyTimes();
+		replay(account);
+
+		return new MemberPlayer(account, null);
 	}
 }
