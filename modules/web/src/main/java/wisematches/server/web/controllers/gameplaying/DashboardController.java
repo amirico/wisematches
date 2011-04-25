@@ -39,7 +39,7 @@ public class DashboardController extends AbstractPlayerController {
     private PlayerManager playerManager;
     private AdvertisementManager advertisementManager;
 
-    private RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager;
+    private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -116,9 +116,9 @@ public class DashboardController extends AbstractPlayerController {
         model.addAttribute("personality", personality);
 
         final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(scribbleRoomManager.getProposalManager().getActiveProposals());
-        Collections.sort(proposals, new Comparator<ScribbleProposal>() {
+        Collections.sort(proposals, new Comparator<GameProposal<ScribbleSettings>>() {
             @Override
-            public int compare(ScribbleProposal o1, ScribbleProposal o2) {
+            public int compare(GameProposal<ScribbleSettings> o1, GameProposal<ScribbleSettings> o2) {
                 throw new UnsupportedOperationException("Not implemented");
 //				return (o1.isSuitablePlayer(personality) ? 1 : 0) - (o2.isSuitablePlayer(personality) ? 1 : 0);
             }
@@ -166,7 +166,7 @@ public class DashboardController extends AbstractPlayerController {
         }
         model.addAttribute("activeBoards", activeBoards);
 
-        final Collection<ScribbleProposal> proposals = scribbleRoomManager.getProposalManager().getPlayerProposals(personality);
+        final Collection<GameProposal<ScribbleSettings>> proposals = scribbleRoomManager.getProposalManager().getPlayerProposals(personality);
         if (log.isDebugEnabled()) {
             log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
         }
@@ -209,7 +209,7 @@ public class DashboardController extends AbstractPlayerController {
     }
 
     @Autowired
-    public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager) {
+    public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
         this.scribbleRoomManager = scribbleRoomManager;
     }
 }

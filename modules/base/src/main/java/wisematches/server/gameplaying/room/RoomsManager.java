@@ -1,8 +1,8 @@
 package wisematches.server.gameplaying.room;
 
+import wisematches.server.gameplaying.board.BoardManager;
 import wisematches.server.gameplaying.board.GameBoard;
 import wisematches.server.gameplaying.board.GameSettings;
-import wisematches.server.gameplaying.board.BoardManager;
 import wisematches.server.gameplaying.propose.GameProposal;
 import wisematches.server.gameplaying.propose.GameProposalManager;
 import wisematches.server.gameplaying.search.BoardsSearchEngine;
@@ -37,7 +37,7 @@ public class RoomsManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends RoomManager<S, P, B>> R getRoomManager(Room<S, P, B> room) {
+    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends RoomManager<S, B>> R getRoomManager(Room<S, B> room) {
         return (R) roomManagers.get(room);
     }
 
@@ -49,8 +49,8 @@ public class RoomsManager {
      * @throws IllegalArgumentException if there is no room with specified type.
      */
     @SuppressWarnings("unchecked")
-    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends BoardManager<S, B>> R getBoardManager(Room<S, P, B> room) {
-        final RoomManager<S, P, B> roomManager = getRoomManager(room);
+    public <S extends GameSettings, B extends GameBoard<S, ?>, R extends BoardManager<S, B>> R getBoardManager(Room<S, B> room) {
+        final RoomManager<S, B> roomManager = getRoomManager(room);
         if (roomManager == null) {
             throw new IllegalArgumentException("There is no room for specified type");
         }
@@ -66,8 +66,8 @@ public class RoomsManager {
      * @throws IllegalArgumentException if there is no room with specified type.
      */
     @SuppressWarnings("unchecked")
-    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends BoardsSearchEngine> R getSearchesEngine(Room<S, P, B> room) {
-        final RoomManager<S, P, B> roomManager = getRoomManager(room);
+    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends BoardsSearchEngine> R getSearchesEngine(Room<S, B> room) {
+        final RoomManager<S, B> roomManager = getRoomManager(room);
         if (roomManager == null) {
             throw new IllegalArgumentException("There is no room for specified type");
         }
@@ -82,8 +82,8 @@ public class RoomsManager {
      * @throws IllegalArgumentException if there is no room with specified type.
      */
     @SuppressWarnings("unchecked")
-    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends GameProposalManager<S>> R getGameProposalManager(Room<S, P, B> room) {
-        final RoomManager<S, P, B> roomManager = getRoomManager(room);
+    public <S extends GameSettings, P extends GameProposal<S>, B extends GameBoard<S, ?>, R extends GameProposalManager<S>> R getGameProposalManager(Room<S, B> room) {
+        final RoomManager<S, B> roomManager = getRoomManager(room);
         if (roomManager == null) {
             throw new IllegalArgumentException("There is no room for specified type");
         }

@@ -35,7 +35,7 @@ import java.util.Map;
 public class MemoryWordController extends AbstractPlayerController {
     private GameMessageSource gameMessageSource;
     private MemoryWordManager memoryWordManager;
-    private RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager;
+    private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.memory");
 
@@ -103,7 +103,7 @@ public class MemoryWordController extends AbstractPlayerController {
     }
 
     @Autowired
-    public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleProposal, ScribbleBoard> scribbleRoomManager) {
+    public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
         this.scribbleRoomManager = scribbleRoomManager;
     }
 
