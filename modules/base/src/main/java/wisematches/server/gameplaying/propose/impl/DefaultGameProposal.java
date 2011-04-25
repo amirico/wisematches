@@ -91,6 +91,11 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 		return players.contains(personality);
 	}
 
+	@Override
+	public boolean isReady() {
+		return players.size() == playersCount;
+	}
+
 	/**
 	 * Attaches this player to this proposal.
 	 *
@@ -105,7 +110,7 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 		if (this.players.contains(player)) {
 			throw new IllegalArgumentException("error.proposal.twice.player");
 		}
-		if (players.size() == playersCount) {
+		if (isReady()) {
 			throw new IllegalStateException("error.proposal.ready");
 		}
 		players.add(Personality.untie(player));

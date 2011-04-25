@@ -69,5 +69,18 @@ public class FileProposalManagerTest {
 		fileProposalManager.setProposalsResource(file);
 		fileProposalManager.afterPropertiesSet();
 		assertEquals(2, fileProposalManager.getActiveProposals().size());
+
+		Object[] objects = fileProposalManager.getActiveProposals().toArray();
+		@SuppressWarnings("unchecked")
+		GameProposal<GameSettings> pl1 = (GameProposal<GameSettings>) objects[0];
+		@SuppressWarnings("unchecked")
+		GameProposal<GameSettings> pl2 = (GameProposal<GameSettings>) objects[0];
+
+		assertTrue(pl1.getId() != 0);
+		assertTrue(pl2.getId() != 0);
+
+		final GameProposal<GameSettings> p3 = fileProposalManager.initiateGameProposal(settings, 3, Arrays.asList(Personality.person(2)));
+		assertTrue(p3.getId() > pl1.getId());
+		assertTrue(p3.getId() > pl2.getId());
 	}
 }

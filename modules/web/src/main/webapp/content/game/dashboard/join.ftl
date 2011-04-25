@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.scribble.proposal.ScribbleProposal>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.propose.GameProposal<wisematches.server.gameplaying.scribble.board.ScribbleSettings>" -->
 <#include "/core.ftl">
 
 <script type="text/javascript">
@@ -40,50 +40,39 @@
                     <th><@message code="game.language.label"/></th>
                     <th><@message code="game.time.label"/></th>
                     <th><@message code="game.opponents.label"/></th>
-                    <th><@message code="game.rating.label"/></th>
                     <th><@message code="game.join.label"/></th>
                 </tr>
                 </thead>
                 <tbody>
                 <#list activeProposals as proposal>
                 <tr>
-                    <td>${proposal.title}</td>
-                    <td><@message code="language.${proposal.language}"/></td>
-                    <td align="center">${gameMessageSource.formatMinutes(proposal.timeLimits*24*60,locale)}</td>
+                    <td>${proposal.gameSettings.title}</td>
+                    <td><@message code="language.${proposal.gameSettings.language}"/></td>
+                    <td align="center">${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove*24*60,locale)}</td>
                     <td>
-                        <#list proposal.allPlayers as pId>
+                        <#list proposal.players as p>
                             <div>
-                                <#if pId??>
-                                    <#assign playerProposed=playerManager.getPlayer(pId)/>
-                                <@wm.player player=playerProposed showRating=false/>
-                                    <#else>
-                                        <span class="player">
-                                            <span class="waiting"><@message code="game.status.waiting"/></span>
-                                        </span>
-                                </#if>
+                            <@wm.player player=playerManager.getPlayer(p) showRating=true/>
                             </div>
                         </#list>
-                    </td>
-                    <td>
-                        <#list proposal.allPlayers as pId>
+                        <#list (proposal.players?size)..(proposal.playersCount-1) as i>
                             <div>
-                                <#if pId??><#assign playerProposed=playerManager.getPlayer(pId)/>${playerProposed.rating?string.computer}<#else>
-                                    -</#if>
+                                <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
                             </div>
                         </#list>
                     </td>
                     <td class="center">
-                        <#assign msg=proposal.getUnsuitableMessage(player)!""/>
-                        <#if msg?has_content>
-                            <#assign index=msg?index_of(" ")/>
-                            <#if (index > 0)>
-                            <@message code="game.join.err.${msg?substring(0, index)}" args=[msg?substring(index)]/>
-                                <#else>
-                                <@message code="game.join.err.${msg}"/>
-                            </#if>
-                            <#else>
-                                <a href="/game/gameboard.html?join=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
-                        </#if>
+                    <#--<#assign msg=proposal.getUnsuitableMessage(player)!""/>-->
+                        <#--<#if msg?has_content>-->
+                            <#--<#assign index=msg?index_of(" ")/>-->
+                            <#--<#if (index > 0)>-->
+                            <#--<@message code="game.join.err.${msg?substring(0, index)}" args=[msg?substring(index)]/>-->
+                                <#--<#else>-->
+                                <#--<@message code="game.join.err.${msg}"/>-->
+                            <#--</#if>-->
+                            <#--<#else>-->
+                                <#--<a href="/game/gameboard.html?join=${proposal.id}">&raquo; <@message code="game.join.label"/></a>-->
+                        <#--</#if>-->
                     </td>
                 </tr>
                 </#list>
