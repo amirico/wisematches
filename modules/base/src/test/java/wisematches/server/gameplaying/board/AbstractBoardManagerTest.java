@@ -210,12 +210,6 @@ public class AbstractBoardManagerTest {
 		Collection<Long> loadActivePlayerBoards(Personality player);
 	}
 
-	private static class MockGameSettings extends GameSettings {
-		public MockGameSettings(String title, int maxPlayers) {
-			super(title, maxPlayers);
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	private static class MockBoardManager extends AbstractBoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> {
 		private final GameBoardDao gameBoardDao;

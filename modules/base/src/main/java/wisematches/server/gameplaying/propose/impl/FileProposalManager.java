@@ -7,8 +7,9 @@ import wisematches.server.gameplaying.board.GameSettings;
 import wisematches.server.gameplaying.propose.GameProposal;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -16,58 +17,76 @@ import java.util.Collections;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileProposalManager<S extends GameSettings> extends AbstractProposalManager<S> implements Closeable {
-    private ObjectInputStream inputStream;
-    private ObjectOutputStream outputStream;
+	private FileChannel proposalFile;
 
-    private static final Log log = LogFactory.getLog("wisematches.server.gameplaying.proposal");
+	private static final Log log = LogFactory.getLog("wisematches.server.gameplaying.proposal");
 
-    public FileProposalManager() {
-    }
+	public FileProposalManager() {
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected Collection<GameProposal<S>> loadGameProposals() {
-        try {
-            return (Collection<GameProposal<S>>) inputStream.readObject();
-        } catch (IOException ex) {
-            log.error("File proposal can't be loaded", ex);
-        } catch (ClassNotFoundException ex) {
-            log.error("File proposal can't be loaded", ex);
-        }
-        return Collections.emptyList();
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	protected Collection<GameProposal<S>> loadGameProposals() {
+		try {
+			if (proposalFile.position() == 0) {
+				return Collections.emptyList();
+			}
+			proposalFile.position(0);
+			final ObjectInputStream inputStream = new ObjectInputStream(Channels.newInputStream(proposalFile));
+			int count = inputStream.readInt();
+			if (count == 0) {
+				return Collections.emptyList();
+			}
 
-    @Override
-    protected void storeGameProposal(GameProposal<S> sGameProposal) {
-        try {
-            outputStream.reset();
-            outputStream.writeObject(getActiveProposals());
-        } catch (IOException ex) {
-            log.error("File proposal can't be stored", ex);
-        }
-    }
+			final Collection<GameProposal<S>> res = new ArrayList<GameProposal<S>>(count);
+			while (count-- != 0) {
+				res.add((GameProposal<S>) inputStream.readObject());
+			}
+			return res;
+		} catch (EOFException ex) {
+			log.error("File proposal can't be loaded", ex);
+		} catch (IOException ex) {
+			log.error("File proposal can't be loaded", ex);
+		} catch (ClassNotFoundException ex) {
+			log.error("File proposal can't be loaded", ex);
+		}
+		return Collections.emptyList();
+	}
 
-    @Override
-    protected void removeGameProposal(GameProposal<S> sGameProposal) {
-        try {
-            outputStream.reset();
-            outputStream.writeObject(getActiveProposals());
-        } catch (IOException ex) {
-            log.error("File proposal can't be stored", ex);
-        }
-    }
+	@Override
+	protected void storeGameProposal(GameProposal<S> sGameProposal) {
+		saveAllProposals();
+	}
 
-    public void setProposalsResource(Resource resource) throws IOException {
-        final URL url = resource.getURL();
-        final URLConnection connection = url.openConnection();
+	@Override
+	protected void removeGameProposal(GameProposal<S> sGameProposal) {
+		saveAllProposals();
+	}
 
-        inputStream = new ObjectInputStream(connection.getInputStream());
-        outputStream = new ObjectOutputStream(connection.getOutputStream());
-    }
+	private void saveAllProposals() {
+		try {
+			final Collection<GameProposal<S>> activeProposals = getActiveProposals();
+			proposalFile.position(0);
+			final ObjectOutputStream outputStream = new ObjectOutputStream(Channels.newOutputStream(this.proposalFile));
+			outputStream.writeInt(activeProposals.size());
+			for (GameProposal proposal : activeProposals) {
+				outputStream.writeObject(proposal);
+			}
+			outputStream.flush();
+		} catch (IOException ex) {
+			log.error("File proposal can't be stored", ex);
+		}
+	}
 
-    @Override
-    public void close() throws IOException {
-        inputStream.close();
-        outputStream.close();
-    }
+	public void setProposalsResource(File proposalFile) throws IOException {
+		if (!proposalFile.exists()) {
+			proposalFile.createNewFile();
+		}
+		this.proposalFile = new RandomAccessFile(proposalFile, "rw").getChannel();
+	}
+
+	@Override
+	public void close() throws IOException {
+		proposalFile.close();
+	}
 }

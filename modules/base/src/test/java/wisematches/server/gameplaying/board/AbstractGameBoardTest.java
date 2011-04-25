@@ -32,16 +32,7 @@ public class AbstractGameBoardTest {
 
 	@Before
 	public void setUp() throws Exception {
-		class MockGameSettingsBuilder extends GameSettings.Builder {
-			@Override
-			public GameSettings build() {
-				return new GameSettings("Mock", 3) {
-				};
-			}
-		}
-		;
-
-		gameSettings = new MockGameSettingsBuilder().build();
+		gameSettings = new MockGameSettings("Mock", 3);
 
 		board = new MockGameBoard(gameSettings,
 				Arrays.<Personality>asList(Personality.person(1), Personality.person(2), Personality.person(3)));

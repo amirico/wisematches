@@ -89,6 +89,24 @@ public class Personality implements Serializable {
 		return new Personality(id);
 	}
 
+	/**
+	 * Unties specified personality object from original context. This is useful if the {@code person} object
+	 * is complex object, like {@code Account} or {@code Player} and you want store it in collections or maps because
+	 * reference will be locked.
+	 *
+	 * @param person the original personality
+	 * @return player {@code Personality} object actually, instance of {@code Personality} class but not any subclass.
+	 */
+	public static Personality untie(Personality person) {
+		if (person == null) {
+			return null;
+		}
+		if (person.getClass() == Personality.class) {
+			return person;
+		}
+		return person(person.getId());
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
