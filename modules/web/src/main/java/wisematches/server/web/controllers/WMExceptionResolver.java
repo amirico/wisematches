@@ -44,9 +44,9 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
 		return processException("500", exception);
 	}
 
-	@ExceptionHandler(BoardLoadingException.class)
-	public ModelAndView processUnknownBoard(BoardLoadingException exception) {
-		return processException("noboard", null);
+	@ExceptionHandler(UnknownEntityException.class)
+	public ModelAndView processUnknownEntity(UnknownEntityException exception) {
+		return processException("unknown." + exception.getEntityType(), null, exception.getEntityId());
 	}
 
 	@ExceptionHandler(CookieTheftException.class)
