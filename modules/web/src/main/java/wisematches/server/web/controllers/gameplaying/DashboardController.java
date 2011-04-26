@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -105,26 +106,35 @@ public class DashboardController extends AbstractPlayerController {
 		return createGamePage(form, model, locale);
 	}
 
+	@RequestMapping(value = "gameboard", params = "p")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public String joinGameAction(@RequestParam("p") String id, @ModelAttribute("join") String join, Errors errors, Model model, Locale locale) throws BoardManagementException {
+		if (log.isInfoEnabled()) {
+			log.info("Join to the game: " + id);
+		}
+		try {
+			final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
+			final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
+			if (proposal == null) {
+				errors.reject("game.error.restriction.ready.description", null);
+			} else if (proposal.isReady()) {
+				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(proposal.getGameSettings(), proposal.getPlayers());
+				return "redirect:/game/playboard.html?b=" + board.getBoardId();
+			}
+		} catch (ViolatedRestrictionException e) {
+			errors.reject("game.error.restriction." + e.getCode() + ".description", new Object[]{e.getActualValue(), e.getExpectedValue()}, null);
+		}
+		return showWaitingGames(join, model, locale);
+	}
+
 	@RequestMapping("gameboard")
-	public String showWaitingGames(Model model, Locale locale) {
+	public String showWaitingGames(@ModelAttribute("join") String join, Model model, Locale locale) {
 		final Player player = getPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + player);
 		}
-		model.addAttribute("personality", player);
 
 		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(scribbleRoomManager.getProposalManager().getActiveProposals());
-		Collections.sort(proposals, new Comparator<GameProposal<ScribbleSettings>>() {
-			@Override
-			public int compare(GameProposal<ScribbleSettings> o1, GameProposal<ScribbleSettings> o2) {
-				try {
-					o1.isSuitablePlayer(player);
-					return 1;
-				} catch (ViolatedRestrictionException ex) {
-					return -1;
-				}
-			}
-		});
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + proposals.size() + " proposals for personality: " + player);
 		}
@@ -133,54 +143,21 @@ public class DashboardController extends AbstractPlayerController {
 		return "/content/game/dashboard/join";
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "gameboard", params = "join")
-	public String joinGameAction(@RequestParam("join") String id, Model model, Locale locale) throws BoardManagementException {
-		if (log.isInfoEnabled()) {
-			log.info("Join to the game: " + id);
-		}
-		return showWaitingGames(model, locale);
-
-//		try {
-//		final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
-//		final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
-//		if (proposal.isReady()) {
-//			final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(proposal.getGameSettings(), proposal.getPlayers());
-//			return "redirect:/game/playboard.html?b=" + board.getBoardId();
-//		} else {
-//			return showWaitingGames(model, locale);
-//		}
-/*
-			final ScribbleProposal scribbleProposal = proposalManager.attachPlayer(proposalId, getCurrentPlayer());
-			if (scribbleProposal == null) {
-				result.reject("game.gameboard.err.full");
-			}
-		} catch (IllegalStateException ex) {
-			result.reject("game.gameboard.err." + ex.getMessage().split(" ")[0]);
-		} catch (NumberFormatException ex) {
-			result.reject("game.gameboard.err.id");
-		}
-*/
-	}
-
 	@RequestMapping("dashboard")
 	public String showActiveGames(Model model, Locale locale) {
 		final Personality personality = getPersonality();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading active games for personality: " + personality);
 		}
-		model.addAttribute("personality", personality);
-
 		final Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getBoardManager().getActiveBoards(personality);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + personality);
 		}
-		model.addAttribute("activeBoards", activeBoards);
-
 		final Collection<GameProposal<ScribbleSettings>> proposals = scribbleRoomManager.getProposalManager().getPlayerProposals(personality);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
 		}
+		model.addAttribute("activeBoards", activeBoards);
 		model.addAttribute("activeProposals", proposals);
 		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		return "/content/game/dashboard/view";

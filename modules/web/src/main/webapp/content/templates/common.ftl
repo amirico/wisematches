@@ -15,9 +15,10 @@
      title="<#nested>"/>
 </#macro>
 
-<#macro field path id="">
+<#macro field path id="" class="">
 <@spring.bind path/>
-<div <#if id?has_content>id="${id}"</#if> class="<#if spring.status.error>field-error<#else>field-ok</#if>">
+<div <#if id?has_content>id="${id}"</#if>
+     class="<#if spring.status.error>field-error<#else>field-ok</#if><#if class?has_content> ${class}</#if>">
     <#assign status=spring.status>
     <#assign statusValue=spring.stringStatusValue>
 
