@@ -48,10 +48,10 @@
                     </tr>
                 </table>
 
-                <table id="gameboard" width="100%">
+                <table id="gameboard" width="100%" class="display">
                     <thead>
                     <tr>
-                        <th width="100%"><@message code="game.title.label"/></th>
+                        <th><@message code="game.title.label"/></th>
                         <th><@message code="game.language.label"/></th>
                         <th><@message code="game.time.label"/></th>
                         <th><@message code="game.opponents.label"/></th>

@@ -3,35 +3,6 @@
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.propose.GameProposal<wisematches.server.gameplaying.scribble.board.ScribbleSettings>" -->
 <#include "/core.ftl">
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#refreshDashboard").button({icons: {primary: 'ui-icon-refresh'}});
-
-        $('#dashboard').dataTable({
-                    "bJQueryUI": true,
-                    "bStateSave": true,
-                    "bFilter": false,
-                    "bSortClasses": false,
-                    "aaSorting": [
-                        [3,'asc']
-                    ],
-                    "aoColumns": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        { "bSortable": false },
-                        { "bSortable": false }
-                    ],
-                    "sDom": '<"H"lCr>t<"F"ip>',
-                    "sPaginationType": "full_numbers",
-                    "oLanguage": {
-                        "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
-                    }
-                });
-    });
-</script>
-
 <#macro gameStatus board>
     <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == player.getId()>
@@ -55,7 +26,7 @@
                 </button>
             </div>
 
-            <table id="dashboard" width="100%">
+            <table id="dashboard" width="100%" class="display">
                 <thead>
                 <tr>
                     <th width="100%"><@message code="game.title.label"/></th>
@@ -129,3 +100,30 @@
         <td width="160px" valign="top"></td>
     </tr>
 </table>
+
+<script type="text/javascript">
+    $("#refreshDashboard").button({icons: {primary: 'ui-icon-refresh'}});
+
+    $('#dashboard').dataTable({
+                "bJQueryUI": true,
+                "bStateSave": true,
+                "bFilter": false,
+                "bSortClasses": false,
+                "aaSorting": [
+                    [3,'asc']
+                ],
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    { "bSortable": false },
+                    { "bSortable": false }
+                ],
+                "sDom": '<"H"lCr>t<"F"ip>',
+                "sPaginationType": "full_numbers",
+                "oLanguage": {
+                    "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
+                }
+            });
+</script>

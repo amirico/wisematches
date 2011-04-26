@@ -2,8 +2,7 @@
  * ColVis styles
  */
 .ColVis {
-    float: right;
-    margin-bottom: 1em;
+    float: right; /*margin-bottom: 1em; WM commented */
 }
 
 .ColVis_Button {

@@ -8,8 +8,8 @@
 
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
 
-    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/ColReorder.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/ColVis.css"/>
 
@@ -33,7 +33,6 @@
 
     <script type="text/javascript" src="/content/game/playboard/scribble.js"></script>
     <link rel="stylesheet" type="text/css" href="/content/game/playboard/scribble.css"/>
-
 <#include "ops/analytics.ftl">
 </head>
 <body>
