@@ -55,7 +55,9 @@ public class DashboardController extends AbstractPlayerController {
 			form.setBoardLanguage(locale.getLanguage());
 		}
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
+		if (getPlayer().getMembership().isAdsVisible()) {
+			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
+		}
 		return "/content/game/dashboard/create";
 	}
 
@@ -139,7 +141,9 @@ public class DashboardController extends AbstractPlayerController {
 			log.debug("Found " + proposals.size() + " proposals for personality: " + player);
 		}
 		model.addAttribute("activeProposals", proposals);
-		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
+		if (getPlayer().getMembership().isAdsVisible()) {
+			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
+		}
 		return "/content/game/dashboard/join";
 	}
 
@@ -159,7 +163,9 @@ public class DashboardController extends AbstractPlayerController {
 		}
 		model.addAttribute("activeBoards", activeBoards);
 		model.addAttribute("activeProposals", proposals);
-		model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
+		if (getPlayer().getMembership().isAdsVisible()) {
+			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
+		}
 		return "/content/game/dashboard/view";
 	}
 
