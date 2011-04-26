@@ -34,6 +34,7 @@
 .ui-helper-clearfix:after {
     content: ".";
     display: block;
+    line-height: 0;
     height: 0;
     clear: both;
     visibility: hidden;

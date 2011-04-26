@@ -7,9 +7,7 @@
         <#list board.playersHands as hand>
             <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
         <tr class="player-info-${p.id} player-info">
-            <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">
-            <#--<img src="/game/player/image/view.html?pid=${p.id}" alt=""/>-->
-            </td>
+            <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">&nbsp;</td>
             <td class="nickname ui-table-middle">
             <@wm.player player=p showRating=false/>
             </td>

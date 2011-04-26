@@ -1,7 +1,7 @@
 <#include "/core.ftl">
 
 <@wm.widget id="movesHistory" title="game.history.label" style="padding-top: 10px">
-<table width="100%">
+<table width="100%" class="display">
     <thead>
     <tr>
         <th>#</th>
@@ -18,6 +18,7 @@
 <script type="text/javascript">
     var movesHistory = new wm.scribble.History(board, {
                 "passed": "<@message code="game.history.passed.label"/>",
-                "exchange": "<@message code="game.history.exchange.label"/>"
+                "exchange": "<@message code="game.history.exchange.label"/>",
+                "sEmptyTable": "<@message code='game.history.empty'/>"
             });
 </script>

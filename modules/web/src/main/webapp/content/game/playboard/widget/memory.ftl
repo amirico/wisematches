@@ -2,7 +2,7 @@
 <#include "/core.ftl">
 
 <@wm.widget id="memoryWordsWidget" title="game.memory.label" style="padding-top: 10px;">
-<table id="memoryWords" width="100%">
+<table id="memoryWords" width="100%" class="display">
     <thead>
     <tr>
         <th><@message code="game.memory.word"/></th>

@@ -1,12 +1,6 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<script type="text/javascript">
-    $(function() {
-        $("#game-toolbar div").buttonset();
-    });
-</script>
-
 <table id="game-header">
     <tr>
         <td width="178px" height="72px">
@@ -17,7 +11,7 @@
                 <tr>
                     <td valign="top" align="right">
                     <#if player.membership == 'GUEST'>
-                        <span class="player computer">Guest player</span>
+                        <span class="player computer"><@message code="game.player.guest"/></span>
                         <#else>
                             <span class="player member">
                                 <a href="/game/profile.html?p=${player.id}">
@@ -34,31 +28,31 @@
                         <div id="game-toolbar" class="" align="right">
                             <div style="float: left;">
                                 <button id="dashboardButton" onclick="wm.util.url.redirect('/game/dashboard.html')">
-                                    My Games
+                                <@message code="game.menu.games.label"/>
                                 </button>
                                 <button id="gameboardButton" onclick="wm.util.url.redirect('/game/gameboard.html')">
-                                    Join Game
+                                <@message code="game.menu.join.label"/>
                                 </button>
                                 <button id="createButton" onclick="wm.util.url.redirect('/game/create.html')">
-                                    New Game
+                                <@message code="game.menu.create.label"/>
                                 </button>
                             </div>
                             <div style="float: left;">
                                 <button id="messagesButton" onclick="wm.util.url.redirect('/profile/messages.html')">
-                                    Messages
+                                <@message code="game.menu.messages.label"/>
                                 </button>
                             </div>
                             <div style="float: left;">
                                 <button id="tournamentsButton" onclick="wm.util.url.redirect('/game/tournaments.html')">
-                                    Tournaments
+                                <@message code="game.menu.tournaments.label"/>
                                 </button>
                             </div>
                             <div style="margin: 0">
                                 <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify.html')">
-                                    Settings
+                                <@message code="game.menu.settings.label"/>
                                 </button>
                                 <button onclick="wm.util.url.redirect('/info/general.html')">
-                                    Help
+                                <@message code="game.menu.help.label"/>
                                 </button>
                             </div>
                         </div>
@@ -68,5 +62,9 @@
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+    $("#game-toolbar div").buttonset();
+</script>
 
 <div style="height: 20px;"></div>

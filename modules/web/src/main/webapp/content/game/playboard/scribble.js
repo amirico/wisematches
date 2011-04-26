@@ -358,7 +358,8 @@ wm.scribble.History = function(board, language) {
                 "sScrollY": 300,
                 "sScrollX" : "100%",
                 "bStateSave": true,
-                "sDom": 't'
+                "sDom": 't',
+                "oLanguage": language
             });
 
     $.each(board.getGameMoves(), function(i, move) {
