@@ -2,6 +2,7 @@ package wisematches.server.personality.player;
 
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
+import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
@@ -19,17 +20,6 @@ public abstract class StandingPlayer extends Player {
 	}
 
 	@Override
-	public abstract String getNickname();
-
-
-	@Override
-	public abstract Language getLanguage();
-
-	@Override
-	public abstract Membership getMembership();
-
-
-	@Override
 	public short getRating() {
 		return standingPlayerManager.getRating(this);
 	}
@@ -37,6 +27,11 @@ public abstract class StandingPlayer extends Player {
 	@Override
 	public long getPosition() {
 		return standingPlayerManager.getPosition(this);
+	}
+
+	@Override
+	public PlayerProfile getPlayerProfile() {
+		return standingPlayerManager.getProfile(this);
 	}
 
 	@Override

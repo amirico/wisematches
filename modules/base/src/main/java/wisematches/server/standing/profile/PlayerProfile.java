@@ -25,4 +25,6 @@ public interface PlayerProfile {
 	Gender getGender();
 
 	Language getPrimaryLanguage();
+
+	String getComments();
 }

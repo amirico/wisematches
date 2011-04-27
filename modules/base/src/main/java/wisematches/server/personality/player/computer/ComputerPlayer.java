@@ -3,6 +3,7 @@ package wisematches.server.personality.player.computer;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 import wisematches.server.personality.player.Player;
+import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
@@ -89,6 +90,11 @@ public class ComputerPlayer extends Player {
 	@Override
 	public long getPosition() {
 		return 0;
+	}
+
+	@Override
+	public PlayerProfile getPlayerProfile() {
+		return null;
 	}
 
 	@Override
