@@ -6,6 +6,8 @@ import wisematches.server.personality.account.Membership;
 import wisematches.server.personality.player.StandingPlayer;
 import wisematches.server.personality.player.StandingPlayerManager;
 
+import java.util.TimeZone;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -34,5 +36,10 @@ public final class MemberPlayer extends StandingPlayer {
 	@Override
 	public Membership getMembership() {
 		return account.getMembership();
+	}
+
+	@Override
+	public TimeZone getTimeZone() {
+		return account.getTimeZone();
 	}
 }

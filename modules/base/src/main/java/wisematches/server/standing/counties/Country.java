@@ -1,4 +1,4 @@
-package wisematches.server.standing.profile.counties;
+package wisematches.server.standing.counties;
 
 import wisematches.server.personality.account.Language;
 

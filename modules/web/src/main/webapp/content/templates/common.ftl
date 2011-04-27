@@ -6,7 +6,7 @@
     <#if !computerPlayer><a href="/game/profile.html?p=${player.id}"></#if><span
         class="nickname">${gameMessageSource.getPlayerNick(player, locale)}</span><#if showType && player.getMembership() != "BASIC">
     <span class="mod ${player.membership!""?lower_case}"></span></#if><#if !computerPlayer></a></#if>
-    <#if showRating><span class="rating">(${player.rating?string.computer})</span></#if>
+    <#if showRating><span class="rating">(${player.rating})</span></#if>
 </span>
 </#macro>
 

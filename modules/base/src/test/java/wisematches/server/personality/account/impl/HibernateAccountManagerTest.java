@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.personality.account.*;
 
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.easymock.EasyMock.*;
@@ -30,6 +31,9 @@ public class HibernateAccountManagerTest {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	public HibernateAccountManagerTest() {
+	}
 
 	@Test
 	public void testCreateAccount() throws Exception {
@@ -133,6 +137,7 @@ public class HibernateAccountManagerTest {
 		e.setPassword("modified_" + e.getPassword());
 		e.setLanguage(Language.RU);
 		e.setMembership(Membership.PLATINUM);
+		e.setTimeZone(TimeZone.getTimeZone("GMT+04:12"));
 
 		accountManager.addAccountListener(l);
 		try {
@@ -148,6 +153,8 @@ public class HibernateAccountManagerTest {
 		assertEquals(e.getPassword(), player.getPassword());
 		assertEquals(e.getLanguage(), player.getLanguage());
 		assertEquals(e.getMembership(), player.getMembership());
+		assertEquals(e.getTimeZone(), player.getTimeZone());
+		assertEquals(TimeZone.getTimeZone("GMT+04:12"), player.getTimeZone());
 		sessionFactory.getCurrentSession().flush();
 	}
 
@@ -163,6 +170,7 @@ public class HibernateAccountManagerTest {
 		assertEquals(op.getPassword(), mock.getPassword());
 		assertEquals(Language.DEFAULT, mock.getLanguage());
 		assertEquals(Membership.BASIC, mock.getMembership());
+		assertEquals(TimeZone.getDefault(), mock.getTimeZone());
 		return mock;
 	}
 

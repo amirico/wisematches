@@ -29,7 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * TODO: java docs
@@ -96,7 +99,7 @@ public class CreateAccountController {
 		// Create account if no errors
 		if (!result.hasErrors()) {
 			try {
-				player = createAccount(form);
+				player = createAccount(form, request);
 			} catch (DuplicateAccountException ex) {
 				final Set<String> fieldNames = ex.getFieldNames();
 				if (fieldNames.contains("email")) {
@@ -205,17 +208,19 @@ public class CreateAccountController {
 	 * Creates account based on specified form and returns created user.
 	 *
 	 * @param registration the new account form
+	 * @param request
 	 * @return the create player
 	 * @throws DuplicateAccountException	 if account with the same email or nickname already exist
 	 * @throws InadmissibleUsernameException if nickname can't be used.
 	 */
-	private Account createAccount(AccountRegistrationForm registration) throws DuplicateAccountException, InadmissibleUsernameException {
+	private Account createAccount(AccountRegistrationForm registration, HttpServletRequest request) throws DuplicateAccountException, InadmissibleUsernameException {
 		final AccountEditor editor = new AccountEditor();
 		editor.setEmail(registration.getEmail());
 		editor.setNickname(registration.getNickname());
 		editor.setPassword(registration.getPassword());
 		editor.setMembership(defaultMembership);
 		editor.setLanguage(Language.byCode(registration.getLanguage()));
+		editor.setTimeZone(Calendar.getInstance(request.getLocale()).getTimeZone());
 
 		if (playerSecurityService != null) {
 			editor.setPassword(playerSecurityService.encodePlayerPassword(editor.createAccount(), registration.getPassword()));

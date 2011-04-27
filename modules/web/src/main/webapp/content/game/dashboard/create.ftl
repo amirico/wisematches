@@ -152,7 +152,7 @@
                         <span id="on${n}" class="nickname">
                             <#if visible && wm.statusValue?has_content>
                                 <#assign player=playerManager.getPlayer(wm.statusValue?number)/>
-                            <@message code="game.player.${player.nickname}"/> (${player.rating?string.computer})
+                            <@message code="game.player.${player.nickname}"/> (${player.rating})
                                 <#else>
                                 <@message code="game.create.opponents.wait.human.label"/>
                             </#if>
@@ -170,7 +170,7 @@
                                 <ul id="robotsList">
                                     <#list robotPlayers as robot>
                                         <li>&raquo;
-                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wm.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating?string.computer}'})">
+                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wm.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating}'})">
                                             <@wm.player player=robot showType=false/>
                                             </a>
                                         </li>

@@ -1,9 +1,9 @@
-package wisematches.server.standing.profile.counties.impl;
+package wisematches.server.standing.counties.impl;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import wisematches.server.personality.account.Language;
-import wisematches.server.standing.profile.counties.Country;
+import wisematches.server.standing.counties.Country;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,10 +18,13 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class CSVCountriesManagerTest {
+	public CSVCountriesManagerTest() {
+	}
+
 	@Test
 	public void testParse() throws IOException, CSVParsingException {
 		final CSVCountriesManager manager = new CSVCountriesManager();
-		manager.setCsvCountriesFile(new ClassPathResource("/i18n/listOfCountries.csv"));
+		manager.setCsvCountriesFile(new ClassPathResource("/i18n/countries.csv"));
 
 		assertEquals(2, manager.getLanguages().size());
 		assertTrue(manager.getLanguages().contains(Language.EN));

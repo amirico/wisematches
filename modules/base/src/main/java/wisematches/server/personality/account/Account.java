@@ -4,6 +4,7 @@ import wisematches.server.personality.Personality;
 
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.util.TimeZone;
 
 /**
  * The {@code Player} interface represents simple user. This interface is read-only
@@ -59,6 +60,13 @@ public abstract class Account extends Personality implements Serializable {
 	 * @return not null default language of the player.
 	 */
 	public abstract Language getLanguage();
+
+	/**
+	 * Returns player's timezone.
+	 *
+	 * @return the player's timezone.
+	 */
+	public abstract TimeZone getTimeZone();
 
 	/**
 	 * Returns this membership for the player.

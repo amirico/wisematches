@@ -4,43 +4,43 @@
 
 <#include "/core.ftl">
 
-<#macro tileToJS tile><#if tile?has_content>{number: ${tile.number?string.computer}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }</#if></#macro>
+<#macro tileToJS tile><#if tile?has_content>{number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }</#if></#macro>
 
 <script type="text/javascript">
     var scribbleGame = {
-        id: ${board.boardId?string.computer},
+        id: ${board.boardId},
         readOnly: ${viewMode?string},
         language: '${board.gameSettings.language}',
-        daysPerMove: ${board.gameSettings.daysPerMove?string.computer},
-        startedMillis: ${gameMessageSource.getTimeMillis(board.startedTime)?string.computer},
+        daysPerMove: ${board.gameSettings.daysPerMove},
+        startedMillis: ${gameMessageSource.getTimeMillis(board.startedTime)},
         startedMessage: '${gameMessageSource.formatDate(board.startedTime, locale)}',
 
         state: {
             active: ${board.gameActive?string},
-            spentTimeMillis: ${(gameMessageSource.getSpentMinutes(board)*1000*60)?string.computer},
+            spentTimeMillis: ${(gameMessageSource.getSpentMinutes(board)*1000*60)},
             spentTimeMessage: '${gameMessageSource.formatSpentTime(board, locale)}',
-        playerTurn: <#if board.playerTurn??>${board.playerTurn.playerId?string.computer}<#else>null</#if>,
+        playerTurn: <#if board.playerTurn??>${board.playerTurn.playerId}<#else>null</#if>,
         <#if board.gameActive>
-            remainedTimeMillis: ${(gameMessageSource.getRemainedMinutes(board)*1000*60)?string.computer},
+            remainedTimeMillis: ${(gameMessageSource.getRemainedMinutes(board)*1000*60)},
             remainedTimeMessage: '${gameMessageSource.formatRemainedTime(board, locale)}'
         </#if>
         <#if !board.gameActive>
             winners: [<#list board.wonPlayers as winner>${winner.playerId}<#if winner_has_next>,</#if></#list>],
             resolution: '${board.gameResolution}',
-            finishTimeMillis: ${gameMessageSource.getTimeMillis(board.finishedTime)?string.computer},
+            finishTimeMillis: ${gameMessageSource.getTimeMillis(board.finishedTime)},
             finishTimeMessage: '${gameMessageSource.formatDate(board.finishedTime, locale)}'
         </#if>},
 
         players: [
         <#list board.playersHands as hand>
             <#assign p = playerManager.getPlayer(hand.playerId)/>
-            {playerId: ${hand.playerId?string.computer}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points?string.computer}}<#if hand_has_next>,</#if>
+            {playerId: ${hand.playerId}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points}}<#if hand_has_next>,</#if>
         </#list>],
 
     <#if ratings??>
         ratings: [
             <#list ratings as rating>
-                {playerId: ${rating.playerId?string.computer}, boardId: ${rating.boardId?string.computer}, oldRating: ${rating.oldRating?string.computer}, newRating: ${rating.newRating?string.computer}, ratingDelta: ${rating.ratingDelta?string.computer}, points: ${rating.points?string.computer}}<#if rating_has_next>,</#if>
+                {playerId: ${rating.playerId}, boardId: ${rating.boardId}, oldRating: ${rating.oldRating}, newRating: ${rating.newRating}, ratingDelta: ${rating.ratingDelta}, points: ${rating.points}}<#if rating_has_next>,</#if>
             </#list>
         ],
     </#if>
@@ -72,7 +72,7 @@
         },
 
         bank: {
-            capacity: ${board.bankCapacity?string.computer},
+            capacity: ${board.bankCapacity},
             tilesInfo: [
                 <#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
         }
@@ -88,7 +88,7 @@
 </script>
 
 <script type="text/javascript">
-    var board = new wm.scribble.Board(scribbleGame, ${player.id?string.computer}, "wildcardSelectionPanel");
+    var board = new wm.scribble.Board(scribbleGame, ${player.id}, "wildcardSelectionPanel");
 </script>
 
 <#if !viewMode>

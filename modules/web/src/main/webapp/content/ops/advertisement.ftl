@@ -5,8 +5,8 @@
     <script type="text/javascript"><!--
     google_ad_client = "${advertisementBlock.client}";
     google_ad_slot = "${advertisementBlock.slot}";
-    google_ad_width = ${advertisementBlock.width?string.computer};
-    google_ad_height = ${advertisementBlock.height?string.computer};
+    google_ad_width = ${advertisementBlock.width};
+    google_ad_height = ${advertisementBlock.height};
     //-->
     </script>
     <script type="text/javascript"
