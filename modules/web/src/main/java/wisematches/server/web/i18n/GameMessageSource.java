@@ -34,10 +34,6 @@ public class GameMessageSource {
 	public GameMessageSource() {
 	}
 
-	public String getPlayerNick(Player p, String language) {
-		return getPlayerNick(p, Language.byCode(language).locale());
-	}
-
 	public String getPlayerNick(Player p, Locale locale) {
 		if (p instanceof ComputerPlayer) {
 			return messageSource.getMessage("game.player." + p.getNickname(), null, locale);
@@ -49,24 +45,12 @@ public class GameMessageSource {
 		return messageSource.getMessage(code, args, locale);
 	}
 
-	public String formatDate(Date date, String language) {
-		return formatDate(date, Language.byCode(language).locale());
-	}
-
 	public String formatDate(Date date, Locale locale) {
 		return DATE_FORMATTER.get(locale).format(date);
 	}
 
-	public String formatSpentTime(GameBoard board, String language) {
-		return formatSpentTime(board, Language.byCode(language).locale());
-	}
-
 	public String formatSpentTime(GameBoard board, Locale locale) {
 		return formatMinutes(getSpentMinutes(board), locale);
-	}
-
-	public String formatRemainedTime(GameBoard board, String language) {
-		return formatRemainedTime(board, Language.byCode(language).locale());
 	}
 
 	public String formatRemainedTime(GameBoard board, Locale locale) {
@@ -95,10 +79,6 @@ public class GameMessageSource {
 		final long minutesPerMove = daysPerMove * 24 * 60;
 		final long minutesElapsed = (elapsedTime / 1000 / 60);
 		return minutesPerMove - minutesElapsed;
-	}
-
-	public String formatMinutes(long time, String language) {
-		return formatMinutes(time, Language.byCode(language).locale());
 	}
 
 	public String formatMinutes(long time, Locale locale) {
@@ -134,12 +114,12 @@ public class GameMessageSource {
 		return b.toString();
 	}
 
-	public String formatJoinException(GameProposal<? extends GameSettings> proposal, Player player, String language) {
+	public String formatJoinException(GameProposal<? extends GameSettings> proposal, Player player, Locale locale) {
 		try {
 			proposal.isSuitablePlayer(player);
 			return null;
 		} catch (ViolatedRestrictionException ex) {
-			return getMessage("game.error.restriction." + ex.getCode() + ".label", Language.byCode(language).locale(), ex.getExpectedValue(), ex.getActualValue());
+			return getMessage("game.error.restriction." + ex.getCode() + ".label", locale, ex.getExpectedValue(), ex.getActualValue());
 		}
 	}
 

@@ -20,6 +20,8 @@ public class WMFreeMarkerView extends FreeMarkerView {
 
 	@Override
 	protected void processTemplate(Template template, SimpleHash model, HttpServletResponse response) throws IOException, TemplateException {
+		model.put("locale", template.getLocale());
+
 		final HttpRequestParametersHashModel sm2 = (HttpRequestParametersHashModel) model.get(FreemarkerServlet.KEY_REQUEST_PARAMETERS);
 		if ("true".equalsIgnoreCase(String.valueOf(sm2.get("plain"))) ||
 				(model.get("plain") != null && ((TemplateBooleanModel) model.get("plain")).getAsBoolean())) {
