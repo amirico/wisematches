@@ -36,9 +36,12 @@ class HibernatePlayerProfile implements PlayerProfile {
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
 
-	@Column(name = "primaryLanguage")
+	@Column(name = "language")
 	@Enumerated(EnumType.STRING)
 	private Language primaryLanguage;
+
+	@Column(name = "comments")
+	private String comments;
 
 	/**
 	 * Hibernate constructor
@@ -55,28 +58,39 @@ class HibernatePlayerProfile implements PlayerProfile {
 		this(personality.getId());
 	}
 
+	@Override
 	public long getPlayerId() {
 		return playerId;
 	}
 
+	@Override
 	public String getRealName() {
 		return realName;
 	}
 
+	@Override
 	public String getCountryCode() {
 		return countryCode;
 	}
 
+	@Override
 	public Date getBirthday() {
 		return birthday;
 	}
 
+	@Override
 	public Gender getGender() {
 		return gender;
 	}
 
+	@Override
 	public Language getPrimaryLanguage() {
 		return primaryLanguage;
+	}
+
+	@Override
+	public String getComments() {
+		return comments;
 	}
 
 	public void updatePlayerProfile(PlayerProfile profile) {
@@ -85,5 +99,6 @@ class HibernatePlayerProfile implements PlayerProfile {
 		this.birthday = profile.getBirthday();
 		this.gender = profile.getGender();
 		this.primaryLanguage = profile.getPrimaryLanguage();
+		this.comments = profile.getComments();
 	}
 }

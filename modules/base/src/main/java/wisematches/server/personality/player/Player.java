@@ -3,6 +3,7 @@ package wisematches.server.personality.player;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
+import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
@@ -82,7 +83,16 @@ public abstract class Player extends Personality {
 	public abstract long getPosition();
 
 	/**
-	 * Returns player statistic.
+	 * Returns player's profile.
+	 * <p/>
+	 * For computer players always returns null.
+	 *
+	 * @return he player's profile or {@code null} if player is {@code ComputerPlayer}.
+	 */
+	public abstract PlayerProfile getPlayerProfile();
+
+	/**
+	 * Returns player's statistic.
 	 * <p/>
 	 * For computer players always returns null.
 	 *

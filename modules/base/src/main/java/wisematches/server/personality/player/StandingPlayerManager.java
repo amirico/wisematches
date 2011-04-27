@@ -5,6 +5,8 @@ import wisematches.server.personality.account.Account;
 import wisematches.server.personality.account.AccountManager;
 import wisematches.server.personality.player.computer.ComputerPlayer;
 import wisematches.server.personality.player.member.MemberPlayer;
+import wisematches.server.standing.profile.PlayerProfile;
+import wisematches.server.standing.profile.PlayerProfileManager;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
@@ -20,6 +22,7 @@ import java.util.WeakHashMap;
 public class StandingPlayerManager implements PlayerManager {
 	private AccountManager accountManager;
 	private PlayerRatingManager ratingManager;
+	private PlayerProfileManager profileManager;
 	private PlayerStatisticManager statisticsManager;
 
 	private final Map<Personality, Player> playerMap = new WeakHashMap<Personality, Player>();
@@ -71,6 +74,10 @@ public class StandingPlayerManager implements PlayerManager {
 		return ratingManager.getPosition(standingPlayer);
 	}
 
+	PlayerProfile getProfile(StandingPlayer standingPlayer) {
+		return profileManager.getPlayerProfile(standingPlayer);
+	}
+
 	PlayerStatistic getPlayerStatistic(StandingPlayer standingPlayer) {
 		return statisticsManager.getPlayerStatistic(standingPlayer);
 	}
@@ -89,5 +96,9 @@ public class StandingPlayerManager implements PlayerManager {
 
 	public void setStatisticsManager(PlayerStatisticManager statisticsManager) {
 		this.statisticsManager = statisticsManager;
+	}
+
+	public void setProfileManager(PlayerProfileManager profileManager) {
+		this.profileManager = profileManager;
 	}
 }

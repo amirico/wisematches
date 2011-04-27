@@ -1,6 +1,5 @@
 package wisematches.server.standing.profile;
 
-import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 
 import java.util.Date;
@@ -17,6 +16,7 @@ public final class PlayerProfileEditor {
 	private Date birthday;
 	private Gender gender;
 	private Language primaryLanguage;
+	private String comments;
 
 	/**
 	 * Creates new editor based on specified profile.
@@ -30,6 +30,7 @@ public final class PlayerProfileEditor {
 		this.birthday = profile.getBirthday();
 		this.gender = profile.getGender();
 		this.primaryLanguage = profile.getPrimaryLanguage();
+		this.comments = profile.getComments();
 	}
 
 	public String getRealName() {
@@ -72,8 +73,16 @@ public final class PlayerProfileEditor {
 		this.primaryLanguage = primaryLanguage;
 	}
 
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
 	public PlayerProfile createProfile() {
-		return new PlayerProfileDetails(playerId, realName, countryCode, birthday, gender, primaryLanguage);
+		return new PlayerProfileDetails(playerId, realName, countryCode, birthday, gender, primaryLanguage, comments);
 	}
 
 	private static class PlayerProfileDetails implements PlayerProfile {
@@ -83,14 +92,16 @@ public final class PlayerProfileEditor {
 		private final Date birthday;
 		private final Gender gender;
 		private final Language primaryLanguage;
+		private final String comments;
 
-		private PlayerProfileDetails(long playerId, String realName, String countryCode, Date birthday, Gender gender, Language primaryLanguage) {
+		private PlayerProfileDetails(long playerId, String realName, String countryCode, Date birthday, Gender gender, Language primaryLanguage, String comments) {
 			this.playerId = playerId;
 			this.realName = realName;
 			this.countryCode = countryCode;
 			this.birthday = birthday;
 			this.gender = gender;
 			this.primaryLanguage = primaryLanguage;
+			this.comments = comments;
 		}
 
 		@Override
@@ -121,6 +132,11 @@ public final class PlayerProfileEditor {
 		@Override
 		public Language getPrimaryLanguage() {
 			return primaryLanguage;
+		}
+
+		@Override
+		public String getComments() {
+			return comments;
 		}
 	}
 }
