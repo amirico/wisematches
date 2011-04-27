@@ -1,5 +1,6 @@
 [#ftl]
 [#-- @implicitly included --]
+[#-- @ftlvariable name="locale" type="java.util.Locale" --]
 [#-- @ftlvariable name="serverHostname" type="java.lang.String" --]
 [#-- @ftlvariable name="player" type="wisematches.server.personality.player.Player" --]
 [#-- @ftlvariable name="playerManager" type="wisematches.server.personality.player.PlayerManager" --]
