@@ -1,11 +1,11 @@
-package wisematches.server.standing.profile.counties.impl;
+package wisematches.server.standing.counties.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
 import wisematches.server.personality.account.Language;
-import wisematches.server.standing.profile.counties.CountriesManager;
-import wisematches.server.standing.profile.counties.Country;
+import wisematches.server.standing.counties.CountriesManager;
+import wisematches.server.standing.counties.Country;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class CSVCountriesManager implements CountriesManager {
 	public CSVCountriesManager() {
 	}
 
-	public List<Country> getCountries(Language language) {
+	public Collection<Country> getCountries(Language language) {
 		List<Country> countryList = countries.get(language);
 		if (countryList == null) {
 			return countries.get(Language.DEFAULT);

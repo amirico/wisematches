@@ -6,10 +6,7 @@ import wisematches.server.personality.player.Player;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This is base class for all hardcoded players, like robots or guests. Any instance of this
@@ -62,6 +59,16 @@ public class ComputerPlayer extends Player {
 	@Override
 	public Language getLanguage() {
 		return Language.EN;
+	}
+
+	/**
+	 * Always returns {@code TimeZone.getDefault()}
+	 *
+	 * @return returns default timezone.
+	 */
+	@Override
+	public TimeZone getTimeZone() {
+		return TimeZone.getDefault();
 	}
 
 	/**

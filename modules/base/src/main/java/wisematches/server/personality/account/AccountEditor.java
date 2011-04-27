@@ -1,5 +1,7 @@
 package wisematches.server.personality.account;
 
+import java.util.TimeZone;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -8,6 +10,7 @@ public class AccountEditor {
 	private String email;
 	private String nickname;
 	private String password;
+	private TimeZone timeZone = TimeZone.getDefault();
 	private Language language = Language.DEFAULT;
 	private Membership membership = Membership.BASIC;
 
@@ -21,6 +24,7 @@ public class AccountEditor {
 		this.email = account.getEmail();
 		this.language = account.getLanguage();
 		this.membership = account.getMembership();
+		this.timeZone = account.getTimeZone();
 	}
 
 	public AccountEditor(String email, String nickname, String password) {
@@ -74,6 +78,14 @@ public class AccountEditor {
 		return this;
 	}
 
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
+
+	public void setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
+	}
+
 	public Account createAccount() {
 		if (email == null) {
 			throw new IllegalArgumentException("email is not specified");
@@ -81,7 +93,7 @@ public class AccountEditor {
 		if (nickname == null) {
 			throw new IllegalArgumentException("nickname is not specified");
 		}
-		return new AccountDetails(id, email, nickname, password, language, membership);
+		return new AccountDetails(id, email, nickname, password, language, membership, timeZone);
 	}
 
 	/**
@@ -93,16 +105,18 @@ public class AccountEditor {
 		private final String email;
 		private final String nickname;
 		private final String password;
+		private final TimeZone timeZone;
 		private final Language language;
 		private final Membership membership;
 
-		private AccountDetails(long id, String email, String nickname, String password, Language language, Membership membership) {
+		private AccountDetails(long id, String email, String nickname, String password, Language language, Membership membership, TimeZone timeZone) {
 			super(id);
 			this.email = email;
 			this.nickname = nickname;
 			this.password = password;
 			this.language = language;
 			this.membership = membership;
+			this.timeZone = timeZone;
 		}
 
 		@Override
@@ -128,6 +142,11 @@ public class AccountEditor {
 		@Override
 		public Membership getMembership() {
 			return membership;
+		}
+
+		@Override
+		public TimeZone getTimeZone() {
+			return timeZone;
 		}
 	}
 }

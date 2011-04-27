@@ -94,14 +94,21 @@
         <property name="robotBrains" ref="robotBrainsList"/>
     </bean>
 
+    <bean id="countriesManager" class="wisematches.server.standing.counties.impl.CSVCountriesManager">
+        <property name="csvCountriesFile" value="classpath:/i18n/countries.csv"/>
+    </bean>
+
+    <bean id="profileManager" class="wisematches.server.standing.profile.impl.HibernatePlayerProfileManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="accountManager" ref="accountManager"/>
+    </bean>
+
+
     <!--
     <bean id="serverPropertiesManager" class="wisematches.server.utils.system.impl.HibernateServerPropertiesManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="countriesManager" class="wisematches.server.testimonial.profile.counties.impl.CSVCountriesManager">
-        <property name="csvCountriesFile" value="classpath:/i18n/listOfCountries.csv"/>
-    </bean>
     -->
 
     <!--

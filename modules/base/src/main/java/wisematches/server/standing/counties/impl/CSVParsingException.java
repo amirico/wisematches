@@ -1,4 +1,4 @@
-package wisematches.server.standing.profile.counties.impl;
+package wisematches.server.standing.counties.impl;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

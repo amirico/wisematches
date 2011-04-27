@@ -98,7 +98,7 @@
 
 <@element passiveVisible=false>
     <td><strong><@message code="game.state.time"/>:</strong></td>
-    <td>${board.gameSettings.daysPerMove?string.computer} <@message code="game.state.per"/></td>
+    <td>${board.gameSettings.daysPerMove} <@message code="game.state.per"/></td>
 </@element>
 
     <#if board.gameSettings.scratch>

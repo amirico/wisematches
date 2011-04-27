@@ -7,6 +7,7 @@ import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.Collection;
+import java.util.TimeZone;
 
 /**
  * The {@code Player} interface represents simple user. This interface is read-only
@@ -42,6 +43,13 @@ public abstract class Player extends Personality {
 	 * @return not null default language of the player.
 	 */
 	public abstract Language getLanguage();
+
+	/**
+	 * Returns player's timezone.
+	 *
+	 * @return the player's timezone.
+	 */
+	public abstract TimeZone getTimeZone();
 
 	/**
 	 * Returns this membership for the player.

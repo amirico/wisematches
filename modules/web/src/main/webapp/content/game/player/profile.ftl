@@ -51,7 +51,7 @@
 <#macro gamesCount value>
 <div>
     <#if value!=0>
-        <span class="absolute">${value?string.computer}</span><span
+        <span class="absolute">${value}</span><span
             class="percents">(${value/statistic.finishedGames*100}%)</span>
         <#else>
             <span class="absolute">0</span><span class="percents">(0%)</span>
@@ -77,25 +77,25 @@
 <table>
     <tr>
         <td valign="bottom">
-            <div><b>Finished Games:</b> ${statistic.finishedGames?string.computer}</div>
+            <div><b>Finished Games:</b> ${statistic.finishedGames}</div>
         </td>
         <td valign="bottom">
-            <b>Current Rating:</b> ${profile.rating?string.computer}
+            <b>Current Rating:</b> ${profile.rating}
         </td>
     </tr>
     <tr>
         <td>
-        <#assign wins=statistic.wonGames?string.computer/>
-        <#assign losts=statistic.lostGames?string.computer/>
-        <#assign draws=statistic.drawGames?string.computer/>
+        <#assign wins=statistic.wonGames/>
+        <#assign losts=statistic.lostGames/>
+        <#assign draws=statistic.drawGames/>
         <#if statistic.finishedGames==0>
-            <#assign winPercent=0?string.computer/>
-            <#assign lostPercent=0?string.computer/>
-            <#assign drawPercent=0?string.computer/>
+            <#assign winPercent=0/>
+            <#assign lostPercent=0/>
+            <#assign drawPercent=0/>
             <#else>
-                <#assign winPercent=(statistic.wonGames/statistic.finishedGames*100)?string.computer/>
-                <#assign lostPercent=(statistic.lostGames/statistic.finishedGames*100)?string.computer/>
-                <#assign drawPercent=(statistic.drawGames/statistic.finishedGames*100)?string.computer/>
+                <#assign winPercent=(statistic.wonGames/statistic.finishedGames*100)/>
+                <#assign lostPercent=(statistic.lostGames/statistic.finishedGames*100)/>
+                <#assign drawPercent=(statistic.drawGames/statistic.finishedGames*100)/>
         </#if>
             <img src="http://chart.apis.google.com/chart?chs=300x125&cht=p3&chco=3FA83F|AA0033|FFCC33&chd=t:${winPercent},${lostPercent},${drawPercent}&chdl=wins|losts|draws&chdlp=b&chl=${wins}+(${winPercent}%25)|${losts}+(${lostPercent}%25)|${draws}+(${drawPercent}%25)"
                  width="300" height="125" alt=""/>
@@ -139,7 +139,7 @@
     <tbody>
     <tr>
         <td>
-        ${profile.rating?string.computer}
+        ${profile.rating}
         </td>
         <td>
         <@gamesCount value=statistic.wonGames/>
@@ -151,7 +151,7 @@
         <@gamesCount value=statistic.drawGames/>
         </td>
         <td>
-        ${statistic.finishedGames?string.computer}
+        ${statistic.finishedGames}
         </td>
     </tr>
     </tbody>
@@ -160,7 +160,7 @@
 <table>
     <tr>
         <td>Total games in progress:</td>
-        <td>${statistic.activeGames?string.computer}</td>
+        <td>${statistic.activeGames}</td>
     </tr>
     <tr>
         <td>Last time online:</td>
@@ -218,35 +218,35 @@ All rated games:
 <table border="1">
     <tr>
         <td>Average rating:</td>
-        <td>${gamesRating.averageRating?string.computer}</td>
+        <td>${gamesRating.averageRating}</td>
     </tr>
     <tr>
         <td>Highest rating:</td>
-        <td>${gamesRating.highestRating?string.computer}</td>
+        <td>${gamesRating.highestRating}</td>
     </tr>
     <tr>
         <td>Lowest rating:</td>
-        <td>${gamesRating.lowestRating?string.computer}</td>
+        <td>${gamesRating.lowestRating}</td>
     </tr>
     <tr>
         <td>Average opponent rating:</td>
-        <td>${gamesRating.averageOpponentRating?string.computer}</td>
+        <td>${gamesRating.averageOpponentRating}</td>
     </tr>
     <tr>
         <td>Highest rating won against:</td>
-        <td>${gamesRating.highestWonOpponentRating?string.computer}
+        <td>${gamesRating.highestWonOpponentRating}
                         <#--(${playerManager.getPlayer(gamesRating.highestWonOpponentId).nickname})-->
         </td>
     </tr>
     <tr>
         <td>Lowest rating lost against:</td>
-        <td>${gamesRating.lowestLostOpponentRating?string.computer}
+        <td>${gamesRating.lowestLostOpponentRating}
             (${playerManager.getPlayer(gamesRating.lowestLostOpponentId).nickname})
         </td>
     </tr>
     <tr>
         <td>Average moves per game:</td>
-        <td>${gamesRating.averageMovesPerGame?string.computer}</td>
+        <td>${gamesRating.averageMovesPerGame}</td>
     </tr>
 </table>
 (excluding unrated/short games)

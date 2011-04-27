@@ -367,6 +367,9 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	}
 
 	private class TheAccountListener implements AccountListener {
+		private TheAccountListener() {
+		}
+
 		@Override
 		public void accountCreated(Account account) {
 			playerStatisticDao.savePlayerStatistic(new HibernatePlayerStatistic(account));

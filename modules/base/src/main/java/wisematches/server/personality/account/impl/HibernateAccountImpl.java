@@ -5,6 +5,7 @@ import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 
 import javax.persistence.*;
+import java.util.TimeZone;
 
 /**
  * Implementation of player that contains Hibernate annotations and can be stored into database using Hibernate
@@ -34,6 +35,9 @@ public class HibernateAccountImpl extends Account {
 	@Column(name = "language")
 	@Enumerated(EnumType.STRING)
 	private Language language;
+
+	@Column(name = "timezone")
+	private TimeZone timeZone;
 
 	@Column(name = "membership")
 	@Enumerated(EnumType.STRING)
@@ -73,6 +77,11 @@ public class HibernateAccountImpl extends Account {
 	}
 
 	@Override
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
+
+	@Override
 	public Membership getMembership() {
 		return membership;
 	}
@@ -99,5 +108,6 @@ public class HibernateAccountImpl extends Account {
 		this.email = account.getEmail();
 		this.language = account.getLanguage();
 		this.membership = account.getMembership();
+		this.timeZone = account.getTimeZone();
 	}
 }
