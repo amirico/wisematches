@@ -108,12 +108,15 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<RatingBatch> getRatingChanges(final Personality player, final RatingBatching batching) {
+	public Collection<RatingBatch> getRatingChanges(final Personality player, final Date tillDate, final RatingPeriod period, final RatingBatching batching) {
 		return getHibernateTemplate().execute(new HibernateCallback<Collection<RatingBatch>>() {
 			@Override
 			public Collection<RatingBatch> doInHibernate(Session session) throws HibernateException, SQLException {
-				final Query namedQuery = session.getNamedQuery(batching.getQueryName());
+				final Query namedQuery = session.getNamedQuery("player.rating.batch");
 				namedQuery.setParameter("pid", player.getId());
+				namedQuery.setParameter("date", tillDate);
+				namedQuery.setParameter("radix", batching.getRadix());
+				namedQuery.setParameter("range", period.getDaysNumber());
 				return namedQuery.list();
 			}
 		});

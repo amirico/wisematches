@@ -6,7 +6,7 @@ import wisematches.server.personality.player.Player;
 import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.rating.RatingBatch;
 import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.RatingPeriod;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.*;
@@ -105,7 +105,7 @@ public class ComputerPlayer extends Player {
 	}
 
 	@Override
-	public Collection<RatingBatch> getRatingChanges(RatingBatching batching) {
+	public Collection<RatingBatch> getRatingChanges(Date tillDate, RatingPeriod period, RatingBatching batching) {
 		return null;
 	}
 

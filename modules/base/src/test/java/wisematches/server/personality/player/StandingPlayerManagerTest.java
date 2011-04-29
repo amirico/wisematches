@@ -10,12 +10,13 @@ import wisematches.server.personality.player.member.MemberPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingBatch;
 import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.RatingPeriod;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -77,6 +78,7 @@ public class StandingPlayerManagerTest {
 
 	@Test
 	public void testRatingsDelegation() {
+		final Date date = new Date();
 		final Account a = new AccountEditor("a", "dsf", "wer").createAccount();
 
 		expect(accountManager.getAccount(a.getId())).andReturn(a);
@@ -86,20 +88,20 @@ public class StandingPlayerManagerTest {
 
 		expect(ratingManager.getRating(a)).andReturn((short) 123);
 		expect(ratingManager.getPosition(a)).andReturn(321L);
-		expect(ratingManager.getRatingChanges(a, RatingBatching.MONTH)).andReturn(batches);
+		expect(ratingManager.getRatingChanges(a, null, null, RatingBatching.MONTH)).andReturn(batches);
 		replay(ratingManager);
 
 		// robot player
 		final ComputerPlayer rp = (ComputerPlayer) standingPlayerManager.getPlayer(RobotPlayer.DULL);
 		assertEquals(RobotPlayer.DULL.getRating(), rp.getRating());
 		assertEquals(0, rp.getPosition());
-		assertNull(rp.getRatingChanges(RatingBatching.MONTH));
+		assertNull(rp.getRatingChanges(date, RatingPeriod.YEAR, RatingBatching.MONTH));
 
 		// real player
 		final MemberPlayer mp = (MemberPlayer) standingPlayerManager.getPlayer(a);
 		assertEquals(123, mp.getRating());
 		assertEquals(321, mp.getPosition());
-		assertSame(batches, mp.getRatingChanges(RatingBatching.MONTH));
+		assertSame(batches, mp.getRatingChanges(date, RatingPeriod.YEAR, RatingBatching.MONTH));
 
 		verify(accountManager);
 	}

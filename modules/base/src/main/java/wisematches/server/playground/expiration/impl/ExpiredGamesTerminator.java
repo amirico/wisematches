@@ -44,7 +44,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 	private final Collection<GameExpirationListener> listeners = new CopyOnWriteArraySet<GameExpirationListener>();
 
 	private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
-	private static final Log log = LogFactory.getLog("wisematches.server.gameplaying.terminator");
+	private static final Log log = LogFactory.getLog("wisematches.server.playground.terminator");
 
 	public ExpiredGamesTerminator() {
 	}

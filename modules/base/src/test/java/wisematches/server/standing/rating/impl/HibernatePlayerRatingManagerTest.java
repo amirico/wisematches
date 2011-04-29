@@ -140,7 +140,7 @@ public class HibernatePlayerRatingManagerTest {
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 */
-		final Object[] ratingChanges = playerRatingManager.getRatingChanges(Personality.person(1002), RatingBatching.MONTH).toArray();
+		final Object[] ratingChanges = playerRatingManager.getRatingChanges(Personality.person(1002), null, null, RatingBatching.MONTH).toArray();
 		System.out.println(Arrays.toString(ratingChanges));
 //		assertEquals(3, ratingChanges.length);
 //		assertRatingChange((RatingChange) ratingChanges[0], account.getId(), 22L, 1200, 1203);

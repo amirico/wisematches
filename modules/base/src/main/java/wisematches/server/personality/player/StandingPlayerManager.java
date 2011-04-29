@@ -10,11 +10,12 @@ import wisematches.server.standing.profile.PlayerProfileManager;
 import wisematches.server.standing.rating.PlayerRatingManager;
 import wisematches.server.standing.rating.RatingBatch;
 import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.RatingPeriod;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -84,8 +85,8 @@ public class StandingPlayerManager implements PlayerManager {
 		return statisticsManager.getPlayerStatistic(standingPlayer);
 	}
 
-	Collection<RatingBatch> getRatingChanges(StandingPlayer standingPlayer, RatingBatching batching) {
-		return ratingManager.getRatingChanges(standingPlayer, batching);
+	Collection<RatingBatch> getRatingChanges(StandingPlayer standingPlayer, Date tillDate, RatingPeriod period, RatingBatching batching) {
+		return ratingManager.getRatingChanges(standingPlayer, tillDate, period, batching);
 	}
 
 	public void setAccountManager(AccountManager accountManager) {

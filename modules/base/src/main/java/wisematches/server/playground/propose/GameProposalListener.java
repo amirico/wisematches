@@ -1,7 +1,7 @@
 package wisematches.server.playground.propose;
 
 /**
- * Listener interface for {@code wisematches.server.gameplaying.propose.GameProposalManager}.
+ * Listener interface for {@code wisematches.server.playground.propose.GameProposalManager}.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */

@@ -14,6 +14,9 @@ public final class GoogleChartTools {
 		final StringBuilder b = new StringBuilder();
 		for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
 			int value = values[i];
+			if (value < min) {
+				continue;
+			}
 			if (value >= 0) {
 				b.append(SIMPLE_MAP.charAt((int) Math.ceil((SIMPLE_MAP.length() - 1) * (value - min) / (max - min))));
 			}

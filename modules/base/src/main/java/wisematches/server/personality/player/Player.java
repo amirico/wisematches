@@ -7,9 +7,11 @@ import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.rating.RatingBatch;
 import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.RatingPeriod;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -110,5 +112,5 @@ public abstract class Player extends Personality {
 	 * @param batching the batching type
 	 * @return the player's rating changes or {@code null} if player is {@code ComputerPlayer}.
 	 */
-	public abstract Collection<RatingBatch> getRatingChanges(RatingBatching batching);
+	public abstract Collection<RatingBatch> getRatingChanges(Date tillDate, RatingPeriod period, RatingBatching batching);
 }
