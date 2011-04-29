@@ -5,41 +5,41 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <bean id="tilesBankingHouse" class="wisematches.server.gameplaying.scribble.bank.impl.XMLTilesBankingHouse">
+    <bean id="tilesBankingHouse" class="wisematches.server.playground.scribble.bank.impl.XMLTilesBankingHouse">
         <property name="banksPath" value="classpath:/banks/*"/>
     </bean>
 
-    <bean id="scribbleBoardDAO" class="wisematches.server.gameplaying.scribble.board.ScribbleBoardDao">
+    <bean id="scribbleBoardDAO" class="wisematches.server.playground.scribble.board.ScribbleBoardDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="scribbleBoardManager" class="wisematches.server.gameplaying.scribble.board.ScribbleBoardManager">
+    <bean id="scribbleBoardManager" class="wisematches.server.playground.scribble.board.ScribbleBoardManager">
         <property name="dictionaryManager" ref="wordGamesDictionaries"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
     <bean id="scribbleProposalManager"
-          class="wisematches.server.gameplaying.propose.impl.FileProposalManager">
+          class="wisematches.server.playground.propose.impl.FileProposalManager">
         <property name="proposalsResource" value="${server.proposals.file}"/>
     </bean>
 
     <bean id="scribbleSearchEngineManager"
-          class="wisematches.server.gameplaying.scribble.search.ScribbleSearchesEngine">
+          class="wisematches.server.playground.scribble.search.ScribbleSearchesEngine">
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
-    <bean id="scribbleRoomManager" class="wisematches.server.gameplaying.scribble.room.ScribbleRoomManager">
+    <bean id="scribbleRoomManager" class="wisematches.server.playground.scribble.room.ScribbleRoomManager">
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="proposalManager" ref="scribbleProposalManager"/>
         <property name="searchEngine" ref="scribbleSearchEngineManager"/>
     </bean>
 
-    <bean id="memoryWordManager" class="wisematches.server.gameplaying.scribble.memory.impl.HibernateMemoryWordManager">
+    <bean id="memoryWordManager" class="wisematches.server.playground.scribble.memory.impl.HibernateMemoryWordManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="memoryWordCleaner" class="wisematches.server.gameplaying.scribble.memory.impl.MemoryWordsCleaner">
+    <bean id="memoryWordCleaner" class="wisematches.server.playground.scribble.memory.impl.MemoryWordsCleaner">
         <property name="memoryWordManager" ref="memoryWordManager"/>
         <property name="scribbleRoomManager" ref="scribbleRoomManager"/>
     </bean>
@@ -49,6 +49,6 @@
     </util:list>
 
     <util:list id="robotBrainsList">
-        <bean class="wisematches.server.gameplaying.scribble.robot.ScribbleRobotBrain"/>
+        <bean class="wisematches.server.playground.scribble.robot.ScribbleRobotBrain"/>
     </util:list>
 </beans>

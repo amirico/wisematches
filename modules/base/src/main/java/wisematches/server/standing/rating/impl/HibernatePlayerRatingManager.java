@@ -2,20 +2,19 @@ package wisematches.server.standing.rating.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.board.BoardManager;
-import wisematches.server.gameplaying.board.BoardStateListener;
+import wisematches.server.playground.board.*;
+import wisematches.server.playground.room.RoomManager;
+import wisematches.server.playground.room.RoomsManager;
+import wisematches.server.playground.board.BoardManager;
+import wisematches.server.playground.board.BoardStateListener;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.player.computer.ComputerPlayer;
-import wisematches.server.standing.rating.PlayerRatingListener;
-import wisematches.server.standing.rating.PlayerRatingManager;
-import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.*;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -61,11 +60,12 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 				if (computerPlayer != null) {
 					rating = computerPlayer.getRating();
 				} else {
-					final HibernatePlayerRating hibernatePlayerRating = getHibernateTemplate().get(HibernatePlayerRating.class, personality.getId());
-					if (hibernatePlayerRating == null) {
-						throw new IllegalArgumentException("Unknown personality: " + personality);
-					}
-					rating = hibernatePlayerRating.getRating();
+					rating = getHibernateTemplate().execute(new HibernateCallback<Short>() {
+						@Override
+						public Short doInHibernate(Session session) throws HibernateException, SQLException {
+							return ((Number) session.getNamedQuery("player.rating").setLong(0, personality.getId()).uniqueResult()).shortValue();
+						}
+					});
 				}
 				ratings.put(personality, rating);
 			}
@@ -80,7 +80,7 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 		return getHibernateTemplate().execute(new HibernateCallback<Long>() {
 			@Override
 			public Long doInHibernate(Session session) throws HibernateException, SQLException {
-				return (Long) ((Object[]) session.getNamedQuery("PlayerPosition").setLong(0, player.getId()).uniqueResult())[0];
+				return (Long) ((Object[]) session.getNamedQuery("player.position").setLong(0, player.getId()).uniqueResult())[0];
 			}
 		});
 	}
@@ -108,10 +108,15 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<RatingChange> getRatingChanges(Personality player) {
-		return getHibernateTemplate().find(
-				"from wisematches.server.standing.rating.RatingChange rating where rating.playerId = ?",
-				player.getId());
+	public Collection<RatingBatch> getRatingChanges(final Personality player, final RatingBatching batching) {
+		return getHibernateTemplate().execute(new HibernateCallback<Collection<RatingBatch>>() {
+			@Override
+			public Collection<RatingBatch> doInHibernate(Session session) throws HibernateException, SQLException {
+				final Query namedQuery = session.getNamedQuery(batching.getQueryName());
+				namedQuery.setParameter("pid", player.getId());
+				return namedQuery.list();
+			}
+		});
 	}
 
 	private void processRatingChange(final long playerId, final GameBoard board, final short oldRating, final short newRating, final short points) {

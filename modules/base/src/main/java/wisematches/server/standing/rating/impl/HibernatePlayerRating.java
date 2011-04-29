@@ -8,13 +8,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "account_personality")
 @NamedQueries({
-		@NamedQuery
-				(name = "PlayerPosition", query =
-						"SELECT count( a.id ), a.id " +
-								"FROM wisematches.server.standing.rating.impl.HibernatePlayerRating a, wisematches.server.standing.rating.impl.HibernatePlayerRating b " +
-								"WHERE a.id = ? AND (b.rating > a.rating OR (b.rating = a.rating AND b.id <= a.id)) GROUP BY a.id",
-						hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
-				)
+		@NamedQuery(name = "player.rating",
+				query = "SELECT r.rating " +
+						"FROM wisematches.server.standing.rating.impl.HibernatePlayerRating r where r.playerId=?",
+				hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
+		),
+		@NamedQuery(name = "player.position",
+				query = "SELECT count( a.id ), a.id " +
+						"FROM wisematches.server.standing.rating.impl.HibernatePlayerRating a, wisematches.server.standing.rating.impl.HibernatePlayerRating b " +
+						"WHERE a.id = ? AND (b.rating > a.rating OR (b.rating = a.rating AND b.id <= a.id)) GROUP BY a.id",
+				hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
+		)
 })
 class HibernatePlayerRating {
 	@Id

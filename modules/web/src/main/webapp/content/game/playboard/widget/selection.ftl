@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
+<#-- @ftlvariable name="board" type="wisematches.server.playground.scribble.board.ScribbleBoard" -->
 <#include "/core.ftl">
 
 <@wm.widget id="moveInfo" title="game.selection.label" style="padding-top: 10px;">

@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
+<#-- @ftlvariable name="board" type="wisematches.server.playground.scribble.board.ScribbleBoard" -->
 <#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.server.standing.rating.RatingChange>" -->
 
 <#include "/core.ftl">

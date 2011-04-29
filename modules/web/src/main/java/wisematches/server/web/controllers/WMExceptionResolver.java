@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
-import wisematches.server.gameplaying.board.BoardLoadingException;
 import wisematches.server.security.WMSecurityContext;
 
 import javax.servlet.http.HttpServletRequest;

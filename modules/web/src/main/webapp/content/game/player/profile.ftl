@@ -4,107 +4,6 @@
 <#assign statistic=profile.playerStatistic/>
 <#assign playerProfile=profile.playerProfile/>
 
-<style type="text/css">
-    .profile {
-        width: 960px;
-        position: relative;
-        margin: 0 auto;
-        border-width: 1px;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
-        border-radius: 2px;
-        background-image: none;
-    }
-
-    .profile .content {
-        border-width: 0;
-        min-height: 300px;
-        margin-left: 239px;
-        background: #f5f8f9 none;
-        border-left-width: 1px;
-        padding: 18px 10px 18px 20px;
-    }
-
-    .profile .title {
-        border-bottom: 1px solid #c0d2d2;
-        line-height: normal;
-    }
-
-    .profile .player {
-        font-size: 28px;
-        font-family: Lucida, serif;
-        line-height: normal;
-    }
-
-    .profile .registered {
-        font-size: 10px;
-        color: gray;
-        line-height: normal;
-    }
-
-    .profile .info {
-        background-color: transparent;
-        left: 0;
-        position: absolute;
-        padding: 20px 20px;
-        top: 0;
-        width: 200px;
-    }
-
-    .profile .edit {
-        top: 20px;
-        right: 12px;
-        position: absolute;
-    }
-
-    .profile .photo {
-        padding-bottom: 10px;
-    }
-
-    .profile .undefined {
-        display: none;
-    }
-
-    .profile .quotation {
-        padding-top: 10px;
-        font-style: italic;
-    }
-
-    .profile .games-info td {
-        padding: 5px;
-        text-align: center;
-    }
-
-    .profile .games-info {
-        padding-top: 10px;
-    }
-
-    .profile .games-info thead td {
-        font-weight: bold;
-    }
-
-    .profile .games-info tbody td {
-        color: #7a7a00;
-        font-weight: bold;
-        background-image: none;
-    }
-
-    .profile .games-info thead td span {
-        font-weight: bold;
-        border-bottom: 3px solid transparent;
-    }
-
-    .profile .games-info tbody td span {
-        color: gray;
-    }
-
-    .shadow {
-        -webkit-box-shadow: 0 0 3px #B6B7BB;
-        -moz-box-shadow: 0 0 3px #B6B7BB;
-        box-shadow: 0 0 3px #B6B7BB;
-    }
-</style>
-
 <div style="width: 100%">
     <div class="profile shadow ui-state-default">
         <div class="content shadow ui-state-default">
@@ -118,10 +17,10 @@
                 <button onclick="">Edit Profile</button>
             </div>
 
-        <#assign p_wins=0 p_loses=0 p_draws=0/>
-        <#assign wins=statistic.wonGames loses=statistic.lostGames draws=statistic.drawGames finished=statistic.finishedGames/>
+        <#assign p_wins=0 p_loses=0 p_draws=0 p_timeouts=0/>
+        <#assign wins=statistic.wonGames loses=statistic.lostGames draws=statistic.drawGames timeouts=statistic.timeouts finished=statistic.finishedGames/>
         <#if statistic.finishedGames!=0>
-            <#assign p_wins=(wins/finished*100) p_loses=(loses/finished*100) p_draws=(draws/finished*100)/>
+            <#assign p_wins=(wins/finished*100) p_loses=(loses/finished*100) p_draws=(draws/finished*100) p_timeouts=(timeouts/finished*100)/>
         </#if>
             <div>
                 <table class="games-info" width="90%">
@@ -156,21 +55,81 @@
                 </table>
             </div>
 
+            <div style="padding-top: 10px; width: 90%; text-align: left ;">
+            <#assign gamesRating=statistic.allGamesStatisticRating/>
+                <div class="ui-layout-table" style="display: inline-block; vertical-align: top;">
+                    <div>
+                        <div>Total games in progress:</div>
+                        <div>${statistic.activeGames}</div>
+                    </div>
+                    <div>
+                        <div>Timeouts:</div>
+                        <div>${timeouts} <span>(${p_timeouts}%)</div>
+                    </div>
+                    <div>
+                        <div>Average moves per game:</div>
+                        <div>${gamesRating.averageMovesPerGame}</div>
+                    </div>
+                    <div>
+                        <div>Average time per move:</div>
+                        <div>${gameMessageSource.formatMinutes(statistic.averageTurnTime/1000/60, locale)}</div>
+                    </div>
 
-            <div>
-                <div><b>Finished Games:</b> ${finished}</div>
+                    <div style="height:10px;"></div>
 
+                    <div>
+                        <div>Average rating:</div>
+                        <div>${gamesRating.averageRating}</div>
+                    </div>
+                    <div>
+                        <div>Highest rating:</div>
+                        <div>${gamesRating.highestRating}</div>
+                    </div>
+                    <div>
+                        <div>Lowest rating:</div>
+                        <div>${gamesRating.lowestRating}</div>
+                    </div>
+                    <div>
+                        <div>Average opponent rating:</div>
+                        <div>${gamesRating.averageOpponentRating}</div>
+                    </div>
+                    <div>
+                        <div>Highest rating won against:</div>
+                        <div>
+                        ${gamesRating.highestWonOpponentRating}
+                        <#assign hwp=playerManager.getPlayer(gamesRating.highestWonOpponentId)!""/>
+                        <#if hwp?has_content>( <@wm.player player=hwp showRating=false showType=false/>)</#if>
+                        </div>
+                    </div>
+                    <div>
+                        <div>Lowest rating lost against:</div>
+                        <div>
+                        ${gamesRating.lowestLostOpponentRating}
+                        <#assign llp=playerManager.getPlayer(gamesRating.lowestLostOpponentId)!""/>
+                        <#if hwp?has_content>( <@wm.player player=llp showRating=false showType=false/>)</#if>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: inline-block; vertical-align: top; float: right;">
+                    <b>Rating graph (past year):</b>
+                    <br>
+                    <img src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chxl=0:|Jan|Mar|May|Jul|Sep|Oct|Dec|1:|1200|1300|1400|1500|1600&chxr=0,0,12|1,1200,1600&chxs=0,3072F3,14,0,lt,676767&chxt=x,y&chs=300x150&cht=lc&chco=3072F3&chd=s:XYejlsgibXbV&chg=9,10&chls=1"
+                         width="300" height="150" alt=""/>
+
+                <#--<img src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chxl=0:|Jan|Feb|Mar|Jun|Jul|Aug|1:|100|50|0|2:|100|75|50|25|0&chxs=0,00AA00,14,0.5,l,676767&chxt=x,r,y&chs=500x125&cht=lc&chco=FF0000,0000FF&chd=s:DJGPMeGPVPYbekb,3483ghhasdfsdf&chg=20,25&chls=1,6,3|3,3,4"-->
+                <#--width="300" height="125" alt="ratings graph"/>-->
+                </div>
             </div>
-            <div>
-                <div><b>Current Rating:</b> ${profile.rating}</div>
-                <img src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chxl=0:|Jan|Feb|Mar|Jun|Jul|Aug|1:|100|50|0|2:|100|75|50|25|0&chxs=0,00AA00,14,0.5,l,676767&chxt=x,r,y&chs=500x125&cht=lc&chco=FF0000,0000FF&chd=s:DJGPMeGPVPYbekb,3483ghhasdfsdf&chg=20,25&chls=1,6,3|3,3,4"
-                     width="500" height="125" alt=""/>
+
+            <div style="padding-top: 10px; text-align: center;">
+                <a href="">Games in progress</a> | <a href="">Past game history</a>
             </div>
 
             <div class="info">
                 <div class="photo">
                     <img style="width: 200px; height: 200px;"
-                         src="https://ssl.gstatic.com/s2/profiles/images/silhouette200.png" alt="Photo">
+                         src="/resources/images/player/noPlayer200.png" alt="Photo">
                 </div>
                 <div><b>${profile.nickname}</b></div>
                 <div <#if !playerProfile.gender??>class="undefined"</#if>>
@@ -192,182 +151,6 @@
         </div>
     </div>
 </div>
-
-
-<#--
-<#macro gamesCount value>
-<div>
-    <#if value!=0>
-        <span class="absolute">${value}</span><span
-            class="percents">(${value/statistic.finishedGames*100}%)</span>
-        <#else>
-            <span class="absolute">0</span><span class="percents">(0%)</span>
-    </#if>
-</div>
-</#macro>
-
-<table width="100%" class="profile">
-<tr>
-<td width="160px" valign="top">
-<#include "/content/ops/advertisement.ftl">
-</td>
-<td valign="top">
-
-<div style="padding-top: 10px"></div>
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-<table class="games-count">
-    <thead>
-    <tr>
-        <th class="ui-corner-tl">Rating</th>
-        <th>Wins</th>
-        <th>Losses</th>
-        <th>Draws</th>
-        <th class="ui-corner-tr">Total</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-        ${profile.rating}
-        </td>
-        <td>
-        <@gamesCount value=statistic.wonGames/>
-        </td>
-        <td>
-        <@gamesCount value=statistic.lostGames/>
-        </td>
-        <td>
-        <@gamesCount value=statistic.drawGames/>
-        </td>
-        <td>
-        ${statistic.finishedGames}
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<table>
-    <tr>
-        <td>Total games in progress:</td>
-        <td>${statistic.activeGames}</td>
-    </tr>
-    <tr>
-        <td>Last time online:</td>
-        <td>???</td>
-    </tr>
-    <tr>
-        <td>Timeouts:</td>
-        <td><@gamesCount value=statistic.timeouts/></td>
-    </tr>
-    <tr>
-        <td>Average time per move:</td>
-        <td>${gameMessageSource.formatMinutes(statistic.averageTurnTime/1000/60, locale)}</td>
-    </tr>
-</table>
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-<div>
-<#list profile.ratingChanges as rating>
-    <div>
-    ${rating.changeDate}, ${rating.oldRating}, ${rating.newRating}, ${rating.points}
-    </div>
-</#list>
-</div>
-
-<div>
-    <a href="">Rating graph</a>
-    <img src="http://chart.apis.google.com/chart?chxl=0:|Jan|Feb|Mar|Jun|Jul|Aug|1:|100|50|0|2:|100|75|50|25|0&chxs=0,00AA00,14,0.5,l,676767&chxt=x,r,y&chs=300x150&cht=lc&chco=FF0000&chd=s:HHIIIIIHG&chg=20,25&chls=1"
-         width="300" height="150" alt=""/>
-</div>
-
-<#assign gamesRating=statistic.allGamesStatisticRating/>
-All rated games:
-<table border="1">
-    <tr>
-        <td>Average rating:</td>
-        <td>${gamesRating.averageRating}</td>
-    </tr>
-    <tr>
-        <td>Highest rating:</td>
-        <td>${gamesRating.highestRating}</td>
-    </tr>
-    <tr>
-        <td>Lowest rating:</td>
-        <td>${gamesRating.lowestRating}</td>
-    </tr>
-    <tr>
-        <td>Average opponent rating:</td>
-        <td>${gamesRating.averageOpponentRating}</td>
-    </tr>
-    <tr>
-        <td>Highest rating won against:</td>
-        <td>${gamesRating.highestWonOpponentRating}
-                        &lt;#&ndash;(${playerManager.getPlayer(gamesRating.highestWonOpponentId).nickname})&ndash;&gt;
-        </td>
-    </tr>
-    <tr>
-        <td>Lowest rating lost against:</td>
-        <td>${gamesRating.lowestLostOpponentRating}
-            (${playerManager.getPlayer(gamesRating.lowestLostOpponentId).nickname})
-        </td>
-    </tr>
-    <tr>
-        <td>Average moves per game:</td>
-        <td>${gamesRating.averageMovesPerGame}</td>
-    </tr>
-</table>
-(excluding unrated/short games)
-
-<div>
-    <div>
-        <div><a href="">Games in progress</a></div>
-        <div><a href="">Past game history</a></div>
-        <div><a href="">Challenge to a game</a></div>
-        <div><a href="">Notes…</a></div>
-    </div>
-</div>
->-->
 
 <script type="text/javascript">
     $(".profile button").button();

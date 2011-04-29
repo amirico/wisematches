@@ -1,6 +1,6 @@
 package wisematches.server.standing.rating;
 
-import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.playground.board.GameBoard;
 import wisematches.server.personality.Personality;
 
 /**

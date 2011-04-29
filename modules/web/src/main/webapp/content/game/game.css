@@ -165,9 +165,100 @@
     font-style: italic;
 }
 
-/*
-
-.ui-button-text-icon-primary .ui-button-text {
-    padding-left: 16px !important;
+.profile {
+    width: 960px;
+    position: relative;
+    margin: 0 auto;
+    border-width: 1px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-image: none;
 }
-*/
+
+.profile a {
+    color: #a52a2a !important;
+    border-bottom: 1px dotted;
+}
+
+.profile .content {
+    border-width: 0;
+    min-height: 300px;
+    margin-left: 239px;
+    background: #f5f8f9 none;
+    border-left-width: 1px;
+    padding: 18px 10px 18px 20px;
+}
+
+.profile .title {
+    border-bottom: 1px solid #c0d2d2;
+    line-height: normal;
+}
+
+.profile .player {
+    font-size: 28px;
+    font-family: Lucida, serif;
+    line-height: normal;
+}
+
+.profile .registered {
+    font-size: 10px;
+    color: gray;
+    line-height: normal;
+}
+
+.profile .info {
+    background-color: transparent;
+    left: 0;
+    position: absolute;
+    padding: 20px 20px;
+    top: 0;
+    width: 200px;
+}
+
+.profile .edit {
+    top: 20px;
+    right: 12px;
+    position: absolute;
+}
+
+.profile .photo {
+    padding-bottom: 10px;
+}
+
+.profile .undefined {
+    display: none;
+}
+
+.profile .quotation {
+    padding-top: 10px;
+    font-style: italic;
+}
+
+.profile .games-info td {
+    padding: 5px;
+    text-align: center;
+}
+
+.profile .games-info {
+    padding-top: 10px;
+}
+
+.profile .games-info thead td {
+    font-weight: bold;
+}
+
+.profile .games-info tbody td {
+    color: #7a7a00;
+    font-weight: bold;
+    background-image: none;
+}
+
+.profile .games-info thead td span {
+    font-weight: bold;
+    border-bottom: 3px solid transparent;
+}
+
+.profile .games-info tbody td span {
+    color: gray;
+}

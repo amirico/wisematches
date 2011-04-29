@@ -1,10 +1,10 @@
 package wisematches.server.web.i18n;
 
 import org.springframework.context.MessageSource;
-import wisematches.server.gameplaying.board.GameBoard;
-import wisematches.server.gameplaying.board.GameSettings;
-import wisematches.server.gameplaying.propose.GameProposal;
-import wisematches.server.gameplaying.propose.ViolatedRestrictionException;
+import wisematches.server.playground.board.GameBoard;
+import wisematches.server.playground.board.GameSettings;
+import wisematches.server.playground.propose.GameProposal;
+import wisematches.server.playground.propose.ViolatedRestrictionException;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.player.Player;
 import wisematches.server.personality.player.computer.ComputerPlayer;

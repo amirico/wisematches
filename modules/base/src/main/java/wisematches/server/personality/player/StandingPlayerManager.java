@@ -8,6 +8,8 @@ import wisematches.server.personality.player.member.MemberPlayer;
 import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.profile.PlayerProfileManager;
 import wisematches.server.standing.rating.PlayerRatingManager;
+import wisematches.server.standing.rating.RatingBatch;
+import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
@@ -82,8 +84,8 @@ public class StandingPlayerManager implements PlayerManager {
 		return statisticsManager.getPlayerStatistic(standingPlayer);
 	}
 
-	Collection<RatingChange> getRatingChanges(StandingPlayer standingPlayer) {
-		return ratingManager.getRatingChanges(standingPlayer);
+	Collection<RatingBatch> getRatingChanges(StandingPlayer standingPlayer, RatingBatching batching) {
+		return ratingManager.getRatingChanges(standingPlayer, batching);
 	}
 
 	public void setAccountManager(AccountManager accountManager) {
