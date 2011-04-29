@@ -106,6 +106,10 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 		return null;
 	}
 
+	public RatingCurve getRatingCurve(final Personality player, final Date tillDate, final RatingPeriod period, final RatingBatching batching) {
+		return null;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<RatingBatch> getRatingChanges(final Personality player, final Date tillDate, final RatingPeriod period, final RatingBatching batching) {

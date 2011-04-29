@@ -3,6 +3,7 @@ package wisematches.server.standing.rating;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public enum RatingPeriod {
 	YEAR(365);
 

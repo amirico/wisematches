@@ -3,6 +3,7 @@ package wisematches.server.standing.rating;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public enum RatingBatching {
 	DAY(3),
 
