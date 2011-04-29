@@ -1,10 +1,9 @@
 package wisematches.server.standing.rating;
 
-import wisematches.server.gameplaying.board.GameBoard;
+import wisematches.server.playground.board.GameBoard;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -55,8 +54,9 @@ public interface PlayerRatingManager {
 	/**
 	 * Returns history rating changes for specified player.
 	 *
-	 * @param player the player who's history must be returned.
+	 * @param player   the player who's history must be returned.
+	 * @param batching the batching type.
 	 * @return the all changes for specified player.
 	 */
-	Collection<RatingChange> getRatingChanges(Personality player);
+	Collection<RatingBatch> getRatingChanges(Personality player, RatingBatching batching);
 }

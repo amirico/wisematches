@@ -1,7 +1,7 @@
 package wisematches.server.standing.statistic.impl.cleaner;
 
-import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.RoomsManager;
+import wisematches.server.playground.room.RoomManager;
+import wisematches.server.playground.room.RoomsManager;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
 import wisematches.server.utils.system.ServerPropertiesManager;
 

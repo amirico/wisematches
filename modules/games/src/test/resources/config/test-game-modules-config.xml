@@ -8,7 +8,7 @@
     </bean>
 
     <bean id="wordGamesDictionaries"
-          class="wisematches.server.gameplaying.dictionary.impl.resource.ResourceDictionaryManager">
+          class="wisematches.server.playground.dictionary.impl.resource.ResourceDictionaryManager">
         <property name="filePostfix" value="properties"/>
         <property name="filePrefix" value="dictionary"/>
         <property name="dictionariesPath" value="classpath:/dicts/*"/>

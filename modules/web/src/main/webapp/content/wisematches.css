@@ -387,3 +387,26 @@ div.space-line {
     -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.shadow {
+    -webkit-box-shadow: 0 0 3px #B6B7BB;
+    -moz-box-shadow: 0 0 3px #B6B7BB;
+    box-shadow: 0 0 3px #B6B7BB;
+}
+
+.ui-layout-table {
+    display: table;
+}
+
+.ui-layout-table div {
+    display: table-row;
+}
+
+.ui-layout-table div div {
+    display: table-cell;
+    padding-right: 5px;
+}
+
+.ui-layout-table div div:first-child {
+    font-weight: bold;
+}

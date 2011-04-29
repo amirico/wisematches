@@ -3,6 +3,8 @@ package wisematches.server.personality.player;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 import wisematches.server.standing.profile.PlayerProfile;
+import wisematches.server.standing.rating.RatingBatch;
+import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
@@ -40,7 +42,7 @@ public abstract class StandingPlayer extends Player {
 	}
 
 	@Override
-	public Collection<RatingChange> getRatingChanges() {
-		return standingPlayerManager.getRatingChanges(this);
+	public Collection<RatingBatch> getRatingChanges(RatingBatching batching) {
+		return standingPlayerManager.getRatingChanges(this, batching);
 	}
 }

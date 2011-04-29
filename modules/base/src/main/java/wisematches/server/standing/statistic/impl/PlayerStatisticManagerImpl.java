@@ -2,10 +2,10 @@ package wisematches.server.standing.statistic.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.server.gameplaying.board.*;
-import wisematches.server.gameplaying.room.RoomManager;
-import wisematches.server.gameplaying.room.RoomsManager;
-import wisematches.server.gameplaying.board.BoardStateListener;
+import wisematches.server.playground.board.*;
+import wisematches.server.playground.room.RoomManager;
+import wisematches.server.playground.room.RoomsManager;
+import wisematches.server.playground.board.BoardStateListener;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Account;
 import wisematches.server.personality.account.AccountListener;

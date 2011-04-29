@@ -4,6 +4,8 @@ import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 import wisematches.server.personality.player.Player;
 import wisematches.server.standing.profile.PlayerProfile;
+import wisematches.server.standing.rating.RatingBatch;
+import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
@@ -103,7 +105,7 @@ public class ComputerPlayer extends Player {
 	}
 
 	@Override
-	public Collection<RatingChange> getRatingChanges() {
+	public Collection<RatingBatch> getRatingChanges(RatingBatching batching) {
 		return null;
 	}
 

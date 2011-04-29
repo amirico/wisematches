@@ -4,6 +4,8 @@ import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 import wisematches.server.standing.profile.PlayerProfile;
+import wisematches.server.standing.rating.RatingBatch;
+import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
@@ -105,7 +107,8 @@ public abstract class Player extends Personality {
 	 * <p/>
 	 * For computer players always returns null.
 	 *
+	 * @param batching the batching type
 	 * @return the player's rating changes or {@code null} if player is {@code ComputerPlayer}.
 	 */
-	public abstract Collection<RatingChange> getRatingChanges();
+	public abstract Collection<RatingBatch> getRatingChanges(RatingBatching batching);
 }

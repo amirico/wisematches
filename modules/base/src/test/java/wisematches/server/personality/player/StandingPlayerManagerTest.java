@@ -8,6 +8,8 @@ import wisematches.server.personality.player.computer.guest.GuestPlayer;
 import wisematches.server.personality.player.computer.robot.RobotPlayer;
 import wisematches.server.personality.player.member.MemberPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
+import wisematches.server.standing.rating.RatingBatch;
+import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
@@ -80,24 +82,24 @@ public class StandingPlayerManagerTest {
 		expect(accountManager.getAccount(a.getId())).andReturn(a);
 		replay(accountManager);
 
-		final Collection<RatingChange> changes = new ArrayList<RatingChange>();
+		final Collection<RatingBatch> batches = new ArrayList<RatingBatch>();
 
 		expect(ratingManager.getRating(a)).andReturn((short) 123);
 		expect(ratingManager.getPosition(a)).andReturn(321L);
-		expect(ratingManager.getRatingChanges(a)).andReturn(changes);
+		expect(ratingManager.getRatingChanges(a, RatingBatching.MONTH)).andReturn(batches);
 		replay(ratingManager);
 
 		// robot player
 		final ComputerPlayer rp = (ComputerPlayer) standingPlayerManager.getPlayer(RobotPlayer.DULL);
 		assertEquals(RobotPlayer.DULL.getRating(), rp.getRating());
 		assertEquals(0, rp.getPosition());
-		assertNull(rp.getRatingChanges());
+		assertNull(rp.getRatingChanges(RatingBatching.MONTH));
 
 		// real player
 		final MemberPlayer mp = (MemberPlayer) standingPlayerManager.getPlayer(a);
 		assertEquals(123, mp.getRating());
 		assertEquals(321, mp.getPosition());
-		assertSame(changes, mp.getRatingChanges());
+		assertSame(batches, mp.getRatingChanges(RatingBatching.MONTH));
 
 		verify(accountManager);
 	}

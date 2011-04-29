@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="board" type="wisematches.server.gameplaying.scribble.board.ScribbleBoard" -->
+<#-- @ftlvariable name="board" type="wisematches.server.playground.scribble.board.ScribbleBoard" -->
 
 <#include "/core.ftl">
 

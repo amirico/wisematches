@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.gameplaying.scribble.board.ScribbleBoard>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.gameplaying.propose.GameProposal<wisematches.server.gameplaying.scribble.board.ScribbleSettings>" -->
+<#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.server.playground.scribble.board.ScribbleBoard>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.gameplaying.scribble.board.ScribbleSettings>" -->
 <#include "/core.ftl">
 
 <script type="text/javascript">

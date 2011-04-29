@@ -14,16 +14,16 @@
         <property name="accountLockManager" ref="lockAccountManager"/>
     </bean>
 
-    <bean id="lexicalDictionary" class="wisematches.server.gameplaying.dictionary.impl.file.FileDictionaryManager">
+    <bean id="lexicalDictionary" class="wisematches.server.playground.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>
 
-    <bean id="slanglyDictionary" class="wisematches.server.gameplaying.dictionary.impl.file.FileDictionaryManager">
+    <bean id="slanglyDictionary" class="wisematches.server.playground.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
         <property name="createEmptyDictionary" value="true"/>
     </bean>
 
-    <bean id="wordGamesDictionaries" class="wisematches.server.gameplaying.dictionary.impl.WordGamesDictionariesImpl">
+    <bean id="wordGamesDictionaries" class="wisematches.server.playground.dictionary.impl.WordGamesDictionariesImpl">
         <property name="lexicalManager" ref="lexicalDictionary"/>
         <property name="slanglyManager" ref="slanglyDictionary"/>
     </bean>
@@ -54,7 +54,7 @@
         <property name="playerStatisticDao" ref="playerStatisticDao"/>
     </bean>
 
-    <bean id="gameTimeoutTerminator" class="wisematches.server.gameplaying.expiration.impl.ExpiredGamesTerminator"
+    <bean id="gameTimeoutTerminator" class="wisematches.server.playground.expiration.impl.ExpiredGamesTerminator"
           destroy-method="destroy">
         <property name="taskScheduler">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
@@ -67,7 +67,7 @@
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
     </bean>
 
-    <bean id="robotsActivityManager" class="wisematches.server.gameplaying.robot.impl.RobotActivityCenter">
+    <bean id="robotsActivityManager" class="wisematches.server.playground.robot.impl.RobotActivityCenter">
         <property name="roomsManager" ref="roomsManager"/>
         <property name="robotBrainManager" ref="robotsBrainManager"/>
         <property name="transactionManager" ref="transactionManager"/>
@@ -85,13 +85,13 @@
 
     <util:list id="roomsManagerList"/>
 
-    <bean id="roomsManager" class="wisematches.server.gameplaying.room.RoomsManager">
+    <bean id="roomsManager" class="wisematches.server.playground.room.RoomsManager">
         <property name="roomManagers" ref="roomsManagerList"/>
     </bean>
 
     <util:list id="robotBrainsList"/>
 
-    <bean id="robotsBrainManager" class="wisematches.server.gameplaying.robot.impl.RobotBrainManagerImpl">
+    <bean id="robotsBrainManager" class="wisematches.server.playground.robot.impl.RobotBrainManagerImpl">
         <property name="robotBrains" ref="robotBrainsList"/>
     </bean>
 
