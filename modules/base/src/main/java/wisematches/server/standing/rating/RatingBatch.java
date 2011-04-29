@@ -17,6 +17,7 @@ import java.util.Date;
 						"ORDER BY position ASC",
 				resultClass = RatingBatch.class)
 })
+@Deprecated
 public class RatingBatch {
 	@Id
 	private int position;
