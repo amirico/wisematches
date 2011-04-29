@@ -132,7 +132,7 @@ public class ScribbleBoardDaoTest {
 		final Player p3 = Personality.person(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.gameplaying.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.gameplaying.dictionary.Dictionary.class);
+		final wisematches.server.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.playground.dictionary.Dictionary.class);
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 

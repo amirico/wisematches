@@ -4,17 +4,17 @@ package wisematches.server.standing.rating;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum RatingBatching {
-	DAY("player.rating.day"),
+	DAY(3),
 
-	MONTH("player.rating.month");
+	MONTH(10);
 
-	private final String queryName;
+	private final int radix;
 
-	RatingBatching(String queryName) {
-		this.queryName = queryName;
+	RatingBatching(int radix) {
+		this.radix = radix;
 	}
 
-	public String getQueryName() {
-		return queryName;
+	public int getRadix() {
+		return radix;
 	}
 }

@@ -1,66 +1,66 @@
 package wisematches.server.standing.rating;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-/*
-@NamedQueries({
-
-		@NamedQuery(name = "player.rating.month",
-				query = "SELECT b.batchNumber, avg(b.rating) " +
-						"FROM rating_history b " +
-						"WHERE playerId=:pid, DATE_SUB(CURDATE(),INTERVAL 1 YEAR) <= time, ",
-				hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
-		)
-})
-*/
 @NamedNativeQueries({
 		@NamedNativeQuery(
-				name = "player.rating.day",
-				query = "SELECT DAY(time) as batchNumber, avg(newRating) as rating " +
+				name = "player.rating.batch",
+				query = "SELECT :range-round((UNIX_TIMESTAMP(:date)-UNIX_TIMESTAMP(date(time)))/60/60/24) as position, " +
+						"ROUND(avg(newRating)) as ratingAvg, max(newRating) as ratingMax, min(newRating) as ratingMin " +
 						"FROM rating_history " +
-						"WHERE playerId=:pid AND DATE_SUB(CURDATE(),INTERVAL 1 YEAR) < time " +
-						"GROUP BY YEAR(time), MONTH(time), DAY(time)",
-				resultClass = RatingBatch.class),
-		@NamedNativeQuery(
-				name = "player.rating.month",
-				query = "SELECT MONTH(time) as batchNumber, avg(newRating) as rating " +
-						"FROM rating_history " +
-						"WHERE playerId=:pid AND DATE_SUB(CURDATE(),INTERVAL 1 YEAR) < time " +
-						"GROUP BY YEAR(time), MONTH(time)",
+						"WHERE playerId=:pid AND time>:date-:range AND time<= :date GROUP BY YEAR(time), ROUND(DAYOFYEAR(time)/:radix) " +
+						"ORDER BY position ASC",
 				resultClass = RatingBatch.class)
 })
 public class RatingBatch {
 	@Id
-	private int batchNumber;
+	private int position;
 
-	private short rating;
+	private short ratingMin;
+
+	private short ratingMax;
+
+	private short ratingAvg;
 
 	RatingBatch() {
 	}
 
-	public RatingBatch(int batchNumber, short rating) {
-		this.batchNumber = batchNumber;
-		this.rating = rating;
+	public RatingBatch(int position, short ratingMin, short ratingMax, short ratingAvg) {
+		this.position = position;
+		this.ratingMin = ratingMin;
+		this.ratingMax = ratingMax;
+		this.ratingAvg = ratingAvg;
 	}
 
-	public int getBatchNumber() {
-		return batchNumber;
+	public int getPosition() {
+		return position;
 	}
 
-	public short getRating() {
-		return rating;
+	public short getRatingMin() {
+		return ratingMin;
+	}
+
+	public short getRatingMax() {
+		return ratingMax;
+	}
+
+	public short getRatingAvg() {
+		return ratingAvg;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("RatingBatch");
-		sb.append("{batchNumber=").append(batchNumber);
-		sb.append(", rating=").append(rating);
+		sb.append("{ratingAvg=").append(ratingAvg);
+		sb.append(", ratingMax=").append(ratingMax);
+		sb.append(", ratingMin=").append(ratingMin);
+		sb.append(", position=").append(position);
 		sb.append('}');
 		return sb.toString();
 	}

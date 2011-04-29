@@ -18,7 +18,7 @@ import java.util.Collections;
 public class FileProposalManager<S extends GameSettings> extends AbstractProposalManager<S> implements Closeable {
 	private FileChannel proposalFile;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.gameplaying.proposal");
+	private static final Log log = LogFactory.getLog("wisematches.server.playground.proposal");
 
 	public FileProposalManager() {
 	}

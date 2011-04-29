@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="profile" type="wisematches.server.personality.player.Player" -->
+<#-- @ftlvariable name="chart" type="wisematches.server.web.utils.RatingChart" -->
 <#include "/core.ftl">
 
 <#assign statistic=profile.playerStatistic/>
@@ -114,11 +115,14 @@
                 <div style="display: inline-block; vertical-align: top; float: right;">
                     <b>Rating graph (past year):</b>
                     <br>
-                    <img src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chxl=0:|Jan|Mar|May|Jul|Sep|Oct|Dec|1:|1200|1300|1400|1500|1600&chxr=0,0,12|1,1200,1600&chxs=0,3072F3,14,0,lt,676767&chxt=x,y&chs=300x150&cht=lc&chco=3072F3&chd=s:XYejlsgibXbV&chg=9,10&chls=1"
-                         width="300" height="150" alt=""/>
-
-                <#--<img src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chxl=0:|Jan|Feb|Mar|Jun|Jul|Aug|1:|100|50|0|2:|100|75|50|25|0&chxs=0,00AA00,14,0.5,l,676767&chxt=x,r,y&chs=500x125&cht=lc&chco=FF0000,0000FF&chd=s:DJGPMeGPVPYbekb,3483ghhasdfsdf&chg=20,25&chls=1,6,3|3,3,4"-->
-                <#--width="300" height="125" alt="ratings graph"/>-->
+                    <img width="300" height="150"
+                         src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chls=1&chg=8.33,25&chco=FFCC33&chxt=x,y&cht=lxy&chs=300x150&chxs=0,676767,11.5,0,lt,676767|1,676767,15.5,0,l,676767&chxl=0:|<#list chart.monthIndexes as m>|<#if m_index %2 ==0><@message code="month.names.${m}"/></#if></#list>1:|${chart.minRating}|${chart.maxRating}&chd=e:${chart.encodedDates},${chart.encodedRatingsAvg}"
+                         alt="Rating Chart">
+                <#--
+                    <img width="300" height="150"
+                         src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chls=1,2,2|1|1,2,2&chg=8.33,25&chco=008000,FFCC33,AA0033&chxt=x,y&cht=lxy&chs=300x150&chxs=0,676767,11.5,0,lt,676767|1,676767,15.5,0,l,676767&chxl=0:|<#list chart.monthIndexes as m><#if m_index %2 ==0>AA_${m}</#if>|</#list>1:${chart.minRating}|${chart.maxRating}&chd=e:${chart.encodedDates},${chart.encodedRatingsMax},${chart.encodedDates},${chart.encodedRatingsAvg},${chart.encodedDates},${chart.encodedRatingsMin}"
+                         alt="Rating Chart">
+-->
                 </div>
             </div>
 

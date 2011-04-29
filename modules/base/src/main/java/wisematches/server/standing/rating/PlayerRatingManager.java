@@ -4,6 +4,7 @@ import wisematches.server.playground.board.GameBoard;
 import wisematches.server.personality.Personality;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -55,8 +56,9 @@ public interface PlayerRatingManager {
 	 * Returns history rating changes for specified player.
 	 *
 	 * @param player   the player who's history must be returned.
-	 * @param batching the batching type.
-	 * @return the all changes for specified player.
+	 * @param tillDate
+	 * @param period
+	 * @param batching the batching type.  @return the all changes for specified player.
 	 */
-	Collection<RatingBatch> getRatingChanges(Personality player, RatingBatching batching);
+	Collection<RatingBatch> getRatingChanges(Personality player, Date tillDate, RatingPeriod period, RatingBatching batching);
 }

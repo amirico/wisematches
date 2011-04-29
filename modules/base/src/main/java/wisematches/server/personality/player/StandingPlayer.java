@@ -6,9 +6,11 @@ import wisematches.server.standing.profile.PlayerProfile;
 import wisematches.server.standing.rating.RatingBatch;
 import wisematches.server.standing.rating.RatingBatching;
 import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.RatingPeriod;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -42,7 +44,7 @@ public abstract class StandingPlayer extends Player {
 	}
 
 	@Override
-	public Collection<RatingBatch> getRatingChanges(RatingBatching batching) {
-		return standingPlayerManager.getRatingChanges(this, batching);
+	public Collection<RatingBatch> getRatingChanges(Date tillDate, RatingPeriod period, RatingBatching batching) {
+		return standingPlayerManager.getRatingChanges(this, tillDate, period, batching);
 	}
 }

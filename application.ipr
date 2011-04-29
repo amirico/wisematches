@@ -376,6 +376,8 @@
         <w>accoint</w>
         <w>blacknames</w>
         <w>configurer</w>
+        <w>curdate</w>
+        <w>dayofyear</w>
         <w>extjs</w>
         <w>freemarker</w>
         <w>gameboard</w>
