@@ -6,34 +6,36 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerStatistic {
-	long getPlayerId();
+    long getPlayerId();
 
-	Date getUpdateTime();
+    Date getUpdateTime();
 
-	int getActiveGames();
+    int getActiveGames();
 
-	int getWonGames();
+    int getWonGames();
 
-	int getLostGames();
+    int getLostGames();
 
-	int getDrawGames();
+    int getDrawGames();
 
-	int getTimeouts();
+    int getTimeouts();
 
-	int getFinishedGames();
+    int getFinishedGames();
 
-	int getTurnsCount();
+    int getTurnsCount();
 
-	/**
-	 * Returns average turn time in milliseconds.
-	 *
-	 * @return the average turn time in milliseconds.
-	 */
-	int getAverageTurnTime();
+    /**
+     * Returns average turn time in milliseconds.
+     *
+     * @return the average turn time in milliseconds.
+     */
+    int getAverageTurnTime();
 
-	Date getLastMoveTime();
+    Date getLastMoveTime();
 
-	Date getLastCleanupTime();
+    Date getLastCleanupTime();
 
-	PlayerStatisticRating getAllGamesStatisticRating();
+    PlayerStatisticWord getWordStatistic();
+
+    PlayerStatisticRating getAllGamesStatisticRating();
 }
