@@ -1,21 +1,21 @@
 package wisematches.server.standing.statistic.impl;
 
 import org.hibernate.SessionFactory;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.personality.Personality;
-import wisematches.server.standing.statistic.PlayerStatistic;
+import wisematches.server.personality.account.*;
 import wisematches.server.standing.statistic.PlayerStatisticRating;
 
 import java.util.Date;
+import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -23,73 +23,97 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/test-server-base-config.xml",
-		"classpath:/config/database-config.xml",
-		"classpath:/config/server-base-config.xml"
+        "classpath:/config/test-server-base-config.xml",
+        "classpath:/config/database-config.xml",
+        "classpath:/config/server-base-config.xml"
 })
 public class PlayerStatisticDaoTest {
-	@Autowired
-	private SessionFactory sessionFactory;
+    private Account person;
 
-	@Autowired
-	private PlayerStatisticDao playerStatisticDao;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	public PlayerStatisticDaoTest() {
-	}
+    @Autowired
+    private AccountManager accountManager;
 
-	@Test
-	public void test_playerStatistic() throws InterruptedException {
-		final Personality person = Personality.person(1L);
-		final HibernatePlayerStatistic statistic = new HibernatePlayerStatistic(person);
-		final long time = System.currentTimeMillis() - 1000;
+    @Autowired
+    private PlayerStatisticDao playerStatisticDao;
 
-		statistic.setAverageTurnTime(1);
-		statistic.incrementDrawGames();
-		statistic.incrementDrawGames();
-		statistic.setLastMoveTime(new Date(300000));
-		statistic.incrementLostGames();
-		statistic.incrementLostGames();
-		statistic.incrementLostGames();
-		statistic.incrementLostGames();
-		statistic.incrementTimeouts();
-		statistic.incrementTimeouts();
-		statistic.incrementTimeouts();
-		statistic.incrementTimeouts();
-		statistic.incrementTimeouts();
-		statistic.incrementTurnsCount();
-		statistic.incrementTurnsCount();
-		statistic.incrementTurnsCount();
-		statistic.incrementTurnsCount();
-		statistic.incrementTurnsCount();
-		statistic.incrementTurnsCount();
-		statistic.incrementWonGames();
-		statistic.incrementWonGames();
-		statistic.incrementWonGames();
-		statistic.incrementWonGames();
-		statistic.incrementWonGames();
-		statistic.incrementWonGames();
-		statistic.incrementWonGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		statistic.incrementActiveGames();
-		playerStatisticDao.savePlayerStatistic(statistic);
+    public PlayerStatisticDaoTest() {
+    }
 
-		final HibernatePlayerStatisticRating ri1 = statistic.getAllGamesStatisticRating();
-		ri1.setHighestRating(1);
-		ri1.setLowestRating(2);
-		ri1.setAverageMovesPerGame(3);
-		ri1.setAverageOpponentRating(4);
-		ri1.setAverageRating(5);
-		ri1.setHighestWonOpponentRating(6);
-		ri1.setHighestWonOpponentId(7);
-		ri1.setLowestLostOpponentRating(8);
-		ri1.setLowestLostOpponentId(9);
-		playerStatisticDao.savePlayerStatistic(statistic);
+    @Before
+    public void setUp() throws InadmissibleUsernameException, DuplicateAccountException {
+        final String uuid = UUID.randomUUID().toString();
+        person = accountManager.createAccount(new AccountEditor(uuid + "@mock.wm", uuid, "AS").createAccount());
+    }
+
+    @After
+    public void tearDown() throws UnknownAccountException {
+        accountManager.removeAccount(person);
+    }
+
+    @Test
+    public void test_playerStatistic() throws InterruptedException, InadmissibleUsernameException, DuplicateAccountException {
+        final HibernatePlayerStatistic statistic = playerStatisticDao.loadPlayerStatistic(person);
+        assertNotNull(statistic);
+        final long time = System.currentTimeMillis() - 1000;
+
+        statistic.setAverageTurnTime(1);
+        statistic.incrementDrawGames();
+        statistic.incrementDrawGames();
+        statistic.setLastMoveTime(new Date(300000));
+        statistic.incrementLostGames();
+        statistic.incrementLostGames();
+        statistic.incrementLostGames();
+        statistic.incrementLostGames();
+        statistic.incrementTimeouts();
+        statistic.incrementTimeouts();
+        statistic.incrementTimeouts();
+        statistic.incrementTimeouts();
+        statistic.incrementTimeouts();
+        statistic.incrementTurnsCount();
+        statistic.incrementTurnsCount();
+        statistic.incrementTurnsCount();
+        statistic.incrementTurnsCount();
+        statistic.incrementTurnsCount();
+        statistic.incrementTurnsCount();
+        statistic.incrementWonGames();
+        statistic.incrementWonGames();
+        statistic.incrementWonGames();
+        statistic.incrementWonGames();
+        statistic.incrementWonGames();
+        statistic.incrementWonGames();
+        statistic.incrementWonGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        statistic.incrementActiveGames();
+        playerStatisticDao.savePlayerStatistic(statistic);
+
+        final HibernatePlayerStatisticRating ri1 = statistic.getAllGamesStatisticRating();
+        ri1.setHighestRating(1);
+        ri1.setLowestRating(2);
+        ri1.setAverageMovesPerGame(3);
+        ri1.setAverageOpponentRating(4);
+        ri1.setAverageRating(5);
+        ri1.setHighestWonOpponentRating(6);
+        ri1.setHighestWonOpponentId(7);
+        ri1.setLowestLostOpponentRating(8);
+        ri1.setLowestLostOpponentId(9);
+        playerStatisticDao.savePlayerStatistic(statistic);
+
+        final HibernatePlayerStatisticWord ws = statistic.getWordStatistic();
+        ws.setWordsCount(2);
+        ws.setAvgWordLength(3);
+        ws.setAvgWordPoints(4);
+        ws.setMaxWordLength(5);
+        ws.setMaxWordPoints(6);
+        playerStatisticDao.savePlayerStatistic(statistic);
 
 /*
 		final HibernatePlayerStatisticRating ri2 = statistic.getNinetyDaysRatingInfo();
@@ -129,30 +153,37 @@ public class PlayerStatisticDaoTest {
 		playerStatisticManager.updatePlayerStatistic(statistic);
 */
 
-		sessionFactory.getCurrentSession().flush();
-		sessionFactory.getCurrentSession().clear();
+        sessionFactory.getCurrentSession().flush();
+        sessionFactory.getCurrentSession().clear();
 
-		final HibernatePlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
-		assertEquals(1, s.getAverageTurnTime());
-		assertEquals(2, s.getDrawGames());
-		assertEquals(300000, s.getLastMoveTime().getTime());
-		assertEquals(4, s.getLostGames());
-		assertEquals(5, s.getTimeouts());
-		assertEquals(6, s.getTurnsCount());
-		assertEquals(7, s.getWonGames());
-		assertEquals(8, s.getActiveGames());
-		assertTrue(s.getUpdateTime().getTime() >= time);
+        final HibernatePlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
+        assertEquals(1, s.getAverageTurnTime());
+        assertEquals(2, s.getDrawGames());
+        assertEquals(300000, s.getLastMoveTime().getTime());
+        assertEquals(4, s.getLostGames());
+        assertEquals(5, s.getTimeouts());
+        assertEquals(6, s.getTurnsCount());
+        assertEquals(7, s.getWonGames());
+        assertEquals(8, s.getActiveGames());
+        assertTrue(s.getUpdateTime().getTime() >= time);
 
-		final PlayerStatisticRating sri1 = s.getAllGamesStatisticRating();
-		assertEquals(1, sri1.getHighestRating());
-		assertEquals(2, sri1.getLowestRating());
-		assertEquals(3, sri1.getAverageMovesPerGame());
-		assertEquals(4, sri1.getAverageOpponentRating());
-		assertEquals(5, sri1.getAverageRating());
-		assertEquals(6, sri1.getHighestWonOpponentRating());
-		assertEquals(7, sri1.getHighestWonOpponentId());
-		assertEquals(8, sri1.getLowestLostOpponentRating());
-		assertEquals(9, sri1.getLowestLostOpponentId());
+        final PlayerStatisticRating sri1 = s.getAllGamesStatisticRating();
+        assertEquals(1, sri1.getHighestRating());
+        assertEquals(2, sri1.getLowestRating());
+        assertEquals(3, sri1.getAverageMovesPerGame());
+        assertEquals(4, sri1.getAverageOpponentRating());
+        assertEquals(5, sri1.getAverageRating());
+        assertEquals(6, sri1.getHighestWonOpponentRating());
+        assertEquals(7, sri1.getHighestWonOpponentId());
+        assertEquals(8, sri1.getLowestLostOpponentRating());
+        assertEquals(9, sri1.getLowestLostOpponentId());
+
+        final HibernatePlayerStatisticWord ws2 = s.getWordStatistic();
+        assertEquals(2, ws2.getWordsCount());
+        assertEquals(3, ws2.getAvgWordLength());
+        assertEquals(4, ws2.getAvgWordPoints());
+        assertEquals(5, ws2.getMaxWordLength());
+        assertEquals(6, ws2.getMaxWordPoints());
 
 /*
 		final HibernatePlayerStatisticRating sri2 = s.getNinetyDaysRatingInfo();
@@ -189,9 +220,9 @@ public class PlayerStatisticDaoTest {
 		assertEquals(9000, sri4.getLowestLostOpponentId());
 */
 
-		playerStatisticDao.removePlayerStatistic(s);
-		sessionFactory.getCurrentSession().flush();
-		sessionFactory.getCurrentSession().clear();
-		assertNull(playerStatisticDao.loadPlayerStatistic(person));
-	}
+        playerStatisticDao.removePlayerStatistic(s);
+        sessionFactory.getCurrentSession().flush();
+        sessionFactory.getCurrentSession().clear();
+        assertNull(playerStatisticDao.loadPlayerStatistic(person));
+    }
 }
