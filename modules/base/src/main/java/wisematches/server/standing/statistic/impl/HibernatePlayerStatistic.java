@@ -273,7 +273,7 @@ public class HibernatePlayerStatistic implements Serializable, PlayerStatistic {
     }
 
     @Override
-    public PlayerStatisticWord getWordStatistic() {
+    public HibernatePlayerStatisticWord getWordStatistic() {
         return wordStatistic;
     }
 

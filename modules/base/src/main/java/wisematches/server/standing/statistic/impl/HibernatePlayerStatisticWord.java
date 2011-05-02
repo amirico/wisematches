@@ -58,4 +58,24 @@ public class HibernatePlayerStatisticWord implements PlayerStatisticWord, Serial
     public int getMaxWordPoints() {
         return maxWordPoints;
     }
+
+    public void setWordsCount(int wordsCount) {
+        this.wordsCount = wordsCount;
+    }
+
+    public void setAvgWordLength(int avgWordLength) {
+        this.avgWordLength = avgWordLength;
+    }
+
+    public void setMaxWordLength(int maxWordLength) {
+        this.maxWordLength = maxWordLength;
+    }
+
+    public void setAvgWordPoints(int avgWordPoints) {
+        this.avgWordPoints = avgWordPoints;
+    }
+
+    public void setMaxWordPoints(int maxWordPoints) {
+        this.maxWordPoints = maxWordPoints;
+    }
 }
