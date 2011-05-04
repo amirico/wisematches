@@ -57,7 +57,7 @@
             </div>
 
             <div style="padding-top: 10px; width: 90%; text-align: left ;">
-            <#assign gamesRating=statistic.allGamesStatisticRating/>
+            <#assign gamesRating=statistic.ratingsStatistic/>
                 <div class="ui-layout-table" style="display: inline-block; vertical-align: top;">
                     <div>
                         <div>Total games in progress:</div>
@@ -80,15 +80,15 @@
 
                     <div>
                         <div>Average rating:</div>
-                        <div>${gamesRating.averageRating}</div>
+                        <div>${gamesRating.average}</div>
                     </div>
                     <div>
                         <div>Highest rating:</div>
-                        <div>${gamesRating.highestRating}</div>
+                        <div>${gamesRating.highest}</div>
                     </div>
                     <div>
                         <div>Lowest rating:</div>
-                        <div>${gamesRating.lowestRating}</div>
+                        <div>${gamesRating.lowest}</div>
                     </div>
                     <div>
                         <div>Average opponent rating:</div>
