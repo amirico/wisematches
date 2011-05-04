@@ -12,4 +12,9 @@ public final class ScribbleRoom implements Room<ScribbleSettings, ScribbleBoard>
 
 	private ScribbleRoom() {
 	}
+
+	@Override
+	public String toString() {
+		return "ScribbleRoom";
+	}
 }

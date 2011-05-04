@@ -47,11 +47,13 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="statisticsManager" class="wisematches.server.standing.statistic.impl.PlayerStatisticManagerImpl">
+    <bean id="statisticsManager" class="wisematches.server.standing.statistic.impl.DefaultPlayerStatisticManager">
         <property name="roomsManager" ref="roomsManager"/>
-        <property name="ratingManager" ref="ratingManager"/>
         <property name="accountManager" ref="accountManager"/>
         <property name="playerStatisticDao" ref="playerStatisticDao"/>
+        <property name="gamesStatistician" ref=""/>
+        <property name="movesStatistician" ref=""/>
+        <property name="ratingsStatistician" ref=""/>
     </bean>
 
     <bean id="gameTimeoutTerminator" class="wisematches.server.playground.expiration.impl.ExpiredGamesTerminator"
@@ -103,34 +105,4 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="accountManager" ref="accountManager"/>
     </bean>
-
-
-    <!--
-    <bean id="serverPropertiesManager" class="wisematches.server.utils.system.impl.HibernateServerPropertiesManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    -->
-
-    <!--
-    <bean id="statisticsCleanerCenter" class="wisematches.server.standing.statistic.impl.cleaner.PlayerStatisticCleaner">
-        <property name="playerStatisticManager" ref="statisticsManager"/>
-        <property name="roomsManager" ref="roomsManager"/>
-        <property name="serverPropertiesManager" ref="serverPropertiesManager"/>
-    </bean>
-
-    <bean id="statisticsCleanerJobDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="statisticsCleanerCenter"/>
-        <property name="targetMethod" value="performClean"/>
-        <property name="concurrent" value="false"/>
-    </bean>
-
-    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="statisticsCleanerJobDetail"/>
-
-        &lt;!&ndash; run every morning at 3 AM &ndash;&gt;
-        <property name="cronExpression" value="0 0 3 * * ?"/>
-    </bean>
-    -->
 </beans>

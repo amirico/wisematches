@@ -7,7 +7,7 @@ public class PlayerEventProducer {//implements EventProducer {
 /*
     private EventNotificator notificator;
 
-    private PlayerStatisticManager statisticsManager;
+    private PlayerStatisticManagerImpl statisticsManager;
 
     private final AccountLockListener lockAccountListener = new TheLockAccountListener();
     private final PlayerStatisticListener playerStatisticListener = new ThePlayerStatisticListener();
@@ -21,7 +21,7 @@ public class PlayerEventProducer {//implements EventProducer {
         this.notificator = null;
     }
 
-    public void setPlayerStatisticManager(PlayerStatisticManager statisticsManager) {
+    public void setPlayerStatisticManager(PlayerStatisticManagerImpl statisticsManager) {
         if (this.statisticsManager != null) {
             this.statisticsManager.removePlayerStatisticListener(playerStatisticListener);
         }
