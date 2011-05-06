@@ -48,7 +48,6 @@ public class HibernateAccountManagerTest {
 		} finally {
 			accountManager.removeAccountListener(l);
 		}
-		sessionFactory.getCurrentSession().flush();
 	}
 
 	@Test
@@ -71,7 +70,6 @@ public class HibernateAccountManagerTest {
 		} finally {
 			accountManager.removeAccountListener(l);
 		}
-		sessionFactory.getCurrentSession().flush();
 	}
 
 	@Test
@@ -87,7 +85,6 @@ public class HibernateAccountManagerTest {
 			assertEquals(1, ex.getFieldNames().size());
 			assertTrue(ex.getFieldNames().contains("username"));
 		}
-		sessionFactory.getCurrentSession().flush();
 	}
 
 	@Test
@@ -103,7 +100,6 @@ public class HibernateAccountManagerTest {
 			assertEquals(1, ex.getFieldNames().size());
 			assertTrue(ex.getFieldNames().contains("email"));
 		}
-		sessionFactory.getCurrentSession().flush();
 	}
 
 	@Test
@@ -121,7 +117,6 @@ public class HibernateAccountManagerTest {
 			assertTrue(ex.getFieldNames().contains("username"));
 			assertTrue(ex.getFieldNames().contains("email"));
 		}
-		sessionFactory.getCurrentSession().flush();
 	}
 
 	@Test
@@ -155,13 +150,11 @@ public class HibernateAccountManagerTest {
 		assertEquals(e.getMembership(), player.getMembership());
 		assertEquals(e.getTimeZone(), player.getTimeZone());
 		assertEquals(TimeZone.getTimeZone("GMT+04:12"), player.getTimeZone());
-		sessionFactory.getCurrentSession().flush();
 	}
 
 	private Account createAccount() throws Exception {
 		final Account op = createMockEditor().createAccount();
 		final Account mock = accountManager.createAccount(op);
-		sessionFactory.getCurrentSession().flush();
 
 		assertNotNull(mock);
 		assertFalse(0 == mock.getId());

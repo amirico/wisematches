@@ -33,11 +33,6 @@ public class RecoveryTokenManagerTest {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	@After
-	public void flushSession() {
-		sessionFactory.getCurrentSession().flush();
-	}
-
 	@Test
 	public void testManager() throws InterruptedException, TokenExpiredException, InadmissibleUsernameException, DuplicateAccountException, UnknownAccountException {
 		final AccountEditor editor = new AccountEditor();
