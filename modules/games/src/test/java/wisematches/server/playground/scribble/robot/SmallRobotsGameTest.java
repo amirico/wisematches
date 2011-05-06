@@ -16,6 +16,7 @@ import wisematches.server.playground.scribble.board.ScribbleSettings;
 import wisematches.server.playground.scribble.room.ScribbleRoom;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.player.computer.robot.RobotPlayer;
+import wisematches.server.standing.statistic.statistician.MovesStatistician;
 
 import java.util.Arrays;
 import java.util.Collection;

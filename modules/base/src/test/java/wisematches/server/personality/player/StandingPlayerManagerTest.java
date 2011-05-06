@@ -88,7 +88,7 @@ public class StandingPlayerManagerTest {
 
 		expect(ratingManager.getRating(a)).andReturn((short) 123);
 		expect(ratingManager.getPosition(a)).andReturn(321L);
-		expect(ratingManager.getRatingChanges(a, null, null, RatingBatching.MONTH)).andReturn(batches);
+		expect(ratingManager.getRatingChanges(a, date, RatingPeriod.YEAR, RatingBatching.MONTH)).andReturn(batches);
 		replay(ratingManager);
 
 		// robot player

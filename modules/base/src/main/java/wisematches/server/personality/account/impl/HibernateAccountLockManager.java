@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -119,7 +120,10 @@ public class HibernateAccountLockManager extends HibernateDaoSupport implements 
 		}
 		if (accountInfo != null) {
 			//object can be cached so we must update it from database.
-			template.refresh(accountInfo);
+			try {
+				template.refresh(accountInfo);
+			} catch (DataAccessException ex) {
+			}
 
 			if (System.currentTimeMillis() < accountInfo.getUnlockDate().getTime()) {
 				if (log.isDebugEnabled()) {

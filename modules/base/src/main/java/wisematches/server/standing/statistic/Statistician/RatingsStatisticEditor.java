@@ -12,13 +12,13 @@ import java.io.Serializable;
 @Embeddable
 public class RatingsStatisticEditor implements RatingsStatistic, Serializable {
 	@Column(name = "rAvg")
-	private short averageRating;
+	private short average;
 
 	@Column(name = "rHi")
-	private short highestRating;
+	private short highest;
 
 	@Column(name = "rLow")
-	private short lowestRating;
+	private short lowest;
 
 	@Column(name = "roAvg")
 	private short averageOpponentRating;
@@ -42,17 +42,17 @@ public class RatingsStatisticEditor implements RatingsStatistic, Serializable {
 
 	@Override
 	public short getAverage() {
-		return averageRating;
+		return average;
 	}
 
 	@Override
 	public short getHighest() {
-		return highestRating;
+		return highest;
 	}
 
 	@Override
 	public short getLowest() {
-		return lowestRating;
+		return lowest;
 	}
 
 	@Override
@@ -80,16 +80,16 @@ public class RatingsStatisticEditor implements RatingsStatistic, Serializable {
 		return lowestLostOpponentId;
 	}
 
-	public void setAverageRating(short averageRating) {
-		this.averageRating = averageRating;
+	public void setAverage(short averageRating) {
+		this.average = averageRating;
 	}
 
-	public void setHighestRating(short highestRating) {
-		this.highestRating = highestRating;
+	public void setHighest(short highestRating) {
+		this.highest = highestRating;
 	}
 
-	public void setLowestRating(short lowestRating) {
-		this.lowestRating = lowestRating;
+	public void setLowest(short lowestRating) {
+		this.lowest = lowestRating;
 	}
 
 	public void setAverageOpponentRating(short averageOpponentRating) {
@@ -116,9 +116,9 @@ public class RatingsStatisticEditor implements RatingsStatistic, Serializable {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("RatingsStatisticEditor");
-		sb.append("{averageRating=").append(averageRating);
-		sb.append(", highestRating=").append(highestRating);
-		sb.append(", lowestRating=").append(lowestRating);
+		sb.append("{average=").append(average);
+		sb.append(", highest=").append(highest);
+		sb.append(", lowest=").append(lowest);
 		sb.append(", averageOpponentRating=").append(averageOpponentRating);
 		sb.append(", highestWonOpponentRating=").append(highestWonOpponentRating);
 		sb.append(", highestWonOpponentId=").append(highestWonOpponentId);

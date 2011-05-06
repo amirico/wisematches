@@ -69,7 +69,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 			boardsMap.addBoard(board);
 
 			for (BoardStateListener listener : boardStateListeners) {
-				listener.gameStarted(board);
+				listener.gameStarted((GameBoard) board);
 			}
 		} finally {
 			openBoardLock.unlock();

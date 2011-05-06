@@ -1,19 +1,17 @@
 package wisematches.server.standing.statistic.impl.statistician;
 
-import wisematches.server.playground.board.GameBoard;
-import wisematches.server.playground.board.GamePlayerHand;
-import wisematches.server.playground.board.GameResolution;
-import wisematches.server.playground.board.GameSettings;
+import wisematches.server.playground.board.*;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.statistician.GamesStatisticEditor;
 import wisematches.server.standing.statistic.statistician.GamesStatistician;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DefaultGamesStatistician<S extends GameSettings, P extends GamePlayerHand, B extends GameBoard<S, P>> implements GamesStatistician<S, P, B> {
+public class DefaultGamesStatistician<S extends GameSettings, P extends GamePlayerHand, B extends GameBoard<S, P>> extends AbstractStatistician implements GamesStatistician<S, P, B> {
 	public DefaultGamesStatistician() {
 	}
 
@@ -27,20 +25,17 @@ public class DefaultGamesStatistician<S extends GameSettings, P extends GamePlay
 		editor.setActive(editor.getActive() - 1);
 		editor.setFinished(editor.getFinished() + 1);
 
-/*
-		editor.setAverageMovesPerGame();
+		// Update average moves per game
+		int movesCount = 0;
+		final List<GameMove> list = board.getGameMoves();
+		for (GameMove gameMove : list) {
+			if (gameMove.getPlayerMove().getPlayerId() == statistic.getPlayerId()) {
+				movesCount++;
+			}
+		}
+		final int gamesCount = editor.getFinished();
+		editor.setAverageMovesPerGame(average(editor.getAverageMovesPerGame(), movesCount, gamesCount));
 
-		final Date previousMoveTime = previousMoveTime(board);
-
-		statistic.incrementTurnsCount();
-		statistic.setAverageTurnTime(
-				average(statistic.getAverageTurnTime(),
-						(int) (currentMoveTime.getTime() - previousMoveTime.getTime()),
-						statistic.getTurnsCount()
-				)
-		);
-
-*/
 		if (board.isRatedGame()) { // If game is not rated just ignore it
 			if (resolution == GameResolution.TIMEOUT) {
 				editor.setTimeouts(editor.getTimeouts() + 1);

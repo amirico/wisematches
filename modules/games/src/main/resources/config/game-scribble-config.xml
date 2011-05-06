@@ -19,6 +19,9 @@
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
+    <bean id="movesStatistician" class="wisematches.server.playground.scribble.statistic.ScribbleMovesStatistician">
+    </bean>
+
     <bean id="scribbleProposalManager"
           class="wisematches.server.playground.propose.impl.FileProposalManager">
         <property name="proposalsResource" value="${server.proposals.file}"/>
