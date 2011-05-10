@@ -7,15 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.server.personality.player.Player;
 import wisematches.server.personality.player.PlayerManager;
-import wisematches.server.standing.rating.RatingBatch;
-import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingPeriod;
+import wisematches.server.standing.rating.RatingCurve;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.utils.RatingChart;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -38,7 +37,7 @@ public class PlayerProfileController extends AbstractPlayerController {
 	}
 
 	@RequestMapping("profile")
-	public String createGamePage(@RequestParam("p") String profileId, Model model, Locale locale) throws UnknownEntityException {
+	public String viewProfile(@RequestParam("p") String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
 			final Player player = playerManager.getPlayer(Long.parseLong(profileId));
 			if (player == null) {
@@ -53,9 +52,16 @@ public class PlayerProfileController extends AbstractPlayerController {
 			c.set(Calendar.HOUR, 0);
 			c.set(Calendar.DAY_OF_MONTH, 1);
 			c.add(Calendar.MONTH, 1);
+			final Date end = c.getTime();
 
-			final Collection<RatingBatch> ratingChanges = player.getRatingChanges(c.getTime(), RatingPeriod.YEAR, RatingBatching.MONTH);
-			final RatingChart chart = new RatingChart(c, RatingPeriod.YEAR, ratingChanges);
+			c.add(Calendar.DAY_OF_YEAR, -365);
+			final Date start = c.getTime();
+
+			RatingCurve ratingCurve = player.getRatingCurve(10, start, end);
+			final RatingChart chart = null;//new RatingChart();
+
+//			final Collection<RatingBatch> ratingChanges = player.getRatingCurve(c.getTime(), RatingPeriod.YEAR, RatingBatching.MONTH);
+//			final RatingChart chart = new RatingChart(c, RatingPeriod.YEAR, ratingChanges);
 
 			model.addAttribute("profile", player);
 			model.addAttribute("chart", chart);

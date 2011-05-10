@@ -7,17 +7,21 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import wisematches.server.personality.Personality;
+import wisematches.server.personality.player.computer.ComputerPlayer;
 import wisematches.server.playground.board.*;
 import wisematches.server.playground.room.RoomManager;
 import wisematches.server.playground.room.RoomsManager;
-import wisematches.server.playground.board.BoardManager;
-import wisematches.server.playground.board.BoardStateListener;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.player.computer.ComputerPlayer;
-import wisematches.server.standing.rating.*;
+import wisematches.server.standing.rating.PlayerRatingListener;
+import wisematches.server.standing.rating.PlayerRatingManager;
+import wisematches.server.standing.rating.RatingChange;
+import wisematches.server.standing.rating.RatingCurve;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -106,22 +110,17 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 		return null;
 	}
 
-	public RatingCurve getRatingCurve(final Personality player, final Date tillDate, final RatingPeriod period, final RatingBatching batching) {
-		return null;
-	}
-
 	@Override
-	@SuppressWarnings("unchecked")
-	public Collection<RatingBatch> getRatingChanges(final Personality player, final Date tillDate, final RatingPeriod period, final RatingBatching batching) {
-		return getHibernateTemplate().execute(new HibernateCallback<Collection<RatingBatch>>() {
+	public RatingCurve getRatingCurve(final Personality player, final int resolution, final Date startDate, final Date endDate) {
+		return getHibernateTemplate().execute(new HibernateCallback<RatingCurve>() {
 			@Override
-			public Collection<RatingBatch> doInHibernate(Session session) throws HibernateException, SQLException {
-				final Query namedQuery = session.getNamedQuery("player.rating.batch");
+			public RatingCurve doInHibernate(Session session) throws HibernateException, SQLException {
+				final Query namedQuery = session.getNamedQuery("player.rating.curve");
 				namedQuery.setParameter("pid", player.getId());
-				namedQuery.setParameter("date", tillDate);
-				namedQuery.setParameter("radix", batching.getRadix());
-				namedQuery.setParameter("range", period.getDaysNumber());
-				return namedQuery.list();
+				namedQuery.setParameter("resolution", resolution);
+				namedQuery.setParameter("start", startDate);
+				namedQuery.setParameter("end", endDate);
+				return new RatingCurve(resolution, startDate, endDate, namedQuery.list());
 			}
 		});
 	}

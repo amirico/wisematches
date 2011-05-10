@@ -8,14 +8,10 @@ import wisematches.server.personality.player.computer.guest.GuestPlayer;
 import wisematches.server.personality.player.computer.robot.RobotPlayer;
 import wisematches.server.personality.player.member.MemberPlayer;
 import wisematches.server.standing.rating.PlayerRatingManager;
-import wisematches.server.standing.rating.RatingBatch;
-import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingPeriod;
+import wisematches.server.standing.rating.RatingCurve;
 import wisematches.server.standing.statistic.PlayerStatistic;
 import wisematches.server.standing.statistic.PlayerStatisticManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import static org.easymock.EasyMock.*;
@@ -78,30 +74,31 @@ public class StandingPlayerManagerTest {
 
 	@Test
 	public void testRatingsDelegation() {
-		final Date date = new Date();
+		final Date startDate = new Date();
+		final Date endDate = new Date();
 		final Account a = new AccountEditor("a", "dsf", "wer").createAccount();
 
 		expect(accountManager.getAccount(a.getId())).andReturn(a);
 		replay(accountManager);
 
-		final Collection<RatingBatch> batches = new ArrayList<RatingBatch>();
+		final RatingCurve ratingCurve = createMock(RatingCurve.class);
 
 		expect(ratingManager.getRating(a)).andReturn((short) 123);
 		expect(ratingManager.getPosition(a)).andReturn(321L);
-		expect(ratingManager.getRatingChanges(a, date, RatingPeriod.YEAR, RatingBatching.MONTH)).andReturn(batches);
+		expect(ratingManager.getRatingCurve(a, 13, startDate, endDate)).andReturn(ratingCurve);
 		replay(ratingManager);
 
 		// robot player
 		final ComputerPlayer rp = (ComputerPlayer) standingPlayerManager.getPlayer(RobotPlayer.DULL);
 		assertEquals(RobotPlayer.DULL.getRating(), rp.getRating());
 		assertEquals(0, rp.getPosition());
-		assertNull(rp.getRatingChanges(date, RatingPeriod.YEAR, RatingBatching.MONTH));
+		assertNull(rp.getRatingCurve(13, startDate, endDate));
 
 		// real player
 		final MemberPlayer mp = (MemberPlayer) standingPlayerManager.getPlayer(a);
 		assertEquals(123, mp.getRating());
 		assertEquals(321, mp.getPosition());
-		assertSame(batches, mp.getRatingChanges(date, RatingPeriod.YEAR, RatingBatching.MONTH));
+		assertSame(ratingCurve, mp.getRatingCurve(13, startDate, endDate));
 
 		verify(accountManager);
 	}
