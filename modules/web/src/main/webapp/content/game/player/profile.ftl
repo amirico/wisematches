@@ -116,7 +116,7 @@
                     <b>Rating graph (past year):</b>
                     <br>
                     <img width="300" height="150"
-                         src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chls=1&chg=8.33,25&chco=FFCC33&chxt=x,y&cht=lxy&chs=300x150&chxs=0,676767,11.5,0,lt,676767|1,676767,15.5,0,l,676767&chxl=0:|<#list chart.monthIndexes as m>|<#if m_index %2 ==0><@message code="month.names.${m}"/></#if></#list>1:|${chart.minRating}|${chart.maxRating}&chd=e:${chart.encodedDates},${chart.encodedRatingsAvg}"
+                         src="http://chart.apis.google.com/chart?chf=bg,s,67676700&chls=1&chg=8.33,25&chco=FFCC33&chxt=x,y&cht=lxy&chs=300x150&chxs=0,676767,11.5,0,lt,676767|1,676767,15.5,0,l,676767&chxl=0:|<#list chart.monthIndexes as m>|<#if m_index %2 ==0><@message code="month.names.${m}"/></#if></#list>1:|${chart.minRating}|${chart.maxRating}&chd=e:${chart.encodedPoints},${chart.encodedRatingsAvg}"
                          alt="Rating Chart">
                 <#--
                     <img width="300" height="150"

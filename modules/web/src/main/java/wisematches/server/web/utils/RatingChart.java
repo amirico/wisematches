@@ -1,56 +1,18 @@
 package wisematches.server.web.utils;
 
-import wisematches.server.standing.rating.RatingBatch;
-import wisematches.server.standing.rating.RatingPeriod;
+import wisematches.server.standing.rating.RatingCurve;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class RatingChart {
-	private final int startDate;
-	private final int endDate;
-	private final int minRating;
-	private final int maxRating;
-	private final int[] dates;
-	private final int[] ratingsMin;
-	private final int[] ratingsMax;
-	private final int[] ratingsAvg;
+	private final RatingCurve ratingCurve;
 	private final int[] monthIndexes = new int[12];
 
-	public RatingChart(Calendar calendar, RatingPeriod period, Collection<RatingBatch> batches) {
-		startDate = 0;
-		endDate = period.getDaysNumber();
-
-		int index = 0;
-		int min = 1200;
-		int max = 1200;
-		dates = new int[batches.size()];
-		ratingsAvg = new int[batches.size()];
-		ratingsMax = new int[batches.size()];
-		ratingsMin = new int[batches.size()];
-		Arrays.fill(ratingsAvg, -1);
-		Arrays.fill(ratingsMax, -1);
-		Arrays.fill(ratingsMin, -1);
-		for (RatingBatch playerBatch : batches) {
-			if (max < playerBatch.getRatingMax()) {
-				max = playerBatch.getRatingMax();
-			}
-			if (min > playerBatch.getRatingMin()) {
-				min = playerBatch.getRatingMin();
-			}
-			dates[index] = playerBatch.getPosition();
-			ratingsAvg[index] = playerBatch.getRatingAvg();
-			ratingsMax[index] = playerBatch.getRatingMax();
-			ratingsMin[index] = playerBatch.getRatingMin();
-			index++;
-		}
-
-		minRating = (int) Math.ceil((min / 100) * 100 - 100);
-		maxRating = (int) Math.floor((max / 100) * 100 + 100);
+	public RatingChart(Calendar calendar, RatingCurve ratingCurve) {
+		this.ratingCurve = ratingCurve;
 
 		final int middle = calendar.get(Calendar.MONTH) + 1;
 		for (int i = 1; i <= 12; i++) {
@@ -59,55 +21,55 @@ public class RatingChart {
 		}
 	}
 
-	public int getStartDate() {
-		return startDate;
+	public int getStartPoint() {
+		return 0;
 	}
 
-	public int getEndDate() {
-		return endDate;
+	public int getEndPoint() {
+		return ratingCurve.getPointsCount();
 	}
 
-	public int[] getDates() {
-		return dates;
+	public short getMaxRating() {
+		return (short) Math.ceil((ratingCurve.getMaxRating() / 100) * 100 + 100);
 	}
 
-	public int getMaxRating() {
-		return maxRating;
+	public short getMinRating() {
+		return (short) Math.ceil((ratingCurve.getMinRating() / 100) * 100 - 100);
 	}
 
-	public int getMinRating() {
-		return minRating;
+	public short[] getRatingsPoint() {
+		return ratingCurve.getRatingPoints();
 	}
 
-	public int[] getRatingsMin() {
-		return ratingsMin;
+	public short[] getRatingsMin() {
+		return ratingCurve.getRatingsMin();
 	}
 
-	public int[] getRatingsMax() {
-		return ratingsMax;
+	public short[] getRatingsMax() {
+		return ratingCurve.getRatingsMax();
 	}
 
-	public int[] getRatingsAvg() {
-		return ratingsAvg;
+	public short[] getRatingsAvg() {
+		return ratingCurve.getRatingsAvg();
 	}
 
 	public int[] getMonthIndexes() {
 		return monthIndexes;
 	}
 
-	public String getEncodedDates() {
-		return GoogleChartTools.encodeExtended(dates, startDate, endDate);
+	public String getEncodedPoints() {
+		return GoogleChartTools.encodeExtended(ratingCurve.getRatingPoints(), 0, ratingCurve.getPointsCount());
 	}
 
 	public String getEncodedRatingsMin() {
-		return GoogleChartTools.encodeExtended(ratingsMax, minRating, maxRating);
+		return GoogleChartTools.encodeExtended(ratingCurve.getRatingsMin(), getMinRating(), getMaxRating());
 	}
 
 	public String getEncodedRatingsAvg() {
-		return GoogleChartTools.encodeExtended(ratingsAvg, minRating, maxRating);
+		return GoogleChartTools.encodeExtended(ratingCurve.getRatingsAvg(), getMinRating(), getMaxRating());
 	}
 
 	public String getEncodedRatingsMax() {
-		return GoogleChartTools.encodeExtended(ratingsMax, minRating, maxRating);
+		return GoogleChartTools.encodeExtended(ratingCurve.getRatingsMax(), getMinRating(), getMaxRating());
 	}
 }

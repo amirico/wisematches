@@ -1,15 +1,9 @@
 package wisematches.server.personality.player;
 
-import wisematches.server.personality.account.Language;
-import wisematches.server.personality.account.Membership;
 import wisematches.server.standing.profile.PlayerProfile;
-import wisematches.server.standing.rating.RatingBatch;
-import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingChange;
-import wisematches.server.standing.rating.RatingPeriod;
+import wisematches.server.standing.rating.RatingCurve;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -44,7 +38,7 @@ public abstract class StandingPlayer extends Player {
 	}
 
 	@Override
-	public Collection<RatingBatch> getRatingChanges(Date tillDate, RatingPeriod period, RatingBatching batching) {
-		return standingPlayerManager.getRatingChanges(this, tillDate, period, batching);
+	public RatingCurve getRatingCurve(int resolution, Date startDate, Date endDate) {
+		return standingPlayerManager.getRatingCurve(this, resolution, startDate, endDate);
 	}
 }

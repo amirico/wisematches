@@ -4,13 +4,9 @@ import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 import wisematches.server.standing.profile.PlayerProfile;
-import wisematches.server.standing.rating.RatingBatch;
-import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingChange;
-import wisematches.server.standing.rating.RatingPeriod;
+import wisematches.server.standing.rating.RatingCurve;
 import wisematches.server.standing.statistic.PlayerStatistic;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -105,12 +101,19 @@ public abstract class Player extends Personality {
 	public abstract PlayerStatistic getPlayerStatistic();
 
 	/**
-	 * Returns collection of rating changes.
+	 * Returns rating curve container that contains information about all rating changes for specified player
+	 * for specified dates with specified resolution.
 	 * <p/>
 	 * For computer players always returns null.
 	 *
-	 * @param batching the batching type
-	 * @return the player's rating changes or {@code null} if player is {@code ComputerPlayer}.
+	 * @param resolution the curve resolution. Indicates how many days must be grouped for one point. It's not possible
+	 *                   to get curve with resolution less that one day at this moment.
+	 * @param startDate  start date. If null all range will be used.
+	 * @param endDate	end date. If null today will be used
+	 * @return the rating curve.
+	 * @throws IllegalArgumentException if resolution if zero or negative.
+	 * @throws NullPointerException	 if {@code player} is null
+	 * @see wisematches.server.standing.rating.PlayerRatingManager#getRatingCurve(wisematches.server.personality.Personality, int, java.util.Date, java.util.Date)
 	 */
-	public abstract Collection<RatingBatch> getRatingChanges(Date tillDate, RatingPeriod period, RatingBatching batching);
+	public abstract RatingCurve getRatingCurve(int resolution, Date startDate, Date endDate);
 }

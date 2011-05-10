@@ -208,7 +208,7 @@ public class EMailNotificationsSender {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
 			model.put("move", move);
-			model.put("points", move.getPoints());
+			model.put("points", move.getRatingPoints());
 			model.put("movedPlayer", playerManager.getPlayer(move.getPlayerMove().getPlayerId()));
 
 			if (nextPlayer != null) {

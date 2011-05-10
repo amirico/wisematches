@@ -19,10 +19,7 @@ import wisematches.server.playground.board.BoardManager;
 import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.*;
 import wisematches.server.personality.player.computer.robot.RobotPlayer;
-import wisematches.server.standing.rating.PlayerRatingListener;
-import wisematches.server.standing.rating.RatingBatching;
-import wisematches.server.standing.rating.RatingChange;
-import wisematches.server.standing.rating.RatingPeriod;
+import wisematches.server.standing.rating.*;
 
 import java.util.*;
 
@@ -126,6 +123,15 @@ public class HibernatePlayerRatingManagerTest {
 	}
 
 	@Test
+	public void testGetRatingCurve() throws Exception {
+		long end = System.currentTimeMillis();
+		long start = end - 31536000000L; //365 * 24 * 60 * 60 * 1000; // - one year
+
+		RatingCurve ratingCurve = playerRatingManager.getRatingCurve(Personality.person(1002), 10, new Date(start), new Date(end));
+		System.out.println(ratingCurve);
+	}
+
+	@Test
 	@SuppressWarnings("unchecked")
 	public void test_getRatingChanges_personality() {
 /*
@@ -141,8 +147,8 @@ public class HibernatePlayerRatingManagerTest {
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 		boardStateListener.gameFinished(b, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 */
-		final Object[] ratingChanges = playerRatingManager.getRatingChanges(Personality.person(1002), new Date(), RatingPeriod.YEAR, RatingBatching.MONTH).toArray();
-		System.out.println(Arrays.toString(ratingChanges));
+//		final Object[] ratingChanges = playerRatingManager.getRatingChanges(Personality.person(1002), new Date(), RatingPeriod.YEAR, RatingBatching.MONTH).toArray();
+//		System.out.println(Arrays.toString(ratingChanges));
 //		assertEquals(3, ratingChanges.length);
 //		assertRatingChange((RatingChange) ratingChanges[0], account.getId(), 22L, 1200, 1203);
 //		assertRatingChange((RatingChange) ratingChanges[1], account.getId(), 23L, 1203, 1206);

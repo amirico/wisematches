@@ -10,7 +10,7 @@ public final class GoogleChartTools {
 	private GoogleChartTools() {
 	}
 
-	public static String encodeSimple(int[] values, float min, float max) {
+	public static String encodeSimple(short[] values, float min, float max) {
 		final StringBuilder b = new StringBuilder();
 		for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
 			int value = values[i];
@@ -24,7 +24,7 @@ public final class GoogleChartTools {
 		return b.toString();
 	}
 
-	public static String encodeExtended(int[] values, float min, float max) {
+	public static String encodeExtended(short[] values, float min, float max) {
 		final int length = EXTENDED_MAP.length();
 		final StringBuilder b = new StringBuilder();
 		for (int value : values) {
