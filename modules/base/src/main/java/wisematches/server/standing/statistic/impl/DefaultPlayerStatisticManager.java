@@ -82,7 +82,7 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 			lock(personality);
 			try {
 				final HibernatePlayerStatistic statistic = (HibernatePlayerStatistic) getPlayerStatistic(personality);
-				gamesStatistician.updateGamesStatistic(board, statistic, statistic.getGamesStatistic());
+				gamesStatistician.updateGamesStatistic(board, statistic, statistic.getGamesStatisticEditor());
 				updatePlayerStatistic(personality, statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated for player: " + personality, th);
@@ -93,7 +93,27 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 	}
 
 	protected void processPlayerMoved(B board, GameMove move) {
+		final P hand = board.getPlayerHand(move.getPlayerMove().getPlayerId());
+		if (isPlayerIgnored(hand)) {
+			return;
+		}
+
+		final Personality personality = Personality.person(hand.getPlayerId());
+		lock(personality);
+		try {
+			final HibernatePlayerStatistic statistic = (HibernatePlayerStatistic) getPlayerStatistic(personality);
+			movesStatistician.updateMovesStatistic(board, move, statistic, statistic.getMovesStatisticEditor());
+			updatePlayerStatistic(personality, statistic);
+		} catch (Throwable th) {
+			log.error("Statistic can't be updated for player: " + personality, th);
+		} finally {
+			unlock(personality);
+		}
+	}
+
+	protected void processGameFinished(B board, GameResolution resolution) {
 		final Collection<P> hands = board.getPlayersHands();
+		final Collection<P> wonPlayers = board.getWonPlayers();
 		for (P hand : hands) {
 			if (isPlayerIgnored(hand)) {
 				continue;
@@ -103,30 +123,8 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 			lock(personality);
 			try {
 				final HibernatePlayerStatistic statistic = (HibernatePlayerStatistic) getPlayerStatistic(personality);
-				movesStatistician.updateMovesStatistic(board, move, statistic, statistic.getMovesStatistic());
-				updatePlayerStatistic(personality, statistic);
-			} catch (Throwable th) {
-				log.error("Statistic can't be updated for player: " + personality, th);
-			} finally {
-				unlock(personality);
-			}
-		}
-	}
-
-	protected void processGameFinished(B board, GameResolution resolution) {
-		final Collection<P> hands = board.getPlayersHands();
-		final Collection<P> wonPlayers = board.getWonPlayers();
-		for (P hand : hands) {
-			if (!isPlayerIgnored(hand)) {
-				continue;
-			}
-
-			final Personality personality = Personality.person(hand.getPlayerId());
-			lock(personality);
-			try {
-				final HibernatePlayerStatistic statistic = (HibernatePlayerStatistic) getPlayerStatistic(personality);
-				gamesStatistician.updateGamesStatistic(board, resolution, wonPlayers, statistic, statistic.getGamesStatistic());
-				ratingsStatistician.updateRatingsStatistic(board, resolution, wonPlayers, statistic, statistic.getRatingsStatistic());
+				gamesStatistician.updateGamesStatistic(board, resolution, wonPlayers, statistic, statistic.getGamesStatisticEditor());
+				ratingsStatistician.updateRatingsStatistic(board, resolution, wonPlayers, statistic, statistic.getRatingsStatisticEditor());
 				updatePlayerStatistic(personality, statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated for player: " + personality, th);

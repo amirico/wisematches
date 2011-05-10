@@ -62,7 +62,7 @@ public class PlayerStatisticDaoTest {
 		final HibernatePlayerStatistic statistic = playerStatisticDao.loadPlayerStatistic(person);
 		assertNotNull(statistic);
 
-		final GamesStatisticEditor gs = statistic.getGamesStatistic();
+		final GamesStatisticEditor gs = statistic.getGamesStatisticEditor();
 		gs.setActive(1);
 		gs.setAverageMovesPerGame(2);
 		gs.setDraws(3);
@@ -73,7 +73,7 @@ public class PlayerStatisticDaoTest {
 		gs.setWins(8);
 		playerStatisticDao.savePlayerStatistic(statistic);
 
-		final MovesStatisticEditor ms = statistic.getMovesStatistic();
+		final MovesStatisticEditor ms = statistic.getMovesStatisticEditor();
 		ms.setAverageTurnTime(1);
 		ms.setAverageWordLength(2);
 		ms.setAvgPoints(3);
@@ -88,7 +88,7 @@ public class PlayerStatisticDaoTest {
 		ms.setWordsCount(9);
 		playerStatisticDao.savePlayerStatistic(statistic);
 
-		final RatingsStatisticEditor rs = statistic.getRatingsStatistic();
+		final RatingsStatisticEditor rs = statistic.getRatingsStatisticEditor();
 		rs.setAverage((short) 1);
 		rs.setAverageOpponentRating((short) 2);
 		rs.setHighest((short) 3);
@@ -104,7 +104,7 @@ public class PlayerStatisticDaoTest {
 
 		final HibernatePlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
 
-		final GamesStatisticEditor gsil = s.getGamesStatistic();
+		final GamesStatisticEditor gsil = s.getGamesStatisticEditor();
 		assertEquals(1, gsil.getActive());
 		assertEquals(2, gsil.getAverageMovesPerGame());
 		assertEquals(3, gsil.getDraws());

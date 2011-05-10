@@ -3,7 +3,10 @@ package wisematches.server.standing.statistic.impl;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import wisematches.server.personality.Personality;
+import wisematches.server.standing.statistic.GamesStatistic;
+import wisematches.server.standing.statistic.MovesStatistic;
 import wisematches.server.standing.statistic.PlayerStatistic;
+import wisematches.server.standing.statistic.RatingsStatistic;
 import wisematches.server.standing.statistic.statistician.RatingsStatisticEditor;
 import wisematches.server.standing.statistic.statistician.GamesStatisticEditor;
 import wisematches.server.standing.statistic.statistician.MovesStatisticEditor;
@@ -50,10 +53,12 @@ class HibernatePlayerStatistic implements PlayerStatistic, Serializable {
 		this.playerId = personality.getId();
 	}
 
+	@Override
 	public long getPlayerId() {
 		return playerId;
 	}
 
+	@Override
 	public Date getUpdateTime() {
 		return updateTime;
 	}
@@ -62,15 +67,32 @@ class HibernatePlayerStatistic implements PlayerStatistic, Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public GamesStatisticEditor getGamesStatistic() {
+	@Override
+	public GamesStatistic getGamesStatistic() {
 		return gamesStatistic;
 	}
 
-	public MovesStatisticEditor getMovesStatistic() {
+	@Override
+	public MovesStatistic getMovesStatistic() {
 		return movesStatistic;
 	}
 
-	public RatingsStatisticEditor getRatingsStatistic() {
+	@Override
+	public RatingsStatistic getRatingsStatistic() {
 		return ratingsStatistic;
+	}
+
+	RatingsStatisticEditor getRatingsStatisticEditor() {
+		return ratingsStatistic;
+	}
+
+
+	GamesStatisticEditor getGamesStatisticEditor() {
+		return gamesStatistic;
+	}
+
+
+	MovesStatisticEditor getMovesStatisticEditor() {
+		return movesStatistic;
 	}
 }

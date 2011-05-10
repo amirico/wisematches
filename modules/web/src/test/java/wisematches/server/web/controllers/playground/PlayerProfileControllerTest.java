@@ -41,12 +41,13 @@ public class PlayerProfileControllerTest {
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.DAY_OF_MONTH, 1);
 		c.add(Calendar.MONTH, 1);
+		final int middle = c.get(Calendar.MONTH) + 1;
 		final Date end = c.getTime();
 
 		c.add(Calendar.DAY_OF_YEAR, -365);
 		final Date start = c.getTime();
 
-		RatingChart chart = new RatingChart(c, getRatingCurve(10, start, end));
+		RatingChart chart = new RatingChart(getRatingCurve(10, start, end), middle);
 
 		StringBuilder b = new StringBuilder();
 		b.append("http://chart.apis.google.com/chart");
