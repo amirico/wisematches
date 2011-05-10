@@ -11,13 +11,12 @@ public class RatingChart {
 	private final RatingCurve ratingCurve;
 	private final int[] monthIndexes = new int[12];
 
-	public RatingChart(Calendar calendar, RatingCurve ratingCurve) {
+	public RatingChart(RatingCurve ratingCurve, int endMonth) {
 		this.ratingCurve = ratingCurve;
 
-		final int middle = calendar.get(Calendar.MONTH) + 1;
 		for (int i = 1; i <= 12; i++) {
-			int pos = i > middle ? i - 12 : i;
-			monthIndexes[11 - middle + pos] = i;
+			int pos = i > endMonth ? i - 12 : i;
+			monthIndexes[11 - endMonth + pos] = i;
 		}
 	}
 

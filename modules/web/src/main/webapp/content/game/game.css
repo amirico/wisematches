@@ -262,3 +262,15 @@
 .profile .games-info tbody td span {
     color: gray;
 }
+
+.profile .statistic {
+    padding-bottom: 10px;
+}
+
+.profile .statistic .ui-state-default {
+    padding: 5px;
+}
+
+.profile .statistic .ui-layout-table {
+    padding-left: 5px;
+}
