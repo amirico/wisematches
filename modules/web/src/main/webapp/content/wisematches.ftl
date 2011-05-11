@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/jquery/css/ColReorder.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/ColVis.css"/>
 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="/jquery/js/jquery.min.js"></script>
     <script type="text/javascript" src="/jquery/js/json.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery-ui.min.js"></script>

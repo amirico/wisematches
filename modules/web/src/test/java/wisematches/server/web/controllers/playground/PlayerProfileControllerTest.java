@@ -73,12 +73,12 @@ public class PlayerProfileControllerTest {
 		b.append("&cht=lxy");
 		b.append("&chco=008000,FFCC33,AA0033");
 		b.append("&chd=e:");
-		b.append(chart.getEncodedPoints()).append(",");
-		b.append(chart.getEncodedRatingsMin()).append(",");
-		b.append(chart.getEncodedPoints()).append(",");
-		b.append(chart.getEncodedRatingsAvg()).append(",");
-		b.append(chart.getEncodedPoints()).append(",");
-		b.append(chart.getEncodedRatingsMax()).append(",");
+//		b.append(chart.getEncodedPoints()).append(",");
+//		b.append(chart.getEncodedRatingsMin()).append(",");
+//		b.append(chart.getEncodedPoints()).append(",");
+//		b.append(chart.getEncodedRatingsAvg()).append(",");
+//		b.append(chart.getEncodedPoints()).append(",");
+//		b.append(chart.getEncodedRatingsMax()).append(",");
 		b.append("&chg=8.33,25");
 		b.append("&chls=1,4,4|1|1,4,4");
 

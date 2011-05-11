@@ -53,18 +53,14 @@ public class PlayerProfileController extends AbstractPlayerController {
 			c.set(Calendar.DAY_OF_MONTH, 1);
 			c.add(Calendar.MONTH, 1);
 
-			final int middle = c.get(Calendar.MONTH) + 1;
+			final int middle = c.get(Calendar.MONTH);
 			final Date end = c.getTime();
 
 			c.add(Calendar.DAY_OF_YEAR, -365);
 			final Date start = c.getTime();
 
-			RatingCurve ratingCurve = player.getRatingCurve(10, start, end);
+			final RatingCurve ratingCurve = player.getRatingCurve(10, start, end);
 			final RatingChart chart = new RatingChart(ratingCurve, middle);
-
-//			final Collection<RatingBatch> ratingChanges = player.getRatingCurve(c.getTime(), RatingPeriod.YEAR, RatingBatching.MONTH);
-//			final RatingChart chart = new RatingChart(c, RatingPeriod.YEAR, ratingChanges);
-
 			model.addAttribute("profile", player);
 			model.addAttribute("chart", chart);
 			return "/content/game/player/profile";
