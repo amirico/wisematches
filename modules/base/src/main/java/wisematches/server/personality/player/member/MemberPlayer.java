@@ -6,6 +6,7 @@ import wisematches.server.personality.account.Membership;
 import wisematches.server.personality.player.StandingPlayer;
 import wisematches.server.personality.player.StandingPlayerManager;
 
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -26,6 +27,11 @@ public final class MemberPlayer extends StandingPlayer {
 
 	public Account getAccount() {
 		return account;
+	}
+
+	@Override
+	public Date getCreationDate() {
+		return account.getCreationDate();
 	}
 
 	@Override

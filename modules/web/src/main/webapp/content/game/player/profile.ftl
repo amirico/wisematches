@@ -16,7 +16,9 @@
         <div class="player">
             Player's profile: <strong>${playerProfile.realName!profile.nickname}</strong>
         </div>
-        <div class="registered">Registered since Feb-06 (5 years stage)</div>
+        <div class="registered">
+            Registered since ${gameMessageSource.formatDate(profile.creationDate, locale)}
+        </div>
     </div>
     <div class="edit">
         <button onclick="">Edit Profile</button>
@@ -257,7 +259,6 @@
         data.setValue(12, 1, 1210);
         data.setValue(0, 1, 1250);
 
-        // Create and draw the visualization.
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
                     backgroundColor: 'transparent',

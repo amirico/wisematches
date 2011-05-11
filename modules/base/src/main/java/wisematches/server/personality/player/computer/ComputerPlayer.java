@@ -62,6 +62,11 @@ public class ComputerPlayer extends Player {
 		return Language.EN;
 	}
 
+	@Override
+	public Date getCreationDate() {
+		return null;
+	}
+
 	/**
 	 * Always returns {@code TimeZone.getDefault()}
 	 *

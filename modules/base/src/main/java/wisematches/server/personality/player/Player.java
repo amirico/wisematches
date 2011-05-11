@@ -35,6 +35,12 @@ public abstract class Player extends Personality {
 	 */
 	public abstract String getNickname();
 
+	/**
+	 * Returns creation date
+	 *
+	 * @return the creation date
+	 */
+	public abstract Date getCreationDate();
 
 	/**
 	 * Returns default language of the player.

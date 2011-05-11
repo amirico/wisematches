@@ -5,6 +5,7 @@ import wisematches.server.personality.account.Language;
 import wisematches.server.personality.account.Membership;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -32,6 +33,10 @@ public class HibernateAccountImpl extends Account {
 	@Column(name = "email", nullable = false, length = 150)
 	private String email;
 
+	@Column(name = "created")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date creationDate;
+
 	@Column(name = "language")
 	@Enumerated(EnumType.STRING)
 	private Language language;
@@ -53,6 +58,7 @@ public class HibernateAccountImpl extends Account {
 	public HibernateAccountImpl(Account account) {
 		super(account.getId());
 		this.nickname = account.getNickname();
+		this.creationDate = account.getCreationDate();
 		updateAccountInfo(account);
 	}
 
@@ -69,6 +75,11 @@ public class HibernateAccountImpl extends Account {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+
+	@Override
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
 	@Override
