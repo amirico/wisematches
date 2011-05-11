@@ -4,6 +4,7 @@ import wisematches.server.personality.Personality;
 
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -51,6 +52,13 @@ public abstract class Account extends Personality implements Serializable {
 	 * @return the player's password.
 	 */
 	public abstract String getPassword();
+
+	/**
+	 * Returns date when player was created
+	 *
+	 * @return date when player was created
+	 */
+	public abstract Date getCreationDate();
 
 	/**
 	 * Returns default language of the player.

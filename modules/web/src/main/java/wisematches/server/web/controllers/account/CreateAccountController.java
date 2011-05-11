@@ -208,7 +208,7 @@ public class CreateAccountController {
 	 * Creates account based on specified form and returns created user.
 	 *
 	 * @param registration the new account form
-	 * @param request
+	 * @param request	  the original request
 	 * @return the create player
 	 * @throws DuplicateAccountException	 if account with the same email or nickname already exist
 	 * @throws InadmissibleUsernameException if nickname can't be used.

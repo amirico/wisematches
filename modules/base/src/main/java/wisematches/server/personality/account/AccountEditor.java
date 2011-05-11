@@ -1,5 +1,6 @@
 package wisematches.server.personality.account;
 
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -10,6 +11,7 @@ public class AccountEditor {
 	private String email;
 	private String nickname;
 	private String password;
+	private Date creationDate = new Date();
 	private TimeZone timeZone = TimeZone.getDefault();
 	private Language language = Language.DEFAULT;
 	private Membership membership = Membership.BASIC;
@@ -22,6 +24,7 @@ public class AccountEditor {
 		this.nickname = account.getNickname();
 		this.password = account.getPassword();
 		this.email = account.getEmail();
+		this.creationDate = account.getCreationDate();
 		this.language = account.getLanguage();
 		this.membership = account.getMembership();
 		this.timeZone = account.getTimeZone();
@@ -93,7 +96,7 @@ public class AccountEditor {
 		if (nickname == null) {
 			throw new IllegalArgumentException("nickname is not specified");
 		}
-		return new AccountDetails(id, email, nickname, password, language, membership, timeZone);
+		return new AccountDetails(id, email, nickname, password, creationDate, language, membership, timeZone);
 	}
 
 	/**
@@ -105,11 +108,12 @@ public class AccountEditor {
 		private final String email;
 		private final String nickname;
 		private final String password;
+		private final Date creationDate;
 		private final TimeZone timeZone;
 		private final Language language;
 		private final Membership membership;
 
-		private AccountDetails(long id, String email, String nickname, String password, Language language, Membership membership, TimeZone timeZone) {
+		private AccountDetails(long id, String email, String nickname, String password, Date creationDate, Language language, Membership membership, TimeZone timeZone) {
 			super(id);
 			this.email = email;
 			this.nickname = nickname;
@@ -117,6 +121,7 @@ public class AccountEditor {
 			this.language = language;
 			this.membership = membership;
 			this.timeZone = timeZone;
+			this.creationDate = creationDate;
 		}
 
 		@Override
@@ -132,6 +137,11 @@ public class AccountEditor {
 		@Override
 		public String getPassword() {
 			return password;
+		}
+
+		@Override
+		public Date getCreationDate() {
+			return creationDate;
 		}
 
 		@Override
