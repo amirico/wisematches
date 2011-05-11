@@ -89,7 +89,7 @@ form label {
 
 .ui-widget-content {
     padding: 5px;
-    background: #DFE8F6 none;
+    background: #eaf4fc none;
 }
 
 .ui-button-disabled {
@@ -398,15 +398,15 @@ div.space-line {
     display: table;
 }
 
-.ui-layout-table div {
+.ui-layout-table>div {
     display: table-row;
 }
 
-.ui-layout-table div div {
+.ui-layout-table>div>div {
     display: table-cell;
-    padding-right: 5px;
 }
 
-.ui-layout-table div div:first-child {
+.ui-layout-table>div>div:first-child {
     font-weight: bold;
+    white-space: nowrap;
 }

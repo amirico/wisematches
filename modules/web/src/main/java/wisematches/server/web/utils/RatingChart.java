@@ -20,11 +20,7 @@ public class RatingChart {
 		}
 	}
 
-	public int getStartPoint() {
-		return 0;
-	}
-
-	public int getEndPoint() {
+	public int getPointsCount() {
 		return ratingCurve.getPointsCount();
 	}
 
@@ -54,21 +50,5 @@ public class RatingChart {
 
 	public int[] getMonthIndexes() {
 		return monthIndexes;
-	}
-
-	public String getEncodedPoints() {
-		return GoogleChartTools.encodeExtended(ratingCurve.getRatingPoints(), 0, ratingCurve.getPointsCount());
-	}
-
-	public String getEncodedRatingsMin() {
-		return GoogleChartTools.encodeExtended(ratingCurve.getRatingsMin(), getMinRating(), getMaxRating());
-	}
-
-	public String getEncodedRatingsAvg() {
-		return GoogleChartTools.encodeExtended(ratingCurve.getRatingsAvg(), getMinRating(), getMaxRating());
-	}
-
-	public String getEncodedRatingsMax() {
-		return GoogleChartTools.encodeExtended(ratingCurve.getRatingsMax(), getMinRating(), getMaxRating());
 	}
 }
