@@ -1,12 +1,10 @@
-package wisematches.server.standing.statistic.impl;
+package wisematches.server.standing.stats.imp;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.server.personality.Personality;
-import wisematches.server.standing.statistic.statistician.PlayerStatisticEditor;
-
-import java.util.Date;
+import wisematches.server.standing.stats.statistician.PlayerStatisticEditor;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -22,7 +20,7 @@ class PlayerStatisticDao extends HibernateDaoSupport {
 
 	@Transactional(propagation = Propagation.MANDATORY)
 	void savePlayerStatistic(PlayerStatisticEditor statistic) {
-		statistic.setUpdateTime(new Date());
+//		statistic.setUpdateTime(new Date());
 		getHibernateTemplate().saveOrUpdate(statistic);
 	}
 

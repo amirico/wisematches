@@ -1,4 +1,4 @@
-package wisematches.server.standing.statistic.impl;
+package wisematches.server.standing.stats.imp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,10 +10,11 @@ import wisematches.server.personality.player.computer.ComputerPlayer;
 import wisematches.server.playground.board.*;
 import wisematches.server.playground.room.RoomManager;
 import wisematches.server.playground.room.RoomsManager;
-import wisematches.server.standing.statistic.PlayerStatistic;
-import wisematches.server.standing.statistic.PlayerStatisticListener;
-import wisematches.server.standing.statistic.PlayerStatisticManager;
-import wisematches.server.standing.statistic.statistician.PlayerStatisticEditor;
+import wisematches.server.standing.stats.PlayerStatistic;
+import wisematches.server.standing.stats.PlayerStatisticListener;
+import wisematches.server.standing.stats.PlayerStatisticManager;
+import wisematches.server.standing.stats.statistician.PlayerStatisticEditor;
+import wisematches.server.standing.stats.statistician.PlayerStatistician;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,23 +26,23 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DefaultPlayerStatisticManager<S extends GameSettings, P extends GamePlayerHand, B extends GameBoard<S, P>> implements PlayerStatisticManager {
+public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	private RoomsManager roomsManager;
 	private AccountManager accountManager;
 	private PlayerStatisticDao playerStatisticDao;
-	private PlayerStatisticFactory playerStatisticFactory;
+	private PlayerStatistician playerStatistician;
 
 	private final Lock lockLock = new ReentrantLock();
-	private final Map<Personality, ReentrantLock> locksMap = new HashMap<Personality, ReentrantLock>();
 
 	private final TheAccountListener accountListener = new TheAccountListener();
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
+	private final Map<Personality, ReentrantLock> locksMap = new HashMap<Personality, ReentrantLock>();
 	private final Collection<PlayerStatisticListener> listeners = new CopyOnWriteArraySet<PlayerStatisticListener>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.statistic");
 
-	public DefaultPlayerStatisticManager() {
+	public PlayerStatisticManagerImpl() {
 	}
 
 	@Override
@@ -60,13 +61,13 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 	public PlayerStatistic getPlayerStatistic(Personality personality) {
 		lock(personality);
 		try {
-			return playerStatisticDao.loadPlayerStatistic(playerStatisticFactory.getStatisticType(), personality);
+			return playerStatisticDao.loadPlayerStatistic(playerStatistician.getStatisticType(), personality);
 		} finally {
 			unlock(personality);
 		}
 	}
 
-	protected void processGameStarted(B board) {
+	protected <S extends GameSettings, P extends GamePlayerHand> void processGameStarted(GameBoard<S, P> board) {
 		final Collection<P> hands = board.getPlayersHands();
 		for (P hand : hands) {
 			if (isPlayerIgnored(hand)) {
@@ -77,7 +78,7 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 			lock(personality);
 			try {
 				final PlayerStatisticEditor statistic = (PlayerStatisticEditor) getPlayerStatistic(personality);
-				playerStatisticFactory.getGamesStatistician().updateGamesStatistic(board, statistic, statistic.getGamesStatisticEditor());
+				playerStatistician.updateStatistic(board, statistic);
 				updatePlayerStatistic(personality, statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated for player: " + personality, th);
@@ -87,7 +88,7 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 		}
 	}
 
-	protected void processPlayerMoved(B board, GameMove move) {
+	protected <S extends GameSettings, P extends GamePlayerHand> void processPlayerMoved(GameBoard<S, P> board, GameMove move) {
 		final P hand = board.getPlayerHand(move.getPlayerMove().getPlayerId());
 		if (isPlayerIgnored(hand)) {
 			return;
@@ -97,7 +98,7 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 		lock(personality);
 		try {
 			final PlayerStatisticEditor statistic = (PlayerStatisticEditor) getPlayerStatistic(personality);
-			playerStatisticFactory.getMovesStatistician().updateMovesStatistic(board, move, statistic, statistic.getMovesStatisticEditor());
+			playerStatistician.updateStatistic(board, move, statistic);
 			updatePlayerStatistic(personality, statistic);
 		} catch (Throwable th) {
 			log.error("Statistic can't be updated for player: " + personality, th);
@@ -106,9 +107,8 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 		}
 	}
 
-	protected void processGameFinished(B board, GameResolution resolution) {
+	public <S extends GameSettings, P extends GamePlayerHand> void processGameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 		final Collection<P> hands = board.getPlayersHands();
-		final Collection<P> wonPlayers = board.getWonPlayers();
 		for (P hand : hands) {
 			if (isPlayerIgnored(hand)) {
 				continue;
@@ -118,8 +118,7 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 			lock(personality);
 			try {
 				final PlayerStatisticEditor statistic = (PlayerStatisticEditor) getPlayerStatistic(personality);
-				playerStatisticFactory.getGamesStatistician().updateGamesStatistic(board, resolution, wonPlayers, statistic, statistic.getGamesStatisticEditor());
-				playerStatisticFactory.getRatingsStatistician().updateRatingsStatistic(board, resolution, wonPlayers, statistic, statistic.getRatingsStatisticEditor());
+				playerStatistician.updateStatistic(board, resolution, wonPlayers, statistic);
 				updatePlayerStatistic(personality, statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated for player: " + personality, th);
@@ -201,12 +200,12 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 		}
 	}
 
-	public void setPlayerStatisticDao(PlayerStatisticDao playerStatisticDao) {
-		this.playerStatisticDao = playerStatisticDao;
+	public void setPlayerStatistician(PlayerStatistician playerStatistician) {
+		this.playerStatistician = playerStatistician;
 	}
 
-	public void setPlayerStatisticFactory(PlayerStatisticFactory playerStatisticFactory) {
-		this.playerStatisticFactory = playerStatisticFactory;
+	public void setPlayerStatisticDao(PlayerStatisticDao playerStatisticDao) {
+		this.playerStatisticDao = playerStatisticDao;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -216,17 +215,17 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameStarted(GameBoard<S, P> board) {
-			processGameStarted((B) board);
+			processGameStarted(board);
 		}
 
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameMoveDone(GameBoard<S, P> board, GameMove move) {
-			processPlayerMoved((B) board, move);
+			processPlayerMoved(board, move);
 		}
 
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
-			processGameFinished((B) board, resolution);
+			processGameFinished(board, resolution, wonPlayers);
 		}
 	}
 
@@ -237,12 +236,12 @@ public class DefaultPlayerStatisticManager<S extends GameSettings, P extends Gam
 
 		@Override
 		public void accountCreated(Account account) {
-			playerStatisticDao.savePlayerStatistic(playerStatisticFactory.createPlayerStatistic(account));
+			playerStatisticDao.savePlayerStatistic(playerStatistician.createPlayerStatistic(account));
 		}
 
 		@Override
 		public void accountRemove(Account account) {
-			PlayerStatisticEditor hibernatePlayerStatistic = playerStatisticDao.loadPlayerStatistic(playerStatisticFactory.getStatisticType(), account);
+			PlayerStatisticEditor hibernatePlayerStatistic = playerStatisticDao.loadPlayerStatistic(playerStatistician.getStatisticType(), account);
 			if (hibernatePlayerStatistic != null) {
 				playerStatisticDao.removePlayerStatistic(hibernatePlayerStatistic);
 			}

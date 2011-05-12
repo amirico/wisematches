@@ -25,12 +25,5 @@ public interface MovesStatistic {
 	int getMaxPoints();
 
 
-	int getAverageWordLength();
-
-	String getLastLongestWord();
-
-	String getLastValuableWord();
-
-
 	Date getLastMoveTime();
 }

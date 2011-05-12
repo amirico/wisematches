@@ -4,12 +4,14 @@ import wisematches.server.standing.statistic.GamesStatistic;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Embeddable
+@MappedSuperclass
 public class GamesStatisticEditor implements GamesStatistic, Serializable {
 	@Column(name = "gActive")
 	private int active;

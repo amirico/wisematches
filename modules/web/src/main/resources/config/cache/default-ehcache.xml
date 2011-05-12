@@ -11,7 +11,7 @@
             overflowToDisk="false"
             memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="wisematches.server.standing.statistic.impl.HibernatePlayerStatistic"
+    <cache name="wisematches.server.playground.scribble.statistic.ScribblePlayerStatistic"
            maxElementsInMemory="1000"
            eternal="true"
            diskPersistent="false"

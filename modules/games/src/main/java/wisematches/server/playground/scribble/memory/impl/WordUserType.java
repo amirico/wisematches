@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  *
  *   TILE_NUMBER := INTEGER{1,3}
  *   TILE_LETTER := CHARACTER
- *   TILE_COSE := INTEGER
+ *   TILE_COST := INTEGER
  * </pre>
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
