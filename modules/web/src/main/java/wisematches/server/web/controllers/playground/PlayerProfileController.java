@@ -3,6 +3,7 @@ package wisematches.server.web.controllers.playground;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.server.personality.player.Player;
@@ -37,7 +38,7 @@ public class PlayerProfileController extends AbstractPlayerController {
 	}
 
 	@RequestMapping("profile")
-	public String viewProfile(@RequestParam("p") String profileId, Model model, Locale locale) throws UnknownEntityException {
+	public String viewProfile(@RequestParam("p") String profileId, Model model) throws UnknownEntityException {
 		try {
 			final Player player = playerManager.getPlayer(Long.parseLong(profileId));
 			if (player == null) {
@@ -72,5 +73,10 @@ public class PlayerProfileController extends AbstractPlayerController {
 	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
+	}
+
+	@ModelAttribute("headerTitle")
+	public String getHeaderTitle() {
+		return "title.profile";
 	}
 }
