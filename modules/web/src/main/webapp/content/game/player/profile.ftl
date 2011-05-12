@@ -14,16 +14,17 @@
 <div class="content shadow ui-state-default">
     <div class="title">
         <div class="player">
-            Player's profile: <strong>${playerProfile.realName!profile.nickname}</strong>
+        <@message code="game.profile.nick"/>: <strong>${playerProfile.realName!profile.nickname}</strong>
         </div>
         <div class="registered">
-            Registered since ${gameMessageSource.formatDate(profile.creationDate, locale)}
+        <@message code="game.profile.registered"/> ${gameMessageSource.formatDate(profile.creationDate, locale)}
         </div>
     </div>
+<#if player.id == profile.id>
     <div class="edit">
-        <button onclick="">Edit Profile</button>
+        <button onclick=""><@message code="game.profile.edit"/></button>
     </div>
-
+</#if>
 <#assign p_wins=0 p_loses=0 p_draws=0 p_timeouts=0/>
 <#assign wins=gamesStatistic.wins loses=gamesStatistic.loses draws=gamesStatistic.draws timeouts=gamesStatistic.timeouts finished=gamesStatistic.finished/>
 <#if finished != 0>
@@ -37,19 +38,19 @@
                         <thead>
                         <tr>
                             <td class="ui-state-default ui-corner-tl" width="50%">
-                                <span>Rating</span>
+                                <span><@message code="game.profile.rating"/></span>
                             </td>
                             <td class="ui-state-default">
-                                <span style="border-color: #008000">Wins</span>
+                                <span style="border-color: #008000"><@message code="game.profile.wins"/></span>
                             </td>
                             <td class="ui-state-default">
-                                <span style="border-color: #AA0033">Loses</span>
+                                <span style="border-color: #AA0033"><@message code="game.profile.loses"/></span>
                             </td>
                             <td class="ui-state-default">
-                                <span style="border-color: #FF9900">Draws</span>
+                                <span style="border-color: #FF9900"><@message code="game.profile.draws"/></span>
                             </td>
                             <td class="ui-state-default ui-corner-tr">
-                                <span>Total</span>
+                                <span><@message code="game.profile.total"/></span>
                             </td>
                         </tr>
                         </thead>
@@ -73,23 +74,23 @@
                     <div style="vertical-align: top;">
                         <div class="ui-layout-table">
                             <div>
-                                <div>Average rating:</div>
+                                <div><@message code="game.profile.rating.avg"/>:</div>
                                 <div>${ratingsStatistic.average}</div>
                             </div>
                             <div>
-                                <div>Highest rating:</div>
+                                <div><@message code="game.profile.rating.hi"/>:</div>
                                 <div>${ratingsStatistic.highest}</div>
                             </div>
                             <div>
-                                <div>Lowest rating:</div>
+                                <div><@message code="game.profile.rating.low"/>:</div>
                                 <div>${ratingsStatistic.lowest}</div>
                             </div>
                             <div>
-                                <div>Average opponent rating:</div>
+                                <div><@message code="game.profile.rating.op.avg"/>:</div>
                                 <div>${ratingsStatistic.averageOpponentRating}</div>
                             </div>
                             <div>
-                                <div>Highest rating won against:</div>
+                                <div><@message code="game.profile.rating.op.hi"/>:</div>
                                 <div>
                                 ${ratingsStatistic.highestWonOpponentRating}
                                 <#assign hwp=playerManager.getPlayer(ratingsStatistic.highestWonOpponentId)!""/>
@@ -97,7 +98,7 @@
                                 </div>
                             </div>
                             <div>
-                                <div>Lowest rating lost against:</div>
+                                <div><@message code="game.profile.rating.op.low"/>:</div>
                                 <div>
                                 ${ratingsStatistic.lowestLostOpponentRating}
                                 <#assign llp=playerManager.getPlayer(ratingsStatistic.lowestLostOpponentId)!""/>
@@ -108,7 +109,7 @@
                     </div>
                     <div style="text-align: right; width: 300px">
                         <div id="ratingChart"></div>
-                        <div class="sample"><sub>(past year only)</sub></div>
+                        <div class="sample"><sub>(<@message code="game.profile.rating.pastyear"/>)</sub></div>
                     </div>
                 </div>
             </div>
@@ -120,39 +121,39 @@
                     <div style="vertical-align: top;">
                         <div class="ui-layout-table">
                             <div>
-                                <div>Total games in progress:</div>
+                                <div><@message code="game.profile.games.active"/>:</div>
                                 <div>${gamesStatistic.active}</div>
                             </div>
                             <div>
-                                <div>Timeouts:</div>
+                                <div><@message code="game.profile.games.timeouts"/>:</div>
                                 <div>${timeouts} <span>(${p_timeouts}%)</div>
                             </div>
                             <div>
-                                <div>Average moves per game:</div>
+                                <div><@message code="game.profile.games.avg.moves"/>:</div>
                                 <div>${gamesStatistic.averageMovesPerGame}</div>
                             </div>
+                        <#if movesStatistic.averageTurnTime != 0>
                             <div>
-                                <div>Average time per move:</div>
+                                <div><@message code="game.profile.games.avg.time"/>:</div>
                                 <div>${gameMessageSource.formatMinutes(movesStatistic.averageTurnTime/1000/60, locale)}</div>
                             </div>
+                        </#if>
+                        <#if movesStatistic.lastMoveTime??>
                             <div>
-                                <div>Last move date:</div>
+                                <div><@message code="game.profile.games.last"/>:</div>
                                 <div>
-                                <#if movesStatistic.lastMoveTime??>
                                 ${gameMessageSource.formatDate(movesStatistic.lastMoveTime, locale)}
-                                    <#else>
-                                        no one move
-                                </#if>
                                 </div>
                             </div>
+                        </#if>
                         </div>
                     </div>
                     <div style="vertical-align: top; width: 300px">
-                        <span class="sample">Successfulness</span>
+                        <span class="sample"><@message code="game.profile.games.successfulness"/></span>
 
                         <div id="gamesChart"></div>
 
-                        <span class="sample">Punctual</span>
+                        <span class="sample"><@message code="game.profile.games.punctual"/></span>
 
                         <div id="timeoutsChart"></div>
                     </div>
@@ -163,7 +164,7 @@
         <div class="statistic ui-corner-all ui-state-default shadow">
             <div class="ui-layout-table">
                 <div style="height: 24px">
-                    <div>Average Word:</div>
+                    <div><@message code="game.profile.word.avg"/>:</div>
                     <div style="position: relative;">
                     <#list 1..movesStatistic.averageWordLength as i>
                         <div class="tile cost0"
@@ -171,12 +172,12 @@
                             <span></span></div>
                     </#list>
                         <div style="white-space: nowrap; position: absolute; top:0; left: ${4+22*movesStatistic.averageWordLength}px">
-                            <strong>(${movesStatistic.avgPoints} points)</strong>
+                            <strong>(${movesStatistic.avgPoints} <@message code="game.profile.word.points"/>)</strong>
                         </div>
                     </div>
                 </div>
                 <div style="height: 24px">
-                    <div>Last Longest Word:</div>
+                    <div><@message code="game.profile.word.long"/>:</div>
                     <div style="position: relative; padding-top: 3px">
                     <#--${movesStatistic.lastLongestWord!""}-->
                     <#list ['a','b','c','d','a','b','c','d','a','b','c','d','a','b','c','d'] as ch>
@@ -185,12 +186,12 @@
                             <span>${ch?upper_case}</span></div>
                     </#list>
                         <div style="white-space: nowrap; position: absolute; top:0; left: ${4+16*22}px">
-                            (${movesStatistic.minPoints} points)
+                            (${movesStatistic.minPoints} <@message code="game.profile.word.points"/>)
                         </div>
                     </div>
                 </div>
                 <div style="height: 24px">
-                    <div>Last Valuable Word:</div>
+                    <div><@message code="game.profile.word.valuable"/>:</div>
                     <div style="position: relative; padding-top: 3px">
                     <#--${movesStatistic.lastValuableWord!""} -->
                     <#list ['a','b','c','d','a','b','c','d','a','b','c','d','a','b','c','d'] as ch>
@@ -199,7 +200,7 @@
                             <span>${ch?upper_case}</span></div>
                     </#list>
                         <div style="white-space: nowrap; position: absolute; top:0; left: ${4+16*22}px">
-                            (${movesStatistic.maxPoints} points)
+                            (${movesStatistic.maxPoints} <@message code="game.profile.word.points"/>)
                         </div>
                     </div>
                 </div>
@@ -207,9 +208,9 @@
         </div>
     </div>
 
-    <div style="padding-top: 10px; text-align: center;">
-        <a href="">Games in progress</a> | <a href="">Past game history</a>
-    </div>
+<#--<div style="padding-top: 10px; text-align: center;">-->
+<#--<a href="">Games in progress</a> | <a href="">Past game history</a>-->
+<#--</div>-->
 </div>
 
 <div class="info">
@@ -231,7 +232,7 @@
     ${profile.timeZone.displayName}
     </div>
     <div class="<#if !playerProfile.comments??>undefined </#if>quotation">
-        &laquo;${playerProfile.comments!""}&raquo;
+        &laquo; ${playerProfile.comments!""} &raquo;
     </div>
 </div>
 </div>
@@ -246,7 +247,7 @@
         // Create and populate the data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'x');
-        data.addColumn('number', 'Rating');
+        data.addColumn('number', '<@message code="game.profile.rating"/>');
         data.addRows(${chart.pointsCount});
 
         var resolution = ${(chart.pointsCount/chart.monthIndexes?size)?string("0")};
@@ -285,9 +286,9 @@
 
     function drawGamesChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Wins');
-        data.addColumn('number', 'Loses');
-        data.addColumn('number', 'Draws');
+        data.addColumn('number', '<@message code="game.profile.wins"/>');
+        data.addColumn('number', '<@message code="game.profile.loses"/>');
+        data.addColumn('number', '<@message code="game.profile.draws"/>');
         data.addRows([
             [${gamesStatistic.wins+10}, ${gamesStatistic.loses+5}, ${gamesStatistic.draws+43}]
         ]);
@@ -311,8 +312,8 @@
                 });
 
         var data2 = new google.visualization.DataTable();
-        data2.addColumn('number', 'Timeouts');
-        data2.addColumn('number', 'Well');
+        data2.addColumn('number', '<@message code="game.profile.games.timeouts"/>');
+        data2.addColumn('number', '<@message code="game.profile.games.well"/>');
         data2.addRows([
             [${gamesStatistic.loses+576}, ${gamesStatistic.wins+2342}]
         ]);
