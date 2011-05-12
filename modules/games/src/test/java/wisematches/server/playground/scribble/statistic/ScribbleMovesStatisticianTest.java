@@ -12,7 +12,6 @@ import wisematches.server.playground.scribble.board.ExchangeTilesMove;
 import wisematches.server.playground.scribble.board.MakeWordMove;
 import wisematches.server.playground.scribble.board.ScribbleBoard;
 import wisematches.server.standing.statistic.PlayerStatistic;
-import wisematches.server.standing.statistic.statistician.MovesStatisticEditor;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -39,7 +38,7 @@ public class ScribbleMovesStatisticianTest {
 		final long moveTime = System.currentTimeMillis();
 
 		final PlayerStatistic playerStatistic = createMock(PlayerStatistic.class);
-		final MovesStatisticEditor editor = new MovesStatisticEditor();
+		final ScribbleMovesStatisticEditor editor = new ScribbleMovesStatisticEditor();
 
 		final PlayerMove move1 = new MakeWordMove(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4)));
 		final PlayerMove move2 = new MakeWordMove(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4), new Tile(1, 'C', 1), new Tile(1, 'D', 1)));

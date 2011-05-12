@@ -3,7 +3,7 @@ package wisematches.server.standing.statistic.statistician;
 import wisematches.server.standing.statistic.MovesStatistic;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Embeddable
+@MappedSuperclass
 public class MovesStatisticEditor implements MovesStatistic, Serializable {
 	@Column(name = "mTurns")
 	private int turnsCount;
@@ -37,15 +37,6 @@ public class MovesStatisticEditor implements MovesStatistic, Serializable {
 
 	@Column(name = "mMaxPoints")
 	private int maxPoints;
-
-	@Column(name = "mAvgWord")
-	private int averageWordLength;
-
-	@Column(name = "mLongest")
-	private String lastLongestWord;
-
-	@Column(name = "mValuable")
-	private String lastValuableWord;
 
 	@Column(name = "mLastTime")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -97,21 +88,6 @@ public class MovesStatisticEditor implements MovesStatistic, Serializable {
 	}
 
 	@Override
-	public int getAverageWordLength() {
-		return averageWordLength;
-	}
-
-	@Override
-	public String getLastLongestWord() {
-		return lastLongestWord;
-	}
-
-	@Override
-	public String getLastValuableWord() {
-		return lastValuableWord;
-	}
-
-	@Override
 	public Date getLastMoveTime() {
 		return lastMoveTime;
 	}
@@ -148,18 +124,6 @@ public class MovesStatisticEditor implements MovesStatistic, Serializable {
 		this.maxPoints = maxPoints;
 	}
 
-	public void setAverageWordLength(int averageWordLength) {
-		this.averageWordLength = averageWordLength;
-	}
-
-	public void setLastLongestWord(String lastLongestWord) {
-		this.lastLongestWord = lastLongestWord;
-	}
-
-	public void setLastValuableWord(String lastValuableWord) {
-		this.lastValuableWord = lastValuableWord;
-	}
-
 	public void setLastMoveTime(Date lastMoveTime) {
 		this.lastMoveTime = lastMoveTime;
 	}
@@ -176,9 +140,6 @@ public class MovesStatisticEditor implements MovesStatistic, Serializable {
 		sb.append(", minPoints=").append(minPoints);
 		sb.append(", avgPoints=").append(avgPoints);
 		sb.append(", maxPoints=").append(maxPoints);
-		sb.append(", averageWordLength=").append(averageWordLength);
-		sb.append(", lastLongestWord='").append(lastLongestWord).append('\'');
-		sb.append(", lastValuableWord='").append(lastValuableWord).append('\'');
 		sb.append(", lastMoveTime=").append(lastMoveTime);
 		sb.append('}');
 		return sb.toString();

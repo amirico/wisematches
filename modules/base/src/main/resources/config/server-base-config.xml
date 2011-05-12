@@ -64,9 +64,9 @@
         <property name="roomsManager" ref="roomsManager"/>
         <property name="accountManager" ref="accountManager"/>
         <property name="playerStatisticDao" ref="playerStatisticDao"/>
-        <property name="gamesStatistician" ref="gamesStatistician"/>
-        <property name="movesStatistician" ref="movesStatistician"/>
-        <property name="ratingsStatistician" ref="ratingsStatistician"/>
+        <!--<property name="gamesStatistician" ref="gamesStatistician"/>-->
+        <!--<property name="movesStatistician" ref="movesStatistician"/>-->
+        <!--<property name="ratingsStatistician" ref="ratingsStatistician"/>-->
     </bean>
 
     <bean id="gameTimeoutTerminator" class="wisematches.server.playground.expiration.impl.ExpiredGamesTerminator"

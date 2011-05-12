@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.server.personality.Personality;
 import wisematches.server.personality.account.*;
-import wisematches.server.standing.statistic.MovesStatistic;
 import wisematches.server.standing.statistic.RatingsStatistic;
 import wisematches.server.standing.statistic.statistician.GamesStatisticEditor;
-import wisematches.server.standing.statistic.statistician.MovesStatisticEditor;
 import wisematches.server.standing.statistic.statistician.RatingsStatisticEditor;
 
 import java.util.Date;
@@ -49,17 +48,17 @@ public class PlayerStatisticDaoTest {
 	@Before
 	public void setUp() throws InadmissibleUsernameException, DuplicateAccountException {
 		final String uuid = UUID.randomUUID().toString();
-		person = accountManager.createAccount(new AccountEditor(uuid + "@mock.wm", uuid, "AS").createAccount());
+//		person = accountManager.createAccount(new AccountEditor(uuid + "@mock.wm", uuid, "AS").createAccount());
 	}
 
 	@After
 	public void tearDown() throws UnknownAccountException {
-		accountManager.removeAccount(person);
+//		accountManager.removeAccount(person);
 	}
 
 	@Test
 	public void test_playerStatistic() throws InterruptedException, InadmissibleUsernameException, DuplicateAccountException {
-		final HibernatePlayerStatistic statistic = playerStatisticDao.loadPlayerStatistic(person);
+		final MockPlayerStatistic statistic = playerStatisticDao.loadPlayerStatistic(MockPlayerStatistic.class, Personality.person(1002));
 		assertNotNull(statistic);
 
 		final GamesStatisticEditor gs = statistic.getGamesStatisticEditor();
@@ -73,7 +72,7 @@ public class PlayerStatisticDaoTest {
 		gs.setWins(8);
 		playerStatisticDao.savePlayerStatistic(statistic);
 
-		final MovesStatisticEditor ms = statistic.getMovesStatisticEditor();
+		final MockMovesStatisticEditor ms = statistic.getMovesStatisticEditor();
 		ms.setAverageTurnTime(1);
 		ms.setAverageWordLength(2);
 		ms.setAvgPoints(3);
@@ -102,7 +101,7 @@ public class PlayerStatisticDaoTest {
 		sessionFactory.getCurrentSession().flush();
 		sessionFactory.getCurrentSession().clear();
 
-		final HibernatePlayerStatistic s = playerStatisticDao.loadPlayerStatistic(person);
+		final MockPlayerStatistic s = playerStatisticDao.loadPlayerStatistic(MockPlayerStatistic.class, person);
 
 		final GamesStatisticEditor gsil = s.getGamesStatisticEditor();
 		assertEquals(1, gsil.getActive());
@@ -124,7 +123,7 @@ public class PlayerStatisticDaoTest {
 		assertEquals(7, sri1.getLowestLostOpponentId());
 		assertEquals((short) 8, sri1.getLowestLostOpponentRating());
 
-		final MovesStatistic msil = s.getMovesStatistic();
+		final MockMovesStatistic msil = s.getMovesStatistic();
 		assertEquals(1, msil.getAverageTurnTime());
 		assertEquals(2, msil.getAverageWordLength());
 		assertEquals(3, msil.getAvgPoints());
@@ -141,6 +140,6 @@ public class PlayerStatisticDaoTest {
 		playerStatisticDao.removePlayerStatistic(s);
 		sessionFactory.getCurrentSession().flush();
 		sessionFactory.getCurrentSession().clear();
-		assertNull(playerStatisticDao.loadPlayerStatistic(person));
+		assertNull(playerStatisticDao.loadPlayerStatistic(MockPlayerStatistic.class, person));
 	}
 }
