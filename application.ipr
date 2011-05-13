@@ -529,6 +529,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/database/database.iml" filepath="$PROJECT_DIR$/modules/database/database.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/personality/personality.iml" filepath="$PROJECT_DIR$/modules/personality/personality.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
     </modules>
   </component>
   <component name="ProjectResources">

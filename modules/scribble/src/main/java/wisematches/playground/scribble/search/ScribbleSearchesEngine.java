@@ -1,9 +1,9 @@
 package wisematches.playground.scribble.search;
 
+import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.ScribbleBoardDao;
-import wisematches.server.playground.board.GameResolution;
-import wisematches.server.playground.search.BoardLastMoveInfo;
-import wisematches.server.playground.search.BoardsSearchEngine;
+import wisematches.playground.search.BoardsSearchEngine;
+import wisematches.playground.search.LastMoveInfo;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,14 +15,14 @@ import java.util.EnumSet;
 public class ScribbleSearchesEngine implements BoardsSearchEngine {
 	private ScribbleBoardDao scribbleBoardDao;
 
-	private static final Collection<BoardLastMoveInfo> EMPTY_SCRIBBLE_BOARD = Collections.emptyList();
+	private static final Collection<LastMoveInfo> EMPTY_SCRIBBLE_BOARD = Collections.emptyList();
 
 	public ScribbleSearchesEngine() {
 	}
 
 	@Override
-	public Collection<BoardLastMoveInfo> findExpiringBoards() {
-		final Collection<BoardLastMoveInfo> expiredBoards = scribbleBoardDao.findExpiringBoards();
+	public Collection<LastMoveInfo> findExpiringBoards() {
+		final Collection<LastMoveInfo> expiredBoards = scribbleBoardDao.findExpiringBoards();
 		if (expiredBoards.size() == 0) {
 			return EMPTY_SCRIBBLE_BOARD;
 		}

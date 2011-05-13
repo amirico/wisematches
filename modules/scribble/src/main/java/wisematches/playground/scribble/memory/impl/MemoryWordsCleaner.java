@@ -1,9 +1,10 @@
 package wisematches.playground.scribble.memory.impl;
 
 import org.apache.log4j.Logger;
+import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.memory.MemoryWordManager;
-import wisematches.playground.scribble.room.ScribbleRoomManager;
 
 import java.util.Collection;
 
@@ -12,7 +13,7 @@ import java.util.Collection;
  */
 public class MemoryWordsCleaner {
 	private MemoryWordManager memoryWordManager;
-	private ScribbleRoomManager scribbleRoomManager;
+	private ScribbleBoardManager scribbleBoardManager;
 
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
@@ -25,15 +26,16 @@ public class MemoryWordsCleaner {
 		this.memoryWordManager = memoryWordManager;
 	}
 
-	public void setScribbleRoomManager(ScribbleRoomManager scribbleRoomManager) {
-		if (this.scribbleRoomManager != null) {
-			this.scribbleRoomManager.getBoardManager().removeBoardStateListener(boardStateListener);
+
+	public void setScribbleBoardManager(ScribbleBoardManager scribbleBoardManager) {
+		if (this.scribbleBoardManager != null) {
+			this.scribbleBoardManager.removeBoardStateListener(boardStateListener);
 		}
 
-		this.scribbleRoomManager = scribbleRoomManager;
+		this.scribbleBoardManager = scribbleBoardManager;
 
-		if (this.scribbleRoomManager != null) {
-			this.scribbleRoomManager.getBoardManager().addBoardStateListener(boardStateListener);
+		if (this.scribbleBoardManager != null) {
+			this.scribbleBoardManager.addBoardStateListener(boardStateListener);
 		}
 	}
 

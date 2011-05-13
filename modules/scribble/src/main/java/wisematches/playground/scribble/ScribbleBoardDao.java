@@ -3,8 +3,8 @@ package wisematches.playground.scribble;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.personality.Personality;
-import wisematches.server.playground.board.GameResolution;
-import wisematches.server.playground.search.BoardLastMoveInfo;
+import wisematches.playground.GameResolution;
+import wisematches.playground.search.LastMoveInfo;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -39,9 +39,9 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<BoardLastMoveInfo> findExpiringBoards() {
+	public Collection<LastMoveInfo> findExpiringBoards() {
 		final HibernateTemplate template = getHibernateTemplate();
-		return template.find("select new " + BoardLastMoveInfo.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
+		return template.find("select new " + LastMoveInfo.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
 				ScribbleBoard.class.getName() + " board where board.gameResolution is null");
 	}
 /*

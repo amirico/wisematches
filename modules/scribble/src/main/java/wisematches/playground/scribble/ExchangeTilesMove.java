@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.server.playground.board.MakeTurnMove;
+import wisematches.playground.MakeTurnMove;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
