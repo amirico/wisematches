@@ -11,4 +11,6 @@
             </props>
         </property>
     </bean>
+
+    <import resource="database-config.xml"/>
 </beans>
