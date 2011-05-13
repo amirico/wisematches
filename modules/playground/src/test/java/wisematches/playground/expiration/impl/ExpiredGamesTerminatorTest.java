@@ -7,16 +7,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
-import wisematches.playground.room.MockRoom;
-import wisematches.server.playground.board.BoardLoadingException;
-import wisematches.server.playground.board.BoardManager;
-import wisematches.server.playground.board.BoardStateListener;
-import wisematches.server.playground.expiration.GameExpirationListener;
-import wisematches.server.playground.expiration.GameExpirationType;
-import wisematches.server.playground.room.RoomManager;
-import wisematches.server.playground.room.RoomsManager;
-import wisematches.server.playground.search.BoardLastMoveInfo;
-import wisematches.server.playground.search.BoardsSearchEngine;
+import wisematches.playground.*;
+import wisematches.playground.expiration.GameExpirationListener;
+import wisematches.playground.expiration.GameExpirationType;
+import wisematches.playground.search.BoardsSearchEngine;
+import wisematches.playground.search.LastMoveInfo;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,11 +23,8 @@ import static org.easymock.EasyMock.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ExpiredGamesTerminatorTest {
-	private BoardsSearchEngine searchesEngine;
-
 	private BoardManager boardManager;
-	private RoomManager roomManager;
-	private RoomsManager roomsManager;
+	private BoardsSearchEngine searchesEngine;
 
 	private Capture<BoardStateListener> boardStateListener;
 
@@ -55,14 +47,6 @@ public class ExpiredGamesTerminatorTest {
 		boardManager = createMock(BoardManager.class);
 		boardManager.addBoardStateListener(capture(boardStateListener));
 
-		roomManager = createMock(RoomManager.class);
-		expect(roomManager.getRoomType()).andReturn(MockRoom.type);
-		expect(roomManager.getSearchesEngine()).andReturn(searchesEngine);
-		expect(roomManager.getBoardManager()).andReturn(boardManager);
-
-		roomsManager = createMock(RoomsManager.class);
-		expect(roomsManager.getRoomManagers()).andReturn(Arrays.asList(roomManager));
-
 		transactionTemplate = new TransactionTemplate() {
 			@Override
 			public <T> T execute(TransactionCallback<T> action) throws TransactionException {
@@ -75,6 +59,7 @@ public class ExpiredGamesTerminatorTest {
 
 		gamesTerminator = new ExpiredGamesTerminator();
 		gamesTerminator.setTaskScheduler(taskScheduler);
+		gamesTerminator.setBoardsSearchEngine(searchesEngine);
 		gamesTerminator.setTransactionTemplate(transactionTemplate);
 	}
 
@@ -84,11 +69,11 @@ public class ExpiredGamesTerminatorTest {
 		final long time = System.currentTimeMillis();
 
 		expect(searchesEngine.findExpiringBoards()).andReturn(Arrays.asList(
-				new BoardLastMoveInfo(12L, 3, new Date(time - MILLIS_IN_DAY * 2 + 200)), // DAY
-				new BoardLastMoveInfo(13L, 3, new Date(time - MILLIS_IN_DAY * 2 - MILLIS_IN_DAY / 2 + 200)), // HALF
-				new BoardLastMoveInfo(14L, 3, new Date(time - MILLIS_IN_DAY * 3 + MILLIS_IN_DAY / 24 + 200)), // HOUR
-				new BoardLastMoveInfo(15L, 3, new Date(time - MILLIS_IN_DAY * 4)), // OUT OF DATE
-				new BoardLastMoveInfo(16L, 3, new Date(time - MILLIS_IN_DAY * 4)) // OUT OF DATE FINISHED
+				new LastMoveInfo(12L, 3, new Date(time - MILLIS_IN_DAY * 2 + 200)), // DAY
+				new LastMoveInfo(13L, 3, new Date(time - MILLIS_IN_DAY * 2 - MILLIS_IN_DAY / 2 + 200)), // HALF
+				new LastMoveInfo(14L, 3, new Date(time - MILLIS_IN_DAY * 3 + MILLIS_IN_DAY / 24 + 200)), // HOUR
+				new LastMoveInfo(15L, 3, new Date(time - MILLIS_IN_DAY * 4)), // OUT OF DATE
+				new LastMoveInfo(16L, 3, new Date(time - MILLIS_IN_DAY * 4)) // OUT OF DATE FINISHED
 		));
 		replay(searchesEngine);
 
@@ -108,23 +93,18 @@ public class ExpiredGamesTerminatorTest {
 		expect(boardManager.openBoard(16L)).andReturn(gameBoard2);
 		replay(boardManager);
 
-		replay(roomManager);
-
-		expect(roomsManager.getBoardManager(MockRoom.type)).andReturn(boardManager).times(3);
-		replay(roomsManager);
-
 		final GameExpirationListener l = createMock(GameExpirationListener.class);
-		l.gameExpiring(12L, MockRoom.type, GameExpirationType.ONE_DAY);
-		l.gameExpiring(13L, MockRoom.type, GameExpirationType.HALF_DAY);
-		l.gameExpiring(14L, MockRoom.type, GameExpirationType.ONE_HOUR);
+		l.gameExpiring(12L, GameExpirationType.ONE_DAY);
+		l.gameExpiring(13L, GameExpirationType.HALF_DAY);
+		l.gameExpiring(14L, GameExpirationType.ONE_HOUR);
 		replay(l);
 
 		gamesTerminator.addGameExpirationListener(l);
-		gamesTerminator.setRoomsManager(roomsManager);
+		gamesTerminator.setBoardManager(boardManager);
 
 		Thread.sleep(500);
 
-		verify(searchesEngine, l, gameBoard, gameBoard2, boardManager, roomsManager);
+		verify(searchesEngine, l, gameBoard, gameBoard2, boardManager);
 	}
 
 	@Test
@@ -132,7 +112,7 @@ public class ExpiredGamesTerminatorTest {
 	public void testListeners() throws InterruptedException, GameMoveException, BoardLoadingException {
 		final long time = System.currentTimeMillis();
 
-		expect(searchesEngine.findExpiringBoards()).andReturn(Collections.<BoardLastMoveInfo>emptyList());
+		expect(searchesEngine.findExpiringBoards()).andReturn(Collections.<LastMoveInfo>emptyList());
 		replay(searchesEngine);
 
 		final GameSettings gs = createStrictMock(GameSettings.class);
@@ -149,13 +129,13 @@ public class ExpiredGamesTerminatorTest {
 		expect(gameBoard.getBoardId()).andReturn(12L);
 		replay(gameBoard);
 
-		replay(boardManager, roomManager, roomsManager);
+		replay(boardManager);
 
 		final GameExpirationListener l = createMock(GameExpirationListener.class);
 		replay(l);
 
 		gamesTerminator.addGameExpirationListener(l);
-		gamesTerminator.setRoomsManager(roomsManager);
+		gamesTerminator.setBoardManager(boardManager);
 
 		boardStateListener.getValue().gameStarted(gameBoard);
 		boardStateListener.getValue().gameMoveDone(gameBoard, new GameMove(new MakeTurnMove(12L), 12, 1, new Date()));
@@ -163,6 +143,6 @@ public class ExpiredGamesTerminatorTest {
 
 		Thread.sleep(500);
 
-		verify(searchesEngine, l, gameBoard, boardManager, roomsManager);
+		verify(searchesEngine, l, gameBoard, boardManager);
 	}
 }

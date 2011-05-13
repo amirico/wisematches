@@ -13,9 +13,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import wisematches.personality.account.Account;
+import wisematches.personality.account.Language;
 import wisematches.server.mail.*;
-import wisematches.server.personality.account.Account;
-import wisematches.server.personality.account.Language;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;

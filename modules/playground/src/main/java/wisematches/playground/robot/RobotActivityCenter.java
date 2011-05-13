@@ -1,4 +1,4 @@
-package wisematches.playground.robot.impl;
+package wisematches.playground.robot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,26 +10,23 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.*;
-import wisematches.playground.robot.RobotBrain;
-import wisematches.playground.robot.RobotBrainManager;
-import wisematches.playground.room.Room;
-import wisematches.playground.room.RoomManager;
-import wisematches.playground.room.RoomsManager;
 
 import java.util.Collection;
 import java.util.concurrent.Executor;
 
 /**
- * This manager listen all games and when turn is transfered to robot it start process for perfome that move.
+ * This manager listen all games and when turn is transferred to robot it start process for perfomed that move.
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RobotActivityCenter {
 	private Executor movesExecutor;
 
-	private RoomsManager roomsManager;
-	private RobotBrainManager robotBrainManager;
+	private RobotBrain robotBrain;
+	private BoardManager boardManager;
 	private TransactionTemplate transactionTemplate;
+
+	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.robot.activity");
 
@@ -37,26 +34,20 @@ public class RobotActivityCenter {
 	}
 
 	private void initializeGames() {
-		final Collection<RoomManager> roomManagerCollection = roomsManager.getRoomManagers();
+		boardManager.addBoardStateListener(boardStateListener);
 
-		final Collection<RobotPlayer> robotPlayers = robotBrainManager.getRobotPlayers();
-		for (RoomManager roomManager : roomManagerCollection) {
-			final Room roomType = roomManager.getRoomType();
-			final BoardManager boardManager = roomManager.getBoardManager();
-			boardManager.addBoardStateListener(new TheBoardStateListener(roomType));
-
-			for (RobotPlayer player : robotPlayers) {
-				@SuppressWarnings("unchecked")
-				final Collection<GameBoard> activeBoards = boardManager.getActiveBoards(player);
-				for (GameBoard activeBoard : activeBoards) {
-					processRobotMove(roomType, activeBoard);
-				}
+		final Collection<RobotPlayer> robotPlayers = RobotPlayer.getRobotPlayers();
+		for (RobotPlayer player : robotPlayers) {
+			@SuppressWarnings("unchecked")
+			final Collection<GameBoard> activeBoards = boardManager.getActiveBoards(player);
+			for (GameBoard activeBoard : activeBoards) {
+				processRobotMove(activeBoard);
 			}
 		}
 	}
 
 	private void afterPropertiesSet() {
-		if (this.robotBrainManager != null && this.roomsManager != null && this.movesExecutor != null && this.transactionTemplate != null) {
+		if (this.robotBrain != null && boardManager != null && this.movesExecutor != null && this.transactionTemplate != null) {
 			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
@@ -69,17 +60,16 @@ public class RobotActivityCenter {
 	/**
 	 * Checks that robot's has a turn on specified board and make a turn.
 	 *
-	 * @param room	  the room of specified game board.
 	 * @param gameBoard the bame board to check and make a turn.
 	 * @return {@code true} if move was maden; {@code false} - otherwise.
 	 */
-	private boolean processRobotMove(Room room, GameBoard gameBoard) {
+	private boolean processRobotMove(GameBoard gameBoard) {
 		final GamePlayerHand hand = gameBoard.getPlayerTurn();
 		if (hand != null) {
 			final RobotPlayer robot = RobotPlayer.getComputerPlayer(hand.getPlayerId(), RobotPlayer.class);
 			if (robot != null) {
-				log.info("Initialize robot activity: " + room + ", " + robot);
-				movesExecutor.execute(new MakeTurnTask(room, gameBoard));
+				log.info("Initialize robot activity: " + robot);
+				movesExecutor.execute(new MakeTurnTask(gameBoard));
 				return true;
 			}
 		}
@@ -87,13 +77,13 @@ public class RobotActivityCenter {
 	}
 
 
-	public void setRoomsManager(RoomsManager roomsManager) {
-		this.roomsManager = roomsManager;
+	public void setRobotBrain(RobotBrain robotBrain) {
+		this.robotBrain = robotBrain;
 		afterPropertiesSet();
 	}
 
-	public void setRobotBrainManager(RobotBrainManager robotBrainManager) {
-		this.robotBrainManager = robotBrainManager;
+	public void setBoardManager(BoardManager boardManager) {
+		this.boardManager = boardManager;
 		afterPropertiesSet();
 	}
 
@@ -110,11 +100,9 @@ public class RobotActivityCenter {
 
 
 	final class MakeTurnTask implements Runnable {
-		private final Room roomType;
 		private final GameBoard gameBoard;
 
-		MakeTurnTask(Room roomType, GameBoard gameBoard) {
-			this.roomType = roomType;
+		MakeTurnTask(GameBoard gameBoard) {
 			this.gameBoard = gameBoard;
 		}
 
@@ -126,10 +114,9 @@ public class RobotActivityCenter {
 					final RobotType robotType = robot.getRobotType();
 					transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 						@Override
+						@SuppressWarnings("unchecked")
 						protected void doInTransactionWithoutResult(TransactionStatus status) {
-							@SuppressWarnings("unchecked")
-							final RobotBrain<GameBoard> brain = robotBrainManager.getRobotBrain(roomType, robotType);
-							brain.putInAction(gameBoard, robotType);
+							robotBrain.putInAction(gameBoard, robotType);
 						}
 					});
 				}
@@ -138,20 +125,17 @@ public class RobotActivityCenter {
 	}
 
 	private final class TheBoardStateListener implements BoardStateListener {
-		private Room room;
-
-		private TheBoardStateListener(Room room) {
-			this.room = room;
+		private TheBoardStateListener() {
 		}
 
 		@Override
 		public void gameStarted(GameBoard board) {
-			processRobotMove(room, board);
+			processRobotMove(board);
 		}
 
 		@Override
 		public void gameMoveDone(GameBoard board, GameMove move) {
-			processRobotMove(room, board);
+			processRobotMove(board);
 		}
 
 		@Override

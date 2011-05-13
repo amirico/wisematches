@@ -1,6 +1,6 @@
 package wisematches.tracking.impl;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.server.standing.statistic.statistician.GamesStatisticEditor;
 import wisematches.server.standing.statistic.statistician.PlayerStatisticEditor;
 import wisematches.server.standing.statistic.statistician.RatingsStatisticEditor;

@@ -2,7 +2,7 @@ package wisematches.playground.scribble;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.server.playground.board.GameResolution;
 import wisematches.server.playground.search.BoardLastMoveInfo;
 

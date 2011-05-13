@@ -1,7 +1,6 @@
-package wisematches.playground.board;
+package wisematches.playground;
 
-import wisematches.playground.*;
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 import java.lang.reflect.Field;
 import java.util.Collection;

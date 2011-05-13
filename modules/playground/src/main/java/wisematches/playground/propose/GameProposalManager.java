@@ -1,8 +1,8 @@
 package wisematches.playground.propose;
 
+import wisematches.personality.Personality;
+import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.player.Player;
 
 import java.util.Collection;
 
@@ -42,7 +42,7 @@ public interface GameProposalManager<S extends GameSettings> {
 	 * @param player	 the player to be added.
 	 * @return the modified waiting game info or {@code null} if no proposal with specified id.
 	 * @throws IllegalArgumentException	 if specified player is null.
-	 * @throws ViolatedRestrictionException if game can't initialized because specified player is not suitable: {@link GameProposal#isSuitablePlayer(wisematches.server.personality.player.Player)}
+	 * @throws ViolatedRestrictionException if game can't initialized because specified player is not suitable: {@link GameProposal#isSuitablePlayer(Player)}
 	 */
 	GameProposal<S> attachPlayer(long proposalId, Player player) throws ViolatedRestrictionException;
 
@@ -53,7 +53,7 @@ public interface GameProposalManager<S extends GameSettings> {
 	 * @param player	 the player to be attached.
 	 * @return the modified waiting game info or {@code null} if no proposal with specified id.
 	 * @throws IllegalArgumentException	 if specified player is null.
-	 * @throws ViolatedRestrictionException if game can't initialized because specified player is not suitable: {@link GameProposal#isSuitablePlayer(wisematches.server.personality.player.Player)}
+	 * @throws ViolatedRestrictionException if game can't initialized because specified player is not suitable: {@link GameProposal#isSuitablePlayer(Player)}
 	 */
 	GameProposal<S> detachPlayer(long proposalId, Player player) throws ViolatedRestrictionException;
 

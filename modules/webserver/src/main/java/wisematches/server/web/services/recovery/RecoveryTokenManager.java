@@ -1,7 +1,7 @@
 package wisematches.server.web.services.recovery;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import wisematches.server.personality.account.Account;
+import wisematches.personality.account.Account;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

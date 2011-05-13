@@ -1,5 +1,7 @@
 package wisematches.playground;
 
+import wisematches.personality.Personality;
+
 import java.util.Collection;
 
 /**

@@ -1,11 +1,11 @@
 package wisematches.playground.propose.impl;
 
+import wisematches.personality.Personality;
+import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameRestriction;
 import wisematches.playground.propose.ViolatedRestrictionException;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.player.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;

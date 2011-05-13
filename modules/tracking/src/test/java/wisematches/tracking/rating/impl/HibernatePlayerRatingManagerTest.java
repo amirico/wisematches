@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.personality.Personality;
 import wisematches.personality.player.computer.robot.RobotPlayer;
-import wisematches.server.personality.Personality;
 import wisematches.server.playground.board.*;
 import wisematches.server.playground.room.RoomManager;
 import wisematches.server.playground.room.RoomsManager;
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
 		"classpath:/config/test-server-base-config.xml",
 		"classpath:/src/main/resources/config/database-config.xml",
-		"classpath:/config/server-base-config.xml"
+		"classpath:/config/playground-config.xml"
 })
 public class HibernatePlayerRatingManagerTest {
 	private Account account;

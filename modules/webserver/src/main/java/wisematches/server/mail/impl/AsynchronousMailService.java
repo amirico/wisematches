@@ -3,10 +3,10 @@ package wisematches.server.mail.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import wisematches.personality.account.Account;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
-import wisematches.server.personality.account.Account;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;

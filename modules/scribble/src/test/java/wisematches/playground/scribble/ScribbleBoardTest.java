@@ -1,8 +1,8 @@
 package wisematches.playground.scribble;
 
 import junit.framework.TestCase;
+import wisematches.personality.Personality;
 import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.server.personality.Personality;
 import wisematches.server.playground.board.GameMove;
 import wisematches.server.playground.board.GameMoveException;
 import wisematches.server.playground.board.PassTurnMove;

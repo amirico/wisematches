@@ -2,9 +2,9 @@ package wisematches.playground.scribble;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import wisematches.personality.Personality;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
-import wisematches.server.personality.Personality;
 import wisematches.server.playground.board.AbstractBoardManager;
 import wisematches.server.playground.board.BoardCreationException;
 import wisematches.server.playground.board.BoardLoadingException;

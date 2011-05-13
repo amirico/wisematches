@@ -1,9 +1,9 @@
-package wisematches.playground.impl.file;
+package wisematches.playground.dictionary.impl.file;
 
 import junit.framework.TestCase;
-import wisematches.server.playground.dictionary.Dictionary;
-import wisematches.server.playground.dictionary.DictionaryModificationException;
-import wisematches.server.playground.dictionary.Word;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.DictionaryModificationException;
+import wisematches.playground.dictionary.Word;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +16,9 @@ import java.util.Locale;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileDictionaryTest extends TestCase {
+	public FileDictionaryTest() {
+	}
+
 	public void testSearch() throws IOException, FileNotFoundException {
 		String s = URLDecoder.decode(getClass().getResource("/dicts/dictionary_en.properties").getFile(), "UTF-8");
 		File f = new File(s);

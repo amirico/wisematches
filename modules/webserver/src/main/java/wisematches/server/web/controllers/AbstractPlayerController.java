@@ -1,8 +1,8 @@
 package wisematches.server.web.controllers;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
+import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
-import wisematches.server.personality.Personality;
 import wisematches.server.security.WMSecurityContext;
 
 /**

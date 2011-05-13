@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 import javax.persistence.*;
 import java.util.*;

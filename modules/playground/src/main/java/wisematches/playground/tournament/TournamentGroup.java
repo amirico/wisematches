@@ -4,7 +4,7 @@
 
 package wisematches.playground.tournament;
 
-import wisematches.server.personality.account.Language;
+import wisematches.personality.Language;
 
 /**
  * {@code TournamentGroup} is a very small part of tournament and contains limited (3 or 4) number of players.

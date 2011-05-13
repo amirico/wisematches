@@ -59,7 +59,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-acl:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: quartz:quartz:1.5.2" level="project" />
-    <orderEntry type="module" module-name="accounts" />
+    <orderEntry type="module" module-name="personality" />
     <orderEntry type="module" module-name="playground" />
     <orderEntry type="library" name="Maven: wisematches:scribble:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />

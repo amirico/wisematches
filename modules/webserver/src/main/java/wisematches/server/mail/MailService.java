@@ -1,6 +1,6 @@
 package wisematches.server.mail;
 
-import wisematches.server.personality.account.Account;
+import wisematches.personality.account.Account;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public interface MailService {
 	 * {@code msgCode} that will be mapped to appropriate message sources.
 	 * <p/>
 	 * This is asynchronous method that returns immediately after mail template has been prepared. Please
-	 * check {@link #sendWarrantyMail(MailSender, wisematches.server.personality.account.Account, String, java.util.Map)} to be
+	 * check {@link #sendWarrantyMail(MailSender, wisematches.personality.account.Account, String, java.util.Map)} to be
 	 * sure that email has been sent.
 	 *
 	 * @param from	required parameter that describes account name for sender.

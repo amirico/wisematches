@@ -2,7 +2,6 @@ package wisematches.playground.robot;
 
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.GameBoard;
-import wisematches.playground.room.Room;
 
 /**
  * The robot's brain. This object can process for a move of robot.
@@ -11,13 +10,6 @@ import wisematches.playground.room.Room;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface RobotBrain<B extends GameBoard> {
-	/**
-	 * Returns room that this brain is supported.
-	 *
-	 * @return the supported room.
-	 */
-	Room getRoom();
-
 	/**
 	 * Returns array of robot types that this brain is supported.
 	 *

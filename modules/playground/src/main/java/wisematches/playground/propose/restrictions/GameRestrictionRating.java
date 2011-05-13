@@ -1,8 +1,8 @@
 package wisematches.playground.propose.restrictions;
 
+import wisematches.personality.player.Player;
 import wisematches.playground.propose.GameRestriction;
 import wisematches.playground.propose.ViolatedRestrictionException;
-import wisematches.server.personality.player.Player;
 
 /**
  * Validates player's rating and throws {@code ViolatedRestrictionException} with code {@code rating.min}

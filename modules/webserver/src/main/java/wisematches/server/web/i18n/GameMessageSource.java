@@ -1,9 +1,9 @@
 package wisematches.server.web.i18n;
 
 import org.springframework.context.MessageSource;
+import wisematches.personality.account.Language;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.computer.ComputerPlayer;
-import wisematches.server.personality.account.Language;
 import wisematches.server.playground.board.GameBoard;
 import wisematches.server.playground.board.GameSettings;
 import wisematches.server.playground.propose.GameProposal;

@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import wisematches.server.personality.account.Language;
+import wisematches.personality.account.Language;
 import wisematches.server.web.services.ads.AdvertisementBlock;
 import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.ads.AdvertisementProvider;

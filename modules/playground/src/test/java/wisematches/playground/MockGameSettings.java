@@ -1,6 +1,4 @@
-package wisematches.playground.board;
-
-import wisematches.playground.GameSettings;
+package wisematches.playground;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

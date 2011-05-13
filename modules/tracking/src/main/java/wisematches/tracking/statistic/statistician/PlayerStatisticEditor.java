@@ -1,12 +1,11 @@
 package wisematches.tracking.statistic.statistician;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.tracking.statistic.GamesStatistic;
 import wisematches.tracking.statistic.MovesStatistic;
 import wisematches.tracking.statistic.PlayerStatistic;
 import wisematches.tracking.statistic.RatingsStatistic;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 

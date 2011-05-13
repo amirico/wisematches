@@ -1,6 +1,6 @@
 package wisematches.tracking.statistic;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 /**
  * {@code PlayerStatisticListener} notifies clients that player statistic was changed.

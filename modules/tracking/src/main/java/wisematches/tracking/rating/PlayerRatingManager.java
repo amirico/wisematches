@@ -1,6 +1,6 @@
 package wisematches.tracking.rating;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.server.playground.board.GameBoard;
 
 import java.util.Collection;

@@ -1,7 +1,7 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;

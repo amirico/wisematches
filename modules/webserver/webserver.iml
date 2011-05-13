@@ -9,6 +9,10 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/src/main/java" />
+          <root url="file://$MODULE_DIR$/src/main/resources" />
+        </sourceRoots>
       </configuration>
     </facet>
   </component>
@@ -71,10 +75,10 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-acl:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: quartz:quartz:1.5.2" level="project" />
-    <orderEntry type="module" module-name="accounts" />
+    <orderEntry type="module" module-name="personality" />
     <orderEntry type="module" module-name="playground" />
-    <orderEntry type="module" module-name="tracking" />
     <orderEntry type="library" name="Maven: wisematches:scribble:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="tracking" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.7.1" level="project" />

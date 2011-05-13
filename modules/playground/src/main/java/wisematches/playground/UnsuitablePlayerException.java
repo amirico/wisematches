@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 /**
  * This exception is throw if player can't make a turn because turn belongs to other player or player

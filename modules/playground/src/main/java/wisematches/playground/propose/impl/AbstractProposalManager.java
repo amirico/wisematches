@@ -1,10 +1,10 @@
 package wisematches.playground.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
+import wisematches.personality.Personality;
+import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.*;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;

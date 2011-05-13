@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="ratingManager" class="wisematches.server.standing.rating.impl.HibernatePlayerRatingManager">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="ratingSystem">
+            <bean class="wisematches.server.standing.rating.impl.systems.ELORatingSystem"/>
+        </property>
+    </bean>
+
+    <bean id="playerStatisticDao" class="wisematches.server.standing.statistic.impl.PlayerStatisticDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="gamesStatistician"
+          class="wisematches.server.standing.statistic.impl.statistician.DefaultGamesStatistician">
+    </bean>
+
+    <bean id="movesStatistician"
+          class="wisematches.server.standing.statistic.impl.statistician.DefaultMovesStatistician">
+    </bean>
+
+    <bean id="ratingsStatistician"
+          class="wisematches.server.standing.statistic.impl.statistician.DefaultRatingsStatistician">
+        <property name="ratingManager" ref="ratingManager"/>
+    </bean>
+
+    <bean id="statisticsManager" class="wisematches.server.standing.statistic.impl.DefaultPlayerStatisticManager">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="accountManager" ref="accountManager"/>
+        <property name="playerStatisticDao" ref="playerStatisticDao"/>
+        <!--<property name="gamesStatistician" ref="gamesStatistician"/>-->
+        <!--<property name="movesStatistician" ref="movesStatistician"/>-->
+        <!--<property name="ratingsStatistician" ref="ratingsStatistician"/>-->
+    </bean>
+</beans>

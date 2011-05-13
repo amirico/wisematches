@@ -2,8 +2,8 @@ package wisematches.server.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
-import wisematches.server.personality.Personality;
 import wisematches.server.security.impl.WMUserDetails;
 
 /**

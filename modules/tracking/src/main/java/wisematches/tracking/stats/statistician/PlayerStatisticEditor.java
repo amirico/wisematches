@@ -1,6 +1,6 @@
 package wisematches.tracking.stats.statistician;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.tracking.stats.PlayerStatistic;
 
 import javax.persistence.MappedSuperclass;

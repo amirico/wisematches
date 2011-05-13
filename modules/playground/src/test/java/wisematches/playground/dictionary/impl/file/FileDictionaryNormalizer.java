@@ -1,4 +1,4 @@
-package wisematches.playground.impl.file;
+package wisematches.playground.dictionary.impl.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,13 +6,12 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 /**
- * Created by IntelliJ IDEA.
- * User: sergey
- * Date: 18.06.2009
- * Time: 22:43:03
- * To change this template use File | Settings | File Templates.
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class FileDictionaryNolmalizer {
+public class FileDictionaryNormalizer {
+	public FileDictionaryNormalizer() {
+	}
+
 	public static void main(String[] args) throws FileNotFoundException {
 		if (args.length != 1) {
 			throw new IllegalArgumentException("Where is no path to dictionary file");

@@ -23,8 +23,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/src/main/resources/config/database-config.xml",
-		"classpath:/config/server-base-config.xml",
-		"classpath:/config/game-scribble-config.xml",
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-config.xml",
 		"classpath:/config/test-game-modules-config.xml"})
 public class HibernateMemoryWordManagerTest {
 	@Autowired
