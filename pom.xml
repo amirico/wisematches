@@ -11,7 +11,7 @@
 
     <modules>
         <module>modules/database</module>
-        <module>modules/accounts</module>
+        <module>modules/personality</module>
         <module>modules/playground</module>
         <module>modules/scribble</module>
         <module>modules/tracking</module>
