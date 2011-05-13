@@ -101,12 +101,34 @@
             <element id="archive" name="database-1.0-SNAPSHOT.jar">
               <element id="module-output" name="database" />
             </element>
+            <element id="library" level="project" name="Maven: org.hibernate:hibernate:3.5.1-Final" />
+            <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.5.6" />
+            <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:3.5.1-Final" />
+            <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:3.5.1-Final" />
+            <element id="library" level="project" name="Maven: antlr:antlr:2.7.6" />
+            <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.1" />
+            <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
+            <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
+            <element id="library" level="project" name="Maven: javax.transaction:jta:1.1" />
+            <element id="library" level="project" name="Maven: org.hibernate:hibernate-annotations:3.5.1-Final" />
+            <element id="library" level="project" name="Maven: org.hibernate:hibernate-commons-annotations:3.2.0.Final" />
+            <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final" />
+            <element id="library" level="project" name="Maven: cglib:cglib:2.2" />
+            <element id="library" level="project" name="Maven: asm:asm:3.1" />
+            <element id="library" level="project" name="Maven: javassist:javassist:3.11.0.GA" />
+            <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.0.2.GA" />
+            <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
+            <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.1" />
+            <element id="library" level="project" name="Maven: javax.xml.stream:stax-api:1.0-2" />
+            <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+            <element id="library" level="project" name="Maven: com.sun.xml.bind:jaxb-impl:2.1.3" />
+            <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.6" />
+            <element id="library" level="project" name="Maven: cglib:cglib-nodep:2.2" />
+            <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
+            <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache:1.6.0" />
             <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1.1" />
             <element id="library" level="project" name="Maven: log4j:log4j:1.2.12" />
             <element id="library" level="project" name="Maven: org.slf4j:slf4j-jcl:1.5.6" />
-            <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.5.6" />
-            <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
-            <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
             <element id="library" level="project" name="Maven: org.springframework:spring-core:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-asm:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-expression:3.0.5.RELEASE" />
@@ -125,28 +147,6 @@
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: quartz:quartz:1.5.2" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate:3.5.1-Final" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:3.5.1-Final" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:3.5.1-Final" />
-            <element id="library" level="project" name="Maven: antlr:antlr:2.7.6" />
-            <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.1" />
-            <element id="library" level="project" name="Maven: javax.transaction:jta:1.1" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-annotations:3.5.1-Final" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-commons-annotations:3.2.0.Final" />
-            <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final" />
-            <element id="library" level="project" name="Maven: cglib:cglib:2.2" />
-            <element id="library" level="project" name="Maven: asm:asm:3.1" />
-            <element id="library" level="project" name="Maven: javassist:javassist:3.11.0.GA" />
-            <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.0.2.GA" />
-            <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
-            <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.1" />
-            <element id="library" level="project" name="Maven: javax.xml.stream:stax-api:1.0-2" />
-            <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
-            <element id="library" level="project" name="Maven: com.sun.xml.bind:jaxb-impl:2.1.3" />
-            <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.6" />
-            <element id="library" level="project" name="Maven: cglib:cglib-nodep:2.2" />
-            <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache:1.6.0" />
             <element id="archive" name="accounts-1.0-SNAPSHOT.jar">
               <element id="module-output" name="accounts" />
             </element>
@@ -156,6 +156,7 @@
             <element id="archive" name="tracking-1.0-SNAPSHOT.jar">
               <element id="module-output" name="tracking" />
             </element>
+            <element id="library" level="project" name="Maven: wisematches:scribble:1.0-SNAPSHOT" />
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.7.1" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.7.1" />
@@ -506,13 +507,13 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/modules/account/accounts.iml" filepath="$PROJECT_DIR$/modules/account/accounts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/accounts/accounts.iml" filepath="$PROJECT_DIR$/modules/accounts/accounts.iml" />
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/database/database.iml" filepath="$PROJECT_DIR$/modules/database/database.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/games/scribble.iml" filepath="$PROJECT_DIR$/modules/games/scribble.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/tracking/tracking.iml" filepath="$PROJECT_DIR$/modules/tracking/tracking.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/web/webserver.iml" filepath="$PROJECT_DIR$/modules/web/webserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/webserver/webserver.iml" filepath="$PROJECT_DIR$/modules/webserver/webserver.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -529,8 +530,8 @@
     </option>
   </component>
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/database/database.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/database/database_data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/design/database/database.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/design/database/database_data.sql" dialect="MySQL" />
   </component>
   <component name="StarteamConfiguration">
     <option name="SERVER" value="" />
@@ -1037,6 +1038,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.6/slf4j-api-1.5.6-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: org.slf4j:slf4j-api:1.5.8">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: org.slf4j:slf4j-jcl:1.5.6">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-jcl/1.5.6/slf4j-jcl-1.5.6.jar!/" />
@@ -1268,6 +1280,17 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/modules/base/pom-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/application/base/1.0-SNAPSHOT/base-1.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:scribble:1.0-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/1.0-SNAPSHOT/scribble-1.0-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/1.0-SNAPSHOT/scribble-1.0-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/1.0-SNAPSHOT/scribble-1.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: xml-apis:xml-apis:1.0.b2">
