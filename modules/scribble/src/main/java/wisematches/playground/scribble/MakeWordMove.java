@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.server.playground.board.MakeTurnMove;
+import wisematches.playground.MakeTurnMove;
 
 /**
  * Scribble move has a few parameters: letters of the putted word, start position and word direction.

@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.server.playground.board.GameSettings;
+import wisematches.playground.GameSettings;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

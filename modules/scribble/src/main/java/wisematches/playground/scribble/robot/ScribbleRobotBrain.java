@@ -3,17 +3,15 @@ package wisematches.playground.scribble.robot;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.playground.GameMove;
+import wisematches.playground.GameMoveException;
+import wisematches.playground.PassTurnMove;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.IterableDictionary;
+import wisematches.playground.robot.RobotBrain;
 import wisematches.playground.scribble.*;
-import wisematches.playground.scribble.room.ScribbleRoom;
 import wisematches.playground.scribble.scores.ScoreCalculation;
 import wisematches.playground.scribble.scores.ScoreEngine;
-import wisematches.server.playground.board.GameMove;
-import wisematches.server.playground.board.GameMoveException;
-import wisematches.server.playground.board.PassTurnMove;
-import wisematches.server.playground.dictionary.Dictionary;
-import wisematches.server.playground.dictionary.IterableDictionary;
-import wisematches.server.playground.robot.RobotBrain;
-import wisematches.server.playground.room.Room;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +26,6 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 	private static final Log log = LogFactory.getLog("wisematches.scribble.robot.brain");
 
 	public ScribbleRobotBrain() {
-	}
-
-	public Room getRoom() {
-		return ScribbleRoom.name;
 	}
 
 	public RobotType[] getRobotTypes() {

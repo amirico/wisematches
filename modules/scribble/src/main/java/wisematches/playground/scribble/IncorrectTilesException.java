@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.server.playground.board.IncorrectMoveException;
+import wisematches.playground.IncorrectMoveException;
 
 import static wisematches.playground.scribble.IncorrectTilesException.Type.*;
 

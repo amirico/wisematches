@@ -4,11 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 import wisematches.personality.Personality;
+import wisematches.playground.*;
+import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.scores.ScoreEngine;
 import wisematches.playground.scribble.scores.engines.ScribbleScoreEngine;
-import wisematches.server.playground.dictionary.Dictionary;
 
+import javax.persistence.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -341,7 +343,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * This method also invokes <code>super</code> method to check that game is right state.
 	 *
 	 * @throws GameStateException if there is no dictionary or tiles bank.
-	 * @see #setDictionary(wisematches.server.playground.dictionary.Dictionary)
+	 * @see #setDictionary(Dictionary)
 	 */
 	protected void checkState() throws GameStateException {
 		if (dictionary == null || tilesBank == null) {

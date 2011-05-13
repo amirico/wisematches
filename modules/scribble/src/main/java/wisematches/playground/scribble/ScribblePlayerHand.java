@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.server.playground.board.GamePlayerHand;
+import wisematches.playground.GamePlayerHand;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;

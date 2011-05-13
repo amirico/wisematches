@@ -10,11 +10,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import wisematches.personality.Personality;
+import wisematches.playground.GameMoveException;
+import wisematches.playground.GameResolution;
+import wisematches.playground.PassTurnMove;
+import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.server.playground.board.GameMoveException;
-import wisematches.server.playground.board.GameResolution;
-import wisematches.server.playground.board.PassTurnMove;
-import wisematches.server.playground.search.BoardLastMoveInfo;
+import wisematches.playground.search.LastMoveInfo;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -62,7 +63,7 @@ public class ScribbleBoardDaoTest {
 		final Personality p4 = Personality.person(4L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.playground.dictionary.Dictionary.class);
+		final Dictionary dictionary = createStrictMock(Dictionary.class);
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
@@ -96,7 +97,7 @@ public class ScribbleBoardDaoTest {
 		final Personality p3 = Personality.person(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.playground.dictionary.Dictionary.class);
+		final wisematches.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.playground.dictionary.Dictionary.class);
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
@@ -104,10 +105,10 @@ public class ScribbleBoardDaoTest {
 		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p1, p2, p3), tilesBank, dictionary);
 		scribbleBoardDao.saveScribbleBoard(sb1);
 
-		final Collection<BoardLastMoveInfo> collection = scribbleBoardDao.findExpiringBoards();
+		final Collection<LastMoveInfo> collection = scribbleBoardDao.findExpiringBoards();
 		assertEquals(1, collection.size());
 
-		final BoardLastMoveInfo info = collection.iterator().next();
+		final LastMoveInfo info = collection.iterator().next();
 		assertEquals(sb1.getBoardId(), info.getBoardId());
 		assertEquals(sb1.getGameSettings().getDaysPerMove(), info.getDaysPerMove());
 		assertDates(sb1.getLastMoveTime(), info.getLastMoveTime());
@@ -162,8 +163,8 @@ public class ScribbleBoardDaoTest {
 		final Personality p3 = Personality.person(3L);
 
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.playground.dictionary.Dictionary.class);
-		expect(dictionary.getWord("aaaa")).andReturn(new wisematches.server.playground.dictionary.Word("aaaa", LOCALE));
+		final wisematches.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.playground.dictionary.Dictionary.class);
+		expect(dictionary.getWord("aaaa")).andReturn(new wisematches.playground.dictionary.Word("aaaa", LOCALE));
 		replay(dictionary);
 
 		final ScribbleSettings ss = new ScribbleSettings("This is scribble board game", "ru", 3);
@@ -199,7 +200,7 @@ public class ScribbleBoardDaoTest {
 
 	private ScribbleBoard checkLoadedDatabase2(ScribbleBoard sb) {
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.playground.dictionary.Dictionary.class);
+		final wisematches.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.playground.dictionary.Dictionary.class);
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
@@ -215,8 +216,8 @@ public class ScribbleBoardDaoTest {
 
 	private ScribbleBoard checkLoadedDatabase(ScribbleBoard originalBoard) {
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
-		final wisematches.server.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.server.playground.dictionary.Dictionary.class);
-		expect(dictionary.getWord("aaaa")).andReturn(new wisematches.server.playground.dictionary.Word("aaaa", LOCALE));
+		final wisematches.playground.dictionary.Dictionary dictionary = createStrictMock(wisematches.playground.dictionary.Dictionary.class);
+		expect(dictionary.getWord("aaaa")).andReturn(new wisematches.playground.dictionary.Word("aaaa", LOCALE));
 		replay(dictionary);
 
 		final ScribbleBoard loadedBoard = scribbleBoardDao.getScribbleBoard(originalBoard.getBoardId());

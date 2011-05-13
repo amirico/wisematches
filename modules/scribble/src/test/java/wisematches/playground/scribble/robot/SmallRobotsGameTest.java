@@ -1,5 +1,6 @@
 package wisematches.playground.scribble.robot;
 
+/*
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import wisematches.personality.Personality;
 import wisematches.personality.player.computer.robot.RobotPlayer;
+import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
@@ -23,6 +25,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.Assert.*;
+*/
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * This is integration test and demonstrates how two robots can play a game...
@@ -40,6 +48,11 @@ import static org.junit.Assert.*;
 		"classpath:/config/scribble-config.xml",
 		"classpath:/config/test-game-modules-config.xml"})
 public class SmallRobotsGameTest {
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("Commented");
+	}
+/*
 	@Autowired
 	private RoomsManager roomsManager;
 
@@ -125,4 +138,5 @@ public class SmallRobotsGameTest {
 		gameFinishedCondition.signalAll();
 		gameFinishedLock.unlock();
 	}
+*/
 }

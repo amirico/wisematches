@@ -1,11 +1,7 @@
-package wisematches.playground.scribble.memory.impl;
+package wisematches.playground.scribble;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
-import wisematches.playground.scribble.Direction;
-import wisematches.playground.scribble.Position;
-import wisematches.playground.scribble.Tile;
-import wisematches.playground.scribble.Word;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;

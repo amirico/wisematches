@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.server.playground.board.IncorrectMoveException;
+import wisematches.playground.IncorrectMoveException;
 
 /**
  * This exception is indicates that word placed in incorrect position. This exception contains information

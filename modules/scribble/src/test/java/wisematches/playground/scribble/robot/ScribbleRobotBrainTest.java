@@ -3,13 +3,13 @@ package wisematches.playground.scribble.robot;
 import org.easymock.IAnswer;
 import org.junit.Test;
 import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.playground.GameMove;
+import wisematches.playground.GameMoveException;
+import wisematches.playground.PlayerMove;
+import wisematches.playground.dictionary.IterableDictionary;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.scores.ScoreCalculation;
 import wisematches.playground.scribble.scores.ScoreEngine;
-import wisematches.server.playground.board.GameMove;
-import wisematches.server.playground.board.GameMoveException;
-import wisematches.server.playground.board.PlayerMove;
-import wisematches.server.playground.dictionary.IterableDictionary;
 
 import java.io.BufferedReader;
 import java.io.IOException;

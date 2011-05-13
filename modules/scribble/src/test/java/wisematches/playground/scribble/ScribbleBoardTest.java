@@ -2,12 +2,12 @@ package wisematches.playground.scribble;
 
 import junit.framework.TestCase;
 import wisematches.personality.Personality;
+import wisematches.playground.GameMove;
+import wisematches.playground.GameMoveException;
+import wisematches.playground.PassTurnMove;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.DictionaryNotFoundException;
 import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.server.playground.board.GameMove;
-import wisematches.server.playground.board.GameMoveException;
-import wisematches.server.playground.board.PassTurnMove;
-import wisematches.server.playground.dictionary.Dictionary;
-import wisematches.server.playground.dictionary.DictionaryNotFoundException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -544,7 +544,7 @@ public class ScribbleBoardTest extends TestCase {
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		for (String word : words) {
 			if (word != null) {
-				expect(dictionary.getWord(word)).andReturn(new wisematches.server.playground.dictionary.Word(word, LOCALE));
+				expect(dictionary.getWord(word)).andReturn(new wisematches.playground.dictionary.Word(word, LOCALE));
 			} else {
 				expect(dictionary.getWord(isA(CharSequence.class))).andReturn(null);
 			}
