@@ -148,7 +148,7 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: quartz:quartz:1.5.2" />
             <element id="archive" name="accounts-1.0-SNAPSHOT.jar">
-              <element id="module-output" name="accounts" />
+              <element id="module-output" name="personality" />
             </element>
             <element id="archive" name="playground-1.0-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
@@ -268,6 +268,12 @@
               <file url="file://$PROJECT_DIR$/modules/base/src/main/resources/config/database-config.xml" />
               <file url="file://$PROJECT_DIR$/modules/base/src/main/resources/config/server-base-config.xml" />
               <file url="file://$PROJECT_DIR$/modules/base/src/test/resources/config/test-server-base-config.xml" />
+            </files>
+          </module>
+          <module name="scribble">
+            <files>
+              <file url="file://$PROJECT_DIR$/modules/scribble/src/main/resources/config/game-scribble-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/scribble/src/test/resources/config/test-game-modules-config.xml" />
             </files>
           </module>
         </modules>
@@ -507,13 +513,9 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/modules/accounts/accounts.iml" filepath="$PROJECT_DIR$/modules/accounts/accounts.iml" />
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/database/database.iml" filepath="$PROJECT_DIR$/modules/database/database.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/tracking/tracking.iml" filepath="$PROJECT_DIR$/modules/tracking/tracking.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/webserver/webserver.iml" filepath="$PROJECT_DIR$/modules/webserver/webserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/accounts/personality.iml" filepath="$PROJECT_DIR$/modules/accounts/personality.iml" />
     </modules>
   </component>
   <component name="ProjectResources">

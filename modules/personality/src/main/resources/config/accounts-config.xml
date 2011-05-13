@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="lockAccountManager" class="wisematches.personality.account.impl.HibernateAccountLockManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="accountManager" class="wisematches.personality.account.impl.HibernateAccountManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="accountLockManager" ref="lockAccountManager"/>
+    </bean>
+
+    <bean id="countriesManager" class="wisematches.personality.profile.countries.impl.CSVCountriesManager">
+        <property name="csvCountriesFile" value="classpath:/i18n/countries.csv"/>
+    </bean>
+
+    <bean id="profileManager" class="wisematches.personality.profile.impl.HibernatePlayerProfileManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="accountManager" ref="accountManager"/>
+    </bean>
+
+    <bean id="playerManager" class="wisematches.personality.player.DefaultPlayerManager">
+        <property name="accountManager" ref="accountManager"/>
+    </bean>
+</beans>
