@@ -1,6 +1,6 @@
 package wisematches.server.security;
 
-import wisematches.server.personality.account.Account;
+import wisematches.personality.account.Account;
 
 /**
  * Simple interface for interact with security over web application.

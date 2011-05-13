@@ -1,6 +1,6 @@
 package wisematches.playground.propose;
 
-import wisematches.server.personality.player.Player;
+import wisematches.personality.player.Player;
 
 import java.io.Serializable;
 

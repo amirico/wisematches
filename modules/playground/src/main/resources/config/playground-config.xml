@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="lexicalDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
+    </bean>
+
+    <bean id="slanglyDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
+        <property name="createEmptyDictionary" value="true"/>
+    </bean>
+
+    <bean id="wordGamesDictionaries" class="wisematches.playground.dictionary.impl.WordGamesDictionariesImpl">
+        <property name="lexicalManager" ref="lexicalDictionary"/>
+        <property name="slanglyManager" ref="slanglyDictionary"/>
+    </bean>
+</beans>

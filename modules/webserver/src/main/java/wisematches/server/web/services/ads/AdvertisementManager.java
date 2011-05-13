@@ -1,6 +1,6 @@
 package wisematches.server.web.services.ads;
 
-import wisematches.server.personality.account.Language;
+import wisematches.personality.account.Language;
 
 /**
  * This is ads provider manager that contains list of {@code AdvertisementBlock} blocks and provides

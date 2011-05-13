@@ -1,8 +1,8 @@
 package wisematches.playground.propose;
 
+import wisematches.personality.Personality;
+import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.player.Player;
 
 import java.util.Collection;
 

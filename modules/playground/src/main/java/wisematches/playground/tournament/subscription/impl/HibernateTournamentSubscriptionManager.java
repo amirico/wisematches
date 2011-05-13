@@ -4,13 +4,13 @@
 
 package wisematches.playground.tournament.subscription.impl;
 
+import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.playground.tournament.Tournament;
 import wisematches.playground.tournament.TournamentSection;
 import wisematches.playground.tournament.subscription.TournamentSubscription;
 import wisematches.playground.tournament.subscription.TournamentSubscriptionException;
 import wisematches.playground.tournament.subscription.TournamentSubscriptionManager;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.account.Language;
 
 /**
  * TODO: write description here
@@ -19,6 +19,9 @@ import wisematches.server.personality.account.Language;
  * @version $Id:  $
  */
 public class HibernateTournamentSubscriptionManager implements TournamentSubscriptionManager {
+	public HibernateTournamentSubscriptionManager() {
+	}
+
 	@Override
 	public Tournament getAnnouncedTournament() {
 		return null;

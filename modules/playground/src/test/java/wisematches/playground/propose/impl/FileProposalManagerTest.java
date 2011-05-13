@@ -1,17 +1,18 @@
-package wisematches.playground.impl;
+package wisematches.playground.propose.impl;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.playground.board.MockGameSettings;
-import wisematches.server.playground.board.GameSettings;
-import wisematches.server.playground.propose.GameProposal;
-import wisematches.server.playground.propose.ViolatedRestrictionException;
+import wisematches.playground.GameSettings;
+import wisematches.playground.MockGameSettings;
+import wisematches.playground.propose.GameProposal;
+import wisematches.playground.propose.ViolatedRestrictionException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**

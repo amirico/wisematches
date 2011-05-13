@@ -4,9 +4,9 @@
 
 package wisematches.playground.tournament.subscription;
 
+import wisematches.personality.Language;
 import wisematches.playground.tournament.Tournament;
 import wisematches.playground.tournament.TournamentSection;
-import wisematches.server.personality.account.Language;
 
 /**
  * This class contains information about subscription for player.

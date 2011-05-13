@@ -1,8 +1,8 @@
-package wisematches.playground.impl.file;
+package wisematches.playground.dictionary.impl.file;
 
 import junit.framework.TestCase;
-import wisematches.server.playground.dictionary.Dictionary;
-import wisematches.server.playground.dictionary.DictionaryNotFoundException;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.DictionaryNotFoundException;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;

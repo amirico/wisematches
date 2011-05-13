@@ -1,23 +1,22 @@
-package wisematches.playground.impl;
+package wisematches.playground.propose.impl;
 
 import org.easymock.IMockBuilder;
 import org.junit.Test;
+import wisematches.personality.account.Account;
+import wisematches.personality.player.Player;
 import wisematches.personality.player.member.MemberPlayer;
-import wisematches.playground.board.MockGameSettings;
-import wisematches.server.personality.account.Account;
-import wisematches.server.personality.player.Player;
-import wisematches.server.playground.board.GameSettings;
-import wisematches.server.playground.propose.GameRestriction;
-import wisematches.server.playground.propose.ViolatedRestrictionException;
-import wisematches.server.playground.propose.restrictions.GameRestrictionNickname;
+import wisematches.playground.GameSettings;
+import wisematches.playground.MockGameSettings;
+import wisematches.playground.propose.GameRestriction;
+import wisematches.playground.propose.ViolatedRestrictionException;
+import wisematches.playground.propose.restrictions.GameRestrictionNickname;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -152,6 +151,6 @@ public class DefaultGameProposalTest {
 		expect(account.getNickname()).andReturn("Player" + id).anyTimes();
 		replay(account);
 
-		return new MemberPlayer(account, null);
+		return new MemberPlayer(account);
 	}
 }

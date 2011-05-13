@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
+import wisematches.personality.Personality;
 import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.server.personality.Personality;
 import wisematches.server.playground.board.GameMoveException;
 import wisematches.server.playground.board.GameResolution;
 import wisematches.server.playground.board.PassTurnMove;
@@ -28,8 +28,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/src/main/resources/config/database-config.xml",
-		"classpath:/config/server-base-config.xml",
-		"classpath:/config/game-scribble-config.xml",
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-config.xml",
 		"classpath:/config/test-game-modules-config.xml"})
 public class ScribbleBoardDaoTest {
 	@Autowired

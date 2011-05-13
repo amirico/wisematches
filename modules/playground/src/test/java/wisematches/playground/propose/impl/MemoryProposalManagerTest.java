@@ -1,14 +1,14 @@
-package wisematches.playground.impl;
+package wisematches.playground.propose.impl;
 
 import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.playground.board.MockGameSettings;
-import wisematches.server.personality.player.Player;
-import wisematches.server.playground.board.GameSettings;
-import wisematches.server.playground.propose.GameProposal;
-import wisematches.server.playground.propose.GameProposalListener;
-import wisematches.server.playground.propose.ViolatedRestrictionException;
+import wisematches.personality.player.Player;
+import wisematches.playground.GameSettings;
+import wisematches.playground.MockGameSettings;
+import wisematches.playground.propose.GameProposal;
+import wisematches.playground.propose.GameProposalListener;
+import wisematches.playground.propose.ViolatedRestrictionException;
 
 import java.util.Arrays;
 

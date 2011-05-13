@@ -147,16 +147,16 @@
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.0.5.RELEASE" />
             <element id="library" level="project" name="Maven: quartz:quartz:1.5.2" />
-            <element id="archive" name="accounts-1.0-SNAPSHOT.jar">
+            <element id="archive" name="personality-1.0-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
             </element>
             <element id="archive" name="playground-1.0-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
+            <element id="library" level="project" name="Maven: wisematches:scribble:1.0-SNAPSHOT" />
             <element id="archive" name="tracking-1.0-SNAPSHOT.jar">
               <element id="module-output" name="tracking" />
             </element>
-            <element id="library" level="project" name="Maven: wisematches:scribble:1.0-SNAPSHOT" />
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.7.1" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.7.1" />
@@ -273,6 +273,7 @@
           <module name="scribble">
             <files>
               <file url="file://$PROJECT_DIR$/modules/scribble/src/main/resources/config/game-scribble-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/scribble/src/main/resources/config/scribble-config.xml" />
               <file url="file://$PROJECT_DIR$/modules/scribble/src/test/resources/config/test-game-modules-config.xml" />
             </files>
           </module>
@@ -313,6 +314,16 @@
             </value>
           </option>
           <option name="myCustomValuesEnabled" value="true" />
+        </inspection_tool>
+        <inspection_tool class="NullableProblems" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="REPORT_NULLABLE_METHOD_OVERRIDES_NOTNULL" value="true" />
+          <option name="REPORT_NOT_ANNOTATED_METHOD_OVERRIDES_NOTNULL" value="true" />
+          <option name="REPORT_NOTNULL_PARAMETER_OVERRIDES_NULLABLE" value="true" />
+          <option name="REPORT_NOT_ANNOTATED_PARAMETER_OVERRIDES_NOTNULL" value="true" />
+          <option name="REPORT_NOT_ANNOTATED_GETTER" value="true" />
+          <option name="REPORT_NOT_ANNOTATED_SETTER_PARAMETER" value="true" />
+          <option name="REPORT_ANNOTATION_NOT_PROPAGATED_TO_OVERRIDERS" value="true" />
+          <option name="REPORT_NULLS_PASSED_TO_NON_ANNOTATED_METHOD" value="true" />
         </inspection_tool>
         <inspection_tool class="SpringMVCViewInspection" enabled="false" level="ERROR" enabled_by_default="false" />
       </profile>
@@ -482,6 +493,7 @@
         <w>configurer</w>
         <w>curdate</w>
         <w>dayofyear</w>
+        <w>expirations</w>
         <w>extjs</w>
         <w>freemarker</w>
         <w>gameboard</w>
@@ -515,7 +527,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/database/database.iml" filepath="$PROJECT_DIR$/modules/database/database.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/accounts/personality.iml" filepath="$PROJECT_DIR$/modules/accounts/personality.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/personality/personality.iml" filepath="$PROJECT_DIR$/modules/personality/personality.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
     </modules>
   </component>
   <component name="ProjectResources">

@@ -3,7 +3,7 @@ package wisematches.tracking.statistic.impl;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.tracking.statistic.statistician.PlayerStatisticEditor;
 
 import java.util.Date;

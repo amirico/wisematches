@@ -2,11 +2,11 @@ package wisematches.tracking.statistic.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import wisematches.personality.Personality;
+import wisematches.personality.account.Account;
+import wisematches.personality.account.AccountListener;
+import wisematches.personality.account.AccountManager;
 import wisematches.personality.player.computer.ComputerPlayer;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.account.Account;
-import wisematches.server.personality.account.AccountListener;
-import wisematches.server.personality.account.AccountManager;
 import wisematches.server.playground.room.RoomManager;
 import wisematches.server.playground.room.RoomsManager;
 import wisematches.tracking.statistic.PlayerStatistic;

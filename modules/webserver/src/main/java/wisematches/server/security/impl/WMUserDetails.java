@@ -2,8 +2,8 @@ package wisematches.server.security.impl;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
-import wisematches.server.personality.Personality;
 import wisematches.server.security.WMAuthorities;
 
 import java.util.Collection;

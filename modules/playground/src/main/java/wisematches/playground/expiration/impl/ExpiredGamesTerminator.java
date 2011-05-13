@@ -10,9 +10,6 @@ import wisematches.playground.*;
 import wisematches.playground.expiration.GameExpirationListener;
 import wisematches.playground.expiration.GameExpirationManager;
 import wisematches.playground.expiration.GameExpirationType;
-import wisematches.playground.room.Room;
-import wisematches.playground.room.RoomManager;
-import wisematches.playground.room.RoomsManager;
 import wisematches.playground.search.BoardsSearchEngine;
 import wisematches.playground.search.LastMoveInfo;
 
@@ -29,18 +26,20 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ExpiredGamesTerminator implements GameExpirationManager {
-	private RoomsManager roomsManager;
+	private final Lock lock = new ReentrantLock();
+
 	private TaskScheduler taskScheduler;
 	private TransactionTemplate transactionTemplate;
 
-	private final Lock lock = new ReentrantLock();
+	private BoardsSearchEngine boardsSearchEngine;
+	private BoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> boardManager;
+	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Map<Long, ScheduledFuture> scheduledExpirations = new HashMap<Long, ScheduledFuture>();
-	private final Map<Room, TheBoardStateListener> boardStateListeners = new HashMap<Room, TheBoardStateListener>();
-
 	private final Collection<GameExpirationListener> listeners = new CopyOnWriteArraySet<GameExpirationListener>();
 
 	private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
+
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.terminator");
 
 	public ExpiredGamesTerminator() {
@@ -58,7 +57,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		listeners.remove(l);
 	}
 
-	protected void scheduleBoardTermination(final Room room, final long boardId, final Date expiringDate) {
+	protected void scheduleBoardTermination(final long boardId, final Date expiringDate) {
 		lock.lock();
 		try {
 			ScheduledFuture scheduledFuture = scheduledExpirations.get(boardId);
@@ -68,13 +67,13 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 
 			final ScheduledFuture schedule;
 			final GameExpirationType type = GameExpirationType.nextExpiringPoint(expiringDate);
-			final GameExpirationTask task = new GameExpirationTask(room, boardId, expiringDate, type);
+			final GameExpirationTask task = new GameExpirationTask(boardId, expiringDate, type);
 			if (type == null) { // expired
-				log.info("Board is expired: " + boardId + "@" + room + " and will be terminated");
+				log.info("Board is expired: " + boardId + " and will be terminated");
 				schedule = taskScheduler.schedule(task, expiringDate);
 			} else {
 				final Date triggerTime = type.getExpirationTriggerTime(expiringDate);
-				log.info("Start expiration scheduler: " + boardId + "@" + room + " to " + triggerTime + "(" + type + ")");
+				log.info("Start expiration scheduler: " + boardId + " to " + triggerTime + "(" + type + ")");
 				schedule = taskScheduler.schedule(task, triggerTime);
 			}
 			scheduledExpirations.put(boardId, schedule);
@@ -83,10 +82,10 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
-	protected void cancelBoardTermination(final Room room, final long boardId) {
+	protected void cancelBoardTermination(final long boardId) {
 		lock.lock();
 		try {
-			log.info("Cancel board termination " + boardId + "@" + room);
+			log.info("Cancel board termination " + boardId);
 
 			ScheduledFuture scheduledFuture = scheduledExpirations.get(boardId);
 			if (scheduledFuture != null) {
@@ -97,36 +96,35 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
-	protected boolean executeBoardTermination(final Room room, final long boardId) {
+	protected boolean executeBoardTermination(final long boardId) {
 		lock.lock();
 		try {
-			@SuppressWarnings("unchecked")
-			final GameBoard board = roomsManager.getBoardManager(room).openBoard(boardId);
+			final GameBoard board = boardManager.openBoard(boardId);
 			if (board != null) {
 				if (!board.isGameActive()) {
-					log.info("Terminate game " + boardId + "@" + room);
+					log.info("Terminate game " + boardId);
 					board.terminate();
 					return true;
 				} else {
-					log.info("Looks like the game still active " + boardId + "@" + room);
+					log.info("Looks like the game still active " + boardId);
 				}
 			} else {
 				return true; // no board - nothing to do
 			}
 		} catch (BoardLoadingException e) {
-			log.error("Board " + boardId + "@" + room + " can't be loaded for termination", e);
+			log.error("Board " + boardId + " can't be loaded for termination", e);
 		} catch (GameMoveException e) {
-			log.error("Board " + boardId + "@" + room + " can't be terminated", e);
+			log.error("Board " + boardId + " can't be terminated", e);
 		} finally {
 			lock.unlock();
 		}
 		return false;
 	}
 
-	protected void processGameExpiration(final Room room, final long boardId, final GameExpirationTask task) {
+	protected void processGameExpiration(final long boardId, final GameExpirationTask task) {
 		lock.lock();
 		try {
-			log.info("Process game expiration: " + boardId + "@" + room + ": " + task.getExpirationType());
+			log.info("Process game expiration: " + boardId + ": " + task.getExpirationType());
 			final ScheduledFuture scheduledFuture = scheduledExpirations.get(boardId);
 			if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
 				boolean reschedulingRequired = true;
@@ -134,17 +132,17 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 					reschedulingRequired = transactionTemplate.execute(new TransactionCallback<Boolean>() {
 						@Override
 						public Boolean doInTransaction(TransactionStatus status) {
-							return !executeBoardTermination(room, boardId);
+							return !executeBoardTermination(boardId);
 						}
 					});
 				} else {
 					for (GameExpirationListener listener : listeners) {
-						listener.gameExpiring(boardId, room, task.getExpirationType());
+						listener.gameExpiring(boardId, task.getExpirationType());
 					}
 				}
 
 				if (reschedulingRequired) {
-					scheduleBoardTermination(room, boardId, task.getExpiringDate());
+					scheduleBoardTermination(boardId, task.getExpiringDate());
 				}
 			}
 		} finally {
@@ -154,28 +152,6 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 
 	protected Date getExpiringDate(int daysPerMove, Date lastMoveTime) {
 		return new Date(lastMoveTime.getTime() + daysPerMove * MILLIS_IN_DAY);
-	}
-
-	@SuppressWarnings("unchecked")
-	public void setRoomsManager(RoomsManager roomsManager) {
-		lock.lock();
-		try {
-			if (this.roomsManager != null) {
-				for (Map.Entry<Room, TheBoardStateListener> entry : boardStateListeners.entrySet()) {
-					BoardManager boardManager = this.roomsManager.getBoardManager(entry.getKey());
-					if (boardManager != null) {
-						boardManager.removeBoardStateListener(entry.getValue());
-					}
-				}
-				boardStateListeners.clear();
-			}
-
-			this.roomsManager = roomsManager;
-
-			initTerminator();
-		} finally {
-			lock.unlock();
-		}
 	}
 
 	public void setTaskScheduler(TaskScheduler taskScheduler) {
@@ -188,6 +164,10 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
+	public void setBoardsSearchEngine(BoardsSearchEngine boardsSearchEngine) {
+		this.boardsSearchEngine = boardsSearchEngine;
+	}
+
 	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
 		lock.lock();
 		try {
@@ -198,26 +178,22 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
-	private void initTerminator() {
-		if (roomsManager == null || taskScheduler == null || transactionTemplate == null) {
-			return;
-		}
-
-		if (boardStateListeners.isEmpty()) {
-			final Collection<RoomManager> roomManagers = roomsManager.getRoomManagers();
-			for (RoomManager roomManager : roomManagers) {
-				final Room room = roomManager.getRoomType();
-
-				final BoardsSearchEngine searchesEngine = roomManager.getSearchesEngine();
-				final Collection<LastMoveInfo> expirings = searchesEngine.findExpiringBoards();
-				for (LastMoveInfo board : expirings) {
-					scheduleBoardTermination(room, board.getBoardId(), getExpiringDate(board.getDaysPerMove(), board.getLastMoveTime()));
-				}
-
-				final TheBoardStateListener l = new TheBoardStateListener(room);
-				roomManager.getBoardManager().addBoardStateListener(l);
-				boardStateListeners.put(room, l);
+	public void setBoardManager(BoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> boardManager) {
+		lock.lock();
+		try {
+			if (this.boardManager != null) {
+				this.boardManager.removeBoardStateListener(boardStateListener);
 			}
+
+			this.boardManager = boardManager;
+
+			if (this.boardManager != null) {
+				this.boardManager.addBoardStateListener(boardStateListener);
+			}
+
+			initTerminator();
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -232,14 +208,23 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
+	private void initTerminator() {
+		if (boardsSearchEngine == null || boardManager == null || taskScheduler == null || transactionTemplate == null) {
+			return;
+		}
+
+		final Collection<LastMoveInfo> expiring = boardsSearchEngine.findExpiringBoards();
+		for (LastMoveInfo board : expiring) {
+			scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getDaysPerMove(), board.getLastMoveTime()));
+		}
+	}
+
 	private class GameExpirationTask implements Runnable {
-		private final Room room;
 		private final long boardId;
 		private final Date expiringDate;
 		private final GameExpirationType expirationType;
 
-		private GameExpirationTask(Room room, long boardId, Date expiringDate, GameExpirationType expirationType) {
-			this.room = room;
+		private GameExpirationTask(long boardId, Date expiringDate, GameExpirationType expirationType) {
 			this.boardId = boardId;
 			this.expiringDate = expiringDate;
 			this.expirationType = expirationType;
@@ -247,7 +232,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 
 		@Override
 		public void run() {
-			processGameExpiration(room, boardId, this);
+			processGameExpiration(boardId, this);
 		}
 
 		public long getBoardId() {
@@ -264,10 +249,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 	}
 
 	private class TheBoardStateListener implements BoardStateListener {
-		private final Room room;
-
-		private TheBoardStateListener(Room room) {
-			this.room = room;
+		private TheBoardStateListener() {
 		}
 
 		@Override
@@ -277,12 +259,12 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 
 		@Override
 		public void gameMoveDone(GameBoard board, GameMove move) {
-			scheduleBoardTermination(room, board.getBoardId(), getExpiringDate(board.getGameSettings().getDaysPerMove(), board.getLastMoveTime()));
+			scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getGameSettings().getDaysPerMove(), board.getLastMoveTime()));
 		}
 
 		@Override
 		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution gameResolution, Collection<P> wonPlayers) {
-			cancelBoardTermination(room, board.getBoardId());
+			cancelBoardTermination(board.getBoardId());
 		}
 	}
 }

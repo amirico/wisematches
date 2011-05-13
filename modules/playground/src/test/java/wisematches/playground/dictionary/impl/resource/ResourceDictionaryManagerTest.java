@@ -1,8 +1,8 @@
-package wisematches.playground.impl.resource;
+package wisematches.playground.dictionary.impl.resource;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import wisematches.server.playground.dictionary.DictionaryNotFoundException;
+import wisematches.playground.dictionary.DictionaryNotFoundException;
 
 import java.util.Locale;
 
@@ -13,6 +13,9 @@ import static org.junit.Assert.fail;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ResourceDictionaryManagerTest {
+	public ResourceDictionaryManagerTest() {
+	}
+
 	@Test
 	public void test() throws DictionaryNotFoundException {
 		ResourceDictionaryManager m = new ResourceDictionaryManager();

@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import wisematches.server.personality.account.Membership;
+import wisematches.personality.account.Membership;
 
 import java.util.*;
 

@@ -7,12 +7,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import wisematches.personality.Personality;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.room.ScribbleRoom;
-import wisematches.server.personality.Personality;
 import wisematches.server.playground.robot.RobotBrainManager;
 import wisematches.server.playground.room.RoomsManager;
 
@@ -36,8 +36,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/src/main/resources/config/database-config.xml",
-		"classpath:/config/server-base-config.xml",
-		"classpath:/config/game-scribble-config.xml",
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-config.xml",
 		"classpath:/config/test-game-modules-config.xml"})
 public class SmallRobotsGameTest {
 	@Autowired

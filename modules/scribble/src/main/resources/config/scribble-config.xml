@@ -19,7 +19,38 @@
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
-    <bean id="movesStatistician" class="wisematches.tracking.stats.ScribbleMovesStatistician">
+    <bean id="scribbleTerminator" class="wisematches.playground.expiration.impl.ExpiredGamesTerminator"
+          destroy-method="destroy">
+        <property name="taskScheduler">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="threadGroupName" value="GameTimeoutTerminator"/>
+                <property name="threadNamePrefix" value="GameTimeoutTerminator"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="boardManager" ref="sc"/>
+        <property name="boardsSearchEngine" ref="sc"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
+    </bean>
+
+    <bean id="robotsActivityManager" class="wisematches.playground.robot.RobotActivityCenter">
+        <property name="roomsManager" ref="roomsManager"/>
+        <property name="robotBrainManager" ref="robotsBrainManager"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="movesExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+                <property name="maxPoolSize" value="5"/>
+                <property name="corePoolSize" value="1"/>
+                <property name="keepAliveSeconds" value="60"/>
+                <property name="threadGroupName" value="robotsActivityExecutor"/>
+                <property name="threadNamePrefix" value="robotsActivityExecutor"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="false"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="robotsBrainManager" class="wisematches.playground.robot.impl.RobotBrainManagerImpl">
+        <property name="robotBrains" ref="robotBrainsList"/>
     </bean>
 
     <bean id="scribbleProposalManager"

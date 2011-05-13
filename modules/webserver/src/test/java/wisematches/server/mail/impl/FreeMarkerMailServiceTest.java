@@ -8,9 +8,9 @@ import org.springframework.context.support.StaticMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import wisematches.personality.account.Account;
+import wisematches.personality.account.Language;
 import wisematches.server.mail.MailSender;
-import wisematches.server.personality.account.Account;
-import wisematches.server.personality.account.Language;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;

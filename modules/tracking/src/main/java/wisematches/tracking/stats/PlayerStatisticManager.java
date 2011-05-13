@@ -1,6 +1,6 @@
 package wisematches.tracking.stats;
 
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 /**
  * Statistics manager allows get statistic for specified player. This manager can use database or any

@@ -1,10 +1,12 @@
-package wisematches.playground.impl.resource;
+package wisematches.playground.dictionary.impl.resource;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import wisematches.server.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.Dictionary;
 
 import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

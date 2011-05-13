@@ -3,10 +3,10 @@
  */
 package wisematches.playground.tournament.subscription;
 
+import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.playground.tournament.Tournament;
 import wisematches.playground.tournament.TournamentSection;
-import wisematches.server.personality.Personality;
-import wisematches.server.personality.account.Language;
 
 /**
  * Additional manager for {@code TournamentManager} which manages players subscription for tournaments.
@@ -62,7 +62,7 @@ public interface TournamentSubscriptionManager {
 	 *
 	 * @param player the player
 	 * @return the subscription info or {@code null} if player is not subscribed to announced tournament.
-	 * @see #isSubscribed(wisematches.server.personality.Personality)
+	 * @see #isSubscribed(wisematches.personality.Personality)
 	 */
 	TournamentSubscription getSubscription(Personality player);
 }

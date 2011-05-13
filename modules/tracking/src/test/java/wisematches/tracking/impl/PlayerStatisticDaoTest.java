@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 import wisematches.server.standing.statistic.RatingsStatistic;
 import wisematches.server.standing.statistic.statistician.GamesStatisticEditor;
 import wisematches.server.standing.statistic.statistician.RatingsStatisticEditor;
@@ -17,7 +17,8 @@ import wisematches.server.standing.statistic.statistician.RatingsStatisticEditor
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -27,7 +28,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
 		"classpath:/config/test-server-base-config.xml",
 		"classpath:/src/main/resources/config/database-config.xml",
-		"classpath:/config/server-base-config.xml"
+		"classpath:/config/playground-config.xml"
 })
 public class PlayerStatisticDaoTest {
 	private Account person;

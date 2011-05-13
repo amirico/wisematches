@@ -1,11 +1,10 @@
-package wisematches.playground.board;
+package wisematches.playground;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.playground.*;
-import wisematches.server.personality.Personality;
+import wisematches.personality.Personality;
 
 import java.util.Arrays;
 import java.util.Collection;

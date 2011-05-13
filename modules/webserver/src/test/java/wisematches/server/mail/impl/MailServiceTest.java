@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import wisematches.personality.account.Account;
+import wisematches.personality.account.Language;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
-import wisematches.server.personality.account.Account;
-import wisematches.server.personality.account.Language;
 
 import java.util.HashMap;
 import java.util.Map;

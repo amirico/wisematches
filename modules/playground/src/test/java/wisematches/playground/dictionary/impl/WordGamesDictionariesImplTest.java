@@ -1,7 +1,8 @@
-package wisematches.playground.impl;
+package wisematches.playground.dictionary.impl;
 
 import junit.framework.TestCase;
-import wisematches.server.playground.dictionary.impl.file.FileDictionaryManager;
+import wisematches.playground.dictionary.*;
+import wisematches.playground.dictionary.impl.file.FileDictionaryManager;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +20,9 @@ import static org.easymock.EasyMock.*;
 public class WordGamesDictionariesImplTest extends TestCase {
 	private WordGamesDictionariesImpl dictionaries;
 	private static final Locale LOCALE = Locale.ENGLISH;
+
+	public WordGamesDictionariesImplTest() {
+	}
 
 	protected void setUp() throws Exception {
 		String s = URLDecoder.decode(FileDictionaryManager.class.getResource("/dicts/dictionary_en.properties").getFile(), "UTF-8");
