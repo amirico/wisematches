@@ -10,9 +10,12 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>modules/base</module>
+        <module>modules/database</module>
+        <module>modules/accounts</module>
+        <module>modules/playground</module>
         <module>modules/games</module>
-        <module>modules/web</module>
+        <module>modules/tracking</module>
+        <module>modules/webserver</module>
     </modules>
 
     <repositories>
@@ -165,6 +168,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.0.2.GA</version>
+        </dependency>
+
+        <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>3.11.0.GA</version>
@@ -208,6 +217,7 @@
             <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
