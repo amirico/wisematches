@@ -10,6 +10,7 @@
           <file>file://$MODULE_DIR$/../personality/src/main/resources/config/accounts-config.xml</file>
           <file>file://$MODULE_DIR$/../playground/src/main/resources/config/playground-config.xml</file>
           <file>jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.0.5.RELEASE/spring-jdbc-3.0.5.RELEASE.jar!/org/springframework/jdbc/support/sql-error-codes.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/scribble-junit-config.xml</file>
         </fileset>
       </configuration>
     </facet>
