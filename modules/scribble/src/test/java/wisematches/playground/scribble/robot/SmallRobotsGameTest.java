@@ -1,6 +1,5 @@
 package wisematches.playground.scribble.robot;
 
-/*
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -14,9 +13,6 @@ import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.playground.scribble.room.ScribbleRoom;
-import wisematches.server.playground.robot.RobotBrainManager;
-import wisematches.server.playground.room.RoomsManager;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,39 +21,22 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.Assert.*;
-*/
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * This is integration test and demonstrates how two robots can play a game...
  * <p/>
  * This test uses real configuration and store game into database. It check that all steps works correct.
  * <p/>
- * TODO: move this test to integration test
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/src/main/resources/config/database-config.xml",
-		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-config.xml",
-		"classpath:/config/test-game-modules-config.xml"})
+		"classpath:/config/database-junit-config.xml",
+		"classpath:/config/scribble-junit-config.xml"})
 public class SmallRobotsGameTest {
-	@Test
-	public void test() {
-		throw new UnsupportedOperationException("Commented");
-	}
-/*
 	@Autowired
-	private RoomsManager roomsManager;
-
-	@Autowired
-	private RobotBrainManager robotBrainManager;
+	private ScribbleBoardManager scribbleBoardManager;
 
 	private final Lock gameFinishedLock = new ReentrantLock();
 	private final Condition gameFinishedCondition = gameFinishedLock.newCondition();
@@ -71,16 +50,13 @@ public class SmallRobotsGameTest {
 	public void test_makeSmallGame() throws BoardCreationException, InterruptedException {
 		long currentTime = System.currentTimeMillis();
 
-		assertNotNull("No room manager", roomsManager);
-		assertNotNull("No robots brain manager", robotBrainManager);
+		assertNotNull("No room manager", scribbleBoardManager);
 
 		final RobotPlayer r1 = RobotPlayer.DULL;
 		final RobotPlayer r2 = RobotPlayer.TRAINEE;
 		final RobotPlayer r3 = RobotPlayer.EXPERT;
 
-		final ScribbleBoardManager roomManager = roomsManager.getBoardManager(ScribbleRoom.name);
-
-		final ScribbleBoard board = roomManager.createBoard(
+		final ScribbleBoard board = scribbleBoardManager.createBoard(
 				new ScribbleSettings("This is robots game", "en", 3, false, true),
 				Arrays.<Personality>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
@@ -138,5 +114,4 @@ public class SmallRobotsGameTest {
 		gameFinishedCondition.signalAll();
 		gameFinishedLock.unlock();
 	}
-*/
 }
