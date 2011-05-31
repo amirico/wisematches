@@ -258,13 +258,27 @@
       </facet-type>
       <facet-type id="jpa">
         <modules>
-          <module name="base" />
-          <module name="games" />
-          <module name="web" />
+          <module name="personality">
+            <files>
+              <file url="file://$PROJECT_DIR$/modules/personality/META-INF/persistence.xml" />
+            </files>
+          </module>
         </modules>
       </facet-type>
       <facet-type id="Spring">
         <modules>
+          <module name="application">
+            <files>
+              <file url="file://$PROJECT_DIR$/modules/tracking/src/main/resources/config/tracking-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/tracking/src/test/resources/config/test-server-base-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/resources/config/application-settings.xml" />
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/resources/config/mail-sender-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/resources/config/message-source-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/resources/config/server-web-config.xml" />
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/WEB-INF/web-app-security.xml" />
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/WEB-INF/web-app-servlet.xml" />
+            </files>
+          </module>
           <module name="base">
             <files>
               <file url="file://$PROJECT_DIR$/modules/base/src/main/resources/config/database-config.xml" />
@@ -283,6 +297,11 @@
       </facet-type>
       <facet-type id="web">
         <modules>
+          <module name="application">
+            <files>
+              <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/WEB-INF/web.xml" />
+            </files>
+          </module>
           <module name="web" />
           <module name="webserver" />
         </modules>

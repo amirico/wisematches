@@ -299,7 +299,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameMoveDone(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
 			saveBoardImpl((B) board);
 
 			for (GameBoardListener statesListener : boardStateListeners) {
@@ -309,7 +309,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
 			saveBoardImpl((B) board);
 
 			for (GameBoardListener statesListener : boardStateListeners) {

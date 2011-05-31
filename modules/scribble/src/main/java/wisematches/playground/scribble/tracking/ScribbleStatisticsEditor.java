@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.stats.statistician;
+package wisematches.playground.scribble.tracking;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -6,7 +6,6 @@ import org.hibernate.annotations.TypeDefs;
 import wisematches.personality.Personality;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.WordUserType;
-import wisematches.playground.scribble.stats.ScribbleStatistics;
 import wisematches.playground.tracking.StatisticsEditor;
 
 import javax.persistence.Entity;
@@ -26,11 +25,15 @@ import javax.persistence.Entity;
 		}
 )
 public class ScribbleStatisticsEditor extends StatisticsEditor implements ScribbleStatistics {
-	@Type(type = "word")
-	private Word lastLongestWord;
 	private int wordsCount;
+
 	private int averageWordLength;
 	private int exchangesCount;
+
+	@Type(type = "word")
+	private Word lastLongestWord;
+
+	@Type(type = "word")
 	private Word lastValuableWord;
 
 	@Deprecated
