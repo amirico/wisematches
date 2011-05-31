@@ -18,6 +18,8 @@ import wisematches.playground.tracking.*;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -30,6 +32,7 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 	private StatisticsTrapper statisticsTrapper;
 	private PlayerTrackingCenterDao playerTrackingCenterDao;
 
+	private final Lock statisticLock = new ReentrantLock();
 	private final Map<Personality, Short> ratings = new WeakHashMap<Personality, Short>();
 	private final AccountListener accountListener = new TheAccountListener();
 	private final BoardStateListener boardStateListener = new TheBoardStateListener();
@@ -38,7 +41,7 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 
 	private static final Logger log = Logger.getLogger("wisematches.playground.tracking");
 
-	protected PlayerTrackingCenterImpl() {
+	public PlayerTrackingCenterImpl() {
 	}
 
 	@Override
@@ -78,7 +81,12 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 
 	@Override
 	public Statistics getPlayerStatistic(Personality personality) {
-		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
+		statisticLock.lock();
+		try {
+			return playerTrackingCenterDao.loadPlayerStatistic(statisticsTrapper.getStatisticType(), personality);
+		} finally {
+			statisticLock.unlock();
+		}
 	}
 
 	@Override
@@ -117,7 +125,7 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 
 		@SuppressWarnings("unchecked")
 		final Collection<RatingChange> ratingChanges = template.find(
-				"from wisematches.playground.rating.RatingChange rating where rating.boardId = ?", board.getBoardId());
+				"from wisematches.playground.tracking.RatingChange rating where rating.boardId = ?", board.getBoardId());
 
 		if (ratingChanges != null) {
 			final Map<Long, RatingChange> map = new HashMap<Long, RatingChange>();
@@ -191,6 +199,78 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 	}
 
 
+	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		final Collection<? extends GamePlayerHand> hands = board.getPlayersHands();
+		for (GamePlayerHand hand : hands) {
+			if (isPlayerIgnored(hand)) {
+				continue;
+			}
+
+			final Personality personality = Personality.person(hand.getPlayerId());
+			statisticLock.lock();
+			try {
+				final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
+				statisticsTrapper.trapGameStarted(board, statistic);
+				playerTrackingCenterDao.savePlayerStatistic(statistic);
+				fireStatisticUpdated(personality, statistic);
+			} catch (Throwable th) {
+				log.error("Statistic can't be updated for player: " + personality, th);
+			} finally {
+				statisticLock.unlock();
+			}
+		}
+	}
+
+	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
+		final GamePlayerHand hand = board.getPlayerHand(move.getPlayerMove().getPlayerId());
+		if (isPlayerIgnored(hand)) {
+			return;
+		}
+
+		final Personality personality = Personality.person(hand.getPlayerId());
+		statisticLock.lock();
+		try {
+			final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
+			statisticsTrapper.trapGameMoveDone(board, move, statistic);
+			playerTrackingCenterDao.savePlayerStatistic(statistic);
+			fireStatisticUpdated(personality, statistic);
+		} catch (Throwable th) {
+			log.error("Statistic can't be updated for player: " + personality, th);
+		} finally {
+			statisticLock.unlock();
+		}
+	}
+
+	protected void processGameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, RatingChanges changes) {
+		final Collection<? extends GamePlayerHand> hands = board.getPlayersHands();
+		for (GamePlayerHand hand : hands) {
+			if (isPlayerIgnored(hand)) {
+				continue;
+			}
+
+			// store rating change
+			final RatingChange ratingChange = changes.getRatingChange(hand);
+			playerTrackingCenterDao.getHibernateTemplate().save(ratingChange);
+
+			final Personality personality = Personality.person(hand.getPlayerId());
+			statisticLock.lock();
+			try {
+				final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
+				statisticsTrapper.trapGameFinished(board, changes, statistic);
+				playerTrackingCenterDao.savePlayerStatistic(statistic);
+				fireStatisticUpdated(personality, statistic);
+			} catch (Throwable th) {
+				log.error("Statistic can't be updated for player: " + personality, th);
+			} finally {
+				statisticLock.unlock();
+			}
+		}
+	}
+
+	protected boolean isPlayerIgnored(final GamePlayerHand hand) {
+		return ComputerPlayer.getComputerPlayer(hand.getPlayerId()) != null;
+	}
+
 	protected void fireStatisticUpdated(Personality player, Statistics statistic) {
 		for (StatisticsListener statisticsListener : statisticsListeners) {
 			statisticsListener.playerStatisticUpdated(player, statistic);
@@ -221,22 +301,22 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 	}
 
 	private class TheBoardStateListener implements BoardStateListener {
-
 		private TheBoardStateListener() {
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameStarted(GameBoard<S, P> board) {
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+			processGameStarted(board);
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameMoveDone(GameBoard<S, P> board, GameMove move) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
+			processGameMoveDone(board, move);
 		}
 
 		@Override
-		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
-			final RatingChanges ratingChanges = forecastRatingChanges(board);
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
+			processGameFinished(board, forecastRatingChanges(board));
 		}
-
 	}
 }

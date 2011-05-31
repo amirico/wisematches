@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.stats;
+package wisematches.playground.scribble.tracking;
 
 import wisematches.playground.scribble.Word;
 import wisematches.playground.tracking.Statistics;

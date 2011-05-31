@@ -2,6 +2,7 @@ package wisematches.playground.scribble.stats.statistician;
 
 import org.junit.Before;
 import org.junit.Test;
+import wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

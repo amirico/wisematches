@@ -13,10 +13,8 @@ public interface GameBoardListener {
 	 *
 	 * @param board the board
 	 * @param move  the made move
-	 * @param <S>   the game settings type
-	 * @param <P>   the player's hand type
 	 */
-	<S extends GameSettings, P extends GamePlayerHand> void gameMoveDone(GameBoard<S, P> board, GameMove move);
+	void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move);
 
 	/**
 	 * Indicates that game has been finished
@@ -24,8 +22,6 @@ public interface GameBoardListener {
 	 * @param board	  the game board
 	 * @param resolution the game finalization resolution
 	 * @param wonPlayers the winners list or empty list if no winners (draw).
-	 * @param <S>        the game settings type
-	 * @param <P>        the player's hand type
 	 */
-	<S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers);
+	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers);
 }

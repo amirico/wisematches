@@ -61,11 +61,11 @@ public class SmallRobotsGameTest {
 				Arrays.<Personality>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
 			@Override
-			public void gameMoveDone(GameBoard board, GameMove move) {
+			public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
 			}
 
 			@Override
-			public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
+			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
 				notifyGameFinished();
 			}
 		});

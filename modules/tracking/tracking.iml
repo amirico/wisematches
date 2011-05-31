@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset1" name="Tracking" removed="false">
-          <file>file://$MODULE_DIR$/src/main/resources/config/tracking-config.xml</file>
-          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-junit-config.xml</file>
-          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-config.xml</file>
-          <file>file://$MODULE_DIR$/../personality/src/main/resources/config/accounts-config.xml</file>
-          <file>file://$MODULE_DIR$/../playground/src/main/resources/config/playground-config.xml</file>
-          <file>jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.0.5.RELEASE/spring-jdbc-3.0.5.RELEASE.jar!/org/springframework/jdbc/support/sql-error-codes.xml</file>
-        </fileset>
-      </configuration>
-    </facet>
-  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />

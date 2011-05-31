@@ -2,16 +2,12 @@ package wisematches.playground.tracking;
 
 import wisematches.personality.Personality;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.QueryHint;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@MappedSuperclass
 @NamedQueries({
 		@NamedQuery(name = "player.rating",
 				query = "SELECT r.rating " +
@@ -25,7 +21,9 @@ import java.util.Date;
 				hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
 		)
 })
+@MappedSuperclass
 public class StatisticsEditor implements Statistics {
+	@Id
 	private long playerId;
 	private Date updateTime;
 	private int wins;
