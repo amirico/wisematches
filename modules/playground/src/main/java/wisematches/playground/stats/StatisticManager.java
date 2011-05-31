@@ -1,4 +1,4 @@
-package wisematches.tracking.stats;
+package wisematches.playground.stats;
 
 import wisematches.personality.Personality;
 
@@ -8,10 +8,10 @@ import wisematches.personality.Personality;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface PlayerStatisticManager {
-	void addPlayerStatisticListener(PlayerStatisticListener l);
+public interface StatisticManager<T extends PlayerStatistic> {
+	void addPlayerStatisticListener(StatisticListener l);
 
-	void removePlayerStatisticListener(PlayerStatisticListener l);
+	void removePlayerStatisticListener(StatisticListener l);
 
 	/**
 	 * Returns statistic for specified player.
@@ -19,5 +19,5 @@ public interface PlayerStatisticManager {
 	 * @param personality the player id.
 	 * @return the player statistic.
 	 */
-	PlayerStatistic getPlayerStatistic(Personality personality);
+	T getPlayerStatistic(Personality personality);
 }

@@ -1,36 +1,29 @@
-package wisematches.tracking.stats;
+package wisematches.playground.scribble.stats.statistician;
 
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.playground.scribble.MakeWordMove;
-import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.server.playground.board.GameMove;
-import wisematches.server.playground.board.PlayerMove;
-
-import java.util.Arrays;
-import java.util.Date;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleMovesStatisticianTest {
-	private ScribbleMovesStatistician movesStatistician;
+public class ScribblePlayerStatisticianTest {
+	private ScribbleStatisticsTrapper movesStatistician;
 
-	public ScribbleMovesStatisticianTest() {
+	public ScribblePlayerStatisticianTest() {
 	}
 
 	@Before
 	public void setUp() {
-		movesStatistician = new ScribbleMovesStatistician();
+		movesStatistician = new ScribbleStatisticsTrapper();
 	}
 
 	@Test
 	public void testUpdateMovesStatistic() throws Exception {
+		throw new UnsupportedOperationException("Commented");
+/*
 		final long moveTime = System.currentTimeMillis();
 
-		final PlayerStatistic playerStatistic = createMock(PlayerStatistic.class);
+		final Statistics playerStatistic = createMock(Statistics.class);
 		final ScribbleMovesStatisticEditor editor = new ScribbleMovesStatisticEditor();
 
 		final PlayerMove move1 = new MakeWordMove(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4)));
@@ -87,5 +80,6 @@ public class ScribbleMovesStatisticianTest {
 		assertEquals(2, editor.getWordsCount());
 
 		verify(gb);
+*/
 	}
 }

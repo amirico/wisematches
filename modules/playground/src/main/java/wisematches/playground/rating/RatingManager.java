@@ -1,4 +1,4 @@
-package wisematches.tracking.rating;
+package wisematches.playground.rating;
 
 import wisematches.personality.Personality;
 import wisematches.playground.GameBoard;
@@ -9,20 +9,20 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface PlayerRatingManager {
+public interface RatingManager {
 	/**
 	 * Adds ratings listener.
 	 *
 	 * @param l the ratings listener to be added.
 	 */
-	void addRatingsChangeListener(PlayerRatingListener l);
+	void addRatingsChangeListener(RatingListener l);
 
 	/**
 	 * Removes ratings listener.
 	 *
 	 * @param l the ratings listener to be removed.
 	 */
-	void removeRatingsChangeListener(PlayerRatingListener l);
+	void removeRatingsChangeListener(RatingListener l);
 
 	/**
 	 * Returns current player's rating.

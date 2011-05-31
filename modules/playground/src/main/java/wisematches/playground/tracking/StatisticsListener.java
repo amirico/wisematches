@@ -1,4 +1,4 @@
-package wisematches.tracking.stats;
+package wisematches.playground.tracking;
 
 import wisematches.personality.Personality;
 
@@ -7,7 +7,7 @@ import wisematches.personality.Personality;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface PlayerStatisticListener {
+public interface StatisticsListener {
 	/**
 	 * Indicates that player statistic was updated.
 	 * <p/>
@@ -17,5 +17,5 @@ public interface PlayerStatisticListener {
 	 * @param personality the id of player who's statistic was updated.
 	 * @param statistic   the statistic that contains updated data.
 	 */
-	void playerStatisticUpdated(Personality personality, PlayerStatistic statistic);
+	void playerStatisticUpdated(Personality personality, Statistics statistic);
 }

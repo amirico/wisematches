@@ -153,7 +153,9 @@
             <element id="archive" name="playground-1.0-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
-            <element id="library" level="project" name="Maven: wisematches:scribble:1.0-SNAPSHOT" />
+            <element id="archive" name="scribble-1.0-SNAPSHOT.jar">
+              <element id="module-output" name="scribble" />
+            </element>
             <element id="archive" name="tracking-1.0-SNAPSHOT.jar">
               <element id="module-output" name="tracking" />
             </element>
@@ -495,6 +497,7 @@
         <w>dayofyear</w>
         <w>expirations</w>
         <w>extjs</w>
+        <w>forecasted</w>
         <w>freemarker</w>
         <w>gameboard</w>
         <w>gameplaying</w>
@@ -1297,17 +1300,6 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/modules/base/pom-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/application/base/1.0-SNAPSHOT/base-1.0-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:scribble:1.0-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/1.0-SNAPSHOT/scribble-1.0-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/1.0-SNAPSHOT/scribble-1.0-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/1.0-SNAPSHOT/scribble-1.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: xml-apis:xml-apis:1.0.b2">

@@ -15,15 +15,15 @@
     </bean>
 
     <bean id="gamesStatistician"
-          class="wisematches.server.standing.statistic.impl.statistician.DefaultGamesStatistician">
+          class="wisematches.server.standing.statistic.impl.statisticsTrapper.DefaultGamesStatistician">
     </bean>
 
     <bean id="movesStatistician"
-          class="wisematches.server.standing.statistic.impl.statistician.DefaultMovesStatistician">
+          class="wisematches.server.standing.statistic.impl.statisticsTrapper.DefaultMovesStatistician">
     </bean>
 
     <bean id="ratingsStatistician"
-          class="wisematches.server.standing.statistic.impl.statistician.DefaultRatingsStatistician">
+          class="wisematches.server.standing.statistic.impl.statisticsTrapper.DefaultRatingsStatistician">
         <property name="ratingManager" ref="ratingManager"/>
     </bean>
 

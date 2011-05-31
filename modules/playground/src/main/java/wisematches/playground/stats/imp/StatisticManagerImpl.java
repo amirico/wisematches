@@ -1,4 +1,4 @@
-package wisematches.tracking.stats.imp;
+package wisematches.playground.stats.imp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,13 +7,12 @@ import wisematches.personality.account.Account;
 import wisematches.personality.account.AccountListener;
 import wisematches.personality.account.AccountManager;
 import wisematches.personality.player.computer.ComputerPlayer;
-import wisematches.server.playground.room.RoomManager;
-import wisematches.server.playground.room.RoomsManager;
-import wisematches.tracking.stats.PlayerStatistic;
-import wisematches.tracking.stats.PlayerStatisticListener;
-import wisematches.tracking.stats.PlayerStatisticManager;
-import wisematches.tracking.stats.statistician.PlayerStatisticEditor;
-import wisematches.tracking.stats.statistician.PlayerStatistician;
+import wisematches.playground.*;
+import wisematches.playground.stats.PlayerStatistic;
+import wisematches.playground.stats.StatisticListener;
+import wisematches.playground.stats.StatisticManager;
+import wisematches.playground.tracking.StatisticsEditor;
+import wisematches.playground.tracking.StatisticsTrapper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,11 +24,11 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
-	private RoomsManager roomsManager;
+public class StatisticManagerImpl implements StatisticManager {
+	private BoardManager boardManager;
 	private AccountManager accountManager;
 	private PlayerStatisticDao playerStatisticDao;
-	private PlayerStatistician playerStatistician;
+	private StatisticsTrapper statisticsTrapper;
 
 	private final Lock lockLock = new ReentrantLock();
 
@@ -37,22 +36,22 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Map<Personality, ReentrantLock> locksMap = new HashMap<Personality, ReentrantLock>();
-	private final Collection<PlayerStatisticListener> listeners = new CopyOnWriteArraySet<PlayerStatisticListener>();
+	private final Collection<StatisticListener> listeners = new CopyOnWriteArraySet<StatisticListener>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.statistic");
 
-	public PlayerStatisticManagerImpl() {
+	public StatisticManagerImpl() {
 	}
 
 	@Override
-	public void addPlayerStatisticListener(PlayerStatisticListener l) {
+	public void addPlayerStatisticListener(StatisticListener l) {
 		if (l != null) {
 			listeners.add(l);
 		}
 	}
 
 	@Override
-	public void removePlayerStatisticListener(PlayerStatisticListener l) {
+	public void removePlayerStatisticListener(StatisticListener l) {
 		listeners.remove(l);
 	}
 
@@ -60,7 +59,7 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	public PlayerStatistic getPlayerStatistic(Personality personality) {
 		lock(personality);
 		try {
-			return playerStatisticDao.loadPlayerStatistic(playerStatistician.getStatisticType(), personality);
+			return playerStatisticDao.loadPlayerStatistic(statisticsTrapper.getStatisticType(), personality);
 		} finally {
 			unlock(personality);
 		}
@@ -76,8 +75,8 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 			final Personality personality = Personality.person(hand.getPlayerId());
 			lock(personality);
 			try {
-				final PlayerStatisticEditor statistic = (PlayerStatisticEditor) getPlayerStatistic(personality);
-				playerStatistician.updateStatistic(board, statistic);
+				final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
+				statisticsTrapper.trapGameStarted(board, statistic);
 				updatePlayerStatistic(personality, statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated for player: " + personality, th);
@@ -96,8 +95,8 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		final Personality personality = Personality.person(hand.getPlayerId());
 		lock(personality);
 		try {
-			final PlayerStatisticEditor statistic = (PlayerStatisticEditor) getPlayerStatistic(personality);
-			playerStatistician.updateStatistic(board, move, statistic);
+			final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
+			statisticsTrapper.trapGameMoveDone(board, move, statistic);
 			updatePlayerStatistic(personality, statistic);
 		} catch (Throwable th) {
 			log.error("Statistic can't be updated for player: " + personality, th);
@@ -116,8 +115,8 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 			final Personality personality = Personality.person(hand.getPlayerId());
 			lock(personality);
 			try {
-				final PlayerStatisticEditor statistic = (PlayerStatisticEditor) getPlayerStatistic(personality);
-				playerStatistician.updateStatistic(board, resolution, wonPlayers, statistic);
+				final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
+				statisticsTrapper.trapGameFinished(board, , statistic);
 				updatePlayerStatistic(personality, statistic);
 			} catch (Throwable th) {
 				log.error("Statistic can't be updated for player: " + personality, th);
@@ -161,29 +160,23 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		}
 	}
 
-	protected void updatePlayerStatistic(Personality personality, PlayerStatisticEditor statistic) {
+	protected void updatePlayerStatistic(Personality personality, StatisticsEditor statistic) {
 		playerStatisticDao.savePlayerStatistic(statistic);
 
-		for (PlayerStatisticListener listener : listeners) {
+		for (StatisticListener listener : listeners) {
 			listener.playerStatisticUpdated(personality, statistic);
 		}
 	}
 
-	public void setRoomsManager(RoomsManager roomsManager) {
-		if (this.roomsManager != null) {
-			final Collection<RoomManager> managers = this.roomsManager.getRoomManagers();
-			for (RoomManager manager : managers) {
-				manager.getBoardManager().removeBoardStateListener(boardStateListener);
-			}
+	public void setBoardManager(BoardManager boardManager) {
+		if (this.boardManager != null) {
+			this.boardManager.removeBoardStateListener(boardStateListener);
 		}
 
-		this.roomsManager = roomsManager;
+		this.boardManager = boardManager;
 
-		if (this.roomsManager != null) {
-			final Collection<RoomManager> managers = this.roomsManager.getRoomManagers();
-			for (RoomManager manager : managers) {
-				manager.getBoardManager().addBoardStateListener(boardStateListener);
-			}
+		if (this.boardManager != null) {
+			this.boardManager.addBoardStateListener(boardStateListener);
 		}
 	}
 
@@ -199,12 +192,12 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		}
 	}
 
-	public void setPlayerStatistician(PlayerStatistician playerStatistician) {
-		this.playerStatistician = playerStatistician;
-	}
-
 	public void setPlayerStatisticDao(PlayerStatisticDao playerStatisticDao) {
 		this.playerStatisticDao = playerStatisticDao;
+	}
+
+	public void setStatisticsTrapper(StatisticsTrapper statisticsTrapper) {
+		this.statisticsTrapper = statisticsTrapper;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -228,19 +221,18 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private class TheAccountListener implements AccountListener {
 		private TheAccountListener() {
 		}
 
 		@Override
 		public void accountCreated(Account account) {
-			playerStatisticDao.savePlayerStatistic(playerStatistician.createPlayerStatistic(account));
+			playerStatisticDao.savePlayerStatistic(statisticsTrapper.createStatisticsEditor(account));
 		}
 
 		@Override
 		public void accountRemove(Account account) {
-			PlayerStatisticEditor hibernatePlayerStatistic = playerStatisticDao.loadPlayerStatistic(playerStatistician.getStatisticType(), account);
+			StatisticsEditor hibernatePlayerStatistic = playerStatisticDao.loadPlayerStatistic(statisticsTrapper.getStatisticType(), account);
 			if (hibernatePlayerStatistic != null) {
 				playerStatisticDao.removePlayerStatistic(hibernatePlayerStatistic);
 			}

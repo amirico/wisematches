@@ -1,4 +1,4 @@
-package wisematches.tracking.rating;
+package wisematches.playground.rating;
 
 import wisematches.personality.Personality;
 import wisematches.playground.GameBoard;
@@ -8,7 +8,7 @@ import wisematches.playground.GameBoard;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface PlayerRatingListener {
+public interface RatingListener {
 	/**
 	 * This method is invoked when player's rating was changed after a game. Specified player already
 	 * contains new rating.
