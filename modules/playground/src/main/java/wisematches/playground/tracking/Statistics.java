@@ -1,15 +1,16 @@
-package wisematches.tracking.stats;
+package wisematches.playground.tracking;
 
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface PlayerStatistic {
+public interface Statistics {
 	long getPlayerId();
 
 	Date getUpdateTime();
 
+	short getRating();
 
 	int getWins();
 
@@ -51,11 +52,7 @@ public interface PlayerStatistic {
 
 	int getTurnsCount();
 
-	int getWordsCount();
-
 	int getPassesCount();
-
-	int getExchangesCount();
 
 	int getLowestPoints();
 

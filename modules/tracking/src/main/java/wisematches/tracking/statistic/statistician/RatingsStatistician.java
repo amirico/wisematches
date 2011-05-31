@@ -1,9 +1,9 @@
 package wisematches.tracking.statistic.statistician;
 
-import wisematches.server.playground.board.GameBoard;
-import wisematches.server.playground.board.GamePlayerHand;
-import wisematches.server.playground.board.GameResolution;
-import wisematches.server.playground.board.GameSettings;
+import wisematches.playground.GameBoard;
+import wisematches.playground.GamePlayerHand;
+import wisematches.playground.GameResolution;
+import wisematches.playground.GameSettings;
 import wisematches.tracking.statistic.PlayerStatistic;
 
 import java.util.Collection;

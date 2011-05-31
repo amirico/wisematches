@@ -1,4 +1,4 @@
-package wisematches.tracking.rating.impl;
+package wisematches.playground.rating.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -9,10 +9,8 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.personality.Personality;
 import wisematches.personality.player.computer.ComputerPlayer;
-import wisematches.tracking.rating.PlayerRatingListener;
-import wisematches.tracking.rating.PlayerRatingManager;
-import wisematches.tracking.rating.RatingChange;
-import wisematches.tracking.rating.RatingCurve;
+import wisematches.playground.*;
+import wisematches.playground.rating.*;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -26,7 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernatePlayerRatingManager extends HibernateDaoSupport implements PlayerRatingManager {
+public class HibernateRatingManager extends HibernateDaoSupport implements RatingManager {
 	private BoardManager boardManager;
 	private RatingSystem ratingSystem;
 
@@ -34,20 +32,20 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 
 	private final Lock ratingsLock = new ReentrantLock();
 	private final Map<Personality, Short> ratings = new WeakHashMap<Personality, Short>();
-	private final Collection<PlayerRatingListener> ratingListeners = new CopyOnWriteArraySet<PlayerRatingListener>();
+	private final Collection<RatingListener> ratingListeners = new CopyOnWriteArraySet<RatingListener>();
 
-	private static final Logger log = Logger.getLogger(HibernatePlayerRatingManager.class);
+	private static final Logger log = Logger.getLogger(HibernateRatingManager.class);
 
-	public HibernatePlayerRatingManager() {
+	public HibernateRatingManager() {
 	}
 
 	@Override
-	public void addRatingsChangeListener(PlayerRatingListener l) {
+	public void addRatingsChangeListener(RatingListener l) {
 		ratingListeners.add(l);
 	}
 
 	@Override
-	public void removeRatingsChangeListener(PlayerRatingListener l) {
+	public void removeRatingsChangeListener(RatingListener l) {
 		ratingListeners.remove(l);
 	}
 
@@ -163,7 +161,7 @@ public class HibernatePlayerRatingManager extends HibernateDaoSupport implements
 	}
 
 	protected void fireRatingChangedEvent(Personality p, GameBoard board, short oldRating, short newRating) {
-		for (PlayerRatingListener ratingListener : ratingListeners) {
+		for (RatingListener ratingListener : ratingListeners) {
 			ratingListener.playerRatingChanged(p, board, oldRating, newRating);
 		}
 	}

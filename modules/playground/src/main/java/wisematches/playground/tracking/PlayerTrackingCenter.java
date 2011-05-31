@@ -1,28 +1,20 @@
-package wisematches.tracking.rating;
+package wisematches.playground.tracking;
 
 import wisematches.personality.Personality;
 import wisematches.playground.GameBoard;
+import wisematches.playground.GamePlayerHand;
+import wisematches.playground.GameSettings;
 
-import java.util.Collection;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface PlayerRatingManager {
-	/**
-	 * Adds ratings listener.
-	 *
-	 * @param l the ratings listener to be added.
-	 */
-	void addRatingsChangeListener(PlayerRatingListener l);
+public interface PlayerTrackingCenter {
+	void addStatisticListener(StatisticsListener l);
 
-	/**
-	 * Removes ratings listener.
-	 *
-	 * @param l the ratings listener to be removed.
-	 */
-	void removeRatingsChangeListener(PlayerRatingListener l);
+	void removeStatisticListener(StatisticsListener l);
+
 
 	/**
 	 * Returns current player's rating.
@@ -34,15 +26,12 @@ public interface PlayerRatingManager {
 	short getRating(Personality person);
 
 	/**
-	 * Returns position of player in ratings table that is sorted by {@code SortType.DESC}. To get position
-	 * of player in table sorted by {@code SortType.ASC} user following construction:
-	 * {@code getPlayersCount() - getPlayerPosition(long)}.
+	 * Returns statistic for specified player.
 	 *
-	 * @param player the player id how position should be returned.
-	 * @return the player's position in ratings table starting from 1 or {@code 0} if player is unknown.
-	 * @throws IllegalArgumentException if specified personality out of this manager.
+	 * @param personality the player id.
+	 * @return the player statistic.
 	 */
-	long getPosition(Personality player);
+	Statistics getPlayerStatistic(Personality personality);
 
 	/**
 	 * Returns collection of all changes for specified board.
@@ -50,7 +39,22 @@ public interface PlayerRatingManager {
 	 * @param board the board
 	 * @return collection of rating changes or null if board doesn't exist or not finished yet.
 	 */
-	Collection<RatingChange> getRatingChanges(GameBoard board);
+	RatingChanges getRatingChanges(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board);
+
+	/**
+	 * Forecast possible rating changes if board will be closed right now. The method takes into account
+	 * current player's rating and current board's state.
+	 * <p/>
+	 * The method can return different result for the same board and the same player because player's ratung
+	 * can be changed or board's state can be changed.
+	 * <p/>
+	 * If game was finished please use {@link #getRatingChanges(wisematches.playground.GameBoard)} method instead.
+	 * This method is based on current player's rating.
+	 *
+	 * @param board the board
+	 * @return the forecasted rating changes
+	 */
+	RatingChanges forecastRatingChanges(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board);
 
 	/**
 	 * Returns rating curve container that contains information about all rating changes for specified player
@@ -65,5 +69,5 @@ public interface PlayerRatingManager {
 	 * @throws IllegalArgumentException if resolution if zero or negative.
 	 * @throws NullPointerException	 if {@code player} is null
 	 */
-	RatingCurve getRatingCurve(Personality player, int resolution, Date startDate, Date endDate);
+	RatingChangesCurve getRatingChangesCurve(Personality player, int resolution, Date startDate, Date endDate);
 }

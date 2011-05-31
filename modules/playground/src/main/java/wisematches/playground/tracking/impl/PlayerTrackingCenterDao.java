@@ -1,31 +1,30 @@
-package wisematches.tracking.stats.imp;
+package wisematches.playground.tracking.impl;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.tracking.stats.statistician.PlayerStatisticEditor;
+import wisematches.playground.tracking.StatisticsEditor;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-class PlayerStatisticDao extends HibernateDaoSupport {
-	PlayerStatisticDao() {
+public class PlayerTrackingCenterDao extends HibernateDaoSupport {
+	public PlayerTrackingCenterDao() {
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	<T extends PlayerStatisticEditor> T loadPlayerStatistic(Class<? extends T> clazz, Personality personality) {
+	<T extends StatisticsEditor> T loadPlayerStatistic(Class<? extends T> clazz, Personality personality) {
 		return getHibernateTemplate().get(clazz, personality.getId());
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	void savePlayerStatistic(PlayerStatisticEditor statistic) {
-//		statistic.setUpdateTime(new Date());
+	void savePlayerStatistic(StatisticsEditor statistic) {
 		getHibernateTemplate().saveOrUpdate(statistic);
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	void removePlayerStatistic(PlayerStatisticEditor statistic) {
+	void removePlayerStatistic(StatisticsEditor statistic) {
 		getHibernateTemplate().delete(statistic);
 	}
 }
