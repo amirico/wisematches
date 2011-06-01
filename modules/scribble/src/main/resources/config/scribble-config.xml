@@ -17,6 +17,17 @@
         <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
     </bean>
 
+    <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
+    </bean>
+
+    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.PlayerTrackingCenterImpl">
+        <property name="ratingSystem" ref="eloRatingSystem"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="accountManager" ref="accountManager"/>
+        <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
+        <property name="playerTrackingCenterDao" ref="playerTrackingCenterDao"/>
+    </bean>
+
     <bean id="scribbleProposalManager"
           class="wisematches.playground.propose.impl.FileProposalManager">
         <property name="proposalsResource" value="${server.proposals.file}"/>

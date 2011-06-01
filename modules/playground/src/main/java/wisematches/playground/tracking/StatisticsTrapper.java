@@ -46,8 +46,6 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		final int moveTime = (int) (move.getMoveTime().getTime() - previousMoveTime(board).getTime());
 		editor.setAverageMoveTime(average(editor.getAverageMoveTime(), moveTime, turnsCount));
 
-		editor.setTurnsCount(editor.getTurnsCount() + 1);
-
 		final PlayerMove playerMove = move.getPlayerMove();
 		if (playerMove instanceof PassTurnMove) {
 			editor.setPassesCount(editor.getPassesCount() + 1);
@@ -69,31 +67,31 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		final int gamesCount = editor.getFinishedGames();
 		editor.setAverageMovesPerGame(average(editor.getAverageMovesPerGame(), movesCount, gamesCount));
 
-		if (board.isRatedGame()) { // If game is not rated just ignore it
-			if (board.getGameResolution() == GameResolution.TIMEOUT) {
-				editor.setTimeouts(editor.getTimeouts() + 1);
-			}
-
-			final Collection<? extends GamePlayerHand> wonPlayers = board.getWonPlayers();
-			if (wonPlayers.isEmpty()) { // draw
-				editor.setDraws(editor.getDraws() + 1);
-			} else {
-				boolean winner = false;
-				for (GamePlayerHand hand : wonPlayers) {
-					if (hand.getPlayerId() == editor.getPlayerId()) {
-						winner = true;
-						break;
-					}
-				}
-
-				if (winner) {
-					editor.setWins(editor.getWins() + 1);
-				} else {
-					editor.setLoses(editor.getLoses() + 1);
-				}
-			}
-		} else {
+		if (!board.isRatedGame()) {
 			editor.setUnratedGames(editor.getUnratedGames() + 1);
+			return;
+		}
+		if (board.getGameResolution() == GameResolution.TIMEOUT) {
+			editor.setTimeouts(editor.getTimeouts() + 1);
+		}
+
+		final Collection<? extends GamePlayerHand> wonPlayers = board.getWonPlayers();
+		if (wonPlayers.isEmpty()) { // draw
+			editor.setDraws(editor.getDraws() + 1);
+		} else {
+			boolean winner = false;
+			for (GamePlayerHand hand : wonPlayers) {
+				if (hand.getPlayerId() == editor.getPlayerId()) {
+					winner = true;
+					break;
+				}
+			}
+
+			if (winner) {
+				editor.setWins(editor.getWins() + 1);
+			} else {
+				editor.setLoses(editor.getLoses() + 1);
+			}
 		}
 
 		final RatingChange currentRating = changes.getRatingChange(editor.getPlayerId());
@@ -120,7 +118,7 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 
 
 		final short rating = currentRating.getNewRating();
-		final short averageOpponentsRating = (short) (opponentsRatings / board.getPlayersHands().size());
+		final short averageOpponentsRating = (short) (opponentsRatings / (board.getPlayersHands().size() - 1));
 		editor.setAverageOpponentRating((short) average(editor.getAverageOpponentRating(), averageOpponentsRating, gamesCount));
 		editor.setAverageRating((short) average(editor.getAverageRating(), rating, gamesCount));
 

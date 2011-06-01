@@ -5,7 +5,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import wisematches.playground.scribble.Word;
-import wisematches.playground.scribble.WordUserType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +19,7 @@ import java.io.Serializable;
 		{
 				@TypeDef(
 						name = "word",
-						typeClass = WordUserType.class,
+						typeClass = MemoryWordUserType.class,
 						parameters = {
 						}
 				)

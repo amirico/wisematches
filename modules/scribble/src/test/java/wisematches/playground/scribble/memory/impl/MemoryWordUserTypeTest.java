@@ -1,7 +1,10 @@
 package wisematches.playground.scribble.memory.impl;
 
 import org.junit.Test;
-import wisematches.playground.scribble.*;
+import wisematches.playground.scribble.Direction;
+import wisematches.playground.scribble.Position;
+import wisematches.playground.scribble.Tile;
+import wisematches.playground.scribble.Word;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +17,8 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class WordUserTypeTest {
-	public WordUserTypeTest() {
+public class MemoryWordUserTypeTest {
+	public MemoryWordUserTypeTest() {
 	}
 
 	@Test
@@ -27,7 +30,7 @@ public class WordUserTypeTest {
 		expect(resultSet.getString("a4")).andReturn("122а1|68м2|127а10|111г3|0b0");
 		replay(resultSet);
 
-		final WordUserType type = new WordUserType();
+		final MemoryWordUserType type = new MemoryWordUserType();
 		final Word o = (Word) type.nullSafeGet(resultSet, new String[]{"a1", "a2", "a3", "a4"}, this);
 		assertNotNull(o);
 
@@ -70,7 +73,7 @@ public class WordUserTypeTest {
 		ps.setString(15, "1a1|2b1|123c10|0d0");
 		replay(ps);
 
-		final WordUserType type = new WordUserType();
+		final MemoryWordUserType type = new MemoryWordUserType();
 		type.nullSafeSet(ps, w, 12);
 
 		verify(ps);
