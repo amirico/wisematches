@@ -5,35 +5,39 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import wisematches.personality.Personality;
 import wisematches.playground.scribble.Word;
-import wisematches.playground.scribble.WordUserType;
 import wisematches.playground.tracking.StatisticsEditor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-@TypeDefs(
-		{
-				@TypeDef(
-						name = "word",
-						typeClass = WordUserType.class,
-						parameters = {
-						}
-				)
-		}
-)
+@Table(name = "scribble_statistic")
+@TypeDefs({
+		@TypeDef(
+				name = "statWord",
+				typeClass = StatisticsWordUserType.class,
+				parameters = {}
+		)
+})
 public class ScribbleStatisticsEditor extends StatisticsEditor implements ScribbleStatistics {
+	@Column(name = "words")
 	private int wordsCount;
-
-	private int averageWordLength;
+	@Column(name = "exchanges")
 	private int exchangesCount;
 
-	@Type(type = "word")
+	@Column(name = "aWord")
+	private int averageWordLength;
+
+	@Type(type = "statWord")
+	@Column(name = "longestWord")
 	private Word lastLongestWord;
 
-	@Type(type = "word")
+	@Type(type = "statWord")
+	@Column(name = "valuableWord")
 	private Word lastValuableWord;
 
 	@Deprecated

@@ -24,32 +24,85 @@ import java.util.Date;
 @MappedSuperclass
 public class StatisticsEditor implements Statistics {
 	@Id
+	@Column(name = "playerId")
 	private long playerId;
+
+	@Column(name = "rating")
+	private short rating = 1200;
+
+	@Column(name = "updateTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateTime;
+
+	@Column(name = "wins")
 	private int wins;
+
+	@Column(name = "loses")
 	private int loses;
+
+	@Column(name = "draws")
 	private int draws;
+
+	@Column(name = "timeouts")
 	private int timeouts;
+
+	@Column(name = "active")
 	private int activeGames;
+
+	@Column(name = "unrated")
 	private int unratedGames;
+
+	@Column(name = "finished")
 	private int finishedGames;
+
+	@Column(name = "aRating")
 	private short averageRating;
+
+	@Column(name = "hRating")
 	private short highestRating;
+
+	@Column(name = "lRating")
 	private short lowestRating;
+
+	@Column(name = "aoRating")
 	private short averageOpponentRating;
+
+	@Column(name = "hoRating")
 	private short highestWonOpponentRating;
+
+	@Column(name = "hoId")
 	private long highestWonOpponentId;
+
+	@Column(name = "loRating")
 	private short lowestLostOpponentRating;
+
+	@Column(name = "loId")
 	private long lowestLostOpponentId;
+
+	@Column(name = "lastMoveTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastMoveTime;
+
+	@Column(name = "avgMoveTime")
 	private int averageMoveTime;
+
+	@Column(name = "avgGameMoves")
 	private int averageMovesPerGame;
+
+	@Column(name = "turns")
 	private int turnsCount;
+
+	@Column(name = "passes")
 	private int passesCount;
+
+	@Column(name = "lPoints")
 	private int lowestPoints;
+
+	@Column(name = "aPoints")
 	private int averagePoints;
+
+	@Column(name = "hPoints")
 	private int highestPoints;
-	private short rating;
 
 	@Deprecated
 	protected StatisticsEditor() {

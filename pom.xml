@@ -14,7 +14,6 @@
         <module>modules/personality</module>
         <module>modules/playground</module>
         <module>modules/scribble</module>
-        <module>modules/tracking</module>
         <module>modules/webserver</module>
     </modules>
 

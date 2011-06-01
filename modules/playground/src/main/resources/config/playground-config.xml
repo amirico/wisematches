@@ -3,6 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+    <bean id="eloRatingSystem" class="wisematches.playground.rating.impl.ELORatingSystem"/>
+
+    <bean id="playerTrackingCenterDao" class="wisematches.playground.tracking.impl.HibernatePlayerTrackingCenterDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean id="lexicalDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>

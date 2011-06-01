@@ -1,11 +1,6 @@
 package wisematches.playground.tracking.impl;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
 import wisematches.personality.account.AccountListener;
@@ -15,7 +10,6 @@ import wisematches.playground.*;
 import wisematches.playground.rating.RatingSystem;
 import wisematches.playground.tracking.*;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
@@ -66,13 +60,7 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 			if (computerPlayer != null) {
 				rating = computerPlayer.getRating();
 			} else {
-				final HibernateTemplate template = playerTrackingCenterDao.getHibernateTemplate();
-				rating = template.execute(new HibernateCallback<Short>() {
-					@Override
-					public Short doInHibernate(Session session) throws HibernateException, SQLException {
-						return ((Number) session.getNamedQuery("player.rating").setLong(0, person.getId()).uniqueResult()).shortValue();
-					}
-				});
+				rating = playerTrackingCenterDao.getRating(person);
 			}
 			ratings.put(person, rating);
 		}
@@ -80,6 +68,7 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Statistics getPlayerStatistic(Personality personality) {
 		statisticLock.lock();
 		try {
@@ -109,57 +98,34 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 			newRatings = oldRatings.clone(); // if game is not rated - no changes.
 		}
 
-		final Map<Long, RatingChange> res = new HashMap<Long, RatingChange>();
+		final Collection<RatingChange> res = new ArrayList<RatingChange>();
 		for (int i = 0; i < hands.length; i++) {
-			@SuppressWarnings("unchecked")
 			final GamePlayerHand hand = hands[i];
-			final RatingChange change = new RatingChange(hand.getPlayerId(), board.getBoardId(), new Date(), oldRatings[i], newRatings[i], hand.getPoints());
-			res.put(hand.getPlayerId(), change);
+			res.add(new RatingChange(hand.getPlayerId(), board.getBoardId(), new Date(), oldRatings[i], newRatings[i], hand.getPoints()));
 		}
 		return new RatingChanges(res);
 	}
 
 	@Override
 	public RatingChanges getRatingChanges(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-		final HibernateTemplate template = playerTrackingCenterDao.getHibernateTemplate();
-
-		@SuppressWarnings("unchecked")
-		final Collection<RatingChange> ratingChanges = template.find(
-				"from wisematches.playground.tracking.RatingChange rating where rating.boardId = ?", board.getBoardId());
-
+		final Collection<RatingChange> ratingChanges = playerTrackingCenterDao.getRatingChanges(board.getBoardId());
 		if (ratingChanges != null) {
-			final Map<Long, RatingChange> map = new HashMap<Long, RatingChange>();
-			for (RatingChange ratingChange : ratingChanges) {
-				map.put(ratingChange.getPlayerId(), ratingChange);
-			}
-
 			for (GamePlayerHand hand : board.getPlayersHands()) {
 				final ComputerPlayer cp = ComputerPlayer.getComputerPlayer(hand.getPlayerId());
 				if (cp != null) {
-					map.put(hand.getPlayerId(), new RatingChange(
-							hand.getPlayerId(), board.getBoardId(),
-							board.getFinishedTime(), cp.getRating(), cp.getRating(), hand.getPoints()));
+					ratingChanges.add(
+							new RatingChange(hand.getPlayerId(), board.getBoardId(),
+									board.getFinishedTime(), cp.getRating(), cp.getRating(), hand.getPoints()));
 				}
 			}
-			return new RatingChanges(map);
+			return new RatingChanges(ratingChanges);
 		}
 		return null;
 	}
 
 	@Override
 	public RatingChangesCurve getRatingChangesCurve(final Personality player, final int resolution, final Date startDate, final Date endDate) {
-		final HibernateTemplate template = playerTrackingCenterDao.getHibernateTemplate();
-		return template.execute(new HibernateCallback<RatingChangesCurve>() {
-			@Override
-			public RatingChangesCurve doInHibernate(Session session) throws HibernateException, SQLException {
-				final Query namedQuery = session.getNamedQuery("rating.curve");
-				namedQuery.setParameter("pid", player.getId());
-				namedQuery.setParameter("resolution", resolution);
-				namedQuery.setParameter("start", startDate);
-				namedQuery.setParameter("end", endDate);
-				return new RatingChangesCurve(resolution, startDate, endDate, namedQuery.list());
-			}
-		});
+		return playerTrackingCenterDao.getRatingChangesCurve(player, resolution, startDate, endDate);
 	}
 
 
@@ -197,7 +163,6 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 	public void setPlayerTrackingCenterDao(PlayerTrackingCenterDao playerTrackingCenterDao) {
 		this.playerTrackingCenterDao = playerTrackingCenterDao;
 	}
-
 
 	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		final Collection<? extends GamePlayerHand> hands = board.getPlayersHands();
@@ -250,7 +215,7 @@ public class PlayerTrackingCenterImpl implements PlayerTrackingCenter {
 
 			// store rating change
 			final RatingChange ratingChange = changes.getRatingChange(hand);
-			playerTrackingCenterDao.getHibernateTemplate().save(ratingChange);
+			playerTrackingCenterDao.saveRatingChange(ratingChange);
 
 			final Personality personality = Personality.person(hand.getPlayerId());
 			statisticLock.lock();

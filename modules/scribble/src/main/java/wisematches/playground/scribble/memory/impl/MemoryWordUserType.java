@@ -1,7 +1,11 @@
-package wisematches.playground.scribble;
+package wisematches.playground.scribble.memory.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
+import wisematches.playground.scribble.Direction;
+import wisematches.playground.scribble.Position;
+import wisematches.playground.scribble.Tile;
+import wisematches.playground.scribble.Word;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -14,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This {@code UserType} is used to store {@link Word} object into database.
+ * This {@code UserType} is used to store {@link wisematches.playground.scribble.Word} object into database.
  * <p/>
  * A table that contains {@code Word} object must have four columns in following order:
  * <ol>
@@ -37,12 +41,12 @@ import java.util.regex.Pattern;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public final class WordUserType implements UserType {
+public class MemoryWordUserType implements UserType {
 	private static final Pattern TILES_PATTERN = Pattern.compile("((\\d{1,3})([^\\d])(\\d{1,2})\\|?)");
 
 	private static final int[] SQL_TYPES = new int[]{Types.TINYINT, Types.TINYINT, Types.TINYINT, Types.VARCHAR};
 
-	public WordUserType() {
+	public MemoryWordUserType() {
 	}
 
 	public int[] sqlTypes() {
