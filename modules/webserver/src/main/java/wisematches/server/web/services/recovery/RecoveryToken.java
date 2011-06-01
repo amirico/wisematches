@@ -2,6 +2,7 @@ package wisematches.server.web.services.recovery;
 
 import wisematches.personality.account.Account;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 

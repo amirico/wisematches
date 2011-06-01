@@ -4,13 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.UrlResource;
 import org.xml.sax.SAXException;
-import wisematches.personality.account.Language;
+import wisematches.personality.Language;
 import wisematches.server.web.services.ads.AdvertisementBlock;
 import wisematches.server.web.services.ads.AdvertisementProvider;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**

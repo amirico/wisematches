@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.player.Player;
-import wisematches.playground.scribble.board.*;
-import wisematches.server.playground.dictionary.DictionaryManager;
-import wisematches.server.playground.dictionary.DictionaryNotFoundException;
-import wisematches.server.playground.room.RoomManager;
-import wisematches.server.standing.rating.PlayerRatingManager;
+import wisematches.playground.*;
+import wisematches.playground.dictionary.DictionaryManager;
+import wisematches.playground.dictionary.DictionaryNotFoundException;
+import wisematches.playground.scribble.*;
+import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
@@ -35,10 +35,11 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/game")
 public class PlaygroundController extends AbstractPlayerController {
-	private PlayerRatingManager ratingManager;
+	private ScribbleBoardManager boardManager;
+	private PlayerTrackingCenter trackingCenter;
+
 	private DictionaryManager dictionaryManager;
 	private GameMessageSource gameMessageSource;
-	private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
@@ -49,7 +50,7 @@ public class PlaygroundController extends AbstractPlayerController {
 	public String showPlayboard(@RequestParam("b") long gameId, Model model) throws UnknownEntityException {
 		try {
 			final Player player = getPlayer();
-			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+			final ScribbleBoard board = boardManager.openBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
 			}
@@ -57,7 +58,7 @@ public class PlaygroundController extends AbstractPlayerController {
 			model.addAttribute("board", board);
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
 			if (!board.isGameActive()) {
-				model.addAttribute("ratings", ratingManager.getRatingChanges(board));
+				model.addAttribute("ratings", trackingCenter.getRatingChanges(board));
 			}
 			return "/content/game/playboard/scribble";
 		} catch (BoardLoadingException ex) {
@@ -75,12 +76,12 @@ public class PlaygroundController extends AbstractPlayerController {
 			log.debug("Process player's move: " + gameId + ", word: " + word);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						final Player currentPlayer = getPlayer();
-						return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
-					}
-				}, locale);
+			@Override
+			public Map<String, Object> call() throws Exception {
+				final Player currentPlayer = getPlayer();
+				return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
+			}
+		}, locale);
 	}
 
 	@ResponseBody
@@ -91,12 +92,12 @@ public class PlaygroundController extends AbstractPlayerController {
 			log.debug("Process player's pass: " + gameId);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						final Player currentPlayer = getPlayer();
-						return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
-					}
-				}, locale);
+			@Override
+			public Map<String, Object> call() throws Exception {
+				final Player currentPlayer = getPlayer();
+				return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
+			}
+		}, locale);
 	}
 
 	@ResponseBody
@@ -108,16 +109,16 @@ public class PlaygroundController extends AbstractPlayerController {
 			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						int[] t = new int[tiles.length];
-						for (int i = 0; i < tiles.length; i++) {
-							t[i] = tiles[i].getNumber();
-						}
-						final Player currentPlayer = getPlayer();
-						return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
-					}
-				}, locale);
+			@Override
+			public Map<String, Object> call() throws Exception {
+				int[] t = new int[tiles.length];
+				for (int i = 0; i < tiles.length; i++) {
+					t[i] = tiles[i].getNumber();
+				}
+				final Player currentPlayer = getPlayer();
+				return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
+			}
+		}, locale);
 	}
 
 	@ResponseBody
@@ -128,20 +129,20 @@ public class PlaygroundController extends AbstractPlayerController {
 			log.debug("Process player's resign: " + gameId);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						Player currentPlayer = getPlayer();
-						final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
-						board.resign(board.getPlayerHand(currentPlayer.getId()));
+			@Override
+			public Map<String, Object> call() throws Exception {
+				Player currentPlayer = getPlayer();
+				final ScribbleBoard board = boardManager.openBoard(gameId);
+				board.resign(board.getPlayerHand(currentPlayer.getId()));
 
-						final Map<String, Object> res = new HashMap<String, Object>();
-						res.put("state", convertGameState(board, locale));
-						if (!board.isGameActive()) {
-							res.put("players", board.getPlayersHands());
-						}
-						return res;
-					}
-				}, locale);
+				final Map<String, Object> res = new HashMap<String, Object>();
+				res.put("state", convertGameState(board, locale));
+				if (!board.isGameActive()) {
+					res.put("players", board.getPlayersHands());
+				}
+				return res;
+			}
+		}, locale);
 	}
 
 	@ResponseBody
@@ -152,42 +153,42 @@ public class PlaygroundController extends AbstractPlayerController {
 			log.debug("Load board changes for: " + gameId + "@" + movesCount);
 		}
 		return processSafeAction(new Callable<Map<String, Object>>() {
-					@Override
-					public Map<String, Object> call() throws Exception {
-						final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+			@Override
+			public Map<String, Object> call() throws Exception {
+				final ScribbleBoard board = boardManager.openBoard(gameId);
 
-						final Map<String, Object> res = new HashMap<String, Object>();
-						res.put("state", convertGameState(board, locale));
-						final List<GameMove> gameMoves = board.getGameMoves();
-						final int newMovesCount = gameMoves.size() - movesCount;
-						if (newMovesCount > 0) {
-							final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
-							for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
-								moves.add(convertPlayerMove(move, locale));
-							}
-							res.put("moves", moves);
-
-							final Player currentPlayer = getPlayer(); // update hand only if new moves found
-							if (currentPlayer != null) {
-								ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer.getId());
-								if (playerHand != null) {
-									res.put("hand", playerHand.getTiles());
-								}
-							}
-						}
-						if (!board.isGameActive()) {
-							res.put("players", board.getPlayersHands());
-						}
-						return res;
+				final Map<String, Object> res = new HashMap<String, Object>();
+				res.put("state", convertGameState(board, locale));
+				final List<GameMove> gameMoves = board.getGameMoves();
+				final int newMovesCount = gameMoves.size() - movesCount;
+				if (newMovesCount > 0) {
+					final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
+					for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
+						moves.add(convertPlayerMove(move, locale));
 					}
-				}, locale);
+					res.put("moves", moves);
+
+					final Player currentPlayer = getPlayer(); // update hand only if new moves found
+					if (currentPlayer != null) {
+						ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer.getId());
+						if (playerHand != null) {
+							res.put("hand", playerHand.getTiles());
+						}
+					}
+				}
+				if (!board.isGameActive()) {
+					res.put("players", board.getPlayersHands());
+				}
+				return res;
+			}
+		}, locale);
 	}
 
 	@ResponseBody
 	@RequestMapping("/playboard/check")
 	public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
 		try {
-			Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
+			wisematches.playground.dictionary.Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));
 			if (dictionary.getWord(form.getWord()) == null) {
 				return ServiceResponse.failure();
 			}
@@ -203,7 +204,7 @@ public class PlaygroundController extends AbstractPlayerController {
 			throw new UnsuitablePlayerException("make turn", currentPlayer);
 		}
 
-		final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(gameId);
+		final ScribbleBoard board = boardManager.openBoard(gameId);
 		final GameMove gameMove = board.makeMove(move);
 
 		final Map<String, Object> res = new HashMap<String, Object>();
@@ -230,7 +231,7 @@ public class PlaygroundController extends AbstractPlayerController {
 				res[index++] = wonPlayer.getPlayerId();
 			}
 			state.put("winners", res);
-			state.put("ratings", ratingManager.getRatingChanges(board));
+			state.put("ratings", trackingCenter.getRatingChanges(board));
 			state.put("resolution", board.getGameResolution());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
@@ -324,8 +325,13 @@ public class PlaygroundController extends AbstractPlayerController {
 	}
 
 	@Autowired
-	public void setRatingManager(PlayerRatingManager ratingManager) {
-		this.ratingManager = ratingManager;
+	public void setBoardManager(ScribbleBoardManager scribbleBoardManager) {
+		this.boardManager = scribbleBoardManager;
+	}
+
+	@Autowired
+	public void setTrackingCenter(PlayerTrackingCenter scribbleTrackingCenter) {
+		this.trackingCenter = scribbleTrackingCenter;
 	}
 
 	@Autowired
@@ -336,10 +342,5 @@ public class PlaygroundController extends AbstractPlayerController {
 	@Autowired
 	public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
 		this.dictionaryManager = dictionaryManager;
-	}
-
-	@Autowired
-	public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
-		this.scribbleRoomManager = scribbleRoomManager;
 	}
 }
