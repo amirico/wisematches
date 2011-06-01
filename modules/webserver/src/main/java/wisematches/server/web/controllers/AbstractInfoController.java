@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class AbstractInfoController {
+public class AbstractInfoController extends AbstractPlayerController {
 	private String[] resourcesPaths;
 	private String defaultEncoding = "UTF-8";
 	private ResourceLoader resourceLoader = new DefaultResourceLoader();

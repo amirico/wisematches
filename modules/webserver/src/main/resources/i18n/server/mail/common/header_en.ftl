@@ -1,1 +1,1 @@
-Dear, <b>${player.nickname}</b>.
+Dear, <b>${principal.nickname}</b>.

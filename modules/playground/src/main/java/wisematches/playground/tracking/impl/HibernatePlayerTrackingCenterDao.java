@@ -23,7 +23,6 @@ public class HibernatePlayerTrackingCenterDao extends HibernateDaoSupport implem
 	public HibernatePlayerTrackingCenterDao() {
 	}
 
-	@Transactional(propagation = Propagation.MANDATORY)
 	public <T extends StatisticsEditor> T loadPlayerStatistic(Class<? extends T> clazz, Personality personality) {
 		return getHibernateTemplate().get(clazz, personality.getId());
 	}

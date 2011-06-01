@@ -5,7 +5,7 @@
 
 <#macro gameStatus board>
     <#if board.isGameActive()>
-        <#if board.getPlayerTurn().getPlayerId() == player.getId()>
+        <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
         <span class="player"><a
                 href="/game/playboard.html?b=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
             <#else>
@@ -105,25 +105,25 @@
     $("#refreshDashboard").button({icons: {primary: 'ui-icon-refresh'}});
 
     $('#dashboard').dataTable({
-                "bJQueryUI": true,
-                "bStateSave": true,
-                "bFilter": false,
-                "bSortClasses": false,
-                "aaSorting": [
-                    [3,'asc']
-                ],
-                "aoColumns": [
-                    null,
-                    null,
-                    null,
-                    null,
-                    { "bSortable": false },
-                    { "bSortable": false }
-                ],
-                "sDom": '<"H"lCr>t<"F"ip>',
-                "sPaginationType": "full_numbers",
-                "oLanguage": {
-                    "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
-                }
-            });
+        "bJQueryUI": true,
+        "bStateSave": true,
+        "bFilter": false,
+        "bSortClasses": false,
+        "aaSorting": [
+            [3,'asc']
+        ],
+        "aoColumns": [
+            null,
+            null,
+            null,
+            null,
+            { "bSortable": false },
+            { "bSortable": false }
+        ],
+        "sDom": '<"H"lCr>t<"F"ip>',
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sEmptyTable": "<@message code="game.dashboard.empty" args=['/game/create.html', '/game/gameboard.html']/>"
+        }
+    });
 </script>

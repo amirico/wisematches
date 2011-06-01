@@ -61,7 +61,7 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
 		res.addObject("errorCode", errorCode);
 		res.addObject("errorArguments", arguments);
 		res.addObject("errorException", exception);
-		res.addObject("player", WMSecurityContext.getPlayer());
+		res.addObject("principal", WMSecurityContext.getPlayer());
 		res.addObject("personality", WMSecurityContext.getPersonality());
 		res.addObject("headerTitle", "title.playboard");
 		return res;

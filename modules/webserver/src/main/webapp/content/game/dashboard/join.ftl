@@ -7,17 +7,17 @@
         $("#refreshGameboard").button({icons: {primary: 'ui-icon-refresh'}});
 
         $('#gameboard').dataTable({
-                    "bJQueryUI": true,
-                    "bStateSave": true,
-                    "bFilter": false,
-                    "bSort": false,
-                    "bSortClasses": false,
-                    "sDom": '<"H"lCr>t<"F"ip>',
-                    "sPaginationType": "full_numbers",
-                    "oLanguage": {
-                        "sEmptyTable": "<@message code="game.gameboard.empty" args=["/game/create.html"]/>"
-                    }
-                });
+            "bJQueryUI": true,
+            "bStateSave": true,
+            "bFilter": false,
+            "bSort": false,
+            "bSortClasses": false,
+            "sDom": '<"H"lCr>t<"F"ip>',
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sEmptyTable": "<@message code="game.gameboard.empty" args=["/game/create.html"]/>"
+            }
+        });
     });
 </script>
 
@@ -78,7 +78,7 @@
                             </#list>
                         </td>
                         <td class="center">
-                            <#assign msg=gameMessageSource.formatJoinException(proposal, player, locale)!""/>
+                            <#assign msg=gameMessageSource.formatJoinException(proposal, principal, locale)!""/>
                             <#if msg?has_content>
                                 <span class="game-join-error">${msg}</span>
                                 <#else>
