@@ -151,8 +151,8 @@
                         <span class="player">
                         <span id="on${n}" class="nickname">
                             <#if visible && wm.statusValue?has_content>
-                                <#assign player=playerManager.getPlayer(wm.statusValue?number)/>
-                            <@message code="game.player.${player.nickname}"/> (${player.rating})
+                                <#assign principal=playerManager.getPlayer(wm.statusValue?number)/>
+                            <@message code="game.player.${principal.nickname}"/> (${principal.rating})
                                 <#else>
                                 <@message code="game.create.opponents.wait.human.label"/>
                             </#if>

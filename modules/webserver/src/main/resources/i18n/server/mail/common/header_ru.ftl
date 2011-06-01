@@ -1,1 +1,1 @@
-Многоуважаемый, <b>${player.nickname}</b>.
+Многоуважаемый, <b>${principal.nickname}</b>.

@@ -4,12 +4,13 @@
 
 <@mail.html subject="WiseMatches Account Assistance">
 <p>
-    To initiate the process for resetting the password for your ${player.nickname} WiseMatches Account, visit the link
+    To initiate the process for resetting the password for your ${principal.nickname} WiseMatches Account, visit the
+    link
     below
 </p>
 
 <p>
-<@mail.url path='${confirmationUrl}?language=${player.language.code()}&token=${recoveryToken}'/>
+<@mail.url path='${confirmationUrl}?language=${principal.language.code()}&token=${recoveryToken}'/>
 </p>
 <p>
     If clicking on the link above does not work, copy and paste the URL in a new browser window instead. Thank you for

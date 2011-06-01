@@ -3,9 +3,9 @@
     padding-right: 10px;
 }
 
-#playboard tr.odd td, #playboard tr.even td {
+#playboard tr.odd, #playboard tr.even, #playboard tr.odd td, #playboard tr.even td {
     border: 0;
-    background-color: #DFE8F6;
+    background-color: transparent;
     cursor: pointer;
 }
 

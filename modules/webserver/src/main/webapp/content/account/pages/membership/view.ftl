@@ -11,7 +11,7 @@
 </p>
 
 <div>
-    Your membership level: ${player.membership.name()}
+    Your membership level: ${principal.membership.name()}
 </div>
 
 <table>

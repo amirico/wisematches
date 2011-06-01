@@ -10,12 +10,12 @@
             <table style="height: 100%; width: 100%">
                 <tr>
                     <td valign="top" align="right">
-                    <#if player.membership == 'GUEST'>
+                    <#if principal.membership == 'GUEST'>
                         <span class="player computer"><@message code="game.player.guest"/></span>
                         <#else>
                             <span class="player member">
-                                <a href="/game/profile.html?p=${player.id}">
-                                    <span class="nickname">${player.nickname} (${player.account.email})</span>
+                                <a href="/game/profile.html?p=${principal.id}">
+                                    <span class="nickname">${principal.nickname} (${principal.account.email})</span>
                                 </a>
                             </span>
                     </#if>

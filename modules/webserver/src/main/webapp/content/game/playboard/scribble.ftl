@@ -77,7 +77,7 @@
                 <#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
         }
 
-    <#assign playerHand=board.getPlayerHand(player.getId())!""/>
+    <#assign playerHand=board.getPlayerHand(principal.getId())!""/>
     <#if playerHand??>
         ,
         privacy: {
@@ -88,7 +88,7 @@
 </script>
 
 <script type="text/javascript">
-    var board = new wm.scribble.Board(scribbleGame, ${player.id}, "wildcardSelectionPanel");
+    var board = new wm.scribble.Board(scribbleGame, ${principal.id}, "wildcardSelectionPanel");
 </script>
 
 <#if !viewMode>

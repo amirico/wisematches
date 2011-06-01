@@ -3,11 +3,11 @@
 
 <@mail.html subject="Служба Аккаунтов WiseMatches">
 <p>
-    Чтобы изменить пароль аккаунта WiseMatches ${player.nickname} нажмите на расположенную ниже ссылку
+    Чтобы изменить пароль аккаунта WiseMatches ${principal.nickname} нажмите на расположенную ниже ссылку
 </p>
 
 <p>
-<@mail.url path='${confirmationUrl}?language=${player.language.code()}&token=${recoveryToken}'/>
+<@mail.url path='${confirmationUrl}?language=${principal.language.code()}&token=${recoveryToken}'/>
 </p>
 <p>
     Если эта ссылка не работает, откройте новое окно браузера, а затем скопируйте и вставьте URL-адрес в адресную

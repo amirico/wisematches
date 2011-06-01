@@ -56,6 +56,7 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		editor.setActiveGames(editor.getActiveGames() - 1);
 		editor.setFinishedGames(editor.getFinishedGames() + 1);
 
+
 		// Update average moves per game
 		int movesCount = 0;
 		final List<GameMove> list = board.getGameMoves();
@@ -95,6 +96,8 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		}
 
 		final RatingChange currentRating = changes.getRatingChange(editor.getPlayerId());
+
+		editor.setRating(currentRating.getNewRating());
 
 		int opponentsRatings = 0;
 		RatingChange maxOpponent = null;

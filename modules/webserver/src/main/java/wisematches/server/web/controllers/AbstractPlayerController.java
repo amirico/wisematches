@@ -12,7 +12,7 @@ public abstract class AbstractPlayerController {
 	protected AbstractPlayerController() {
 	}
 
-	@ModelAttribute("player")
+	@ModelAttribute("principal")
 	public Player getPlayer() {
 		return WMSecurityContext.getPlayer();
 	}
