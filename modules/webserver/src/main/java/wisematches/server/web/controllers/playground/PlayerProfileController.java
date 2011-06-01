@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
-import wisematches.server.standing.rating.RatingCurve;
+import wisematches.playground.tracking.PlayerTrackingCenter;
+import wisematches.playground.tracking.RatingChangesCurve;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.utils.RatingChart;
@@ -23,6 +24,7 @@ import java.util.Date;
 @RequestMapping("/game")
 public class PlayerProfileController extends AbstractPlayerController {
 	private PlayerManager playerManager;
+	private PlayerTrackingCenter trackingCenter;
 
 	private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new ThreadLocal<Calendar>() {
 		@Override
@@ -58,7 +60,7 @@ public class PlayerProfileController extends AbstractPlayerController {
 			c.add(Calendar.DAY_OF_YEAR, -365);
 			final Date start = c.getTime();
 
-			final RatingCurve ratingCurve = player.getRatingCurve(10, start, end);
+			final RatingChangesCurve ratingCurve = trackingCenter.getRatingChangesCurve(player, 10, start, end);
 			final RatingChart chart = new RatingChart(ratingCurve, middle);
 			model.addAttribute("profile", player);
 			model.addAttribute("chart", chart);
@@ -71,6 +73,11 @@ public class PlayerProfileController extends AbstractPlayerController {
 	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
+	}
+
+	@Autowired
+	public void setTrackingCenter(PlayerTrackingCenter trackingCenter) {
+		this.trackingCenter = trackingCenter;
 	}
 
 	@ModelAttribute("headerTitle")

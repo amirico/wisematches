@@ -1,15 +1,15 @@
 package wisematches.server.web.utils;
 
-import wisematches.server.standing.rating.RatingCurve;
+import wisematches.playground.tracking.RatingChangesCurve;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class RatingChart {
-	private final RatingCurve ratingCurve;
+	private final RatingChangesCurve ratingCurve;
 	private final int[] monthIndexes = new int[12];
 
-	public RatingChart(RatingCurve ratingCurve, int endMonth) {
+	public RatingChart(RatingChangesCurve ratingCurve, int endMonth) {
 		this.ratingCurve = ratingCurve;
 
 		for (int i = 1; i <= 12; i++) {

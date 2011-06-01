@@ -1,12 +1,12 @@
 package wisematches.server.web.services.recovery;
 
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.personality.account.*;
 
 import static org.junit.Assert.*;
 
@@ -16,8 +16,10 @@ import static org.junit.Assert.*;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/src/main/resources/config/database-config.xml",
+		"classpath:/config/database-junit-config.xml",
+		"classpath:/config/accounts-config.xml",
 		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-junit-config.xml",
 		"classpath:/config/application-settings.xml",
 		"classpath:/config/server-web-config.xml"
 })
@@ -28,8 +30,8 @@ public class RecoveryTokenManagerTest {
 	@Autowired
 	private RecoveryTokenManager recoveryTokenManager;
 
-	@Autowired
-	private SessionFactory sessionFactory;
+	public RecoveryTokenManagerTest() {
+	}
 
 	@Test
 	public void testManager() throws InterruptedException, TokenExpiredException, InadmissibleUsernameException, DuplicateAccountException, UnknownAccountException {

@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
+import wisematches.playground.BoardLoadingException;
+import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.Word;
-import wisematches.playground.scribble.board.ScribbleBoard;
-import wisematches.playground.scribble.board.ScribblePlayerHand;
-import wisematches.playground.scribble.board.ScribbleSettings;
 import wisematches.playground.scribble.memory.MemoryWordManager;
-import wisematches.server.playground.board.BoardLoadingException;
-import wisematches.server.playground.room.RoomManager;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.form.ScribbleWordForm;
@@ -33,9 +32,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/game/memory")
 public class MemoryWordController extends AbstractPlayerController {
+	private ScribbleBoardManager boardManager;
 	private GameMessageSource gameMessageSource;
 	private MemoryWordManager memoryWordManager;
-	private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.memory");
 
@@ -75,7 +74,7 @@ public class MemoryWordController extends AbstractPlayerController {
 			if (personality == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.personality", locale));
 			}
-			final ScribbleBoard board = scribbleRoomManager.getBoardManager().openBoard(boardId);
+			final ScribbleBoard board = boardManager.openBoard(boardId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.board.unknown", locale));
 			}
@@ -103,8 +102,8 @@ public class MemoryWordController extends AbstractPlayerController {
 	}
 
 	@Autowired
-	public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
-		this.scribbleRoomManager = scribbleRoomManager;
+	public void setBoardManager(ScribbleBoardManager boardManager) {
+		this.boardManager = boardManager;
 	}
 
 	private static enum MemoryAction {

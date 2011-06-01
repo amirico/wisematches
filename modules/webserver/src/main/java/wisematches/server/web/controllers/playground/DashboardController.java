@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import wisematches.personality.Language;
 import wisematches.personality.Personality;
-import wisematches.personality.account.Language;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.personality.player.computer.robot.RobotPlayer;
-import wisematches.playground.scribble.board.ScribbleBoard;
-import wisematches.playground.scribble.board.ScribbleSettings;
-import wisematches.server.playground.board.BoardManagementException;
-import wisematches.server.playground.propose.GameProposal;
-import wisematches.server.playground.propose.GameProposalManager;
-import wisematches.server.playground.propose.ViolatedRestrictionException;
-import wisematches.server.playground.room.RoomManager;
+import wisematches.playground.BoardManagementException;
+import wisematches.playground.propose.GameProposal;
+import wisematches.playground.propose.GameProposalManager;
+import wisematches.playground.propose.ViolatedRestrictionException;
+import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
 import wisematches.server.web.services.ads.AdvertisementManager;
@@ -40,9 +40,9 @@ import java.util.*;
 @RequestMapping("/game")
 public class DashboardController extends AbstractPlayerController {
 	private PlayerManager playerManager;
+	private GameProposalManager<ScribbleSettings> proposalManager;
+	private ScribbleBoardManager boardManager;
 	private AdvertisementManager advertisementManager;
-
-	private RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -97,10 +97,9 @@ public class DashboardController extends AbstractPlayerController {
 			final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
 			if (players.size() == opponents) {
 				players.add(0, player); // also add current personality as a first one
-				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(s, players);
+				final ScribbleBoard board = boardManager.createBoard(s, players);
 				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			} else {
-				final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
 				proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(player));
 				return "redirect:/game/dashboard.html";
 			}
@@ -115,12 +114,11 @@ public class DashboardController extends AbstractPlayerController {
 			log.info("Join to the game: " + id);
 		}
 		try {
-			final GameProposalManager<ScribbleSettings> proposalManager = scribbleRoomManager.getProposalManager();
 			final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPlayer());
 			if (proposal == null) {
 				errors.reject("game.error.restriction.ready.description", null);
 			} else if (proposal.isReady()) {
-				final ScribbleBoard board = scribbleRoomManager.getBoardManager().createBoard(proposal.getGameSettings(), proposal.getPlayers());
+				final ScribbleBoard board = boardManager.createBoard(proposal.getGameSettings(), proposal.getPlayers());
 				return "redirect:/game/playboard.html?b=" + board.getBoardId();
 			}
 		} catch (ViolatedRestrictionException e) {
@@ -136,7 +134,7 @@ public class DashboardController extends AbstractPlayerController {
 			log.debug("Loading waiting games for personality: " + player);
 		}
 
-		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(scribbleRoomManager.getProposalManager().getActiveProposals());
+		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(proposalManager.getActiveProposals());
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + proposals.size() + " proposals for personality: " + player);
 		}
@@ -153,11 +151,11 @@ public class DashboardController extends AbstractPlayerController {
 		if (log.isDebugEnabled()) {
 			log.debug("Loading active games for personality: " + personality);
 		}
-		final Collection<ScribbleBoard> activeBoards = scribbleRoomManager.getBoardManager().getActiveBoards(personality);
+		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(personality);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + personality);
 		}
-		final Collection<GameProposal<ScribbleSettings>> proposals = scribbleRoomManager.getProposalManager().getPlayerProposals(personality);
+		final Collection<GameProposal<ScribbleSettings>> proposals = proposalManager.getPlayerProposals(personality);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + proposals.size() + " proposals for personality: " + personality);
 		}
@@ -203,7 +201,12 @@ public class DashboardController extends AbstractPlayerController {
 	}
 
 	@Autowired
-	public void setScribbleRoomManager(RoomManager<ScribbleSettings, ScribbleBoard> scribbleRoomManager) {
-		this.scribbleRoomManager = scribbleRoomManager;
+	public void setProposalManager(GameProposalManager<ScribbleSettings> proposalManager) {
+		this.proposalManager = proposalManager;
+	}
+
+	@Autowired
+	public void setBoardManager(ScribbleBoardManager boardManager) {
+		this.boardManager = boardManager;
 	}
 }

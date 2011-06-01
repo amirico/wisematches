@@ -37,6 +37,9 @@ public class StatisticsWordUserType implements UserType {
 	}
 
 	public boolean equals(Object x, Object y) throws HibernateException {
+		if (x == null) {
+			return x == y;
+		}
 		return x.equals(y);
 	}
 
@@ -45,7 +48,10 @@ public class StatisticsWordUserType implements UserType {
 	}
 
 	public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
-		final String tilesString = rs.getString(names[3]);
+		final String tilesString = rs.getString(names[0]);
+		if (tilesString == null) {
+			return null;
+		}
 
 		final List<Tile> tiles = new ArrayList<Tile>(15);
 		final Matcher matcher = TILES_PATTERN.matcher(tilesString);
@@ -66,18 +72,21 @@ public class StatisticsWordUserType implements UserType {
 
 	public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
 		final Word w = (Word) value;
-
-		String s = "";
-		final Tile[] tiles = w.getTiles();
-		for (Tile tile : tiles) {
-			s += tile.getNumber() + "" + tile.getLetter() + "" + tile.getCost() + "|";
-		}
-
-		final int length = s.length();
-		if (length == 0) {
-			st.setString(index, s);
+		if (w == null) {
+			st.setString(index, null);
 		} else {
-			st.setString(index, s.substring(0, length - 1));
+			String s = "";
+			final Tile[] tiles = w.getTiles();
+			for (Tile tile : tiles) {
+				s += tile.getNumber() + "" + tile.getLetter() + "" + tile.getCost() + "|";
+			}
+
+			final int length = s.length();
+			if (length == 0) {
+				st.setString(index, s);
+			} else {
+				st.setString(index, s.substring(0, length - 1));
+			}
 		}
 	}
 

@@ -1,7 +1,5 @@
 package wisematches.server.deprecated.web.modules.app.notification;
 
-import wisematches.server.standing.notice.PlayerNotification;
-
 /**
  * Enum of notification types. {@code NotificationsSender} can fires only predefined numbers of notifications.
  * <p/>
@@ -9,7 +7,7 @@ import wisematches.server.standing.notice.PlayerNotification;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public enum GameBoardNotification implements PlayerNotification {
+public enum GameBoardNotification {
 	GAME_STARTED(false),
 	PLAYER_ADDED(false),
 	PLAYER_REMOVED(false),

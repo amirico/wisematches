@@ -13,9 +13,10 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:/src/main/resources/config/database-config.xml
+            classpath:/config/database-config.xml
+            classpath:/config/accounts-config.xml
             classpath:/config/playground-config.xml
-            classpath:/config/game-scribble-config.xml
+            classpath:/config/scribble-config.xml
             classpath:/config/message-source-config.xml
             classpath:/config/mail-sender-config.xml
             classpath:/config/server-web-config.xml
