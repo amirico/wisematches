@@ -21,7 +21,7 @@
 </div>
 <#if principal.id == player.id>
 <div class="edit">
-    <button onclick=""><@message code="game.profile.edit"/></button>
+    <button onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="game.profile.edit"/></button>
 </div>
 </#if>
 <#assign p_wins=0 p_loses=0 p_draws=0 p_timeouts=0/>
