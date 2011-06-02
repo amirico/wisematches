@@ -11,6 +11,7 @@ import java.util.Date;
  */
 public final class PlayerProfileEditor {
 	private final long playerId;
+	private final Date creationDate;
 	private String realName;
 	private String countryCode;
 	private Date birthday;
@@ -25,12 +26,17 @@ public final class PlayerProfileEditor {
 	 */
 	public PlayerProfileEditor(PlayerProfile profile) {
 		this.playerId = profile.getPlayerId();
+		this.creationDate = profile.getCreationDate();
 		this.realName = profile.getRealName();
 		this.countryCode = profile.getCountryCode();
 		this.birthday = profile.getBirthday();
 		this.gender = profile.getGender();
 		this.primaryLanguage = profile.getPrimaryLanguage();
 		this.comments = profile.getComments();
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
 	public String getRealName() {
@@ -82,11 +88,12 @@ public final class PlayerProfileEditor {
 	}
 
 	public PlayerProfile createProfile() {
-		return new PlayerProfileDetails(playerId, realName, countryCode, birthday, gender, primaryLanguage, comments);
+		return new PlayerProfileDetails(playerId, creationDate, realName, countryCode, birthday, gender, primaryLanguage, comments);
 	}
 
 	private static class PlayerProfileDetails implements PlayerProfile {
 		private final long playerId;
+		private final Date creationDate;
 		private final String realName;
 		private final String countryCode;
 		private final Date birthday;
@@ -94,8 +101,9 @@ public final class PlayerProfileEditor {
 		private final Language primaryLanguage;
 		private final String comments;
 
-		private PlayerProfileDetails(long playerId, String realName, String countryCode, Date birthday, Gender gender, Language primaryLanguage, String comments) {
+		private PlayerProfileDetails(long playerId, Date creationDate, String realName, String countryCode, Date birthday, Gender gender, Language primaryLanguage, String comments) {
 			this.playerId = playerId;
+			this.creationDate = creationDate;
 			this.realName = realName;
 			this.countryCode = countryCode;
 			this.birthday = birthday;
@@ -107,6 +115,11 @@ public final class PlayerProfileEditor {
 		@Override
 		public long getPlayerId() {
 			return playerId;
+		}
+
+		@Override
+		public Date getCreationDate() {
+			return creationDate;
 		}
 
 		@Override

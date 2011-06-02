@@ -28,7 +28,7 @@ public class InformationController extends AbstractInfoController {
 		if (webRequest.getParameter("plain") != null) {
 			return "/content/templates/resources";
 		} else {
-			return "/content/info/helpCenter";
+			return "/content/templates/helpCenter";
 		}
 	}
 }

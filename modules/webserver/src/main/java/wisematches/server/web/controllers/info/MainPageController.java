@@ -16,8 +16,8 @@ public class MainPageController {
 	@RequestMapping("index")
 	public String mainPage() {
 		if (WMAuthorities.USER.isAuthorityGranted()) {
-			return "redirect:/game/dashboard.html";
+			return "redirect:/playground/scribble/active";
 		}
-		return "redirect:/account/login.html";
+		return "redirect:/account/login";
 	}
 }

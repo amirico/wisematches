@@ -1,5 +1,5 @@
 /*
- * jQuery UI CSS Framework 1.8.12
+ * jQuery UI CSS Framework 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -93,7 +93,7 @@
 }
 
 /*
- * jQuery UI CSS Framework 1.8.12
+ * jQuery UI CSS Framework 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1050,7 +1050,7 @@
 }
 
 /*
- * jQuery UI Resizable 1.8.12
+ * jQuery UI Resizable 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1070,7 +1070,7 @@
     /* http://bugs.jqueryui.com/ticket/7233
     - Resizable: resizable handles fail to work in IE if transparent and content overlaps
    */
-    background-image: url(data:);
+    background-image: url(data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=);
 }
 
 .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle {
@@ -1142,7 +1142,7 @@
 }
 
 /*
- * jQuery UI Selectable 1.8.12
+ * jQuery UI Selectable 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1157,7 +1157,7 @@
 }
 
 /*
- * jQuery UI Accordion 1.8.12
+ * jQuery UI Accordion 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1219,7 +1219,7 @@
 }
 
 /*
- * jQuery UI Autocomplete 1.8.12
+ * jQuery UI Autocomplete 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1240,7 +1240,7 @@
 /* without this, the menu expands to 100% in IE6 */
 
 /*
- * jQuery UI Menu 1.8.12
+ * jQuery UI Menu 1.8.13
  *
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1284,7 +1284,7 @@
 }
 
 /*
- * jQuery UI Button 1.8.12
+ * jQuery UI Button 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1398,7 +1398,7 @@ button.ui-button::-moz-focus-inner {
 
 /* reset extra padding in Firefox */
 /*
- * jQuery UI Dialog 1.8.12
+ * jQuery UI Dialog 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1480,7 +1480,7 @@ button.ui-button::-moz-focus-inner {
 }
 
 /*
- * jQuery UI Slider 1.8.12
+ * jQuery UI Slider 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1557,7 +1557,7 @@ button.ui-button::-moz-focus-inner {
 }
 
 /*
- * jQuery UI Tabs 1.8.12
+ * jQuery UI Tabs 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1620,7 +1620,7 @@ button.ui-button::-moz-focus-inner {
 }
 
 /*
- * jQuery UI Datepicker 1.8.12
+ * jQuery UI Datepicker 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1851,7 +1851,7 @@ button.ui-button::-moz-focus-inner {
 }
 
 /*
- * jQuery UI Progressbar 1.8.12
+ * jQuery UI Progressbar 1.8.13
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.

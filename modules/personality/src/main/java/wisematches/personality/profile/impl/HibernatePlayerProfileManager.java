@@ -43,11 +43,6 @@ public class HibernatePlayerProfileManager extends HibernateDaoSupport implement
 		return getHibernateTemplate().get(HibernatePlayerProfile.class, personality.getId());
 	}
 
-	@Transactional(propagation = Propagation.MANDATORY)
-	public void createProfile(PlayerProfile profile) {
-		getHibernateTemplate().save(profile);
-	}
-
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void updateProfile(PlayerProfile playerProfile) {
@@ -60,10 +55,14 @@ public class HibernatePlayerProfileManager extends HibernateDaoSupport implement
 		}
 	}
 
-	@Transactional(propagation = Propagation.MANDATORY)
-	public void removeProfile(PlayerProfile profile) {
+	private void removeProfile(PlayerProfile profile) {
 		getHibernateTemplate().delete(profile);
 	}
+
+	private void createProfile(PlayerProfile profile) {
+		getHibernateTemplate().save(profile);
+	}
+
 
 	public void setAccountManager(AccountManager accountManager) {
 		if (this.accountManager != null) {

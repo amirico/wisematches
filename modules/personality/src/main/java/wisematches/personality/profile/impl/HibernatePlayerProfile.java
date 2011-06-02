@@ -22,6 +22,10 @@ class HibernatePlayerProfile implements PlayerProfile {
 	@Column(name = "playerId")
 	private long playerId;
 
+	@Column(name = "created")
+	@Temporal(TemporalType.DATE)
+	private Date creationDate = new Date();
+
 	@Column(name = "realName")
 	private String realName;
 
@@ -61,6 +65,11 @@ class HibernatePlayerProfile implements PlayerProfile {
 	@Override
 	public long getPlayerId() {
 		return playerId;
+	}
+
+	@Override
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
 	@Override
