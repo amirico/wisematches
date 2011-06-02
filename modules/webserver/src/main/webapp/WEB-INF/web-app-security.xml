@@ -51,62 +51,62 @@
 
     <beans:bean id="authenticationSuccessHandler"
                 class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-        <beans:property name="defaultTargetUrl" value="/game/dashboard.html"/>
+        <beans:property name="defaultTargetUrl" value="/playground/scribble/active"/>
         <beans:property name="targetUrlParameter" value="continue"/>
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler"
                 class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
-        <beans:property name="defaultFailureUrl" value="/account/loginAuth.html?error=system"/>
+        <beans:property name="defaultFailureUrl" value="/account/loginAuth?error=system"/>
         <beans:property name="exceptionMappings">
             <beans:map>
                 <beans:entry
                         key="org.springframework.security.authentication.BadCredentialsException"
-                        value="/account/loginAuth.html?error=credential"/>
+                        value="/account/loginAuth?error=credential"/>
                 <beans:entry
                         key="org.springframework.security.core.userdetails.UsernameNotFoundException"
-                        value="/account/loginAuth.html?error=credential"/>
+                        value="/account/loginAuth?error=credential"/>
 
                 <beans:entry
                         key="org.springframework.security.web.authentication.session.SessionAuthenticationException"
-                        value="/account/loginAuth.html?error=session"/>
+                        value="/account/loginAuth?error=session"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.www.NonceExpiredException"
-                        value="/account/loginAuth.html?error=session"/>
+                        value="/account/loginAuth?error=session"/>
                 <beans:entry
                         key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException"
-                        value="/account/loginAuth.html?error=session"/>
+                        value="/account/loginAuth?error=session"/>
                 <beans:entry
                         key="org.springframework.security.authentication.InsufficientAuthenticationException"
-                        value="/account/loginAuth.html?error=session"/>
+                        value="/account/loginAuth?error=session"/>
 
                 <beans:entry
                         key="org.springframework.security.authentication.AccountStatusException"
-                        value="/account/loginAuth.html?error=status"/>
+                        value="/account/loginAuth?error=status"/>
 
                 <beans:entry
                         key="org.springframework.security.authentication.InsufficientAuthenticationException"
-                        value="/account/loginAuth.html?error=insufficient"/>
+                        value="/account/loginAuth?error=insufficient"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException"
-                        value="/account/loginAuth.html?error=insufficient"/>
+                        value="/account/loginAuth?error=insufficient"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.CookieTheftException"
-                        value="/account/loginAuth.html?error=insufficient"/>
+                        value="/account/loginAuth?error=insufficient"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.InvalidCookieException"
-                        value="/account/loginAuth.html?error=insufficient"/>
+                        value="/account/loginAuth?error=insufficient"/>
             </beans:map>
         </beans:property>
     </beans:bean>
 
     <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.spring.WMAccessDeniedHandler">
-        <beans:property name="insufficientErrorPage" value="/account/loginAuth.html?error=insufficient"/>
+        <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
     </beans:bean>
 
     <beans:bean id="guestFilter" class="wisematches.server.security.impl.GuestAuthenticationFilter">
-        <beans:property name="guestProcessingUrl" value="/account/loginGuest.html"/>
+        <beans:property name="guestProcessingUrl" value="/account/loginGuest"/>
         <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
         <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
     </beans:bean>
@@ -130,9 +130,9 @@
 
 
     <http use-expressions="true">
-        <intercept-url pattern="/game/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/membership/**" access="isAuthenticated()"/>
-        <intercept-url pattern="/account/modify.html" access="isFullyAuthenticated()"/>
+        <intercept-url pattern="/account/modify" access="isFullyAuthenticated()"/>
         <intercept-url pattern="/admin/**" access="hasRole('admin') and isFullyAuthenticated()"/>
 
         <intercept-url pattern="/jquery/**" filters="none"/>
@@ -147,13 +147,13 @@
 
         <access-denied-handler ref="accessDeniedHandler"/>
 
-        <form-login login-page="/account/login.html"
-                    login-processing-url="/account/loginProcessing.html"
+        <form-login login-page="/account/login"
+                    login-processing-url="/account/loginProcessing"
                     authentication-success-handler-ref="authenticationSuccessHandler"
                     authentication-failure-handler-ref="authenticationFailureHandler"/>
 
-        <logout logout-url="/account/logout.html"
-                logout-success-url="/"
+        <logout logout-url="/account/logout"
+                logout-success-url="/account/login"
                 invalidate-session="true"/>
     </http>
 </beans:beans>

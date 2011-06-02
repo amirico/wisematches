@@ -16,6 +16,13 @@ import java.util.Date;
 public interface PlayerProfile {
 	long getPlayerId();
 
+	/**
+	 * Returns date when player was created
+	 *
+	 * @return date when player was created
+	 */
+	Date getCreationDate();
+
 	String getRealName();
 
 	String getCountryCode();

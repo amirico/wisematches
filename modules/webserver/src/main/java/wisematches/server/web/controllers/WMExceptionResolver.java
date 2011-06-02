@@ -19,25 +19,32 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@RequestMapping("/info/error")
 public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolver {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.exceptions");
 
 	public WMExceptionResolver() {
 	}
 
-	@RequestMapping("/error/400.html")
+
+	@RequestMapping(value = "")
+	public ModelAndView processException() {
+		return processException("???", null);
+	}
+
+	@RequestMapping(value = "", params = "c=400")
 	@ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class, TypeMismatchException.class})
 	public ModelAndView processBadRequest() {
 		return processException("400", null);
 	}
 
-	@RequestMapping("/error/404.html")
+	@RequestMapping(value = "", params = "c=404")
 	@ExceptionHandler(NoSuchRequestHandlingMethodException.class)
 	public ModelAndView processPageNotFound(HttpServletRequest request) {
 		return processException("404", null, request.getRequestURI());
 	}
 
-	@RequestMapping("/error/500.html")
+	@RequestMapping(value = "", params = "c=500")
 	@ExceptionHandler(Exception.class)
 	public ModelAndView processUnhandledException(Exception exception) {
 		return processException("500", exception);
@@ -50,14 +57,14 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
 
 	@ExceptionHandler(CookieTheftException.class)
 	public String cookieTheftException(CookieTheftException ex) {
-		return "forward:/account/loginAuth.html?error=insufficient";
+		return "forward:/account/loginAuth?error=insufficient";
 	}
 
 	private ModelAndView processException(String errorCode, Exception exception, Object... arguments) {
 		if (exception != null) {
 			log.error("Error notification received", exception);
 		}
-		final ModelAndView res = new ModelAndView("/content/errors/layout");
+		final ModelAndView res = new ModelAndView("/content/templates/errors");
 		res.addObject("errorCode", errorCode);
 		res.addObject("errorArguments", arguments);
 		res.addObject("errorException", exception);

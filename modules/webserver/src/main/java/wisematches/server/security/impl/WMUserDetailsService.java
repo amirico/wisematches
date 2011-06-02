@@ -86,7 +86,7 @@ public class WMUserDetailsService implements UserDetailsService, PlayerSecurityS
 
 		final UsernamePasswordAuthenticationToken newAuthentication =
 				new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
-		newAuthentication.setDetails(playerManager.getPlayer(player));
+		newAuthentication.setDetails(playerManager.getPrincipal(player));
 		return newAuthentication;
 	}
 */

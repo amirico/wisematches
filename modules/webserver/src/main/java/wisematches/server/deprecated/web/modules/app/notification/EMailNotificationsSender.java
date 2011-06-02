@@ -50,7 +50,7 @@ public class EMailNotificationsSender {
 						log.debug("Send notification " + notificationType + " to " + playerId + " with resource " + resource);
 					}
 
-					final Player p = playerManager.getPlayer(playerId);
+					final Player p = playerManager.getPrincipal(playerId);
 					final boolean playerOnline = playerSessionsManager.isPlayerOnline(p);
 
 					if (!playerOnline || notificationType.isOnlineNotification()) {
@@ -135,7 +135,7 @@ public class EMailNotificationsSender {
 		public void gameStarted(GameBoard board) {
 			@SuppressWarnings("unchecked")
 			final Collection<GamePlayerHand> playersHands = board.getPlayersHands();
-			final Player turnOwnerPlayer = playerManager.getPlayer(board.getPlayerTurn().getPlayerId());
+			final Player turnOwnerPlayer = playerManager.getPrincipal(board.getPlayerTurn().getPlayerId());
 
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
@@ -155,7 +155,7 @@ public class EMailNotificationsSender {
 		public <S extends GameSettings, P extends GamePlayerHand> void gameFinished(GameBoard<S, P> board, GameResolution resolution, Collection<P> wonPlayers) {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("board", board);
-//			model.put("wonPlayer", playerManager.getPlayer(wonPlayer.getPlayerId()));
+//			model.put("wonPlayer", playerManager.getPrincipal(wonPlayer.getPlayerId()));
 			model.put("rated", board.isRatedGame());
 
 			@SuppressWarnings("unchecked")
@@ -173,7 +173,7 @@ public class EMailNotificationsSender {
 			model.put("board", board);
 			model.put("timeouted", byTimeout);
 			model.put("rated", board.isRatedGame());
-			model.put("interrupterPlayer", playerManager.getPlayer(interrupterPlayer.getPlayerId()));
+			model.put("interrupterPlayer", playerManager.getPrincipal(interrupterPlayer.getPlayerId()));
 
 			sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.lost", interrupterPlayer, model);
 
@@ -181,7 +181,7 @@ public class EMailNotificationsSender {
 			final List<P> hands = board.getPlayersHands();
 			final Collection<P> wonPlayer = board.getWonPlayers();
 			if (wonPlayer != null) {
-				model.put("wonPlayer", playerManager.getPlayer(wonPlayer.getPlayerId()));
+				model.put("wonPlayer", playerManager.getPrincipal(wonPlayer.getPlayerId()));
 				sentNotification(GameBoardNotification.GAME_FINISHED, "app.game.finished.won", wonPlayer, model);
 				for (GamePlayerHand hand : hands) {
 					if (hand == wonPlayer || hand == interrupterPlayer) {
@@ -209,10 +209,10 @@ public class EMailNotificationsSender {
 			model.put("board", board);
 			model.put("move", move);
 			model.put("points", move.getRatingPoints());
-			model.put("movedPlayer", playerManager.getPlayer(move.getPlayerMove().getPlayerId()));
+			model.put("movedPlayer", playerManager.getPrincipal(move.getPlayerMove().getPlayerId()));
 
 			if (nextPlayer != null) {
-				model.put("nextPlayer", playerManager.getPlayer(nextPlayer.getPlayerId()));
+				model.put("nextPlayer", playerManager.getPrincipal(nextPlayer.getPlayerId()));
 			}
 
 			if (nextPlayer != null) {
