@@ -5,24 +5,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.profile.PlayerProfile;
+import wisematches.personality.profile.PlayerProfileEditor;
 import wisematches.personality.profile.PlayerProfileManager;
 import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.playground.tracking.RatingChangesCurve;
 import wisematches.playground.tracking.Statistics;
 import wisematches.server.web.controllers.AbstractPlayerController;
+import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm;
 import wisematches.server.web.utils.RatingChart;
 
-import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -51,7 +48,12 @@ public class PlayerProfileController extends AbstractPlayerController {
 	@RequestMapping("view")
 	public String viewProfile(@RequestParam("p") String profileId, Model model) throws UnknownEntityException {
 		try {
-			final Player player = playerManager.getPlayer(Long.parseLong(profileId));
+			final Player player;
+			if (profileId == null) {
+				player = getPrincipal();
+			} else {
+				player = playerManager.getPlayer(Long.parseLong(profileId));
+			}
 			if (player == null) {
 				throw new UnknownEntityException(profileId, "profile");
 			}
@@ -86,19 +88,35 @@ public class PlayerProfileController extends AbstractPlayerController {
 	}
 
 	@RequestMapping("edit")
-	public String editProfile(@ModelAttribute("profile") PlayerProfileForm form, Model model, Locale locale) {
-		final Player player = getPrincipal();
-		final PlayerProfile profile = profileManager.getPlayerProfile(player);
-
-		model.addAttribute("player", player);
+	public String editProfile(Model model, Locale locale) {
+		final Player principal = getPrincipal();
+		model.addAttribute("player", principal);
+		model.addAttribute("profile", profileManager.getPlayerProfile(principal));
 		return "/content/personality/profile/edit";
 	}
 
+	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "edit", method = RequestMethod.POST)
-	public String editProfile(@Valid @ModelAttribute("profile") PlayerProfileForm form,
-							  BindingResult result, Model model, Locale locale) {
-		return editProfile(form, model, locale);
+	@RequestMapping(value = "save", method = RequestMethod.POST)
+	public ServiceResponse editProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
+		try {
+			final PlayerProfile profile = profileManager.getPlayerProfile(getPersonality());
+
+			final PlayerProfileEditor editor = new PlayerProfileEditor(profile);
+//		editor.setBirthday(form.getBirthday());
+			editor.setRealName(form.getRealName());
+			editor.setComments(form.getComments());
+			editor.setCountryCode(form.getCountryCode());
+//		editor.setGender(form.getGender());
+//		editor.setBirthday(form.getBirthday());
+//		editor.setPrimaryLanguage(form.getPrimaryLanguage());
+			profileManager.updateProfile(editor.createProfile());
+
+			return ServiceResponse.SUCCESS;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ServiceResponse.failure(ex.getMessage());
+		}
 	}
 
 	@Autowired

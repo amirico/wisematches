@@ -76,11 +76,11 @@
 </td>
 <td valign="top">
 <div id="create-game">
-<div>
-    <div class="ui-widget-header ui-corner-all">
+<div class="ui-corner-all shadow">
+    <div class="ui-widget-header ui-corner-top">
     <@message code="game.create.label"/>
     </div>
-    <div class="ui-widget-content ui-corner-all">
+    <div class="ui-widget-content ui-corner-bottom" style="margin: 0">
         <div class="info-description"><@message code="game.create.description"/></div>
         <form id="form" class="form" action="/playground/scribble/create" method="post">
             <table>
