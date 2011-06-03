@@ -135,48 +135,54 @@ wm.ui = new function() {
         'border-width': '3px'
     };
 
+    $.blockUI.defaults.overlayCSS = {
+        backgroundColor: '#000',
+        opacity:           0.2,
+        cursor:               'wait'
+    };
+
     $.ajaxSetup({
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json'
-            });
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json'
+    });
 
     this.showConfirm = function(title, msg, approvedAction) {
         $('<div></div>').html(msg).dialog({
-                    title: title,
-                    draggable: false,
-                    modal: true,
-                    resizable: false,
-                    width: 400,
-                    buttons: {
-                        "Ok": function() {
-                            $(this).dialog("close");
-                            approvedAction(true);
-                        },
-                        "Cancel": function() {
-                            $(this).dialog("close");
-                            approvedAction(false);
-                        } }
-                });
+            title: title,
+            draggable: false,
+            modal: true,
+            resizable: false,
+            width: 400,
+            buttons: {
+                "Ok": function() {
+                    $(this).dialog("close");
+                    approvedAction(true);
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                    approvedAction(false);
+                } }
+        });
     };
 
     this.showWaitMessage = function(message) {
         $.blockUI({
-                    blockMsgClass: 'ui-corner-all ui-state-default',
-                    css: {
-                        padding: '15px',
-                        opacity: .85
-                    },
-                    message: message });
+            blockMsgClass: 'ui-corner-all ui-state-default',
+            css: {
+                padding: '15px',
+                opacity: .85
+            },
+            message: message });
     };
 
     this.showMessage = function(opts) {
         opts = opts || {};
         var v = $.extend(opts, {
-                    message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
-                    blockMsgClass: 'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
-                    draggable: false
-                });
+            message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
+            blockMsgClass: 'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
+            draggable: false
+        });
         $.blockUI(v);
         $('.blockOverlay').click($.unblockUI);
     };
@@ -184,14 +190,19 @@ wm.ui = new function() {
     this.showGrowl = function(title, message, type, opts) {
         opts = opts || {};
         var v = $.extend(opts, {
-                    classes: [ opts.error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
-                    showStyle: {opacity: .95},
-                    autoHideDelay: 10000
-                });
+            classes: [ opts.error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
+            showStyle: {opacity: .95},
+            autoHideDelay: 10000
+        });
         $("#freeow").freeow(title, message, v);
     }
 };
 
 $(document).ready(function() {
     $("[title]").tooltip({ position: "bottom right", opacity: 0.97});
+    var notifications = $(".notification");
+    if (notifications.size() > 0) {
+        $("#header-separator").slideUp('slow');
+        notifications.appendTo($("#notification-block")).slideDown('slow');
+    }
 });

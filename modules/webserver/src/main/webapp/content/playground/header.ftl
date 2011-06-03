@@ -14,7 +14,7 @@
                         <span class="player computer"><@message code="game.player.guest"/></span>
                         <#else>
                             <span class="player member">
-                                <a href="/playground/profile/view?p=${principal.id}">
+                                <a href="/playground/profile/view">
                                     <span class="nickname">${principal.nickname} (${principal.account.email})</span>
                                 </a>
                             </span>
@@ -54,7 +54,7 @@
                          `       </button>
                             </div>
 -->
-                            <div style="margin: 0">
+                            <div>
                                 <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify')">
                                 <@message code="game.menu.settings.label"/>
                                 </button>
@@ -73,5 +73,3 @@
 <script type="text/javascript">
     $("#game-toolbar div").buttonset();
 </script>
-
-<div style="height: 20px;"></div>

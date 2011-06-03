@@ -45,6 +45,12 @@
     <#include "personality/header.ftl"/>
 </@security.authorize>
 
+<div id="notification-block"></div>
+
+<@security.authorize ifAllGranted="user">
+<div id="header-separator" style="height: 20px;"></div>
+</@security.authorize>
+
 <#include "${originalTemplateName}"/>
 
 <#if !errorCode??>
