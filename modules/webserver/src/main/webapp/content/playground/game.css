@@ -272,3 +272,7 @@
 .profile .statistic .ui-layout-table>div>div {
     padding-right: 10px;
 }
+
+.editable .sample {
+    color: #999999;
+}

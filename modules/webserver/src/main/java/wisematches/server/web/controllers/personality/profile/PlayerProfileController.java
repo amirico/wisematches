@@ -46,7 +46,7 @@ public class PlayerProfileController extends AbstractPlayerController {
 	}
 
 	@RequestMapping("view")
-	public String viewProfile(@RequestParam("p") String profileId, Model model) throws UnknownEntityException {
+	public String viewProfile(@RequestParam(value = "p", required = false) String profileId, Model model) throws UnknownEntityException {
 		try {
 			final Player player;
 			if (profileId == null) {

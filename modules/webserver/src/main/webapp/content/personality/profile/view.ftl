@@ -98,7 +98,7 @@
                             <#else>
                             ${statistics.lowestLostOpponentRating}
                                 <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                                <#if hwp?has_content>( <@wm.player player=llp showRating=false showType=false/>)</#if>
+                                <#if llp?has_content>( <@wm.player player=llp showRating=false showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -237,28 +237,8 @@
 <#--</div>-->
 </div>
 
-<div class="info">
-    <div class="photo">
-        <img style="width: 200px; height: 200px;"
-             src="/resources/images/player/noPlayer200.png" alt="Photo">
-    </div>
-    <div><strong>${player.nickname}</strong></div>
-    <div <#if !profile.gender??>class="undefined"</#if>>
-    ${profile.gender!"gender undefined"},
-    </div>
-    <div <#if !profile.birthday??>class="undefined"</#if>>
-    ${profile.birthday!"ages undefined"},
-    </div>
-    <div <#if !profile.countryCode??>class="undefined"</#if>>
-    ${profile.countryCode!"country undefined"},
-    </div>
-    <div>
-    ${player.timeZone.displayName}
-    </div>
-    <div class="<#if !profile.comments??>undefined </#if>quotation">
-        &laquo; ${profile.comments!""} &raquo;
-    </div>
-</div>
+<#include "public.ftl"/>
+s
 </div>
 </div>
 
@@ -279,7 +259,7 @@
         for (m in months) for (i = 0; i < resolution; i++) data.setValue(m * resolution + i, 0, months[m]);
 
     <#list ratingChart.ratingsPoint as p>
-        data.setValue(${p?string.computer}, 1, ${ratingChart.ratingsAvg[p_index]});
+        data.setValue(${p}, 1, ${ratingChart.ratingsAvg[p_index]});
     </#list>
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
