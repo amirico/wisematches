@@ -198,6 +198,182 @@ wm.ui = new function() {
     }
 };
 
+wm.ui.editor = {};
+
+wm.ui.editor.Controller = function(view, editorsInfo) {
+    var activeElement;
+    var activeEditor;
+
+    var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
+            "<div class='ui-editor-label'></div>" +
+            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+            "<button class='ui-editor-save'>Save</button> " +
+            "<button class='ui-editor-cancel'>Cancel</button>" +
+            "</div></div>" +
+            "</div></div></div>");
+
+    var editorLabel = $(editorDialog).find('.ui-editor-label');
+    var editorContent = $(editorDialog).find('.ui-editor-content');
+
+    var commitEditing = function() {
+        setViewInfo(activeElement, {
+            value: activeEditor.getValue(),
+            view: activeEditor.getDisplayValue()
+        });
+
+        $.blockUI({ message: "<h1>Remote call in progress...</h1>" });
+
+        var values = {};
+        $.each($(view).find('input').serializeArray(), function(i, field) {
+            values[field.name] = field.value;
+        });
+        alert($.toJSON(values));
+
+        $.ajax({
+            url: 'save',
+            cache: false,
+            data: $.toJSON(values),
+            complete: function() {
+                $.unblockUI();
+            }
+        });
+    };
+
+    var revertEditing = function() {
+        $.unblockUI();
+        return false;
+    };
+
+    var createNewEditor = function(editorInfo) {
+        if (editorInfo.type == 'text') {
+            return new wm.ui.editor.TextEditor();
+        } else if (editorInfo.type == 'select') {
+            return new wm.ui.editor.SelectEditor(editorInfo.values);
+        } else if (editorInfo.type == 'date') {
+            return new wm.ui.editor.DateEditor(editorInfo.opts || {});
+        }
+    };
+
+    var setViewInfo = function(view, info) {
+        var a = $(view).children(".ui-editor-view");
+        if (info.value == "") {
+            a.addClass('sample');
+            a.html(a.attr('label'));
+        } else {
+            a.removeClass('sample');
+            a.html(info.view);
+        }
+        $(view).children("input").val(info.value);
+    };
+
+    var getViewInfo = function(view) {
+        return {
+            label: $(view).children(".ui-editor-label").text(),
+            view: $(view).children(".ui-editor-view").html(),
+            value: $(view).children("input").val()
+        };
+    };
+
+    var closeEditor = function() {
+        editorLabel.empty();
+        editorContent.empty();
+
+        activeEditor = null;
+        activeElement = null;
+    };
+
+    var openEditor = function(view, editor) {
+        activeElement = view;
+        activeEditor = editor;
+
+        var viewInfo = getViewInfo(view);
+
+        editorLabel.text(viewInfo.label);
+        editorContent.append(editor.createEditor(viewInfo.value));
+
+        var offset = $(view).offset();
+
+        $.blockUI({
+            message: editorDialog,
+            centerX: false,
+            centerY: false,
+            fadeIn: false,
+            fadeOut: false,
+            blockMsgClass: 'shadow',
+            css: {
+                width: 'auto',
+                left: offset.left + 5,
+                top: offset.top + 5
+            },
+            draggable: false,
+            onUnblock: closeEditor
+        });
+    };
+
+    var saveButton = $(editorDialog).find('.ui-editor-save').click(commitEditing);
+    var cancelButton = $(editorDialog).find('.ui-editor-cancel').click(revertEditing);
+
+    $.each($(view).find('.ui-editor-item'), function(i, v) {
+        if (editorsInfo[v.id] != undefined) {
+            $(v).click(function() {
+                openEditor(v, createNewEditor(editorsInfo[v.id]));
+            });
+        }
+    });
+};
+
+wm.ui.editor.TextEditor = function() {
+    var editor = $("<input>");
+
+    this.createEditor = function(currentValue) {
+        return editor.val(currentValue);
+    };
+
+    this.getValue = function() {
+        return editor.val();
+    };
+
+    this.getDisplayValue = function() {
+        return editor.val();
+    };
+};
+
+wm.ui.editor.DateEditor = function(ops) {
+    var editor = $("<div></div>").datepicker(ops);
+
+    this.createEditor = function(currentValue) {
+        return editor.datepicker("setDate", currentValue);
+    };
+
+    this.getValue = function() {
+        return $.datepicker.formatDate('dd-mm-yy', editor.datepicker("getDate"));
+    };
+
+    this.getDisplayValue = function() {
+        return $.datepicker.formatDate('DD, MM d, yy', editor.datepicker("getDate"));
+    };
+};
+
+wm.ui.editor.SelectEditor = function(values) {
+    var editor = $('<select></select>');
+
+    $.each(values, function(key, value) {
+        editor.append($('<option value="' + key + '">' + value + '</option>'));
+    });
+
+    this.createEditor = function(currentValue) {
+        return editor.val(currentValue);
+    };
+
+    this.getValue = function() {
+        return editor.val();
+    };
+
+    this.getDisplayValue = function() {
+        return editor.children("option:selected").text();
+    };
+};
+
 $(document).ready(function() {
     $("[title]").tooltip({ position: "bottom right", opacity: 0.97});
     var notifications = $(".notification");

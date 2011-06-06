@@ -411,3 +411,7 @@ div.space-line {
     font-weight: bold;
     white-space: nowrap;
 }
+
+.ui-widget-editor {
+    display: none;
+}

@@ -3,55 +3,51 @@
 <#include "/core.ftl">
 
 <style type="text/css">
-    .editable div {
+    .ui-editor-item div {
         padding-top: 10px;
         padding-right: 20px;
         padding-bottom: 10px;
     }
 
-    .editable div.player {
+    .ui-editor-item div.player {
         padding: 0 !important;
     }
 
-    .player.editor-label {
+    .ui-editor-item.player .ui-editor-label {
         display: none;
     }
 
-    .editable:hover {
+    .ui-editor-item:hover {
         cursor: pointer;
         background: #dfeffc;
     }
 
-    #profileEditorDialog {
+    .ui-widget-editor {
         padding-left: 20px;
         padding-right: 20px;
     }
 
-    #profileEditorName, #profileEditorContent {
-        vertical-align: top;
-    }
-
-    #profileEditorContent {
+    .ui-editor-content {
         padding-bottom: 10px;
     }
 
-    #profileEditorContent .ui-datepicker {
+    .ui-editor-content .ui-datepicker {
         display: block !important;
     }
 
-    #profileEditorControls .ui-button-text {
+    .ui-editor-content div.ui-datepicker, .ui-editor-content .ui-datepicker td {
+        font-size: 12px;
+        line-height: normal;
+    }
+
+    .ui-editor-controls .ui-button-text {
         padding-top: 2px !important;
         padding-bottom: 2px !important;
     }
 
-    #profileEditorContent, #profileEditorControls {
+    .ui-editor-content, .ui-editor-controls {
         text-align: left;
         padding-left: 20px;
-    }
-
-    div.ui-datepicker, .ui-datepicker td {
-        font-size: 12px;
-        line-height: normal;
     }
 
     .notification {
@@ -59,10 +55,11 @@
     }
 </style>
 
-<#macro editor id header empty value="" classes="">
-<div id="${id}-row" class="editable ${classes}">
-    <div class="editor-label ${classes}">${header}</div>
-    <div class="editor-view<#if !value?has_content> sample</#if> ${classes}"><#if value?has_content>${value}<#else>${empty}</#if></div>
+<#macro editor id label empty value="" classes="">
+<div id="${id}" class="ui-editor-item ${classes}">
+    <div class="ui-editor-label ${classes}">${label}</div>
+    <div label="${empty}"
+         class="ui-editor-view<#if !value?has_content> sample</#if> ${classes}"><#if value?has_content>${value}<#else>${empty}</#if></div>
     <input name="${id}" type="hidden" value="${value}">
 </div>
 </#macro>
@@ -73,36 +70,34 @@
 </div>
 
 <div style="width: 100%">
-    <form>
-        <div class="profile shadow ui-state-default">
-            <div class="content shadow ui-state-default">
-                <div class="title">
-                <@editor id="realName" header="" value=profile.realName empty="Your real name" classes="player"/>
-                </div>
-
-                <div class="ui-layout-table">
-                <@editor id="comments" header="Introduction" value=profile.comments empty="Put a little about yourself here."/>
-
-            <@editor id="gender" header="Gender" value=profile.gender empty="Undefined gender"/>
-
-            <@editor id="birthday" header="Birthday" value=profile.birthday empty="Your birthday date"/>
-
-            <@editor id="countryCode" header="Country" value=profile.countryCode empty="Country where do you live"/>
-
-            <@editor id="primaryLanguage" header="Primary language" value=profile.primaryLanguage empty="Your primary language for games"/>
-                </div>
+    <div class="profile shadow ui-state-default">
+        <div class="content shadow ui-state-default">
+            <div class="title">
+            <@editor id="realName" label="" value=profile.realName empty="Your real name" classes="player"/>
             </div>
 
-            <div class="info">
-                <div class="photo">
-                    <img style="width: 200px; height: 200px;"
-                         src="/resources/images/player/noPlayer200.png" alt="Photo">
+            <div class="ui-layout-table">
+            <@editor id="comments" label="Introduction" value=profile.comments empty="Put a little about yourself here."/>
 
-                    <div style="text-align: center;"><a href="asd">change photo</a></div>
-                </div>
+            <@editor id="gender" label="Gender" value=profile.gender empty="Undefined gender"/>
+
+            <@editor id="birthday" label="Birthday" value=profile.birthday empty="Your birthday date"/>
+
+            <@editor id="countryCode" label="Country" value=profile.countryCode empty="Country where do you live"/>
+
+            <@editor id="primaryLanguage" label="Primary language" value=profile.primaryLanguage empty="Your primary language for games"/>
             </div>
         </div>
-    </form>
+
+        <div class="info">
+            <div class="photo">
+                <img style="width: 200px; height: 200px;"
+                     src="/resources/images/player/noPlayer200.png" alt="Photo">
+
+                <div style="text-align: center;"><a href="asd">change photo</a></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="profileEditorDialog" class="ui-widget-content" style="display: none;">
@@ -121,77 +116,41 @@
 </div>
 
 <script type="text/javascript">
+    var editorController = new wm.ui.editor.Controller($('.profile'), {
+        realName: {
+            type: 'text'
+        },
+        comments: {
+            type: 'text'
+        },
+        gender: {
+            type: 'select',
+            values: {
+                male: 'Male',
+                female: 'Female',
+                other: 'Other'
+            }
+        },
+        birthday: {
+            type: 'date',
+            opts: {
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+                yearRange: '1900:2011'
+
+            }
+        },
+        primaryLanguage: {
+            type: 'select',
+            values: {
+                en: 'English',
+                ru: 'Russian'
+            }
+        }
+    });
+    /*
     wm.profile = {};
-
-    wm.profile.Language = function() {
-        var editor = $('<select><option value="en">English</option><option value="ru">Russian</option></select>');
-
-        this.createEditor = function(valueInfo) {
-            return editor.val(valueInfo.value);
-        };
-
-        this.getValue = function() {
-            return editor.val();
-        };
-
-        this.getDisplayValue = function() {
-            return editor.children("option:selected").text();
-        };
-    };
-
-    wm.profile.Gender = function() {
-        var editor = $('<select><option value="m">Male</option><option value="f">Female</option><option value="o">Other</option></select>');
-
-        this.createEditor = function(valueInfo) {
-            return editor.val(valueInfo.value);
-        };
-
-        this.getValue = function() {
-            return editor.val();
-        };
-
-        this.getDisplayValue = function() {
-            return editor.children("option:selected").text();
-        };
-    };
-
-    wm.profile.Introduction = function() {
-        var editor = $('<input label="sfasfasdf">');
-
-        this.createEditor = function(valueInfo) {
-            return editor.val(valueInfo.value);
-        };
-
-        this.getValue = function() {
-            return editor.val();
-        };
-
-        this.getDisplayValue = function() {
-            return editor.val();
-        };
-    };
-
-    wm.profile.Birthday = function() {
-        var editor = $("<div></div>");
-        editor.datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd-mm-yy',
-            yearRange: '1900:2011'
-        });
-
-        this.createEditor = function(valueInfo) {
-            return editor.datepicker("setDate", valueInfo.value);
-        };
-
-        this.getValue = function() {
-            return $.datepicker.formatDate('dd-mm-yy', editor.datepicker("getDate"));
-        };
-
-        this.getDisplayValue = function() {
-            return $.datepicker.formatDate('DD, MM d, yy', editor.datepicker("getDate"));
-        };
-    };
 
     wm.profile.editor = new function() {
         var editingElement;
@@ -272,15 +231,28 @@
 
     $('.editable').click(function() {
         if (this.id == 'realName-row') {
-            wm.profile.editor.openEditor(this, new wm.profile.Introduction());
+            wm.profile.editor.openEditor(this, new wm.ui.editor.TextEditor());
         } else if (this.id == 'gender-row') {
-            wm.profile.editor.openEditor(this, new wm.profile.Gender());
+            wm.profile.editor.openEditor(this, new wm.ui.editor.SelectEditor({
+                male: 'Male',
+                female: 'Female',
+                other: 'Other'
+            }));
         } else if (this.id == 'primaryLanguage-row') {
-            wm.profile.editor.openEditor(this, new wm.profile.Language());
+            wm.profile.editor.openEditor(this, new wm.ui.editor.SelectEditor({
+                en: 'English',
+                ru: 'Russian'
+            }));
         } else if (this.id == 'comments-row') {
-            wm.profile.editor.openEditor(this, new wm.profile.Introduction());
+            wm.profile.editor.openEditor(this, new wm.ui.editor.TextEditor());
         } else if (this.id == 'birthday-row') {
-            wm.profile.editor.openEditor(this, new wm.profile.Birthday());
+            wm.profile.editor.openEditor(this, new wm.ui.editor.DateEditor({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+                yearRange: '1900:2011'
+            }));
         }
     });
+*/
 </script>
