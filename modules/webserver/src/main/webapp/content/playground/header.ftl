@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<table id="game-header">
+<table id="header">
     <tr>
         <td width="178px" height="72px">
             <img id="header-image" src="/resources/images/logo.png" width="178" height="72" alt="logo"/>

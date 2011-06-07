@@ -313,40 +313,48 @@ div.space-line {
     color: #003333;
 }
 
-/* Outermost Container */
-.freeow {
-    position: fixed;
-    width: 350px;
+.notify-widget {
     z-index: 9999;
+    position: fixed;
+    text-align: center;
 }
 
-.freeow-top-right {
+.notify-widget-top-center {
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.notify-widget-top-right {
+    width: 350px;
     top: 10px;
     right: 10px;
 }
 
-.freeow-bottom-right {
+.notify-widget-bottom-right {
+    width: 350px;
     bottom: 10px;
     right: 10px;
 }
 
-/* Message */
-.freeow > div {
+.notify-widget > div {
+    margin: 0;
     position: relative;
-    margin-bottom: 5px;
     cursor: pointer;
+    display: inline-block;
+    text-align: center;
 }
 
-.freeow .content {
+.notify-widget .content {
     margin: 5px 5px 5px 69px;
 }
 
-.freeow h2, .freeow p {
+.notify-widget h2, .notify-widget p {
     margin: 0;
     padding: 0;
 }
 
-.freeow .icon {
+.notify-widget .icon {
     position: absolute;
     display: block;
     top: 5px;
@@ -355,12 +363,12 @@ div.space-line {
     z-index: 1;
 }
 
-.freeow .closeInfo {
+.notify-widget .closeInfo {
     text-align: right;
     font-size: 10px;
 }
 
-.freeow .close {
+.notify-widget .close {
     position: absolute;
     display: block;
     width: 24px;
@@ -371,7 +379,7 @@ div.space-line {
     z-index: 2;
 }
 
-.freeow div:hover .close {
+.notify-widget div:hover .close {
     background: transparent url('/resources/images/close.png') no-repeat 0 0;
 }
 
@@ -413,5 +421,56 @@ div.space-line {
 }
 
 .ui-widget-editor {
+    display: none;
+}
+
+.ui-editor-item div {
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+.ui-editor-item div.player {
+    padding: 0 !important;
+}
+
+.ui-editor-item.player .ui-editor-label {
+    display: none;
+}
+
+.ui-editor-item:hover {
+    cursor: pointer;
+    background: #dfeffc;
+}
+
+.ui-widget-editor {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.ui-editor-content {
+    padding-bottom: 10px;
+}
+
+.ui-editor-content .ui-datepicker {
+    display: block !important;
+}
+
+.ui-editor-content div.ui-datepicker, .ui-editor-content .ui-datepicker td {
+    font-size: 12px;
+    line-height: normal;
+}
+
+.ui-editor-controls .ui-button-text {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+.ui-editor-content, .ui-editor-controls {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.notification {
     display: none;
 }

@@ -13,11 +13,17 @@ public class MainPageController {
 	public MainPageController() {
 	}
 
-	@RequestMapping("index")
+
+	@RequestMapping("")
 	public String mainPage() {
 		if (WMAuthorities.USER.isAuthorityGranted()) {
 			return "redirect:/playground/scribble/active";
 		}
 		return "redirect:/account/login";
+	}
+
+	@RequestMapping("index")
+	public String indexPage() {
+		return mainPage();
 	}
 }

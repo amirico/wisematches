@@ -194,7 +194,7 @@ wm.ui = new function() {
             showStyle: {opacity: .95},
             autoHideDelay: 10000
         });
-        $("#freeow").freeow(title, message, v);
+        $("#notify-widget-pane").freeow(title, message, v);
     }
 };
 
@@ -215,13 +215,28 @@ wm.ui.editor.Controller = function(view, editorsInfo) {
     var editorLabel = $(editorDialog).find('.ui-editor-label');
     var editorContent = $(editorDialog).find('.ui-editor-content');
 
+    var saveButton = $(editorDialog).find('.ui-editor-save');
+    var cancelButton = $(editorDialog).find('.ui-editor-cancel');
+
     var commitEditing = function() {
+        saveButton.attr('disabled', 'disabled');
+        cancelButton.attr('disabled', 'disabled');
+
         setViewInfo(activeElement, {
             value: activeEditor.getValue(),
             view: activeEditor.getDisplayValue()
         });
 
-        $.blockUI({ message: "<h1>Remote call in progress...</h1>" });
+        $("#header").block({
+            message: "Saving profile...",
+            css: {
+                top: 0,
+                borderWidth: 1,
+                borderTopWidth: 0
+            },
+            showOverlay: false,
+            blockMsgClass: 'ui-state-highlight ui-corner-bottom'
+        });
 
         var values = {};
         $.each($(view).find('input').serializeArray(), function(i, field) {
@@ -233,8 +248,38 @@ wm.ui.editor.Controller = function(view, editorsInfo) {
             url: 'save',
             cache: false,
             data: $.toJSON(values),
-            complete: function() {
+            error: function(jqXHR, textStatus, errorThrown) {
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (!data.success) {
+                    $("#header").block({
+                        message: "Profile saving error: " + data.summary,
+                        css: {
+                            top: 0,
+                            borderWidth: 1,
+                            borderTopWidth: 0
+                        },
+                        timeout: 10000,
+                        showOverlay: false,
+                        blockMsgClass: 'ui-state-error ui-corner-bottom'
+                    });
+                } else {
+                    $("#header").block({
+                        message: "Profile saved",
+                        css: {
+                            top: 0,
+                            borderWidth: 1,
+                            borderTopWidth: 0
+                        },
+                        timeout: 5000,
+                        showOverlay: false,
+                        blockMsgClass: 'ui-state-highlight ui-corner-bottom'
+                    });
+                }
+                $("#header").unblock();
                 $.unblockUI();
+                saveButton.removeAttr('disabled');
+                cancelButton.removeAttr('disabled');
             }
         });
     };
@@ -310,8 +355,8 @@ wm.ui.editor.Controller = function(view, editorsInfo) {
         });
     };
 
-    var saveButton = $(editorDialog).find('.ui-editor-save').click(commitEditing);
-    var cancelButton = $(editorDialog).find('.ui-editor-cancel').click(revertEditing);
+    saveButton.click(commitEditing);
+    cancelButton.click(revertEditing);
 
     $.each($(view).find('.ui-editor-item'), function(i, v) {
         if (editorsInfo[v.id] != undefined) {

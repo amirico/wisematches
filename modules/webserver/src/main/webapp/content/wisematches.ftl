@@ -37,7 +37,11 @@
 <#include "templates/analytics.ftl">
 </head>
 <body>
-<div id="freeow" class="freeow freeow-top-right"></div>
+<div id="notify-widget-pane" class="notify-widget"></div>
+
+<#--<div id="freeow" class="freeow freeow-top-right"></div>-->
+<#--<div id="freeow2" class="freeow2"></div>-->
+
 <@security.authorize ifAllGranted="user">
     <#include "playground/header.ftl"/>
 </@security.authorize>
