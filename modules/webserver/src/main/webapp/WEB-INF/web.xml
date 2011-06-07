@@ -92,6 +92,11 @@
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
+        <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>web-app</servlet-name>
         <url-pattern>*.ajax</url-pattern>
     </servlet-mapping>
 

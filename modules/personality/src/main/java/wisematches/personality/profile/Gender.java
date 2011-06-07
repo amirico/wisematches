@@ -7,5 +7,6 @@ package wisematches.personality.profile;
  */
 public enum Gender {
 	MALE,
-	FEMALE
+	FEMALE,
+	OTHER
 }

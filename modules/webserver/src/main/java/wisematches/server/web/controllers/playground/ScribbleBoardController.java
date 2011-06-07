@@ -46,7 +46,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	public ScribbleBoardController() {
 	}
 
-	@RequestMapping("/")
+	@RequestMapping("")
 	public String showPlayboard(@RequestParam("b") long gameId, Model model) throws UnknownEntityException {
 		try {
 			final Player player = getPrincipal();
@@ -68,7 +68,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/make")
+	@RequestMapping("make")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
 										@RequestBody final ScribbleWordForm word, final Locale locale) {
@@ -85,7 +85,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/pass")
+	@RequestMapping("pass")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		if (log.isDebugEnabled()) {
@@ -101,7 +101,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/exchange")
+	@RequestMapping("exchange")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
 											 @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
@@ -122,7 +122,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/resign")
+	@RequestMapping("resign")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		if (log.isDebugEnabled()) {
@@ -146,7 +146,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/changes")
+	@RequestMapping("changes")
 	public ServiceResponse loadChangesAjax(@RequestParam("b") final long gameId,
 										   @RequestParam("m") final int movesCount, final Locale locale) {
 		if (log.isDebugEnabled()) {
@@ -185,7 +185,7 @@ public class ScribbleBoardController extends AbstractPlayerController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/check")
+	@RequestMapping("check")
 	public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
 		try {
 			wisematches.playground.dictionary.Dictionary dictionary = dictionaryManager.getDictionary(new Locale(form.getLang()));

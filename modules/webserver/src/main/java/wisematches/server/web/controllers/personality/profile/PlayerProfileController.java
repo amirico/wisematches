@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
+import wisematches.personality.profile.Gender;
 import wisematches.personality.profile.PlayerProfile;
 import wisematches.personality.profile.PlayerProfileEditor;
 import wisematches.personality.profile.PlayerProfileManager;
@@ -20,6 +22,9 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm;
 import wisematches.server.web.utils.RatingChart;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -38,6 +43,13 @@ public class PlayerProfileController extends AbstractPlayerController {
 		@Override
 		protected Calendar initialValue() {
 			return Calendar.getInstance();
+		}
+	};
+
+	private static final ThreadLocal<DateFormat> DATE_FORMAT_THREAD_LOCAL = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("dd-mm-yyyy");
 		}
 	};
 
@@ -90,8 +102,28 @@ public class PlayerProfileController extends AbstractPlayerController {
 	@RequestMapping("edit")
 	public String editProfile(Model model, Locale locale) {
 		final Player principal = getPrincipal();
+		final PlayerProfile profile = profileManager.getPlayerProfile(principal);
+
+		final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
+
+		final PlayerProfileForm form = new PlayerProfileForm();
+		form.setComments(profile.getComments());
+		form.setCountryCode(profile.getCountryCode());
+
+		form.setRealName(profile.getRealName());
+
+		if (profile.getBirthday() != null) {
+			form.setBirthday(dateFormat.format(profile.getBirthday()));
+		}
+		if (profile.getGender() != null) {
+			form.setGender(profile.getGender().name().toLowerCase());
+		}
+		if (profile.getPrimaryLanguage() != null) {
+			form.setPrimaryLanguage(profile.getPrimaryLanguage().code().toLowerCase());
+		}
+
 		model.addAttribute("player", principal);
-		model.addAttribute("profile", profileManager.getPlayerProfile(principal));
+		model.addAttribute("profileForm", form);
 		return "/content/personality/profile/edit";
 	}
 
@@ -100,21 +132,51 @@ public class PlayerProfileController extends AbstractPlayerController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public ServiceResponse editProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
 		try {
+			final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
+
 			final PlayerProfile profile = profileManager.getPlayerProfile(getPersonality());
 
 			final PlayerProfileEditor editor = new PlayerProfileEditor(profile);
-//		editor.setBirthday(form.getBirthday());
+			editor.setBirthday(dateFormat.parse(form.getBirthday()));
 			editor.setRealName(form.getRealName());
 			editor.setComments(form.getComments());
 			editor.setCountryCode(form.getCountryCode());
-//		editor.setGender(form.getGender());
-//		editor.setBirthday(form.getBirthday());
-//		editor.setPrimaryLanguage(form.getPrimaryLanguage());
+
+			if (form.getBirthday() == null || form.getBirthday().trim().length() == 0) {
+				editor.setBirthday(null);
+			} else {
+				try {
+					editor.setBirthday(dateFormat.parse(form.getBirthday()));
+				} catch (ParseException ex) {
+					return ServiceResponse.failure(ex.getMessage());
+				}
+			}
+
+			if (form.getGender() == null || form.getGender().trim().length() == 0) {
+				editor.setGender(null);
+			} else {
+				try {
+					editor.setGender(Gender.valueOf(form.getGender().toUpperCase()));
+				} catch (IllegalArgumentException ex) {
+					return ServiceResponse.failure(ex.getMessage());
+				}
+			}
+
+			if (form.getPrimaryLanguage() == null || form.getPrimaryLanguage().trim().length() == 0) {
+				editor.setPrimaryLanguage(null);
+			} else {
+				try {
+					editor.setPrimaryLanguage(Language.valueOf(form.getPrimaryLanguage().toUpperCase()));
+				} catch (IllegalArgumentException ex) {
+					return ServiceResponse.failure(ex.getMessage());
+				}
+			}
 			profileManager.updateProfile(editor.createProfile());
 
 			return ServiceResponse.SUCCESS;
+		} catch (ParseException ex) {
+			return ServiceResponse.failure(ex.getMessage());
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			return ServiceResponse.failure(ex.getMessage());
 		}
 	}

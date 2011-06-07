@@ -337,36 +337,36 @@
     background: url("/resources/images/scribble/board/dynamic.png") no-repeat -76px 0 !important;
 }
 
-.freeow .your-turn .content span {
+.notify-widget .your-turn .content span {
     color: #a52a2a;
     font-weight: bold;
 }
 
-.freeow .your-turn .icon {
+.notify-widget .your-turn .icon {
     width: 48px;
     height: 48px;
     background: url('/resources/images/scribble/playboard/notifications.png') no-repeat 0 0;
 }
 
-.freeow .opponent-turn .icon {
+.notify-widget .opponent-turn .icon {
     width: 48px;
     height: 48px;
     background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -48px 0;
 }
 
-.freeow .game-finished .icon {
+.notify-widget .game-finished .icon {
     width: 48px;
     height: 48px;
     background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -96px 0;
 }
 
-.freeow .move-accepted .icon {
+.notify-widget .move-accepted .icon {
     width: 48px;
     height: 48px;
     background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -144px 0;
 }
 
-.freeow .move-declined .icon {
+.notify-widget .move-declined .icon {
     width: 48px;
     height: 48px;
     background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -192px 0;
