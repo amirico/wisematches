@@ -125,6 +125,16 @@ wm.util.url = new function() {
 };
 
 wm.ui = new function() {
+    var alertTemplate = function(title, message) {
+        var e;
+        e = ['<div>','<div class="content">','<h2>' + title + '</h2>','<p>' + message + '</p>','</div>','<span class="icon"></span>','<span class="close"></span>','</div>'].join("");
+        return e;
+    };
+
+    var statusTemplate = function(title, message) {
+        return '<div><div class="content">' + message + '</div></div>';
+    };
+
     $.blockUI.defaults.css = {
         padding:    0,
         margin:        0,
@@ -187,235 +197,221 @@ wm.ui = new function() {
         $('.blockOverlay').click($.unblockUI);
     };
 
-    this.showGrowl = function(title, message, type, opts) {
-        opts = opts || {};
-        var v = $.extend(opts, {
-            classes: [ opts.error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
+    this.showAlert = function(title, message, type, error) {
+        $("#alerts-widget-pane").freeow(title, message, {
+            classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
             showStyle: {opacity: .95},
+            template:alertTemplate,
             autoHideDelay: 10000
         });
-        $("#notify-widget-pane").freeow(title, message, v);
-    }
+    };
+
+    this.showStatus = function(message, error) {
+        $("#status-widget-pane").empty(); // trick - clear all statuses.
+
+        $("#status-widget-pane").freeow(null, message, {
+            classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-bottom"],
+            template:statusTemplate,
+            autoHideDelay: 10000
+        });
+    };
+
+    $(document).ready(function() {
+        $("body").prepend($("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>"));
+        $("body").prepend($("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>"));
+    });
 };
 
-wm.ui.editor = {};
+wm.ui.editor = new function() {
+    var TextEditor = function() {
+        var editor = $("<input>");
 
-wm.ui.editor.Controller = function(view, editorsInfo) {
-    var activeElement;
-    var activeEditor;
+        this.createEditor = function(currentValue) {
+            return editor.val(currentValue);
+        };
 
-    var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-            "<div class='ui-editor-label'></div>" +
-            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-            "<button class='ui-editor-save'>Save</button> " +
-            "<button class='ui-editor-cancel'>Cancel</button>" +
-            "</div></div>" +
-            "</div></div></div>");
+        this.getValue = function() {
+            return editor.val();
+        };
 
-    var editorLabel = $(editorDialog).find('.ui-editor-label');
-    var editorContent = $(editorDialog).find('.ui-editor-content');
-
-    var saveButton = $(editorDialog).find('.ui-editor-save');
-    var cancelButton = $(editorDialog).find('.ui-editor-cancel');
-
-    var commitEditing = function() {
-        saveButton.attr('disabled', 'disabled');
-        cancelButton.attr('disabled', 'disabled');
-
-        setViewInfo(activeElement, {
-            value: activeEditor.getValue(),
-            view: activeEditor.getDisplayValue()
-        });
-
-        $("#header").block({
-            message: "Saving profile...",
-            css: {
-                top: 0,
-                borderWidth: 1,
-                borderTopWidth: 0
-            },
-            showOverlay: false,
-            blockMsgClass: 'ui-state-highlight ui-corner-bottom'
-        });
-
-        var values = {};
-        $.each($(view).find('input').serializeArray(), function(i, field) {
-            values[field.name] = field.value;
-        });
-        alert($.toJSON(values));
-
-        $.ajax({
-            url: 'save',
-            cache: false,
-            data: $.toJSON(values),
-            error: function(jqXHR, textStatus, errorThrown) {
-            },
-            success: function(data, textStatus, jqXHR) {
-                if (!data.success) {
-                    $("#header").block({
-                        message: "Profile saving error: " + data.summary,
-                        css: {
-                            top: 0,
-                            borderWidth: 1,
-                            borderTopWidth: 0
-                        },
-                        timeout: 10000,
-                        showOverlay: false,
-                        blockMsgClass: 'ui-state-error ui-corner-bottom'
-                    });
-                } else {
-                    $("#header").block({
-                        message: "Profile saved",
-                        css: {
-                            top: 0,
-                            borderWidth: 1,
-                            borderTopWidth: 0
-                        },
-                        timeout: 5000,
-                        showOverlay: false,
-                        blockMsgClass: 'ui-state-highlight ui-corner-bottom'
-                    });
-                }
-                $("#header").unblock();
-                $.unblockUI();
-                saveButton.removeAttr('disabled');
-                cancelButton.removeAttr('disabled');
-            }
-        });
-    };
-
-    var revertEditing = function() {
-        $.unblockUI();
-        return false;
-    };
-
-    var createNewEditor = function(editorInfo) {
-        if (editorInfo.type == 'text') {
-            return new wm.ui.editor.TextEditor();
-        } else if (editorInfo.type == 'select') {
-            return new wm.ui.editor.SelectEditor(editorInfo.values);
-        } else if (editorInfo.type == 'date') {
-            return new wm.ui.editor.DateEditor(editorInfo.opts || {});
-        }
-    };
-
-    var setViewInfo = function(view, info) {
-        var a = $(view).children(".ui-editor-view");
-        if (info.value == "") {
-            a.addClass('sample');
-            a.html(a.attr('label'));
-        } else {
-            a.removeClass('sample');
-            a.html(info.view);
-        }
-        $(view).children("input").val(info.value);
-    };
-
-    var getViewInfo = function(view) {
-        return {
-            label: $(view).children(".ui-editor-label").text(),
-            view: $(view).children(".ui-editor-view").html(),
-            value: $(view).children("input").val()
+        this.getDisplayValue = function() {
+            return editor.val();
         };
     };
 
-    var closeEditor = function() {
-        editorLabel.empty();
-        editorContent.empty();
+    var DateEditor = function(ops) {
+        var editor = $("<div></div>").datepicker(ops);
 
-        activeEditor = null;
-        activeElement = null;
+        this.createEditor = function(currentValue) {
+            return editor.datepicker("setDate", currentValue);
+        };
+
+        this.getValue = function() {
+            return $.datepicker.formatDate(ops.dateFormat, editor.datepicker("getDate"));
+        };
+
+        this.getDisplayValue = function() {
+            return $.datepicker.formatDate(ops.displayFormat, editor.datepicker("getDate"));
+        };
     };
 
-    var openEditor = function(view, editor) {
-        activeElement = view;
-        activeEditor = editor;
+    var SelectEditor = function(values) {
+        var editor = $('<select></select>');
 
-        var viewInfo = getViewInfo(view);
-
-        editorLabel.text(viewInfo.label);
-        editorContent.append(editor.createEditor(viewInfo.value));
-
-        var offset = $(view).offset();
-
-        $.blockUI({
-            message: editorDialog,
-            centerX: false,
-            centerY: false,
-            fadeIn: false,
-            fadeOut: false,
-            blockMsgClass: 'shadow',
-            css: {
-                width: 'auto',
-                left: offset.left + 5,
-                top: offset.top + 5
-            },
-            draggable: false,
-            onUnblock: closeEditor
+        $.each(values, function(key, value) {
+            editor.append($('<option value="' + key + '">' + value + '</option>'));
         });
+
+        this.createEditor = function(currentValue) {
+            return editor.val(currentValue);
+        };
+
+        this.getValue = function() {
+            return editor.val();
+        };
+
+        this.getDisplayValue = function() {
+            return editor.children("option:selected").text();
+        };
     };
 
-    saveButton.click(commitEditing);
-    cancelButton.click(revertEditing);
+    this.Controller = function(view, committer, editorsInfo) {
+        var activeElement;
+        var activeEditor;
+        var previousValue;
 
-    $.each($(view).find('.ui-editor-item'), function(i, v) {
-        if (editorsInfo[v.id] != undefined) {
-            $(v).click(function() {
-                openEditor(v, createNewEditor(editorsInfo[v.id]));
+        var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
+                "<div class='ui-editor-label'></div>" +
+                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+                "<div class='ui-editor-error'></div>" +
+                "<button class='ui-editor-save'>Save</button> " +
+                "<button class='ui-editor-cancel'>Cancel</button>" +
+                "</div></div>" +
+                "</div></div></div>");
+
+        var editorLabel = $(editorDialog).find('.ui-editor-label');
+        var editorContent = $(editorDialog).find('.ui-editor-content');
+
+        var saveButton = $(editorDialog).find('.ui-editor-save');
+        var cancelButton = $(editorDialog).find('.ui-editor-cancel');
+
+        var commitEditing = function() {
+            saveButton.attr('disabled', 'disabled');
+            cancelButton.attr('disabled', 'disabled');
+
+            setViewInfo(activeElement, {
+                value: activeEditor.getValue(),
+                view: activeEditor.getDisplayValue()
             });
-        }
-    });
-};
 
-wm.ui.editor.TextEditor = function() {
-    var editor = $("<input>");
+            var values = {};
+            $.each($(view).find('input').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
+            committer(activeElement.id, values, function(errorMsg) {
+                if (errorMsg != undefined) {
+                    editorDialog.addClass('ui-state-error');
+                    editorDialog.find(".ui-editor-error").html(errorMsg);
 
-    this.createEditor = function(currentValue) {
-        return editor.val(currentValue);
-    };
+                    saveButton.removeAttr('disabled');
+                    cancelButton.removeAttr('disabled');
+                } else {
+                    $.unblockUI();
+                }
+            });
+        };
 
-    this.getValue = function() {
-        return editor.val();
-    };
+        var revertEditing = function() {
+            setViewInfo(activeElement, {
+                value: previousValue.value,
+                view: previousValue.view
+            });
+            $.unblockUI();
+            return false;
+        };
 
-    this.getDisplayValue = function() {
-        return editor.val();
-    };
-};
+        var createNewEditor = function(editorInfo) {
+            if (editorInfo.type == 'text') {
+                return new TextEditor();
+            } else if (editorInfo.type == 'select') {
+                return new SelectEditor(editorInfo.values);
+            } else if (editorInfo.type == 'date') {
+                return new DateEditor(editorInfo.opts || {});
+            }
+        };
 
-wm.ui.editor.DateEditor = function(ops) {
-    var editor = $("<div></div>").datepicker(ops);
+        var setViewInfo = function(view, info) {
+            var a = $(view).children(".ui-editor-view");
+            if (info.value == "") {
+                a.addClass('sample');
+                a.html(a.attr('label'));
+            } else {
+                a.removeClass('sample');
+                a.html(info.view);
+            }
+            $(view).children("input").val(info.value);
+        };
 
-    this.createEditor = function(currentValue) {
-        return editor.datepicker("setDate", currentValue);
-    };
+        var getViewInfo = function(view) {
+            return {
+                label: $(view).children(".ui-editor-label").text(),
+                view: $(view).children(".ui-editor-view").html(),
+                value: $(view).children("input").val()
+            };
+        };
 
-    this.getValue = function() {
-        return $.datepicker.formatDate('dd-mm-yy', editor.datepicker("getDate"));
-    };
+        var closeEditor = function() {
+            saveButton.removeAttr('disabled');
+            cancelButton.removeAttr('disabled');
 
-    this.getDisplayValue = function() {
-        return $.datepicker.formatDate('DD, MM d, yy', editor.datepicker("getDate"));
-    };
-};
+            editorDialog.removeClass('ui-state-error');
+            editorDialog.find(".ui-editor-error").html('');
 
-wm.ui.editor.SelectEditor = function(values) {
-    var editor = $('<select></select>');
+            editorLabel.empty();
+            editorContent.empty();
 
-    $.each(values, function(key, value) {
-        editor.append($('<option value="' + key + '">' + value + '</option>'));
-    });
+            activeEditor = null;
+            activeElement = null;
+            previousValue = null;
+        };
 
-    this.createEditor = function(currentValue) {
-        return editor.val(currentValue);
-    };
+        var openEditor = function(view, editor) {
+            activeElement = view;
+            activeEditor = editor;
+            previousValue = getViewInfo(view);
 
-    this.getValue = function() {
-        return editor.val();
-    };
+            editorLabel.text(previousValue.label);
+            editorContent.append(editor.createEditor(previousValue.value));
 
-    this.getDisplayValue = function() {
-        return editor.children("option:selected").text();
+            var offset = $(view).offset();
+
+            $.blockUI({
+                message: editorDialog,
+                centerX: false,
+                centerY: false,
+                fadeIn: false,
+                fadeOut: false,
+                blockMsgClass: 'shadow',
+                css: {
+                    width: 'auto',
+                    left: offset.left + 5,
+                    top: offset.top + 5
+                },
+                draggable: false,
+                onUnblock: closeEditor
+            });
+        };
+
+        saveButton.click(commitEditing);
+        cancelButton.click(revertEditing);
+
+        $.each($(view).find('.ui-editor-item'), function(i, v) {
+            if (editorsInfo[v.id] != undefined) {
+                $(v).click(function() {
+                    openEditor(v, createNewEditor(editorsInfo[v.id]));
+                });
+            }
+        });
     };
 };
 

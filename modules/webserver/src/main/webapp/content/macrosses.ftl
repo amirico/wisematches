@@ -1,5 +1,17 @@
 <#include "/core.ftl">
 
+<#macro editor id code value="" view="" classes="">
+    <#assign qwe=view/>
+    <#if (!view?has_content) && (value?has_content)><#assign qwe=value/></#if>
+<div id="${id}" class="ui-editor-item ${classes}">
+    <div class="ui-editor-label ${classes}"><@message code="${code}.label"/></div>
+    <div label="<@message code="${code}.description"/>"
+         class=" ui-editor-view<#if !qwe?has_content> sample</#if> ${classes}
+    "><#if qwe?has_content>${qwe}<#else><@message code="${code}.description"/></#if></div>
+    <input name="${id}" type="hidden" value="${value}">
+</div>
+</#macro>
+
 <#macro player player showType=true showRating=true>
     <#assign computerPlayer=(player.membership == "GUEST") || (player.membership == "ROBOT")/>
 <span class="player <#if computerPlayer>computer<#else>member</#if>">

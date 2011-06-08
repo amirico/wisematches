@@ -5,6 +5,7 @@ package wisematches.server.web.controllers.personality.profile.form;
  */
 public class PlayerProfileForm {
 	private String realName;
+	private String country;
 	private String countryCode;
 	private String birthday;
 	private String gender;
@@ -60,5 +61,13 @@ public class PlayerProfileForm {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 }
