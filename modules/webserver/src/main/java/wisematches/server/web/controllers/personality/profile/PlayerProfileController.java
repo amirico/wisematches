@@ -13,6 +13,7 @@ import wisematches.personality.profile.Gender;
 import wisematches.personality.profile.PlayerProfile;
 import wisematches.personality.profile.PlayerProfileEditor;
 import wisematches.personality.profile.PlayerProfileManager;
+import wisematches.personality.profile.countries.CountriesManager;
 import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.playground.tracking.RatingChangesCurve;
 import wisematches.playground.tracking.Statistics;
@@ -20,6 +21,7 @@ import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm;
+import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.utils.RatingChart;
 
 import java.text.DateFormat;
@@ -36,8 +38,10 @@ import java.util.Locale;
 @RequestMapping("/playground/profile")
 public class PlayerProfileController extends AbstractPlayerController {
 	private PlayerManager playerManager;
+	private CountriesManager countriesManager;
 	private PlayerProfileManager profileManager;
 	private PlayerTrackingCenter trackingCenter;
+	private GameMessageSource messageSource;
 
 	private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new ThreadLocal<Calendar>() {
 		@Override
@@ -49,16 +53,15 @@ public class PlayerProfileController extends AbstractPlayerController {
 	private static final ThreadLocal<DateFormat> DATE_FORMAT_THREAD_LOCAL = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
-			return new SimpleDateFormat("dd-mm-yyyy");
+			return new SimpleDateFormat("dd-MM-yyyy");
 		}
 	};
-
 
 	public PlayerProfileController() {
 	}
 
 	@RequestMapping("view")
-	public String viewProfile(@RequestParam(value = "p", required = false) String profileId, Model model) throws UnknownEntityException {
+	public String viewProfile(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
 			final Player player;
 			if (profileId == null) {
@@ -88,6 +91,10 @@ public class PlayerProfileController extends AbstractPlayerController {
 			final PlayerProfile profile = profileManager.getPlayerProfile(player);
 			final Statistics statistics = trackingCenter.getPlayerStatistic(player);
 			final RatingChangesCurve ratingCurve = trackingCenter.getRatingChangesCurve(player, 10, start, end);
+
+			if (profile.getCountryCode() != null) {
+				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
+			}
 
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
@@ -121,23 +128,27 @@ public class PlayerProfileController extends AbstractPlayerController {
 		if (profile.getPrimaryLanguage() != null) {
 			form.setPrimaryLanguage(profile.getPrimaryLanguage().code().toLowerCase());
 		}
+		if (profile.getCountryCode() != null) {
+			form.setCountry(countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)).getName());
+		}
 
 		model.addAttribute("player", principal);
+		model.addAttribute("profile", profile);
 		model.addAttribute("profileForm", form);
+		model.addAttribute("countries", countriesManager.getCountries(Language.byLocale(locale)));
 		return "/content/personality/profile/edit";
 	}
 
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public ServiceResponse editProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
+	public ServiceResponse saveProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
 		try {
 			final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
 
 			final PlayerProfile profile = profileManager.getPlayerProfile(getPersonality());
 
 			final PlayerProfileEditor editor = new PlayerProfileEditor(profile);
-			editor.setBirthday(dateFormat.parse(form.getBirthday()));
 			editor.setRealName(form.getRealName());
 			editor.setComments(form.getComments());
 			editor.setCountryCode(form.getCountryCode());
@@ -148,7 +159,7 @@ public class PlayerProfileController extends AbstractPlayerController {
 				try {
 					editor.setBirthday(dateFormat.parse(form.getBirthday()));
 				} catch (ParseException ex) {
-					return ServiceResponse.failure(ex.getMessage());
+					return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.birthday", locale));
 				}
 			}
 
@@ -158,7 +169,7 @@ public class PlayerProfileController extends AbstractPlayerController {
 				try {
 					editor.setGender(Gender.valueOf(form.getGender().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
-					return ServiceResponse.failure(ex.getMessage());
+					return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.gender", locale));
 				}
 			}
 
@@ -168,16 +179,14 @@ public class PlayerProfileController extends AbstractPlayerController {
 				try {
 					editor.setPrimaryLanguage(Language.valueOf(form.getPrimaryLanguage().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
-					return ServiceResponse.failure(ex.getMessage());
+					return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.primary", locale));
 				}
 			}
 			profileManager.updateProfile(editor.createProfile());
 
 			return ServiceResponse.SUCCESS;
-		} catch (ParseException ex) {
-			return ServiceResponse.failure(ex.getMessage());
 		} catch (Exception ex) {
-			return ServiceResponse.failure(ex.getMessage());
+			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
 		}
 	}
 
@@ -194,6 +203,16 @@ public class PlayerProfileController extends AbstractPlayerController {
 	@Autowired
 	public void setProfileManager(PlayerProfileManager profileManager) {
 		this.profileManager = profileManager;
+	}
+
+	@Autowired
+	public void setCountriesManager(CountriesManager countriesManager) {
+		this.countriesManager = countriesManager;
+	}
+
+	@Autowired
+	public void setGameMessageSource(GameMessageSource gameMessageSource) {
+		this.messageSource = gameMessageSource;
 	}
 
 	@ModelAttribute("headerTitle")

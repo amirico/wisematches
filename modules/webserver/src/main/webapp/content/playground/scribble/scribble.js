@@ -395,7 +395,7 @@ wm.scribble.Controls = function(board, language) {
 
     var showMoveResult = function(success, message, error) {
         if (success) {
-            wm.ui.showGrowl(language['acceptedLabel'], language['acceptedDescription'], 'move-accepted');
+            wm.ui.showAlert(language['acceptedLabel'], language['acceptedDescription'], 'move-accepted');
         } else {
             wm.ui.showMessage({message: message + (error != null ? error : ''), error:true});
         }
@@ -433,9 +433,9 @@ wm.scribble.Controls = function(board, language) {
             updateControlsState();
 
             if (board.isPlayerActive()) {
-                wm.ui.showGrowl(language['updatedLabel'], language['updatedYour'], 'your-turn');
+                wm.ui.showAlert(language['updatedLabel'], language['updatedYour'], 'your-turn');
             } else {
-                wm.ui.showGrowl(language['updatedLabel'], language['updatedOther'] + ' <b>' + board.getPlayerInfo(state.playerTurn).nickname + '</b>.', 'opponent-turn');
+                wm.ui.showAlert(language['updatedLabel'], language['updatedOther'] + ' <b>' + board.getPlayerInfo(state.playerTurn).nickname + '</b>.', 'opponent-turn');
             }
         } else if (type === 'finished') {
             $("#boardActionsToolbar").hide();
@@ -457,7 +457,7 @@ wm.scribble.Controls = function(board, language) {
                     });
                 }
             }
-            wm.ui.showGrowl(language['finishedLabel'], msg + "<div class='closeInfo'>" + language['clickToClose'] + "</div>", 'game-finished', opts);
+            wm.ui.showAlert(language['finishedLabel'], msg + "<div class='closeInfo'>" + language['clickToClose'] + "</div>", 'game-finished', opts);
         }
     };
 

@@ -313,48 +313,50 @@ div.space-line {
     color: #003333;
 }
 
-.notify-widget {
+.freeow-widget {
     z-index: 9999;
     position: fixed;
+}
+
+.status-widget-pane {
+    top: -1;
+    left: 0;
+    width: 100%;
     text-align: center;
 }
 
-.notify-widget-top-center {
-    width: 100%;
-    left: 0;
-    top: 0;
+.status-widget-pane > div {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
 }
 
-.notify-widget-top-right {
+.status-widget-pane .content {
+    margin: 2px 10px 5px 10px;
+}
+
+.alerts-widget-pane {
     width: 350px;
     top: 10px;
     right: 10px;
 }
 
-.notify-widget-bottom-right {
-    width: 350px;
-    bottom: 10px;
-    right: 10px;
-}
-
-.notify-widget > div {
-    margin: 0;
+.alerts-widget-pane > div {
     position: relative;
+    margin-bottom: 5px;
     cursor: pointer;
-    display: inline-block;
-    text-align: center;
 }
 
-.notify-widget .content {
+.alerts-widget-pane .content {
     margin: 5px 5px 5px 69px;
 }
 
-.notify-widget h2, .notify-widget p {
+.alerts-widget-pane h2, .alerts-widget-pane p {
     margin: 0;
     padding: 0;
 }
 
-.notify-widget .icon {
+.alerts-widget-pane .icon {
     position: absolute;
     display: block;
     top: 5px;
@@ -363,12 +365,12 @@ div.space-line {
     z-index: 1;
 }
 
-.notify-widget .closeInfo {
+.alerts-widget-pane .closeInfo {
     text-align: right;
     font-size: 10px;
 }
 
-.notify-widget .close {
+.alerts-widget-pane .close {
     position: absolute;
     display: block;
     width: 24px;
@@ -379,7 +381,7 @@ div.space-line {
     z-index: 2;
 }
 
-.notify-widget div:hover .close {
+.alerts-widget-pane div:hover .close {
     background: transparent url('/resources/images/close.png') no-repeat 0 0;
 }
 
