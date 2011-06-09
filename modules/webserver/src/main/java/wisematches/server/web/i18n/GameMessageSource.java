@@ -1,5 +1,8 @@
 package wisematches.server.web.i18n;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.Years;
 import org.springframework.context.MessageSource;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
@@ -55,6 +58,13 @@ public class GameMessageSource {
 
 	public String formatRemainedTime(GameBoard board, Locale locale) {
 		return formatMinutes(getRemainedMinutes(board), locale);
+	}
+
+	public int getAge(Date date) {
+		DateMidnight birthdate = new DateMidnight(date);
+		DateTime now = new DateTime();
+		Years age = Years.yearsBetween(birthdate, now);
+		return age.getYears();
 	}
 
 	public long getTimeMillis(Date date) {
