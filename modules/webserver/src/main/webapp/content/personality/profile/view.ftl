@@ -244,21 +244,19 @@
              src="/resources/images/player/noPlayer200.png" alt="Photo">
     </div>
     <div><strong>${player.nickname}</strong></div>
-    <div <#if !profile.gender??>class="undefined"</#if>>
-    ${profile.gender!"gender undefined"},
-    </div>
-    <div <#if !profile.birthday??>class="undefined"</#if>>
-    ${profile.birthday!"ages undefined"},
-    </div>
-    <div <#if !country??>class="undefined"</#if>>
-    ${country.name!"country undefined"},
-    </div>
     <div>
-    ${player.timeZone.displayName}
+    <#if profile.gender??>
+    <@message code="gender." + profile.gender.name()?lower_case/>,
+    </#if>
+    <#if profile.birthday??>${gameMessageSource.getAge(profile.birthday)} <@message code="profile.edit.years"/>,</#if>
     </div>
-    <div class="<#if !profile.comments??>undefined </#if>quotation">
-        &laquo; ${profile.comments!""} &raquo;
-    </div>
+<#if country??>
+    <div>${country.name},</div>
+</#if>
+    <div>${player.timeZone.displayName}</div>
+<#if profile.comments?? && profile.comments?has_content>
+    <div class="quotation">&laquo; ${profile.comments} &raquo;</div>
+</#if>
 </div>
 </div>
 </div>

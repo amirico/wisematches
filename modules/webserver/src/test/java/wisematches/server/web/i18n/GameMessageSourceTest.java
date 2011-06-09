@@ -3,6 +3,7 @@ package wisematches.server.web.i18n;
 import org.junit.Test;
 import org.springframework.context.support.StaticMessageSource;
 
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -23,4 +24,11 @@ public class GameMessageSourceTest {
 			System.out.println(i + " " + s.formatMinutes(i * 24 * 15, ru));
 		}
 	}
+
+	@Test
+	public void testGetAge() {
+		final GameMessageSource source = new GameMessageSource();
+		System.out.println(source.getAge(new Date(82, 5, 10)));
+	}
+
 }
