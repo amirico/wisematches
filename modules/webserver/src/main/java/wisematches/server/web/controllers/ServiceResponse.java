@@ -34,6 +34,13 @@ public final class ServiceResponse {
 		return summary;
 	}
 
+	public String getError() {
+		if (success) {
+			return null;
+		}
+		return summary;
+	}
+
 	public Map<String, Object> getData() {
 		return data;
 	}

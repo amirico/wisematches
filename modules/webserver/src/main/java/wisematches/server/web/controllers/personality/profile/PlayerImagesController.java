@@ -6,16 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import wisematches.personality.player.Player;
+import wisematches.server.web.controllers.AbstractPlayerController;
+import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.services.images.PlayerImageType;
 import wisematches.server.web.services.images.PlayerImagesManager;
+import wisematches.server.web.services.images.UnsupportedImageException;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO: there is no Unit test for this class
@@ -23,12 +33,12 @@ import java.io.InputStream;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @Controller
-@RequestMapping("/playboard/profile/image")
-public class PlayerImagesController {
-	private Resource noPlayerImageResource;
-
+@RequestMapping("/playground/profile/image")
+public class PlayerImagesController extends AbstractPlayerController {
 	private ResourceLoader resourceLoader;
 	private PlayerImagesManager playerImagesManager;
+
+	private final Map<PlayerImageType, Resource> noPlayersResources = new HashMap<PlayerImageType, Resource>();
 
 	private static final int BUFFER_SIZE = 1000;
 	private static final int SIZE_THRESHOLD = 1204;
@@ -39,7 +49,7 @@ public class PlayerImagesController {
 	}
 
 	@RequestMapping("view")
-	public void getPlayerImage(@RequestParam("pid") String playerId, HttpServletResponse response) throws IOException {
+	public void getPlayerImage(@RequestParam("pid") String playerId, Model model, HttpServletResponse response) throws IOException {
 		if (log.isDebugEnabled()) {
 			log.debug("Load player image: " + playerId);
 		}
@@ -47,6 +57,7 @@ public class PlayerImagesController {
 		if (playerId == null) {
 			throw new IllegalArgumentException("PlayerId is not specified");
 		}
+		model.addAttribute("plain", Boolean.TRUE);
 
 		final long id;
 		try {
@@ -55,9 +66,18 @@ public class PlayerImagesController {
 			throw new IllegalArgumentException("PlayerId is not specified");
 		}
 
-		InputStream stream = playerImagesManager.getPlayerImage(id, PlayerImageType.AVATAR);
+		final PlayerImageType type = PlayerImageType.PROFILE;
+		InputStream stream = playerImagesManager.getPlayerImage(id, type);
 		if (stream == null) {
-			stream = noPlayerImageResource.getInputStream();
+			Resource resource = noPlayersResources.get(type);
+			if (resource == null) {
+				resource = resourceLoader.getResource("/resources/images/player/noPlayer" + type.name() + ".png");
+				noPlayersResources.put(type, resource);
+			}
+
+			if (resource != null) {
+				stream = resource.getInputStream();
+			}
 		}
 
 		ServletOutputStream outputStream = response.getOutputStream();
@@ -66,101 +86,21 @@ public class PlayerImagesController {
 		stream.close();
 	}
 
-/*
-	@RequestMapping("image")
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-		final String action = request.getParameter("action");
-//		final Language language = WebUtils.getRequestAttrbiute(request, Language.class);
-		if ("remove".equals(action)) {
-			final Player player = getPrincipal(request);
-			if (log.isDebugEnabled()) {
-				log.debug("Remove player image: " + player);
-			}
-			if (player == null) {
-				final String msg = ResourceManager.getString("app.session.expired", language);
-				sendErrorResponse(response, UpdateImageErrors.SESSION_EXPIRED, msg);
-			} else {
-				playerImagesManager.removePlayerImage(player.getId(), PlayerImageType.AVATAR);
-				sendSuccessResponse(response);
-			}
-		} else if ("update".equals(action)) {
-			final Player player = getPrincipal(request);
-			if (log.isDebugEnabled()) {
-				log.debug("Update player image: " + player);
-			}
-			if (player == null) {
-				final String msg = ResourceManager.getString("app.session.expired", language);
-				sendErrorResponse(response, UpdateImageErrors.SESSION_EXPIRED, msg);
-			} else {
-				try {
-					updatePlayerImage(player, request);
-					sendSuccessResponse(response);
-				} catch (FileUploadBase.UnknownSizeException ex) {
-					sendErrorResponse(response, UpdateImageErrors.UNKNOWN_SIZE, null);
-				} catch (FileUploadBase.SizeLimitExceededException ex) {
-					sendErrorResponse(response, UpdateImageErrors.TOO_LONG_FILE, null);
-				} catch (UnsupportedImageException ex) {
-					sendErrorResponse(response, UpdateImageErrors.UNSUPPORTED_IMAGE, ex.getMessage());
-				} catch (Exception ex) {
-					log.error("File can't be uploat by internal error", ex);
-					sendErrorResponse(response, UpdateImageErrors.INTERNAL_ERROR, null);
-				}
-			}
-		} else {
-			loadPlayerImage(request, response);
-		}
-		return null;
-	}
 
-	private void sendSuccessResponse(HttpServletResponse response) throws IOException {
-		response.setContentType("text/html");
-		final PrintWriter writer = response.getWriter();
-		writer.write("success=true");
-		writer.flush();
-	}
-
-	private void sendErrorResponse(HttpServletResponse response, UpdateImageErrors error, String message) throws IOException {
-		response.setContentType("text/html");
-		final PrintWriter writer = response.getWriter();
-		writer.print("success=false;");
-		writer.print("error=");
-		writer.print(error.name());
-		writer.print(";");
-		if (message != null) {
-			writer.print("message=");
-			writer.print(message);
-		}
-		writer.flush();
-	}
-
-	private void updatePlayerImage(Player player, HttpServletRequest request) throws FileUploadException, UnsupportedImageException, IOException {
-		final DiskFileItemFactory factory = new DiskFileItemFactory();
-		factory.setSizeThreshold(SIZE_THRESHOLD); //1Mb
-
-		final ServletFileUpload upload = new ServletFileUpload(factory);
-		if (log.isDebugEnabled()) {
-			log.debug("Servlet file upload: " + upload);
-		}
-
-		@SuppressWarnings("unchecked")
-		final List<FileItem> list = upload.parseRequest(request);
-		if (log.isDebugEnabled()) {
-			log.debug("FileItems count: " + list.size());
-		}
-		if (list.size() == 0) {
-			throw new FileUploadBase.UnknownSizeException("File item is not attached");
-		}
-		final FileItem fileItem = list.get(0);
+	@ResponseBody
+	@RequestMapping("edit")
+	private ServiceResponse updatePlayerImage(HttpServletRequest request) {
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug("FileItem: " + fileItem.getContentType() + " " + fileItem.getSize());
-			}
-			playerImagesManager.setPlayerImage(player.getId(), fileItem.getInputStream(), PlayerImageType.AVATAR);
-		} finally {
-			fileItem.delete();
+			final ServletInputStream inputStream = request.getInputStream();
+			Player principal = getPrincipal();
+			playerImagesManager.setPlayerImage(principal.getId(), inputStream, PlayerImageType.PROFILE);
+			return ServiceResponse.success();
+		} catch (IOException ex) {
+			return ServiceResponse.failure(ex.getMessage());
+		} catch (UnsupportedImageException ex) {
+			return ServiceResponse.failure(ex.getMessage());
 		}
 	}
-*/
 
 	@Autowired
 	public void setPlayerImagesManager(PlayerImagesManager playerImagesManager) {
@@ -170,6 +110,5 @@ public class PlayerImagesController {
 	@Autowired
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
-		noPlayerImageResource = resourceLoader.getResource("/resources/images/player/noPlayerIcon.png");
 	}
 }
