@@ -22,7 +22,12 @@ public enum PlayerImageType {
 	/**
 	 * Image is avatar and has {@code 16x16} pixels size.
 	 */
-	AVATAR(36, 28);
+	AVATAR(36, 28),
+
+	/**
+	 * This is big profile image and has {@code 200x200} pixels.
+	 */
+	PROFILE(200, 200);
 
 	private final int width;
 	private final int height;
