@@ -223,6 +223,8 @@
 }
 
 .profile .photo {
+    position: relative;
+    text-align: center;
     padding-bottom: 10px;
 }
 
@@ -263,6 +265,13 @@
     color: gray;
 }
 
+.profile .photo .remove {
+    top: 0;
+    right: 0;
+    position: absolute;
+    cursor: pointer;
+}
+
 .profile .statistic {
     padding: 5px;
     margin-top: 10px;
@@ -271,6 +280,50 @@
 
 .profile .statistic .ui-layout-table>div>div {
     padding-right: 10px;
+}
+
+#changeProfileDialog {
+    position: relative;
+    width: 100%;
+}
+
+#changeProfileDialog .qq-upload-control div {
+    display: inline-block !important;
+}
+
+#changeProfileDialog .qq-upload-button {
+    width: auto !important;
+}
+
+#changeProfileDialog .qq-upload-drop-area {
+    width: 200px;
+    height: 200px;
+    display: inline-block !important;
+    margin-left: 2px !important;
+}
+
+#changeProfileDialog .qq-upload-file {
+    display: none;
+}
+
+#changeProfileDialog .qq-upload-spinner, #changeProfileDialog .qq-upload-size, #changeProfileDialog .qq-upload-cancel {
+    margin-right: 7px;
+}
+
+#changeProfileDialog .qq-upload-spinner {
+    display: inline-block;
+    background: url("/resources/images/wait.gif");
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+}
+
+#changeProfileDialog .qq-upload-failed-text {
+    display: none;
+}
+
+#changeProfileDialog .qq-upload-fail .qq-upload-failed-text {
+    display: inline;
 }
 
 .editable .sample {

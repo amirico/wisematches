@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.player.Player;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.images.PlayerImageType;
 import wisematches.server.web.services.images.PlayerImagesManager;
 import wisematches.server.web.services.images.UnsupportedImageException;
@@ -22,9 +23,10 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -36,20 +38,21 @@ import java.util.Map;
 @RequestMapping("/playground/profile/image")
 public class PlayerImagesController extends AbstractPlayerController {
 	private ResourceLoader resourceLoader;
+	private GameMessageSource gameMessageSource;
 	private PlayerImagesManager playerImagesManager;
 
 	private final Map<PlayerImageType, Resource> noPlayersResources = new HashMap<PlayerImageType, Resource>();
 
-	private static final int BUFFER_SIZE = 1000;
-	private static final int SIZE_THRESHOLD = 1204;
-
 	private static final Log log = LogFactory.getLog(PlayerImagesController.class);
+	public static final String PREVIEW_ATTRIBUTE_NAME = "PLAYER_IMAGE_PREVIEW_FILE";
 
 	public PlayerImagesController() {
 	}
 
 	@RequestMapping("view")
-	public void getPlayerImage(@RequestParam("pid") String playerId, Model model, HttpServletResponse response) throws IOException {
+	public void getPlayerImage(@RequestParam("pid") String playerId,
+							   @RequestParam(value = "preview", required = false) String preview,
+							   Model model, HttpServletResponse response, HttpSession httpSession) throws IOException {
 		if (log.isDebugEnabled()) {
 			log.debug("Load player image: " + playerId);
 		}
@@ -65,9 +68,20 @@ public class PlayerImagesController extends AbstractPlayerController {
 		} catch (NumberFormatException ex) {
 			throw new IllegalArgumentException("PlayerId is not specified");
 		}
+		final boolean p = (preview != null && Boolean.parseBoolean(preview));
 
 		final PlayerImageType type = PlayerImageType.PROFILE;
-		InputStream stream = playerImagesManager.getPlayerImage(id, type);
+
+		InputStream stream = null;
+		if (p) {
+			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
+			if (f != null) {
+				stream = new FileInputStream(f);
+			}
+		} else {
+			stream = playerImagesManager.getPlayerImage(id, type);
+		}
+
 		if (stream == null) {
 			Resource resource = noPlayersResources.get(type);
 			if (resource == null) {
@@ -86,20 +100,68 @@ public class PlayerImagesController extends AbstractPlayerController {
 		stream.close();
 	}
 
-
 	@ResponseBody
-	@RequestMapping("edit")
-	private ServiceResponse updatePlayerImage(HttpServletRequest request) {
+	@RequestMapping("preview")
+	private ServiceResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
 		try {
+			final Player principal = getPrincipal();
 			final ServletInputStream inputStream = request.getInputStream();
-			Player principal = getPrincipal();
-			playerImagesManager.setPlayerImage(principal.getId(), inputStream, PlayerImageType.PROFILE);
+			if (request.getContentLength() > 512000) {
+				return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.size2", locale, 512000));
+			}
+
+			final PlayerImageType type = PlayerImageType.PROFILE;
+
+			final File tempFile = File.createTempFile(createPreviewFileName(principal, type), "img");
+			tempFile.deleteOnExit();
+
+			FileOutputStream out = new FileOutputStream(tempFile);
+			FileCopyUtils.copy(inputStream, out);
+			out.close();
+
+			httpSession.setAttribute(PREVIEW_ATTRIBUTE_NAME, tempFile);
 			return ServiceResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(ex.getMessage());
-		} catch (UnsupportedImageException ex) {
-			return ServiceResponse.failure(ex.getMessage());
+			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping("remove")
+	private ServiceResponse removePlayerImage(HttpSession httpSession) {
+		final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
+		if (f != null) {
+			f.delete();
+		}
+		httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
+		playerImagesManager.removePlayerImage(getPrincipal().getId(), PlayerImageType.PROFILE);
+		return ServiceResponse.success();
+	}
+
+	@ResponseBody
+	@RequestMapping("set")
+	private ServiceResponse setPlayerImage(HttpSession httpSession, Locale locale) {
+		try {
+			final Player principal = getPrincipal();
+			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
+			if (f == null) {
+				return ServiceResponse.failure("No preview image");
+			}
+
+			playerImagesManager.setPlayerImage(principal.getId(), new FileInputStream(f), PlayerImageType.PROFILE);
+			httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
+			f.delete();
+
+			return ServiceResponse.success();
+		} catch (IOException ex) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
+		} catch (UnsupportedImageException ex) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.unsupported", locale));
+		}
+	}
+
+	private String createPreviewFileName(Player principal, PlayerImageType type) {
+		return "player_image_" + principal.getId() + "_" + type.toString();
 	}
 
 	@Autowired
@@ -110,5 +172,10 @@ public class PlayerImagesController extends AbstractPlayerController {
 	@Autowired
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
+	}
+
+	@Autowired
+	public void setGameMessageSource(GameMessageSource gameMessageSource) {
+		this.gameMessageSource = gameMessageSource;
 	}
 }

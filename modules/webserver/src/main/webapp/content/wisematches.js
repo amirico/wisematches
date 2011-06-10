@@ -216,6 +216,15 @@ wm.ui = new function() {
         });
     };
 
+    this.refreshImage = function(element) {
+        var el = $(element);
+        if (el.attr('src').indexOf("?") < 0) {
+            el.attr('src', el.attr('src') + '?' + new Date().getTime());
+        } else {
+            el.attr('src', el.attr('src') + '&' + new Date().getTime());
+        }
+    };
+
     $(document).ready(function() {
         $("body").prepend($("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>"));
         $("body").prepend($("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>"));

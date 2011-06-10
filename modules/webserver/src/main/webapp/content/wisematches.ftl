@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/ColReorder.css"/>
     <link rel="stylesheet" type="text/css" href="/jquery/css/ColVis.css"/>
-    <link rel="stylesheet" type="text/css" href="/jquery/css/fileuploader.css"/>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="/jquery/js/jquery.min.js"></script>
