@@ -326,6 +326,10 @@
     display: inline;
 }
 
+.settings-tabs a {
+    border: 0;
+}
+
 .editable .sample {
     color: #999999;
 }

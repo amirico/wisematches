@@ -150,12 +150,6 @@ public class CreateAccountController {
 		}
 	}
 
-	@RequestMapping(value = "modify")
-	public String modifyAccountPage(Model model) {
-		model.addAttribute("pageName", "modifyAccount");
-		return "/content/personality/account/modify";
-	}
-
 	/**
 	 * JSON request for email and username validation.
 	 *
