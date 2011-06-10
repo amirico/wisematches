@@ -240,7 +240,7 @@
 
 <div class="info">
     <div class="photo">
-        <img style="width: 200px; height: 200px;" src="image/view?pid=${player.id}" alt="Photo">
+        <img class="shadow" style="width: 200px; height: 200px;" src="image/view?pid=${player.id}" alt="Photo">
     </div>
     <div><strong>${player.nickname}</strong></div>
     <div>

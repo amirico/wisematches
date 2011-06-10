@@ -9,120 +9,192 @@
     <button onclick="wm.util.url.redirect('/playground/profile/view')"><@message code="profile.edit.done"/></button>
 </div>
 
-<#--<div style="width: 100%">-->
-<#--<div class="profile shadow ui-state-default">-->
-<#--<div class="content shadow ui-state-default">-->
-<#--<#if profileForm.gender??><#assign genderName=springMacroRequestContext.getMessage("gender."+profileForm.gender)/></#if>-->
-<#--<#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage)/></#if>-->
-<#--<#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>-->
+<div style="width: 100%">
+    <div class="profile shadow ui-state-default">
+        <div class="content shadow ui-state-default">
+        <#if profileForm.gender??><#assign genderName=springMacroRequestContext.getMessage("gender."+profileForm.gender)/></#if>
+        <#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage)/></#if>
+        <#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>
 
-<#--<div class="title">-->
-<#--<@wm.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player"/>-->
-<#--</div>-->
+            <div class="title">
+            <@wm.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player"/>
+            </div>
 
-<#--<div class="ui-layout-table">-->
-<#--<@wm.editor id="comments" code="profile.edit.comments" value=profileForm.comments/>-->
+            <div class="ui-layout-table">
+            <@wm.editor id="comments" code="profile.edit.comments" value=profileForm.comments/>
 
-<#--<@wm.editor id="gender" code="profile.edit.gender" value=profileForm.gender view=genderName/>-->
+<@wm.editor id="gender" code="profile.edit.gender" value=profileForm.gender view=genderName/>
 
-<#--<@wm.editor id="birthday" code="profile.edit.birthday" value=profileForm.birthday view=birthdayName/>-->
+<@wm.editor id="birthday" code="profile.edit.birthday" value=profileForm.birthday view=birthdayName/>
 
-<#--<@wm.editor id="countryCode" code="profile.edit.country" value=profileForm.countryCode view=profileForm.country/>-->
+<@wm.editor id="countryCode" code="profile.edit.country" value=profileForm.countryCode view=profileForm.country/>
 
-<#--<@wm.editor id="primaryLanguage" code="profile.edit.language" value=profileForm.primaryLanguage view=languageName/>-->
-<#--</div>-->
-<#--</div>-->
+<@wm.editor id="primaryLanguage" code="profile.edit.language" value=profileForm.primaryLanguage view=languageName/>
+            </div>
+        </div>
 
-<#--<div class="info">-->
-<#--<div class="photo">-->
-<#--<img id="playerPhoto" style="width: 200px; height: 200px;"-->
-<#--src="image/view?pid=${player.id}" alt="Photo">-->
+        <div class="info">
+            <div class="photo">
+                <img class="shadow" style="width: 200px; height: 200px;" src="image/view?pid=${player.id}" alt="Photo">
 
-<#--<div style="text-align: center;"><a href="javascript: wm.ui.profile.showSelectProfilePhoto();">change-->
-<#--photo</a></div>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
+                <div class="remove">
+                    <img title="<@message code="profile.edit.photo.remove.label"/>" src="/resources/images/close.png"
+                         onclick="wm.ui.profile.removeProfilePhoto()"/>
+                </div>
 
-<div id="selectProfilePhoto">
-    <b>Choose image to upload</b>
+                <div>
+                    <a href="javascript: wm.ui.profile.chooseProfilePhoto();"><@message code="profile.edit.photo.change.label"/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <p>
-        You can upload JPG, GIF or PNG files. Width and height of the image must be the same. The best size of the
-        photo is 200x200 pixels.
-    </p>
+<div id="changeProfileDialog" class="qq-uploader ui-helper-hidden">
+    <table width="100%">
+        <tr>
+            <td valign="top" align="left">
+                <div class="info-header"><b><@message code="profile.edit.photo.label"/></b></div>
 
-    <div id="imageUploader"></div>
+                <div class="info-description"><@message code="profile.edit.photo.description"/></div>
+
+                <div class="qq-upload-failed-text ui-state-error-text"></div>
+
+                <div class="qq-upload-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                    <span class="ui-button-text"><@message code="profile.edit.photo.select"/></span>
+                </div>
+
+                <div class="qq-upload-list"></div>
+            </td>
+
+            <td valign="top" align="center">
+                <div class="qq-upload-drop-area preview">
+                    <img class="shadow" width="200px" height="200px" src="image/view?pid=${player.id}&preview=true">
+                </div>
+                <div class="sample">(<@message code="profile.edit.photo.drop"/>)</div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <script type="text/javascript">
     wm.ui.profile = new function() {
-        var uploader = new qq.FileUploader({
-            element: $("#imageUploader")[0],
-            action: 'image/edit',
-            onComplete: function(id, fileName, responseJSON) {
-                if (responseJSON.success) {
-                    var a = $("#playerPhoto");
-                    a.attr('src', a.attr('src') + '&' + new Date().getTime());
-                } else {
-                    $("#imageUploader").show();
-                }
-            },
-            template: '<div class="qq-uploader">' +
-                    '<div class="qq-upload-button"><button>Select file</button></div>' +
-                    '<span>or</span>' +
-                    '<div class="qq-upload-drop-area"><span>drop files here to upload</span></div>' +
-                    '<div class="qq-upload-list"></div>' +
-                    '</div>',
+        var dialogElement = $("#changeProfileDialog");
+        var chooseButton = dialogElement.find(".qq-upload-button");
+        var errorMessage = dialogElement.find(".qq-upload-failed-text");
 
+        var cancelButton = $("<button>Cancel</button>").button();
+        var updateButton = $("<button>Set as default</button>").button();
+
+        chooseButton.hover(function() {
+                    chooseButton.addClass("ui-state-hover");
+                }, function() {
+                    chooseButton.removeClass("ui-state-hover");
+                });
+
+        var updateProfileImage = function() {
+            wm.ui.refreshImage($(".profile .info .photo > img"));
+        };
+
+        var updatePreviewImage = function() {
+            wm.ui.refreshImage($(".qq-upload-drop-area > img"));
+        };
+
+        var showErrorMessage = function(message) {
+            errorMessage.html(message).show();
+        };
+
+        var uploader = new qq.FileUploader({
+            element: dialogElement[0],
+            action: 'image/preview',
             fileTemplate: '<div>' +
                     '<span class="qq-upload-file"></span>' +
                     '<span class="qq-upload-spinner"></span>' +
                     '<span class="qq-upload-size"></span>' +
-                    '<a class="qq-upload-cancel" href="#">Cancel</a>' +
-                    '<span class="qq-upload-failed-text">Failed</span>' +
+                    '<a class="qq-upload-cancel" href="#"><@message code="cancel.label"/></a>' +
                     '</div>',
-            onSubmit: function(id, fileName) {
-                $("#imageUploader").hide();
+            sizeLimit: 512000,
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+            messages: {
+                typeError: "<@message code="profile.edit.error.photo.type"/>",
+                sizeError: "<@message code="profile.edit.error.photo.size"/>",
+                emptyError: "<@message code="profile.edit.error.photo.empty"/>",
+                onLeave: "<@message code="profile.edit.error.photo.leave"/>"
             },
-            onProgress: function(id, fileName, loaded, total) {
+            onSubmit: function(id, fileName) {
+                chooseButton.hide();
+                errorMessage.hide();
+            },
+            onComplete: function(id, fileName, responseJSON) {
+                chooseButton.show();
+                dialogElement.find(".qq-upload-list span").empty();
+                $(dialogElement.parent().find("button")[1]).button("enable");
+
+                if (responseJSON.success) {
+                    updatePreviewImage();
+                } else {
+                    this.showMessage(responseJSON.summary);
+                }
             },
             onCancel: function(id, fileName) {
-            }
+                dialogElement.find(".qq-upload-list").hide();
+                chooseButton.show();
+            },
+            showMessage: showErrorMessage
         });
 
-//            _addToList: function(id, fileName) {
-//                $(this._listElement).empty();
-    <#---->
-//                qq.FileUploader.prototype._addToList.apply(this, arguments);
-//            }});
-
-        //        qq.extend(qq.FileUploader.prototype, {
-        //    );
-
-
-        this.showSelectProfilePhoto = function() {
-            $("#selectProfilePhoto").dialog({
-                title: 'Select Profile Photo',
-                width: 400,
-                modal: true,
-                buttons: {
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    },
-                    "Set at profile photo": function() {
-                        $(this).dialog("close");
+        this.removeProfilePhoto = function() {
+            $.ajax('image/remove', {
+                success: function(data, textStatus, jqXHR) {
+                    if (data.success) {
+                        updateProfileImage();
+                    } else {
+                        ui.util.showStatus("<@message code="profile.edit.error.remove"/>", true);
                     }
                 }
             });
+        };
+
+        this.chooseProfilePhoto = function() {
+            updatePreviewImage();
+
+            dialogElement.dialog({
+                title: "<@message code="profile.edit.photo.title"/>",
+                modal: true,
+                minWidth: 550,
+                height: 'auto',
+                resizable: false,
+                buttons: [
+                    {
+                        text: "<@message code="cancel.label"/>",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "<@message code="profile.edit.photo.set"/>",
+                        disabled: true,
+                        click: function() {
+                            $.ajax('image/set', {
+                                success: function(data, textStatus, jqXHR) {
+                                    if (data.success) {
+                                        updateProfileImage();
+                                        dialogElement.dialog("close");
+                                    } else {
+                                        showErrorMessage(data.summary);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                ]
+            });
         }
-    }
-            ;
+    };
 
     var editorController = new wm.ui.editor.Controller($('.profile'),
             function(field, data, callback) {
-                wm.ui.showStatus('<@message code="profile.edit.saving"/>');
+                wm.ui.showStatus("<@message code="profile.edit.saving"/>");
 
                 $.ajax({
                     url: 'save',
@@ -136,7 +208,7 @@
                             wm.ui.showStatus("<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
                             callback(data.summary);
                         } else {
-                            wm.ui.showStatus('<@message code="profile.edit.saved"/>');
+                            wm.ui.showStatus("<@message code="profile.edit.saved"/>");
                             callback();
                         }
                     }

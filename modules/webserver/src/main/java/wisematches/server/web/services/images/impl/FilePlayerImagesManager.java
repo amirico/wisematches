@@ -3,18 +3,13 @@ package wisematches.server.web.services.images.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
 import wisematches.server.web.services.images.PlayerImageType;
 import wisematches.server.web.services.images.PlayerImagesListener;
 import wisematches.server.web.services.images.PlayerImagesManager;
 import wisematches.server.web.services.images.UnsupportedImageException;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -118,6 +113,25 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 		if (log.isDebugEnabled()) {
 			log.debug("Update image for player " + playerId + " of type " + type);
 		}
+
+		final FileOutputStream out = new FileOutputStream(f);
+		try {
+			FileCopyUtils.copy(stream, out);
+
+			if (added) {
+				for (PlayerImagesListener listener : listeners) {
+					listener.playerImageAdded(playerId, type);
+				}
+			} else {
+				for (PlayerImagesListener listener : listeners) {
+					listener.playerImageUpdated(playerId, type);
+				}
+			}
+		} finally {
+			out.close();
+		}
+
+/*
 		final ImageOutputStream ios = ImageIO.createImageOutputStream(f);
 		final ImageInputStream iis = ImageIO.createImageInputStream(stream);
 		try {
@@ -136,6 +150,7 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 			ios.close();
 			iis.close();
 		}
+*/
 	}
 
 	private String getImageFilename(long playerId, PlayerImageType type) {
