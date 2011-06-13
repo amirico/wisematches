@@ -6,11 +6,18 @@
         $('#terms_tabs a').removeClass('active');
         $('#terms-' + name + '-page-link').addClass('active');
 
-        $.get('/info/' + name + '?plain=true', function(data) {
-            var el = $('#terms_panel');
-            el.height($('#form').height() - $('#terms_tabs').height() - 5);
-            el.html(data);
-        });
+        $.get('/info/' + name + '?plain=true',
+                function(data) {
+                    var el = $('#terms_panel');
+                    el.height($('#form').height() - $('#terms_tabs').height() - 5);
+                    el.html(data);
+                }).error(function(jqXHR, textStatus, errorThrown) {
+                    if (textStatus == 'parsererror') {
+                        var el = $('#terms_panel');
+                        el.height($('#form').height() - $('#terms_tabs').height() - 5);
+                        el.html(jqXHR.responseText);
+                    }
+                });
     }
 
     $(document).ready(function() {
@@ -171,7 +178,7 @@
                     </#list>
                         <div style="clear: left;"></div>
                     </div>
-                    <div id="terms_panel" class="ui-widget-content" style="padding: 0 0 0 5px;"></div>
+                    <div id="terms_panel" class="ui-widget-content" style="padding: 0 2 0 5px;"></div>
                 </div>
             </td>
         </tr>

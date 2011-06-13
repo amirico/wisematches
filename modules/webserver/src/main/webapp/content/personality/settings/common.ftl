@@ -1,5 +1,53 @@
-<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi
-    sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus
-    auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci.
-    Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius
-    sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+<#-- @ftlvariable name="timeZones" type="java.util.Collection<java.util.TimeZone>" -->
+<#include "/core.ftl">
+
+<table class="ui-widget-content" width="100%">
+    <tr>
+        <td>
+            <label for="language"><@message code="account.register.language.label"/>:</label>
+        </td>
+        <td>
+        <@wm.field path="settings.language">
+            <select id="language" name="language" style="width: 170px;">
+                <#list ["en", "ru"] as l>
+                    <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
+                    <@message code="language.${l}"/>
+                    </option>
+                </#list>
+            </select>
+        </@wm.field>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <label for="timezone">Time zone:</label>
+        </td>
+        <td>
+        <@wm.field path="settings.timezone">
+            <select id="timezone" name="timezone" style="width: 170px;">
+                <#list timeZones as tz>
+                    <option value="${tz.displayName}" <#if (locale==tz)>selected="selected"</#if>>
+                    ${tz.ID} (GMT:<#if (tz.rawOffset>=0)>+<#else>-</#if>${tz.rawOffset/60000}:${tz.rawOffset%60000})
+                    </option>
+                </#list>
+            </select>
+        </@wm.field>
+            <div class="sample">
+                All displayed dates and times will be converted to that time zone. By default GMT timezone is used.
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+        </td>
+        <td align="center">
+            <button id="createAccount"
+                    name="createAccount"
+                    type="submit"
+                    value="submit">Save Changes
+            </button>
+        </td>
+    </tr>
+</table>
