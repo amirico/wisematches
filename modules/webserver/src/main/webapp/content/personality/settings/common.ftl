@@ -16,6 +16,9 @@
                 </#list>
             </select>
         </@wm.field>
+            <div class="sample">
+                All text will be show in this language
+            </div>
         </td>
     </tr>
 
@@ -40,14 +43,24 @@
     </tr>
 
     <tr>
+        <td><label for="email">EMail:</label></td>
         <td>
+            <a href="javascript: $('#emailPane').show();">change email</a>
+            <div id="emailPane" class="ui-helper-hidden">
+                <@wm.field path="settings.email"/>
+            </div>
         </td>
-        <td align="center">
-            <button id="createAccount"
-                    name="createAccount"
-                    type="submit"
-                    value="submit">Save Changes
-            </button>
+    </tr>
+
+    <tr>
+        <td><label for="password">Password:</label></td>
+        <td><a href="#">change password</a></td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td align="left">
+            <button id="save" name="save" type="submit" value="submit">Save Changes</button>
         </td>
     </tr>
 </table>
