@@ -27,8 +27,8 @@
         <@wm.field path="settings.timezone">
             <select id="timezone" name="timezone" style="width: 170px;">
                 <#list timeZones as tz>
-                    <option value="${tz.displayName}" <#if (locale==tz)>selected="selected"</#if>>
-                    ${tz.ID} (GMT:<#if (tz.rawOffset>=0)>+<#else>-</#if>${tz.rawOffset/60000}:${tz.rawOffset%60000})
+                    <option value="${tz.ID}" <#if (wm.statusValue==tz.ID)>selected="selected"</#if>>
+                    ${tz.ID} (GMT:<#if (tz.rawOffset>=0)>+<#else>-</#if>${tz.rawOffset/3600000}:${tz.rawOffset%3600000})
                     </option>
                 </#list>
             </select>
