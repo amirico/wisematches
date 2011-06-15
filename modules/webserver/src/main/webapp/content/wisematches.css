@@ -22,6 +22,10 @@ form label {
     white-space: nowrap;
 }
 
+input {
+    margin: 0;
+}
+
 .sample {
     color: #666666;
     line-height: normal;

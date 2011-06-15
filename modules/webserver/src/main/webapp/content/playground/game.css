@@ -333,3 +333,11 @@
 .editable .sample {
     color: #999999;
 }
+
+.common-settings {
+    border-spacing: 5px;
+}
+
+.common-settings td {
+    vertical-align: top;
+}
