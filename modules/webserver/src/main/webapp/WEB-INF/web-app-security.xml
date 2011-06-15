@@ -36,6 +36,7 @@
         <beans:property name="playerManager" ref="playerManager"/>
         <beans:property name="accountManager" ref="accountManager"/>
         <beans:property name="accountLockManager" ref="lockAccountManager"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
 
         <beans:property name="saltSource" ref="saltSource"/>
         <beans:property name="passwordEncoder" ref="passwordEncoder"/>

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="timeZones" type="java.util.Collection<java.util.TimeZone>" -->
+<#-- @ftlvariable name="timeZones" type="java.util.Collection<wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo>" -->
 <#-- @ftlvariable name="settings" type="wisematches.server.web.controllers.personality.settings.form.SettingsForm" -->
 <#include "/core.ftl">
 
@@ -24,30 +24,29 @@
 
     <tr>
         <td>
-            <label for="timezone">Time zone:</label>
+            <label for="timezone"><@message code="account.register.timezone.label"/>:</label>
         </td>
         <td>
         <@wm.field path="settings.timezone">
-            <select id="timezone" name="timezone" style="width: 170px;">
+            <select id="timezone" name="timezone" style="width: 400px;">
                 <#list timeZones as tz>
-                    <option value="${tz.ID}" <#if (wm.statusValue==tz.ID)>selected="selected"</#if>>
-                    ${tz.ID} (GMT:<#if (tz.rawOffset>=0)>+<#else>-</#if>${tz.rawOffset/3600000}:${tz.rawOffset%3600000})
+                    <option value="${tz.id}" <#if (wm.statusValue==tz.id)>selected="selected"</#if>>
+                        (<@message code="account.register.timezone.gmt"/> ${tz.offsetName}) ${tz.id}
                     </option>
                 </#list>
             </select>
         </@wm.field>
-            <div class="sample">
-                All displayed dates and times will be converted to that time zone. By default GMT timezone is used.
-            </div>
+            <div class="sample"><@message code="account.register.timezone.description"/></div>
         </td>
     </tr>
 
     <tr>
         <td>
-            <label for="email">EMail address:</label>
+        <#--@declare id="email"--><label for="email"><@message code="account.modify.email.label"/>:</label>
         </td>
         <td>
-        <#if !settings.changeEmail><a href="#" onclick="wm.setting.changeEmail(this);">change email</a></#if>
+        <#if !settings.changeEmail><a href="#"
+                                      onclick="wm.setting.changeEmail(this);"><@message code="account.modify.change.email"/></a></#if>
 
             <div id="emailPane" <#if !settings.changeEmail>class="ui-helper-hidden"</#if>>
             <@wm.fieldInput path="settings.email"/>
@@ -59,11 +58,11 @@
 
     <tr>
         <td>
-            <label for="password">Password:</label>
+        <#--@declare id="password"--><label for="password"><@message code="account.modify.password.label"/>:</label>
         </td>
         <td>
         <#if !settings.changePassword>
-            <a href="#" onclick="wm.setting.changePassword(this);">change password</a>
+            <a href="#" onclick="wm.setting.changePassword(this);"><@message code="account.modify.change.password"/></a>
         </#if>
 
             <div id="passwordPane" <#if !settings.changePassword>class="ui-helper-hidden"</#if>>
@@ -80,7 +79,7 @@
     <tr>
         <td></td>
         <td align="left">
-            <button id="save" name="save" type="submit" value="submit">Save Changes</button>
+            <button id="save" name="save" type="submit" value="submit"><@message code="account.modify.save"/></button>
         </td>
     </tr>
 </table>
@@ -99,6 +98,12 @@
             $('#passwordPane').slideDown();
             $('#changePassword').val('true');
             return false;
-        }
-    }
+        };
+
+    <#if saved??>
+        $(document).ready(function() {
+            wm.ui.showStatus("<@message code="account.modify.saved"/>");
+        });
+    </#if>
+    };
 </script>
