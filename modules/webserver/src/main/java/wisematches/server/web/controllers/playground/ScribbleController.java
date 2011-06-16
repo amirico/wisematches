@@ -29,6 +29,7 @@ import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
 import wisematches.server.web.services.ads.AdvertisementManager;
+import wisematches.server.web.services.restriction.PlayerRestrictionManager;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -40,9 +41,10 @@ import java.util.*;
 @RequestMapping("/playground/scribble")
 public class ScribbleController extends AbstractPlayerController {
 	private PlayerManager playerManager;
-	private GameProposalManager<ScribbleSettings> proposalManager;
 	private ScribbleBoardManager boardManager;
 	private AdvertisementManager advertisementManager;
+	private PlayerRestrictionManager restrictionManager;
+	private GameProposalManager<ScribbleSettings> proposalManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -54,6 +56,11 @@ public class ScribbleController extends AbstractPlayerController {
 		if (form.getBoardLanguage() == null) {
 			form.setBoardLanguage(locale.getLanguage());
 		}
+
+		final int a1 = boardManager.getActiveBoards(getPrincipal()).size();
+		final int a2 = proposalManager.getPlayerProposals(getPrincipal()).size();
+		model.addAttribute("restricted", restrictionManager.isRestricted(getPrincipal(), "games.active", a1 + a2));
+
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		if (getPrincipal().getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
@@ -208,5 +215,10 @@ public class ScribbleController extends AbstractPlayerController {
 	@Autowired
 	public void setBoardManager(ScribbleBoardManager boardManager) {
 		this.boardManager = boardManager;
+	}
+
+	@Autowired
+	public void setRestrictionManager(PlayerRestrictionManager restrictionManager) {
+		this.restrictionManager = restrictionManager;
 	}
 }
