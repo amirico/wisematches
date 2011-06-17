@@ -39,7 +39,7 @@
                 </thead>
                 <tbody>
                 <#list activeBoards as board>
-                <tr>
+                <tr id="board${board.boardId}">
                     <#assign settings=board.gameSettings/>
                     <td>
                         <a href="/playground/scribble/board?b=${board.boardId}">${settings.title}</a>
@@ -51,7 +51,7 @@
                     </td>
                     <td>
                         <#list board.playersHands as hand>
-                            <div><@wm.player player=playerManager.getPlayer(hand.getPlayerId()) showRating=false/></div>
+                            <div><@wm.player player=playerManager.getPlayer(hand.getPlayerId())/></div>
                         </#list>
                     </td>
                     <td class="center">
@@ -63,11 +63,15 @@
                 </#list>
 
                 <#list activeProposals as proposal>
-                <tr>
+                <tr id="proposal${proposal.id}">
                     <td>${proposal.gameSettings.title}</td>
                     <td><@message code="language.${proposal.gameSettings.language}"/></td>
                     <td>
                         <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
+
+                        <div style="text-align: right;"><a href="cancel?p=${proposal.id}"
+                                                           onclick="cancelProposal(${proposal.id}); return false;">cancel
+                            proposal</a></div>
                     </td>
                     <td class="center">
                     ${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove *24 * 60, locale)}
@@ -75,7 +79,7 @@
                     <td>
                         <#list proposal.players as p>
                             <div>
-                            <@wm.player player=playerManager.getPlayer(p) showRating=false/>
+                            <@wm.player player=playerManager.getPlayer(p)/>
                             </div>
                         </#list>
                         <#list (proposal.players?size)..(proposal.playersCount-1) as i>
@@ -126,4 +130,17 @@
             "sEmptyTable": "<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
         }
     });
+
+    function cancelProposal(id) {
+        $.ajax('cancel?p=' + id, {
+            success: function(data, textStatus, jqXHR) {
+                if (data.success) {
+                    $("#proposal" + id).fadeOut();
+                    wm.ui.showStatus("Proposal was canceled", false);
+                } else {
+                    wm.ui.showStatus("Proposal can't be canceled", true);
+                }
+            }
+        });
+    }
 </script>

@@ -14,7 +14,7 @@ public abstract class AbstractPlayerController {
 
 	@ModelAttribute("principal")
 	public Player getPrincipal() {
-		return WMSecurityContext.getPlayer();
+		return WMSecurityContext.getPrincipal();
 	}
 
 	@ModelAttribute("personality")

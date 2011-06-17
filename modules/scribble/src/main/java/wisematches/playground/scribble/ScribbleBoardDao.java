@@ -1,7 +1,10 @@
 package wisematches.playground.scribble;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
 import wisematches.playground.search.LastMoveInfo;
@@ -17,6 +20,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	public ScribbleBoardDao() {
 	}
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ScribbleBoard getScribbleBoard(long boardId) {
 		final HibernateTemplate template = getHibernateTemplate();
 		ScribbleBoard scribbleBoard = template.get(ScribbleBoard.class, boardId);
@@ -24,6 +28,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 		return scribbleBoard;
 	}
 
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void saveScribbleBoard(ScribbleBoard scribbleBoard) {
 		final HibernateTemplate template = getHibernateTemplate();
 		template.saveOrUpdate(scribbleBoard);
@@ -32,13 +37,24 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Long> getActiveBoards(Personality player) {
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Collection<Long> getActiveBoardsIds(Personality player) {
 		final HibernateTemplate template = getHibernateTemplate();
 		return (List<Long>) template.find("select board.boardId from wisematches.playground.scribble.ScribbleBoard " +
 				" board join board.playerHands hand where board.gameResolution is NULL and hand.playerId = ?", player.getId());
 	}
 
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getActiveBoardsCount(Personality personality) {
+		final HibernateTemplate template = getHibernateTemplate();
+		return DataAccessUtils.intResult(template.find("select count(*) from wisematches.playground.scribble.ScribbleBoard " +
+				" board join board.playerHands hand where board.gameResolution is NULL and hand.playerId = ?", personality.getId()));
+	}
+
+
 	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Collection<LastMoveInfo> findExpiringBoards() {
 		final HibernateTemplate template = getHibernateTemplate();
 		return template.find("select new " + LastMoveInfo.class.getName() + "(board.boardId, board.gameSettings.daysPerMove, board.lastMoveTime) from " +
@@ -83,6 +99,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 	}
 */
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGamesCount(EnumSet<GameResolution> states) {
 		if (states != null && states.size() == 0) {
 			return 0;
@@ -112,7 +129,7 @@ public class ScribbleBoardDao extends HibernateDaoSupport {
 				values[index++] = state;
 			}
 			query.append(")");
-			return ((Number) template.find(query.toString(), values).get(0)).intValue();
+			return DataAccessUtils.intResult(template.find(query.toString(), values));
 		}
 	}
 }

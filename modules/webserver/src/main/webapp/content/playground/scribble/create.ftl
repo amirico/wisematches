@@ -1,3 +1,7 @@
+<#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
+<#-- @ftlvariable name="opponentsCount" type="java.lang.Integer" -->
 <#-- @ftlvariable name="robotPlayers" type="wisematches.server.player.computer.robot.RobotPlayer[]" -->
 <#include "/core.ftl">
 
@@ -25,7 +29,14 @@
             i2.fadeIn('fast');
         }
 
-        if (i1.is(':visible') && i2.is(':visible')) {
+        var t = 1;
+        if (i1.is(':visible')) {
+            t++;
+        }
+        if (i2.is(':visible')) {
+            t++;
+        }
+        if (t == ${opponentsCount}) {
             $('#oia').hide();
         }
     }
@@ -76,11 +87,15 @@
 </td>
 <td valign="top">
 <div id="create-game">
-<div class="ui-corner-all shadow">
-    <div class="ui-widget-header ui-corner-top">
+<div>
+<#if restricted>
+<@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
+</#if>
+
+    <div class="ui-widget-header ui-corner-all shadow">
     <@message code="game.create.label"/>
     </div>
-    <div class="ui-widget-content ui-corner-bottom" style="margin: 0">
+    <div class="ui-widget-content ui-corner-all shadow" style="margin: 0">
         <div class="info-description"><@message code="game.create.description"/></div>
         <form id="form" class="form" action="/playground/scribble/create" method="post">
             <table>
@@ -138,7 +153,7 @@
                 </tr>
 
             <#assign visibleOpponents = 0/>
-            <#list 1..3 as n>
+            <#list 1..opponentsCount as n>
             <@spring.bind path="create.opponent${n}"/>
                 <#assign visible=spring.stringStatusValue != "no"/>
                 <#if visible><#assign visibleOpponents=visibleOpponents+1/></#if>
@@ -152,17 +167,19 @@
                         <span id="on${n}" class="nickname">
                             <#if visible && wm.statusValue?has_content>
                                 <#assign principal=playerManager.getPlayer(wm.statusValue?number)/>
-                            <@message code="game.player.${principal.nickname}"/> (${principal.rating})
+                            <@message code="game.player.${principal.nickname}"/>
                                 <#else>
-                                <@message code="game.create.opponents.wait.human.label"/>
+                            <@message code="game.create.opponents.wait.human.label"/>
                             </#if>
                         </span>
                             </span>
-                        <span id="wao${n}"
-                              <#if !visible || !wm.statusValue?has_content>style="display: none;"</#if>>
+                        <#if !playRobotsOnly>
+                            <span id="wao${n}"
+                                  <#if !visible || !wm.statusValue?has_content>style="display: none;"</#if>>
                             <@message code="separator.or"/>
                                 <a href="javascript: changeOpponent(${n}, null)"><@message code="game.create.opponents.wait.human.label"/></a>
                         </span>
+                        </#if>
                     <@message code="separator.or"/>
                         <#if n==1>
                             <div id="selectRobotPlayer">
@@ -185,7 +202,7 @@
                 </tr>
             </#list>
 
-                <tr id="oia" <#if visibleOpponents==3>style="display: none"</#if>>
+                <tr id="oia" <#if visibleOpponents==opponentsCount>style="display: none"</#if>>
                     <td></td>
                     <td>
                         <a href="javascript: addOneMoreOpponent()"><@message code="game.create.opponents.wait.more.label"/></a>
@@ -232,12 +249,14 @@
                 </tr>
 -->
 
+            <#if !restricted>
                 <tr>
                     <td></td>
                     <td>
                         <button><@message code="game.create.submit"/></button>
                     </td>
                 </tr>
+            </#if>
             </table>
         </form>
     </div>

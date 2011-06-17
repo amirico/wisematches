@@ -70,7 +70,7 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 
 	@Override
 	protected Collection<Long> loadActivePlayerBoards(Personality player) {
-		return scribbleBoardDao.getActiveBoards(player);
+		return scribbleBoardDao.getActiveBoardsIds(player);
 	}
 
 	public void setScribbleBoardDao(ScribbleBoardDao scribbleBoardDao) {

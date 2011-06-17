@@ -13,7 +13,7 @@ public final class WMSecurityContext {
 	private WMSecurityContext() {
 	}
 
-	public static Player getPlayer() {
+	public static Player getPrincipal() {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.getPrincipal() instanceof WMUserDetails) {
 			WMUserDetails details = (WMUserDetails) authentication.getPrincipal();

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import wisematches.server.security.WMSecurityContext;
+import wisematches.server.web.services.restriction.RestrictionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +51,11 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
 		return processException("500", exception);
 	}
 
+	@ExceptionHandler(RestrictionException.class)
+	public ModelAndView processRestrictionException(RestrictionException exception) {
+		return processException("restriction", null);
+	}
+
 	@ExceptionHandler(UnknownEntityException.class)
 	public ModelAndView processUnknownEntity(UnknownEntityException exception) {
 		return processException("unknown." + exception.getEntityType(), null, exception.getEntityId());
@@ -68,7 +74,7 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
 		res.addObject("errorCode", errorCode);
 		res.addObject("errorArguments", arguments);
 		res.addObject("errorException", exception);
-		res.addObject("principal", WMSecurityContext.getPlayer());
+		res.addObject("principal", WMSecurityContext.getPrincipal());
 		res.addObject("personality", WMSecurityContext.getPersonality());
 		res.addObject("headerTitle", "title.playboard");
 		return res;

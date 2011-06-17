@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<table id="header">
+<table id="header" class="ui-widget-content shadow" style="background: none; border-width: 0;border-bottom-width: 1px;">
     <tr>
         <td width="178px" height="72px">
             <img id="header-image" src="/resources/images/logo.png" width="178" height="72" alt="logo"/>
@@ -11,7 +11,9 @@
                 <tr>
                     <td valign="top" align="right">
                     <#if principal.membership == 'GUEST'>
-                        <span class="player computer"><@message code="game.player.guest"/></span>
+                        <span class="player computer">
+                        <span class="nickname"><@message code="game.player.guest"/></span>
+                        </span>
                         <#else>
                             <span class="player member">
                                 <a href="/playground/profile/view">
@@ -55,9 +57,11 @@
                             </div>
 -->
                             <div>
+                            <#if principal.membership != 'GUEST'>
                                 <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify')">
                                 <@message code="game.menu.settings.label"/>
                                 </button>
+                            </#if>
                                 <button onclick="wm.util.url.redirect('/info/help')">
                                 <@message code="game.menu.help.label"/>
                                 </button>

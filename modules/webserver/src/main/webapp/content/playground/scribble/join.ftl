@@ -1,3 +1,5 @@
+<#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
+<#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.scribble.ScribbleBoard>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
@@ -28,6 +30,10 @@
             <#include "/content/templates/advertisement.ftl">
             </td>
             <td valign="top">
+            <#if restricted>
+            <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
+            </#if>
+
                 <table width="100%">
                     <tr>
                         <td width="100%" nowrap="nowrap">
@@ -67,7 +73,7 @@
                         <td>
                             <#list proposal.players as p>
                                 <div>
-                                <@wm.player player=playerManager.getPlayer(p) showRating=true/>
+                                <@wm.player player=playerManager.getPlayer(p)/>
                                 </div>
                             </#list>
                             <#list (proposal.players?size)..(proposal.playersCount-1) as i>
@@ -81,8 +87,10 @@
                             <#assign msg=gameMessageSource.formatJoinException(proposal, principal, locale)!""/>
                             <#if msg?has_content>
                                 <span class="game-join-error">${msg}</span>
-                                <#else>
+                                <#elseif !restricted>
                                     <a href="/playground/scribble/join?p=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
+                                <#else>
+                                    <span class="game-join-error"><@message code="game.join.err.forbidden"/></span>
                             </#if>
                         </td>
                     </tr>

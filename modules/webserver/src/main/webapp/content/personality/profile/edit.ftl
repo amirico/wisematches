@@ -87,10 +87,10 @@
         var updateButton = $("<button>Set as default</button>").button();
 
         chooseButton.hover(function() {
-                    chooseButton.addClass("ui-state-hover");
-                }, function() {
-                    chooseButton.removeClass("ui-state-hover");
-                });
+            chooseButton.addClass("ui-state-hover");
+        }, function() {
+            chooseButton.removeClass("ui-state-hover");
+        });
 
         var updateProfileImage = function() {
             wm.ui.refreshImage($(".profile .info .photo > img"));
@@ -149,7 +149,7 @@
                     if (data.success) {
                         updateProfileImage();
                     } else {
-                        ui.util.showStatus("<@message code="profile.edit.error.remove"/>", true);
+                        wm.ui.showStatus("<@message code="profile.edit.error.remove"/>", true);
                     }
                 }
             });
