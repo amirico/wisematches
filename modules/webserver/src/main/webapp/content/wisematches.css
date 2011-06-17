@@ -252,6 +252,10 @@ div.space-line {
     text-align: justify;
 }
 
+#info-help-items li {
+    list-style: none;
+}
+
 /* Terms & Policy & Naming styles */
 #info-terms-items li, #info-policy-items li, #info-naming-items li, #info-rules-items li {
     list-style: decimal inside;
