@@ -125,7 +125,7 @@ public class ScribbleBoardManagerTest {
 	public void testLoadActivePlayerBoards() {
 		final Collection<Long> ids = Arrays.asList(1L, 2L, 3L);
 
-		expect(scribbleBoardDao.getActiveBoards(Personality.person(1))).andReturn(ids);
+		expect(scribbleBoardDao.getActiveBoardsIds(Personality.person(1))).andReturn(ids);
 		replay(scribbleBoardDao);
 
 		replay(dictionaryManager);

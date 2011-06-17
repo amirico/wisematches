@@ -99,8 +99,14 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				return null;
 			}
 			proposal.detachPlayer(player);
-			storeGameProposal(proposal);
-			fireGameProposalUpdated(proposal);
+			if (proposal.getPlayers().isEmpty()) {
+				proposals.remove(proposalId);
+				removeGameProposal(proposal);
+				fireGameProposalClosed(proposal);
+			} else {
+				storeGameProposal(proposal);
+				fireGameProposalUpdated(proposal);
+			}
 			return proposal;
 		} finally {
 			lock.unlock();

@@ -1,5 +1,6 @@
 package wisematches.playground.scribble.search;
 
+import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.ScribbleBoardDao;
 import wisematches.playground.search.BoardsSearchEngine;
@@ -28,13 +29,11 @@ public class ScribbleSearchesEngine implements BoardsSearchEngine {
 		}
 		return expiredBoards;
 	}
-/*
 
 	@Override
-	public RatedBoardsInfo getRatedBoards(long playerId, Date startDate, Date endDate) {
-		return scribbleBoardDao.getRatedBoards(playerId, startDate, endDate);
+	public int getActiveBoardsCount(Personality personality) {
+		return scribbleBoardDao.getActiveBoardsCount(personality);
 	}
-*/
 
 	@Override
 	public int getGamesCount(EnumSet<GameResolution> resolutions) {

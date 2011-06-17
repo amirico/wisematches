@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
+import wisematches.personality.player.Player;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
@@ -21,6 +22,7 @@ import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
+import wisematches.server.web.services.restriction.PlayerRestrictionManager;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -35,6 +37,7 @@ public class ScribbleMemoryController extends AbstractPlayerController {
 	private ScribbleBoardManager boardManager;
 	private GameMessageSource gameMessageSource;
 	private MemoryWordManager memoryWordManager;
+	private PlayerRestrictionManager restrictionManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.memory");
 
@@ -82,6 +85,13 @@ public class ScribbleMemoryController extends AbstractPlayerController {
 			if (hand == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.hand.unknown", locale));
 			}
+			if (action == MemoryAction.ADD) {
+				final Player principal = ScribbleMemoryController.this.getPrincipal();
+				final int memoryWordsCount = memoryWordManager.getMemoryWordsCount(board, hand);
+				if (restrictionManager.isRestricted(principal, "scribble.memory", memoryWordsCount)) {
+					throw new MemoryActionException("game.memory.err.limit", restrictionManager.getRestriction(principal, "scribble.memory"));
+				}
+			}
 			return ServiceResponse.success(null, action.doAction(memoryWordManager, board, hand, word));
 		} catch (MemoryActionException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage(ex.getCode(), locale, ex.getArgs()));
@@ -89,6 +99,11 @@ public class ScribbleMemoryController extends AbstractPlayerController {
 			log.error("Memory word can't be loaded for board: " + boardId, ex);
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.board.loading", locale));
 		}
+	}
+
+	@Autowired
+	public void setBoardManager(ScribbleBoardManager boardManager) {
+		this.boardManager = boardManager;
 	}
 
 	@Autowired
@@ -102,11 +117,11 @@ public class ScribbleMemoryController extends AbstractPlayerController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
-		this.boardManager = boardManager;
+	public void setRestrictionManager(PlayerRestrictionManager restrictionManager) {
+		this.restrictionManager = restrictionManager;
 	}
 
-	private static enum MemoryAction {
+	private enum MemoryAction {
 		LOAD {
 			@Override
 			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) {
@@ -128,10 +143,6 @@ public class ScribbleMemoryController extends AbstractPlayerController {
 			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) throws MemoryActionException {
 				if (log.isDebugEnabled()) {
 					log.debug("Add memory word for " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word);
-				}
-				int memoryWordsCount = wordManager.getMemoryWordsCount(board, hand);
-				if (memoryWordsCount >= 3) {
-					throw new MemoryActionException("game.memory.err.limit", 3);
 				}
 				wordManager.addMemoryWord(board, hand, word);
 				return null;

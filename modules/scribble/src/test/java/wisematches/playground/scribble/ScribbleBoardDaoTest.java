@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.GameResolution;
@@ -26,6 +27,7 @@ import static org.junit.Assert.*;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
@@ -56,7 +58,7 @@ public class ScribbleBoardDaoTest {
 	}
 
 	@Test
-	public void test_activeGames() {
+	public void test_getActiveBoardsIds() {
 		final Personality p1 = Personality.person(1L);
 		final Personality p2 = Personality.person(2L);
 		final Personality p3 = Personality.person(3L);
@@ -73,10 +75,10 @@ public class ScribbleBoardDaoTest {
 		scribbleBoardDao.saveScribbleBoard(sb1);
 
 		assertTrue(sb1.isGameActive());
-		assertEquals(0, scribbleBoardDao.getActiveBoards(p1).size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p2).size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p4).size());
+		assertEquals(0, scribbleBoardDao.getActiveBoardsIds(p1).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p2).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p3).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p4).size());
 
 		// Next boards
 		final ScribbleSettings ss2 = new ScribbleSettings("This is scribble board game", "ru", 3);
@@ -84,10 +86,46 @@ public class ScribbleBoardDaoTest {
 		scribbleBoardDao.saveScribbleBoard(sb2);
 
 		assertTrue(sb2.isGameActive());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p1).size());
-		assertEquals(2, scribbleBoardDao.getActiveBoards(p2).size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p3).size());
-		assertEquals(1, scribbleBoardDao.getActiveBoards(p4).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p1).size());
+		assertEquals(2, scribbleBoardDao.getActiveBoardsIds(p2).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p3).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p4).size());
+	}
+
+
+	@Test
+	public void test_getActiveBoardsCount() {
+		final Personality p1 = Personality.person(1L);
+		final Personality p2 = Personality.person(2L);
+		final Personality p3 = Personality.person(3L);
+		final Personality p4 = Personality.person(4L);
+
+		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));
+		final Dictionary dictionary = createStrictMock(Dictionary.class);
+		expect(dictionary.getLocale()).andReturn(LOCALE);
+		expect(dictionary.getLocale()).andReturn(LOCALE);
+		replay(dictionary);
+
+		final ScribbleSettings ss1 = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb1 = new ScribbleBoard(ss1, Arrays.asList(p2, p3, p4), tilesBank, dictionary);
+		scribbleBoardDao.saveScribbleBoard(sb1);
+
+		assertTrue(sb1.isGameActive());
+		assertEquals(0, scribbleBoardDao.getActiveBoardsIds(p1).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p2).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p3).size());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsIds(p4).size());
+
+		// Next boards
+		final ScribbleSettings ss2 = new ScribbleSettings("This is scribble board game", "ru", 3);
+		final ScribbleBoard sb2 = new ScribbleBoard(ss2, Arrays.asList(p1, p2), tilesBank, dictionary);
+		scribbleBoardDao.saveScribbleBoard(sb2);
+
+		assertTrue(sb2.isGameActive());
+		assertEquals(1, scribbleBoardDao.getActiveBoardsCount(p1));
+		assertEquals(2, scribbleBoardDao.getActiveBoardsCount(p2));
+		assertEquals(1, scribbleBoardDao.getActiveBoardsCount(p3));
+		assertEquals(1, scribbleBoardDao.getActiveBoardsCount(p4));
 	}
 
 	@Test
@@ -176,9 +214,6 @@ public class ScribbleBoardDaoTest {
 		sb.makeMove(move1);
 		scribbleBoardDao.saveScribbleBoard(sb);
 
-		//Test loading board from storage after clearing
-		scribbleBoardDao.getHibernateTemplate().clear();
-
 		final ScribbleBoard loaded = checkLoadedDatabase(sb);
 		Tile[] tiles = Arrays.copyOfRange(loaded.getPlayerTurn().getTiles(), 0, 4);
 		tiles[1] = move1.getWord().getTiles()[2];
@@ -193,10 +228,8 @@ public class ScribbleBoardDaoTest {
 		loaded.makeMove(move4);
 		scribbleBoardDao.saveScribbleBoard(loaded);
 
-		ScribbleBoard loaded2 = checkLoadedDatabase2(loaded);
-		scribbleBoardDao.getHibernateTemplate().delete(loaded2);
+		checkLoadedDatabase2(loaded);
 	}
-
 
 	private ScribbleBoard checkLoadedDatabase2(ScribbleBoard sb) {
 		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 100, 1));

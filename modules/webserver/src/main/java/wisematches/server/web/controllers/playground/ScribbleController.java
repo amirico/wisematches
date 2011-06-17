@@ -9,11 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import wisematches.personality.Language;
+import wisematches.personality.Membership;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -26,10 +24,13 @@ import wisematches.playground.propose.ViolatedRestrictionException;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.playground.scribble.search.ScribbleSearchesEngine;
 import wisematches.server.web.controllers.AbstractPlayerController;
+import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
 import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.restriction.PlayerRestrictionManager;
+import wisematches.server.web.services.restriction.RestrictionException;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -42,6 +43,7 @@ import java.util.*;
 public class ScribbleController extends AbstractPlayerController {
 	private PlayerManager playerManager;
 	private ScribbleBoardManager boardManager;
+	private ScribbleSearchesEngine searchesEngine;
 	private AdvertisementManager advertisementManager;
 	private PlayerRestrictionManager restrictionManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
@@ -57,12 +59,18 @@ public class ScribbleController extends AbstractPlayerController {
 			form.setBoardLanguage(locale.getLanguage());
 		}
 
-		final int a1 = boardManager.getActiveBoards(getPrincipal()).size();
-		final int a2 = proposalManager.getPlayerProposals(getPrincipal()).size();
-		model.addAttribute("restricted", restrictionManager.isRestricted(getPrincipal(), "games.active", a1 + a2));
+		final Player principal = getPrincipal();
+
+		if (principal.getMembership() == Membership.GUEST && form.getOpponent1() == null) {
+			form.setOpponent1(String.valueOf(RobotPlayer.DULL.getId()));
+		}
 
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-		if (getPrincipal().getMembership().isAdsVisible()) {
+		model.addAttribute("opponentsCount", restrictionManager.getRestriction(principal, "scribble.opponents"));
+		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
+		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount()));
+		model.addAttribute("playRobotsOnly", principal.getMembership() == Membership.GUEST);
+		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
 		return "/content/playground/scribble/create";
@@ -71,12 +79,13 @@ public class ScribbleController extends AbstractPlayerController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
-								   BindingResult result, Model model, Locale locale) throws BoardManagementException {
+								   BindingResult result, Model model, Locale locale) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Create new game: " + form);
 		}
 
-		final Player player = getPrincipal();
+		final Player principal = getPrincipal();
+		restrictionManager.checkRestriction(principal, "games.active", getActiveGamesCount());
 
 		if (form.getDaysPerMove() < 2) {
 			result.rejectValue("daysPerMove", "game.create.time.err.min");
@@ -100,28 +109,53 @@ public class ScribbleController extends AbstractPlayerController {
 			result.rejectValue("opponent1", "game.create.opponents.err.nofirst");
 		}
 
+
 		if (!result.hasErrors()) {
 			final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
 			if (players.size() == opponents) {
-				players.add(0, player); // also add current personality as a first one
+				players.add(0, principal); // also add current personality as a first one
 				final ScribbleBoard board = boardManager.createBoard(s, players);
 				return "redirect:/playground/scribble/board?b=" + board.getBoardId();
 			} else {
-				proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(player));
+				proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(principal));
 				return "redirect:/playground/scribble/active";
 			}
 		}
 		return createGamePage(form, model, locale);
 	}
 
+
+	@RequestMapping("join")
+	public String showWaitingGames(@ModelAttribute("join") String join, Model model, Locale locale) throws RestrictionException {
+		final Player player = getPrincipal();
+		if (log.isDebugEnabled()) {
+			log.debug("Loading waiting games for personality: " + player);
+		}
+		final Player principal = getPrincipal();
+		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(proposalManager.getActiveProposals());
+		if (log.isDebugEnabled()) {
+			log.debug("Found " + proposals.size() + " proposals for personality: " + player);
+		}
+		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
+		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount()));
+		model.addAttribute("activeProposals", proposals);
+		if (getPrincipal().getMembership().isAdsVisible()) {
+			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
+		}
+		return "/content/playground/scribble/join";
+	}
+
 	@RequestMapping(value = "join", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String joinGameAction(@RequestParam("p") String id, @ModelAttribute("join") String join, Errors errors, Model model, Locale locale) throws BoardManagementException {
+	public String joinGameAction(@RequestParam("p") String id, @ModelAttribute("join") String join, Errors errors, Model model, Locale locale) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Join to the game: " + id);
 		}
 		try {
-			final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), getPrincipal());
+			final Player principal = getPrincipal();
+			restrictionManager.checkRestriction(principal, "games.active", getActiveGamesCount());
+
+			final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), principal);
 			if (proposal == null) {
 				errors.reject("game.error.restriction.ready.description", null);
 			} else if (proposal.isReady()) {
@@ -132,24 +166,6 @@ public class ScribbleController extends AbstractPlayerController {
 			errors.reject("game.error.restriction." + e.getCode() + ".description", new Object[]{e.getActualValue(), e.getExpectedValue()}, null);
 		}
 		return showWaitingGames(join, model, locale);
-	}
-
-	@RequestMapping("join")
-	public String showWaitingGames(@ModelAttribute("join") String join, Model model, Locale locale) {
-		final Player player = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Loading waiting games for personality: " + player);
-		}
-
-		final List<GameProposal<ScribbleSettings>> proposals = new ArrayList<GameProposal<ScribbleSettings>>(proposalManager.getActiveProposals());
-		if (log.isDebugEnabled()) {
-			log.debug("Found " + proposals.size() + " proposals for personality: " + player);
-		}
-		model.addAttribute("activeProposals", proposals);
-		if (getPrincipal().getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
-		}
-		return "/content/playground/scribble/join";
 	}
 
 	@RequestMapping("active")
@@ -172,6 +188,24 @@ public class ScribbleController extends AbstractPlayerController {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
 		return "/content/playground/scribble/active";
+	}
+
+	@ResponseBody
+	@RequestMapping("cancel")
+	public ServiceResponse cancelProposal(@RequestParam("p") String proposal, Model model, Locale locale) {
+		final Player player = getPrincipal();
+		if (log.isDebugEnabled()) {
+			log.debug("Cancel proposal " + proposal + " for player " + player);
+		}
+
+		try {
+			proposalManager.detachPlayer(Long.valueOf(proposal), player);
+			return ServiceResponse.SUCCESS;
+		} catch (NumberFormatException ex) {
+			return ServiceResponse.failure("format");
+		} catch (ViolatedRestrictionException e) {
+			return ServiceResponse.failure("active");
+		}
 	}
 
 	private boolean checkOpponent(String field, String opponent, boolean cpAllowed, List<Personality> players, BindingResult result) {
@@ -197,6 +231,10 @@ public class ScribbleController extends AbstractPlayerController {
 		return false;
 	}
 
+	private int getActiveGamesCount() {
+		return searchesEngine.getActiveBoardsCount(getPrincipal()) + proposalManager.getPlayerProposals(getPrincipal()).size();
+	}
+
 	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
@@ -220,5 +258,10 @@ public class ScribbleController extends AbstractPlayerController {
 	@Autowired
 	public void setRestrictionManager(PlayerRestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
+	}
+
+	@Autowired
+	public void setSearchesEngine(ScribbleSearchesEngine searchesEngine) {
+		this.searchesEngine = searchesEngine;
 	}
 }

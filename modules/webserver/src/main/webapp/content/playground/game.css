@@ -1,3 +1,30 @@
+.restriction {
+    padding: 5px;
+}
+
+.restriction>div {
+    vertical-align: top;
+    display: inline-block;
+}
+
+.restriction-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.restriction-message {
+    margin-top: -10px;
+    padding-left: 37px;
+}
+
+.restriction .restriction-icon {
+    float: left;
+    padding-right: 5px;
+    width: 32px;
+    height: 32px;
+    background: url('/resources/images/status/forbidden_32.png') no-repeat left top;
+}
+
 #create-game .description {
     padding-bottom: 15px;
 }
@@ -19,10 +46,6 @@
 #create-game .ui-widget-content td {
     text-align: left;
     vertical-align: top;
-}
-
-#join-game .ui-state-error {
-    padding: 4px;
 }
 
 #join-game .ui-state-error-text {

@@ -23,6 +23,7 @@ public class HibernatePlayerTrackingCenterDao extends HibernateDaoSupport implem
 	public HibernatePlayerTrackingCenterDao() {
 	}
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T extends StatisticsEditor> T loadPlayerStatistic(Class<? extends T> clazz, Personality personality) {
 		return getHibernateTemplate().get(clazz, personality.getId());
 	}
@@ -38,6 +39,7 @@ public class HibernatePlayerTrackingCenterDao extends HibernateDaoSupport implem
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public short getRating(final Personality person) {
 		return getHibernateTemplate().execute(new HibernateCallback<Short>() {
 			@Override
@@ -55,11 +57,13 @@ public class HibernatePlayerTrackingCenterDao extends HibernateDaoSupport implem
 
 	@Override
 	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Collection<RatingChange> getRatingChanges(long boardId) {
 		return getHibernateTemplate().find("from wisematches.playground.tracking.RatingChange rating where rating.boardId = ?", boardId);
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public RatingChangesCurve getRatingChangesCurve(final Personality player, final int resolution, final Date startDate, final Date endDate) {
 		return getHibernateTemplate().execute(new HibernateCallback<RatingChangesCurve>() {
 			@Override

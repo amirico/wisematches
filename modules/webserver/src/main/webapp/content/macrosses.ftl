@@ -12,19 +12,26 @@
 </div>
 </#macro>
 
-<#macro player player showType=true showRating=true>
+<#macro player player showType=true>
     <#assign computerPlayer=(player.membership == "GUEST") || (player.membership == "ROBOT")/>
 <span class="player <#if computerPlayer>computer<#else>member</#if>">
     <#if !computerPlayer><a href="/playground/profile/view?p=${player.id}"></#if><span
         class="nickname">${gameMessageSource.getPlayerNick(player, locale)}</span><#if showType && player.getMembership() != "BASIC">
     <span class="mod ${player.membership!""?lower_case}"></span></#if><#if !computerPlayer></a></#if>
-    <#if showRating><span class="rating">(${player.rating})</span></#if>
 </span>
 </#macro>
 
 <#macro info>
 <img class="help-tooltip" style="vertical-align: text-bottom" src="/resources/images/help.png" width="16" height="16"
      title="<#nested>"/>
+</#macro>
+
+<#macro restriction style="">
+<div class="restriction ui-state-error ui-corner-all shadow" <#if style?has_content>style="${style}"</#if>>
+    <div class="restriction-icon"></div>
+    <div class="restriction-name"><@message code="restriction.label"/></div>
+    <div class="restriction-message"><#nested></div>
+</div>
 </#macro>
 
 <#macro field path id="" class="">
@@ -55,8 +62,8 @@
 
 <#macro widget title id="" class="" style="">
 <div class="ui-widget" <#if style??>style="${style}"</#if>>
-    <div class="ui-widget-header ui-corner-all"><@message code=title/></div>
-    <div <#if id??>id="${id}"</#if> class="ui-widget-content ui-corner-all">
+    <div class="ui-widget-header ui-corner-all shadow"><@message code=title/></div>
+    <div <#if id??>id="${id}"</#if> class="ui-widget-content ui-corner-all shadow">
         <#nested/>
     </div>
 </div>

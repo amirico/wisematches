@@ -2,7 +2,7 @@
 
 <#include "/core.ftl">
 
-<div id="boardActionsToolbar" class="ui-widget-content ui-corner-all" style="border-top: 0" align="center">
+<div id="boardActionsToolbar" class="ui-widget-content ui-corner-all shadow" align="center">
     <div>
         <button id="makeTurnButton" onclick="boardActionsToolbar.makeTurn()">
         <@message code="game.play.make"/>

@@ -1,5 +1,6 @@
 package wisematches.playground.search;
 
+import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
 
 import java.util.Collection;
@@ -19,6 +20,14 @@ public interface BoardsSearchEngine {
 	 * @return the boards which is active now and can be expired.
 	 */
 	Collection<LastMoveInfo> findExpiringBoards();
+
+	/**
+	 * Returns active games count for specified person.
+	 *
+	 * @param personality the person who games count should be calculated
+	 * @return the number of games count.
+	 */
+	int getActiveBoardsCount(Personality personality);
 
 	/**
 	 * Returns count of games with specified resolution. If specified resolutions set is null when

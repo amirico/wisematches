@@ -99,7 +99,7 @@
                             <#else>
                             ${statistics.lowestLostOpponentRating}
                                 <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                                <#if llp?has_content>( <@wm.player player=llp showRating=false showType=false/>)</#if>
+                                <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                             <#else>
                             ${statistics.highestWonOpponentRating}
                                 <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
-                                <#if hwp?has_content>( <@wm.player player=hwp showRating=false showType=false/>
+                                <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
                                     )</#if>
                         </#if>
                         </div>
@@ -282,25 +282,25 @@
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
-            backgroundColor: 'transparent',
-            interpolateNulls: true,
-            legend: 'none',
-            width: 300,
-            height: 150,
-            chartArea: {
-                top: 10,
-                left: 50,
-                width: 280,
-                height: 120
-            },
-            hAxis: {
-                showTextEvery: resolution * 2
-            },
-            vAxis: {
-                format: '#',
-                minValue: ${ratingChart.minRating?string("0")},
-                maxValue: ${ratingChart.maxRating?string("0")}
-            }}
+                    backgroundColor: 'transparent',
+                    interpolateNulls: true,
+                    legend: 'none',
+                    width: 300,
+                    height: 150,
+                    chartArea: {
+                        top: 10,
+                        left: 50,
+                        width: 280,
+                        height: 120
+                    },
+                    hAxis: {
+                        showTextEvery: resolution * 2
+                    },
+                    vAxis: {
+                        format: '#',
+                        minValue: ${ratingChart.minRating?string("0")},
+                        maxValue: ${ratingChart.maxRating?string("0")}
+                    }}
         );
     }
 
