@@ -74,6 +74,8 @@
     </tr>
 </table>
 
+<#include "guest.ftl"/>
+
 <script type="text/javascript">
     $("#game-toolbar div").buttonset();
 </script>

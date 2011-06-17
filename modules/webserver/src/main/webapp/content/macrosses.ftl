@@ -28,7 +28,7 @@
 
 <#macro restriction style="">
 <div class="restriction ui-state-error ui-corner-all shadow" <#if style?has_content>style="${style}"</#if>>
-    <div class="restriction-icon"></div>
+    <div class="restriction-icon wm-icon-forbidden"></div>
     <div class="restriction-name"><@message code="restriction.label"/></div>
     <div class="restriction-message"><#nested></div>
 </div>
