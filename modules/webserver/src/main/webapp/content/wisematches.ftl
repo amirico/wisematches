@@ -38,12 +38,15 @@
 <#include "templates/analytics.ftl">
 </head>
 <body>
+<#include 'unsupportedBrowser.ftl'/>
+
 <@security.authorize ifAllGranted="user">
     <#include "playground/header.ftl"/>
 </@security.authorize>
 <@security.authorize ifNotGranted="user">
     <#include "personality/header.ftl"/>
 </@security.authorize>
+
 
 <div id="notification-block"></div>
 
