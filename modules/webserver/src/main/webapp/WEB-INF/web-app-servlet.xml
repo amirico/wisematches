@@ -26,6 +26,10 @@
             <property name="paramName" value="language"/>
         </bean>
 
+        <bean id="browserDetectionInterceptor" class="wisematches.server.web.view.WMBrowserDetectionInterceptor">
+            <!--TODO: allowed browsers must be placed here-->
+        </bean>
+
         <mvc:interceptor>
             <mvc:mapping path="/playground/**"/>
             <mvc:mapping path="/account/create"/>
