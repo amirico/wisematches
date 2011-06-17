@@ -140,6 +140,18 @@ tr.even:hover td, tr.odd:hover td {
     background-image: url('/resources/images/wait.gif');
 }
 
+.wm-icon-forbidden {
+    width: 32px;
+    height: 32px;
+    background: url('/resources/images/status/forbidden_32.png') no-repeat left top;
+}
+
+.wm-icon-warning {
+    width: 32px;
+    height: 32px;
+    background: url('/resources/images/status/warning_32.png') no-repeat left top;
+}
+
 div.space-line {
     clear: both;
     margin: 0;

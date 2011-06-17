@@ -20,9 +20,6 @@
 .restriction .restriction-icon {
     float: left;
     padding-right: 5px;
-    width: 32px;
-    height: 32px;
-    background: url('/resources/images/status/forbidden_32.png') no-repeat left top;
 }
 
 #create-game .description {
