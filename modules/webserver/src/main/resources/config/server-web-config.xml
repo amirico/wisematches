@@ -65,4 +65,15 @@
             </list>
         </property>
     </bean>
+
+    <bean id="notificationManager" class="wisematches.server.web.services.notice.impl.HibernateNotificationManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationDescription">
+            <list>
+                <bean class="">
+
+                </bean>
+            </list>
+        </property>
+    </bean>
 </beans>

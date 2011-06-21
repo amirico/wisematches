@@ -17,7 +17,7 @@ INSERT IGNORE INTO sys_version(db_version, script_name, description)
 
 INSERT IGNORE INTO sys_version(db_version, script_name, description)
         VALUES (5, 'path_from_4_to_5.sql',
-                'Logging settings column added. User notifications table added');
+                'Logging settings column added. User notification table added');
 
 INSERT IGNORE INTO sys_version(db_version, script_name, description)
         VALUES (6, 'path_from_5_to_6.sql', 'Some tables renamed.');
