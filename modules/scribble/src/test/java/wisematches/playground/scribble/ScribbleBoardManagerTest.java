@@ -2,6 +2,7 @@ package wisematches.playground.scribble;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import wisematches.personality.Personality;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
@@ -13,6 +14,7 @@ import wisematches.playground.scribble.bank.TilesBankingHouse;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import static org.easymock.EasyMock.*;
@@ -25,9 +27,9 @@ import static org.junit.Assert.assertSame;
 public class ScribbleBoardManagerTest {
 	private ScribbleBoardManager scribbleRoomManager;
 
+	private HibernateTemplate hibernateTemplate;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
-	private ScribbleBoardDao scribbleBoardDao;
 
 	private static final Locale LOCALE = new Locale("en");
 
@@ -38,12 +40,12 @@ public class ScribbleBoardManagerTest {
 	public void testSetUp() {
 		dictionaryManager = createStrictMock(DictionaryManager.class);
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
-		scribbleBoardDao = createStrictMock(ScribbleBoardDao.class);
+		hibernateTemplate = createStrictMock(HibernateTemplate.class);
 
 		scribbleRoomManager = new ScribbleBoardManager();
 		scribbleRoomManager.setDictionaryManager(dictionaryManager);
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
-		scribbleRoomManager.setScribbleBoardDao(scribbleBoardDao);
+		scribbleRoomManager.setHibernateTemplate(hibernateTemplate);
 	}
 
 	@Test
@@ -59,8 +61,9 @@ public class ScribbleBoardManagerTest {
 		board.initGameAfterLoading(tilesBank, dictionary);
 		replay(board);
 
-		expect(scribbleBoardDao.getScribbleBoard(1L)).andReturn(board);
-		replay(scribbleBoardDao);
+		expect(hibernateTemplate.get(ScribbleBoard.class, 1L)).andReturn(board);
+		hibernateTemplate.evict(board);
+		replay(hibernateTemplate);
 
 		expect(dictionaryManager.getDictionary(LOCALE)).andReturn(dictionary);
 		replay(dictionaryManager);
@@ -72,7 +75,7 @@ public class ScribbleBoardManagerTest {
 		assertSame(board, board1);
 
 		verify(board);
-		verify(scribbleBoardDao);
+		verify(hibernateTemplate);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}
@@ -108,25 +111,27 @@ public class ScribbleBoardManagerTest {
 	public void testSaveBoardImpl() {
 		final ScribbleBoard board = createNiceMock(ScribbleBoard.class);
 
-		scribbleBoardDao.saveScribbleBoard(board);
-		replay(scribbleBoardDao);
+		hibernateTemplate.saveOrUpdate(board);
+		hibernateTemplate.flush();
+		hibernateTemplate.evict(board);
+		replay(hibernateTemplate);
 
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
 
 		scribbleRoomManager.saveBoardImpl(board);
 
-		verify(scribbleBoardDao);
+		verify(hibernateTemplate);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}
 
 	@Test
 	public void testLoadActivePlayerBoards() {
-		final Collection<Long> ids = Arrays.asList(1L, 2L, 3L);
+		final List<Long> ids = Arrays.asList(1L, 2L, 3L);
 
-		expect(scribbleBoardDao.getActiveBoardsIds(Personality.person(1))).andReturn(ids);
-		replay(scribbleBoardDao);
+		expect(hibernateTemplate.find(isA(String.class), eq(1L))).andReturn(ids);
+		replay(hibernateTemplate);
 
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
@@ -134,7 +139,7 @@ public class ScribbleBoardManagerTest {
 		final Collection<Long> longCollection = scribbleRoomManager.loadActivePlayerBoards(Personality.person(1));
 		assertSame(ids, longCollection);
 
-		verify(scribbleBoardDao);
+		verify(hibernateTemplate);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}

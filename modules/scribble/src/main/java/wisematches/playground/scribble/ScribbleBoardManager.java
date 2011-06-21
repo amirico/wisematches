@@ -2,6 +2,9 @@ package wisematches.playground.scribble;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
 import wisematches.playground.AbstractBoardManager;
 import wisematches.playground.BoardCreationException;
@@ -13,6 +16,7 @@ import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -21,7 +25,7 @@ import java.util.Locale;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings, ScribbleBoard> {
-	private ScribbleBoardDao scribbleBoardDao;
+	private HibernateTemplate hibernateTemplate;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
@@ -46,13 +50,15 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	protected ScribbleBoard loadBoardImpl(long gameId) throws BoardLoadingException {
 		Locale locale = null;
 		try {
-			final ScribbleBoard board = scribbleBoardDao.getScribbleBoard(gameId);
+			final ScribbleBoard board = hibernateTemplate.get(ScribbleBoard.class, gameId);
 			if (board == null) {
 				return null;
 			}
+			hibernateTemplate.evict(board);
 			locale = new Locale(board.getGameSettings().getLanguage());
 			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
 			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, board.getPlayersHands().size(), true);
@@ -64,17 +70,23 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	protected void saveBoardImpl(ScribbleBoard board) {
-		scribbleBoardDao.saveScribbleBoard(board);
+		hibernateTemplate.saveOrUpdate(board);
+		hibernateTemplate.flush();
+		hibernateTemplate.evict(board);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	protected Collection<Long> loadActivePlayerBoards(Personality player) {
-		return scribbleBoardDao.getActiveBoardsIds(player);
+		return (List<Long>) hibernateTemplate.find("select board.boardId from wisematches.playground.scribble.ScribbleBoard " +
+				" board join board.playerHands hand where board.gameResolution is NULL and hand.playerId = ?", player.getId());
 	}
 
-	public void setScribbleBoardDao(ScribbleBoardDao scribbleBoardDao) {
-		this.scribbleBoardDao = scribbleBoardDao;
+	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+		this.hibernateTemplate = hibernateTemplate;
 	}
 
 	public void setDictionaryManager(DictionaryManager dictionaryManager) {

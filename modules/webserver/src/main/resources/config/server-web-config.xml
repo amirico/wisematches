@@ -70,9 +70,9 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDescription">
             <list>
-                <bean class="">
-
-                </bean>
+                <!--<bean class="">-->
+                <!---->
+                <!--</bean>-->
             </list>
         </property>
     </bean>

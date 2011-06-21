@@ -40,29 +40,18 @@
 <body>
 <#include 'unsupportedBrowser.ftl'/>
 
-<@security.authorize ifAllGranted="user">
-    <#include "playground/header.ftl"/>
-</@security.authorize>
-<@security.authorize ifNotGranted="user">
-    <#include "personality/header.ftl"/>
-</@security.authorize>
-
+<#if principal??><#include "playground/header.ftl"/><#else><#include "personality/header.ftl"/></#if>
 
 <div id="notification-block"></div>
 
-<@security.authorize ifAllGranted="user">
+<#if principal??>
 <div id="header-separator" style="height: 20px;"></div>
-</@security.authorize>
+</#if>
 
 <#include "${originalTemplateName}"/>
 
 <#if !errorCode??>
-<@security.authorize ifAllGranted="user">
-    <#include "playground/footer.ftl"/>
-</@security.authorize>
-<@security.authorize ifNotGranted="user">
-    <#include "personality/footer.ftl"/>
-</@security.authorize>
+    <#if principal??><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
 </#if>
 </body>
 </html>

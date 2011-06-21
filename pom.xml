@@ -23,10 +23,25 @@
             <name>JBoss Repository</name>
             <url>http://repository.jboss.org/maven2/</url>
         </repository>
+
+        <repository>
+            <id>org.springframework.maven.milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+
+        <repository>
+            <id>org.springframework.maven.snapshot</id>
+            <name>Spring Maven Snapshot Repository</name>
+            <url>http://maven.springframework.org/snapshot</url>
+        </repository>
     </repositories>
 
     <properties>
-        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+        <!-- TODO: We have critical issue https://jira.springsource.org/browse/SPR-8464 -->
+        <org.springframework.version>3.1.0.BUILD-SNAPSHOT</org.springframework.version>
+        <!-- TODO: because we are using snapshot we must use separate version for security -->
+        <org.springframework.security.version>3.1.0.RC2</org.springframework.security.version>
     </properties>
 
     <dependencies>
@@ -120,19 +135,19 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${org.springframework.version}</version>
+            <version>${org.springframework.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${org.springframework.version}</version>
+            <version>${org.springframework.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-acl</artifactId>
-            <version>${org.springframework.version}</version>
+            <version>${org.springframework.security.version}</version>
         </dependency>
 
         <dependency>

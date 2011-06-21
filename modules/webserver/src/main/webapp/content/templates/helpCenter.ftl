@@ -54,7 +54,7 @@
 
                     <li class="x-panel-body-noheader separator"
                         style="border-color: #dad7d7; padding-bottom: 5px;"></li>
-                <@security.authorize access="isAuthenticated()">
+                <#if principal??>
                     <li>
                         <b><@message code="info.continue.label"/></b>
                         <ul id="continue">
@@ -66,24 +66,23 @@
                             </li>
                         </ul>
                     </li>
-                </@security.authorize>
-                <@security.authorize access="not isAuthenticated()">
-                    <li>
-                        <b><@message code="info.start.label"/></b>
-                        <ul id="start">
-                            <li>
-                                <button id="createAnAccount" class="account-button"
-                                        onclick="wm.util.url.redirect('/account/create')">
-                                <@message code="account.register.label"/>
-                                </button>
-                            </li>
-                            <li class="separator"><@message code="separator.or"/></li>
-                            <li><a href="/account/login"><@message code="account.signin.label"/></a></li>
-                            <li class="separator"><@message code="separator.or"/></li>
-                            <li><a href="/account/loginGuest"><@message code="account.guest.label"/></a></li>
-                        </ul>
-                    </li>
-                </@security.authorize>
+                    <#else>
+                        <li>
+                            <b><@message code="info.start.label"/></b>
+                            <ul id="start">
+                                <li>
+                                    <button id="createAnAccount" class="account-button"
+                                            onclick="wm.util.url.redirect('/account/create')">
+                                    <@message code="account.register.label"/>
+                                    </button>
+                                </li>
+                                <li class="separator"><@message code="separator.or"/></li>
+                                <li><a href="/account/login"><@message code="account.signin.label"/></a></li>
+                                <li class="separator"><@message code="separator.or"/></li>
+                                <li><a href="/account/loginGuest"><@message code="account.guest.label"/></a></li>
+                            </ul>
+                        </li>
+                </#if>
                 </ul>
             </div>
         </td>

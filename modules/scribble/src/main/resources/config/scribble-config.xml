@@ -7,14 +7,10 @@
         <property name="banksPath" value="classpath:/banks/*"/>
     </bean>
 
-    <bean id="scribbleBoardDAO" class="wisematches.playground.scribble.ScribbleBoardDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
     <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribbleBoardManager">
         <property name="dictionaryManager" ref="wordGamesDictionaries"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
-        <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
     </bean>
 
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
@@ -35,7 +31,7 @@
 
     <bean id="scribbleSearchEngineManager"
           class="wisematches.playground.scribble.search.ScribbleSearchesEngine">
-        <property name="scribbleBoardDao" ref="scribbleBoardDAO"/>
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
     </bean>
 
     <bean id="scribbleTerminator" class="wisematches.playground.expiration.impl.ExpiredGamesTerminator"
