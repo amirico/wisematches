@@ -5,8 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 
 import java.util.Map;
 
@@ -22,8 +21,8 @@ public class WMDispatcherServlet extends DispatcherServlet {
 		final Map<String, HandlerMapping> matchingBeans =
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
 		for (HandlerMapping handlerMapping : matchingBeans.values()) {
-			if (handlerMapping instanceof AbstractUrlHandlerMapping) {
-				AbstractUrlHandlerMapping mapping = (AbstractUrlHandlerMapping) handlerMapping;
+			if (handlerMapping instanceof AbstractHandlerMapping) {
+				AbstractHandlerMapping mapping = (AbstractHandlerMapping) handlerMapping;
 				mapping.setAlwaysUseFullPath(true);
 			}
 		}
@@ -31,8 +30,8 @@ public class WMDispatcherServlet extends DispatcherServlet {
 		Map<String, HandlerAdapter> matchingBeans2 =
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerAdapter.class, true, false);
 		for (HandlerAdapter handlerAdapter : matchingBeans2.values()) {
-			if (handlerAdapter instanceof AnnotationMethodHandlerAdapter) {
-				AnnotationMethodHandlerAdapter adapter = (AnnotationMethodHandlerAdapter) handlerAdapter;
+			if (handlerAdapter instanceof AbstractHandlerMapping) {
+				AbstractHandlerMapping adapter = (AbstractHandlerMapping) handlerAdapter;
 				adapter.setAlwaysUseFullPath(true);
 			}
 		}

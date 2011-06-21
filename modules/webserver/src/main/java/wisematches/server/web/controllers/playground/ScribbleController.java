@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import wisematches.personality.Language;
 import wisematches.personality.Membership;
@@ -66,9 +65,9 @@ public class ScribbleController extends AbstractPlayerController {
 		}
 
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-		model.addAttribute("opponentsCount", restrictionManager.getRestriction(principal, "scribble.opponents"));
 		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
 		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount()));
+		model.addAttribute("opponentsCount", restrictionManager.getRestriction(principal, "scribble.opponents"));
 		model.addAttribute("playRobotsOnly", principal.getMembership() == Membership.GUEST);
 		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
@@ -126,7 +125,7 @@ public class ScribbleController extends AbstractPlayerController {
 
 
 	@RequestMapping("join")
-	public String showWaitingGames(@ModelAttribute("join") String join, Model model, Locale locale) throws RestrictionException {
+	public String showWaitingGames(Model model, Locale locale) throws RestrictionException {
 		final Player player = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + player);
@@ -147,7 +146,7 @@ public class ScribbleController extends AbstractPlayerController {
 
 	@RequestMapping(value = "join", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String joinGameAction(@RequestParam("p") String id, @ModelAttribute("join") String join, Errors errors, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+	public String joinGameAction(@RequestParam("p") String id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Join to the game: " + id);
 		}
@@ -157,15 +156,16 @@ public class ScribbleController extends AbstractPlayerController {
 
 			final GameProposal<ScribbleSettings> proposal = proposalManager.attachPlayer(Long.valueOf(id), principal);
 			if (proposal == null) {
-				errors.reject("game.error.restriction.ready.description", null);
+				model.addAttribute("joinError", "game.error.restriction.ready.description");
 			} else if (proposal.isReady()) {
 				final ScribbleBoard board = boardManager.createBoard(proposal.getGameSettings(), proposal.getPlayers());
 				return "redirect:/playground/scribble/board?b=" + board.getBoardId();
 			}
 		} catch (ViolatedRestrictionException e) {
-			errors.reject("game.error.restriction." + e.getCode() + ".description", new Object[]{e.getActualValue(), e.getExpectedValue()}, null);
+			model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
+			model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
 		}
-		return showWaitingGames(join, model, locale);
+		return showWaitingGames(model, locale);
 	}
 
 	@RequestMapping("active")

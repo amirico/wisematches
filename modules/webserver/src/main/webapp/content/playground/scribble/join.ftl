@@ -37,12 +37,9 @@
                 <table width="100%">
                     <tr>
                         <td width="100%" nowrap="nowrap">
-                        <@spring.bind path="join"/>
-                        <#if spring.status.error>
-                            <div class="ui-state-error ui-corner-all">
-                                <#list spring.status.errorMessages as msg>
-                                    <div class="ui-state-error-text error-msg">${msg}</div>
-                                </#list>
+                        <#if joinError??>
+                            <div class="ui-state-error ui-corner-all" style="padding: 4px;">
+                                <div class="ui-state-error-text error-msg"><@message code=joinError args=joinErrorArgs/></div>
                             </div>
                         </#if>
                         </td>
