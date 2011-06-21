@@ -77,7 +77,7 @@ public class EMailNotificationsSender {
 
 	protected boolean isPlayerAllowsNotification(Player p, PlayerNotification notification) {
 		throw new UnsupportedOperationException("Commented");
-//		return p.getPlayerNotifications().isNotificationEnabled(notification);
+//		return p.getNotificationMask().isEnabled(notification);
 	}
 
 	public void destroy() {

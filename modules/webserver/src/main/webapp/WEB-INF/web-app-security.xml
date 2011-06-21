@@ -123,12 +123,18 @@
         <beans:property name="userDetailsService" ref="userDetailsService"/>
     </beans:bean>
 
+    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+
+    <beans:bean id="sessionControlStrategy"
+                class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+        <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+    </beans:bean>
+
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="guestAuthenticationProvider"/>
 
         <authentication-provider ref="memberAuthenticationProvider"/>
     </authentication-manager>
-
 
     <http use-expressions="true">
         <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
@@ -143,6 +149,8 @@
         <intercept-url pattern="/**" access="permitAll"/>
 
         <custom-filter ref="guestFilter" before="ANONYMOUS_FILTER"/>
+
+        <session-management session-authentication-strategy-ref="sessionControlStrategy"/>
 
         <remember-me services-ref="rememberMeServices" key="${security.remember.token}"/>
 

@@ -11,7 +11,7 @@
             <#include "common.ftl"/>
             </div>
         <#--<div id="notificationsTab" class="ui-state-default">-->
-        <#--<#include "notifications.ftl"/>-->
+        <#--<#include "notification.ftl"/>-->
         <#--</div>-->
         </div>
     </div>
