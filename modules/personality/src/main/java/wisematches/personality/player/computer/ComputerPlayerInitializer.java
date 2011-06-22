@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
  */
 public class ComputerPlayerInitializer implements InitializingBean {
 	public ComputerPlayerInitializer() {
-		System.out.println("asdasd");
 	}
 
 	@Override

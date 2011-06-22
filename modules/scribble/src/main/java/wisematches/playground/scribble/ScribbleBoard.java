@@ -58,7 +58,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Lob
 	@Type(type = "[B")
 	@Column(name = "boardTiles")
-	@Access(AccessType.PROPERTY)
 	private final byte[] boardTiles = new byte[255];
 
 	/**

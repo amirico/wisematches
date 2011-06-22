@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.web.authentication.rememberme.CookieTheftException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Controller
 @RequestMapping("/info/error")
 public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolver {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.exceptions");
