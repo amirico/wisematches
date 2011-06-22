@@ -12,6 +12,7 @@ import wisematches.server.web.services.notice.NotificationMask;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,11 @@ public class HibernateNotificationManager extends HibernateDaoSupport implements
 	private final Map<String, NotificationDescription> descriptionMap = new HashMap<String, NotificationDescription>();
 
 	public HibernateNotificationManager() {
+	}
+
+	@Override
+	public Collection<NotificationDescription> getDescriptions() {
+		return Collections.unmodifiableCollection(descriptionMap.values());
 	}
 
 	@Override

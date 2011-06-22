@@ -49,7 +49,8 @@ public class SettingsController extends AbstractPlayerController {
 		form.setLanguage(principal.getLanguage().name().toLowerCase());
 		form.setEmail(principal.getEmail());
 		model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
-		model.addAttribute("notificationsMask", notificationManager.getNotificationMask(principal));
+		model.addAttribute("notificationMask", notificationManager.getNotificationMask(principal));
+		model.addAttribute("notificationDescriptions", notificationManager.getDescriptions());
 		return "/content/personality/settings/template";
 	}
 

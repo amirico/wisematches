@@ -74,10 +74,6 @@
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
-    <bean id="wmExceptionResolver"
-          class="wisematches.server.web.controllers.WMExceptionResolver">
-    </bean>
-
     <bean id="annotationMethodHandlerExceptionResolver"
           class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
     </bean>
