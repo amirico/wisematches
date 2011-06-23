@@ -95,6 +95,9 @@ public class HibernateNotificationManager extends HibernateDaoSupport implements
                 sqlQuery.setLong(0, personality.getId());
 
                 final Object[] values = (Object[]) sqlQuery.uniqueResult();
+                if (values == null) {
+                    return null;
+                }
                 final NotificationMask m = new NotificationMask();
                 for (int i = 0; i < names.length; i++) {
                     m.setEnabled(names[i], values[i] != null);
