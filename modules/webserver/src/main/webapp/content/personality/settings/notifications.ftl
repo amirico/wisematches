@@ -6,7 +6,7 @@
 <#assign lastSeries=""/>
 <table class="common-settings ui-widget-content ui-state-default shadow ui-corner-all" style="background-image: none;"
        width="100%">
-<#list notificationDescriptions?sort_by("series") as desc>
+<#list notificationDescriptions?sort_by('series')?sort_by('name') as desc>
     <#if (desc_index !=0 && lastSeries!=desc.series)>
         <tr>
             <td colspan="2" class="ui-state-default shadow"></td>
@@ -14,22 +14,39 @@
     </#if>
     <#if lastSeries!=desc.series>
         <tr>
-            <td colspan="2"><h4 style="margin-bottom: 0;">${desc.series?upper_case}</h4></td>
+            <td colspan="2">
+                <h2 style="margin-bottom: 0;">
+                <@message code="account.modify.notice.series.${desc.series?lower_case}"/>
+                </h2>
+            </td>
         </tr>
     </#if>
     <#assign lastSeries=desc.series/>
     <tr>
         <td style="padding-top: 4px; width: 10px;">
             <input id="field${desc.name}" name="${desc.name}" type="checkbox"
-                   <#if notificationMask.isEnabled(desc.name)>checked="checked"</#if>>
+                   <#if notificationMask.isEnabled(desc.name)>checked="checked"</#if> value="true">
         </td>
         <td>
-            <div><label for="field${desc.name}">${desc.name}</label></div>
-            <div class="sample">This is description for ${desc.name}</div>
+            <div>
+                <label for="field${desc.name}">
+                <@message code="account.modify.notice.${desc.name?lower_case}.label"/>
+                </label>
+            </div>
+            <div class="sample">
+            <@message code="account.modify.notice.${desc.name?lower_case}.description"/>
+            </div>
         </td>
     </tr>
 </#list>
     <tr>
         <td colspan="2" class="ui-state-default shadow"></td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td align="left">
+            <button name="save" type="submit" value="submit"><@message code="account.modify.save"/></button>
+        </td>
     </tr>
 </table>
