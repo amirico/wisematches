@@ -21,6 +21,10 @@ public final class NotificationDescription {
 		this(name, series, evenOnline, true);
 	}
 
+	public NotificationDescription(String name, boolean evenOnline, boolean enabled) {
+		this(name, null, evenOnline, enabled);
+	}
+
 	public NotificationDescription(String name, String series, boolean evenOnline, boolean enabled) {
 		if (name == null) {
 			throw new NullPointerException("Notification name can't be null");

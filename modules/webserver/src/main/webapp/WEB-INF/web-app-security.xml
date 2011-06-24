@@ -123,11 +123,14 @@
         <beans:property name="userDetailsService" ref="userDetailsService"/>
     </beans:bean>
 
-    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+    <beans:bean id="concurrentSessionFilter" class="wisematches.server.web.security.spring.WMConcurrentSessionFilter">
+        <beans:property name="sessionRegistry" ref="playerStateManager"/>
+        <beans:property name="expiredUrl" value="/account/loginAuth?error=session"/>
+    </beans:bean>
 
     <beans:bean id="sessionControlStrategy"
                 class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
-        <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+        <beans:constructor-arg name="sessionRegistry" ref="playerStateManager"/>
     </beans:bean>
 
     <authentication-manager alias="authenticationManager">
@@ -150,7 +153,8 @@
 
         <intercept-url pattern="/**" access="permitAll"/>
 
-        <custom-filter ref="guestFilter" before="ANONYMOUS_FILTER"/>
+        <custom-filter before="ANONYMOUS_FILTER" ref="guestFilter"/>
+        <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrentSessionFilter"/>
 
         <session-management session-authentication-strategy-ref="sessionControlStrategy"/>
 
