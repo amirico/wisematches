@@ -44,8 +44,8 @@
                             </div>
                         <#--
                             <div style="float: left;">
-                                <button id="messagesButton" onclick="wm.util.url.redirect('/profile/messages')">
-                                <@message code="game.menu.messages.label"/>
+                                <button id="messagesButton" onclick="wm.util.url.redirect('/profile/message')">
+                                <@message code="game.menu.message.label"/>
                                 </button>
                             </div>
 -->

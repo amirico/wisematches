@@ -96,7 +96,7 @@
     </bean>
 
     <bean id="notificationPublisherCenter"
-          class="wisematches.server.web.services.notice.publisher.NotificationPublisherCenter">
+          class="wisematches.server.web.services.notice.publisher.NotificationPublishCenter">
         <property name="publishers">
             <list>
                 <bean class="wisematches.server.web.services.notice.impl.publisher.MailNotificationPublisher">
@@ -105,6 +105,8 @@
                 </bean>
             </list>
         </property>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="expirationManager" ref="scribbleTerminator"/>
         <property name="playerStateManager" ref="playerStateManager"/>
         <property name="notificationManager" ref="notificationManager"/>
     </bean>
