@@ -1,8 +1,10 @@
 <#-- @ftlvariable name="supportedBrowser" type="java.lang.Boolean" -->
-<#if !(supportedBrowser!false)>
+<#include "/core.ftl">
+
+<#if !(supportedBrowser!true)>
 <div class="unsupported-browser ui-state-error shadow">
-    <div>Unfortunately your browser is not well supported ans the site can look incorrect or don't work at all.
-        Please use the following browsers and versions or latest one:
+    <div>
+    <@message code="browser.unsupported"/>
     </div>
     <div align="center">
         <table>

@@ -28,4 +28,15 @@ public final class Notification {
 	public Object getContext() {
 		return context;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Notification");
+		sb.append("{personality=").append(personality);
+		sb.append(", description=").append(description);
+		sb.append(", context=").append(context);
+		sb.append('}');
+		return sb.toString();
+	}
 }

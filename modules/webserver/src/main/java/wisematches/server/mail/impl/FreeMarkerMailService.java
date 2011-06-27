@@ -15,7 +15,9 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import wisematches.personality.Language;
 import wisematches.personality.account.Account;
+import wisematches.personality.player.PlayerManager;
 import wisematches.server.mail.*;
+import wisematches.server.web.i18n.GameMessageSource;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -32,6 +34,8 @@ import java.util.regex.Pattern;
 public class FreeMarkerMailService implements MailService {
 	private String serverHostName = "wisematches.net";
 	private JavaMailSender mailSender;
+	private PlayerManager playerManager;
+	private GameMessageSource gameMessageSource;
 	private MessageSource messageSource;
 	private Configuration freeMarkerConfig;
 
@@ -126,7 +130,10 @@ public class FreeMarkerMailService implements MailService {
 					final Template template = getTemplate(msgCode, language);
 
 					final Map<String, Object> variables = new HashMap<String, Object>();
-					variables.put("player", player);
+					variables.put("principal", player);
+					variables.put("locale", player.getLanguage().locale());
+					variables.put("accountManager", playerManager);
+					variables.put("gameMessageSource", gameMessageSource);
 					variables.put("messageCode", msgCode);
 					variables.put("serverHostName", serverHostName);
 					variables.put("sender", sender.getDefaultName());
@@ -220,6 +227,14 @@ public class FreeMarkerMailService implements MailService {
 	public void setServerHostName(String serverHostName) {
 		this.serverHostName = serverHostName;
 		validateAddressesCache();
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
+	}
+
+	public void setGameMessageSource(GameMessageSource gameMessageSource) {
+		this.gameMessageSource = gameMessageSource;
 	}
 
 	private static final class SenderKey {

@@ -70,10 +70,6 @@
         </property>
     </bean>
 
-    <bean id="gameMessageSource" class="wisematches.server.web.i18n.GameMessageSource">
-        <property name="messageSource" ref="messageSource"/>
-    </bean>
-
     <bean id="annotationMethodHandlerExceptionResolver"
           class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
     </bean>

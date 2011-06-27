@@ -13,7 +13,6 @@ import wisematches.server.web.services.notice.NotificationManager;
 import wisematches.server.web.services.notice.NotificationMask;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +22,8 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateNotificationManager extends HibernateDaoSupport implements NotificationManager {
+	private static final Integer INT_TRUE = 1;
+
 	private final Map<String, NotificationDescription> descriptionMap = new HashMap<String, NotificationDescription>();
 
 	public HibernateNotificationManager() {
@@ -41,15 +42,24 @@ public class HibernateNotificationManager extends HibernateDaoSupport implements
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isNotificationEnabled(final String name, final Personality personality) {
-		final Object lastUpdated = getHibernateTemplate().execute(new HibernateCallback<Object>() {
+		final NotificationDescription d = descriptionMap.get(name);
+		if (d == null) {
+			return false;
+		}
+
+		final Boolean b = getHibernateTemplate().execute(new HibernateCallback<Boolean>() {
 			@Override
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+			public Boolean doInHibernate(Session session) throws HibernateException, SQLException {
 				final SQLQuery sqlQuery = session.createSQLQuery("select `" + name + "` from settings_notice where pid=?");
 				sqlQuery.setLong(0, personality.getId());
-				return sqlQuery.uniqueResult();
+				final Object v = sqlQuery.uniqueResult();
+				if (v == null) {
+					return null;
+				}
+				return isEnabled(v);
 			}
 		});
-		return lastUpdated != null;
+		return b == null ? d.isEnabled() : b;
 	}
 
 	@Override
@@ -107,11 +117,15 @@ public class HibernateNotificationManager extends HibernateDaoSupport implements
 				}
 				final NotificationMask m = new NotificationMask();
 				for (int i = 0; i < names.length; i++) {
-					m.setEnabled(names[i], values[i] != null);
+					m.setEnabled(names[i], isEnabled(values[i]));
 				}
 				return m;
 			}
 		});
+	}
+
+	private boolean isEnabled(Object v) {
+		return INT_TRUE.equals(v) || Boolean.TRUE.equals(v);
 	}
 
 	private void saveNotificationMask(final Personality personality, final NotificationMask mask) {
@@ -145,11 +159,7 @@ public class HibernateNotificationManager extends HibernateDaoSupport implements
 				sqlQuery.setLong(0, personality.getId());
 				for (int j = 0; j < 2; j++) {
 					for (int i = 0; i < names.length; i++) {
-						if (mask.isEnabled(names[i])) {
-							sqlQuery.setTimestamp(names.length * j + i + 1, new Timestamp(System.currentTimeMillis()));
-						} else {
-							sqlQuery.setTimestamp(names.length * j + i + 1, null);
-						}
+						sqlQuery.setBoolean(names.length * j + i + 1, mask.isEnabled(names[i]));
 					}
 				}
 				sqlQuery.executeUpdate();

@@ -5,11 +5,11 @@
     <title>${subject}</title>
 </head>
 <body>
-<p><#include "common/header.ftl"></p>
+<p><#include "header.ftl"></p>
 
 <p><#nested/></p>
 
-<p><#include "common/footer.ftl"></p>
+<p><#include "footer.ftl"></p>
 </body>
 </html>
 </#macro>
