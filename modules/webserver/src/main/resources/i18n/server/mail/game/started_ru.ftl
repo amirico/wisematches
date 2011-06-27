@@ -3,7 +3,7 @@
 
 <@mail.html subject="Ваша игра начата">
 
-<p> Игра #${context.boardId} (${context.gameSettings.title}, которую вы ожидаете, началась.</p>
+<p> Игра #${context.boardId} (${context.gameSettings.title}), которую вы ожидаете, началась.</p>
 <br>
 
 <p>
