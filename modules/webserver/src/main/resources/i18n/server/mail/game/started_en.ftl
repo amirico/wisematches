@@ -3,7 +3,7 @@
 
 <@mail.html subject="Game has been started">
 
-<p> A Game Board #${context.boardId} (${context.gameSettings.title} you are waiting for has been started</p>
+<p> A Game Board #${context.boardId} (${context.gameSettings.title}) you are waiting for has been started</p>
 <br>
 
 <p>
