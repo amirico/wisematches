@@ -3,6 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="gameMessageSource" class="wisematches.server.web.i18n.GameMessageSource">
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
     <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
@@ -89,7 +94,7 @@
                       c:enabled="true"/>
                 <bean parent="notification" c:name="game.timeout.hour" c:series="timeout" c:evenOnline="true"
                       c:enabled="true"/>
-                <bean parent="notification" c:name="message" c:evenOnline="false"
+                <bean parent="notification" c:name="game.message" c:evenOnline="false"
                       c:enabled="true"/>
             </list>
         </property>

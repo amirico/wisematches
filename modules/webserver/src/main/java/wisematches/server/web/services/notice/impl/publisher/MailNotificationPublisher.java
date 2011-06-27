@@ -27,7 +27,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 			return;
 		}
 		final NotificationDescription description = notification.getDescription();
-		mailService.sendMail(MailSender.GAME, account, description.getName(), Collections.singletonMap("context", notification.getContext()));
+		mailService.sendMail(MailSender.GAME, account, description.getName().replaceAll("\\.", "/"), Collections.singletonMap("context", notification.getContext()));
 	}
 
 	public void setMailService(MailService mailService) {

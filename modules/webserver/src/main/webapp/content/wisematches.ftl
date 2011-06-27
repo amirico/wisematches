@@ -38,7 +38,7 @@
 <#include "templates/analytics.ftl">
 </head>
 <body>
-<#include 'unsupportedBrowser.ftl'/>
+<#include 'templates/unsupportedBrowser.ftl'/>
 
 <#if principal??><#include "playground/header.ftl"/><#else><#include "personality/header.ftl"/></#if>
 

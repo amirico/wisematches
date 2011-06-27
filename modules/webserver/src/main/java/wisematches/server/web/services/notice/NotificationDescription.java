@@ -14,7 +14,7 @@ public final class NotificationDescription {
 	}
 
 	public NotificationDescription(String name, boolean evenOnline) {
-		this(name, null, evenOnline);
+		this(name, "", evenOnline);
 	}
 
 	public NotificationDescription(String name, String series, boolean evenOnline) {
@@ -22,12 +22,15 @@ public final class NotificationDescription {
 	}
 
 	public NotificationDescription(String name, boolean evenOnline, boolean enabled) {
-		this(name, null, evenOnline, enabled);
+		this(name, "", evenOnline, enabled);
 	}
 
 	public NotificationDescription(String name, String series, boolean evenOnline, boolean enabled) {
 		if (name == null) {
 			throw new NullPointerException("Notification name can't be null");
+		}
+		if (series == null) {
+			throw new NullPointerException("Notification series can't be null");
 		}
 		this.name = name;
 		this.series = series;
@@ -53,20 +56,30 @@ public final class NotificationDescription {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		final NotificationDescription that = (NotificationDescription) o;
-		return name.equals(that.name) && series.equals(that.series);
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		NotificationDescription that = (NotificationDescription) o;
+
+		return name.equals(that.name) && !(series != null ? !series.equals(that.series) : that.series != null);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + series.hashCode();
+		result = 31 * result + (series != null ? series.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("NotificationDescription");
+		sb.append("{name='").append(name).append('\'');
+		sb.append(", series='").append(series).append('\'');
+		sb.append(", enabled=").append(enabled);
+		sb.append(", evenOnline=").append(evenOnline);
+		sb.append('}');
+		return sb.toString();
 	}
 }
