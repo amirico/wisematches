@@ -132,7 +132,7 @@ public class FreeMarkerMailService implements MailService {
 					final Map<String, Object> variables = new HashMap<String, Object>();
 					variables.put("principal", player);
 					variables.put("locale", player.getLanguage().locale());
-					variables.put("accountManager", playerManager);
+					variables.put("playerManager", playerManager);
 					variables.put("gameMessageSource", gameMessageSource);
 					variables.put("messageCode", msgCode);
 					variables.put("serverHostName", serverHostName);

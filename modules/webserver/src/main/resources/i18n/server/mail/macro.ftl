@@ -14,6 +14,16 @@
 </html>
 </#macro>
 
+<#macro board board>
+<a href="http://${serverHostName}/playground/scribble/board?b=${board.boardId}">
+    #${board.boardId} (${board.gameSettings.title})
+</a>
+</#macro>
+
+<#macro player pid>
+<a href="http://${serverHostName}/playground/profile/view?p=${pid}"><em>${gameMessageSource.getPlayerNick(playerManager.getPlayer(pid), locale)}</em></a>
+</#macro>
+
 <#macro host>${serverHostName}</#macro>
 
 <#macro mailto box><a href="mailto:${box}@${serverHostName}">${box}@${serverHostName}</a></#macro>

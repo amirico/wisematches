@@ -1,5 +1,7 @@
 package wisematches.server.web.services.notice.publisher;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wisematches.personality.Personality;
 import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.playground.*;
@@ -33,10 +35,16 @@ public class NotificationPublishCenter {
 	private final TheNotificationListener notificationListener = new TheNotificationListener();
 	private final Collection<NotificationPublisher> publishers = new ArrayList<NotificationPublisher>();
 
+	private static final Log log = LogFactory.getLog("wisematches.server.notice.publisher");
+
 	public NotificationPublishCenter() {
 	}
 
 	protected void processNotification(Notification notification) {
+		if (log.isDebugEnabled()) {
+			log.debug("Process notification " + notification);
+		}
+
 		final NotificationDescription description = notification.getDescription();
 		final Personality personality = notification.getPersonality();
 		if (personality instanceof ComputerPlayer) {
@@ -50,6 +58,9 @@ public class NotificationPublishCenter {
 				if (!playerStateManager.isPlayerOnline(personality)) {
 					fireNotification(notification);
 				} else {
+					if (log.isDebugEnabled()) {
+						log.debug("Player if online, put notification into queue");
+					}
 					lock.lock();
 					try {
 						List<Notification> notifications = bufferedNotification.get(personality);
@@ -62,6 +73,10 @@ public class NotificationPublishCenter {
 						lock.unlock();
 					}
 				}
+			}
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug("Notification is disabled for player " + personality);
 			}
 		}
 	}
@@ -85,6 +100,10 @@ public class NotificationPublishCenter {
 
 
 	protected void fireNotification(Notification notification) {
+		if (log.isInfoEnabled()) {
+			log.info("Fire notification " + notification.getDescription().getName() + " to person " + notification.getPersonality());
+		}
+
 		for (NotificationPublisher publisher : publishers) {
 			publisher.publishNotification(notification);
 		}
@@ -194,7 +213,7 @@ public class NotificationPublishCenter {
 						processNotification(new Notification(Personality.person(hand.getPlayerId()), d1, board));
 					}
 				} else {
-					if (d2 != null) {
+					if (d2 != null && board.getPlayersHands().size() > 2) {
 						processNotification(new Notification(Personality.person(hand.getPlayerId()), d2, board));
 					}
 				}
@@ -225,8 +244,7 @@ public class NotificationPublishCenter {
 						}
 					}
 				}
-			} catch (BoardLoadingException ex) {
-				;
+			} catch (BoardLoadingException ignored) {
 			}
 		}
 

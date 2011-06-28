@@ -23,11 +23,11 @@ public class NotificationPublishCenterTest {
 	private NotificationManager notificationManager;
 	private NotificationPublishCenter publishCenter;
 
-	private NotificationDescription d1 = new NotificationDescription("d1", null, true, true);
-	private NotificationDescription d2 = new NotificationDescription("d2", null, true, false);
-	private NotificationDescription d3 = new NotificationDescription("d3", null, false);
-	private NotificationDescription d4 = new NotificationDescription("d4", "s1", true);
-	private NotificationDescription d5 = new NotificationDescription("d5", "s1", true);
+	private NotificationDescription d1 = new NotificationDescription("d1", "", null, true, true);
+	private NotificationDescription d2 = new NotificationDescription("d2", "", null, false, true);
+	private NotificationDescription d3 = new NotificationDescription("d3", "", null, true, false);
+	private NotificationDescription d4 = new NotificationDescription("d4", "", "s1", true, true);
+	private NotificationDescription d5 = new NotificationDescription("d5", "", "s1", true, true);
 
 	public NotificationPublishCenterTest() {
 	}
