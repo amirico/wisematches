@@ -426,6 +426,10 @@ div.space-line {
     box-shadow: 0 0 3px #B6B7BB;
 }
 
+.ui-background-no {
+    background-image: none !important;;
+}
+
 .ui-layout-table {
     display: table;
 }

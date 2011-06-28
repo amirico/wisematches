@@ -69,9 +69,11 @@
                     <td>
                         <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
 
-                        <div style="text-align: right;"><a href="cancel?p=${proposal.id}"
-                                                           onclick="cancelProposal(${proposal.id}); return false;">cancel
-                            proposal</a></div>
+                        <div style="text-align: right;">
+                            <a href="cancel?p=${proposal.id}" onclick="cancelProposal(${proposal.id}); return false;">
+                            <@message code="game.proposal.cancel"/>
+                            </a>
+                        </div>
                     </td>
                     <td class="center">
                     ${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove *24 * 60, locale)}
@@ -136,9 +138,9 @@
             success: function(data, textStatus, jqXHR) {
                 if (data.success) {
                     $("#proposal" + id).fadeOut();
-                    wm.ui.showStatus("Proposal was canceled", false);
+                    wm.ui.showStatus("<@message code="game.proposal.canceled"/>", false);
                 } else {
-                    wm.ui.showStatus("Proposal can't be canceled", true);
+                    wm.ui.showStatus("<@message code="game.proposal.cancel.error"/>", true);
                 }
             }
         });

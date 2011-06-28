@@ -22,7 +22,7 @@
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
 
-    <bean id="activeGamesRestriction" class="wisematches.server.web.services.restriction.impl.RestrictionDescription">
+    <bean id="activeGamesRestriction" class="wisematches.server.web.services.restriction.RestrictionDescription">
         <property name="name" value="games.active"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -36,7 +36,7 @@
     </bean>
 
     <bean id="scribbleMemoryRestriction"
-          class="wisematches.server.web.services.restriction.impl.RestrictionDescription">
+          class="wisematches.server.web.services.restriction.RestrictionDescription">
         <property name="name" value="scribble.memory"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -50,7 +50,7 @@
     </bean>
 
     <bean id="scribbleOpponentsRestriction"
-          class="wisematches.server.web.services.restriction.impl.RestrictionDescription">
+          class="wisematches.server.web.services.restriction.RestrictionDescription">
         <property name="name" value="scribble.opponents"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -64,7 +64,7 @@
     </bean>
 
     <bean id="playerRestrictionManager"
-          class="wisematches.server.web.services.restriction.impl.PlayerRestrictionManagerImpl">
+          class="wisematches.server.web.services.restriction.impl.RestrictionManagerImpl">
         <property name="restrictions">
             <list>
                 <ref bean="activeGamesRestriction"/>

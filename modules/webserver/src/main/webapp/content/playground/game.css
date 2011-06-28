@@ -361,3 +361,7 @@
 .common-settings td {
     vertical-align: top;
 }
+
+.profile .membership div {
+    padding: 5px;
+}
