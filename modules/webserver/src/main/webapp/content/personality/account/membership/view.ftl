@@ -3,11 +3,11 @@
 <#include "/core.ftl">
 
 <div class="profile">
-    <div class="membership shadow">
-        <div class="ui-widget-header">
+    <div class="membership">
+        <div class="ui-widget-header ui-corner-all shadow">
         <@message code="membership.label"/>
         </div>
-        <div class="ui-state-default ui-background-no">
+        <div class="ui-state-default ui-background-no ui-corner-all shadow">
             <div>
             <@message code="membership.description"/>
             </div>
