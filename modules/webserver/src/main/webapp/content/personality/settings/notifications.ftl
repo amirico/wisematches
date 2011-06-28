@@ -3,25 +3,25 @@
 
 <#include "/core.ftl">
 
-<#assign lastSeries=""/>
+<#assign lastGroup=""/>
 <table class="common-settings ui-widget-content ui-state-default shadow ui-corner-all" style="background-image: none;"
        width="100%">
-<#list notificationDescriptions?sort_by('series')?sort_by('name') as desc>
-    <#if (desc_index !=0 && lastSeries!=desc.series)>
+<#list notificationDescriptions?sort_by('group') as desc>
+    <#if (desc_index !=0 && lastGroup!=desc.group)>
         <tr>
             <td colspan="2" class="ui-state-default shadow"></td>
         </tr>
     </#if>
-    <#if lastSeries!=desc.series>
+    <#if lastGroup!=desc.group>
         <tr>
             <td colspan="2">
                 <h2 style="margin-bottom: 0;">
-                <@message code="account.modify.notice.series.${desc.series?lower_case}"/>
+                <@message code="account.modify.notice.group.${desc.group?lower_case}"/>
                 </h2>
             </td>
         </tr>
     </#if>
-    <#assign lastSeries=desc.series/>
+    <#assign lastGroup=desc.group/>
     <tr>
         <td style="padding-top: 4px; width: 10px;">
             <input id="field${desc.name}" name="${desc.name}" type="checkbox"
