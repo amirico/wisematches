@@ -19,12 +19,6 @@
 
     <repositories>
         <repository>
-            <id>JBOSS</id>
-            <name>JBoss Repository</name>
-            <url>http://repository.jboss.org/maven2/</url>
-        </repository>
-
-        <repository>
             <id>org.springframework.maven.milestone</id>
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springframework.org/milestone</url>
@@ -55,14 +49,14 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.12</version>
+            <version>1.2.16</version>
         </dependency>
 
         <!-- This library is used in Hibernate annotations 3.4.0 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jcl</artifactId>
-            <version>1.5.6</version>
+            <version>1.6.1</version>
         </dependency>
         <!-- End logging systems dependency -->
 
