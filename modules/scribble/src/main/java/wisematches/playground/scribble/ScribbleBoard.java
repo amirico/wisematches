@@ -494,6 +494,9 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	private void checkExchangeTilesMove(ExchangeTilesMove move) throws IncorrectMoveException {
 		final int[] ints = move.getTilesIds();
+		if (ints.length == 0) {
+			throw new IncorrectTilesException(false);
+		}
 		if (ints.length > tilesBank.getTilesLimit()) {
 			throw new IncorrectMoveException("Not required tiles to in bank");
 		}
