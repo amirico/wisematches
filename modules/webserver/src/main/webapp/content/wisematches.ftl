@@ -37,7 +37,9 @@
 <div id="header-separator" style="height: 20px;"></div>
 </#if>
 
+<div style="padding: 5px">
 <#include "${originalTemplateName}"/>
+</div>
 
 <#if !errorCode??>
     <#if principal??><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
