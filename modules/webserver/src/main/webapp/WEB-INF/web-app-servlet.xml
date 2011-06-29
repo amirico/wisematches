@@ -50,7 +50,7 @@
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="messageInterpolator">
             <bean class="wisematches.server.web.i18n.SpringMessageInterpolator">
-                <property name="messageSource" ref="serverMessageSource"/>
+                <property name="messageSource" ref="messageSource"/>
             </bean>
         </property>
     </bean>
@@ -58,17 +58,6 @@
     <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
 
     <bean id="localeResolver" class="wisematches.server.web.i18n.WMPlayerLocaleResolver"/>
-
-    <bean id="mappingDriven"
-          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="alwaysUseFullPath" value="true"/>
-
-        <property name="mappings">
-            <props>
-                <prop key="/i18n/*.js">clientGameMessageSource</prop>
-            </props>
-        </property>
-    </bean>
 
     <bean id="annotationMethodHandlerExceptionResolver"
           class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">

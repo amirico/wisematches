@@ -4,6 +4,8 @@
 <#-- @ftlvariable name="profileForm" type="wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 
+<script type="text/javascript" src="/jquery/js/fileuploader.js"></script>
+
 <div class="notification shadow ui-state-highlight" style="text-align: center; padding: 5px;">
 <@message code="profile.edit.description"/>
     <button onclick="wm.util.url.redirect('/playground/profile/view')"><@message code="profile.edit.done"/></button>
@@ -87,10 +89,10 @@
         var updateButton = $("<button>Set as default</button>").button();
 
         chooseButton.hover(function() {
-            chooseButton.addClass("ui-state-hover");
-        }, function() {
-            chooseButton.removeClass("ui-state-hover");
-        });
+                    chooseButton.addClass("ui-state-hover");
+                }, function() {
+                    chooseButton.removeClass("ui-state-hover");
+                });
 
         var updateProfileImage = function() {
             wm.ui.refreshImage($(".profile .info .photo > img"));

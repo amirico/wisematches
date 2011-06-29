@@ -6,6 +6,12 @@
 
 <#macro tileToJS tile><#if tile?has_content>{number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }</#if></#macro>
 
+<@wm.jstable/>
+<script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
+<script type="text/javascript" src="/content/playground/scribble/scribble.js"></script>
+
 <script type="text/javascript">
     var scribbleGame = {
         id: ${board.boardId},

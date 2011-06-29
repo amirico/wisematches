@@ -16,7 +16,7 @@ import java.util.Locale;
 @RequestMapping({"/info"})
 public class InformationController extends AbstractInfoController {
     public InformationController() {
-        super("classpath:/i18n/server/info/");
+        super("classpath:/i18n/info/");
     }
 
     @RequestMapping("/{pageName}")

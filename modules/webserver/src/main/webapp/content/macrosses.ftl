@@ -1,5 +1,14 @@
 <#include "/core.ftl">
 
+<#macro jstable>
+<link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
+<script type="text/javascript" src="/jquery/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/jquery/css/ColReorder.css"/>
+<script type="text/javascript" src="/jquery/js/ColReorder.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/jquery/css/ColVis.css"/>
+<script type="text/javascript" src="/jquery/js/ColVis.min.js"></script>
+</#macro>
+
 <#macro editor id code value="" view="" classes="">
     <#assign qwe=view/>
     <#if (!view?has_content) && (value?has_content)><#assign qwe=value/></#if>
