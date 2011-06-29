@@ -143,8 +143,6 @@
 
     <http pattern="/resources/**" security="none"/>
 
-    <http pattern="/i18n/**" security="none"/>
-
     <http use-expressions="true">
         <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/membership/**" access="isAuthenticated()"/>

@@ -3,6 +3,8 @@
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
 
+<@wm.jstable/>
+
 <#macro gameStatus board>
     <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>

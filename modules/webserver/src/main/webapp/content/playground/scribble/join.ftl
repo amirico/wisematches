@@ -4,6 +4,8 @@
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
 
+<@wm.jstable/>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $("#refreshGameboard").button({icons: {primary: 'ui-icon-refresh'}});

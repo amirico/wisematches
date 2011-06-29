@@ -1,5 +1,6 @@
 package wisematches.server.web.services.notice.publisher;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,47 +19,47 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Ignore
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-junit-config.xml",
-		"classpath:/config/application-settings.xml",
-		"classpath:/config/mail-sender-config.xml",
-		"classpath:/config/message-source-config.xml",
-		"classpath:/config/server-web-config.xml"
+        "classpath:/config/database-junit-config.xml",
+        "classpath:/config/accounts-config.xml",
+        "classpath:/config/playground-config.xml",
+        "classpath:/config/scribble-junit-config.xml",
+        "classpath:/config/application-settings.xml",
+        "classpath:/config/mail-sender-config.xml",
+        "classpath:/config/server-web-config.xml"
 })
 public class NotificationFunctionalTest {
-	@Autowired
-	ScribbleBoardManager boardManager;
+    @Autowired
+    ScribbleBoardManager boardManager;
 
-	@Autowired
-	NotificationManager notificationManager;
+    @Autowired
+    NotificationManager notificationManager;
 
-	@Autowired
-	NotificationPublishCenter publishCenter;
+    @Autowired
+    NotificationPublishCenter publishCenter;
 
-	public NotificationFunctionalTest() {
-	}
+    public NotificationFunctionalTest() {
+    }
 
-	@Test
-	public void asd() throws BoardLoadingException, InterruptedException {
-		final Personality p = Personality.person(1029);
+    @Test
+    public void asd() throws BoardLoadingException, InterruptedException {
+        final Personality p = Personality.person(1029);
 
-		final ScribbleBoard b1 = boardManager.openBoard(53);
-		final ScribbleBoard b2 = boardManager.openBoard(54);
+        final ScribbleBoard b1 = boardManager.openBoard(53);
+        final ScribbleBoard b2 = boardManager.openBoard(54);
 
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.started"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.finished"), b1));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.move.your"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.move.opponent"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.day"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.half"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.hour"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.message"), new Message(p, new Date(), "Mock Subject", "Mock body")));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.started"), b2));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.finished"), b1));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.move.your"), b2));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.move.opponent"), b2));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.day"), b2));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.half"), b2));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.hour"), b2));
+        publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.message"), new Message(p, new Date(), "Mock Subject", "Mock body")));
 
-		Thread.sleep(1000000);
-	}
+        Thread.sleep(1000000);
+    }
 }

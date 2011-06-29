@@ -8,6 +8,8 @@
 <#macro undefined value>
     <#if value==0><@message code="profile.undefined"/><#else>${value}</#if>
 </#macro>
+<link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <div style="width: 100%">
 <div class="profile shadow ui-state-default">
@@ -282,25 +284,25 @@
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
-                    backgroundColor: 'transparent',
-                    interpolateNulls: true,
-                    legend: 'none',
-                    width: 300,
-                    height: 150,
-                    chartArea: {
-                        top: 10,
-                        left: 50,
-                        width: 280,
-                        height: 120
-                    },
-                    hAxis: {
-                        showTextEvery: resolution * 2
-                    },
-                    vAxis: {
-                        format: '#',
-                        minValue: ${ratingChart.minRating?string("0")},
-                        maxValue: ${ratingChart.maxRating?string("0")}
-                    }}
+            backgroundColor: 'transparent',
+            interpolateNulls: true,
+            legend: 'none',
+            width: 300,
+            height: 150,
+            chartArea: {
+                top: 10,
+                left: 50,
+                width: 280,
+                height: 120
+            },
+            hAxis: {
+                showTextEvery: resolution * 2
+            },
+            vAxis: {
+                format: '#',
+                minValue: ${ratingChart.minRating?string("0")},
+                maxValue: ${ratingChart.maxRating?string("0")}
+            }}
         );
     }
 

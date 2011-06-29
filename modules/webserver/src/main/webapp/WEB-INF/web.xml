@@ -17,7 +17,6 @@
             classpath:/config/accounts-config.xml
             classpath:/config/playground-config.xml
             classpath:/config/scribble-config.xml
-            classpath:/config/message-source-config.xml
             classpath:/config/mail-sender-config.xml
             classpath:/config/server-web-config.xml
             classpath:/config/application-settings.xml
@@ -69,11 +68,6 @@
         <servlet-class>wisematches.server.web.view.WMDispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
-    <servlet-mapping>
-        <servlet-name>web-app</servlet-name>
-        <url-pattern>/i18n/*</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
