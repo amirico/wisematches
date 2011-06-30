@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,8 @@ public class WMAccessDeniedHandler implements AccessDeniedHandler {
 	private String restrictedErrorPage;
 	private String insufficientErrorPage;
 
+	private RequestCache requestCache = new HttpSessionRequestCache();
+
 	private final AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
 
 	public WMAccessDeniedHandler() {
@@ -28,6 +32,9 @@ public class WMAccessDeniedHandler implements AccessDeniedHandler {
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		if (!response.isCommitted()) {
+			//TODO: https://jira.springsource.org/browse/SEC-1773
+			requestCache.saveRequest(request, response);
+
 			final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			final boolean rememberMe = authenticationTrustResolver.isRememberMe(auth);
 			if (rememberMe && insufficientErrorPage != null) {
