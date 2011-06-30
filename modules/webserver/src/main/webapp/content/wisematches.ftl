@@ -19,10 +19,9 @@
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/content/wisematches.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="/content/personality/account/account.css"/>
 <#if principal??>
     <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
-    <#else>
-        <link rel="stylesheet" type="text/css" href="/content/personality/account/account.css"/>
 </#if>
 <#include "templates/analytics.ftl">
 </head>
