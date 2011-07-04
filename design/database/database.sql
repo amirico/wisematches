@@ -23,7 +23,8 @@ CREATE  TABLE IF NOT EXISTS
   UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 )
   ENGINE = InnoDB
-  COMMENT = 'The base table that contains information about a player';
+  DEFAULT CHARACTER SET = utf8
+  COMMENT = 'The base table that contains information about a player' ;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`account_lock`
@@ -43,7 +44,8 @@ CREATE  TABLE IF NOT EXISTS `wisematches`.`account_lock` (
   ON DELETE NO ACTION
   ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`account_blacknames`
@@ -54,7 +56,8 @@ CREATE  TABLE IF NOT EXISTS
   `reason` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`username`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`persistent_logins`
@@ -67,7 +70,8 @@ CREATE  TABLE IF NOT EXISTS
   `last_used` TIMESTAMP NOT NULL ,
   PRIMARY KEY (`series`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`persistent_recoveries`
@@ -86,7 +90,8 @@ CREATE  TABLE IF NOT EXISTS
   ON DELETE NO ACTION
   ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -111,7 +116,8 @@ CREATE  TABLE IF NOT EXISTS `wisematches`.`scribble_board` (
   PRIMARY KEY (`boardId`) ,
   UNIQUE INDEX `boardId_UNIQUE` (`boardId` ASC)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`scribble_player`
@@ -132,7 +138,8 @@ CREATE  TABLE IF NOT EXISTS
   ON UPDATE NO ACTION
 )
   ENGINE = InnoDB
-  COMMENT = 'There is no constrain between playerId and account_personality because system players don\'t have account.';
+  DEFAULT CHARACTER SET = utf8,
+COMMENT = 'There is no constrain between playerId and account_personali' /* comment truncated */ ;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`rating_history`
@@ -146,7 +153,8 @@ CREATE  TABLE IF NOT EXISTS `wisematches`.`rating_history` (
   `points` SMALLINT NOT NULL ,
   UNIQUE INDEX `history_UNIQUE` (`playerId` ASC, `boardId` ASC)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`scribble_statistic`
@@ -182,19 +190,12 @@ CREATE  TABLE IF NOT EXISTS
   `words` INT NULL ,
   `exchanges` INT NULL ,
   `aWord` BIGINT(20)  NULL ,
-  `longestWord` VARCHAR(104) NULL ,
-  `valuableWord` VARCHAR(104) NULL ,
-  PRIMARY KEY (`playerId`) ,
-  INDEX
-          `fk_rating_statistic_account_personality1` (`playerId` ASC) ,
-  CONSTRAINT
-          `fk_rating_statistic_account_personality1`
-  FOREIGN KEY (`playerId` )
-  REFERENCES `wisematches`.`account_personality` (`id` )
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION
+  `longestWord` VARCHAR(255) NULL ,
+  `valuableWord` VARCHAR(255) NULL ,
+  PRIMARY KEY (`playerId`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`scribble_memory`
@@ -213,7 +214,8 @@ CREATE  TABLE IF NOT EXISTS
   `word` VARCHAR(104) NULL COMMENT 'The made word. This field contains maximum 15 tiles in following format: \\nTileNumberCharCost. Where TileNumber - 1 or two chars,\\nChar - the letter,\\nCost - the cost (one char).' ,
   PRIMARY KEY (`boardId`, `playerId`, `wordNumber`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`account_profile`
@@ -238,10 +240,43 @@ CREATE  TABLE IF NOT EXISTS
   ON DELETE NO ACTION
   ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `wisematches`.`settings_notice`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS
+        `wisematches`.`settings_notice` (
+  `pid` BIGINT(20)  NOT NULL ,
+  `game.started` INT(1) NULL ,
+  `game.move.your` INT(1) NULL ,
+  `game.move.opponent` INT(1) NULL ,
+  `game.finished` INT(1) NULL ,
+  `game.timeout.day` INT(1) NULL ,
+  `game.timeout.half` INT(1) NULL ,
+  `game.timeout.hour` INT(1) NULL ,
+  `game.message` INT(1) NULL ,
+  PRIMARY KEY (`pid`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `wisematches`.`message`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `wisematches`.`message` (
+  `id` BIGINT(20)  NOT NULL AUTO_INCREMENT ,
+  `recipient` BIGINT(20)  NOT NULL ,
+  `sender` BIGINT(20)  NULL ,
+  `created` TIMESTAMP NOT NULL ,
+  `subject` VARCHAR(100) NULL ,
+  `body` TEXT NULL ,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-ALTER TABLE account_personality AUTO_INCREMENT = 1001;
