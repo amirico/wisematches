@@ -1,9 +1,14 @@
 package wisematches.playground.tracking.impl;
 
+import org.junit.Test;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class PlayerTrackingCenterImplTest {
+	@Test
+	public void mock() {
+	}
 /*
 	private Account account;
 	private BoardStateListener boardStateListener;

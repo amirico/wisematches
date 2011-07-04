@@ -11,6 +11,9 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
+            <element id="directory" name="config">
+              <element id="file-copy" path="$PROJECT_DIR$/modules/webserver/src/test/resources/config/wisematches-settings.properties" />
+            </element>
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-1.0-SNAPSHOT.jar">
