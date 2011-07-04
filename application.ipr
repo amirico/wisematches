@@ -11,9 +11,7 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="directory" name="config">
-              <element id="file-copy" path="$PROJECT_DIR$/modules/webserver/src/test/resources/config/wisematches-settings.properties" />
-            </element>
+            <element id="file-copy" path="$PROJECT_DIR$/modules/webserver/src/test/resources/wisematches-settings.properties" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-1.0-SNAPSHOT.jar">
@@ -81,6 +79,7 @@
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.18" />
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
             <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-web:3.0.5.RELEASE" />
           </element>
         </element>
       </root>
