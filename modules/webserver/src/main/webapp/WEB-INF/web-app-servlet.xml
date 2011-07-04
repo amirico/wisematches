@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <import resource="classpath:/config/application-settings.xml"/>
+
+    <context:component-scan base-package="wisematches.server.web.controllers"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <mvc:annotation-driven validator="validator"/>
+
+    <mvc:interceptors>
+        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="language"/>
+        </bean>
+
+        <bean id="browserDetectionInterceptor" class="wisematches.server.web.view.WMBrowserDetectionInterceptor">
+            <!--TODO: allowed browsers must be placed here-->
+        </bean>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/playground/**"/>
+            <mvc:mapping path="/account/create"/>
+            <mvc:mapping path="/account/modify"/>
+
+            <bean id="hibernateSessionInterceptor"
+                  class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+                <property name="sessionFactory" ref="sessionFactory"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean id="captchaService" class="wisematches.server.web.security.captcha.google.GoogleCaptchaService">
+        <property name="publicKey" value="${recaptcha.publickey}"/>
+        <property name="privateKey" value="${recaptcha.privatekey}"/>
+    </bean>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="messageInterpolator">
+            <bean class="wisematches.server.web.i18n.SpringMessageInterpolator">
+                <property name="messageSource" ref="messageSource"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
+
+    <bean id="localeResolver" class="wisematches.server.web.i18n.WMPlayerLocaleResolver"/>
+
+    <bean id="annotationMethodHandlerExceptionResolver"
+          class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+    </bean>
+
+    <bean id="responseStatusExceptionResolver"
+          class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
+    </bean>
+
+    <bean id="defaultHandlerExceptionResolver"
+          class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
+    </bean>
+
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value=""/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="playerManager" value-ref="playerManager"/>
+                <entry key="captchaService" value-ref="captchaService"/>
+                <entry key="gameMessageSource" value-ref="gameMessageSource"/>
+                <entry key="analyticsCode" value="${analytics.trackcode}"/>
+            </map>
+        </property>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="number_format">computer</prop>
+                <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
+                <prop key="template_exception_handler">rethrow</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="freemarkerViewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="viewClass" value="wisematches.server.web.view.WMFreeMarkerView"/>
+    </bean>
+
+    <alias alias="viewResolver" name="freemarkerViewResolver"/>
+</beans>

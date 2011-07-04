@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="fallbackToSystemLocale" value="false"/>
+
+        <property name="basenames">
+            <array>
+                <value>classpath:/i18n/web</value>
+                <value>classpath:/i18n/exceptions</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="gameMessageSource" class="wisematches.server.web.i18n.GameMessageSource">
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="playerImagesManager" class="wisematches.server.web.services.images.impl.FilePlayerImagesManager">
+        <property name="imagesFolder" value="${server.images.path}/players"/>
+    </bean>
+
+    <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
+
+    <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
+        <property name="adsResource" value="${advertisement.providers.file}"/>
+    </bean>
+
+    <bean id="activeGamesRestriction" class="wisematches.server.web.services.restriction.RestrictionDescription">
+        <property name="name" value="games.active"/>
+        <property name="restrictions">
+            <map value-type="java.lang.Integer">
+                <entry key="GUEST" value="1"/>
+                <entry key="BASIC" value="5"/>
+                <entry key="SILVER" value="10"/>
+                <entry key="GOLD" value="30"/>
+                <entry key="PLATINUM" value="100"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="scribbleMemoryRestriction"
+          class="wisematches.server.web.services.restriction.RestrictionDescription">
+        <property name="name" value="scribble.memory"/>
+        <property name="restrictions">
+            <map value-type="java.lang.Integer">
+                <entry key="GUEST" value="1"/>
+                <entry key="BASIC" value="2"/>
+                <entry key="SILVER" value="5"/>
+                <entry key="GOLD" value="20"/>
+                <entry key="PLATINUM" value="50"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="scribbleOpponentsRestriction"
+          class="wisematches.server.web.services.restriction.RestrictionDescription">
+        <property name="name" value="scribble.opponents"/>
+        <property name="restrictions">
+            <map value-type="java.lang.Integer">
+                <entry key="GUEST" value="1"/>
+                <entry key="BASIC" value="1"/>
+                <entry key="SILVER" value="2"/>
+                <entry key="GOLD" value="2"/>
+                <entry key="PLATINUM" value="3"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="playerRestrictionManager"
+          class="wisematches.server.web.services.restriction.impl.RestrictionManagerImpl">
+        <property name="restrictions">
+            <list>
+                <ref bean="activeGamesRestriction"/>
+                <ref bean="scribbleMemoryRestriction"/>
+                <ref bean="scribbleOpponentsRestriction"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="notification" class="wisematches.server.web.services.notice.NotificationDescription" abstract="true"/>
+
+    <bean id="notificationManager" class="wisematches.server.web.services.notice.impl.HibernateNotificationManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationDescription">
+            <list>
+                <bean parent="notification" c:name="game.started"
+                      c:group="games" c:enabled="false" c:evenOnline="false"/>
+
+                <bean parent="notification" c:name="game.finished"
+                      c:group="games" c:enabled="true" c:evenOnline="true"/>
+
+                <bean parent="notification" c:name="game.move.your"
+                      c:group="games" c:enabled="true" c:evenOnline="false" c:series="game.move"/>
+
+                <bean parent="notification" c:name="game.move.opponent"
+                      c:group="games" c:enabled="false" c:evenOnline="false" c:series="game.move"/>
+
+                <bean parent="notification" c:name="game.timeout.day"
+                      c:group="expiration" c:enabled="true" c:evenOnline="false"/>
+
+                <bean parent="notification" c:name="game.timeout.half"
+                      c:group="expiration" c:enabled="true" c:evenOnline="false"/>
+
+                <bean parent="notification" c:name="game.timeout.hour"
+                      c:group="expiration" c:enabled="true" c:evenOnline="true"/>
+
+                <bean parent="notification" c:name="game.message"
+                      c:group="message" c:enabled="true" c:evenOnline="false" c:series="game.message"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="notificationPublisherCenter"
+          class="wisematches.server.web.services.notice.publisher.NotificationPublishCenter">
+        <property name="publishers">
+            <list>
+                <bean class="wisematches.server.web.services.notice.impl.publisher.MailNotificationPublisher">
+                    <property name="mailService" ref="mailService"/>
+                    <property name="accountManager" ref="accountManager"/>
+                </bean>
+            </list>
+        </property>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="expirationManager" ref="scribbleTerminator"/>
+        <property name="playerStateManager" ref="playerStateManager"/>
+        <property name="notificationManager" ref="notificationManager"/>
+    </bean>
+</beans>
