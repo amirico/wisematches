@@ -17,6 +17,28 @@
         <module>modules/webserver</module>
     </modules>
 
+    <developers>
+        <developer>
+            <name>Sergey Klimenko</name>
+            <email>smklimenko@gmail.com</email>
+            <roles>
+                <role>Owner</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>GMT+03:00</timezone>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>Google Code</system>
+        <url>http://code.google.com/p/wisematches/issues/list</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:hg:file:///${basedir}</connection>
+        <developerConnection>scm:hg:file:///${basedir}</developerConnection>
+    </scm>
+
     <repositories>
         <repository>
             <id>org.springframework.maven.milestone</id>
