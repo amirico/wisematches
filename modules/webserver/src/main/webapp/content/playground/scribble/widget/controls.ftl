@@ -46,6 +46,7 @@
         "resignLabel": "<@message code="game.move.resign.label"/>",
         "resignDescription": "<@message code="game.move.resign.description"/>",
         "exchange": "<@message code="game.play.exchange.label"/>",
-        "cancel": "<@message code="cancel.label"/>"
+        "cancel": "<@message code="cancel.label"/>",
+        "updatingBoard": "<@message code="game.move.updating"/>"
     });
 </script>

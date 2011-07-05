@@ -145,14 +145,28 @@ wm.ui = new function() {
         }
     };
 
-    this.showStatus = function(message, error) {
-        $("#status-widget-pane").empty(); // trick - clear all statuses.
+    this.showStatus = function(message, error, stick) {
+        wm.ui.clearStatus();
+
+        if (stick == undefined) {
+            stick = false;
+        }
 
         $("#status-widget-pane").freeow(null, message, {
             classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-bottom"],
             template:statusTemplate,
+            autoHide: !stick,
             autoHideDelay: 10000
         });
+    };
+
+    this.clearStatus = function() {
+        var freeow = $("#status-widget-pane").children().data("freeow");
+        if (freeow != null) {
+            freeow.hide();
+        } else {
+            $("#status-widget-pane").empty();
+        }
     };
 
     this.refreshImage = function(element) {

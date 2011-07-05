@@ -114,6 +114,7 @@ wm.scribble.Memory = function(board, language) {
     };
 
     var executeRequest = function(type, data, successHandler) {
+        wm.ui.showStatus(language['changeMemory'], false, true);
         $("#memoryWords").block({ message: null, overlayCSS: overlayCSS });
 
         if (data != null) {
@@ -127,6 +128,7 @@ wm.scribble.Memory = function(board, language) {
                 wm.ui.showMessage({message: result.summary, error:true});
             }
             $("#memoryWords").unblock();
+            wm.ui.clearStatus();
         });
     };
 
@@ -404,6 +406,7 @@ wm.scribble.Controls = function(board, language) {
     var blockBoard = function() {
         $(board.getBoardElement()).parent().block({ message: null, overlayCSS: overlayCSS });
         $("#boardActionsToolbar").block({ message: null, overlayCSS: overlayCSS });
+        wm.ui.showStatus(language['updatingBoard'], false, true);
     };
 
     var unblockBoard = function() {
@@ -411,6 +414,7 @@ wm.scribble.Controls = function(board, language) {
 
         $("#boardActionsToolbar").unblock();
         $(board.getBoardElement()).parent().unblock();
+        wm.ui.clearStatus();
     };
 
     var updateSelectionState = function() {
@@ -489,33 +493,33 @@ wm.scribble.Controls = function(board, language) {
         });
 
         $('#exchangeTilesPanel').dialog({
-                    title: language['exchange'],
-                    draggable:false,
-                    modal: true,
-                    resizable: false,
-                    width: 400,
-                    buttons: [
-                        {
-                            text: language['exchange'],
-                            click: function() {
-                                $(this).dialog("close");
-                                var tiles = new Array();
-                                $.each(tilesPanel.children(), function(i, tw) {
-                                    if (wm.scribble.tile.isTileSelected(tw)) {
-                                        tiles.push($(tw).data('tile'));
-                                    }
-                                });
-                                board.exchangeTiles(tiles, showMoveResult);
+            title: language['exchange'],
+            draggable:false,
+            modal: true,
+            resizable: false,
+            width: 400,
+            buttons: [
+                {
+                    text: language['exchange'],
+                    click: function() {
+                        $(this).dialog("close");
+                        var tiles = new Array();
+                        $.each(tilesPanel.children(), function(i, tw) {
+                            if (wm.scribble.tile.isTileSelected(tw)) {
+                                tiles.push($(tw).data('tile'));
                             }
-                        },
-                        {
-                            text: language['cancel'],
-                            click: function() {
-                                $(this).dialog("close");
-                            }
-                        }
-                    ]
+                        });
+                        board.exchangeTiles(tiles, showMoveResult);
+                    }
+                },
+                {
+                    text: language['cancel'],
+                    click: function() {
+                        $(this).dialog("close");
+                    }
                 }
+            ]
+        }
         )
     };
 
