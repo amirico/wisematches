@@ -1096,6 +1096,10 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
 
                             if (lastMove != null && lastMove.word != null && lastMove.word != undefined) {
                                 playboard.selectWord(lastMove.word);
+                                $(scribble).bind('mousedown', function() {
+                                    $(scribble).unbind('mousedown');
+                                    playboard.clearSelection();
+                                });
                             }
                         }
 
