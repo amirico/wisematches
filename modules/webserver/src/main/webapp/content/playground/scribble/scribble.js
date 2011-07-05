@@ -489,33 +489,33 @@ wm.scribble.Controls = function(board, language) {
         });
 
         $('#exchangeTilesPanel').dialog({
-            title: language['exchange'],
-            draggable:false,
-            modal: true,
-            resizable: false,
-            width: 400,
-            buttons: [
-                {
-                    text: language['exchange'],
-                    click: function() {
-                        $(this).dialog("close");
-                        var tiles = new Array();
-                        $.each(tilesPanel.children(), function(i, tw) {
-                            if (wm.scribble.tile.isTileSelected(tw)) {
-                                tiles.push($(tw).data('tile'));
+                    title: language['exchange'],
+                    draggable:false,
+                    modal: true,
+                    resizable: false,
+                    width: 400,
+                    buttons: [
+                        {
+                            text: language['exchange'],
+                            click: function() {
+                                $(this).dialog("close");
+                                var tiles = new Array();
+                                $.each(tilesPanel.children(), function(i, tw) {
+                                    if (wm.scribble.tile.isTileSelected(tw)) {
+                                        tiles.push($(tw).data('tile'));
+                                    }
+                                });
+                                board.exchangeTiles(tiles, showMoveResult);
                             }
-                        });
-                        board.exchangeTiles(tiles, showMoveResult);
-                    }
-                },
-                {
-                    text: language['cancel'],
-                    click: function() {
-                        $(this).dialog("close");
-                    }
+                        },
+                        {
+                            text: language['cancel'],
+                            click: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
         )
     };
 
@@ -1077,7 +1077,9 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
                         if (moves != undefined && moves.length > 0) {
                             clearSelectionImpl();
 
+                            var lastMove = null;
                             $.each(moves, function(i, move) {
+                                lastMove = move;
                                 var playerInfo = playboard.getPlayerInfo(move.player);
                                 playerInfo.points = playerInfo.points + move.points;
                                 registerBoardMove(move, false);
@@ -1086,6 +1088,10 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
                             var hand = response.data.hand;
                             if (hand != null && hand != undefined) {
                                 validateHandTile(hand);
+                            }
+
+                            if (lastMove != null && lastMove.word != null && lastMove.word != undefined) {
+                                playboard.selectWord(lastMove.word);
                             }
                         }
 
