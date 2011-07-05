@@ -28,6 +28,7 @@
 
 <script type="text/javascript">
     var memoryWords = new wm.scribble.Memory(board, {
-        "sEmptyTable": "<@message code='game.memory.empty'/>"
+        "sEmptyTable": "<@message code='game.memory.empty'/>",
+        "changeMemory": "<@message code='game.memory.changing'/>"
     });
 </script>
