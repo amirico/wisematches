@@ -74,6 +74,7 @@ wm.scribble.Memory = function(board, language) {
         memoryWords[id] = word;
         memoryTable.fnAddData(createNewRecord(id, word));
         $("#memoryClearButton").button(memoryWordsCount == 0 ? "disable" : "enable");
+        board.clearSelection();
     };
 
     var getWord = function(id) {
