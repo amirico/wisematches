@@ -47,7 +47,7 @@ wm.util.url = new function() {
 };
 
 wm.ui = new function() {
-    var activeWindows = false;
+    var activeWindows = true;
 
     var alertTemplate = function(title, message) {
         var e;
