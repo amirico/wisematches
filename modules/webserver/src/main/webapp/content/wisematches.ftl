@@ -43,5 +43,6 @@
 <#if !errorCode??>
     <#if principal??><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
 </#if>
+
 </body>
 </html>

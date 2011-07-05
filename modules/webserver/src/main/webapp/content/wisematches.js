@@ -47,6 +47,8 @@ wm.util.url = new function() {
 };
 
 wm.ui = new function() {
+    var activeWindows = false;
+
     var alertTemplate = function(title, message) {
         var e;
         e = ['<div>','<div class="content">','<h2>' + title + '</h2>','<p>' + message + '</p>','</div>','<span class="icon"></span>','<span class="close"></span>','</div>'].join("");
@@ -126,6 +128,21 @@ wm.ui = new function() {
             template:alertTemplate,
             autoHideDelay: 10000
         });
+        wm.ui.getAttention(title);
+    };
+
+    this.getAttention = function(title) {
+        if (!activeWindows) {
+            $(window).stopTime('attention-timer');
+            var documentTitle = document.title;
+            $(window).everyTime(500, 'attention-timer', function(i) {
+                if (i % 2 == 0) {
+                    document.title = "*** " + title + " ***";
+                } else {
+                    document.title = documentTitle;
+                }
+            });
+        }
     };
 
     this.showStatus = function(message, error) {
@@ -150,6 +167,19 @@ wm.ui = new function() {
     $(document).ready(function() {
         $("body").prepend($("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>"));
         $("body").prepend($("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>"));
+
+        var activeWindowTitle = document.title;
+        $(window).bind("focus", function() {
+            activeWindows = true;
+            if (activeWindowTitle != undefined) {
+                document.title = activeWindowTitle;
+            }
+            $(window).stopTime('attention-timer');
+        });
+        $(window).bind("blur", function() {
+            activeWindows = false;
+            activeWindowTitle = document.title;
+        });
     });
 };
 
