@@ -365,3 +365,7 @@
 .profile .membership div {
     padding: 5px;
 }
+
+#messagesWidget .datatables_wrapper {
+    min-height: inherit;
+}
