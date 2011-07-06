@@ -86,10 +86,12 @@
                             <#assign msg=gameMessageSource.formatJoinException(proposal, principal, locale)!""/>
                             <#if msg?has_content>
                                 <span class="game-join-error">${msg}</span>
-                                <#elseif !restricted>
-                                    <a href="/playground/scribble/join?p=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
-                                <#else>
+                                <#elseif principal.membership == "GUEST">
+                                    <span class="game-join-error"><@message code="game.join.err.guest"/></span>
+                                <#elseif restricted>
                                     <span class="game-join-error"><@message code="game.join.err.forbidden"/></span>
+                                <#else>
+                                    <a href="/playground/scribble/join?p=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
                             </#if>
                         </td>
                     </tr>
