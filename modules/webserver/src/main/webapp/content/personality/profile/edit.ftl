@@ -45,7 +45,8 @@
                 </div>
 
                 <div>
-                    <a href="javascript: wm.ui.profile.chooseProfilePhoto();"><@message code="profile.edit.photo.change.label"/></a>
+                    <a href="#"
+                       onclick="wm.ui.profile.chooseProfilePhoto()"><@message code="profile.edit.photo.change.label"/></a>
                 </div>
             </div>
         </div>
@@ -89,10 +90,10 @@
         var updateButton = $("<button>Set as default</button>").button();
 
         chooseButton.hover(function() {
-                    chooseButton.addClass("ui-state-hover");
-                }, function() {
-                    chooseButton.removeClass("ui-state-hover");
-                });
+            chooseButton.addClass("ui-state-hover");
+        }, function() {
+            chooseButton.removeClass("ui-state-hover");
+        });
 
         var updateProfileImage = function() {
             wm.ui.refreshImage($(".profile .info .photo > img"));
@@ -155,6 +156,7 @@
                     }
                 }
             });
+            return false;
         };
 
         this.chooseProfilePhoto = function() {
@@ -191,6 +193,7 @@
                     }
                 ]
             });
+            return false;
         }
     };
 
@@ -252,11 +255,11 @@
                 countryCode: {
                     type: 'select',
                     values: {
-    <#list countries as country>
-    ${country.code}: "${country.name}"<#if country_has_next>,</#if>
-    </#list>
-    }
-    }
-    })
-    ;
+                    <#list countries as country>
+                        '${country.code}': "${country.name}"<#if country_has_next>,</#if>
+                    </#list>
+                    }
+                }
+            })
+            ;
 </script>

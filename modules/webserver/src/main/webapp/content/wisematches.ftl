@@ -15,6 +15,7 @@
     <script type="text/javascript" src="/jquery/js/jquery.blockUI.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.freeow.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/content/wisematches.js"></script>
