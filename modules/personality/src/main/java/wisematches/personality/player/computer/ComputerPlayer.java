@@ -147,4 +147,8 @@ public class ComputerPlayer extends Player {
 		}
 		return res;
 	}
+
+	public static boolean isComputerPlayer(Player player) {
+		return player instanceof ComputerPlayer;
+	}
 }

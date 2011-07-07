@@ -25,5 +25,6 @@
 
     <bean id="messageManager" class="wisematches.playground.message.impl.HibernateMessageManager">
         <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="playerManager" ref="playerManager"/>
     </bean>
 </beans>
