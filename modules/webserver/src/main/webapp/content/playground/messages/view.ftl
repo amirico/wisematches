@@ -27,7 +27,7 @@
                 <thead>
                 <tr>
                     <th><input title="select all messages" type="checkbox" name="all"></th>
-                    <th>Sender/Info</th>
+                    <th>Date/Actions</th>
                     <th width="100%">Message</th>
                 </tr>
                 </thead>
@@ -35,7 +35,9 @@
                 <#list messages as m>
                 <tr>
                     <td valign="top"><input type="checkbox" name="m${m.id}"></td>
-                    <td valign="top">${m.subject!""}</td>
+                    <td valign="top">
+                    ${m.created!""}
+                    </td>
                     <td valign="top">
                         From: ${m.sender} at ${m.created?string}
                         <hr>
@@ -45,6 +47,7 @@
                 </#list>
                 </tbody>
             </table>
+            a
 
             <div>
                 <button style="margin-left: 0">
