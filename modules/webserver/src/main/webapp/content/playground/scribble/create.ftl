@@ -80,17 +80,12 @@
     }
 </script>
 
-<table width="100%">
-<tr>
-<td width="160" valign="top">
-<#include "/content/templates/advertisement.ftl">
-</td>
-<td valign="top">
+<@wm.playground>
 <div id="create-game">
 <div>
-<#if restricted>
-<@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
-</#if>
+    <#if restricted>
+    <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
+    </#if>
 
     <div class="ui-widget-header ui-corner-all shadow">
     <@message code="game.create.label"/>
@@ -152,18 +147,18 @@
                     </td>
                 </tr>
 
-            <#assign visibleOpponents = 0/>
-            <#list 1..opponentsCount as n>
-            <@spring.bind path="create.opponent${n}"/>
-                <#assign visible=spring.stringStatusValue != "no"/>
-                <#if visible><#assign visibleOpponents=visibleOpponents+1/></#if>
-                <tr id="op${n}" <#if !visible>style="display: none;"</#if>>
-                    <td></td>
-                    <td>
-                    <@wm.field path="create.opponent${n}">
-                        <input type="hidden" id="oi${n}" name="opponent${n}" value="${wm.statusValue}"/>
-                        &raquo;
-                        <span class="player">
+                <#assign visibleOpponents = 0/>
+                <#list 1..opponentsCount as n>
+                <@spring.bind path="create.opponent${n}"/>
+                    <#assign visible=spring.stringStatusValue != "no"/>
+                    <#if visible><#assign visibleOpponents=visibleOpponents+1/></#if>
+                    <tr id="op${n}" <#if !visible>style="display: none;"</#if>>
+                        <td></td>
+                        <td>
+                        <@wm.field path="create.opponent${n}">
+                            <input type="hidden" id="oi${n}" name="opponent${n}" value="${wm.statusValue}"/>
+                            &raquo;
+                            <span class="player">
                         <span id="on${n}" class="nickname">
                             <#if visible && wm.statusValue?has_content>
                                 <#assign principal=playerManager.getPlayer(wm.statusValue?number)/>
@@ -173,34 +168,34 @@
                             </#if>
                         </span>
                             </span>
-                        <#if !playRobotsOnly>
-                            <span id="wao${n}"
-                                  <#if !visible || !wm.statusValue?has_content>style="display: none;"</#if>>
+                            <#if !playRobotsOnly>
+                                <span id="wao${n}"
+                                      <#if !visible || !wm.statusValue?has_content>style="display: none;"</#if>>
                             <@message code="separator.or"/>
                                 <a href="javascript: changeOpponent(${n}, null)"><@message code="game.create.opponents.wait.human.label"/></a>
                         </span>
-                        </#if>
-                    <@message code="separator.or"/>
-                        <#if n==1>
-                            <div id="selectRobotPlayer">
-                                <a href="create.ftl#"><@message code="game.create.opponents.wait.robot.label"/></a>
-                                <ul id="robotsList">
-                                    <#list robotPlayers as robot>
-                                        <li>&raquo;
-                                            <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wm.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating}'})">
-                                            <@wm.player player=robot showType=false/>
-                                            </a>
-                                        </li>
-                                    </#list>
-                                </ul>
-                            </div>
-                            <#else>
-                                <a href="javascript: removeOpponent(${n})"><@message code="game.create.opponents.wait.clear.label"/></a>
-                        </#if>
-                    </@wm.field>
-                    </td>
-                </tr>
-            </#list>
+                            </#if>
+                        <@message code="separator.or"/>
+                            <#if n==1>
+                                <div id="selectRobotPlayer">
+                                    <a href="create.ftl#"><@message code="game.create.opponents.wait.robot.label"/></a>
+                                    <ul id="robotsList">
+                                        <#list robotPlayers as robot>
+                                            <li>&raquo;
+                                                <a href="javascript: changeOpponent(${n}, {id:'${robot.id}', name:'<@wm.message code="game.player.${robot.nickname}"/>', rating:'${robot.rating}'})">
+                                                <@wm.player player=robot showType=false/>
+                                                </a>
+                                            </li>
+                                        </#list>
+                                    </ul>
+                                </div>
+                                <#else>
+                                    <a href="javascript: removeOpponent(${n})"><@message code="game.create.opponents.wait.clear.label"/></a>
+                            </#if>
+                        </@wm.field>
+                        </td>
+                    </tr>
+                </#list>
 
                 <tr id="oia" <#if visibleOpponents==opponentsCount>style="display: none"</#if>>
                     <td></td>
@@ -249,14 +244,14 @@
                 </tr>
 -->
 
-            <#if !restricted>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button><@message code="game.create.submit"/></button>
-                    </td>
-                </tr>
-            </#if>
+                <#if !restricted>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button><@message code="game.create.submit"/></button>
+                        </td>
+                    </tr>
+                </#if>
             </table>
         </form>
     </div>
@@ -314,7 +309,4 @@
 <#--</div>-->
 <#--</div>-->
 </div>
-</td>
-<td width="160" valign="top"></td>
-</tr>
-</table>
+</@wm.playground>

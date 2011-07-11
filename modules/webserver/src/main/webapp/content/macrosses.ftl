@@ -69,6 +69,22 @@
     <#if captchaService??><@field path>${captchaService.createCaptchaScript(locale)}</@field></#if>
 </#macro>
 
+<#macro playground id="">
+<table <#if id?has_content>id="${id}"</#if> width="100%">
+    <tr>
+        <td width="160px" valign="top">
+            <#include "/content/templates/advertisement.ftl">
+        </td>
+        <td valign="top">
+            <#nested/>
+        </td>
+        <td width="160px" valign="top">
+
+        </td>
+    </tr>
+</table>
+</#macro>
+
 <#macro widget title id="" class="" style="">
 <div class="ui-widget" <#if style??>style="${style}"</#if>>
     <div class="ui-widget-header ui-corner-all shadow"><@message code=title/></div>
