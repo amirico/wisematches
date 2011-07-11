@@ -25,12 +25,12 @@ public class GameMessageSource {
 	private MessageSource messageSource;
 
 	private static final Map<Locale, DateFormat> DATE_FORMATTER = new ConcurrentHashMap<Locale, DateFormat>();
+	private static final Map<Locale, DateFormat> TIME_FORMATTER = new ConcurrentHashMap<Locale, DateFormat>();
 
 	static {
 		for (Language lang : Language.values()) {
 			DATE_FORMATTER.put(lang.locale(), DateFormat.getDateInstance(DateFormat.LONG, lang.locale()));
-//			DATE_FORMATTER.put(lang.locale(), new SimpleDateFormat("dd-MMM-yyyy HH:mm", lang.locale()));
-//			DATE_FORMATTER.put(lang.locale(), new SimpleDateFormat("MMM dd, yyyy HH:mm z", lang.locale()));
+			TIME_FORMATTER.put(lang.locale(), DateFormat.getTimeInstance(DateFormat.SHORT, lang.locale()));
 		}
 	}
 
@@ -50,6 +50,10 @@ public class GameMessageSource {
 
 	public String formatDate(Date date, Locale locale) {
 		return DATE_FORMATTER.get(locale).format(date);
+	}
+
+	public String formatTime(Date date, Locale locale) {
+		return TIME_FORMATTER.get(locale).format(date);
 	}
 
 	public String formatSpentTime(GameBoard board, Locale locale) {
