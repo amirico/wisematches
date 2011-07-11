@@ -1,6 +1,19 @@
 <#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
 <#include "/core.ftl">
 
+
+<style type="text/css">
+    #messages tr .test {
+        color: #cccccc;
+        text-decoration: underline;
+    }
+
+    #messages tr:hover .test {
+        color: inherit;
+        text-decoration: underline;
+    }
+</style>
+
 <@wm.jstable/>
 
 <@wm.playground id="messagesWidget">
@@ -22,21 +35,40 @@
     <thead>
     <tr>
         <th><input title="select all messages" type="checkbox" name="all"></th>
-        <th>Date/Actions</th>
+        <th>Date</th>
         <th width="100%">Message</th>
     </tr>
     </thead>
     <tbody>
         <#list messages as m>
         <tr>
-            <td valign="top"><input type="checkbox" name="m${m.id}"></td>
             <td valign="top">
-            ${m.created!""}
+                <input type="checkbox" name="m${m.id}">
             </td>
             <td valign="top">
-                From: ${m.sender} at ${m.created?string}
-                <hr>
-            ${m.body!""}
+                <div style="white-space: nowrap;">${gameMessageSource.formatDate(m.created, locale)}</div>
+                <div style="white-space: nowrap;">${gameMessageSource.formatTime(m.created, locale)}</div>
+            </td>
+            <td valign="top" width="100%">
+                <#if m.sender != 0>
+                    <div class="ui-state-default" style="background: none; border-width: 0; border-bottom-width: 2px">
+                        From: <@wm.player player=playerManager.getPlayer(m.sender)/>
+                    </div>
+                </#if>
+                <div>
+                ${m.text}
+                </div>
+
+                <div class="ui-state-default" style="background: none; border: none;">
+                    <div style="float: right;">
+                        <a class="test" href="">Replay</a>
+                        <a class="test" href="">Ignore</a>
+                        <a class="test" href="">Delete</a>
+                    </div>
+                    <div>
+                        <a class="test" href="">Previous Message</a>
+                    </div>
+                </div>
             </td>
         </tr>
         </#list>
