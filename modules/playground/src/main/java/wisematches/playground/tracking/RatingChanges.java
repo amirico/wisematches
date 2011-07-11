@@ -38,6 +38,10 @@ public final class RatingChanges implements Iterable<RatingChange> {
 		return getRatingChange(personality.getId());
 	}
 
+	public Collection toCollection() {
+		return changeMap.values();
+	}
+
 	@Override
 	public Iterator<RatingChange> iterator() {
 		return changeMap.values().iterator();

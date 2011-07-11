@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
-<#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.server.standing.rating.RatingChange>" -->
+<#-- @ftlvariable name="ratings" type="wisematches.playground.tracking.RatingChanges" -->
 
 <#include "/core.ftl">
 
@@ -44,7 +44,7 @@
 
     <#if ratings??>
         ratings: [
-            <#list ratings as rating>
+            <#list ratings.toCollection() as rating>
                 {playerId: ${rating.playerId}, boardId: ${rating.boardId}, oldRating: ${rating.oldRating}, newRating: ${rating.newRating}, ratingDelta: ${rating.ratingDelta}, points: ${rating.points}}<#if rating_has_next>,</#if>
             </#list>
         ],
@@ -83,7 +83,7 @@
         }
 
     <#assign playerHand=board.getPlayerHand(principal.getId())!""/>
-    <#if playerHand??>
+    <#if playerHand?has_content>
         ,
         privacy: {
             handTiles: [<#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]

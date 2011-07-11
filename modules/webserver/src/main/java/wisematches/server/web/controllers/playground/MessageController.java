@@ -5,9 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -18,7 +19,6 @@ import wisematches.playground.message.MessageManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.server.web.controllers.AbstractPlayerController;
-import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.form.MessageForm;
 
@@ -45,44 +45,59 @@ public class MessageController extends AbstractPlayerController {
 		return "/content/playground/messages/view";
 	}
 
-	@RequestMapping("sent")
+	@RequestMapping("history")
 	public String showSentForm(Model model) {
-		return "/content/playground/messages/sent";
+		return "/content/playground/messages/history";
+	}
+
+	@RequestMapping("create")
+	public String createMessage(@RequestParam("p") long pid, MessageForm form, Model model, Locale locale) {
+		final Player player = playerManager.getPlayer(pid);
+		if (player == null) {
+//			result.reject("msgRecipient", "unknown");
+		}
+
+		if (ComputerPlayer.isComputerPlayer(player)) {
+//			result.reject("msgRecipient", "computer");
+		}
+		model.addAttribute("form", form);
+		model.addAttribute("recipient", player);
+		return "/content/playground/messages/create";
 	}
 
 	@RequestMapping(value = "send", method = RequestMethod.POST)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse sendMessage(@RequestBody final MessageForm form, Locale locale) {
+	public String sendMessage(MessageForm form, BindingResult result, Model model, Locale locale) {
 		final Player player = playerManager.getPlayer(form.getMsgRecipient());
 		if (player == null) {
-			return ServiceResponse.FAILURE;
+			result.reject("msgRecipient", "unknown");
 		}
 
 		if (ComputerPlayer.isComputerPlayer(player)) {
-			return ServiceResponse.FAILURE;
+			result.reject("msgRecipient", "computer");
 		}
 
 		final Personality personality = getPersonality();
 		if (form.getMsgOriginal() != 0) {
 			final Message m = messageManager.getMessage(form.getMsgOriginal());
 			if (m == null) {
-				return ServiceResponse.FAILURE;
+				result.reject("msgOriginal", "unknown");
 			}
 			messageManager.replayMessage(personality, m, form.getMsgText());
 		} else if (form.getMsgBoard() != 0) {
 			try {
 				final ScribbleBoard board = boardManager.openBoard(form.getMsgBoard());
 				if (board == null) {
-					return ServiceResponse.FAILURE;
+					result.reject("msgBoard", "unknown");
 				}
 				messageManager.sendMessage(personality, player, form.getMsgText(), board);
 			} catch (BoardLoadingException e) {
-				return ServiceResponse.FAILURE;
+				result.reject("msgBoard", "unknown");
 			}
 		} else {
 			messageManager.sendMessage(personality, player, form.getMsgText());
 		}
-		return ServiceResponse.SUCCESS;
+		return createMessage(form.getMsgRecipient(), form, model, locale);
 	}
 
 	@Autowired
