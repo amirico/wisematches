@@ -4,10 +4,10 @@ package wisematches.server.web.controllers.playground.form;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class MessageForm {
-	private long msgRecipient;
 	private String msgText;
-	private long msgOriginal;
 	private long msgBoard;
+	private long msgOriginal;
+	private long msgRecipient;
 
 	public MessageForm() {
 	}
