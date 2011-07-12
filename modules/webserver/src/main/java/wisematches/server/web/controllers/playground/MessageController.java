@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -19,6 +20,7 @@ import wisematches.playground.message.MessageManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.server.web.controllers.AbstractPlayerController;
+import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.form.MessageForm;
 
@@ -63,6 +65,43 @@ public class MessageController extends AbstractPlayerController {
 		model.addAttribute("form", form);
 		model.addAttribute("recipient", player);
 		return "/content/playground/messages/create";
+	}
+
+	@RequestMapping("replay")
+	public String replayMessage(@RequestParam("m") long mid, MessageForm form, BindingResult result,
+								Model model, Locale locale) {
+		final Message message = messageManager.getMessage(mid);
+		if (message == null) {
+			result.reject("unknown.message");
+		} else {
+			final Personality personality = getPersonality();
+			if (message.getRecipient() != personality.getId() || message.getSender() != personality.getId()) {
+				result.reject("not.your.message");
+			}
+		}
+
+		if (!result.hasErrors()) {
+			final Player player = playerManager.getPlayer(message.getSender());
+			model.addAttribute("recipient", player);
+		}
+		model.addAttribute("form", form);
+		return "/content/playground/messages/create";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "remove", method = RequestMethod.POST)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse removeMessage(@RequestParam("m") long mid) {
+		final Message message = messageManager.getMessage(mid);
+		if (message == null) {
+			return ServiceResponse.failure("unknown message");
+		}
+
+		final Personality personality = getPersonality();
+		if (message.getRecipient() != personality.getId()) {
+			return ServiceResponse.failure("not your message");
+		}
+		return ServiceResponse.SUCCESS;
 	}
 
 	@RequestMapping(value = "send", method = RequestMethod.POST)

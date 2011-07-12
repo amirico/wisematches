@@ -128,6 +128,72 @@ public class GameMessageSource {
 		return b.toString();
 	}
 
+	/**
+	 * Taken from here: http://stackoverflow.com/questions/1224996/java-convert-string-to-html-string
+	 *
+	 * @param string
+	 * @return
+	 */
+	public static String stringToHTMLString(String string) {
+		final StringBuilder sb = new StringBuilder(string.length());
+		// true if last char was blank
+		boolean lastWasBlankChar = false;
+		int len = string.length();
+		char c;
+
+		for (int i = 0; i < len; i++) {
+			c = string.charAt(i);
+			if (c == ' ') {
+				// blank gets extra work,
+				// this solves the problem you get if you replace all
+				// blanks with &nbsp;, if you do that you loss
+				// word breaking
+				if (lastWasBlankChar) {
+					lastWasBlankChar = false;
+					sb.append("&nbsp;");
+				} else {
+					lastWasBlankChar = true;
+					sb.append(' ');
+				}
+			} else {
+				lastWasBlankChar = false;
+				//
+				// HTML Special Chars
+				switch (c) {
+					case '"':
+						sb.append("&quot;");
+						break;
+					case '&':
+						sb.append("&amp;");
+						break;
+					case '<':
+						sb.append("&lt;");
+						break;
+					case '>':
+						sb.append("&gt;");
+						break;
+					case '\n':
+						// Handle Newline
+						sb.append("<br>");
+						break;
+					default:
+						int ci = 0xffff & c;
+						if (ci < 160)
+							// nothing special only 7 Bit
+							sb.append(c);
+						else {
+							// Not 7 Bit use the unicode system
+							sb.append("&#");
+							sb.append(String.valueOf(ci));
+							sb.append(';');
+						}
+						break;
+				}
+			}
+		}
+		return sb.toString();
+	}
+
 	public String formatJoinException(GameProposal<? extends GameSettings> proposal, Player player, Locale locale) {
 		try {
 			proposal.isSuitablePlayer(player);

@@ -146,7 +146,8 @@ wm.ui = new function() {
     };
 
     this.showStatus = function(message, error, stick) {
-        wm.ui.clearStatus();
+//        wm.ui.clearStatus();
+        $("#status-widget-pane").empty();
 
         if (stick == undefined) {
             stick = false;
