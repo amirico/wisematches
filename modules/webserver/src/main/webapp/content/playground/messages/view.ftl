@@ -32,7 +32,6 @@
     }
 
     #messages tr.odd td, #messages tr.even td {
-        text-align: left;
         vertical-align: top;
         border-bottom-style: solid;
     }
@@ -43,7 +42,7 @@
 <@wm.playground id="messagesWidget">
 <div>
     <div style="float: left;">
-        <button style="margin-left: 0">
+        <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
             Delete Selected
         </button>
     </div>
@@ -59,7 +58,7 @@
     <thead>
     <tr>
         <th>
-            <input title="select all messages" type="checkbox" id="messageAll" name="messageAll" value="true"
+            <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
                    onchange="wm.messages.selectAll()">
         </th>
         <th>From/Date</th>
@@ -70,7 +69,7 @@
         <#list messages as m>
         <tr id="message${m.id}" class="message ui-state-default">
             <td class="message-checkbox">
-                <input type="checkbox" name="msg${m.id}" value="true">
+                <input type="checkbox" name="removeList" value="${m.id}">
             </td>
             <td>
                 <#if m.sender != 0>
@@ -103,7 +102,7 @@
                         &nbsp;
                     </#if>
                     <a title="Delete the message"
-                       href="#" onclick="wm.messages.remove(${m.id})">Delete</a>
+                       href="#" onclick="wm.messages.remove([${m.id}])">Delete</a>
                 </div>
             </td>
         </tr>
@@ -112,7 +111,7 @@
 </table>
 
 <div>
-    <button style="margin-left: 0">
+    <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
         Delete Selected
     </button>
 </div>
@@ -134,16 +133,30 @@
 
     wm.messages = new function() {
         this.selectAll = function() {
-            $(".message-checkbox input").prop("checked", $("#messageAll").prop("checked"));
+            $(".message-checkbox input").prop("checked", $("#removeAll").prop("checked"));
         };
 
-        this.remove = function(id) {
-            wm.ui.showStatus("Removing the message. Please wait...", false, true);
-            $.post('remove.ajax?m=' + id)
-                    .success(
-                    function(response) {
+        this.removeSelected = function() {
+            var selected = new Array();
+            $(".message-checkbox input:checked").each(function(index, el) {
+                selected.push($(el).val());
+            });
+            wm.messages.remove(selected);
+        };
+
+        this.remove = function(msgs) {
+            wm.ui.showStatus("Removing messages. Please wait...", false, true);
+            $.ajax('remove.ajax', {
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data:  {'messages[]': msgs}
+            })
+                    .success(function(response) {
                         if (response.success) {
-                            $('#example').dataTable().fnDeleteRow($("#messages #message" + id).get(0));
+                            var dataTable = $('#messages').dataTable();
+                            $.each(msgs, function(i, v) {
+                                dataTable.fnDeleteRow($("#messages #message" + v).get(0));
+                            });
                             wm.ui.showStatus("Message has been removed");
                         } else {
                             wm.ui.showStatus("Message can't be removed", true, false);

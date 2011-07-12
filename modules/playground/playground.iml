@@ -74,6 +74,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:3.1.0.BUILD-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:3.1.0.RC2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.1.0.RC2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-web:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.6.10" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.6.10" level="project" />
     <orderEntry type="library" name="Maven: org.openid4java:openid4java-nodeps:0.9.6" level="project" />

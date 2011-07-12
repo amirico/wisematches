@@ -1,3 +1,7 @@
+#game-toolbar .ui-buttonset {
+    margin-right: 0;
+}
+
 .restriction {
     padding: 5px;
 }
