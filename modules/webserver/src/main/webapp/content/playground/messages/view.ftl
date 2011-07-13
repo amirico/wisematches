@@ -1,6 +1,7 @@
 <#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
 <#include "/core.ftl">
 
+<#include "/content/playground/ignores/scriplet.ftl">
 
 <style type="text/css">
     .message {
@@ -94,11 +95,9 @@
                                href="#">Previous Message</a>
                         </#if>
                         &nbsp;&nbsp;&nbsp;
-                        <a title="Report abuse"
-                           href="#">Abuse</a>
+                        <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">Abuse</a>
                         &nbsp;
-                        <a title="Add the player to ignore list"
-                           href="#">Ignore</a>
+                    <@ignore_link pid=m.sender>Ignore</@ignore_link>
                         &nbsp;
                     </#if>
                     <a title="Delete the message"
@@ -132,6 +131,17 @@
     });
 
     wm.messages = new function() {
+        this.reportAbuse = function(id) {
+            wm.ui.showStatus("Sending abuse report. Please wait...");
+            $.post('/playground/messages/abuse.ajax?m=' + id, function(result) {
+                if (result.success) {
+                    wm.ui.showStatus("Abuse report has been sent");
+                } else {
+                    wm.ui.showStatus(result.summary, true);
+                }
+            });
+        };
+
         this.selectAll = function() {
             $(".message-checkbox input").prop("checked", $("#removeAll").prop("checked"));
         };

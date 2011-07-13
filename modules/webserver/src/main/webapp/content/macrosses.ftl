@@ -72,13 +72,13 @@
 <#macro playground id="">
 <table <#if id?has_content>id="${id}"</#if> width="100%">
     <tr>
-        <td width="160px" valign="top">
+        <td width="165px" valign="top" align="left">
             <#include "/content/templates/advertisement.ftl">
         </td>
         <td valign="top">
             <#nested/>
         </td>
-        <td width="160px" valign="top">
+        <td width="165px" valign="top" align="right">
 
         </td>
     </tr>
