@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -25,10 +22,10 @@ import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailService;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
-import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.form.MessageForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -39,158 +36,199 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/messages")
 public class MessageController extends AbstractPlayerController {
-	private MailService mailService;
-	private PlayerManager playerManager;
-	private MessageManager messageManager;
-	private GameMessageSource messageSource;
-	private ScribbleBoardManager boardManager;
+    private MailService mailService;
+    private PlayerManager playerManager;
+    private MessageManager messageManager;
+    private GameMessageSource messageSource;
+    private ScribbleBoardManager boardManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
+    private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
 
-	public MessageController() {
-	}
+    public MessageController() {
+    }
 
-	@RequestMapping("view")
-	public String showPlayboard(Model model) throws UnknownEntityException {
-		final Player principal = getPrincipal();
+    @RequestMapping("view")
+    public String showPlayboard(Model model) {
+        model.addAttribute("messages", messageManager.getMessages(getPrincipal()));
+        return "/content/playground/messages/view";
+    }
 
-		model.addAttribute("messages", messageManager.getMessages(principal));
-		return "/content/playground/messages/view";
-	}
+    @RequestMapping("create")
+    public String createMessage(@RequestParam("p") long pid, Model model,
+                                @ModelAttribute("form") MessageForm form, BindingResult result) {
+        final Player player = playerManager.getPlayer(pid);
+        if (player == null || ComputerPlayer.isComputerPlayer(player)) {
+            result.rejectValue("msgRecipient", "messages.err.recipient");
+        }
+        model.addAttribute("recipient", player);
+        return "/content/playground/messages/create";
+    }
 
-	@RequestMapping("create")
-	public String createMessage(@RequestParam("p") long pid, MessageForm form, Model model, Locale locale) {
-		final Player player = playerManager.getPlayer(pid);
-		if (player == null) {
-//			result.reject("msgRecipient", "unknown");
-		}
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RequestMapping(value = "create", method = RequestMethod.POST)
+    public String createMessageAction(Model model,
+                                      @ModelAttribute("form") @Valid MessageForm form, BindingResult result) {
+        final Player player = playerManager.getPlayer(form.getMsgRecipient());
+        if (player == null || ComputerPlayer.isComputerPlayer(player)) {
+            result.rejectValue("msgRecipient", "messages.err.recipient");
+        }
 
-		if (ComputerPlayer.isComputerPlayer(player)) {
-//			result.reject("msgRecipient", "computer");
-		}
-		model.addAttribute("form", form);
-		model.addAttribute("recipient", player);
-		return "/content/playground/messages/create";
-	}
+        final Message originalMessage = messageManager.getMessage(form.getMsgOriginal());
+        if (originalMessage == null) {
+            result.rejectValue("msgRecipient", "messages.err.original");
+        } else {
 
-	@RequestMapping("replay")
-	public String replayMessage(@RequestParam("m") long mid, MessageForm form, BindingResult result,
-								Model model, Locale locale) {
-		final Message message = messageManager.getMessage(mid);
-		if (message == null) {
-			result.reject("unknown.message");
-		} else {
-			final Personality personality = getPersonality();
-			if (message.getRecipient() != personality.getId() || message.getSender() != personality.getId()) {
-				result.reject("not.your.message");
-			}
-		}
+        }
 
-		if (!result.hasErrors()) {
-			final Player player = playerManager.getPlayer(message.getSender());
-			model.addAttribute("recipient", player);
-		}
-		model.addAttribute("form", form);
-		return "/content/playground/messages/create";
-	}
+        return createMessage(form.getMsgRecipient(), model, form, result);
+/*
 
-	@ResponseBody
-	@RequestMapping("abuse")
-	public ServiceResponse reportAbuse(@RequestParam("m") long mid, Locale locale) {
-		final Message message = messageManager.getMessage(mid);
-		if (message != null) {
-			if (message.getRecipient() == getPrincipal().getId()) {
-				try {
-					mailService.sendSupportRequest("Abuse report", "game/abuse", Collections.singletonMap("message", mid));
-					return ServiceResponse.success();
-				} catch (MailException e) {
-					log.error("Abuse report can't be sent for message: " + mid, e);
-					return ServiceResponse.failure(messageSource.getMessage("messages.abuse.err.system", locale));
-				}
-			} else {
-				return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
-			}
-		} else {
-			return ServiceResponse.failure(messageSource.getMessage("messages.err.unknown", locale));
-		}
-	}
 
-	@ResponseBody
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "remove", method = RequestMethod.POST)
-	public ServiceResponse removeMessage(@RequestParam(value = "messages[]") List<Long> removeList) {
-		final long principal = getPrincipal().getId();
-		for (Long mid : removeList) {
-			final Message message = messageManager.getMessage(mid);
-			if (message != null && message.getRecipient() == principal) {
-				messageManager.removeMessage(mid);
-			}
-		}
-		return ServiceResponse.SUCCESS;
-	}
+        final Personality personality = getPersonality();
+        if (form.getMsgOriginal() != 0) {
+            if (m == null) {
+                result.reject("msgOriginal", "unknown");
+            }
+            messageManager.replayMessage(personality, m, form.getMsgText());
+            return replayMessage(form.getMsgOriginal(), model, form, result);
+        } else if (form.getMsgBoard() != 0) {
+            try {
+                final ScribbleBoard board = boardManager.openBoard(form.getMsgBoard());
+                if (board == null) {
+                    result.reject("msgBoard", "unknown");
+                }
+                messageManager.sendMessage(personality, player, form.getMsgText(), board);
+            } catch (BoardLoadingException e) {
+                result.reject("msgBoard", "unknown");
+            }
+            return createMessage(form.getMsgRecipient(), model, form, result);
+        } else {
+            messageManager.sendMessage(personality, player, form.getMsgText());
+        }
+*/
+    }
 
-	@RequestMapping(value = "send", method = RequestMethod.POST)
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String sendMessage(MessageForm form, BindingResult result, Model model, Locale locale) {
-		final Player player = playerManager.getPlayer(form.getMsgRecipient());
-		if (player == null) {
-			result.reject("msgRecipient", "unknown");
-		}
+    @RequestMapping("replay")
+    public String replayMessage(@RequestParam("m") long mid, Model model,
+                                @ModelAttribute("form") MessageForm form, BindingResult result) {
+        final Message message = messageManager.getMessage(mid);
+        if (message == null) {
+            result.reject("unknown.message");
+        } else {
+            final Personality personality = getPersonality();
+            if (message.getRecipient() != personality.getId() || message.getSender() != personality.getId()) {
+                result.reject("not.your.message");
+            }
+        }
 
-		if (ComputerPlayer.isComputerPlayer(player)) {
-			result.reject("msgRecipient", "computer");
-		}
+        if (!result.hasErrors()) {
+            final Player player = playerManager.getPlayer(message.getSender());
+            model.addAttribute("recipient", player);
+        }
+        model.addAttribute("form", form);
+        return "/content/playground/messages/create";
+    }
 
-		final Personality personality = getPersonality();
-		if (form.getMsgOriginal() != 0) {
-			final Message m = messageManager.getMessage(form.getMsgOriginal());
-			if (m == null) {
-				result.reject("msgOriginal", "unknown");
-			}
-			messageManager.replayMessage(personality, m, form.getMsgText());
-		} else if (form.getMsgBoard() != 0) {
-			try {
-				final ScribbleBoard board = boardManager.openBoard(form.getMsgBoard());
-				if (board == null) {
-					result.reject("msgBoard", "unknown");
-				}
-				messageManager.sendMessage(personality, player, form.getMsgText(), board);
-			} catch (BoardLoadingException e) {
-				result.reject("msgBoard", "unknown");
-			}
-		} else {
-			messageManager.sendMessage(personality, player, form.getMsgText());
-		}
-		return createMessage(form.getMsgRecipient(), form, model, locale);
-	}
+    @ResponseBody
+    @RequestMapping("abuse")
+    public ServiceResponse reportAbuse(@RequestParam("m") long mid, Locale locale) {
+        final Message message = messageManager.getMessage(mid);
+        if (message != null) {
+            if (message.getRecipient() == getPrincipal().getId()) {
+                try {
+                    mailService.sendSupportRequest("Abuse report", "game/abuse", Collections.singletonMap("message", mid));
+                    return ServiceResponse.success();
+                } catch (MailException e) {
+                    log.error("Abuse report can't be sent for message: " + mid, e);
+                    return ServiceResponse.failure(messageSource.getMessage("messages.abuse.err.system", locale));
+                }
+            } else {
+                return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
+            }
+        } else {
+            return ServiceResponse.failure(messageSource.getMessage("messages.err.unknown", locale));
+        }
+    }
 
-	@Autowired
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public ServiceResponse removeMessage(@RequestParam(value = "messages[]") List<Long> removeList) {
+        final long principal = getPrincipal().getId();
+        for (Long mid : removeList) {
+            final Message message = messageManager.getMessage(mid);
+            if (message != null && message.getRecipient() == principal) {
+                messageManager.removeMessage(mid);
+            }
+        }
+        return ServiceResponse.SUCCESS;
+    }
 
-	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
-	}
+    @RequestMapping(value = "send", method = RequestMethod.POST)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String sendMessage(Model model,
+                              @ModelAttribute("form") @Valid MessageForm form, BindingResult result) {
+        final Player player = playerManager.getPlayer(form.getMsgRecipient());
+        if (player == null) {
+            result.reject("msgRecipient", "unknown");
+        }
 
-	@Autowired
-	public void setMessageManager(MessageManager messageManager) {
-		this.messageManager = messageManager;
-	}
+        if (ComputerPlayer.isComputerPlayer(player)) {
+            result.reject("msgRecipient", "computer");
+        }
 
-	@Autowired
-	public void setMessageSource(GameMessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
+        final Personality personality = getPersonality();
+        if (form.getMsgOriginal() != 0) {
+            final Message m = messageManager.getMessage(form.getMsgOriginal());
+            if (m == null) {
+                result.reject("msgOriginal", "unknown");
+            }
+            messageManager.replayMessage(personality, m, form.getMsgText());
+            return replayMessage(form.getMsgOriginal(), model, form, result);
+        } else if (form.getMsgBoard() != 0) {
+            try {
+                final ScribbleBoard board = boardManager.openBoard(form.getMsgBoard());
+                if (board == null) {
+                    result.reject("msgBoard", "unknown");
+                }
+                messageManager.sendMessage(personality, player, form.getMsgText(), board);
+            } catch (BoardLoadingException e) {
+                result.reject("msgBoard", "unknown");
+            }
+            return createMessage(form.getMsgRecipient(), model, form, result);
+        } else {
+            messageManager.sendMessage(personality, player, form.getMsgText());
+            return createMessage(form.getMsgRecipient(), model, form, result);
+        }
+    }
 
-	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
-		this.boardManager = boardManager;
-	}
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
 
-	@Override
-	public String getHeaderTitle() {
-		return "title.messages";
-	}
+    @Autowired
+    public void setPlayerManager(PlayerManager playerManager) {
+        this.playerManager = playerManager;
+    }
+
+    @Autowired
+    public void setMessageManager(MessageManager messageManager) {
+        this.messageManager = messageManager;
+    }
+
+    @Autowired
+    public void setMessageSource(GameMessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    @Autowired
+    public void setBoardManager(ScribbleBoardManager boardManager) {
+        this.boardManager = boardManager;
+    }
+
+    @Override
+    public String getHeaderTitle() {
+        return "title.messages";
+    }
 }
