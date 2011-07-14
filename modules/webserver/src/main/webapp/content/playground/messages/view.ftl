@@ -1,43 +1,7 @@
 <#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
 <#include "/core.ftl">
 
-<#include "/content/playground/ignores/scriplet.ftl">
-
-<style type="text/css">
-    .message {
-        font-weight: normal;
-        border: none;
-    }
-
-    .message-text {
-        text-align: justify;
-    }
-
-    .message-date {
-        white-space: nowrap;
-    }
-
-    .message-controls {
-        float: right;
-        font-weight: bold;
-    }
-
-    #messages tr .message-controls a {
-        color: #cccccc;
-        text-decoration: underline;
-    }
-
-    #messages tr:hover .message-controls a {
-        color: inherit;
-        text-decoration: underline;
-    }
-
-    #messages tr.odd td, #messages tr.even td {
-        vertical-align: top;
-        border-bottom-style: solid;
-    }
-</style>
-
+<#include "/content/playground/blacklist/scriplet.ftl">
 <@wm.jstable/>
 
 <@wm.playground id="messagesWidget">
@@ -97,7 +61,7 @@
                         &nbsp;&nbsp;&nbsp;
                         <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">Abuse</a>
                         &nbsp;
-                    <@ignore_link pid=m.sender>Ignore</@ignore_link>
+                    <@ignore_link pid=m.sender callback="wm.messages.clearIgnored">Ignore</@ignore_link>
                         &nbsp;
                     </#if>
                     <a title="Delete the message"
@@ -131,6 +95,10 @@
     });
 
     wm.messages = new function() {
+        this.clearIgnored = function(pid) {
+            alert('adasd');
+        };
+
         this.reportAbuse = function(id) {
             wm.ui.showStatus("Sending abuse report. Please wait...");
             $.post('/playground/messages/abuse.ajax?m=' + id, function(result) {

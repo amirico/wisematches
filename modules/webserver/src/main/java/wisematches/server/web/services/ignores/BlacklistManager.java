@@ -13,7 +13,7 @@ public interface BlacklistManager {
 	 *
 	 * @param person  the person who wants add another one to black list
 	 * @param whom	the person who should be added to blacklist.
-	 * @param comment
+	 * @param comment the ignore comment
 	 */
 	void addPlayer(Personality person, Personality whom, String comment);
 
