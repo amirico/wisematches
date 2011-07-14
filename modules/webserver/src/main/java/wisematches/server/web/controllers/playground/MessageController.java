@@ -14,6 +14,7 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageManager;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -40,6 +41,7 @@ public class MessageController extends AbstractPlayerController {
     private PlayerManager playerManager;
     private MessageManager messageManager;
     private GameMessageSource messageSource;
+    private BlacklistManager blacklistManager;
     private ScribbleBoardManager boardManager;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
@@ -57,10 +59,13 @@ public class MessageController extends AbstractPlayerController {
     public String createMessage(@RequestParam("p") long pid, Model model,
                                 @ModelAttribute("form") MessageForm form, BindingResult result) {
         final Player player = playerManager.getPlayer(pid);
-        if (player == null || ComputerPlayer.isComputerPlayer(player)) {
+        if (blacklistManager.isIgnored(getPersonality(), player)) {
+            result.rejectValue("msgRecipient", "messages.err.ignored");
+        } else if (player == null || ComputerPlayer.isComputerPlayer(player)) {
             result.rejectValue("msgRecipient", "messages.err.recipient");
+        } else {
+            model.addAttribute("recipient", player);
         }
-        model.addAttribute("recipient", player);
         return "/content/playground/messages/create";
     }
 
@@ -79,33 +84,7 @@ public class MessageController extends AbstractPlayerController {
         } else {
 
         }
-
         return createMessage(form.getMsgRecipient(), model, form, result);
-/*
-
-
-        final Personality personality = getPersonality();
-        if (form.getMsgOriginal() != 0) {
-            if (m == null) {
-                result.reject("msgOriginal", "unknown");
-            }
-            messageManager.replayMessage(personality, m, form.getMsgText());
-            return replayMessage(form.getMsgOriginal(), model, form, result);
-        } else if (form.getMsgBoard() != 0) {
-            try {
-                final ScribbleBoard board = boardManager.openBoard(form.getMsgBoard());
-                if (board == null) {
-                    result.reject("msgBoard", "unknown");
-                }
-                messageManager.sendMessage(personality, player, form.getMsgText(), board);
-            } catch (BoardLoadingException e) {
-                result.reject("msgBoard", "unknown");
-            }
-            return createMessage(form.getMsgRecipient(), model, form, result);
-        } else {
-            messageManager.sendMessage(personality, player, form.getMsgText());
-        }
-*/
     }
 
     @RequestMapping("replay")
@@ -225,6 +204,11 @@ public class MessageController extends AbstractPlayerController {
     @Autowired
     public void setBoardManager(ScribbleBoardManager boardManager) {
         this.boardManager = boardManager;
+    }
+
+    @Autowired
+    public void setBlacklistManager(BlacklistManager blacklistManager) {
+        this.blacklistManager = blacklistManager;
     }
 
     @Override

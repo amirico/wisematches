@@ -21,10 +21,6 @@
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
-    <bean id="blacklistManager" class="wisematches.server.web.services.ignores.impl.HibernateBlacklistManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
     <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
