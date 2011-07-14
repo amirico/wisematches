@@ -55,7 +55,7 @@ public class HibernateBlacklistManager extends HibernateDaoSupport implements Bl
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY)
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public boolean isIgnored(Personality person, Personality whom) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
@@ -73,7 +73,7 @@ public class HibernateBlacklistManager extends HibernateDaoSupport implements Bl
 
 	@Override
 	@SuppressWarnings("unchecked")
-	@Transactional(propagation = Propagation.MANDATORY)
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public Collection<BlacklistRecord> getBlacklist(final Personality person) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");

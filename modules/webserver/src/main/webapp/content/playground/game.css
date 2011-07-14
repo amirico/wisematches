@@ -370,6 +370,39 @@
     padding: 5px;
 }
 
-#messagesWidget .datatables_wrapper {
+#messagesWidget .datatables_wrapper, #blacklistWidget .datatables_wrapper {
     min-height: inherit;
+}
+
+#messages tr .message-controls a, #blacklist tr .blacklist-controls a {
+    color: #cccccc;
+    text-decoration: underline;
+}
+
+#messages tr:hover .message-controls a, #blacklist tr:hover .blacklist-controls a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+#messages tr.odd td, #messages tr.even td, #blacklist tr.odd td, #blacklist tr.even td {
+    vertical-align: top;
+    border-bottom-style: solid;
+}
+
+.message, .blacklist {
+    font-weight: normal;
+    border: none;
+}
+
+.message-text, .blacklist-text {
+    text-align: justify;
+}
+
+.message-date, .blacklist-date {
+    white-space: nowrap;
+}
+
+.message-controls, .blacklist-controls {
+    float: right;
+    font-weight: bold;
 }
