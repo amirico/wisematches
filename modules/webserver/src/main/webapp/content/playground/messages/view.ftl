@@ -15,7 +15,7 @@
     <div style="float: right;">
         <a href="/playground/messages/sent">Sent messages</a>
         •
-        <a href="/playground/players/ignores">My ignore list</a>
+        <a href="/playground/blacklist/view">My ignore list</a>
     </div>
 </div>
 
@@ -74,7 +74,8 @@
 </table>
 
 <div>
-    <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
+    <button style="margin-left: 0" onclick="wm.messages.clearIgnored(1001);">
+    <#--<button style="margin-left: 0" onclick="wm.messages.removeSelected();">-->
         Delete Selected
     </button>
 </div>
@@ -96,7 +97,12 @@
 
     wm.messages = new function() {
         this.clearIgnored = function(pid) {
-            alert('adasd');
+            var ignores = $("#messages .player a[href$='" + pid + "']").closest('tr');
+            var dataTable = $('#messages').dataTable();
+            $.each(ignores, function(i, v) {
+                dataTable.fnDeleteRow(v);
+            });
+            return false;
         };
 
         this.reportAbuse = function(id) {
@@ -108,10 +114,12 @@
                     wm.ui.showStatus(result.summary, true);
                 }
             });
+            return false;
         };
 
         this.selectAll = function() {
             $(".message-checkbox input").prop("checked", $("#removeAll").prop("checked"));
+            return false;
         };
 
         this.removeSelected = function() {
@@ -120,6 +128,7 @@
                 selected.push($(el).val());
             });
             wm.messages.remove(selected);
+            return false;
         };
 
         this.remove = function(msgs) {

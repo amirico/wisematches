@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="blacklist" type="java.util.Collection<wisematches.server.web.services.ignores.BlacklistRecord>" -->
+<#-- @ftlvariable name="blacklist" type="java.util.Collection<wisematches.playground.blacklist.BlacklistRecord>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>
@@ -78,6 +78,7 @@
     wm.blacklist = new function() {
         this.selectAll = function() {
             $(".blacklist-checkbox input").prop("checked", $("#removeAll").prop("checked"));
+            return false;
         };
 
         this.remove = function(ids) {
@@ -110,6 +111,7 @@
                 selected.push($(el).val());
             });
             wm.messages.remove(selected);
+            return false;
         };
     };
 </script>
