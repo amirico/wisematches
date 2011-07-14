@@ -11,10 +11,11 @@ public interface BlacklistManager {
 	/**
 	 * Adds a {@code whom} personality to the {@code person} blacklist
 	 *
-	 * @param person the person who wants add another one to black list
-	 * @param whom   the person who should be added to blacklist.
+	 * @param person  the person who wants add another one to black list
+	 * @param whom	the person who should be added to blacklist.
+	 * @param comment
 	 */
-	void addPlayer(Personality person, Personality whom);
+	void addPlayer(Personality person, Personality whom, String comment);
 
 	/**
 	 * Removes a {@code whom} personality from the {@code person} blacklist
@@ -39,5 +40,5 @@ public interface BlacklistManager {
 	 * @param person the person who's blacklist should be returned.
 	 * @return the collection of
 	 */
-	Collection<BlacklistRecord> getIgnores(Personality person);
+	Collection<BlacklistRecord> getBlacklist(Personality person);
 }
