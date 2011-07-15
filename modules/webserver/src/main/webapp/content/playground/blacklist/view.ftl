@@ -7,7 +7,7 @@
 <div>
     <div style="float: left;">
         <button type="submit" style="margin-left: 0" onclick="wm.blacklist.removeSelected();">
-            Trustworthy Selected
+        <@message code="blacklist.trustworthy.selected"/>
         </button>
     </div>
 </div>
@@ -19,9 +19,9 @@
             <input title="select all player" type="checkbox" id="removeAll" name="removeAll" value="true"
                    onchange="wm.blacklist.selectAll()">
         </th>
-        <th>Player</th>
-        <th>Since</th>
-        <th width="100%">Comment</th>
+        <th><@message code="blacklist.column.player"/></th>
+        <th><@message code="blacklist.column.since"/></th>
+        <th width="100%"><@message code="blacklist.column.comment"/></th>
     </tr>
     </thead>
     <tbody>
@@ -44,8 +44,9 @@
                 </div>
 
                 <div class="blacklist-controls">
-                    <a title="Remove the player from the blacklist"
-                       href="#" onclick="wm.blacklist.remove([${r.whom}])">Trustworthy</a>
+                    <a href="#" onclick="wm.blacklist.remove([${r.whom}])">
+                    <@message code="blacklist.trustworthy.single"/>
+                    </a>
                 </div>
             </td>
         </tr>
@@ -55,7 +56,7 @@
 
 <div>
     <button style="margin-left: 0" onclick="wm.blacklist.removeSelected();">
-        Trustworthy Selected
+    <@message code="blacklist.trustworthy.selected"/>
     </button>
 </div>
 </@wm.playground>

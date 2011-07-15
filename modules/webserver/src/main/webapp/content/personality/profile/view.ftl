@@ -5,6 +5,8 @@
 <#-- @ftlvariable name="ratingChart" type="wisematches.server.web.utils.RatingChart" -->
 <#include "/core.ftl">
 
+<#include "/content/playground/blacklist/scriplet.ftl">
+
 <#macro undefined value>
     <#if value==0><@message code="profile.undefined"/><#else>${value}</#if>
 </#macro>
@@ -235,9 +237,9 @@
 </div>
 </div>
 
-<#--<div style="padding-top: 10px; text-align: center;">-->
-<#--<a href="">Games in progress</a> | <a href="">Past game history</a>-->
-<#--</div>-->
+<div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
+<@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
+</div>
 </div>
 
 <div class="info">

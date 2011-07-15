@@ -1,5 +1,6 @@
 <#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
 <#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="blacklistManager" type="wisematches.playground.blacklist.BlacklistManager" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.scribble.ScribbleBoard>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
@@ -65,7 +66,9 @@
                 <td><@message code="language.${proposal.gameSettings.language}"/></td>
                 <td align="center">${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove*24*60,locale)}</td>
                 <td>
+                    <#assign inBlacklist=restricted/>
                     <#list proposal.players as p>
+                        <#assign inBlacklist=inBlacklist || blacklistManager.isIgnored(p, principal)/>
                         <div>
                         <@wm.player player=playerManager.getPlayer(p)/>
                         </div>
