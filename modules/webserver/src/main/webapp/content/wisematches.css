@@ -44,6 +44,10 @@ input {
     text-align: center;
 }
 
+.fg-toolbar {
+    height: 28px;
+}
+
 /* Header CSS declaration */
 #header {
     width: 100%
