@@ -410,3 +410,7 @@
     float: right;
     font-weight: bold;
 }
+
+#privateMessageDialog {
+    border-spacing: 5px;
+}

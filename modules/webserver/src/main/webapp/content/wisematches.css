@@ -512,3 +512,11 @@ div.space-line {
     vertical-align: top;
     text-align: center;
 }
+
+.loading-image {
+    height: 100%;
+    background-size: auto;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background: transparent url("http://tdanryan.com/demo/framedialog/assets/im/progress-indicator-alpha.gif") no-repeat scroll 50% 50%;
+}

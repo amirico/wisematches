@@ -55,6 +55,21 @@ public class MessageController extends AbstractPlayerController {
 		return "/content/playground/messages/view";
 	}
 
+	@RequestMapping(value = "create", params = "dialog")
+	public String createMessageDialog(@RequestParam("p") long pid, Model model,
+									  @ModelAttribute("form") MessageForm form, BindingResult result) {
+		final Player player = playerManager.getPlayer(pid);
+		if (blacklistManager.isBlacklisted(getPersonality(), player)) {
+			result.rejectValue("msgRecipient", "messages.err.ignored");
+		} else if (player == null || ComputerPlayer.isComputerPlayer(player)) {
+			result.rejectValue("msgRecipient", "messages.err.recipient");
+		} else {
+			model.addAttribute("recipient", player);
+		}
+		model.addAttribute("plain", Boolean.TRUE);
+		return "/content/playground/messages/create";
+	}
+
 	@RequestMapping("create")
 	public String createMessage(@RequestParam("p") long pid, Model model,
 								@ModelAttribute("form") MessageForm form, BindingResult result) {
@@ -140,6 +155,13 @@ public class MessageController extends AbstractPlayerController {
 				messageManager.removeMessage(mid);
 			}
 		}
+		return ServiceResponse.SUCCESS;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "send2", method = RequestMethod.POST)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse sendMessage(@RequestBody MessageForm form) {
 		return ServiceResponse.SUCCESS;
 	}
 
