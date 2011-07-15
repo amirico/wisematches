@@ -10,7 +10,6 @@ import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.playground.blacklist.BlacklistManager;
-import wisematches.playground.message.MessageManager;
 import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.form.BlacklistRecordForm;
@@ -26,7 +25,6 @@ import java.util.Locale;
 @RequestMapping("/playground/blacklist")
 public class BlacklistController extends AbstractPlayerController {
     private PlayerManager playerManager;
-    private MessageManager messageManager;
     private BlacklistManager blacklistManager;
     private GameMessageSource gameMessageSource;
 
@@ -48,7 +46,6 @@ public class BlacklistController extends AbstractPlayerController {
             return ServiceResponse.failure(gameMessageSource.getMessage("blacklist.err.unknown", locale));
         }
         blacklistManager.addPlayer(getPersonality(), player, form.getComment());
-        messageManager.removeMessages(player, getPersonality());
         return ServiceResponse.SUCCESS;
     }
 
@@ -66,11 +63,6 @@ public class BlacklistController extends AbstractPlayerController {
     @Autowired
     public void setPlayerManager(PlayerManager playerManager) {
         this.playerManager = playerManager;
-    }
-
-    @Autowired
-    public void setMessageManager(MessageManager messageManager) {
-        this.messageManager = messageManager;
     }
 
     @Autowired

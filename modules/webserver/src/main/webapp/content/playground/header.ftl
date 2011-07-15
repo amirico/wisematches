@@ -27,8 +27,19 @@
                 </tr>
                 <tr>
                     <td valign="bottom">
-                        <div id="game-toolbar" class="" align="right">
-                            <div style="float: left;">
+                        <div id="game-toolbar" class="" align="left">
+                            <div style="float: right;">
+                            <#if principal.membership != 'GUEST'>
+                                <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify')">
+                                <@message code="game.menu.settings.label"/>
+                                </button>
+                            </#if>
+                                <button onclick="wm.util.url.redirect('/info/help')">
+                                <@message code="game.menu.help.label"/>
+                                </button>
+                            </div>
+
+                            <div style="display: inline-block;">
                                 <button id="dashboardButton"
                                         onclick="wm.util.url.redirect('/playground/scribble/active')">
                                 <@message code="game.menu.games.label"/>
@@ -42,13 +53,16 @@
                                 <@message code="game.menu.create.label"/>
                                 </button>
                             </div>
-                        <#--
-                            <div style="float: left;">
-                                <button id="messagesButton" onclick="wm.util.url.redirect('/profile/message')">
-                                <@message code="game.menu.message.label"/>
+
+                            <div style="padding-left: 30px; display: inline-block;">
+                                <button id="messagesButton" onclick="wm.util.url.redirect('/playground/messages/view')">
+                                <@message code="game.menu.messages.label"/>
+                                </button>
+                                <button id="blacklistButton"
+                                        onclick="wm.util.url.redirect('/playground/blacklist/view')">
+                                <@message code="game.menu.blacklist.label"/>
                                 </button>
                             </div>
--->
                         <#--
                             <div style="float: left;">
                                 <button id="tournamentsButton" onclick="wm.util.url.redirect('/game/tournaments')">
@@ -56,16 +70,6 @@
                          `       </button>
                             </div>
 -->
-                            <div>
-                            <#if principal.membership != 'GUEST'>
-                                <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify')">
-                                <@message code="game.menu.settings.label"/>
-                                </button>
-                            </#if>
-                                <button onclick="wm.util.url.redirect('/info/help')">
-                                <@message code="game.menu.help.label"/>
-                                </button>
-                            </div>
                         </div>
                     </td>
                 </tr>

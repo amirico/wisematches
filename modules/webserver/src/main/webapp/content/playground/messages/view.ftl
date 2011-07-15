@@ -1,8 +1,8 @@
 <#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
 <#include "/core.ftl">
 
-<#include "/content/playground/blacklist/scriplet.ftl">
 <@wm.jstable/>
+<#include "/content/playground/blacklist/scriplet.ftl">
 
 <@wm.playground id="messagesWidget">
 <div>
@@ -61,7 +61,7 @@
                         &nbsp;&nbsp;&nbsp;
                         <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">Abuse</a>
                         &nbsp;
-                    <@ignore_link pid=m.sender callback="wm.messages.clearIgnored">Ignore</@ignore_link>
+                    <@blacklist pid=m.sender callback="wm.messages.clearIgnored">Ignore</@blacklist>
                         &nbsp;
                     </#if>
                     <a title="Delete the message"
