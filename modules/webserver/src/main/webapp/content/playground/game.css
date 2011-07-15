@@ -374,6 +374,10 @@
     min-height: inherit;
 }
 
+#messages tr, #blacklist tr {
+    background-image: none;
+}
+
 #messages tr .message-controls a, #blacklist tr .blacklist-controls a {
     color: #cccccc;
     text-decoration: underline;

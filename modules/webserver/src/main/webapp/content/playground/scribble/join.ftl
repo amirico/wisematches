@@ -66,9 +66,9 @@
                 <td><@message code="language.${proposal.gameSettings.language}"/></td>
                 <td align="center">${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove*24*60,locale)}</td>
                 <td>
-                    <#assign inBlacklist=restricted/>
+                    <#assign blacklisted=restricted/>
                     <#list proposal.players as p>
-                        <#assign inBlacklist=inBlacklist || blacklistManager.isIgnored(p, principal)/>
+                        <#assign blacklisted=blacklisted || blacklistManager.isBlacklisted(p, principal)/>
                         <div>
                         <@wm.player player=playerManager.getPlayer(p)/>
                         </div>
@@ -86,7 +86,7 @@
                         <span class="game-join-error">${msg}</span>
                         <#elseif principal.membership == "GUEST">
                             <span class="game-join-error"><@message code="game.join.err.guest"/></span>
-                        <#elseif restricted>
+                        <#elseif restricted || blacklisted>
                             <span class="game-join-error"><@message code="game.join.err.forbidden"/></span>
                         <#else>
                             <a href="/playground/scribble/join?p=${proposal.id}">&raquo; <@message code="game.join.label"/></a>

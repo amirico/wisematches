@@ -26,7 +26,7 @@
             <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
                    onchange="wm.messages.selectAll()">
         </th>
-        <th>From/Date</th>
+        <th nowrap="nowrap">From/Date</th>
         <th width="100%">Message</th>
     </tr>
     </thead>

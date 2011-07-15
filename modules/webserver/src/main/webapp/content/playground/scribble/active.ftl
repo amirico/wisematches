@@ -17,11 +17,17 @@
 </#macro>
 
 <@wm.playground>
-<div style="float: right;">
-    <button id="refreshDashboard" onclick="window.location.reload()">
-    <@message code="refresh.label"/>
-    </button>
-</div>
+
+<table width="100%">
+    <tr>
+        <td width="100%" nowrap="nowrap"></td>
+        <td nowrap="nowrap">
+            <button id="refreshDashboard" onclick="window.location.reload()">
+            <@message code="refresh.label"/>
+            </button>
+        </td>
+    </tr>
+</table>
 
 <table id="dashboard" width="100%" class="display">
     <thead>
