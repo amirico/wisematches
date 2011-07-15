@@ -44,6 +44,5 @@
     </div>
 </div>
 
-
 <#macro blacklist pid callback=""><a title="<@message code="blacklist.confirm.label"/>" href="#"
                                      onclick="wm.blacklist.add(${pid}<#if callback?has_content>, ${callback}</#if>)"><#nested/></a></#macro>
