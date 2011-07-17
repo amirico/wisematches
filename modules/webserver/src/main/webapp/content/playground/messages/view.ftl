@@ -2,6 +2,7 @@
 <#include "/core.ftl">
 
 <@wm.jstable/>
+<#include "/content/playground/messages/scriplet.ftl">
 <#include "/content/playground/blacklist/scriplet.ftl">
 
 <@wm.playground id="messagesWidget">
@@ -51,17 +52,16 @@
 
                 <div class="message-controls">
                     <#if !m.notification>
-                        <a title="Replay to the message"
-                           href="/playground/messages/replay?m=${m.id}">Replay</a>
-                        <#if m.original != 0>
-                            &nbsp;
-                            <a title="This message has been replied to"
-                               href="#">Previous Message</a>
-                        </#if>
+                    <@replayMessage pid=m.id>Replay</@replayMessage>
+                    <#--<#if m.original != 0>-->
+                    <#--&nbsp;-->
+                    <#--<a title="This message has been replied to"-->
+                    <#--href="#">Previous Message</a>-->
+                    <#--</#if>-->
                         &nbsp;&nbsp;&nbsp;
                         <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">Abuse</a>
                         &nbsp;
-                    <@blacklist pid=m.sender callback="wm.messages.clearIgnored">Ignore</@blacklist>
+                    <@blacklist pid=m.sender>Ignore</@blacklist>
                         &nbsp;
                     </#if>
                     <a title="Delete the message"
@@ -74,8 +74,7 @@
 </table>
 
 <div>
-    <button style="margin-left: 0" onclick="wm.messages.clearIgnored(1001);">
-    <#--<button style="margin-left: 0" onclick="wm.messages.removeSelected();">-->
+    <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
         Delete Selected
     </button>
 </div>
@@ -95,16 +94,7 @@
         "sPaginationType": "full_numbers"
     });
 
-    wm.messages = new function() {
-        this.clearIgnored = function(pid) {
-            var ignores = $("#messages .player a[href$='" + pid + "']").closest('tr');
-            var dataTable = $('#messages').dataTable();
-            $.each(ignores, function(i, v) {
-                dataTable.fnDeleteRow(v);
-            });
-            return false;
-        };
-
+    wm.messages = $.extend({}, wm.messages, new function() {
         this.reportAbuse = function(id) {
             wm.ui.showStatus("Sending abuse report. Please wait...");
             $.post('/playground/messages/abuse.ajax?m=' + id, function(result) {
@@ -154,5 +144,5 @@
                     });
             return false;
         };
-    };
+    });
 </script>
