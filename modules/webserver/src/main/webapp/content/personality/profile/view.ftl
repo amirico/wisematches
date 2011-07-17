@@ -239,7 +239,7 @@
 </div>
 
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
-<@privateMessage pid=player.id/>
+<@privateMessage pid=player.id>Send private message</@privateMessage>
     |
 <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
 </div>
@@ -289,25 +289,25 @@
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
-                    backgroundColor: 'transparent',
-                    interpolateNulls: true,
-                    legend: 'none',
-                    width: 300,
-                    height: 150,
-                    chartArea: {
-                        top: 10,
-                        left: 50,
-                        width: 280,
-                        height: 120
-                    },
-                    hAxis: {
-                        showTextEvery: resolution * 2
-                    },
-                    vAxis: {
-                        format: '#',
-                        minValue: ${ratingChart.minRating?string("0")},
-                        maxValue: ${ratingChart.maxRating?string("0")}
-                    }}
+            backgroundColor: 'transparent',
+            interpolateNulls: true,
+            legend: 'none',
+            width: 300,
+            height: 150,
+            chartArea: {
+                top: 10,
+                left: 50,
+                width: 280,
+                height: 120
+            },
+            hAxis: {
+                showTextEvery: resolution * 2
+            },
+            vAxis: {
+                format: '#',
+                minValue: ${ratingChart.minRating?string("0")},
+                maxValue: ${ratingChart.maxRating?string("0")}
+            }}
         );
     }
 

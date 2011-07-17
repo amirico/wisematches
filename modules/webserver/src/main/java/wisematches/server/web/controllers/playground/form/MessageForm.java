@@ -1,49 +1,40 @@
 package wisematches.server.web.controllers.playground.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageForm {
-    @NotEmpty(message = "asdasd")
-    private String msgText;
-    private long msgBoard;
-    private long msgOriginal;
-    private long msgRecipient;
+    private long pid;
+    private String message;
+    private boolean replay;
 
     public MessageForm() {
     }
 
-    public long getMsgRecipient() {
-        return msgRecipient;
+    public long getPid() {
+        return pid;
     }
 
-    public void setMsgRecipient(long msgRecipient) {
-        this.msgRecipient = msgRecipient;
+    public void setPid(long pid) {
+        this.pid = pid;
     }
 
-    public String getMsgText() {
-        return msgText;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsgText(String msgText) {
-        this.msgText = msgText;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public long getMsgOriginal() {
-        return msgOriginal;
+    public boolean isReplay() {
+        return replay;
     }
 
-    public void setMsgOriginal(long msgOriginal) {
-        this.msgOriginal = msgOriginal;
-    }
-
-    public long getMsgBoard() {
-        return msgBoard;
-    }
-
-    public void setMsgBoard(long msgBoard) {
-        this.msgBoard = msgBoard;
+    public void setReplay(boolean replay) {
+        this.replay = replay;
     }
 }
