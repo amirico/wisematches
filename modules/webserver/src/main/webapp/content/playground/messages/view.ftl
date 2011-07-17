@@ -9,14 +9,12 @@
 <div>
     <div style="float: left;">
         <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
-            Delete Selected
+        <@message code="messages.delete.selected"/>
         </button>
     </div>
 
     <div style="float: right;">
-        <a href="/playground/messages/sent">Sent messages</a>
-        •
-        <a href="/playground/blacklist/view">My ignore list</a>
+        <a href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
     </div>
 </div>
 
@@ -27,8 +25,8 @@
             <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
                    onchange="wm.messages.selectAll()">
         </th>
-        <th nowrap="nowrap">From/Date</th>
-        <th width="100%">Message</th>
+        <th nowrap="nowrap"><@message code="messages.column.from"/></th>
+        <th width="100%"><@message code="messages.column.message"/></th>
     </tr>
     </thead>
     <tbody>
@@ -59,13 +57,15 @@
                     <#--href="#">Previous Message</a>-->
                     <#--</#if>-->
                         &nbsp;&nbsp;&nbsp;
-                        <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">Abuse</a>
+                        <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">
+                        <@message code="messages.abuse"/>
+                        </a>
                         &nbsp;
-                    <@blacklist pid=m.sender>Ignore</@blacklist>
+                    <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
                         &nbsp;
                     </#if>
                     <a title="Delete the message"
-                       href="#" onclick="wm.messages.remove([${m.id}])">Delete</a>
+                       href="#" onclick="wm.messages.remove([${m.id}])"><@message code="messages.delete.single"/></a>
                 </div>
             </td>
         </tr>
@@ -75,7 +75,7 @@
 
 <div>
     <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
-        Delete Selected
+    <@message code="messages.delete.selected"/>
     </button>
 </div>
 </@wm.playground>
@@ -96,10 +96,10 @@
 
     wm.messages = $.extend({}, wm.messages, new function() {
         this.reportAbuse = function(id) {
-            wm.ui.showStatus("Sending abuse report. Please wait...");
+            wm.ui.showStatus("<@message code="messages.status.abuse.sending"/>");
             $.post('/playground/messages/abuse.ajax?m=' + id, function(result) {
                 if (result.success) {
-                    wm.ui.showStatus("Abuse report has been sent");
+                    wm.ui.showStatus("<@message code="messages.status.abuse.sent"/>");
                 } else {
                     wm.ui.showStatus(result.summary, true);
                 }
@@ -122,7 +122,7 @@
         };
 
         this.remove = function(msgs) {
-            wm.ui.showStatus("Removing messages. Please wait...", false, true);
+            wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);
             $.ajax('remove.ajax', {
                 type: 'post',
                 contentType: 'application/x-www-form-urlencoded',
@@ -134,13 +134,13 @@
                             $.each(msgs, function(i, v) {
                                 dataTable.fnDeleteRow($("#messages #message" + v).get(0));
                             });
-                            wm.ui.showStatus("Message has been removed");
+                            wm.ui.showStatus("<@message code="messages.status.remove.sent"/>");
                         } else {
-                            wm.ui.showStatus("Message can't be removed", true, false);
+                            wm.ui.showStatus(result.summary, true);
                         }
                     })
                     .error(function(jqXHR, textStatus, errorThrown) {
-                        wm.ui.showStatus("Message can't be removed", true, false);
+                        wm.ui.showStatus(textStatus, true);
                     });
             return false;
         };

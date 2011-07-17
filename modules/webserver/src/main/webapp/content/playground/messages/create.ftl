@@ -2,10 +2,7 @@
 <#-- @ftlvariable name="recipient" type="wisematches.personality.player.Player" -->
 <#include "/core.ftl">
 
-<div>
-    Please enter a message text for the player below. Please keep in mind that in case of abuse or spam your
-    account can be blocked.
-</div>
+<div><@message code="messages.description"/></div>
 
 <div class="ui-layout-table" style="width: 100%">
     <div>
@@ -33,6 +30,7 @@
         </@wm.field>
         </div>
     </div>
+<#--
 <#if original??>
     <div>
         <div></div>
@@ -42,4 +40,5 @@
         </div>
     </div>
 </#if>
+-->
 </div>

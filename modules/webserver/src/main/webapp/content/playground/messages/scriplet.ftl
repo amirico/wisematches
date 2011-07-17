@@ -24,17 +24,17 @@
                 buttons: [
                     {
                         id: "sendPrivateMessage",
-                        text: "Send message",
+                        text: "<@message code="messages.label"/>",
                         disabled: true,
                         click:function() {
-                            wm.ui.showStatus("Sending message. Please wait...", false, true);
+                            wm.ui.showStatus("<@message code="messages.status.sending"/>", false, true);
                             dlg.closest(".ui-dialog").block({ message: "", overlayCSS: overlayCSS });
 
                             var msg = $("#privateMessageDialog textarea").val();
                             $.post('/playground/messages/send.ajax', $.toJSON({pid: id, replay: replay, message: msg}), function(result) {
                                 dlg.closest(".ui-dialog").unblock();
                                 if (result.success) {
-                                    wm.ui.showStatus("Message has been sent");
+                                    wm.ui.showStatus("<@message code="messages.status.sent"/>");
                                     dlg.dialog("close");
                                 } else {
                                     wm.ui.showStatus(result.summary, true);
@@ -43,7 +43,7 @@
                         }
                     },
                     {
-                        text: "Cancel",
+                        text: "<@message code="button.cancel"/>",
                         click: function() {
                             dlg.dialog("close");
                         }
