@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="memberships" type="java.util.Collection<wisematches.personality.Membership>" -->
-<#-- @ftlvariable name="restrictionDescriptions" type="java.util.Collection<wisematches.server.web.services.restriction.RestrictionDescription>" -->
+<#-- @ftlvariable name="restrictionDescriptions" type="java.util.Collection<wisematches.playground.restriction.RestrictionDescription>" -->
 <#include "/core.ftl">
 
 <div class="profile">

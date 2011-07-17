@@ -1,4 +1,4 @@
-package wisematches.server.web.services.restriction;
+package wisematches.playground.restriction;
 
 import wisematches.personality.Membership;
 

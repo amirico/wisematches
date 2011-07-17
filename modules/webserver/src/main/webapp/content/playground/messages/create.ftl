@@ -1,8 +1,14 @@
+<#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="messagesCount" type="java.lang.Integer" -->
 <#-- @ftlvariable name="original" type="wisematches.playground.message.Message" -->
 <#-- @ftlvariable name="recipient" type="wisematches.personality.player.Player" -->
 <#include "/core.ftl">
 
 <div><@message code="messages.description"/></div>
+
+<#if restricted>
+<@wm.restriction style="margin-bottom: 10px"><@message code="messages.create.forbidden" args=[messagesCount, '/account/membership']/></@wm.restriction>
+</#if>
 
 <div class="ui-layout-table" style="width: 100%">
     <div>

@@ -1,10 +1,10 @@
-package wisematches.server.web.services.restriction.impl;
+package wisematches.playground.restriction.impl;
 
 import wisematches.personality.Membership;
 import wisematches.personality.player.Player;
-import wisematches.server.web.services.restriction.RestrictionDescription;
-import wisematches.server.web.services.restriction.RestrictionException;
-import wisematches.server.web.services.restriction.RestrictionManager;
+import wisematches.playground.restriction.RestrictionDescription;
+import wisematches.playground.restriction.RestrictionException;
+import wisematches.playground.restriction.RestrictionManager;
 
 import java.util.*;
 

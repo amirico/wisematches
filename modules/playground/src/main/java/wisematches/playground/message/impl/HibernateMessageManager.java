@@ -1,9 +1,17 @@
 package wisematches.playground.message.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.personality.Membership;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -11,7 +19,10 @@ import wisematches.playground.GameBoard;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageListener;
 import wisematches.playground.message.MessageManager;
+import wisematches.playground.restriction.RestrictionDescription;
+import wisematches.playground.restriction.RestrictionManager;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -20,8 +31,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class HibernateMessageManager extends HibernateDaoSupport implements MessageManager {
     private PlayerManager playerManager;
+    private RestrictionManager restrictionManager;
 
     private final Collection<MessageListener> listeners = new CopyOnWriteArraySet<MessageListener>();
+
+    private static final Log log = LogFactory.getLog("wisematches.server.playground.message");
 
     public HibernateMessageManager() {
     }
@@ -103,6 +117,13 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
     }
 
     @Override
+    public int getTodayMessagesCount(Personality person) {
+        final HibernateTemplate template = getHibernateTemplate();
+        return DataAccessUtils.intResult(template.find("select count(*) " +
+                "from wisematches.playground.message.Message where sender = ? and created>= CURDATE()", person.getId()));
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Collection<Message> getMessages(Personality person) {
         final HibernateTemplate template = getHibernateTemplate();
@@ -110,12 +131,14 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public void removeMessage(long messageId) {
         final HibernateTemplate template = getHibernateTemplate();
         template.bulkUpdate("delete from wisematches.playground.message.Message where id= ?", messageId);
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public void removeMessages(Personality sender, Personality recipient) {
         final HibernateTemplate template = getHibernateTemplate();
         template.bulkUpdate("delete from wisematches.playground.message.Message where recipient= ? and sender = ?",
@@ -123,12 +146,73 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public void clearMessages(Personality person) {
         final HibernateTemplate template = getHibernateTemplate();
         template.bulkUpdate("delete from wisematches.playground.message.Message where recipient = ?", person.getId());
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void cleanup() {
+        RestrictionDescription msgHist = null;
+        RestrictionDescription noticeHist = null;
+        final Collection<RestrictionDescription> descriptions = restrictionManager.getRestrictionDescriptions();
+        for (RestrictionDescription description : descriptions) {
+            if ("messages.hist.private".equals(description.getName())) {
+                msgHist = description;
+            } else if ("messages.hist.notice".equals(description.getName())) {
+                noticeHist = description;
+            }
+        }
+
+        Membership[] values = Membership.values();
+        final StringBuilder b = new StringBuilder();
+        b.append("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and ");
+        b.append("(");
+        if (msgHist != null) {
+            b.append("(m.notification and ");
+            for (Membership value : values) {
+                Comparable restriction = msgHist.getRestriction(value);
+                if (restriction != null) {
+                    b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
+                }
+            }
+            b.setLength(b.length() - 4);
+            b.append(")");
+        }
+        if (noticeHist != null) {
+            if (msgHist != null) {
+                b.append(" or ");
+            }
+            b.append("(not m.notification and ");
+            for (Membership value : values) {
+                Comparable restriction = noticeHist.getRestriction(value);
+                if (restriction != null) {
+                    b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
+                }
+            }
+            b.setLength(b.length() - 4);
+            b.append(")");
+        }
+        b.append(")");
+
+        log.info("Cleanup old messages: " + b);
+
+        getHibernateTemplate().execute(new HibernateCallback<Integer>() {
+            @Override
+            public Integer doInHibernate(Session session) throws HibernateException, SQLException {
+                SQLQuery sqlQuery = session.createSQLQuery(b.toString());
+                return sqlQuery.executeUpdate();
+            }
+        });
+    }
+
     public void setPlayerManager(PlayerManager playerManager) {
         this.playerManager = playerManager;
+    }
+
+    public void setRestrictionManager(RestrictionManager restrictionManager) {
+        this.restrictionManager = restrictionManager;
     }
 }
