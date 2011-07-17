@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
@@ -22,7 +23,6 @@ import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.restriction.RestrictionManager;
 
 import java.util.Collections;
 import java.util.Locale;

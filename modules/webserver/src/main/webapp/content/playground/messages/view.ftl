@@ -50,22 +50,21 @@
 
                 <div class="message-controls">
                     <#if !m.notification>
-                    <@replayMessage pid=m.id>Replay</@replayMessage>
+                    <@replayMessage pid=m.id><@message code="messages.replay"/></@replayMessage>
                     <#--<#if m.original != 0>-->
                     <#--&nbsp;-->
                     <#--<a title="This message has been replied to"-->
                     <#--href="#">Previous Message</a>-->
                     <#--</#if>-->
                         &nbsp;&nbsp;&nbsp;
-                        <a title="Report abuse" href="#" onclick="wm.messages.reportAbuse(${m.id});">
-                        <@message code="messages.abuse"/>
-                        </a>
+                        <a href="#"
+                           onclick="wm.messages.reportAbuse(${m.id});"><@message code="messages.abuse"/></a>
                         &nbsp;
                     <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
                         &nbsp;
                     </#if>
-                    <a title="Delete the message"
-                       href="#" onclick="wm.messages.remove([${m.id}])"><@message code="messages.delete.single"/></a>
+                    <a href="#"
+                       onclick="wm.messages.remove([${m.id}])"><@message code="messages.delete.single"/></a>
                 </div>
             </td>
         </tr>

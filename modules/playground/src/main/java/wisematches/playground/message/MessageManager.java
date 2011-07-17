@@ -64,6 +64,14 @@ public interface MessageManager {
     Message getMessage(long id);
 
     /**
+     * Returns number of messages sent today.
+     *
+     * @param personality the person who's count should be returned.
+     * @return the number of messages sent today.
+     */
+    int getTodayMessagesCount(Personality personality);
+
+    /**
      * Returns collection of all message for specified person.
      *
      * @param person the person who's message should be returned.
@@ -92,4 +100,9 @@ public interface MessageManager {
      * @param person the person who's message should be removed
      */
     void clearMessages(Personality person);
+
+    /**
+     * Clears all messages according to rules
+     */
+    void cleanup();
 }

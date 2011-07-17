@@ -35,58 +35,6 @@
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
 
-    <bean id="activeGamesRestriction" class="wisematches.server.web.services.restriction.RestrictionDescription">
-        <property name="name" value="games.active"/>
-        <property name="restrictions">
-            <map value-type="java.lang.Integer">
-                <entry key="GUEST" value="1"/>
-                <entry key="BASIC" value="5"/>
-                <entry key="SILVER" value="10"/>
-                <entry key="GOLD" value="30"/>
-                <entry key="PLATINUM" value="100"/>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="scribbleMemoryRestriction"
-          class="wisematches.server.web.services.restriction.RestrictionDescription">
-        <property name="name" value="scribble.memory"/>
-        <property name="restrictions">
-            <map value-type="java.lang.Integer">
-                <entry key="GUEST" value="1"/>
-                <entry key="BASIC" value="2"/>
-                <entry key="SILVER" value="5"/>
-                <entry key="GOLD" value="20"/>
-                <entry key="PLATINUM" value="50"/>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="scribbleOpponentsRestriction"
-          class="wisematches.server.web.services.restriction.RestrictionDescription">
-        <property name="name" value="scribble.opponents"/>
-        <property name="restrictions">
-            <map value-type="java.lang.Integer">
-                <entry key="GUEST" value="1"/>
-                <entry key="BASIC" value="1"/>
-                <entry key="SILVER" value="2"/>
-                <entry key="GOLD" value="2"/>
-                <entry key="PLATINUM" value="3"/>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="playerRestrictionManager"
-          class="wisematches.server.web.services.restriction.impl.RestrictionManagerImpl">
-        <property name="restrictions">
-            <list>
-                <ref bean="activeGamesRestriction"/>
-                <ref bean="scribbleMemoryRestriction"/>
-                <ref bean="scribbleOpponentsRestriction"/>
-            </list>
-        </property>
-    </bean>
-
     <bean id="notification" class="wisematches.server.web.services.notice.NotificationDescription" abstract="true"/>
 
     <bean id="notificationManager" class="wisematches.server.web.services.notice.impl.HibernateNotificationManager">

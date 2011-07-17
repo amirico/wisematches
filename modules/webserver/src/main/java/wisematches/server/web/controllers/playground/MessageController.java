@@ -9,13 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageManager;
+import wisematches.playground.restriction.RestrictionException;
+import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailService;
 import wisematches.server.web.controllers.AbstractPlayerController;
@@ -38,6 +39,7 @@ public class MessageController extends AbstractPlayerController {
     private MessageManager messageManager;
     private GameMessageSource messageSource;
     private BlacklistManager blacklistManager;
+    private RestrictionManager restrictionManager;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
 
@@ -45,22 +47,29 @@ public class MessageController extends AbstractPlayerController {
     }
 
     @RequestMapping("view")
+    @Transactional(propagation = Propagation.SUPPORTS)
     public String showPlayboard(Model model) {
         model.addAttribute("messages", messageManager.getMessages(getPrincipal()));
         return "/content/playground/messages/view";
     }
 
     @RequestMapping(value = "create")
+    @Transactional(propagation = Propagation.SUPPORTS)
     public String createMessageDialog(@RequestParam(value = "dialog", required = false) boolean dialog, Model model,
                                       @ModelAttribute("form") MessageForm form, BindingResult result) {
+        final Player principal = getPrincipal();
+
         model.addAttribute("plain", dialog);
+
+        model.addAttribute("messagesCount", restrictionManager.getRestriction(principal, "messages.count"));
+        model.addAttribute("restricted",
+                restrictionManager.isRestricted(principal, "messages.count", messageManager.getTodayMessagesCount(principal)));
 
         long playerId = form.getPid();
         if (form.isReplay()) {
             final Message message = messageManager.getMessage(form.getPid());
             if (message != null) {
-                final Personality personality = getPersonality();
-                if (message.getRecipient() == personality.getId() || message.getSender() == personality.getId()) {
+                if (message.getRecipient() == principal.getId() || message.getSender() == principal.getId()) {
                     playerId = message.getSender();
                     model.addAttribute("original", message);
                 } else {
@@ -74,7 +83,7 @@ public class MessageController extends AbstractPlayerController {
         }
 
         final Player player = playerManager.getPlayer(playerId);
-        if (blacklistManager.isBlacklisted(getPersonality(), player)) {
+        if (blacklistManager.isBlacklisted(principal, player)) {
             result.rejectValue("pid", "messages.err.ignored");
         } else if (player == null || ComputerPlayer.isComputerPlayer(player)) {
             result.rejectValue("pid", "messages.err.recipient");
@@ -88,13 +97,21 @@ public class MessageController extends AbstractPlayerController {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @RequestMapping(value = "send", method = RequestMethod.POST)
     public ServiceResponse sendMessage(@RequestBody MessageForm form, Locale locale) {
+        final Player principal = getPrincipal();
+
+        final Comparable restriction = restrictionManager.getRestriction(principal, "messages.count");
+        try {
+            restrictionManager.checkRestriction(principal, "messages.count", messageManager.getTodayMessagesCount(principal));
+        } catch (RestrictionException ex) {
+            return ServiceResponse.failure(messageSource.getMessage("messages.create.forbidden", locale, restriction, "/account/membership"));
+        }
+
         Message message = null;
         long playerId = form.getPid();
-        final Personality personality = getPersonality();
         if (form.isReplay()) {
             message = messageManager.getMessage(form.getPid());
             if (message != null) {
-                if (message.getRecipient() == personality.getId() || message.getSender() == personality.getId()) {
+                if (message.getRecipient() == principal.getId() || message.getSender() == principal.getId()) {
                     playerId = message.getSender();
                 } else {
                     return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
@@ -113,9 +130,9 @@ public class MessageController extends AbstractPlayerController {
 
 
         if (form.isReplay()) {
-            messageManager.replayMessage(personality, message, form.getMessage());
+            messageManager.replayMessage(principal, message, form.getMessage());
         } else {
-            messageManager.sendMessage(personality, player, form.getMessage());
+            messageManager.sendMessage(principal, player, form.getMessage());
         }
         return ServiceResponse.SUCCESS;
     }
@@ -178,6 +195,11 @@ public class MessageController extends AbstractPlayerController {
     @Autowired
     public void setBlacklistManager(BlacklistManager blacklistManager) {
         this.blacklistManager = blacklistManager;
+    }
+
+    @Autowired
+    public void setRestrictionManager(RestrictionManager restrictionManager) {
+        this.restrictionManager = restrictionManager;
     }
 
     @Override

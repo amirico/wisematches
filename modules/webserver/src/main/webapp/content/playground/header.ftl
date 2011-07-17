@@ -54,6 +54,7 @@
                                 </button>
                             </div>
 
+                        <#if principal.membership != 'GUEST'>
                             <div style="padding-left: 30px; display: inline-block;">
                                 <button id="messagesButton" onclick="wm.util.url.redirect('/playground/messages/view')">
                                 <@message code="game.menu.messages.label"/>
@@ -63,6 +64,8 @@
                                 <@message code="game.menu.blacklist.label"/>
                                 </button>
                             </div>
+                        </#if>
+
                         <#--
                             <div style="float: left;">
                                 <button id="tournamentsButton" onclick="wm.util.url.redirect('/game/tournaments')">

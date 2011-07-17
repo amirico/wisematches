@@ -16,7 +16,7 @@
                 $("#sendPrivateMessage").button("enable");
             });
             dlg.dialog({
-                title: "Send Private Message",
+                title: "<@message code="messages.label"/>",
                 width: 550,
                 minHeight : 350,
                 modal: true,

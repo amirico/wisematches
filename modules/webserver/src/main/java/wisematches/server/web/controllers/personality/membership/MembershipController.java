@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.personality.Membership;
+import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.web.controllers.AbstractInfoController;
-import wisematches.server.web.services.restriction.RestrictionManager;
 
 import java.util.Arrays;
 
