@@ -131,7 +131,7 @@ public class MessageController extends AbstractPlayerController {
                     return ServiceResponse.success();
                 } catch (MailException e) {
                     log.error("Abuse report can't be sent for message: " + mid, e);
-                    return ServiceResponse.failure(messageSource.getMessage("messages.abuse.err.system", locale));
+                    return ServiceResponse.failure(messageSource.getMessage("messages.err.abuse", locale));
                 }
             } else {
                 return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));

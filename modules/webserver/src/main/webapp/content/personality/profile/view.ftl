@@ -239,7 +239,7 @@
 </div>
 
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
-<@privateMessage pid=player.id>Send private message</@privateMessage>
+<@privateMessage pid=player.id><@message code="messages.label"/></@privateMessage>
     |
 <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
 </div>

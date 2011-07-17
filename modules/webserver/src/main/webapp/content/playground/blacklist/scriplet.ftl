@@ -26,7 +26,7 @@
                         $(this).dialog("close");
                         execute(pid, $("#blacklistConfirmDialog textarea").val(), callback);
                     },
-                    "<@message code="blacklist.confirm.cancel"/>": function() {
+                    "<@message code="button.cancel"/>": function() {
                         $(this).dialog("close");
                     }
                 }});
