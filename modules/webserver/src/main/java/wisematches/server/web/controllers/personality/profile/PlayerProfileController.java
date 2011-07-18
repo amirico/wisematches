@@ -18,9 +18,9 @@ import wisematches.personality.profile.countries.Country;
 import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.playground.tracking.RatingChangesCurve;
 import wisematches.playground.tracking.Statistics;
-import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
+import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.utils.RatingChart;
@@ -37,7 +37,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/profile")
-public class PlayerProfileController extends AbstractPlayerController {
+public class PlayerProfileController extends WisematchesController {
     private PlayerManager playerManager;
     private CountriesManager countriesManager;
     private PlayerProfileManager profileManager;

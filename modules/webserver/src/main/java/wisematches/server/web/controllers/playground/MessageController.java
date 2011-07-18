@@ -19,8 +19,8 @@ import wisematches.playground.restriction.RestrictionException;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.mail.MailException;
 import wisematches.server.mail.MailService;
-import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.MessageForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
@@ -33,7 +33,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/messages")
-public class MessageController extends AbstractPlayerController {
+public class MessageController extends WisematchesController {
     private MailService mailService;
     private PlayerManager playerManager;
     private MessageManager messageManager;
@@ -47,7 +47,7 @@ public class MessageController extends AbstractPlayerController {
     }
 
     @RequestMapping("view")
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String showPlayboard(Model model) {
         model.addAttribute("messages", messageManager.getMessages(getPrincipal()));
         return "/content/playground/messages/view";
@@ -83,7 +83,7 @@ public class MessageController extends AbstractPlayerController {
         }
 
         final Player player = playerManager.getPlayer(playerId);
-        if (blacklistManager.isBlacklisted(principal, player)) {
+        if (blacklistManager.isBlacklisted(player, principal)) {
             result.rejectValue("pid", "messages.err.ignored");
         } else if (player == null || ComputerPlayer.isComputerPlayer(player)) {
             result.rejectValue("pid", "messages.err.recipient");
@@ -122,7 +122,7 @@ public class MessageController extends AbstractPlayerController {
         }
 
         final Player player = playerManager.getPlayer(playerId);
-        if (blacklistManager.isBlacklisted(getPersonality(), player)) {
+        if (blacklistManager.isBlacklisted(player, getPersonality())) {
             return ServiceResponse.failure(messageSource.getMessage("messages.err.ignored", locale));
         } else if (player == null || ComputerPlayer.isComputerPlayer(player)) {
             return ServiceResponse.failure(messageSource.getMessage("messages.err.recipients", locale));
@@ -184,6 +184,7 @@ public class MessageController extends AbstractPlayerController {
 
     @Autowired
     public void setMessageManager(MessageManager messageManager) {
+        super.setMessageManager(messageManager);
         this.messageManager = messageManager;
     }
 

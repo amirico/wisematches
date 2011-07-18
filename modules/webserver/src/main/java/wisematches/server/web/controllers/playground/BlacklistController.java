@@ -10,8 +10,8 @@ import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.playground.blacklist.BlacklistManager;
-import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.BlacklistRecordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
@@ -23,7 +23,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/blacklist")
-public class BlacklistController extends AbstractPlayerController {
+public class BlacklistController extends WisematchesController {
     private PlayerManager playerManager;
     private BlacklistManager blacklistManager;
     private GameMessageSource gameMessageSource;

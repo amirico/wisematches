@@ -28,8 +28,8 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.search.ScribbleSearchesEngine;
-import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
 import wisematches.server.web.services.ads.AdvertisementManager;
 
@@ -41,7 +41,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
-public class ScribbleController extends AbstractPlayerController {
+public class ScribbleController extends WisematchesController {
     private PlayerManager playerManager;
     private BlacklistManager blacklistManager;
     private ScribbleBoardManager boardManager;

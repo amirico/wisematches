@@ -24,6 +24,7 @@ import wisematches.playground.restriction.RestrictionManager;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -117,6 +118,20 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
     }
 
     @Override
+    public int getNewMessagesCount(final Personality person) {
+        return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
+            @Override
+            public Integer doInHibernate(Session session) throws HibernateException, SQLException {
+                final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
+                        "FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
+                        "WHERE m.recipient=? and (a.last_messages_check is null or m.created>=a.last_messages_check)");
+                sqlQuery.setLong(0, person.getId());
+                return ((Number) sqlQuery.uniqueResult()).intValue();
+            }
+        });
+    }
+
+    @Override
     public int getTodayMessagesCount(Personality person) {
         final HibernateTemplate template = getHibernateTemplate();
         return DataAccessUtils.intResult(template.find("select count(*) " +
@@ -125,8 +140,18 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(propagation = Propagation.MANDATORY)
     public Collection<Message> getMessages(Personality person) {
         final HibernateTemplate template = getHibernateTemplate();
+
+        LastMessagesCheck lastMessagesCheck = template.get(LastMessagesCheck.class, person.getId());
+        if (lastMessagesCheck == null) {
+            lastMessagesCheck = new LastMessagesCheck(person.getId(), new Date());
+        } else {
+            lastMessagesCheck.setLastCheckTime(new Date());
+        }
+        template.saveOrUpdate(lastMessagesCheck);
+
         return template.find("from wisematches.playground.message.Message where recipient = ?", person.getId());
     }
 
