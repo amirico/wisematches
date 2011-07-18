@@ -19,8 +19,8 @@ import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.memory.MemoryWordManager;
-import wisematches.server.web.controllers.AbstractPlayerController;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/scribble/memory")
-public class ScribbleMemoryController extends AbstractPlayerController {
+public class ScribbleMemoryController extends WisematchesController {
     private ScribbleBoardManager boardManager;
     private GameMessageSource gameMessageSource;
     private MemoryWordManager memoryWordManager;

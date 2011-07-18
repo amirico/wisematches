@@ -3,6 +3,8 @@ package wisematches.playground.message.impl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -88,8 +91,8 @@ public class HibernateMessageManagerTest {
         assertEquals(0, messageManager.getMessages(p2).size());
     }
 
-
     @Test
+    @SuppressWarnings("unchecked")
     public void testCleanup() {
         final Map<Membership, Comparable> a1 = new HashMap<Membership, Comparable>();
         a1.put(Membership.GUEST, 0);
@@ -110,8 +113,10 @@ public class HibernateMessageManagerTest {
                 new RestrictionDescription("messages.hist.private", a1),
                 new RestrictionDescription("messages.hist.notice", a2)));
 
-/*
         final HibernateTemplate template = createMock(HibernateTemplate.class);
+        expect(template.execute(isA(HibernateCallback.class))).andReturn(0);
+        replay(template);
+/*
         expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
                 "((m.notification and " +
                 "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
@@ -125,15 +130,14 @@ public class HibernateMessageManagerTest {
                 "(a.membership = 'SILVER' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'GOLD' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 20 DAY))))")).andReturn(0);
-        replay(template);
 */
 
         final HibernateMessageManager m = new HibernateMessageManager();
         m.setRestrictionManager(r);
-//        m.setHibernateTemplate(template);
+        m.setHibernateTemplate(template);
 
         m.cleanup();
 
-//        verify(template);
+        verify(template);
     }
 }

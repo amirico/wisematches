@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
+<#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
 <#include "/core.ftl">
 
 <table id="header" class="ui-widget-content shadow" style="background: none; border-width: 0;border-bottom-width: 1px;">
@@ -58,6 +59,8 @@
                             <div style="padding-left: 30px; display: inline-block;">
                                 <button id="messagesButton" onclick="wm.util.url.redirect('/playground/messages/view')">
                                 <@message code="game.menu.messages.label"/>
+                                    <#if newMessagesCount?? && newMessagesCount !=0><strong>(${newMessagesCount}
+                                        )</strong></#if>
                                 </button>
                                 <button id="blacklistButton"
                                         onclick="wm.util.url.redirect('/playground/blacklist/view')">
