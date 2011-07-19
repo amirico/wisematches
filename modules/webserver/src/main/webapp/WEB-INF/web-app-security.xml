@@ -1,0 +1,172 @@
+<!--
+  ~ Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
+  -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+             default-destroy-method="destroy">
+
+    <global-method-security jsr250-annotations="enabled"/>
+
+    <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+        <beans:property name="userPropertyToUse" value="nickname"/>
+    </beans:bean>
+
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
+
+    <beans:bean id="rememberMeServices"
+                class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+        <beans:property name="key" value="${security.remember.token}"/>
+        <beans:property name="userDetailsService" ref="userDetailsService"/>
+        <beans:property name="parameter" value="rememberMe"/>
+        <beans:property name="cookieName" value="REMEMBER_ME"/>
+
+        <beans:property name="tokenRepository">
+            <beans:bean class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+                <beans:property name="dataSource" ref="dataSource"/>
+                <beans:property name="createTableOnStartup" value="false"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
+        <beans:property name="playerManager" ref="playerManager"/>
+        <beans:property name="accountManager" ref="accountManager"/>
+        <beans:property name="accountLockManager" ref="lockAccountManager"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+
+        <beans:property name="saltSource" ref="saltSource"/>
+        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+    </beans:bean>
+
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.spring.WMRedirectStrategy">
+        <beans:property name="redirectParameters">
+            <beans:set>
+                <beans:value>rememberMe</beans:value>
+            </beans:set>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="authenticationSuccessHandler"
+                class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="/playground/scribble/active"/>
+        <beans:property name="targetUrlParameter" value="continue"/>
+    </beans:bean>
+
+    <beans:bean id="authenticationFailureHandler"
+                class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+        <beans:property name="redirectStrategy" ref="redirectStrategy"/>
+        <beans:property name="defaultFailureUrl" value="/account/loginAuth?error=system"/>
+        <beans:property name="exceptionMappings">
+            <beans:map>
+                <beans:entry
+                        key="org.springframework.security.authentication.BadCredentialsException"
+                        value="/account/loginAuth?error=credential"/>
+                <beans:entry
+                        key="org.springframework.security.core.userdetails.UsernameNotFoundException"
+                        value="/account/loginAuth?error=credential"/>
+
+                <beans:entry
+                        key="org.springframework.security.web.authentication.session.SessionAuthenticationException"
+                        value="/account/loginAuth?error=session"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.www.NonceExpiredException"
+                        value="/account/loginAuth?error=session"/>
+                <beans:entry
+                        key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException"
+                        value="/account/loginAuth?error=session"/>
+                <beans:entry
+                        key="org.springframework.security.authentication.InsufficientAuthenticationException"
+                        value="/account/loginAuth?error=session"/>
+
+                <beans:entry
+                        key="org.springframework.security.authentication.AccountStatusException"
+                        value="/account/loginAuth?error=status"/>
+
+                <beans:entry
+                        key="org.springframework.security.authentication.InsufficientAuthenticationException"
+                        value="/account/loginAuth?error=insufficient"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException"
+                        value="/account/loginAuth?error=insufficient"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.rememberme.CookieTheftException"
+                        value="/account/loginAuth?error=insufficient"/>
+                <beans:entry
+                        key="org.springframework.security.web.authentication.rememberme.InvalidCookieException"
+                        value="/account/loginAuth?error=insufficient"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.spring.WMAccessDeniedHandler">
+        <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
+    </beans:bean>
+
+    <beans:bean id="guestFilter" class="wisematches.server.security.impl.GuestAuthenticationFilter">
+        <beans:property name="guestProcessingUrl" value="/account/loginGuest"/>
+        <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
+        <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
+    </beans:bean>
+
+    <beans:bean id="guestAuthenticationProvider"
+                class="wisematches.server.security.impl.GuestAuthenticationProvider">
+    </beans:bean>
+
+    <beans:bean id="memberAuthenticationProvider"
+                class="wisematches.server.security.impl.MemberAuthenticationProvider">
+        <beans:property name="saltSource" ref="saltSource"/>
+        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+        <beans:property name="userDetailsService" ref="userDetailsService"/>
+    </beans:bean>
+
+    <beans:bean id="concurrentSessionFilter" class="wisematches.server.web.security.spring.WMConcurrentSessionFilter">
+        <beans:property name="sessionRegistry" ref="playerStateManager"/>
+        <beans:property name="expiredUrl" value="/account/loginAuth?error=session"/>
+    </beans:bean>
+
+    <beans:bean id="sessionControlStrategy"
+                class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+        <beans:constructor-arg name="sessionRegistry" ref="playerStateManager"/>
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="guestAuthenticationProvider"/>
+
+        <authentication-provider ref="memberAuthenticationProvider"/>
+    </authentication-manager>
+
+    <http pattern="/jquery/**" security="none"/>
+
+    <http pattern="/resources/**" security="none"/>
+
+    <http use-expressions="true">
+        <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/account/membership/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/account/modify" access="isFullyAuthenticated()"/>
+        <intercept-url pattern="/admin/**" access="hasRole('admin') and isFullyAuthenticated()"/>
+
+        <intercept-url pattern="/**" access="permitAll"/>
+
+        <custom-filter before="ANONYMOUS_FILTER" ref="guestFilter"/>
+        <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrentSessionFilter"/>
+
+        <session-management session-authentication-strategy-ref="sessionControlStrategy"/>
+
+        <remember-me services-ref="rememberMeServices" key="${security.remember.token}"/>
+
+        <access-denied-handler ref="accessDeniedHandler"/>
+
+        <form-login login-page="/account/login"
+                    login-processing-url="/account/loginProcessing"
+                    authentication-success-handler-ref="authenticationSuccessHandler"
+                    authentication-failure-handler-ref="authenticationFailureHandler"/>
+
+        <logout logout-url="/account/logout"
+                logout-success-url="/account/login"
+                invalidate-session="true"/>
+    </http>
+</beans:beans>

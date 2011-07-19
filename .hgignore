@@ -1,0 +1,6 @@
+/target$
+/.*\.bak$
+/.*\.vpp~.*$
+application.ids
+application.iws
+release.properties

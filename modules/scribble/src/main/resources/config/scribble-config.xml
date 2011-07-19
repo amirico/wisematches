@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="tilesBankingHouse" class="wisematches.playground.scribble.bank.impl.XMLTilesBankingHouse">
+        <property name="banksPath" value="classpath:/banks/*"/>
+    </bean>
+
+    <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribbleBoardManager">
+        <property name="dictionaryManager" ref="wordGamesDictionaries"/>
+        <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+
+    <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
+    </bean>
+
+    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.PlayerTrackingCenterImpl">
+        <property name="ratingSystem" ref="eloRatingSystem"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="accountManager" ref="accountManager"/>
+        <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
+        <property name="playerTrackingCenterDao" ref="playerTrackingCenterDao"/>
+    </bean>
+
+    <bean id="scribbleProposalManager"
+          class="wisematches.playground.propose.impl.FileProposalManager">
+        <property name="proposalsResource" value="${server.proposals.file}"/>
+    </bean>
+
+    <bean id="scribbleSearchEngineManager"
+          class="wisematches.playground.scribble.search.ScribbleSearchesEngine">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+
+    <bean id="scribbleTerminator" class="wisematches.playground.expiration.impl.ExpiredGamesTerminator"
+          destroy-method="destroy">
+        <property name="taskScheduler">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="threadGroupName" value="GameTimeoutTerminator"/>
+                <property name="threadNamePrefix" value="GameTimeoutTerminator"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="boardsSearchEngine" ref="scribbleSearchEngineManager"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
+    </bean>
+
+    <bean id="scribbleRobotBrain" class="wisematches.playground.scribble.robot.ScribbleRobotBrain"/>
+
+    <bean id="scribbleRobotActivity" class="wisematches.playground.robot.RobotActivityCenter">
+        <property name="robotBrain" ref="scribbleRobotBrain"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="movesExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+                <property name="maxPoolSize" value="5"/>
+                <property name="corePoolSize" value="1"/>
+                <property name="keepAliveSeconds" value="60"/>
+                <property name="threadGroupName" value="robotsActivityExecutor"/>
+                <property name="threadNamePrefix" value="robotsActivityExecutor"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="false"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="memoryWordManager" class="wisematches.playground.scribble.memory.impl.HibernateMemoryWordManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="memoryWordCleaner" class="wisematches.playground.scribble.memory.impl.MemoryWordsCleaner">
+        <property name="memoryWordManager" ref="memoryWordManager"/>
+        <property name="scribbleBoardManager" ref="scribbleBoardManager"/>
+    </bean>
+</beans>
