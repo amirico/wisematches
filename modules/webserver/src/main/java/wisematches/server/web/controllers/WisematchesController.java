@@ -28,15 +28,6 @@ public abstract class WisematchesController {
         return WMSecurityContext.getPersonality();
     }
 
-    @ModelAttribute("newMessagesCount")
-    public int getNewMessagesCount() {
-        final Personality personality = getPersonality();
-        if (personality == null || messageManager == null) {
-            return 0;
-        }
-        return messageManager.getNewMessagesCount(personality);
-    }
-
     @ModelAttribute("headerTitle")
     public String getHeaderTitle() {
         return "title.playboard";

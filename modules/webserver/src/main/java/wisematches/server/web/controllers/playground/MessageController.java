@@ -54,7 +54,7 @@ public class MessageController extends WisematchesController {
     public String showPlayboard(Model model, Locale locale) {
         final Player principal = getPrincipal();
         model.addAttribute("messages", messageManager.getMessages(principal));
-        model.addAttribute("newMessagesCount", messageManager.getNewMessagesCount(principal));
+        model.addAttribute("newMessagesCount", 0);
         if (principal.getMembership().isAdsVisible()) {
             model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("message", Language.byLocale(locale)));
         }

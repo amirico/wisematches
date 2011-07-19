@@ -59,8 +59,12 @@
                             <div style="padding-left: 30px; display: inline-block;">
                                 <button id="messagesButton" onclick="wm.util.url.redirect('/playground/messages/view')">
                                 <@message code="game.menu.messages.label"/>
-                                    <#if newMessagesCount?? && newMessagesCount !=0>
-                                        <strong>(${newMessagesCount})</strong>
+                                    <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
+                                    <#if messageManager?has_content>
+                                        <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
+                                        <#if newMessagesCount?? && newMessagesCount !=0>
+                                            <strong>(${newMessagesCount})</strong>
+                                        </#if>
                                     </#if>
                                 </button>
                                 <button id="blacklistButton"

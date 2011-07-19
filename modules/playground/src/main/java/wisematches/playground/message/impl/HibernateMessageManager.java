@@ -124,7 +124,7 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
             public Integer doInHibernate(Session session) throws HibernateException, SQLException {
                 final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
                         "FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
-                        "WHERE m.recipient=? and (a.last_messages_check is null or m.created>=a.last_messages_check)");
+                        "WHERE m.recipient=? and (a.last_messages_check is null or m.created>a.last_messages_check)");
                 sqlQuery.setLong(0, person.getId());
                 return ((Number) sqlQuery.uniqueResult()).intValue();
             }
