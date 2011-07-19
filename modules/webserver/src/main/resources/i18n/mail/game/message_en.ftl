@@ -7,8 +7,7 @@
 </p>
 
 ---------
-<p><strong>${context.subject}</strong></p>
-<p>${context.body}</p>
+<p>${context.text}</p>
 ---------
 <br>
 

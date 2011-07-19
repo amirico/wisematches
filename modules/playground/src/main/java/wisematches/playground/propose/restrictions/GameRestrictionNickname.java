@@ -14,6 +14,8 @@ public final class GameRestrictionNickname implements GameRestriction {
 	private final boolean matcher;
 	private final String nickname;
 
+	private static final long serialVersionUID = -5862537948675200684L;
+
 	public GameRestrictionNickname(String nickname) {
 		this(nickname, false);
 	}

@@ -14,6 +14,8 @@ public final class GameRestrictionRating implements GameRestriction {
 	private final int min;
 	private final int max;
 
+	private static final long serialVersionUID = -4891729205616056463L;
+
 	public GameRestrictionRating(int min, int max) {
 		this.min = min;
 		this.max = max;
