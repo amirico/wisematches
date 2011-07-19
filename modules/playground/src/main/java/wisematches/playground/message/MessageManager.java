@@ -64,6 +64,14 @@ public interface MessageManager {
     Message getMessage(long id);
 
     /**
+     * Returns new messages count.
+     *
+     * @param personality the person who's messages count should be received.
+     * @return the number of messages received from last time
+     */
+    int getNewMessagesCount(Personality personality);
+
+    /**
      * Returns number of messages sent today.
      *
      * @param personality the person who's count should be returned.
