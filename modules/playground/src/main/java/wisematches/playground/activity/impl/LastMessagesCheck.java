@@ -1,4 +1,4 @@
-package wisematches.playground.message.impl;
+package wisematches.playground.activity.impl;
 
 import javax.persistence.*;
 import java.util.Date;
