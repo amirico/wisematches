@@ -35,6 +35,10 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="activityManager" class="wisematches.playground.activity.impl.HibernateActivityManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean id="messagesCleanerJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="messageManager"/>
         <property name="targetMethod" value="cleanup"/>

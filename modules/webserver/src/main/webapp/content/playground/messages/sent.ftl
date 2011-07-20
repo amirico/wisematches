@@ -2,8 +2,6 @@
 <#include "/core.ftl">
 
 <@wm.jstable/>
-<#include "/content/playground/messages/scriplet.ftl">
-<#include "/content/playground/blacklist/scriplet.ftl">
 
 <@wm.playground id="messagesWidget">
 <div>
@@ -11,12 +9,6 @@
         <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
         <@message code="messages.delete.selected"/>
         </button>
-    </div>
-
-    <div style="float: right;">
-        <a href="/playground/messages/sent"><@message code="messages.sent"/></a>
-        •
-        <a href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
     </div>
 </div>
 
@@ -27,7 +19,7 @@
             <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
                    onchange="wm.messages.selectAll()">
         </th>
-        <th nowrap="nowrap"><@message code="messages.column.from"/></th>
+        <th nowrap="nowrap"><@message code="messages.column.to"/></th>
         <th width="100%"><@message code="messages.column.message"/></th>
     </tr>
     </thead>
@@ -38,9 +30,7 @@
                 <input type="checkbox" name="removeList" value="${m.id}">
             </td>
             <td>
-                <#if m.sender != 0>
-                    <div class="message-from"><@wm.player player=playerManager.getPlayer(m.sender)/></div>
-                </#if>
+                <div class="message-from"><@wm.player player=playerManager.getPlayer(m.recipient)/></div>
                 <div class="message-date">
                 ${gameMessageSource.formatDate(m.creationDate, locale)} ${gameMessageSource.formatTime(m.creationDate, locale)}
                 </div>
@@ -51,22 +41,7 @@
                 </div>
 
                 <div class="message-controls">
-                    <#if !m.notification>
-                    <@replyMessage pid=m.id><@message code="messages.reply"/></@replyMessage>
-                    <#--<#if m.original != 0>-->
-                    <#--&nbsp;-->
-                    <#--<a title="This message has been replied to"-->
-                    <#--href="#">Previous Message</a>-->
-                    <#--</#if>-->
-                        &nbsp;&nbsp;&nbsp;
-                        <a href="#"
-                           onclick="wm.messages.reportAbuse(${m.id});"><@message code="messages.abuse"/></a>
-                        &nbsp;
-                    <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
-                        &nbsp;
-                    </#if>
-                    <a href="#"
-                       onclick="wm.messages.remove([${m.id}])"><@message code="messages.delete.single"/></a>
+                    <a href="#" onclick="wm.messages.remove([${m.id}])"><@message code="messages.delete.single"/></a>
                 </div>
             </td>
         </tr>
@@ -96,18 +71,6 @@
     });
 
     wm.messages = $.extend({}, wm.messages, new function() {
-        this.reportAbuse = function(id) {
-            wm.ui.showStatus("<@message code="messages.status.abuse.sending"/>");
-            $.post('/playground/messages/abuse.ajax?m=' + id, function(result) {
-                if (result.success) {
-                    wm.ui.showStatus("<@message code="messages.status.abuse.sent"/>");
-                } else {
-                    wm.ui.showStatus(result.summary, true);
-                }
-            });
-            return false;
-        };
-
         this.selectAll = function() {
             $(".message-checkbox input").prop("checked", $("#removeAll").prop("checked"));
             return false;
@@ -124,7 +87,7 @@
 
         this.remove = function(msgs) {
             wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);
-            $.ajax('remove.ajax', {
+            $.ajax('remove.ajax?sent=true', {
                 type: 'post',
                 contentType: 'application/x-www-form-urlencoded',
                 data:  {'messages[]': msgs}
