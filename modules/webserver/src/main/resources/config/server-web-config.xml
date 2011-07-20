@@ -82,5 +82,6 @@
         <property name="expirationManager" ref="scribbleTerminator"/>
         <property name="playerStateManager" ref="playerStateManager"/>
         <property name="notificationManager" ref="notificationManager"/>
+        <property name="messageManager" ref="messageManager"/>
     </bean>
 </beans>
