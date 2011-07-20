@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -14,6 +15,7 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.BlacklistRecordForm;
 import wisematches.server.web.i18n.GameMessageSource;
+import wisematches.server.web.services.ads.AdvertisementManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -27,13 +29,18 @@ public class BlacklistController extends WisematchesController {
     private PlayerManager playerManager;
     private BlacklistManager blacklistManager;
     private GameMessageSource gameMessageSource;
+    private AdvertisementManager advertisementManager;
 
     public BlacklistController() {
     }
 
     @RequestMapping("view")
-    public String viewBlacklist(Model model) {
-        model.addAttribute("blacklist", blacklistManager.getBlacklist(getPersonality()));
+    public String viewBlacklist(Model model, Locale locale) {
+        final Player principal = getPrincipal();
+        model.addAttribute("blacklist", blacklistManager.getBlacklist(principal));
+        if (principal.getMembership().isAdsVisible()) {
+            model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("blacklist", Language.byLocale(locale)));
+        }
         return "/content/playground/blacklist/view";
     }
 
@@ -73,5 +80,10 @@ public class BlacklistController extends WisematchesController {
     @Autowired
     public void setGameMessageSource(GameMessageSource gameMessageSource) {
         this.gameMessageSource = gameMessageSource;
+    }
+
+    @Autowired
+    public void setAdvertisementManager(AdvertisementManager advertisementManager) {
+        this.advertisementManager = advertisementManager;
     }
 }
