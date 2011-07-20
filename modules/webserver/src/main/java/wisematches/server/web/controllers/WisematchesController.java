@@ -13,8 +13,6 @@ import wisematches.server.security.WMSecurityContext;
  */
 @Controller
 public abstract class WisematchesController {
-    private MessageManager messageManager;
-
     protected WisematchesController() {
     }
 
@@ -31,10 +29,5 @@ public abstract class WisematchesController {
     @ModelAttribute("headerTitle")
     public String getHeaderTitle() {
         return "title.playboard";
-    }
-
-    @Autowired
-    public void setMessageManager(MessageManager messageManager) {
-        this.messageManager = messageManager;
     }
 }

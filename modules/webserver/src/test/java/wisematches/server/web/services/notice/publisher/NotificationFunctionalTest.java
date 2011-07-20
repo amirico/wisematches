@@ -1,5 +1,6 @@
 package wisematches.server.web.services.notice.publisher;
 
+import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,8 @@ import wisematches.playground.message.Message;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.server.web.services.notice.NotificationManager;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -56,7 +59,7 @@ public class NotificationFunctionalTest {
 		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.day"), b2));
 		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.half"), b2));
 		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.timeout.hour"), b2));
-		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.message"), new Message(p, "Mock body")));
+		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.message"), createMock(Message.class)));
 
 		Thread.sleep(1000000);
 	}
