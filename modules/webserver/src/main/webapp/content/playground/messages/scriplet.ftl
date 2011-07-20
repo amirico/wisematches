@@ -9,10 +9,10 @@
             backgroundColor:'#DFEFFC'
         };
 
-        var sendRequest = function(id, replay) {
+        var sendRequest = function(id, reply) {
             var dlg = $("#privateMessageDialog");
             dlg.html('<div class="loading-image" style="height: 350px"></div>');
-            dlg.load("/playground/messages/create?dialog=true&pid=" + id + "&replay=" + replay, function() {
+            dlg.load("/playground/messages/create?dialog=true&pid=" + id + "&reply=" + reply, function() {
                 $("#sendPrivateMessage").button("enable");
             });
             dlg.dialog({
@@ -31,7 +31,7 @@
                             dlg.closest(".ui-dialog").block({ message: "", overlayCSS: overlayCSS });
 
                             var msg = $("#privateMessageDialog textarea").val();
-                            $.post('/playground/messages/send.ajax', $.toJSON({pid: id, replay: replay, message: msg}), function(result) {
+                            $.post('/playground/messages/send.ajax', $.toJSON({pid: id, reply: reply, message: msg}), function(result) {
                                 dlg.closest(".ui-dialog").unblock();
                                 if (result.success) {
                                     wm.ui.showStatus("<@message code="messages.status.sent"/>");
@@ -53,7 +53,7 @@
             });
         };
 
-        this.replay = function(original) {
+        this.reply = function(original) {
             sendRequest(original, true);
             return false;
         };
@@ -71,6 +71,6 @@
 <a href="#" onclick="wm.messages.create(${pid})"><#nested/></a>
 </#macro>
 
-<#macro replayMessage pid>
-<a href="#" onclick="wm.messages.replay(${pid})"><#nested/></a>
+<#macro replyMessage pid>
+<a href="#" onclick="wm.messages.reply(${pid})"><#nested/></a>
 </#macro>

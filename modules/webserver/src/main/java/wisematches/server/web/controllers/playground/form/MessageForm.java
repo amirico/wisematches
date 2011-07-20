@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class MessageForm {
     private long pid;
     private String message;
-    private boolean replay;
+    private boolean reply;
 
     public MessageForm() {
     }
@@ -30,11 +30,11 @@ public class MessageForm {
         this.message = message;
     }
 
-    public boolean isReplay() {
-        return replay;
+    public boolean isReply() {
+        return reply;
     }
 
-    public void setReplay(boolean replay) {
-        this.replay = replay;
+    public void setReply(boolean reply) {
+        this.reply = reply;
     }
 }

@@ -7,7 +7,7 @@ public enum MailSender {
     /**
      * This is abstract e-mail notification.
      */
-    UNDEFINED("noreplay"),
+    UNDEFINED("noreply"),
 
     /**
      * From address is bugs reporter.
@@ -17,12 +17,12 @@ public enum MailSender {
     /**
      * Mail was sent from game state notifications team
      */
-    GAME("game-noreplay"),
+    GAME("game-noreply"),
 
     /**
      * Mail was sent from accounts support team.
      */
-    ACCOUNTS("account-noreplay");
+    ACCOUNTS("account-noreply");
 
     private final String defaultName;
 

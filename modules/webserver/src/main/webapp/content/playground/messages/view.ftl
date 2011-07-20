@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
+<#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.impl.HibernateMessage>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>
@@ -50,7 +50,7 @@
 
                 <div class="message-controls">
                     <#if !m.notification>
-                    <@replayMessage pid=m.id><@message code="messages.replay"/></@replayMessage>
+                    <@replyMessage pid=m.id><@message code="messages.reply"/></@replyMessage>
                     <#--<#if m.original != 0>-->
                     <#--&nbsp;-->
                     <#--<a title="This message has been replied to"-->

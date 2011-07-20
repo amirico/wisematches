@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="context" type="wisematches.playground.message.Message" -->
+<#-- @ftlvariable name="context" type="wisematches.playground.message.impl.HibernateMessage" -->
 <#import "../macro.ftl" as mail>
 
 <@mail.html subject="You have got new message">

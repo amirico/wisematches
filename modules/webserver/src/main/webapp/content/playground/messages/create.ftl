@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="messagesCount" type="java.lang.Integer" -->
-<#-- @ftlvariable name="original" type="wisematches.playground.message.Message" -->
+<#-- @ftlvariable name="original" type="wisematches.playground.message.impl.HibernateMessage" -->
 <#-- @ftlvariable name="recipient" type="wisematches.personality.player.Player" -->
 <#include "/core.ftl">
 
@@ -41,7 +41,7 @@
     <div>
         <div></div>
         <div style="font-style: italic;">
-            This is replay to the message of <@wm.player player=playerManager.getPlayer(original.sender)/> received
+            This is reply to the message of <@wm.player player=playerManager.getPlayer(original.sender)/> received
         ${gameMessageSource.formatDate(original.created, locale)} ${gameMessageSource.formatTime(original.created, locale)}
         </div>
     </div>
