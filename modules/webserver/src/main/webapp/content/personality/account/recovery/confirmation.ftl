@@ -24,7 +24,7 @@
                     </td>
                     <td>
                     <@wm.field path="recovery.token">
-                        <input type="hidden" id="token" name="token" value="${wisematches.statusValue}">
+                        <input type="hidden" id="token" name="token" value="${spring.stringStatusValue}">
                     </@wm.field>
 
                     <@wm.fieldInput path="recovery.email"/>
