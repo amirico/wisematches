@@ -148,19 +148,47 @@
     position: relative;
     width: 342px !important;
     height: 366px !important;
-    background-image: url('/resources/images/scribble/board/field.png');
+    background: url('/resources/images/scribble/board/border.gif');
+}
+
+.scribble .background {
+    z-index: 1;
+    position: absolute;
+    top: 4px !important;
+    left: 4px !important;
+    width: 334px !important;
+    height: 335px !important;
+}
+
+.scribble .color {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #558be7;
+    background: -moz-linear-gradient(-45deg, #1a49d6, #75b0f1);
+    background: -webkit-gradient(linear, left top, right bottom, from(#1a49d6), to(#75b0f1));
+    background: -o-linear-gradient(top left, #1a49d6, #75b0f1);
+}
+
+.scribble .grid {
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('/resources/images/scribble/board/grid.gif');
 }
 
 .scribble .field {
+    z-index: 2;
     position: absolute;
     top: 6px !important;
     left: 6px !important;
-    z-index: 1;
 }
 
 .scribble .bonuses {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
 }
 
 .scribble .board {
@@ -178,7 +206,7 @@
 }
 
 .scribble .highlighting {
-    z-index: 3;
+    z-index: 4;
     width: 22px !important;
     height: 22px !important;
     background: url(/resources/images/scribble/board/tiles.png) no-repeat;
@@ -188,7 +216,7 @@
 .tile {
     cursor: pointer;
     color: white;
-    z-index: 4;
+    z-index: 5;
 
     font-size: 12px;
     font-family: arial serif;

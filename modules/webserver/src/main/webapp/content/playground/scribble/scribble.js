@@ -697,6 +697,9 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');
+    var gameBackground = $("<div></div>").addClass('background').appendTo(scribble);
+    $("<div></div>").addClass('color').appendTo(gameBackground);
+    $("<div></div>").addClass('grid').appendTo(gameBackground);
     var gameField = $("<div></div>").addClass('field').appendTo(scribble);
 
     var hand = $("<div></div>").addClass('hand').appendTo($(gameField));
@@ -770,7 +773,9 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
         for (var i = 0; i < 15; i++) {
             for (var j = 0; j < 15; j++) {
                 var bonus = scoreEngine.getCellBonus(i, j);
-                $("<div></div>").addClass('cell').addClass('bonus-cell-' + bonus).offset({left: j * 22, top: i * 22}).appendTo(bonuses);
+                if (bonus != undefined) {
+                    $("<div></div>").addClass('cell').addClass('bonus-cell-' + bonus).offset({left: j * 22, top: i * 22}).appendTo(bonuses);
+                }
             }
         }
 
