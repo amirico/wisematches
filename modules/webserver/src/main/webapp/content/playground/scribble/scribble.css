@@ -174,9 +174,10 @@
 .scribble .grid {
     z-index: 2;
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background-image: url('/resources/images/scribble/board/grid.gif');
+    width: 328px !important;
+    height: 329px !important;
+    border: 3px solid transparent;
+    background: url('/resources/images/scribble/board/grid.gif') repeat;
 }
 
 .scribble .field {
