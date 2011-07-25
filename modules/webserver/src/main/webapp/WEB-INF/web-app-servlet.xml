@@ -78,6 +78,7 @@
         <property name="freemarkerVariables">
             <map>
                 <entry key="playerManager" value-ref="playerManager"/>
+                <entry key="playerStateManager" value-ref="playerStateManager"/>
                 <entry key="captchaService" value-ref="captchaService"/>
                 <entry key="gameMessageSource" value-ref="gameMessageSource"/>
                 <entry key="analyticsCode" value="${analytics.trackcode}"/>

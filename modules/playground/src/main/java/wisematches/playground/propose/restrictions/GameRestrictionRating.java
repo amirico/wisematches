@@ -23,6 +23,7 @@ public final class GameRestrictionRating implements GameRestriction {
 
 	@Override
 	public void validatePlayer(Player player) throws ViolatedRestrictionException {
+/*
 		final short rating = player.getRating();
 		if (rating < min) {
 			throw new ViolatedRestrictionException("rating.min", rating, min, this);
@@ -30,5 +31,6 @@ public final class GameRestrictionRating implements GameRestriction {
 		if (rating > max) {
 			throw new ViolatedRestrictionException("rating.max", rating, max, this);
 		}
+*/
 	}
 }

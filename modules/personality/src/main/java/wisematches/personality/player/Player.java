@@ -64,13 +64,4 @@ public abstract class Player extends Personality {
 	 *         and has some limitations.
 	 */
 	public abstract Membership getMembership();
-
-	/**
-	 * Returns current player's rating.
-	 * <p/>
-	 * For computer players always returns predefined constant.
-	 *
-	 * @return the current player's rating.
-	 */
-	public abstract short getRating();
 }

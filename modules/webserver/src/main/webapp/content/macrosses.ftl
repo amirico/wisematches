@@ -21,12 +21,15 @@
 </div>
 </#macro>
 
-<#macro player player showType=true>
+<#macro player player showType=true showState=true>
     <#assign computerPlayer=(player.membership == "GUEST") || (player.membership == "ROBOT")/>
 <span class="player <#if computerPlayer>computer<#else>member</#if>">
+    <#if showState && playerStateManager.isPlayerOnline(player)>
+        <div class="online"></div></#if>
     <#if !computerPlayer><a href="/playground/profile/view?p=${player.id}"></#if><span
-        class="nickname">${gameMessageSource.getPlayerNick(player, locale)}</span><#if showType && player.getMembership() != "BASIC">
-    <span class="mod ${player.membership!""?lower_case}"></span></#if><#if !computerPlayer></a></#if>
+        class="nickname">${gameMessageSource.getPlayerNick(player, locale)}</span>
+    <#if showType && player.getMembership() != "BASIC">
+        <span class="mod ${player.membership!""?lower_case}"></span></#if><#if !computerPlayer></a></#if>
 </span>
 </#macro>
 

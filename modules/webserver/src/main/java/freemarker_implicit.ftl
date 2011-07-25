@@ -4,5 +4,6 @@
 [#-- @ftlvariable name="serverHostname" type="java.lang.String" --]
 [#-- @ftlvariable name="principal" type="wisematches.personality.player.Player" --]
 [#-- @ftlvariable name="playerManager" type="wisematches.personality.player.PlayerManager" --]
+[#-- @ftlvariable name="playerStateManager" type="wisematches.server.web.services.state.PlayerStateManager" --]
 [#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.captcha.CaptchaService" --]
 [#-- @ftlvariable name="gameMessageSource" type="wisematches.server.web.i18n.GameMessageSource" --]
