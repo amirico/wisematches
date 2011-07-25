@@ -114,7 +114,7 @@
         <td style="vertical-align: top;">
         <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"/>
         <#if !viewMode><#include "widget/controls.ftl"/></#if>
-            <#--<#include "widget/annotation.ftl"/>-->
+            <#include "widget/annotation.ftl"/>
         </td>
 
         <td style="vertical-align: top; width: 280px">
