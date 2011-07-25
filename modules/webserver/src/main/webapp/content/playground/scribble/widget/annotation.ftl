@@ -40,23 +40,13 @@
                 </div>
             </div>
 
-            <div id="annotationPlayer">Loading a comment...</div>
+            <div id="annotationPlayer"></div>
         </div>
 
         <div class="ui-widget-content"
              style="padding-top: 0; margin-left: -5px; margin-right: -5px;border-width: 0; border-bottom-width:  1px;"></div>
 
-        <div id="annotationMessage" style="padding-top: 10px; text-align: justify;">
-            This is annotation.
-            Дорогие игроки, пожалуйста, обратите внимание, что наша игра все еще находится в стадии активной разработки.
-            Вполне воз.
-            Дорогие игроки, пожалуйста, обратите внимание, что наша игра все еще находится в стадии активной разработки.
-            Вполне воз.
-            Дорогие игроки, пожалуйста, обратите внимание, что наша игра все еще находится в стадии активной разработки.
-            Вполне воз.
-            Дорогие игроки, пожалуйста, обратите внимание, что наша игра все еще находится в стадии активной разработки.
-            Вполне воз
-        </div>
+        <div id="annotationMessage" style="padding-top: 10px; text-align: justify;"></div>
     </div>
 </div>
 
@@ -65,6 +55,13 @@
         var comments;
         var position = 0;
         var commentsCache = new Array();
+
+        var overlayCSS = {
+            '-moz-border-radius': '5px',
+            '-webkit-border-radius': '5px',
+            'border-radius': '5px',
+            backgroundColor:'#DFEFFC'
+        };
 
         this.addNew = function() {
             $("#annotationView").hide();
@@ -91,34 +88,38 @@
         var showComment = function(pos) {
             var comment = commentsCache['comment' + pos];
             if (comment == undefined) {
-                $("#annotationPlayer").html("Loading a comment...");
-                $("#annotationMessage").html('<div class="loading-image" style="height: 100px"></div>');
-                $.post('/playground/scribble/comment/get.ajax?b=' + board.getBoardId() + "&m=" + id, function(result) {
+                $("#annotationWidget").block({ message: 'Loading a comment...', overlayCSS: overlayCSS });
+//                $("#annotationPlayer").html("Loading a comment...");
+//                $("#annotationMessage").html('<div class="loading-image" style="height: 50px"></div>');
+                $.post('/playground/scribble/comment/get.ajax?b=' + board.getBoardId() + "&m=" + comments[pos], function(result) {
                     if (result.success) {
                         commentsCache['comment' + pos] = result.data;
                         showComment(pos);
                     } else {
                         wm.ui.showStatus(result.summary, true);
                     }
+                    $("#annotationWidget").unblock();
                 });
             } else {
                 position = pos;
                 $("#annotationMessage").html(comment.text);
                 $("#annotationPlayer").html(board.getPlayerInfo(comment.pid).nickname);
-                $("#annotationPosition").html(position + " of " + comments.length);
+                $("#annotationPosition").html((position + 1) + " of " + comments.length);
             }
         };
 
         this.next = function() {
             if (position + 1 < comments.length) {
-                showComment(comments[position++]);
+                showComment(position + 1);
             }
+            return false;
         };
 
         this.prev = function() {
             if (position - 1 >= 0) {
-                showComment(comments[position--]);
+                showComment(position - 1);
             }
+            return false;
         };
 
         var updateView = function(ids) {
@@ -127,7 +128,7 @@
             $("#annotationCount").html("(" + comments.length + ")");
             if (comments.length > 0) {
                 $("#annotationView").show();
-                showComment(comments[position]);
+                showComment(comments.length - 1);
             }
         };
 
