@@ -179,6 +179,10 @@ wm.ui = new function() {
         }
     };
 
+    this.player = function(info) {
+        return '<span class="player member"><a href="/playground/profile/view?p=' + info.playerId + '"><span class="nickname">' + info.nickname + '</span></a></span>';
+    };
+
     $(document).ready(function() {
         $("body").prepend($("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>"));
         $("body").prepend($("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>"));

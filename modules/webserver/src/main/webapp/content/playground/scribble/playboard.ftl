@@ -103,29 +103,31 @@
 </div>
 </#if>
 
-<table id="playboard" cellpadding="5" align="center">
-    <tr>
-        <td style="vertical-align: top; width: 250px">
-        <#include "widget/progress.ftl"/>
+<div id="board${board.boardId}">
+    <table id="playboard" cellpadding="5" align="center">
+        <tr>
+            <td style="vertical-align: top; width: 250px">
+            <#include "widget/progress.ftl"/>
         <#include "widget/legend.ftl"/>
         <#include "widget/history.ftl"/>
-        </td>
+            </td>
 
-        <td style="vertical-align: top;">
-        <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"/>
+            <td style="vertical-align: top;">
+            <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"/>
         <#if !viewMode><#include "widget/controls.ftl"/></#if>
-            <#include "widget/annotation.ftl"/>
-        </td>
+            <#if playerHand?has_content><#include "widget/annotation.ftl"/></#if>
+            </td>
 
-        <td style="vertical-align: top; width: 280px">
-        <#include "widget/players.ftl"/>
+            <td style="vertical-align: top; width: 280px">
+            <#include "widget/players.ftl"/>
 <#if !viewMode>
-            <#include "widget/selection.ftl"/>
-            <#include "widget/memory.ftl"/>
-        </#if>
-        </td>
-    </tr>
-</table>
+                <#include "widget/selection.ftl"/>
+                <#include "widget/memory.ftl"/>
+            </#if>
+            </td>
+        </tr>
+    </table>
+</div>
 
 <script type="text/javascript">
     $("#scribbleBoard").prepend(board.getBoardElement());

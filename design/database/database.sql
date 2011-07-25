@@ -23,8 +23,8 @@ CREATE  TABLE IF NOT EXISTS
   UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 )
   ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  COMMENT = 'The base table that contains information about a player' ;
+  DEFAULT CHARACTER SET = utf8,
+COMMENT = 'The base table that contains information about a player' ;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`account_lock`
@@ -273,7 +273,7 @@ CREATE  TABLE IF NOT EXISTS `wisematches`.`player_message` (
   `sender` BIGINT(20)  NOT NULL DEFAULT 0 ,
   `notification` TINYINT(4)  NOT NULL ,
   `original` BIGINT(20)  NOT NULL DEFAULT 0 ,
-  `board` BIGINT(20)  NOT NULL DEFAULT 0 ,
+  `state` TINYINT(4)  NULL DEFAULT 0 ,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
@@ -305,6 +305,19 @@ CREATE  TABLE IF NOT EXISTS
   DEFAULT CHARACTER SET = utf8;
 
 
+-- -----------------------------------------------------
+-- Table `wisematches`.`scribble_comment`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS
+        `wisematches`.`scribble_comment` (
+  `id` BIGINT(20)  NOT NULL AUTO_INCREMENT ,
+  `board` BIGINT(20)  NULL ,
+  `person` BIGINT(20)  NULL ,
+  `text` VARCHAR(254) NULL ,
+  `creationDate` TIMESTAMP NULL ,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

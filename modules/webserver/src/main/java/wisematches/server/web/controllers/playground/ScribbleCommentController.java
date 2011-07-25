@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.personality.player.PlayerManager;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
@@ -27,94 +26,90 @@ import java.util.Map;
 @Controller
 @RequestMapping("/playground/scribble/comment")
 public class ScribbleCommentController extends WisematchesController {
-	private PlayerManager playerManager;
-	private ScribbleBoardManager boardManager;
-	private GameMessageSource gameMessageSource;
-	private ScribbleCommentManager commentManager;
+    private ScribbleBoardManager boardManager;
+    private GameMessageSource gameMessageSource;
+    private ScribbleCommentManager commentManager;
 
-	public ScribbleCommentController() {
-	}
+    public ScribbleCommentController() {
+    }
 
-	@ResponseBody
-	@RequestMapping("load")
-	public ServiceResponse loadComments(@RequestParam("b") final long gameId, Locale locale) {
-		final ScribbleBoard board;
-		try {
-			board = boardManager.openBoard(gameId);
-			if (board == null) {
-				return ServiceResponse.failure("Unknown board");
-			}
-		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure("Unknown board");
-		}
-		if (board.getPlayerHand(getPersonality().getId()) == null) {
-			return ServiceResponse.failure("Not your game");
-		}
-		return ServiceResponse.success(null, "comments", commentManager.getBoardComments(board));
-	}
+    @ResponseBody
+    @RequestMapping("load")
+    public ServiceResponse loadComments(@RequestParam("b") final long gameId, Locale locale) {
+        final ScribbleBoard board;
+        try {
+            board = boardManager.openBoard(gameId);
+            if (board == null) {
+                return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+            }
+        } catch (BoardLoadingException ex) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+        }
+        if (board.getPlayerHand(getPersonality().getId()) == null) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
+        }
+        return ServiceResponse.success(null, "comments", commentManager.getBoardComments(board));
+    }
 
-	@ResponseBody
-	@RequestMapping("get")
-	public ServiceResponse getComment(@RequestParam("b") final long gameId, @RequestParam("m") final long msg, Locale locale) {
-		final ScribbleBoard board;
-		try {
-			board = boardManager.openBoard(gameId);
-			if (board == null) {
-				return ServiceResponse.failure("Unknown board");
-			}
-		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure("Unknown board");
-		}
-		if (board.getPlayerHand(getPersonality().getId()) == null) {
-			return ServiceResponse.failure("Not your game");
-		}
-		ScribbleComment comment = commentManager.getComment(msg);
-		if (comment == null) {
-			return ServiceResponse.failure("Unknown comment");
-		}
+    @ResponseBody
+    @RequestMapping("get")
+    public ServiceResponse getComment(@RequestParam("b") final long gameId, @RequestParam("m") final long msg, Locale locale) {
+        final ScribbleBoard board;
+        try {
+            board = boardManager.openBoard(gameId);
+            if (board == null) {
+                return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+            }
+        } catch (BoardLoadingException ex) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+        }
+        if (board.getPlayerHand(getPersonality().getId()) == null) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
+        }
+        ScribbleComment comment = commentManager.getComment(msg);
+        if (comment == null) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.comment", locale));
+        }
+        return ServiceResponse.success(null, serialize(locale, comment));
+    }
 
-		final Map<String, Object> res = new HashMap<String, Object>();
-		res.put("text", comment.getText());
-		res.put("date", gameMessageSource.formatDate(comment.getCreationDate(), locale));
-		res.put("time", gameMessageSource.formatTime(comment.getCreationDate(), locale));
-		res.put("pid", comment.getPerson());
-		return ServiceResponse.success(null, res);
-	}
+    @ResponseBody
+    @RequestMapping("add")
+    public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
+        final ScribbleBoard board;
+        try {
+            board = boardManager.openBoard(gameId);
+            if (board == null) {
+                return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+            }
+        } catch (BoardLoadingException ex) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+        }
+        final ScribbleComment comment = commentManager.addComment(getPrincipal(), board, form.getText());
+        return ServiceResponse.success(null, serialize(locale, comment));
+    }
 
-	@ResponseBody
-	@RequestMapping("add")
-	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
-		final ScribbleBoard board;
-		try {
-			board = boardManager.openBoard(gameId);
-			if (board == null) {
-				return ServiceResponse.failure("Unknown board");
-			}
-		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure("Unknown board");
-		}
+    private Map<String, Object> serialize(Locale locale, ScribbleComment comment) {
+        final Map<String, Object> res = new HashMap<String, Object>();
+        res.put("id", comment.getId());
+        res.put("text", comment.getText());
+        res.put("elapsed", gameMessageSource.formatElapsedTime(comment.getCreationDate(), locale));
+        res.put("person", comment.getPerson());
+        return res;
+    }
 
-		commentManager.addComment(getPrincipal(), board, form.getText());
-		return ServiceResponse.SUCCESS;
-	}
+    @Autowired
+    public void setBoardManager(ScribbleBoardManager boardManager) {
+        this.boardManager = boardManager;
+    }
 
-	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
-	}
+    @Autowired
+    public void setCommentManager(ScribbleCommentManager commentManager) {
+        this.commentManager = commentManager;
+    }
 
-	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
-		this.boardManager = boardManager;
-	}
-
-	@Autowired
-	public void setCommentManager(ScribbleCommentManager commentManager) {
-		this.commentManager = commentManager;
-	}
-
-	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
-	}
+    @Autowired
+    public void setGameMessageSource(GameMessageSource gameMessageSource) {
+        this.gameMessageSource = gameMessageSource;
+    }
 }
