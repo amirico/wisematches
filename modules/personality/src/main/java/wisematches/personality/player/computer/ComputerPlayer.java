@@ -89,7 +89,6 @@ public class ComputerPlayer extends Player {
 		return membership;
 	}
 
-	@Override
 	public short getRating() {
 		return rating;
 	}

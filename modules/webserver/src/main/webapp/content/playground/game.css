@@ -70,6 +70,13 @@
     color: gray;
 }
 
+.player .online {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: url("/resources/images/player/online.png") no-repeat left top;
+}
+
 .player .nickname {
     font-weight: bold;
 }

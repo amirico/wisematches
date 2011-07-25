@@ -33,11 +33,6 @@ public final class MemberPlayer extends Player {
 	}
 
 	@Override
-	public short getRating() {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-
-	@Override
 	public Language getLanguage() {
 		return account.getLanguage();
 	}
