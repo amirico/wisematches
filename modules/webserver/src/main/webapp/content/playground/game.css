@@ -421,3 +421,39 @@
 #privateMessageDialog {
     border-spacing: 5px;
 }
+
+.annotationWidget {
+    padding-top: 10px;
+    max-width: 445px;
+}
+
+.annotationControls a {
+    color: #1D5987;
+    border-bottom: 1px dashed;
+    text-decoration: none
+}
+
+.annotationPrev, .annotationNext {
+    background: none !important;
+    border: none !important;
+    cursor: pointer;
+}
+
+.annotationTimestamp {
+    font-size: 10px;
+    color: gray;
+    line-height: normal;
+}
+
+.annotationSeparator {
+    padding-top: 0;
+    margin-left: -5px;
+    margin-right: -5px;
+    border-width: 0;
+    border-bottom-width: 1px;
+}
+
+.annotationMessage {
+    padding-top: 10px;
+    text-align: justify;
+}
