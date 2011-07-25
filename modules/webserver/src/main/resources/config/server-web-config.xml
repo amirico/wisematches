@@ -29,6 +29,11 @@
         <property name="imagesFolder" value="${server.images.path}/players"/>
     </bean>
 
+    <bean id="scribbleCommentManager"
+          class="wisematches.server.web.services.comment.impl.HibernateScribbleCommentManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
 
     <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
