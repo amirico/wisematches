@@ -59,27 +59,36 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void sendNotification(Personality recipient, String body) {
-		if (recipient == null) {
-			throw new NullPointerException("Recipient can't be null");
-		}
-		publishMessage(new HibernateMessage(recipient, body));
+		sendNotification(recipient, body, false);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void sendMessage(Personality sender, Personality recipient, String body) {
+		sendMessage(sender, recipient, body, false);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void replyMessage(Personality sender, Message message, String body) {
+		replyMessage(sender, message, body, false);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void sendMessage(Personality sender, Personality recipient, String body, boolean quite) {
 		if (recipient == null) {
 			throw new NullPointerException("Recipient can't be null");
 		}
 		if (sender == null) {
 			throw new NullPointerException("Sender can't be null");
 		}
-		publishMessage(new HibernateMessage(recipient, body, sender));
+		publishMessage(new HibernateMessage(recipient, body, sender), quite);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void replyMessage(Personality sender, Message message, String body) {
+	public void replyMessage(Personality sender, Message message, String body, boolean quite) {
 		if (sender == null) {
 			throw new NullPointerException("Sender can't be null");
 		}
@@ -91,15 +100,24 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 		if (recipient == null) {
 			throw new IllegalStateException("Recipient is unknown");
 		}
-		publishMessage(new HibernateMessage(message, body, sender));
+		publishMessage(new HibernateMessage(message, body, sender), quite);
 	}
 
-	private void publishMessage(Message m) {
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void sendNotification(Personality recipient, String body, boolean quite) {
+		if (recipient == null) {
+			throw new NullPointerException("Recipient can't be null");
+		}
+		publishMessage(new HibernateMessage(recipient, body), quite);
+	}
+
+	private void publishMessage(Message m, boolean quite) {
 		final HibernateTemplate template = getHibernateTemplate();
 		template.save(m);
 
 		for (MessageListener listener : listeners) {
-			listener.messageSent(m);
+			listener.messageSent(m, quite);
 		}
 	}
 

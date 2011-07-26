@@ -24,6 +24,18 @@ public interface MessageManager {
 	void sendMessage(Personality sender, Personality recipient, String body);
 
 	/**
+	 * Sent a message to specified player
+	 *
+	 * @param sender	the sender of the message
+	 * @param recipient the player who should received the message
+	 * @param body	  the message's body
+	 * @param quite	 indicates is notification should be quite or note.
+	 * @throws NullPointerException	 if sender or recipient is null
+	 * @throws IllegalArgumentException if body is null or empty
+	 */
+	void sendMessage(Personality sender, Personality recipient, String body, boolean quite);
+
+	/**
 	 * Reply to specified message.
 	 *
 	 * @param sender  the sender of the message
@@ -35,6 +47,18 @@ public interface MessageManager {
 	void replyMessage(Personality sender, Message message, String body);
 
 	/**
+	 * Reply to specified message.
+	 *
+	 * @param sender  the sender of the message
+	 * @param message the original message
+	 * @param body	the message's body
+	 * @param quite   indicates is notification should be quite or note.
+	 * @throws NullPointerException	 if sender, recipient or message is null
+	 * @throws IllegalArgumentException if body is null or empty
+	 */
+	void replyMessage(Personality sender, Message message, String body, boolean quite);
+
+	/**
 	 * Sent notification to specified player with specified body
 	 *
 	 * @param recipient the player who should received the message
@@ -43,6 +67,17 @@ public interface MessageManager {
 	 * @throws IllegalArgumentException if recipient is unknown or {@code body} is empty.
 	 */
 	void sendNotification(Personality recipient, String body);
+
+	/**
+	 * Sent notification to specified player with specified body
+	 *
+	 * @param recipient the player who should received the message
+	 * @param body	  the message's body
+	 * @param quite	 indicates is notification should be quite or note.
+	 * @throws NullPointerException	 if recipient is null
+	 * @throws IllegalArgumentException if recipient is unknown or {@code body} is empty.
+	 */
+	void sendNotification(Personality recipient, String body, boolean quite);
 
 	/**
 	 * Returns a message with specified id.
