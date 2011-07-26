@@ -23,14 +23,14 @@ public interface GameProposalManager<S extends GameSettings> {
      *
      * @param settings     the original game settings
      * @param playersCount the max players count
-     * @param restrictions the collection of restrictions. If there is no restrictions empty collection or {@code null} can be passed.
-     * @param players      current players count. List must contains at least one player (initiator)  @return returns the proposal (possible new or modified).
-     * @return new game proposal object with information about the proposal.
+     * @param restriction  the restriction for the proposal.
+     * @param players      current players count. List must contains at least one player (initiator)  @return returns the proposal (possible new or modified).  @return new game proposal object with information about the proposal.
+     * @return initiated proposal.
      * @throws IllegalArgumentException if {@code settings} or {@code players} are null or if {@code playersCount}
      *                                  is less than two or if {@code players} collection size more than
      *                                  {@code playersCount} or contains null.
      */
-    GameProposal<S> initiateGameProposal(S settings, int playersCount, Collection<GameRestriction> restrictions, Collection<Player> players);
+    GameProposal<S> initiateGameProposal(S settings, int playersCount, GameRestriction restriction, Collection<Player> players);
 
     /**
      * Attaches specified player to the waiting game.
