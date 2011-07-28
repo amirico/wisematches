@@ -7,18 +7,20 @@ import wisematches.playground.propose.ViolatedRestrictionException;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class GameRestrictionEmail implements GameRestriction {
-    private final String email;
+public final class GameRestrictionEmail implements GameRestriction {
+	private final String email;
 
-    public GameRestrictionEmail(String email) {
-        this.email = email;
-    }
+	private static final long serialVersionUID = -8668714084495105235L;
 
-    @Override
-    public void validatePlayer(Player player) throws ViolatedRestrictionException {
-        final String actual = player.getEmail();
-        if (!actual.equalsIgnoreCase(email)) {
-            throw new ViolatedRestrictionException("email", actual, email, this);
-        }
-    }
+	public GameRestrictionEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public void validatePlayer(Player player) throws ViolatedRestrictionException {
+		final String actual = player.getEmail();
+		if (!actual.equalsIgnoreCase(email)) {
+			throw new ViolatedRestrictionException("email", actual, email, this);
+		}
+	}
 }

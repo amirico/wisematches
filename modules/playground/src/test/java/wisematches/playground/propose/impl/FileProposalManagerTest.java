@@ -49,10 +49,10 @@ public class FileProposalManagerTest {
 		final GameSettings settings = new MockGameSettings("Mock", 3);
 
 		long currentSize = file.length();
-		fileProposalManager.initiateGameProposal(settings, 3, null, Arrays.asList(DefaultGameProposalTest.createPlayer(2)));
+		fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2)), null);
 		assertTrue(currentSize < (currentSize = file.length()));
 
-		fileProposalManager.initiateGameProposal(settings, 3, null, Arrays.asList(DefaultGameProposalTest.createPlayer(2), DefaultGameProposalTest.createPlayer(3)));
+		fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2), DefaultWaitingGameProposalTest.createPlayer(3)), null);
 		assertTrue(currentSize < (currentSize = file.length()));
 	}
 
@@ -61,8 +61,8 @@ public class FileProposalManagerTest {
 		System.out.println(file.getAbsolutePath());
 		final GameSettings settings = new MockGameSettings("Mock", 3);
 
-		final GameProposal<GameSettings> p1 = fileProposalManager.initiateGameProposal(settings, 3, null, Arrays.asList(DefaultGameProposalTest.createPlayer(2)));
-		final GameProposal<GameSettings> p2 = fileProposalManager.initiateGameProposal(settings, 3, null, Arrays.asList(DefaultGameProposalTest.createPlayer(2), DefaultGameProposalTest.createPlayer(3)));
+		final GameProposal<GameSettings> p1 = fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2)), null);
+		final GameProposal<GameSettings> p2 = fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2), DefaultWaitingGameProposalTest.createPlayer(3)), null);
 		fileProposalManager.close();
 
 		fileProposalManager = new FileProposalManager<GameSettings>();
@@ -79,7 +79,7 @@ public class FileProposalManagerTest {
 		assertTrue(pl1.getId() != 0);
 		assertTrue(pl2.getId() != 0);
 
-		final GameProposal<GameSettings> p3 = fileProposalManager.initiateGameProposal(settings, 3, null, Arrays.asList(DefaultGameProposalTest.createPlayer(2)));
+		final GameProposal<GameSettings> p3 = fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2)), null);
 		assertTrue(p3.getId() > pl1.getId());
 		assertTrue(p3.getId() > pl2.getId());
 	}

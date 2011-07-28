@@ -4,7 +4,6 @@ import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
-import wisematches.playground.propose.GameRestriction;
 import wisematches.playground.propose.ViolatedRestrictionException;
 
 import java.io.Serializable;
@@ -15,41 +14,23 @@ import java.util.Collections;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class DefaultGameProposal<S extends GameSettings> implements GameProposal<S>, Serializable {
+public abstract class AbstractGameProposal<S extends GameSettings> implements GameProposal<S>, Serializable {
 	private final long id;
 	private final S gameSettings;
 	private final int playersCount;
-	private final GameRestriction restriction;
 	private final Collection<Personality> players;
 
 	private static final long serialVersionUID = -7719928493587170213L;
 
-	public DefaultGameProposal(long id, S gameSettings, int playersCount, Collection<Player> players) {
-		this(id, gameSettings, playersCount, null, players);
-	}
-
-	/**
-	 * Opens new waiting game in this manager.
-	 *
-	 * @param id		   id of this proposal. Can't be zero.
-	 * @param gameSettings the original game settings. Can't be null.
-	 * @param playersCount the max players count. Can't be less than 2.
-	 * @param restriction  the restriction for game proposal.
-	 * @param players	  current players count. List must contains at least one player (initiator). Size can't be more
-	 *                     or equals than {@code playersCount}
-	 * @throws IllegalArgumentException if {@code settings} or {@code players} are null or if {@code playersCount}
-	 *                                  is less than two or if {@code players} collection size more than
-	 *                                  {@code playersCount} or contains null.
-	 */
-	protected DefaultGameProposal(long id, S gameSettings, int playersCount, GameRestriction restriction, Collection<Player> players) {
+	protected AbstractGameProposal(long id, S gameSettings, int playersCount, Collection<Player> players) {
 		if (id == 0) {
 			throw new IllegalArgumentException("error.proposal.null.id");
 		}
 		if (gameSettings == null) {
-			throw new IllegalArgumentException("error.proposal.null.settings");
+			throw new NullPointerException("error.proposal.null.settings");
 		}
 		if (players == null) {
-			throw new IllegalArgumentException("error.proposal.null.players");
+			throw new NullPointerException("error.proposal.null.players");
 		}
 		if (playersCount < 2) {
 			throw new IllegalArgumentException("error.proposal.illegal.count");
@@ -61,8 +42,6 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 			throw new IllegalArgumentException("error.proposal.many.players");
 		}
 
-		this.restriction = restriction;
-
 		this.id = id;
 		this.gameSettings = gameSettings;
 		this.playersCount = playersCount;
@@ -70,7 +49,7 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 		this.players = new ArrayList<Personality>(playersCount);
 		for (Player player : players) {
 			if (player == null) {
-				throw new IllegalArgumentException("error.proposal.null.player");
+				throw new NullPointerException("error.proposal.null.player");
 			}
 			if (this.players.contains(player)) {
 				throw new IllegalArgumentException("error.proposal.twice.player");
@@ -100,11 +79,6 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 	}
 
 	@Override
-	public GameRestriction getRestriction() {
-		return restriction;
-	}
-
-	@Override
 	public void isSuitablePlayer(Player player) throws ViolatedRestrictionException {
 		if (player == null) {
 			throw new ViolatedRestrictionException("player.null");
@@ -112,9 +86,8 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 		if (players.contains(player)) {
 			throw new ViolatedRestrictionException("player.exist");
 		}
-		if (restriction != null) {
-			restriction.validatePlayer(player);
-		}
+
+		validateRestrictions(player);
 	}
 
 	@Override
@@ -123,14 +96,11 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 	}
 
 	@Override
-	public boolean isChallenge() {
-		return false;
-	}
-
-	@Override
 	public boolean isReady() {
 		return players.size() == playersCount;
 	}
+
+	protected abstract void validateRestrictions(Player player) throws ViolatedRestrictionException;
 
 	/**
 	 * Attaches this player to this proposal.
@@ -165,13 +135,6 @@ public final class DefaultGameProposal<S extends GameSettings> implements GamePr
 		if (player == null) {
 			throw new ViolatedRestrictionException("player.null");
 		}
-		validateRestrictions(player);
 		players.remove(player);
-	}
-
-	void validateRestrictions(Player player) throws ViolatedRestrictionException {
-		if (restriction != null) {
-			restriction.validatePlayer(player);
-		}
 	}
 }

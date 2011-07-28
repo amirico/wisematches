@@ -38,4 +38,16 @@ public final class ViolatedRestrictionException extends Exception {
 	public GameRestriction getGameRestriction() {
 		return gameRestriction;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("ViolatedRestrictionException");
+		sb.append("{code='").append(code).append('\'');
+		sb.append(", actualValue=").append(actualValue);
+		sb.append(", expectedValue=").append(expectedValue);
+		sb.append(", gameRestriction=").append(gameRestriction);
+		sb.append('}');
+		return sb.toString();
+	}
 }

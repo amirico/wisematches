@@ -122,7 +122,7 @@ public class ScribbleController extends WisematchesController {
 			final ScribbleBoard board = boardManager.createBoard(s, players);
 			return "redirect:/playground/scribble/board?b=" + board.getBoardId();
 		} else {
-			proposalManager.initiateGameProposal(s, opponents + 1, null, Arrays.asList(principal));
+			proposalManager.initiateWaitingProposal(s, opponents + 1, Arrays.asList(principal), null);
 			return "redirect:/playground/scribble/active";
 		}
 	}
