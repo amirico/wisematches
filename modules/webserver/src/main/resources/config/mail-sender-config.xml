@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.server.host}"/>
+        <property name="port" value="${mail.server.port}"/>
+        <property name="username" value="${mail.server.username}"/>
+        <property name="password" value="${mail.server.password}"/>
+
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.server.auth}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="mailFreemarkerConfig" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="preferFileSystemAccess" value="false"/>
+        <property name="templateLoaderPath" value="classpath:/i18n/mail"/>
+    </bean>
+
+    <bean id="freeMarkerMailService" class="wisematches.server.mail.impl.FreeMarkerMailService">
+        <property name="mailSender" ref="springMailSender"/>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="gameMessageSource" ref="gameMessageSource"/>
+        <property name="messageSource" ref="messageSource"/>
+        <property name="serverHostName" value="${server.hostname}"/>
+
+        <property name="freeMarkerConfig" ref="mailFreemarkerConfig"/>
+        <property name="supportSenderAddress" value="${mail.support.sender}"/>
+        <property name="supportRecipientAddress" value="${mail.support.recipient}"/>
+    </bean>
+
+    <bean id="mailService" class="wisematches.server.mail.impl.AsynchronousMailService">
+        <property name="originalMailService" ref="freeMarkerMailService"/>
+    </bean>
+</beans>

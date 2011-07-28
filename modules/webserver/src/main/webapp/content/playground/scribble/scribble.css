@@ -1,0 +1,402 @@
+#playboard #scribbleBoard {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#playboard tr.odd, #playboard tr.even, #playboard tr.odd td, #playboard tr.even td {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#playboard tr.even:hover td, #playboard tr.odd:hover td {
+    border: 0;
+    background-color: #A6C9E2;
+    cursor: pointer;
+}
+
+#playboard #movesHistory td {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+#playboard #movesHistory th, #playboard #movesHistory td {
+    white-space: nowrap;
+}
+
+#playboard #movesHistory .ui-state-default {
+    border: 0;
+}
+
+#playboard #movesHistory .moveMade {
+}
+
+#playboard #movesHistory .movePassed {
+    color: gray;
+    font-style: italic;
+}
+
+#playboard #movesHistory .moveExchange {
+    color: gray;
+    font-style: italic;
+}
+
+#gameProgressAction, #gameProgressFinished {
+    width: 100%;
+}
+
+.game-progress {
+    height: 16px;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    position: relative;
+}
+
+.game-progress div {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.game-progress .game-progress-board {
+    float: left;
+    background-color: #1aa21a;
+    border: 1px solid #137c13;
+    border-right-width: 0;
+}
+
+.game-progress .game-progress-bank {
+    float: left;
+    background-color: #ec7500;
+    border: 1px solid #c46100;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+.game-progress .game-progress-hand {
+    float: left;
+    background-color: #dcd900;
+    border: 1px solid #a19e01;
+    border-left-width: 0;
+}
+
+.game-progress .game-progress-caption {
+    width: 100%;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+}
+
+.game-progress .game-progress-finished {
+    float: left;
+    font-weight: bold;
+    text-align: center;
+    line-height: normal;
+    color: white !important;
+    background-color: #cccccc;
+    border: 1px solid #999999;
+}
+
+.game-resolution-player {
+    font-size: 10px;
+    text-align: right;
+    font-style: italic;
+}
+
+.game-state-scratch {
+    text-align: center;
+}
+
+.game-state-scratch span {
+    font-style: italic;
+    font-weight: bold;
+}
+
+#playboard #gameInfo td {
+    padding-left: 5px;
+    white-space: nowrap;
+}
+
+#playboard button {
+    padding-left: 12px;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+}
+
+#wordStatus {
+    position: relative;
+}
+
+#wordStatusIcon {
+    width: 16px;
+    height: 16px;
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    left: .5em
+}
+
+#wordStatusMessage {
+    padding-left: 24px;
+}
+
+.scribble {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 342px !important;
+    height: 366px !important;
+    background: url('/resources/images/scribble/board/border.gif');
+}
+
+.scribble .background {
+    z-index: 1;
+    position: absolute;
+    top: 4px !important;
+    left: 4px !important;
+    width: 334px !important;
+    height: 335px !important;
+}
+
+.scribble .color {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #558be7;
+    background: -moz-linear-gradient(-45deg, #1a49d6, #75b0f1);
+    background: -webkit-gradient(linear, left top, right bottom, from(#1a49d6), to(#75b0f1));
+    background: -o-linear-gradient(top left, #1a49d6, #75b0f1);
+}
+
+.scribble .grid {
+    z-index: 2;
+    position: absolute;
+    width: 328px !important;
+    height: 329px !important;
+    border: 3px solid transparent;
+    background: url('/resources/images/scribble/board/grid.gif') repeat;
+}
+
+.scribble .field {
+    z-index: 2;
+    position: absolute;
+    top: 6px !important;
+    left: 6px !important;
+}
+
+.scribble .bonuses {
+    position: absolute;
+    z-index: 3;
+}
+
+.scribble .board {
+    top: 1px;
+    left: 1px;
+    position: absolute;
+    width: 330px !important;
+    height: 330px !important;
+}
+
+.scribble .hand {
+    position: absolute;
+    left: 88px !important;
+    top: 335px !important;
+}
+
+.scribble .highlighting {
+    z-index: 4;
+    width: 22px !important;
+    height: 22px !important;
+    background: url(/resources/images/scribble/board/tiles.png) no-repeat;
+    position: absolute;
+}
+
+.tile {
+    cursor: pointer;
+    color: white;
+    z-index: 5;
+
+    font-size: 12px;
+    font-family: arial serif;
+
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+
+    text-align: center;
+    vertical-align: middle;
+
+    background: url(/resources/images/scribble/board/tiles.png) no-repeat;
+}
+
+.tile span {
+    top: 3px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tile-selected span {
+    font-weight: bold;
+}
+
+.cell, .tile {
+    width: 22px !important;
+    height: 22px !important;
+    position: absolute;
+}
+
+.cost0 {
+    color: black;
+}
+
+.cost1, .cost2, .cost3, .cost4, .cost5, .cost6, .cost7, .cost8, .cost9, .cost10 {
+    color: white;
+}
+
+.bonus-cell-center {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat 0 0;
+}
+
+.bonus-cell-2l {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -22px 0;
+}
+
+.bonus-cell-2w {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -44px 0;
+}
+
+.bonus-cell-3l {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -66px 0;
+}
+
+.bonus-cell-3w {
+    background: url(/resources/images/scribble/board/bonuses.png) no-repeat -88px 0;
+}
+
+.icon-controls-make {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat 0 0 !important;
+}
+
+.icon-controls-pass {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -16px 0 !important;
+}
+
+.icon-controls-resign {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -32px 0 !important;
+}
+
+.icon-controls-exchange {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -48px 0 !important;
+}
+
+.icon-controls-clear {
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -64px 0 !important;
+}
+
+.icon-memory-add {
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat 0 0 !important;
+}
+
+.icon-memory-remove {
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat -16px 0 !important;
+}
+
+#memoryWords_wrapper {
+    min-height: 20px;
+    _height: 20px;
+}
+
+#memoryWords .memory-controls {
+    white-space: nowrap;
+}
+
+#memoryWords .memory-controls a, #memoryWords .memory-controls span {
+    border: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.icon-memory-select {
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat -32px 0 !important;
+}
+
+.icon-memory-clear {
+    background: url('/resources/images/scribble/playboard/memory.png') no-repeat -48px 0 !important;
+}
+
+.icon-word-check {
+    background: url("/resources/images/scribble/playboard/checks.png") no-repeat 0 0 !important;
+}
+
+.icon-word-valid {
+    background: url("/resources/images/scribble/playboard/checks.png") no-repeat -16px 0 !important;
+}
+
+.icon-word-invalid {
+    background: url("/resources/images/scribble/playboard/checks.png") no-repeat -32px 0 !important;
+}
+
+.icon-wait {
+    background: url("/resources/images/wait.gif") no-repeat left center !important;
+}
+
+.rating .change {
+    width: 38px;
+    height: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.rating .icon-rating-up {
+    color: #31c54e;
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -38px 0 !important;
+}
+
+.rating .icon-rating-down {
+    color: #c54c31;
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat 0 0 !important;
+}
+
+.rating .icon-rating-same {
+    color: #8c8c7f;
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -76px 0 !important;
+}
+
+.your-turn .content span {
+    color: #a52a2a;
+    font-weight: bold;
+}
+
+.your-turn .icon {
+    width: 48px;
+    height: 48px;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat 0 0;
+}
+
+.opponent-turn .icon {
+    width: 48px;
+    height: 48px;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -48px 0;
+}
+
+.game-finished .icon {
+    width: 48px;
+    height: 48px;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -96px 0;
+}
+
+.move-accepted .icon {
+    width: 48px;
+    height: 48px;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -144px 0;
+}
+
+.move-declined .icon {
+    width: 48px;
+    height: 48px;
+    background: url('/resources/images/scribble/playboard/notifications.png') no-repeat -192px 0;
+}
