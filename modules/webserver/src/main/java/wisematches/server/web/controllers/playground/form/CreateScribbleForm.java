@@ -86,6 +86,10 @@ public class CreateScribbleForm {
 		this.opponent3 = opponent3;
 	}
 
+	public String[] getOpponents() {
+		return new String[]{opponent1, opponent2, opponent3};
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

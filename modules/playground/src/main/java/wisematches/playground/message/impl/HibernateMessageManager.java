@@ -160,10 +160,10 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 		final HibernateTemplate template = getHibernateTemplate();
 		if (direction == MessageDirection.SENT) {
 			return template.find("from wisematches.playground.message.impl.HibernateMessage where " +
-					"sender = ? and state in (0, ?)", person.getId(), MessageDirection.RECEIVED.mask());
+					"sender = ? and state in (0, ?) order by creationDate desc", person.getId(), MessageDirection.RECEIVED.mask());
 		} else {
 			return template.find("from wisematches.playground.message.impl.HibernateMessage where " +
-					"recipient = ? and state in (0,?)", person.getId(), MessageDirection.SENT.mask());
+					"recipient = ? and state in (0,?) order by creationDate desc", person.getId(), MessageDirection.SENT.mask());
 		}
 	}
 
