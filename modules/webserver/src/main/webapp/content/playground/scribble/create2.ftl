@@ -183,43 +183,59 @@
                             </div>
 
                             <div id="waitingForm" class="create-form ui-helper-hidden">
-                                <div>
-                                    <input type="radio" id="opponentsCount1" name="opponentsCount">
-                                    <label for="opponentsCount1">One opponent</label>
-                                    <input type="radio" id="opponentsCount2" name="opponentsCount">
-                                    <label for="opponentsCount2">Two opponents</label>
-                                    <input type="radio" id="opponentsCount3" name="opponentsCount">
-                                    <label for="opponentsCount3">Three opponents</label>
+                                <div style="float: left;">
+                                    <div style="padding: 5px">
+                                        <input type="radio" id="opponentsCount1" name="opponentsCount">
+                                        <label for="opponentsCount1" style="color: #a52a2a;">One opponent</label>
+                                    </div>
+                                    <div style="padding: 5px">
+                                        <input type="radio" id="opponentsCount2" name="opponentsCount">
+                                        <label for="opponentsCount2" style="color: #a52a2a;">Two opponents</label>
+                                    </div>
+                                    <div style="padding: 5px">
+                                        <input type="radio" id="opponentsCount3" name="opponentsCount">
+                                        <label for="opponentsCount3" style="color: #a52a2a;">Three opponents</label>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label><@message code="game.create.limits.rating.label"/>:</label>
-                                <@wm.field path="create.minRating" id="minRatingDiv">
-                                <@message code="game.create.limits.rating.min"/>
-                                    <select name="minRating">
-                                        <option value="0"
-                                                <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
-                                        <#list ['900','950','1000','1050','1100','1150','1200','1250'] as r>
-                                            <option value="${r}">${r}</option>
-                                        </#list>
-                                    </select>
-                                </@wm.field>
-                                <@wm.field path="create.maxRating" id="maxRatingDiv">
-                                    , <@message code="game.create.limits.rating.max"/>
-                                    <select name="maxRating">
-                                        <#list ['1350','1400','1450','1500','1550','1600','1650','1700','1750','1800'] as r>
-                                            <option value="${r}"
-                                                    <#if r==wm.statusValue>selected="selected"</#if>>${r}</option>
-                                        </#list>
-                                        <option value="0"
-                                                <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
-                                    </select>
-                                </@wm.field>
+                                    <div>
+                                        <label><@message code="game.create.limits.rating.label"/>:</label>
+                                    <@wm.field path="create.minRating" id="minRatingDiv">
+                                    <@message code="game.create.limits.rating.min"/>
+                                        <select name="minRating">
+                                            <option value="0"
+                                                    <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
+                                            <#list ['900','950','1000','1050','1100','1150','1200','1250'] as r>
+                                                <option value="${r}">${r}</option>
+                                            </#list>
+                                        </select>
+                                    </@wm.field>
+                                    <@wm.field path="create.maxRating" id="maxRatingDiv">
+                                        , <@message code="game.create.limits.rating.max"/>
+                                        <select name="maxRating">
+                                            <#list ['1350','1400','1450','1500','1550','1600','1650','1700','1750','1800'] as r>
+                                                <option value="${r}"
+                                                        <#if r==wm.statusValue>selected="selected"</#if>>${r}</option>
+                                            </#list>
+                                            <option value="0"
+                                                    <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.rating.no"/></option>
+                                        </select>
+                                    </@wm.field>
+                                    </div>
                                 </div>
                             </div>
 
                             <div id="challengeForm" class="create-form ui-helper-hidden">
-                                asdasdasdas
+                                <div style="float: left;">
+                                    <div style="padding: 5px">
+                                    <@wm.player player=principal/>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    You can challenge an opponent from his/her profile at this moment.
+                                </div>
                             </div>
                         </td>
                     </tr>
