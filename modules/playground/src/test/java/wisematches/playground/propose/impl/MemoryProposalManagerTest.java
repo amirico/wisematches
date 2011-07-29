@@ -4,13 +4,13 @@ import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
 import wisematches.personality.player.Player;
+import wisematches.personality.player.computer.guest.GuestPlayer;
+import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
 import wisematches.playground.propose.ViolatedRestrictionException;
-
-import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -21,10 +21,10 @@ import static org.junit.Assert.*;
 public class MemoryProposalManagerTest {
 	private MemoryProposalManager<GameSettings> proposalManager;
 
-	public static final Player PERSON1 = DefaultWaitingGameProposalTest.createPlayer(1);
-	public static final Player PERSON2 = DefaultWaitingGameProposalTest.createPlayer(2);
-	public static final Player PERSON3 = DefaultWaitingGameProposalTest.createPlayer(3);
-	public static final Player PERSON4 = DefaultWaitingGameProposalTest.createPlayer(4);
+	public static final Player PERSON1 = RobotPlayer.DULL;
+	public static final Player PERSON2 = RobotPlayer.TRAINEE;
+	public static final Player PERSON3 = RobotPlayer.EXPERT;
+	public static final Player PERSON4 = GuestPlayer.GUEST;
 
 	public MemoryProposalManagerTest() {
 	}
@@ -65,12 +65,12 @@ public class MemoryProposalManagerTest {
 		proposalManager.addGameProposalListener(listener);
 
 		final GameSettings settings = new MockGameSettings("Mock", 3);
-		final GameProposal gameProposal1 = proposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(PERSON1), null);
+		final GameProposal gameProposal1 = proposalManager.initiateWaitingProposal(settings, PERSON1, 3, null);
 		// We don't have to check all exception. See DefaultWaitingGameProposalTest file to get more.
 		assertTrue(gameProposal1 instanceof AbstractGameProposal);
 		assertSame(gameProposal1, proposalCapture.getValue());
 
-		final GameProposal gameProposal2 = proposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(PERSON1), null);
+		final GameProposal gameProposal2 = proposalManager.initiateWaitingProposal(settings, PERSON1, 3, null);
 		assertTrue(gameProposal2 instanceof AbstractGameProposal);
 		assertSame(gameProposal2, proposalCapture.getValue());
 
@@ -92,7 +92,7 @@ public class MemoryProposalManagerTest {
 		replay(listener);
 
 		final GameSettings settings = new MockGameSettings("Mock", 3);
-		final GameProposal gameProposal1 = proposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(PERSON1), null);
+		final GameProposal gameProposal1 = proposalManager.initiateWaitingProposal(settings, PERSON1, 3, null);
 
 		proposalManager.addGameProposalListener(listener);
 		assertNull(proposalManager.attachPlayer(0, PERSON2));
@@ -111,9 +111,13 @@ public class MemoryProposalManagerTest {
 	@Test
 	public void getPlayerProposals() throws ViolatedRestrictionException {
 		final GameSettings settings = new MockGameSettings("Mock", 3);
-		final GameProposal<GameSettings> proposal1 = proposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(PERSON1), null);
-		final GameProposal<GameSettings> proposal2 = proposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(PERSON1, PERSON2), null);
-		final GameProposal<GameSettings> proposal3 = proposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(PERSON2, PERSON3, PERSON4), null);
+		final GameProposal<GameSettings> proposal1 = proposalManager.initiateWaitingProposal(settings, PERSON1, 4, null);
+		final GameProposal<GameSettings> proposal2 = proposalManager.initiateWaitingProposal(settings, PERSON1, 4, null);
+		proposalManager.attachPlayer(proposal2.getId(), PERSON2);
+
+		final GameProposal<GameSettings> proposal3 = proposalManager.initiateWaitingProposal(settings, PERSON2, 4, null);
+		proposalManager.attachPlayer(proposal3.getId(), PERSON3);
+		proposalManager.attachPlayer(proposal3.getId(), PERSON4);
 
 		assertArrayEquals(new GameProposal[]{proposal2, proposal1}, proposalManager.getPlayerProposals(PERSON1).toArray());
 		assertArrayEquals(new GameProposal[]{proposal2, proposal3}, proposalManager.getPlayerProposals(PERSON2).toArray());

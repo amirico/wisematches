@@ -3,6 +3,7 @@ package wisematches.playground.propose.impl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.GameProposal;
@@ -10,7 +11,6 @@ import wisematches.playground.propose.ViolatedRestrictionException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -49,10 +49,10 @@ public class FileProposalManagerTest {
 		final GameSettings settings = new MockGameSettings("Mock", 3);
 
 		long currentSize = file.length();
-		fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2)), null);
+		fileProposalManager.initiateWaitingProposal(settings, RobotPlayer.DULL, 3, null);
 		assertTrue(currentSize < (currentSize = file.length()));
 
-		fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2), DefaultWaitingGameProposalTest.createPlayer(3)), null);
+		fileProposalManager.initiateWaitingProposal(settings, RobotPlayer.DULL, 3, null);
 		assertTrue(currentSize < (currentSize = file.length()));
 	}
 
@@ -61,8 +61,8 @@ public class FileProposalManagerTest {
 		System.out.println(file.getAbsolutePath());
 		final GameSettings settings = new MockGameSettings("Mock", 3);
 
-		final GameProposal<GameSettings> p1 = fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2)), null);
-		final GameProposal<GameSettings> p2 = fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2), DefaultWaitingGameProposalTest.createPlayer(3)), null);
+		final GameProposal<GameSettings> p1 = fileProposalManager.initiateWaitingProposal(settings, RobotPlayer.DULL, 3, null);
+		final GameProposal<GameSettings> p2 = fileProposalManager.initiateWaitingProposal(settings, RobotPlayer.DULL, 3, null);
 		fileProposalManager.close();
 
 		fileProposalManager = new FileProposalManager<GameSettings>();
@@ -79,7 +79,7 @@ public class FileProposalManagerTest {
 		assertTrue(pl1.getId() != 0);
 		assertTrue(pl2.getId() != 0);
 
-		final GameProposal<GameSettings> p3 = fileProposalManager.initiateWaitingProposal(settings, 3, Arrays.asList(DefaultWaitingGameProposalTest.createPlayer(2)), null);
+		final GameProposal<GameSettings> p3 = fileProposalManager.initiateWaitingProposal(settings, RobotPlayer.DULL, 3, null);
 		assertTrue(p3.getId() > pl1.getId());
 		assertTrue(p3.getId() > pl2.getId());
 	}

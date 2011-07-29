@@ -54,8 +54,8 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiateWaitingProposal(S settings, int playersCount, Collection<Player> players, GameRestriction restriction) {
-		return registerProposal(new DefaultWaitingGameProposal<S>(proposalIds.incrementAndGet(), settings, playersCount, players, restriction));
+	public GameProposal<S> initiateWaitingProposal(S settings, Player initiator, int playersCount, GameRestriction restriction) {
+		return registerProposal(new DefaultWaitingGameProposal<S>(proposalIds.incrementAndGet(), settings, playersCount, initiator, restriction));
 	}
 
 	@Override

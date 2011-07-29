@@ -14,14 +14,16 @@ import wisematches.personality.Membership;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
-import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.BoardManagementException;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.blacklist.BlacklistedException;
+import wisematches.playground.message.MessageManager;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalManager;
+import wisematches.playground.propose.GameRestriction;
 import wisematches.playground.propose.ViolatedRestrictionException;
+import wisematches.playground.propose.restrictions.GameRestrictionRating;
 import wisematches.playground.restriction.RestrictionException;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -31,6 +33,7 @@ import wisematches.playground.scribble.search.ScribbleSearchesEngine;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
+import wisematches.server.web.controllers.playground.form.OpponentType;
 import wisematches.server.web.services.ads.AdvertisementManager;
 
 import javax.validation.Valid;
@@ -43,6 +46,7 @@ import java.util.*;
 @RequestMapping("/playground/scribble")
 public class ScribbleGameController extends WisematchesController {
 	private PlayerManager playerManager;
+	private MessageManager messageManager;
 	private BlacklistManager blacklistManager;
 	private ScribbleBoardManager boardManager;
 	private ScribbleSearchesEngine searchesEngine;
@@ -56,15 +60,19 @@ public class ScribbleGameController extends WisematchesController {
 	}
 
 	@RequestMapping("create")
-	public String createGamePage(@ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
+	public String createGamePage(@Valid @ModelAttribute("create") CreateScribbleForm form, BindingResult result,
+								 Model model, Locale locale) {
 		if (form.getBoardLanguage() == null) {
 			form.setBoardLanguage(locale.getLanguage());
 		}
 
 		final Player principal = getPrincipal();
-
-		if (principal.getMembership() == Membership.GUEST && form.getOpponent1() == null) {
-			form.setOpponent1(String.valueOf(RobotPlayer.DULL.getId()));
+		final long[] opponents = form.getOpponents();
+		for (int i = 0, opponentsLength = opponents.length; i < opponentsLength; i++) {
+			long opponent = opponents[i];
+			if (opponent != 0 && playerManager.getPlayer(opponent) == null) {
+				result.rejectValue("opponent" + (i + 1), "game.create.opponents.err.unknown", new Object[]{opponent}, null);
+			}
 		}
 
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
@@ -78,53 +86,75 @@ public class ScribbleGameController extends WisematchesController {
 		return "/content/playground/scribble/create";
 	}
 
+	@RequestMapping("challenge")
+	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form,
+							BindingResult result, Model model, Locale locale) {
+		form.setTitle("Challenge from " + getPrincipal().getNickname());
+		form.setOpponentType(OpponentType.CHALLENGE);
+		form.setOpponent1(pid);
+		return createGamePage(form, result, model, locale);
+	}
+
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
-								   BindingResult result, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+								   BindingResult result, Model model, Locale locale) throws BoardManagementException {
 		if (log.isInfoEnabled()) {
 			log.info("Create new game: " + form);
 		}
 
 		final Player principal = getPrincipal();
-		restrictionManager.checkRestriction(principal, "games.active", getActiveGamesCount(principal));
-
-		if (form.getDaysPerMove() < 2) {
-			result.rejectValue("daysPerMove", "game.create.time.err.min");
-		} else if (form.getDaysPerMove() > 14) {
-			result.rejectValue("daysPerMove", "game.create.time.err.max");
-		}
-
-		int opponents = 0;
-		final List<Personality> players = new ArrayList<Personality>();
-		if (checkOpponent("opponent1", form.getOpponent1(), true, players, result)) {
-			opponents++;
-		}
-		if (checkOpponent("opponent2", form.getOpponent2(), false, players, result)) {
-			opponents++;
-		}
-		if (checkOpponent("opponent3", form.getOpponent3(), false, players, result)) {
-			opponents++;
-		}
-
-		if (opponents == 0) {
-			result.rejectValue("opponent1", "game.create.opponents.err.nofirst");
-		}
-
-
-		if (result.hasErrors()) {
-			return createGamePage(form, model, locale);
+		if (restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal))) {
+			return createGamePage(form, result, model, locale);
 		}
 
 		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), form.getBoardLanguage(), form.getDaysPerMove());
-		if (players.size() == opponents) {
-			players.add(0, principal); // also add current personality as a first one
-			final ScribbleBoard board = boardManager.createBoard(s, players);
+		if (form.getOpponentType() == OpponentType.ROBOT) {
+			final ScribbleBoard board = boardManager.createBoard(s, Arrays.asList(principal, RobotPlayer.valueOf(form.getRobotType())));
 			return "redirect:/playground/scribble/board?b=" + board.getBoardId();
-		} else {
-			proposalManager.initiateWaitingProposal(s, opponents + 1, Arrays.asList(principal), null);
-			return "redirect:/playground/scribble/active";
+		} else if (form.getOpponentType() == OpponentType.WAIT) {
+			final Comparable restriction = restrictionManager.getRestriction(principal, "scribble.opponents");
+			if (form.getOpponentsCount() > (Integer) restriction) {
+				result.rejectValue("opponentsCount", "game.create.opponents.err.count", new Object[]{restriction, "/account/membership"}, null);
+			} else {
+				GameRestriction r = null;
+				if (form.getMinRating() != 0 || form.getMaxRating() != 0) {
+					r = new GameRestrictionRating(form.getMinRating(), form.getMaxRating());
+				}
+				try {
+					proposalManager.initiateWaitingProposal(s, principal, form.getOpponentsCount() + 1, r);
+				} catch (Exception ex) {
+					result.rejectValue("title", ex.getMessage());
+				}
+			}
+		} else if (form.getOpponentType() == OpponentType.CHALLENGE) {
+			final long[] opponents = form.getOpponents();
+			final List<Player> players = new ArrayList<Player>(opponents.length);
+			for (int i = 0, opponentsLength = opponents.length; i < opponentsLength; i++) {
+				long opponent = opponents[i];
+				if (opponent != 0) {
+					final Player player = playerManager.getPlayer(opponent);
+					if (player == null) {
+						result.rejectValue("opponent" + (i + 1), "game.create.opponents.err.unknown", new Object[]{opponent}, null);
+					} else {
+						players.add(player);
+					}
+				}
+			}
+
+			if (!result.hasErrors()) {
+				try {
+					proposalManager.initiateChallengeProposal(s, principal, players);
+				} catch (Exception ex) {
+					result.rejectValue("title", ex.getMessage());
+				}
+			}
 		}
+
+		if (result.hasErrors()) {
+			return createGamePage(form, result, model, locale);
+		}
+		return "redirect:/playground/scribble/active";
 	}
 
 	@RequestMapping("join")
@@ -180,13 +210,6 @@ public class ScribbleGameController extends WisematchesController {
 		return showWaitingGames(model, locale);
 	}
 
-	@RequestMapping("challenge")
-	public String challenge(@RequestParam("p") long pid, @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
-		form.setOpponent1(String.valueOf(pid));
-		form.setTitle("Challenge from " + getPrincipal().getNickname());
-		return createGamePage(form, model, locale);
-	}
-
 	@RequestMapping("active")
 	public String showActiveGames(Model model, Locale locale) {
 		final Player principal = getPrincipal();
@@ -227,29 +250,6 @@ public class ScribbleGameController extends WisematchesController {
 		}
 	}
 
-	private boolean checkOpponent(String field, String opponent, boolean cpAllowed, List<Personality> players, BindingResult result) {
-		final String id = opponent.trim();
-		if (!"no".equalsIgnoreCase(id)) {
-			if (!id.isEmpty()) {
-				try {
-					final Long playerId = Long.valueOf(id);
-					final Player player1 = playerManager.getPlayer(playerId);
-					if (player1 == null) {
-						result.rejectValue(field, "game.create.opponents.err.unknown");
-					} else if (!cpAllowed && player1 instanceof ComputerPlayer) {
-						result.rejectValue(field, "game.create.opponents.err.manyrobots");
-					} else {
-						players.add(player1);
-					}
-				} catch (NumberFormatException ex) {
-					result.rejectValue(field, "game.create.opponents.err.badid");
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
 	private int getActiveGamesCount(Player principal) {
 		return searchesEngine.getActiveBoardsCount(principal) + proposalManager.getPlayerProposals(principal).size();
 	}
@@ -257,6 +257,11 @@ public class ScribbleGameController extends WisematchesController {
 	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
+	}
+
+	@Autowired
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
 	}
 
 	@Autowired
