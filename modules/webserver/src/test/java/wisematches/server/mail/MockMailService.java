@@ -8,6 +8,9 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class MockMailService implements MailService {
+	public MockMailService() {
+	}
+
 	@Override
 	public void sendMail(MailSender from, Account to, String msgCode, Map<String, ?> model) {
 	}
