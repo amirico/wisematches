@@ -41,7 +41,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
-public class ScribbleController extends WisematchesController {
+public class ScribbleGameController extends WisematchesController {
 	private PlayerManager playerManager;
 	private BlacklistManager blacklistManager;
 	private ScribbleBoardManager boardManager;
@@ -52,7 +52,7 @@ public class ScribbleController extends WisematchesController {
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
-	public ScribbleController() {
+	public ScribbleGameController() {
 	}
 
 	@RequestMapping("create")

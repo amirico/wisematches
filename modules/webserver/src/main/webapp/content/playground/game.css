@@ -26,29 +26,6 @@
     padding-right: 5px;
 }
 
-#create-game .description {
-    padding-bottom: 15px;
-}
-
-#create-game .ui-widget-content {
-    margin-bottom: 10px;
-}
-
-#create-game .ui-widget-header {
-    padding: 5px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-#create-game .ui-widget-content table {
-    border-spacing: 5px;
-}
-
-#create-game .ui-widget-content td {
-    text-align: left;
-    vertical-align: top;
-}
-
 #join-game .ui-state-error-text {
     font-weight: bold;
 }
@@ -365,12 +342,12 @@
     color: #999999;
 }
 
-.common-settings {
-    border-spacing: 5px;
+.common-settings, .create-game {
+    border-spacing: 5px !important;
 }
 
-.common-settings td {
-    vertical-align: top;
+.common-settings td, .create-game td {
+    vertical-align: top !important;
 }
 
 .profile .membership div {
