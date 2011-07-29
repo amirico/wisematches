@@ -6,7 +6,7 @@ import wisematches.playground.propose.GameRestriction;
 import wisematches.playground.propose.ViolatedRestrictionException;
 import wisematches.playground.propose.WaitingGameProposal;
 
-import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -16,12 +16,12 @@ public final class DefaultWaitingGameProposal<S extends GameSettings> extends Ab
 
 	private static final long serialVersionUID = -7397713360246859828L;
 
-	public DefaultWaitingGameProposal(long id, S gameSettings, int playersCount, Collection<Player> players) {
-		this(id, gameSettings, playersCount, players, null);
+	public DefaultWaitingGameProposal(long id, S gameSettings, Player initiator, int playersCount) {
+		this(id, gameSettings, playersCount, initiator, null);
 	}
 
-	public DefaultWaitingGameProposal(long id, S gameSettings, int playersCount, Collection<Player> players, GameRestriction gameRestriction) {
-		super(id, gameSettings, playersCount, players);
+	public DefaultWaitingGameProposal(long id, S gameSettings, int playersCount, Player initiator, GameRestriction gameRestriction) {
+		super(id, gameSettings, playersCount, Arrays.asList(initiator));
 		this.gameRestriction = gameRestriction;
 	}
 
