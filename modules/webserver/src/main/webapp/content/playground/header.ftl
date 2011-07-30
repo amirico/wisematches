@@ -67,6 +67,10 @@
                                         </#if>
                                     </#if>
                                 </button>
+                                <button id="friendsButton"
+                                        onclick="wm.util.url.redirect('/playground/friends/view')">
+                                <@message code="game.menu.friends.label"/>
+                                </button>
                                 <button id="blacklistButton"
                                         onclick="wm.util.url.redirect('/playground/blacklist/view')">
                                 <@message code="game.menu.blacklist.label"/>

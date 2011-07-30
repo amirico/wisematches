@@ -7,6 +7,7 @@
 
 <#include "/content/playground/messages/scriplet.ftl">
 <#include "/content/playground/blacklist/scriplet.ftl">
+<#include "/content/playground/friends/scriplet.ftl">
 
 <#macro undefined value>
     <#if value==0><@message code="profile.undefined"/><#else>${value}</#if>
@@ -242,6 +243,8 @@
 <@privateMessage pid=player.id><@message code="messages.label"/></@privateMessage>
     |
 <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
+    |
+<@friends pid=player.id><@message code="friends.add.label"/></@friends>
 </div>
 </div>
 

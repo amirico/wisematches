@@ -10,12 +10,12 @@ import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
-import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.BlacklistRecordForm;
+import wisematches.server.web.controllers.playground.form.FriendRelationForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
+import wisematches.server.web.services.friends.FriendsManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -24,45 +24,47 @@ import java.util.Locale;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@RequestMapping("/playground/blacklist")
-public class BlacklistController extends WisematchesController {
+@RequestMapping("/playground/friends")
+public class FriendsController extends WisematchesController {
     private PlayerManager playerManager;
-    private BlacklistManager blacklistManager;
+    private FriendsManager friendsManager;
     private GameMessageSource gameMessageSource;
     private AdvertisementManager advertisementManager;
 
-    public BlacklistController() {
+    public FriendsController() {
     }
 
     @RequestMapping("view")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public String viewBlacklist(Model model, Locale locale) {
         final Player principal = getPrincipal();
-        model.addAttribute("blacklist", blacklistManager.getBlacklist(principal));
+        model.addAttribute("friends", friendsManager.getFriendsList(principal));
         if (principal.getMembership().isAdsVisible()) {
-            model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("blacklist", Language.byLocale(locale)));
+            model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("friends", Language.byLocale(locale)));
         }
-        return "/content/playground/blacklist/view";
+        return "/content/playground/friends/view";
     }
+
 
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public ServiceResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
+    public ServiceResponse addFriend(@RequestBody FriendRelationForm form, Locale locale) {
         final Player player = playerManager.getPlayer(form.getPerson());
         if (player == null) {
-            return ServiceResponse.failure(gameMessageSource.getMessage("blacklist.err.unknown", locale));
+            return ServiceResponse.failure(gameMessageSource.getMessage("friends.err.unknown", locale));
         }
-        blacklistManager.addPlayer(getPersonality(), player, form.getComment());
+        friendsManager.addFriend(getPersonality(), player, form.getComment());
         return ServiceResponse.SUCCESS;
     }
 
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @RequestMapping(value = "remove", method = RequestMethod.POST)
-    public ServiceResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {
+    public ServiceResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
         final Personality personality = getPersonality();
         for (Long id : removeList) {
-            blacklistManager.removePlayer(personality, Personality.person(id));
+            friendsManager.removeFriend(personality, Personality.person(id));
         }
         return ServiceResponse.SUCCESS;
     }
@@ -73,8 +75,8 @@ public class BlacklistController extends WisematchesController {
     }
 
     @Autowired
-    public void setBlacklistManager(BlacklistManager blacklistManager) {
-        this.blacklistManager = blacklistManager;
+    public void setFriendsManager(FriendsManager friendsManager) {
+        this.friendsManager = friendsManager;
     }
 
     @Autowired
