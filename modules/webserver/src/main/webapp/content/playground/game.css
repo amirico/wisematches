@@ -354,45 +354,45 @@
     padding: 5px;
 }
 
-#messagesWidget .datatables_wrapper, #blacklistWidget .datatables_wrapper {
+#messagesWidget .datatables_wrapper, #blacklistWidget .datatables_wrapper, #friendsWidget .datatables_wrapper {
     min-height: inherit;
 }
 
-#messages tr, #blacklist tr {
+#messages tr, #blacklist tr, #frieds tr {
     background-image: none;
 }
 
-#messages tr .message-controls a, #blacklist tr .blacklist-controls a {
-    color: #cccccc;
-    text-decoration: underline;
-}
-
-#messages tr:hover .message-controls a, #blacklist tr:hover .blacklist-controls a {
-    color: inherit;
-    text-decoration: underline;
-}
-
-#messages tr.odd td, #messages tr.even td, #blacklist tr.odd td, #blacklist tr.even td {
+#messages tr.odd td, #messages tr.even td, #blacklist tr.odd td, #blacklist tr.even td, #friends tr.odd td, #friends tr.even td {
     vertical-align: top;
     border-bottom-style: solid;
 }
 
-.message, .blacklist {
+.message, .blacklist, .friend {
     font-weight: normal;
     border: none;
 }
 
-.message-text, .blacklist-text {
+.message-text, .blacklist-text, .friend-text {
     text-align: justify;
 }
 
-.message-date, .blacklist-date {
+.message-date, .blacklist-date, .friend-date {
     white-space: nowrap;
 }
 
-.message-controls, .blacklist-controls {
+.message-controls, .blacklist-controls, .friend-controls {
     float: right;
     font-weight: bold;
+}
+
+#messages tr .message-controls a, #blacklist tr .blacklist-controls a, #friends tr .friend-controls a {
+    color: #cccccc;
+    text-decoration: underline;
+}
+
+#messages tr:hover .message-controls a, #blacklist tr:hover .blacklist-controls a, #friends tr:hover .friend-controls a {
+    color: inherit;
+    text-decoration: underline;
 }
 
 #privateMessageDialog {
