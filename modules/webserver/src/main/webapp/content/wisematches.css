@@ -518,5 +518,5 @@ div.space-line {
     background-size: auto;
     background-clip: border-box;
     background-origin: padding-box;
-    background: transparent url("http://tdanryan.com/demo/framedialog/assets/im/progress-indicator-alpha.gif") no-repeat scroll 50% 50%;
+    background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50%;
 }
