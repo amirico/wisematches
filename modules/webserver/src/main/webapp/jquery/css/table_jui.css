@@ -48,7 +48,7 @@
 }
 
 .paging_full_numbers {
-    width: 350px !important;
+    width: auto;
 }
 
 .dataTables_wrapper .ui-toolbar {
@@ -102,8 +102,8 @@ table.display thead th div.DataTables_sort_wrapper span {
 
 .dataTables_wrapper {
     position: relative;
-    min-height: 302px;
-    _height: 302px;
+    /*min-height: 302px;*/
+    /*_height: 302px;*/
     clear: both;
 }
 
