@@ -435,9 +435,30 @@
     text-align: justify;
 }
 
-.remove-player-icon {
+/*.remove-player-icon {*/
+/*cursor: pointer;*/
+/*background: none !important;*/
+/*border: 0 !important;*/
+/*padding: 0 !important;*/
+/*}*/
+
+#searchTypes {
+    margin: 0;
+    padding: 5px 0;
+}
+
+#searchPlayerWidget {
+    padding: 0 0 5px;
+}
+
+.player-search-action {
     cursor: pointer;
     background: none !important;
-    border: 0 !important;
+    border-top-width: 0 !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-bottom-width: 1px !important;
+    border-bottom-style: dashed !important;
     padding: 0 !important;
+    vertical-align: bottom;
 }
