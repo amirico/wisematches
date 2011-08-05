@@ -65,8 +65,8 @@
                     $.each(result.data.players, function(i, d) {
                         players[i] = d;
                         var a = '';
-                        $.each(f_actions, function(i, d) {
-                            a += '<a href="#" onclick="wm.search.callCallback(' + d.action + ',' + i + ');">' + d.text + '</a>';
+                        $.each(f_actions, function(j, d) {
+                            a += '<a href="#" onclick="wm.search.callCallback(' + i + ',' + j + ');">' + d.text + '</a>';
                         });
                         resultTable.fnAddData([wm.ui.player(d), languages[d.language], d.rating, a]);
                     });
@@ -80,8 +80,8 @@
             loadContent($("input[name='searchTypes']:checked").val());
         };
 
-        this.callCallback = function(name, i) {
-            name(players[i]);
+        this.callCallback = function(pid, aid) {
+            eval(f_actions[aid].action)(players[pid], f_actions[aid].arguments);
         };
 
         this.openDialog = function(actions) {
@@ -91,6 +91,7 @@
 
             $("#searchPlayerWidget").dialog({
                 title: 'Search Player',
+                modal: true,
                 width: 600,
                 buttons: {
                     'Close': function() {

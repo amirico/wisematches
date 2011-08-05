@@ -435,12 +435,13 @@
     text-align: justify;
 }
 
-/*.remove-player-icon {*/
-/*cursor: pointer;*/
-/*background: none !important;*/
-/*border: 0 !important;*/
-/*padding: 0 !important;*/
-/*}*/
+#searchResult table th {
+    white-space: nowrap !important;
+}
+
+#searchResult table tr>td {
+    width: 100%;
+}
 
 #searchTypes {
     margin: 0;
