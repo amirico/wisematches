@@ -179,8 +179,17 @@ wm.ui = new function() {
         }
     };
 
-    this.player = function(info) {
-        return '<span class="player member"><a href="/playground/profile/view?p=' + info.playerId + '"><span class="nickname">' + info.nickname + '</span></a></span>';
+    this.player = function(info, hideLink) {
+        var html = '<span class="player member">';
+        if (!hideLink) {
+            html += '<a href="/playground/profile/view?p=' + info.playerId + '">';
+        }
+        html += '<span class="nickname">' + info.nickname + '</span>';
+        if (!hideLink) {
+            html += '</a>';
+        }
+        html += '</span>';
+        return html;
     };
 
     $(document).ready(function() {

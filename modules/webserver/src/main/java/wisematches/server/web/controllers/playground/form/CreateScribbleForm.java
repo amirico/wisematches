@@ -34,9 +34,7 @@ public class CreateScribbleForm {
     @Max(value = 3, message = "game.create.opponents.err.max")
     private int opponentsCount = 1;
 
-    private long opponent1;
-    private long opponent2;
-    private long opponent3;
+    private long[] opponents;
 
     @Length(max = 254, message = "game.create.opponent.challenge.err")
     private String challengeMessage;
@@ -108,32 +106,12 @@ public class CreateScribbleForm {
         this.opponentsCount = opponentsCount;
     }
 
-    public long getOpponent1() {
-        return opponent1;
-    }
-
-    public void setOpponent1(long opponent1) {
-        this.opponent1 = opponent1;
-    }
-
-    public long getOpponent2() {
-        return opponent2;
-    }
-
-    public void setOpponent2(long opponent2) {
-        this.opponent2 = opponent2;
-    }
-
-    public long getOpponent3() {
-        return opponent3;
-    }
-
-    public void setOpponent3(long opponent3) {
-        this.opponent3 = opponent3;
-    }
-
     public long[] getOpponents() {
-        return new long[]{opponent1, opponent2, opponent3};
+        return opponents;
+    }
+
+    public void setOpponents(long[] opponents) {
+        this.opponents = opponents;
     }
 
     public String getChallengeMessage() {

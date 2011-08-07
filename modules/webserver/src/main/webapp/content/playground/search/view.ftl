@@ -20,9 +20,11 @@
                 <thead>
                 <tr>
                     <th width="100%" nowrap="nowrap">Player</th>
-                    <th nowrap="nowrap">Language</th>
                     <th nowrap="nowrap">Rating</th>
-                    <th>Actions</th>
+                    <th nowrap="nowrap">Language</th>
+                    <th nowrap="nowrap">Active Games</th>
+                    <th nowrap="nowrap">Finished Games</th>
+                    <th nowrap="nowrap">Average Move Time</th>
                 </tr>
                 </thead>
             </table>
@@ -32,8 +34,8 @@
 
 <script type="text/javascript">
     wm.search = new function() {
-        var f_actions;
         var players;
+        var callback;
 
         var languages = {
             ru:'<@message code="language.ru"/>',
@@ -45,12 +47,20 @@
             "bSortClasses": false,
             "aoColumns": [
                 { "bSortable": true },
-                { "bSortable": true},
-                { "bSortable": true},
-                { "bSortable": false }
+                { "bSortable": true },
+                { "bSortable": true },
+                { "bSortable": true },
+                { "bSortable": true },
+                { "bSortable": true }
             ],
             "sDom": '<r<t>ip>',
             "sPaginationType": "full_numbers"
+        });
+
+        resultTable.click(function(event) {
+            var p = $(event.target).closest('tr').find("div[row]").attr('row');
+            closeDialog();
+            callback(players[p]);
         });
 
         var loadContent = function(name) {
@@ -64,11 +74,7 @@
                 if (result.success) {
                     $.each(result.data.players, function(i, d) {
                         players[i] = d;
-                        var a = '';
-                        $.each(f_actions, function(j, d) {
-                            a += '<a href="#" onclick="wm.search.callCallback(' + i + ',' + j + ');">' + d.text + '</a>';
-                        });
-                        resultTable.fnAddData([wm.ui.player(d), languages[d.language], d.rating, a]);
+                        resultTable.fnAddData(['<div row="' + i + '">' + wm.ui.player(d, true) + '</div>', d.rating, languages[d.language], d.activeGames, d.finishedGames, d.averageMoveTime]);
                     });
                 }
                 $('#searchLoading').hide();
@@ -80,12 +86,12 @@
             loadContent($("input[name='searchTypes']:checked").val());
         };
 
-        this.callCallback = function(pid, aid) {
-            eval(f_actions[aid].action)(players[pid], f_actions[aid].arguments);
+        var closeDialog = function() {
+            $("#searchPlayerWidget").dialog('close');
         };
 
-        this.openDialog = function(actions) {
-            f_actions = actions;
+        this.openDialog = function(c) {
+            callback = c;
 
             reloadContent();
 
@@ -100,10 +106,6 @@
                 }
             });
             return false;
-        };
-
-        this.closeDialog = function() {
-            $("#searchPlayerWidget").dialog('close');
         };
 
         $("#searchTypes").buttonset().change(reloadContent);

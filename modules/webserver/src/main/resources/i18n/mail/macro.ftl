@@ -15,14 +15,15 @@
 </#macro>
 
 <#macro board board>
-<a href="http://${serverHostName}/playground/scribble/board?b=${board.boardId}">
-    #${board.boardId} (${board.gameSettings.title})
-</a>
+<@link href="playground/scribble/board?b=${board.boardId}">#${board.boardId} (${board.gameSettings.title})</@link>
 </#macro>
 
 <#macro player pid>
-<a href="http://${serverHostName}/playground/profile/view?p=${pid}"><em>${gameMessageSource.getPlayerNick(playerManager.getPlayer(pid), locale)}</em></a>
+<@link href="playground/profile/view?p=${pid}">
+<em>${gameMessageSource.getPlayerNick(playerManager.getPlayer(pid), locale)}</em></@link>
 </#macro>
+
+<#macro link href><a href="http://${serverHostName}/${href}"><#nested/></a></#macro>
 
 <#macro host>${serverHostName}</#macro>
 
