@@ -26,7 +26,7 @@
             There is no winner. Stalemate.
             <#break>
         <#default>
-            The following player/players are won the game:
+            The following player/players have won the game:
             <#list context.wonPlayers as w>
             <@mail.player pid=w.playerId/><#if w_has_next>, </#if></#list>
     </#switch>

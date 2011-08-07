@@ -439,8 +439,8 @@
     white-space: nowrap !important;
 }
 
-#searchResult table tr>td {
-    width: 100%;
+#searchResult table tr {
+    cursor: pointer;
 }
 
 #searchTypes {
@@ -452,14 +452,16 @@
     padding: 0 0 5px;
 }
 
+.player-search-remove .player .nickname {
+    cursor: pointer;
+    text-decoration: line-through;
+}
+
 .player-search-action {
     cursor: pointer;
-    background: none !important;
-    border-top-width: 0 !important;
-    border-left-width: 0 !important;
-    border-right-width: 0 !important;
-    border-bottom-width: 1px !important;
-    border-bottom-style: dashed !important;
+    border-width: 0;
     padding: 0 !important;
     vertical-align: bottom;
+    border-bottom: 1px dashed;
+    background: none !important;
 }

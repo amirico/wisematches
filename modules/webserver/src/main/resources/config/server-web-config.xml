@@ -73,6 +73,9 @@
 
                 <bean parent="notification" c:name="game.message"
                       c:group="message" c:enabled="true" c:evenOnline="false" c:series="game.message"/>
+
+                <bean parent="notification" c:name="game.challenge"
+                      c:group="message" c:enabled="true" c:evenOnline="true" c:series="game.challenge"/>
             </list>
         </property>
     </bean>
