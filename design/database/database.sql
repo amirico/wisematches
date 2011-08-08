@@ -23,8 +23,8 @@ CREATE  TABLE IF NOT EXISTS
   UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 )
   ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8,
-COMMENT = 'The base table that contains information about a player' ;
+  DEFAULT CHARACTER SET = utf8
+  COMMENT = 'The base table that contains information about a player' ;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`account_lock`
@@ -316,6 +316,18 @@ CREATE  TABLE IF NOT EXISTS
   `text` VARCHAR(254) NULL ,
   `creationDate` TIMESTAMP NULL ,
   PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `wisematches`.`player_friends`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `wisematches`.`player_friends` (
+  `person` BIGINT(20)  NOT NULL ,
+  `friend` BIGINT(20)  NOT NULL ,
+  `registered` TIMESTAMP NULL ,
+  `comment` VARCHAR(254) NULL ,
+  PRIMARY KEY (`person`, `friend`)
 )
   ENGINE = InnoDB;
 
