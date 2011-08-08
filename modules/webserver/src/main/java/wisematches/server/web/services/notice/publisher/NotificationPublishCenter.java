@@ -11,6 +11,7 @@ import wisematches.playground.expiration.GameExpirationType;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageListener;
 import wisematches.playground.message.MessageManager;
+import wisematches.playground.propose.ChallengeGameProposal;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
 import wisematches.server.web.services.notice.NotificationDescription;
@@ -207,7 +208,6 @@ public class NotificationPublishCenter {
 
         @Override
         public void gameProposalInitiated(GameProposal proposal) {
-/*
             if (proposal instanceof ChallengeGameProposal) {
                 final ChallengeGameProposal challenge = (ChallengeGameProposal) proposal;
                 final NotificationDescription description = notificationManager.getDescription("game.challenge");
@@ -219,7 +219,6 @@ public class NotificationPublishCenter {
                     }
                 }
             }
-*/
         }
 
         @Override
