@@ -178,14 +178,14 @@
 
                                     <div id="opponentsControl"
                                          <#if (opponentsCount>=maxOpponents)>class="ui-helper-hidden"</#if>>
-                                        <a href='#' onclick="wm.scribble.create.add(); return false;">add an
-                                            opponent</a>
+                                        <a href='#'
+                                           onclick="create.selectOpponent(); return false;"><@message code="game.create.opponent.add.label"/></a>
                                     </div>
                                 </div>
 
                                 <div style="display: inline-block; vertical-align: top; padding-top: 5px; padding-left: 20px">
                                     <div>
-                                        Please enter a challenge message for your opponents:
+                                    <@message code="game.create.opponent.add.description"/>:
                                     </div>
                                     <div>
                                         <textarea name="challengeMessage"
@@ -211,72 +211,5 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    wm.scribble = {};
-    wm.scribble.create = new function() {
-        var maxOpponents = ${maxOpponents};
-        var opponentsCount = ${opponentsCount};
-
-        this.add = function() {
-            wm.search.openDialog(wm.scribble.create.insertPlayer);
-            return false;
-        };
-
-        var attachPlayerSearchActions = function(a) {
-            $(a).hover(
-                    function() {
-                        $(this).addClass("player-search-remove");
-                    },
-                    function() {
-                        $(this).removeClass("player-search-remove");
-                    }).click(function() {
-                        $(this).fadeOut('fast', function() {
-                            $(this).remove();
-                            if (opponentsCount == maxOpponents) {
-                                $("#opponentsControl").fadeIn('slow');
-                            }
-                            opponentsCount--;
-                        });
-                    });
-        };
-
-        this.insertPlayer = function(playerInfo) {
-            var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.playerId + '"/></div>');
-            attachPlayerSearchActions(s);
-            $("#opponentsList").append(s);
-            $("#opponentsList .ui-state-error-text").remove();
-            s.fadeIn('fast');
-            opponentsCount++;
-            if (opponentsCount == maxOpponents) {
-                $("#opponentsControl").fadeOut('slow');
-            }
-        };
-
-        $("#opponentsList div").each(function(i, a) {
-            attachPlayerSearchActions(a);
-        });
-
-        $("#createGame #radio").buttonset();
-        $("#createGame button").button();
-
-        $("#opponentTypeRobot").change(function() {
-            $(".create-form").slideUp();
-            $("#robotForm").slideDown();
-        });
-
-        $("#opponentTypeWait").change(function() {
-            $(".create-form").slideUp();
-            $("#waitingForm").slideDown();
-        });
-
-        $("#opponentTypeChallenge").change(function() {
-            $(".create-form").slideUp();
-            $("#challengeForm").slideDown();
-        });
-
-        $(".player-search-action").hover(function() {
-                    $(this).addClass("ui-state-hover");
-                }, function() {
-                    $(this).removeClass("ui-state-hover");
-                });
-    };
+    var create = new wm.Create(${maxOpponents}, ${opponentsCount}, playerSearch);
 </script>
