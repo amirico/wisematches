@@ -191,7 +191,6 @@ wm.scribble.Comments = function(board, language) {
             });
 };
 
-
 wm.scribble.Memory = function(board, language) {
     var nextWordId = 0;
     var memoryWords = new Array();
@@ -756,7 +755,6 @@ wm.scribble.Players = function(board) {
                 updateBoardState();
             });
 };
-
 
 wm.scribble.ScoreEngine = function(gameBonuses, board) {
     var emptyHandBonus = 33;
