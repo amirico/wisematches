@@ -13,16 +13,19 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateActivityManager extends HibernateDaoSupport implements ActivityManager {
-    @Override
-    @Transactional(propagation = Propagation.MANDATORY)
-    public void messagesChecked(Personality person) {
-        HibernateTemplate template = getHibernateTemplate();
-        LastMessagesCheck lastMessagesCheck = template.get(LastMessagesCheck.class, person.getId());
-        if (lastMessagesCheck == null) {
-            lastMessagesCheck = new LastMessagesCheck(person.getId(), new Date());
-        } else {
-            lastMessagesCheck.setLastCheckTime(new Date());
-        }
-        template.saveOrUpdate(lastMessagesCheck);
-    }
+	public HibernateActivityManager() {
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void messagesChecked(Personality person) {
+		HibernateTemplate template = getHibernateTemplate();
+		LastMessagesCheck lastMessagesCheck = template.get(LastMessagesCheck.class, person.getId());
+		if (lastMessagesCheck == null) {
+			lastMessagesCheck = new LastMessagesCheck(person.getId(), new Date());
+		} else {
+			lastMessagesCheck.setLastCheckTime(new Date());
+		}
+		template.saveOrUpdate(lastMessagesCheck);
+	}
 }

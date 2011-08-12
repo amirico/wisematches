@@ -20,8 +20,8 @@ public class HibernateMessage implements Message {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "created", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created", nullable = false, updatable = false)
 	private Date creationDate;
 
 	@Column(name = "recipient", nullable = false, updatable = false)
@@ -87,8 +87,7 @@ public class HibernateMessage implements Message {
 		if (original != null) {
 			this.original = original.getId();
 		}
-		if (notification)
-			this.creationDate = new Date();
+		this.creationDate = new Date();
 		this.text = text;
 		this.notification = notification;
 	}
