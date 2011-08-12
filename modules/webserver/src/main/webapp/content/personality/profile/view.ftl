@@ -20,7 +20,11 @@
 <div class="content shadow ui-state-default">
 <div class="title">
     <div class="player">
-        <strong>${profile.realName!player.nickname}</strong>
+    <#if (profile.realName?? && profile.realName?has_content)>
+        <strong>${profile.realName}</strong>
+        <#else>
+            <strong>${player.nickname}</strong>
+    </#if>
     </div>
     <div class="registered">
     <@message code="profile.registered"/>: ${gameMessageSource.formatDate(profile.creationDate, locale)}
@@ -63,9 +67,9 @@
                 <tbody>
                 <tr>
                     <td class="ui-state-default">${statistics.rating}</td>
-                    <td class="ui-state-default">${wins} <span>(${p_wins}%)</span></td>
-                    <td class="ui-state-default">${loses} <span>(${p_loses}%)</span></td>
-                    <td class="ui-state-default">${draws} <span>(${p_draws}%)</span></td>
+                    <td class="ui-state-default">${wins} <span>(${p_wins?string("0")}%)</span></td>
+                    <td class="ui-state-default">${loses} <span>(${p_loses?string("0")}%)</span></td>
+                    <td class="ui-state-default">${draws} <span>(${p_draws?string("0")}%)</span></td>
                     <td class="ui-state-default">${finished}</td>
                 </tr>
                 </tbody>
@@ -292,25 +296,25 @@
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
-            backgroundColor: 'transparent',
-            interpolateNulls: true,
-            legend: 'none',
-            width: 300,
-            height: 150,
-            chartArea: {
-                top: 10,
-                left: 50,
-                width: 280,
-                height: 120
-            },
-            hAxis: {
-                showTextEvery: resolution * 2
-            },
-            vAxis: {
-                format: '#',
-                minValue: ${ratingChart.minRating?string("0")},
-                maxValue: ${ratingChart.maxRating?string("0")}
-            }}
+                    backgroundColor: 'transparent',
+                    interpolateNulls: true,
+                    legend: 'none',
+                    width: 300,
+                    height: 150,
+                    chartArea: {
+                        top: 10,
+                        left: 50,
+                        width: 280,
+                        height: 120
+                    },
+                    hAxis: {
+                        showTextEvery: resolution * 2
+                    },
+                    vAxis: {
+                        format: '#',
+                        minValue: ${ratingChart.minRating?string("0")},
+                        maxValue: ${ratingChart.maxRating?string("0")}
+                    }}
         );
     }
 

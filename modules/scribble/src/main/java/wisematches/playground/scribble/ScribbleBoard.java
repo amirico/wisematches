@@ -55,9 +55,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *  |-----------------|
 	 * </pre>
 	 */
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "boardTiles")
 	private final byte[] boardTiles = new byte[255];
 
 	/**
@@ -72,10 +69,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * <p/>
 	 * This buffer contains tile number incremented by 1. Zero value means no tile.
 	 */
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "handTiles")
-	@Access(AccessType.PROPERTY)
 	private final byte[] handTiles = new byte[42];
 
 	/**
@@ -94,10 +87,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *  |--------------------------------|
 	 * </pre>
 	 */
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "redefinitions")
-	@Access(AccessType.PROPERTY)
 	private final ByteBuffer tilesRedefinitions = ByteBuffer.allocate(255);
 
 	/**
@@ -118,10 +107,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *  |-------------------------------------------------------------------------------------------------------------|
 	 * </pre>
 	 */
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "moves")
-	@Access(AccessType.PROPERTY)
 	private final ByteBuffer boardMoves = ByteBuffer.allocate(2912);
 
 	public static final int CELLS_NUMBER = 15;
@@ -657,6 +642,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *
 	 * @return the encoded board tiles that should be stored into database.
 	 */
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "boardTiles")
+	@Access(AccessType.PROPERTY)
 	byte[] getBoardTiles() {
 		return boardTiles;
 	}
@@ -665,6 +654,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		System.arraycopy(boardTiles, 0, this.boardTiles, 0, boardTiles.length);
 	}
 
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "handTiles")
+	@Access(AccessType.PROPERTY)
 	byte[] getHandTiles() {
 		return handTiles;
 	}
@@ -673,6 +666,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		System.arraycopy(handTiles, 0, this.handTiles, 0, handTiles.length);
 	}
 
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "redefinitions")
+	@Access(AccessType.PROPERTY)
 	byte[] getTilesRedefinitions() {
 		return tilesRedefinitions.array();
 	}
@@ -683,6 +680,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		this.tilesRedefinitions.rewind();
 	}
 
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "moves")
+	@Access(AccessType.PROPERTY)
 	byte[] getBoardMoves() {
 		return boardMoves.array();
 	}

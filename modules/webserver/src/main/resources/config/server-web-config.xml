@@ -17,6 +17,13 @@
         </property>
     </bean>
 
+    <bean id="notificationFreemarkerConfig"
+          class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="preferFileSystemAccess" value="false"/>
+        <property name="templateLoaderPath" value="classpath:/i18n/message"/>
+    </bean>
+
     <bean id="gameMessageSource" class="wisematches.server.web.i18n.GameMessageSource">
         <property name="messageSource" ref="messageSource"/>
     </bean>
@@ -81,19 +88,22 @@
     </bean>
 
     <bean id="notificationPublisherCenter"
-          class="wisematches.server.web.services.notice.publisher.NotificationPublishCenter">
+          class="wisematches.server.web.services.notice.impl.NotificationPublishCenter">
         <property name="publishers">
             <list>
+                <bean class="wisematches.server.web.services.notice.impl.publisher.MessageNotificationPublisher">
+                    <property name="configuration" ref="notificationFreemarkerConfig"/>
+                    <property name="messageManager" ref="messageManager"/>
+                </bean>
                 <bean class="wisematches.server.web.services.notice.impl.publisher.MailNotificationPublisher">
                     <property name="mailService" ref="mailService"/>
-                    <property name="accountManager" ref="accountManager"/>
+                    <property name="playerStateManager" ref="playerStateManager"/>
                 </bean>
             </list>
         </property>
+        <property name="playerManager" ref="playerManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="expirationManager" ref="scribbleTerminator"/>
-        <property name="playerStateManager" ref="playerStateManager"/>
         <property name="notificationManager" ref="notificationManager"/>
-        <property name="messageManager" ref="messageManager"/>
     </bean>
 </beans>

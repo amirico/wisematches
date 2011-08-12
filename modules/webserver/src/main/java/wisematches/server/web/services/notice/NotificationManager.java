@@ -21,7 +21,7 @@ public interface NotificationManager {
 	/**
 	 * Returns unmodifiable collection of all known descriptions.
 	 *
-	 * @return the unmodifiable collection of all descrptions.
+	 * @return the unmodifiable collection of all descriptions.
 	 */
 	public Collection<NotificationDescription> getDescriptions();
 

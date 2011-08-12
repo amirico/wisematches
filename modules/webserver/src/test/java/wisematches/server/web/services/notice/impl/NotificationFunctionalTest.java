@@ -1,6 +1,5 @@
-package wisematches.server.web.services.notice.publisher;
+package wisematches.server.web.services.notice.impl;
 
-import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,14 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.personality.Personality;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.message.Message;
-import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.server.web.services.notice.NotificationManager;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -47,6 +41,7 @@ public class NotificationFunctionalTest {
 
 	@Test
 	public void asd() throws BoardLoadingException, InterruptedException {
+/*
 		final Personality p = Personality.person(1029);
 
 		final ScribbleBoard b1 = boardManager.openBoard(53);
@@ -62,5 +57,6 @@ public class NotificationFunctionalTest {
 		publishCenter.processNotification(new Notification(p, notificationManager.getDescription("game.message"), createMock(Message.class)));
 
 		Thread.sleep(1000000);
+*/
 	}
 }
