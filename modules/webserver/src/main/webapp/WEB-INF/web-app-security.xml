@@ -167,6 +167,6 @@
 
         <logout logout-url="/account/logout"
                 logout-success-url="/account/login"
-                invalidate-session="true"/>
+                invalidate-session="false"/>
     </http>
 </beans:beans>

@@ -3,9 +3,9 @@ package wisematches.server.web.i18n;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.util.WebUtils;
 import wisematches.personality.Language;
-import wisematches.personality.player.Player;
+import wisematches.server.security.WMAuthorities;
+import wisematches.server.security.impl.WMUserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,26 +18,38 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 	public WMPlayerLocaleResolver() {
 	}
 
+	/**
+	 * This implementation uses {@code Authentication} object from {@code SecurityContextHolder}
+	 * to get {@code Player} object and if it's set when player's locale is used.
+	 *
+	 * @param request the request
+	 * @return the locale
+	 */
 	public Locale resolveLocale(HttpServletRequest request) {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) {
-			return resolveLocale(super.resolveLocale(request));
+			return super.resolveLocale(request);
+		}
+		if (authentication.getAuthorities().contains(WMAuthorities.GUEST)) {
+			return super.resolveLocale(request);
+		}
+
+		final Object details = authentication.getPrincipal();
+		if (details instanceof WMUserDetails) {
+			return ((WMUserDetails) details).getPlayer().getLanguage().locale();
 		} else {
-			Locale locale = (Locale) WebUtils.getSessionAttribute(request, LOCALE_SESSION_ATTRIBUTE_NAME);
-			if (locale == null) {
-				if (authentication.getDetails() instanceof Player) {
-					return ((Player) authentication.getDetails()).getLanguage().locale();
-				} else {
-					return resolveLocale(super.resolveLocale(request));
-				}
-			} else {
-				return locale;
-			}
+			return super.resolveLocale(request);
 		}
 	}
 
+	@Override
+	protected Locale determineDefaultLocale(HttpServletRequest request) {
+		return resolveLocale(super.determineDefaultLocale(request));
+	}
+
+	@Override
 	public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
-		WebUtils.setSessionAttribute(request, LOCALE_SESSION_ATTRIBUTE_NAME, resolveLocale(locale));
+		super.setLocale(request, response, resolveLocale(locale));
 	}
 
 	/**
@@ -47,6 +59,10 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 	 * @return resolved locale
 	 */
 	protected Locale resolveLocale(Locale locale) {
-		return Language.byCode(locale.getLanguage()).locale();
+		Language language = Language.byLocale(locale);
+		if (language != null) {
+			return language.locale();
+		}
+		return Language.DEFAULT.locale();
 	}
 }
