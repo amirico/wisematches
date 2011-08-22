@@ -14,7 +14,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -26,7 +25,6 @@ public class GuestAuthenticationFilter extends GenericFilterBean implements Init
 
 	private String guestProcessingUrl = DEFAULT_GUEST_PROCESSING_URL;
 
-	private static final String PARAMETER_NAME = "WM_GUEST_SESSION";
 	private static final String DEFAULT_GUEST_PROCESSING_URL = "/j_spring_security_guest";
 
 	private static final WMUserDetails USER_DETAILS = new WMUserDetails(GuestPlayer.GUEST, "guest", "guest", true);
@@ -53,15 +51,7 @@ public class GuestAuthenticationFilter extends GenericFilterBean implements Init
 	}
 
 	protected boolean applyGuestForThisRequest(HttpServletRequest request) {
-		final boolean guestSession = guestProcessingUrl.equals(request.getRequestURI());
-		if (guestSession) {
-			final HttpSession session = request.getSession(true);
-			if (session.getAttribute(PARAMETER_NAME) == null) {
-				session.setAttribute(PARAMETER_NAME, Boolean.TRUE);
-				return true;
-			}
-		}
-		return false;
+		return guestProcessingUrl.equals(request.getRequestURI());
 	}
 
 	public void setGuestProcessingUrl(String guestProcessingUrl) {
