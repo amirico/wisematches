@@ -257,6 +257,7 @@ CREATE  TABLE IF NOT EXISTS
   `game.timeout.half` INT(1) NULL ,
   `game.timeout.hour` INT(1) NULL ,
   `game.message` INT(1) NULL ,
+  `game.challenge` INT(1) NULL DEFAULT 1 ,
   PRIMARY KEY (`pid`)
 )
   ENGINE = InnoDB

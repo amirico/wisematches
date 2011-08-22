@@ -39,8 +39,13 @@
     display: inline-block;
 }
 
-.player a, .player .nickname, .player .rating {
+.player a, .player .nickname {
     color: #a52a2a;
+    text-decoration: none;
+}
+
+.player.member a, .player.member .nickname {
+    border-bottom: 1px solid #a52a2a;
 }
 
 .player .waiting {
@@ -359,7 +364,7 @@
     min-height: inherit;
 }
 
-#messages tr, #blacklist tr, #frieds tr {
+#messages tr, #blacklist tr, #friends tr {
     background-image: none;
 }
 
