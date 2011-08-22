@@ -1,3 +1,0 @@
-1. Only one game at the moment
-2. Games are not stored into DB, only in memory.
-3.
