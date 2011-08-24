@@ -7,9 +7,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.server.web.services.notice.NotificationDescription;
 import wisematches.server.web.services.notice.NotificationManager;
-import wisematches.server.web.services.notice.NotificationMask;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
+import wisematches.server.web.services.notify.settings.NotificationMask;
 
 import java.util.Collection;
 
@@ -40,31 +40,31 @@ public class HibernateNotificationManagerTest {
 	public void test() {
 		final Personality person = Personality.person(1);
 
-		NotificationMask notificationMask = notificationManager.getNotificationMask(person);
-		for (String name : notificationMask.getNotificationNames()) {
-			notificationMask.setEnabled(name, true);
+		NotificationMask mask = notificationManager.getNotificationMask(person);
+		for (String name : mask.getNotificationNames()) {
+			mask.setEnabled(name, true);
 		}
-		notificationManager.setNotificationMask(person, notificationMask);
+		notificationManager.setNotificationMask(person, mask);
 
 		final Collection<NotificationDescription> descriptions = notificationManager.getDescriptions();
 		for (NotificationDescription d : descriptions) {
 			assertTrue(notificationManager.isNotificationEnabled(d.getName(), person));
 		}
 
-		notificationMask = notificationManager.getNotificationMask(person);
-		System.out.println(notificationMask);
-		for (String name : notificationMask.getNotificationNames()) {
-			assertTrue(notificationMask.isEnabled(name));
-			notificationMask.setEnabled(name, false);
+		mask = notificationManager.getNotificationMask(person);
+		System.out.println(mask);
+		for (String name : mask.getNotificationNames()) {
+			assertTrue(mask.isEnabled(name));
+			mask.setEnabled(name, false);
 		}
-		notificationManager.setNotificationMask(person, notificationMask);
+		notificationManager.setNotificationMask(person, mask);
 
 		for (NotificationDescription d : descriptions) {
 			assertFalse(notificationManager.isNotificationEnabled(d.getName(), person));
 		}
-		notificationMask = notificationManager.getNotificationMask(person);
-		for (String name : notificationMask.getNotificationNames()) {
-			assertFalse(notificationMask.isEnabled(name));
+		mask = notificationManager.getNotificationMask(person);
+		for (String name : mask.getNotificationNames()) {
+			assertFalse(mask.isEnabled(name));
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package wisematches.server.web.services.notice;
 
 import wisematches.personality.Personality;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
+import wisematches.server.web.services.notify.settings.NotificationMask;
 
 import java.util.Collection;
 

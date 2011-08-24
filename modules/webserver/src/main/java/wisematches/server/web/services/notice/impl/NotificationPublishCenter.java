@@ -16,9 +16,9 @@ import wisematches.playground.propose.ChallengeGameProposal;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
 import wisematches.server.web.services.notice.Notification;
-import wisematches.server.web.services.notice.NotificationDescription;
 import wisematches.server.web.services.notice.NotificationManager;
 import wisematches.server.web.services.notice.NotificationPublisher;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -17,7 +17,7 @@
             classpath:/config/accounts-config.xml
             classpath:/config/playground-config.xml
             classpath:/config/scribble-config.xml
-            classpath:/config/mail-sender-config.xml
+            classpath:/config/notify-sender-config.xml
             classpath:/config/server-web-config.xml
             classpath:/config/application-settings.xml
             /WEB-INF/web-app-security.xml

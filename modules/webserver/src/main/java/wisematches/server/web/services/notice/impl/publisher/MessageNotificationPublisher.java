@@ -8,8 +8,8 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import wisematches.personality.Language;
 import wisematches.playground.message.MessageManager;
 import wisematches.server.web.services.notice.Notification;
-import wisematches.server.web.services.notice.NotificationDescription;
 import wisematches.server.web.services.notice.NotificationPublisher;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -48,11 +48,11 @@ public class MessageNotificationPublisher implements NotificationPublisher {
 		return configuration.getTemplate(notification.getDescription().getName().replaceAll("\\.", "/") + ".ftl", language.locale(), "UTF-8");
 	}
 
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
-	}
-
 	public void setMessageManager(MessageManager messageManager) {
 		this.messageManager = messageManager;
+	}
+
+	public void setFreemarkerConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 }

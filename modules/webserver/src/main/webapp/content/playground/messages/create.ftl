@@ -41,7 +41,7 @@
     <div>
         <div></div>
         <div style="font-style: italic;">
-            This is reply to the message of <@wm.player player=playerManager.getPlayer(original.sender)/> received
+            This is reply to the message of <@wm.player player=playerManager.getPlayer(original.senderName)/> received
         ${gameMessageSource.formatDate(original.created, locale)} ${gameMessageSource.formatTime(original.created, locale)}
         </div>
     </div>

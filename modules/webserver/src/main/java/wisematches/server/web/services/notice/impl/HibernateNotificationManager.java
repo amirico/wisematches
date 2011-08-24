@@ -8,9 +8,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.server.web.services.notice.NotificationDescription;
 import wisematches.server.web.services.notice.NotificationManager;
-import wisematches.server.web.services.notice.NotificationMask;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
+import wisematches.server.web.services.notify.settings.NotificationMask;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -65,14 +65,14 @@ public class HibernateNotificationManager extends HibernateDaoSupport implements
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public NotificationMask getNotificationMask(Personality personality) {
-		NotificationMask notificationMask = loadNotificationMask(personality);
-		if (notificationMask == null) {
-			notificationMask = new NotificationMask();
+		NotificationMask mask = loadNotificationMask(personality);
+		if (mask == null) {
+			mask = new NotificationMask();
 			for (NotificationDescription d : descriptionMap.values()) {
-				notificationMask.setEnabled(d.getName(), d.isEnabled());
+				mask.setEnabled(d.getName(), d.isEnabled());
 			}
 		}
-		return notificationMask;
+		return mask;
 	}
 
 	@Override

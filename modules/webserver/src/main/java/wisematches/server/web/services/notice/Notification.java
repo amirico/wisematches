@@ -1,14 +1,15 @@
 package wisematches.server.web.services.notice;
 
 import wisematches.personality.player.member.MemberPlayer;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class Notification {
+	private final Object context;
 	private final MemberPlayer member;
 	private final NotificationDescription description;
-	private final Object context;
 
 	public Notification(MemberPlayer member, NotificationDescription description, Object context) {
 		this.member = member;
