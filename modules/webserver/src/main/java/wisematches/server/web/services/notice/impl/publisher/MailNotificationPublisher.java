@@ -4,11 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wisematches.personality.Personality;
 import wisematches.personality.player.member.MemberPlayer;
-import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
+import wisematches.server.mail.SenderName;
 import wisematches.server.web.services.notice.Notification;
-import wisematches.server.web.services.notice.NotificationDescription;
 import wisematches.server.web.services.notice.NotificationPublisher;
+import wisematches.server.web.services.notify.settings.NotificationDescription;
 import wisematches.server.web.services.state.PlayerStateListener;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -63,7 +63,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 
 	private void processNotification(Notification notification) {
 		MemberPlayer member = notification.getMember();
-		mailService.sendMail(MailSender.GAME, member.getAccount(), notification.getDescription().getName().replaceAll("\\.", "/"), Collections.singletonMap("context", notification.getContext()));
+		mailService.sendMail(SenderName.GAME, member.getAccount(), notification.getDescription().getName().replaceAll("\\.", "/"), Collections.singletonMap("context", notification.getContext()));
 	}
 
 	private void processNotifications(List<Notification> notifications) {

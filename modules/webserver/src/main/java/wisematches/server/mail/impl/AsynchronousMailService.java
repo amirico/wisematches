@@ -5,8 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import wisematches.personality.account.Account;
 import wisematches.server.mail.MailException;
-import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
+import wisematches.server.mail.SenderName;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  */
 public class AsynchronousMailService implements MailService {
 	private MailService originalMailService;
-	private ExecutorService executorService = Executors.newSingleThreadExecutor(new CustomizableThreadFactory("MailSender"));
+	private ExecutorService executorService = Executors.newSingleThreadExecutor(new CustomizableThreadFactory("SenderName"));
 
 	protected static final Log log = LogFactory.getLog("wisematches.server.mail");
 
@@ -25,12 +25,12 @@ public class AsynchronousMailService implements MailService {
 	}
 
 	@Override
-	public void sendMail(MailSender from, Account to, String msgCode, Map<String, ?> model) {
+	public void sendMail(SenderName from, Account to, String msgCode, Map<String, ?> model) {
 		executorService.submit(new PlayerMailJob(from, to, msgCode, model));
 	}
 
 	@Override
-	public void sendWarrantyMail(MailSender from, Account to, String msgCode, Map<String, ?> model) throws MailException {
+	public void sendWarrantyMail(SenderName from, Account to, String msgCode, Map<String, ?> model) throws MailException {
 		originalMailService.sendWarrantyMail(from, to, msgCode, model);
 	}
 
@@ -58,12 +58,12 @@ public class AsynchronousMailService implements MailService {
 	}
 
 	private class PlayerMailJob implements Runnable {
-		private final MailSender from;
+		private final SenderName from;
 		private final Account to;
 		private final String msgCode;
 		private final Map<String, ?> model;
 
-		private PlayerMailJob(MailSender from, Account to, String msgCode, Map<String, ?> model) {
+		private PlayerMailJob(SenderName from, Account to, String msgCode, Map<String, ?> model) {
 			this.from = from;
 			this.to = to;
 			this.msgCode = msgCode;

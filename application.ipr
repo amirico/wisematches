@@ -11,7 +11,6 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-1.0-SNAPSHOT.jar">
@@ -531,10 +530,6 @@
     </GetOptions>
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
-  <component name="XPathView.XPathProjectComponent">
-    <history />
-    <find-history />
-  </component>
   <component name="ideajad">
     <property name="annotate" value="false" />
     <property name="annotateFully" value="false" />

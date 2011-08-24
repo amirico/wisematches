@@ -16,8 +16,8 @@ import wisematches.personality.account.Account;
 import wisematches.personality.account.AccountEditor;
 import wisematches.personality.account.AccountManager;
 import wisematches.server.mail.MailException;
-import wisematches.server.mail.MailSender;
 import wisematches.server.mail.MailService;
+import wisematches.server.mail.SenderName;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.personality.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
@@ -83,7 +83,7 @@ public class RecoveryController {
 					mailModel.put("recoveryToken", encodeToken(token));
 					mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-					mailService.sendWarrantyMail(MailSender.ACCOUNTS, player, "account/recovery", mailModel);
+					mailService.sendWarrantyMail(SenderName.ACCOUNTS, player, "account/recovery", mailModel);
 
 					//noinspection SpringMVCViewInspection
 					return "redirect:/account/recovery/expectation";
@@ -164,7 +164,7 @@ public class RecoveryController {
 
 		try {
 			accountManager.updateAccount(e.createAccount());
-			mailService.sendMail(MailSender.ACCOUNTS, player, "account/updated", null);
+			mailService.sendMail(SenderName.ACCOUNTS, player, "account/updated", null);
 			return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 		} catch (Exception e1) {
 			if (log.isDebugEnabled()) {
