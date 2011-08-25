@@ -17,16 +17,6 @@
         </property>
     </bean>
 
-    <bean id="mailFreemarkerConfig" parent="commonFreemarkerConfig">
-        <property name="preferFileSystemAccess" value="false"/>
-        <property name="templateLoaderPath" value="classpath:/notice/mail"/>
-    </bean>
-
-    <bean id="messageFreemarkerConfig" parent="commonFreemarkerConfig">
-        <property name="preferFileSystemAccess" value="false"/>
-        <property name="templateLoaderPath" value="classpath:/notice/message"/>
-    </bean>
-
     <bean id="notificationExecutorService" class="java.util.concurrent.Executors"
           factory-method="newSingleThreadExecutor">
         <constructor-arg index="0">
@@ -36,31 +26,40 @@
         </constructor-arg>
     </bean>
 
-    <bean id="mailNotificationPublisher" class="wisematches.server.web.services.notify.mail.MailNotificationPublisher">
+    <bean id="notificationFreemarkerConfig" parent="commonFreemarkerConfig">
+        <property name="preferFileSystemAccess" value="false"/>
+        <property name="templateLoaderPath" value="classpath:/i18n/notify"/>
+    </bean>
+
+    <bean id="notificationTransformer"
+          class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
+        <property name="messageSource" ref="messageSource"/>
+        <property name="freeMarkerConfig">
+            <bean factory-bean="notificationFreemarkerConfig" factory-method="createConfiguration"/>
+        </property>
+    </bean>
+
+    <bean id="mailNotificationPublisher"
+          class="wisematches.server.web.services.notify.impl.publish.mail.MailNotificationPublisher">
         <property name="mailSender" ref="springMailSender"/>
         <property name="messageSource" ref="messageSource"/>
         <property name="serverHostName" value="${server.hostname}"/>
         <property name="executorService" ref="notificationExecutorService"/>
-        <property name="freeMarkerConfig">
-            <bean factory-bean="mailFreemarkerConfig" factory-method="createConfiguration"/>
-        </property>
+        <property name="notificationTransformer" ref="notificationTransformer"/>
     </bean>
 
     <bean id="messageNotificationPublisher"
-          class="wisematches.server.web.services.notify.message.MessageNotificationPublisher">
-        <property name="messageSource" ref="messageSource"/>
+          class="wisematches.server.web.services.notify.impl.publish.message.MessageNotificationPublisher">
         <property name="messageManager" ref="messageManager"/>
         <property name="executorService" ref="notificationExecutorService"/>
-        <property name="freeMarkerConfig">
-            <bean factory-bean="messageFreemarkerConfig" factory-method="createConfiguration"/>
-        </property>
+        <property name="notificationTransformer" ref="notificationTransformer"/>
     </bean>
 
-
-    <bean id="notification" class="wisematches.server.web.services.notify.settings.NotificationDescription"
+    <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescription"
           abstract="true"/>
 
-    <bean id="notificationManager" class="wisematches.server.web.services.notice.impl.HibernateNotificationManager">
+    <bean id="notificationManager"
+          class="wisematches.server.web.services.notify.impl.manager.HibernateNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDescription">
             <list>
@@ -95,14 +94,27 @@
     </bean>
 
     <bean id="notificationPublisherCenter"
-          class="wisematches.server.web.services.notify.NotificationPublishCenter">
+          class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
         <property name="playerManager" ref="playerManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="expirationManager" ref="scribbleTerminator"/>
         <property name="notificationPublisher">
             <list>
-                <ref bean="mailNotificationPublisher"/>
-                <ref bean="messageNotificationPublisher"/>
+                <bean class="wisematches.server.web.services.notify.impl.publish.reducer.FilteringNotificationPublisher">
+                    <property name="acceptedNotifications">
+                        <set>
+                            <value>game.finished</value>
+                            <value>game.challenge</value>
+                        </set>
+                    </property>
+                    <property name="notificationPublisher" ref="messageNotificationPublisher"/>
+                </bean>
+
+                <bean class="wisematches.server.web.services.notify.impl.publish.reducer.ReducingNotificationPublisher">
+                    <property name="playerStateManager" ref="playerStateManager"/>
+                    <property name="notificationManager" ref="notificationManager"/>
+                    <property name="notificationPublisher" ref="mailNotificationPublisher"/>
+                </bean>
             </list>
         </property>
     </bean>
