@@ -3,13 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="notificationFreemarkerConfig"
-          class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="preferFileSystemAccess" value="false"/>
-        <property name="templateLoaderPath" value="classpath:/i18n/message"/>
-    </bean>
-
     <bean id="gameMessageSource" class="wisematches.server.web.i18n.GameMessageSource">
         <property name="messageSource" ref="messageSource"/>
     </bean>

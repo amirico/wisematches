@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="settings" type="wisematches.server.web.services.notify.settings.NotificationMask" -->
-<#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.notify.settings.NotificationDescription>" -->
+<#-- @ftlvariable name="settings" type="wisematches.server.web.services.notify.NotificationMask" -->
+<#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.notify.NotificationDescription>" -->
 
 <#include "/core.ftl">
 

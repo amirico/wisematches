@@ -1,0 +1,63 @@
+package wisematches.server.web.services.notify.impl;
+
+import org.easymock.EasyMock;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+import wisematches.personality.Personality;
+import wisematches.playground.BoardLoadingException;
+import wisematches.playground.message.Message;
+import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.server.web.services.notify.NotificationManager;
+
+/**
+ * @author Sergey Klimenko (smklimenko@gmail.com)
+ */
+//@Ignore
+@Transactional
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+		"classpath:/config/database-junit-config.xml",
+		"classpath:/config/accounts-config.xml",
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-junit-config.xml",
+		"classpath:/config/application-settings.xml",
+		"classpath:/config/notify-sender-config.xml",
+		"classpath:/config/server-web-config.xml"
+})
+public class NotificationFunctionalTest {
+	@Autowired
+	ScribbleBoardManager boardManager;
+
+	@Autowired
+	NotificationManager notificationManager;
+
+	@Autowired
+	NotificationPublisherCenter notificationPublisherCenter;
+
+	public NotificationFunctionalTest() {
+	}
+
+	@Test
+	public void asd() throws BoardLoadingException, InterruptedException {
+		final Personality p = Personality.person(1029);
+
+		final ScribbleBoard b1 = boardManager.openBoard(53);
+		final ScribbleBoard b2 = boardManager.openBoard(54);
+
+		notificationPublisherCenter.processNotification(p, "game.started", b2);
+		notificationPublisherCenter.processNotification(p, "game.finished", b1);
+		notificationPublisherCenter.processNotification(p, "game.move.your", b2);
+		notificationPublisherCenter.processNotification(p, "game.move.opponent", b2);
+		notificationPublisherCenter.processNotification(p, "game.timeout.day", b2);
+		notificationPublisherCenter.processNotification(p, "game.timeout.half", b2);
+		notificationPublisherCenter.processNotification(p, "game.timeout.hour", b2);
+		notificationPublisherCenter.processNotification(p, "game.message", EasyMock.createMock(Message.class));
+
+		Thread.sleep(1000000);
+	}
+}
