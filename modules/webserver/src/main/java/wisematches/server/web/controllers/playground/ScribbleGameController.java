@@ -18,7 +18,6 @@ import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.BoardManagementException;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.blacklist.BlacklistedException;
-import wisematches.playground.message.MessageManager;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.GameRestriction;
@@ -46,7 +45,6 @@ import java.util.*;
 @RequestMapping("/playground/scribble")
 public class ScribbleGameController extends WisematchesController {
 	private PlayerManager playerManager;
-	private MessageManager messageManager;
 	private BlacklistManager blacklistManager;
 	private ScribbleBoardManager boardManager;
 	private ScribbleSearchesEngine searchesEngine;
@@ -306,11 +304,6 @@ public class ScribbleGameController extends WisematchesController {
 	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
-	}
-
-	@Autowired
-	public void setMessageManager(MessageManager messageManager) {
-		this.messageManager = messageManager;
 	}
 
 	@Autowired

@@ -103,6 +103,7 @@
           class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
         <property name="playerManager" ref="playerManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
         <property name="expirationManager" ref="scribbleTerminator"/>
         <property name="notificationPublisher">
             <list>
