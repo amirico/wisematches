@@ -38,8 +38,8 @@
                 <input type="checkbox" name="removeList" value="${m.id}">
             </td>
             <td>
-                <#if m.senderName != 0>
-                    <div class="message-from"><@wm.player player=playerManager.getPlayer(m.senderName)/></div>
+                <#if m.sender != 0>
+                    <div class="message-from"><@wm.player player=playerManager.getPlayer(m.sender)/></div>
                 </#if>
                 <div class="message-date">
                 ${gameMessageSource.formatDate(m.creationDate, locale)} ${gameMessageSource.formatTime(m.creationDate, locale)}
@@ -47,7 +47,7 @@
             </td>
             <td width="100%">
                 <div class="message-text">
-                ${gameMessageSource.stringToHTMLString(m.text)}
+                    <#if m.notification>${m.text}<#else>${gameMessageSource.stringToHTMLString(m.text)}</#if>
                 </div>
 
                 <div class="message-controls">
@@ -62,7 +62,7 @@
                         <a href="#"
                            onclick="wm.messages.reportAbuse(${m.id});"><@message code="messages.abuse"/></a>
                         &nbsp;
-                    <@blacklist pid=m.senderName><@message code="messages.ignore"/></@blacklist>
+                    <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
                         &nbsp;
                     </#if>
                     <a href="#"

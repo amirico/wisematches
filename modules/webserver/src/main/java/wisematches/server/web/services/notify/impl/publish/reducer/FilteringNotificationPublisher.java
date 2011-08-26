@@ -1,5 +1,8 @@
 package wisematches.server.web.services.notify.impl.publish.reducer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.server.web.services.notify.NotificationMover;
 import wisematches.server.web.services.notify.impl.publish.NotificationPublisherWrapper;
@@ -15,15 +18,25 @@ import java.util.concurrent.Future;
 public class FilteringNotificationPublisher extends NotificationPublisherWrapper {
 	private final Set<String> acceptedNotifications = new HashSet<String>();
 
+	private static final Log log = LogFactory.getLog("wisematches.server.notify.filter");
+
 	public FilteringNotificationPublisher() {
 	}
 
 	@Override
-	public Future<Void> raiseNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
+	public Future<Void> raiseNotification(String code, Account account, NotificationMover mover, Map<String, Object> model) {
 		if (!acceptedNotifications.contains(code)) {
+			if (log.isDebugEnabled()) {
+				log.debug("Notification '" + code + "' was rejected: not acceptable");
+			}
 			return null;
 		}
-		return notificationPublisher.raiseNotification(code, player, mover, model);
+		return notificationPublisher.raiseNotification(code, account, mover, model);
+	}
+
+	@Override
+	public Future<Void> raiseNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
+		return raiseNotification(code, player.getAccount(), mover, model);
 	}
 
 	public void setAcceptedNotifications(Set<String> codes) {

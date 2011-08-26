@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.personality.Language;
-import wisematches.personality.player.member.MemberPlayer;
+import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationMover;
 import wisematches.server.web.services.notify.impl.Notification;
 import wisematches.server.web.services.notify.impl.NotificationTransformerPublisher;
@@ -40,19 +40,22 @@ public class MailNotificationPublisher extends NotificationTransformerPublisher 
 
 	@Override
 	protected void raiseNotification(final Notification notification) throws Exception {
+		if (log.isDebugEnabled()) {
+			log.debug("Send mail notification '" + notification.getCode() + "' to " + notification.getAccount());
+		}
 		final MimeMessagePreparator mm = new MimeMessagePreparator() {
 			public void prepare(MimeMessage mimeMessage) throws Exception {
-				final MemberPlayer player = notification.getPlayer();
-				final Language language = player.getLanguage();
+				final Account account = notification.getAccount();
+				final Language language = account.getLanguage();
 
-				final InternetAddress to = new InternetAddress(player.getEmail(), player.getNickname(), "UTF-8");
+				final InternetAddress to = new InternetAddress(account.getEmail(), account.getNickname(), "UTF-8");
 				final InternetAddress from = getInternetAddress(notification.getMover(), language);
 
 				final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 				message.setFrom(from);
 				message.setTo(to);
 				message.setSubject(notification.getSubject());
-				message.setText(notification.getSubject(), true);
+				message.setText(notification.getMessage(), true);
 			}
 		};
 		mailSender.send(mm);

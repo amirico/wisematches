@@ -1,7 +1,5 @@
 <#-- @ftlvariable name="recoveryToken" type="java.lang.String" -->
-<#import "/notice/macro.ftl" as notice>
-
-<@notice.html subject="WiseMatches Account Assistance">
+<#import "../utils.ftl" as util>
 
 <p>Your WiseMatches account information was successfully updated.</p>
 
@@ -13,7 +11,5 @@
 <p>
     If you didn't updated WiseMatches account and don't recognize this message, it means someone
     forced your a account at WiseMatches. We recommend contacting a
-    WiseMatches Support Team by email: <@notice.mailto box="account-support"/>
+    WiseMatches Support Team by email: <@util.mailto box="account-support"/>
 </p>
-
-</@notice.html>

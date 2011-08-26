@@ -2,6 +2,7 @@ package wisematches.server.web.services.notify.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.server.web.services.notify.NotificationMover;
 import wisematches.server.web.services.notify.NotificationPublisher;
@@ -24,8 +25,8 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 	}
 
 	@Override
-	public final Future<Void> raiseNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
-		if (player == null) {
+	public Future<Void> raiseNotification(String code, Account account, NotificationMover mover, Map<String, Object> model) {
+		if (account == null) {
 			throw new NullPointerException("Player can't be null");
 		}
 		if (code == null) {
@@ -35,22 +36,30 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 			throw new NullPointerException("Sender can't be null");
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Put notification '" + code + "' into queue for " + player);
+			log.debug("Put notification '" + code + "' into queue for " + account);
 		}
-		return executorService.submit(new NotificationTask(code, player, mover, model));
+		return executorService.submit(new NotificationTask(code, account, mover, model));
+	}
+
+	@Override
+	public final Future<Void> raiseNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
+		return raiseNotification(code, player.getAccount(), mover, model);
 	}
 
 	protected abstract void raiseNotification(Notification notification) throws Exception;
 
-	private void processNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) throws Exception {
+	private void processNotification(String code, Account account, NotificationMover mover, Map<String, Object> model) throws Exception {
 		if (log.isDebugEnabled()) {
-			log.debug("Process notification '" + code + "' for " + player);
+			log.debug("Process notification '" + code + "' for " + account);
 		}
 		try {
-			raiseNotification(notificationTransformer.createNotification(code, player, mover, this, model));
+			raiseNotification(notificationTransformer.createNotification(code, account, mover, this, model));
 		} catch (Exception ex) {
-			log.error("Notification '" + code + "' for '" + player.getNickname() + "' can't be processed", ex);
+			log.error("Notification '" + code + "' for '" + account + "' can't be processed", ex);
 			throw ex;
+		} catch (Throwable th) {
+			log.error("Notification '" + code + "' for '" + account + "' can't be processed", th);
+			throw new Exception(th);
 		}
 	}
 
@@ -64,12 +73,12 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 
 	private class NotificationTask implements Callable<Void> {
 		private final String code;
-		private final MemberPlayer player;
+		private final Account account;
 		private final NotificationMover mover;
 		private final Map<String, Object> model;
 
-		private NotificationTask(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
-			this.player = player;
+		private NotificationTask(String code, Account account, NotificationMover mover, Map<String, Object> model) {
+			this.account = account;
 			this.code = code;
 			this.mover = mover;
 			this.model = model;
@@ -77,7 +86,7 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 
 		@Override
 		public Void call() throws Exception {
-			processNotification(code, player, mover, model);
+			processNotification(code, account, mover, model);
 			return null;
 		}
 	}

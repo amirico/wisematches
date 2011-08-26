@@ -1,1 +1,1 @@
-<div class="notification">
+<div class="notify-message">

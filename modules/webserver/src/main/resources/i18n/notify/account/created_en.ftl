@@ -1,11 +1,10 @@
-<#import "/notice/macro.ftl" as notice>
+<#-- @ftlvariable name="context" type="" -->
+<#import "../utils.ftl" as util>
 
-<@notice.html subject="WiseMatches Account Assistance">
-
-<p>Congratulations on creating your new WiseMatches account</p>
+<p>Congratulations on creating your new WiseMatches account.</p>
 
 <p>
-    You can log in to your account at &lt;@notify.link href=&quot;&quot;/&gt;.
+    You can log in to your account at <@util.link href=""/>.
 </p>
 <br>
 
@@ -21,7 +20,5 @@
 <p>
     If you didn't created WiseMatches account and don't recognize this message, it means someone used your
     email address for creating a account at WiseMatches. We recommend contacting a
-    WiseMatches Support Team by email: <@notice.mailto box="account-support"/>
+    WiseMatches Support Team by email: <@util.mailto box="account-support"/>
 </p>
-
-</@notice.html>

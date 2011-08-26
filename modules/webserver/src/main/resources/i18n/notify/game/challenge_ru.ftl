@@ -1,11 +1,9 @@
 <#-- @ftlvariable name="context" type="wisematches.playground.propose.ChallengeGameProposal" -->
-<#import "/notice/macro.ftl" as notice>
+<#import "../utils.ftl" as notify>
 
-<@notice.html subject="Получен вызов от другого игрока">
 <p>
-    Вы получили вызов от игрока <b><@notice.player pid=context.getInitiator().id/></b>. Вы можете принять вызов и
-    начать новую игру используя <@notice.link href="/playground/scribble/join?p=${context.id}">эту ссылку</@notice.link>
+    Вы получили вызов от игрока <b><@notify.player player=context.initiator/></b>. Вы можете принять вызов и
+    начать новую игру используя <@notify.link href="/playground/scribble/join?p=${context.id}">эту ссылку</@notify.link>
     или
-    присоединиться к игре в <@notice.link href="/playground/scribble/join">игровой зоне</@notice.link>.
+    присоединиться к игре в <@notify.link href="/playground/scribble/join">игровой зоне</@notify.link>.
 </p>
-</@notice.html>
