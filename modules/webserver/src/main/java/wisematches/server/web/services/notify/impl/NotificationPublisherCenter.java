@@ -15,6 +15,7 @@ import wisematches.playground.message.MessageListener;
 import wisematches.playground.propose.ChallengeGameProposal;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
+import wisematches.playground.propose.GameProposalManager;
 import wisematches.server.web.services.notify.NotificationMover;
 import wisematches.server.web.services.notify.NotificationPublisher;
 
@@ -28,6 +29,7 @@ import java.util.Collections;
 public class NotificationPublisherCenter {
 	private BoardManager boardManager;
 	private PlayerManager playerManager;
+	private GameProposalManager proposalManager;
 	private GameExpirationManager expirationManager;
 
 	private final TheNotificationListener notificationListener = new TheNotificationListener();
@@ -83,6 +85,18 @@ public class NotificationPublisherCenter {
 		this.expirationManager = expirationManager;
 		if (this.expirationManager != null) {
 			this.expirationManager.addGameExpirationListener(notificationListener);
+		}
+	}
+
+	public void setProposalManager(GameProposalManager proposalManager) {
+		if (this.proposalManager != null) {
+			this.proposalManager.removeGameProposalListener(notificationListener);
+		}
+
+		this.proposalManager = proposalManager;
+
+		if (this.proposalManager != null) {
+			this.proposalManager.addGameProposalListener(notificationListener);
 		}
 	}
 

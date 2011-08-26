@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="settings" type="wisematches.server.web.services.notify.NotificationMask" -->
+<#-- @ftlvariable name="notificationMask" type="wisematches.server.web.services.notify.NotificationMask" -->
 <#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.notify.NotificationDescription>" -->
 
 <#include "/core.ftl">
@@ -25,7 +25,7 @@
     <tr>
         <td style="padding-top: 4px; width: 10px;">
             <input id="field${desc.name}" name="${desc.name}" type="checkbox"
-                   <#if settings.isEnabled(desc.name)>checked="checked"</#if> value="true">
+                   <#if notificationMask.isEnabled(desc.name)>checked="checked"</#if> value="true">
         </td>
         <td>
             <div>
