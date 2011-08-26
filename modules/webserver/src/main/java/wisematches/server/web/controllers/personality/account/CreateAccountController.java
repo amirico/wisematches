@@ -19,12 +19,12 @@ import org.springframework.web.bind.support.SessionStatus;
 import wisematches.personality.Language;
 import wisematches.personality.Membership;
 import wisematches.personality.account.*;
-import wisematches.server.mail.MailService;
-import wisematches.server.mail.SenderName;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.services.notify.NotificationMover;
+import wisematches.server.web.services.notify.NotificationPublisher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +32,7 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -42,9 +43,9 @@ import java.util.Set;
 @Controller
 @RequestMapping("/account")
 public class CreateAccountController {
-	private MailService mailService;
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
+	private NotificationPublisher notificationPublisher;
 	private AccountSecurityService accountSecurityService;
 
 	private Membership defaultMembership = Membership.BASIC;
@@ -127,7 +128,7 @@ public class CreateAccountController {
 			}
 
 			status.setComplete();
-			mailService.sendMail(SenderName.ACCOUNTS, player, "account/created", null);
+			notificationPublisher.raiseNotification("account.created", player, NotificationMover.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
 			return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 		}
 	}
@@ -238,8 +239,9 @@ public class CreateAccountController {
 	}
 
 	@Autowired
-	public void setMailService(@Qualifier("mailService") MailService mailService) {
-		this.mailService = mailService;
+	@Qualifier("mailNotificationPublisher")
+	public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+		this.notificationPublisher = notificationPublisher;
 	}
 
 	@Autowired

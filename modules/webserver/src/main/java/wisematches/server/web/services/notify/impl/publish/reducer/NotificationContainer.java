@@ -15,16 +15,17 @@ class NotificationContainer {
 	NotificationContainer() {
 	}
 
-	void addNotification(NotificationInfo info) {
+	boolean addNotification(NotificationInfo info) {
 		final String s = info.description.getSeries();
 		if (s != null && !s.isEmpty()) {
 			if (series.contains(s)) {
-				return;
+				return false;
 			} else {
 				series.add(s);
 			}
 		}
 		notifications.add(info);
+		return true;
 	}
 
 	List<NotificationInfo> getNotifications() {

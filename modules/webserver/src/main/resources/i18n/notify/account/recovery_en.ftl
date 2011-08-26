@@ -1,8 +1,7 @@
 <#-- @ftlvariable name="recoveryToken" type="java.lang.String" -->
 <#-- @ftlvariable name="confirmationUrl" type="java.lang.String" -->
-<#import "/notice/macro.ftl" as notice>
+<#import "../utils.ftl" as util>
 
-<@notice.html subject="WiseMatches Account Assistance">
 <p>
     To initiate the process for resetting the password for your ${principal.nickname} WiseMatches Account, visit the
     link
@@ -10,7 +9,7 @@
 </p>
 
 <p>
-<@notice.link href='${confirmationUrl}?language=${principal.language.code()}&token=${recoveryToken}'/>
+<@util.link href='${confirmationUrl}?language=${principal.language.code()}&token=${recoveryToken}'/>
 </p>
 <p>
     If clicking on the link above does not work, copy and paste the URL in a new browser window instead. Thank you for
@@ -19,9 +18,7 @@
 
 <br>
 <p>
-    If you didn't initiate recovery WiseMatches passwrod and don't recognize this message, it means someone tried
+    If you didn't initiate recovery WiseMatches password and don't recognize this message, it means someone tried
     to force your a account at WiseMatches. We recommend contacting a
-    WiseMatches Support Team by email: <@notice.mailto box="account-support"/>
+    WiseMatches Support Team by email: <@util.mailto box="account-support"/>
 </p>
-
-</@notice.html>

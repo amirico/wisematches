@@ -1,13 +1,11 @@
 <#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
-<#import "..//notice/macro.ftl" as notice>
+<#import "../../utils.ftl" as notify>
 
-<@notice.html subject="Ход был передан следующему противника">
 <p>
-    Ход в игре &lt;@notify.board board=context/&gt; был передан следующему
-    противнику &lt;@notice.player pid=context.playerTurn.playerId/&gt;
+    Ход в игре <@notify.board board=context/> был передан следующему
+    противнику <@notify.player player=context.playerTurn.playerId/>
 </p>
 
 <p>
     Обратите внимание, что состояние более одной игры могло быть изменено но только одно письмо было послано.
 </p>
-</@notice.html>

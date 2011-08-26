@@ -1,6 +1,6 @@
 package wisematches.server.web.services.notify.impl;
 
-import wisematches.personality.player.member.MemberPlayer;
+import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationMover;
 
 /**
@@ -10,14 +10,14 @@ public class Notification {
 	private final String code;
 	private final String subject;
 	private final String message;
-	private final MemberPlayer player;
+	private final Account account;
 	private final NotificationMover mover;
 
-	public Notification(String code, String subject, String message, MemberPlayer player, NotificationMover mover) {
+	public Notification(String code, String subject, String message, Account account, NotificationMover mover) {
 		this.code = code;
 		this.subject = subject;
 		this.message = message;
-		this.player = player;
+		this.account = account;
 		this.mover = mover;
 	}
 
@@ -33,8 +33,8 @@ public class Notification {
 		return message;
 	}
 
-	public MemberPlayer getPlayer() {
-		return player;
+	public Account getAccount() {
+		return account;
 	}
 
 	public NotificationMover getMover() {

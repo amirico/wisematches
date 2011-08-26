@@ -1,7 +1,6 @@
 package wisematches.server.web.controllers.playground.form;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import wisematches.personality.player.computer.robot.RobotType;
 
 import javax.validation.constraints.Max;
@@ -19,8 +18,7 @@ public class CreateScribbleForm {
 	@Max(value = 14, message = "game.create.time.err.max")
 	private int daysPerMove = 3;
 
-	@NotEmpty(message = "game.create.language.err.blank")
-	private String boardLanguage = "en";
+	private String boardLanguage;
 
 	@NotNull(message = "game.create.opponent.err.blank")
 	private OpponentType opponentType = OpponentType.WAIT;

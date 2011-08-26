@@ -1,6 +1,9 @@
 package wisematches.server.web.services.notify.impl.publish.reducer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wisematches.personality.Personality;
+import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.server.web.services.notify.NotificationDescription;
 import wisematches.server.web.services.notify.NotificationManager;
@@ -25,33 +28,48 @@ public class ReducingNotificationPublisher extends NotificationPublisherWrapper 
 	private final Lock lock = new ReentrantLock();
 	private final PlayerStateListener stateListener = new ThePlayerStateListener();
 
-	private final Map<MemberPlayer, NotificationContainer> bufferedNotification = new HashMap<MemberPlayer, NotificationContainer>();
+	private final Map<Account, NotificationContainer> bufferedNotification = new HashMap<Account, NotificationContainer>();
+
+	private static final Log log = LogFactory.getLog("wisematches.server.notify.reducing");
 
 	public ReducingNotificationPublisher() {
 	}
 
 	@Override
-	public Future<Void> raiseNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
+	public Future<Void> raiseNotification(String code, Account account, NotificationMover mover, Map<String, Object> model) {
 		final NotificationDescription description = notificationManager.getDescription(code);
 		if (description == null) {
-			return notificationPublisher.raiseNotification(code, player, mover, model);
+			if (log.isDebugEnabled()) {
+				log.debug("No description for notification '" + code + "'. Raising in normal way.");
+			}
+			return notificationPublisher.raiseNotification(code, account, mover, model);
 		}
 
-		if (!notificationManager.isNotificationEnabled(description, player)) {
+		if (!notificationManager.isNotificationEnabled(description, account)) {
+			if (log.isDebugEnabled()) {
+				log.debug("Notification '" + code + "' is disabled for player " + account);
+			}
 			return null;
 		}
 
 		lock.lock();
 		try {
-			if (!playerStateManager.isPlayerOnline(player) || description.isEvenOnline()) {
-				return notificationPublisher.raiseNotification(code, player, mover, model);
+			if (!playerStateManager.isPlayerOnline(account) || description.isEvenOnline()) {
+				if (log.isDebugEnabled()) {
+					log.debug("Player '" + account + "' is offline. Raise notification.");
+				}
+				return notificationPublisher.raiseNotification(code, account, mover, model);
 			} else {
-				NotificationContainer container = bufferedNotification.get(player);
+				NotificationContainer container = bufferedNotification.get(account);
 				if (container == null) {
 					container = new NotificationContainer();
-					bufferedNotification.put(player, container);
+					bufferedNotification.put(account, container);
 				}
-				container.addNotification(new NotificationInfo(code, player, mover, description, model));
+				if (!container.addNotification(new NotificationInfo(account, mover, description, model))) {
+					if (log.isDebugEnabled()) {
+						log.debug("Notification '" + code + "' was reduced: the same series already raised.");
+					}
+				}
 				return null;
 			}
 		} finally {
@@ -59,8 +77,13 @@ public class ReducingNotificationPublisher extends NotificationPublisherWrapper 
 		}
 	}
 
+	@Override
+	public Future<Void> raiseNotification(String code, MemberPlayer player, NotificationMover mover, Map<String, Object> model) {
+		return raiseNotification(code, player.getAccount(), mover, model);
+	}
+
 	private void processNotification(NotificationInfo n) {
-		notificationPublisher.raiseNotification(n.code, n.player, n.mover, n.model);
+		notificationPublisher.raiseNotification(n.description.getName(), n.account, n.mover, n.model);
 	}
 
 	public void setPlayerStateManager(PlayerStateManager playerStateManager) {

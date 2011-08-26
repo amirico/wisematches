@@ -6,6 +6,10 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateException;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +33,18 @@ public class WMFreeMarkerView extends FreeMarkerView {
 		} else {
 			model.put("originalTemplateName", getUrl());
 			super.processTemplate(getTemplate("/content/wisematches.ftl", template.getLocale()), model, response);
+		}
+	}
+
+	@Override
+	protected FreeMarkerConfig autodetectConfiguration() throws BeansException {
+		try {
+			return getApplicationContext().getBean("freemarkerConfig", FreeMarkerConfig.class);
+		} catch (NoSuchBeanDefinitionException ex) {
+			throw new ApplicationContextException(
+					"Must define a single FreeMarkerConfig bean in this web application context " +
+							"(may be inherited): FreeMarkerConfigurer is the usual implementation. " +
+							"This bean may be given any name.", ex);
 		}
 	}
 }

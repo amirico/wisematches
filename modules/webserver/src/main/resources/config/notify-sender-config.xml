@@ -26,9 +26,14 @@
         </constructor-arg>
     </bean>
 
-    <bean id="notificationFreemarkerConfig" parent="commonFreemarkerConfig">
+    <bean id="notificationFreemarkerConfig" parent="commonFreemarkerConfig" scope="prototype">
         <property name="preferFileSystemAccess" value="false"/>
         <property name="templateLoaderPath" value="classpath:/i18n/notify"/>
+        <property name="freemarkerVariables">
+            <map merge="true">
+                <entry key="serverHostName" value="${server.hostname}"/>
+            </map>
+        </property>
     </bean>
 
     <bean id="notificationTransformer"
@@ -53,6 +58,7 @@
         <property name="messageManager" ref="messageManager"/>
         <property name="executorService" ref="notificationExecutorService"/>
         <property name="notificationTransformer" ref="notificationTransformer"/>
+        <property name="transactionRequiresNew" ref="transactionRequiresNew"/>
     </bean>
 
     <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescription"

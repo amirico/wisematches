@@ -1,7 +1,5 @@
 <#-- @ftlvariable name="recoveryToken" type="java.lang.String" -->
-<#import "/notice/macro.ftl" as notice>
-
-<@notice.html subject="Служба Аккаунтов WiseMatches">
+<#import "../utils.ftl" as util>
 
 <p>Информаци о вашем WiseMatches аккаунте была успешно изменена.</p>
 
@@ -13,7 +11,5 @@
 <p>
     Если вы не изменяли WiseMatches аккаунт и получение данного письма вызывает у вас недоумение, это значит что кто-то
     взломал ваш WiseMatches аккаунт. Мы рекомендуем обратиться в службу поддержки
-    WiseMatches по адресу: &lt;@notify.mailto box=&quot;account-support&quot;/&gt;.
+    WiseMatches по адресу: <@util.mailto box="account-support"/>.
 </p>
-
-</@notice.html>

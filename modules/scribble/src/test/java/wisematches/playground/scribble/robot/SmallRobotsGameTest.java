@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.*;
@@ -59,7 +60,7 @@ public class SmallRobotsGameTest {
 		final RobotPlayer r3 = RobotPlayer.EXPERT;
 
 		final ScribbleBoard board = scribbleBoardManager.createBoard(
-				new ScribbleSettings("This is robots game", "en", 3, false, true),
+				new ScribbleSettings("This is robots game", Language.RU, 3, false, true),
 				Arrays.<Personality>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
 			@Override

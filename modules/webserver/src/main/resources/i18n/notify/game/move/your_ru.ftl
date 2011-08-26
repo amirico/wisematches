@@ -1,8 +1,7 @@
 <#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
-<#import "..//notice/macro.ftl" as notice>
+<#import "../../utils.ftl" as notify>
 
-<@notice.html subject="Ваш ход в иге">
-<p> Ход в игре &lt;@notify.board board=context/&gt; был передан вам</p>
+<p> Ход в игре <@notify.board board=context/> был передан вам</p>
 
 <p>
     У вас есть <em>${gameMessageSource.formatRemainedTime(context, locale)}</em> чтобы совершить ход. В противном
@@ -12,4 +11,3 @@
 <p>
     Обратите внимание, что состояние более одной игры могло быть изменено но только одно письмо было послано.
 </p>
-</@notice.html>

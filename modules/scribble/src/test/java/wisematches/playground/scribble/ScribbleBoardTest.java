@@ -1,6 +1,7 @@
 package wisematches.playground.scribble;
 
 import junit.framework.TestCase;
+import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
@@ -34,7 +35,7 @@ public class ScribbleBoardTest extends TestCase {
 	}
 
 	protected void setUp() throws Exception {
-		settings = new ScribbleSettings("test", "en", 3);
+		settings = new ScribbleSettings("test", Language.EN, 3);
 	}
 
 	public void test_initializeBoard() {

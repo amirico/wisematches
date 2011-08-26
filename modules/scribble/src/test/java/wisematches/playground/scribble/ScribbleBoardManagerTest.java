@@ -3,6 +3,7 @@ package wisematches.playground.scribble;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
@@ -50,7 +51,7 @@ public class ScribbleBoardManagerTest {
 
 	@Test
 	public void testLoadBoardImpl() throws BoardLoadingException, DictionaryNotFoundException {
-		final ScribbleSettings settings = new ScribbleSettings("Mock", "en", 3);
+		final ScribbleSettings settings = new ScribbleSettings("Mock", Language.EN, 3);
 
 		final Dictionary dictionary = createNiceMock(Dictionary.class);
 		final TilesBank tilesBank = new TilesBank();
@@ -82,7 +83,7 @@ public class ScribbleBoardManagerTest {
 
 	@Test
 	public void testCreateBoardImpl() throws DictionaryNotFoundException, BoardCreationException {
-		final ScribbleSettings settings = new ScribbleSettings("Mock", "en", 3);
+		final ScribbleSettings settings = new ScribbleSettings("Mock", Language.EN, 3);
 
 		final Dictionary dictionary = createNiceMock(Dictionary.class);
 		expect(dictionary.getLocale()).andReturn(LOCALE);

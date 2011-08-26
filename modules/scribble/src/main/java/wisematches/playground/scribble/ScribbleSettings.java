@@ -1,5 +1,6 @@
 package wisematches.playground.scribble;
 
+import wisematches.personality.Language;
 import wisematches.playground.GameSettings;
 
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ public final class ScribbleSettings extends GameSettings {
 	 * @param title	the title of the game.
 	 * @param language the code of the language.
 	 */
-	public ScribbleSettings(String title, String language) {
+	public ScribbleSettings(String title, Language language) {
 		this(title, language, DEFAULT_TIMEOUT_DAYS);
 	}
 
@@ -40,14 +41,13 @@ public final class ScribbleSettings extends GameSettings {
 	 * @param language	the code of the language.
 	 * @param daysPerMove days per move.
 	 */
-	public ScribbleSettings(String title, String language, int daysPerMove) {
-		super(title, daysPerMove);
-		this.language = language;
+	public ScribbleSettings(String title, Language language, int daysPerMove) {
+		this(title, language, daysPerMove, true, false);
 	}
 
-	public ScribbleSettings(String title, String language, int daysPerMove, boolean ratedGame, boolean scratch) {
+	public ScribbleSettings(String title, Language language, int daysPerMove, boolean ratedGame, boolean scratch) {
 		super(title, daysPerMove, ratedGame, scratch);
-		this.language = language;
+		this.language = language.code();
 	}
 
 	/**
@@ -60,7 +60,7 @@ public final class ScribbleSettings extends GameSettings {
 	}
 
 	public static class Builder extends GameSettings.Builder {
-		private String language;
+		private Language language;
 
 		public Builder() {
 		}
@@ -70,11 +70,11 @@ public final class ScribbleSettings extends GameSettings {
 			return new ScribbleSettings(title, language, daysPerMove, ratedGame, scratch);
 		}
 
-		public String getLanguage() {
+		public Language getLanguage() {
 			return language;
 		}
 
-		public void setLanguage(String language) {
+		public void setLanguage(Language language) {
 			this.language = language;
 		}
 	}

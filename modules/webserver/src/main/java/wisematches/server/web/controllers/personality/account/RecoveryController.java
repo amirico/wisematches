@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.personality.account.Account;
 import wisematches.personality.account.AccountEditor;
 import wisematches.personality.account.AccountManager;
-import wisematches.server.mail.MailException;
-import wisematches.server.mail.MailService;
-import wisematches.server.mail.SenderName;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.personality.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.services.notify.NotificationMover;
+import wisematches.server.web.services.notify.NotificationPublisher;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
@@ -34,8 +33,10 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -43,10 +44,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/account/recovery")
 public class RecoveryController {
-	private MailService mailService;
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
 	private RecoveryTokenManager recoveryTokenManager;
+	private NotificationPublisher notificationPublisher;
 	private AccountSecurityService accountSecurityService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
@@ -79,20 +80,20 @@ public class RecoveryController {
 				try {
 					final RecoveryToken token = recoveryTokenManager.createToken(player);
 
-					final Map<String, String> mailModel = new HashMap<String, String>();
+					final Map<String, Object> mailModel = new HashMap<String, Object>();
 					mailModel.put("recoveryToken", encodeToken(token));
 					mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-					mailService.sendWarrantyMail(SenderName.ACCOUNTS, player, "account/recovery", mailModel);
-
+					Future<Void> voidFuture = notificationPublisher.raiseNotification("account.recovery", player, NotificationMover.ACCOUNTS, mailModel);
+					voidFuture.get();
 					//noinspection SpringMVCViewInspection
 					return "redirect:/account/recovery/expectation";
-				} catch (MailException ex) {
+				} catch (NullPointerException ex) {
 					log.error("Recovery password email can't be delivered", ex);
-
-					result.rejectValue("email", "account.recovery.err.transport");
+					result.rejectValue("email", "account.recovery.err.system");
 					return recoveryRequestPage(model, form);
 				} catch (Exception ex) {
+					log.error("Recovery password email can't be delivered", ex);
 					result.rejectValue("email", "account.recovery.err.system");
 					return recoveryRequestPage(model, form);
 				}
@@ -164,7 +165,7 @@ public class RecoveryController {
 
 		try {
 			accountManager.updateAccount(e.createAccount());
-			mailService.sendMail(SenderName.ACCOUNTS, player, "account/updated", null);
+			notificationPublisher.raiseNotification("account.updated", player, NotificationMover.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
 			return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 		} catch (Exception e1) {
 			if (log.isDebugEnabled()) {
@@ -192,8 +193,9 @@ public class RecoveryController {
 	}
 
 	@Autowired
-	public void setMailService(@Qualifier("mailService") MailService mailService) {
-		this.mailService = mailService;
+	@Qualifier("mailNotificationPublisher")
+	public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+		this.notificationPublisher = notificationPublisher;
 	}
 
 	@Autowired
