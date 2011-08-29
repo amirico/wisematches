@@ -67,7 +67,7 @@ CREATE  TABLE IF NOT EXISTS
   `series` VARCHAR(64) NOT NULL ,
   `username` VARCHAR(150) NOT NULL ,
   `token` VARCHAR(64) NOT NULL ,
-  `last_used` TIMESTAMP NOT NULL ,
+  `last_used` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   PRIMARY KEY (`series`)
 )
   ENGINE = InnoDB
@@ -147,7 +147,7 @@ COMMENT = 'There is no constrain between playerId and account_personali' /* comm
 CREATE  TABLE IF NOT EXISTS `wisematches`.`rating_history` (
   `playerId` BIGINT(20)  NOT NULL ,
   `boardId` BIGINT(20)  NOT NULL ,
-  `time` TIMESTAMP NOT NULL ,
+  `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `oldRating` SMALLINT NOT NULL ,
   `newRating` SMALLINT NOT NULL ,
   `points` SMALLINT NOT NULL ,
@@ -161,41 +161,42 @@ CREATE  TABLE IF NOT EXISTS `wisematches`.`rating_history` (
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS
         `wisematches`.`scribble_statistic` (
-  `playerId` BIGINT(20)  NOT NULL ,
-  `rating` SMALLINT NULL ,
-  `updateTime` TIMESTAMP NULL ,
-  `wins` INT NULL ,
-  `loses` INT NULL ,
-  `draws` INT NULL ,
-  `timeouts` INT NULL ,
-  `active` INT NULL ,
-  `unrated` INT NULL ,
-  `finished` INT NULL ,
-  `aRating` SMALLINT NULL ,
-  `hRating` SMALLINT NULL ,
-  `lRating` SMALLINT NULL ,
-  `aoRating` SMALLINT NULL ,
-  `hoRating` SMALLINT NULL ,
-  `hoId` BIGINT(20)  NULL ,
-  `loRating` SMALLINT NULL ,
-  `loId` BIGINT(20)  NULL ,
-  `lastMoveTime` TIMESTAMP NULL ,
-  `avgMoveTime` INT NULL ,
-  `avgGameMoves` INT NULL ,
-  `turns` INT NULL ,
-  `passes` INT NULL ,
-  `lPoints` SMALLINT NULL ,
-  `aPoints` SMALLINT NULL ,
-  `hPoints` SMALLINT NULL ,
-  `words` INT NULL ,
-  `exchanges` INT NULL ,
-  `aWord` BIGINT(20)  NULL ,
-  `longestWord` VARCHAR(255) NULL ,
-  `valuableWord` VARCHAR(255) NULL ,
+  `playerId` BIGINT(20) NOT NULL ,
+  `rating` SMALLINT(6) NULL DEFAULT NULL ,
+  `updateTime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP ,
+  `wins` INT(11) NULL DEFAULT NULL ,
+  `loses` INT(11) NULL DEFAULT NULL ,
+  `draws` INT(11) NULL DEFAULT NULL ,
+  `timeouts` INT(11) NULL DEFAULT NULL ,
+  `active` INT(11) NULL DEFAULT NULL ,
+  `unrated` INT(11) NULL DEFAULT NULL ,
+  `finished` INT(11) NULL DEFAULT NULL ,
+  `aRating` SMALLINT(6) NULL DEFAULT NULL ,
+  `hRating` SMALLINT(6) NULL DEFAULT NULL ,
+  `lRating` SMALLINT(6) NULL DEFAULT NULL ,
+  `aoRating` SMALLINT(6) NULL DEFAULT NULL ,
+  `hoRating` SMALLINT(6) NULL DEFAULT NULL ,
+  `hoId` BIGINT(20) NULL DEFAULT NULL ,
+  `loRating` SMALLINT(6) NULL DEFAULT NULL ,
+  `loId` BIGINT(20) NULL DEFAULT NULL ,
+  `lastMoveTime` TIMESTAMP NULL DEFAULT NULL ,
+  `avgMoveTime` INT(11) NULL DEFAULT NULL ,
+  `avgGameMoves` INT(11) NULL DEFAULT NULL ,
+  `turns` INT(11) NULL DEFAULT NULL ,
+  `passes` INT(11) NULL DEFAULT NULL ,
+  `lPoints` SMALLINT(6) NULL DEFAULT NULL ,
+  `aPoints` SMALLINT(6) NULL DEFAULT NULL ,
+  `hPoints` SMALLINT(6) NULL DEFAULT NULL ,
+  `words` INT(11) NULL DEFAULT NULL ,
+  `exchanges` INT(11) NULL DEFAULT NULL ,
+  `aWord` BIGINT(20) NULL DEFAULT NULL ,
+  `longestWord` VARCHAR(255) NULL DEFAULT NULL ,
+  `valuableWord` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`playerId`)
 )
   ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_general_ci;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`scribble_memory`
@@ -248,37 +249,40 @@ CREATE  TABLE IF NOT EXISTS
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS
         `wisematches`.`settings_notice` (
-  `pid` BIGINT(20)  NOT NULL ,
-  `game.started` INT(1) NULL ,
-  `game.move.your` INT(1) NULL ,
-  `game.move.opponent` INT(1) NULL ,
-  `game.finished` INT(1) NULL ,
-  `game.timeout.day` INT(1) NULL ,
-  `game.timeout.half` INT(1) NULL ,
-  `game.timeout.hour` INT(1) NULL ,
-  `game.message` INT(1) NULL ,
-  `game.challenge` INT(1) NULL DEFAULT 1 ,
+  `pid` BIGINT(20) NOT NULL ,
+  `game.state.started` INT(1) NULL DEFAULT NULL ,
+  `game.state.finished` INT(1) NULL DEFAULT NULL ,
+  `game.move.your` INT(1) NULL DEFAULT NULL ,
+  `game.move.opponent` INT(1) NULL DEFAULT NULL ,
+  `game.timeout.day` INT(1) NULL DEFAULT NULL ,
+  `game.timeout.half` INT(1) NULL DEFAULT NULL ,
+  `game.timeout.hour` INT(1) NULL DEFAULT NULL ,
+  `game.challenge.received` INT(1) NULL DEFAULT '1' ,
+  `game.challenge.rejected` INT(1) NULL DEFAULT '0' ,
+  `game.message` INT(1) NULL DEFAULT NULL ,
   PRIMARY KEY (`pid`)
 )
   ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_general_ci;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`player_message`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `wisematches`.`player_message` (
-  `id` BIGINT(20)  NOT NULL AUTO_INCREMENT ,
-  `created` TIMESTAMP NOT NULL ,
-  `recipient` BIGINT(20)  NOT NULL ,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT ,
+  `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `recipient` BIGINT(20) NOT NULL ,
   `text` TEXT NOT NULL ,
-  `sender` BIGINT(20)  NOT NULL DEFAULT 0 ,
-  `notification` TINYINT(4)  NOT NULL ,
-  `original` BIGINT(20)  NOT NULL DEFAULT 0 ,
-  `state` TINYINT(4)  NULL DEFAULT 0 ,
+  `sender` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `notification` TINYINT(4) NOT NULL ,
+  `original` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `state` TINYINT(4) NULL DEFAULT '0' ,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_general_ci;
 
 -- -----------------------------------------------------
 -- Table `wisematches`.`player_blacklist`
@@ -287,7 +291,7 @@ CREATE  TABLE IF NOT EXISTS
         `wisematches`.`player_blacklist` (
   `person` BIGINT(20)  NOT NULL ,
   `whom` BIGINT(20)  NOT NULL ,
-  `since` TIMESTAMP NOT NULL ,
+  `since` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `message` VARCHAR(254) NULL ,
   PRIMARY KEY (`person`, `whom`)
 )
@@ -299,7 +303,7 @@ CREATE  TABLE IF NOT EXISTS
 CREATE  TABLE IF NOT EXISTS
         `wisematches`.`player_activity` (
   `pid` BIGINT(20)  NOT NULL ,
-  `last_messages_check` TIMESTAMP NULL ,
+  `last_messages_check` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
   PRIMARY KEY (`pid`)
 )
   ENGINE = InnoDB
@@ -314,8 +318,8 @@ CREATE  TABLE IF NOT EXISTS
   `id` BIGINT(20)  NOT NULL AUTO_INCREMENT ,
   `board` BIGINT(20)  NULL ,
   `person` BIGINT(20)  NULL ,
+  `created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
   `text` VARCHAR(254) NULL ,
-  `creationDate` TIMESTAMP NULL ,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB;
@@ -326,7 +330,7 @@ CREATE  TABLE IF NOT EXISTS
 CREATE  TABLE IF NOT EXISTS `wisematches`.`player_friends` (
   `person` BIGINT(20)  NOT NULL ,
   `friend` BIGINT(20)  NOT NULL ,
-  `registered` TIMESTAMP NULL ,
+  `registered` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
   `comment` VARCHAR(254) NULL ,
   PRIMARY KEY (`person`, `friend`)
 )

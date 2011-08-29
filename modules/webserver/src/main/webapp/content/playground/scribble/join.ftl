@@ -90,6 +90,10 @@
                             <span class="game-join-error"><@message code="game.join.err.forbidden"/></span>
                         <#else>
                             <a href="/playground/scribble/join?p=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
+                            <#if proposal.class.simpleName=="DefaultChallengeGameProposal">
+                                <br>
+                                <a href="/playground/scribble/decline?p=${proposal.id}">&raquo; <@message code="game.decline.label"/></a>
+                            </#if>
                     </#if>
                 </td>
             </tr>

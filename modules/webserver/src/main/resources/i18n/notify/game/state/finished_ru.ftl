@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
-<#import "../utils.ftl" as notify>
+<#import "../../utils.ftl" as notify>
 
 <p> Игра <@notify.board board=context/> была завершена</p>
 

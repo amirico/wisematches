@@ -28,14 +28,14 @@ public class ReducingNotificationPublisherTest {
 		final MemberPlayer player = new MemberPlayer(createMock(Account.class));
 		final Map<String, Object> model = new HashMap<String, Object>();
 
-		final NotificationDescription d1 = new NotificationDescription("game.started", null, "game", false, false);
-		final NotificationDescription d2 = new NotificationDescription("game.finished", null, "game", false, true);
+		final NotificationDescription d1 = new NotificationDescription("game.state.started", null, "game", false, false);
+		final NotificationDescription d2 = new NotificationDescription("game.state.finished", null, "game", false, true);
 		final NotificationDescription d3 = new NotificationDescription("game.message", null, "message", false, false);
 
 		final NotificationPublisher publisher = createStrictMock(NotificationPublisher.class);
 		expect(publisher.raiseNotification("asd", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.started", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.finished", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.started", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
 		expect(publisher.raiseNotification("game.message", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
@@ -66,8 +66,8 @@ public class ReducingNotificationPublisherTest {
 		p.setNotificationManager(notificationManager);
 
 		p.raiseNotification("asd", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("game.started", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("game.finished", player, NotificationMover.ACCOUNTS, model);
+		p.raiseNotification("game.state.started", player, NotificationMover.ACCOUNTS, model);
+		p.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model);
 		p.raiseNotification("game.message", player, NotificationMover.ACCOUNTS, model);
 		p.raiseNotification("game.message", player, NotificationMover.ACCOUNTS, model);
 

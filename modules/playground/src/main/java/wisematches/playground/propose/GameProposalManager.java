@@ -36,11 +36,12 @@ public interface GameProposalManager<S extends GameSettings> {
 	 * Initializes new challenge proposal.
 	 *
 	 * @param settings  the game settings
+	 * @param comment   the comment for the challenge
 	 * @param initiator the proposal initiator.
-	 * @param opponents the other opponents
-	 * @return created game proposal.
+	 * @param opponents the other opponents   @return created game proposal.
+	 * @return the initiated challenge
 	 */
-	GameProposal<S> initiateChallengeProposal(S settings, Player initiator, Collection<Player> opponents);
+	GameProposal<S> initiateChallengeProposal(S settings, String comment, Player initiator, Collection<Player> opponents);
 
 	/**
 	 * Attaches specified player to the waiting game.
@@ -66,6 +67,17 @@ public interface GameProposalManager<S extends GameSettings> {
 	 * @throws ViolatedRestrictionException if game can't initialized because specified player is not suitable: {@link GameProposal#isSuitablePlayer(Player)}
 	 */
 	GameProposal<S> detachPlayer(long proposalId, Player player) throws ViolatedRestrictionException;
+
+	/**
+	 * Cancels a game proposal with specified {@code proposalId}. A proposal can be cancelled only
+	 * by person who initialised a waiting proposal of by anyone who in a challenge proposal.
+	 *
+	 * @param proposalId the proposal id
+	 * @param player	 a player who wants cancel the proposal.
+	 * @return cancelled game proposal or {@code null} if there is no proposals with specified id.
+	 * @throws ViolatedRestrictionException if specified player can't cancel the proposal.
+	 */
+	GameProposal<S> cancel(long proposalId, Player player) throws ViolatedRestrictionException;
 
 	/**
 	 * Returns proposal with specified id or {@code null} if there is no such proposal.

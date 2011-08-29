@@ -119,7 +119,7 @@ public class NotificationPublisherCenter {
 				@SuppressWarnings("unchecked")
 				final Collection<Personality> waitingPlayers = challenge.getWaitingPlayers();
 				for (Personality player : waitingPlayers) {
-					processNotification(player, "game.challenge", challenge);
+					processNotification(player, "game.challenge.received", challenge);
 				}
 			}
 		}
@@ -130,13 +130,16 @@ public class NotificationPublisherCenter {
 
 		@Override
 		public void gameProposalClosed(GameProposal proposal) {
+			if (!proposal.isReady() && proposal instanceof ChallengeGameProposal) {
+				processNotification(proposal.getInitiator(), "game.challenge.rejected", proposal);
+			}
 		}
 
 		@Override
 		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
 			for (GamePlayerHand hand : playersHands) {
-				processNotification(hand.getPlayerId(), "game.started", board);
+				processNotification(hand.getPlayerId(), "game.state.started", board);
 			}
 		}
 
@@ -156,7 +159,7 @@ public class NotificationPublisherCenter {
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
 			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
 			for (GamePlayerHand hand : playersHands) {
-				processNotification(Personality.person(hand.getPlayerId()), "game.finished", board);
+				processNotification(Personality.person(hand.getPlayerId()), "game.state.finished", board);
 			}
 		}
 

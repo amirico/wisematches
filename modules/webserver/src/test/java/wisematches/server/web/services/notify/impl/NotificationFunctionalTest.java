@@ -95,15 +95,16 @@ public class NotificationFunctionalTest {
 		final ScribbleBoard b1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), tilesBank, dictionary);
 		final ScribbleBoard b2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), tilesBank, dictionary);
 
-		notificationPublisherCenter.processNotification(p1, "game.started", b2);
-		notificationPublisherCenter.processNotification(p1, "game.finished", b1);
+		notificationPublisherCenter.processNotification(p1, "game.state.started", b2);
+		notificationPublisherCenter.processNotification(p1, "game.state.finished", b1);
 		notificationPublisherCenter.processNotification(p1, "game.move.your", b2);
 		notificationPublisherCenter.processNotification(p1, "game.move.opponent", b2);
 		notificationPublisherCenter.processNotification(p1, "game.timeout.day", b2);
 		notificationPublisherCenter.processNotification(p1, "game.timeout.half", b2);
 		notificationPublisherCenter.processNotification(p1, "game.timeout.hour", b2);
 		notificationPublisherCenter.processNotification(p1, "game.message", createMock(Message.class));
-		notificationPublisherCenter.processNotification(p1, "game.challenge", new DefaultChallengeGameProposal<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), p1, Arrays.asList(p2)));
+		notificationPublisherCenter.processNotification(p1, "game.challenge.received", new DefaultChallengeGameProposal<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.asList(p2)));
+		notificationPublisherCenter.processNotification(p1, "game.challenge.rejected", new DefaultChallengeGameProposal<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.asList(p2)));
 
 		Thread.sleep(1000);
 		verify(mailSender, messageManager);
