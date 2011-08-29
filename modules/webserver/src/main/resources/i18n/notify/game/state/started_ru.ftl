@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
-<#import "../utils.ftl" as util>
+<#import "../../utils.ftl" as util>
 
 <p> Игра <@util.board board=context/>, которую вы ожидаете, началась.</p>
 

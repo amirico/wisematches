@@ -34,6 +34,13 @@ public interface GameProposal<S extends GameSettings> {
 	int getPlayersCount();
 
 	/**
+	 * Returns a player who has initiated the proposal.
+	 *
+	 * @return the proposal's initiator.
+	 */
+	Personality getInitiator();
+
+	/**
 	 * Returns collection of player who already joined to the game
 	 *
 	 * @return the unmodifiable collection of player who already joined to the game

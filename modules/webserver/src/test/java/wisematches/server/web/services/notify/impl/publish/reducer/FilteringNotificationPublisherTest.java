@@ -29,15 +29,15 @@ public class FilteringNotificationPublisherTest {
 
 		final FilteringNotificationPublisher p = new FilteringNotificationPublisher();
 		p.setNotificationPublisher(publisher);
-		p.setAcceptedNotifications(new HashSet<String>(Arrays.asList("game.finished", "game.challenge")));
+		p.setAcceptedNotifications(new HashSet<String>(Arrays.asList("game.state.finished", "game.challenge.received")));
 
-		expect(publisher.raiseNotification("game.finished", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.challenge", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.challenge.received", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
 		p.raiseNotification("asd", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("game.finished", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("game.challenge", player, NotificationMover.ACCOUNTS, model);
+		p.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model);
+		p.raiseNotification("game.challenge.received", player, NotificationMover.ACCOUNTS, model);
 		p.raiseNotification("qwe", player, NotificationMover.ACCOUNTS, model);
 		verify(publisher);
 	}

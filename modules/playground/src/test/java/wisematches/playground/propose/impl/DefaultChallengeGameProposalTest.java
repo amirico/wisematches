@@ -28,49 +28,49 @@ public class DefaultChallengeGameProposalTest {
 	@Test
 	public void constructor() throws ViolatedRestrictionException {
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(0, new MockGameSettings("Mock", 3), PERSON1, Arrays.asList(PERSON2));
+			new DefaultChallengeGameProposal<GameSettings>(0, new MockGameSettings("Mock", 3), "comment", PERSON1, Arrays.asList(PERSON2));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ignore) {
 		}
 
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(1, null, PERSON1, Arrays.asList(PERSON2));
+			new DefaultChallengeGameProposal<GameSettings>(1, null, "comment", PERSON1, Arrays.asList(PERSON2));
 			fail("Exception must be here");
 		} catch (NullPointerException ignore) {
 		}
 
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), null, Arrays.asList(PERSON2));
+			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", null, Arrays.asList(PERSON2));
 			fail("Exception must be here");
 		} catch (NullPointerException ignore) {
 		}
 
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, null);
+			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, null);
 			fail("Exception must be here");
 		} catch (NullPointerException ignore) {
 		}
 
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, Collections.<Player>singletonList(null));
+			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, Collections.<Player>singletonList(null));
 			fail("Exception must be here");
 		} catch (NullPointerException ignore) {
 		}
 
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, Arrays.asList(PERSON1));
+			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, Arrays.asList(PERSON1));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ignore) {
 		}
 
 		try {
-			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, Arrays.asList(PERSON2, PERSON2));
+			new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, Arrays.asList(PERSON2, PERSON2));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ignore) {
 		}
 
 		final MockGameSettings mock1 = new MockGameSettings("Mock", 3);
-		final DefaultChallengeGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, mock1, PERSON1, Arrays.asList(PERSON2, PERSON3));
+		final DefaultChallengeGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, mock1, "comment", PERSON1, Arrays.asList(PERSON2, PERSON3));
 		assertEquals(1, mock.getId());
 		assertSame(mock1, mock.getGameSettings());
 		assertEquals(3, mock.getPlayersCount());
@@ -81,7 +81,7 @@ public class DefaultChallengeGameProposalTest {
 
 	@Test
 	public void attachPlayer() throws ViolatedRestrictionException {
-		final AbstractGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, Arrays.asList(PERSON2, PERSON3));
+		final AbstractGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, Arrays.asList(PERSON2, PERSON3));
 		assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
 		try {
 			mock.attachPlayer(PERSON1);
@@ -106,7 +106,7 @@ public class DefaultChallengeGameProposalTest {
 
 	@Test
 	public void detachPlayer() throws ViolatedRestrictionException {
-		final AbstractGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, Arrays.asList(PERSON2, PERSON3));
+		final AbstractGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, Arrays.asList(PERSON2, PERSON3));
 		try {
 			mock.detachPlayer(null);
 			fail("Exception must be here");
@@ -119,7 +119,7 @@ public class DefaultChallengeGameProposalTest {
 
 	@Test
 	public void gameRestriction() throws ViolatedRestrictionException {
-		final AbstractGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, Arrays.asList(PERSON2, PERSON3));
+		final AbstractGameProposal<GameSettings> mock = new DefaultChallengeGameProposal<GameSettings>(1, new MockGameSettings("Mock", 3), "comment", PERSON1, Arrays.asList(PERSON2, PERSON3));
 		mock.attachPlayer(PERSON2);
 
 		try {

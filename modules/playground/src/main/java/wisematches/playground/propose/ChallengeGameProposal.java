@@ -12,6 +12,13 @@ import java.util.Collection;
  */
 public interface ChallengeGameProposal<S extends GameSettings> extends GameProposal<S> {
 	/**
+	 * Returns comment for the challenge.
+	 *
+	 * @return the comment for the challenge.
+	 */
+	String getComment();
+
+	/**
 	 * Returns proposal initiator
 	 *
 	 * @return the initiator of the proposal.

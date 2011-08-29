@@ -86,8 +86,8 @@ public class MailNotificationFunctionalTest {
 		final ScribbleBoard b1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), tilesBank, dictionary);
 		final ScribbleBoard b2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), tilesBank, dictionary);
 
-		notificationPublisher.raiseNotification("game.started", p1, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b1));
-		notificationPublisher.raiseNotification("game.started", p2, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b2));
+		notificationPublisher.raiseNotification("game.state.started", p1, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b1));
+		notificationPublisher.raiseNotification("game.state.started", p2, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b2));
 
 		notificationPublisher.raiseNotification("game.move.your", p1, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b1));
 		notificationPublisher.raiseNotification("game.move.your", p2, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b2));
@@ -106,16 +106,20 @@ public class MailNotificationFunctionalTest {
 
 		b1.resign(b1.getPlayerHand(p1.getId()));
 		b2.resign(b2.getPlayerHand(p1.getId()));
-		notificationPublisher.raiseNotification("game.finished", p1, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b1));
-		notificationPublisher.raiseNotification("game.finished", p2, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b2));
+		notificationPublisher.raiseNotification("game.state.finished", p1, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b1));
+		notificationPublisher.raiseNotification("game.state.finished", p2, NotificationMover.GAME, Collections.<String, Object>singletonMap("context", b2));
 
 		final Message m = new HibernateMessage(p2, "asdqwe adf", p1);
 		notificationPublisher.raiseNotification("game.message", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
 		notificationPublisher.raiseNotification("game.message", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
 
-		DefaultChallengeGameProposal<ScribbleSettings> proposal = new DefaultChallengeGameProposal<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), p1, Arrays.<Player>asList(p2));
-		notificationPublisher.raiseNotification("game.challenge", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal));
-		notificationPublisher.raiseNotification("game.challenge", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal));
+		DefaultChallengeGameProposal<ScribbleSettings> proposal1 = new DefaultChallengeGameProposal<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.<Player>asList(p2));
+		notificationPublisher.raiseNotification("game.challenge.received", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
+		notificationPublisher.raiseNotification("game.challenge.received", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
+
+		DefaultChallengeGameProposal<ScribbleSettings> proposal2 = new DefaultChallengeGameProposal<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.<Player>asList(p2));
+		notificationPublisher.raiseNotification("game.challenge.rejected", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));
+		notificationPublisher.raiseNotification("game.challenge.rejected", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));
 
 		notificationPublisher.raiseNotification("account.created", p1.getAccount(), NotificationMover.ACCOUNTS, null);
 		notificationPublisher.raiseNotification("account.created", p2.getAccount(), NotificationMover.ACCOUNTS, null);

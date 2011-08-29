@@ -59,8 +59,8 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiateChallengeProposal(S settings, Player initiator, Collection<Player> opponents) {
-		return registerProposal(new DefaultChallengeGameProposal<S>(proposalIds.incrementAndGet(), settings, initiator, opponents));
+	public GameProposal<S> initiateChallengeProposal(S settings, String comment, Player initiator, Collection<Player> opponents) {
+		return registerProposal(new DefaultChallengeGameProposal<S>(proposalIds.incrementAndGet(), settings, comment, initiator, opponents));
 	}
 
 	private GameProposal<S> registerProposal(GameProposal<S> proposal) {
@@ -115,6 +115,34 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				storeGameProposal(proposal);
 				fireGameProposalUpdated(proposal);
 			}
+			return proposal;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public GameProposal<S> cancel(long proposalId, Player player) throws ViolatedRestrictionException {
+		lock.lock();
+		try {
+			final AbstractGameProposal<S> proposal = (AbstractGameProposal<S>) proposals.get(proposalId);
+			if (proposal == null) {
+				return null;
+			}
+			if (proposal instanceof ChallengeGameProposal<?>) {
+				final ChallengeGameProposal cgp = (ChallengeGameProposal) proposal;
+				if (!cgp.getWaitingPlayers().contains(player) && !cgp.getInitiator().equals(player)) {
+					throw new ViolatedRestrictionException("player.unsuitable");
+				}
+			} else {
+				if (!proposal.getInitiator().equals(player)) {
+					throw new ViolatedRestrictionException("player.unsuitable");
+				}
+			}
+
+			proposals.remove(proposalId);
+			removeGameProposal(proposal);
+			fireGameProposalClosed(proposal);
 			return proposal;
 		} finally {
 			lock.unlock();

@@ -58,8 +58,7 @@ public class ScribbleGameController extends WisematchesController {
 	}
 
 	@RequestMapping("create")
-	public String createGamePage(@Valid @ModelAttribute("create") CreateScribbleForm form, BindingResult result,
-								 Model model, Locale locale) {
+	public String createGamePage(@Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
 		if (form.getBoardLanguage() == null) {
 			form.setBoardLanguage(locale.getLanguage());
 		}
@@ -77,12 +76,11 @@ public class ScribbleGameController extends WisematchesController {
 	}
 
 	@RequestMapping("challenge")
-	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form,
-							BindingResult result, Model model, Locale locale) {
+	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
 		form.setTitle("Challenge from " + getPrincipal().getNickname());
 		form.setOpponentType(OpponentType.CHALLENGE);
 		form.setOpponents(new long[]{pid});
-		return createGamePage(form, result, model, locale);
+		return createGamePage(form, model, locale);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -95,7 +93,7 @@ public class ScribbleGameController extends WisematchesController {
 
 		final Player principal = getPrincipal();
 		if (restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal))) {
-			return createGamePage(form, result, model, locale);
+			return createGamePage(form, model, locale);
 		}
 
 		final Language language = Language.byCode(form.getBoardLanguage());
@@ -114,7 +112,7 @@ public class ScribbleGameController extends WisematchesController {
 		}
 
 		if (result.hasErrors()) {
-			return createGamePage(form, result, model, locale);
+			return createGamePage(form, model, locale);
 		}
 		return "redirect:/playground/scribble/active";
 	}
@@ -153,14 +151,18 @@ public class ScribbleGameController extends WisematchesController {
 						if (player == null) {
 							result.rejectValue("opponents", "game.create.opponents.err.unknown", new Object[]{opponent}, null);
 						} else {
-							players.add(player);
+							if (!blacklistManager.isBlacklisted(player, principal)) {
+								players.add(player);
+							} else {
+								result.rejectValue("title", "game.error.restriction.blacklist.description");
+							}
 						}
 					}
 				}
 
 				if (!result.hasErrors()) {
 					try {
-						proposalManager.initiateChallengeProposal(s, principal, players);
+						proposalManager.initiateChallengeProposal(s, form.getChallengeMessage(), principal, players);
 					} catch (Exception ex) {
 						result.rejectValue("title", ex.getMessage());
 					}
@@ -191,7 +193,7 @@ public class ScribbleGameController extends WisematchesController {
 
 	@RequestMapping(value = "join", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String joinGameAction(@RequestParam("p") String id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+	public String joinGameAction(@RequestParam("p") long id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Join to game: " + id);
 		}
@@ -199,14 +201,14 @@ public class ScribbleGameController extends WisematchesController {
 			final Player principal = getPrincipal();
 			restrictionManager.checkRestriction(principal, "games.active", getActiveGamesCount(principal));
 
-			GameProposal<ScribbleSettings> proposal = proposalManager.getProposal(Long.valueOf(id));
+			GameProposal<ScribbleSettings> proposal = proposalManager.getProposal(id);
 			if (proposal != null) {
 				for (Personality personality : proposal.getPlayers()) {
 					blacklistManager.checkBlacklist(personality, principal);
 				}
 			}
 
-			proposal = proposalManager.attachPlayer(Long.valueOf(id), principal);
+			proposal = proposalManager.attachPlayer(id, principal);
 			if (proposal == null) {
 				model.addAttribute("joinError", "game.error.restriction.ready.description");
 			} else if (proposal.isReady()) {
@@ -222,39 +224,52 @@ public class ScribbleGameController extends WisematchesController {
 		return showWaitingGames(model, locale);
 	}
 
+	@RequestMapping(value = "accept", params = "p")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public String acceptGameAction(@RequestParam("p") long id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+		if (log.isInfoEnabled()) {
+			log.info("Accept a game: " + id);
+		}
+		return joinGameAction(id, model, locale);
+	}
+
 	@RequestMapping(value = "decline", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String declineGameAction(@RequestParam("p") String id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+	public String declineGameAction(@RequestParam("p") long id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
-			log.info("Decline game: " + id);
+			log.info("Decline a game: " + id);
 		}
-//        try {
-//            final Player principal = getPrincipal();
-//            restrictionManager.checkRestriction(principal, "games.active", getActiveGamesCount(principal));
-
-/*
-            GameProposal<ScribbleSettings> proposal = proposalManager.getProposal(Long.valueOf(id));
-            if (proposal != null) {
-                for (Personality personality : proposal.getPlayers()) {
-                    blacklistManager.checkBlacklist(personality, principal);
-                }
-            }
-
-            proposal = proposalManager.attachPlayer(Long.valueOf(id), principal);
-            if (proposal == null) {
-                model.addAttribute("joinError", "game.error.restriction.ready.description");
-            } else if (proposal.isReady()) {
-                final ScribbleBoard board = boardManager.createBoard(proposal.getGameSettings(), proposal.getPlayers());
-                return "redirect:/playground/scribble/board?b=" + board.getBoardId();
-            }
-        } catch (BlacklistedException e) {
-            model.addAttribute("joinError", "game.error.restriction.blacklist.description");
-        } catch (ViolatedRestrictionException e) {
-            model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
-            model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
-        }
-*/
+		try {
+			final Player principal = getPrincipal();
+			final GameProposal<ScribbleSettings> proposal = proposalManager.cancel(id, principal);
+			if (proposal == null) {
+				model.addAttribute("joinError", "game.error.restriction.ready.description");
+			}
+		} catch (ViolatedRestrictionException e) {
+			model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
+			model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
+		}
 		return showWaitingGames(model, locale);
+	}
+
+	@ResponseBody
+	@RequestMapping("cancel")
+	public ServiceResponse cancelProposal(@RequestParam("p") long proposal, Model model, Locale locale) {
+		final Player player = getPrincipal();
+		if (log.isDebugEnabled()) {
+			log.debug("Cancel proposal " + proposal + " for player " + player);
+		}
+
+		try {
+			if (proposalManager.cancel(proposal, player) == null) {
+				return ServiceResponse.FAILURE;
+			}
+			return ServiceResponse.SUCCESS;
+		} catch (NumberFormatException ex) {
+			return ServiceResponse.failure("format");
+		} catch (ViolatedRestrictionException e) {
+			return ServiceResponse.failure("active");
+		}
 	}
 
 	@RequestMapping("active")
@@ -277,24 +292,6 @@ public class ScribbleGameController extends WisematchesController {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
 		return "/content/playground/scribble/active";
-	}
-
-	@ResponseBody
-	@RequestMapping("cancel")
-	public ServiceResponse cancelProposal(@RequestParam("p") String proposal, Model model, Locale locale) {
-		final Player player = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Cancel proposal " + proposal + " for player " + player);
-		}
-
-		try {
-			proposalManager.detachPlayer(Long.valueOf(proposal), player);
-			return ServiceResponse.SUCCESS;
-		} catch (NumberFormatException ex) {
-			return ServiceResponse.failure("format");
-		} catch (ViolatedRestrictionException e) {
-			return ServiceResponse.failure("active");
-		}
 	}
 
 	private int getActiveGamesCount(Player principal) {

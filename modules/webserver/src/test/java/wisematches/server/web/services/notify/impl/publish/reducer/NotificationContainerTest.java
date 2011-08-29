@@ -22,8 +22,8 @@ public class NotificationContainerTest {
 		final Account account = createMock(Account.class);
 
 		final NotificationDescription d1 = new NotificationDescription("game.test", null, null, false, false);
-		final NotificationDescription d2 = new NotificationDescription("game.started", null, "game", false, false);
-		final NotificationDescription d3 = new NotificationDescription("game.finished", null, "game", false, false);
+		final NotificationDescription d2 = new NotificationDescription("game.state.started", null, "game", false, false);
+		final NotificationDescription d3 = new NotificationDescription("game.state.finished", null, "game", false, false);
 		final NotificationDescription d4 = new NotificationDescription("game.message", null, "message", false, false);
 
 		final NotificationContainer container = new NotificationContainer();
@@ -37,7 +37,7 @@ public class NotificationContainerTest {
 		final List<NotificationInfo> notifications = container.getNotifications();
 		assertEquals(3, notifications.size());
 		assertEquals("game.test", notifications.get(0).description.getName());
-		assertEquals("game.started", notifications.get(1).description.getName());
+		assertEquals("game.state.started", notifications.get(1).description.getName());
 		assertEquals("game.message", notifications.get(2).description.getName());
 	}
 }

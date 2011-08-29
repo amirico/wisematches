@@ -69,10 +69,10 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDescription">
             <list>
-                <bean parent="notification" c:name="game.started"
+                <bean parent="notification" c:name="game.state.started"
                       c:group="games" c:enabled="false" c:evenOnline="false"/>
 
-                <bean parent="notification" c:name="game.finished"
+                <bean parent="notification" c:name="game.state.finished"
                       c:group="games" c:enabled="true" c:evenOnline="true"/>
 
                 <bean parent="notification" c:name="game.move.your"
@@ -90,11 +90,14 @@
                 <bean parent="notification" c:name="game.timeout.hour"
                       c:group="expiration" c:enabled="true" c:evenOnline="true"/>
 
+                <bean parent="notification" c:name="game.challenge.received"
+                      c:group="challenge" c:enabled="true" c:evenOnline="false" c:series="game.challenge"/>
+
+                <bean parent="notification" c:name="game.challenge.rejected"
+                      c:group="challenge" c:enabled="false" c:evenOnline="false" c:series="game.challenge"/>
+
                 <bean parent="notification" c:name="game.message"
                       c:group="message" c:enabled="true" c:evenOnline="false" c:series="game.message"/>
-
-                <bean parent="notification" c:name="game.challenge"
-                      c:group="message" c:enabled="true" c:evenOnline="true" c:series="game.challenge"/>
             </list>
         </property>
     </bean>
@@ -110,8 +113,9 @@
                 <bean class="wisematches.server.web.services.notify.impl.publish.reducer.FilteringNotificationPublisher">
                     <property name="acceptedNotifications">
                         <set>
-                            <value>game.finished</value>
-                            <value>game.challenge</value>
+                            <value>game.state.finished</value>
+                            <value>game.challenge.received</value>
+                            <value>game.challenge.rejected</value>
                         </set>
                     </property>
                     <property name="notificationPublisher" ref="messageNotificationPublisher"/>

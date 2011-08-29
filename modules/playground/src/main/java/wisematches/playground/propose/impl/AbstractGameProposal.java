@@ -18,49 +18,41 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
 	private final long id;
 	private final S gameSettings;
 	private final int playersCount;
+	private final Player initiator;
 	private final Collection<Personality> players;
 
 	private static final long serialVersionUID = -7719928493587170213L;
 
-	protected AbstractGameProposal(long id, S gameSettings, int playersCount, Collection<Player> players) {
+	protected AbstractGameProposal(long id, S gameSettings, int playersCount, Player initiator) {
 		if (id == 0) {
 			throw new IllegalArgumentException("error.proposal.null.id");
 		}
 		if (gameSettings == null) {
 			throw new NullPointerException("error.proposal.null.settings");
 		}
-		if (players == null) {
-			throw new NullPointerException("error.proposal.null.players");
+		if (initiator == null) {
+			throw new NullPointerException("error.proposal.null.initiator");
 		}
 		if (playersCount < 2) {
 			throw new IllegalArgumentException("error.proposal.illegal.count");
 		}
-		if (players.size() < 1) {
-			throw new IllegalArgumentException("error.proposal.notenough.players");
-		}
-		if (players.size() > playersCount) {
-			throw new IllegalArgumentException("error.proposal.many.players");
-		}
 
 		this.id = id;
+		this.initiator = initiator;
 		this.gameSettings = gameSettings;
 		this.playersCount = playersCount;
 
 		this.players = new ArrayList<Personality>(playersCount);
-		for (Player player : players) {
-			if (player == null) {
-				throw new NullPointerException("error.proposal.null.player");
-			}
-			if (this.players.contains(player)) {
-				throw new IllegalArgumentException("error.proposal.twice.player");
-			}
-			this.players.add(Personality.untie(player));
-		}
+		this.players.add(Personality.untie(initiator));
 	}
 
 	@Override
 	public long getId() {
 		return id;
+	}
+
+	public Player getInitiator() {
+		return initiator;
 	}
 
 	@Override

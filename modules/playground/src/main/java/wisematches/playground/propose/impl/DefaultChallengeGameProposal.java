@@ -14,14 +14,14 @@ import java.util.HashSet;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultChallengeGameProposal<S extends GameSettings> extends AbstractGameProposal<S> implements ChallengeGameProposal<S> {
-	private final Player initiator;
+	private final String comment;
 	private final Collection<Personality> waitingPlayers = new HashSet<Personality>();
 
 	private static final long serialVersionUID = -3407502628388362362L;
 
-	public DefaultChallengeGameProposal(long id, S gameSettings, Player initiator, Collection<Player> waiting) {
-		super(id, gameSettings, 1 + waiting.size(), Collections.singleton(initiator));
-		this.initiator = initiator;
+	public DefaultChallengeGameProposal(long id, S gameSettings, String comment, Player initiator, Collection<Player> waiting) {
+		super(id, gameSettings, 1 + waiting.size(), initiator);
+		this.comment = comment;
 		for (Player player : waiting) {
 			if (player == null) {
 				throw new NullPointerException("error.proposal.null.player");
@@ -32,10 +32,12 @@ public class DefaultChallengeGameProposal<S extends GameSettings> extends Abstra
 		}
 	}
 
-	public Player getInitiator() {
-		return initiator;
+	@Override
+	public String getComment() {
+		return comment;
 	}
 
+	@Override
 	public Collection<Personality> getWaitingPlayers() {
 		return Collections.unmodifiableCollection(waitingPlayers);
 	}
