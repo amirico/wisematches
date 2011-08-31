@@ -1,8 +1,8 @@
-package wisematches.server.web.services.comment.impl;
+package wisematches.playground.scribble.comment.impl;
 
-import wisematches.personality.player.Player;
-import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.server.web.services.comment.ScribbleComment;
+import wisematches.personality.Personality;
+import wisematches.playground.GameBoard;
+import wisematches.playground.scribble.comment.GameComment;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "scribble_comment")
-public class HibernateScribbleComment implements ScribbleComment {
+public class HibernateGameComment implements GameComment {
 	@Id
 	@Column(name = "id", nullable = false, updatable = false, unique = true)
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,10 +31,10 @@ public class HibernateScribbleComment implements ScribbleComment {
 	@Column(name = "text")
 	private String text;
 
-	public HibernateScribbleComment() {
+	HibernateGameComment() {
 	}
 
-	public HibernateScribbleComment(Player person, ScribbleBoard board, String text) {
+	HibernateGameComment(GameBoard board, Personality person, String text) {
 		this.board = board.getBoardId();
 		this.person = person.getId();
 		this.text = text;

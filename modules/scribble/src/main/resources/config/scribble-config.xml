@@ -66,6 +66,11 @@
         </property>
     </bean>
 
+    <bean id="scribbleCommentManager"
+          class="wisematches.playground.scribble.comment.impl.HibernateGameCommentManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean id="memoryWordManager" class="wisematches.playground.scribble.memory.impl.HibernateMemoryWordManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>

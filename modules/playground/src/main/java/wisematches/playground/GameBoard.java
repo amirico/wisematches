@@ -117,7 +117,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @return the list of all players on this board.
 	 */
-	Collection<P> getPlayersHands();
+	List<P> getPlayersHands();
 
 	/**
 	 * Returns list of winners for this game, empty list if no winners (draw) or {@code null} if game still active.

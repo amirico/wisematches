@@ -54,6 +54,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	@CollectionTable(name = "scribble_player", joinColumns = @JoinColumn(name = "boardId"))
 	private List<P> playerHands;
 
+	@Column(name = "playersCount")
+	private byte playersCount;
+
 	@Column(name = "currentPlayerIndex")
 	private byte currentPlayerIndex = -1;
 
@@ -132,6 +135,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			hands.add(createPlayerHand(player));
 		}
 		playerHands = hands;
+		playersCount = (byte) hands.size();
 		currentPlayerIndex = selectFirstPlayer(gameSettings, hands);
 	}
 
