@@ -68,7 +68,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 
 		final Word word = selectResultWord(words, type, board.getScoreEngine(), board);
 		if (log.isDebugEnabled()) {
-			log.debug("Robot select word: " + word);
+			log.debug("Robot selected word: " + word);
 		}
 
 		try {

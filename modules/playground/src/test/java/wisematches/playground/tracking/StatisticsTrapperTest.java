@@ -45,7 +45,7 @@ public class StatisticsTrapperTest {
 				new RatingChange(14L, 1L, new Date(), (short) 1250, (short) 1300, (short) -5),
 				new RatingChange(15L, 1L, new Date(), (short) 1300, (short) 1220, (short) -10));
 
-		final Collection<GamePlayerHand> hands = Arrays.asList(
+		final List<GamePlayerHand> hands = Arrays.asList(
 				new GamePlayerHand(13L, (short) 20),
 				new GamePlayerHand(14L, (short) -5),
 				new GamePlayerHand(15L, (short) -10));
