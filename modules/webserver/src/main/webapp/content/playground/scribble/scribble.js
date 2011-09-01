@@ -246,7 +246,7 @@ wm.scribble.Comments = function(board, language) {
                 updateStatus();
                 widget.find('.content').show();
             } else {
-                wm.ui.showStatus(result.summary, true);
+                showEditorError(result.summary);
             }
             unblock();
         });

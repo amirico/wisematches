@@ -79,6 +79,13 @@ public class ScribbleCommentController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("add")
 	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
+		if (form.getText().trim().isEmpty()) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.empty", locale));
+		}
+		if (form.getText().length() > 250) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.length", locale, 250));
+		}
+
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
