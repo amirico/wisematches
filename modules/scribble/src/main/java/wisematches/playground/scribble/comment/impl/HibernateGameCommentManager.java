@@ -79,7 +79,7 @@ public class HibernateGameCommentManager extends HibernateDaoSupport implements 
 			@Override
 			public List doInHibernate(Session session) throws HibernateException, SQLException {
 				final SQLQuery sqlQuery = session.createSQLQuery(
-						"select c.id, (c.`read`&(1 << p.playerIndex)) != 0 from scribble_comment as c left join scribble_player as p " +
+						"select c.id, (c.person=p.playerId) || (c.`read`&(1 << p.playerIndex)) != 0 from scribble_comment as c left join scribble_player as p " +
 								"on c.board=p.boardId and p.playerId=:person " +
 								"where c.board=:board " +
 								"order by c.created desc, c.id desc");

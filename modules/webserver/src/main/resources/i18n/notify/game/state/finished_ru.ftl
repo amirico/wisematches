@@ -15,7 +15,7 @@
         <#break>
     <#case "TIMEOUT">
         <#if context.playerTurn.playerId == principal.id>
-            Время вашего хода истекло и игра была notifyна.
+            Время вашего хода истекло и игра была прервана.
             <#else>
                 Время хода игрока <@notify.player player=context.playerTurn.playerId/>
                 истекло и игра была прервана.

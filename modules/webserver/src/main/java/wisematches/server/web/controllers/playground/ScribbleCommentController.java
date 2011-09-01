@@ -17,9 +17,7 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.ScribbleCommentForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -69,7 +67,13 @@ public class ScribbleCommentController extends WisematchesController {
 		if (board.getPlayerHand(getPersonality().getId()) == null) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
 		}
-		return ServiceResponse.success(null, "comments", commentManager.getComments(board, getPersonality(), ids));
+
+		final Collection<Map<?, ?>> a = new ArrayList<Map<?, ?>>();
+		final List<GameComment> comments = commentManager.getComments(board, getPersonality(), ids);
+		for (GameComment comment : comments) {
+			a.add(serialize(comment, locale));
+		}
+		return ServiceResponse.success(null, "comments", a);
 	}
 
 	@ResponseBody

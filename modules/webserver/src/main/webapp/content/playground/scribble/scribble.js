@@ -56,152 +56,217 @@ wm.scribble.tile = new function() {
 };
 
 wm.scribble.Comments = function(board, language) {
-    var position = 0;
+    var loadedComments = 0;
     var comments = new Array();
 
-    var overlayCSS = {
-        '-moz-border-radius': '5px',
-        '-webkit-border-radius': '5px',
-        'border-radius': '5px',
-        backgroundColor:'#DFEFFC'
+    var widget = $("#board" + board.getBoardId() + ' .annotation');
+    var view = widget.find('.items');
+
+    var editor = widget.find('.editor');
+    var editorError = editor.find('.ui-state-error-text');
+
+    var status = widget.find('.status');
+
+    var initWidget = function() {
+        block();
+        editor.find("button").button();
+        editor.find("textarea").change(function() {
+            showEditorError(null);
+        });
+        loadStatuses();
     };
 
-    var element = function(clazz) {
-        return $("#board" + board.getBoardId() + " " + clazz);
-    };
-
-    this.addNew = function() {
-        element(".annotationArea textarea").val("");
-        element(".annotationView").slideUp('slow');
-        element(".annotationArea").slideDown('slow');
-        return false;
-    };
-
-    this.cancelNew = function() {
-        closeEditor();
-    };
-
-    this.save = function() {
-        element(".annotationWidget").block({ message: null, overlayCSS: overlayCSS });
-        var msg = element(".annotationArea textarea").val();
-        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), $.toJSON({text: msg}), function(result) {
+    var loadStatuses = function() {
+        $.post('/playground/scribble/comment/load.ajax?b=' + board.getBoardId(), function(result) {
             if (result.success) {
-                comments.unshift(result.data);
-                showComment(0);
-                closeEditor();
+                comments = result.data.comments;
+
+                var count = 0;
+                var historyCount = 0;
+                var unreadLoaded = true;
+                $.each(result.data.comments, function(i, a) {
+                    if (!a.read && unreadLoaded) {
+                        count++;
+                    } else {
+                        if (historyCount < 3) {
+                            count++;
+                        }
+                        unreadLoaded = false;
+                        historyCount++;
+                    }
+                });
+
+                widget.find('.header .controls div').toggle();
+                if (comments.length != 0) {
+                    widget.find('.content').show();
+                    updateStatus();
+                    loadComments(count);
+                } else {
+                    unblock();
+                }
+                $.post('/playground/scribble/comment/mark.ajax?b=' + board.getBoardId());
             } else {
                 wm.ui.showStatus(result.summary, true);
+                unblock();
             }
-            element(".annotationWidget").unblock();
         });
     };
 
-    var showComment = function(pos) {
-        var comment = comments[pos];
-        if (typeof(comment) == 'number') {
-            element(".annotationWidget").block({ message: null, overlayCSS: overlayCSS });
-            $.post('/playground/scribble/comment/get.ajax?b=' + board.getBoardId() + "&m=" + comments[pos], function(result) {
-                if (result.success) {
-                    comments[pos] = result.data;
-                    showComment(pos);
-                } else {
-                    wm.ui.showStatus(result.summary, true);
-                }
-                element(".annotationWidget").unblock();
-            });
-        } else {
-            position = pos;
-            element(".annotationMessage").html(comment.text);
-            element(".annotationPlayer").html(wm.ui.player(board.getPlayerInfo(comment.person)));
-            element(".annotationPosition").html((position + 1) + " of " + comments.length);
-            element(".annotationTimestamp").html('(' + comment.elapsed + ' ' + language['ago'] + ')');
+    var loadComments = function(count) {
+        if (loadedComments + count > comments.length) {
+            count = comments.length - loadedComments;
+        }
 
-            if (position == 0) {
-                element(".annotationPrev").addClass("ui-state-disabled").data('disabled', true);
+        if (count <= 0) {
+            return false;
+        }
+
+        var read = new Array();
+        var visible = new Array();
+        for (var i = loadedComments; i < loadedComments + count; i++) {
+            visible.push(comments[i].id);
+            read['c' + comments[i].id] = comments[i].read;
+        }
+
+        block();
+        $.post('/playground/scribble/comment/get.ajax?b=' + board.getBoardId(), $.toJSON(visible), function(result) {
+            if (result.success) {
+                $.each(result.data.comments, function(i, a) {
+                    showComment(a, read['c' + a.id], false);
+                });
+                loadedComments += count;
+                updateStatus();
             } else {
-                element(".annotationPrev").removeClass("ui-state-disabled").data('disabled', false);
+                wm.ui.showStatus(result.summary, true);
             }
-            if (position == comments.length - 1) {
-                element(".annotationNext").addClass("ui-state-disabled").data('disabled', true);
-            } else {
-                element(".annotationNext").removeClass("ui-state-disabled").data('disabled', false);
-            }
-        }
+            unblock();
+        });
     };
 
-    this.next = function() {
-        if (position + 1 < comments.length) {
-            showComment(position + 1);
-        }
-        return false;
-    };
-
-    this.prev = function() {
-        if (position - 1 >= 0) {
-            showComment(position - 1);
-        }
-        return false;
-    };
-
-    var updateView = function(ids) {
-        comments = ids;
-        if (comments.length > 0) {
-            element(".annotationView").show();
-            showComment(0);
-        }
-    };
-
-    var closeEditor = function() {
-        element(".annotationArea").slideUp('slow');
-        if (comments.length > 0) {
-            element(".annotationView").slideDown('slow');
-        }
-    };
-
-    $.post('/playground/scribble/comment/load.ajax?b=' + board.getBoardId(), function(result) {
-        if (result.success) {
-            updateView(result.data.comments);
+    var updateStatus = function() {
+        if (comments.length == 0) {
+            status.find('.controls').hide();
         } else {
-            wm.ui.showStatus(result.summary, true);
+            var c = getNextLoadCount();
+            if (c == 0) {
+                status.find('.controls').hide();
+            } else {
+                status.find('.controls span').html(c);
+            }
+            status.find('.progress').html("1.." + loadedComments + " " + language['of'] + " " + comments.length);
         }
-    });
+    };
 
-    element(".annotationWidget button").button();
+    var getNextLoadCount = function() {
+        var c = comments.length - loadedComments;
+        if (c > 5) {
+            return 5;
+        }
+        return c;
+    };
 
-    element(".annotationNext").hover(function() {
-                if ($(this).data('disabled') != true) {
-                    $(this).addClass("ui-state-hover");
-                }
-            },
-            function() {
-                if ($(this).data('disabled') != true) {
-                    $(this).removeClass("ui-state-hover");
-                }
+    var block = function() {
+        widget.block({ message: null});
+    };
+
+    var unblock = function() {
+        widget.unblock();
+    };
+
+    var clearEditor = function() {
+        editor.slideUp('fast');
+        showEditorError(null);
+        editor.find("textarea").val('');
+    };
+
+    var showEditorError = function(msg) {
+        if (msg == undefined || msg == null) {
+            editorError.html('');
+        } else {
+            editorError.html(msg);
+        }
+    };
+
+    var registerItemControls = function(item) {
+        item.hover(function() {
+            $(this).find(".info").slideDown('fast');
+            $(this).toggleClass("collapsed");
+        }, function() {
+            $(this).find(".info").slideUp('fast');
+            $(this).toggleClass("collapsed");
+        });
+    };
+
+    var showComment = function(comment, collapsed, top) {
+        var item = $('<div class="item' + (collapsed ? ' collapsed' : '') + '"></div>');
+        var info = $('<div class="info"></div>').appendTo(item);
+        var time = $('<div class="time"></div>').appendTo(info).html('(' + comment.elapsed + ' ' + language['ago'] + ')');
+        var player = $('<div class="sender"></div>').appendTo(info).html(wm.ui.player(board.getPlayerInfo(comment.person)));
+
+        var msg = $('<div class="message"></div>').appendTo(item).html(comment.text + "<span></span>");
+
+        if (collapsed) {
+            registerItemControls(item);
+        } else {
+            item.click(function() {
+                registerItemControls($(this).click(null));
             });
+        }
 
-    element(".annotationPrev").hover(function() {
-                if ($(this).data('disabled') != true) {
-                    $(this).addClass("ui-state-hover");
-                }
-            },
-            function() {
-                if ($(this).data('disabled') != true) {
-                    $(this).removeClass("ui-state-hover");
-                }
-            });
+        if (top) {
+            if (view.children().length != 0) {
+                view.prepend($('<div class="separator ui-widget-content"></div>'));
+            }
+            view.prepend(item);
+        } else {
+            if (view.children().length != 0) {
+                view.append($('<div class="separator ui-widget-content"></div>'));
+            }
+            view.append(item);
+        }
+    };
+
+    this.create = function() {
+        editor.slideDown('fast');
+    };
+
+    this.save = function() {
+        var val = editor.find('textarea').val();
+        if (val.trim().length == 0) {
+            showEditorError("Message is empty. Please enter a message.");
+            return false;
+        }
+        block();
+        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), $.toJSON({text: val}), function(result) {
+            if (result.success) {
+                loadedComments += 1;
+                comments.unshift({id: result.data.id, read: true});
+                showComment(result.data, true, true);
+                clearEditor();
+                updateStatus();
+                widget.find('.content').show();
+            } else {
+                wm.ui.showStatus(result.summary, true);
+            }
+            unblock();
+        });
+    };
+
+    this.cancel = function() {
+        clearEditor();
+    };
+
+    this.load = function() {
+        loadComments(getNextLoadCount());
+    };
+
+    initWidget();
 };
 
 wm.scribble.Memory = function(board, language) {
     var nextWordId = 0;
     var memoryWords = new Array();
     var memoryWordsCount = 0;
-
-    var overlayCSS = {
-        '-moz-border-radius': '5px',
-        '-webkit-border-radius': '5px',
-        'border-radius': '5px',
-        backgroundColor:'#DFEFFC'
-    };
 
     var addWord = function(word) {
         memoryWordsCount++;
@@ -252,7 +317,7 @@ wm.scribble.Memory = function(board, language) {
 
     var executeRequest = function(type, data, successHandler) {
         wm.ui.showStatus(language['changeMemory'], false, true);
-        $("#memoryWords").block({ message: null, overlayCSS: overlayCSS });
+        $("#memoryWords").block({ message: null});
 
         if (data != null) {
             data = $.toJSON(data);
@@ -517,13 +582,6 @@ wm.scribble.Controls = function(board, language) {
     $("#passTurnButton").button({disabled: true, icons: {primary: 'icon-controls-pass'}});
     $("#resignGameButton").button({disabled: true, icons: {primary: 'icon-controls-resign'}});
 
-    var overlayCSS = {
-        '-moz-border-radius': '5px',
-        '-webkit-border-radius': '5px',
-        'border-radius': '5px',
-        backgroundColor:'#DFEFFC'
-    };
-
     var onTileSelected = function() {
         if (wm.scribble.tile.isTileSelected(this)) {
             wm.scribble.tile.deselectTile(this);
@@ -541,8 +599,8 @@ wm.scribble.Controls = function(board, language) {
     };
 
     var blockBoard = function() {
-        $(board.getBoardElement()).parent().block({ message: null, overlayCSS: overlayCSS });
-        $("#boardActionsToolbar").block({ message: null, overlayCSS: overlayCSS });
+        $(board.getBoardElement()).parent().block({ message: null});
+        $("#boardActionsToolbar").block({ message: null});
         wm.ui.showStatus(language['updatingBoard'], false, true);
     };
 
@@ -630,33 +688,33 @@ wm.scribble.Controls = function(board, language) {
         });
 
         $('#exchangeTilesPanel').dialog({
-            title: language['exchange'],
-            draggable:false,
-            modal: true,
-            resizable: false,
-            width: 400,
-            buttons: [
-                {
-                    text: language['exchange'],
-                    click: function() {
-                        $(this).dialog("close");
-                        var tiles = new Array();
-                        $.each(tilesPanel.children(), function(i, tw) {
-                            if (wm.scribble.tile.isTileSelected(tw)) {
-                                tiles.push($(tw).data('tile'));
+                    title: language['exchange'],
+                    draggable:false,
+                    modal: true,
+                    resizable: false,
+                    width: 400,
+                    buttons: [
+                        {
+                            text: language['exchange'],
+                            click: function() {
+                                $(this).dialog("close");
+                                var tiles = new Array();
+                                $.each(tilesPanel.children(), function(i, tw) {
+                                    if (wm.scribble.tile.isTileSelected(tw)) {
+                                        tiles.push($(tw).data('tile'));
+                                    }
+                                });
+                                board.exchangeTiles(tiles, showMoveResult);
                             }
-                        });
-                        board.exchangeTiles(tiles, showMoveResult);
-                    }
-                },
-                {
-                    text: language['cancel'],
-                    click: function() {
-                        $(this).dialog("close");
-                    }
+                        },
+                        {
+                            text: language['cancel'],
+                            click: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
         )
     };
 
