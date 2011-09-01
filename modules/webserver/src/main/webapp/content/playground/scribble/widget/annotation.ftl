@@ -20,10 +20,10 @@
 
         <table width="100%">
             <tr>
-                <td width="100%" align="left">
+                <td width="100%" align="left" valign="top">
                     <div class="ui-state-error-text"></div>
                 </td>
-                <td nowrap="nowrap" align="right">
+                <td nowrap="nowrap" align="right" valign="top">
                     <button onclick="comments.save(); return false;"><@message code="game.comment.submit"/></button>
                     <button onclick="comments.cancel(); return false;"><@message code="game.comment.cancel"/></button>
                 </td>
