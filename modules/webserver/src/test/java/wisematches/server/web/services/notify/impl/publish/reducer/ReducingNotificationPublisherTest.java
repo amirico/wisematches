@@ -25,7 +25,8 @@ public class ReducingNotificationPublisherTest {
 
 	@Test
 	public void test() {
-		final MemberPlayer player = new MemberPlayer(createMock(Account.class));
+		final Account account = createMock(Account.class);
+		final MemberPlayer player = new MemberPlayer(account);
 		final Map<String, Object> model = new HashMap<String, Object>();
 
 		final NotificationDescription d1 = new NotificationDescription("game.state.started", null, "game", false, false);
@@ -33,10 +34,10 @@ public class ReducingNotificationPublisherTest {
 		final NotificationDescription d3 = new NotificationDescription("game.message", null, "message", false, false);
 
 		final NotificationPublisher publisher = createStrictMock(NotificationPublisher.class);
-		expect(publisher.raiseNotification("asd", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.state.started", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.message", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("asd", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.started", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.message", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
 		final Capture<PlayerStateListener> listener = new Capture<PlayerStateListener>();

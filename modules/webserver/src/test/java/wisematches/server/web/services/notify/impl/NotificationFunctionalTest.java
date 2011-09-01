@@ -2,6 +2,7 @@ package wisematches.server.web.services.notify.impl;
 
 import org.easymock.Capture;
 import org.easymock.IMockBuilder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Ignore
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -108,9 +110,6 @@ public class NotificationFunctionalTest {
 
 		Thread.sleep(1000);
 		verify(mailSender, messageManager);
-
-		System.out.println(message1);
-		System.out.println(message2);
 	}
 
 	private MemberPlayer createMockPlayer(long i, Language en) {

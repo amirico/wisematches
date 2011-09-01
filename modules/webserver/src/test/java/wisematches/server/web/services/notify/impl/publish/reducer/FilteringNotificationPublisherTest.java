@@ -22,7 +22,8 @@ public class FilteringNotificationPublisherTest {
 
 	@Test
 	public void test() {
-		final MemberPlayer player = new MemberPlayer(createMock(Account.class));
+		final Account account = createMock(Account.class);
+		final MemberPlayer player = new MemberPlayer(account);
 		final Map<String, Object> model = new HashMap<String, Object>();
 
 		final NotificationPublisher publisher = createStrictMock(NotificationPublisher.class);
@@ -31,8 +32,8 @@ public class FilteringNotificationPublisherTest {
 		p.setNotificationPublisher(publisher);
 		p.setAcceptedNotifications(new HashSet<String>(Arrays.asList("game.state.finished", "game.challenge.received")));
 
-		expect(publisher.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.challenge.received", player, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.challenge.received", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
 		p.raiseNotification("asd", player, NotificationMover.ACCOUNTS, model);

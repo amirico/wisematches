@@ -60,7 +60,7 @@ public class SmallRobotsGameTest {
 		final RobotPlayer r3 = RobotPlayer.EXPERT;
 
 		final ScribbleBoard board = scribbleBoardManager.createBoard(
-				new ScribbleSettings("This is robots game", Language.RU, 3, false, true),
+				new ScribbleSettings("This is robots game", Language.EN, 3, false, true),
 				Arrays.<Personality>asList(r1, r2, r3));
 		board.addGameBoardListener(new GameBoardListener() {
 			@Override

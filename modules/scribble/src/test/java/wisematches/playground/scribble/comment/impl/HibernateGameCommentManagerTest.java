@@ -71,7 +71,7 @@ public class HibernateGameCommentManagerTest {
 		final List<GameCommentState> s2 = commentManager.getCommentStates(board, player2);
 		assertEquals(2, s2.size());
 		assertFalse(s2.get(1).isRead()); //c1
-		assertFalse(s2.get(0).isRead()); //c2
+		assertTrue(s2.get(0).isRead()); //c2 (but true)
 
 		commentManager.markRead(board, player2);
 		final List<GameCommentState> s3 = commentManager.getCommentStates(board, player1);
@@ -91,7 +91,7 @@ public class HibernateGameCommentManagerTest {
 		final List<GameCommentState> s6 = commentManager.getCommentStates(board, player2);
 		assertEquals(2, s6.size());
 		assertTrue(s6.get(1).isRead());  //c1
-		assertFalse(s6.get(0).isRead());  //c2
+		assertTrue(s6.get(0).isRead());  //c2
 
 		commentManager.removeComment(board, player1, c1.getId());
 		commentManager.removeComment(board, player2, c2.getId());

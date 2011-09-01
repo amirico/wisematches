@@ -12,6 +12,9 @@ import java.util.Locale;
 public class XMLTilesBankingHouseTest extends TestCase {
 	private XMLTilesBankingHouse bankingHouse;
 
+	public XMLTilesBankingHouseTest() {
+	}
+
 	protected void setUp() throws Exception {
 		bankingHouse = new XMLTilesBankingHouse();
 		bankingHouse.setBanksPath(new ClassPathResource("/banks/"));
