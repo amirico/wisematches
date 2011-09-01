@@ -70,9 +70,13 @@ wm.ui = new function() {
     };
 
     $.blockUI.defaults.overlayCSS = {
-        backgroundColor: '#000',
+//        backgroundColor: '#000',
         opacity:           0.2,
-        cursor:               'wait'
+        cursor:               'wait',
+        '-moz-border-radius': '5px',
+        '-webkit-border-radius': '5px',
+        'border-radius': '5px',
+        backgroundColor:'#DFEFFC'
     };
 
     $.ajaxSetup({

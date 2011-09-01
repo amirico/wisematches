@@ -2,13 +2,6 @@
 
 <script type="text/javascript">
     wm.messages = $.extend({}, wm.messages, new function() {
-        var overlayCSS = {
-            '-moz-border-radius': '5px',
-            '-webkit-border-radius': '5px',
-            'border-radius': '5px',
-            backgroundColor:'#DFEFFC'
-        };
-
         var sendRequest = function(id, reply) {
             var dlg = $("#privateMessageDialog");
             dlg.html('<div class="loading-image" style="height: 350px"></div>');
@@ -28,7 +21,7 @@
                         disabled: true,
                         click:function() {
                             wm.ui.showStatus("<@message code="messages.status.sending"/>", false, true);
-                            dlg.closest(".ui-dialog").block({ message: "", overlayCSS: overlayCSS });
+                            dlg.closest(".ui-dialog").block({ message: ""});
 
                             var msg = $("#privateMessageDialog textarea").val();
                             $.post('/playground/messages/send.ajax', $.toJSON({pid: id, reply: reply, message: msg}), function(result) {
