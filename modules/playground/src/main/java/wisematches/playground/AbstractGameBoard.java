@@ -35,7 +35,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	private long boardId;
 
 	/**
-	 * Collections of all maden turns.
+	 * Collections of all done moves.
 	 * <p/>
 	 * This is transient field for Hibernate.
 	 */
@@ -56,6 +56,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 	@Column(name = "playersCount")
 	private byte playersCount;
+
+	@Column(name = "movesCount")
+	private int movesCount = 0;
 
 	@Column(name = "currentPlayerIndex")
 	private byte currentPlayerIndex = -1;
@@ -212,6 +215,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 			final GameMove gameMove = new GameMove(move, points, moves.size(), lastMoveTime);
 			moves.add(gameMove);
+			movesCount = moves.size();
 
 			processMoveFinished(player, gameMove);
 
