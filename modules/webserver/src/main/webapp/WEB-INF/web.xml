@@ -98,6 +98,10 @@
         <welcome-file>index</welcome-file>
     </welcome-file-list>
 
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+
     <error-page>
         <error-code>400</error-code>
         <location>/info/error?c=400</location>

@@ -13,6 +13,10 @@
         <property name="hibernateTemplate" ref="hibernateTemplate"/>
     </bean>
 
+    <bean id="scribbleHistoryManager" class="wisematches.playground.scribble.history.ScribbleHistoryManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
     </bean>
 
