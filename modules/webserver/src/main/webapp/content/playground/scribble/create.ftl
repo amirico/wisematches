@@ -104,7 +104,7 @@
                                                 <input id="robotType${t}" name="robotType" type="radio" value="${t}"
                                                        <#if wm.statusValue==t?upper_case>checked="checked"</#if>/>
                                                 <label for="robotType${t}">
-                                                <@wm.player player=robot showType=false/> (${robot.rating})
+                                                <@wm.player player=robot showType=false/> (${robot.newRating})
                                                 </label>
                                             </td>
                                             <td width="100%">

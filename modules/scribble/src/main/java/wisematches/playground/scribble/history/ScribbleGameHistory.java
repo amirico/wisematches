@@ -1,5 +1,7 @@
 package wisematches.playground.scribble.history;
 
+import wisematches.personality.Language;
+import wisematches.playground.GameResolution;
 import wisematches.playground.history.GameHistory;
 
 import javax.persistence.*;
@@ -9,26 +11,16 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-@NamedNativeQueries({
-		@NamedNativeQuery(
-				name = "scribble.history",
-				query =
-						"select board.*, max(if(r.playerIndex=0, r.playerId, 0)) player0, max(if(r.playerIndex=1, r.playerId, 0)) player1, max(if(r.playerIndex=2, r.playerId, 0)) player2, max(if(r.playerIndex=3, r.playerId, 0)) player3 " +
-								"from (select board.boardId, board.rated, board.language, board.playersCount, board.resolution, board.movesCount, board.startedDate, board.finishedDate, rating.newRating rating, rating.newRating-rating.oldRating ratingChange from scribble_board as board, scribble_player as hand, rating_history as rating where not board.resolution is null and board.boardId=hand.boardId and board.boardId=rating.boardId and rating.playerId=hand.playerId and hand.playerId=?) as board, scribble_player as r " +
-								"where r.boardId=board.boardId group by board.boardId order by board.boardId",
-				resultSetMapping = "scribble.history")
-})
-@SqlResultSetMapping(name = "scribble.history",
-		entities = @EntityResult(entityClass = ScribbleGameHistory.class))
 public class ScribbleGameHistory implements GameHistory {
 	@Id
 	private long boardId;
 	private Date startedDate;
 	private Date finishedDate;
 	private boolean rated;
-	private String language;
-	private int rating;
-	private int ratingChange;
+	private Language language;
+	private GameResolution resolution;
+	private int newRating;
+	private int oldRating;
 	private int movesCount;
 	private long player0;
 	private long player1;
@@ -38,6 +30,7 @@ public class ScribbleGameHistory implements GameHistory {
 	public ScribbleGameHistory() {
 	}
 
+	@Override
 	public long getBoardId() {
 		return boardId;
 	}
@@ -46,6 +39,7 @@ public class ScribbleGameHistory implements GameHistory {
 		this.boardId = boardId;
 	}
 
+	@Override
 	public Date getStartedDate() {
 		return startedDate;
 	}
@@ -54,6 +48,7 @@ public class ScribbleGameHistory implements GameHistory {
 		this.startedDate = startedDate;
 	}
 
+	@Override
 	public Date getFinishedDate() {
 		return finishedDate;
 	}
@@ -62,6 +57,7 @@ public class ScribbleGameHistory implements GameHistory {
 		this.finishedDate = finishedDate;
 	}
 
+	@Override
 	public boolean isRated() {
 		return rated;
 	}
@@ -70,30 +66,43 @@ public class ScribbleGameHistory implements GameHistory {
 		this.rated = rated;
 	}
 
-	public String getLanguage() {
+	@Override
+	public Language getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(String language) {
+	public void setLanguage(Language language) {
 		this.language = language;
 	}
 
-	public int getRating() {
-		return rating;
+	public void setResolution(GameResolution resolution) {
+		this.resolution = resolution;
 	}
 
-	public void setRating(int rating) {
-		this.rating = rating;
+	@Override
+	public GameResolution getResolution() {
+		return resolution;
 	}
 
-	public int getRatingChange() {
-		return ratingChange;
+	@Override
+	public int getOldRating() {
+		return newRating;
 	}
 
-	public void setRatingChange(int ratingChange) {
-		this.ratingChange = ratingChange;
+	public void setNewRating(int newRating) {
+		this.newRating = newRating;
 	}
 
+	@Override
+	public int getNewRating() {
+		return oldRating;
+	}
+
+	public void setOldRating(int oldRating) {
+		this.oldRating = oldRating;
+	}
+
+	@Override
 	public int getMovesCount() {
 		return movesCount;
 	}
@@ -135,6 +144,7 @@ public class ScribbleGameHistory implements GameHistory {
 	}
 
 	@Override
+	@Transient
 	public long[] getPlayers() {
 		return new long[]{player0, player1, player2, player3};
 	}
@@ -147,9 +157,10 @@ public class ScribbleGameHistory implements GameHistory {
 		sb.append(", startedDate=").append(startedDate);
 		sb.append(", finishedDate=").append(finishedDate);
 		sb.append(", rated=").append(rated);
-		sb.append(", language='").append(language).append('\'');
-		sb.append(", rating=").append(rating);
-		sb.append(", ratingChange=").append(ratingChange);
+		sb.append(", language=").append(language);
+		sb.append(", resolution=").append(resolution);
+		sb.append(", newRating=").append(newRating);
+		sb.append(", oldRating=").append(oldRating);
 		sb.append(", movesCount=").append(movesCount);
 		sb.append(", player0=").append(player0);
 		sb.append(", player1=").append(player1);
