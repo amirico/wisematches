@@ -1,5 +1,8 @@
 package wisematches.playground.history;
 
+import wisematches.personality.Language;
+import wisematches.playground.GameResolution;
+
 import java.util.Arrays;
 import java.util.Date;
 
@@ -7,21 +10,23 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface GameHistory {
-	public long getBoardId();
+	long getBoardId();
 
-	public Date getStartedDate();
+	Date getStartedDate();
 
-	public Date getFinishedDate();
+	Date getFinishedDate();
 
-	public boolean isRated();
+	boolean isRated();
 
-	public String getLanguage();
+	Language getLanguage();
 
-	public int getRating();
+	GameResolution getResolution();
 
-	public int getRatingChange();
+	int getOldRating();
 
-	public int getMovesCount();
+	int getNewRating();
 
-	public long[] getPlayers();
+	int getMovesCount();
+
+	long[] getPlayers();
 }

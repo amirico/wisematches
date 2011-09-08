@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.playground.history.GameHistory;
@@ -37,7 +38,7 @@ public class ScribbleHistoryManagerTest {
 		int finishedGamesCount = historyManager.getFinishedGamesCount(player);
 		System.out.println(finishedGamesCount);
 
-		List<GameHistory> finishedGames = historyManager.getFinishedGames(player, Range.limit(14, 3));
+		List<GameHistory> finishedGames = historyManager.getFinishedGames(player, Range.limit(1, 10), Order.asc("language"));
 		System.out.println("Finished size: " + finishedGames.size());
 		System.out.println(finishedGames);
 	}
