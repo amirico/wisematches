@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.scribble.ScribbleBoard>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
@@ -16,13 +17,21 @@
     </#if>
 </#macro>
 
-<@wm.playground>
+<@wm.playground id="activegames">
 
 <table width="100%" height="30px">
     <tr>
-        <td width="100%" nowrap="nowrap"></td>
+        <td width="100%" nowrap="nowrap">
+            <#if player != principal>
+                <div class="title">
+                <@message code="game.dashboard.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
+                </div>
+            </#if>
+        </td>
         <td nowrap="nowrap" valign="top">
-            <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
+            <#if player == principal>
+                <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
+            </#if>
         </td>
     </tr>
 </table>
@@ -125,7 +134,9 @@
         "sDom": '<"H"lCr>t<"F"ip>',
         "sPaginationType": "full_numbers",
         "oLanguage": {
+        <#if player == principal>
             "sEmptyTable": "<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
+        </#if>
         }
     });
 

@@ -557,3 +557,9 @@
     background-color: #C5DBEC;
 }
 
+#pastgames .title, #pastgames .title span, #activegames .title, #activegames .title span {
+    font-size: 28px;
+    line-height: normal;
+    font-family: Lucida, serif;
+    margin-bottom: 5px;
+}

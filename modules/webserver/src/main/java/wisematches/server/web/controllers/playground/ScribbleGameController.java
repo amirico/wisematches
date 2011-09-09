@@ -30,6 +30,7 @@ import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.search.ScribbleSearchesEngine;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.form.OpponentType;
@@ -59,21 +60,37 @@ public class ScribbleGameController extends WisematchesController {
 
 	@RequestMapping("active")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String showActiveGames(Model model, Locale locale) {
-		final Player principal = getPrincipal();
+	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model, Locale locale) throws UnknownEntityException {
+		final Player principal;
+		if (pid == null) {
+			principal = getPrincipal();
+		} else {
+			principal = playerManager.getPlayer(pid);
+		}
+		if (principal == null) {
+			throw new UnknownEntityException(null, "account");
+		}
 		if (log.isDebugEnabled()) {
 			log.debug("Loading active games for personality: " + principal);
 		}
+		model.addAttribute("player", principal);
+
 		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
+		model.addAttribute("activeBoards", activeBoards);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
 		}
-		final Collection<GameProposal<ScribbleSettings>> proposals = proposalManager.getPlayerProposals(principal);
-		if (log.isDebugEnabled()) {
-			log.debug("Found " + proposals.size() + " proposals for personality: " + principal);
+
+		if (principal == getPrincipal()) {
+			final Collection<GameProposal<ScribbleSettings>> proposals = proposalManager.getPlayerProposals(principal);
+			model.addAttribute("activeProposals", proposals);
+			if (log.isDebugEnabled()) {
+				log.debug("Found " + proposals.size() + " proposals for personality: " + principal);
+			}
+		} else {
+			model.addAttribute("activeProposals", Collections.emptyList());
 		}
-		model.addAttribute("activeBoards", activeBoards);
-		model.addAttribute("activeProposals", proposals);
+
 		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
