@@ -198,7 +198,7 @@
     <div class="ui-layout-table">
         <div>
             <div><@message code="profile.points.avg"/>:</div>
-            <div><@undefined value=statistics.activeGames/></div>
+            <div><@undefined value=statistics.averagePoints/></div>
         </div>
         <div>
             <div><@message code="profile.points.lo"/>:</div>
