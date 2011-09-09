@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameHistoryManager {
+public interface GameHistoryManager<H extends GameHistory> {
 	/**
 	 * Returns number of finished games.
 	 *
@@ -26,5 +26,5 @@ public interface GameHistoryManager {
 	 * @param orders	  orders
 	 * @return list of all finished games.
 	 */
-	List<GameHistory> getFinishedGames(Personality personality, Range range, Order... orders);
+	List<H> getFinishedGames(Personality personality, Range range, Order... orders);
 }

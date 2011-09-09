@@ -22,11 +22,11 @@ public interface GameHistory {
 
 	GameResolution getResolution();
 
-	int getOldRating();
-
 	int getNewRating();
+
+	int getRatingChange();
 
 	int getMovesCount();
 
-	long[] getPlayers();
+	long[] getPlayers(long excludePlayer);
 }

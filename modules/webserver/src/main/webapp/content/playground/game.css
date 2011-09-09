@@ -504,3 +504,56 @@
     font-weight: bold;
     line-height: normal;
 }
+
+.rating div {
+    display: inline-block;
+}
+
+.rating .change {
+    width: 38px;
+    height: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.rating.up {
+    color: #31c54e;
+}
+
+.rating.up .change {
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -38px 0 !important;
+}
+
+.rating.down {
+    color: #c54c31;
+}
+
+.rating.down .change {
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat 0 0 !important;
+}
+
+.rating.same {
+    color: #8c8c7f;
+}
+
+.rating.same .change {
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -76px 0 !important;
+}
+
+#history td {
+    white-space: nowrap;
+    border: none;
+}
+
+#history tr.odd td {
+    background-color: #DFEFFC;
+}
+
+#history tr.even td {
+    background-color: #d7e8f5;
+}
+
+#history tr.even:hover td, #history tr.odd:hover td {
+    background-color: #C5DBEC;
+}
+

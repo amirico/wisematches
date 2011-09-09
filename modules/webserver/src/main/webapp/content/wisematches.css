@@ -520,3 +520,14 @@ div.space-line {
     background-origin: padding-box;
     background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50%;
 }
+
+.datatables_processing {
+    z-index: 999;
+    padding: 5px;
+    top: 50% !important;
+    background-size: auto;
+    border: none !important;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50%;
+}
