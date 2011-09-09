@@ -211,7 +211,15 @@ public class ScribbleGameController extends WisematchesController {
 		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
 		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestriction(principal, "scribble.opponents"));
-		model.addAttribute("playRobotsOnly", principal.getMembership() == Membership.GUEST);
+
+		if (principal.getMembership() == Membership.GUEST) {
+			form.setOpponentType(OpponentType.ROBOT);
+			model.addAttribute("playRobotsOnly", true);
+		} else {
+			model.addAttribute("playRobotsOnly", false);
+		}
+
+
 		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
