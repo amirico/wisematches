@@ -1,10 +1,17 @@
 <#-- @ftlvariable name="columns" type="java.lang.String[]" -->
+<#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 
 <#include "/core.ftl">
 
 <@wm.jstable/>
 
-<@wm.playground>
+<@wm.playground id="pastgames">
+    <#if player != principal>
+    <div class="title">
+    <@message code="game.past.history.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
+    </div>
+    </#if>
+
 <table id="history" width="100%" class="display">
     <thead>
     <tr>
@@ -60,9 +67,10 @@
             }},
             null
         ],
+        "iDisplayStart": 0,
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": "/playground/scribble/history",
+        "sAjaxSource": "/playground/scribble/history<#if player!=principal>?p=${player.id}</#if>",
         "sDom": '<"H"lCr>t<"F"ip>',
         "sPaginationType": "full_numbers",
         "fnServerData": function (sSource, aoData, fnCallback) {

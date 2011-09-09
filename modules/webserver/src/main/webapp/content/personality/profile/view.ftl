@@ -241,15 +241,20 @@
         </div>
     </div>
 </div>
-</div>
 
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
+    <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
+    |
+    <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
+    <br>
 <@privateMessage pid=player.id><@message code="messages.label"/></@privateMessage>
     |
 <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
     |
 <@friends pid=player.id><@message code="friends.add.label"/></@friends>
 </div>
+</div>
+
 </div>
 
 <div class="info">
