@@ -18,13 +18,11 @@
 
 <@wm.playground>
 
-<table width="100%">
+<table width="100%" height="30px">
     <tr>
         <td width="100%" nowrap="nowrap"></td>
-        <td nowrap="nowrap">
-            <button id="refreshDashboard" onclick="window.location.reload()">
-            <@message code="refresh.label"/>
-            </button>
+        <td nowrap="nowrap" valign="top">
+            <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
         </td>
     </tr>
 </table>
@@ -108,8 +106,6 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    $("#refreshDashboard").button({icons: {primary: 'ui-icon-refresh'}});
-
     $('#dashboard').dataTable({
         "bJQueryUI": true,
         "bStateSave": true,

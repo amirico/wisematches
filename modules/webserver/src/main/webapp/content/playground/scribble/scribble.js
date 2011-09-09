@@ -767,15 +767,15 @@ wm.scribble.Players = function(board) {
         var iconClass;
         if (ratingDelta == 0) {
             ratingDelta = '+' + ratingDelta;
-            iconClass = "icon-rating-same";
+            iconClass = "same";
         } else if (ratingDelta > 0) {
             ratingDelta = '+' + ratingDelta;
-            iconClass = "icon-rating-up";
+            iconClass = "up";
         } else {
             ratingDelta = '' + ratingDelta;
-            iconClass = "icon-rating-down";
+            iconClass = "down";
         }
-        updatePlayerInfo(pid, "<div class='rating'><div class='change " + iconClass + "'><sub>" + ratingDelta + "</sub></div><div class='value'>" + ratingFinal + "</div></div>");
+        updatePlayerInfo(pid, "<div class='rating " + iconClass + "'><div class='change'><sub>" + ratingDelta + "</sub></div><div class='value'>" + ratingFinal + "</div></div>");
     };
 
     var updatePlayerPoints = function(pid, points) {

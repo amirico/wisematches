@@ -57,121 +57,31 @@ public class ScribbleGameController extends WisematchesController {
 	public ScribbleGameController() {
 	}
 
-	@RequestMapping("create")
-	public String createGamePage(@Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
-		if (form.getBoardLanguage() == null) {
-			form.setBoardLanguage(locale.getLanguage());
-		}
-
+	@RequestMapping("active")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String showActiveGames(Model model, Locale locale) {
 		final Player principal = getPrincipal();
-		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
-		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
-		model.addAttribute("maxOpponents", restrictionManager.getRestriction(principal, "scribble.opponents"));
-		model.addAttribute("playRobotsOnly", principal.getMembership() == Membership.GUEST);
+		if (log.isDebugEnabled()) {
+			log.debug("Loading active games for personality: " + principal);
+		}
+		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
+		if (log.isDebugEnabled()) {
+			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
+		}
+		final Collection<GameProposal<ScribbleSettings>> proposals = proposalManager.getPlayerProposals(principal);
+		if (log.isDebugEnabled()) {
+			log.debug("Found " + proposals.size() + " proposals for personality: " + principal);
+		}
+		model.addAttribute("activeBoards", activeBoards);
+		model.addAttribute("activeProposals", proposals);
 		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
-		return "/content/playground/scribble/create";
-	}
-
-	@RequestMapping("challenge")
-	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
-		form.setTitle("Challenge from " + getPrincipal().getNickname());
-		form.setOpponentType(OpponentType.CHALLENGE);
-		form.setOpponents(new long[]{pid});
-		return createGamePage(form, model, locale);
-	}
-
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
-								   BindingResult result, Model model, Locale locale) throws BoardManagementException {
-		if (log.isInfoEnabled()) {
-			log.info("Create new game: " + form);
-		}
-
-		final Player principal = getPrincipal();
-		if (restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal))) {
-			return createGamePage(form, model, locale);
-		}
-
-		final Language language = Language.byCode(form.getBoardLanguage());
-		if (language == null) {
-			result.rejectValue("boardLanguage", "game.create.language.err.blank");
-		}
-
-		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
-		if (form.getOpponentType() == OpponentType.ROBOT) {
-			final ScribbleBoard board = boardManager.createBoard(s, Arrays.asList(principal, RobotPlayer.valueOf(form.getRobotType())));
-			return "redirect:/playground/scribble/board?b=" + board.getBoardId();
-		} else if (form.getOpponentType() == OpponentType.WAIT) {
-			createWaitAction(form, result, principal, s);
-		} else if (form.getOpponentType() == OpponentType.CHALLENGE) {
-			createChallengeAction(form, result, principal, s);
-		}
-
-		if (result.hasErrors()) {
-			return createGamePage(form, model, locale);
-		}
-		return "redirect:/playground/scribble/active";
-	}
-
-	private void createWaitAction(CreateScribbleForm form, BindingResult result, Player principal, ScribbleSettings s) {
-		final Comparable restriction = restrictionManager.getRestriction(principal, "scribble.opponents");
-		if (form.getOpponentsCount() > (Integer) restriction) {
-			result.rejectValue("opponentsCount", "game.create.opponents.err.count", new Object[]{restriction, "/account/membership"}, null);
-		} else {
-			GameRestriction r = null;
-			if (form.getMinRating() != 0 || form.getMaxRating() != 0) {
-				r = new GameRestrictionRating(form.getMinRating(), form.getMaxRating());
-			}
-			try {
-				proposalManager.initiateWaitingProposal(s, principal, form.getOpponentsCount() + 1, r);
-			} catch (Exception ex) {
-				result.rejectValue("title", ex.getMessage());
-			}
-		}
-	}
-
-	private void createChallengeAction(CreateScribbleForm form, BindingResult result, Player principal, ScribbleSettings s) {
-		final long[] opponents = form.getOpponents();
-		if (opponents == null || opponents.length == 0) {
-			result.rejectValue("opponents", "game.create.opponents.err.min");
-		} else {
-			final Comparable restriction = restrictionManager.getRestriction(principal, "scribble.opponents");
-			if (opponents.length > (Integer) restriction) {
-				result.rejectValue("opponentsCount", "game.create.opponents.err.count", new Object[]{restriction, "/account/membership"}, null);
-			} else {
-				final List<Player> players = new ArrayList<Player>(opponents.length);
-				for (int i = 0, opponentsLength = opponents.length; i < opponentsLength; i++) {
-					long opponent = opponents[i];
-					if (opponent != 0) {
-						final Player player = playerManager.getPlayer(opponent);
-						if (player == null) {
-							result.rejectValue("opponents", "game.create.opponents.err.unknown", new Object[]{opponent}, null);
-						} else {
-							if (!blacklistManager.isBlacklisted(player, principal)) {
-								players.add(player);
-							} else {
-								result.rejectValue("title", "game.error.restriction.blacklist.description");
-							}
-						}
-					}
-				}
-
-				if (!result.hasErrors()) {
-					try {
-						proposalManager.initiateChallengeProposal(s, form.getChallengeMessage(), principal, players);
-					} catch (Exception ex) {
-						result.rejectValue("title", ex.getMessage());
-					}
-				}
-			}
-		}
+		return "/content/playground/scribble/active";
 	}
 
 	@RequestMapping("join")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String showWaitingGames(Model model, Locale locale) throws RestrictionException {
 		final Player principal = getPrincipal();
 		if (log.isDebugEnabled()) {
@@ -254,7 +164,7 @@ public class ScribbleGameController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("cancel")
-	public ServiceResponse cancelProposal(@RequestParam("p") long proposal, Model model, Locale locale) {
+	public ServiceResponse cancelProposal(@RequestParam("p") long proposal) {
 		final Player player = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
@@ -272,30 +182,124 @@ public class ScribbleGameController extends WisematchesController {
 		}
 	}
 
-	@RequestMapping("active")
-	public String showActiveGames(Model model, Locale locale) {
+	@RequestMapping("create")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String createGamePage(@Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
+		if (form.getBoardLanguage() == null) {
+			form.setBoardLanguage(locale.getLanguage());
+		}
+
 		final Player principal = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Loading active games for personality: " + principal);
-		}
-		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
-		if (log.isDebugEnabled()) {
-			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
-		}
-		final Collection<GameProposal<ScribbleSettings>> proposals = proposalManager.getPlayerProposals(principal);
-		if (log.isDebugEnabled()) {
-			log.debug("Found " + proposals.size() + " proposals for personality: " + principal);
-		}
-		model.addAttribute("activeBoards", activeBoards);
-		model.addAttribute("activeProposals", proposals);
+		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
+		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
+		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
+		model.addAttribute("maxOpponents", restrictionManager.getRestriction(principal, "scribble.opponents"));
+		model.addAttribute("playRobotsOnly", principal.getMembership() == Membership.GUEST);
 		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
-		return "/content/playground/scribble/active";
+		return "/content/playground/scribble/create";
+	}
+
+	@RequestMapping("challenge")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
+		form.setTitle("Challenge from " + getPrincipal().getNickname());
+		form.setOpponentType(OpponentType.CHALLENGE);
+		form.setOpponents(new long[]{pid});
+		return createGamePage(form, model, locale);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public String createGameAction(@Valid @ModelAttribute("create") CreateScribbleForm form,
+								   BindingResult result, Model model, Locale locale) throws BoardManagementException {
+		if (log.isInfoEnabled()) {
+			log.info("Create new game: " + form);
+		}
+
+		final Player principal = getPrincipal();
+		if (restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal))) {
+			return createGamePage(form, model, locale);
+		}
+
+		final Language language = Language.byCode(form.getBoardLanguage());
+		if (language == null) {
+			result.rejectValue("boardLanguage", "game.create.language.err.blank");
+		}
+
+		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
+		if (form.getOpponentType() == OpponentType.ROBOT) {
+			final ScribbleBoard board = boardManager.createBoard(s, Arrays.asList(principal, RobotPlayer.valueOf(form.getRobotType())));
+			return "redirect:/playground/scribble/board?b=" + board.getBoardId();
+		} else if (form.getOpponentType() == OpponentType.WAIT) {
+			createWaitAction(form, result, principal, s);
+		} else if (form.getOpponentType() == OpponentType.CHALLENGE) {
+			createChallengeAction(form, result, principal, s);
+		}
+
+		if (result.hasErrors()) {
+			return createGamePage(form, model, locale);
+		}
+		return "redirect:/playground/scribble/active";
 	}
 
 	private int getActiveGamesCount(Player principal) {
 		return searchesEngine.getActiveBoardsCount(principal) + proposalManager.getPlayerProposals(principal).size();
+	}
+
+	private void createWaitAction(CreateScribbleForm form, BindingResult result, Player principal, ScribbleSettings s) {
+		final Comparable restriction = restrictionManager.getRestriction(principal, "scribble.opponents");
+		if (form.getOpponentsCount() > (Integer) restriction) {
+			result.rejectValue("opponentsCount", "game.create.opponents.err.count", new Object[]{restriction, "/account/membership"}, null);
+		} else {
+			GameRestriction r = null;
+			if (form.getMinRating() != 0 || form.getMaxRating() != 0) {
+				r = new GameRestrictionRating(form.getMinRating(), form.getMaxRating());
+			}
+			try {
+				proposalManager.initiateWaitingProposal(s, principal, form.getOpponentsCount() + 1, r);
+			} catch (Exception ex) {
+				result.rejectValue("title", ex.getMessage());
+			}
+		}
+	}
+
+	private void createChallengeAction(CreateScribbleForm form, BindingResult result, Player principal, ScribbleSettings s) {
+		final long[] opponents = form.getOpponents();
+		if (opponents == null || opponents.length == 0) {
+			result.rejectValue("opponents", "game.create.opponents.err.min");
+		} else {
+			final Comparable restriction = restrictionManager.getRestriction(principal, "scribble.opponents");
+			if (opponents.length > (Integer) restriction) {
+				result.rejectValue("opponentsCount", "game.create.opponents.err.count", new Object[]{restriction, "/account/membership"}, null);
+			} else {
+				final List<Player> players = new ArrayList<Player>(opponents.length);
+				for (int i = 0, opponentsLength = opponents.length; i < opponentsLength; i++) {
+					long opponent = opponents[i];
+					if (opponent != 0) {
+						final Player player = playerManager.getPlayer(opponent);
+						if (player == null) {
+							result.rejectValue("opponents", "game.create.opponents.err.unknown", new Object[]{opponent}, null);
+						} else {
+							if (!blacklistManager.isBlacklisted(player, principal)) {
+								players.add(player);
+							} else {
+								result.rejectValue("title", "game.error.restriction.blacklist.description");
+							}
+						}
+					}
+				}
+
+				if (!result.hasErrors()) {
+					try {
+						proposalManager.initiateChallengeProposal(s, form.getChallengeMessage(), principal, players);
+					} catch (Exception ex) {
+						result.rejectValue("title", ex.getMessage());
+					}
+				}
+			}
+		}
 	}
 
 	@Autowired

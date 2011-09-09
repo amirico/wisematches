@@ -10,7 +10,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.history.GameHistory;
 import wisematches.playground.history.GameHistoryManager;
 
 import java.sql.SQLException;
@@ -19,7 +18,7 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleHistoryManager extends HibernateDaoSupport implements GameHistoryManager {
+public class ScribbleHistoryManager extends HibernateDaoSupport implements GameHistoryManager<ScribbleGameHistory> {
 	private static final String QUERY = "select " +
 			"b.*, " +
 			"max(if(r.playerIndex=0, r.playerId, 0)) player0, " +
@@ -30,7 +29,7 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 			"	(select " +
 			"		board.boardId, board.rated, UPPER(board.language) language, " +
 			"		board.resolution, board.movesCount, board.startedDate, board.finishedDate, " +
-			"		rating.newRating, rating.oldRating " +
+			"		rating.newRating, rating.newRating - rating.oldRating ratingChange" +
 			"	from " +
 			"		scribble_board as board, scribble_player as hand, rating_history as rating " +
 			"	where " +
@@ -55,7 +54,7 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GameHistory> getFinishedGames(final Personality personality, final Range range, final Order... orders) {
+	public List<ScribbleGameHistory> getFinishedGames(final Personality personality, final Range range, final Order... orders) {
 		final HibernateTemplate template = getHibernateTemplate();
 		return template.executeWithNativeSession(new HibernateCallback<List>() {
 			@Override

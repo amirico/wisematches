@@ -5,6 +5,7 @@ import wisematches.playground.GameResolution;
 import wisematches.playground.history.GameHistory;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -20,12 +21,14 @@ public class ScribbleGameHistory implements GameHistory {
 	private Language language;
 	private GameResolution resolution;
 	private int newRating;
-	private int oldRating;
+	private int ratingChange;
 	private int movesCount;
 	private long player0;
 	private long player1;
 	private long player2;
 	private long player3;
+
+	public static final long[] EMPTY_PLAYERS = new long[0];
 
 	public ScribbleGameHistory() {
 	}
@@ -84,8 +87,7 @@ public class ScribbleGameHistory implements GameHistory {
 		return resolution;
 	}
 
-	@Override
-	public int getOldRating() {
+	public int getNewRating() {
 		return newRating;
 	}
 
@@ -94,12 +96,12 @@ public class ScribbleGameHistory implements GameHistory {
 	}
 
 	@Override
-	public int getNewRating() {
-		return oldRating;
+	public int getRatingChange() {
+		return ratingChange;
 	}
 
-	public void setOldRating(int oldRating) {
-		this.oldRating = oldRating;
+	public void setRatingChange(int ratingChange) {
+		this.ratingChange = ratingChange;
 	}
 
 	@Override
@@ -145,8 +147,21 @@ public class ScribbleGameHistory implements GameHistory {
 
 	@Override
 	@Transient
-	public long[] getPlayers() {
-		return new long[]{player0, player1, player2, player3};
+	public long[] getPlayers(long excludePlayer) {
+		int count = 0;
+		final long[] longs = new long[4];
+		for (long l : new long[]{player0, player1, player2, player3}) {
+			if (l != 0 && l != excludePlayer) {
+				longs[count++] = l;
+			}
+		}
+		if (count == 0) {
+			return EMPTY_PLAYERS;
+		}
+		if (count == longs.length) {
+			return longs;
+		}
+		return Arrays.copyOf(longs, count);
 	}
 
 	@Override
@@ -160,7 +175,7 @@ public class ScribbleGameHistory implements GameHistory {
 		sb.append(", language=").append(language);
 		sb.append(", resolution=").append(resolution);
 		sb.append(", newRating=").append(newRating);
-		sb.append(", oldRating=").append(oldRating);
+		sb.append(", ratingChange=").append(ratingChange);
 		sb.append(", movesCount=").append(movesCount);
 		sb.append(", player0=").append(player0);
 		sb.append(", player1=").append(player1);
