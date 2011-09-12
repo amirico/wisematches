@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ import wisematches.personality.player.PlayerManager;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.BlacklistRecordForm;
+import wisematches.server.web.controllers.playground.player.form.BlacklistRecordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
 

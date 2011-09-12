@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.message;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +23,7 @@ import wisematches.playground.restriction.RestrictionException;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.MessageForm;
+import wisematches.server.web.controllers.playground.message.form.MessageForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.notify.NotificationPublisher;

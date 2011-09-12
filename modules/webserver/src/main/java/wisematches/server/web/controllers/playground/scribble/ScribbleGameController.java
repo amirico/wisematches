@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.scribble;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,8 +32,8 @@ import wisematches.playground.scribble.search.ScribbleSearchesEngine;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.CreateScribbleForm;
-import wisematches.server.web.controllers.playground.form.OpponentType;
+import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
+import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
 import wisematches.server.web.services.ads.AdvertisementManager;
 
 import javax.validation.Valid;

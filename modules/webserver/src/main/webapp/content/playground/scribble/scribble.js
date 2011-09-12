@@ -260,6 +260,10 @@ wm.scribble.Comments = function(board, language) {
         loadComments(getNextLoadCount());
     };
 
+    this.getCommentsCount = function() {
+        return comments.length;
+    };
+
     board.bind('gameState',
             function(event, type, state) {
                 if (type === 'finished') {
@@ -308,7 +312,7 @@ wm.scribble.Memory = function(board, language) {
         var text = word.text;
         var valid = board.checkWord(word);
         if (valid && checkPlacement) {
-             valid = !board.isWordPlaced(word);
+            valid = !board.isWordPlaced(word);
         }
         var points = scoreEngine.getWordPoints(word).points.toString();
 
@@ -1387,7 +1391,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
 
         this.stopBoardMonitoring();
 
-        $(scribble).everyTime(6000, 'board' + id + 'Monitoring', function() {
+        $(scribble).everyTime(60000, 'board' + id + 'Monitoring', function() {
             sendServerRequest('changes', null, handler);
         });
     };

@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground.form;
+package wisematches.server.web.controllers.playground.scribble.form;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

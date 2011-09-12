@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.playground.tracking.Statistics;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.PlayerInfoForm;
+import wisematches.server.web.controllers.playground.player.form.PlayerInfoForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.friends.FriendsManager;
 
@@ -27,14 +27,14 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/search")
-public class SearchController extends WisematchesController {
+public class PlayerSearchController extends WisematchesController {
     private PlayerManager playerManager;
     private FriendsManager friendsManager;
     private GameMessageSource messageSource;
     private PlayerProfileManager profileManager;
     private PlayerTrackingCenter trackingCenter;
 
-    public SearchController() {
+    public PlayerSearchController() {
     }
 
     @ResponseBody

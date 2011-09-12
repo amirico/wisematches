@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.scribble;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +21,7 @@ import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.memory.MemoryWordManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.ScribbleWordForm;
+import wisematches.server.web.controllers.playground.scribble.form.ScribbleWordForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
 import java.util.Collections;

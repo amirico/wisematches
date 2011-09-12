@@ -31,6 +31,14 @@ public interface GameCommentManager {
 	 */
 	GameComment removeComment(GameBoard board, Personality personality, long commentId);
 
+	/**
+	 * Returns comments count for specified board and player.
+	 *
+	 * @param board	   the board
+	 * @param personality the player
+	 * @return comments count
+	 */
+	int getCommentsCount(GameBoard board, Personality personality);
 
 	/**
 	 * Returns collection of comments for specified ids. Not exist comments are not included

@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.scribble;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.ScribbleCommentForm;
+import wisematches.server.web.controllers.playground.scribble.form.ScribbleCommentForm;
 import wisematches.server.web.i18n.GameMessageSource;
 
 import java.util.*;

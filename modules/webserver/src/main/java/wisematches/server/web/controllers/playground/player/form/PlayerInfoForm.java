@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground.form;
+package wisematches.server.web.controllers.playground.player.form;
 
 import wisematches.personality.Language;
 import wisematches.personality.Membership;
