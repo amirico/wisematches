@@ -2,6 +2,8 @@ package wisematches.server.web.controllers.playground;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,6 +80,7 @@ public class ScribbleCommentController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("add")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
 		if (form.getText().trim().isEmpty()) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.empty", locale));
@@ -95,12 +98,16 @@ public class ScribbleCommentController extends WisematchesController {
 		} catch (BoardLoadingException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 		}
+		if (!board.isGameActive()) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.finished", locale));
+		}
 		final GameComment comment = commentManager.addComment(board, getPrincipal(), form.getText());
 		return ServiceResponse.success(null, serialize(comment, locale));
 	}
 
 	@ResponseBody
 	@RequestMapping("remove")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse removeComment(@RequestParam("b") final long gameId, @RequestParam("c") final long commentId, Locale locale) {
 		final ScribbleBoard board;
 		try {
@@ -120,6 +127,7 @@ public class ScribbleCommentController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("mark")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse markComment(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {

@@ -23,23 +23,17 @@
                             </span>
                     </#if>
                         |
+                    <#if principal.membership != 'GUEST'><a
+                            href="/account/modify"><@message code="game.menu.settings.label"/></a></#if>
+                        |
+                        <a href="/info/help"><@message code="game.menu.help.label"/></a>
+                        |
                         <a href="/account/logout"><@message code="account.signout.label"/></a>
                     </td>
                 </tr>
                 <tr>
                     <td valign="bottom">
                         <div id="game-toolbar" class="" align="left">
-                            <div style="float: right;">
-                            <#if principal.membership != 'GUEST'>
-                                <button id="modifyButton" onclick="wm.util.url.redirect('/account/modify')">
-                                <@message code="game.menu.settings.label"/>
-                                </button>
-                            </#if>
-                                <button onclick="wm.util.url.redirect('/info/help')">
-                                <@message code="game.menu.help.label"/>
-                                </button>
-                            </div>
-
                             <div style="display: inline-block;">
                                 <button id="dashboardButton"
                                         onclick="wm.util.url.redirect('/playground/scribble/active')">

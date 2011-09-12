@@ -260,6 +260,10 @@ div.space-line {
     list-style: none;
 }
 
+#info-help-items li {
+    list-style: square inside !important;
+}
+
 /* Terms & Policy & Naming styles */
 #info-terms-items li, #info-policy-items li, #info-naming-items li, #info-rules-items li {
     list-style: decimal inside;
