@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground.form;
+package wisematches.server.web.controllers.playground.message.form;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 

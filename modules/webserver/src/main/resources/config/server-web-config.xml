@@ -19,6 +19,12 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="scribbleObjectsConverter"
+          class="wisematches.server.web.controllers.playground.scribble.ScribbleObjectsConverter">
+        <property name="gameMessageSource" ref="gameMessageSource"/>
+        <property name="trackingCenter" ref="scribbleTrackingCenter"/>
+    </bean>
+
     <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
 
     <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">

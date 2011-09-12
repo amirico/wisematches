@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground;
+package wisematches.server.web.controllers.playground.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,7 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.form.FriendRelationForm;
+import wisematches.server.web.controllers.playground.player.form.FriendRelationForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.friends.FriendsManager;

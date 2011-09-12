@@ -60,8 +60,16 @@ public class HibernateGameCommentManagerTest {
 
 	@Test
 	public void testMarkReadUnread() throws BoardCreationException, GameMoveException {
+		assertEquals(0, commentManager.getCommentsCount(board, player1));
+		assertEquals(0, commentManager.getCommentsCount(board, player2));
+
 		GameComment c1 = commentManager.addComment(board, player1, "This is message1");
+		assertEquals(1, commentManager.getCommentsCount(board, player1));
+		assertEquals(1, commentManager.getCommentsCount(board, player2));
+
 		GameComment c2 = commentManager.addComment(board, player2, "This is message2");
+		assertEquals(2, commentManager.getCommentsCount(board, player1));
+		assertEquals(2, commentManager.getCommentsCount(board, player2));
 
 		commentManager.markRead(board, player1, c1.getId());
 		final List<GameCommentState> s1 = commentManager.getCommentStates(board, player1);
@@ -94,13 +102,26 @@ public class HibernateGameCommentManagerTest {
 		assertTrue(s6.get(0).isRead());  //c2
 
 		commentManager.removeComment(board, player1, c1.getId());
+		assertEquals(1, commentManager.getCommentsCount(board, player1));
+		assertEquals(1, commentManager.getCommentsCount(board, player2));
+
 		commentManager.removeComment(board, player2, c2.getId());
+		assertEquals(0, commentManager.getCommentsCount(board, player1));
+		assertEquals(0, commentManager.getCommentsCount(board, player2));
 	}
 
 	@Test
 	public void testGetComments() throws BoardCreationException, GameMoveException {
+		assertEquals(0, commentManager.getCommentsCount(board, player1));
+		assertEquals(0, commentManager.getCommentsCount(board, player2));
+
 		final GameComment c1 = commentManager.addComment(board, player1, "This is message1");
+		assertEquals(1, commentManager.getCommentsCount(board, player1));
+		assertEquals(1, commentManager.getCommentsCount(board, player2));
+
 		final GameComment c2 = commentManager.addComment(board, player2, "This is message2");
+		assertEquals(2, commentManager.getCommentsCount(board, player1));
+		assertEquals(2, commentManager.getCommentsCount(board, player2));
 
 		assertEquals(2, commentManager.getComments(board, player1).size());
 		assertEquals(2, commentManager.getComments(board, player2).size());
@@ -111,11 +132,17 @@ public class HibernateGameCommentManagerTest {
 
 		assertNull(commentManager.removeComment(board, player1, c2.getId())); // no remove
 		assertEquals(2, commentManager.getComments(board, player1).size());
+		assertEquals(2, commentManager.getCommentsCount(board, player1));
+		assertEquals(2, commentManager.getCommentsCount(board, player2));
 
-		assertNotNull(commentManager.removeComment(board, player1, c1.getId())); // no remove
+		assertNotNull(commentManager.removeComment(board, player1, c1.getId())); // removed
 		assertEquals(1, commentManager.getComments(board, player1).size());
+		assertEquals(1, commentManager.getCommentsCount(board, player1));
+		assertEquals(1, commentManager.getCommentsCount(board, player2));
 
 		commentManager.clearComments(board);
+		assertEquals(0, commentManager.getCommentsCount(board, player1));
+		assertEquals(0, commentManager.getCommentsCount(board, player2));
 		assertEquals(0, commentManager.getComments(board, player1).size());
 	}
 }

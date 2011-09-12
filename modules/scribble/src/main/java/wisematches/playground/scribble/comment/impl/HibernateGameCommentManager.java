@@ -5,6 +5,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.ResultTransformer;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -49,6 +50,12 @@ public class HibernateGameCommentManager extends HibernateDaoSupport implements 
 			return comment;
 		}
 		return null;
+	}
+
+	@Override
+	public int getCommentsCount(GameBoard board, Personality personality) {
+		final HibernateTemplate hibernateTemplate = getHibernateTemplate();
+		return DataAccessUtils.intResult(hibernateTemplate.find("select count(*) from wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=?", board.getBoardId()));
 	}
 
 	@Override
