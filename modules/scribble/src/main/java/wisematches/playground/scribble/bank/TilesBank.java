@@ -2,8 +2,7 @@ package wisematches.playground.scribble.bank;
 
 import wisematches.playground.scribble.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * <code>TilesBank</code> is a bank of tiles in game. When bank is initialized it contains all tiles. When
@@ -15,8 +14,10 @@ import java.util.List;
  */
 public final class TilesBank {
 	private final Tile[] tiles;
-	private final TilesInfo[] tilesInfos;
-	private final List<Integer> unusedIndexes;
+	private final TilesInfo[] tilesInfo;
+	private final LinkedList<Integer> unusedIndexes;
+
+	private static final int SHUFFLES_COUNT = 3;
 
 	/**
 	 * Initializes bank with specified tiles. Each tiles info contains information about tiles of one type
@@ -25,11 +26,11 @@ public final class TilesBank {
 	 * @param letterInfos the bank letters info.
 	 */
 	public TilesBank(TilesInfo... letterInfos) {
-		this.tilesInfos = letterInfos.clone();
+		this.tilesInfo = letterInfos.clone();
 		int capacity = calculateCapacity(letterInfos);
 
 		tiles = new Tile[capacity];
-		unusedIndexes = new ArrayList<Integer>(capacity);
+		unusedIndexes = new LinkedList<Integer>();
 
 		int number = 0;
 		for (final TilesInfo li : letterInfos) {
@@ -38,6 +39,10 @@ public final class TilesBank {
 				unusedIndexes.add(number);
 				number++;
 			}
+		}
+
+		for (int i = 0; i < SHUFFLES_COUNT; i++) { // Issue 57: Next tile selection algorithm is not very good
+			Collections.shuffle(unusedIndexes);
 		}
 	}
 
@@ -115,8 +120,8 @@ public final class TilesBank {
 	 *
 	 * @return
 	 */
-	public TilesInfo[] getTilesInfos() {
-		return tilesInfos.clone();
+	public TilesInfo[] getTilesInfo() {
+		return tilesInfo.clone();
 	}
 
 	/**
@@ -136,17 +141,7 @@ public final class TilesBank {
 		final int count = Math.min(tilesCount, unusedIndexes.size());
 		final Tile[] res = new Tile[count];
 		for (int i = 0; i < res.length; i++) {
-			int pos = (int) (unusedIndexes.size() * Math.random());
-			if (pos < 0 || pos >= unusedIndexes.size()) {
-				throw new IllegalStateException("Bank is empty. Requested tiles count: " + tilesCount);
-			}
-
-			final Integer index = unusedIndexes.remove(pos);
-			if (index != null) {
-				res[i] = tiles[index];
-			} else {
-				throw new IllegalStateException("Bank is empty. Requested tiles count: " + tilesCount);
-			}
+			res[i] = tiles[unusedIndexes.removeFirst()];
 		}
 		return res;
 	}

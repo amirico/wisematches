@@ -6,7 +6,6 @@ import org.hibernate.annotations.Type;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
-import wisematches.playground.history.GameHistory;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.scores.ScoreEngine;
 import wisematches.playground.scribble.scores.engines.ScribbleScoreEngine;
@@ -624,7 +623,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * @return the copy of bank info.
 	 */
 	public TilesBank.TilesInfo[] getTilesBankInfo() {
-		return tilesBank.getTilesInfos();
+		return tilesBank.getTilesInfo();
 	}
 
 	/**

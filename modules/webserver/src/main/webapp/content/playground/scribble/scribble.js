@@ -260,6 +260,13 @@ wm.scribble.Comments = function(board, language) {
         loadComments(getNextLoadCount());
     };
 
+    board.bind('gameState',
+            function(event, type, state) {
+                if (type === 'finished') {
+                    widget.find('.create-comment').remove();
+                }
+            });
+
     initWidget();
 };
 
@@ -268,12 +275,12 @@ wm.scribble.Memory = function(board, language) {
     var memoryWords = new Array();
     var memoryWordsCount = 0;
 
-    var addWord = function(word) {
+    var addWord = function(word, checkPlacement) {
         memoryWordsCount++;
 
         var id = nextWordId++;
         memoryWords[id] = word;
-        memoryTable.fnAddData(createNewRecord(id, word));
+        memoryTable.fnAddData(createNewRecord(id, word, checkPlacement));
         $("#memoryClearButton").button(memoryWordsCount == 0 ? "disable" : "enable");
         board.clearSelection();
     };
@@ -295,11 +302,14 @@ wm.scribble.Memory = function(board, language) {
         }
     };
 
-    var createNewRecord = function(id, word) {
+    var createNewRecord = function(id, word, checkPlacement) {
         var scoreEngine = board.getScoreEngine();
 
         var text = word.text;
         var valid = board.checkWord(word);
+        if (valid && checkPlacement) {
+             valid = !board.isWordPlaced(word);
+        }
         var points = scoreEngine.getWordPoints(word).points.toString();
 
         var e = '<div id="memoryWordControls' + id + '" class="memory-controls">';
@@ -338,17 +348,16 @@ wm.scribble.Memory = function(board, language) {
         memoryTable.fnClearTable();
         executeRequest('load', null, function(data) {
             $.each(data.words, function(i, word) {
-                addWord(word);
+                addWord(word, true);
             });
         });
     };
 
     var validateWords = function() {
-        var scoreEngine = board.getScoreEngine();
         $.each(memoryWords, function(id, word) {
             if (word != null && word != undefined) {
                 var row = $('#memoryWordControls' + id).closest('tr').get(0);
-                memoryTable.fnUpdate(createNewRecord(id, word), memoryTable.fnGetPosition(row), 0);
+                memoryTable.fnUpdate(createNewRecord(id, word, true), memoryTable.fnGetPosition(row), 0);
             }
         });
     };
@@ -379,7 +388,7 @@ wm.scribble.Memory = function(board, language) {
         var word = board.getSelectedWord();
         if (word != null || word != undefined) {
             executeRequest('add', word, function(data) {
-                addWord(word);
+                addWord(word, false);
             });
         }
     };
@@ -1532,6 +1541,19 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
                 if (getHandTileIndex(tile) == null) {
                     return false;
                 }
+            }
+        });
+    };
+
+    this.isWordPlaced = function(word) {
+        return wordIterator(word, function(i, tile, row, column) {
+            var boardTile = boardTiles[column][row];
+            if (boardTile == null || boardTile == undefined) {
+                return false;
+            }
+
+            if (tile.number != boardTile.data('tile').number) {
+                return false;
             }
         });
     };

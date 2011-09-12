@@ -79,14 +79,23 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 						log.debug("Robot made a word and took " + move.getPoints() + " points");
 					}
 				} catch (GameMoveException ex) {
-					log.error("Move can't be maden", ex);
+					log.error("Move can't be done", ex);
 					board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
 				}
 			} else {
-				if (log.isDebugEnabled()) {
-					log.debug("No availeable word. Turn passed.");
+				int bankRemained = Math.min(7, board.getBankRemained());
+				if (bankRemained == 0) {
+					if (log.isDebugEnabled()) {
+						log.debug("No available word. Turn passed.");
+					}
+					board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
+				} else {
+					int[] tiles = selectTilesForExchange(robotHand, type, bankRemained);
+					if (log.isDebugEnabled()) {
+						log.debug("No available word. Exchange tiles: " + Arrays.toString(tiles));
+					}
+					board.makeMove(new ExchangeTilesMove(robotHand.getPlayerId(), tiles));
 				}
-				board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
 			}
 		} catch (GameMoveException ex) {
 			log.error("Move can't be passed", ex);
@@ -201,6 +210,17 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 			return null;
 		}
 		return word;
+	}
+
+	int[] selectTilesForExchange(ScribblePlayerHand hand, RobotType type, int max) {
+		int n = 0;
+		final int[] list = new int[max];
+		for (Tile tile : hand.getTiles()) {
+			if (!tile.isWildcard()) {
+				list[n++] = tile.getNumber();
+			}
+		}
+		return n != max ? Arrays.copyOf(list, n) : list;
 	}
 
 	private Word searchDullWord(List<Word> words) {
