@@ -143,12 +143,12 @@ public class ScribbleObjectsConverter {
 		return moveInfo;
 	}
 
-	public Map<String, Object> convertGameComment(final GameComment comment, final Locale locale) {
+	Map<String, Object> convertGameComment(final GameComment comment, final Locale locale) {
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put("id", comment.getId());
 		res.put("text", comment.getText());
 		res.put("person", comment.getPerson());
-		res.put("date", gameMessageSource.formatElapsedTime(comment.getCreationDate(), locale));
+		res.put("elapsed", gameMessageSource.formatElapsedTime(comment.getCreationDate(), locale));
 		return res;
 	}
 

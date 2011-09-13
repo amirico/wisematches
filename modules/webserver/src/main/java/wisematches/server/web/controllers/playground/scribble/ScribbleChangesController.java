@@ -25,7 +25,7 @@ import java.util.concurrent.Callable;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@RequestMapping("/playground/scribble/board")
+@RequestMapping("/playground/scribble")
 public class ScribbleChangesController extends WisematchesController {
 	private GameCommentManager commentManager;
 	private ScribbleBoardManager boardManager;
@@ -74,7 +74,7 @@ public class ScribbleChangesController extends WisematchesController {
 					final int newCommentsCount = commentManager.getCommentsCount(board, getPersonality()) - commentsCount;
 					if (newCommentsCount > 0) {
 						List<GameCommentState> commentStates = commentManager.getCommentStates(board, getPersonality());
-						commentStates = commentStates.subList(commentsCount, commentStates.size());
+						commentStates = commentStates.subList(0, newCommentsCount);
 
 						int index = 0;
 						final long[] ids = new long[commentStates.size()];
@@ -95,29 +95,21 @@ public class ScribbleChangesController extends WisematchesController {
 				}
 				return res;
 			}
-		}
-
-				, locale);
+		}, locale);
 	}
 
 	@Autowired
-	public void setBoardManager
-			(ScribbleBoardManager
-					 boardManager) {
+	public void setBoardManager(ScribbleBoardManager boardManager) {
 		this.boardManager = boardManager;
 	}
 
 	@Autowired
-	public void setCommentManager
-			(GameCommentManager
-					 commentManager) {
+	public void setCommentManager(GameCommentManager commentManager) {
 		this.commentManager = commentManager;
 	}
 
 	@Autowired
-	public void setScribbleObjectsConverter
-			(ScribbleObjectsConverter
-					 scribbleObjectsConverter) {
+	public void setScribbleObjectsConverter(ScribbleObjectsConverter scribbleObjectsConverter) {
 		this.scribbleObjectsConverter = scribbleObjectsConverter;
 	}
 }
