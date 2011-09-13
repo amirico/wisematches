@@ -260,8 +260,29 @@ wm.scribble.Comments = function(board, language) {
         loadComments(getNextLoadCount());
     };
 
-    this.getCommentsCount = function() {
-        return comments.length;
+    this.getMonitoringBean = function() {
+        var processLoadedComments = function(response) {
+            var d = response.data.comments;
+            if (d != undefined && d.length > 0) {
+                $.each(d.reverse(), function(i, a) {
+                    comments.unshift({id: a.id, read: false});
+                    showComment(a, false, true);
+                });
+                loadedComments += d.length;
+                updateStatus();
+                $.post('/playground/scribble/comment/mark.ajax?b=' + board.getBoardId());
+            }
+        };
+
+        return new function() {
+            this.getParameters = function() {
+                return "c=" + comments.length;
+            };
+
+            this.getCallback = function() {
+                return processLoadedComments;
+            };
+        };
     };
 
     board.bind('gameState',
@@ -1233,7 +1254,6 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
             enabled = false;
             clearSelectionImpl();
             ratings = state.ratings;
-            playboard.stopBoardMonitoring();
             scribble.trigger('gameState', ['finished', state]);
         } else if (state.playerTurn != oldState.playerTurn) {
             scribble.trigger('gameState', ['turn', state]);
@@ -1286,46 +1306,47 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
             data = $.toJSON(data);
         }
         $.post('/playground/scribble/board/' + type + '.ajax?b=' + id + '&m=' + moves.length, data)
-                .success(
-                function(response) {
-                    if (response.success) {
-                        var moves = response.data.moves;
-                        if (moves != undefined && moves.length > 0) {
-                            clearSelectionImpl();
-
-                            var lastMove = null;
-                            $.each(moves, function(i, move) {
-                                lastMove = move;
-                                var playerInfo = playboard.getPlayerInfo(move.player);
-                                playerInfo.points = playerInfo.points + move.points;
-                                registerBoardMove(move, false);
-                            });
-
-                            var hand = response.data.hand;
-                            if (hand != null && hand != undefined) {
-                                validateHandTile(hand);
-                            }
-
-                            if (lastMove != null && lastMove.word != null && lastMove.word != undefined) {
-                                playboard.selectWord(lastMove.word);
-                                $(scribble).bind('mousedown', function() {
-                                    $(scribble).unbind('mousedown');
-                                    playboard.clearSelection();
-                                });
-                            }
-                        }
-
-                        updatePlayersInfo(response.data.players);
-                        updateGameState(response.data.state);
-                        resultHandler.call(playboard, true, response.summary);
-                    } else {
-                        resultHandler.call(playboard, false, response.summary);
-                    }
+                .success(function(response) {
+                    processServerResponse(response);
+                    resultHandler.call(playboard, response.success, response.summary);
                 })
-                .error(
-                function(jqXHR, textStatus, errorThrown) {
+                .error(function(jqXHR, textStatus, errorThrown) {
                     resultHandler.call(playboard, false, textStatus, errorThrown);
                 });
+    };
+
+    var processServerResponse = function(response) {
+        if (!response.success) {
+            return;
+        }
+        var moves = response.data.moves;
+        if (moves != undefined && moves.length > 0) {
+            clearSelectionImpl();
+
+            var lastMove = null;
+            $.each(moves, function(i, move) {
+                lastMove = move;
+                var playerInfo = playboard.getPlayerInfo(move.player);
+                playerInfo.points = playerInfo.points + move.points;
+                registerBoardMove(move, false);
+            });
+
+            var hand = response.data.hand;
+            if (hand != null && hand != undefined) {
+                validateHandTile(hand);
+            }
+
+            if (lastMove != null && lastMove.word != null && lastMove.word != undefined) {
+                playboard.selectWord(lastMove.word);
+                $(scribble).bind('mousedown', function() {
+                    $(scribble).unbind('mousedown');
+                    playboard.clearSelection();
+                });
+            }
+        }
+
+        updatePlayersInfo(response.data.players);
+        updateGameState(response.data.state);
     };
 
     var wordIterator = function(word, handler) {
@@ -1382,22 +1403,6 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
 
     this.getBoardId = function() {
         return id;
-    };
-
-    this.startBoardMonitoring = function(handler) {
-        if (!playboard.isBoardActive()) {
-            return false;
-        }
-
-        this.stopBoardMonitoring();
-
-        $(scribble).everyTime(60000, 'board' + id + 'Monitoring', function() {
-            sendServerRequest('changes', null, handler);
-        });
-    };
-
-    this.stopBoardMonitoring = function() {
-        $(scribble).stopTime('board' + id + 'Monitoring');
     };
 
     this.getBoardElement = function() {
@@ -1700,5 +1705,73 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
         return language;
     };
 
+    this.getMonitoringBean = function() {
+        return new function() {
+            this.getParameters = function() {
+                return "m=" + moves.length;
+            };
+
+            this.getCallback = function() {
+                return processServerResponse;
+            };
+        };
+    };
+
     initializeGame();
+};
+
+wm.scribble.Monitoring = function(board) {
+    var items = {};
+
+    var sendServerRequest = function() {
+        var params = '';
+        $.each(items, function(i, v) {
+            if (v != null) {
+                var parameters = v.getParameters();
+                if (parameters != null && parameters != undefined) {
+                    params += '&' + parameters;
+                }
+            }
+        });
+
+        $.post('/playground/scribble/changes.ajax?b=' + board.getBoardId() + params, null).success(
+                function(response) {
+                    $.each(items, function(i, v) {
+                        if (v != null) {
+                            v.getCallback()(response);
+                        }
+                    });
+                }
+        );
+    };
+
+    this.addMonitoringBean = function(name, monitoringBean) {
+        items[name] = monitoringBean;
+    };
+
+    this.removeMonitoring = function(name) {
+        items[name] = null;
+    };
+
+    this.startMonitoring = function() {
+        if (!board.isBoardActive()) {
+            return false;
+        }
+
+        this.stopMonitoring();
+
+        $(board).everyTime(6000, 'board' + board.getBoardId() + 'Monitoring', function() {
+            sendServerRequest();
+        });
+    };
+
+    this.stopMonitoring = function() {
+        $(board).stopTime('board' + board.getBoardId() + 'Monitoring');
+    };
+
+    board.bind('gameState', function(event, type, state) {
+        if (type === 'finished') {
+            this.stopMonitoring();
+        }
+    });
 };

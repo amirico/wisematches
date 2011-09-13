@@ -134,8 +134,13 @@
 
     <#if board.gameActive>
     $(document).ready(function() {
-        board.startBoardMonitoring(function(state, message, error) {
-        });
+        var monitoring = new wm.scribble.Monitoring(board);
+
+        monitoring.addMonitoringBean('board', board.getMonitoringBean());
+        if (comments != null && comments != undefined) {
+            monitoring.addMonitoringBean('comments', comments.getMonitoringBean());
+        }
+        monitoring.startMonitoring();
     });
     </#if>
 </script>

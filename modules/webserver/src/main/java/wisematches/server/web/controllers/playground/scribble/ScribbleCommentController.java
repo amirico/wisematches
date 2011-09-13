@@ -30,6 +30,7 @@ public class ScribbleCommentController extends WisematchesController {
 	private ScribbleBoardManager boardManager;
 	private GameMessageSource gameMessageSource;
 	private GameCommentManager commentManager;
+	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	public ScribbleCommentController() {
 	}
@@ -73,7 +74,7 @@ public class ScribbleCommentController extends WisematchesController {
 		final Collection<Map<?, ?>> a = new ArrayList<Map<?, ?>>();
 		final List<GameComment> comments = commentManager.getComments(board, getPersonality(), ids);
 		for (GameComment comment : comments) {
-			a.add(serialize(comment, locale));
+			a.add(scribbleObjectsConverter.convertGameComment(comment, locale));
 		}
 		return ServiceResponse.success(null, "comments", a);
 	}
@@ -102,7 +103,7 @@ public class ScribbleCommentController extends WisematchesController {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.finished", locale));
 		}
 		final GameComment comment = commentManager.addComment(board, getPrincipal(), form.getText());
-		return ServiceResponse.success(null, serialize(comment, locale));
+		return ServiceResponse.success(null, scribbleObjectsConverter.convertGameComment(comment, locale));
 	}
 
 	@ResponseBody
@@ -142,15 +143,6 @@ public class ScribbleCommentController extends WisematchesController {
 		return ServiceResponse.success();
 	}
 
-	private Map<String, Object> serialize(GameComment comment, Locale locale) {
-		final Map<String, Object> res = new HashMap<String, Object>();
-		res.put("id", comment.getId());
-		res.put("text", comment.getText());
-		res.put("elapsed", gameMessageSource.formatElapsedTime(comment.getCreationDate(), locale));
-		res.put("person", comment.getPerson());
-		return res;
-	}
-
 	@Autowired
 	public void setBoardManager(ScribbleBoardManager boardManager) {
 		this.boardManager = boardManager;
@@ -164,5 +156,10 @@ public class ScribbleCommentController extends WisematchesController {
 	@Autowired
 	public void setGameMessageSource(GameMessageSource gameMessageSource) {
 		this.gameMessageSource = gameMessageSource;
+	}
+
+	@Autowired
+	public void setScribbleObjectsConverter(ScribbleObjectsConverter scribbleObjectsConverter) {
+		this.scribbleObjectsConverter = scribbleObjectsConverter;
 	}
 }
