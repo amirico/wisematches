@@ -4,7 +4,9 @@
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
 <#-- @ftlvariable name="robotPlayers" type="wisematches.server.player.computer.robot.RobotPlayer[]" -->
 <#include "/core.ftl">
-<#include "/content/playground/search/view.ftl">
+
+<@wm.jstable/>
+<#include "/content/playground/search/scriplet.ftl">
 
 <@wm.playground>
 <div id="createGame">

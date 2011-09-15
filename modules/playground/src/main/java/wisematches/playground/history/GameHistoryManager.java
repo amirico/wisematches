@@ -27,4 +27,12 @@ public interface GameHistoryManager<H extends GameHistory> {
 	 * @return list of all finished games.
 	 */
 	List<H> getFinishedGames(Personality personality, Range range, Order... orders);
+
+	/**
+	 * @param personality a person who's games should be returned
+	 * @param range	   values range
+	 * @param orders	  orders
+	 * @return list of all finished games.
+	 */
+	List<Long> getPlayedFormerly(Personality personality, Range range, Order... orders);
 }
