@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.history.GameHistory;
 
 import java.util.List;
 
@@ -32,13 +31,25 @@ public class ScribbleHistoryManagerTest {
 	}
 
 	@Test
-	public void test() {
+	public void testFinishedGames() {
 		final Personality player = Personality.person(1029);
 
 		int finishedGamesCount = historyManager.getFinishedGamesCount(player);
 		System.out.println(finishedGamesCount);
 
 		List<ScribbleGameHistory> finishedGames = historyManager.getFinishedGames(player, Range.limit(1, 10), Order.asc("language"));
+		System.out.println("Finished size: " + finishedGames.size());
+		System.out.println(finishedGames);
+	}
+
+	@Test
+	public void testPlayedFormerly() {
+		final Personality player = Personality.person(1029);
+
+		int finishedGamesCount = historyManager.getPlayedFormerlyCount(player);
+		System.out.println(finishedGamesCount);
+
+		List<Long> finishedGames = historyManager.getPlayedFormerly(player, Range.limit(0, 10));
 		System.out.println("Finished size: " + finishedGames.size());
 		System.out.println(finishedGames);
 	}

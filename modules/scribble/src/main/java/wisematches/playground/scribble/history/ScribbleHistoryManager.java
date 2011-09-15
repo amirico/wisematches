@@ -1,6 +1,7 @@
 package wisematches.playground.scribble.history;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.dao.support.DataAccessUtils;
@@ -19,7 +20,7 @@ import java.util.List;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ScribbleHistoryManager extends HibernateDaoSupport implements GameHistoryManager<ScribbleGameHistory> {
-	private static final String QUERY = "select " +
+	private static final String FINISHED_GAMES_QUERY = "select " +
 			"b.*, " +
 			"max(if(r.playerIndex=0, r.playerId, 0)) player0, " +
 			"max(if(r.playerIndex=1, r.playerId, 0)) player1, " +
@@ -69,9 +70,9 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 						b.append(order.toString());
 					}
 					b.insert(0, "order by ");
-					sqlQuery = QUERY.replaceAll("\\$\\{order\\}", b.toString());
+					sqlQuery = FINISHED_GAMES_QUERY.replaceAll("\\$\\{order\\}", b.toString());
 				} else {
-					sqlQuery = QUERY.replaceAll("\\$\\{order\\}", "");
+					sqlQuery = FINISHED_GAMES_QUERY.replaceAll("\\$\\{order\\}", "");
 				}
 
 				final SQLQuery query = session.createSQLQuery(sqlQuery);
@@ -82,6 +83,36 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 				query.setParameter(2, range.getMaxResults());
 
 				return query.list();
+			}
+		});
+	}
+
+	public int getPlayedFormerlyCount(Personality personality) {
+		final HibernateTemplate template = getHibernateTemplate();
+		return DataAccessUtils.intResult(template.find("select count(distinct r.playerId) " +
+				"from wisematches.playground.tracking.RatingChange as l, " +
+				" wisematches.playground.tracking.RatingChange as r " +
+				"where l.boardId=r.boardId and l.playerId=? and not r.playerId=?",
+				personality.getId(), personality.getId()));
+	}
+
+	@Override
+	public List<Long> getPlayedFormerly(final Personality personality, final Range range, final Order... orders) {
+		final HibernateTemplate template = getHibernateTemplate();
+		return template.executeWithNativeSession(new HibernateCallback<List<Long>>() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public List<Long> doInHibernate(Session session) throws HibernateException, SQLException {
+				final Query query = session.createQuery("select distinct r.playerId " +
+						"from wisematches.playground.tracking.RatingChange as l, " +
+						" wisematches.playground.tracking.RatingChange as r " +
+						"where l.boardId=r.boardId and l.playerId=:pid and not r.playerId=:pid order by r.changeDate desc");
+				if (range != null) {
+					query.setFirstResult(range.getFirstResult());
+					query.setMaxResults(range.getMaxResults());
+				}
+				query.setParameter("pid", personality.getId());
+				return (List<Long>) query.list();
 			}
 		});
 	}

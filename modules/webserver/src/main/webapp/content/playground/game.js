@@ -1,6 +1,8 @@
-wm.Search = function(language) {
+wm.Search = function(scriplet, language) {
     var players;
     var callback;
+
+    var search = this;
 
     var languages = {
         ru: language['ru'],
@@ -18,13 +20,13 @@ wm.Search = function(language) {
             { "bSortable": true },
             { "bSortable": true }
         ],
-        "sDom": '<r<t>ip>',
+        "sDom": scriplet ? '<r<t>ip>' : '<"H"lCr>t<"F"ip>',
         "sPaginationType": "full_numbers"
     });
 
     resultTable.click(function(event) {
         var p = $(event.target).closest('tr').find("div[row]").attr('row');
-        closeDialog();
+        search.closeDialog();
         callback(players[p]);
     });
 
@@ -47,17 +49,17 @@ wm.Search = function(language) {
         });
     };
 
-    var reloadContent = function() {
-        loadContent($("input[name='searchTypes']:checked").val());
+    this.closeDialog = function() {
+        $("#searchPlayerWidget").dialog('close');
     };
 
-    var closeDialog = function() {
-        $("#searchPlayerWidget").dialog('close');
+    this.reloadContent = function() {
+        loadContent($("input[name='searchTypes']:checked").val());
     };
 
     this.openDialog = function(c) {
         callback = c;
-        reloadContent();
+        search.reloadContent();
         $("#searchPlayerWidget").dialog({
             title: language['title'],
             modal: true,
@@ -74,7 +76,11 @@ wm.Search = function(language) {
         return false;
     };
 
-    $("#searchTypes").buttonset().change(reloadContent);
+    $("#searchTypes").buttonset().change(search.reloadContent);
+
+    if (!scriplet) {
+        search.reloadContent();
+    }
 };
 
 wm.Create = function(maxOpponents, opponentsCount, playerSearch) {
@@ -136,8 +142,8 @@ wm.Create = function(maxOpponents, opponentsCount, playerSearch) {
     });
 
     $(".player-search-action").hover(function() {
-                $(this).addClass("ui-state-hover");
-            }, function() {
-                $(this).removeClass("ui-state-hover");
-            });
+        $(this).addClass("ui-state-hover");
+    }, function() {
+        $(this).removeClass("ui-state-hover");
+    });
 };

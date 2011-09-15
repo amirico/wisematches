@@ -3,6 +3,7 @@ package wisematches.server.web.controllers.info;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.server.security.WMAuthorities;
+import wisematches.server.web.controllers.personality.account.AuthenticationController;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -19,11 +20,11 @@ public class MainPageController {
 		if (WMAuthorities.USER.isAuthorityGranted()) {
 			return "redirect:/playground/scribble/active";
 		}
-		return "redirect:/account/login";
+		return "forward:/account/login";
 	}
 
 	@RequestMapping("index")
-	public String indexPage() {
+	public String mainPage2() {
 		return mainPage();
 	}
 }
