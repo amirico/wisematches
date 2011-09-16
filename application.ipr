@@ -434,8 +434,10 @@
         <w>onclick</w>
         <w>playboard</w>
         <w>recaptcha</w>
+        <w>render&quot;</w>
         <w>slangly</w>
         <w>successfulness</w>
+        <w>tbody</w>
         <w>tuple</w>
         <w>uploader</w>
       </words>
@@ -1157,6 +1159,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-web:3.0.5.RELEASE">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.springframework:spring-web:3.1.0.BUILD-SNAPSHOT">

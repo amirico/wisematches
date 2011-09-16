@@ -41,4 +41,12 @@ public final class Order {
 	public static Order desc(String propertyName) {
 		return new Order(propertyName, false);
 	}
+
+	public boolean isAscending() {
+		return ascending;
+	}
+
+	public String getPropertyName() {
+		return propertyName;
+	}
 }

@@ -1,126 +1,113 @@
 package wisematches.server.web.controllers.playground.player;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wisematches.database.Order;
+import wisematches.database.Range;
 import wisematches.personality.Language;
-import wisematches.personality.player.Player;
-import wisematches.personality.player.PlayerManager;
-import wisematches.personality.profile.PlayerProfile;
-import wisematches.personality.profile.PlayerProfileManager;
-import wisematches.playground.scribble.history.ScribbleHistoryManager;
-import wisematches.playground.tracking.PlayerTrackingCenter;
-import wisematches.playground.tracking.Statistics;
-import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.personality.Personality;
+import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.player.form.PlayerInfoForm;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.friends.FriendsManager;
+import wisematches.server.web.services.ads.AdvertisementManager;
+import wisematches.server.web.services.search.player.PlayerInfoBean;
+import wisematches.server.web.services.search.player.PlayerSearchArea;
+import wisematches.server.web.services.search.player.PlayerSearchManager;
+import wisematches.server.web.services.state.PlayerStateManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@RequestMapping("/playground/search")
+@RequestMapping("/playground/players")
 public class PlayerSearchController extends WisematchesController {
-	private PlayerManager playerManager;
-	private FriendsManager friendsManager;
 	private GameMessageSource messageSource;
-	private PlayerProfileManager profileManager;
-	private PlayerTrackingCenter trackingCenter;
-	private ScribbleHistoryManager historyManager;
+	private PlayerStateManager stateManager;
+	private PlayerSearchManager searchManager;
+	private AdvertisementManager advertisementManager;
+
+	private static final Object[][] EMPTY_DATA = new Object[0][0];
+
+	private static final String[] SORT_COLUMNS = {"account", "rating", "language", "activeGames", "finishedGames", "averageMoveTime"};
+	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
+
+	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
 
 	public PlayerSearchController() {
 	}
 
 	@RequestMapping("")
-	public String showPlayersSearchForm() {
-		return "/content/playground/search/view";
-	}
-
-	@ResponseBody
-	@RequestMapping("friends")
-	public ServiceResponse loadFriendsList(Locale locale) {
-		final Collection<Long> friendsIds = friendsManager.getFriendsIds(getPersonality());
-		final Collection<PlayerInfoForm> forms = getPlayerForms(locale, friendsIds);
-		return ServiceResponse.success(null, "players", forms);
-	}
-
-	@ResponseBody
-	@RequestMapping("formerly")
-	public ServiceResponse loadPlayedFormerlyList(Locale locale) {
-		final Collection<Long> friendsIds = historyManager.getPlayedFormerly(getPersonality(), null);
-		final Collection<PlayerInfoForm> forms = getPlayerForms(locale, friendsIds);
-		return ServiceResponse.success(null, "players", forms);
-	}
-
-	@ResponseBody
-	@RequestMapping("custom")
-	public ServiceResponse loadCustomList(Locale locale) {
-		final Collection<Long> friendsIds = historyManager.getPlayedFormerly(getPersonality(), null);
-		final Collection<PlayerInfoForm> forms = getPlayerForms(locale, friendsIds);
-		return ServiceResponse.success(null, "players", forms);
-	}
-
-	private Collection<PlayerInfoForm> getPlayerForms(Locale locale, Collection<Long> friendsIds) {
-		final Collection<PlayerInfoForm> forms = new ArrayList<PlayerInfoForm>();
-		for (Long friendsId : friendsIds) {
-			Player player = playerManager.getPlayer(friendsId);
-			if (player != null) {
-				Language primaryLanguage = null;
-				PlayerProfile profile = profileManager.getPlayerProfile(player);
-				if (profile != null) {
-					primaryLanguage = profile.getPrimaryLanguage();
-				}
-				if (primaryLanguage == null) {
-					primaryLanguage = player.getLanguage();
-				}
-				final Statistics ps = trackingCenter.getPlayerStatistic(player);
-				forms.add(new PlayerInfoForm(
-						player.getId(),
-						player.getNickname(),
-						player.getMembership(),
-						primaryLanguage,
-						ps.getRating(),
-						ps.getActiveGames(),
-						ps.getFinishedGames(),
-						messageSource.formatMinutes(ps.getAverageMoveTime() / 1000 / 60, locale)
-				));
-			}
+	public String showPlayersSearchForm(Model model, Locale locale) {
+		model.addAttribute("scriplet", Boolean.FALSE);
+		model.addAttribute("area", PlayerSearchArea.FRIENDS);
+		model.addAttribute("areas", AREAS);
+		if (getPrincipal().getMembership().isAdsVisible()) {
+			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("players", Language.byLocale(locale)));
 		}
-		return forms;
+		return "/content/playground/players/view";
 	}
 
 	@ResponseBody
-	@RequestMapping("a")
-	public ServiceResponse qwe(Model model) {
-		return ServiceResponse.success(null, "aaData", new Object[][]{{1, "asdasd", 1244}, {2, "qwe423", 434}});
+	@RequestMapping("load.ajax")
+	public Map<String, Object> load(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
+		final Personality personality = getPersonality();
+		final PlayerSearchArea area = PlayerSearchArea.valueOf(areaName.toUpperCase());
+		if (log.isDebugEnabled()) {
+			log.debug("Loading players for area: " + area + " for player " + personality);
+		}
+		final int gamesCount = searchManager.getPlayersCount(personality, area, null);
+		final int displayGamesCount = searchManager.getPlayersCount(personality, area, null); // not null if we have criterias
+
+		final Map<String, Object> res = new HashMap<String, Object>();
+		res.put("sEcho", request.get("sEcho"));
+		res.put("iTotalRecords", gamesCount);
+		res.put("iTotalDisplayRecords", displayGamesCount);
+
+		if (gamesCount == 0) {
+			res.put("aaData", EMPTY_DATA);
+		} else {
+			final Order[] orders = new Order[(Integer) request.get("iSortingCols")];
+			for (int i = 0; i < orders.length; i++) {
+				final String name = SORT_COLUMNS[(Integer) request.get("iSortCol_" + i)];
+				if ("asc".equalsIgnoreCase((String) request.get("sSortDir_" + i))) {
+					orders[i] = Order.asc(name);
+				} else {
+					orders[i] = Order.desc(name);
+				}
+			}
+
+			Range limit = Range.limit((Integer) request.get("iDisplayStart"), (Integer) request.get("iDisplayLength"));
+			final List<PlayerInfoBean> games = searchManager.getPlayerBeans(personality, area, null, limit, orders);
+			int index = 0;
+			final Object[][] data = new Object[games.size()][];
+			for (PlayerInfoBean info : games) {
+				final Object[] row = new Object[SORT_COLUMNS.length + 1];
+				row[0] = ServicePlayer.get(info.getAccount(), stateManager);
+				row[1] = info.getRating();
+				row[2] = info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale);
+				row[3] = messageSource.getMessage("language." + info.getAccount().getLanguage().code(), locale);
+				row[4] = info.getActiveGames();
+				row[5] = info.getFinishedGames();
+				row[6] = messageSource.formatMinutes(info.getAverageMoveTime(), locale);
+				data[index++] = row;
+			}
+			res.put("aaData", data);
+		}
+		return res;
 	}
 
 	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
-	}
-
-	@Autowired
-	public void setFriendsManager(FriendsManager friendsManager) {
-		this.friendsManager = friendsManager;
-	}
-
-	@Autowired
-	public void setTrackingCenter(PlayerTrackingCenter trackingCenter) {
-		this.trackingCenter = trackingCenter;
-	}
-
-	@Autowired
-	public void setProfileManager(PlayerProfileManager profileManager) {
-		this.profileManager = profileManager;
+	public void setStateManager(PlayerStateManager stateManager) {
+		this.stateManager = stateManager;
 	}
 
 	@Autowired
@@ -129,7 +116,12 @@ public class PlayerSearchController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setHistoryManager(ScribbleHistoryManager historyManager) {
-		this.historyManager = historyManager;
+	public void setSearchManager(PlayerSearchManager searchManager) {
+		this.searchManager = searchManager;
+	}
+
+	@Autowired
+	public void setAdvertisementManager(AdvertisementManager advertisementManager) {
+		this.advertisementManager = advertisementManager;
 	}
 }

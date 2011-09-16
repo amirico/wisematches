@@ -1760,7 +1760,7 @@ wm.scribble.Monitoring = function(board) {
 
         this.stopMonitoring();
 
-        $(board).everyTime(6000, 'board' + board.getBoardId() + 'Monitoring', function() {
+        $(board).everyTime(60000, 'board' + board.getBoardId() + 'Monitoring', function() {
             sendServerRequest();
         });
     };

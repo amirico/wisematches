@@ -6,7 +6,6 @@
 <#include "/core.ftl">
 
 <@wm.jstable/>
-<#include "/content/playground/search/scriplet.ftl">
 
 <@wm.playground>
 <div id="createGame">
@@ -210,8 +209,10 @@
         </div>
     </div>
 </div>
+
+    <#include "/content/playground/players/scriplet.ftl">
 </@wm.playground>
 
 <script type="text/javascript">
-    var create = new wm.Create(${maxOpponents}, ${opponentsCount}, playerSearch);
+    var create = new wm.game.Create(${maxOpponents}, ${opponentsCount}, playerSearch);
 </script>

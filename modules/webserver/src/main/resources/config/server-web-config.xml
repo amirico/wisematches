@@ -27,6 +27,11 @@
 
     <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
 
+    <bean id="playerSearchManager"
+          class="wisematches.server.web.services.search.player.impl.HibernatePlayerSearchManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
