@@ -108,8 +108,7 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 						" wisematches.playground.tracking.RatingChange as r " +
 						"where l.boardId=r.boardId and l.playerId=:pid and not r.playerId=:pid order by r.changeDate desc");
 				if (range != null) {
-					query.setFirstResult(range.getFirstResult());
-					query.setMaxResults(range.getMaxResults());
+					range.apply(query);
 				}
 				query.setParameter("pid", personality.getId());
 				return (List<Long>) query.list();

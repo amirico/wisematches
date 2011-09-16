@@ -35,6 +35,7 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
 import wisematches.server.web.services.ads.AdvertisementManager;
+import wisematches.server.web.services.search.player.PlayerSearchArea;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -211,6 +212,8 @@ public class ScribbleGameController extends WisematchesController {
 		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
 		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestriction(principal, "scribble.opponents"));
+		model.addAttribute("area", PlayerSearchArea.FRIENDS);
+		model.addAttribute("areas", Arrays.asList(PlayerSearchArea.values()));
 
 		if (principal.getMembership() == Membership.GUEST) {
 			form.setOpponentType(OpponentType.ROBOT);

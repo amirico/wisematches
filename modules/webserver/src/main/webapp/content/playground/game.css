@@ -405,7 +405,9 @@
     border-spacing: 5px;
 }
 
-#searchResult table th {
+#searchResult table th, #searchResult table td {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
     white-space: nowrap !important;
 }
 
@@ -420,6 +422,7 @@
 
 #searchPlayerWidget {
     padding: 0 0 5px;
+    overflow: hidden;
 }
 
 .player-search-remove .player .nickname {

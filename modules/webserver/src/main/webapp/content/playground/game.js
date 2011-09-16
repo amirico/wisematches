@@ -1,69 +1,69 @@
-wm.Search = function(scriplet, language) {
+if (wm == null) wm = {};
+if (wm.game == null) wm.game = {};
+
+wm.game.Search = function(scriplet, language) {
     var players;
     var callback;
 
     var search = this;
 
-    var languages = {
-        ru: language['ru'],
-        en: language['en']
-    };
-
     var resultTable = $('#searchResult table').dataTable({
         "bJQueryUI": true,
         "bSortClasses": false,
         "aoColumns": [
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true },
-            { "bSortable": true }
+            {
+                "bSortable": false,
+                "fnRender": function (oObj) {
+                    return wm.ui.player(oObj.aData[0]);
+                }
+            },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": false }
         ],
-        "sDom": scriplet ? '<r<t>ip>' : '<"H"lCr>t<"F"ip>',
+        "iDisplayStart": 0,
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "/playground/players/load.ajax",
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            var data = {};
+            for (var i in aoData) {
+                data[aoData[i]['name']] = aoData[i]['value'];
+            }
+            $.post(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), $.toJSON(data), function (json) {
+                players = json.aaData;
+                fnCallback(json)
+            });
+        },
+        "sDom": '<"H"lCr>t<"F"ip>',
         "sPaginationType": "full_numbers"
     });
 
-    resultTable.click(function(event) {
-        var p = $(event.target).closest('tr').find("div[row]").attr('row');
-        search.closeDialog();
-        callback(players[p]);
-    });
-
-    var loadContent = function(name) {
-        $('#searchResult').hide();
-        $('#searchLoading').show();
-
-        players = new Array();
-        resultTable.fnClearTable();
-
-        $.post('/playground/search/' + name + '.ajax', function(result) {
-            if (result.success) {
-                $.each(result.data.players, function(i, d) {
-                    players[i] = d;
-                    resultTable.fnAddData(['<div row="' + i + '">' + wm.ui.player(d, true) + '</div>', d.rating, languages[d.language], d.activeGames, d.finishedGames, d.averageMoveTime]);
-                });
-            }
-            $('#searchLoading').hide();
-            $('#searchResult').show();
-        });
+    var reloadContent = function() {
+        resultTable.fnDraw();
     };
+
+    resultTable.find("tbody").click(function(event) {
+        var p = $(event.target).closest('tr');
+        search.closeDialog();
+        var pos = resultTable.fnGetPosition(p.get(0));
+        callback(players[pos][0]);
+    });
 
     this.closeDialog = function() {
         $("#searchPlayerWidget").dialog('close');
     };
 
-    this.reloadContent = function() {
-        loadContent($("input[name='searchTypes']:checked").val());
-    };
-
     this.openDialog = function(c) {
         callback = c;
-        search.reloadContent();
+        reloadContent();
         $("#searchPlayerWidget").dialog({
             title: language['title'],
             modal: true,
-            width: 600,
+            width: 800,
             buttons: [
                 {
                     text: language['close'],
@@ -76,14 +76,14 @@ wm.Search = function(scriplet, language) {
         return false;
     };
 
-    $("#searchTypes").buttonset().change(search.reloadContent);
+    $("#searchTypes").buttonset().change(reloadContent);
 
     if (!scriplet) {
-        search.reloadContent();
+        reloadContent();
     }
 };
 
-wm.Create = function(maxOpponents, opponentsCount, playerSearch) {
+wm.game.Create = function(maxOpponents, opponentsCount, playerSearch) {
     var attachPlayerSearchActions = function(a) {
         $(a).hover(
                 function() {
