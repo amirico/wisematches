@@ -139,6 +139,8 @@ public class CreateAccountController {
 			b.append("j_username=").append(URLEncoder.encode(email, "UTF-8"));
 			b.append("&");
 			b.append("j_password=").append(URLEncoder.encode(password, "UTF-8"));
+			b.append("&");
+			b.append("continue=").append("/playground/welcome");
 			if (rememberMe) {
 				b.append("&").append("rememberMe=true");
 			}
