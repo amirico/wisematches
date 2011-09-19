@@ -18,6 +18,9 @@
                         <li><@message code="game.guest.warn.2"/></li>
                         <li><@message code="game.guest.warn.3"/></li>
                         <li><@message code="game.guest.warn.4"/></li>
+                        <li><@message code="game.guest.warn.5"/></li>
+                        <li><@message code="game.guest.warn.6"/></li>
+                        <li><@message code="game.guest.warn.7"/></li>
                     </ul>
                 </div>
             </td>
