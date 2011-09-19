@@ -247,6 +247,8 @@
     |
     <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
     <br>
+    <a href="/playground/scribble/challenge?p=${player.id}"><@message code="game.challenge.label"/></a>
+    |
 <@privateMessage pid=player.id><@message code="messages.label"/></@privateMessage>
     |
 <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
