@@ -24,8 +24,9 @@
                     </#if>
                         |
                     <#if principal.membership != 'GUEST'><a
-                            href="/account/modify"><@message code="game.menu.settings.label"/></a></#if>
+                            href="/account/modify"><@message code="game.menu.settings.label"/></a>
                         |
+                    </#if>
                         <a href="/info/help"><@message code="game.menu.help.label"/></a>
                         |
                         <a href="/account/logout"><@message code="account.signout.label"/></a>
@@ -49,17 +50,16 @@
                                 </button>
                             </div>
 
-                        <#if principal.membership != 'GUEST'>
                             <div style="padding-left: 30px; display: inline-block;">
                                 <button id="messagesButton" onclick="wm.util.url.redirect('/playground/messages/view')">
                                 <@message code="game.menu.messages.label"/>
-                                    <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
-                                    <#if messageManager?has_content>
-                                        <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
-                                        <#if newMessagesCount?? && newMessagesCount !=0>
-                                            <strong>(${newMessagesCount})</strong>
-                                        </#if>
+                                <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
+                                <#if messageManager?has_content>
+                                    <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
+                                    <#if newMessagesCount?? && newMessagesCount !=0>
+                                        <strong>(${newMessagesCount})</strong>
                                     </#if>
+                                </#if>
                                 </button>
                                 <button id="friendsButton"
                                         onclick="wm.util.url.redirect('/playground/friends/view')">
@@ -70,11 +70,15 @@
                                 <@message code="game.menu.blacklist.label"/>
                                 </button>
                             </div>
-                        </#if>
 
+                            <div style="padding-left: 30px; display: inline-block;">
+                                <button id="tournamentsButton" onclick="wm.util.url.redirect('/playground/players')">
+                                <@message code="game.menu.players.label"/>
+                                </button>
+                            </div>
                         <#--
                             <div style="float: left;">
-                                <button id="tournamentsButton" onclick="wm.util.url.redirect('/game/tournaments')">
+                                <button id="tournamentsButton" onclick="wm.util.url.redirect('/playground/tournaments')">
                                 <@message code="game.menu.tournaments.label"/>
                          `       </button>
                             </div>
