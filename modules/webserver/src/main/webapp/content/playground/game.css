@@ -190,9 +190,7 @@
 }
 
 .profile a {
-    text-decoration: none;
     color: #a52a2a !important;
-    border-bottom: 1px dotted;
 }
 
 .profile .content {
