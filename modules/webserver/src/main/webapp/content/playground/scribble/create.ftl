@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
-<#-- @ftlvariable name="robotPlayers" type="wisematches.server.player.computer.robot.RobotPlayer[]" -->
+<#-- @ftlvariable name="robotPlayers" type="java.util.Collection<wisematches.server.player.computer.robot.RobotPlayer>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>

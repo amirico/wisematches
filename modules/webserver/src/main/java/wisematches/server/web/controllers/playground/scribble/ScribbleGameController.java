@@ -231,7 +231,7 @@ public class ScribbleGameController extends WisematchesController {
 
 	@RequestMapping("challenge")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
+	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, BindingResult result, Model model, Locale locale) {
 		form.setTitle("Challenge from " + getPrincipal().getNickname());
 		form.setOpponentType(OpponentType.CHALLENGE);
 		form.setOpponents(new long[]{pid});
