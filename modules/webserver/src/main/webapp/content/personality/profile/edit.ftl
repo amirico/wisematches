@@ -114,7 +114,7 @@
                     '<span class="qq-upload-file"></span>' +
                     '<span class="qq-upload-spinner"></span>' +
                     '<span class="qq-upload-size"></span>' +
-                    '<a class="qq-upload-cancel" href="#"><@message code="cancel.label"/></a>' +
+                    '<a class="qq-upload-cancel" href="#"><@message code="button.cancel"/></a>' +
                     '</div>',
             sizeLimit: 512000,
             allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
@@ -170,7 +170,7 @@
                 resizable: false,
                 buttons: [
                     {
-                        text: "<@message code="cancel.label"/>",
+                        text: "<@message code="button.cancel"/>",
                         click: function() {
                             $(this).dialog("close");
                         }

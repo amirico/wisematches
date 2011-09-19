@@ -47,7 +47,6 @@ public class PlayerSearchController extends WisematchesController {
 
 	@RequestMapping("")
 	public String showPlayersSearchForm(Model model, Locale locale) {
-		model.addAttribute("scriplet", Boolean.FALSE);
 		model.addAttribute("area", PlayerSearchArea.FRIENDS);
 		model.addAttribute("areas", AREAS);
 		if (getPrincipal().getMembership().isAdsVisible()) {
@@ -89,15 +88,17 @@ public class PlayerSearchController extends WisematchesController {
 			final List<PlayerInfoBean> games = searchManager.getPlayerBeans(personality, area, null, limit, orders);
 			int index = 0;
 			final Object[][] data = new Object[games.size()][];
+
+			final String noMovesMsg = messageSource.getMessage("search.err.nomoves", locale);
 			for (PlayerInfoBean info : games) {
 				final Object[] row = new Object[SORT_COLUMNS.length + 1];
 				row[0] = ServicePlayer.get(info.getAccount(), stateManager);
 				row[1] = info.getRating();
-				row[2] = info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale);
+				row[2] = info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : noMovesMsg;
 				row[3] = messageSource.getMessage("language." + info.getAccount().getLanguage().code(), locale);
 				row[4] = info.getActiveGames();
 				row[5] = info.getFinishedGames();
-				row[6] = messageSource.formatMinutes(info.getAverageMoveTime(), locale);
+				row[6] = info.getAverageMoveTime() != 0 ? messageSource.formatMinutes(info.getAverageMoveTime() / 1000 / 60, locale) : noMovesMsg;
 				data[index++] = row;
 			}
 			res.put("aaData", data);
