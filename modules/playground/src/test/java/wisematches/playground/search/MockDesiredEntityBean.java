@@ -5,7 +5,8 @@ import wisematches.personality.Language;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class MockDesiredEntity implements DesiredEntity {
+@SearchDistinct("pid")
+public class MockDesiredEntityBean implements DesiredEntityBean {
 	@SearchAttribute(column = "account.id", sortable = false)
 	private long pid;
 
@@ -15,7 +16,7 @@ public class MockDesiredEntity implements DesiredEntity {
 	@SearchAttribute(column = "profile.language")
 	private Language language;
 
-	public MockDesiredEntity() {
+	public MockDesiredEntityBean() {
 	}
 
 	public long getPid() {

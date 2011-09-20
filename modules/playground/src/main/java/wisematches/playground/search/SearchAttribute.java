@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * system.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see DesiredEntity
+ * @see DesiredEntityBean
  */
 @Documented
 @Inherited

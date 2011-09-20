@@ -1,11 +1,11 @@
-package wisematches.server.web.services.search.player;
+package wisematches.playground.search.player;
+
+import wisematches.playground.search.DesiredEntityContext;
 
 /**
- * Players search area. Only players from specified area will be searched.
- *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerSearchArea {
+public enum PlayerSearchArea implements DesiredEntityContext {
 	/**
 	 * Players will be searched only in friends list.
 	 */

@@ -1,11 +1,11 @@
-package wisematches.server.web.services.friends.impl;
+package wisematches.playground.friends.impl;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import wisematches.personality.Personality;
-import wisematches.server.web.services.friends.FriendRelation;
-import wisematches.server.web.services.friends.FriendsListener;
-import wisematches.server.web.services.friends.FriendsManager;
+import wisematches.playground.friends.FriendRelation;
+import wisematches.playground.friends.FriendsListener;
+import wisematches.playground.friends.FriendsManager;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -64,12 +64,12 @@ public class HibernateFriendsManager extends HibernateDaoSupport implements Frie
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<Long> getFriendsIds(Personality person) {
-		return getHibernateTemplate().find("select friend from wisematches.server.web.services.friends.impl.HibernateFriendRelation where person=?", person.getId());
+		return getHibernateTemplate().find("select friend from wisematches.playground.friends.impl.HibernateFriendRelation where person=?", person.getId());
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<FriendRelation> getFriendsList(Personality person) {
-		return getHibernateTemplate().find("from wisematches.server.web.services.friends.impl.HibernateFriendRelation where person=?", person.getId());
+		return getHibernateTemplate().find("from wisematches.playground.friends.impl.HibernateFriendRelation where person=?", person.getId());
 	}
 }

@@ -13,13 +13,14 @@ import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
+import wisematches.playground.search.DesiredEntityDescriptor;
+import wisematches.playground.search.EntitySearchManager;
+import wisematches.playground.search.player.PlayerEntityBean;
+import wisematches.playground.search.player.PlayerSearchArea;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
-import wisematches.server.web.services.search.player.PlayerInfoBean;
-import wisematches.server.web.services.search.player.PlayerSearchArea;
-import wisematches.server.web.services.search.player.PlayerSearchManager;
 import wisematches.server.web.services.state.PlayerStateManager;
 
 import java.util.*;
@@ -32,12 +33,12 @@ import java.util.*;
 public class PlayerSearchController extends WisematchesController {
 	private GameMessageSource messageSource;
 	private PlayerStateManager stateManager;
-	private PlayerSearchManager searchManager;
 	private AdvertisementManager advertisementManager;
+	private EntitySearchManager<PlayerEntityBean, PlayerSearchArea> searchManager;
 
 	private static final Object[][] EMPTY_DATA = new Object[0][0];
 
-	private static final String[] SORT_COLUMNS = {"account", "rating", "language", "activeGames", "finishedGames", "averageMoveTime"};
+	private static final String[] COLUMNS = {"nickname", "language", "rating", "averageMoveTime", "lastMoveTime"};
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
@@ -46,9 +47,12 @@ public class PlayerSearchController extends WisematchesController {
 	}
 
 	@RequestMapping("")
-	public String showPlayersSearchForm(Model model, Locale locale) {
-		model.addAttribute("area", PlayerSearchArea.FRIENDS);
-		model.addAttribute("areas", AREAS);
+	public String showPlayersSearchForm(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model, Locale locale) {
+		model.addAttribute("searchArea", area);
+		model.addAttribute("searchAreas", AREAS);
+		model.addAttribute("searchColumns", COLUMNS);
+		model.addAttribute("searchEntityDescriptor", searchManager.getDescriptor());
+
 		if (getPrincipal().getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("players", Language.byLocale(locale)));
 		}
@@ -63,8 +67,8 @@ public class PlayerSearchController extends WisematchesController {
 		if (log.isDebugEnabled()) {
 			log.debug("Loading players for area: " + area + " for player " + personality);
 		}
-		final int gamesCount = searchManager.getPlayersCount(personality, area, null);
-		final int displayGamesCount = searchManager.getPlayersCount(personality, area, null); // not null if we have criterias
+		final int gamesCount = searchManager.getTotalCount(personality, area);
+		final int displayGamesCount = gamesCount;
 
 		final Map<String, Object> res = new HashMap<String, Object>();
 		res.put("sEcho", request.get("sEcho"));
@@ -76,7 +80,7 @@ public class PlayerSearchController extends WisematchesController {
 		} else {
 			final Order[] orders = new Order[(Integer) request.get("iSortingCols")];
 			for (int i = 0; i < orders.length; i++) {
-				final String name = SORT_COLUMNS[(Integer) request.get("iSortCol_" + i)];
+				final String name = COLUMNS[(Integer) request.get("iSortCol_" + i)];
 				if ("asc".equalsIgnoreCase((String) request.get("sSortDir_" + i))) {
 					orders[i] = Order.asc(name);
 				} else {
@@ -85,21 +89,26 @@ public class PlayerSearchController extends WisematchesController {
 			}
 
 			Range limit = Range.limit((Integer) request.get("iDisplayStart"), (Integer) request.get("iDisplayLength"));
-			final List<PlayerInfoBean> games = searchManager.getPlayerBeans(personality, area, null, limit, orders);
+			final List<PlayerEntityBean> games = searchManager.searchEntities(personality, area, null, orders, limit);
 			int index = 0;
-			final Object[][] data = new Object[games.size()][];
+			final Object[] data = new Object[games.size()];
 
 			final String noMovesMsg = messageSource.getMessage("search.err.nomoves", locale);
-			for (PlayerInfoBean info : games) {
-				final Object[] row = new Object[SORT_COLUMNS.length + 1];
-				row[0] = ServicePlayer.get(info.getPid(), info.getNickname(), stateManager);
-				row[1] = info.getRating();
-				row[2] = info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : noMovesMsg;
-				row[3] = info.getLanguage() != null ? messageSource.getMessage("language." + info.getLanguage().code(), locale) : messageSource.getMessage("search.err.language", locale);
-				row[4] = info.getActiveGames();
-				row[5] = info.getFinishedGames();
-				row[6] = info.getAverageMoveTime() != 0 ? messageSource.formatMinutes(info.getAverageMoveTime() / 1000 / 60, locale) : noMovesMsg;
-				data[index++] = row;
+			for (PlayerEntityBean info : games) {
+				final Map<String, Object> a = new HashMap<String, Object>();
+				a.put("nickname", ServicePlayer.get(info.getPid(), info.getNickname(), stateManager));
+
+				if (info.getLanguage() != null) {
+					a.put("language", messageSource.getMessage("language." + info.getLanguage().code(), locale));
+				} else {
+					a.put("language", messageSource.getMessage("search.err.language", locale));
+				}
+				a.put("rating", info.getRating());
+				a.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : noMovesMsg);
+				a.put("activeGames", info.getActiveGames());
+				a.put("finishedGames", info.getFinishedGames());
+				a.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatMinutes(info.getAverageMoveTime() / 1000 / 60, locale) : noMovesMsg);
+				data[index++] = a;
 			}
 			res.put("aaData", data);
 		}
@@ -117,7 +126,7 @@ public class PlayerSearchController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setSearchManager(PlayerSearchManager searchManager) {
+	public void setSearchManager(EntitySearchManager<PlayerEntityBean, PlayerSearchArea> searchManager) {
 		this.searchManager = searchManager;
 	}
 

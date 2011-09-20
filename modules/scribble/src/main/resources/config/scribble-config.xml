@@ -34,7 +34,7 @@
     </bean>
 
     <bean id="scribbleSearchEngineManager"
-          class="wisematches.playground.scribble.search.ScribbleSearchesEngine">
+          class="wisematches.playground.scribble.search.board.ScribbleSearchesEngine">
         <property name="hibernateTemplate" ref="hibernateTemplate"/>
     </bean>
 
@@ -72,6 +72,10 @@
 
     <bean id="scribbleCommentManager"
           class="wisematches.playground.scribble.comment.impl.HibernateGameCommentManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="playerSearchManager" class="wisematches.playground.scribble.search.player.ScribblePlayerSearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
