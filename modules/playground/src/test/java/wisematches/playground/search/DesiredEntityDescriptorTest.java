@@ -2,18 +2,21 @@ package wisematches.playground.search;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DesiredEntityDescriptorTest {
+	public DesiredEntityDescriptorTest() {
+	}
+
 	@Test
-	public void ad() {
-		final SearchAttribute[] attributes = DesiredEntityDescriptor.getAttributes(MockDesiredEntity.class, "nickname", "language");
-		for (SearchAttribute attribute : attributes) {
+	public void test() {
+		DesiredEntityDescriptor<MockDesiredEntityBean> d = new DesiredEntityDescriptor<MockDesiredEntityBean>(MockDesiredEntityBean.class);
+		assertEquals("pid", d.getDistinctField());
+		assertEquals("account.id", d.getDistinctAttribute().column());
 
-		}
-
-//		final DesiredEntityDescriptor d = new DesiredEntityDescriptor(MockDesiredEntity.class);
-//		System.out.println(d);
+		assertEquals(3, d.getAttributes().size());
 	}
 }

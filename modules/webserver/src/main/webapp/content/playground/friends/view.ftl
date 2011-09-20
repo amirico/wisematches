@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="friends" type="java.util.Collection<wisematches.server.web.services.friends.FriendRelation>" -->
+<#-- @ftlvariable name="friends" type="java.util.Collection<wisematches.playground.friends.FriendRelation>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>

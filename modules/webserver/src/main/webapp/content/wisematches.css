@@ -542,6 +542,14 @@ div.space-line {
     position: absolute;
 }
 
+.captchas label {
+    font-weight: normal !important;
+}
+
+.captchas input {
+    width: 180px;
+}
+
 .captchas .image {
     width: 178px;
     height: 40px;
@@ -549,12 +557,4 @@ div.space-line {
     position: relative;
     border: 1px solid gray;
     margin-bottom: 3px;
-}
-
-.captchas label {
-    font-weight: normal !important;
-}
-
-.captchas input {
-    width: 180px;
 }

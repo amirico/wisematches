@@ -28,14 +28,16 @@ import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.playground.scribble.search.ScribbleSearchesEngine;
+import wisematches.playground.scribble.search.board.ScribbleSearchesEngine;
+import wisematches.playground.search.EntitySearchManager;
+import wisematches.playground.search.player.PlayerEntityBean;
+import wisematches.playground.search.player.PlayerSearchArea;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
 import wisematches.server.web.services.ads.AdvertisementManager;
-import wisematches.server.web.services.search.player.PlayerSearchArea;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -53,6 +55,10 @@ public class ScribbleGameController extends WisematchesController {
 	private RestrictionManager restrictionManager;
 	private AdvertisementManager advertisementManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
+	private EntitySearchManager<PlayerEntityBean, PlayerSearchArea> searchManager;
+
+	private static final String[] SEARCH_COLUMNS = new String[]{"nickname", "language", "rating", "averageMoveTime", "lastMoveTime"};
+	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -212,8 +218,11 @@ public class ScribbleGameController extends WisematchesController {
 		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
 		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestriction(principal, "scribble.opponents"));
-		model.addAttribute("area", PlayerSearchArea.FRIENDS);
-		model.addAttribute("areas", Arrays.asList(PlayerSearchArea.values()));
+
+		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
+		model.addAttribute("searchAreas", SEARCH_AREAS);
+		model.addAttribute("searchColumns", SEARCH_COLUMNS);
+		model.addAttribute("searchEntityDescriptor", searchManager.getDescriptor());
 
 		if (principal.getMembership() == Membership.GUEST) {
 			form.setOpponentType(OpponentType.ROBOT);
@@ -363,5 +372,10 @@ public class ScribbleGameController extends WisematchesController {
 	@Autowired
 	public void setProposalManager(GameProposalManager<ScribbleSettings> proposalManager) {
 		this.proposalManager = proposalManager;
+	}
+
+	@Autowired
+	public void setSearchManager(EntitySearchManager<PlayerEntityBean, PlayerSearchArea> searchManager) {
+		this.searchManager = searchManager;
 	}
 }

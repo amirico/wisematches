@@ -1,4 +1,4 @@
-package wisematches.server.web.services.friends.impl;
+package wisematches.playground.friends.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,8 +7,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.player.computer.robot.RobotPlayer;
-import wisematches.server.web.services.friends.FriendRelation;
-import wisematches.server.web.services.friends.FriendsListener;
+import wisematches.playground.friends.FriendRelation;
+import wisematches.playground.friends.FriendsListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
 		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-junit-config.xml",
-		"classpath:/config/application-settings.xml",
-		"classpath:/config/server-web-junit-config.xml"
+		"classpath:/config/playground-config.xml"
 })
 public class HibernateFriendsManagerTest {
 	@Autowired

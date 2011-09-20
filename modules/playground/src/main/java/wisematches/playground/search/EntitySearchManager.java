@@ -9,10 +9,12 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface EntitySearchManager<T extends DesiredEntity> {
-	int getTotalCount(Personality person);
+public interface EntitySearchManager<T extends DesiredEntityBean<C>, C extends DesiredEntityContext> {
+	DesiredEntityDescriptor getDescriptor();
 
-	int getFilteredCount(Personality person, SearchCriteria[] criteria);
+	int getTotalCount(Personality person, C context);
 
-	List<T> searchEntities(Personality person, SearchCriteria[] criteria, Order[] order, Range range);
+	int getFilteredCount(Personality person, C context, SearchCriteria[] criteria);
+
+	List<T> searchEntities(Personality person, C context, SearchCriteria[] criteria, Order[] order, Range range);
 }

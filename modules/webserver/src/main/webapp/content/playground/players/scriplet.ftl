@@ -1,6 +1,8 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="area" type="wisematches.server.web.services.search.player.PlayerSearchArea" -->
-<#-- @ftlvariable name="areas" type="java.util.List<wisematches.server.web.services.search.player.PlayerSearchArea>" -->
+<#-- @ftlvariable name="searchColumns" type="java.util.Collection<java.lang.String>" -->
+<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.playground.search.DesiredEntityDescriptor" -->
+<#-- @ftlvariable name="searchArea" type="wisematches.playground.search.player.PlayerSearchArea" -->
+<#-- @ftlvariable name="searchAreas" type="java.util.List<wisematches.server.web.services.search.player.PlayerSearchArea>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>
@@ -9,10 +11,10 @@
 
 <div id="searchPlayerWidget" <#if scriplet>class="ui-helper-hidden"</#if>>
     <div id="searchTypes">
-    <#list areas as a>
-        <input id="search${a.name()}" name="searchTypes" type="radio" value="${a.name()}"
-               <#if a=area>checked="checked"</#if>/>
-        <label for="search${a.name()}"><@message code="search.type.${a.name()?lower_case}"/></label>
+    <#list searchAreas as a>
+        <input id="search${a.name()?lower_case?capitalize}" name="searchTypes" type="radio" value="${a.name()}"
+               <#if a=searchArea>checked="checked"</#if>/>
+        <label for="search${a.name()?lower_case?capitalize}"><@message code="search.type.${a.name()?lower_case}"/></label>
     </#list>
     </div>
 
@@ -20,13 +22,9 @@
         <table id="searchResult">
             <thead>
             <tr>
-                <th width="100%" nowrap="nowrap"><@message code="search.column.player"/></th>
-                <th nowrap="nowrap"><@message code="search.column.rating"/></th>
-                <th nowrap="nowrap"><@message code="search.column.lastMoveTime"/></th>
-                <th nowrap="nowrap"><@message code="search.column.language"/></th>
-                <th nowrap="nowrap"><@message code="search.column.active"/></th>
-                <th nowrap="nowrap"><@message code="search.column.finished"/></th>
-                <th nowrap="nowrap"><@message code="search.column.avgMoveTime"/></th>
+            <#list searchColumns as c>
+                <th width="100%" nowrap="nowrap"><@message code="search.column.${c}"/></th>
+            </#list>
             </tr>
             </thead>
             <tbody>
@@ -36,8 +34,14 @@
 </div>
 
 <script type="text/javascript">
-    var playerSearch = new wm.game.Search(${scriplet?string}, {
-        title: '<@message code="search.label"/>',
-        close: '<@message code="button.close"/>'
-    });
+    var playerSearch = new wm.game.Search(
+            [<#list searchColumns as c>{
+                "sName": '${c}',
+                "mDataProp": '${c}',
+                "bSortable": ${searchEntityDescriptor.getAttribute(c).sortable()?string}
+            }<#if c_has_next>,</#if></#list>],
+    ${scriplet?string}, {
+                title: '<@message code="search.label"/>',
+                close: '<@message code="button.close"/>'
+            });
 </script>

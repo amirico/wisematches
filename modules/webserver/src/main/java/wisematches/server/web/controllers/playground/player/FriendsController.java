@@ -15,7 +15,7 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.player.form.FriendRelationForm;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
-import wisematches.server.web.services.friends.FriendsManager;
+import wisematches.playground.friends.FriendsManager;
 
 import java.util.List;
 import java.util.Locale;

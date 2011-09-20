@@ -1,7 +1,7 @@
-package wisematches.server.web.services.friends.impl;
+package wisematches.playground.friends.impl;
 
 import wisematches.personality.Personality;
-import wisematches.server.web.services.friends.FriendRelation;
+import wisematches.playground.friends.FriendRelation;
 
 import javax.persistence.*;
 import java.io.Serializable;

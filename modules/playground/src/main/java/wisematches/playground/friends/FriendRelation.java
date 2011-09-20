@@ -1,4 +1,4 @@
-package wisematches.server.web.services.friends;
+package wisematches.playground.friends;
 
 import java.util.Date;
 

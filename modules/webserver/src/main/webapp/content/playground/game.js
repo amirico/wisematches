@@ -1,30 +1,24 @@
 if (wm == null) wm = {};
 if (wm.game == null) wm.game = {};
 
-wm.game.Search = function(scriplet, language) {
+wm.game.Search = function(columns, scriplet, language) {
     var players;
     var callback;
 
     var search = this;
 
+    $.each(columns, function(i, a) {
+        if (a.sName == 'nickname') {
+            a.fnRender = function (oObj) {
+                return wm.ui.player(oObj.aData.nickname);
+            };
+        }
+    });
+
     var resultTable = $('#searchResult').dataTable({
         "bJQueryUI": true,
         "bSortClasses": false,
-        "aoColumns": [
-            {
-                "bSortable": false,
-                "fnRender": function (oObj) {
-                    return wm.ui.player(oObj.aData[0]);
-                }
-            },
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false }
-        ],
-        "iDisplayStart": 0,
+        "aoColumns": columns,
         "bProcessing": true,
         "bServerSide": true,
         "sAjaxSource": "/playground/players/load.ajax",

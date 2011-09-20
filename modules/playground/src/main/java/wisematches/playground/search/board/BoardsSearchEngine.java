@@ -1,4 +1,4 @@
-package wisematches.playground.search.player;
+package wisematches.playground.search.board;
 
 import wisematches.personality.Personality;
 

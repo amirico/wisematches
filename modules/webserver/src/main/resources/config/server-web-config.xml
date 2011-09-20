@@ -15,10 +15,6 @@
         <property name="imagesFolder" value="${server.images.path}/players"/>
     </bean>
 
-    <bean id="friendsManager" class="wisematches.server.web.services.friends.impl.HibernateFriendsManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
     <bean id="scribbleObjectsConverter"
           class="wisematches.server.web.controllers.playground.scribble.ScribbleObjectsConverter">
         <property name="gameMessageSource" ref="gameMessageSource"/>
@@ -26,11 +22,6 @@
     </bean>
 
     <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
-
-    <bean id="playerSearchManager"
-          class="wisematches.server.web.services.search.player.impl.HibernatePlayerSearchManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
 
     <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
         <property name="adsResource" value="${advertisement.providers.file}"/>

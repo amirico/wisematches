@@ -10,8 +10,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.playground.*;
 import wisematches.playground.expiration.GameExpirationListener;
 import wisematches.playground.expiration.GameExpirationType;
-import wisematches.playground.search.player.BoardsSearchEngine;
-import wisematches.playground.search.player.LastMoveInfo;
+import wisematches.playground.search.board.BoardsSearchEngine;
+import wisematches.playground.search.board.LastMoveInfo;
 
 import java.util.Arrays;
 import java.util.Collections;
