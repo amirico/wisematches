@@ -92,10 +92,10 @@ public class PlayerSearchController extends WisematchesController {
 			final String noMovesMsg = messageSource.getMessage("search.err.nomoves", locale);
 			for (PlayerInfoBean info : games) {
 				final Object[] row = new Object[SORT_COLUMNS.length + 1];
-				row[0] = ServicePlayer.get(info.getAccount(), stateManager);
+				row[0] = ServicePlayer.get(info.getPid(), info.getNickname(), stateManager);
 				row[1] = info.getRating();
 				row[2] = info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : noMovesMsg;
-				row[3] = messageSource.getMessage("language." + info.getAccount().getLanguage().code(), locale);
+				row[3] = info.getLanguage() != null ? messageSource.getMessage("language." + info.getLanguage().code(), locale) : messageSource.getMessage("search.err.language", locale);
 				row[4] = info.getActiveGames();
 				row[5] = info.getFinishedGames();
 				row[6] = info.getAverageMoveTime() != 0 ? messageSource.formatMinutes(info.getAverageMoveTime() / 1000 / 60, locale) : noMovesMsg;

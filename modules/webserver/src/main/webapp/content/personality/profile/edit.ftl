@@ -37,7 +37,7 @@
 
         <div class="info">
             <div class="photo">
-                <img class="shadow" style="width: 200px; height: 200px;" src="image/view?pid=${player.id}" alt="Photo">
+                <img class="shadow" style="width: 200px; height: 200px;" src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
 
                 <div class="remove">
                     <img title="<@message code="profile.edit.photo.remove.label"/>" src="/resources/images/close.png"
@@ -72,7 +72,7 @@
 
             <td valign="top" align="center">
                 <div class="qq-upload-drop-area preview">
-                    <img class="shadow" width="200px" height="200px" src="image/view?pid=${player.id}&preview=true">
+                    <img class="shadow" width="200px" height="200px" src="/playground/profile/image/view?pid=${player.id}&preview=true">
                 </div>
                 <div class="sample">(<@message code="profile.edit.photo.drop"/>)</div>
             </td>

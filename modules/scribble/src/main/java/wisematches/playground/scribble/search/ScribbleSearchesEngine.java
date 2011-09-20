@@ -4,8 +4,8 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import wisematches.personality.Personality;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.search.BoardsSearchEngine;
-import wisematches.playground.search.LastMoveInfo;
+import wisematches.playground.search.player.BoardsSearchEngine;
+import wisematches.playground.search.player.LastMoveInfo;
 
 import java.util.Collection;
 import java.util.Collections;

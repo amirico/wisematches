@@ -16,24 +16,22 @@
     </#list>
     </div>
 
-    <div id="searchContent">
-        <div id="searchResult">
-            <table style="width: 100%; padding-bottom: 5px;">
-                <thead>
-                <tr>
-                    <th width="100%" nowrap="nowrap"><@message code="search.column.player"/></th>
-                    <th nowrap="nowrap"><@message code="search.column.rating"/></th>
-                    <th nowrap="nowrap"><@message code="search.column.lastMoveTime"/></th>
-                    <th nowrap="nowrap"><@message code="search.column.language"/></th>
-                    <th nowrap="nowrap"><@message code="search.column.active"/></th>
-                    <th nowrap="nowrap"><@message code="search.column.finished"/></th>
-                    <th nowrap="nowrap"><@message code="search.column.avgMoveTime"/></th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <div>
+        <table id="searchResult">
+            <thead>
+            <tr>
+                <th width="100%" nowrap="nowrap"><@message code="search.column.player"/></th>
+                <th nowrap="nowrap"><@message code="search.column.rating"/></th>
+                <th nowrap="nowrap"><@message code="search.column.lastMoveTime"/></th>
+                <th nowrap="nowrap"><@message code="search.column.language"/></th>
+                <th nowrap="nowrap"><@message code="search.column.active"/></th>
+                <th nowrap="nowrap"><@message code="search.column.finished"/></th>
+                <th nowrap="nowrap"><@message code="search.column.avgMoveTime"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 </div>
 

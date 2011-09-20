@@ -69,7 +69,7 @@
 </#macro>
 
 <#macro captcha path>
-    <#if captchaService??><@field path>${captchaService.createCaptchaScript(locale)}</@field></#if>
+    <#if captchaService??><@field path>${captchaService.createCaptchaScript(gameMessageSource, locale)}</@field></#if>
 </#macro>
 
 <#macro playground id="">
