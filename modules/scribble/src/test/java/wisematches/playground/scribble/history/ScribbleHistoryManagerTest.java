@@ -41,16 +41,4 @@ public class ScribbleHistoryManagerTest {
 		System.out.println("Finished size: " + finishedGames.size());
 		System.out.println(finishedGames);
 	}
-
-	@Test
-	public void testPlayedFormerly() {
-		final Personality player = Personality.person(1029);
-
-		int finishedGamesCount = historyManager.getPlayedFormerlyCount(player);
-		System.out.println(finishedGamesCount);
-
-		List<Long> finishedGames = historyManager.getPlayedFormerly(player, Range.limit(0, 10));
-		System.out.println("Finished size: " + finishedGames.size());
-		System.out.println(finishedGames);
-	}
 }

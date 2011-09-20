@@ -24,7 +24,7 @@ public class MainPageController {
 
 	@RequestMapping("/playground/welcome")
 	public String welcomePage() {
-		return "forward:/playground/scribble/active";
+		return "forward:/playground/profile/edit";
 	}
 
 	@RequestMapping("index")

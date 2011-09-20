@@ -7,7 +7,7 @@ wm.game.Search = function(scriplet, language) {
 
     var search = this;
 
-    var resultTable = $('#searchResult table').dataTable({
+    var resultTable = $('#searchResult').dataTable({
         "bJQueryUI": true,
         "bSortClasses": false,
         "aoColumns": [

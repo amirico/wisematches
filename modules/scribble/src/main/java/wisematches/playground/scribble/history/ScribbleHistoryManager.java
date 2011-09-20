@@ -95,24 +95,4 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 				"where l.boardId=r.boardId and l.playerId=? and not r.playerId=?",
 				personality.getId(), personality.getId()));
 	}
-
-	@Override
-	public List<Long> getPlayedFormerly(final Personality personality, final Range range, final Order... orders) {
-		final HibernateTemplate template = getHibernateTemplate();
-		return template.executeWithNativeSession(new HibernateCallback<List<Long>>() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public List<Long> doInHibernate(Session session) throws HibernateException, SQLException {
-				final Query query = session.createQuery("select distinct r.playerId " +
-						"from wisematches.playground.tracking.RatingChange as l, " +
-						" wisematches.playground.tracking.RatingChange as r " +
-						"where l.boardId=r.boardId and l.playerId=:pid and not r.playerId=:pid order by r.changeDate desc");
-				if (range != null) {
-					range.apply(query);
-				}
-				query.setParameter("pid", personality.getId());
-				return (List<Long>) query.list();
-			}
-		});
-	}
 }

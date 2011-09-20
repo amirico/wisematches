@@ -11,13 +11,11 @@ import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.server.web.services.search.SearchCriteria;
-import wisematches.server.web.services.search.SearchParameter;
 import wisematches.server.web.services.search.player.PlayerInfoBean;
 import wisematches.server.web.services.search.player.PlayerSearchArea;
 import wisematches.server.web.services.search.player.PlayerSearchManager;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -65,10 +63,10 @@ public class HibernatePlayerSearchManager extends HibernateDaoSupport implements
 			@SuppressWarnings("unchecked")
 			public List<PlayerInfoBean> doInHibernate(Session session) throws HibernateException, SQLException {
 				final StringBuilder query = new StringBuilder();
-				query.append("select distinct account, stats.rating, stats.activeGames, stats.finishedGames, stats.lastMoveTime, stats.averageMoveTime ");
-				query.append("from wisematches.personality.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor stats ");
+				query.append("select distinct account.id, account.nickname, profile.primaryLanguage, stats.rating, stats.activeGames, stats.finishedGames, stats.lastMoveTime, stats.averageMoveTime ");
+				query.append("from wisematches.personality.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor stats, wisematches.personality.profile.impl.HibernatePlayerProfile profile ");
 				appendAreaCriteria(query, area);
-				query.append(" and account.id=stats.playerId");
+				query.append(" and account.id=stats.playerId and profile.playerId=account.id");
 
 				if (order != null && order.length != 0) {
 /*

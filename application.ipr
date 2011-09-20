@@ -415,7 +415,9 @@
       <words>
         <w>accoint</w>
         <w>blacknames</w>
+        <w>captchas</w>
         <w>configurer</w>
+        <w>criterias</w>
         <w>curdate</w>
         <w>dayofyear</w>
         <w>expirations</w>
@@ -435,6 +437,7 @@
         <w>playboard</w>
         <w>recaptcha</w>
         <w>render&quot;</w>
+        <w>searchable</w>
         <w>slangly</w>
         <w>successfulness</w>
         <w>tbody</w>

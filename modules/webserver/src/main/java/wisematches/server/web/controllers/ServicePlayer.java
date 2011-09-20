@@ -1,8 +1,10 @@
 package wisematches.server.web.controllers;
 
 import wisematches.personality.Membership;
+import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.Player;
+import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -18,6 +20,17 @@ public class ServicePlayer {
 	private boolean robot;
 
 	private ServicePlayer() {
+	}
+
+	public ServicePlayer(long id, String nickname, boolean online, boolean robot) {
+		this.id = id;
+		this.online = online;
+		this.nickname = nickname;
+		this.robot = robot;
+	}
+
+	public static ServicePlayer get(long pid, String nickname, PlayerStateManager stateManager) {
+		return new ServicePlayer(pid, nickname, stateManager.isPlayerOnline(Personality.person(pid)), false);
 	}
 
 	public static ServicePlayer get(Account player, PlayerStateManager stateManager) {

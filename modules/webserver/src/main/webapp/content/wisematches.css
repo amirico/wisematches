@@ -535,3 +535,26 @@ div.space-line {
     background-origin: padding-box;
     background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50%;
 }
+
+.captchas img {
+    top: -20px;
+    right: -1px;
+    position: absolute;
+}
+
+.captchas .image {
+    width: 178px;
+    height: 40px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid gray;
+    margin-bottom: 3px;
+}
+
+.captchas label {
+    font-weight: normal !important;
+}
+
+.captchas input {
+    width: 180px;
+}

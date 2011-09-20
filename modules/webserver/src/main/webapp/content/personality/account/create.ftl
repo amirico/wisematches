@@ -146,7 +146,7 @@
                             </td>
                             <td>
                             <@wm.captcha path="registration.captcha"/>
-                                <span class="sample"><@message code="captcha.description"/></span>
+                                <#--<span class="sample"><@message code="captcha.description"/></span>-->
                             </td>
                         </tr>
 

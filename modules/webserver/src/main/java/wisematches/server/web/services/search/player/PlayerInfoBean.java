@@ -1,7 +1,6 @@
 package wisematches.server.web.services.search.player;
 
 import wisematches.personality.Language;
-import wisematches.personality.account.Account;
 import wisematches.server.web.services.search.SearchParameter;
 
 import java.util.Date;
@@ -10,15 +9,19 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class PlayerInfoBean {
-	private final Account account;
+	private final long pid;
+	private final String nickname;
+	private final Language language;
 	private final int rating;
 	private final int activeGames;
 	private final int finishedGames;
 	private final Date lastMoveTime;
 	private final long averageMoveTime;
 
-	public PlayerInfoBean(Account account, int rating, int activeGames, int finishedGames, Date lastMoveTime, long averageMoveTime) {
-		this.account = account;
+	public PlayerInfoBean(long pid, String nickname, Language language, int rating, int activeGames, int finishedGames, Date lastMoveTime, long averageMoveTime) {
+		this.pid = pid;
+		this.nickname = nickname;
+		this.language = language;
 		this.rating = rating;
 		this.activeGames = activeGames;
 		this.finishedGames = finishedGames;
@@ -26,14 +29,17 @@ public class PlayerInfoBean {
 		this.averageMoveTime = averageMoveTime;
 	}
 
-	@SearchParameter(name = "account", sortingColumns = {"account.nickname"})
-	public Account getAccount() {
-		return account;
+	public long getPid() {
+		return pid;
+	}
+
+	public String getNickname() {
+		return nickname;
 	}
 
 	@SearchParameter(name = "account.language")
 	public Language getLanguage() {
-		return account.getLanguage();
+		return language;
 	}
 
 	@SearchParameter(name = "stats.rating")
@@ -65,7 +71,9 @@ public class PlayerInfoBean {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("PlayerInfoBean");
-		sb.append("{account=").append(account);
+		sb.append("{pid=").append(pid);
+		sb.append(", nickname='").append(nickname).append('\'');
+		sb.append(", language=").append(language);
 		sb.append(", rating=").append(rating);
 		sb.append(", activeGames=").append(activeGames);
 		sb.append(", finishedGames=").append(finishedGames);

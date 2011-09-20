@@ -39,9 +39,13 @@ public class GameMessageSource {
 
 	public String getPlayerNick(Player p, Locale locale) {
 		if (p instanceof ComputerPlayer) {
-			return messageSource.getMessage("game.player." + p.getNickname(), null, locale);
+			return getRobotNick((ComputerPlayer) p, locale);
 		}
 		return p.getNickname();
+	}
+
+	public String getRobotNick(ComputerPlayer player, Locale locale) {
+		return messageSource.getMessage("game.player." + player.getNickname(), null, locale);
 	}
 
 	public String getMessage(String code, Locale locale, Object... args) {

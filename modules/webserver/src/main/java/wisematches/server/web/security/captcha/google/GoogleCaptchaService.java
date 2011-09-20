@@ -3,6 +3,7 @@ package wisematches.server.web.security.captcha.google;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.Errors;
+import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.security.captcha.CaptchaService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -34,7 +36,7 @@ public class GoogleCaptchaService implements CaptchaService {
 	}
 
 	@Override
-	public String createCaptchaScript(String language) {
+	public String createCaptchaScript(GameMessageSource messageSource, Locale language) {
 		final StringBuilder b = new StringBuilder();
 		b.append("<script type=\"text/javascript\">");
 		b.append(LINE_SEPARATOR);
