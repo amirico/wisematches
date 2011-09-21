@@ -19,11 +19,11 @@
     </div>
 
     <div>
-        <table id="searchResult">
+        <table id="searchResult" class="display">
             <thead>
             <tr>
             <#list searchColumns as c>
-                <th width="100%" nowrap="nowrap"><@message code="search.column.${c}"/></th>
+                <th <#if c="nickname">width="100%"</#if>><@message code="search.column.${c}"/></th>
             </#list>
             </tr>
             </thead>
