@@ -1005,6 +1005,9 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
                 }
             }
         }
+        if (scoreEngine.getCellBonus(7, 7) == undefined) {
+            $("<div></div>").addClass('cell').addClass('bonus-cell-center').offset({left: 7 * 22, top: 7 * 22}).appendTo(bonuses);
+        }
 
         $.each(moves, function(i, move) {
             registerBoardMove(move, true);
