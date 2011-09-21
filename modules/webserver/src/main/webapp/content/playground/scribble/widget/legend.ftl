@@ -27,7 +27,7 @@
         </td>
         <td> - <@message code='game.legend.triple.letter'/></td>
         <td>
-            <div class="cell bonus-cell-3l" style="position: static;"></div>
+            <div class="cell bonus-cell-3w" style="position: static;"></div>
         </td>
         <td> - <@message code='game.legend.triple.word'/></td>
     </tr>
