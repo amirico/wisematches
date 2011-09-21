@@ -86,13 +86,4 @@ public class ScribbleHistoryManager extends HibernateDaoSupport implements GameH
 			}
 		});
 	}
-
-	public int getPlayedFormerlyCount(Personality personality) {
-		final HibernateTemplate template = getHibernateTemplate();
-		return DataAccessUtils.intResult(template.find("select count(distinct r.playerId) " +
-				"from wisematches.playground.tracking.RatingChange as l, " +
-				" wisematches.playground.tracking.RatingChange as r " +
-				"where l.boardId=r.boardId and l.playerId=? and not r.playerId=?",
-				personality.getId(), personality.getId()));
-	}
 }

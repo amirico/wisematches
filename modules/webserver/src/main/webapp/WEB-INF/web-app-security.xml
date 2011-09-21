@@ -57,9 +57,10 @@
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler"
-                class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+                class="wisematches.server.web.security.spring.fixes.ExceptionMappingAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
         <beans:property name="defaultFailureUrl" value="/account/loginAuth?error=system"/>
+        <beans:property name="allowSessionCreation" value="true"/>
         <beans:property name="exceptionMappings">
             <beans:map>
                 <beans:entry
@@ -102,7 +103,7 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.spring.WMAccessDeniedHandler">
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.spring.fixes.WMAccessDeniedHandler">
         <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
     </beans:bean>
 
@@ -123,7 +124,7 @@
         <beans:property name="userDetailsService" ref="userDetailsService"/>
     </beans:bean>
 
-    <beans:bean id="concurrentSessionFilter" class="wisematches.server.web.security.spring.WMConcurrentSessionFilter">
+    <beans:bean id="concurrentSessionFilter" class="wisematches.server.web.security.spring.fixes.ConcurrentSessionFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
         <beans:property name="expiredUrl" value="/account/loginAuth?error=session"/>
     </beans:bean>
