@@ -1,4 +1,4 @@
-package wisematches.server.web.security.spring;
+package wisematches.server.web.security.spring.fixes;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * TODO: must be removed when https://jira.springsource.org/browse/SEC-1770 will be fixed.
  */
-public class WMConcurrentSessionFilter extends GenericFilterBean {
+public class ConcurrentSessionFilter extends GenericFilterBean {
 	//~ Instance fields ================================================================================================
 
 	private SessionRegistry sessionRegistry;
