@@ -1,39 +1,65 @@
-package wisematches.playground.scribble.history;
+package wisematches.playground.scribble.search.board;
 
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
-import wisematches.playground.history.GameHistory;
+import wisematches.playground.search.DesiredEntityBean;
+import wisematches.playground.search.SearchAttribute;
+import wisematches.playground.search.SearchDistinct;
 
-import javax.persistence.*;
-import java.util.Arrays;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-public class ScribbleGameHistory implements GameHistory {
+@SearchDistinct("boardId")
+public class ScribbleHistoryEntity implements DesiredEntityBean<Void> {
 	@Id
+	@SearchAttribute(column = "board.boardId")
 	private long boardId;
+
+	@SearchAttribute(column = "board.startedDate")
 	private Date startedDate;
+
+	@SearchAttribute(column = "board.finishedDate")
 	private Date finishedDate;
+
+	@SearchAttribute(column = "board.rated")
 	private boolean rated;
+
+	@SearchAttribute(column = "UPPER(board.language)")
 	private Language language;
+
+	@SearchAttribute(column = "board.resolution")
 	private GameResolution resolution;
-	private int newRating;
-	private int ratingChange;
+
+	@SearchAttribute(column = "board.movesCount")
 	private int movesCount;
+
+	@SearchAttribute(column = "rating.newRating")
+	private short newRating;
+
+	@SearchAttribute(column = "rating.newRating - rating.oldRating")
+	private short ratingChange;
+
+	@SearchAttribute(column = "max(if(r.playerIndex=0, r.playerId, 0))", sortable = false)
 	private long player0;
+
+	@SearchAttribute(column = "max(if(r.playerIndex=1, r.playerId, 0))", sortable = false)
 	private long player1;
+
+	@SearchAttribute(column = "max(if(r.playerIndex=2, r.playerId, 0))", sortable = false)
 	private long player2;
+
+	@SearchAttribute(column = "max(if(r.playerIndex=3, r.playerId, 0))", sortable = false)
 	private long player3;
 
-	public static final long[] EMPTY_PLAYERS = new long[0];
-
-	public ScribbleGameHistory() {
+	public ScribbleHistoryEntity() {
 	}
 
-	@Override
 	public long getBoardId() {
 		return boardId;
 	}
@@ -42,7 +68,6 @@ public class ScribbleGameHistory implements GameHistory {
 		this.boardId = boardId;
 	}
 
-	@Override
 	public Date getStartedDate() {
 		return startedDate;
 	}
@@ -51,7 +76,6 @@ public class ScribbleGameHistory implements GameHistory {
 		this.startedDate = startedDate;
 	}
 
-	@Override
 	public Date getFinishedDate() {
 		return finishedDate;
 	}
@@ -60,7 +84,6 @@ public class ScribbleGameHistory implements GameHistory {
 		this.finishedDate = finishedDate;
 	}
 
-	@Override
 	public boolean isRated() {
 		return rated;
 	}
@@ -69,7 +92,6 @@ public class ScribbleGameHistory implements GameHistory {
 		this.rated = rated;
 	}
 
-	@Override
 	public Language getLanguage() {
 		return language;
 	}
@@ -78,33 +100,30 @@ public class ScribbleGameHistory implements GameHistory {
 		this.language = language;
 	}
 
-	public void setResolution(GameResolution resolution) {
-		this.resolution = resolution;
-	}
-
-	@Override
 	public GameResolution getResolution() {
 		return resolution;
 	}
 
-	public int getNewRating() {
+	public void setResolution(GameResolution resolution) {
+		this.resolution = resolution;
+	}
+
+	public short getNewRating() {
 		return newRating;
 	}
 
-	public void setNewRating(int newRating) {
+	public void setNewRating(short newRating) {
 		this.newRating = newRating;
 	}
 
-	@Override
-	public int getRatingChange() {
+	public short getRatingChange() {
 		return ratingChange;
 	}
 
-	public void setRatingChange(int ratingChange) {
+	public void setRatingChange(short ratingChange) {
 		this.ratingChange = ratingChange;
 	}
 
-	@Override
 	public int getMovesCount() {
 		return movesCount;
 	}
@@ -145,23 +164,39 @@ public class ScribbleGameHistory implements GameHistory {
 		this.player3 = player3;
 	}
 
-	@Override
-	@Transient
-	public long[] getPlayers(long excludePlayer) {
-		int count = 0;
-		final long[] longs = new long[4];
-		for (long l : new long[]{player0, player1, player2, player3}) {
-			if (l != 0 && l != excludePlayer) {
-				longs[count++] = l;
-			}
+	public long[] getPlayers(Personality personality) {
+		int c = 0;
+		if (isDefined(player0, personality)) {
+			c++;
 		}
-		if (count == 0) {
-			return EMPTY_PLAYERS;
+		if (isDefined(player1, personality)) {
+			c++;
 		}
-		if (count == longs.length) {
-			return longs;
+		if (isDefined(player2, personality)) {
+			c++;
 		}
-		return Arrays.copyOf(longs, count);
+		if (isDefined(player3, personality)) {
+			c++;
+		}
+		long[] res = new long[c];
+		c = 0;
+		if (isDefined(player0, personality)) {
+			res[c++] = player0;
+		}
+		if (isDefined(player1, personality)) {
+			res[c++] = player1;
+		}
+		if (isDefined(player2, personality)) {
+			res[c++] = player2;
+		}
+		if (isDefined(player3, personality)) {
+			res[c] = player3;
+		}
+		return res;
+	}
+
+	private boolean isDefined(long id, Personality p) {
+		return id != 0 && id != p.getId();
 	}
 
 	@Override
@@ -174,9 +209,9 @@ public class ScribbleGameHistory implements GameHistory {
 		sb.append(", rated=").append(rated);
 		sb.append(", language=").append(language);
 		sb.append(", resolution=").append(resolution);
+		sb.append(", movesCount=").append(movesCount);
 		sb.append(", newRating=").append(newRating);
 		sb.append(", ratingChange=").append(ratingChange);
-		sb.append(", movesCount=").append(movesCount);
 		sb.append(", player0=").append(player0);
 		sb.append(", player1=").append(player1);
 		sb.append(", player2=").append(player2);

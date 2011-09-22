@@ -1,11 +1,9 @@
 package wisematches.playground.search.player;
 
-import wisematches.playground.search.DesiredEntityContext;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerSearchArea implements DesiredEntityContext {
+public enum PlayerSearchArea {
 	/**
 	 * Players will be searched only in friends list.
 	 */

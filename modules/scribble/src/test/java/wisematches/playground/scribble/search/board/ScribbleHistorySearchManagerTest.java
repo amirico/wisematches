@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.history;
+package wisematches.playground.scribble.search.board;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,22 +23,22 @@ import java.util.List;
 		"classpath:/config/playground-config.xml",
 		"classpath:/config/scribble-junit-config.xml"
 })
-public class ScribbleHistoryManagerTest {
+public class ScribbleHistorySearchManagerTest {
 	@Autowired
-	private ScribbleHistoryManager historyManager;
+	private ScribbleHistorySearchManager historySearchManager;
 
-	public ScribbleHistoryManagerTest() {
+	public ScribbleHistorySearchManagerTest() {
 	}
 
 	@Test
-	public void testFinishedGames() {
+	public void testName() throws Exception {
 		final Personality player = Personality.person(1029);
 
-		int finishedGamesCount = historyManager.getFinishedGamesCount(player);
+		int finishedGamesCount = historySearchManager.getTotalCount(player, null);
 		System.out.println(finishedGamesCount);
 
-		List<ScribbleGameHistory> finishedGames = historyManager.getFinishedGames(player, Range.limit(1, 10), Order.asc("language"));
-		System.out.println("Finished size: " + finishedGames.size());
-		System.out.println(finishedGames);
+		List<ScribbleHistoryEntity> historyEntity = historySearchManager.searchEntities(player, null, null, new Order[]{Order.asc("language")}, Range.limit(4, 10));
+		System.out.println("Finished size: " + historyEntity.size());
+		System.out.println(historyEntity);
 	}
 }

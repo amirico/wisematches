@@ -5,45 +5,44 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import wisematches.database.Order;
-import wisematches.database.Range;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
-import wisematches.playground.history.GameHistoryManager;
-import wisematches.playground.scribble.history.ScribbleGameHistory;
+import wisematches.playground.scribble.search.board.ScribbleHistoryEntity;
+import wisematches.playground.scribble.search.board.ScribbleHistorySearchManager;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.UnknownEntityException;
-import wisematches.server.web.controllers.WisematchesController;
+import wisematches.server.web.controllers.playground.AbstractSearchController;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.state.PlayerStateManager;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@RequestMapping("/playground/scribble")
-public class ScribbleHistoryController extends WisematchesController {
+@RequestMapping("/playground/scribble/history")
+public class ScribbleHistoryController extends AbstractSearchController<ScribbleHistoryEntity, Void> {
 	private PlayerManager playerManager;
 	private GameMessageSource messageSource;
 	private PlayerStateManager playerStateManager;
 	private AdvertisementManager advertisementManager;
-	private GameHistoryManager<ScribbleGameHistory> historyManager;
-
-	private static final String[] COLUMNS = {"finishedDate", "newRating", "ratingChange", "players", "resolution", "movesCount"};
-	private static final Object[][] EMPTY_DATA = new Object[0][0];
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
 	public ScribbleHistoryController() {
+		super(new String[]{"finishedDate", "newRating", "ratingChange", "players", "resolution", "movesCount"});
 	}
 
-	@RequestMapping("history")
+	@RequestMapping("")
 	public String showHistoryGames(@RequestParam(value = "p", required = false) Long pid, Model model, Locale locale) throws UnknownEntityException {
 		final Player principal;
 		if (pid == null) {
@@ -59,7 +58,9 @@ public class ScribbleHistoryController extends WisematchesController {
 			log.debug("Loading active games for personality: " + principal);
 		}
 		model.addAttribute("player", principal);
-		model.addAttribute("columns", COLUMNS);
+		model.addAttribute("searchColumns", getColumns());
+		model.addAttribute("searchEntityDescriptor", getDesiredEntityDescriptor());
+
 		if (principal.getMembership().isAdsVisible()) {
 			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
@@ -67,59 +68,31 @@ public class ScribbleHistoryController extends WisematchesController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "history", method = RequestMethod.POST)
+	@RequestMapping(value = "load.ajax")
 	public Map<String, Object> loadHistoryGames(@RequestParam(value = "p", required = false) Long pid, @RequestBody Map<String, Object> request, Locale locale) {
-		final Personality principal;
+		final Personality personality;
 		if (pid == null) {
-			principal = getPersonality();
+			personality = getPersonality();
 		} else {
-			principal = Personality.person(pid);
+			personality = Personality.person(pid);
 		}
+		return loadData(personality, request, null, locale);
+	}
 
-		final int gamesCount = historyManager.getFinishedGamesCount(principal);
-
-		final Map<String, Object> res = new HashMap<String, Object>();
-		res.put("sEcho", request.get("sEcho"));
-		res.put("iTotalRecords", gamesCount);
-		res.put("iTotalDisplayRecords", gamesCount);
-
-		if (gamesCount == 0) {
-			res.put("aaData", EMPTY_DATA);
-		} else {
-			final Order[] orders = new Order[(Integer) request.get("iSortingCols")];
-			for (int i = 0; i < orders.length; i++) {
-				final String name = COLUMNS[(Integer) request.get("iSortCol_" + i)];
-				if ("asc".equalsIgnoreCase((String) request.get("sSortDir_" + i))) {
-					orders[i] = Order.asc(name);
-				} else {
-					orders[i] = Order.desc(name);
-				}
-			}
-
-			Range limit = Range.limit((Integer) request.get("iDisplayStart"), (Integer) request.get("iDisplayLength"));
-			final List<ScribbleGameHistory> games = historyManager.getFinishedGames(principal, limit, orders);
-			int index = 0;
-			final Object[][] data = new Object[games.size()][];
-			for (ScribbleGameHistory game : games) {
-				final Object[] row = new Object[COLUMNS.length + 1];
-				row[0] = messageSource.formatDate(game.getFinishedDate(), locale);
-				row[1] = game.getNewRating();
-				row[2] = game.getRatingChange();
-
-				final long[] playerIds = game.getPlayers(principal.getId());
-				final ServicePlayer[] players = new ServicePlayer[playerIds.length];
-				for (int i = 0, players1Length = playerIds.length; i < players1Length; i++) {
-					players[i] = ServicePlayer.get(playerManager.getPlayer(playerIds[i]), messageSource, playerStateManager, locale);
-				}
-				row[3] = players;
-				row[4] = messageSource.getMessage("game.resolution." + game.getResolution().name().toLowerCase(), locale);
-				row[5] = game.getMovesCount();
-				row[6] = game.getBoardId();
-				data[index++] = row;
-			}
-			res.put("aaData", data);
+	@Override
+	protected void convertEntity(ScribbleHistoryEntity entity, Personality personality, Map<String, Object> map, Locale locale) {
+		map.put("newRating", entity.getNewRating());
+		map.put("finishedDate", messageSource.formatDate(entity.getFinishedDate(), locale));
+		map.put("ratingChange", entity.getRatingChange());
+		final long[] playerIds = entity.getPlayers(personality);
+		final ServicePlayer[] players = new ServicePlayer[playerIds.length];
+		for (int i = 0, players1Length = playerIds.length; i < players1Length; i++) {
+			players[i] = ServicePlayer.get(playerManager.getPlayer(playerIds[i]), messageSource, playerStateManager, locale);
 		}
-		return res;
+		map.put("players", players);
+		map.put("resolution", messageSource.getMessage("game.resolution." + entity.getResolution().name().toLowerCase(), locale));
+		map.put("movesCount", entity.getMovesCount());
+		map.put("boardId", entity.getBoardId());
 	}
 
 	@Autowired
@@ -143,7 +116,7 @@ public class ScribbleHistoryController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setHistoryManager(GameHistoryManager<ScribbleGameHistory> historyManager) {
-		this.historyManager = historyManager;
+	public void setHistorySearchManager(ScribbleHistorySearchManager historySearchManager) {
+		setEntitySearchManager(historySearchManager);
 	}
 }

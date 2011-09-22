@@ -42,4 +42,9 @@ public class ScribblePlayerSearchManager extends AbstractHibernateSearchManager<
 				throw new UnsupportedOperationException("Area criteria not implemented for " + area);
 		}
 	}
+
+	@Override
+	protected String getGroupCriterias(PlayerSearchArea context) {
+		return null;
+	}
 }
