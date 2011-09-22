@@ -6,7 +6,7 @@
 
 <@wm.jstable/>
 
-<@wm.playground id="pastgames">
+<@wm.playground id="pastGamesWidget">
     <#if player != principal>
     <div class="title">
     <@message code="game.past.history.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>

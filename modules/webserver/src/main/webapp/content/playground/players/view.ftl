@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<@wm.playground>
+<@wm.playground id="playersWidget">
 <div>
     <div class="ui-widget-header ui-corner-all shadow"><@message code="search.label"/></div>
 

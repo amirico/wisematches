@@ -7,7 +7,7 @@
 
 <@wm.jstable/>
 
-<@wm.playground>
+<@wm.playground id="createGameWidget">
 <div id="createGame">
     <div>
         <#if restricted>

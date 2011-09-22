@@ -36,7 +36,6 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
-import wisematches.server.web.services.ads.AdvertisementManager;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -52,7 +51,6 @@ public class ScribbleGameController extends WisematchesController {
 	private ScribbleBoardManager boardManager;
 	private ScribbleSearchesEngine searchesEngine;
 	private RestrictionManager restrictionManager;
-	private AdvertisementManager advertisementManager;
 	private ScribblePlayerSearchManager searchManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
 
@@ -66,7 +64,7 @@ public class ScribbleGameController extends WisematchesController {
 
 	@RequestMapping("active")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model, Locale locale) throws UnknownEntityException {
+	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
 		final Player principal;
 		if (pid == null) {
 			principal = getPrincipal();
@@ -96,16 +94,12 @@ public class ScribbleGameController extends WisematchesController {
 		} else {
 			model.addAttribute("activeProposals", Collections.emptyList());
 		}
-
-		if (principal.getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
-		}
 		return "/content/playground/scribble/active";
 	}
 
 	@RequestMapping("join")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String showWaitingGames(Model model, Locale locale) throws RestrictionException {
+	public String showWaitingGames(Model model) throws RestrictionException {
 		final Player principal = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + principal);
@@ -118,15 +112,12 @@ public class ScribbleGameController extends WisematchesController {
 		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
 		model.addAttribute("activeProposals", proposals);
 		model.addAttribute("blacklistManager", blacklistManager);
-		if (principal.getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("gameboard", Language.byLocale(locale)));
-		}
 		return "/content/playground/scribble/join";
 	}
 
 	@RequestMapping(value = "join", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String joinGameAction(@RequestParam("p") long id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+	public String joinGameAction(@RequestParam("p") long id, Model model) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Join to game: " + id);
 		}
@@ -154,21 +145,21 @@ public class ScribbleGameController extends WisematchesController {
 			model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
 			model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
 		}
-		return showWaitingGames(model, locale);
+		return showWaitingGames(model);
 	}
 
 	@RequestMapping(value = "accept", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String acceptGameAction(@RequestParam("p") long id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+	public String acceptGameAction(@RequestParam("p") long id, Model model) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Accept a game: " + id);
 		}
-		return joinGameAction(id, model, locale);
+		return joinGameAction(id, model);
 	}
 
 	@RequestMapping(value = "decline", params = "p")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String declineGameAction(@RequestParam("p") long id, Model model, Locale locale) throws BoardManagementException, RestrictionException {
+	public String declineGameAction(@RequestParam("p") long id, Model model) throws BoardManagementException, RestrictionException {
 		if (log.isInfoEnabled()) {
 			log.info("Decline a game: " + id);
 		}
@@ -182,7 +173,7 @@ public class ScribbleGameController extends WisematchesController {
 			model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
 			model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
 		}
-		return showWaitingGames(model, locale);
+		return showWaitingGames(model);
 	}
 
 	@ResponseBody
@@ -228,11 +219,6 @@ public class ScribbleGameController extends WisematchesController {
 			model.addAttribute("playRobotsOnly", true);
 		} else {
 			model.addAttribute("playRobotsOnly", false);
-		}
-
-
-		if (principal.getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
 		}
 		return "/content/playground/scribble/create";
 	}
@@ -361,11 +347,6 @@ public class ScribbleGameController extends WisematchesController {
 	@Autowired
 	public void setRestrictionManager(RestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
-	}
-
-	@Autowired
-	public void setAdvertisementManager(AdvertisementManager advertisementManager) {
-		this.advertisementManager = advertisementManager;
 	}
 
 	@Autowired

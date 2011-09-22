@@ -3,14 +3,12 @@ package wisematches.server.web.controllers.playground.message;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.ComputerPlayer;
@@ -25,8 +23,6 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.message.form.MessageForm;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.ads.AdvertisementManager;
-import wisematches.server.web.services.notify.NotificationPublisher;
 
 import java.util.List;
 import java.util.Locale;
@@ -43,8 +39,6 @@ public class MessageController extends WisematchesController {
 	private GameMessageSource messageSource;
 	private BlacklistManager blacklistManager;
 	private RestrictionManager restrictionManager;
-	private AdvertisementManager advertisementManager;
-	private NotificationPublisher notificationPublisher;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
 
@@ -53,23 +47,16 @@ public class MessageController extends WisematchesController {
 
 	@RequestMapping("view")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String showReceivedMessage(Model model, Locale locale) {
+	public String showReceivedMessage(Model model) {
 		final Player principal = getPrincipal();
 		activityManager.messagesChecked(principal);
 		model.addAttribute("messages", messageManager.getMessages(principal, MessageDirection.RECEIVED));
-		if (principal.getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("message", Language.byLocale(locale)));
-		}
 		return "/content/playground/messages/view";
 	}
 
 	@RequestMapping("sent")
-	public String showSentMessage(Model model, Locale locale) {
-		final Player principal = getPrincipal();
-		model.addAttribute("messages", messageManager.getMessages(principal, MessageDirection.SENT));
-		if (principal.getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("message", Language.byLocale(locale)));
-		}
+	public String showSentMessage(Model model) {
+		model.addAttribute("messages", messageManager.getMessages(getPrincipal(), MessageDirection.SENT));
 		return "/content/playground/messages/sent";
 	}
 
@@ -199,12 +186,6 @@ public class MessageController extends WisematchesController {
 	}
 
 	@Autowired
-	@Qualifier("mailNotificationPublisher")
-	public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
-		this.notificationPublisher = notificationPublisher;
-	}
-
-	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
@@ -227,11 +208,6 @@ public class MessageController extends WisematchesController {
 	@Autowired
 	public void setRestrictionManager(RestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
-	}
-
-	@Autowired
-	public void setAdvertisementManager(AdvertisementManager advertisementManager) {
-		this.advertisementManager = advertisementManager;
 	}
 
 	@Autowired

@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="advertisementBlock" type="wisematches.server.web.services.ads.AdvertisementBlock" -->
 
-<#if advertisementBlock??>
+<#if advertisementBlock?? && advertisementBlock?has_content>
     <#if advertisementBlock.provider.name() == 'GOOGLE'>
     <script type="text/javascript"><!--
     google_ad_client = "${advertisementBlock.client}";

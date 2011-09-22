@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.scribble.search.player.ScribblePlayerSearchManager;
 import wisematches.playground.search.player.PlayerEntityBean;
@@ -17,7 +16,6 @@ import wisematches.playground.search.player.PlayerSearchArea;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.playground.AbstractSearchController;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.state.PlayerStateManager;
 
 import java.util.Arrays;
@@ -33,7 +31,6 @@ import java.util.Map;
 public class PlayerSearchController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
 	private GameMessageSource messageSource;
 	private PlayerStateManager stateManager;
-	private AdvertisementManager advertisementManager;
 
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
@@ -44,15 +41,11 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 	}
 
 	@RequestMapping("")
-	public String showPlayersSearchForm(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model, Locale locale) {
+	public String showPlayersSearchForm(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model) {
 		model.addAttribute("searchArea", area);
 		model.addAttribute("searchAreas", AREAS);
 		model.addAttribute("searchColumns", getColumns());
 		model.addAttribute("searchEntityDescriptor", getDesiredEntityDescriptor());
-
-		if (getPrincipal().getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("players", Language.byLocale(locale)));
-		}
 		return "/content/playground/players/view";
 	}
 
@@ -95,10 +88,5 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 	@Autowired
 	public void setPlayerSearchManager(ScribblePlayerSearchManager playerSearchManager) {
 		setEntitySearchManager(playerSearchManager);
-	}
-
-	@Autowired
-	public void setAdvertisementManager(AdvertisementManager advertisementManager) {
-		this.advertisementManager = advertisementManager;
 	}
 }
