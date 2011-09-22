@@ -10,14 +10,14 @@
     <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
         <span class="player"><a
-                href="/playground/scribble/board?b=${board.getBoardId()}"><b><@message code="game.status.move_you"/></b></a></span>
+                href="/playground/scribble/board?b=${board.getBoardId()}"><strong><@message code="game.status.move_you"/></strong></a></span>
             <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
     </#if>
 </#macro>
 
-<@wm.playground id="activegames">
+<@wm.playground id="activeGamesWidget">
 
 <table width="100%" height="30px">
     <tr>

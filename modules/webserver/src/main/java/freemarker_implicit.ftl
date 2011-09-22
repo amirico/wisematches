@@ -6,4 +6,5 @@
 [#-- @ftlvariable name="playerManager" type="wisematches.personality.player.PlayerManager" --]
 [#-- @ftlvariable name="playerStateManager" type="wisematches.server.web.services.state.PlayerStateManager" --]
 [#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.captcha.CaptchaService" --]
+[#-- @ftlvariable name="advertisementManager" type="wisematches.server.web.services.ads.AdvertisementManager" --]
 [#-- @ftlvariable name="gameMessageSource" type="wisematches.server.web.i18n.GameMessageSource" --]

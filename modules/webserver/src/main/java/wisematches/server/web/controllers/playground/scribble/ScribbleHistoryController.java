@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -19,7 +18,6 @@ import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.AbstractSearchController;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.ads.AdvertisementManager;
 import wisematches.server.web.services.state.PlayerStateManager;
 
 import java.util.Locale;
@@ -34,7 +32,6 @@ public class ScribbleHistoryController extends AbstractSearchController<Scribble
 	private PlayerManager playerManager;
 	private GameMessageSource messageSource;
 	private PlayerStateManager playerStateManager;
-	private AdvertisementManager advertisementManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
@@ -43,7 +40,7 @@ public class ScribbleHistoryController extends AbstractSearchController<Scribble
 	}
 
 	@RequestMapping("")
-	public String showHistoryGames(@RequestParam(value = "p", required = false) Long pid, Model model, Locale locale) throws UnknownEntityException {
+	public String showHistoryGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
 		final Player principal;
 		if (pid == null) {
 			principal = getPrincipal();
@@ -60,10 +57,6 @@ public class ScribbleHistoryController extends AbstractSearchController<Scribble
 		model.addAttribute("player", principal);
 		model.addAttribute("searchColumns", getColumns());
 		model.addAttribute("searchEntityDescriptor", getDesiredEntityDescriptor());
-
-		if (principal.getMembership().isAdsVisible()) {
-			model.addAttribute("advertisementBlock", advertisementManager.getAdvertisementBlock("dashboard", Language.byLocale(locale)));
-		}
 		return "/content/playground/scribble/history";
 	}
 
@@ -90,9 +83,9 @@ public class ScribbleHistoryController extends AbstractSearchController<Scribble
 			players[i] = ServicePlayer.get(playerManager.getPlayer(playerIds[i]), messageSource, playerStateManager, locale);
 		}
 		map.put("players", players);
+		map.put("boardId", entity.getBoardId());
 		map.put("resolution", messageSource.getMessage("game.resolution." + entity.getResolution().name().toLowerCase(), locale));
 		map.put("movesCount", entity.getMovesCount());
-		map.put("boardId", entity.getBoardId());
 	}
 
 	@Autowired
@@ -108,11 +101,6 @@ public class ScribbleHistoryController extends AbstractSearchController<Scribble
 	@Autowired
 	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
 		this.playerStateManager = playerStateManager;
-	}
-
-	@Autowired
-	public void setAdvertisementManager(AdvertisementManager advertisementManager) {
-		this.advertisementManager = advertisementManager;
 	}
 
 	@Autowired

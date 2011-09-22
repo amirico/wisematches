@@ -9,6 +9,23 @@
 <script type="text/javascript" src="/jquery/js/ColVis.min.js"></script>
 </#macro>
 
+<#macro playground id="">
+<table <#if id?has_content>id="${id}"</#if> width="100%">
+    <tr>
+        <td width="165px" valign="top" align="left">
+            <#if principal.membership.adsVisible>
+            <#assign advertisementBlock=advertisementManager.getAdvertisementBlock(id, locale)!""/>
+            <#include "/content/templates/advertisement.ftl">
+            </#if>
+        </td>
+        <td valign="top">
+            <#nested/>
+        </td>
+        <td width="165px" valign="top" align="right">&nbsp;</td>
+    </tr>
+</table>
+</#macro>
+
 <#macro editor id code value="" view="" classes="">
     <#assign qwe=view/>
     <#if (!view?has_content) && (value?has_content)><#assign qwe=value/></#if>
@@ -70,22 +87,6 @@
 
 <#macro captcha path>
     <#if captchaService??><@field path>${captchaService.createCaptchaScript(gameMessageSource, locale)}</@field></#if>
-</#macro>
-
-<#macro playground id="">
-<table <#if id?has_content>id="${id}"</#if> width="100%">
-    <tr>
-        <td width="165px" valign="top" align="left">
-            <#include "/content/templates/advertisement.ftl">
-        </td>
-        <td valign="top">
-            <#nested/>
-        </td>
-        <td width="165px" valign="top" align="right">
-
-        </td>
-    </tr>
-</table>
 </#macro>
 
 <#macro widget title id="" class="" style="">

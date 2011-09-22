@@ -27,7 +27,7 @@
 </script>
 
 <div id="join-game">
-<@wm.playground>
+<@wm.playground id="waitingGamesWidget">
     <#if restricted>
     <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
     </#if>

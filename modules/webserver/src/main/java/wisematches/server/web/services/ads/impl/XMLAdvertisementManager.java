@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -33,12 +34,17 @@ public class XMLAdvertisementManager implements AdvertisementManager {
 	}
 
 	@Override
-	public AdvertisementBlock getAdvertisementBlock(String name, Language language) {
+	public AdvertisementBlock getAdvertisementBlock(String name, Locale language) {
 		AdvertisementBlock advertisementBlock = advertisementBlocks.get(name + "_" + language);
 		if (advertisementBlock == null) {
 			log.error("No adds block for language " + language + " by name " + name);
 		}
 		return advertisementBlock;
+	}
+
+	@Override
+	public AdvertisementBlock getAdvertisementBlock(String name, Language language) {
+		return getAdvertisementBlock(name, language.locale());
 	}
 
 	public void setAdsResource(Resource resource) throws ParserConfigurationException, IOException, SAXException {

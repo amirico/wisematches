@@ -87,6 +87,7 @@
             <map merge="true">
                 <entry key="analyticsCode" value="${analytics.trackcode}"/>
                 <entry key="captchaService" value-ref="captchaService"/>
+                <entry key="advertisementManager" value-ref="advertisementManager"/>
             </map>
         </property>
     </bean>
