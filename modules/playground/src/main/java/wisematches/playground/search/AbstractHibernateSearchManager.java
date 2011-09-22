@@ -2,6 +2,7 @@ package wisematches.playground.search;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -18,10 +19,16 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean<C>, C extends DesiredEntityContext> extends HibernateDaoSupport implements EntitySearchManager<T, C> {
+public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean<C>, C> extends HibernateDaoSupport implements EntitySearchManager<T, C> {
+	private final boolean sql;
 	private final DesiredEntityDescriptor<T> entityDescriptor;
 
 	protected AbstractHibernateSearchManager(Class<T> type) {
+		this(type, false);
+	}
+
+	protected AbstractHibernateSearchManager(Class<T> type, boolean sql) {
+		this.sql = sql;
 		entityDescriptor = new DesiredEntityDescriptor<T>(type);
 	}
 
@@ -62,7 +69,7 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 					query.append(whereCriterias);
 				}
 
-				final Query query1 = session.createQuery(query.toString());
+				final Query query1 = sql ? session.createSQLQuery(query.toString()) : session.createQuery(query.toString());
 				query1.setCacheable(true);
 				query1.setParameter("pid", person.getId());
 				return ((Number) query1.uniqueResult()).intValue();
@@ -115,6 +122,12 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 					query.append(whereCriterias);
 				}
 
+				String groupCriterias = getGroupCriterias(context);
+				if (groupCriterias != null) {
+					query.append(" group by ");
+					query.append(groupCriterias);
+				}
+
 				if (order != null && order.length != 0) {
 					query.append(" order by ");
 					for (Order o : order) {
@@ -126,13 +139,20 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 					query.setLength(query.length() - 2);
 				}
 
-				final Query query1 = session.createQuery(query.toString());
+				final Query query1;
+				if (sql) {
+					SQLQuery q = session.createSQLQuery(query.toString());
+					q.addEntity(entityDescriptor.getDesiredEntityType());
+					query1 = q;
+				} else {
+					query1 = session.createQuery(query.toString());
+					query1.setResultTransformer(new AliasToBeanResultTransformer(entityDescriptor.getDesiredEntityType()));
+				}
 				query1.setCacheable(true);
 				query1.setParameter("pid", person.getId());
 				if (range != null) {
 					range.apply(query1);
 				}
-				query1.setResultTransformer(new AliasToBeanResultTransformer(entityDescriptor.getDesiredEntityType()));
 				return query1.list();
 			}
 		});
@@ -141,4 +161,6 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 	protected abstract String getTablesList(final C context);
 
 	protected abstract String getWhereCriterias(final C context);
+
+	protected abstract String getGroupCriterias(final C context);
 }

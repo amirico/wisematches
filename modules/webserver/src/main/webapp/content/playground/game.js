@@ -1,6 +1,68 @@
 if (wm == null) wm = {};
 if (wm.game == null) wm.game = {};
 
+wm.game.History = function(pid, columns, language) {
+    $.each(columns, function(i, a) {
+        if (a.sName == 'players') {
+            a.fnRender = function (oObj) {
+                var res = "";
+                var opponents = oObj.aData['players'];
+                for (var i in opponents) {
+                    res += wm.ui.player(opponents[i]);
+                    if (i != opponents.length - 1) {
+                        res += ', ';
+                    }
+                }
+                return res;
+            };
+        } else if (a.sName == 'ratingChange') {
+            a.fnRender = function (oObj) {
+                var rc = oObj.aData['ratingChange'];
+                var res = '';
+                res += '<div class="rating ' + (rc < 0 ? 'down' : rc == 0 ? 'same' : 'up') + '">';
+                res += '<div class="change"><sub>' + (rc < 0 ? '' : '+') + rc + '</sub></div>';
+                res += '</div>';
+                return res;
+            }
+        } else if (a.sName == 'resolution') {
+            a.fnRender = function (oObj) {
+                var id = oObj.aData['boardId'];
+                var state = oObj.aData['resolution'];
+                if (id != 0) {
+                    return "<a href='/playground/scribble/board?b=" + id + "'>" + state + "</a>";
+                } else {
+                    return state;
+                }
+            }
+        }
+    });
+
+    $('#history').dataTable({
+        "bJQueryUI": true,
+        "bStateSave": false,
+        "bFilter": false,
+        "bSortClasses": false,
+        "aaSorting": [
+            [0,'asc']
+        ],
+        "iDisplayStart": 0,
+        "aoColumns": columns,
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "/playground/scribble/history/load.ajax?p=" + pid,
+        "sDom": '<"H"lCr>t<"F"ip>',
+        "sPaginationType": "full_numbers",
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            var data = {};
+            for (var i in aoData) {
+                data[aoData[i]['name']] = aoData[i]['value'];
+            }
+            $.post(sSource, $.toJSON(data), fnCallback);
+        },
+        "oLanguage": language
+    });
+};
+
 wm.game.Search = function(columns, scriplet, language) {
     var players;
     var callback;

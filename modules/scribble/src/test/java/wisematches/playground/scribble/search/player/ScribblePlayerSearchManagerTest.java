@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
 import wisematches.personality.Personality;
-import wisematches.playground.search.EntitySearchManager;
 import wisematches.playground.search.player.PlayerEntityBean;
 import wisematches.playground.search.player.PlayerSearchArea;
 
@@ -27,7 +26,7 @@ import java.util.List;
 })
 public class ScribblePlayerSearchManagerTest {
 	@Autowired
-	private EntitySearchManager<PlayerEntityBean, PlayerSearchArea> playerSearchManager;
+	private ScribblePlayerSearchManager playerSearchManager;
 
 	public ScribblePlayerSearchManagerTest() {
 	}

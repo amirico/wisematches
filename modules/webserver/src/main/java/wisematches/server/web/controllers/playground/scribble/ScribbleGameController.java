@@ -29,8 +29,7 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.search.board.ScribbleSearchesEngine;
-import wisematches.playground.search.EntitySearchManager;
-import wisematches.playground.search.player.PlayerEntityBean;
+import wisematches.playground.scribble.search.player.ScribblePlayerSearchManager;
 import wisematches.playground.search.player.PlayerSearchArea;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
@@ -54,8 +53,8 @@ public class ScribbleGameController extends WisematchesController {
 	private ScribbleSearchesEngine searchesEngine;
 	private RestrictionManager restrictionManager;
 	private AdvertisementManager advertisementManager;
+	private ScribblePlayerSearchManager searchManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
-	private EntitySearchManager<PlayerEntityBean, PlayerSearchArea> searchManager;
 
 	private static final String[] SEARCH_COLUMNS = new String[]{"nickname", "language", "rating", "averageMoveTime", "lastMoveTime"};
 	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
@@ -240,7 +239,7 @@ public class ScribbleGameController extends WisematchesController {
 
 	@RequestMapping("challenge")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, BindingResult result, Model model, Locale locale) {
+	public String challenge(@RequestParam("p") long pid, @Valid @ModelAttribute("create") CreateScribbleForm form, Model model, Locale locale) {
 		form.setTitle("Challenge from " + getPrincipal().getNickname());
 		form.setOpponentType(OpponentType.CHALLENGE);
 		form.setOpponents(new long[]{pid});
@@ -375,7 +374,7 @@ public class ScribbleGameController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setSearchManager(EntitySearchManager<PlayerEntityBean, PlayerSearchArea> searchManager) {
+	public void setSearchManager(ScribblePlayerSearchManager searchManager) {
 		this.searchManager = searchManager;
 	}
 }

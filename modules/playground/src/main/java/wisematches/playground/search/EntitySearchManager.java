@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface EntitySearchManager<T extends DesiredEntityBean<C>, C extends DesiredEntityContext> {
+public interface EntitySearchManager<T extends DesiredEntityBean<C>, C> {
 	DesiredEntityDescriptor getDescriptor();
 
 	int getTotalCount(Personality person, C context);

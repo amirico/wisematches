@@ -13,10 +13,6 @@
         <property name="hibernateTemplate" ref="hibernateTemplate"/>
     </bean>
 
-    <bean id="scribbleHistoryManager" class="wisematches.playground.scribble.history.ScribbleHistoryManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
     </bean>
 
@@ -76,6 +72,10 @@
     </bean>
 
     <bean id="playerSearchManager" class="wisematches.playground.scribble.search.player.ScribblePlayerSearchManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="historySearchManager" class="wisematches.playground.scribble.search.board.ScribbleHistorySearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
