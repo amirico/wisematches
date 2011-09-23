@@ -295,6 +295,16 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	}
 
 	@Override
+	public int getGameMovesCount() {
+		lock.lock();
+		try {
+			return movesCount;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
 	public P getPlayerHand(long playerId) {
 		lock.lock();
 		try {

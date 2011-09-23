@@ -96,6 +96,13 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	List<GameMove> getGameMoves();
 
 	/**
+	 * Returns game moves count.
+	 *
+	 * @return the game moves count.
+	 */
+	int getGameMovesCount();
+
+	/**
 	 * Makes move for active player and returns points for this turn.
 	 *
 	 * @param move the move.
