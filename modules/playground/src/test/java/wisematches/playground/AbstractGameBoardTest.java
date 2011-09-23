@@ -6,10 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import wisematches.personality.Personality;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -113,7 +110,18 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_selectFirstPlayer() {
-		Collection c = Arrays.asList(h1, h2, h3);
+		List<GamePlayerHand> c = Arrays.asList(h1, h2, h3);
+
+		int sum = 0;
+		int[] values = new int[c.size()];
+		for (int i = 0; i < 1000; i++) {
+			byte b = board.selectFirstPlayer(null, c);
+			values[b]++;
+			sum += (b + 1);
+		}
+		System.out.println("First move distribution values: " + Arrays.toString(values));
+
+		assertTrue("The sum [" + sum + "] is less than 1500. It means only first player is selected", sum > 1500);
 		assertTrue("First player selected", c.contains(board.getPlayerTurn()));
 	}
 

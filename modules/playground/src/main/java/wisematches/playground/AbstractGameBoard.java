@@ -97,6 +97,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	private final Collection<GameBoardListener> boardListeners = new CopyOnWriteArrayList<GameBoardListener>();
 
 	private static final int MAX_PASSED_TURNS = 2;
+	private static final Random FIRST_PLAYER_RANDOM = new Random();
 
 	/**
 	 * This is Hibernate constructor that is required for serialization. Visibility of this constructor MUST BE
@@ -434,7 +435,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @return the player who should be first.
 	 */
 	protected byte selectFirstPlayer(S gameSettings, List<P> players) {
-		return (byte) (Math.random() * (players.size() - 1));
+		return (byte) FIRST_PLAYER_RANDOM.nextInt(players.size());
 	}
 
 	protected final P getPlayerByCode(byte code) {
