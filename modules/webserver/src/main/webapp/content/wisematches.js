@@ -186,6 +186,9 @@ wm.ui = new function() {
     this.player = function(info, hideLink) {
         var id = (info.playerId != undefined ? info.playerId : info.id);
         var html = '<span class="player ' + (id > 1000 ? 'member' : 'computer') + '">';
+        if (info.online) {
+            html += '<div class="online"></div> ';
+        }
         if (!hideLink && id > 1000) {
             html += '<a href="/playground/profile/view?p=' + id + '">';
         }

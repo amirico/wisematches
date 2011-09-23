@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/jquery/js/ColVis.min.js"></script>
 </#macro>
 
-<#macro playground id="">
+<#macro playground id>
 <table <#if id?has_content>id="${id}"</#if> width="100%">
     <tr>
         <td width="165px" valign="top" align="left">
