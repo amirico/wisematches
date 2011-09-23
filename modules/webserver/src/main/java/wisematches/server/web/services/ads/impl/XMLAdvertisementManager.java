@@ -24,7 +24,7 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class XMLAdvertisementManager implements AdvertisementManager {
-	private final Map<String, AdvertisementBlock> advertisementBlocks = new HashMap<String, AdvertisementBlock>();
+	private final Map<AdsBlockKey, AdvertisementBlock> advertisementBlocks = new HashMap<AdsBlockKey, AdvertisementBlock>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.adds");
 
@@ -35,7 +35,7 @@ public class XMLAdvertisementManager implements AdvertisementManager {
 
 	@Override
 	public AdvertisementBlock getAdvertisementBlock(String name, Locale language) {
-		AdvertisementBlock advertisementBlock = advertisementBlocks.get(name + "_" + language);
+		AdvertisementBlock advertisementBlock = advertisementBlocks.get(new AdsBlockKey(name, language));
 		if (advertisementBlock == null) {
 			log.error("No adds block for language " + language + " by name " + name);
 		}
@@ -70,9 +70,39 @@ public class XMLAdvertisementManager implements AdvertisementManager {
 					final int width = Integer.valueOf(item.getAttribute("width"));
 					final int height = Integer.valueOf(item.getAttribute("height"));
 
-					advertisementBlocks.put(name + "_" + language, new AdvertisementBlock(client, slot, width, height, AdvertisementProvider.GOOGLE));
+					advertisementBlocks.put(new AdsBlockKey(name, language), new AdvertisementBlock(client, slot, width, height, AdvertisementProvider.GOOGLE));
 				}
 			}
+		}
+	}
+
+	private static final class AdsBlockKey {
+		private final String name;
+		private final Locale locale;
+
+		private AdsBlockKey(String name, Language language) {
+			this(name, language.locale());
+		}
+
+		private AdsBlockKey(String name, Locale locale) {
+			this.name = name;
+			this.locale = locale;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			AdsBlockKey that = (AdsBlockKey) o;
+			return locale.equals(that.locale) && name.equals(that.name);
+		}
+
+		@Override
+		public int hashCode() {
+			int result = name.hashCode();
+			result = 31 * result + locale.hashCode();
+			return result;
 		}
 	}
 }
