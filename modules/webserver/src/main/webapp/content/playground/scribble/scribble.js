@@ -18,7 +18,7 @@ wm.scribble.tile = new function() {
     };
 
     this.createTileWidget = function(tile) {
-        return $("<div></div>").addClass("tile cost" + tile.cost).css('background-position', '-' + tile.cost * 22 + 'px 0').append($("<span></span>").text(tile.letter.toUpperCase())).data('tile', tile);
+        return $("<div></div>").addClass("tile cost" + tile.cost).css('background-position', '-' + tile.cost * 22 + 'px 0').append($("<span></span>").html(tile.letter.toUpperCase())).data('tile', tile);
     };
 
     this.selectTile = function(tileWidget) {
@@ -544,23 +544,44 @@ wm.scribble.Legend = function(board) {
         $('#showLegendButton').slideToggle('slow');
     };
 
-    var infoTable = $("table .tilesInfoTable");
+    var costTable = $("table .tilesCostInfo");
     for (var i = 0; i < 12; i++) {
         var count = 0;
         var e = $("<tr></tr>");
-        $('<td></td>').append($('<div style="position: relative; height: 22px; width:22px"></div>').append(wm.scribble.tile.createTileWidget({letter: '' + i, cost: i}))).appendTo(e);
+//        $('<td></td>').append($('<div style="position: relative; height: 22px; width:22px"></div>').append(wm.scribble.tile.createTileWidget({letter: '' + i, cost: i}))).appendTo(e);
+        $('<td nowrap="nowrap"></td>').html(i + ' points').appendTo(e);
         $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
         var d = $('<div style="position: relative; height: 22px;"></div>');
         $('<td></td>').append(d).appendTo(e);
         $.each(board.getBankTilesInfo(), function(j, bti) {
             if (bti.cost == i) {
-                d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: i}).offset({left: count * 22, top: 0}));
+                d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: bti.cost}).offset({left: count * 22, top: 0}));
                 count++;
             }
         });
         d.width(count * 22);
         if (count > 0) {
-            e.appendTo(infoTable);
+            e.appendTo(costTable);
+        }
+    }
+
+    var countTable = $("table .tilesCountTable");
+    for (var i = 0; i < 30; i++) {
+        var count = 0;
+        var e = $("<tr></tr>");
+        $('<td></td>').html(i + 'шт').appendTo(e);
+        $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
+        var d = $('<div style="position: relative; height: 22px;"></div>');
+        $('<td></td>').append(d).appendTo(e);
+        $.each(board.getBankTilesInfo(), function(j, bti) {
+            if (bti.count == i) {
+                d.append(wm.scribble.tile.createTileWidget({letter: bti.letter, cost: bti.cost}).offset({left: count * 22, top: 0}));
+                count++;
+            }
+        });
+        d.width(count * 22);
+        if (count > 0) {
+            e.appendTo(countTable);
         }
     }
 };
