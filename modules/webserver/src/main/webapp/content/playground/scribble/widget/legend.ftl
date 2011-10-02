@@ -1,21 +1,8 @@
 <#include "/core.ftl">
 
-<@wm.widget id="boardLegend" title="game.legend.label" style="display: none; padding-top: 10px;">
-<div style="padding-top: 3px">
-    <div class="legendTabs" style="line-height: normal; padding-top: 5px; padding-bottom: 5px">
-        <a class="ui-widget-content ui-state-active ui-corner-tl"
-           style="border-bottom: none; background-image: none; margin: 0; padding: 5px;" href="#">Cell Info</a>
-
-        <a class="ui-widget-content ui-state-default"
-           style="border-bottom: none; background-image: none; margin: -5px; padding: 5px;" href="#">Tiles
-            cost</a>
-
-        <a class="ui-widget-content ui-state-default ui-corner-tr"
-           style="border-bottom: none; background-image: none; padding: 5px;" href="#">Tiles
-            count</a>
-    </div>
-
-    <div class="legendContent ui-widget-content">
+<@wm.widget id="boardLegend" title="game.legend.label" style="padding-top: 10px;">
+<div>
+    <div class="legendContent">
         <div class="tilesCellInfo">
             <table>
                 <tr>
@@ -66,20 +53,31 @@
             </table>
         </div>
     </div>
-</div>
 
-<div style="width: 100%; text-align: right;">
-    <a href="javascript: boardLegend.hideLegend()">&laquo; <@message code="game.legend.hide.label"/></a>
+    <div class="legendTabs" style="line-height: normal; padding-top: 5px;">
+        <a href="#">Cell Info</a>
+
+        <a href="#">Tiles cost</a>
+
+        <a href="#">Tiles count</a>
+    <#--
+            <a class="ui-widget-content ui-state-active ui-corner-left"
+               style="background-image: none; margin: 0; padding: 5px;" href="#">Cell Info</a>
+
+            <a class="ui-widget-content ui-state-default"
+               style="background-image: none; margin: -5px; padding: 5px;" href="#">Tiles
+                cost</a>
+
+            <a class="ui-widget-content ui-state-default ui-corner-right"
+               style="background-image: none; padding: 5px;" href="#">Tiles
+                count</a>
+    -->
+    </div>
 </div>
 </@wm.widget>
 
 <script type="text/javascript">
     var boardLegend = new wm.scribble.Legend(board);
-
-    $(document).ready(function() {
-        var link = $("<a></a>").attr('id', 'showLegendButton').attr('href', 'javascript: boardLegend.showLegend()').html('<@message code="game.legend.show.label"/> &raquo;');
-        $("<div></div>").css("width", "100%").css('text-align', 'right').append(link).appendTo('#gameInfo');
-    });
 
     $(".legendTabs a").each(function(index) {
         $(this).click(function() {
