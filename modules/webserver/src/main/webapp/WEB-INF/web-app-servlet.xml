@@ -51,7 +51,7 @@
     <bean id="captchaService" class="wisematches.server.web.security.captcha.captchas.CaptchasCaptchaService">
         <property name="publicKey" value="${captchasNet.publickey}"/>
         <property name="privateKey" value="${captchasNet.privatekey}"/>
-        <property name="lettersCount" value="6"/>
+        <property name="lettersCount" value="4"/>
         <property name="alphabet" value="0123456789"/>
         <property name="width" value="180"/>
         <property name="height" value="80"/>

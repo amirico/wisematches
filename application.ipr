@@ -139,7 +139,7 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" />
+  <component name="DataSourceManagerImpl" compressed="false" hash="3657145938" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -161,39 +161,17 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="gwt">
-        <modules>
-          <module name="games">
-            <files>
-              <file url="file://$PROJECT_DIR$/modules/games/src/main/java/wisematches/server/games/Scribble.gwt.xml" />
-              <file url="file://$PROJECT_DIR$/modules/games/src/main/java/wisematches/server/games/scribble/ScribbleCore.gwt.xml" />
-              <file url="file://$PROJECT_DIR$/modules/games/src/main/java/wisematches/server/games/scribble/ScribbleScores.gwt.xml" />
-            </files>
-          </module>
-        </modules>
-      </facet-type>
-      <facet-type id="jpa">
-        <modules>
-          <module name="personality">
-            <files>
-              <file url="file://$PROJECT_DIR$/modules/personality/META-INF/persistence.xml" />
-            </files>
-          </module>
-        </modules>
-      </facet-type>
-      <facet-type id="web">
-        <modules>
-          <module name="webserver" />
-        </modules>
-      </facet-type>
-    </autodetection-disabled>
-  </component>
   <component name="FacetStructureConfigurable.UI">
     <splitter-proportions>
       <SplitterProportionsDataImpl />
     </splitter-proportions>
+  </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="gwt" url="file://$PROJECT_DIR$/modules/games/src/main/java/wisematches/server/games/Scribble.gwt.xml" />
+    <file type="gwt" url="file://$PROJECT_DIR$/modules/games/src/main/java/wisematches/server/games/scribble/ScribbleCore.gwt.xml" />
+    <file type="gwt" url="file://$PROJECT_DIR$/modules/games/src/main/java/wisematches/server/games/scribble/ScribbleScores.gwt.xml" />
+    <file type="jpa" url="file://$PROJECT_DIR$/modules/personality/META-INF/persistence.xml" />
+    <file type="web" url="file://$PROJECT_DIR$/modules/webserver" />
   </component>
   <component name="GlobalLibrariesConfigurable.UI">
     <splitter-proportions>
