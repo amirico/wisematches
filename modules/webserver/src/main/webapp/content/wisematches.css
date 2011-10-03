@@ -27,6 +27,11 @@ input {
     margin: 0;
 }
 
+a.action {
+    text-decoration: none !important;
+    border-bottom: 1px dotted !important;
+}
+
 .sample {
     color: #666666;
     line-height: normal;
@@ -414,20 +419,6 @@ div.space-line {
     background: transparent url('/resources/images/close.png') no-repeat 0 0;
 }
 
-.tooltip {
-    display: none;
-    background: #cdd7e7;
-    border: 1px solid gray;
-    border-radius: 5px;
-    height: auto;
-    width: auto;
-    z-index: 999;
-    padding: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
 .shadow {
     -webkit-box-shadow: 0 0 3px #B6B7BB;
     -moz-box-shadow: 0 0 3px #B6B7BB;
@@ -519,10 +510,10 @@ div.space-line {
 
 .loading-image {
     height: 100%;
-    background-size: auto;
-    background-clip: border-box;
-    background-origin: padding-box;
-    background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50%;
+    background-size: auto !important;
+    background-clip: border-box !important;
+    background-origin: padding-box !important;
+    background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50% !important;
 }
 
 .datatables_processing {
@@ -530,7 +521,6 @@ div.space-line {
     padding: 5px;
     top: 50% !important;
     background-size: auto;
-    border: none !important;
     background-clip: border-box;
     background-origin: padding-box;
     background: transparent url("/resources/images/progress.gif") no-repeat scroll 50% 50%;
@@ -557,4 +547,22 @@ div.space-line {
     position: relative;
     border: 1px solid gray;
     margin-bottom: 3px;
+}
+
+.quickInfo {
+    float: right;
+    cursor: pointer;
+    border: none !important;
+    background: none !important;
+    top: 2px;
+    position: relative;
+}
+
+.cluetip-close {
+    text-align: right;
+    font-weight: bold;
+}
+
+.cluetip-inner span.ui-icon {
+    display: inline-block !important;
 }

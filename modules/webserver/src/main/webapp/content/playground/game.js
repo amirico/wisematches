@@ -1,10 +1,28 @@
 if (wm == null) wm = {};
 if (wm.game == null) wm.game = {};
 
+wm.game.help = new function() {
+    this.showHelp = function(section, ctx) {
+        $('<div><div class="loading-image" style="height: 300px"></div></div>').load(section + '?plain=true').dialog({
+            title:ctx != undefined ? $(ctx).text() : '',
+            width:650,
+            height:450,
+            modal:true,
+            resizable:true,
+            buttons:{
+                "Close":function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        return false;
+    };
+};
+
 wm.game.History = function(pid, columns, language) {
     $.each(columns, function(i, a) {
         if (a.sName == 'players') {
-            a.fnRender = function (oObj) {
+            a.fnRender = function(oObj) {
                 var res = "";
                 var opponents = oObj.aData['players'];
                 for (var i in opponents) {
@@ -16,7 +34,7 @@ wm.game.History = function(pid, columns, language) {
                 return res;
             };
         } else if (a.sName == 'ratingChange') {
-            a.fnRender = function (oObj) {
+            a.fnRender = function(oObj) {
                 var rc = oObj.aData['ratingChange'];
                 var res = '';
                 res += '<div class="rating ' + (rc < 0 ? 'down' : rc == 0 ? 'same' : 'up') + '">';
@@ -25,7 +43,7 @@ wm.game.History = function(pid, columns, language) {
                 return res;
             }
         } else if (a.sName == 'resolution') {
-            a.fnRender = function (oObj) {
+            a.fnRender = function(oObj) {
                 var id = oObj.aData['boardId'];
                 var state = oObj.aData['resolution'];
                 if (id != 0) {
@@ -38,28 +56,28 @@ wm.game.History = function(pid, columns, language) {
     });
 
     $('#history').dataTable({
-        "bJQueryUI": true,
-        "bStateSave": false,
-        "bFilter": false,
-        "bSortClasses": false,
-        "aaSorting": [
-            [0,'asc']
+        "bJQueryUI":true,
+        "bStateSave":false,
+        "bFilter":false,
+        "bSortClasses":false,
+        "aaSorting":[
+            [0, 'asc']
         ],
-        "iDisplayStart": 0,
-        "aoColumns": columns,
-        "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": "/playground/scribble/history/load.ajax?p=" + pid,
-        "sDom": '<"H"lCr>t<"F"ip>',
-        "sPaginationType": "full_numbers",
-        "fnServerData": function (sSource, aoData, fnCallback) {
+        "iDisplayStart":0,
+        "aoColumns":columns,
+        "bProcessing":true,
+        "bServerSide":true,
+        "sAjaxSource":"/playground/scribble/history/load.ajax?p=" + pid,
+        "sDom":'<"H"lCr>t<"F"ip>',
+        "sPaginationType":"full_numbers",
+        "fnServerData":function(sSource, aoData, fnCallback) {
             var data = {};
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
             }
             $.post(sSource, $.toJSON(data), fnCallback);
         },
-        "oLanguage": language
+        "oLanguage":language
     });
 };
 
@@ -71,31 +89,31 @@ wm.game.Search = function(columns, scriplet, language) {
 
     $.each(columns, function(i, a) {
         if (a.sName == 'nickname') {
-            a.fnRender = function (oObj) {
+            a.fnRender = function(oObj) {
                 return wm.ui.player(oObj.aData.nickname);
             };
         }
     });
 
     var resultTable = $('#searchResult').dataTable({
-        "bJQueryUI": true,
-        "bSortClasses": false,
-        "aoColumns": columns,
-        "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": "/playground/players/load.ajax",
-        "fnServerData": function (sSource, aoData, fnCallback) {
+        "bJQueryUI":true,
+        "bSortClasses":false,
+        "aoColumns":columns,
+        "bProcessing":true,
+        "bServerSide":true,
+        "sAjaxSource":"/playground/players/load.ajax",
+        "fnServerData":function(sSource, aoData, fnCallback) {
             var data = {};
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
             }
-            $.post(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), $.toJSON(data), function (json) {
+            $.post(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), $.toJSON(data), function(json) {
                 players = json.aaData;
                 fnCallback(json)
             });
         },
-        "sDom": '<"H"lCr>t<"F"ip>',
-        "sPaginationType": "full_numbers"
+        "sDom":'<"H"lCr>t<"F"ip>',
+        "sPaginationType":"full_numbers"
     });
 
     var reloadContent = function() {
@@ -117,13 +135,13 @@ wm.game.Search = function(columns, scriplet, language) {
         callback = c;
         reloadContent();
         $("#searchPlayerWidget").dialog({
-            title: language['title'],
-            modal: true,
-            width: 800,
-            buttons: [
+            title:language['title'],
+            modal:true,
+            width:800,
+            buttons:[
                 {
-                    text: language['close'],
-                    click: function() {
+                    text:language['close'],
+                    click:function() {
                         $(this).dialog("close");
                     }
                 }
