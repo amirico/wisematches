@@ -107,7 +107,7 @@
     <table id="playboard" cellpadding="5" align="center">
         <tr>
             <td style="vertical-align: top; width: 250px">
-            <#include "widget/players.ftl"/>
+            <#include "widget/progress.ftl"/>
         <#include "widget/history.ftl"/>
         <#include "widget/help.ftl"/>
             </td>
@@ -119,7 +119,7 @@
             </td>
 
             <td style="vertical-align: top; width: 280px">
-            <#include "widget/progress.ftl"/>
+            <#include "widget/players.ftl"/>
 <#if !viewMode>
                 <#include "widget/selection.ftl"/>
                 <#include "widget/memory.ftl"/>

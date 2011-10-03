@@ -101,6 +101,9 @@ wm.game.Search = function(columns, scriplet, language) {
         "aoColumns":columns,
         "bProcessing":true,
         "bServerSide":true,
+        "aaSorting":[
+            [ 2, "desc" ]
+        ],
         "sAjaxSource":"/playground/players/load.ajax",
         "fnServerData":function(sSource, aoData, fnCallback) {
             var data = {};

@@ -603,7 +603,7 @@ wm.scribble.History = function(board, language) {
         "bPaginate":false,
         "bInfo":false,
         "bFilter":false,
-        "sScrollY":300,
+        "sScrollY":235,
         "sScrollX":"100%",
         "bStateSave":true,
         "sDom":'t',
