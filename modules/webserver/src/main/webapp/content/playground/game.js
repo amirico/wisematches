@@ -90,7 +90,7 @@ wm.game.Search = function(columns, scriplet, language) {
     $.each(columns, function(i, a) {
         if (a.sName == 'nickname') {
             a.fnRender = function(oObj) {
-                return wm.ui.player(oObj.aData.nickname);
+                return wm.ui.player(oObj.aData.nickname, scriplet);
             };
         }
     });
@@ -127,7 +127,7 @@ wm.game.Search = function(columns, scriplet, language) {
         var p = $(event.target).closest('tr');
         search.closeDialog();
         var pos = resultTable.fnGetPosition(p.get(0));
-        callback(players[pos][0]);
+        callback(players[pos]['nickname']);
     });
 
     this.closeDialog = function() {
