@@ -25,7 +25,7 @@
 <@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
 </#macro>
 
-<@wm.widget id="gameInfo" title="game.state.label">
+<@wm.widget id="gameInfo" title="game.state.label" help="board.progress">
 <table width="100%" border="0">
 <@element showSeparator=false>
     <td><strong><@message code="game.state.started"/>:</strong></td>

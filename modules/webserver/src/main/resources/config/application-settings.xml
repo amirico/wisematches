@@ -35,6 +35,7 @@
         <property name="basenames">
             <array>
                 <value>classpath:/i18n/web</value>
+                <value>classpath:/i18n/tips</value>
                 <value>classpath:/i18n/notify</value>
                 <value>classpath:/i18n/exceptions</value>
             </array>

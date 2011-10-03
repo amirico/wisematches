@@ -67,10 +67,10 @@
                             direction:'${word.direction}', text:'${word.text}',
                             tiles:[ <#list word.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list> ]
                         }
-                        <#elseif playerMove.class.simpleName == "ExchangeTilesMove">
-                            type:'exchange'
-                        <#else>
-                            type:'pass'
+                    <#elseif playerMove.class.simpleName == "ExchangeTilesMove">
+                        type:'exchange'
+                    <#else>
+                        type:'pass'
                     </#if>
                 }<#if move_has_next>,</#if>
             </#list>]
@@ -108,14 +108,13 @@
         <tr>
             <td style="vertical-align: top; width: 250px">
             <#include "widget/players.ftl"/>
-        <#include "widget/legend.ftl"/>
         <#include "widget/history.ftl"/>
+        <#include "widget/help.ftl"/>
             </td>
 
             <td style="vertical-align: top;">
-            <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"/>
+            <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"  help="board.playboard"/>
         <#if !viewMode><#include "widget/controls.ftl"/></#if>
-        <#include "widget/help.ftl"/>
             <#if playerHand?has_content><#include "widget/annotation.ftl"/></#if>
             </td>
 

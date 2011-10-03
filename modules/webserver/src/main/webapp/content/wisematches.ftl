@@ -12,10 +12,13 @@
     <script type="text/javascript" src="/jquery/js/jquery.min.js"></script>
     <script type="text/javascript" src="/jquery/js/json.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.hoverIntent.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.blockUI.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.freeow.min.js"></script>
-    <script type="text/javascript" src="/jquery/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.cluetip.css"/>
+    <script type="text/javascript" src="/jquery/js/jquery.cluetip.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/content/wisematches.js"></script>

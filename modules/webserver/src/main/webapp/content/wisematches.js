@@ -51,7 +51,7 @@ wm.ui = new function() {
 
     var alertTemplate = function(title, message) {
         var e;
-        e = ['<div>','<div class="content">','<h2>' + title + '</h2>','<p>' + message + '</p>','</div>','<span class="icon"></span>','<span class="close"></span>','</div>'].join("");
+        e = ['<div>', '<div class="content">', '<h2>' + title + '</h2>', '<p>' + message + '</p>', '</div>', '<span class="icon"></span>', '<span class="close"></span>', '</div>'].join("");
         return e;
     };
 
@@ -60,44 +60,44 @@ wm.ui = new function() {
     };
 
     $.blockUI.defaults.css = {
-        padding:    0,
-        margin:        0,
-        width:        '30%',
-        top:        '40%',
-        left:        '35%',
-        textAlign:    'center',
-        'border-width': '3px'
+        padding:0,
+        margin:0,
+        width:'30%',
+        top:'40%',
+        left:'35%',
+        textAlign:'center',
+        'border-width':'3px'
     };
 
     $.blockUI.defaults.overlayCSS = {
 //        backgroundColor: '#000',
-        opacity:           0.2,
-        cursor:               'wait',
-        '-moz-border-radius': '5px',
-        '-webkit-border-radius': '5px',
-        'border-radius': '5px',
+        opacity:0.2,
+        cursor:'wait',
+        '-moz-border-radius':'5px',
+        '-webkit-border-radius':'5px',
+        'border-radius':'5px',
         backgroundColor:'#DFEFFC'
     };
 
     $.ajaxSetup({
-        type: 'post',
-        dataType: 'json',
-        contentType: 'application/json'
+        type:'post',
+        dataType:'json',
+        contentType:'application/json'
     });
 
     this.showConfirm = function(title, msg, approvedAction) {
         $('<div></div>').html(msg).dialog({
-            title: title,
-            draggable: false,
-            modal: true,
-            resizable: false,
-            width: 400,
-            buttons: {
-                "Ok": function() {
+            title:title,
+            draggable:false,
+            modal:true,
+            resizable:false,
+            width:400,
+            buttons:{
+                "Ok":function() {
                     $(this).dialog("close");
                     approvedAction(true);
                 },
-                "Cancel": function() {
+                "Cancel":function() {
                     $(this).dialog("close");
                     approvedAction(false);
                 } }
@@ -106,20 +106,20 @@ wm.ui = new function() {
 
     this.showWaitMessage = function(message) {
         $.blockUI({
-            blockMsgClass: 'ui-corner-all ui-state-default',
-            css: {
-                padding: '15px',
-                opacity: .85
+            blockMsgClass:'ui-corner-all ui-state-default',
+            css:{
+                padding:'15px',
+                opacity:.85
             },
-            message: message });
+            message:message });
     };
 
     this.showMessage = function(opts) {
         opts = opts || {};
         var v = $.extend(opts, {
-            message: '<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
-            blockMsgClass: 'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
-            draggable: false
+            message:'<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
+            blockMsgClass:'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
+            draggable:false
         });
         $.blockUI(v);
         $('.blockOverlay').click($.unblockUI);
@@ -127,10 +127,10 @@ wm.ui = new function() {
 
     this.showAlert = function(title, message, type, error) {
         $("#alerts-widget-pane").freeow(title, message, {
-            classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
-            showStyle: {opacity: .95},
+            classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
+            showStyle:{opacity:.95},
             template:alertTemplate,
-            autoHideDelay: 10000
+            autoHideDelay:10000
         });
         wm.ui.getAttention(title);
     };
@@ -158,10 +158,10 @@ wm.ui = new function() {
         }
 
         $("#status-widget-pane").freeow(null, message, {
-            classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-bottom"],
+            classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-bottom"],
             template:statusTemplate,
-            autoHide: !stick,
-            autoHideDelay: 10000
+            autoHide:!stick,
+            autoHideDelay:10000
         });
     };
 
@@ -300,8 +300,8 @@ wm.ui.editor = new function() {
             cancelButton.attr('disabled', 'disabled');
 
             setViewInfo(activeElement, {
-                value: activeEditor.getValue(),
-                view: activeEditor.getDisplayValue()
+                value:activeEditor.getValue(),
+                view:activeEditor.getDisplayValue()
             });
 
             var values = {};
@@ -323,8 +323,8 @@ wm.ui.editor = new function() {
 
         var revertEditing = function() {
             setViewInfo(activeElement, {
-                value: previousValue.value,
-                view: previousValue.view
+                value:previousValue.value,
+                view:previousValue.view
             });
             $.unblockUI();
             return false;
@@ -354,9 +354,9 @@ wm.ui.editor = new function() {
 
         var getViewInfo = function(view) {
             return {
-                label: $(view).children(".ui-editor-label").text(),
-                view: $(view).children(".ui-editor-view").html(),
-                value: $(view).children("input").val()
+                label:$(view).children(".ui-editor-label").text(),
+                view:$(view).children(".ui-editor-view").html(),
+                value:$(view).children("input").val()
             };
         };
 
@@ -386,19 +386,19 @@ wm.ui.editor = new function() {
             var offset = $(view).offset();
 
             $.blockUI({
-                message: editorDialog,
-                centerX: false,
-                centerY: false,
-                fadeIn: false,
-                fadeOut: false,
-                blockMsgClass: 'shadow',
-                css: {
-                    width: 'auto',
-                    left: offset.left + 5,
-                    top: offset.top + 5
+                message:editorDialog,
+                centerX:false,
+                centerY:false,
+                fadeIn:false,
+                fadeOut:false,
+                blockMsgClass:'shadow',
+                css:{
+                    width:'auto',
+                    left:offset.left + 5,
+                    top:offset.top + 5
                 },
-                draggable: false,
-                onUnblock: closeEditor
+                draggable:false,
+                onUnblock:closeEditor
             });
         };
 
@@ -416,10 +416,48 @@ wm.ui.editor = new function() {
 };
 
 $(document).ready(function() {
-    $("[title]").tooltip({ position: "bottom right", opacity: 0.97});
+    $("[title]").cluetip({ showTitle:false});
+
     var notifications = $(".notification");
     if (notifications.size() > 0) {
         $("#header-separator").slideUp('slow');
         notifications.appendTo($("#notification-block")).slideDown('slow');
     }
+
+    $(".quickInfo").addClass('ui-state-hover').hover(
+            function() {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-highlight');
+                }
+            },
+            function() {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-hover');
+                }
+            });
+
+    $(".quickInfo a").cluetip({
+        showTitle:false,
+        ajaxCache:true,
+        activation:'click',
+        closePosition:'bottom',
+        closeText:'Close',
+        arrows:false,
+        sticky:true,
+        ajaxProcess:function(E) {
+            return E.summary;
+        },
+        ajaxSettings:{
+            type:'post',
+            dataType:'json',
+            contentType:'application/json'
+        },
+        onActivate:function(e) {
+            e.parent().attr('class', 'quickInfo ui-state-active');
+            return true;
+        },
+        onHide:function(ct, ci) {
+            $(this).parent().attr('class', 'quickInfo ui-state-hover');
+        }
+    });
 });

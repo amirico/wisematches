@@ -2,13 +2,13 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget id="moveInfo" title="game.selection.label" style="padding-top: 10px;">
+<@wm.widget id="moveInfo" title="game.selection.label" style="padding-top: 10px;" help="board.selection">
 <table width="100%">
     <tr>
         <td height="22" valign="bottom"><b><@message code="game.selection.tiles"/>:</b></td>
         <td height="22" width="100%" valign="bottom" style="padding-left: 5px">
             <div id="selectedTilesInfo" style="position: relative; height: 22px;">
-            <@message code="game.selection.notiles"/>
+                <@message code="game.selection.notiles"/>
             </div>
         </td>
     </tr>
@@ -16,7 +16,7 @@
         <td height="22" valign="bottom"><b><@message code="game.selection.word"/>:</b></td>
         <td height="22" valign="bottom" style="padding-left: 5px">
             <div id="selectedWordInfo" style="position: relative; height: 22px;">
-            <@message code="game.selection.noword"/>
+                <@message code="game.selection.noword"/>
             </div>
         </td>
     </tr>
@@ -24,7 +24,7 @@
         <td height="22" valign="bottom"><b><@message code="game.selection.points"/>:</b></td>
         <td height="22" valign="bottom">
             <div id="selectedWordCost" style="position: relative; padding-left: 5px">
-            <@message code="game.selection.noword"/>
+                <@message code="game.selection.noword"/>
             </div>
         </td>
     </tr>
@@ -39,7 +39,7 @@
         </td>
         <td valign="middle" nowrap="nowrap" align="right">
             <button id="checkWordButton" onclick="moveInfo.checkSelectedWord()">
-            <@message code="game.selection.check"/>
+                <@message code="game.selection.check"/>
             </button>
         </td>
     </tr>
@@ -48,8 +48,8 @@
 
 <script type="text/javascript">
     var moveInfo = new wm.scribble.Selection(board, {
-        "checking": "<@message code="game.selection.checking"/>",
-        "valid": "<@message code="game.selection.valid"/>",
-        "invalid": "<@message code="game.selection.invalid"/>"
+        "checking":"<@message code="game.selection.checking"/>",
+        "valid":"<@message code="game.selection.valid"/>",
+        "invalid":"<@message code="game.selection.invalid"/>"
     });
 </script>

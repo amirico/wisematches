@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget id="playersInfo" title="game.player.label">
+<@wm.widget id="playersInfo" title="game.player.label" help="board.players">
 <table cellpadding="5" width="100%" border="1">
     <tbody>
         <#list board.playersHands as hand>

@@ -448,6 +448,7 @@
 
 .annotation .controls {
     float: right;
+    padding-right: 4px;
 }
 
 .annotation .item {
@@ -569,8 +570,8 @@
     margin-bottom: 5px;
 }
 
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
-    text-decoration: underline !important;
+.boardInfoWidget a {
+    white-space: nowrap;
 }
 
 #boardLegend table td {
