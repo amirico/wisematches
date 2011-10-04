@@ -4,6 +4,38 @@
 
 if (wm == null) var wm = {};
 
+wm.i18n = new function() {
+    var values = {};
+
+    var lookup = function(key) {
+        return values[key] || null;
+    };
+
+    var getValue = function(key, defaultValue, options) {
+        var value = lookup(key);
+        if (value == null) return defaultValue;
+
+        if (options != null) {
+            for (key in options) {
+                value = value.replace("{" + key + "}", options[key]);
+            }
+        }
+        return value;
+    };
+
+    this.extend = function(hash) {
+        $.extend(values, hash);
+    };
+
+    this.value = function(key, defaultValue, options) {
+        return getValue(key, defaultValue, options);
+    };
+
+    this.locale = function() {
+        return this.value('locale');
+    }
+};
+
 wm.util = new function() {
     this.createMatrix = function(size) {
         var m = new Array(size);
@@ -92,15 +124,22 @@ wm.ui = new function() {
             modal:true,
             resizable:false,
             width:400,
-            buttons:{
-                "Ok":function() {
-                    $(this).dialog("close");
-                    approvedAction(true);
+            buttons:[
+                {
+                    text:wm.i18n.value('button.ok', 'Ok'),
+                    click:function() {
+                        $(this).dialog("close");
+                        approvedAction(true);
+                    }
                 },
-                "Cancel":function() {
-                    $(this).dialog("close");
-                    approvedAction(false);
-                } }
+                {
+                    text:wm.i18n.value('button.cancel', 'Cancel'),
+                    click:function() {
+                        $(this).dialog("close");
+                        approvedAction(false);
+                    }
+                }
+            ]
         });
     };
 
@@ -424,24 +463,26 @@ $(document).ready(function() {
         notifications.appendTo($("#notification-block")).slideDown('slow');
     }
 
-    $(".quickInfo").addClass('ui-state-hover').hover(
-            function() {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-highlight');
-                }
-            },
+    $(".quickInfo").addClass('ui-state-default').hover(
             function() {
                 if (!$(this).hasClass('ui-state-active')) {
                     $(this).attr('class', 'quickInfo ui-state-hover');
                 }
+            },
+            function() {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-default');
+                }
             });
 
+    var activeQuickInfo = undefined;
     $(".quickInfo a").cluetip({
+        width:340,
         showTitle:false,
         ajaxCache:true,
         activation:'click',
         closePosition:'bottom',
-        closeText:'Close',
+        closeText:wm.i18n.value('button.close'),
         arrows:false,
         sticky:true,
         ajaxProcess:function(E) {
@@ -453,11 +494,16 @@ $(document).ready(function() {
             contentType:'application/json'
         },
         onActivate:function(e) {
+            if (activeQuickInfo != undefined) {
+                activeQuickInfo.parent().attr('class', 'quickInfo ui-state-default');
+            }
+            activeQuickInfo = e;
             e.parent().attr('class', 'quickInfo ui-state-active');
             return true;
         },
         onHide:function(ct, ci) {
-            $(this).parent().attr('class', 'quickInfo ui-state-hover');
+            $(this).parent().attr('class', 'quickInfo ui-state-default');
+            activeQuickInfo = undefined;
         }
     });
 });

@@ -28,6 +28,7 @@
     <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
     <script type="text/javascript" src="/content/playground/game.js"></script>
 </#if>
+<#include 'templates/localization.ftl'/>
 <#include "templates/analytics.ftl">
 </head>
 <body>

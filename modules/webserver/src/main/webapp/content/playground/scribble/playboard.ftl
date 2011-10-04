@@ -90,6 +90,8 @@
         }
     </#if>
     };
+
+    wm.i18n.extend({'2l':'<@message code="game.play.bonus.2l"/>', '3l':'<@message code="game.play.bonus.3l"/>', '2w':'<@message code="game.play.bonus.2w"/>', '3w':'<@message code="game.play.bonus.3w"/>'});
 </script>
 
 <script type="text/javascript">
