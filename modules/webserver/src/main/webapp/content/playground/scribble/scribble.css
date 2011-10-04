@@ -256,6 +256,12 @@
     color: white;
 }
 
+.bonus-cell {
+    font-size: 10px;
+    padding-top: 4px;
+    text-align: center;
+}
+
 .bonus-cell-center {
     background: url(/resources/images/scribble/board/bonuses.png) no-repeat 0 0;
 }

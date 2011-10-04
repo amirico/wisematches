@@ -9,11 +9,14 @@ wm.game.help = new function() {
             height:450,
             modal:true,
             resizable:true,
-            buttons:{
-                "Close":function() {
-                    $(this).dialog("close");
+            buttons:[
+                {
+                    text:wm.i18n.value('button.close', 'Close'),
+                    click:function() {
+                        $(this).dialog("close");
+                    }
                 }
-            }
+            ]
         });
         return false;
     };
@@ -143,7 +146,7 @@ wm.game.Search = function(columns, scriplet, language) {
             width:800,
             buttons:[
                 {
-                    text:language['close'],
+                    text:wm.i18n.value('button.close', 'Close'),
                     click:function() {
                         $(this).dialog("close");
                     }

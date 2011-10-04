@@ -188,12 +188,16 @@ wm.scribble.Comments = function(board, language) {
     };
 
     var registerItemControls = function(item) {
-        item.hoverIntent(function() {
-            $(this).find(".info").slideDown('fast');
-            $(this).toggleClass("collapsed");
-        }, function() {
-            $(this).find(".info").slideUp('fast');
-            $(this).toggleClass("collapsed");
+        item.hoverIntent({
+            interval:300,
+            over:function() {
+                $(this).find(".info").slideDown('fast');
+                $(this).toggleClass("collapsed");
+            },
+            out:function() {
+                $(this).find(".info").slideUp('fast');
+                $(this).toggleClass("collapsed");
+            }
         });
     };
 
@@ -1011,7 +1015,8 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
             for (var j = 0; j < 15; j++) {
                 var bonus = scoreEngine.getCellBonus(i, j);
                 if (bonus != undefined) {
-                    $("<div></div>").addClass('cell').addClass('bonus-cell-' + bonus).offset({left:j * 22, top:i * 22}).appendTo(bonuses);
+                    var text = wm.i18n.value(bonus, bonus.toUpperCase());
+                    $("<div></div>").addClass('cell bonus-cell').addClass('bonus-cell-' + bonus).text(text).offset({left:j * 22, top:i * 22}).appendTo(bonuses);
                 }
             }
         }
