@@ -537,46 +537,60 @@ wm.scribble.Selection = function(board, language) {
             });
 };
 
-wm.scribble.Legend = function(board) {
-    var costTable = $("table .tilesCostInfo");
-    for (var i = 0; i < 12; i++) {
-        var count = 0;
-        var e = $("<tr></tr>");
-        $('<td nowrap="nowrap"></td>').html(i + ' points').appendTo(e);
-        $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
-        var d = $('<div style="position: relative; height: 22px;"></div>');
-        $('<td></td>').append(d).appendTo(e);
-        $.each(board.getBankTilesInfo(), function(j, bti) {
-            if (bti.cost == i) {
-                d.append(wm.scribble.tile.createTileWidget({letter:bti.letter, cost:bti.cost}).offset({left:count * 22, top:0}));
-                count++;
-            }
-        });
-        d.width(count * 22);
-        if (count > 0) {
-            e.appendTo(costTable);
+wm.scribble.BankInfo = function(board, language) {
+    var byCost = new Array();
+    var byCount = new Array();
+    $.each(board.getBankTilesInfo(), function(i, ti) {
+        var cost = byCost[ti.cost] || new Array();
+        var count = byCount[ti.count] || new Array();
+        cost.push(ti);
+        count.push(ti);
+        byCost[ti.cost] = cost;
+        byCount[ti.count] = count;
+    });
+
+    var tiles;
+    var costI = 0;
+    var countI = byCount.length - 1;
+    var table = $("#tilesBankWidget table");
+    while (costI != byCost.length && countI != 0) {
+        var row = $("<tr></tr>").appendTo(table);
+
+        while ((tiles = byCost[costI++]) == undefined) {
         }
+        $("<td class='points-value ui-widget-content'></td>").html(costI - 1).appendTo(row);
+        var costCell = $("<td class='points-tiles ui-widget-content'></td>").appendTo(row);
+        dd1 = $("<div style='width:" + tiles.length * 22 + "px;'></div>").appendTo(costCell);
+        $.each(tiles, function(k, m) {
+            dd1.append(wm.scribble.tile.createTileWidget(m).css('right', (22 * k) + 'px'));
+        });
+
+        while ((tiles = byCount[countI--]) == undefined) {
+        }
+        var countCell = $("<td class='count-tiles ui-widget-content'></td>").appendTo(row);
+        dd1 = $("<div style='width:" + tiles.length * 22 + "px;'></div>").appendTo(countCell);
+        $.each(tiles, function(k, m) {
+            dd1.append(wm.scribble.tile.createTileWidget(m).css('right', (22 * k) + 'px'));
+        });
+
+        $("<td class='count-value ui-widget-content'></td>").html(countI + 1).appendTo(row);
     }
 
-    var countTable = $("table .tilesCountTable");
-    for (var i = 0; i < 30; i++) {
-        var count = 0;
-        var e = $("<tr></tr>");
-        $('<td></td>').html(i + 'шт').appendTo(e);
-        $('<td>&nbsp;-&nbsp;</td>').appendTo(e);
-        var d = $('<div style="position: relative; height: 22px;"></div>');
-        $('<td></td>').append(d).appendTo(e);
-        $.each(board.getBankTilesInfo(), function(j, bti) {
-            if (bti.count == i) {
-                d.append(wm.scribble.tile.createTileWidget({letter:bti.letter, cost:bti.cost}).offset({left:count * 22, top:0}));
-                count++;
-            }
+    this.showBankInfo = function() {
+        $("#tilesBankWidget").dialog({
+            title:language['title'],
+            width:'auto',
+            resizable:false,
+            buttons:[
+                {
+                    text:'Close',
+                    click:function() {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
         });
-        d.width(count * 22);
-        if (count > 0) {
-            e.appendTo(countTable);
-        }
-    }
+    };
 };
 
 wm.scribble.History = function(board, language) {
@@ -1654,6 +1668,18 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
         return bank.capacity;
     };
 
+    this.getBankTilesInfo = function() {
+        return bank.tilesInfo;
+    };
+
+    this.getBoardTile = function(column, row) {
+        var tile = boardTiles[column][row];
+        if (tile == null || tile == undefined) {
+            return null;
+        }
+        return wm.scribble.tile.isTilePined(tile) ? tile.data('tile') : null;
+    };
+
     this.getBoardTilesCount = function() {
         var count = 0;
         for (var i = 0; i < 15; i++) {
@@ -1668,10 +1694,6 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
 
     this.getGameMoves = function() {
         return moves;
-    };
-
-    this.getBankTilesInfo = function() {
-        return bank.tilesInfo;
     };
 
     this.getHandTiles = function() {
