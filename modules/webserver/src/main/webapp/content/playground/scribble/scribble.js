@@ -1391,7 +1391,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
             columnK = 1;
         }
         for (var i = 0, count = word.tiles.length; i < count; i++) {
-            var res = handler(i, word.tiles[i], row, column);
+            var res = handler(word.tiles[i], row, column, i, word.text[i]);
             if (res === false) {
                 return false;
             }
@@ -1572,7 +1572,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
     };
 
     this.checkWord = function(word) {
-        return wordIterator(word, function(i, tile, row, column) {
+        return wordIterator(word, function(tile, row, column, i, letter) {
             var boardTile = boardTiles[column][row];
             if (boardTile != null && boardTile != undefined) {
                 if (tile.number != boardTile.data('tile').number) {
@@ -1587,7 +1587,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
     };
 
     this.isWordPlaced = function(word) {
-        return wordIterator(word, function(i, tile, row, column) {
+        return wordIterator(word, function(tile, row, column, i, letter) {
             var boardTile = boardTiles[column][row];
             if (boardTile == null || boardTile == undefined) {
                 return false;
@@ -1604,7 +1604,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
         if (!playboard.checkWord(word)) {
             return false;
         }
-        var res = wordIterator(word, function(i, tile, row, column) {
+        var res = wordIterator(word, function(tile, row, column, i, letter) {
             var boardTile = boardTiles[column][row];
             if (wm.scribble.tile.isTilePined(boardTile)) {
                 if (tile.number != boardTile.data('tile').number) {
@@ -1620,7 +1620,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
                 tile = tileWidget.data('tile');
 
                 if (tile.wildcard) {
-                    wm.scribble.tile.setLetter(tileWidget, tile.letter);
+                    wm.scribble.tile.setLetter(tileWidget, letter);
                 }
                 tile.row = row;
                 tile.column = column;
