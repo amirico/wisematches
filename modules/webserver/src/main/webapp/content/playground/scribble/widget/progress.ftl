@@ -13,106 +13,140 @@
 </#macro>
 
 <#macro separator activeVisible=true passiveVisible=true>
-<@row activeVisible=activeVisible passiveVisible=passiveVisible>
-<td colspan="2">
-    <div class="ui-widget-content ui-widget-separator"></div>
-</td>
-</@row>
+    <@row activeVisible=activeVisible passiveVisible=passiveVisible>
+    <td colspan="2">
+        <div class="ui-widget-content ui-widget-separator"></div>
+    </td>
+    </@row>
 </#macro>
 
 <#macro element activeVisible=true passiveVisible=true showSeparator=true>
     <#if showSeparator><@separator activeVisible=activeVisible passiveVisible=passiveVisible/></#if>
-<@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
+    <@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
 </#macro>
 
 <@wm.widget id="gameInfo" title="game.state.label" help="board.progress">
+<div id="tilesBankWidget" class="tiles-bank ui-widget-content ui-helper-hidden">
+    <table>
+        <thead>
+        <tr>
+            <th class="ui-state-hover ui-corner-tl">
+                <span><@message code="game.state.bankinfo.points"/></span>
+            </th>
+            <th class="ui-state-hover" colspan="2">
+                <span><@message code="game.state.bankinfo.tiles"/></span>
+            </th>
+            <th class="ui-state-hover ui-corner-tr">
+                <span><@message code="game.state.bankinfo.count"/></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 <table width="100%" border="0">
-<@element showSeparator=false>
-    <td><strong><@message code="game.state.started"/>:</strong></td>
-    <td width="100%">
-        <div id="gameStartedTime">
-        ${gameMessageSource.formatDate(board.startedTime, locale)}
-        </div>
-    </td>
-</@element>
-
-<@element activeVisible=false>
-    <td><strong><@message code="game.state.finished"/>:</strong></td>
-    <td>
-        <div id="gameFinishedTime">
-            <#if board.finishedTime??>${gameMessageSource.formatDate(board.finishedTime, locale)}</#if>
-        </div>
-    </td>
-</@element>
-
-<@element passiveVisible=false>
-    <td valign="top"><strong><@message code="game.state.progress"/>:</strong></td>
-    <td style="padding-top: 2px;">
-        <div id="gameProgress" class="ui-progressbar game-progress">
-            <div class="ui-progressbar-value ui-corner-left game-progress-board" style="width:0"></div>
-            <div class="ui-progressbar-value game-progress-bank" style="width:0"></div>
-            <div class="ui-progressbar-value ui-corner-right game-progress-hand" style="width:0"></div>
-            <div class="game-progress-caption sample"></div>
-        </div>
-        <div class="sample" style="text-align: center; font-size: 10px">
-        <@message code="game.state.progress.sample"/>
-        </div>
-    </td>
-</@element>
-
-<@element activeVisible=false>
-    <td valign="top"><strong><@message code="game.state.resolution"/>:</strong></td>
-    <td>
-        <div id="gameResolution">
-            <div class="ui-progressbar game-progress">
-                <div class="ui-progressbar-value ui-corner-all game-progress-finished game-progress-caption sample">
-                    <#if board.gameResolution??><@message code="game.resolution.${board.gameResolution.name()?lower_case}"/></#if>
-                </div>
-            </div>
-            <div class="sample game-resolution-player">
-                <#if board.gameResolution??>
-                <#switch board.gameResolution>
-                    <#case 'FINISHED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
-                    <#case 'STALEMATE'><@message code="game.resolution.timeout"/><#break>
-                    <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
-                    <#case 'RESIGNED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
-                    <#default>
-                </#switch>
-                </#if>
-            </div>
-        </div>
-    </td>
-</@element>
-
-<@element>
-    <td><strong><@message code="game.state.language"/>:</strong></td>
-    <td><@message code="language."+board.gameSettings.language/></td>
-</@element>
-
-<@element>
-    <td><strong><@message code="game.state.spent"/>:</strong></td>
-    <td>
-        <div id="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
-    </td>
-</@element>
-
-<@element passiveVisible=false>
-    <td><strong><@message code="game.state.time"/>:</strong></td>
-    <td>${board.gameSettings.daysPerMove} <@message code="game.state.per"/></td>
-</@element>
-
-    <#if board.gameSettings.scratch>
-    <@element>
-        <td colspan="2">
-            <div class="game-state-scratch">
-                <span><@message code="game.state.scratch.label"/></span>
-            <@wm.info><@message code="game.state.scratch.description"/></@wm.info>
+    <@element showSeparator=false>
+        <td><strong><@message code="game.state.started"/>:</strong></td>
+        <td width="100%">
+            <div id="gameStartedTime">
+            ${gameMessageSource.formatDate(board.startedTime, locale)}
             </div>
         </td>
     </@element>
+
+    <@element activeVisible=false>
+        <td><strong><@message code="game.state.finished"/>:</strong></td>
+        <td>
+            <div id="gameFinishedTime">
+                <#if board.finishedTime??>${gameMessageSource.formatDate(board.finishedTime, locale)}</#if>
+            </div>
+        </td>
+    </@element>
+
+    <@element passiveVisible=false>
+        <td valign="top"><strong><@message code="game.state.progress"/>:</strong></td>
+        <td style="padding-top: 2px;">
+            <div id="gameProgress" class="ui-progressbar game-progress">
+                <div class="ui-progressbar-value ui-corner-left game-progress-board" style="width:0"></div>
+                <div class="ui-progressbar-value game-progress-bank" style="width:0"></div>
+                <div class="ui-progressbar-value ui-corner-right game-progress-hand" style="width:0"></div>
+                <div class="game-progress-caption sample"></div>
+            </div>
+            <div class="sample" style="text-align: center; font-size: 10px">
+                <@message code="game.state.progress.sample"/>
+            </div>
+        </td>
+    </@element>
+
+    <@element>
+        <td><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
+        <td>
+            <div id="bankState">
+                <a class="action" href="#showBankInfo"
+                   onclick="bankInfo.showBankInfo(); return false;"><@message code="game.state.bankinfo.link"/></a>
+            </div>
+        </td>
+    </@element>
+
+    <@element activeVisible=false>
+        <td valign="top"><strong><@message code="game.state.resolution"/>:</strong></td>
+        <td>
+            <div id="gameResolution">
+                <div class="ui-progressbar game-progress">
+                    <div class="ui-progressbar-value ui-corner-all game-progress-finished game-progress-caption sample">
+                        <#if board.gameResolution??><@message code="game.resolution.${board.gameResolution.name()?lower_case}"/></#if>
+                    </div>
+                </div>
+                <div class="sample game-resolution-player">
+                    <#if board.gameResolution??>
+                <#switch board.gameResolution>
+                        <#case 'FINISHED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'STALEMATE'><@message code="game.resolution.timeout"/><#break>
+                        <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'RESIGNED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#default>
+                    </#switch>
+                </#if>
+                </div>
+            </div>
+        </td>
+    </@element>
+
+    <@element>
+        <td><strong><@message code="game.state.language"/>:</strong></td>
+        <td><@message code="language."+board.gameSettings.language/></td>
+    </@element>
+
+    <@element>
+        <td><strong><@message code="game.state.spent"/>:</strong></td>
+        <td>
+            <div id="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
+        </td>
+    </@element>
+
+    <@element passiveVisible=false>
+        <td><strong><@message code="game.state.time"/>:</strong></td>
+        <td>${board.gameSettings.daysPerMove} <@message code="game.state.per"/></td>
+    </@element>
+
+    <#if board.gameSettings.scratch>
+        <@element>
+            <td colspan="2">
+                <div class="game-state-scratch">
+                    <span><@message code="game.state.scratch.label"/></span>
+                    <@wm.info><@message code="game.state.scratch.description"/></@wm.info>
+                </div>
+            </td>
+        </@element>
     </#if>
 </table>
 </@wm.widget>
+
+<script type="text/javascript">
+    var bankInfo = new wm.scribble.BankInfo(board, {'title':'<@message code="game.state.bankinfo.label"/>'});
+</script>
 
 <#if board.gameActive>
 <script type="text/javascript">
