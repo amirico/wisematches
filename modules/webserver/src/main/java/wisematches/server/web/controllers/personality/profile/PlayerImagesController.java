@@ -30,8 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * TODO: there is no Unit test for this class
- *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @Controller

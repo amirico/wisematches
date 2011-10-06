@@ -566,3 +566,8 @@ div.space-line {
 .cluetip-inner span.ui-icon {
     display: inline-block !important;
 }
+
+a {
+    text-decoration: none !important;
+    border-bottom: 1px solid;
+}

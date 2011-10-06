@@ -6,7 +6,6 @@ import wisematches.personality.player.Player;
 import wisematches.playground.*;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.comment.GameComment;
-import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.i18n.GameMessageSource;
 
@@ -18,7 +17,6 @@ import java.util.concurrent.Callable;
  */
 public class ScribbleObjectsConverter {
 	private GameMessageSource gameMessageSource;
-	private PlayerTrackingCenter trackingCenter;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
@@ -111,7 +109,7 @@ public class ScribbleObjectsConverter {
 				res[index++] = wonPlayer.getPlayerId();
 			}
 			state.put("winners", res);
-			state.put("ratings", trackingCenter.getRatingChanges(board));
+			state.put("ratings", board.getRatingChanges());
 			state.put("resolution", board.getGameResolution());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
@@ -154,9 +152,5 @@ public class ScribbleObjectsConverter {
 
 	public void setGameMessageSource(GameMessageSource gameMessageSource) {
 		this.gameMessageSource = gameMessageSource;
-	}
-
-	public void setTrackingCenter(PlayerTrackingCenter trackingCenter) {
-		this.trackingCenter = trackingCenter;
 	}
 }

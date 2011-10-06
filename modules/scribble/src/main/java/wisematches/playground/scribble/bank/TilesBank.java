@@ -112,7 +112,7 @@ public final class TilesBank {
 		return unusedIndexes.size() == 0;
 	}
 
-	/**
+	/**                           `
 	 * Returns copy of information about tiles in this bank.
 	 * <p/>
 	 * TODO: this method should be replaced to {@code TilesBankInfo} class. This class should

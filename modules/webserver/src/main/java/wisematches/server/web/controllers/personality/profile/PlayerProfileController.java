@@ -15,8 +15,8 @@ import wisematches.personality.profile.PlayerProfileEditor;
 import wisematches.personality.profile.PlayerProfileManager;
 import wisematches.personality.profile.countries.CountriesManager;
 import wisematches.personality.profile.countries.Country;
-import wisematches.playground.tracking.PlayerTrackingCenter;
-import wisematches.playground.tracking.RatingChangesCurve;
+import wisematches.playground.tracking.PlayerStatisticManager;
+import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.Statistics;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
@@ -41,7 +41,7 @@ public class PlayerProfileController extends WisematchesController {
     private PlayerManager playerManager;
     private CountriesManager countriesManager;
     private PlayerProfileManager profileManager;
-    private PlayerTrackingCenter trackingCenter;
+    private PlayerStatisticManager statisticManager;
     private GameMessageSource messageSource;
 
     private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new ThreadLocal<Calendar>() {
@@ -90,8 +90,8 @@ public class PlayerProfileController extends WisematchesController {
             final Date start = c.getTime();
 
             final PlayerProfile profile = profileManager.getPlayerProfile(player);
-            final Statistics statistics = trackingCenter.getPlayerStatistic(player);
-            final RatingChangesCurve ratingCurve = trackingCenter.getRatingChangesCurve(player, 10, start, end);
+            final Statistics statistics = statisticManager.getPlayerStatistic(player);
+            final RatingCurve ratingCurve = statisticManager.getRatingCurve(player, 10, start, end);
 
             if (profile.getCountryCode() != null) {
                 model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
@@ -200,8 +200,8 @@ public class PlayerProfileController extends WisematchesController {
     }
 
     @Autowired
-    public void setTrackingCenter(PlayerTrackingCenter trackingCenter) {
-        this.trackingCenter = trackingCenter;
+    public void setStatisticManager(PlayerStatisticManager statisticManager) {
+        this.statisticManager = statisticManager;
     }
 
     @Autowired

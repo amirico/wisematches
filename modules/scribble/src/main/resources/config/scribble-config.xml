@@ -8,18 +8,19 @@
     </bean>
 
     <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribbleBoardManager">
-        <property name="dictionaryManager" ref="wordGamesDictionaries"/>
+        <property name="ratingManager" ref="ratingManager"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
         <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="dictionaryManager" ref="wordGamesDictionaries"/>
     </bean>
 
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
     </bean>
 
-    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.PlayerTrackingCenterImpl">
-        <property name="ratingSystem" ref="eloRatingSystem"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
+    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.PlayerStatisticManagerImpl">
+        <property name="ratingManager" ref="ratingManager"/>
         <property name="accountManager" ref="accountManager"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
         <property name="playerTrackingCenterDao" ref="playerTrackingCenterDao"/>
     </bean>

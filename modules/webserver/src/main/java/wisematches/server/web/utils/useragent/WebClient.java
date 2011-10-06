@@ -1,4 +1,4 @@
-package wisematches.server.web.services.useragent;
+package wisematches.server.web.utils.useragent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

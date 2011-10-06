@@ -32,6 +32,7 @@
         <property name="freemarkerVariables">
             <map merge="true">
                 <entry key="serverHostName" value="${server.hostname}"/>
+                <entry key="ratingManager" value-ref="ratingManager"/>
             </map>
         </property>
     </bean>
@@ -70,7 +71,7 @@
         <property name="notificationDescription">
             <list>
                 <bean parent="notification" c:name="game.state.started"
-                      c:group="games" c:enabled="false" c:evenOnline="false"/>
+                      c:group="games" c:enabled="true" c:evenOnline="false"/>
 
                 <bean parent="notification" c:name="game.state.finished"
                       c:group="games" c:enabled="true" c:evenOnline="true"/>

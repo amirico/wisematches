@@ -40,10 +40,9 @@ public class StatisticsTrapperTest {
 		final StatisticsEditor editor = statisticsTrapper.createStatisticsEditor(Personality.person(13L));
 		editor.setActiveGames(4);
 
-		final RatingChanges ratingChanges = new RatingChanges(
-				new RatingChange(13L, 1L, new Date(), (short) 1200, (short) 1300, (short) 20),
-				new RatingChange(14L, 1L, new Date(), (short) 1250, (short) 1300, (short) -5),
-				new RatingChange(15L, 1L, new Date(), (short) 1300, (short) 1220, (short) -10));
+		GameRatingChange rc1 = new GameRatingChange(13L, (short) 20, (short) 1200, (short) 1300);
+		GameRatingChange rc2 = new GameRatingChange(14L, (short) -5, (short) 1250, (short) 1300);
+		GameRatingChange rc3 = new GameRatingChange(15L, (short) -10, (short) 1300, (short) 1220);
 
 		final List<GamePlayerHand> hands = Arrays.asList(
 				new GamePlayerHand(13L, (short) 20),
@@ -61,11 +60,14 @@ public class StatisticsTrapperTest {
 				new GameMove(move3, 6, 3, new Date())));
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(hands);
+		expect(board.getPlayerHand(13L)).andReturn(hands.get(0));
+		expect(board.getRatingChange(hands.get(0))).andReturn(rc1);
+		expect(board.getRatingChanges()).andReturn(Arrays.asList(rc1, rc2, rc3));
 		expect(board.getGameResolution()).andReturn(GameResolution.TIMEOUT);
 		expect(board.getWonPlayers()).andReturn(Collections.emptyList());
 		replay(board);
 
-		statisticsTrapper.trapGameFinished(board, ratingChanges, editor);
+		statisticsTrapper.trapGameFinished(board, editor);
 		assertEquals(3, editor.getActiveGames());
 		assertEquals(1, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame());
@@ -83,11 +85,14 @@ public class StatisticsTrapperTest {
 				new GameMove(move3, 6, 3, new Date())));
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(hands);
+		expect(board.getPlayerHand(13L)).andReturn(hands.get(0));
+		expect(board.getRatingChange(hands.get(0))).andReturn(rc1);
+		expect(board.getRatingChanges()).andReturn(Arrays.asList(rc1, rc2, rc3));
 		expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
 		expect(board.getWonPlayers()).andReturn(Arrays.asList(new GamePlayerHand(14L, (short) 1)));
 		replay(board);
 
-		statisticsTrapper.trapGameFinished(board, ratingChanges, editor);
+		statisticsTrapper.trapGameFinished(board, editor);
 		assertEquals(2, editor.getActiveGames());
 		assertEquals(2, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame());
@@ -105,10 +110,13 @@ public class StatisticsTrapperTest {
 				new GameMove(move3, 6, 3, new Date())));
 		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(hands);
+		expect(board.getPlayerHand(13L)).andReturn(hands.get(0));
+		expect(board.getRatingChange(hands.get(0))).andReturn(rc1);
+		expect(board.getRatingChanges()).andReturn(Arrays.asList(rc1, rc2, rc3));
 		expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
 		expect(board.getWonPlayers()).andReturn(Arrays.asList(new GamePlayerHand(13L, (short) 1)));
 		replay(board);
-		statisticsTrapper.trapGameFinished(board, ratingChanges, editor);
+		statisticsTrapper.trapGameFinished(board, editor);
 		assertEquals(1, editor.getActiveGames());
 		assertEquals(3, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame());
@@ -126,7 +134,7 @@ public class StatisticsTrapperTest {
 				new GameMove(move3, 6, 3, new Date())));
 		expect(board.isRatedGame()).andReturn(false);
 		replay(board);
-		statisticsTrapper.trapGameFinished(board, ratingChanges, editor);
+		statisticsTrapper.trapGameFinished(board, editor);
 		assertEquals(0, editor.getActiveGames());
 		assertEquals(4, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame());
@@ -221,19 +229,22 @@ public class StatisticsTrapperTest {
 
 		final GameBoard board = createMock(GameBoard.class);
 		{
-			final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 991, (short) 100);
-			final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1403, (short) 200);
-			final RatingChange change3 = new RatingChange(15L, 13L, new Date(), (short) 1800, (short) 1812, (short) 300);
+			final GameRatingChange change1 = new GameRatingChange(13L, (short) 100, (short) 1000, (short) 991);
+			final GameRatingChange change2 = new GameRatingChange(14L, (short) 200, (short) 1400, (short) 1403);
+			final GameRatingChange change3 = new GameRatingChange(15L, (short) 300, (short) 1800, (short) 1812);
 
 			reset(board);
 			expect(board.isRatedGame()).andReturn(true);
 			expect(board.getPlayersHands()).andReturn(gamePlayerHands);
+			expect(board.getPlayerHand(14L)).andReturn(gamePlayerHands.get(1));
+			expect(board.getRatingChange(gamePlayerHands.get(1))).andReturn(change2);
+			expect(board.getRatingChanges()).andReturn(Arrays.asList(change1, change2, change3));
 			expect(board.getGameMoves()).andReturn(Collections.emptyList());
 			expect(board.getWonPlayers()).andReturn(Collections.emptyList());
 			expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
 			replay(board);
 
-			statisticsTrapper.trapGameFinished(board, new RatingChanges(change1, change2, change3), editor);
+			statisticsTrapper.trapGameFinished(board, editor);
 			assertEquals(1403, editor.getAverageRating());
 			assertEquals((1000 + 1800) / 2, editor.getAverageOpponentRating());
 			assertEquals(1403, editor.getHighestRating());
@@ -246,19 +257,22 @@ public class StatisticsTrapperTest {
 		}
 
 		{
-			final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 1011, (short) 200);
-			final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1425, (short) 300);
-			final RatingChange change3 = new RatingChange(15L, 13L, new Date(), (short) 1800, (short) 1782, (short) 100);
+			final GameRatingChange change1 = new GameRatingChange(13L, (short) 200, (short) 1000, (short) 1011);
+			final GameRatingChange change2 = new GameRatingChange(14L, (short) 300, (short) 1400, (short) 1425);
+			final GameRatingChange change3 = new GameRatingChange(15L, (short) 100, (short) 1800, (short) 1782);
 
 			reset(board);
 			expect(board.isRatedGame()).andReturn(true);
 			expect(board.getPlayersHands()).andReturn(gamePlayerHands);
+			expect(board.getPlayerHand(14L)).andReturn(gamePlayerHands.get(1));
+			expect(board.getRatingChange(gamePlayerHands.get(1))).andReturn(change2);
+			expect(board.getRatingChanges()).andReturn(Arrays.asList(change1, change2, change3));
 			expect(board.getGameMoves()).andReturn(Collections.emptyList());
 			expect(board.getWonPlayers()).andReturn(Collections.emptyList());
 			expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
 			replay(board);
 
-			statisticsTrapper.trapGameFinished(board, new RatingChanges(change1, change2, change3), editor);
+			statisticsTrapper.trapGameFinished(board, editor);
 			assertEquals((1403 + 1425) / 2, editor.getAverageRating());
 			assertEquals(((1000 + 1800) / 2 + (1000 + 1800) / 2) / 2, editor.getAverageOpponentRating());
 			assertEquals(1425, editor.getHighestRating());
@@ -271,19 +285,22 @@ public class StatisticsTrapperTest {
 		}
 
 		{
-			final RatingChange change1 = new RatingChange(13L, 13L, new Date(), (short) 1000, (short) 1025, (short) 300);
-			final RatingChange change2 = new RatingChange(14L, 13L, new Date(), (short) 1400, (short) 1392, (short) 100);
-			final RatingChange change3 = new RatingChange(15L, 13L, new Date(), (short) 1800, (short) 1782, (short) 200);
+			final GameRatingChange change1 = new GameRatingChange(13L, (short) 300, (short) 1000, (short) 1025);
+			final GameRatingChange change2 = new GameRatingChange(14L, (short) 100, (short) 1400, (short) 1392);
+			final GameRatingChange change3 = new GameRatingChange(15L, (short) 200, (short) 1800, (short) 1782);
 
 			reset(board);
 			expect(board.isRatedGame()).andReturn(true);
 			expect(board.getPlayersHands()).andReturn(gamePlayerHands);
+			expect(board.getPlayerHand(14L)).andReturn(gamePlayerHands.get(1));
+			expect(board.getRatingChange(gamePlayerHands.get(1))).andReturn(change2);
+			expect(board.getRatingChanges()).andReturn(Arrays.asList(change1, change2, change3));
 			expect(board.getGameMoves()).andReturn(Collections.emptyList());
 			expect(board.getWonPlayers()).andReturn(Collections.emptyList());
 			expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
 			replay(board);
 
-			statisticsTrapper.trapGameFinished(board, new RatingChanges(change1, change2, change3), editor);
+			statisticsTrapper.trapGameFinished(board, editor);
 			assertEquals((1403 + 1425 + 1392) / 3, editor.getAverageRating());
 			assertEquals(((1000 + 1800) / 2 + (1000 + 1800) / 2 + (1000 + 1800) / 2) / 3, editor.getAverageOpponentRating());
 			assertEquals(1425, editor.getHighestRating());

@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 public class AbstractBoardManagerTest {
 	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
 
-	private GameBoardListener gameBoardListener;
+	private BoardStateListener boardStateListener;
 
 	public AbstractBoardManagerTest() {
 	}
@@ -74,7 +74,7 @@ public class AbstractBoardManagerTest {
 
 		final Collection<Personality> players = Arrays.<Personality>asList(Personality.person(1), Personality.person(2));
 
-		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
+		final AbstractGameBoard<GameSettings, GamePlayerHand> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
@@ -95,7 +95,7 @@ public class AbstractBoardManagerTest {
 
 	@Test
 	public void testOpenBoard() throws BoardLoadingException {
-		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
+		final AbstractGameBoard<GameSettings, GamePlayerHand> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
@@ -127,12 +127,12 @@ public class AbstractBoardManagerTest {
 	public void testGetActiveBoards() throws BoardLoadingException {
 		final Personality player = Personality.person(1);
 
-		final GameBoard<GameSettings, GamePlayerHand> board1 = createStrictMock(GameBoard.class);
+		final AbstractGameBoard<GameSettings, GamePlayerHand> board1 = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board1);
 		expect(board1.getBoardId()).andReturn(1L);
 		replay(board1);
 
-		final GameBoard<GameSettings, GamePlayerHand> board2 = createStrictMock(GameBoard.class);
+		final AbstractGameBoard<GameSettings, GamePlayerHand> board2 = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board2);
 		expect(board2.getBoardId()).andReturn(2L);
 		replay(board2);
@@ -145,7 +145,7 @@ public class AbstractBoardManagerTest {
 
 		final MockBoardManager mock = new MockBoardManager(dao);
 
-		final Collection<GameBoard<GameSettings, GamePlayerHand>> waitingBoards = mock.getActiveBoards(player);
+		final Collection<AbstractGameBoard<GameSettings, GamePlayerHand>> waitingBoards = mock.getActiveBoards(player);
 		assertEquals(2, waitingBoards.size());
 		assertTrue(waitingBoards.contains(board1));
 		assertTrue(waitingBoards.contains(board2));
@@ -157,9 +157,21 @@ public class AbstractBoardManagerTest {
 
 	@Test
 	public void testSaveListeners() throws BoardLoadingException {
-		final GameBoard<GameSettings, GamePlayerHand> board = createStrictMock(GameBoard.class);
+		final GamePlayerHand h1 = new GamePlayerHand(1, (short) 100);
+		final GamePlayerHand h2 = new GamePlayerHand(2, (short) 200);
+
+		final GameRatingChange c1 = new GameRatingChange(1, (short) 100, (short) 123, (short) 120);
+		final GameRatingChange c2 = new GameRatingChange(2, (short) 200, (short) 127, (short) 145);
+
+		final RatingManager ratingManager = createStrictMock(RatingManager.class);
+		expect(ratingManager.calculateRatings(Arrays.asList(h1, h2))).andReturn(Arrays.asList(c1, c2)).times(2);
+		replay(ratingManager);
+
+		final AbstractGameBoard<GameSettings, GamePlayerHand> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
+		expect(board.getPlayersHands()).andReturn(Arrays.asList(h1, h2));
+		expect(board.getPlayersHands()).andReturn(Arrays.asList(h1, h2));
 		replay(board);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
@@ -178,39 +190,40 @@ public class AbstractBoardManagerTest {
 
 		final MockBoardManager mock = new MockBoardManager(dao);
 		mock.addBoardStateListener(boardListener);
+		mock.setRatingManager(ratingManager);
 
 		mock.openBoard(1L);
 
 		boardListener.gameMoveDone(board, move);
 
-		gameBoardListener.gameFinished(board, GameResolution.FINISHED, null);
-		gameBoardListener.gameFinished(board, GameResolution.TIMEOUT, null);
+		boardStateListener.gameFinished(board, GameResolution.FINISHED, null);
+		boardStateListener.gameFinished(board, GameResolution.TIMEOUT, null);
 
-		verify(board, dao, boardListener);
+		verify(board, dao, boardListener, ratingManager);
 	}
 
-	private void expectListeners(GameBoard<?, ?> board) {
-		board.addGameBoardListener(isA(GameBoardListener.class));
+	private void expectListeners(AbstractGameBoard<?, ?> board) {
+		board.setStateListener(isA(BoardStateListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				gameBoardListener = (GameBoardListener) getCurrentArguments()[0];
+				boardStateListener = (BoardStateListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
 	}
 
 	private interface GameBoardDao {
-		GameBoard loadBoard(long gameId) throws BoardLoadingException;
+		AbstractGameBoard loadBoard(long gameId) throws BoardLoadingException;
 
-		GameBoard createBoard(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
+		AbstractGameBoard createBoard(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
 
-		void saveBoard(GameBoard board);
+		void saveBoard(AbstractGameBoard board);
 
 		Collection<Long> loadActivePlayerBoards(Personality player);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static class MockBoardManager extends AbstractBoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> {
+	private static class MockBoardManager extends AbstractBoardManager<GameSettings, AbstractGameBoard<GameSettings, GamePlayerHand>> {
 		private final GameBoardDao gameBoardDao;
 
 		private MockBoardManager(GameBoardDao gameBoardDao) {
@@ -219,17 +232,17 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected GameBoard loadBoardImpl(long gameId) throws BoardLoadingException {
+		protected AbstractGameBoard loadBoardImpl(long gameId) throws BoardLoadingException {
 			return gameBoardDao.loadBoard(gameId);
 		}
 
 		@Override
-		protected GameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
+		protected AbstractGameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
 			return gameBoardDao.createBoard(gameSettings, players);
 		}
 
 		@Override
-		protected void saveBoardImpl(GameBoard board) {
+		protected void saveBoardImpl(AbstractGameBoard board) {
 			gameBoardDao.saveBoard(board);
 		}
 

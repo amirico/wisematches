@@ -106,7 +106,7 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 
 	/**
 	 * Returns iterator for this word. This is read-only iterator and <code>Iterator.remove()</code>
-	 * method throws <code>UnsupportedOperationException</code>.
+	 * method throws UnsupportedOperation Exception.
 	 * <p/>
 	 * This iterator has only one instance of <code>IteratorItem</code> and just changes it's
 	 * fields on each <code>next()</code> method invocation. If you want store all <code>IteratorItem</code>

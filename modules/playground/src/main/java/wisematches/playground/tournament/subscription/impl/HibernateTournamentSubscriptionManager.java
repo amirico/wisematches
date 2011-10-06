@@ -13,10 +13,7 @@ import wisematches.playground.tournament.subscription.TournamentSubscriptionExce
 import wisematches.playground.tournament.subscription.TournamentSubscriptionManager;
 
 /**
- * TODO: write description here
- *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @version $Id:  $
  */
 public class HibernateTournamentSubscriptionManager implements TournamentSubscriptionManager {
 	public HibernateTournamentSubscriptionManager() {

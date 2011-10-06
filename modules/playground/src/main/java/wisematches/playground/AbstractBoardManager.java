@@ -6,10 +6,7 @@ import wisematches.personality.Personality;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,14 +20,15 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public abstract class AbstractBoardManager<S extends GameSettings, B extends GameBoard<S, ?>> implements BoardManager<S, B> {
-	private final Log log;
+public abstract class AbstractBoardManager<S extends GameSettings, B extends AbstractGameBoard<S, ?>> implements BoardManager<S, B> {
+	private RatingManager ratingManager;
 
 	private final BoardsMap<B> boardsMap;
 
+	private final Log log;
 	private final Lock openBoardLock = new ReentrantLock();
 
-	private final GameBoardListener gameBoardListener = new TheBoardListener();
+	private final BoardStateListener gameBoardListener = new TheBoardListener();
 	private final Collection<BoardStateListener> boardStateListeners = new CopyOnWriteArraySet<BoardStateListener>();
 
 	/**
@@ -65,11 +63,11 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 		openBoardLock.lock();
 		try {
 			saveBoardImpl(board);
-			board.addGameBoardListener(gameBoardListener);
+			board.setStateListener(gameBoardListener);
 			boardsMap.addBoard(board);
 
 			for (BoardStateListener listener : boardStateListeners) {
-				listener.gameStarted((GameBoard) board);
+				listener.gameStarted(board);
 			}
 		} finally {
 			openBoardLock.unlock();
@@ -107,7 +105,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 			if (log.isDebugEnabled()) {
 				log.debug("Board loaded from storage");
 			}
-			loaded.addGameBoardListener(gameBoardListener);
+			loaded.setStateListener(gameBoardListener);
 			boardsMap.addBoard(loaded);
 			return loaded;
 		} finally {
@@ -182,6 +180,10 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 	 * @return the collection of board's ids for specified player or empty collection.
 	 */
 	protected abstract Collection<Long> loadActivePlayerBoards(Personality player);
+
+	public void setRatingManager(RatingManager ratingManager) {
+		this.ratingManager = ratingManager;
+	}
 
 	/* ======================== Inner classes defenitions. ================ */
 
@@ -293,8 +295,12 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 		}
 	}
 
-	private class TheBoardListener implements GameBoardListener {
+	private class TheBoardListener implements BoardStateListener {
 		TheBoardListener() {
+		}
+
+		@Override
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		}
 
 		@Override
@@ -302,7 +308,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
 			saveBoardImpl((B) board);
 
-			for (GameBoardListener statesListener : boardStateListeners) {
+			for (BoardStateListener statesListener : boardStateListeners) {
 				statesListener.gameMoveDone(board, move);
 			}
 		}
@@ -310,9 +316,18 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Gam
 		@Override
 		@SuppressWarnings("unchecked")
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
+			final List<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			final List<GameRatingChange> changes = ratingManager.calculateRatings(playersHands);
+
+			final Iterator<GameRatingChange> iterator1 = changes.iterator();
+			final Iterator<? extends GamePlayerHand> iterator = playersHands.iterator();
+			while (iterator1.hasNext() && iterator.hasNext()) {
+				iterator.next().changeRating(iterator1.next());
+			}
+
 			saveBoardImpl((B) board);
 
-			for (GameBoardListener statesListener : boardStateListeners) {
+			for (BoardStateListener statesListener : boardStateListeners) {
 				statesListener.gameFinished(board, resolution, wonPlayers);
 			}
 		}

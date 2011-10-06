@@ -11,10 +11,10 @@ import java.util.List;
 @NamedNativeQueries({
 		@NamedNativeQuery(
 				name = "rating.curve",
-				query = "SELECT ROUND(((UNIX_TIMESTAMP(date(time))-UNIX_TIMESTAMP(date(:start)))/60/60/24)/:resolution) as position, " +
-						"min(newRating) as ratingMin, avg(newRating) as ratingAvg, max(newRating) as ratingMax " +
-						"FROM rating_history " +
-						"WHERE playerId=:pid AND time>:start AND time<=:end GROUP BY YEAR(time), ROUND(DAYOFYEAR(time)/:resolution) " +
+				query = "SELECT ROUND(((UNIX_TIMESTAMP(date(b.finishedDate))-UNIX_TIMESTAMP(date(:start)))/60/60/24)/:resolution) as position, " +
+						"min(p.newRating) as ratingMin, avg(p.newRating) as ratingAvg, max(p.newRating) as ratingMax " +
+						"FROM scribble_board b, scribble_player p " +
+						"WHERE b.boardId=p.playerId and not b.finishedDate is null and p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:end GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +
 						"ORDER BY position ASC",
 				resultSetMapping = "rating.curve")
 })
@@ -24,7 +24,7 @@ import java.util.List;
 		@ColumnResult(name = "ratingMax"),
 		@ColumnResult(name = "ratingMin")
 })
-public class RatingChangesCurve {
+public class RatingCurve {
 	@Id
 	private final int resolution;
 	private final Date startDate;
@@ -48,11 +48,11 @@ public class RatingChangesCurve {
 	private final short maxRating;
 
 	@Deprecated
-	RatingChangesCurve() {
+	RatingCurve() {
 		throw new UnsupportedOperationException("Not supported");
 	}
 
-	public RatingChangesCurve(int resolution, Date startDate, Date endDate, List list) {
+	public RatingCurve(int resolution, Date startDate, Date endDate, List list) {
 		this.resolution = resolution;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -136,7 +136,7 @@ public class RatingChangesCurve {
 		   private final int[] ratingsAvg;
 		   private final int[] monthIndexes = new int[12];
 
-		   public RatingChangesCurve() {
+		   public RatingCurve() {
 			   startDate = 0;
 			   endDate = period.getDaysNumber();
 

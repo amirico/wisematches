@@ -696,7 +696,7 @@ wm.scribble.Controls = function(board, language) {
             if (board.isPlayerActive()) {
                 wm.ui.showAlert(language['updatedLabel'], language['updatedYour'], 'your-turn');
             } else {
-                wm.ui.showAlert(language['updatedLabel'], language['updatedOther'] + ' <b>' + board.getPlayerInfo(state.playerTurn).nickname + '</b>.', 'opponent-turn');
+//                wm.ui.showAlert(language['updatedLabel'], language['updatedOther'] + ' <b>' + board.getPlayerInfo(state.playerTurn).nickname + '</b>.', 'opponent-turn');
             }
         } else if (type === 'finished') {
             $("#boardActionsToolbar").hide();
@@ -1762,6 +1762,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement) {
 
 wm.scribble.Monitoring = function(board) {
     var items = {};
+    var monitoringInstance = this;
 
     var sendServerRequest = function() {
         var params = '';
@@ -1798,7 +1799,7 @@ wm.scribble.Monitoring = function(board) {
             return false;
         }
 
-        this.stopMonitoring();
+        monitoringInstance.stopMonitoring();
 
         $(board).everyTime(60000, 'board' + board.getBoardId() + 'Monitoring', function() {
             sendServerRequest();
@@ -1811,7 +1812,7 @@ wm.scribble.Monitoring = function(board) {
 
     board.bind('gameState', function(event, type, state) {
         if (type === 'finished') {
-            this.stopMonitoring();
+            monitoringInstance.stopMonitoring();
         }
     });
 };

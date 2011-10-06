@@ -36,8 +36,6 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * TODO: java docs
- *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller

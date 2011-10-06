@@ -8,12 +8,10 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.playground.tracking.RatingChange;
-import wisematches.playground.tracking.RatingChangesCurve;
+import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.StatisticsEditor;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -50,30 +48,17 @@ public class HibernatePlayerTrackingCenterDao extends HibernateDaoSupport implem
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY)
-	public void saveRatingChange(RatingChange ratingChange) {
-		getHibernateTemplate().save(ratingChange);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Collection<RatingChange> getRatingChanges(long boardId) {
-		return getHibernateTemplate().find("from wisematches.playground.tracking.RatingChange rating where rating.boardId = ?", boardId);
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public RatingChangesCurve getRatingChangesCurve(final Personality player, final int resolution, final Date startDate, final Date endDate) {
-		return getHibernateTemplate().execute(new HibernateCallback<RatingChangesCurve>() {
+	public RatingCurve getRatingChangesCurve(final Personality player, final int resolution, final Date startDate, final Date endDate) {
+		return getHibernateTemplate().execute(new HibernateCallback<RatingCurve>() {
 			@Override
-			public RatingChangesCurve doInHibernate(Session session) throws HibernateException, SQLException {
+			public RatingCurve doInHibernate(Session session) throws HibernateException, SQLException {
 				final Query namedQuery = session.getNamedQuery("rating.curve");
 				namedQuery.setParameter("pid", player.getId());
 				namedQuery.setParameter("resolution", resolution);
 				namedQuery.setParameter("start", startDate);
 				namedQuery.setParameter("end", endDate);
-				return new RatingChangesCurve(resolution, startDate, endDate, namedQuery.list());
+				return new RatingCurve(resolution, startDate, endDate, namedQuery.list());
 			}
 		});
 	}

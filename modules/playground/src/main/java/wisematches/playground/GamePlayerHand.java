@@ -19,6 +19,12 @@ public class GamePlayerHand {
 	@Column(name = "points")
 	private short points;
 
+	@Column(name = "oldRating")
+	private short oldRating;
+
+	@Column(name = "newRating")
+	private short newRating;
+
 	/**
 	 * This is Hibernate constructor. In subclasses in must be declared as package visibile.
 	 */
@@ -58,6 +64,14 @@ public class GamePlayerHand {
 		return points;
 	}
 
+	short getOldRating() {
+		return oldRating;
+	}
+
+	short getNewRating() {
+		return newRating;
+	}
+
 	/**
 	 * Increases points of the player and returns new value.
 	 *
@@ -67,6 +81,11 @@ public class GamePlayerHand {
 	short increasePoints(short delta) {
 		points = (short) (points + delta);
 		return points;
+	}
+
+	void changeRating(GameRatingChange change) {
+		this.oldRating = change.getOldRating();
+		this.newRating = change.getNewRating();
 	}
 
 	@Override

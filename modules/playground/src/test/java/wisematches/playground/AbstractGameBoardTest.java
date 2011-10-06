@@ -23,16 +23,20 @@ public class AbstractGameBoardTest {
 	private GamePlayerHand h3;
 
 	private MockGameBoard board;
+	private BoardStateListener stateListener;
 
 	public AbstractGameBoardTest() {
 	}
 
 	@Before
 	public void setUp() throws Exception {
+		stateListener = createNiceMock(BoardStateListener.class);
+
 		gameSettings = new MockGameSettings("Mock", 3);
 
 		board = new MockGameBoard(gameSettings,
 				Arrays.<Personality>asList(Personality.person(1), Personality.person(2), Personality.person(3)));
+		board.setStateListener(stateListener);
 		h1 = board.getPlayerHand(1);
 		h2 = board.getPlayerHand(2);
 		h3 = board.getPlayerHand(3);
@@ -84,28 +88,6 @@ public class AbstractGameBoardTest {
 		assertSame(h2, board.getPlayerHand(2));
 		assertSame(h3, board.getPlayerHand(3));
 		assertNull(board.getPlayerHand(4));
-	}
-
-	@Test
-	public void test_stateListeners() {
-		final GameMove gm = new GameMove(createMock(PlayerMove.class), 10, 1, new Date());
-
-		final GameBoardListener l = createStrictMock(GameBoardListener.class);
-		l.gameFinished(board, null, null);
-		l.gameMoveDone(board, gm);
-		replay(l);
-
-		board.addGameBoardListener(l);
-		board.addGameBoardListener(l);
-
-		board.fireGameFinished();
-		board.firePlayerMoved(gm);
-
-		//no any calles after removing must be
-		board.removeGameBoardListener(l);
-		board.firePlayerMoved(gm);
-
-		verify(l);
 	}
 
 	@Test
@@ -191,7 +173,7 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_gameMoves() throws GameMoveException {
-		final GameBoardListener l = createStrictMock(GameBoardListener.class);
+		final BoardStateListener l = createStrictMock(BoardStateListener.class);
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
 		final Capture<GameMove> move = new Capture<GameMove>();
@@ -200,7 +182,7 @@ public class AbstractGameBoardTest {
 
 		board.setPoints((short) 10);
 		board.setMoveFinished(false);
-		board.addGameBoardListener(l);
+		board.setStateListener(l);
 
 		GamePlayerHand turn = board.getPlayerTurn();
 		GamePlayerHand nextTurn = board.getNextPlayerTurn();
@@ -258,13 +240,13 @@ public class AbstractGameBoardTest {
 	public void test_finishByWin() throws GameMoveException {
 		h1.increasePoints((short) 1);
 
-		GameBoardListener l = createStrictMock(GameBoardListener.class);
+		BoardStateListener l = createStrictMock(BoardStateListener.class);
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameFinished(board, GameResolution.FINISHED, Collections.singletonList(h1));
 		replay(l);
 
-		board.addGameBoardListener(l);
+		board.setStateListener(l);
 
 		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGameFinished(true);
@@ -284,13 +266,13 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_finishByDraw_NoWins() throws GameMoveException {
-		GameBoardListener l = createStrictMock(GameBoardListener.class);
+		BoardStateListener l = createStrictMock(BoardStateListener.class);
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameFinished(board, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
-		board.addGameBoardListener(l);
+		board.setStateListener(l);
 
 		board.makeMove(new MakeTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGameFinished(true);
@@ -307,13 +289,13 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_finishByDraw_NoMoves() throws GameMoveException {
-		GameBoardListener l = createStrictMock(GameBoardListener.class);
+		BoardStateListener l = createStrictMock(BoardStateListener.class);
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
 		l.gameFinished(board, GameResolution.STALEMATE, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
-		board.addGameBoardListener(l);
+		board.setStateListener(l);
 
 		board.makeMove(new PassTurnMove(board.getPlayerTurn().getPlayerId()));
 		board.setGamePassed(true);
@@ -331,11 +313,11 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_finishByClose() throws GameMoveException {
-		GameBoardListener l = createStrictMock(GameBoardListener.class);
+		BoardStateListener l = createStrictMock(BoardStateListener.class);
 		l.gameFinished(board, GameResolution.RESIGNED, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
-		board.addGameBoardListener(l);
+		board.setStateListener(l);
 		board.setFinishScore(new short[]{0, 0, 0});
 
 		try {
@@ -355,12 +337,12 @@ public class AbstractGameBoardTest {
 
 	@Test
 	public void test_finishByTermination() throws GameMoveException {
-		GameBoardListener l = createStrictMock(GameBoardListener.class);
+		BoardStateListener l = createStrictMock(BoardStateListener.class);
 		final GamePlayerHand playerTurn = board.getPlayerTurn();
 		l.gameFinished(board, GameResolution.TIMEOUT, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
-		board.addGameBoardListener(l);
+		board.setStateListener(l);
 		board.setFinishScore(new short[]{0, 0, 0});
 		board.setLastMoveTime(new Date(System.currentTimeMillis() / 2));
 		board.terminate();

@@ -22,7 +22,7 @@ public class ScribblePlayerSearchManager extends AbstractHibernateSearchManager<
 			case FRIENDS:
 				return r + ", wisematches.playground.friends.impl.HibernateFriendRelation r";
 			case FORMERLY:
-				return r + ", wisematches.playground.tracking.RatingChange as l, wisematches.playground.tracking.RatingChange as r";
+				return r + ", wisematches.playground.scribble.ScribbleBoard board left join board.playerHands l left join board.playerHands r";
 			default:
 				throw new UnsupportedOperationException("Area criteria not implemented for " + area);
 		}
@@ -37,7 +37,7 @@ public class ScribblePlayerSearchManager extends AbstractHibernateSearchManager<
 			case FRIENDS:
 				return r + "r.friend=account.id and r.person=:pid";
 			case FORMERLY:
-				return r + "r.playerId=account.id and l.boardId=r.boardId and not r.playerId=l.playerId and l.playerId=:pid";
+				return r + "r.playerId=account.id and not r.playerId=l.playerId and l.playerId=:pid";
 			default:
 				throw new UnsupportedOperationException("Area criteria not implemented for " + area);
 		}

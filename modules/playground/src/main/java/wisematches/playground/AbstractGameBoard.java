@@ -4,7 +4,6 @@ import wisematches.personality.Personality;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -51,6 +50,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	@OrderColumn(name = "playerIndex")
 	@ElementCollection(fetch = FetchType.EAGER)
 	@org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.ALL)
+
 	@CollectionTable(name = "scribble_player", joinColumns = @JoinColumn(name = "boardId"))
 	private List<P> playerHands;
 
@@ -94,7 +94,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	protected final Lock lock = new ReentrantLock();
 
 	@Transient
-	private final Collection<GameBoardListener> boardListeners = new CopyOnWriteArrayList<GameBoardListener>();
+	private BoardStateListener stateListener;
 
 	private static final int MAX_PASSED_TURNS = 2;
 	private static final Random FIRST_PLAYER_RANDOM = new Random();
@@ -103,7 +103,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * This is Hibernate constructor that is required for serialization. Visibility of this constructor MUST BE
 	 * changed to package visible in superclass.
 	 */
-	@Deprecated
 	protected AbstractGameBoard() {
 	}
 
@@ -163,27 +162,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		return finishedDate;
 	}
 
-	public void addGameBoardListener(GameBoardListener listener) {
-		if (!boardListeners.contains(listener)) {
-			boardListeners.add(listener);
-		}
+	void setStateListener(BoardStateListener stateListener) {
+		this.stateListener = stateListener;
 	}
 
-	public void removeGameBoardListener(GameBoardListener listener) {
-		boardListeners.remove(listener);
-	}
-
-	protected void firePlayerMoved(GameMove move) {
-		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameMoveDone(this, move);
-		}
-	}
-
-	protected void fireGameFinished() {
-		for (GameBoardListener boardListener : boardListeners) {
-			boardListener.gameFinished(this, gameResolution, getWonPlayers());
-		}
-	}
 	/* ========== End Listeners and Fires ================ */
 
 	@Override
@@ -224,11 +206,15 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			boolean passed = isGameStalemate();
 			if (finished || passed) {
 				finalizeGame(finished ? GameResolution.FINISHED : GameResolution.STALEMATE);
-				firePlayerMoved(gameMove);
-				fireGameFinished();
+				if (stateListener != null) {
+					stateListener.gameMoveDone(this, gameMove);
+					stateListener.gameFinished(this, gameResolution, getWonPlayers());
+				}
 			} else {
 				currentPlayerIndex = getNextPlayerIndex();
-				firePlayerMoved(gameMove);
+				if (stateListener != null) {
+					stateListener.gameMoveDone(this, gameMove);
+				}
 			}
 			return gameMove;
 		} finally {
@@ -327,6 +313,26 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public GameRatingChange getRatingChange(GamePlayerHand hand) {
+		if (gameResolution == null) {
+			return null;
+		}
+		return new GameRatingChange(hand);
+	}
+
+	@Override
+	public Collection<GameRatingChange> getRatingChanges() {
+		if (gameResolution == null) {
+			return null;
+		}
+		List<GameRatingChange> changes = new ArrayList<GameRatingChange>(playerHands.size());
+		for (P hand : playerHands) {
+			changes.add(getRatingChange(hand));
+		}
+		return changes;
 	}
 
 	@Override
@@ -504,7 +510,9 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 		//According to requirements if game was interrupted when terminator should be set as a current player.
 		currentPlayerIndex = getPlayerCode(hand);
-		fireGameFinished();
+		if (stateListener != null) {
+			stateListener.gameFinished(this, gameResolution, getWonPlayers());
+		}
 	}
 
 	/*================== Checks game state =================*/
