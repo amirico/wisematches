@@ -39,10 +39,10 @@ public class ScribbleHistoryEntity implements DesiredEntityBean<Void> {
 	@SearchAttribute(column = "board.movesCount")
 	private int movesCount;
 
-	@SearchAttribute(column = "rating.newRating")
+	@SearchAttribute(column = "l.newRating")
 	private short newRating;
 
-	@SearchAttribute(column = "rating.newRating - rating.oldRating")
+	@SearchAttribute(column = "l.newRating - l.oldRating")
 	private short ratingChange;
 
 	@SearchAttribute(column = "max(if(r.playerIndex=0, r.playerId, 0))", sortable = false)

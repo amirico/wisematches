@@ -12,12 +12,12 @@ public class ScribbleHistorySearchManager extends AbstractHibernateSearchManager
 
 	@Override
 	protected String getTablesList(Void context) {
-		return "scribble_board as board, rating_history as rating, scribble_player as l, scribble_player as r";
+		return "scribble_board as board, scribble_player as l, scribble_player as r";
 	}
 
 	@Override
 	protected String getWhereCriterias(Void context) {
-		return "rating.boardId=board.boardId and rating.playerId=l.playerId and l.boardId=board.boardId and board.boardId=r.boardId and not board.resolution is null and l.playerId=:pid";
+		return "l.boardId=board.boardId and board.boardId=r.boardId and not board.resolution is null and l.playerId=:pid";
 	}
 
 	@Override

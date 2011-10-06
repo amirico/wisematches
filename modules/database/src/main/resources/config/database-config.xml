@@ -37,7 +37,6 @@
                 <prop key="hibernate.cache.use_query_cache">false</prop>
                 <prop key="hibernate.cache.use_second_level_cache">false</prop>
                 <!--
-        TODO: cache is disable by default. Should be enabled later.
                 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
                 <prop key="hibernate.cache.provider_configuration_file_resource_path">config/hibernate-ehcache.xml</prop>
 -->

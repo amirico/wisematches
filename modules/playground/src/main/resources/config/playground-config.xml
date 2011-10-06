@@ -11,6 +11,11 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="ratingManager" class="wisematches.playground.tracking.impl.RatingManagerImpl">
+        <property name="ratingSystem" ref="eloRatingSystem"/>
+        <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
+    </bean>
+
     <bean id="lexicalDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>

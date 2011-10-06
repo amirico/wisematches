@@ -5,6 +5,7 @@ import wisematches.personality.Personality;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -126,5 +127,15 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	@Override
 	public Date getLastMoveTime() {
 		return lastMoveTime;
+	}
+
+	@Override
+	public GameRatingChange getRatingChange(GamePlayerHand player) {
+		return null;
+	}
+
+	@Override
+	public List<GameRatingChange> getRatingChanges() {
+		return null;
 	}
 }

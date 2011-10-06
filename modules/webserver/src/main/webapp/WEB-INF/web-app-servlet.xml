@@ -27,7 +27,14 @@
         </bean>
 
         <bean id="browserDetectionInterceptor" class="wisematches.server.web.view.WMBrowserDetectionInterceptor">
-            <!--TODO: allowed browsers must be placed here-->
+            <property name="supportedBrowsers">
+                <map>
+                    <entry key="CHROME" value="12"/>
+                    <entry key="OPERA" value="11"/>
+                    <entry key="FIREFOX" value="4"/>
+                    <entry key="SAFARI" value="5"/>
+                </map>
+            </property>
         </bean>
 
         <mvc:interceptor>

@@ -1,7 +1,7 @@
 package wisematches.server.web.controllers.playground;
 
 import org.junit.Test;
-import wisematches.playground.tracking.RatingChangesCurve;
+import wisematches.playground.tracking.RatingCurve;
 import wisematches.server.web.utils.RatingChart;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class PlayerProfileControllerTest {
 	final String[] NAMES = new String[]{"Jun", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 	@SuppressWarnings("unchecked")
-	private RatingChangesCurve getRatingCurve(int resolution, Date start, Date end) {
+	private RatingCurve getRatingCurve(int resolution, Date start, Date end) {
 		int prev = 1200;
 		int count = ((int) ((end.getTime() - start.getTime()) / 1000 / 60 / 60 / 24)) / resolution;
 		List list = new ArrayList();
@@ -28,7 +28,7 @@ public class PlayerProfileControllerTest {
 			list.add(new Object[]{i, (short) (rating - 10), rating, (short) (rating + 20), rating});
 			prev = rating;
 		}
-		return new RatingChangesCurve(resolution, start, end, list);
+		return new RatingCurve(resolution, start, end, list);
 	}
 
 	@Test

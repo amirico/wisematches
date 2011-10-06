@@ -13,6 +13,15 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	void removeBoardStateListener(BoardStateListener l);
 
 	/**
+	 * Returns game by it's id.
+	 *
+	 * @param gameId the game id
+	 * @return the game by specified id or <code>null</code> if game is unknown.
+	 * @throws BoardLoadingException if board can't be loaded by some reasons.
+	 */
+	B openBoard(long gameId) throws BoardLoadingException;
+
+	/**
 	 * Creates new game board with specified settings.
 	 *
 	 * @param gameSettings the settings for new game
@@ -21,15 +30,6 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	 * @throws BoardCreationException if board can't be created by some reasons.
 	 */
 	B createBoard(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
-
-	/**
-	 * Returns game by it's id.
-	 *
-	 * @param gameId the game id
-	 * @return the game by specified id or <code>null</code> if game is unknown.
-	 * @throws BoardLoadingException if board can't be loaded by some reasons.
-	 */
-	B openBoard(long gameId) throws BoardLoadingException;
 
 	/**
 	 * Returns collection of all opened boards at this moment. This methods returns copy of boards

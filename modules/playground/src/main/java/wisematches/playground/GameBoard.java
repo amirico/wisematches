@@ -8,10 +8,6 @@ import java.util.List;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
-	void addGameBoardListener(GameBoardListener listener);
-
-	void removeGameBoardListener(GameBoardListener listener);
-
 	/**
 	 * Returns id of this board.
 	 *
@@ -125,6 +121,22 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * @return the list of all players on this board.
 	 */
 	List<P> getPlayersHands();
+
+	/**
+	 * Returns rating change for specified player hand for that game.
+	 *
+	 * @param player the player who's rating should be changed.
+	 * @return rating change for specified player or null if game is not finished.
+	 */
+	GameRatingChange getRatingChange(GamePlayerHand player);
+
+	/**
+	 * Returns list of all rating changes for the game. Please note that not all changes are reflected in
+	 * player's statistic.
+	 *
+	 * @return list of all changes or null if game is not finished.
+	 */
+	Collection<GameRatingChange> getRatingChanges();
 
 	/**
 	 * Returns list of winners for this game, empty list if no winners (draw) or {@code null} if game still active.

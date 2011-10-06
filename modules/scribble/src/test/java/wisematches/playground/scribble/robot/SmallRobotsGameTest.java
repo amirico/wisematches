@@ -62,14 +62,20 @@ public class SmallRobotsGameTest {
 		final ScribbleBoard board = scribbleBoardManager.createBoard(
 				new ScribbleSettings("This is robots game", Language.EN, 3, false, true),
 				Arrays.<Personality>asList(r1, r2, r3));
-		board.addGameBoardListener(new GameBoardListener() {
+		scribbleBoardManager.addBoardStateListener(new BoardStateListener() {
+			@Override
+			public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+			}
+
 			@Override
 			public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
 			}
 
 			@Override
-			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
-				notifyGameFinished();
+			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
+				if (board.getBoardId() == b.getBoardId()) {
+					notifyGameFinished();
+				}
 			}
 		});
 		assertTrue("Game is not in progress state", board.isGameActive());

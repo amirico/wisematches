@@ -20,7 +20,6 @@ import wisematches.playground.scribble.ExchangeTilesMove;
 import wisematches.playground.scribble.MakeWordMove;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
-import wisematches.playground.tracking.PlayerTrackingCenter;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
@@ -41,7 +40,6 @@ import java.util.concurrent.Callable;
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends WisematchesController {
 	private ScribbleBoardManager boardManager;
-	private PlayerTrackingCenter trackingCenter;
 	private DictionaryManager dictionaryManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
 
@@ -62,7 +60,7 @@ public class ScribbleBoardController extends WisematchesController {
 			model.addAttribute("board", board);
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
 			if (!board.isGameActive()) {
-				model.addAttribute("ratings", trackingCenter.getRatingChanges(board));
+				model.addAttribute("ratings", board.getRatingChanges());
 			}
 			return "/content/playground/scribble/playboard";
 		} catch (BoardLoadingException ex) {
@@ -177,11 +175,6 @@ public class ScribbleBoardController extends WisematchesController {
 	@Autowired
 	public void setBoardManager(ScribbleBoardManager scribbleBoardManager) {
 		this.boardManager = scribbleBoardManager;
-	}
-
-	@Autowired
-	public void setTrackingCenter(PlayerTrackingCenter scribbleTrackingCenter) {
-		this.trackingCenter = scribbleTrackingCenter;
 	}
 
 	@Autowired

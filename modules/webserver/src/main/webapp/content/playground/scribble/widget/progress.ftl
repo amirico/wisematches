@@ -80,16 +80,6 @@
         </td>
     </@element>
 
-    <@element>
-        <td><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
-        <td>
-            <div id="bankState">
-                <a class="action" href="#showBankInfo"
-                   onclick="bankInfo.showBankInfo(); return false;"><@message code="game.state.bankinfo.link"/></a>
-            </div>
-        </td>
-    </@element>
-
     <@element activeVisible=false>
         <td valign="top"><strong><@message code="game.state.resolution"/>:</strong></td>
         <td>
@@ -110,6 +100,16 @@
                     </#switch>
                 </#if>
                 </div>
+            </div>
+        </td>
+    </@element>
+
+    <@element>
+        <td><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
+        <td>
+            <div id="bankState">
+                <a class="action" href="#showBankInfo"
+                   onclick="bankInfo.showBankInfo(); return false;"><@message code="game.state.bankinfo.link"/></a>
             </div>
         </td>
     </@element>

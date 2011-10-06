@@ -2,49 +2,52 @@ package wisematches.server.web.view;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import wisematches.server.web.services.useragent.WebClient;
+import wisematches.server.web.utils.useragent.UserAgent;
+import wisematches.server.web.utils.useragent.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMBrowserDetectionInterceptor extends HandlerInterceptorAdapter {
-    public WMBrowserDetectionInterceptor() {
-    }
+	private Map<UserAgent, Integer> supportedBrowsers = new HashMap<UserAgent, Integer>();
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (modelAndView != null) {
-            final HttpSession session = request.getSession();
+	public WMBrowserDetectionInterceptor() {
+	}
 
-            Object supportedBrowser = null;
-            if (session != null) {
-                supportedBrowser = session.getAttribute("IS_BROWSED_SUPPORTED");
-            }
-            if (supportedBrowser == null) {
-                supportedBrowser = checkBrowserVersion(WebClient.detect(request));
-            }
-            if (session != null) {
-                session.setAttribute("IS_BROWSED_SUPPORTED", supportedBrowser);
-            }
-            modelAndView.addObject("supportedBrowser", supportedBrowser);
-        }
-    }
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+		if (modelAndView != null) {
+			final HttpSession session = request.getSession();
 
-    private Boolean checkBrowserVersion(WebClient detect) {
-        switch (detect.getUserAgent()) {
-            case CHROME:
-                return detect.getMajorVersion() >= 12;
-            case OPERA:
-                return detect.getMajorVersion() >= 11;
-            case FIREFOX:
-                return detect.getMajorVersion() >= 4;
-            case SAFARI:
-                return detect.getMajorVersion() >= 5;
-        }
-        return Boolean.FALSE;
-    }
+			Object supportedBrowser = null;
+			if (session != null) {
+				supportedBrowser = session.getAttribute("IS_BROWSED_SUPPORTED");
+			}
+			if (supportedBrowser == null) {
+				supportedBrowser = checkBrowserVersion(WebClient.detect(request));
+			}
+			if (session != null) {
+				session.setAttribute("IS_BROWSED_SUPPORTED", supportedBrowser);
+			}
+			modelAndView.addObject("supportedBrowser", supportedBrowser);
+		}
+	}
+
+	private Boolean checkBrowserVersion(WebClient detect) {
+		Integer integer = supportedBrowsers.get(detect.getUserAgent());
+		if (integer == null) {
+			return Boolean.FALSE;
+		}
+		return detect.getMajorVersion() >= integer;
+	}
+
+	public void setSupportedBrowsers(Map<UserAgent, Integer> supportedBrowsers) {
+		this.supportedBrowsers = supportedBrowsers;
+	}
 }
