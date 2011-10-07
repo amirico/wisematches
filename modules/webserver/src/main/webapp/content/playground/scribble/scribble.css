@@ -416,3 +416,33 @@
     height: 22px;
     position: relative;
 }
+
+.player-info {
+    padding: 3px;
+    margin-bottom: 5px;
+    background-image: none !important;
+}
+
+.player-info td {
+    color: gray;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: top;
+    border: 1px solid transparent;
+}
+
+.player-info .points {
+    text-align: center;
+}
+
+.player-info .rating {
+    padding-left: 10px;
+}
+
+.player-info .rating div {
+    display: inline-block;
+}
+
+.player-info .winner-icon {
+    vertical-align: top;
+}

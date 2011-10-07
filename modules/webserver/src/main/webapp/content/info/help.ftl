@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="infoId" type="java.lang.String" -->
+<#-- @ftlvariable name="resourceTemplate" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <#macro markSelected pageName><#if infoId==pageName>class="selected"</#if></#macro>
@@ -9,7 +10,14 @@
             <div id="info-navigation">
                 <ul>
                     <li>
-                        <b><@messageCapFirst code="info.readmore.label"/></b>
+                        <strong><@messageCapFirst code="info.readmore.label"/></strong>
+                    </li>
+                    <li>
+                        <ul id="help">
+                            <li <@markSelected "move"/>>
+                                <a href="/info/move">How to move</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <ul id="rules">
@@ -56,7 +64,7 @@
                         style="border-color: #dad7d7; padding-bottom: 5px;"></li>
                 <#if principal??>
                     <li>
-                        <b><@message code="info.continue.label"/></b>
+                        <strong><@message code="info.continue.label"/></strong>
                         <ul id="continue">
                             <li>
                                 <a href="/playground/scribble/active"><@message code="info.open.dashboard.label"/></a>
@@ -66,28 +74,28 @@
                             </li>
                         </ul>
                     </li>
-                    <#else>
-                        <li>
-                            <b><@message code="info.start.label"/></b>
-                            <ul id="start">
-                                <li>
-                                    <button id="createAnAccount" class="account-button"
-                                            onclick="wm.util.url.redirect('/account/create')">
+                <#else>
+                    <li>
+                        <strong><@message code="info.start.label"/></strong>
+                        <ul id="start">
+                            <li>
+                                <button id="createAnAccount" class="account-button"
+                                        onclick="wm.util.url.redirect('/account/create')">
                                     <@message code="account.register.label"/>
-                                    </button>
-                                </li>
-                                <li class="separator"><@message code="separator.or"/></li>
-                                <li><a href="/account/login"><@message code="account.signin.label"/></a></li>
-                                <li class="separator"><@message code="separator.or"/></li>
-                                <li><a href="/account/loginGuest"><@message code="account.guest.label"/></a></li>
-                            </ul>
-                        </li>
+                                </button>
+                            </li>
+                            <li class="separator"><@message code="separator.or"/></li>
+                            <li><a href="/account/login"><@message code="account.signin.label"/></a></li>
+                            <li class="separator"><@message code="separator.or"/></li>
+                            <li><a href="/account/loginGuest"><@message code="account.guest.label"/></a></li>
+                        </ul>
+                    </li>
                 </#if>
                 </ul>
             </div>
         </td>
         <td id="info-content" style="vertical-align: top;">
-        <#include "/content/templates/resources.ftl">
+        <#if resourceTemplate??><#include resourceTemplate><#else><#include "/content/info/resources.ftl"></#if>
         </td>
     </tr>
 </table>
