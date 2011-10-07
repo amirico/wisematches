@@ -48,7 +48,7 @@
 
 <table width="100%" border="0">
     <@element showSeparator=false>
-        <td><strong><@message code="game.state.started"/>:</strong></td>
+        <td nowrap="nowrap"><strong><@message code="game.state.started"/>:</strong></td>
         <td width="100%">
             <div id="gameStartedTime">
             ${gameMessageSource.formatDate(board.startedTime, locale)}
@@ -57,7 +57,7 @@
     </@element>
 
     <@element activeVisible=false>
-        <td><strong><@message code="game.state.finished"/>:</strong></td>
+        <td nowrap="nowrap"><strong><@message code="game.state.finished"/>:</strong></td>
         <td>
             <div id="gameFinishedTime">
                 <#if board.finishedTime??>${gameMessageSource.formatDate(board.finishedTime, locale)}</#if>
@@ -66,7 +66,7 @@
     </@element>
 
     <@element passiveVisible=false>
-        <td valign="top"><strong><@message code="game.state.progress"/>:</strong></td>
+        <td nowrap="nowrap" valign="top"><strong><@message code="game.state.progress"/>:</strong></td>
         <td style="padding-top: 2px;">
             <div id="gameProgress" class="ui-progressbar game-progress">
                 <div class="ui-progressbar-value ui-corner-left game-progress-board" style="width:0"></div>
@@ -81,7 +81,7 @@
     </@element>
 
     <@element activeVisible=false>
-        <td valign="top"><strong><@message code="game.state.resolution"/>:</strong></td>
+        <td nowrap="nowrap" valign="top"><strong><@message code="game.state.resolution"/>:</strong></td>
         <td>
             <div id="gameResolution">
                 <div class="ui-progressbar game-progress">
@@ -105,7 +105,7 @@
     </@element>
 
     <@element>
-        <td><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
+        <td nowrap="nowrap"><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
         <td>
             <div id="bankState">
                 <a class="action" href="#showBankInfo"
@@ -115,19 +115,19 @@
     </@element>
 
     <@element>
-        <td><strong><@message code="game.state.language"/>:</strong></td>
+        <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>
         <td><@message code="language."+board.gameSettings.language/></td>
     </@element>
 
     <@element>
-        <td><strong><@message code="game.state.spent"/>:</strong></td>
+        <td nowrap="nowrap"><strong><@message code="game.state.spent"/>:</strong></td>
         <td>
             <div id="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
         </td>
     </@element>
 
     <@element passiveVisible=false>
-        <td><strong><@message code="game.state.time"/>:</strong></td>
+        <td nowrap="nowrap"><strong><@message code="game.state.time"/>:</strong></td>
         <td>${board.gameSettings.daysPerMove} <@message code="game.state.per"/></td>
     </@element>
 
