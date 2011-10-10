@@ -25,8 +25,8 @@
     <@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
 </#macro>
 
-<@wm.widget id="gameInfo" title="game.state.label" help="board.progress">
-<div id="tilesBankWidget" class="tiles-bank ui-widget-content ui-helper-hidden">
+<@wm.widget class="gameInfo" title="game.state.label" help="board.progress">
+<div class="tiles-bank ui-widget-content ui-helper-hidden">
     <table>
         <thead>
         <tr>
@@ -50,7 +50,7 @@
     <@element showSeparator=false>
         <td nowrap="nowrap"><strong><@message code="game.state.started"/>:</strong></td>
         <td width="100%">
-            <div id="gameStartedTime">
+            <div class="gameStartedTime">
             ${gameMessageSource.formatDate(board.startedTime, locale)}
             </div>
         </td>
@@ -59,7 +59,7 @@
     <@element activeVisible=false>
         <td nowrap="nowrap"><strong><@message code="game.state.finished"/>:</strong></td>
         <td>
-            <div id="gameFinishedTime">
+            <div class="gameFinishedTime">
                 <#if board.finishedTime??>${gameMessageSource.formatDate(board.finishedTime, locale)}</#if>
             </div>
         </td>
@@ -68,7 +68,7 @@
     <@element passiveVisible=false>
         <td nowrap="nowrap" valign="top"><strong><@message code="game.state.progress"/>:</strong></td>
         <td style="padding-top: 2px;">
-            <div id="gameProgress" class="ui-progressbar game-progress">
+            <div class="game-progress ui-progressbar">
                 <div class="ui-progressbar-value ui-corner-left game-progress-board" style="width:0"></div>
                 <div class="ui-progressbar-value game-progress-bank" style="width:0"></div>
                 <div class="ui-progressbar-value ui-corner-right game-progress-hand" style="width:0"></div>
@@ -83,7 +83,7 @@
     <@element activeVisible=false>
         <td nowrap="nowrap" valign="top"><strong><@message code="game.state.resolution"/>:</strong></td>
         <td>
-            <div id="gameResolution">
+            <div class="gameResolution">
                 <div class="ui-progressbar game-progress">
                     <div class="ui-progressbar-value ui-corner-all game-progress-finished game-progress-caption sample">
                         <#if board.gameResolution??><@message code="game.resolution.${board.gameResolution.name()?lower_case}"/></#if>
@@ -107,7 +107,7 @@
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
         <td>
-            <div id="bankState">
+            <div class="bankState">
                 <a class="action" href="#showBankInfo"
                    onclick="bankInfo.showBankInfo(); return false;"><@message code="game.state.bankinfo.link"/></a>
             </div>
@@ -122,7 +122,7 @@
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.spent"/>:</strong></td>
         <td>
-            <div id="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
+            <div class="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
         </td>
     </@element>
 
@@ -150,16 +150,18 @@
 
 <#if board.gameActive>
 <script type="text/javascript">
-    wm.scribble.state = new function() {
+    wm.scribble.state = function(board) {
+        var status = this;
+
         this.updateProgressBar = function() {
             var count = board.getBankCapacity();
             var bo = board.getBoardTilesCount(), ha = board.getHandTilesCount(), ba = board.getBankTilesCount();
             var p3 = Math.round(100 * ha / count), p2 = Math.round(100 * ba / count), p1 = 100 - p3 - p2;
 
-            var boardWidget = $("#gameProgress .game-progress-board").css('width', p1 + '%');
-            var bankWidget = $("#gameProgress .game-progress-bank").css('width', p2 + '%');
-            var handWidget = $("#gameProgress .game-progress-hand").css('width', p3 + '%');
-            $("#gameProgress .game-progress-caption").text(bo + ' / ' + ba + ' / ' + ha);
+            var boardWidget = board.getPlayboardElement(".game-progress .game-progress-board").css('width', p1 + '%');
+            var bankWidget = board.getPlayboardElement(".game-progress .game-progress-bank").css('width', p2 + '%');
+            var handWidget = board.getPlayboardElement(".game-progress .game-progress-hand").css('width', p3 + '%');
+            board.getPlayboardElement(".game-progress .game-progress-caption").text(bo + ' / ' + ba + ' / ' + ha);
 
             if (p1 < 2) {
                 boardWidget.hide();
@@ -175,9 +177,9 @@
         };
 
         this.markAsFinished = function(state) {
-            $("#gameFinishedTime").html(state.finishTimeMessage);
-            var cap = $("#gameResolution .game-progress-caption");
-            var desc = $("#gameResolution .game-resolution-player");
+            board.getPlayboardElement(".gameFinishedTime").html(state.finishTimeMessage);
+            var cap = board.getPlayboardElement(".gameResolution .game-progress-caption");
+            var desc = board.getPlayboardElement(".gameResolution .game-resolution-player");
             switch (state.resolution) {
                 case 'FINISHED':
                     cap.text("<@message code="game.resolution.finished"/>");
@@ -199,19 +201,19 @@
 
             $(".state-change-marker").toggle();
         };
-    };
 
-    wm.scribble.state.updateProgressBar();
+        board.bind('gameState',
+                function(event, type, state) {
+                    board.getPlayboardElement(".spentTime").html(state.spentTimeMessage);
+                    if (type === 'finished') {
+                        status.markAsFinished(state);
+                    }
+                }).bind('gameMoves',
+                function(event, move) {
+                    status.updateProgressBar();
+                });
 
-    board.bind('gameState',
-            function(event, type, state) {
-                $("#spentTime").html(state.spentTimeMessage);
-                if (type === 'finished') {
-                    wm.scribble.state.markAsFinished(state);
-                }
-            }).bind('gameMoves',
-            function(event, move) {
-                wm.scribble.state.updateProgressBar();
-            });
+        status.updateProgressBar();
+    }(board);
 </script>
 </#if>

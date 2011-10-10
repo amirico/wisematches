@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<@wm.widget id="movesHistory" title="game.history.label" style="padding-top: 10px" help="board.history">
+<@wm.widget class="movesHistory" title="game.history.label" style="padding-top: 10px" help="board.history">
 <table width="100%" class="display">
     <thead>
     <tr>

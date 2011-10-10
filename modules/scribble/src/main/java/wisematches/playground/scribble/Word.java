@@ -170,29 +170,6 @@ public final class Word implements Iterable<Word.IteratorItem>, Serializable {
 		return result;
 	}
 
-	/*
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		Word word = (Word) o;
-		return direction == word.direction && position.equals(word.position) && text.equals(word.text);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = direction.ordinal();
-		result = 31 * result + position.hashCode();
-		result = 31 * result + text.hashCode();
-		return result;
-	}
-*/
-
 	@Override
 	public String toString() {
 		return "Word{" +

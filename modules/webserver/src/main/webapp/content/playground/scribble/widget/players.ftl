@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget id="playersInfo" title="game.player.label" help="board.players">
+<@wm.widget class="playersInfo" title="game.player.label" help="board.players">
 <table cellpadding="5" width="100%" border="1">
     <tbody>
         <#list board.playersHands as hand>
@@ -9,7 +9,7 @@
         <tr class="player-info-${p.id} player-info">
             <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">&nbsp;</td>
             <td class="nickname ui-table-middle">
-            <@wm.player player=p/>
+                <@wm.player player=p/>
             </td>
             <td width="20px" class="points ui-table-middle">${hand.points}</td>
             <td width="60px" class="info ui-corner-right ui-table-right"></td>

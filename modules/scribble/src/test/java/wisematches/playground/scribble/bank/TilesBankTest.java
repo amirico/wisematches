@@ -1,20 +1,26 @@
 package wisematches.playground.scribble.bank;
 
 import junit.framework.TestCase;
+import wisematches.personality.Language;
 import wisematches.playground.scribble.Tile;
+import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class TilesBankTest extends TestCase {
+	public TilesBankTest() {
+	}
+
 	public void testBank() {
-		TilesBank b = new TilesBank(
-				new TilesBank.TilesInfo('a', 5, 1),
-				new TilesBank.TilesInfo('b', 4, 2),
-				new TilesBank.TilesInfo('c', 3, 3),
-				new TilesBank.TilesInfo('d', 2, 4),
-				new TilesBank.TilesInfo('z', 1, 5)
-		);
+		final TilesBankInfoEditor editor = new TilesBankInfoEditor(Language.EN);
+		editor.add('a', 5, 1);
+		editor.add('b', 4, 2);
+		editor.add('c', 3, 3);
+		editor.add('d', 2, 4);
+		editor.add('z', 1, 5);
+
+		TilesBank b = new TilesBank(editor.createTilesBankInfo());
 
 		assertEquals(15, b.getBankCapacity());
 		assertEquals(15, b.getTilesLimit());

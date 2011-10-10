@@ -78,7 +78,7 @@
         bank:{
             capacity: ${board.bankCapacity},
             tilesInfo:[
-                <#list board.getTilesBankInfo() as tbi>{letter:'${tbi.getLetter()}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
+                <#list board.lettersDistribution.letterDescriptions as tbi>{letter:'${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
         }
 
     <#assign playerHand=board.getPlayerHand(principal.getId())!""/>
@@ -94,12 +94,15 @@
 </script>
 
 <script type="text/javascript">
-    var board = new wm.scribble.Board(scribbleGame, ${principal.id}, "wildcardSelectionPanel");
+    if (typeof(scribbleController) == "undefined") {
+        scribbleController = new wm.scribble.AjaxController();
+    }
+    var board = new wm.scribble.Board(scribbleGame, ${principal.id}, "wildcardSelectionPanel", scribbleController);
 </script>
 
 <#if !viewMode>
 <div id="wildcardSelectionPanel" title="<@message code="game.play.wildcard.label"/>" style="display: none;">
     <div><@message code="game.play.wildcard.description"/></div>
-    <div style="position: relative; height: ${(((board.tilesBankInfo?size)/15)?ceiling)*22}px;"></div>
+    <div style="position: relative; height: ${(((board.lettersDistribution?size)/15)?ceiling)*22}px;"></div>
 </div>
 </#if>

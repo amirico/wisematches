@@ -11,6 +11,7 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
 import wisematches.playground.scribble.bank.TilesBank;
+import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 
 import java.util.Arrays;
@@ -54,7 +55,7 @@ public class ScribbleBoardManagerTest {
 		final ScribbleSettings settings = new ScribbleSettings("Mock", Language.EN, 3);
 
 		final Dictionary dictionary = createNiceMock(Dictionary.class);
-		final TilesBank tilesBank = new TilesBank();
+		final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).createTilesBankInfo());
 
 		final ScribbleBoard board = createStrictMock(ScribbleBoard.class);
 		expect(board.getGameSettings()).andReturn(settings);
@@ -69,7 +70,7 @@ public class ScribbleBoardManagerTest {
 		expect(dictionaryManager.getDictionary(LOCALE)).andReturn(dictionary);
 		replay(dictionaryManager);
 
-		expect(tilesBankingHouse.createTilesBank(LOCALE, 3, true)).andReturn(tilesBank);
+		expect(tilesBankingHouse.createTilesBank(Language.EN, 3, true)).andReturn(tilesBank);
 		replay(tilesBankingHouse);
 
 		final ScribbleBoard board1 = scribbleRoomManager.loadBoardImpl(1L);
@@ -89,12 +90,13 @@ public class ScribbleBoardManagerTest {
 		expect(dictionary.getLocale()).andReturn(LOCALE);
 		replay(dictionary);
 
-		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('A', 100, 1));
+		final TilesBankInfoEditor editor = new TilesBankInfoEditor(Language.EN);
+		final TilesBank tilesBank = new TilesBank(editor.add('A', 100, 1).createTilesBankInfo());
 
 		expect(dictionaryManager.getDictionary(LOCALE)).andReturn(dictionary);
 		replay(dictionaryManager);
 
-		expect(tilesBankingHouse.createTilesBank(LOCALE, 2, true)).andReturn(tilesBank);
+		expect(tilesBankingHouse.createTilesBank(Language.EN, 2, true)).andReturn(tilesBank);
 		replay(tilesBankingHouse);
 
 		scribbleRoomManager.setDictionaryManager(dictionaryManager);

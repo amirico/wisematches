@@ -6,7 +6,7 @@
 <#include "scriplet.ftl"/>
 
 <div id="board${board.boardId}">
-    <table id="playboard" cellpadding="5" align="center">
+    <table id="playboard" class="playboard" cellpadding="5" align="center">
         <tr>
             <td style="vertical-align: top; width: 250px">
             <#include "widget/progress.ftl"/>
@@ -15,7 +15,7 @@
             </td>
 
             <td style="vertical-align: top;">
-            <@wm.widget id="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"  help="board.playboard"/>
+            <@wm.widget class="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"  help="board.playboard"/>
         <#if !viewMode><#include "widget/controls.ftl"/></#if>
             <#if playerHand?has_content><#include "widget/annotation.ftl"/></#if>
             </td>
@@ -32,7 +32,7 @@
 </div>
 
 <script type="text/javascript">
-    $("#scribbleBoard").prepend(board.getBoardElement());
+    $("#board${board.boardId} .scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
 
     <#if board.gameActive>
     $(document).ready(function() {

@@ -4,18 +4,11 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.playground.scribble.bank.TilesBankingHouse;
-import wisematches.playground.scribble.bank.UnsupportedLocaleException;
+import wisematches.personality.Language;
+import wisematches.playground.scribble.bank.LettersDistribution;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
 
 /**
  * This implementation of {@code TilesBankingHouse} loaders tiles from XML file of following structure:
@@ -34,29 +27,21 @@ import java.util.Locale;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class XMLTilesBankingHouse implements TilesBankingHouse {
+public class XMLTilesBankingHouse extends AbstractTilesBankingHouse {
 	private Resource banksPath;
 
 	private static final DocumentBuilderFactory BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-	public TilesBank createTilesBank(Locale locale, int playersCount, boolean wildcardAllowed) {
-		try {
-			final Resource bankFile = getBankResource(locale);
-			final Collection<TilesBank.TilesInfo> infoCollection = getTilesInfos(bankFile, playersCount, wildcardAllowed);
-			return new TilesBank(infoCollection.toArray(new TilesBank.TilesInfo[infoCollection.size()]));
-		} catch (Exception ex) {
-			throw new UnsupportedLocaleException("Tiles Bank for locale " + locale + " can't be loaded", ex);
-		}
+	public XMLTilesBankingHouse() {
 	}
 
-	private Collection<TilesBank.TilesInfo> getTilesInfos(Resource resource, int playersCount, boolean wildcardAllowed)
-			throws ParserConfigurationException, IOException, SAXException {
+	@Override
+	protected LettersDistribution loadTilesBankInfo(Language language, int playersCount, boolean wildcardAllowed) throws Exception {
 		final DocumentBuilder builder = BUILDER_FACTORY.newDocumentBuilder();
-
-		final Document document1 = builder.parse(resource.getInputStream());
+		final Document document1 = builder.parse(banksPath.createRelative("bank_" + language.code() + ".xml").getInputStream());
 
 		final NodeList list = document1.getElementsByTagName("letter");
-		Collection<TilesBank.TilesInfo> letters = new ArrayList<TilesBank.TilesInfo>(list.getLength());
+		final TilesBankInfoEditor info = new TilesBankInfoEditor(language);
 		for (int i = 0; i < list.getLength(); i++) {
 			final Element e = (Element) list.item(i);
 			final char ch = Character.toLowerCase(e.getAttribute("char").charAt(0));
@@ -74,13 +59,9 @@ public class XMLTilesBankingHouse implements TilesBankingHouse {
 				resultCount = count;
 			}
 
-			letters.add(new TilesBank.TilesInfo(ch, resultCount, cost));
+			info.add(ch, resultCount, cost);
 		}
-		return letters;
-	}
-
-	private Resource getBankResource(Locale locale) throws IOException {
-		return banksPath.createRelative("bank_" + locale.toString() + ".xml");
+		return info.createTilesBankInfo();
 	}
 
 	public void setBanksPath(Resource banksPath) {

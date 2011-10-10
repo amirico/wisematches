@@ -90,7 +90,7 @@
 </#macro>
 
 <#macro widget title id="" class="" style="" help="">
-<div class="ui-widget" <#if style?has_content>style="${style}"</#if>>
+<div class="ui-widget<#if class?has_content> ${class}</#if>" <#if style?has_content>style="${style}"</#if>>
     <div class="ui-widget-header ui-corner-all shadow">
         <#if help?has_content>
             <div class="quickInfo">
@@ -98,7 +98,6 @@
             </div>
         </#if>
         <@message code=title/>
-
     </div>
     <div <#if id?has_content>id="${id}"</#if> class="ui-widget-content ui-corner-all shadow">
         <#nested/>

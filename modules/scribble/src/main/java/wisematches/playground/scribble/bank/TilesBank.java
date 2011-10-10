@@ -14,7 +14,7 @@ import java.util.*;
  */
 public final class TilesBank {
 	private final Tile[] tiles;
-	private final TilesInfo[] tilesInfo;
+	private final LettersDistribution lettersDistribution;
 	private final LinkedList<Integer> unusedIndexes;
 
 	private static final int SHUFFLES_COUNT = 3;
@@ -23,19 +23,17 @@ public final class TilesBank {
 	 * Initializes bank with specified tiles. Each tiles info contains information about tiles of one type
 	 * (tiles of one letter).
 	 *
-	 * @param letterInfos the bank letters info.
+	 * @param lettersDistribution the bank letters info.
 	 */
-	public TilesBank(TilesInfo... letterInfos) {
-		this.tilesInfo = letterInfos.clone();
-		int capacity = calculateCapacity(letterInfos);
-
-		tiles = new Tile[capacity];
-		unusedIndexes = new LinkedList<Integer>();
+	public TilesBank(LettersDistribution lettersDistribution) {
+		this.lettersDistribution = lettersDistribution;
+		this.tiles = new Tile[lettersDistribution.getLettersCount()];
+		this.unusedIndexes = new LinkedList<Integer>();
 
 		int number = 0;
-		for (final TilesInfo li : letterInfos) {
-			for (int j = 0; j < li.getCount(); j++) {
-				tiles[number] = new Tile(number, li.getLetter(), li.getCost());
+		for (LetterDescription description : lettersDistribution) {
+			for (int j = 0; j < description.getCount(); j++) {
+				tiles[number] = new Tile(number, description.getLetter(), description.getCost());
 				unusedIndexes.add(number);
 				number++;
 			}
@@ -75,6 +73,15 @@ public final class TilesBank {
 	}
 
 	/**
+	 * Returns number of unused tiles.
+	 *
+	 * @return the number of unused tiles.
+	 */
+	public int getTilesLimit() {
+		return unusedIndexes.size();
+	}
+
+	/**
 	 * Returns number of all tiles in bank, including already used tiles.
 	 *
 	 * @return the bank capacity.
@@ -94,35 +101,19 @@ public final class TilesBank {
 	}
 
 	/**
-	 * Returns number of unused tiles.
+	 * Request tile from bank by specified number. Tile is marked as used.
 	 *
-	 * @return the number of unused tiles.
+	 * @param number the number of tile.
+	 * @return requested tile
+	 * @throws IllegalArgumentException if tile with specified number already requested.
+	 * @see #isTileInUse(int)
 	 */
-	public int getTilesLimit() {
-		return unusedIndexes.size();
-	}
-
-	/**
-	 * Checks that bank doesn't have unused tiles. This method is equalent of <code>getTilesLimit() == 0</code>
-	 *
-	 * @return <code>true</code> if bank doesn't have more unused tiles; <code>false</code> - otherwise.
-	 * @see #getTilesLimit()
-	 */
-	public boolean isEmpty() {
-		return unusedIndexes.size() == 0;
-	}
-
-	/**
-	 * `
-	 * Returns copy of information about tiles in this bank.
-	 * <p/>
-	 * TODO: this method should be replaced to {@code TilesBankInfo} class. This class should
-	 * contains {@code Locale}, number of tiles, array of {@code TilesInfo}, version of bank and so on.
-	 *
-	 * @return
-	 */
-	public TilesInfo[] getTilesInfo() {
-		return tilesInfo.clone();
+	public Tile requestTile(int number) {
+		if (unusedIndexes.remove(Integer.valueOf(number))) {
+			return tiles[number];
+		} else {
+			throw new IllegalArgumentException("Requested tile not present in bank: " + number);
+		}
 	}
 
 	/**
@@ -148,18 +139,13 @@ public final class TilesBank {
 	}
 
 	/**
-	 * Request tile from bank by specified number. Tile is marked as used.
+	 * Returns this tile to unused list.
 	 *
-	 * @param number the number of tile.
-	 * @return requested tile
-	 * @throws IllegalArgumentException if tile with specified number already requested.
-	 * @see #isTileInUse(int)
+	 * @param number the tile number to rollback.
 	 */
-	public Tile requestTile(int number) {
-		if (unusedIndexes.remove(Integer.valueOf(number))) {
-			return tiles[number];
-		} else {
-			throw new IllegalArgumentException("Requested tile not present in bank: " + number);
+	public void rollbackTile(int number) {
+		if (!unusedIndexes.contains(number)) {
+			unusedIndexes.add(number);
 		}
 	}
 
@@ -177,57 +163,21 @@ public final class TilesBank {
 	}
 
 	/**
-	 * Returns this tile to unused list.
+	 * Checks that bank doesn't have unused tiles. This method is equalent of <code>getTilesLimit() == 0</code>
 	 *
-	 * @param number the tile number to rollback.
+	 * @return <code>true</code> if bank doesn't have more unused tiles; <code>false</code> - otherwise.
+	 * @see #getTilesLimit()
 	 */
-	public void rollbackTile(int number) {
-		if (!unusedIndexes.contains(number)) {
-			unusedIndexes.add(number);
-		}
-	}
-
-	private int calculateCapacity(TilesInfo... letterInfos) {
-		int capacity = 0;
-		for (TilesInfo letterInfo : letterInfos) {
-			capacity += letterInfo.getCount();
-		}
-		return capacity;
+	public boolean isEmpty() {
+		return unusedIndexes.size() == 0;
 	}
 
 	/**
-	 * <code>TilesInfo</code> contains information about tiles of the same type (tiles with the same letter).
+	 * Returns information about the bank.
 	 *
-	 * @author Sergey Klimenko (smklimenko@gmail.com)
+	 * @return information about the bank.
 	 */
-	public static final class TilesInfo {
-		private final char letter;
-		private final int cost;
-		private final int count;
-
-		/**
-		 * Creates new information about tile.
-		 *
-		 * @param letter the letter of tiles.
-		 * @param count  the number of tiles with this letter.
-		 * @param cost   the cost of these tiles.
-		 */
-		public TilesInfo(char letter, int count, int cost) {
-			this.letter = letter;
-			this.count = count;
-			this.cost = cost;
-		}
-
-		public char getLetter() {
-			return letter;
-		}
-
-		public int getCount() {
-			return count;
-		}
-
-		public int getCost() {
-			return cost;
-		}
+	public LettersDistribution getLettersDistribution() {
+		return lettersDistribution;
 	}
 }

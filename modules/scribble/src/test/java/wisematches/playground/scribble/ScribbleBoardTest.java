@@ -9,6 +9,7 @@ import wisematches.playground.PassTurnMove;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
 import wisematches.playground.scribble.bank.TilesBank;
+import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,6 +30,8 @@ public class ScribbleBoardTest extends TestCase {
 	private ScribblePlayerHand h2;
 	private ScribblePlayerHand h3;
 
+	private final TilesBankInfoEditor editor = new TilesBankInfoEditor(Language.EN);
+
 	private static final Locale LOCALE = new Locale("en");
 
 	public ScribbleBoardTest() {
@@ -36,11 +39,20 @@ public class ScribbleBoardTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		settings = new ScribbleSettings("test", Language.EN, 3);
+
+		editor.add('a', 3, 1); // 0-2
+		editor.add('b', 3, 2); // 3-5
+		editor.add('c', 3, 3); // 6-8
+		editor.add('d', 3, 4); // 9-11
+		editor.add('e', 3, 5); // 12-14
+		editor.add('f', 3, 6); // 15-17
+		editor.add('g', 3, 7);  // 18-20
+		editor.add('m', 13, 0);
 	}
 
 	public void test_initializeBoard() {
 		final Dictionary dict = createDictionary();
-		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('a', 103, 1));
+		final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('a', 103, 1).createTilesBankInfo());
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dict);
@@ -217,8 +229,7 @@ public class ScribbleBoardTest extends TestCase {
 			board.makeMove(new MakeWordMove(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(5, 0))));
 			fail("Exception must be: incorrect word place");
-		} catch (GameMoveException ex) {
-			;
+		} catch (GameMoveException ignore) {
 		}
 
 		// incorrect word place2
@@ -227,8 +238,7 @@ public class ScribbleBoardTest extends TestCase {
 			board.makeMove(new MakeWordMove(hand.getPlayerId(),
 					new Word(new Position(7, 9), Direction.HORIZONTAL, tilesBank.getTiles(2, 7, 8, 9, 10, 11, 12))));
 			fail("Exception must be: incorrect word place");
-		} catch (IncorrectPositionException ex) {
-			;
+		} catch (IncorrectPositionException ignore) {
 		}
 
 		//not in dictionary
@@ -237,23 +247,14 @@ public class ScribbleBoardTest extends TestCase {
 			board.makeMove(new MakeWordMove(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(0, 7))));
 			fail("Exception must be: no in dictionary");
-		} catch (UnknownWordException ex) {
-			;
+		} catch (UnknownWordException ignore) {
 		}
 	}
 
 	public void test_checkMove_Correct() throws GameMoveException, DictionaryNotFoundException {
 		final Dictionary dictionary = createDictionary("abcd", "def", "fefgabcd");
-		final TilesBank tilesBank = new TilesBank(
-				new TilesBank.TilesInfo('a', 3, 1), // 0-2
-				new TilesBank.TilesInfo('b', 3, 2), // 3-5
-				new TilesBank.TilesInfo('c', 3, 3), // 6-8
-				new TilesBank.TilesInfo('d', 3, 4), // 9-11
-				new TilesBank.TilesInfo('e', 3, 5), // 12-14
-				new TilesBank.TilesInfo('f', 3, 6), // 15-17
-				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
-				new TilesBank.TilesInfo('m', 13, 0)
-		);
+
+		final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
 
@@ -303,16 +304,7 @@ public class ScribbleBoardTest extends TestCase {
 
 	public void test_checkMove_exchange() throws GameMoveException {
 		final Dictionary dictionary = createDictionary("abcd", "def", "fefgabcd");
-		final TilesBank tilesBank = new TilesBank(
-				new TilesBank.TilesInfo('a', 3, 1), // 0-2
-				new TilesBank.TilesInfo('b', 3, 2), // 3-5
-				new TilesBank.TilesInfo('c', 3, 3), // 6-8
-				new TilesBank.TilesInfo('d', 3, 4), // 9-11
-				new TilesBank.TilesInfo('e', 3, 5), // 12-14
-				new TilesBank.TilesInfo('f', 3, 6), // 15-17
-				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
-				new TilesBank.TilesInfo('m', 13, 0)
-		);
+		final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
 
@@ -361,16 +353,7 @@ public class ScribbleBoardTest extends TestCase {
 
 	public void test_checkMove_pass() throws GameMoveException {
 		final Dictionary dictionary = createDictionary("abcd", "def", "fefgabcd");
-		final TilesBank tilesBank = new TilesBank(
-				new TilesBank.TilesInfo('a', 3, 1), // 0-2
-				new TilesBank.TilesInfo('b', 3, 2), // 3-5
-				new TilesBank.TilesInfo('c', 3, 3), // 6-8
-				new TilesBank.TilesInfo('d', 3, 4), // 9-11
-				new TilesBank.TilesInfo('e', 3, 5), // 12-14
-				new TilesBank.TilesInfo('f', 3, 6), // 15-17
-				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
-				new TilesBank.TilesInfo('m', 13, 0)
-		);
+		final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
 
@@ -467,16 +450,7 @@ public class ScribbleBoardTest extends TestCase {
 
 	public void test_processGameFinished_noTiles() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		final Dictionary dictionary = createDictionary();
-		final TilesBank tilesBank = new TilesBank(
-				new TilesBank.TilesInfo('a', 3, 1), // 0-2
-				new TilesBank.TilesInfo('b', 3, 2), // 3-5
-				new TilesBank.TilesInfo('c', 3, 3), // 6-8
-				new TilesBank.TilesInfo('d', 3, 4), // 9-11
-				new TilesBank.TilesInfo('e', 3, 5), // 12-14
-				new TilesBank.TilesInfo('f', 3, 6), // 15-17
-				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
-				new TilesBank.TilesInfo('m', 13, 0)
-		);
+		final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
@@ -505,16 +479,7 @@ public class ScribbleBoardTest extends TestCase {
 	 */
 	public void test_processGameFinished_haveTiles() throws Exception {
 		final Dictionary dictionary = createDictionary();
-		final TilesBank tilesBank = new TilesBank(
-				new TilesBank.TilesInfo('a', 3, 1), // 0-2
-				new TilesBank.TilesInfo('b', 3, 2), // 3-5
-				new TilesBank.TilesInfo('c', 3, 3), // 6-8
-				new TilesBank.TilesInfo('d', 3, 4), // 9-11
-				new TilesBank.TilesInfo('e', 3, 5), // 12-14
-				new TilesBank.TilesInfo('f', 3, 6), // 15-17
-				new TilesBank.TilesInfo('g', 3, 7),  // 18-20
-				new TilesBank.TilesInfo('m', 13, 0)
-		);
+		final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
@@ -556,13 +521,12 @@ public class ScribbleBoardTest extends TestCase {
 
 	private TilesBank createTilesBank(String tiles, int stubChars) {
 		final char[] chars = tiles.toCharArray();
-		final TilesBank.TilesInfo[] infos = new TilesBank.TilesInfo[chars.length + 1];
-		for (int i = 0; i < chars.length; i++) {
-			final char ch = chars[i];
+		final TilesBankInfoEditor editor = new TilesBankInfoEditor(Language.EN);
+		for (final char ch : chars) {
 			final int cost = (ch == '*' ? 0 : 1);
-			infos[i] = new TilesBank.TilesInfo(ch, 1, cost);
+			editor.add(ch, 1, cost);
 		}
-		infos[chars.length] = new TilesBank.TilesInfo('a', stubChars, 1);
-		return new TilesBank(infos);
+		editor.add('a', stubChars, 1);
+		return new TilesBank(editor.createTilesBankInfo());
 	}
 }

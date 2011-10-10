@@ -50,7 +50,7 @@
 </div>
 
 <script type="text/javascript">
-    var comments = new wm.scribble.Comments(board, {
+    var comments = new wm.scribble.Comments(board, scribbleController, {
         "ago":"<@message code='game.comment.ago'/>",
         "of":"<@message code='separator.of'/>"
     });
