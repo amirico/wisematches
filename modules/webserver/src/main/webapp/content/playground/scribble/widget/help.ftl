@@ -2,9 +2,15 @@
 
 <div class="boardInfoWidget" style="padding-top: 10px;">
     <div class="ui-widget-content ui-corner-all shadow" align="center">
-    <#--<a class="action" href="#" onclick="wm.game.help.showHelp('/info/legend'); return false;">Показать Легенду</a> |-->
-    <#--<a class="action" href="#" onclick="wm.game.help.showHelp('/info/moves'); return false;">Как ходить?</a> |-->
+        <a href="/info/move" target="_blank"><@messageCapFirst code="info.rules.move.label"/></a>
+        |
+        <a href="/info/rules" target="_blank"><@messageCapFirst code="game.help.rules"/></a>
+    <#--
         <a class="action" href="#"
-           onclick="wm.game.help.showHelp('/info/rules', this); return false;"><@message code="game.help.rules"/></a>
+           onclick="wm.game.help.showHelp('/info/move', this); return false;"><@messageCapFirst code="info.rules.move.label"/></a>
+        |
+        <a class="action" href="#"
+           onclick="wm.game.help.showHelp('/info/rules', this); return false;"><@messageCapFirst code="game.help.rules"/></a>
+-->
     </div>
 </div>

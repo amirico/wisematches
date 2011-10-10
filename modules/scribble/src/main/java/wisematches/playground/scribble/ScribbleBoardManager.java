@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.AbstractBoardManager;
 import wisematches.playground.BoardCreationException;
@@ -17,7 +18,6 @@ import wisematches.playground.scribble.bank.TilesBankingHouse;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Implementation of the room for scribble game
@@ -37,11 +37,11 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 
 	@Override
 	protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
-		final Locale locale = new Locale(gameSettings.getLanguage());
+		final Language language = Language.byCode(gameSettings.getLanguage());
 
 		try {
-			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, players.size(), true);
+			final Dictionary dictionary = dictionaryManager.getDictionary(language.locale());
+			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
 
 			return new ScribbleBoard(gameSettings, players, tilesBank, dictionary);
 		} catch (DictionaryNotFoundException e) {
@@ -52,20 +52,20 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	protected ScribbleBoard loadBoardImpl(long gameId) throws BoardLoadingException {
-		Locale locale = null;
+		Language language = null;
 		try {
 			final ScribbleBoard board = hibernateTemplate.get(ScribbleBoard.class, gameId);
 			if (board == null) {
 				return null;
 			}
 			hibernateTemplate.evict(board);
-			locale = new Locale(board.getGameSettings().getLanguage());
-			final Dictionary dictionary = dictionaryManager.getDictionary(locale);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(locale, board.getPlayersHands().size(), true);
+			language = Language.byCode(board.getGameSettings().getLanguage());
+			final Dictionary dictionary = dictionaryManager.getDictionary(language.locale());
+			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, board.getPlayersHands().size(), true);
 			board.initGameAfterLoading(tilesBank, dictionary);
 			return board;
 		} catch (DictionaryNotFoundException e) {
-			throw new BoardLoadingException("No dictionary for locale " + locale, e);
+			throw new BoardLoadingException("No dictionary for locale " + language, e);
 		}
 	}
 

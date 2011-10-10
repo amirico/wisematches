@@ -10,12 +10,12 @@
             <div id="info-navigation">
                 <ul>
                     <li>
-                        <strong><@messageCapFirst code="info.readmore.label"/></strong>
+                        <strong><@messageCapFirst code="info.rules.move.label"/></strong>
                     </li>
                     <li>
                         <ul id="help">
                             <li <@markSelected "move"/>>
-                                <a href="/info/move">How to move</a>
+                                <a href="/info/move"><@messageCap code="info.rules.move.label"/></a>
                             </li>
                         </ul>
                     </li>

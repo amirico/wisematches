@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.bank;
 
-import java.util.Locale;
+import wisematches.personality.Language;
 
 /**
  * {@code TilesBankingHouse} allows create new {@code TilesBank} by some parameters.
@@ -17,14 +17,13 @@ public interface TilesBankingHouse {
 	 * <p/>
 	 * If {@code wildcardAllowed} is disabled returned {@code TilesBank} won't contains wilcard tiles at all.
 	 *
-	 * @param locale		  the locale of tiles bank.
+	 * @param language		the language of new bank
 	 * @param playersCount	the number of players in game.
 	 * @param wildcardAllowed is wild card tiles allowed or not. {@code true} of allow wildcards;
 	 *                        {@code false} - to deny wildcard.
-	 * @return creted tiles bank
-	 * @throws UnsupportedLocaleException if tiles bank for specified locale can't be loaded.
-	 * @throws NullPointerException	   if {@code locale} is null
-	 * @throws IllegalArgumentException   if number of players is negative
+	 * @return created tiles bank
+	 * @throws NullPointerException	 if {@code locale} is null
+	 * @throws IllegalArgumentException if number of players is negative
 	 */
-	TilesBank createTilesBank(Locale locale, int playersCount, boolean wildcardAllowed);
+	TilesBank createTilesBank(Language language, int playersCount, boolean wildcardAllowed);
 }

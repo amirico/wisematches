@@ -33,8 +33,8 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 	}
 
 	public void putInAction(ScribbleBoard board, RobotType type) {
-		final long currentTime = System.currentTimeMillis();
 		final long boardId = board.getBoardId();
+		final long currentTime = System.currentTimeMillis();
 
 		if (log.isDebugEnabled()) {
 			log.debug("Start braining activity for board: " + boardId + " of type " + type +
@@ -42,9 +42,8 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 		}
 
 		final ScribblePlayerHand robotHand = board.getPlayerTurn();
-
-		final Dictionary dict = board.getDictionary();
-		if (!(dict instanceof IterableDictionary)) {
+		final List<Word> words = searchAvailableMoves(board, robotHand, type);
+		if (words == null) {
 			if (log.isInfoEnabled()) {
 				log.info("Dictionary is not iterable. Turn passed.");
 			}
@@ -55,13 +54,6 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 			}
 			return;
 		}
-
-		final IterableDictionary dictionary = (IterableDictionary) dict;
-		if (log.isTraceEnabled()) {
-			log.trace("Hand robot tiles: " + Arrays.toString(robotHand.getTiles()));
-		}
-
-		final List<Word> words = analyzeValidWords(board, robotHand, type, dictionary);
 		if (log.isTraceEnabled()) {
 			log.trace("Found " + words.size() + " variants of words ");
 		}
@@ -106,6 +98,24 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 					System.currentTimeMillis() + ". Robot has been thought " +
 					(System.currentTimeMillis() - currentTime) + "ms");
 		}
+	}
+
+	public List<Word> getAvailableMoves(ScribbleBoard board, ScribblePlayerHand hand) {
+		return searchAvailableMoves(board, hand, RobotType.EXPERT); // expert knows about all moves
+	}
+
+	List<Word> searchAvailableMoves(ScribbleBoard board, ScribblePlayerHand hand, RobotType type) {
+		final Dictionary dict = board.getDictionary();
+		if (!(dict instanceof IterableDictionary)) {
+			return null;
+		}
+
+		final IterableDictionary dictionary = (IterableDictionary) dict;
+		if (log.isTraceEnabled()) {
+			log.trace("Hand robot tiles: " + Arrays.toString(hand.getTiles()));
+		}
+
+		return analyzeValidWords(board, hand, RobotType.EXPERT, dictionary); // expert has all moves
 	}
 
 	List<Word> analyzeValidWords(final TilesPlacement board, final ScribblePlayerHand hand,

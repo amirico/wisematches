@@ -1,48 +1,39 @@
-#playboard #scribbleBoard {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-#playboard tr.odd, #playboard tr.even, #playboard tr.odd td, #playboard tr.even td {
+.playboard tr.odd, .playboard tr.even, .playboard tr.odd td, .playboard tr.even td {
     border: 0;
     background-color: transparent;
     cursor: pointer;
 }
 
-#playboard tr.even:hover td, #playboard tr.odd:hover td {
+.playboard tr.even:hover td, .playboard tr.odd:hover td {
     border: 0;
     background-color: #A6C9E2;
     cursor: pointer;
 }
 
-#playboard #movesHistory td {
+.movesHistory td {
     padding-left: 3px;
     padding-right: 3px;
 }
 
-#playboard #movesHistory th, #playboard #movesHistory td {
+.movesHistory th, .movesHistory td {
     white-space: nowrap;
 }
 
-#playboard #movesHistory .ui-state-default {
+.movesHistory .ui-state-default {
     border: 0;
 }
 
-#playboard #movesHistory .moveMade {
+.movesHistory .moveMade {
 }
 
-#playboard #movesHistory .movePassed {
+.movesHistory .movePassed {
     color: gray;
     font-style: italic;
 }
 
-#playboard #movesHistory .moveExchange {
+.movesHistory .moveExchange {
     color: gray;
     font-style: italic;
-}
-
-#gameProgressAction, #gameProgressFinished {
-    width: 100%;
 }
 
 .game-progress {
@@ -113,22 +104,22 @@
     font-weight: bold;
 }
 
-#playboard #gameInfo td {
+.playboard .gameInfo td {
     padding-left: 5px;
     white-space: nowrap;
 }
 
-#playboard button {
+.playboard button {
     padding-left: 12px;
     background-repeat: no-repeat;
     background-position: 5px center;
 }
 
-#wordStatus {
+.wordStatus {
     position: relative;
 }
 
-#wordStatusIcon {
+.wordStatusIcon {
     width: 16px;
     height: 16px;
     display: block;
@@ -138,7 +129,7 @@
     left: .5em
 }
 
-#wordStatusMessage {
+.wordStatusMessage {
     padding-left: 24px;
 }
 
@@ -310,16 +301,20 @@
     background: url('/resources/images/scribble/playboard/memory.png') no-repeat -16px 0 !important;
 }
 
-#memoryWords_wrapper {
+.memoryWords_wrapper {
     min-height: 20px;
     _height: 20px;
 }
 
-#memoryWords .memory-controls {
+.memoryWords {
+    width: 100%;
+}
+
+.memoryWords .memory-controls {
     white-space: nowrap;
 }
 
-#memoryWords .memory-controls a, #memoryWords .memory-controls span {
+.memoryWords .memory-controls a, .memoryWords .memory-controls span {
     border: 0;
     width: 16px;
     height: 16px;

@@ -24,6 +24,7 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.bank.TilesBank;
+import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 import wisematches.server.web.services.notify.NotificationManager;
 import wisematches.server.web.services.notify.impl.publish.mail.MailNotificationPublisher;
 import wisematches.server.web.services.notify.impl.publish.message.MessageNotificationPublisher;
@@ -88,7 +89,7 @@ public class NotificationFunctionalTest {
 		messageManager.sendNotification(same(p1), capture(message2));
 		replay(mailSender, messageManager);
 
-		final TilesBank tilesBank = new TilesBank(new TilesBank.TilesInfo('A', 100, 1));
+		final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo());
 		final Dictionary dictionary = createNiceMock(Dictionary.class);
 
 		mailNotificationPublisher.setMailSender(mailSender);
