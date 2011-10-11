@@ -319,10 +319,10 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 			final List<? extends GamePlayerHand> playersHands = board.getPlayersHands();
 			final List<GameRatingChange> changes = ratingManager.calculateRatings(playersHands);
 
-			final Iterator<GameRatingChange> iterator1 = changes.iterator();
-			final Iterator<? extends GamePlayerHand> iterator = playersHands.iterator();
-			while (iterator1.hasNext() && iterator.hasNext()) {
-				iterator.next().changeRating(iterator1.next());
+			final Iterator<GameRatingChange> changeIterator = changes.iterator();
+			final Iterator<? extends GamePlayerHand> handsIterator = playersHands.iterator();
+			while (changeIterator.hasNext() && handsIterator.hasNext()) {
+				handsIterator.next().changeRating(changeIterator.next(), board.isRatedGame());
 			}
 
 			saveBoardImpl((B) board);

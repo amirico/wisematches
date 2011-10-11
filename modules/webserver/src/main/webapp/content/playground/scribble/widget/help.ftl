@@ -5,12 +5,5 @@
         <a href="/info/move" target="_blank"><@messageCapFirst code="info.rules.move.label"/></a>
         |
         <a href="/info/rules" target="_blank"><@messageCapFirst code="game.help.rules"/></a>
-    <#--
-        <a class="action" href="#"
-           onclick="wm.game.help.showHelp('/info/move', this); return false;"><@messageCapFirst code="info.rules.move.label"/></a>
-        |
-        <a class="action" href="#"
-           onclick="wm.game.help.showHelp('/info/rules', this); return false;"><@messageCapFirst code="game.help.rules"/></a>
--->
     </div>
 </div>
