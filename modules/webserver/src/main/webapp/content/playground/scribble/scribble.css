@@ -247,6 +247,14 @@
     color: white;
 }
 
+ul.bonuses span {
+    display: inline-block;
+}
+
+ul.bonuses .bonus-cell {
+    position: relative;
+}
+
 .bonus-cell {
     font-size: 10px;
     padding-top: 4px;

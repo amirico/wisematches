@@ -83,9 +83,10 @@ public class GamePlayerHand {
 		return points;
 	}
 
-	void changeRating(GameRatingChange change) {
+	void
+	changeRating(GameRatingChange change, boolean rated) {
 		this.oldRating = change.getOldRating();
-		this.newRating = change.getNewRating();
+		this.newRating = rated ? change.getNewRating() : change.getOldRating();
 	}
 
 	@Override

@@ -10,25 +10,16 @@
             <div id="info-navigation">
                 <ul>
                     <li>
-                        <strong><@messageCapFirst code="info.rules.move.label"/></strong>
-                    </li>
-                    <li>
-                        <ul id="help">
-                            <li <@markSelected "move"/>>
-                                <a href="/info/move"><@messageCap code="info.rules.move.label"/></a>
-                            </li>
-                        </ul>
+                        <strong><@messageCapFirst code="info.readmore.label"/></strong>
                     </li>
                     <li>
                         <ul id="rules">
+                            <li <@markSelected "move"/>>
+                                <a href="/info/move"><@messageCap code="info.rules.move.label"/></a>
+                            </li>
                             <li <@markSelected "rules"/>>
                                 <a href="/info/rules"><@messageCap code="info.rules.scribble.label"/></a>
                             </li>
-                        <#--
-                            <li <@markSelected "tournament"/>>
-                                <a href="/info/tournament"><@messageCap code="info.rules.tournament.label"/></a>
-                            </li>
--->
                             <li <@markSelected "rating"/>>
                                 <a href="/info/rating"><@messageCap code="info.rules.rating.label"/></a>
                             </li>
