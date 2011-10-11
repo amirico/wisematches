@@ -171,7 +171,9 @@ public class AbstractBoardManagerTest {
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(h1, h2));
+		expect(board.isRatedGame()).andReturn(true);
 		expect(board.getPlayersHands()).andReturn(Arrays.asList(h1, h2));
+		expect(board.isRatedGame()).andReturn(true);
 		replay(board);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
