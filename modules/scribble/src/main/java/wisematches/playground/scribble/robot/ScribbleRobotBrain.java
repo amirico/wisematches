@@ -10,8 +10,8 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.IterableDictionary;
 import wisematches.playground.robot.RobotBrain;
 import wisematches.playground.scribble.*;
-import wisematches.playground.scribble.scores.ScoreCalculation;
-import wisematches.playground.scribble.scores.ScoreEngine;
+import wisematches.playground.scribble.ScribbleMoveScore;
+import wisematches.playground.scribble.score.ScoreEngine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -256,7 +256,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 
 		int maxPoints = 0;
 		for (Word word : words) {
-			final ScoreCalculation calculation = scoreEngine.calculateWordScore(word, tilesPlacement);
+			final ScribbleMoveScore calculation = scoreEngine.calculateWordScore(word, tilesPlacement);
 			final int points = calculation.getPoints();
 			if (points > maxPoints) {
 				result = word;

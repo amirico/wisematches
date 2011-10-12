@@ -132,7 +132,7 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
+	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 		final GamePlayerHand hand = board.getPlayerHand(move.getPlayerMove().getPlayerId());
 		if (isPlayerIgnored(hand)) {
 			return;
@@ -142,7 +142,7 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		statisticLock.lock();
 		try {
 			final StatisticsEditor statistic = (StatisticsEditor) getPlayerStatistic(personality);
-			statisticsTrapper.trapGameMoveDone(board, move, statistic);
+			statisticsTrapper.trapGameMoveDone(board, move, moveScore, statistic);
 			playerTrackingCenterDao.savePlayerStatistic(statistic);
 			fireStatisticUpdated(personality, statistic);
 		} catch (Throwable th) {
@@ -219,8 +219,8 @@ public class PlayerStatisticManagerImpl implements PlayerStatisticManager {
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
-			processGameMoveDone(board, move);
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+			processGameMoveDone(board, move, moveScore);
 		}
 
 		@Override

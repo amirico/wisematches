@@ -2,9 +2,9 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.scribble.scores.engines;
+package wisematches.playground.scribble.score.engines;
 
-import wisematches.playground.scribble.scores.ScoreBonus;
+import wisematches.playground.scribble.score.ScoreBonus;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

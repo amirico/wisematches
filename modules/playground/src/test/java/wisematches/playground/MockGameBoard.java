@@ -15,10 +15,10 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private boolean allowNextMove = true;
 	private boolean gameFinished = false;
 	private boolean gamePassed = false;
-	private short points = 0;
 	private boolean moveFinished;
 	private short[] finishScore;
 	private Date lastMoveTime = new Date();
+	private MockGameMoveScore scoreCalculation = new MockGameMoveScore();
 
 	MockGameBoard(GameSettings gameSettings, Collection<Personality> players) {
 		super(gameSettings, players);
@@ -39,8 +39,8 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	}
 
 	@Override
-	protected short calculateMovePoints(PlayerMove move) {
-		return points;
+	protected GameMoveScore calculateMoveScores(PlayerMove move) {
+		return scoreCalculation;
 	}
 
 	@Override
@@ -97,11 +97,11 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	}
 
 	public int getPoints() {
-		return points;
+		return scoreCalculation.getPoints();
 	}
 
 	public void setPoints(short points) {
-		this.points = points;
+		scoreCalculation.setPoints(points);
 	}
 
 	public boolean isMoveFinished() {

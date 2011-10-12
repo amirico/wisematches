@@ -144,7 +144,7 @@ public class NotificationPublisherCenter {
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
 			for (GamePlayerHand hand : playersHands) {
 				if (board.getPlayerTurn() != null && board.getPlayerTurn().equals(hand)) {

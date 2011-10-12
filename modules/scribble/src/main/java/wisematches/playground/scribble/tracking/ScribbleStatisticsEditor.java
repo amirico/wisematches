@@ -26,6 +26,7 @@ import javax.persistence.Table;
 public class ScribbleStatisticsEditor extends StatisticsEditor implements ScribbleStatistics {
 	@Column(name = "words")
 	private int wordsCount;
+
 	@Column(name = "exchanges")
 	private int exchangesCount;
 
@@ -39,6 +40,9 @@ public class ScribbleStatisticsEditor extends StatisticsEditor implements Scribb
 	@Type(type = "statWord")
 	@Column(name = "valuableWord")
 	private Word lastValuableWord;
+
+	@Column(name = "allHandBonuses")
+	private int allHandTilesBonuses;
 
 	@Deprecated
 	ScribbleStatisticsEditor() {
@@ -86,5 +90,13 @@ public class ScribbleStatisticsEditor extends StatisticsEditor implements Scribb
 
 	public Word getLastValuableWord() {
 		return lastValuableWord;
+	}
+
+	public int getAllHandTilesBonuses() {
+		return allHandTilesBonuses;
+	}
+
+	public void setAllHandTilesBonuses(int allHandTilesBonuses) {
+		this.allHandTilesBonuses = allHandTilesBonuses;
 	}
 }

@@ -28,7 +28,7 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		editor.setActiveGames(editor.getActiveGames() + 1);
 	}
 
-	public void trapGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, T editor) {
+	public void trapGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore, T editor) {
 		final int turnsCount = editor.getTurnsCount() + 1;
 
 		editor.setTurnsCount(turnsCount);

@@ -1,11 +1,11 @@
-package wisematches.playground.scribble.scores.engines;
+package wisematches.playground.scribble.score.engines;
 
+import wisematches.playground.scribble.ScribbleMoveScore;
 import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.TilesPlacement;
 import wisematches.playground.scribble.Word;
-import wisematches.playground.scribble.scores.ScoreBonus;
-import wisematches.playground.scribble.scores.ScoreCalculation;
-import wisematches.playground.scribble.scores.ScoreEngine;
+import wisematches.playground.scribble.score.ScoreBonus;
+import wisematches.playground.scribble.score.ScoreEngine;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -43,7 +43,7 @@ public class AbstractScoreEngine implements ScoreEngine {
 		return bonuses;
 	}
 
-	public ScoreCalculation calculateWordScore(Word word, TilesPlacement tilesPlacement) {
+	public ScribbleMoveScore calculateWordScore(Word word, TilesPlacement tilesPlacement) {
 		ScoreBonus.Type[] bonuses = new ScoreBonus.Type[word.length()];
 
 		StringBuilder formula = new StringBuilder();
@@ -113,37 +113,6 @@ public class AbstractScoreEngine implements ScoreEngine {
 			formula.append(allHandsBonus);
 		}
 
-		return new ScoreCalculationImpl(points,
-				handTilesCount == LETTERS_IN_HAND, bonuses, formula.toString());
-	}
-
-	private static final class ScoreCalculationImpl implements ScoreCalculation {
-		private final short points;
-		private final boolean allFromHand;
-		private final ScoreBonus.Type[] bonuses;
-		private final String formula;
-
-		private ScoreCalculationImpl(short points, boolean allFromHand, ScoreBonus.Type[] bonuses, String formula) {
-			this.points = points;
-			this.allFromHand = allFromHand;
-			this.bonuses = bonuses;
-			this.formula = formula;
-		}
-
-		public short getPoints() {
-			return points;
-		}
-
-		public boolean isAllFromHand() {
-			return allFromHand;
-		}
-
-		public ScoreBonus.Type[] getBonuses() {
-			return bonuses;
-		}
-
-		public String getFormula() {
-			return formula;
-		}
+		return new ScribbleMoveScore(points, handTilesCount == LETTERS_IN_HAND, bonuses, formula.toString());
 	}
 }

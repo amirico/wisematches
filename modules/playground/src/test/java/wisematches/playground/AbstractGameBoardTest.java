@@ -16,13 +16,12 @@ import static org.junit.Assert.*;
  */
 @SuppressWarnings("unchecked")
 public class AbstractGameBoardTest {
-	private GameSettings gameSettings;
-
 	private GamePlayerHand h1;
 	private GamePlayerHand h2;
 	private GamePlayerHand h3;
 
 	private MockGameBoard board;
+	private GameSettings gameSettings;
 	private BoardStateListener stateListener;
 
 	public AbstractGameBoardTest() {
@@ -177,7 +176,7 @@ public class AbstractGameBoardTest {
 		//move maden
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
 		final Capture<GameMove> move = new Capture<GameMove>();
-		l.gameMoveDone(same(board), capture(move));
+		l.gameMoveDone(same(board), capture(move), isA(GameMoveScore.class));
 		replay(l);
 
 		board.setPoints((short) 10);
@@ -202,7 +201,7 @@ public class AbstractGameBoardTest {
 		reset(l);
 		PlayerMove m2 = new PassTurnMove(board.getPlayerTurn().getPlayerId());
 		final Capture<GameMove> gm2 = new Capture<GameMove>();
-		l.gameMoveDone(same(board), capture(gm2));
+		l.gameMoveDone(same(board), capture(gm2), isA(GameMoveScore.class));
 		replay(l);
 
 		turn = board.getPlayerTurn();
@@ -241,8 +240,8 @@ public class AbstractGameBoardTest {
 		h1.increasePoints((short) 1);
 
 		BoardStateListener l = createStrictMock(BoardStateListener.class);
-		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
-		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
 		l.gameFinished(board, GameResolution.FINISHED, Collections.singletonList(h1));
 		replay(l);
 
@@ -267,8 +266,8 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_finishByDraw_NoWins() throws GameMoveException {
 		BoardStateListener l = createStrictMock(BoardStateListener.class);
-		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
-		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
 		l.gameFinished(board, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 
@@ -290,8 +289,8 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_finishByDraw_NoMoves() throws GameMoveException {
 		BoardStateListener l = createStrictMock(BoardStateListener.class);
-		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
-		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject());
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
 		l.gameFinished(board, GameResolution.STALEMATE, Collections.<GamePlayerHand>emptyList());
 		replay(l);
 

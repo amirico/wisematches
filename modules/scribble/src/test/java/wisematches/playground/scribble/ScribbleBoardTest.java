@@ -5,6 +5,7 @@ import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
+import wisematches.playground.GameMoveScore;
 import wisematches.playground.PassTurnMove;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
@@ -393,8 +394,8 @@ public class ScribbleBoardTest extends TestCase {
 		ScribblePlayerHand hand = board.getPlayerTurn();
 
 		final MakeWordMove wordMove = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
-		final int points = board.calculateMovePoints(wordMove);
-		assertEquals(4, points);
+		final GameMoveScore points = board.calculateMoveScores(wordMove);
+		assertEquals(4, points.getPoints());
 	}
 
 	public void test_processMoveFinished() {

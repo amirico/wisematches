@@ -8,8 +8,8 @@ import wisematches.playground.GameMoveException;
 import wisematches.playground.PlayerMove;
 import wisematches.playground.dictionary.IterableDictionary;
 import wisematches.playground.scribble.*;
-import wisematches.playground.scribble.scores.ScoreCalculation;
-import wisematches.playground.scribble.scores.ScoreEngine;
+import wisematches.playground.scribble.score.ScoreBonus;
+import wisematches.playground.scribble.score.ScoreEngine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,22 +50,22 @@ public class ScribbleRobotBrainTest {
 	public void test_selectResultWordExceprt() {
 		final TilesPlacement tilesPlacement = createNiceMock(TilesPlacement.class);
 
-		final ScoreCalculation calculation = createStrictMock(ScoreCalculation.class);
-		expect(calculation.getPoints()).andReturn((short) 10).andReturn((short) 20).andReturn((short) 30).andReturn((short) 5);
-		replay(calculation);
+		final ScribbleMoveScore c1 = new ScribbleMoveScore((short) 10, false, ScoreBonus.Type.values(), "asd");
+		final ScribbleMoveScore c2 = new ScribbleMoveScore((short) 20, false, ScoreBonus.Type.values(), "asd");
+		final ScribbleMoveScore c3 = new ScribbleMoveScore((short) 30, false, ScoreBonus.Type.values(), "asd");
+		final ScribbleMoveScore c4 = new ScribbleMoveScore((short) 5, false, ScoreBonus.Type.values(), "asd");
 
 		final ScoreEngine scoreEngine = createStrictMock(ScoreEngine.class);
-		expect(scoreEngine.calculateWordScore(w1, tilesPlacement)).andReturn(calculation);
-		expect(scoreEngine.calculateWordScore(w2, tilesPlacement)).andReturn(calculation);
-		expect(scoreEngine.calculateWordScore(w3, tilesPlacement)).andReturn(calculation);
-		expect(scoreEngine.calculateWordScore(w4, tilesPlacement)).andReturn(calculation);
+		expect(scoreEngine.calculateWordScore(w1, tilesPlacement)).andReturn(c1);
+		expect(scoreEngine.calculateWordScore(w2, tilesPlacement)).andReturn(c2);
+		expect(scoreEngine.calculateWordScore(w3, tilesPlacement)).andReturn(c3);
+		expect(scoreEngine.calculateWordScore(w4, tilesPlacement)).andReturn(c4);
 		replay(scoreEngine);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
 		final Word word = brain.selectResultWord(Arrays.asList(w1, w2, w3, w4), RobotType.EXPERT, scoreEngine, tilesPlacement);
 		assertSame(w3, word);
 
-		verify(calculation);
 		verify(scoreEngine);
 	}
 

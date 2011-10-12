@@ -4,6 +4,7 @@ import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ExchangeTilesMove;
 import wisematches.playground.scribble.MakeWordMove;
+import wisematches.playground.scribble.ScribbleMoveScore;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.tracking.StatisticsTrapper;
 
@@ -21,8 +22,8 @@ public class ScribbleStatisticsTrapper extends StatisticsTrapper<ScribbleStatist
 	}
 
 	@Override
-	public void trapGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, ScribbleStatisticsEditor editor) {
-		super.trapGameMoveDone(board, move, editor);
+	public void trapGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore, ScribbleStatisticsEditor editor) {
+		super.trapGameMoveDone(board, move, moveScore, editor);
 
 		final PlayerMove playerMove = move.getPlayerMove();
 		if (playerMove instanceof MakeWordMove) {
@@ -39,6 +40,13 @@ public class ScribbleStatisticsTrapper extends StatisticsTrapper<ScribbleStatist
 
 			if (editor.getLastLongestWord() == null || editor.getLastLongestWord().length() <= text.length()) {
 				editor.setLastLongestWord(word);
+			}
+
+			if (moveScore != null && moveScore instanceof ScribbleMoveScore) {
+				final ScribbleMoveScore sms = (ScribbleMoveScore) moveScore;
+				if (sms.isAllFromHand()) {
+					editor.setAllHandTilesBonuses(editor.getAllHandTilesBonuses() + 1);
+				}
 			}
 		} else if (playerMove instanceof ExchangeTilesMove) {
 			editor.setExchangesCount(editor.getExchangesCount() + 1);
