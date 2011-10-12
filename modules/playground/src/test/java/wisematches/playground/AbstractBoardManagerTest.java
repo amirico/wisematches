@@ -185,7 +185,7 @@ public class AbstractBoardManagerTest {
 		final GameMove move = new GameMove(new PassTurnMove(13L), 0, 0, new Date());
 
 		final BoardStateListener boardListener = createStrictMock(BoardStateListener.class);
-		boardListener.gameMoveDone(board, move);
+		boardListener.gameMoveDone(board, move, null);
 		boardListener.gameFinished(board, GameResolution.FINISHED, null);
 		boardListener.gameFinished(board, GameResolution.TIMEOUT, null);
 		replay(boardListener);
@@ -196,7 +196,7 @@ public class AbstractBoardManagerTest {
 
 		mock.openBoard(1L);
 
-		boardListener.gameMoveDone(board, move);
+		boardListener.gameMoveDone(board, move, null);
 
 		boardStateListener.gameFinished(board, GameResolution.FINISHED, null);
 		boardStateListener.gameFinished(board, GameResolution.TIMEOUT, null);

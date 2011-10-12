@@ -208,6 +208,10 @@
             <div><@message code="profile.points.hi"/>:</div>
             <div><@undefined value=statistics.highestPoints/></div>
         </div>
+        <div>
+            <div><@message code="profile.points.allHandBonuses"/>:</div>
+            <div>${statistics.allHandTilesBonuses}</div>
+        </div>
     </div>
 
     <div class="ui-layout-table" style="padding-top: 10px;">

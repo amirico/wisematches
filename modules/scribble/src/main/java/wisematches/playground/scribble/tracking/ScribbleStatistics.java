@@ -11,6 +11,13 @@ public interface ScribbleStatistics extends Statistics {
 
 	int getExchangesCount();
 
+	/**
+	 * Returns number of 'all hand tiles' bonuses.
+	 *
+	 * @return number of 'all hand tiles' bonuses.
+	 */
+	int getAllHandTilesBonuses();
+
 	int getAverageWordLength();
 
 	Word getLastLongestWord();

@@ -138,7 +138,7 @@ public class ExpiredGamesTerminatorTest {
 		gamesTerminator.setBoardManager(boardManager);
 
 		boardStateListener.getValue().gameStarted(gameBoard);
-		boardStateListener.getValue().gameMoveDone(gameBoard, new GameMove(new MakeTurnMove(12L), 12, 1, new Date()));
+		boardStateListener.getValue().gameMoveDone(gameBoard, new GameMove(new MakeTurnMove(12L), 12, 1, new Date()), null);
 		boardStateListener.getValue().gameFinished(gameBoard, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
 
 		Thread.sleep(500);

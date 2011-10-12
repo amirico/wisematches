@@ -254,11 +254,11 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 
 		@Override
 		public void gameStarted(GameBoard board) {
-			gameMoveDone(board, null);
+			gameMoveDone(board, null, null);
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard board, GameMove move) {
+		public void gameMoveDone(GameBoard board, GameMove move, GameMoveScore moveScore) {
 			scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getGameSettings().getDaysPerMove(), board.getLastMoveTime()));
 		}
 

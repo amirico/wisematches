@@ -188,7 +188,7 @@ public class StatisticsTrapperTest {
 				.andReturn(Arrays.asList(new GameMove(move1, 0, 0, new Date(moveTime + 3000)), null));
 		replay(gb);
 
-		statisticsTrapper.trapGameMoveDone(gb, new GameMove(move1, 10, 1, new Date(moveTime)), editor);
+		statisticsTrapper.trapGameMoveDone(gb, new GameMove(move1, 10, 1, new Date(moveTime)), null, editor);
 		assertEquals(10, editor.getAveragePoints());
 		assertEquals(1000, editor.getAverageMoveTime());
 		assertEquals(moveTime, editor.getLastMoveTime().getTime());
@@ -197,7 +197,7 @@ public class StatisticsTrapperTest {
 		assertEquals(0, editor.getPassesCount());
 		assertEquals(1, editor.getTurnsCount());
 
-		statisticsTrapper.trapGameMoveDone(gb, new GameMove(move2, 20, 1, new Date(moveTime + 3000)), editor);
+		statisticsTrapper.trapGameMoveDone(gb, new GameMove(move2, 20, 1, new Date(moveTime + 3000)), null, editor);
 		assertEquals(15, editor.getAveragePoints());
 		assertEquals((1000 + 3000) / 2, editor.getAverageMoveTime());
 		assertEquals(moveTime + 3000, editor.getLastMoveTime().getTime());
@@ -206,7 +206,7 @@ public class StatisticsTrapperTest {
 		assertEquals(0, editor.getPassesCount());
 		assertEquals(2, editor.getTurnsCount());
 
-		statisticsTrapper.trapGameMoveDone(gb, new GameMove(move3, 6, 1, new Date(moveTime + 8000)), editor);
+		statisticsTrapper.trapGameMoveDone(gb, new GameMove(move3, 6, 1, new Date(moveTime + 8000)), null, editor);
 		assertEquals(12, editor.getAveragePoints());
 		assertEquals((1000 + 3000 + 5000) / 3, editor.getAverageMoveTime());
 		assertEquals(moveTime + 8000, editor.getLastMoveTime().getTime());

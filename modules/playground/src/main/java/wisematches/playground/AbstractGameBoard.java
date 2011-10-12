@@ -185,7 +185,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 
 			checkMove(move);
 
-			final short points = calculateMovePoints(move);
+			final GameMoveScore moveScore = calculateMoveScores(move);
+			final short points = moveScore != null ? moveScore.getPoints() : 0;
 			player.increasePoints(points);
 			lastMoveTime = new Date();
 
@@ -207,13 +208,13 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			if (finished || passed) {
 				finalizeGame(finished ? GameResolution.FINISHED : GameResolution.STALEMATE);
 				if (stateListener != null) {
-					stateListener.gameMoveDone(this, gameMove);
+					stateListener.gameMoveDone(this, gameMove, moveScore);
 					stateListener.gameFinished(this, gameResolution, getWonPlayers());
 				}
 			} else {
 				currentPlayerIndex = getNextPlayerIndex();
 				if (stateListener != null) {
-					stateListener.gameMoveDone(this, gameMove);
+					stateListener.gameMoveDone(this, gameMove, moveScore);
 				}
 			}
 			return gameMove;
@@ -539,7 +540,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @param move the move to be calculated.
 	 * @return the move points.
 	 */
-	protected abstract short calculateMovePoints(PlayerMove move);
+	protected abstract GameMoveScore calculateMoveScores(PlayerMove move);
 
 	/**
 	 * Indicates that move was accepted. When this method is called move already added to game moves list.

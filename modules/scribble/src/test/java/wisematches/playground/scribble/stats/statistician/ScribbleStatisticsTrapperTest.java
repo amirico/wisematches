@@ -6,6 +6,7 @@ import wisematches.personality.Personality;
 import wisematches.playground.GameMove;
 import wisematches.playground.PlayerMove;
 import wisematches.playground.scribble.*;
+import wisematches.playground.scribble.score.ScoreBonus;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsEditor;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper;
 
@@ -46,7 +47,11 @@ public class ScribbleStatisticsTrapperTest {
 				.andReturn(Arrays.asList(new GameMove(move1, 6, 3, new Date(moveTime + 3000)), null));
 		replay(gb);
 
-		movesStatistician.trapGameMoveDone(gb, new GameMove(move1, 20, 1, new Date(moveTime)), editor);
+		final ScribbleMoveScore s1 = new ScribbleMoveScore((short) 20, false, ScoreBonus.Type.values(), "asd");
+		final ScribbleMoveScore s2 = new ScribbleMoveScore((short) 10, true, ScoreBonus.Type.values(), "asd");
+		final ScribbleMoveScore s3 = new ScribbleMoveScore((short) 5, true, ScoreBonus.Type.values(), "asd");
+
+		movesStatistician.trapGameMoveDone(gb, new GameMove(move1, 20, 1, new Date(moveTime)), s1, editor);
 		assertEquals(20, editor.getAveragePoints());
 		assertEquals(1000, editor.getAverageMoveTime());
 		assertEquals(2, editor.getAverageWordLength());
@@ -59,8 +64,9 @@ public class ScribbleStatisticsTrapperTest {
 		assertEquals(0, editor.getPassesCount());
 		assertEquals(1, editor.getTurnsCount());
 		assertEquals(1, editor.getWordsCount());
+		assertEquals(0, editor.getAllHandTilesBonuses());
 
-		movesStatistician.trapGameMoveDone(gb, new GameMove(move2, 10, 1, new Date(moveTime + 3000)), editor);
+		movesStatistician.trapGameMoveDone(gb, new GameMove(move2, 10, 1, new Date(moveTime + 3000)), s2, editor);
 		assertEquals(15, editor.getAveragePoints());
 		assertEquals((1000 + 3000) / 2, editor.getAverageMoveTime());
 		assertEquals(3, editor.getAverageWordLength());
@@ -73,8 +79,9 @@ public class ScribbleStatisticsTrapperTest {
 		assertEquals(0, editor.getPassesCount());
 		assertEquals(2, editor.getTurnsCount());
 		assertEquals(2, editor.getWordsCount());
+		assertEquals(1, editor.getAllHandTilesBonuses());
 
-		movesStatistician.trapGameMoveDone(gb, new GameMove(move3, 6, 1, new Date(moveTime + 8000)), editor);
+		movesStatistician.trapGameMoveDone(gb, new GameMove(move3, 6, 1, new Date(moveTime + 8000)), s3, editor);
 		assertEquals(12, editor.getAveragePoints());
 		assertEquals((1000 + 3000 + 5000) / 3, editor.getAverageMoveTime());
 		assertEquals(3, editor.getAverageWordLength());
@@ -87,6 +94,7 @@ public class ScribbleStatisticsTrapperTest {
 		assertEquals(0, editor.getPassesCount());
 		assertEquals(3, editor.getTurnsCount());
 		assertEquals(2, editor.getWordsCount());
+		assertEquals(1, editor.getAllHandTilesBonuses());
 
 		verify(gb);
 	}

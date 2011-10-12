@@ -8,8 +8,8 @@ import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.LettersDistribution;
-import wisematches.playground.scribble.scores.ScoreEngine;
-import wisematches.playground.scribble.scores.engines.ScribbleScoreEngine;
+import wisematches.playground.scribble.score.ScoreEngine;
+import wisematches.playground.scribble.score.engines.ScribbleScoreEngine;
 
 import javax.persistence.*;
 import java.nio.ByteBuffer;
@@ -350,12 +350,12 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 	@Override
-	protected short calculateMovePoints(PlayerMove move) {
+	protected ScribbleMoveScore calculateMoveScores(PlayerMove move) {
 		if (move instanceof MakeWordMove) {
 			final MakeWordMove makeWordMove = (MakeWordMove) move;
-			return scoreEngine.calculateWordScore(makeWordMove.getWord(), this).getPoints();
+			return scoreEngine.calculateWordScore(makeWordMove.getWord(), this);
 		}
-		return 0;
+		return null;
 	}
 
 	@Override

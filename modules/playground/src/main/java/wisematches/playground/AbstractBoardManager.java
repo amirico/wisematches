@@ -305,11 +305,11 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 			saveBoardImpl((B) board);
 
 			for (BoardStateListener statesListener : boardStateListeners) {
-				statesListener.gameMoveDone(board, move);
+				statesListener.gameMoveDone(board, move, null);
 			}
 		}
 

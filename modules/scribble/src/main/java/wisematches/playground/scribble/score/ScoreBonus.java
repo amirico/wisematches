@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.scores;
+package wisematches.playground.scribble.score;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

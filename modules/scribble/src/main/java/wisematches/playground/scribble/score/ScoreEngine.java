@@ -1,5 +1,6 @@
-package wisematches.playground.scribble.scores;
+package wisematches.playground.scribble.score;
 
+import wisematches.playground.scribble.ScribbleMoveScore;
 import wisematches.playground.scribble.TilesPlacement;
 import wisematches.playground.scribble.Word;
 
@@ -26,5 +27,5 @@ public interface ScoreEngine {
 	 * @return the score calculation.
 	 * @throws NullPointerException is specified word is <code>null</code>.
 	 */
-	ScoreCalculation calculateWordScore(Word word, TilesPlacement tilesPlacement);
+	ScribbleMoveScore calculateWordScore(Word word, TilesPlacement tilesPlacement);
 }

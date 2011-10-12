@@ -16,10 +16,11 @@ public interface BoardStateListener {
 	/**
 	 * Indicates that player has made move.
 	 *
-	 * @param board the board
-	 * @param move  the made move
+	 * @param board	 the board
+	 * @param move	  the made move
+	 * @param moveScore calculated score for the move
 	 */
-	void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move);
+	void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore);
 
 	/**
 	 * Indicates that game has been finished
