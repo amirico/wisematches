@@ -72,6 +72,7 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
 		map.put("activeGames", info.getActiveGames());
 		map.put("finishedGames", info.getFinishedGames());
+		map.put("playerOnline", stateManager.isPlayerOnline(Personality.person(info.getPid())));
 		map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatMinutes(info.getAverageMoveTime() / 1000 / 60, locale) : messageSource.getMessage("search.err.nomoves", locale));
 	}
 

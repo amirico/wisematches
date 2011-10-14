@@ -11,7 +11,7 @@
         <div class="controls">
         <#if board.gameActive>
             <div class="ui-helper-hidden create-comment">
-                <a href="#" onclick="comments.create(); return false;"><@message code="game.comment.new"/></a>
+                <a class="action" href="#" onclick="comments.create(); return false;"><@message code="game.comment.new"/></a>
             </div>
         </#if>
             <div class="loading-image" style="width: 150px">&nbsp;</div>

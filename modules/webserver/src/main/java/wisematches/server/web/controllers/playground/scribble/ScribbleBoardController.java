@@ -26,6 +26,7 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CheckWordForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleTileForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleWordForm;
+import wisematches.server.web.services.thesaurus.ThesaurusHouse;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends WisematchesController {
+	private ThesaurusHouse thesaurusHouse;
 	private ScribbleBoardManager boardManager;
 	private DictionaryManager dictionaryManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
@@ -58,6 +60,7 @@ public class ScribbleBoardController extends WisematchesController {
 			}
 
 			model.addAttribute("board", board);
+			model.addAttribute("thesaurusHouse", thesaurusHouse);
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
 			if (!board.isGameActive()) {
 				model.addAttribute("ratings", board.getRatingChanges());
@@ -170,6 +173,11 @@ public class ScribbleBoardController extends WisematchesController {
 		final ScribbleBoard board = boardManager.openBoard(gameId);
 		final GameMove gameMove = board.makeMove(move);
 		return scribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
+	}
+
+	@Autowired
+	public void setThesaurusHouse(ThesaurusHouse thesaurusHouse) {
+		this.thesaurusHouse = thesaurusHouse;
 	}
 
 	@Autowired

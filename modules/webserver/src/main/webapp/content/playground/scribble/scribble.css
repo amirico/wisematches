@@ -353,6 +353,10 @@ ul.bonuses .bonus-cell {
     background: url("/resources/images/wait.gif") no-repeat left center !important;
 }
 
+.icon-empty {
+    background-image: none !important;
+}
+
 .your-turn .content span {
     color: #a52a2a;
     font-weight: bold;
@@ -448,4 +452,23 @@ ul.bonuses .bonus-cell {
 
 .player-info .winner-icon {
     vertical-align: top;
+}
+
+.word-check {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+.word-lookup {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.word-lookup span {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.word-value.ui-state-error {
+    padding: 2px 1px;
 }
