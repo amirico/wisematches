@@ -131,12 +131,24 @@
     <table>
         <tr>
             <td class="info-header" colspan="2">
+                <span class="info-label" style="font-size: 18px"><@message code="game.thesaurus.label"/></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="280px"><#include "/content/playground/scribble/widget/thesaurus.ftl"/></td>
+            <td><@message code="game.tip.board.thesaurus"/></td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td class="info-header" colspan="2">
                 <span class="info-label" style="font-size: 18px"><@message code="game.memory.label"/></span>
             </td>
         </tr>
         <tr>
-            <td width="280px"><#include "/content/playground/scribble/widget/memory.ftl"/></td>
             <td><@message code="game.tip.board.memory"/></td>
+            <td width="280px"><#include "/content/playground/scribble/widget/memory.ftl"/></td>
         </tr>
     </table>
 

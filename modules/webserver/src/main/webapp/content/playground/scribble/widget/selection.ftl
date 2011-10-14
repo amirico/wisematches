@@ -29,27 +29,8 @@
         </td>
     </tr>
 </table>
-<table width="100%">
-    <tr>
-        <td valign="middle" nowrap="nowrap">
-            <div class="wordStatus">
-                <span class="wordStatusIcon"></span>
-                <span class="wordStatusMessage"></span>
-            </div>
-        </td>
-        <td valign="middle" nowrap="nowrap" align="right">
-            <button class="checkWordButton" onclick="moveInfo.checkSelectedWord()">
-                <@message code="game.selection.check"/>
-            </button>
-        </td>
-    </tr>
-</table>
 </@wm.widget>
 
 <script type="text/javascript">
-    var moveInfo = new wm.scribble.Selection(board, {
-        "checking":"<@message code="game.selection.checking"/>",
-        "valid":"<@message code="game.selection.valid"/>",
-        "invalid":"<@message code="game.selection.invalid"/>"
-    });
+    var moveInfo = new wm.scribble.Selection(board);
 </script>
