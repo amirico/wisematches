@@ -54,8 +54,7 @@
     </repositories>
 
     <properties>
-        <!-- TODO: We have critical issue https://jira.springsource.org/browse/SPR-8464 -->
-        <org.springframework.version>3.1.0.BUILD-SNAPSHOT</org.springframework.version>
+        <org.springframework.version>3.1.0.RC1</org.springframework.version>
         <!-- TODO: because we are using snapshot we must use separate version for security -->
         <org.springframework.security.version>3.1.0.RC2</org.springframework.security.version>
 

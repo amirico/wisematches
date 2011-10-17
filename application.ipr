@@ -39,27 +39,27 @@
             <element id="library" level="project" name="Maven: log4j:log4j:1.2.16" />
             <element id="library" level="project" name="Maven: org.slf4j:slf4j-jcl:1.6.1" />
             <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-core:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-asm:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-expression:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-beans:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-aop:3.1.0.BUILD-SNAPSHOT" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-core:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-asm:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-expression:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-beans:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-aop:3.1.0.RC1" />
             <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-context:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-context-support:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-tx:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:3.1.0.BUILD-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-orm:3.1.0.BUILD-SNAPSHOT" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-context:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-context-support:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-tx:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:3.1.0.RC1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-orm:3.1.0.RC1" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.1.0.RC2" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.1.0.RC2" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-web:3.1.0.BUILD-SNAPSHOT" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-web:3.1.0.RC1" />
             <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.6.10" />
             <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.6.10" />
             <element id="library" level="project" name="Maven: org.openid4java:openid4java-nodeps:0.9.6" />
             <element id="library" level="project" name="Maven: com.google.code.guice:guice:2.0" />
             <element id="library" level="project" name="Maven: net.jcip:jcip-annotations:1.0" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.1.0.RC2" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.0.BUILD-SNAPSHOT" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.0.RC1" />
             <element id="library" level="project" name="Maven: quartz:quartz:1.5.2" />
             <element id="archive" name="personality-1.0-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
@@ -72,7 +72,7 @@
             </element>
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.8.2" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.8.2" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.1.0.BUILD-SNAPSHOT" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.1.0.RC1" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.1.0.RC2" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:3.1.0.RC2" />
             <element id="library" level="project" name="Maven: joda-time:joda-time:1.6.2" />
@@ -1018,125 +1018,125 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RC2/spring-security-web-3.1.0.RC2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-aop:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-aop:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/3.1.0.RC1/spring-aop-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/3.1.0.RC1/spring-aop-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/3.1.0.RC1/spring-aop-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-asm:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-asm:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.1.0.RC1/spring-asm-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.1.0.RC1/spring-asm-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.1.0.RC1/spring-asm-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-beans:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-beans:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.1.0.RC1/spring-beans-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.1.0.RC1/spring-beans-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/3.1.0.RC1/spring-beans-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-context-support:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-context-support:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context-support/3.1.0.RC1/spring-context-support-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context-support/3.1.0.RC1/spring-context-support-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context-support/3.1.0.RC1/spring-context-support-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-context:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-context:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/3.1.0.RC1/spring-context-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/3.1.0.RC1/spring-context-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/3.1.0.RC1/spring-context-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-core:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-core:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.1.0.RC1/spring-core-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.1.0.RC1/spring-core-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.1.0.RC1/spring-core-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-expression:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-expression:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/3.1.0.RC1/spring-expression-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/3.1.0.RC1/spring-expression-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/3.1.0.RC1/spring-expression-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-jdbc:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-jdbc:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.0.RC1/spring-jdbc-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.0.RC1/spring-jdbc-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.0.RC1/spring-jdbc-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-orm:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-orm:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.1.0.RC1/spring-orm-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.1.0.RC1/spring-orm-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/3.1.0.RC1/spring-orm-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-test:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-test:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.1.0.BUILD-SNAPSHOT/spring-test-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.1.0.RC1/spring-test-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.1.0.BUILD-SNAPSHOT/spring-test-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.1.0.RC1/spring-test-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.1.0.BUILD-SNAPSHOT/spring-test-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.1.0.RC1/spring-test-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-tx:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-tx:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.RC1/spring-tx-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.RC1/spring-tx-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.0.RC1/spring-tx-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.springframework:spring-web:3.0.5.RELEASE">
@@ -1150,26 +1150,26 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-web:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-web:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.1.0.RC1/spring-web-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.1.0.RC1/spring-web-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/3.1.0.RC1/spring-web-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-webmvc:3.1.0.BUILD-SNAPSHOT">
+    <library name="Maven: org.springframework:spring-webmvc:3.1.0.RC1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.0.RC1/spring-webmvc-3.1.0.RC1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.0.RC1/spring-webmvc-3.1.0.RC1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.0.RC1/spring-webmvc-3.1.0.RC1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: quartz:quartz:1.5.2">

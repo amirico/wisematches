@@ -20,8 +20,6 @@
         <property name="gameMessageSource" ref="gameMessageSource"/>
     </bean>
 
-    <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
-
     <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
