@@ -17,6 +17,13 @@
 
     <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
 
+    <beans:bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
+
+    <beans:bean id="sessionRegistryFixFilter"
+                class="wisematches.server.web.security.spring.fixes.SessionRegistryFixFilter">
+        <beans:property name="sessionRegistry" ref="playerStateManager"/>
+    </beans:bean>
+
     <beans:bean id="rememberMeServices"
                 class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
         <beans:property name="key" value="${security.remember.token}"/>
@@ -124,7 +131,8 @@
         <beans:property name="userDetailsService" ref="userDetailsService"/>
     </beans:bean>
 
-    <beans:bean id="concurrentSessionFilter" class="wisematches.server.web.security.spring.fixes.ConcurrentSessionFilter">
+    <beans:bean id="concurrentSessionFilter"
+                class="wisematches.server.web.security.spring.fixes.ConcurrentSessionFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
         <beans:property name="expiredUrl" value="/account/loginAuth?error=session"/>
     </beans:bean>
@@ -153,6 +161,7 @@
         <intercept-url pattern="/**" access="permitAll"/>
 
         <custom-filter before="ANONYMOUS_FILTER" ref="guestFilter"/>
+        <custom-filter after="SESSION_MANAGEMENT_FILTER" ref="sessionRegistryFixFilter"/>
         <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrentSessionFilter"/>
 
         <session-management session-authentication-strategy-ref="sessionControlStrategy"/>
