@@ -22,11 +22,9 @@
 
             <td style="vertical-align: top; width: 280px">
             <#include "widget/players.ftl"/>
-<#if !viewMode>
                 <#include "widget/selection.ftl"/>
                 <#include "widget/thesaurus.ftl"/>
-                <#include "widget/memory.ftl"/>
-            </#if>
+<#if !viewMode><#include "widget/memory.ftl"/></#if>
             </td>
         </tr>
     </table>
