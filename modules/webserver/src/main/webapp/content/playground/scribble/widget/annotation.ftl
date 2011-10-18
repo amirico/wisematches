@@ -11,12 +11,16 @@
         <div class="controls">
         <#if board.gameActive>
             <div class="ui-helper-hidden create-comment">
-                <a class="action" href="#" onclick="comments.create(); return false;"><@message code="game.comment.new"/></a>
+                <a class="action" href="#"
+                   onclick="comments.create(); return false;"><@message code="game.comment.add"/></a>
             </div>
         </#if>
             <div class="loading-image" style="width: 150px">&nbsp;</div>
         </div>
-        <div class="label"><b><@message code="game.comment.label"/></b></div>
+        <div class="label">
+            <b><@message code="game.comment.label"/></b>
+            <span class="new ui-helper-hidden ui-state-hover">(<span class="value">7</span> <@message code="game.comment.new"/>)</span>
+        </div>
     </div>
 
     <div class="editor ui-widget-content ui-corner-all shadow ui-helper-hidden">
@@ -52,6 +56,7 @@
 <script type="text/javascript">
     var comments = new wm.scribble.Comments(board, scribbleController, {
         "ago":"<@message code='game.comment.ago'/>",
-        "of":"<@message code='separator.of'/>"
+        "of":"<@message code='separator.of'/>",
+        "empty":"<@message code='game.comment.err.empty'/>"
     });
 </script>

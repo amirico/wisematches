@@ -86,6 +86,7 @@ wm.scribble.AjaxController = function() {
 
 wm.scribble.Comments = function(board, controller, language) {
     var loadedComments = 0;
+    var unreadComments = 0;
     var comments = new Array();
 
     var widget = board.getPlayboardElement('.annotation');
@@ -95,6 +96,7 @@ wm.scribble.Comments = function(board, controller, language) {
     var editorError = editor.find('.ui-state-error-text');
 
     var status = widget.find('.status');
+    var newCount = widget.find('.new .value');
 
     var initWidget = function() {
         block();
@@ -103,6 +105,16 @@ wm.scribble.Comments = function(board, controller, language) {
             showEditorError(null);
         });
         loadStatuses();
+    };
+
+    var changeUnreadMessages = function(diff) {
+        unreadComments = unreadComments + diff;
+        newCount.text(unreadComments);
+        if (unreadComments != 0) {
+            newCount.parent().fadeIn('slow');
+        } else {
+            newCount.parent().fadeOut('slow');
+        }
     };
 
     var loadStatuses = function() {
@@ -241,8 +253,12 @@ wm.scribble.Comments = function(board, controller, language) {
         if (collapsed) {
             registerItemControls(item);
         } else {
+            changeUnreadMessages(1);
             item.click(function() {
-                registerItemControls($(this).click(null));
+                item.find(".info").slideUp('fast');
+                item.addClass("collapsed");
+                changeUnreadMessages(-1);
+                registerItemControls(item.unbind('click', arguments.callee));
             });
         }
 
@@ -266,7 +282,7 @@ wm.scribble.Comments = function(board, controller, language) {
     this.save = function() {
         var val = editor.find('textarea').val();
         if (val.trim().length == 0) {
-            showEditorError("Message is empty. Please enter a message.");
+            showEditorError(language['empty']);
             return false;
         }
         block();
@@ -302,7 +318,10 @@ wm.scribble.Comments = function(board, controller, language) {
                     showComment(a, false, true);
                 });
                 loadedComments += d.length;
-                updateStatus();
+                if (loadedComments == d.length) {
+                    widget.find('.content').show();
+                    updateStatus();
+                }
                 $.post('/playground/scribble/comment/mark.ajax?b=' + board.getBoardId());
             }
         };
