@@ -51,8 +51,7 @@
 </#macro>
 
 <#macro info>
-<img class="help-tooltip" style="vertical-align: text-bottom" src="/resources/images/help.png" width="16" height="16"
-     title="<#nested>"/>
+<div class="help-tooltip ui-icon ui-icon-info" title="<#nested>"></div>
 </#macro>
 
 <#macro restriction style="">
