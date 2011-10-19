@@ -64,7 +64,7 @@ wm.game.History = function(pid, columns, language) {
         "bFilter":false,
         "bSortClasses":false,
         "aaSorting":[
-            [0, 'asc']
+            [0, 'desc']
         ],
         "iDisplayStart":0,
         "aoColumns":columns,
@@ -105,6 +105,7 @@ wm.game.Search = function(columns, scriplet, language) {
         "bProcessing":true,
         "bServerSide":true,
         "aaSorting":[
+            [ 1, "desc" ],
             [ 2, "desc" ]
         ],
         "sAjaxSource":"/playground/players/load.ajax",

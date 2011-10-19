@@ -37,7 +37,7 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
 
 	public PlayerSearchController() {
-		super(new String[]{"nickname", "language", "rating", "averageMoveTime", "lastMoveTime"});
+		super(new String[]{"nickname", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"});
 	}
 
 	@RequestMapping("")
@@ -68,7 +68,8 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 		} else {
 			map.put("language", messageSource.getMessage("search.err.language", locale));
 		}
-		map.put("rating", info.getRating());
+		map.put("ratingG", info.getRatingG());
+		map.put("ratingA", info.getRatingA());
 		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
 		map.put("activeGames", info.getActiveGames());
 		map.put("finishedGames", info.getFinishedGames());

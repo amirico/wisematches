@@ -22,7 +22,10 @@ public class PlayerEntityBean implements DesiredEntityBean<PlayerSearchArea> {
 	private Language language;
 
 	@SearchAttribute(column = "stats.rating")
-	private int rating;
+	private int ratingA;
+
+	@SearchAttribute(column = "cast((stats.rating*(stats.finishedGames-stats.unratedGames))/(select count(distinct boardId) from wisematches.playground.scribble.ScribbleBoard where not gameResolution is null) as integer)")
+	private int ratingG;
 
 	@SearchAttribute(column = "stats.activeGames")
 	private int activeGames;
@@ -47,6 +50,22 @@ public class PlayerEntityBean implements DesiredEntityBean<PlayerSearchArea> {
 		this.pid = pid;
 	}
 
+	public int getRatingA() {
+		return ratingA;
+	}
+
+	public void setRatingA(int ratingA) {
+		this.ratingA = ratingA;
+	}
+
+	public int getRatingG() {
+		return ratingG;
+	}
+
+	public void setRatingG(int ratingG) {
+		this.ratingG = ratingG;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -61,14 +80,6 @@ public class PlayerEntityBean implements DesiredEntityBean<PlayerSearchArea> {
 
 	public void setLanguage(Language language) {
 		this.language = language;
-	}
-
-	public int getRating() {
-		return rating;
-	}
-
-	public void setRating(int rating) {
-		this.rating = rating;
 	}
 
 	public int getActiveGames() {
@@ -110,7 +121,8 @@ public class PlayerEntityBean implements DesiredEntityBean<PlayerSearchArea> {
 		sb.append("{pid=").append(pid);
 		sb.append(", nickname='").append(nickname).append('\'');
 		sb.append(", language=").append(language);
-		sb.append(", rating=").append(rating);
+		sb.append(", ratingA=").append(ratingA);
+		sb.append(", ratingG=").append(ratingG);
 		sb.append(", activeGames=").append(activeGames);
 		sb.append(", finishedGames=").append(finishedGames);
 		sb.append(", lastMoveTime=").append(lastMoveTime);
