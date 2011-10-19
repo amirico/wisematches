@@ -35,11 +35,11 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		editor.setLastMoveTime(move.getMoveTime());
 
 		final int points = move.getPoints();
+		if ((editor.getLowestPoints() == 0 || points < editor.getLowestPoints()) && points != 0) {
+			editor.setLowestPoints(points);
+		}
 		if (editor.getHighestPoints() == 0 || points > editor.getHighestPoints()) {
 			editor.setHighestPoints(points);
-		}
-		if (editor.getLowestPoints() == 0 || points < editor.getLowestPoints()) {
-			editor.setLowestPoints(points);
 		}
 		editor.setAveragePoints(average(editor.getAveragePoints(), points, turnsCount));
 
