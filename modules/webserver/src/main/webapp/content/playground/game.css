@@ -477,3 +477,11 @@
 #boardLegend table td {
     white-space: nowrap;
 }
+
+.tile-set-classic {
+    background-image: url(/resources/images/scribble/board/tiles_1.png);
+}
+
+.tile-set-classic2 {
+    background-image: url(/resources/images/scribble/board/tiles_2.png);
+}
