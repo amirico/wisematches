@@ -54,7 +54,7 @@ public class ScribbleGameController extends WisematchesController {
 	private ScribblePlayerSearchManager searchManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
 
-	private static final String[] SEARCH_COLUMNS = new String[]{"nickname", "language", "rating", "averageMoveTime", "lastMoveTime"};
+	private static final String[] SEARCH_COLUMNS = new String[]{"nickname", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"};
 	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
