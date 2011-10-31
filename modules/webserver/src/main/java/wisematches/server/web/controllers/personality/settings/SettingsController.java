@@ -15,6 +15,8 @@ import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.account.*;
 import wisematches.personality.player.Player;
+import wisematches.playground.scribble.settings.BoardSettings;
+import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
@@ -39,6 +41,7 @@ import java.util.TimeZone;
 public class SettingsController extends WisematchesController {
 	private AccountManager accountManager;
 	private NotificationManager notificationManager;
+	private BoardSettingsManager boardSettingsManager;
 	private AccountSecurityService accountSecurityService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.settings");
@@ -57,6 +60,11 @@ public class SettingsController extends WisematchesController {
 		model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
 		model.addAttribute("notificationMask", notificationManager.getNotificationMask(principal));
 		model.addAttribute("notificationDescriptions", new ArrayList<NotificationDescription>(notificationManager.getDescriptions()));
+
+		final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
+		form.setTilesClass(settings.getTilesClass());
+		form.setCheckWords(settings.isCheckWords());
+		form.setCleanMemory(settings.isCleanMemory());
 		return "/content/personality/settings/template";
 	}
 
@@ -84,6 +92,9 @@ public class SettingsController extends WisematchesController {
 			mask.setEnabled(description.getName(), parameter != null && Boolean.parseBoolean(parameter));
 		}
 		notificationManager.setNotificationMask(personality, mask);
+
+		boardSettingsManager.setScribbleSettings(personality,
+				new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.getTilesClass()));
 
 		Language language = account.getLanguage();
 		if (form.getLanguage() != null) {
@@ -177,12 +188,17 @@ public class SettingsController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
-		this.accountSecurityService = accountSecurityService;
+	public void setNotificationManager(NotificationManager notificationManager) {
+		this.notificationManager = notificationManager;
 	}
 
 	@Autowired
-	public void setNotificationManager(NotificationManager notificationManager) {
-		this.notificationManager = notificationManager;
+	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
+		this.boardSettingsManager = boardSettingsManager;
+	}
+
+	@Autowired
+	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
+		this.accountSecurityService = accountSecurityService;
 	}
 }

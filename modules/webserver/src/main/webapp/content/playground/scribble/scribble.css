@@ -219,8 +219,14 @@
 
     text-align: center;
     vertical-align: middle;
+}
 
-    background: url(/resources/images/scribble/board/tiles.png) no-repeat;
+.tiles-set-classic .tile {
+    background-image: url(/resources/images/scribble/board/tiles_1.png);
+}
+
+.tiles-set-classic2 .tile {
+    background-image: url(/resources/images/scribble/board/tiles_2.png);
 }
 
 .tile span {
@@ -230,6 +236,7 @@
 }
 
 .tile-selected span {
+    color: #fdff00;
     font-weight: bold;
 }
 

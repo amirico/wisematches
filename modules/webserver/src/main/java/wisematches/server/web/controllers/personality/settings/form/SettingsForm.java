@@ -24,6 +24,10 @@ public class SettingsForm {
 	@Length(max = 100, message = "account.register.pwd-cfr.err.max")
 	private String confirm;
 
+	private String tilesClass;
+	private boolean checkWords;
+	private boolean cleanMemory;
+
 	private boolean changeEmail = false;
 	private boolean changePassword = false;
 
@@ -84,5 +88,29 @@ public class SettingsForm {
 
 	public void setChangePassword(boolean changePassword) {
 		this.changePassword = changePassword;
+	}
+
+	public boolean isCleanMemory() {
+		return cleanMemory;
+	}
+
+	public void setCleanMemory(boolean cleanMemory) {
+		this.cleanMemory = cleanMemory;
+	}
+
+	public boolean isCheckWords() {
+		return checkWords;
+	}
+
+	public void setCheckWords(boolean checkWords) {
+		this.checkWords = checkWords;
+	}
+
+	public String getTilesClass() {
+		return tilesClass;
+	}
+
+	public void setTilesClass(String tilesClass) {
+		this.tilesClass = tilesClass;
 	}
 }

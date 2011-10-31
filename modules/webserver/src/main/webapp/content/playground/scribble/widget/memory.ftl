@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
 <@wm.widget class="memoryWordsWidget" title="game.memory.label" style="padding-top: 10px;" help="board.memory">
@@ -27,8 +28,11 @@
 </@wm.widget>
 
 <script type="text/javascript">
-    var memoryWords = new wm.scribble.Memory(board, scribbleController, {
-        "sEmptyTable":"<@message code='game.memory.empty'/>",
-        "changeMemory":"<@message code='game.memory.changing'/>"
-    });
+    var memoryWords = new wm.scribble.Memory(board, scribbleController, ${boardSettings.cleanMemory?string},
+            {
+                "sEmptyTable":"<@message code='game.memory.empty'/>",
+                "changeMemory":"<@message code='game.memory.changing'/>",
+                "clearedLabel":"Wrong Words Cleared",
+                "clearedDescription":"Wrong words were removed from memory"
+            });
 </script>
