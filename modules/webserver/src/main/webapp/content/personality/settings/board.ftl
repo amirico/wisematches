@@ -56,13 +56,6 @@
         </@wm.fieldInput>
         </td>
     </tr>
-
-    <tr>
-        <td></td>
-        <td align="left">
-            <button name="save" type="submit" value="submit"><@message code="account.modify.save"/></button>
-        </td>
-    </tr>
 </table>
 
 <script type="text/javascript">

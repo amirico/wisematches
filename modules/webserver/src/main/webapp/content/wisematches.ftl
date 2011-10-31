@@ -16,6 +16,7 @@
     <script type="text/javascript" src="/jquery/js/jquery.blockUI.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.freeow.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.form.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.cluetip.css"/>
     <script type="text/javascript" src="/jquery/js/jquery.cluetip.min.js"></script>

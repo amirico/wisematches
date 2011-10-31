@@ -1033,6 +1033,41 @@ wm.scribble.Players = function(board) {
             });
 };
 
+wm.scribble.Settings = function(board, language) {
+    this.showSettings = function() {
+        var dlg = $('<div><div class="loading-image" style="height: 200px"></div></div>');
+        dlg.load('/playground/scribble/settings/load');
+        dlg.dialog({
+            title:language['title'],
+            width:550,
+            minHeight:'auto',
+            modal:true,
+            resizable:false,
+            buttons:[
+                {
+                    text:language['apply'],
+                    click:function() {
+                        $("#boardSettingsForm").ajaxSubmit({
+                            dataType:'json',
+                            contentType:'application/x-www-form-urlencoded',
+                            success:function(data) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+                {
+                    text:wm.i18n.value('button.cancel', 'Cancel'),
+                    click:function() {
+                        dlg.dialog("close");
+                    }
+
+                }
+            ]
+        });
+    }
+};
+
 wm.scribble.ScoreEngine = function(gameBonuses, board) {
     var emptyHandBonus = 33;
 
