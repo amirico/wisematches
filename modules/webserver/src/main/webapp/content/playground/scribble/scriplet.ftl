@@ -1,6 +1,7 @@
 <#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.playground.GameRatingChange>" -->
 <#include "/core.ftl">
 
@@ -104,7 +105,7 @@
 </script>
 
 <#if !viewMode>
-<div id="wildcardSelectionPanel" title="<@message code="game.play.wildcard.label"/>" style="display: none;">
+<div id="wildcardSelectionPanel" class="${boardSettings.tilesClass}" title="<@message code="game.play.wildcard.label"/>" style="display: none;">
     <div><@message code="game.play.wildcard.description"/></div>
     <div style="position: relative; height: ${(((board.lettersDistribution?size)/15)?ceiling)*22}px;"></div>
 </div>

@@ -446,7 +446,8 @@ wm.scribble.Memory = function(board, controller, clearMemory, language) {
                 var valid = isWordValid(word, true);
                 if (!valid && clearMemory) {
                     removeWord(id);
-                    executeRequest('remove', word, function(data) {});
+                    executeRequest('remove', word, function(data) {
+                    });
                 } else {
                     var row = memoryWordTable.find('.memory-word-' + id).closest('tr').get(0);
                     memoryTable.fnUpdate(createNewRecord(id, word, valid), memoryTable.fnGetPosition(row), 0);
@@ -578,18 +579,34 @@ wm.scribble.Selection = function(board) {
             });
 };
 
-wm.scribble.Thesaurus = function(board) {
+wm.scribble.Thesaurus = function(board, checkWords) {
     var thesaurus = this;
+
+    var checkTimer = undefined;
 
     var input = board.getPlayboardElement('.word-value');
     var status = board.getPlayboardElement('.word-status');
     var checkButton = board.getPlayboardElement('.word-check');
     var lookupButton = board.getPlayboardElement('.word-lookup');
 
+    const CHECK_WORD_TIMEOUT = 1000;
+
     this.checkWord = function() {
+        validateWord(input.val());
+        return false;
+    };
+
+    this.lookupWord = function() {
+        window.open('http://slovari.yandex.ru/' + input.val() + '/значение');
+        return false;
+    };
+
+    var validateWord = function(text) {
+        if (text.length == 0) {
+            return;
+        }
         status.removeClass('icon-empty').addClass('icon-wait');
-        var value = input.val();
-        $.post('/playground/scribble/board/check.ajax', $.toJSON({word:value, lang:board.getLanguage()}),
+        $.post('/playground/scribble/board/check.ajax', $.toJSON({word:text, lang:board.getLanguage()}),
                 function(response) {
                     status.removeClass('icon-wait');
                     checkButton.button('disable').removeClass("ui-state-hover");
@@ -600,12 +617,6 @@ wm.scribble.Thesaurus = function(board) {
                         status.addClass('icon-word-invalid');
                     }
                 }, 'json');
-        return false;
-    };
-
-    this.lookupWord = function() {
-        window.open('http://slovari.yandex.ru/' + input.val() + '/значение');
-        return false;
     };
 
     var validateInputValue = function() {
@@ -614,9 +625,23 @@ wm.scribble.Thesaurus = function(board) {
         if (input.val().length != 0) {
             checkButton.button('enable');
             lookupButton.button('enable');
+
+            if (checkWords) {
+                if (checkTimer != undefined) {
+                    $(thesaurus).stopTime('checkWord');
+                }
+                var val = input.val(); // copy value
+                checkTimer = $(thesaurus).oneTime(CHECK_WORD_TIMEOUT, 'checkWord', function() {
+                    validateWord(val);
+                });
+            }
         } else {
             checkButton.button('disable').removeClass("ui-state-hover");
             lookupButton.button('disable').removeClass("ui-state-hover");
+
+            if (checkWords && checkTimer != undefined) {
+                $(thesaurus).stopTime('checkWord');
+            }
         }
     };
 
