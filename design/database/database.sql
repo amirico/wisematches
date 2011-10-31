@@ -309,6 +309,18 @@ CREATE  TABLE IF NOT EXISTS `wisematches`.`player_friends` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `wisematches`.`scribble_settings`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `wisematches`.`scribble_settings` (
+  `playerId` BIGINT(20)  NOT NULL ,
+  `cleanMemory` INT NULL DEFAULT 1 ,
+  `checkWords` TINYINT(4)  NULL DEFAULT 1 ,
+  `tilesClass` VARCHAR(45) NULL ,
+  PRIMARY KEY (`playerId`) )
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

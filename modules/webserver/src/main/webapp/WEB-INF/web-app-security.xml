@@ -17,8 +17,6 @@
 
     <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
 
-    <beans:bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
-
     <beans:bean id="sessionRegistryFixFilter"
                 class="wisematches.server.web.security.spring.fixes.SessionRegistryFixFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
