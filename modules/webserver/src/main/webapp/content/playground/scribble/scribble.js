@@ -347,7 +347,7 @@ wm.scribble.Comments = function(board, controller, language) {
     initWidget();
 };
 
-wm.scribble.Memory = function(board, controller, language) {
+wm.scribble.Memory = function(board, controller, clearMemory, language) {
     var nextWordId = 0;
     var memoryWords = new Array();
     var memoryWordsCount = 0;
@@ -358,13 +358,18 @@ wm.scribble.Memory = function(board, controller, language) {
     var clearWordButton = memoryWordWidget.find('.memoryClearButton');
 
     var addWord = function(word, checkPlacement) {
-        memoryWordsCount++;
-
-        var id = nextWordId++;
-        memoryWords[id] = word;
-        memoryTable.fnAddData(createNewRecord(id, word, checkPlacement));
-        clearWordButton.button(memoryWordsCount == 0 ? "disable" : "enable");
-        board.clearSelection();
+        var valid = isWordValid(word, checkPlacement);
+        if (!valid && clearMemory) {
+            executeRequest('remove', word, function(data) {
+            });
+        } else {
+            memoryWordsCount++;
+            var id = nextWordId++;
+            memoryWords[id] = word;
+            memoryTable.fnAddData(createNewRecord(id, word, valid));
+            clearWordButton.button(memoryWordsCount == 0 ? "disable" : "enable");
+            board.clearSelection();
+        }
     };
 
     var getWord = function(id) {
@@ -384,14 +389,18 @@ wm.scribble.Memory = function(board, controller, language) {
         }
     };
 
-    var createNewRecord = function(id, word, checkPlacement) {
-        var scoreEngine = board.getScoreEngine();
-
-        var text = word.text;
+    var isWordValid = function(word, checkPlacement) {
         var valid = board.checkWord(word);
         if (valid && checkPlacement) {
             valid = !board.isWordPlaced(word);
         }
+        return valid;
+    };
+
+    var createNewRecord = function(id, word, valid) {
+        var scoreEngine = board.getScoreEngine();
+
+        var text = word.text;
         var points = scoreEngine.getWordPoints(word).points.toString();
 
         var e = '<div class="memory-controls memory-word-' + id + '">';
@@ -434,8 +443,14 @@ wm.scribble.Memory = function(board, controller, language) {
     var validateWords = function() {
         $.each(memoryWords, function(id, word) {
             if (word != null && word != undefined) {
-                var row = memoryWordTable.find('.memory-word-' + id).closest('tr').get(0);
-                memoryTable.fnUpdate(createNewRecord(id, word, true), memoryTable.fnGetPosition(row), 0);
+                var valid = isWordValid(word, true);
+                if (!valid && clearMemory) {
+                    removeWord(id);
+                    executeRequest('remove', word, function(data) {});
+                } else {
+                    var row = memoryWordTable.find('.memory-word-' + id).closest('tr').get(0);
+                    memoryTable.fnUpdate(createNewRecord(id, word, valid), memoryTable.fnGetPosition(row), 0);
+                }
             }
         });
     };
@@ -1065,7 +1080,7 @@ wm.scribble.ScoreEngine = function(gameBonuses, board) {
     };
 };
 
-wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, controller) {
+wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, controller, tilesClass) {
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');

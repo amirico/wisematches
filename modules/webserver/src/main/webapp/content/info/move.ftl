@@ -1,5 +1,6 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.playground.GameRatingChange>" -->
 <#-- @ftlvariable name="memoryWords" type="java.util.Collection<wisematches.playground.scribble.Word>" -->
 
@@ -57,7 +58,7 @@
 
 <#include "/content/playground/scribble/scriplet.ftl"/>
 
-<div id="board${board.boardId}" class="playboard">
+<div id="board${board.boardId}" class="playboard ${boardSettings.tilesClass}">
     <div id="info-move">
         <div id="info-move-header" class="info-header">
             <div id="info-move-label" class="info-label"><@messageCapFirst code="info.rules.move.label"/></div>

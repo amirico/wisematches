@@ -1,11 +1,12 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.playground.GameRatingChange>" -->
 <#include "/core.ftl">
 
 <#include "scriplet.ftl"/>
 
-<div id="board${board.boardId}">
+<div id="board${board.boardId}" class="${boardSettings.tilesClass}">
     <table id="playboard" class="playboard" cellpadding="5" align="center">
         <tr>
             <td style="vertical-align: top; width: 250px">
