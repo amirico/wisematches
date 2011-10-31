@@ -236,8 +236,12 @@
 }
 
 .tile-selected span {
-    color: #00bd08;
     font-weight: bold;
+    text-shadow: white 0 0 10px, white 0 0 1px;
+}
+
+.tile-selected.cost0 span {
+    text-shadow: black 0 0 10px, black 0 0 1px;
 }
 
 .cell, .tile {

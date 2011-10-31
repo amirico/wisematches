@@ -31,8 +31,6 @@
     var memoryWords = new wm.scribble.Memory(board, scribbleController, ${boardSettings.cleanMemory?string},
             {
                 "sEmptyTable":"<@message code='game.memory.empty'/>",
-                "changeMemory":"<@message code='game.memory.changing'/>",
-                "clearedLabel":"Wrong Words Cleared",
-                "clearedDescription":"Wrong words were removed from memory"
+                "changeMemory":"<@message code='game.memory.changing'/>"
             });
 </script>
