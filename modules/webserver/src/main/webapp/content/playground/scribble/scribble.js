@@ -601,13 +601,38 @@ wm.scribble.Thesaurus = function(board, checkWords) {
         return false;
     };
 
+    var startAutoChecker = function() {
+        stopAutoChecker();
+        var val = input.val();
+        checkTimer = $(thesaurus).oneTime(CHECK_WORD_TIMEOUT, 'checkWord', function() {
+            if (isAutoChecker()) {
+                validateWord(val);
+            }
+        });
+    };
+
+    var stopAutoChecker = function() {
+        if (isAutoChecker()) {
+            $(thesaurus).stopTime('checkWord');
+            checkTimer = undefined;
+        }
+    };
+
+    var isAutoChecker = function() {
+        return (checkTimer != undefined);
+    };
+
     var validateWord = function(text) {
+        stopAutoChecker();
         if (text.length == 0) {
             return;
         }
         status.removeClass('icon-empty').addClass('icon-wait');
         $.post('/playground/scribble/board/check.ajax', $.toJSON({word:text, lang:board.getLanguage()}),
                 function(response) {
+                    if (isAutoChecker()) {
+                        return;
+                    }
                     status.removeClass('icon-wait');
                     checkButton.button('disable').removeClass("ui-state-hover");
                     if (response.success) {
@@ -627,20 +652,14 @@ wm.scribble.Thesaurus = function(board, checkWords) {
             lookupButton.button('enable');
 
             if (checkWords) {
-                if (checkTimer != undefined) {
-                    $(thesaurus).stopTime('checkWord');
-                }
-                var val = input.val(); // copy value
-                checkTimer = $(thesaurus).oneTime(CHECK_WORD_TIMEOUT, 'checkWord', function() {
-                    validateWord(val);
-                });
+                startAutoChecker();
             }
         } else {
             checkButton.button('disable').removeClass("ui-state-hover");
             lookupButton.button('disable').removeClass("ui-state-hover");
 
-            if (checkWords && checkTimer != undefined) {
-                $(thesaurus).stopTime('checkWord');
+            if (checkWords) {
+                stopAutoChecker();
             }
         }
     };
@@ -1167,6 +1186,8 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
     var boardTiles = wm.util.createMatrix(15);
 
     var draggingTile = null;
+
+    var selectedWord = null;
     var selectedTileWidgets = [];
 
     var wildcardSelectionDialog = null;
@@ -1381,7 +1402,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
             }
         }
         if (notifyWord) {
-            scribble.trigger('wordSelection', [playboard.getSelectedWord()]);
+            changeSelectedWord(playboard.getSelectedWord());
         }
     };
 
@@ -1491,6 +1512,33 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
         }
     };
 
+    var isWordSelected = function(word) {
+        if (word == selectedWord) {
+            return true;
+        }
+
+        if (word != null && selectedWord != null) {
+            if (word.text == selectedWord.text &&
+                    word.position.row == selectedWord.position.row &&
+                    word.position.column == selectedWord.position.column &&
+                    word.direction == selectedWord.direction) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    var changeSelectedWord = function(word) {
+        if (!isWordSelected(word)) {
+            if (word == null) {
+                scribble.trigger('wordSelection', null);
+            } else {
+                scribble.trigger('wordSelection', [word]);
+            }
+        }
+        selectedWord = word;
+    };
+
     var clearSelectionImpl = function() {
         if (selectedTileWidgets.length == 0) {
             return;
@@ -1514,7 +1562,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
                 changeTileSelection(widget, false, false);
             }
         }
-        scribble.trigger('wordSelection', null);
+        changeSelectedWord(null);
     };
 
     var makeMove = function(type, data, handler) {
@@ -1789,6 +1837,9 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
     };
 
     this.selectWord = function(word) {
+        if (isWordSelected(word)) {
+            return;
+        }
         clearSelectionImpl();
         if (!playboard.checkWord(word)) {
             return false;
@@ -1820,12 +1871,12 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
             }
         });
         if (res) {
-            scribble.trigger('wordSelection', [word]);
+            changeSelectedWord(word);
         }
     };
 
     this.selectHistoryWord = function(word) {
-        if (!enabled) {
+        if (!enabled || isWordSelected(word)) {
             return;
         }
         clearSelectionImpl();
@@ -1843,7 +1894,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
         for (var i = 0, count = word.length; i < count; i++) {
             changeTileSelection(boardTiles[column + i * columnK][row + i * rowK].get(0), true, false);
         }
-        scribble.trigger('wordSelection', [playboard.getSelectedWord()]);
+        changeSelectedWord(playboard.getSelectedWord());
     };
 
     this.clearSelection = function() {

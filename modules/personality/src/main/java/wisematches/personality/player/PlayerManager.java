@@ -1,9 +1,6 @@
 package wisematches.personality.player;
 
-import wisematches.database.Range;
 import wisematches.personality.Personality;
-
-import java.util.List;
 
 /**
  * Players manager interface. This
