@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.impl.HibernateMessage>" -->
+<#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>
@@ -9,7 +9,7 @@
 <div>
     <div style="float: left;">
         <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
-        <@message code="messages.delete.selected"/>
+            <@message code="messages.delete.selected"/>
         </button>
     </div>
 
@@ -52,7 +52,7 @@
 
                 <div class="message-controls">
                     <#if !m.notification>
-                    <@replyMessage pid=m.id><@message code="messages.reply"/></@replyMessage>
+                        <@replyMessage pid=m.id><@message code="messages.reply"/></@replyMessage>
                     <#--<#if m.original != 0>-->
                     <#--&nbsp;-->
                     <#--<a title="This message has been replied to"-->
@@ -62,7 +62,7 @@
                         <a href="#"
                            onclick="wm.messages.reportAbuse(${m.id});"><@message code="messages.abuse"/></a>
                         &nbsp;
-                    <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
+                        <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
                         &nbsp;
                     </#if>
                     <a href="#"
@@ -76,7 +76,7 @@
 
 <div>
     <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
-    <@message code="messages.delete.selected"/>
+        <@message code="messages.delete.selected"/>
     </button>
 </div>
 </@wm.playground>
@@ -85,14 +85,16 @@
     $("#messagesWidget button").button();
 
     $('#messages').dataTable({
-        "bJQueryUI": true,
-        "bSortClasses": false,
-        "aoColumns": [
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false }
+        "bJQueryUI":true,
+        "bSortClasses":false,
+        "aaSorting":[
         ],
-        "sPaginationType": "full_numbers"
+        "aoColumns":[
+            { "bSortable":false },
+            { "bSortable":false },
+            { "bSortable":false }
+        ],
+        "sPaginationType":"full_numbers"
     });
 
     wm.messages = $.extend({}, wm.messages, new function() {
@@ -125,9 +127,9 @@
         this.remove = function(msgs) {
             wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);
             $.ajax('remove.ajax', {
-                type: 'post',
-                contentType: 'application/x-www-form-urlencoded',
-                data:  {'messages[]': msgs}
+                type:'post',
+                contentType:'application/x-www-form-urlencoded',
+                data:{'messages[]':msgs}
             })
                     .success(function(response) {
                         if (response.success) {
