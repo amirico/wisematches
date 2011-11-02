@@ -575,3 +575,9 @@ a {
 a.ui-icon {
     border-bottom: none !important;
 }
+
+.help-tooltip {
+    cursor: help;
+    vertical-align: text-bottom;
+    display: inline-block !important;
+}

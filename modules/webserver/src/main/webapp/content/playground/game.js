@@ -1,5 +1,6 @@
 if (wm == null) wm = {};
 if (wm.game == null) wm.game = {};
+if (wm.game.settings == null) wm.game.settings = {};
 
 wm.game.help = new function() {
     this.showHelp = function(section, ctx) {
@@ -64,7 +65,7 @@ wm.game.History = function(pid, columns, language) {
         "bFilter":false,
         "bSortClasses":false,
         "aaSorting":[
-            [0, 'asc']
+            [0, 'desc']
         ],
         "iDisplayStart":0,
         "aoColumns":columns,
@@ -105,6 +106,7 @@ wm.game.Search = function(columns, scriplet, language) {
         "bProcessing":true,
         "bServerSide":true,
         "aaSorting":[
+            [ 1, "desc" ],
             [ 2, "desc" ]
         ],
         "sAjaxSource":"/playground/players/load.ajax",
@@ -226,4 +228,74 @@ wm.game.Create = function(maxOpponents, opponentsCount, playerSearch) {
     }, function() {
         $(this).removeClass("ui-state-hover");
     });
+};
+
+wm.game.settings.Board = function() {
+    var prevSet = $(".tiles-set-prev");
+    var nextSet = $(".tiles-set-next");
+    var tileSetView = $(".tiles-set-view");
+
+    var selected = 0;
+    var tilesSet = ['tiles-set-classic', 'tiles-set-classic2'];
+
+    $.each(tilesSet, function(i, v) {
+        if (tileSetView.hasClass(v)) {
+            selected = i;
+            return false;
+        }
+    });
+
+    var checkButtons = function() {
+        if (selected == 0) {
+            prevSet.attr('disabled', 'disabled');
+        } else {
+            prevSet.removeAttr('disabled');
+        }
+
+        if (selected == tilesSet.length - 1) {
+            nextSet.attr('disabled', 'disabled');
+        } else {
+            nextSet.removeAttr('disabled');
+        }
+    };
+
+    var changeTilesView = function(value) {
+        $("#tilesClass").val(tilesSet[selected + value]);
+
+        tileSetView.removeClass(tilesSet[selected]);
+        tileSetView.addClass(tilesSet[selected + value]);
+
+        selected = selected + value;
+    };
+
+    $(".tiles-set-nav").hover(
+            function() {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+                }
+            },
+            function() {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+                }
+            });
+
+    prevSet.click(function() {
+        if (selected > 0) {
+            changeTilesView(-1);
+            checkButtons();
+            prevSet.removeClass('ui-state-hover').addClass('ui-state-default');
+            return false;
+        }
+    });
+
+    nextSet.click(function() {
+        if (selected < tilesSet.length - 1) {
+            changeTilesView(1);
+            checkButtons();
+            nextSet.removeClass('ui-state-hover').addClass('ui-state-default');
+            return false;
+        }
+    });
+    checkButtons();
 };

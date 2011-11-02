@@ -437,6 +437,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/android/android.iml" filepath="$PROJECT_DIR$/modules/android/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/database/database.iml" filepath="$PROJECT_DIR$/modules/database/database.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/personality/personality.iml" filepath="$PROJECT_DIR$/modules/personality/personality.iml" />

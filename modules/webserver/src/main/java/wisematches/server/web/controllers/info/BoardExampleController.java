@@ -18,6 +18,7 @@ import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 import wisematches.playground.scribble.robot.ScribbleRobotBrain;
+import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.controllers.WisematchesController;
 
 import java.util.*;
@@ -30,6 +31,7 @@ import java.util.*;
 public class BoardExampleController extends WisematchesController {
 	private TilesBankingHouse tilesBankingHouse;
 	private DictionaryManager dictionaryManager;
+	private BoardSettingsManager boardSettingsManager;
 
 	private final Map<Language, BoardWrapper> boardsCache = new HashMap<Language, BoardWrapper>();
 
@@ -50,6 +52,8 @@ public class BoardExampleController extends WisematchesController {
 		model.addAttribute("viewMode", false);
 
 		model.addAttribute("board", board.getBoard());
+		model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPersonality()));
+
 		model.addAttribute("player", RobotPlayer.getComputerPlayer(board.getBoard().getPlayerTurn().getPlayerId()));
 		model.addAttribute("memoryWords", selectMemoryWords(board.getAvailableMoves()));
 
@@ -102,6 +106,11 @@ public class BoardExampleController extends WisematchesController {
 	@Autowired
 	public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
 		this.dictionaryManager = dictionaryManager;
+	}
+
+	@Autowired
+	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
+		this.boardSettingsManager = boardSettingsManager;
 	}
 
 	private static final class BoardWrapper {

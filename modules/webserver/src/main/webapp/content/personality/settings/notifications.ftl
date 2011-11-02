@@ -42,11 +42,4 @@
     <tr>
         <td colspan="2" class="ui-state-default shadow"></td>
     </tr>
-
-    <tr>
-        <td></td>
-        <td align="left">
-            <button name="save" type="submit" value="submit"><@message code="account.modify.save"/></button>
-        </td>
-    </tr>
 </table>
