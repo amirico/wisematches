@@ -88,4 +88,11 @@
         <property name="memoryWordManager" ref="memoryWordManager"/>
         <property name="scribbleBoardManager" ref="scribbleBoardManager"/>
     </bean>
+
+    <bean id="boardSettingsManager" class="wisematches.playground.scribble.settings.impl.HibernateBoardSettingsManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="checkWordsDefault" value="true"/>
+        <property name="clearMemoryDefault" value="true"/>
+        <property name="tilesClassDefault" value="tiles-set-classic"/>
+    </bean>
 </beans>

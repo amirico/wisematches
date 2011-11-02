@@ -23,7 +23,11 @@
             <thead>
             <tr>
             <#list searchColumns as c>
-                <th <#if c="nickname">width="100%"</#if>><@message code="search.column.${c}"/></th>
+                <th <#if c="nickname">width="100%"</#if>><@message code="search.column.${c}"/>
+                    <#if c=="ratingA" || c=="ratingG">
+                    <@wm.info><@message code="search.column.${c}.description"/></@wm.info>
+                </#if>
+                </th>
             </#list>
             </tr>
             </thead>
@@ -36,12 +40,12 @@
 <script type="text/javascript">
     var playerSearch = new wm.game.Search(
             [<#list searchColumns as c>{
-                "sName": '${c}',
-                "mDataProp": '${c}',
+                "sName":'${c}',
+                "mDataProp":'${c}',
                 "bSortable": ${searchEntityDescriptor.getAttribute(c).sortable()?string}
             }<#if c_has_next>,</#if></#list>],
     ${scriplet?string}, {
-                title: '<@message code="search.label"/>',
-                close: '<@message code="button.close"/>'
+                title:'<@message code="search.label"/>',
+                close:'<@message code="button.close"/>'
             });
 </script>

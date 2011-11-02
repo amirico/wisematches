@@ -324,6 +324,33 @@
     vertical-align: top !important;
 }
 
+.settings-board td {
+    vertical-align: top;
+}
+
+.tiles-set-container {
+    padding-left: 10px;
+}
+
+.tiles-set-view {
+    padding: 3px;
+    margin: 0 -4px;
+    display: inline-block;
+    background: #558be7 !important;
+}
+
+.tiles-set-nav {
+    height: 50px;
+    width: 16px;
+    display: inline-block;
+    position: relative;
+}
+
+.tiles-set-nav .ui-icon {
+    position: absolute;
+    top: 16px;
+}
+
 .profile .membership div {
     padding: 5px;
 }

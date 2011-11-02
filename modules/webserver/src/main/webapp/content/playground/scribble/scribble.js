@@ -347,7 +347,7 @@ wm.scribble.Comments = function(board, controller, language) {
     initWidget();
 };
 
-wm.scribble.Memory = function(board, controller, language) {
+wm.scribble.Memory = function(board, controller, clearMemory, language) {
     var nextWordId = 0;
     var memoryWords = new Array();
     var memoryWordsCount = 0;
@@ -358,13 +358,18 @@ wm.scribble.Memory = function(board, controller, language) {
     var clearWordButton = memoryWordWidget.find('.memoryClearButton');
 
     var addWord = function(word, checkPlacement) {
-        memoryWordsCount++;
-
-        var id = nextWordId++;
-        memoryWords[id] = word;
-        memoryTable.fnAddData(createNewRecord(id, word, checkPlacement));
-        clearWordButton.button(memoryWordsCount == 0 ? "disable" : "enable");
-        board.clearSelection();
+        var valid = isWordValid(word, checkPlacement);
+        if (!valid && clearMemory) {
+            executeRequest('remove', word, function(data) {
+            });
+        } else {
+            memoryWordsCount++;
+            var id = nextWordId++;
+            memoryWords[id] = word;
+            memoryTable.fnAddData(createNewRecord(id, word, valid));
+            clearWordButton.button(memoryWordsCount == 0 ? "disable" : "enable");
+            board.clearSelection();
+        }
     };
 
     var getWord = function(id) {
@@ -384,14 +389,18 @@ wm.scribble.Memory = function(board, controller, language) {
         }
     };
 
-    var createNewRecord = function(id, word, checkPlacement) {
-        var scoreEngine = board.getScoreEngine();
-
-        var text = word.text;
+    var isWordValid = function(word, checkPlacement) {
         var valid = board.checkWord(word);
         if (valid && checkPlacement) {
             valid = !board.isWordPlaced(word);
         }
+        return valid;
+    };
+
+    var createNewRecord = function(id, word, valid) {
+        var scoreEngine = board.getScoreEngine();
+
+        var text = word.text;
         var points = scoreEngine.getWordPoints(word).points.toString();
 
         var e = '<div class="memory-controls memory-word-' + id + '">';
@@ -434,8 +443,15 @@ wm.scribble.Memory = function(board, controller, language) {
     var validateWords = function() {
         $.each(memoryWords, function(id, word) {
             if (word != null && word != undefined) {
-                var row = memoryWordTable.find('.memory-word-' + id).closest('tr').get(0);
-                memoryTable.fnUpdate(createNewRecord(id, word, true), memoryTable.fnGetPosition(row), 0);
+                var valid = isWordValid(word, true);
+                if (!valid && clearMemory) {
+                    removeWord(id);
+                    executeRequest('remove', word, function(data) {
+                    });
+                } else {
+                    var row = memoryWordTable.find('.memory-word-' + id).closest('tr').get(0);
+                    memoryTable.fnUpdate(createNewRecord(id, word, valid), memoryTable.fnGetPosition(row), 0);
+                }
             }
         });
     };
@@ -563,18 +579,34 @@ wm.scribble.Selection = function(board) {
             });
 };
 
-wm.scribble.Thesaurus = function(board) {
+wm.scribble.Thesaurus = function(board, checkWords) {
     var thesaurus = this;
+
+    var checkTimer = undefined;
 
     var input = board.getPlayboardElement('.word-value');
     var status = board.getPlayboardElement('.word-status');
     var checkButton = board.getPlayboardElement('.word-check');
     var lookupButton = board.getPlayboardElement('.word-lookup');
 
+    const CHECK_WORD_TIMEOUT = 1000;
+
     this.checkWord = function() {
+        validateWord(input.val());
+        return false;
+    };
+
+    this.lookupWord = function() {
+        window.open('http://slovari.yandex.ru/' + input.val() + '/значение');
+        return false;
+    };
+
+    var validateWord = function(text) {
+        if (text.length == 0) {
+            return;
+        }
         status.removeClass('icon-empty').addClass('icon-wait');
-        var value = input.val();
-        $.post('/playground/scribble/board/check.ajax', $.toJSON({word:value, lang:board.getLanguage()}),
+        $.post('/playground/scribble/board/check.ajax', $.toJSON({word:text, lang:board.getLanguage()}),
                 function(response) {
                     status.removeClass('icon-wait');
                     checkButton.button('disable').removeClass("ui-state-hover");
@@ -585,12 +617,6 @@ wm.scribble.Thesaurus = function(board) {
                         status.addClass('icon-word-invalid');
                     }
                 }, 'json');
-        return false;
-    };
-
-    this.lookupWord = function() {
-        window.open('http://slovari.yandex.ru/' + input.val() + '/значение');
-        return false;
     };
 
     var validateInputValue = function() {
@@ -599,9 +625,23 @@ wm.scribble.Thesaurus = function(board) {
         if (input.val().length != 0) {
             checkButton.button('enable');
             lookupButton.button('enable');
+
+            if (checkWords) {
+                if (checkTimer != undefined) {
+                    $(thesaurus).stopTime('checkWord');
+                }
+                var val = input.val(); // copy value
+                checkTimer = $(thesaurus).oneTime(CHECK_WORD_TIMEOUT, 'checkWord', function() {
+                    validateWord(val);
+                });
+            }
         } else {
             checkButton.button('disable').removeClass("ui-state-hover");
             lookupButton.button('disable').removeClass("ui-state-hover");
+
+            if (checkWords && checkTimer != undefined) {
+                $(thesaurus).stopTime('checkWord');
+            }
         }
     };
 
@@ -993,6 +1033,41 @@ wm.scribble.Players = function(board) {
             });
 };
 
+wm.scribble.Settings = function(board, language) {
+    this.showSettings = function() {
+        var dlg = $('<div><div class="loading-image" style="height: 200px"></div></div>');
+        dlg.load('/playground/scribble/settings/load');
+        dlg.dialog({
+            title:language['title'],
+            width:550,
+            minHeight:'auto',
+            modal:true,
+            resizable:false,
+            buttons:[
+                {
+                    text:language['apply'],
+                    click:function() {
+                        $("#boardSettingsForm").ajaxSubmit({
+                            dataType:'json',
+                            contentType:'application/x-www-form-urlencoded',
+                            success:function(data) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+                {
+                    text:wm.i18n.value('button.cancel', 'Cancel'),
+                    click:function() {
+                        dlg.dialog("close");
+                    }
+
+                }
+            ]
+        });
+    }
+};
+
 wm.scribble.ScoreEngine = function(gameBonuses, board) {
     var emptyHandBonus = 33;
 
@@ -1065,7 +1140,7 @@ wm.scribble.ScoreEngine = function(gameBonuses, board) {
     };
 };
 
-wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, controller) {
+wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, controller, tilesClass) {
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');

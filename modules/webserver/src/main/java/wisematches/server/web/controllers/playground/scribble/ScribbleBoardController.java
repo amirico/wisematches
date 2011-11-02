@@ -20,6 +20,7 @@ import wisematches.playground.scribble.ExchangeTilesMove;
 import wisematches.playground.scribble.MakeWordMove;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
@@ -43,6 +44,7 @@ public class ScribbleBoardController extends WisematchesController {
 	private ThesaurusHouse thesaurusHouse;
 	private ScribbleBoardManager boardManager;
 	private DictionaryManager dictionaryManager;
+	private BoardSettingsManager boardSettingsManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
@@ -60,6 +62,7 @@ public class ScribbleBoardController extends WisematchesController {
 			}
 
 			model.addAttribute("board", board);
+			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
 			model.addAttribute("thesaurusHouse", thesaurusHouse);
 			model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
 			if (!board.isGameActive()) {
@@ -188,6 +191,11 @@ public class ScribbleBoardController extends WisematchesController {
 	@Autowired
 	public void setScribbleObjectsConverter(ScribbleObjectsConverter scribbleObjectsConverter) {
 		this.scribbleObjectsConverter = scribbleObjectsConverter;
+	}
+
+	@Autowired
+	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
+		this.boardSettingsManager = boardSettingsManager;
 	}
 
 	@Autowired

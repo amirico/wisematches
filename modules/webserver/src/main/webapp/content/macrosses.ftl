@@ -51,8 +51,7 @@
 </#macro>
 
 <#macro info>
-<img class="help-tooltip" style="vertical-align: text-bottom" src="/resources/images/help.png" width="16" height="16"
-     title="<#nested>"/>
+<div class="help-tooltip ui-icon ui-icon-info" title="<#nested>"></div>
 </#macro>
 
 <#macro restriction style="">
@@ -81,7 +80,9 @@
 <#macro fieldInput path attributes="" fieldType="text" size=30 value="">
     <@field path=path>
     <input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
-           value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>" ${attributes}/>
+           <#if fieldType=='checkbox'><#if spring.stringStatusValue?has_content && spring.stringStatusValue=='true'>checked="checked"</#if> value="true"<#else>
+           value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>"</#if> ${attributes}/>
+    <#nested>
     </@field>
 </#macro>
 
