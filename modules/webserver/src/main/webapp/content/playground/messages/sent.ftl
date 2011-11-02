@@ -7,7 +7,7 @@
 <div>
     <div style="float: left;">
         <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
-        <@message code="messages.delete.selected"/>
+            <@message code="messages.delete.selected"/>
         </button>
     </div>
 </div>
@@ -51,7 +51,7 @@
 
 <div>
     <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
-    <@message code="messages.delete.selected"/>
+        <@message code="messages.delete.selected"/>
     </button>
 </div>
 </@wm.playground>
@@ -60,14 +60,16 @@
     $("#messagesWidget button").button();
 
     $('#messages').dataTable({
-        "bJQueryUI": true,
-        "bSortClasses": false,
-        "aoColumns": [
-            { "bSortable": false },
-            { "bSortable": false },
-            { "bSortable": false }
+        "bJQueryUI":true,
+        "bSortClasses":false,
+        "aaSorting":[
         ],
-        "sPaginationType": "full_numbers"
+        "aoColumns":[
+            { "bSortable":false },
+            { "bSortable":false },
+            { "bSortable":false }
+        ],
+        "sPaginationType":"full_numbers"
     });
 
     wm.messages = $.extend({}, wm.messages, new function() {
@@ -88,9 +90,9 @@
         this.remove = function(msgs) {
             wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);
             $.ajax('remove.ajax?sent=true', {
-                type: 'post',
-                contentType: 'application/x-www-form-urlencoded',
-                data:  {'messages[]': msgs}
+                type:'post',
+                contentType:'application/x-www-form-urlencoded',
+                data:{'messages[]':msgs}
             })
                     .success(function(response) {
                         if (response.success) {
