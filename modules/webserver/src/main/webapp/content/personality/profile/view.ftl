@@ -3,6 +3,7 @@
 <#-- @ftlvariable name="profile" type="wisematches.personality.profile.PlayerProfile" -->
 <#-- @ftlvariable name="statistics" type="wisematches.playground.scribble.tracking.ScribbleStatistics" -->
 <#-- @ftlvariable name="ratingChart" type="wisematches.server.web.utils.RatingChart" -->
+<#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
 <#include "/content/playground/messages/scriplet.ftl">
@@ -22,8 +23,8 @@
     <div class="player">
     <#if (profile.realName?? && profile.realName?has_content)>
         <strong>${profile.realName}</strong>
-        <#else>
-            <strong>${player.nickname}</strong>
+    <#else>
+        <strong>${player.nickname}</strong>
     </#if>
     </div>
     <div class="registered">
@@ -105,11 +106,11 @@
                         <div><@message code="profile.rating.op.low"/>:</div>
                         <div>
                         <#if statistics.lowestLostOpponentId==0>
-                        <@message code="profile.undefined"/>
-                            <#else>
-                            ${statistics.lowestLostOpponentRating}
-                                <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                                <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
+                            <@message code="profile.undefined"/>
+                        <#else>
+                        ${statistics.lowestLostOpponentRating}
+                            <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
+                            <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -117,12 +118,12 @@
                         <div><@message code="profile.rating.op.hi"/>:</div>
                         <div>
                         <#if statistics.highestWonOpponentId==0>
-                        <@message code="profile.undefined"/>
-                            <#else>
-                            ${statistics.highestWonOpponentRating}
-                                <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
-                                <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
-                                    )</#if>
+                            <@message code="profile.undefined"/>
+                        <#else>
+                        ${statistics.highestWonOpponentRating}
+                            <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
+                            <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
+                                )</#if>
                         </#if>
                         </div>
                     </div>
@@ -161,7 +162,7 @@
                         <#if statistics.lastMoveTime??>
                                 ${gameMessageSource.formatDate(statistics.lastMoveTime, locale)}
                                 <#else>
-                        <@message code="profile.undefined"/>
+                            <@message code="profile.undefined"/>
                         </#if>
                         </div>
                     </div>
@@ -171,7 +172,7 @@
                         <#if statistics.averageMoveTime != 0>
                             ${gameMessageSource.formatMinutes(statistics.averageMoveTime/1000/60, locale)}
                             <#else>
-                        <@message code="profile.undefined"/>
+                            <@message code="profile.undefined"/>
                         </#if>
                         </div>
                     </div>
@@ -214,7 +215,7 @@
         </div>
     </div>
 
-    <div class="ui-layout-table" style="padding-top: 10px;">
+    <div class="ui-layout-table ${boardSettings.tilesClass}" style="padding-top: 10px;">
         <div style="height: 24px;">
             <div><@message code="profile.word.long"/>:</div>
             <div style="position: relative; padding-top: 3px">
@@ -224,7 +225,7 @@
                          style="background-position: -${tile.cost*22}px 0; top: 0; left: ${tile_index*22}px; padding: 0;">
                         <span>${tile.letter?upper_case}</span></div>
                 </#list>
-                <#else>
+            <#else>
                 <@message code="profile.undefined"/>
             </#if>
             </div>
@@ -238,7 +239,7 @@
                          style="background-position: -${tile.cost*22}px 0; top: 0; left: ${tile_index*22}px; padding: 0;">
                         <span>${tile.letter?upper_case}</span></div>
                 </#list>
-                <#else>
+            <#else>
                 <@message code="profile.undefined"/>
             </#if>
             </div>
@@ -265,12 +266,13 @@
 
 <div class="info">
     <div class="photo">
-        <img class="shadow" style="width: 200px; height: 200px;" src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
+        <img class="shadow" style="width: 200px; height: 200px;" src="/playground/profile/image/view?pid=${player.id}"
+             alt="Photo">
     </div>
     <div><strong>${player.nickname}</strong></div>
     <div>
     <#if profile.gender??>
-    <@message code="gender." + profile.gender.name()?lower_case/>,
+        <@message code="gender." + profile.gender.name()?lower_case/>,
     </#if>
     <#if profile.birthday??>${gameMessageSource.getAge(profile.birthday)} <@message code="profile.edit.years"/>,</#if>
     </div>
@@ -288,7 +290,7 @@
 <script type="text/javascript">
     $(".profile button").button();
 
-    google.load('visualization', '1', {packages: ['corechart']});
+    google.load('visualization', '1', {packages:['corechart']});
 
     function drawRatingGraph() {
         // Create and populate the data table.
@@ -307,22 +309,22 @@
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
-                    backgroundColor: 'transparent',
-                    interpolateNulls: true,
-                    legend: 'none',
-                    width: 300,
-                    height: 150,
-                    chartArea: {
-                        top: 10,
-                        left: 50,
-                        width: 280,
-                        height: 120
+                    backgroundColor:'transparent',
+                    interpolateNulls:true,
+                    legend:'none',
+                    width:300,
+                    height:150,
+                    chartArea:{
+                        top:10,
+                        left:50,
+                        width:280,
+                        height:120
                     },
-                    hAxis: {
-                        showTextEvery: resolution * 2
+                    hAxis:{
+                        showTextEvery:resolution * 2
                     },
-                    vAxis: {
-                        format: '#',
+                    vAxis:{
+                        format:'#',
                         minValue: ${ratingChart.minRating?string("0")},
                         maxValue: ${ratingChart.maxRating?string("0")}
                     }}
@@ -340,19 +342,19 @@
 
         new google.visualization.BarChart(document.getElementById('gamesChart')).
                 draw(data, {
-            axisTitlesPosition: 'in',
-            colors: ['#008000', 'AA0033', '#FF9900'],
-            backgroundColor: 'transparent',
-            interpolateNulls: true,
-            legend: 'none',
-            isStacked: true,
-            width: 300,
-            height: 75,
-            chartArea: {
-                top: 0,
-                left: 0,
-                width: 280,
-                height: 40
+            axisTitlesPosition:'in',
+            colors:['#008000', 'AA0033', '#FF9900'],
+            backgroundColor:'transparent',
+            interpolateNulls:true,
+            legend:'none',
+            isStacked:true,
+            width:300,
+            height:75,
+            chartArea:{
+                top:0,
+                left:0,
+                width:280,
+                height:40
             }
         });
 
@@ -365,17 +367,17 @@
 
         new google.visualization.BarChart(document.getElementById('timeoutsChart')).
                 draw(data2, {
-            colors: ['gray', '#00cc66'],
-            backgroundColor: 'transparent',
-            legend: 'none',
-            isStacked: true,
-            width: 300,
-            height: 75,
-            chartArea: {
-                top: 0,
-                left: 0,
-                width: 280,
-                height: 40
+            colors:['gray', '#00cc66'],
+            backgroundColor:'transparent',
+            legend:'none',
+            isStacked:true,
+            width:300,
+            height:75,
+            chartArea:{
+                top:0,
+                left:0,
+                width:280,
+                height:40
             }
         })
     }
