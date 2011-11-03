@@ -3,15 +3,16 @@ package wisematches.client.android;
 import android.app.Activity;
 import android.os.Bundle;
 
-/**
- * @author Sergey Klimenko (smklimenko@gmail.com)
- */
-public class Playground extends Activity {
-	public Playground() {
+public class Dashboard extends Activity {
+	public Dashboard() {
 	}
 
+	/**
+	 * Called when the activity is first created.
+	 */
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.plaground);
+		setContentView(R.layout.dashboard);
 	}
 }

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseMatches</string>
+    <string name="view_dashboard">Active Games</string>
+    <string name="view_playground">Board</string>
 </resources>
