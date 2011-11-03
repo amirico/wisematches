@@ -918,13 +918,12 @@ wm.scribble.Controls = function(board, language) {
 
     this.exchangeTiles = function() {
         board.clearSelection();
-        var tilesPanel = $(board.getPlayboardElement('.exchangeTilesPanel div').get(1));
-        tilesPanel.empty();
+        var tilesPanel = $($('.exchangeTilesPanel div').get(1));
         $.each(board.getHandTiles(), function(i, tile) {
             wm.scribble.tile.createTileWidget(tile).offset({top:0, left:i * 22}).click(onTileSelected).appendTo(tilesPanel);
         });
 
-        board.getPlayboardElement('.exchangeTilesPanel').dialog({
+        $('.exchangeTilesPanel').dialog({
                     title:language['exchange'],
                     draggable:false,
                     modal:true,
