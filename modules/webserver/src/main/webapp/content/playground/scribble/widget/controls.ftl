@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 
 <#include "/core.ftl">
 
@@ -24,7 +25,7 @@
     </div>
 </div>
 
-<div class="exchangeTilesPanel" style="display: none;">
+<div class="exchangeTilesPanel ui-helper-hidden ${boardSettings.tilesClass}">
     <div><@message code="game.play.exchange.description"/></div>
     <div style="height: 16px; position: relative;"></div>
 </div>

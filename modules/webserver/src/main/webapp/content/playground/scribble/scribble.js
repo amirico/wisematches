@@ -917,6 +917,7 @@ wm.scribble.Controls = function(board, language) {
     };
 
     this.exchangeTiles = function() {
+        board.clearSelection();
         var tilesPanel = $(board.getPlayboardElement('.exchangeTilesPanel div').get(1));
         tilesPanel.empty();
         $.each(board.getHandTiles(), function(i, tile) {
