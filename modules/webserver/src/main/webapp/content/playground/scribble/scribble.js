@@ -1341,12 +1341,17 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
                     var replacingTile = draggingTile;
                     wildcardHandler(tile, function(letter) {
                         wm.scribble.tile.setLetter(replacingTile, letter);
+                        tile.row = relatedCell.y;
+                        tile.column = relatedCell.x;
+                        boardTiles[relatedCell.x][relatedCell.y] = replacingTile;
+                        changeTileSelection(replacingTile.get(0), true, true);
                     });
+                } else {
+                    tile.row = relatedCell.y;
+                    tile.column = relatedCell.x;
+                    boardTiles[relatedCell.x][relatedCell.y] = draggingTile;
+                    changeTileSelection(draggingTile.get(0), true, true);
                 }
-                tile.row = relatedCell.y;
-                tile.column = relatedCell.x;
-                boardTiles[relatedCell.x][relatedCell.y] = draggingTile;
-                changeTileSelection(draggingTile.get(0), true, true);
             } else if (relatedCell.container == hand) {
                 if (tile.wildcard) {
                     wm.scribble.tile.setLetter(draggingTile, '*');
@@ -1637,12 +1642,16 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
 
     var wildcardHandler = function(tile, replacer) {
         if (wildcardSelectionDialog == null) {
+            var tileLetter = tile.letter;
             wildcardSelectionDialog = $('#' + wildcardHandlerElement).dialog({
                 autoOpen:false,
                 draggable:false,
                 modal:true,
                 resizable:false,
-                width:400
+                width:400,
+                close: function(event, ui) {
+                    wildcardSelectionDialog.replacer(tileLetter);
+                }
             });
 
             var panel = $($('#' + wildcardHandlerElement + ' div').get(1)).empty();
@@ -1658,7 +1667,7 @@ wm.scribble.Board = function(gameInfo, boardViewer, wildcardHandlerElement, cont
                             wm.scribble.tile.deselectTile(this);
                         }).click(
                         function() {
-                            wildcardSelectionDialog.replacer($(this).data('tile').letter);
+                            tileLetter = $(this).data('tile').letter;
                             wildcardSelectionDialog.dialog("close");
                         }).appendTo(panel);
             });
