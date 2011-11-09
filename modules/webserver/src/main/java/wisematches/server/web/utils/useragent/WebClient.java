@@ -74,7 +74,10 @@ public class WebClient {
 		String ver = null;
 		if (userAgentString != null && !userAgentString.isEmpty()) {
 			try {
-				if (userAgentString.contains("Yahoo! Slurp")) {
+				if (userAgentString.contains("Wisematches/")) {
+					ua = UserAgent.WISEMATCHES;
+					ver = userAgentString.substring(userAgentString.indexOf("Wisematches/") + 12);
+				} else if (userAgentString.contains("Yahoo! Slurp")) {
 					ua = UserAgent.YAHOO_SLURP;
 				} else if (userAgentString.contains("Googlebot/")) {
 					ua = UserAgent.GOOGLEBOT;
