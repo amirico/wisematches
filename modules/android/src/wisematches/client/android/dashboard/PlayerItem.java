@@ -3,7 +3,7 @@ package wisematches.client.android.dashboard;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PlayerItem {
+class PlayerItem {
 	private final long id;
 	private final String nickname;
 	private final int points;

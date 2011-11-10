@@ -36,6 +36,7 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
+import wisematches.server.web.controllers.playground.scribble.form.ScribbleInfoForm;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -95,6 +96,31 @@ public class ScribbleGameController extends WisematchesController {
 			model.addAttribute("activeProposals", Collections.emptyList());
 		}
 		return "/content/playground/scribble/active";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "active.ajax")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public ServiceResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid) throws UnknownEntityException {
+		final Player principal;
+		if (pid == null) {
+			principal = getPrincipal();
+		} else {
+			principal = playerManager.getPlayer(pid);
+		}
+		if (principal == null) {
+			throw new UnknownEntityException(null, "account");
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Loading active games for personality: " + principal);
+		}
+
+		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
+		final List<ScribbleInfoForm> forms = new ArrayList<ScribbleInfoForm>(activeBoards.size());
+		for (ScribbleBoard activeBoard : activeBoards) {
+			forms.add(new ScribbleInfoForm(activeBoard));
+		}
+		return ServiceResponse.success(null, "boards", forms);
 	}
 
 	@RequestMapping("join")

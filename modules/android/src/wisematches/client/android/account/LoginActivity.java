@@ -1,7 +1,11 @@
 package wisematches.client.android.account;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +19,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import wisematches.client.android.R;
-import wisematches.client.android.WisematchesAndroid;
+import wisematches.client.android.WisematchesApplication;
 import wisematches.client.android.dashboard.DashboardActivity;
 
 import java.io.IOException;
@@ -32,30 +36,45 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final WisematchesAndroid wisematches = (WisematchesAndroid) getApplication();
 
-		setContentView(R.layout.accout_login);
-/*
-		startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
-		if (true) {
-			return;
+		final SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+		final String username = preferences.getString("username", null);
+		final String password = preferences.getString("password", null);
+
+		if (username != null && password != null) {
+			setContentView(R.layout.account_logging);
+			doSignIn(username, password, false);
+		} else {
+			setContentView(R.layout.accout_login);
+			final Button signIn = (Button) findViewById(R.id.accountButtonCreate);
+			signIn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ProgressDialog.show(LoginActivity.this, null, "Logging in to WiseMatches. Please wait...", true);
+					final EditText email = (EditText) findViewById(R.id.accountFieldEmail);
+					final EditText pwd = (EditText) findViewById(R.id.accountFieldPassword);
+					final CheckBox rememberMe = (CheckBox) findViewById(R.id.accountFieldRememberMe);
+
+					final String username = email.getText().toString();
+					final String password = pwd.getText().toString();
+
+					doSignIn(username, password, rememberMe.isChecked());
+				}
+			});
 		}
-*/
+	}
 
-		final Button signIn = (Button) findViewById(R.id.accountButtonCreate);
-		signIn.setOnClickListener(new View.OnClickListener() {
+	private void doSignIn(final String username, final String password, final boolean rememberMe) {
+		new AsyncTask<String, Void, Boolean>() {
 			@Override
-			public void onClick(View view) {
-				final EditText email = (EditText) findViewById(R.id.accountFieldEmail);
-				final EditText password = (EditText) findViewById(R.id.accountFieldPassword);
-				final CheckBox rememberMe = (CheckBox) findViewById(R.id.accountFieldRememberMe);
-
+			protected Boolean doInBackground(String... args) {
 				try {
+					final WisematchesApplication wisematches = (WisematchesApplication) getApplication();
+
 					final HttpPost req = new HttpPost("/account/loginProcessing");
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-					nameValuePairs.add(new BasicNameValuePair("j_username", email.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("j_password", password.getText().toString()));
-					nameValuePairs.add(new BasicNameValuePair("rememberMe", String.valueOf(rememberMe.isChecked())));
+					final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+					nameValuePairs.add(new BasicNameValuePair("j_username", username));
+					nameValuePairs.add(new BasicNameValuePair("j_password", password));
 					req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 					final HttpResponse execute = wisematches.execute(req);
@@ -81,14 +100,30 @@ public class LoginActivity extends Activity {
 							} else {
 								Toast.makeText(LoginActivity.this, "Auth error: " + errorCode, Toast.LENGTH_SHORT).show();
 							}
-						} else { //success
-							startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+							return false;
+						} else {
+							return true;
 						}
 					}
 				} catch (IOException ex) {
 					Toast.makeText(LoginActivity.this, ex.getMessage(), Toast.LENGTH_LONG).show();
 				}
+				return false;
 			}
-		});
+
+			@Override
+			protected void onPostExecute(Boolean success) {
+				if (success) {
+					if (rememberMe) {
+						final SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+						final SharedPreferences.Editor edit = preferences.edit();
+						edit.putString("username", username);
+						edit.putString("password", password);
+						edit.commit();
+					}
+					startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+				}
+			}
+		}.execute(username, password);
 	}
 }

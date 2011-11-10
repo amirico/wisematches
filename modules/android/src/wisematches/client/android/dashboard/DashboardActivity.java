@@ -2,25 +2,27 @@ package wisematches.client.android.dashboard;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import wisematches.client.android.R;
-import wisematches.client.android.WisematchesAndroid;
+import wisematches.client.android.server.ServerRequest;
+import wisematches.client.android.server.ServerResponse;
+import wisematches.client.android.server.ServerResponseListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DashboardActivity extends ListActivity {
-	private List<BoardItem> boardItemList;
+public class DashboardActivity extends ListActivity implements ServerResponseListener {
+	private ArrayAdapter<BoardItem> boardItemsAdapter;
 
 	public DashboardActivity() {
 	}
@@ -29,16 +31,22 @@ public class DashboardActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard_active);
 
-		final ArrayAdapter<BoardItem> adapter = new BoardItemsAdapter(this, new ArrayList<BoardItem>());
-		setListAdapter(adapter);
+		boardItemsAdapter = new BoardItemsAdapter(this, new ArrayList<BoardItem>());
+		setListAdapter(boardItemsAdapter);
 
-		final HttpGet get = new HttpGet("/playground/scribble/active.ajax");
-		try {
-			HttpResponse execute = ((WisematchesAndroid) getApplication()).execute(get);
+		ServerRequest.execute(this, "/playground/scribble/active.ajax", "Loading active games...", this);
+	}
 
-		} catch (IOException e) {
-			Toast.makeText(DashboardActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-		}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		boardItemsAdapter = null;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.dashboard, menu);
+		return true;
 	}
 
 	@Override
@@ -49,5 +57,36 @@ public class DashboardActivity extends ListActivity {
 		Object o = this.getListAdapter().getItem(position);
 		String keyword = o.toString();
 		Toast.makeText(this, "You selected: " + keyword, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onSuccess(ServerResponse response) {
+		if (boardItemsAdapter == null) {
+			return;
+		}
+		try {
+			if (response.isSuccess()) {
+				JSONArray jsonArray = response.getData().getJSONArray("boards");
+				int length = jsonArray.length();
+				for (int i = 0; i < length; i++) {
+					JSONObject b = jsonArray.getJSONObject(i);
+					boardItemsAdapter.add(new BoardItem(b.getLong("id"), b.getString("title"), new PlayerItem[0]));
+				}
+			}
+		} catch (JSONException ex) {
+			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+		}
+	}
+
+	@Override
+	public void onFailure(Exception exception) {
+		if (boardItemsAdapter == null) {
+			return;
+		}
+		Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onCancel() {
 	}
 }

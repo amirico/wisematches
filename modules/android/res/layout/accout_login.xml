@@ -9,11 +9,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/color_default">
+            android:background="@color/backgroundDefault">
 
         <LinearLayout android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
-                      android:background="@drawable/color_header"
+                      android:background="@color/backgroundHeader"
                       android:paddingTop="5dip"
                       android:paddingBottom="5dip">
 
@@ -42,7 +42,7 @@
                           android:layout_marginTop="5dip"
                           android:layout_marginBottom="20dip"
                           android:singleLine="true"
-                        android:inputType="textWebEmailAddress"/>
+                          android:inputType="textWebEmailAddress"/>
 
                 <TextView android:layout_width="fill_parent"
                           android:layout_height="wrap_content"

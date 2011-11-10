@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appName">WiseMatches</string>
+    <string name="loginLabel">Sign in with your WiseMatches Account</string>
+    <string name="registerLabel">Register new WiseMatches Account</string>
+
+    <string name="fieldEmail">Your Email</string>
+    <string name="fieldPassword">Password</string>
+    <string name="fieldStaySignedIn">Stay signed in</string>
+    <string name="fieldSignIn">Sign in</string>
+
+    <string name="dashboardLabel">Active Games List</string>
+</resources>
