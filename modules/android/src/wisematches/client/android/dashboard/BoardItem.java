@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class BoardItem {
+class BoardItem {
 	private final long id;
 	private final String name;
 	private final PlayerItem[] players;

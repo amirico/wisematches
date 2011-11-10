@@ -8,12 +8,12 @@
     <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/color_default">
+            android:background="@color/backgroundDefault">
 
         <LinearLayout android:id="@+id/header"
                       android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
-                      android:background="@drawable/color_header"
+                      android:background="@color/backgroundHeader"
                       android:paddingTop="5dip"
                       android:paddingBottom="5dip">
             <ImageView android:src="@drawable/logo"

@@ -19,14 +19,14 @@ import java.io.IOException;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WisematchesAndroid extends Application {
+public class WisematchesApplication extends Application {
 	private final HttpContext localContext = new BasicHttpContext();
 	private final CookieStore cookieStore = new BasicCookieStore();
 	private final DefaultHttpClient client = new DefaultHttpClient();
 
 	private static final HttpHost HOST = new HttpHost("10.0.2.2", 8080);
 
-	public WisematchesAndroid() {
+	public WisematchesApplication() {
 	}
 
 	@Override
