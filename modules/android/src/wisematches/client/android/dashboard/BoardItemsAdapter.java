@@ -1,11 +1,11 @@
 package wisematches.client.android.dashboard;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import wisematches.client.android.R;
 
@@ -32,7 +32,7 @@ public class BoardItemsAdapter extends ArrayAdapter<BoardItem> {
 			final ViewHolder viewHolder = new ViewHolder();
 			viewHolder.text = (TextView) view.findViewById(R.id.label);
 			viewHolder.number = (TextView) view.findViewById(R.id.number);
-			viewHolder.players = (LinearLayout) view.findViewById(R.id.dashboardPlayers);
+			viewHolder.players = (TableLayout) view.findViewById(R.id.dashboardPlayers);
 			view.setTag(viewHolder);
 		} else {
 			view = convertView;
@@ -43,13 +43,23 @@ public class BoardItemsAdapter extends ArrayAdapter<BoardItem> {
 		final BoardItem boardItem = boardItems.get(position);
 		holder.text.setText(boardItem.getName());
 		holder.number.setText(String.valueOf(boardItem.getId()));
-
 		holder.players.removeAllViews();
 
-		for (int i = 0; i < 2; i++) {
-			TextView child = new TextView(context);
-			child.setText("Player " + i);
-			holder.players.addView(child);
+		final PlayerItem[] players = boardItem.getPlayers();
+		if (players != null) {
+			for (PlayerItem playerItem : players) {
+				final TableRow row = new TableRow(context);
+
+				final View player = context.getLayoutInflater().inflate(R.layout.player_item, null);
+				((TextView) player.findViewById(R.id.player_nickname)).setText(playerItem.getNickname());
+				row.addView(player);
+
+				final TextView p = new TextView(context);
+				p.setText(String.valueOf(playerItem.getPoints()));
+				row.addView(p);
+
+				holder.players.addView(row);
+			}
 		}
 		return view;
 	}
@@ -57,6 +67,6 @@ public class BoardItemsAdapter extends ArrayAdapter<BoardItem> {
 	private static class ViewHolder {
 		private TextView text;
 		private TextView number;
-		private LinearLayout players;
+		private TableLayout players;
 	}
 }

@@ -24,10 +24,8 @@
                   android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/dashboardPlayers"
-            android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
-    </LinearLayout>
+    <TableLayout android:id="@+id/dashboardPlayers"
+                 android:layout_height="wrap_content"
+                 android:layout_width="wrap_content">
+    </TableLayout>
 </LinearLayout>

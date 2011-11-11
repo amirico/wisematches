@@ -9,9 +9,9 @@ import java.util.concurrent.ExecutionException;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface ServerResponseListener {
-	void onSuccess(ServerResponse response);
+	void onServerResponseSuccess(ServerResponse response);
 
-	void onFailure(Exception exception);
+	void onServerResponseFailure(Exception exception);
 
-	void onCancel();
+	void onServerResponseCancel();
 }

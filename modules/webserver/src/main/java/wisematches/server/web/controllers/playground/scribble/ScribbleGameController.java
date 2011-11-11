@@ -16,6 +16,7 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.BoardManagementException;
+import wisematches.playground.GameSettings;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.blacklist.BlacklistedException;
 import wisematches.playground.propose.GameProposal;
@@ -27,6 +28,7 @@ import wisematches.playground.restriction.RestrictionException;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.search.board.ScribbleSearchesEngine;
 import wisematches.playground.scribble.search.player.ScribblePlayerSearchManager;
@@ -36,6 +38,7 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
+import wisematches.server.web.controllers.playground.scribble.form.PlayerInfoForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleInfoForm;
 
 import javax.validation.Valid;
@@ -117,8 +120,16 @@ public class ScribbleGameController extends WisematchesController {
 
 		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
 		final List<ScribbleInfoForm> forms = new ArrayList<ScribbleInfoForm>(activeBoards.size());
-		for (ScribbleBoard activeBoard : activeBoards) {
-			forms.add(new ScribbleInfoForm(activeBoard));
+		for (ScribbleBoard board : activeBoards) {
+			final GameSettings settings = board.getGameSettings();
+			final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
+			final PlayerInfoForm[] players = new PlayerInfoForm[playersHands.size()];
+			for (int i = 0, playersHandsSize = playersHands.size(); i < playersHandsSize; i++) {
+				final ScribblePlayerHand hand = playersHands.get(i);
+				final Player player = playerManager.getPlayer(hand.getPlayerId());
+				players[i] = new PlayerInfoForm(player.getId(), player.getNickname(), hand.getPoints());
+			}
+			forms.add(new ScribbleInfoForm(board.getBoardId(), settings.getTitle(), players));
 		}
 		return ServiceResponse.success(null, "boards", forms);
 	}

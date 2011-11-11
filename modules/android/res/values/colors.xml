@@ -1,4 +1,9 @@
 <resources>
-    <color name="backgroundDefault">#EAF4FC</color>
     <color name="backgroundHeader">#A6C9E2</color>
+    <color name="backgroundDefault">#EAF4FC</color>
+    <color name="backgroundField">#fffaf5f9</color>
+
+    <color name="errorLabel">#cd0a0a</color>
+    <color name="errorBorder">#cd0a0a</color>
+    <color name="errorBackground">#fef1ec</color>
 </resources>

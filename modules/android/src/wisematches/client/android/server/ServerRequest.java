@@ -47,7 +47,7 @@ public class ServerRequest extends AsyncTask<String, Void, JSONObject> {
 				return new JSONObject(content);
 			}
 		} catch (Exception e) {
-			listener.onFailure(e);
+			listener.onServerResponseFailure(e);
 		}
 		return null;
 	}
@@ -65,9 +65,9 @@ public class ServerRequest extends AsyncTask<String, Void, JSONObject> {
 		super.onPostExecute(jsonObject);
 		if (listener != null) {
 			try {
-				listener.onSuccess(new ServerResponse(jsonObject));
+				listener.onServerResponseSuccess(new ServerResponse(jsonObject));
 			} catch (JSONException e) {
-				listener.onFailure(e);
+				listener.onServerResponseFailure(e);
 			}
 		}
 		if (progressDialog != null) {
@@ -78,7 +78,7 @@ public class ServerRequest extends AsyncTask<String, Void, JSONObject> {
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
-		listener.onCancel();
+		listener.onServerResponseCancel();
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 		}
@@ -87,7 +87,7 @@ public class ServerRequest extends AsyncTask<String, Void, JSONObject> {
 	@Override
 	protected void onCancelled(JSONObject jsonObject) {
 		super.onCancelled(jsonObject);
-		listener.onCancel();
+		listener.onServerResponseCancel();
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 		}
@@ -119,15 +119,15 @@ public class ServerRequest extends AsyncTask<String, Void, JSONObject> {
 		}
 
 		@Override
-		public void onSuccess(ServerResponse response) {
+		public void onServerResponseSuccess(ServerResponse response) {
 		}
 
 		@Override
-		public void onFailure(Exception exception) {
+		public void onServerResponseFailure(Exception exception) {
 		}
 
 		@Override
-		public void onCancel() {
+		public void onServerResponseCancel() {
 		}
 	}
 }
