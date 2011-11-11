@@ -1,21 +1,17 @@
 package wisematches.server.web.controllers.playground.scribble.form;
 
-import wisematches.playground.scribble.ScribbleBoard;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ScribbleInfoForm {
 	private long id;
 	private String title;
+	private PlayerInfoForm[] playersInfo;
 
-	public ScribbleInfoForm(ScribbleBoard board) {
-		this(board.getBoardId(), board.getGameSettings().getTitle());
-	}
-
-	public ScribbleInfoForm(long id, String title) {
+	public ScribbleInfoForm(long id, String title, PlayerInfoForm[] playersInfo) {
 		this.id = id;
 		this.title = title;
+		this.playersInfo = playersInfo;
 	}
 
 	public long getId() {
@@ -24,5 +20,9 @@ public class ScribbleInfoForm {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public PlayerInfoForm[] getPlayersInfo() {
+		return playersInfo;
 	}
 }

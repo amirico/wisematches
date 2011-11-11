@@ -3,11 +3,16 @@
           package="wisematches.client.android"
           android:versionCode="1"
           android:versionName="1.0">
+
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="11"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application android:label="@string/appName" android:name=".WisematchesApplication" android:icon="@drawable/icon">
+    <application android:label="@string/appName" android:name=".WisematchesApplication"
+                 android:icon="@drawable/icon" android:theme="@android:style/Theme.Light">
+
         <activity android:name=".account.LoginActivity" android:label="@string/appName"
-                  android:noHistory="true">
+                  android:theme="@android:style/Theme.Light.NoTitleBar"
+                  android:excludeFromRecents="true" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -17,7 +22,9 @@
         <activity android:name=".account.RegisterActivity" android:label="@string/registerLabel">
         </activity>
 
-        <activity android:name=".dashboard.DashboardActivity" android:label="@string/dashboardLabel">
+        <activity android:name=".dashboard.DashboardActivity" android:label="@string/dashboardLabel"
+                  android:theme="@android:style/Theme.WithActionBar"
+                  android:logo="@drawable/application_home">
         </activity>
     </application>
 </manifest>

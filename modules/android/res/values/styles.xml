@@ -1,11 +1,5 @@
 <resources>
-    <style name="LoggingInLabel">
-        <item name="android:textColor">@color/backgroundHeader</item>
-        <item name="android:textSize">24dip</item>
-        <item name="android:shadowColor">@color/backgroundHeader</item>
-        <item name="android:shadowRadius">3.0</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">end</item>
+    <style name="errorLabel">
+        <item name="android:textColor">@color/errorLabel</item>
     </style>
 </resources>

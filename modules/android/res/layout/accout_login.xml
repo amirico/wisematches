@@ -3,6 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:animateLayoutChanges="true"
             android:fillViewport="true">
 
     <LinearLayout
@@ -34,7 +35,7 @@
 
                 <TextView android:layout_width="fill_parent"
                           android:layout_height="wrap_content"
-                          android:text="@string/fieldEmail"/>
+                          android:text="@string/account_login_view_username"/>
 
                 <EditText android:id="@+id/accountFieldEmail"
                           android:layout_width="fill_parent"
@@ -46,7 +47,7 @@
 
                 <TextView android:layout_width="fill_parent"
                           android:layout_height="wrap_content"
-                          android:text="@string/fieldPassword"/>
+                          android:text="@string/account_login_view_password"/>
 
                 <EditText android:id="@+id/accountFieldPassword"
                           android:layout_width="fill_parent"
@@ -68,14 +69,23 @@
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="@string/fieldStaySignedIn"/>
+                          android:text="@string/account_login_view_remember"/>
             </LinearLayout>
+
+            <TextView
+                    android:id="@+id/accountErrorMessage"
+                    style="@style/errorLabel"
+                    android:visibility="visible"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""/>
 
             <Button android:id="@+id/accountButtonCreate"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dip"
-                    android:text="@string/fieldSignIn"/>
+                    android:text="@string/account_login_view_login"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
