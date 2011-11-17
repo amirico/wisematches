@@ -3,12 +3,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_game_create"
           android:title="Create New Game"
-          android:icon="@android:drawable/ic_menu_add"
+          android:icon="@drawable/ic_menu_invite"
           android:showAsAction="ifRoom"/>
 
     <item android:id="@+id/menu_game_join"
           android:title="Joint To Game"
-          android:icon="@android:drawable/ic_menu_share"
+          android:icon="@drawable/ic_menu_myplaces"
           android:showAsAction="ifRoom"/>
 
     <item android:id="@+id/menu_refresh"

@@ -1,31 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        <TextView android:text="Title"
-                  android:id="@+id/label"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"/>
-
-        <TextView android:text="#"
-                  android:paddingLeft="5px"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"/>
-
-        <TextView android:text="12"
-                  android:id="@+id/number"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"/>
-    </LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="5dip">
 
     <TableLayout android:id="@+id/dashboardPlayers"
+                 android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
-                 android:layout_width="wrap_content">
+                 android:layout_alignParentRight="true"
+                 android:layout_alignParentTop="true">
+
+        <TableRow android:background="@drawable/player_active">
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content">
+                <TextView android:singleLine="true"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="player_name"/>
+            </LinearLayout>
+
+            <TextView android:singleLine="true"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:paddingLeft="5dip"
+                      android:text="1023"/>
+        </TableRow>
+
+        <TableRow>
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content">
+                <TextView android:singleLine="true"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="player_name"/>
+            </LinearLayout>
+
+            <TextView android:singleLine="true"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:paddingLeft="5dip"
+                      android:text="1023"/>
+        </TableRow>
     </TableLayout>
-</LinearLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/dashboardPlayers">
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+            <TextView android:id="@+id/boardTitle"
+                      android:singleLine="true"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="This is game of new game"/>
+
+            <TextView android:text="#"
+                      android:paddingLeft="5px"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"/>
+
+            <TextView android:text="12"
+                      android:id="@+id/boardNumber"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView android:id="@+id/boardElapsedTime"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="23d 13h"/>
+    </LinearLayout>
+</RelativeLayout>

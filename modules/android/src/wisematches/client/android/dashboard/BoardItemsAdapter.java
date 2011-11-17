@@ -3,10 +3,7 @@ package wisematches.client.android.dashboard;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.*;
 import wisematches.client.android.R;
 
 import java.util.List;
@@ -30,8 +27,9 @@ public class BoardItemsAdapter extends ArrayAdapter<BoardItem> {
 		if (convertView == null) {
 			view = context.getLayoutInflater().inflate(R.layout.dashboard_board_item, null);
 			final ViewHolder viewHolder = new ViewHolder();
-			viewHolder.text = (TextView) view.findViewById(R.id.label);
-			viewHolder.number = (TextView) view.findViewById(R.id.number);
+			viewHolder.text = (TextView) view.findViewById(R.id.boardTitle);
+			viewHolder.number = (TextView) view.findViewById(R.id.boardNumber);
+			viewHolder.elapsedTime = (TextView) view.findViewById(R.id.boardElapsedTime);
 			viewHolder.players = (TableLayout) view.findViewById(R.id.dashboardPlayers);
 			view.setTag(viewHolder);
 		} else {
@@ -41,21 +39,29 @@ public class BoardItemsAdapter extends ArrayAdapter<BoardItem> {
 		final ViewHolder holder = (ViewHolder) view.getTag();
 
 		final BoardItem boardItem = boardItems.get(position);
-		holder.text.setText(boardItem.getName());
+		holder.text.setText(boardItem.getTitle());
 		holder.number.setText(String.valueOf(boardItem.getId()));
+		holder.elapsedTime.setText(String.valueOf(boardItem.getElapsedTime()));
 		holder.players.removeAllViews();
 
-		final PlayerItem[] players = boardItem.getPlayers();
+		final PlayerItem[] players = boardItem.getPlayersInfo();
 		if (players != null) {
 			for (PlayerItem playerItem : players) {
 				final TableRow row = new TableRow(context);
+				if (playerItem.getId() == boardItem.getPlayerTurn()) {
+					row.setBackgroundResource(R.drawable.player_active);
+				}
 
 				final View player = context.getLayoutInflater().inflate(R.layout.player_item, null);
-				((TextView) player.findViewById(R.id.player_nickname)).setText(playerItem.getNickname());
+				((TextView) player.findViewById(R.id.playerNickname)).setText(playerItem.getNickname());
 				row.addView(player);
+
+				final ImageView state = (ImageView) player.findViewById(R.id.playerState);
+				state.setVisibility(playerItem.isOnline() ? View.VISIBLE : View.GONE);
 
 				final TextView p = new TextView(context);
 				p.setText(String.valueOf(playerItem.getPoints()));
+				p.setPadding(5, 0, 0, 0);
 				row.addView(p);
 
 				holder.players.addView(row);
@@ -67,6 +73,7 @@ public class BoardItemsAdapter extends ArrayAdapter<BoardItem> {
 	private static class ViewHolder {
 		private TextView text;
 		private TextView number;
+		private TextView elapsedTime;
 		private TableLayout players;
 	}
 }

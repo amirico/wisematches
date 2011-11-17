@@ -1,16 +1,22 @@
 package wisematches.server.web.controllers.playground.scribble.form;
 
+import wisematches.playground.scribble.ScribbleSettings;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ScribbleInfoForm {
-	private long id;
-	private String title;
-	private PlayerInfoForm[] playersInfo;
+	private final long id;
+	private final ScribbleSettings settings;
+	private final long playerTurn;
+	private final String elapsedTime;
+	private final PlayerInfoForm[] playersInfo;
 
-	public ScribbleInfoForm(long id, String title, PlayerInfoForm[] playersInfo) {
+	public ScribbleInfoForm(long id, ScribbleSettings settings, String elapsedTime, long playerTurn, PlayerInfoForm[] playersInfo) {
 		this.id = id;
-		this.title = title;
+		this.settings = settings;
+		this.playerTurn = playerTurn;
+		this.elapsedTime = elapsedTime;
 		this.playersInfo = playersInfo;
 	}
 
@@ -18,8 +24,16 @@ public class ScribbleInfoForm {
 		return id;
 	}
 
-	public String getTitle() {
-		return title;
+	public ScribbleSettings getSettings() {
+		return settings;
+	}
+
+	public String getElapsedTime() {
+		return elapsedTime;
+	}
+
+	public long getPlayerTurn() {
+		return playerTurn;
 	}
 
 	public PlayerInfoForm[] getPlayersInfo() {
