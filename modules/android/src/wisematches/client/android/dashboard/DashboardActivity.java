@@ -1,6 +1,7 @@
 package wisematches.client.android.dashboard;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import wisematches.client.android.Membership;
 import wisematches.client.android.R;
+import wisematches.client.android.playboard.GameBoardActivity;
 import wisematches.client.android.server.ServerRequest;
 import wisematches.client.android.server.ServerResponse;
 import wisematches.client.android.server.ServerResponseListener;
@@ -56,10 +58,11 @@ public class DashboardActivity extends ListActivity implements ServerResponseLis
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		// Get the item that was clicked
-		Object o = this.getListAdapter().getItem(position);
-		String keyword = o.toString();
-		Toast.makeText(this, "You selected: " + keyword, Toast.LENGTH_LONG).show();
+		final BoardItem item = (BoardItem) this.getListAdapter().getItem(position);
+
+		final Intent intent = new Intent(getApplicationContext(), GameBoardActivity.class);
+		intent.putExtra("BOARD_ID", item.getId());
+		startActivity(intent);
 	}
 
 	private void refreshItems() {
@@ -97,17 +100,30 @@ public class DashboardActivity extends ListActivity implements ServerResponseLis
 				int length = jsonArray.length();
 				for (int i = 0; i < length; i++) {
 					final JSONObject b = jsonArray.getJSONObject(i);
-
+					final JSONObject settings = b.getJSONObject("settings");
 					final JSONArray p = b.getJSONArray("playersInfo");
 					final PlayerItem[] players = new PlayerItem[p.length()];
 					for (int j = 0; j < players.length; j++) {
 						JSONObject po = p.getJSONObject(j);
 						final long id = po.getLong("id");
 						final String nickname = po.getString("nickname");
+						final Membership membership = Membership.valueOf(po.getString("membership"));
+						final boolean online = po.getBoolean("online");
 						final int points = po.getInt("points");
-						players[j] = new PlayerItem(id, nickname, Membership.BASIC, true, points);
+						players[j] = new PlayerItem(id, nickname, membership, online, points);
 					}
-					boardItemsAdapter.add(new BoardItem(b.getLong("id"), b.getString("title"), players));
+
+					final long playerTurn = b.getLong("playerTurn");
+					final String elapsedTime = b.getString("elapsedTime");
+
+					boardItemsAdapter.add(new BoardItem(
+							b.getLong("id"),
+							settings.getString("language"),
+							settings.getString("title"),
+							settings.getInt("daysPerMove"),
+							elapsedTime,
+							playerTurn,
+							players));
 				}
 			}
 		} catch (JSONException ex) {

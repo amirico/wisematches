@@ -23,8 +23,12 @@
         </activity>
 
         <activity android:name=".dashboard.DashboardActivity" android:label="@string/dashboardLabel"
+                  android:theme="@android:style/Theme.WithActionBar">
+        </activity>
+
+        <activity android:name=".playboard.GameBoardActivity" android:label="@string/playboardLabel"
                   android:theme="@android:style/Theme.WithActionBar"
-                  android:logo="@drawable/application_home">
+                  android:logo="@drawable/ic_menu_home">
         </activity>
     </application>
 </manifest>

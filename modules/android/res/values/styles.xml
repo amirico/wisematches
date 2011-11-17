@@ -2,4 +2,9 @@
     <style name="errorLabel">
         <item name="android:textColor">@color/errorLabel</item>
     </style>
+
+    <style name="activePlayer">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/backgroundHeader</item>
+    </style>
 </resources>

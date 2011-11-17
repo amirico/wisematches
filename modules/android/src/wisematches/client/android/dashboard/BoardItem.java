@@ -1,39 +1,52 @@
 package wisematches.client.android.dashboard;
 
-import java.util.Arrays;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 class BoardItem {
 	private final long id;
-	private final String name;
-	private final PlayerItem[] players;
+	private final String language;
+	private final String title;
+	private final int daysPerMove;
+	private final String elapsedTime;
+	private final long playerTurn;
+	private final PlayerItem[] playersInfo;
 
-	public BoardItem(long id, String name, PlayerItem... players) {
+	BoardItem(long id, String language, String title, int daysPerMove, String elapsedTime, long playerTurn, PlayerItem[] playersInfo) {
 		this.id = id;
-		this.name = name;
-		this.players = players;
+		this.language = language;
+		this.title = title;
+		this.daysPerMove = daysPerMove;
+		this.elapsedTime = elapsedTime;
+		this.playerTurn = playerTurn;
+		this.playersInfo = playersInfo;
 	}
 
 	public long getId() {
 		return id;
 	}
 
-	public String getName() {
-		return name;
+	public String getLanguage() {
+		return language;
 	}
 
-	public PlayerItem[] getPlayers() {
-		return players;
+	public String getTitle() {
+		return title;
 	}
 
-	@Override
-	public String toString() {
-		return "BoardItem{" +
-				"players=" + (players == null ? null : Arrays.asList(players)) +
-				", name='" + name + '\'' +
-				", id=" + id +
-				'}';
+	public int getDaysPerMove() {
+		return daysPerMove;
+	}
+
+	public String getElapsedTime() {
+		return elapsedTime;
+	}
+
+	public long getPlayerTurn() {
+		return playerTurn;
+	}
+
+	public PlayerItem[] getPlayersInfo() {
+		return playersInfo;
 	}
 }

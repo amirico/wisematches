@@ -16,7 +16,6 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.BoardManagementException;
-import wisematches.playground.GameSettings;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.blacklist.BlacklistedException;
 import wisematches.playground.propose.GameProposal;
@@ -40,6 +39,8 @@ import wisematches.server.web.controllers.playground.scribble.form.CreateScribbl
 import wisematches.server.web.controllers.playground.scribble.form.OpponentType;
 import wisematches.server.web.controllers.playground.scribble.form.PlayerInfoForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleInfoForm;
+import wisematches.server.web.i18n.GameMessageSource;
+import wisematches.server.web.services.state.PlayerStateManager;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -51,9 +52,11 @@ import java.util.*;
 @RequestMapping("/playground/scribble")
 public class ScribbleGameController extends WisematchesController {
 	private PlayerManager playerManager;
+	private PlayerStateManager playerStateManager;
 	private BlacklistManager blacklistManager;
 	private ScribbleBoardManager boardManager;
 	private ScribbleSearchesEngine searchesEngine;
+	private GameMessageSource messageSource;
 	private RestrictionManager restrictionManager;
 	private ScribblePlayerSearchManager searchManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
@@ -104,7 +107,7 @@ public class ScribbleGameController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping(value = "active.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ServiceResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid) throws UnknownEntityException {
+	public ServiceResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
 		final Player principal;
 		if (pid == null) {
 			principal = getPrincipal();
@@ -121,15 +124,22 @@ public class ScribbleGameController extends WisematchesController {
 		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
 		final List<ScribbleInfoForm> forms = new ArrayList<ScribbleInfoForm>(activeBoards.size());
 		for (ScribbleBoard board : activeBoards) {
-			final GameSettings settings = board.getGameSettings();
+			final ScribbleSettings settings = board.getGameSettings();
+			final long playerTurn = board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : 0;
+
 			final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
 			final PlayerInfoForm[] players = new PlayerInfoForm[playersHands.size()];
 			for (int i = 0, playersHandsSize = playersHands.size(); i < playersHandsSize; i++) {
 				final ScribblePlayerHand hand = playersHands.get(i);
 				final Player player = playerManager.getPlayer(hand.getPlayerId());
-				players[i] = new PlayerInfoForm(player.getId(), player.getNickname(), hand.getPoints());
+				players[i] = new PlayerInfoForm(player.getId(),
+						player.getNickname(),
+						player.getMembership().name(),
+						playerStateManager.isPlayerOnline(player),
+						hand.getPoints());
 			}
-			forms.add(new ScribbleInfoForm(board.getBoardId(), settings.getTitle(), players));
+			final String elapsedTime = messageSource.formatRemainedTime(board, locale);
+			forms.add(new ScribbleInfoForm(board.getBoardId(), settings, elapsedTime, playerTurn, players));
 		}
 		return ServiceResponse.success(null, "boards", forms);
 	}
@@ -394,5 +404,15 @@ public class ScribbleGameController extends WisematchesController {
 	@Autowired
 	public void setSearchManager(ScribblePlayerSearchManager searchManager) {
 		this.searchManager = searchManager;
+	}
+
+	@Autowired
+	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
+		this.playerStateManager = playerStateManager;
+	}
+
+	@Autowired
+	public void setMessageSource(GameMessageSource messageSource) {
+		this.messageSource = messageSource;
 	}
 }
