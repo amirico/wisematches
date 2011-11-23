@@ -15,13 +15,17 @@
                         <span class="player computer">
                         <span class="nickname"><@message code="game.player.guest"/></span>
                         </span>
-                        <#else>
-                            <span class="player member">
+                    <#else>
+                        <span class="player member">
                                 <a href="/playground/profile/view">
                                     <span class="nickname">${principal.nickname} (${principal.account.email})</span>
                                 </a>
                             </span>
                     </#if>
+                    <#--<#if false>-->
+                    <#--|-->
+                    <#--<a href="/info/features" style="color: red; font-weight: bold;">New Features!</a>-->
+                    <#--</#if>-->
                         |
                     <#if principal.membership != 'GUEST'><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>

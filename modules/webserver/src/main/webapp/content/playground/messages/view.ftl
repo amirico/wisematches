@@ -23,12 +23,12 @@
 <table id="messages" width="100%" class="display">
     <thead>
     <tr>
-        <th>
+        <th nowrap="nowrap">
             <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
                    onchange="wm.messages.selectAll()">
         </th>
         <th nowrap="nowrap"><@message code="messages.column.from"/></th>
-        <th width="100%"><@message code="messages.column.message"/></th>
+        <th nowrap="nowrap" width="100%"><@message code="messages.column.message"/></th>
     </tr>
     </thead>
     <tbody>

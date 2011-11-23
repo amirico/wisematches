@@ -28,23 +28,45 @@
 
 <@wm.widget class="gameInfo" title="game.state.label" help="board.progress">
 <div class="tiles-bank ui-widget-content ui-helper-hidden ${boardSettings.tilesClass}">
-    <table>
-        <thead>
-        <tr>
-            <th class="ui-state-hover ui-corner-tl">
-                <span><@message code="game.state.bankinfo.points"/></span>
-            </th>
-            <th class="ui-state-hover" colspan="2">
-                <span><@message code="game.state.bankinfo.tiles"/></span>
-            </th>
-            <th class="ui-state-hover ui-corner-tr">
-                <span><@message code="game.state.bankinfo.count"/></span>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+
+    <div style="display: inline-block; vertical-align: top;">
+        <div class="tiles" style="position: relative;"></div>
+    </div>
+
+    <div class="info" style="display: inline-block; vertical-align: top; padding-left: 30px;">
+        <table border="0" width="300px">
+            <@element showSeparator=false>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.cost"/>:</strong></td>
+                <td align="center" class="tileCost"></td>
+            </@element>
+
+            <@element>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.view"/>:</strong></td>
+                <td align="center">
+                    <div class="tileView" style="position: relative; width: 22px; height: 22px"></div>
+                </td>
+            </@element>
+
+            <tr>
+                <td colspan="2" style="height: 25px;">&nbsp;</td>
+            </tr>
+
+            <@element showSeparator=false>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.total"/>:</strong>
+                </td>
+                <td align="center" class="totalCount"></td>
+            </@element>
+
+            <@element>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.board"/>:</strong></td>
+                <td align="center" class="boardCount"></td>
+            </@element>
+        </table>
+    </div>
+
+    <div style="padding-top: 5px">
+        <div class="sample"><@message code="game.state.bank.info"/></div>
+    </div>
 </div>
 
 <table width="100%" border="0">
@@ -151,10 +173,10 @@
 
 <#if board.gameActive>
 <script type="text/javascript">
-    wm.scribble.state = function(board) {
+    wm.scribble.state = function (board) {
         var status = this;
 
-        this.updateProgressBar = function() {
+        this.updateProgressBar = function () {
             var count = board.getBankCapacity();
             var bo = board.getBoardTilesCount(), ha = board.getHandTilesCount(), ba = board.getBankTilesCount();
             var p3 = Math.round(100 * ha / count), p2 = Math.round(100 * ba / count), p1 = 100 - p3 - p2;
@@ -177,7 +199,7 @@
             }
         };
 
-        this.markAsFinished = function(state) {
+        this.markAsFinished = function (state) {
             board.getPlayboardElement(".gameFinishedTime").html(state.finishTimeMessage);
             var cap = board.getPlayboardElement(".gameResolution .game-progress-caption");
             var desc = board.getPlayboardElement(".gameResolution .game-resolution-player");
@@ -204,13 +226,13 @@
         };
 
         board.bind('gameState',
-                function(event, type, state) {
+                function (event, type, state) {
                     board.getPlayboardElement(".spentTime").html(state.spentTimeMessage);
                     if (type === 'finished') {
                         status.markAsFinished(state);
                     }
                 }).bind('gameMoves',
-                function(event, move) {
+                function (event, move) {
                     status.updateProgressBar();
                 });
 
