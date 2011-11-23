@@ -82,7 +82,7 @@
         bank:{
             capacity: ${board.bankCapacity},
             tilesInfo:[
-                <#list board.lettersDistribution.letterDescriptions as tbi>{letter:'${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}}<#if tbi_has_next>,</#if></#list>]
+                <#list board.lettersDistribution.letterDescriptions as tbi>{letter:'${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}, wildcard: ${(tbi.cost==0)?string}}<#if tbi_has_next>,</#if></#list>]
         }
 
     <#assign playerHand=board.getPlayerHand(player.getId())!""/>
