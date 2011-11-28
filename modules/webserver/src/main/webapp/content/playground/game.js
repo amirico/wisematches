@@ -190,7 +190,7 @@ wm.game.Create = function(maxOpponents, opponentsCount, playerSearch) {
     };
 
     var insertPlayer = function(playerInfo) {
-        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.playerId + '"/></div>');
+        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.id + '"/></div>');
         attachPlayerSearchActions(s);
         $("#opponentsList").append(s);
         $("#opponentsList .ui-state-error-text").remove();
