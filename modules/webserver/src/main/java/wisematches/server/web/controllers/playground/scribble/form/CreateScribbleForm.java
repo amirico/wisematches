@@ -21,12 +21,12 @@ public class CreateScribbleForm {
 	private String boardLanguage;
 
 	@NotNull(message = "game.create.opponent.err.blank")
-	private OpponentType opponentType = OpponentType.WAIT;
-
-	private RobotType robotType = RobotType.TRAINEE;
+	private CreateScribbleTab createTab = CreateScribbleTab.WAIT;
 
 	private int minRating = 0;
 	private int maxRating = 0;
+
+	private RobotType robotType = RobotType.TRAINEE;
 
 	@Min(value = 1, message = "game.create.opponents.err.min")
 	@Max(value = 3, message = "game.create.opponents.err.max")
@@ -36,6 +36,10 @@ public class CreateScribbleForm {
 
 	@Length(max = 254, message = "game.create.opponent.challenge.err")
 	private String challengeMessage;
+
+	private boolean commonError = false;
+
+	private boolean rotten = false;
 
 	public CreateScribbleForm() {
 	}
@@ -64,12 +68,12 @@ public class CreateScribbleForm {
 		this.daysPerMove = daysPerMove;
 	}
 
-	public OpponentType getOpponentType() {
-		return opponentType;
+	public CreateScribbleTab getCreateTab() {
+		return createTab;
 	}
 
-	public void setOpponentType(OpponentType opponentType) {
-		this.opponentType = opponentType;
+	public void setCreateTab(CreateScribbleTab createTab) {
+		this.createTab = createTab;
 	}
 
 	public RobotType getRobotType() {
@@ -118,5 +122,21 @@ public class CreateScribbleForm {
 
 	public void setChallengeMessage(String challengeMessage) {
 		this.challengeMessage = challengeMessage;
+	}
+
+	public boolean isRotten() {
+		return rotten;
+	}
+
+	public void setRotten(boolean rotten) {
+		this.rotten = rotten;
+	}
+
+	public boolean isCommonError() {
+		return commonError;
+	}
+
+	public void setCommonError(boolean commonError) {
+		this.commonError = commonError;
 	}
 }

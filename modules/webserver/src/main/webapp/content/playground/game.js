@@ -208,17 +208,17 @@ wm.game.Create = function(maxOpponents, opponentsCount, playerSearch) {
     $("#createGame #radio").buttonset();
     $("#createGame button").button();
 
-    $("#opponentTypeRobot").change(function() {
+    $("#createTabRobot").change(function() {
         $(".create-form").slideUp();
         $("#robotForm").slideDown();
     });
 
-    $("#opponentTypeWait").change(function() {
+    $("#createTabWait").change(function() {
         $(".create-form").slideUp();
         $("#waitingForm").slideDown();
     });
 
-    $("#opponentTypeChallenge").change(function() {
+    $("#createTabChallenge").change(function() {
         $(".create-form").slideUp();
         $("#challengeForm").slideDown();
     });

@@ -23,9 +23,10 @@
 
             <td style="vertical-align: top; width: 280px">
             <#include "widget/players.ftl"/>
+                <#--<#include "widget/challenge.ftl"/>-->
                 <#include "widget/selection.ftl"/>
                 <#include "widget/thesaurus.ftl"/>
-<#if !viewMode><#include "widget/memory.ftl"/></#if>
+                <#if !viewMode><#include "widget/memory.ftl"/></#if>
             </td>
         </tr>
     </table>
@@ -35,7 +36,7 @@
     $("#board${board.boardId} .scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
 
     <#if board.gameActive>
-    $(document).ready(function() {
+    $(document).ready(function () {
         var monitoring = new wm.scribble.Monitoring(board);
 
         monitoring.addMonitoringBean('board', board.getMonitoringBean());

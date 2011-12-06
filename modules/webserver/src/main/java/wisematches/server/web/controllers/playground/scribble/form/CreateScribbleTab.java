@@ -3,14 +3,14 @@ package wisematches.server.web.controllers.playground.scribble.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum OpponentType {
+public enum CreateScribbleTab {
 	ROBOT("robot"),
 	WAIT("wait"),
 	CHALLENGE("challenge");
 
 	private final String typeName;
 
-	OpponentType(String typeName) {
+	CreateScribbleTab(String typeName) {
 		this.typeName = typeName;
 	}
 

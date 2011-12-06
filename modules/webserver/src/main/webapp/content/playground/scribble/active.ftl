@@ -11,7 +11,7 @@
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
         <span class="player"><a
                 href="/playground/scribble/board?b=${board.getBoardId()}"><strong><@message code="game.status.move_you"/></strong></a></span>
-            <#else>
+        <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
     </#if>
@@ -24,7 +24,7 @@
         <td width="100%" nowrap="nowrap">
             <#if player != principal>
                 <div class="title">
-                <@message code="game.dashboard.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
+                    <@message code="game.dashboard.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
                 </div>
             </#if>
         </td>
@@ -80,8 +80,8 @@
                 <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
 
                 <div style="text-align: right;">
-                    <a href="cancel?p=${proposal.id}" onclick="cancelProposal(${proposal.id}); return false;">
-                    <@message code="game.proposal.cancel"/>
+                    <a href="decline?p=${proposal.id}" onclick="cancelProposal(${proposal.id}); return false;">
+                        <@message code="game.proposal.cancel"/>
                     </a>
                 </div>
             </td>
@@ -91,7 +91,7 @@
             <td>
                 <#list proposal.players as p>
                     <div>
-                    <@wm.player player=playerManager.getPlayer(p)/>
+                        <@wm.player player=playerManager.getPlayer(p)/>
                     </div>
                 </#list>
                 <#list (proposal.players?size)..(proposal.playersCount-1) as i>
@@ -116,33 +116,33 @@
 
 <script type="text/javascript">
     $('#dashboard').dataTable({
-        "bJQueryUI": true,
-        "bStateSave": true,
-        "bFilter": false,
-        "bSortClasses": false,
-        "aaSorting": [
-            [3,'asc']
+        "bJQueryUI":true,
+        "bStateSave":true,
+        "bFilter":false,
+        "bSortClasses":false,
+        "aaSorting":[
+            [3, 'asc']
         ],
-        "aoColumns": [
+        "aoColumns":[
             null,
             null,
             null,
             null,
-            { "bSortable": false },
-            { "bSortable": false }
+            { "bSortable":false },
+            { "bSortable":false }
         ],
-        "sDom": '<"H"lCr>t<"F"ip>',
-        "sPaginationType": "full_numbers",
-        "oLanguage": {
+        "sDom":'<"H"lCr>t<"F"ip>',
+        "sPaginationType":"full_numbers",
+        "oLanguage":{
         <#if player == principal>
-            "sEmptyTable": "<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
+            "sEmptyTable":"<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
         </#if>
         }
     });
 
     function cancelProposal(id) {
-        $.ajax('cancel?p=' + id, {
-            success: function(data, textStatus, jqXHR) {
+        $.ajax('decline.ajax?p=' + id, {
+            success:function (data, textStatus, jqXHR) {
                 if (data.success) {
                     $("#proposal" + id).fadeOut();
                     wm.ui.showStatus("<@message code="game.proposal.canceled"/>", false);
