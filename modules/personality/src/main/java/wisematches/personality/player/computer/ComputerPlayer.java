@@ -19,6 +19,9 @@ public class ComputerPlayer extends Player {
 	protected final Membership membership;
 	protected final short rating;
 
+	private static final int MIN_COMPUTER_ID = 0;
+	private static final int MAX_COMPUTER_ID = 1000;
+
 	private static final Map<Long, ComputerPlayer> computerPlayerMap = new HashMap<Long, ComputerPlayer>();
 
 	/**
@@ -89,6 +92,11 @@ public class ComputerPlayer extends Player {
 		return membership;
 	}
 
+	/**
+	 * Returns rating of computer player. The rating of computer player never changed and is const.
+	 *
+	 * @return the rating of computer player.
+	 */
 	public short getRating() {
 		return rating;
 	}
@@ -147,6 +155,24 @@ public class ComputerPlayer extends Player {
 		return res;
 	}
 
+	/**
+	 * Checks that specified id belongs to computer player. All ids from 1 to 999 reserved for computer players.
+	 * <p/>
+	 * The method can return {@code true} if there is no computer player but id is reserved anyway.
+	 *
+	 * @param id the player's id to be checked.
+	 * @return {@code true} if specified id belongs to computer player; {@code false} - otherwise.
+	 */
+	public static boolean isComputerPlayer(long id) {
+		return id > MIN_COMPUTER_ID && id < MAX_COMPUTER_ID;
+	}
+
+	/**
+	 * Checks the specified player object is instance of {@code ComputerPlayer}.
+	 *
+	 * @param player the player to be checked.
+	 * @return {@code true} if specified player is instance of {@code ComputerPlayer}; {@code false} - otherwise.
+	 */
 	public static boolean isComputerPlayer(Player player) {
 		return player instanceof ComputerPlayer;
 	}
