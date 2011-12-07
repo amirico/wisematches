@@ -138,6 +138,7 @@
     <beans:bean id="sessionControlStrategy"
                 class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
         <beans:constructor-arg name="sessionRegistry" ref="playerStateManager"/>
+        <beans:property name="maximumSessions" value="-1"/>
     </beans:bean>
 
     <authentication-manager alias="authenticationManager">
