@@ -80,9 +80,10 @@
 <#macro fieldInput path attributes="" fieldType="text" size=30 value="">
     <@field path=path>
     <input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
-           <#if fieldType=='checkbox'><#if spring.stringStatusValue?has_content && spring.stringStatusValue=='true'>checked="checked"</#if> value="true"<#else>
+        <#if fieldType=='checkbox'><#if spring.stringStatusValue?has_content && spring.stringStatusValue=='true'>checked="checked"</#if>
+           value="true"<#else>
            value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>"</#if> ${attributes}/>
-    <#nested>
+        <#nested>
     </@field>
 </#macro>
 
@@ -90,8 +91,9 @@
     <#if captchaService??><@field path>${captchaService.createCaptchaScript(gameMessageSource, locale)}</@field></#if>
 </#macro>
 
-<#macro widget title id="" class="" style="" help="">
-<div class="ui-widget<#if class?has_content> ${class}</#if>" <#if style?has_content>style="${style}"</#if>>
+<#macro widget title id="" class="" style="" help="" hidden=false>
+<div class="ui-widget<#if class?has_content> ${class}</#if> <#if hidden>ui-helper-hidden</#if>"
+     <#if style?has_content>style="${style}"</#if>>
     <div class="ui-widget-header ui-corner-all shadow">
         <#if help?has_content>
             <div class="quickInfo">

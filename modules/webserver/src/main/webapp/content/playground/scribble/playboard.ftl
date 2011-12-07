@@ -23,7 +23,6 @@
 
             <td style="vertical-align: top; width: 280px">
             <#include "widget/players.ftl"/>
-                <#--<#include "widget/challenge.ftl"/>-->
                 <#include "widget/selection.ftl"/>
                 <#include "widget/thesaurus.ftl"/>
                 <#if !viewMode><#include "widget/memory.ftl"/></#if>

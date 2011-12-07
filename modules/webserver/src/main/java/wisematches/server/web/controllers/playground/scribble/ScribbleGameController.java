@@ -449,7 +449,7 @@ public class ScribbleGameController extends WisematchesController {
 		try {
 			final ScribbleBoard board = boardManager.openBoard(Long.valueOf(parameter));
 			if (board != null) {
-				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId(), board.getGameSettings().getTitle()));
+				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
 				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
 				form.setBoardLanguage(board.getGameSettings().getLanguage());
 				form.setDaysPerMove(board.getGameSettings().getDaysPerMove());
