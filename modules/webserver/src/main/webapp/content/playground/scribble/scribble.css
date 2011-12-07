@@ -36,6 +36,14 @@
     font-style: italic;
 }
 
+.createChallenge button, .createChallenge span {
+    width: 100%;
+    font-weight: bold;
+    text-align: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 .game-progress {
     height: 16px;
     width: 100%;

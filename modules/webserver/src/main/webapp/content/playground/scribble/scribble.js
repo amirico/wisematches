@@ -570,12 +570,6 @@ wm.scribble.Selection = function (board) {
                     wordInfoElement.text(selectedWordInfo);
                     wordCostElement.text(selectedWordCost);
                 }
-            })
-            .bind('gameState',
-            function (event, type, state) {
-                if (type === 'finished') {
-                    board.getPlayboardElement('.moveInfo').remove();
-                }
             });
 };
 
