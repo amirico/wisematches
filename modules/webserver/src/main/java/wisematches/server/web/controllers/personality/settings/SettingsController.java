@@ -65,6 +65,7 @@ public class SettingsController extends WisematchesController {
 		form.setTilesClass(settings.getTilesClass());
 		form.setCheckWords(settings.isCheckWords());
 		form.setCleanMemory(settings.isCleanMemory());
+		form.setClearByClick(settings.isClearByClick());
 		return "/content/personality/settings/template";
 	}
 
@@ -94,7 +95,7 @@ public class SettingsController extends WisematchesController {
 		notificationManager.setNotificationMask(personality, mask);
 
 		boardSettingsManager.setScribbleSettings(personality,
-				new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.getTilesClass()));
+				new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.getTilesClass()));
 
 		Language language = account.getLanguage();
 		if (form.getLanguage() != null) {

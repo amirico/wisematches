@@ -7,6 +7,7 @@ public class BoardSettingsForm {
 	private String tilesClass;
 	private boolean checkWords;
 	private boolean cleanMemory;
+	private boolean clearByClick;
 
 	public BoardSettingsForm() {
 	}
@@ -33,5 +34,13 @@ public class BoardSettingsForm {
 
 	public void setCleanMemory(boolean cleanMemory) {
 		this.cleanMemory = cleanMemory;
+	}
+
+	public boolean isClearByClick() {
+		return clearByClick;
+	}
+
+	public void setClearByClick(boolean clearByClick) {
+		this.clearByClick = clearByClick;
 	}
 }

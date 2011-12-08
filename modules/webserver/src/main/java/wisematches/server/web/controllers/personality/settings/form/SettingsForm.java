@@ -27,6 +27,7 @@ public class SettingsForm {
 	private String tilesClass;
 	private boolean checkWords;
 	private boolean cleanMemory;
+	private boolean clearByClick;
 
 	private boolean changeEmail = false;
 	private boolean changePassword = false;
@@ -112,5 +113,13 @@ public class SettingsForm {
 
 	public void setTilesClass(String tilesClass) {
 		this.tilesClass = tilesClass;
+	}
+
+	public boolean isClearByClick() {
+		return clearByClick;
+	}
+
+	public void setClearByClick(boolean clearByClick) {
+		this.clearByClick = clearByClick;
 	}
 }

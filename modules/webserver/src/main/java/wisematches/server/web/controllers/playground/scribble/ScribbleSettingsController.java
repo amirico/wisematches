@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.player.Player;
@@ -21,8 +20,8 @@ import wisematches.server.web.controllers.playground.scribble.form.BoardSettings
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@RequestMapping("/playground/scribble/settings")
 @Controller
+@RequestMapping("/playground/scribble/settings")
 public class ScribbleSettingsController extends WisematchesController {
 	private BoardSettingsManager boardSettingsManager;
 
@@ -40,6 +39,7 @@ public class ScribbleSettingsController extends WisematchesController {
 		form.setTilesClass(settings.getTilesClass());
 		form.setCheckWords(settings.isCheckWords());
 		form.setCleanMemory(settings.isCleanMemory());
+		form.setClearByClick(settings.isClearByClick());
 
 		model.addAttribute("plain", Boolean.TRUE);
 
@@ -51,7 +51,7 @@ public class ScribbleSettingsController extends WisematchesController {
 	@RequestMapping("save")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
-		boardSettingsManager.setScribbleSettings(getPersonality(), new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.getTilesClass()));
+		boardSettingsManager.setScribbleSettings(getPersonality(), new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.getTilesClass()));
 		return ServiceResponse.success(null, "settings", form);
 	}
 

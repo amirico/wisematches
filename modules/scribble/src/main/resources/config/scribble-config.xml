@@ -93,6 +93,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="checkWordsDefault" value="true"/>
         <property name="clearMemoryDefault" value="true"/>
+        <property name="clearByClickDefault" value="true"/>
         <property name="tilesClassDefault" value="tiles-set-classic"/>
     </bean>
 </beans>

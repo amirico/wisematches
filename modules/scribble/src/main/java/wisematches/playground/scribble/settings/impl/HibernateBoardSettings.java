@@ -20,14 +20,15 @@ public class HibernateBoardSettings extends BoardSettings {
 	protected HibernateBoardSettings() {
 	}
 
-	protected HibernateBoardSettings(long playerId, boolean cleanMemory, boolean checkWords, String tilesClass) {
-		super(cleanMemory, checkWords, tilesClass);
+	protected HibernateBoardSettings(long playerId, boolean cleanMemory, boolean checkWords, boolean clearByClick, String tilesClass) {
+		super(cleanMemory, checkWords, clearByClick, tilesClass);
 		this.playerId = playerId;
 	}
 
 	protected void update(BoardSettings s) {
 		setCheckWords(s.isCheckWords());
 		setCleanMemory(s.isCleanMemory());
+		setClearByClick(s.isClearByClick());
 		setTilesClass(s.getTilesClass());
 	}
 

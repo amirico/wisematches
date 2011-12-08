@@ -1167,7 +1167,7 @@ wm.scribble.ScoreEngine = function (gameBonuses, board) {
     };
 };
 
-wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, controller, tilesClass) {
+wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, controller, settings) {
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');
@@ -1243,6 +1243,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
             previousCell = cell;
         };
     };
+
     var scoreEngine = new wm.scribble.ScoreEngine(gameInfo.board.bonuses, this);
 
     var initializeGame = function () {
@@ -1269,6 +1270,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
         $(document).mouseup(onTileUp);
         $(document).mousemove(onTileMove);
+        $(scribble).mousedown(onBoardClick);
     };
 
     var onTileSelected = function () {
@@ -1376,6 +1378,24 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
         draggingTile = null;
 
+        ev.preventDefault();
+    };
+
+    var onBoardClick = function (ev) {
+        if (!enabled || !settings.clearByClick) {
+            return;
+        }
+        var relatedCell = getRelatedCell(ev, {left:0, top:0});
+        if (relatedCell == null) {
+            return;
+        }
+        if (relatedCell.container != board || relatedCell.x < 0 || relatedCell.y < 0 || relatedCell.x > 14 || relatedCell.y > 14) {
+            return;
+        }
+        if (boardTiles[relatedCell.x][relatedCell.y] != undefined) {
+            return;
+        }
+        clearSelectionImpl();
         ev.preventDefault();
     };
 
@@ -1616,10 +1636,6 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
             if (lastMove != null && lastMove.word != null && lastMove.word != undefined) {
                 playboard.selectWord(lastMove.word);
-                $(scribble).bind('mousedown', function () {
-                    $(scribble).unbind('mousedown');
-                    playboard.clearSelection();
-                });
             }
         }
 

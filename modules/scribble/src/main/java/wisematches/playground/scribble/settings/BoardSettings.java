@@ -1,6 +1,7 @@
 package wisematches.playground.scribble.settings;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -13,15 +14,19 @@ public class BoardSettings implements Cloneable {
 	@Column(name = "checkWords")
 	private boolean checkWords = true;
 
+	@Column(name = "clearByClick")
+	private boolean clearByClick = true;
+
 	@Column(name = "tilesClass")
 	private String tilesClass;
 
 	public BoardSettings() {
 	}
 
-	public BoardSettings(boolean cleanMemory, boolean checkWords, String tilesClass) {
+	public BoardSettings(boolean cleanMemory, boolean checkWords, boolean clearByClick, String tilesClass) {
 		this.cleanMemory = cleanMemory;
 		this.checkWords = checkWords;
+		this.clearByClick = clearByClick;
 		this.tilesClass = tilesClass;
 	}
 
@@ -47,6 +52,14 @@ public class BoardSettings implements Cloneable {
 
 	public void setTilesClass(String tilesClass) {
 		this.tilesClass = tilesClass;
+	}
+
+	public boolean isClearByClick() {
+		return clearByClick;
+	}
+
+	public void setClearByClick(boolean clearByClick) {
+		this.clearByClick = clearByClick;
 	}
 
 	@Override
