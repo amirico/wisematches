@@ -101,7 +101,10 @@
     if (typeof(scribbleController) == "undefined") {
         scribbleController = new wm.scribble.AjaxController();
     }
-    var board = new wm.scribble.Board(scribbleGame, ${player.id}, "wildcardSelectionPanel", scribbleController);
+    var boardSettings = {
+        clearByClick: ${boardSettings.clearByClick?string}
+    };
+    var board = new wm.scribble.Board(scribbleGame, ${player.id}, "wildcardSelectionPanel", scribbleController, boardSettings);
 </script>
 
 <#if !viewMode>

@@ -18,6 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HibernateBoardSettingsManager extends HibernateDaoSupport implements BoardSettingsManager {
 	private boolean checkWordsDefault = true;
 	private boolean clearMemoryDefault = true;
+	private boolean clearByClickDefault = true;
 	private String tilesClassDefault = "tilesSetClassic";
 
 	private final Lock lock = new ReentrantLock();
@@ -30,7 +31,7 @@ public class HibernateBoardSettingsManager extends HibernateDaoSupport implement
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BoardSettings getScribbleSettings(Personality personality) {
 		if (personality == null) {
-			return new BoardSettings(clearMemoryDefault, checkWordsDefault, tilesClassDefault);
+			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, tilesClassDefault);
 		}
 
 		lock.lock();
@@ -61,7 +62,9 @@ public class HibernateBoardSettingsManager extends HibernateDaoSupport implement
 			cache.put(personality, settings);
 		}
 		if (settings == null) {
-			settings = new HibernateBoardSettings(personality.getId(), clearMemoryDefault, checkWordsDefault, tilesClassDefault);
+			settings = new HibernateBoardSettings(personality.getId(),
+					clearMemoryDefault, checkWordsDefault,
+					clearByClickDefault, tilesClassDefault);
 			cache.put(personality, settings);
 		}
 		return settings;
@@ -97,5 +100,13 @@ public class HibernateBoardSettingsManager extends HibernateDaoSupport implement
 
 	public void setTilesClassDefault(String tilesClassDefault) {
 		this.tilesClassDefault = tilesClassDefault;
+	}
+
+	public boolean isClearByClickDefault() {
+		return clearByClickDefault;
+	}
+
+	public void setClearByClickDefault(boolean clearByClickDefault) {
+		this.clearByClickDefault = clearByClickDefault;
 	}
 }

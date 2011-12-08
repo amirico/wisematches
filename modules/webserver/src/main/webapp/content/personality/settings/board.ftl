@@ -29,6 +29,18 @@
     </tr>
 
     <tr>
+        <td style="padding-top: 4px; width: 10px;">
+        <@wm.fieldInput fieldType='checkbox' path="settings.clearByClick"/>
+        </td>
+        <td>
+        <#--@declare id="clearByClick"-->
+            <label for="clearByClick"><@message code="game.settings.board.clear.label"/></label>
+
+            <div class="sample"><@message code="game.settings.board.clear.description"/></div>
+        </td>
+    </tr>
+
+    <tr>
         <td colspan="2">
         <#--@declare id="tilesClass"-->
             <label for="tilesClass"><@message code="game.settings.board.tiles.label"/>:</label>
