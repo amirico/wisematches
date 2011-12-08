@@ -1,12 +1,12 @@
 <#-- @ftlvariable name="analyticsCode" type="java.lang.String" -->
 
-<#if analyticsCode??></#if>
+<#if analyticsCode??>
 <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', '${analyticsCode}']);
     _gaq.push(['_trackPageview']);
 
-    (function() {
+    (function () {
         var ga = document.createElement('script');
         ga.type = 'text/javascript';
         ga.async = true;
@@ -15,3 +15,4 @@
         s.parentNode.insertBefore(ga, s);
     })();
 </script>
+</#if>
