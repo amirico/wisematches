@@ -6,7 +6,8 @@
 <head>
     <title><@message code=headerTitle!"title.default"/></title>
 
-    <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Language" content="${locale}"/>
 
     <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
     <script type="text/javascript" src="/jquery/js/jquery.min.js"></script>
