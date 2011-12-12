@@ -52,7 +52,9 @@
                                 <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
                                 <#assign newMessages=newMessagesCount?? && newMessagesCount !=0/>
                                 <a href="/playground/messages/view">
-                                    <#if newMessages><#--TODO: add icon here... --></#if><@message code="game.menu.messages.label"/><#if newMessages>
+                                    <#if newMessages><img src="/resources/images/new-message-icon.png"
+                                                          style="width: 16px; height: 16px; padding-right: 5px; padding-bottom: 2px; vertical-align: bottom;"
+                                                          alt=""/></#if><@message code="game.menu.messages.label"/><#if newMessages>
                                     <strong>(${newMessagesCount})</strong>
                                 </#if>
                                 </a>
