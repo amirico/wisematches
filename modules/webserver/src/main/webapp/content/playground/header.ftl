@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
+<#-- @ftlvariable name="messageManager" type="wisematches.playground.message.MessageManager" -->
 <#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
 <#include "/core.ftl">
 
@@ -40,45 +41,28 @@
                     <td valign="bottom">
                         <div id="game-toolbar" class="" align="left">
                             <div style="display: inline-block;">
-                                <button id="dashboardButton"
-                                        onclick="wm.util.url.redirect('/playground/scribble/active')">
-                                <@message code="game.menu.games.label"/>
-                                </button>
-                                <button id="gameboardButton"
-                                        onclick="wm.util.url.redirect('/playground/scribble/join')">
-                                <@message code="game.menu.join.label"/>
-                                </button>
-                                <button id="createButton"
-                                        onclick="wm.util.url.redirect('/playground/scribble/create')">
-                                <@message code="game.menu.create.label"/>
-                                </button>
+                                <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
+                                <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
+                                <a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>
                             </div>
 
                             <div style="padding-left: 30px; display: inline-block;">
-                                <button id="messagesButton" onclick="wm.util.url.redirect('/playground/messages/view')">
-                                <@message code="game.menu.messages.label"/>
-                                <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
-                                <#if messageManager?has_content>
-                                    <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
-                                    <#if newMessagesCount?? && newMessagesCount !=0>
-                                        <strong>(${newMessagesCount})</strong>
-                                    </#if>
+                            <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
+                            <#if messageManager?has_content>
+                                <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
+                                <#assign newMessages=newMessagesCount?? && newMessagesCount !=0/>
+                                <a href="/playground/messages/view">
+                                    <#if newMessages><#--TODO: add icon here... --></#if><@message code="game.menu.messages.label"/><#if newMessages>
+                                    <strong>(${newMessagesCount})</strong>
                                 </#if>
-                                </button>
-                                <button id="friendsButton"
-                                        onclick="wm.util.url.redirect('/playground/friends/view')">
-                                <@message code="game.menu.friends.label"/>
-                                </button>
-                                <button id="blacklistButton"
-                                        onclick="wm.util.url.redirect('/playground/blacklist/view')">
-                                <@message code="game.menu.blacklist.label"/>
-                                </button>
+                                </a>
+                            </#if>
+                                <a href="/playground/friends/view"><@message code="game.menu.friends.label"/></a>
+                                <a href="/playground/blacklist/view"><@message code="game.menu.blacklist.label"/></a>
                             </div>
 
                             <div style="padding-left: 30px; display: inline-block;">
-                                <button id="tournamentsButton" onclick="wm.util.url.redirect('/playground/players')">
-                                <@message code="game.menu.players.label"/>
-                                </button>
+                                <a href="/playground/players"><@message code="game.menu.players.label"/></a>
                             </div>
                         <#--
                             <div style="float: left;">
