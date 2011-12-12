@@ -301,23 +301,39 @@ ul.bonuses .bonus-cell {
 }
 
 .icon-controls-make {
+    width: 20px;
+    height: 20px;
     background: url('/resources/images/scribble/playboard/controls.png') no-repeat 0 0 !important;
 }
 
 .icon-controls-pass {
-    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -16px 0 !important;
+    width: 20px;
+    height: 20px;
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -20px 0 !important;
 }
 
-.icon-controls-resign {
-    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -32px 0 !important;
+.icon-controls-highlight {
+    width: 20px;
+    height: 20px;
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -40px 0 !important;
 }
 
 .icon-controls-exchange {
-    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -48px 0 !important;
+    width: 20px;
+    height: 20px;
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -60px 0 !important;
 }
 
 .icon-controls-clear {
-    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -64px 0 !important;
+    width: 20px;
+    height: 20px;
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -80px 0 !important;
+}
+
+.icon-controls-resign {
+    width: 20px;
+    height: 20px;
+    background: url('/resources/images/scribble/playboard/controls.png') no-repeat -100px 0 !important;
 }
 
 .icon-memory-add {

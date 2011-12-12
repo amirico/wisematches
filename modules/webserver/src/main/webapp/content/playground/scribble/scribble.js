@@ -683,7 +683,7 @@ wm.scribble.Thesaurus = function (board, checkWords) {
 
 wm.scribble.BankInfo = function (board, language) {
     var bankDialog = null;
-    var colsCount = 6;
+    var colsCount = 8;
 
     var initBankDialog = function () {
         var rows = 0;
@@ -816,12 +816,14 @@ wm.scribble.Controls = function (board, language) {
 
     var markTurnButton = board.getPlayboardElement(".makeTurnButton");
     var clearSelectionButton = board.getPlayboardElement(".clearSelectionButton");
+    var selectTileButton = board.getPlayboardElement(".selectTileButton");
     var exchangeTilesButton = board.getPlayboardElement(".exchangeTilesButton");
     var passTurnButton = board.getPlayboardElement(".passTurnButton");
     var resignGameButton = board.getPlayboardElement(".resignGameButton");
 
     markTurnButton.button({disabled:true, icons:{primary:'icon-controls-make'}});
     clearSelectionButton.button({disabled:true, icons:{primary:'icon-controls-clear'}});
+    selectTileButton.button({disabled:false, icons:{primary:'icon-controls-highlight'}});
     exchangeTilesButton.button({disabled:true, icons:{primary:'icon-controls-exchange'}});
     passTurnButton.button({disabled:true, icons:{primary:'icon-controls-pass'}});
     resignGameButton.button({disabled:true, icons:{primary:'icon-controls-resign'}});

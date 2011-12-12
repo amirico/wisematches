@@ -34,7 +34,7 @@
     </div>
 
     <div class="info" style="display: inline-block; vertical-align: top; padding-left: 30px;">
-        <table border="0" width="300px">
+        <table border="0" width="250px">
             <@element showSeparator=false>
                 <td nowrap="nowrap"><strong><@message code="game.state.bank.cost"/>:</strong></td>
                 <td align="center" class="tileCost"></td>
@@ -128,16 +128,6 @@
     </@element>
 
     <@element>
-        <td nowrap="nowrap"><strong><@message code="game.state.bankinfo.label"/>:</strong></td>
-        <td>
-            <div class="bankState">
-                <a class="action" href="#showBankInfo"
-                   onclick="bankInfo.showBankInfo(); return false;"><@message code="game.state.bankinfo.link"/></a>
-            </div>
-        </td>
-    </@element>
-
-    <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>
         <td><@message code="language."+board.gameSettings.language/></td>
     </@element>
@@ -166,10 +156,6 @@
     </#if>
 </table>
 </@wm.widget>
-
-<script type="text/javascript">
-    var bankInfo = new wm.scribble.BankInfo(board, {'title':'<@message code="game.state.bankinfo.label"/>'});
-</script>
 
 <#if board.gameActive>
 <script type="text/javascript">

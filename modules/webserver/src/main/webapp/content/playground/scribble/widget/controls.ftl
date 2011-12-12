@@ -11,11 +11,14 @@
         <button class="clearSelectionButton" onclick="board.clearSelection()">
         <@message code="game.play.clear"/>
         </button>
-        <button class="exchangeTilesButton" onclick="boardActionsToolbar.exchangeTiles()">
-        <@message code="game.play.exchange"/>
+        <button class="selectTileButton" onclick="bankInfo.showBankInfo()">
+        <@message code="game.play.highlight"/>
         </button>
     </div>
     <div>
+        <button class="exchangeTilesButton" onclick="boardActionsToolbar.exchangeTiles()">
+        <@message code="game.play.exchange"/>
+        </button>
         <button class="passTurnButton" onclick="boardActionsToolbar.passTurn()">
         <@message code="game.play.pass"/>
         </button>
@@ -31,6 +34,8 @@
 </div>
 
 <script type="text/javascript">
+    var bankInfo = new wm.scribble.BankInfo(board, {'title':'<@message code="game.state.bankinfo.label"/>'});
+
     var boardActionsToolbar = new wm.scribble.Controls(board, {
         "acceptedLabel":"<@message code="game.move.accepted.label"/>",
         "acceptedDescription":"<@message code="game.move.accepted.description"/>",
