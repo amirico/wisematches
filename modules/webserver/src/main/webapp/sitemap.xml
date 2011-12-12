@@ -5,7 +5,7 @@
         <priority>1.00</priority>
     </url>
     <url>
-        <loc>http://www.wisematches.net/account/login?language=ru</loc>
+        <loc>http://www.wisematches.net/account/login?language=en</loc>
         <priority>1.00</priority>
     </url>
 
@@ -14,7 +14,7 @@
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://www.wisematches.net/account/create?language=ru</loc>
+        <loc>http://www.wisematches.net/account/create?language=en</loc>
         <priority>0.7</priority>
     </url>
 
@@ -23,7 +23,7 @@
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://www.wisematches.net/account/recovery?language=ru</loc>
+        <loc>http://www.wisematches.net/account/recovery?language=en</loc>
         <priority>0.7</priority>
     </url>
 
@@ -32,7 +32,7 @@
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://www.wisematches.net/account/membership?language=ru</loc>
+        <loc>http://www.wisematches.net/account/membership?language=en</loc>
         <priority>0.7</priority>
     </url>
 
