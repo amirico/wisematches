@@ -779,7 +779,7 @@ wm.scribble.History = function (board, language) {
         } else if (move.type == 'pass') {
             link = '<span class="movePassed">' + language['passed'] + '</span>';
         }
-        movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
+        movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points], false);
     };
 
     var movesHistoryTable = board.getPlayboardElement('.movesHistory table').dataTable({
@@ -802,11 +802,13 @@ wm.scribble.History = function (board, language) {
 
     $(document).ready(function () {
         $.each(board.getGameMoves(), function (i, move) {
-            addMoveToHistory(move)
+            addMoveToHistory(move);
+            movesHistoryTable.fnDraw(true);
         });
 
         board.bind('gameMoves', function (event, move) {
-            addMoveToHistory(move)
+            addMoveToHistory(move);
+            movesHistoryTable.fnDraw(true);
         });
     });
 };
