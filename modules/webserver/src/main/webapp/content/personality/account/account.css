@@ -111,3 +111,35 @@
 #info-recovery-footer {
     padding-top: 10px;
 }
+
+#language-combobox {
+    width: auto;
+    text-align: left;
+}
+
+#language-combobox ul {
+    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    list-style: none;
+}
+
+#language-combobox ul li {
+    border: 0;
+    display: block;
+    font-weight: normal;
+    padding: 3px 15px 3px 5px;
+}
+
+#language-combobox .dropdown {
+    position: relative;
+    white-space: nowrap;
+    padding: 3px 15px 3px 5px;
+}
+
+#language-combobox .dropdown span {
+    display: inline-block;
+    vertical-align: middle;
+}
