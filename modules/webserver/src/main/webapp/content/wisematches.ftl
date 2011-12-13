@@ -25,11 +25,14 @@
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/content/wisematches.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/content/personality/account/account.css"/>
 <#if principal??>
     <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
     <script type="text/javascript" src="/content/playground/game.js"></script>
+<#else>
+    <link rel="stylesheet" type="text/css" href="/content/personality/account/account.css"/>
+    <script type="text/javascript" src="/content/personality/account/account.js"></script>
 </#if>
+
 <#include 'templates/localization.ftl'/>
 <#include "templates/analytics.ftl">
 </head>

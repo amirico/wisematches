@@ -12,14 +12,27 @@
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
-                    <@message code=headerTitle!"title.default"/>
+                        <@message code=headerTitle!"title.default"/>
                     </td>
                     <td style="text-align: right;">
-                        <select id="language-combobox" size="1"
-                                onchange="location.href = wm.util.url.extend(null, 'language', this.options[this.selectedIndex].value, true)">
-                            <option value="ru" <#if locale="ru">selected="selected"</#if>>Русский</option>
-                            <option value="en" <#if locale="en">selected="selected"</#if>>English</option>
-                        </select>
+                        <div id="language-combobox" class="ui-widget">
+                            <div class="dropdown ui-state-default ui-corner-all">
+                                <span style="padding-right: 20px;">
+                                    <#switch locale>
+                                        <#case "ru">Русский
+                                        <#break>
+                                        <#case "en">English
+                                        <#break>
+                                    </#switch>
+                                </span>
+                                <span style="position: absolute; right: 0;"
+                                      class="ui-button-icon-primary ui-icon ui-icon-triangle-1-s"></span>
+                            </div>
+                            <ul class="sublinks ui-widget ui-widget-content ui-corner-all">
+                                <li class="ui-state-default ui-corner-all"><a href="?language=ru">Русский</a></li>
+                                <li class="ui-state-default ui-corner-all"><a href="?language=en">English</a></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             </table>
