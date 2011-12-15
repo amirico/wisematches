@@ -12,12 +12,7 @@ import wisematches.personality.Language;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface TournamentGroup {
-	/**
-	 * Returns language of this group.
-	 *
-	 * @return the language of the group.
-	 */
-	Language getLanguage();
+
 
 	/**
 	 * Returns player ids for this group.

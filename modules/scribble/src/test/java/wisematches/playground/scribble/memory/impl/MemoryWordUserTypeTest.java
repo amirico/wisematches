@@ -31,7 +31,7 @@ public class MemoryWordUserTypeTest {
 		replay(resultSet);
 
 		final MemoryWordUserType type = new MemoryWordUserType();
-		final Word o = (Word) type.nullSafeGet(resultSet, new String[]{"a1", "a2", "a3", "a4"}, this);
+		final Word o = (Word) type.nullSafeGet(resultSet, new String[]{"a1", "a2", "a3", "a4"}, null, this);
 		assertNotNull(o);
 
 		assertEquals(new Position(3, 7), o.getPosition());
@@ -74,7 +74,7 @@ public class MemoryWordUserTypeTest {
 		replay(ps);
 
 		final MemoryWordUserType type = new MemoryWordUserType();
-		type.nullSafeSet(ps, w, 12);
+		type.nullSafeSet(ps, w, 12, null);
 
 		verify(ps);
 	}

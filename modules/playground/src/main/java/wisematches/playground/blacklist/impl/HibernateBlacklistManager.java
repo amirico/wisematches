@@ -1,8 +1,8 @@
 package wisematches.playground.blacklist.impl;
 
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
@@ -12,13 +12,13 @@ import wisematches.playground.blacklist.BlacklistRecord;
 import wisematches.playground.blacklist.BlacklistedException;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateBlacklistManager extends HibernateDaoSupport implements BlacklistManager {
+public class HibernateBlacklistManager implements BlacklistManager {
+	private SessionFactory sessionFactory;
 	private final Collection<BlacklistListener> listeners = new CopyOnWriteArraySet<BlacklistListener>();
 
 	public HibernateBlacklistManager() {
@@ -46,14 +46,14 @@ public class HibernateBlacklistManager extends HibernateDaoSupport implements Bl
 			throw new NullPointerException("Whom can't be null");
 		}
 
-		final HibernateTemplate template = getHibernateTemplate();
-		BlacklistRecord record = template.get(BlacklistRecord.class, new BlacklistRecordId(person, whom));
+		final Session session = sessionFactory.getCurrentSession();
+		BlacklistRecord record = (BlacklistRecord) session.get(BlacklistRecord.class, new BlacklistRecordId(person, whom));
 		if (record == null) {
 			record = new BlacklistRecord(person, whom, comment);
-			template.save(record);
+			session.save(record);
 		} else {
 			record = new BlacklistRecord(person, whom, comment);
-			template.merge(record);
+			session.merge(record);
 		}
 
 		for (BlacklistListener listener : listeners) {
@@ -71,10 +71,10 @@ public class HibernateBlacklistManager extends HibernateDaoSupport implements Bl
 			throw new NullPointerException("Whom can't be null");
 		}
 
-		final HibernateTemplate template = getHibernateTemplate();
-		BlacklistRecord record = template.get(BlacklistRecord.class, new BlacklistRecordId(person, whom));
+		final Session session = sessionFactory.getCurrentSession();
+		final BlacklistRecord record = (BlacklistRecord) session.get(BlacklistRecord.class, new BlacklistRecordId(person, whom));
 		if (record != null) {
-			template.delete(record);
+			session.delete(record);
 			for (BlacklistListener listener : listeners) {
 				listener.playerRemoved(record);
 			}
@@ -92,10 +92,11 @@ public class HibernateBlacklistManager extends HibernateDaoSupport implements Bl
 		}
 
 		@SuppressWarnings("unchecked")
-		final List<Long> longs = (List<Long>) getHibernateTemplate().find(
-				"select count(*) from wisematches.playground.blacklist.BlacklistRecord " +
-						"where person=? and whom=?", person.getId(), whom.getId());
-		return DataAccessUtils.uniqueResult(longs) == 1;
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query = session.createQuery("select count(*) from wisematches.playground.blacklist.BlacklistRecord where person=? and whom=?");
+		query.setParameter(0, person.getId());
+		query.setParameter(1, whom.getId());
+		return ((Long) query.uniqueResult()) == 1;
 	}
 
 	@Override
@@ -113,7 +114,13 @@ public class HibernateBlacklistManager extends HibernateDaoSupport implements Bl
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
 		}
-		return (Collection<BlacklistRecord>) getHibernateTemplate().find(
-				"from wisematches.playground.blacklist.BlacklistRecord where person=?", person.getId());
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query = session.createQuery("from wisematches.playground.blacklist.BlacklistRecord where person=?");
+		query.setParameter(0, person.getId());
+		return query.list();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 }

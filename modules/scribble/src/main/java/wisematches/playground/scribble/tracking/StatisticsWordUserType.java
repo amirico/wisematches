@@ -1,6 +1,7 @@
 package wisematches.playground.scribble.tracking;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
 import wisematches.playground.scribble.Direction;
 import wisematches.playground.scribble.Position;
@@ -47,7 +48,8 @@ public class StatisticsWordUserType implements UserType {
 		return x.hashCode();
 	}
 
-	public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
+	@Override
+	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor sessionImplementor, Object o) throws HibernateException, SQLException {
 		final String tilesString = rs.getString(names[0]);
 		if (tilesString == null) {
 			return null;
@@ -70,7 +72,8 @@ public class StatisticsWordUserType implements UserType {
 				tiles.toArray(new Tile[tiles.size()]));
 	}
 
-	public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
+	@Override
+	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor sessionImplementor) throws HibernateException, SQLException {
 		final Word w = (Word) value;
 		if (w == null) {
 			st.setString(index, null);

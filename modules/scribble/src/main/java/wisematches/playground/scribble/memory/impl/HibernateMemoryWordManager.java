@@ -1,8 +1,9 @@
 package wisematches.playground.scribble.memory.impl;
 
 import org.apache.log4j.Logger;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -17,7 +18,8 @@ import java.util.List;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class HibernateMemoryWordManager extends HibernateDaoSupport implements MemoryWordManager {
+public class HibernateMemoryWordManager implements MemoryWordManager {
+	private SessionFactory sessionFactory;
 	private static final Logger log = Logger.getLogger("wisematches.server.scribble.memory");
 
 	public HibernateMemoryWordManager() {
@@ -35,14 +37,14 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 			log.debug("Add new memory word for user " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word + "@" + word.hashCode());
 		}
 
-		final HibernateTemplate template = getHibernateTemplate();
-		MemoryWord mwdo = template.get(MemoryWord.class, new MemoryWord.PK(board.getBoardId(), hand.getPlayerId(), word));
+		final Session session = sessionFactory.getCurrentSession();
+		MemoryWord mwdo = (MemoryWord) session.get(MemoryWord.class, new MemoryWord.PK(board.getBoardId(), hand.getPlayerId(), word));
 		if (mwdo == null) {
 			mwdo = new MemoryWord(board.getBoardId(), hand.getPlayerId(), word);
-			template.save(mwdo);
+			session.save(mwdo);
 		} else {
 			mwdo.setWord(word);
-			template.update(mwdo);
+			session.update(mwdo);
 		}
 	}
 
@@ -54,11 +56,13 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 			log.debug("Remove memory word for user " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word + "@" + word.hashCode());
 		}
 
-		final HibernateTemplate template = getHibernateTemplate();
-		template.bulkUpdate("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ? and memory.wordId.number = ?",
-				board.getBoardId(), hand.getPlayerId(), word.hashCode()
-		);
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query = session.createQuery("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ? and memory.wordId.playerId = ? and memory.wordId.number = ?");
+		query.setParameter(0, board.getBoardId());
+		query.setParameter(1, hand.getPlayerId());
+		query.setParameter(2, word.hashCode());
+		query.executeUpdate();
 	}
 
 	@Override
@@ -70,11 +74,12 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 			log.debug("Clear memory for user " + hand.getPlayerId() + "@" + board.getBoardId());
 		}
 
-		final HibernateTemplate template = getHibernateTemplate();
-		template.bulkUpdate("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?",
-				board.getBoardId(), hand.getPlayerId()
-		);
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query = session.createQuery("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?");
+		query.setParameter(0, board.getBoardId());
+		query.setParameter(1, hand.getPlayerId());
+		query.executeUpdate();
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
@@ -87,31 +92,34 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 			log.debug("Clear all memory for board " + board.getBoardId());
 		}
 
-		final HibernateTemplate template = getHibernateTemplate();
-		template.bulkUpdate("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ?", board.getBoardId());
+		final Session session = sessionFactory.getCurrentSession();
+		session.createQuery("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ?").setParameter(0, board.getBoardId()).executeUpdate();
 	}
 
 	@Override
 	public int getMemoryWordsCount(ScribbleBoard board, ScribblePlayerHand hand) {
 		checkMemoryParameters(board, hand);
 
-		final HibernateTemplate template = getHibernateTemplate();
-		return ((Number) template.find("select count(*) from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?",
-				board.getBoardId(), hand.getPlayerId()).get(0)).intValue();
+		final Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("select count(*) from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?");
+		query.setParameter(0, board.getBoardId());
+		query.setParameter(1, hand.getPlayerId());
+		return ((Number) query.uniqueResult()).intValue();
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Collection<Word> getMemoryWords(ScribbleBoard board, ScribblePlayerHand hand) {
 		checkMemoryParameters(board, hand);
 
-		final HibernateTemplate template = getHibernateTemplate();
-		@SuppressWarnings("unchecked")
-		final List<Word> list = template.find("select memory.word from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?",
-				board.getBoardId(), hand.getPlayerId()
-		);
+		final Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("select memory.word from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
+				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?");
+		query.setParameter(0, board.getBoardId());
+		query.setParameter(1, hand.getPlayerId());
+		final List list = query.list();
 		if (list.size() == 0) {
 			return Collections.emptyList();
 		}
@@ -128,5 +136,9 @@ public class HibernateMemoryWordManager extends HibernateDaoSupport implements M
 		if (board.getPlayerHand(hand.getPlayerId()) != hand) {
 			throw new IllegalArgumentException("Specified hand does not belong to specified board");
 		}
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 }

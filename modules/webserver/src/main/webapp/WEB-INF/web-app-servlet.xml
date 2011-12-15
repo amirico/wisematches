@@ -36,25 +36,8 @@
                 </map>
             </property>
         </bean>
-
-        <mvc:interceptor>
-            <mvc:mapping path="/playground/**"/>
-            <mvc:mapping path="/account/create"/>
-            <mvc:mapping path="/account/modify"/>
-
-            <bean id="hibernateSessionInterceptor"
-                  class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
-                <property name="sessionFactory" ref="sessionFactory"/>
-            </bean>
-        </mvc:interceptor>
     </mvc:interceptors>
 
-    <!--
-    <bean id="captchaService" class="wisematches.server.web.security.captcha.google.GoogleCaptchaService">
-        <property name="publicKey" value="${recaptcha.publickey}"/>
-        <property name="privateKey" value="${recaptcha.privatekey}"/>
-    </bean>
--->
     <bean id="captchaService" class="wisematches.server.web.security.captcha.captchas.CaptchasCaptchaService">
         <property name="publicKey" value="${captchasNet.publickey}"/>
         <property name="privateKey" value="${captchasNet.privatekey}"/>

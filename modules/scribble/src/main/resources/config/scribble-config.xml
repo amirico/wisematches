@@ -9,8 +9,8 @@
 
     <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribbleBoardManager">
         <property name="ratingManager" ref="ratingManager"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
-        <property name="hibernateTemplate" ref="hibernateTemplate"/>
         <property name="dictionaryManager" ref="wordGamesDictionaries"/>
     </bean>
 
@@ -32,7 +32,7 @@
 
     <bean id="scribbleSearchEngineManager"
           class="wisematches.playground.scribble.search.board.ScribbleSearchesEngine">
-        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="scribbleTerminator" class="wisematches.playground.expiration.impl.ExpiredGamesTerminator"
@@ -44,6 +44,7 @@
                 <property name="waitForTasksToCompleteOnShutdown" value="true"/>
             </bean>
         </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="boardsSearchEngine" ref="scribbleSearchEngineManager"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
@@ -54,7 +55,7 @@
     <bean id="scribbleRobotActivity" class="wisematches.playground.robot.RobotActivityCenter">
         <property name="robotBrain" ref="scribbleRobotBrain"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
-        <property name="transactionManager" ref="transactionManager"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
         <property name="movesExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
                 <property name="maxPoolSize" value="5"/>

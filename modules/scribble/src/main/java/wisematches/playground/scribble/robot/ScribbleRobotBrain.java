@@ -10,7 +10,6 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.IterableDictionary;
 import wisematches.playground.robot.RobotBrain;
 import wisematches.playground.scribble.*;
-import wisematches.playground.scribble.ScribbleMoveScore;
 import wisematches.playground.scribble.score.ScoreEngine;
 
 import java.util.ArrayList;
@@ -33,6 +32,10 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 	}
 
 	public void putInAction(ScribbleBoard board, RobotType type) {
+		if (!board.isGameActive()) {
+			return;
+		}
+
 		final long boardId = board.getBoardId();
 		final long currentTime = System.currentTimeMillis();
 

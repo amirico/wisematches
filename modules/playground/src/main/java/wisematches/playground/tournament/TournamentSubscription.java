@@ -2,11 +2,9 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.tournament.subscription;
+package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
-import wisematches.playground.tournament.Tournament;
-import wisematches.playground.tournament.TournamentSection;
 
 /**
  * This class contains information about subscription for player.
@@ -14,10 +12,8 @@ import wisematches.playground.tournament.TournamentSection;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class TournamentSubscription {
-	private long id;
 	private long playerId;
 	private Language language;
-	private Tournament tournament;
 	private TournamentSection tournamentSection;
 
 	public TournamentSubscription(long playerId, Tournament tournament, TournamentSection tournamentSection, Language language) {
@@ -31,7 +27,6 @@ public class TournamentSubscription {
 			throw new NullPointerException("Language can't be null");
 		}
 		this.playerId = playerId;
-		this.tournament = tournament;
 		this.tournamentSection = tournamentSection;
 		this.language = language;
 	}
@@ -44,11 +39,7 @@ public class TournamentSubscription {
 		return language;
 	}
 
-	public Tournament getTournament() {
-		return tournament;
-	}
-
-	public TournamentSection getSectionType() {
+	public TournamentSection getSection() {
 		return tournamentSection;
 	}
 
@@ -58,20 +49,13 @@ public class TournamentSubscription {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		TournamentSubscription that = (TournamentSubscription) o;
-
-		if (playerId != that.playerId) return false;
-		if (language != that.language) return false;
-		if (tournamentSection != that.tournamentSection) return false;
-		if (!tournament.equals(that.tournament)) return false;
-
-		return true;
+		return playerId == that.playerId && language == that.language && tournamentSection == that.tournamentSection;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = (int) (playerId ^ (playerId >>> 32));
 		result = 31 * result + language.hashCode();
-		result = 31 * result + tournament.hashCode();
 		result = 31 * result + tournamentSection.hashCode();
 		return result;
 	}
@@ -81,7 +65,6 @@ public class TournamentSubscription {
 		return "TournamentSubscription{" +
 				"playerId=" + playerId +
 				", language=" + language +
-				", tournament=" + tournament +
 				", tournamentSection=" + tournamentSection +
 				'}';
 	}

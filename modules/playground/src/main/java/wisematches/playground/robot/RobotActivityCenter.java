@@ -2,8 +2,6 @@ package wisematches.playground.robot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -92,12 +90,10 @@ public class RobotActivityCenter {
 		afterPropertiesSet();
 	}
 
-	public void setTransactionManager(PlatformTransactionManager transactionManager) {
-		transactionTemplate = new TransactionTemplate(transactionManager);
-		transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
+		this.transactionTemplate = transactionTemplate;
 		afterPropertiesSet();
 	}
-
 
 	final class MakeTurnTask implements Runnable {
 		private final GameBoard gameBoard;

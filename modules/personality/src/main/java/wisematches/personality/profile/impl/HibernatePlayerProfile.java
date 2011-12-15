@@ -2,6 +2,8 @@ package wisematches.personality.profile.impl;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.profile.Gender;
@@ -14,9 +16,10 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "account_profile")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 class HibernatePlayerProfile implements PlayerProfile {
 	@Id
 	@Column(name = "playerId")

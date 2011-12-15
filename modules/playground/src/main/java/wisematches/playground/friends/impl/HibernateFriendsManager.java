@@ -1,7 +1,8 @@
 package wisematches.playground.friends.impl;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import wisematches.personality.Personality;
 import wisematches.playground.friends.FriendRelation;
 import wisematches.playground.friends.FriendsListener;
@@ -13,7 +14,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateFriendsManager extends HibernateDaoSupport implements FriendsManager {
+public class HibernateFriendsManager implements FriendsManager {
+	private SessionFactory sessionFactory;
 	private final Collection<FriendsListener> listeners = new CopyOnWriteArraySet<FriendsListener>();
 
 	public HibernateFriendsManager() {
@@ -33,27 +35,27 @@ public class HibernateFriendsManager extends HibernateDaoSupport implements Frie
 
 	@Override
 	public void addFriend(Personality person, Personality friend, String comment) {
-		HibernateTemplate template = getHibernateTemplate();
-		HibernateFriendRelation relation = template.get(HibernateFriendRelation.class, new HibernateFriendRelation.PK(person, friend));
+		final Session session = sessionFactory.getCurrentSession();
+		HibernateFriendRelation relation = (HibernateFriendRelation) session.get(HibernateFriendRelation.class, new HibernateFriendRelation.PK(person, friend));
 		if (relation == null) {
 			relation = new HibernateFriendRelation(person, friend, comment);
-			template.save(relation);
+			session.save(relation);
 
 			for (FriendsListener listener : listeners) {
 				listener.friendAdded(person, friend, relation);
 			}
 		} else {
 			relation.setComment(comment);
-			template.update(relation);
+			session.update(relation);
 		}
 	}
 
 	@Override
 	public void removeFriend(Personality person, Personality friend) {
-		HibernateTemplate template = getHibernateTemplate();
-		HibernateFriendRelation relation = template.get(HibernateFriendRelation.class, new HibernateFriendRelation.PK(person, friend));
+		final Session session = sessionFactory.getCurrentSession();
+		HibernateFriendRelation relation = (HibernateFriendRelation) session.get(HibernateFriendRelation.class, new HibernateFriendRelation.PK(person, friend));
 		if (relation != null) {
-			template.delete(relation);
+			session.delete(relation);
 
 			for (FriendsListener listener : listeners) {
 				listener.friendRemoved(person, friend, relation);
@@ -64,12 +66,22 @@ public class HibernateFriendsManager extends HibernateDaoSupport implements Frie
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<Long> getFriendsIds(Personality person) {
-		return getHibernateTemplate().find("select friend from wisematches.playground.friends.impl.HibernateFriendRelation where person=?", person.getId());
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query = session.createQuery("select friend from wisematches.playground.friends.impl.HibernateFriendRelation where person=?");
+		query.setParameter(0, person.getId());
+		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<FriendRelation> getFriendsList(Personality person) {
-		return getHibernateTemplate().find("from wisematches.playground.friends.impl.HibernateFriendRelation where person=?", person.getId());
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query = session.createQuery("from wisematches.playground.friends.impl.HibernateFriendRelation where person=?");
+		query.setParameter(0, person.getId());
+		return query.list();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 }

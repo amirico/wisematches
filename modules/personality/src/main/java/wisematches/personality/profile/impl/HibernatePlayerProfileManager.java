@@ -1,6 +1,7 @@
 package wisematches.personality.profile.impl;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
@@ -17,7 +18,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernatePlayerProfileManager extends HibernateDaoSupport implements PlayerProfileManager {
+public class HibernatePlayerProfileManager implements PlayerProfileManager {
+	private SessionFactory sessionFactory;
 	private AccountManager accountManager;
 
 	private final TheAccountListener accountListener = new TheAccountListener();
@@ -40,15 +42,17 @@ public class HibernatePlayerProfileManager extends HibernateDaoSupport implement
 
 	@Override
 	public PlayerProfile getPlayerProfile(Personality personality) {
-		return getHibernateTemplate().get(HibernatePlayerProfile.class, personality.getId());
+		final Session session = sessionFactory.getCurrentSession();
+		return (PlayerProfile) session.get(HibernatePlayerProfile.class, personality.getId());
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void updateProfile(PlayerProfile playerProfile) {
-		HibernatePlayerProfile hProfile = getHibernateTemplate().get(HibernatePlayerProfile.class, playerProfile.getPlayerId());
+		final Session session = sessionFactory.getCurrentSession();
+		final HibernatePlayerProfile hProfile = (HibernatePlayerProfile) session.get(HibernatePlayerProfile.class, playerProfile.getPlayerId());
 		hProfile.updatePlayerProfile(playerProfile);
-		getHibernateTemplate().update(hProfile);
+		session.update(hProfile);
 
 		for (PlayerProfileListener listener : listeners) {
 			listener.playerProfileChanged(hProfile);
@@ -56,13 +60,16 @@ public class HibernatePlayerProfileManager extends HibernateDaoSupport implement
 	}
 
 	private void removeProfile(PlayerProfile profile) {
-		getHibernateTemplate().delete(profile);
+		sessionFactory.getCurrentSession().delete(profile);
 	}
 
 	private void createProfile(PlayerProfile profile) {
-		getHibernateTemplate().save(profile);
+		sessionFactory.getCurrentSession().save(profile);
 	}
 
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public void setAccountManager(AccountManager accountManager) {
 		if (this.accountManager != null) {
