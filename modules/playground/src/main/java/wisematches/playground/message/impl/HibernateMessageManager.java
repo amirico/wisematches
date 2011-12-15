@@ -2,13 +2,10 @@ package wisematches.playground.message.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +20,6 @@ import wisematches.playground.message.MessageManager;
 import wisematches.playground.restriction.RestrictionDescription;
 import wisematches.playground.restriction.RestrictionManager;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
@@ -32,14 +28,15 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateMessageManager extends HibernateDaoSupport implements MessageManager {
+public class HibernateMessageManager implements MessageManager {
 	private PlayerManager playerManager;
+	private SessionFactory sessionFactory;
+
 	private RestrictionManager restrictionManager;
 
 	private final Lock removesLock = new ReentrantLock();
 
 	private final Collection<MessageListener> listeners = new CopyOnWriteArraySet<MessageListener>();
-
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.message");
 
 	public HibernateMessageManager() {
@@ -114,8 +111,7 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 	}
 
 	private void publishMessage(Message m, boolean quite) {
-		final HibernateTemplate template = getHibernateTemplate();
-		template.save(m);
+		sessionFactory.getCurrentSession().save(m);
 
 		for (MessageListener listener : listeners) {
 			listener.messageSent(m, quite);
@@ -125,51 +121,56 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Message getMessage(long id) {
-		return getHibernateTemplate().get(HibernateMessage.class, id);
+		return (Message) sessionFactory.getCurrentSession().get(HibernateMessage.class, id);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED, readOnly = true)
 	public int getNewMessagesCount(final Personality person) {
-		return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-			@Override
-			public Integer doInHibernate(Session session) throws HibernateException, SQLException {
-				final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
-						"FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
-						"WHERE m.recipient=? and (a.last_messages_check is null or m.created>a.last_messages_check)");
-				sqlQuery.setLong(0, person.getId());
-				return ((Number) sqlQuery.uniqueResult()).intValue();
-			}
-		});
+		final Session session = sessionFactory.getCurrentSession();
+		final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
+				"FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
+				"WHERE m.recipient=? and (a.last_messages_check is null or m.created>a.last_messages_check)");
+		sqlQuery.setLong(0, person.getId());
+		return ((Number) sqlQuery.uniqueResult()).intValue();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getTodayMessagesCount(Personality person, MessageDirection direction) {
-		final HibernateTemplate template = getHibernateTemplate();
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query;
 		if (direction == MessageDirection.SENT) {
-			return DataAccessUtils.intResult(template.find("select count(*) " +
+			query = session.createQuery("select count(*) " +
 					"from wisematches.playground.message.impl.HibernateMessage " +
-					"where sender = ? and creationDate>= CURDATE()", person.getId()));
+					"where sender = ? and creationDate>= CURDATE()");
 		} else {
-			return DataAccessUtils.intResult(template.find("select count(*) " +
+			query = session.createQuery("select count(*) " +
 					"from wisematches.playground.message.impl.HibernateMessage " +
-					"where recipient = ? and creationDate>= CURDATE()", person.getId()));
+					"where recipient = ? and creationDate>= CURDATE()");
 		}
+		query.setParameter(0, person.getId());
+		return ((Number) query.uniqueResult()).intValue();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Collection<Message> getMessages(Personality person, MessageDirection direction) {
-		final HibernateTemplate template = getHibernateTemplate();
+		final Session session = sessionFactory.getCurrentSession();
+		final Query query;
 		if (direction == MessageDirection.SENT) {
-			return template.find("from wisematches.playground.message.impl.HibernateMessage where " +
-					"sender = ? and state in (0, ?) order by creationDate desc", person.getId(), MessageDirection.RECEIVED.mask());
+			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
+					"sender = ? and state in (0, ?) order by creationDate desc");
+			query.setParameter(0, person.getId());
+			query.setParameter(1, MessageDirection.RECEIVED.mask());
 		} else {
-			return template.find("from wisematches.playground.message.impl.HibernateMessage where " +
-					"recipient = ? and state in (0,?) order by creationDate desc", person.getId(), MessageDirection.SENT.mask());
+			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
+					"recipient = ? and state in (0,?) order by creationDate desc");
+			query.setParameter(0, person.getId());
+			query.setParameter(1, MessageDirection.SENT.mask());
 		}
+		return query.list();
 	}
 
 	@Override
@@ -177,9 +178,9 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 	public void removeMessage(Personality person, long messageId, MessageDirection direction) {
 		removesLock.lock();
 		try {
-			final HibernateTemplate template = getHibernateTemplate();
+			final Session session = sessionFactory.getCurrentSession();
 
-			final HibernateMessage message = template.get(HibernateMessage.class, messageId);
+			final HibernateMessage message = (HibernateMessage) session.get(HibernateMessage.class, messageId);
 			if (message == null) {
 				return;
 			}
@@ -190,7 +191,7 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 				throw new IllegalArgumentException("Specified player didn't send the message");
 			}
 			message.setState(direction.add(message.getState()));
-			template.save(message);
+			session.save(message);
 		} finally {
 			removesLock.unlock();
 		}
@@ -247,16 +248,14 @@ public class HibernateMessageManager extends HibernateDaoSupport implements Mess
 
 		removesLock.lock();
 		try {
-			getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-				@Override
-				public Integer doInHibernate(Session session) throws HibernateException, SQLException {
-					SQLQuery sqlQuery = session.createSQLQuery(b.toString());
-					return sqlQuery.executeUpdate();
-				}
-			});
+			sessionFactory.getCurrentSession().createSQLQuery(b.toString()).executeUpdate();
 		} finally {
 			removesLock.unlock();
 		}
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	public void setPlayerManager(PlayerManager playerManager) {

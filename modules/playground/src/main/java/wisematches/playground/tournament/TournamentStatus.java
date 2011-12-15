@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-
 package wisematches.playground.tournament;
 
 /**
@@ -11,13 +10,15 @@ package wisematches.playground.tournament;
  */
 public enum TournamentStatus {
 	/**
-	 * Indicates that tournament was created but not started yet.
+	 * Indicates that tournament was announced but not started yet.
 	 */
 	ANNOUNCED,
+
 	/**
 	 * Indicates that tournament was started.
 	 */
-	STARTED,
+	ACTIVE,
+
 	/**
 	 * Indicates that tournament was finished.
 	 */

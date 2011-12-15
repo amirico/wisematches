@@ -1,6 +1,7 @@
 package wisematches.playground.scribble.memory.impl;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
 import wisematches.playground.scribble.Direction;
 import wisematches.playground.scribble.Position;
@@ -65,7 +66,7 @@ public class MemoryWordUserType implements UserType {
 		return x.hashCode();
 	}
 
-	public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
+	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor sessionImplementor, Object o) throws HibernateException, SQLException {
 		final String tilesString = rs.getString(names[3]);
 
 		final List<Tile> tiles = new ArrayList<Tile>(15);
@@ -85,7 +86,7 @@ public class MemoryWordUserType implements UserType {
 				tiles.toArray(new Tile[tiles.size()]));
 	}
 
-	public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
+	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor sessionImplementor) throws HibernateException, SQLException {
 		final Word w = (Word) value;
 
 		int i = index;

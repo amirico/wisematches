@@ -127,6 +127,7 @@ public class ScribbleRobotBrainTest {
 		});
 
 		final ScribbleBoard scribbleBoard = createStrictMock(ScribbleBoard.class);
+		expect(scribbleBoard.isGameActive()).andReturn(true);
 		expect(scribbleBoard.getBoardId()).andReturn(1L);
 		expect(scribbleBoard.getPlayerTurn()).andReturn(hand);
 		expect(scribbleBoard.getDictionary()).andReturn(dictionary);
@@ -137,10 +138,12 @@ public class ScribbleRobotBrainTest {
 		}).anyTimes();
 		expect(scribbleBoard.getScoreEngine()).andReturn(null);
 		expect(scribbleBoard.makeMove(isA(MakeWordMove.class))).andReturn(new GameMove(createMock(PlayerMove.class), 12, 1, new Date()));
+		expect(scribbleBoard.isGameActive()).andReturn(false);
 		replay(scribbleBoard);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
 		brain.putInAction(scribbleBoard, RobotType.TRAINEE);
+		brain.putInAction(scribbleBoard, RobotType.TRAINEE); // no action - finished
 
 		verify(scribbleBoard);
 	}

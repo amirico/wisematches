@@ -1,8 +1,10 @@
 package wisematches.playground.scribble;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.BoardCreationException;
@@ -11,8 +13,8 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
 import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
+import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +31,7 @@ import static org.junit.Assert.assertSame;
 public class ScribbleBoardManagerTest {
 	private ScribbleBoardManager scribbleRoomManager;
 
-	private HibernateTemplate hibernateTemplate;
+	private Session session;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
@@ -40,14 +42,19 @@ public class ScribbleBoardManagerTest {
 
 	@Before
 	public void testSetUp() {
+		session = createStrictMock(Session.class);
+
+		final SessionFactory sessionFactory = createMock(SessionFactory.class);
+		expect(sessionFactory.getCurrentSession()).andReturn(session).anyTimes();
+		replay(sessionFactory);
+
 		dictionaryManager = createStrictMock(DictionaryManager.class);
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
-		hibernateTemplate = createStrictMock(HibernateTemplate.class);
 
 		scribbleRoomManager = new ScribbleBoardManager();
+		scribbleRoomManager.setSessionFactory(sessionFactory);
 		scribbleRoomManager.setDictionaryManager(dictionaryManager);
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
-		scribbleRoomManager.setHibernateTemplate(hibernateTemplate);
 	}
 
 	@Test
@@ -63,9 +70,9 @@ public class ScribbleBoardManagerTest {
 		board.initGameAfterLoading(tilesBank, dictionary);
 		replay(board);
 
-		expect(hibernateTemplate.get(ScribbleBoard.class, 1L)).andReturn(board);
-		hibernateTemplate.evict(board);
-		replay(hibernateTemplate);
+		expect(session.get(ScribbleBoard.class, 1L)).andReturn(board);
+		session.evict(board);
+		replay(session);
 
 		expect(dictionaryManager.getDictionary(LOCALE)).andReturn(dictionary);
 		replay(dictionaryManager);
@@ -77,7 +84,7 @@ public class ScribbleBoardManagerTest {
 		assertSame(board, board1);
 
 		verify(board);
-		verify(hibernateTemplate);
+		verify(session);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}
@@ -114,17 +121,17 @@ public class ScribbleBoardManagerTest {
 	public void testSaveBoardImpl() {
 		final ScribbleBoard board = createNiceMock(ScribbleBoard.class);
 
-		hibernateTemplate.saveOrUpdate(board);
-		hibernateTemplate.flush();
-		hibernateTemplate.evict(board);
-		replay(hibernateTemplate);
+		session.saveOrUpdate(board);
+		session.flush();
+		session.evict(board);
+		replay(session);
 
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
 
 		scribbleRoomManager.saveBoardImpl(board);
 
-		verify(hibernateTemplate);
+		verify(session);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}
@@ -133,8 +140,13 @@ public class ScribbleBoardManagerTest {
 	public void testLoadActivePlayerBoards() {
 		final List<Long> ids = Arrays.asList(1L, 2L, 3L);
 
-		expect(hibernateTemplate.find(isA(String.class), eq(1L))).andReturn(ids);
-		replay(hibernateTemplate);
+		final Query query = createStrictMock(Query.class);
+		expect(query.setParameter(0, 1L)).andReturn(query);
+		expect(query.list()).andReturn(ids);
+		replay(query);
+
+		expect(session.createQuery(isA(String.class))).andReturn(query);
+		replay(session);
 
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
@@ -142,7 +154,8 @@ public class ScribbleBoardManagerTest {
 		final Collection<Long> longCollection = scribbleRoomManager.loadActivePlayerBoards(Personality.person(1));
 		assertSame(ids, longCollection);
 
-		verify(hibernateTemplate);
+		verify(query);
+		verify(session);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);
 	}

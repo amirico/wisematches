@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
- */
-
-package wisematches.playground.tournament.subscription;
-
-import wisematches.playground.tournament.TournamentException;
+package wisematches.playground.tournament;
 
 /**
- * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class TournamentSubscriptionException extends TournamentException {
 	public TournamentSubscriptionException(String message) {

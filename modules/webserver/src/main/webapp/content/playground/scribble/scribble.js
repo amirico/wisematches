@@ -1054,7 +1054,7 @@ wm.scribble.Players = function (board) {
     board.bind('gameMoves',
             function (event, move) {
                 var playerInfo = board.getPlayerInfo(move.player);
-                if (move.type = 'make') {
+                if (move.type == 'make') {
                     updatePlayerPoints(playerInfo.playerId, playerInfo.points);
                 }
             })

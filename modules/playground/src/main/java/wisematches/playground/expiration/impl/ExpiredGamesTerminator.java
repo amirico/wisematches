@@ -2,9 +2,11 @@ package wisematches.playground.expiration.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.playground.*;
 import wisematches.playground.expiration.GameExpirationListener;
@@ -41,6 +43,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 	private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.terminator");
+	private SessionFactory sessionFactory;
 
 	public ExpiredGamesTerminator() {
 	}
@@ -197,6 +200,11 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+
 	public void destroy() {
 		lock.lock();
 		try {
@@ -213,10 +221,15 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 			return;
 		}
 
-		final Collection<LastMoveInfo> expiring = boardsSearchEngine.findExpiringBoards();
-		for (LastMoveInfo board : expiring) {
-			scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getDaysPerMove(), board.getLastMoveTime()));
-		}
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				final Collection<LastMoveInfo> expiring = boardsSearchEngine.findExpiringBoards();
+				for (LastMoveInfo board : expiring) {
+					scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getDaysPerMove(), board.getLastMoveTime()));
+				}
+			}
+		});
 	}
 
 	private class GameExpirationTask implements Runnable {

@@ -3,10 +3,9 @@ package wisematches.playground.robot;
 import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.*;
@@ -28,6 +27,13 @@ public class RobotActivityCenterTest {
 
 	private Capture<BoardStateListener> listener = new Capture<BoardStateListener>();
 
+	private final TransactionTemplate template = new TransactionTemplate() {
+		@Override
+		public <T> T execute(TransactionCallback<T> action) throws TransactionException {
+			return action.doInTransaction(null);
+		}
+	};
+
 	public RobotActivityCenterTest() {
 	}
 
@@ -41,15 +47,7 @@ public class RobotActivityCenterTest {
 
 		activityManager.setRobotBrain(robotBrain);
 		activityManager.setBoardManager(boardManager);
-
-		final TransactionStatus status = createNiceMock(TransactionStatus.class);
-
-		final PlatformTransactionManager transaction = createStrictMock(PlatformTransactionManager.class);
-		expect(transaction.getTransaction(isA(TransactionDefinition.class))).andReturn(status);
-		transaction.commit(status);
-		replay(transaction);
-
-		activityManager.setTransactionManager(transaction);
+		activityManager.setTransactionTemplate(template);
 	}
 
 	@Test
@@ -63,19 +61,12 @@ public class RobotActivityCenterTest {
 		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
-		final TransactionStatus status = createNiceMock(TransactionStatus.class);
-
-		final PlatformTransactionManager transaction = createStrictMock(PlatformTransactionManager.class);
-		expect(transaction.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW))).andReturn(status);
-		transaction.commit(status);
-		replay(transaction);
-
-		activityManager.setTransactionManager(transaction);
+		activityManager.setTransactionTemplate(template);
 
 		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(gameBoard);
 		task.run();
 
-		verify(robotBrain, transaction);
+		verify(robotBrain);
 	}
 
 	@Test

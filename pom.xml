@@ -45,6 +45,11 @@
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springframework.org/milestone</url>
         </repository>
+        <repository>
+            <id>org.springframework.maven.release</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springsource.org/release</url>
+        </repository>
 
         <repository>
             <id>org.springframework.maven.snapshot</id>
@@ -54,9 +59,9 @@
     </repositories>
 
     <properties>
-        <org.springframework.version>3.1.0.RC1</org.springframework.version>
+        <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
         <!-- TODO: because we are using snapshot we must use separate version for security -->
-        <org.springframework.security.version>3.1.0.RC2</org.springframework.security.version>
+        <org.springframework.security.version>3.1.0.RC3</org.springframework.security.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -75,19 +80,20 @@
             <version>1.2.16</version>
         </dependency>
 
-        <!-- This library is used in Hibernate annotations 3.4.0 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jcl</artifactId>
-            <version>1.6.1</version>
+            <version>1.6.4</version>
         </dependency>
-        <!-- End logging systems dependency -->
+
+        <!--
 
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
         </dependency>
+-->
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -174,23 +180,23 @@
         </dependency>
 
         <dependency>
-            <groupId>quartz</groupId>
+            <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <version>1.5.2</version>
+            <version>2.1.1</version>
         </dependency>
 
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.0</version>
+            <version>3.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

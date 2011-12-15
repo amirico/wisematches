@@ -28,9 +28,9 @@ public class StatisticsWordUserTypeTest {
 		replay(resultSet);
 
 		final StatisticsWordUserType type = new StatisticsWordUserType();
-		assertNull(type.nullSafeGet(resultSet, new String[]{"a4"}, this));
+		assertNull(type.nullSafeGet(resultSet, new String[]{"a4"}, null, this));
 
-		final Word o = (Word) type.nullSafeGet(resultSet, new String[]{"a4"}, this);
+		final Word o = (Word) type.nullSafeGet(resultSet, new String[]{"a4"}, null, this);
 		assertNotNull(o);
 
 		assertEquals(new Position(0, 0), o.getPosition());
@@ -71,9 +71,9 @@ public class StatisticsWordUserTypeTest {
 		replay(ps);
 
 		final StatisticsWordUserType type = new StatisticsWordUserType();
-		type.nullSafeSet(ps, null, 12);
+		type.nullSafeSet(ps, null, 12, null);
 
-		type.nullSafeSet(ps, w, 12);
+		type.nullSafeSet(ps, w, 12, null);
 
 		verify(ps);
 	}

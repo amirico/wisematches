@@ -2,11 +2,18 @@ package wisematches.playground.scribble.robot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import org.springframework.orm.hibernate4.SessionHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.computer.robot.RobotPlayer;
@@ -39,6 +46,9 @@ import static org.junit.Assert.*;
 		"classpath:/config/scribble-junit-config.xml"})
 public class SmallRobotsGameTest {
 	@Autowired
+	private SessionFactory sessionFactory;
+
+	@Autowired
 	private ScribbleBoardManager scribbleBoardManager;
 
 	private final Lock gameFinishedLock = new ReentrantLock();
@@ -47,6 +57,18 @@ public class SmallRobotsGameTest {
 	private static final Log log = LogFactory.getLog("wisematches.scribble.robot.test");
 
 	public SmallRobotsGameTest() {
+	}
+
+	@Before
+	public void setUp() {
+		Session session = sessionFactory.openSession();
+		TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+	}
+
+	@After
+	public void tearDown() {
+		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
+		SessionFactoryUtils.closeSession(sessionHolder.getSession());
 	}
 
 	@Test

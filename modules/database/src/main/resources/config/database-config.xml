@@ -25,7 +25,7 @@
         <property name="preferredTestQuery" value="select 1;"/>
     </bean>
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="wisematches"/>
 
@@ -44,21 +44,17 @@
         </property>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="transactionRequires" class="org.springframework.transaction.support.TransactionTemplate">
-        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
         <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
     </bean>
 
     <bean id="transactionRequiresNew" class="org.springframework.transaction.support.TransactionTemplate">
-        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRES_NEW"/>
         <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRES_NEW"/>
     </bean>
 </beans>

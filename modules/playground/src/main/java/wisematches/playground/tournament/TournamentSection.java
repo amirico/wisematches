@@ -23,6 +23,11 @@ public enum TournamentSection {
 		this.topRating = topRating;
 	}
 
+	/**
+	 * Returns max allowed rating for this group.
+	 *
+	 * @return the max allowed rating for this group.
+	 */
 	public int getTopRating() {
 		return topRating;
 	}

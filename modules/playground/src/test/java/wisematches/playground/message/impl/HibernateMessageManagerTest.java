@@ -1,10 +1,12 @@
 package wisematches.playground.message.impl;
 
+import org.easymock.IExpectationSetters;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,9 +119,17 @@ public class HibernateMessageManagerTest {
 				new RestrictionDescription("messages.hist.private", a1),
 				new RestrictionDescription("messages.hist.notice", a2)));
 
-		final HibernateTemplate template = createMock(HibernateTemplate.class);
-		expect(template.execute(isA(HibernateCallback.class))).andReturn(0);
-		replay(template);
+		final SQLQuery query = createMock(SQLQuery.class);
+		expect(query.executeUpdate()).andReturn(1);
+		replay(query);
+		
+		final Session session = createMock(Session.class);
+		expect(session.createSQLQuery(isA(String.class))).andReturn(query);
+		replay(session);
+
+		final SessionFactory sessionFactory = createMock(SessionFactory.class);
+		expect(sessionFactory.getCurrentSession()).andReturn(session);
+		replay(sessionFactory);
 /*
         expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
                 "((m.notification and " +
@@ -136,13 +146,12 @@ public class HibernateMessageManagerTest {
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 20 DAY))))")).andReturn(0);
 */
 
-
 		final HibernateMessageManager m = new HibernateMessageManager();
+		m.setSessionFactory(sessionFactory);
 		m.setRestrictionManager(r);
-		m.setHibernateTemplate(template);
 
 		m.cleanup();
 
-		verify(template);
+		verify(sessionFactory, session, query);
 	}
 }

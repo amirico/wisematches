@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.settings.impl;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
@@ -15,12 +15,14 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateBoardSettingsManager extends HibernateDaoSupport implements BoardSettingsManager {
+public class HibernateBoardSettingsManager implements BoardSettingsManager {
+	private SessionFactory sessionFactory;
+
 	private boolean checkWordsDefault = true;
 	private boolean clearMemoryDefault = true;
 	private boolean clearByClickDefault = true;
-	private String tilesClassDefault = "tilesSetClassic";
 
+	private String tilesClassDefault = "tilesSetClassic";
 	private final Lock lock = new ReentrantLock();
 	private final Map<Personality, HibernateBoardSettings> cache = new WeakHashMap<Personality, HibernateBoardSettings>();
 
@@ -71,11 +73,11 @@ public class HibernateBoardSettingsManager extends HibernateDaoSupport implement
 	}
 
 	private HibernateBoardSettings loadBoardSettings(Personality personality) {
-		return getHibernateTemplate().get(HibernateBoardSettings.class, personality.getId());
+		return (HibernateBoardSettings) sessionFactory.getCurrentSession().get(HibernateBoardSettings.class, personality.getId());
 	}
 
 	private void saveBoardSettings(HibernateBoardSettings settings) {
-		getHibernateTemplate().saveOrUpdate(settings);
+		sessionFactory.getCurrentSession().saveOrUpdate(settings);
 	}
 
 	public boolean isCheckWordsDefault() {
@@ -104,6 +106,10 @@ public class HibernateBoardSettingsManager extends HibernateDaoSupport implement
 
 	public boolean isClearByClickDefault() {
 		return clearByClickDefault;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	public void setClearByClickDefault(boolean clearByClickDefault) {

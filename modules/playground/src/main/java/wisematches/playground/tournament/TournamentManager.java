@@ -4,7 +4,10 @@
 
 package wisematches.playground.tournament;
 
-import java.util.List;
+import wisematches.personality.Language;
+import wisematches.personality.Personality;
+
+import java.util.Collection;
 
 /**
  * The manager interface for tournaments.
@@ -23,7 +26,7 @@ import java.util.List;
  */
 public interface TournamentManager {
 	/**
-	 * Adds specified listener to this manager. This listener will be notified when next tournamed will be
+	 * Adds specified listener to this manager. This listener will be notified when next tournament will be
 	 * announce, started, finished and so on.
 	 *
 	 * @param l the listener to be added.
@@ -37,6 +40,21 @@ public interface TournamentManager {
 	 */
 	void removeTournamentListener(TournamentListener l);
 
+	/**
+	 * Adds specified listener to this manager. This listener will be notified when a player will subscribe or
+	 * unsubscribe from a tournament.
+	 *
+	 * @param l the listener to be added.
+	 */
+	void addTournamentSubscriptionListener(TournamentSubscriptionListener l);
+
+	/**
+	 * Removes specified listener from this manager. This listener will not received any notification any more.
+	 *
+	 * @param l the listener to be removed.
+	 */
+	void removeTournamentSubscriptionListener(TournamentSubscriptionListener l);
+
 
 	/**
 	 * Returns tournament which is announced at this moment.
@@ -47,31 +65,44 @@ public interface TournamentManager {
 
 
 	/**
-	 * Returns number of tournaments with specified status.
-	 * <p/>
-	 * If there is no one tournament with specified status empty array returned.
+	 * Subscribe specified player to announced player with specified section and language.
 	 *
-	 * @param status the status of tournaments which should be returned.
-	 * @return the array that contains number of tournaments with specified status or empty array
-	 *         if there is no one tournament.
+	 * @param player			the player to be subscribed.
+	 * @param language		  the language of games.
+	 * @param tournamentSection the subscribing section.
+	 * @throws TournamentSubscriptionException
+	 *                              if player already subscribed for announced tournament
+	 *                              or it's rating is not correct for specified section or if subscription can't be
+	 *                              done by internal error
+	 * @throws NullPointerException if any parameter is null
 	 */
-	int[] getTournaments(TournamentStatus status);
+	void subscribe(Personality player, Language language, TournamentSection tournamentSection) throws TournamentSubscriptionException;
 
 	/**
-	 * Returns tournament by it's number.
+	 * Unsubscribe player from announced tournament. If player is not subscribed nothing will be happened.
 	 *
-	 * @param number the tournament number
-	 * @return the tournament by specified number
-	 * @throws IllegalArgumentException if number is negative or great or equals number of all tournaments.
+	 * @param player   the player to be unsubscribe.
+	 * @param language the language of games
+	 * @throws TournamentSubscriptionException
+	 *          if subscription can't be done by internal error
 	 */
-	Tournament getTournament(int number);
+	void unsubscribe(Personality player, Language language) throws TournamentSubscriptionException;
 
 	/**
-	 * Returns unmodifiable list of all rounds for specified tournament. Rounds in list sorted by round number
-	 * where last item - last round.
+	 * Returns tournament section that the player is subscribed to for specified language. If
+	 * player is not subscribed when {@code null} will be returned.
 	 *
-	 * @param tournament the tournament which rounds should be returned.
-	 * @return the sorted unmodifiable list of all rounds.
+	 * @param player   the player
+	 * @param language the language of game
+	 * @return the subscription info or {@code null} if player is not subscribed to announced tournament.
 	 */
-	List<TournamentRound> getTournamentRounds(Tournament tournament);
+	TournamentSection getSubscribedSection(Personality player, Language language);
+
+	/**
+	 * Returns all subscriptions for selected player (for all languages)
+	 *
+	 * @param player the player who's subscriptions
+	 * @return the collection of all subscriptions for specified player.
+	 */
+	Collection<TournamentSubscription> getSubscriptions(Personality player);
 }

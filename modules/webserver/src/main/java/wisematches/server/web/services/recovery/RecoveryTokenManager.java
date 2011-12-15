@@ -1,14 +1,16 @@
 package wisematches.server.web.services.recovery;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import wisematches.personality.account.Account;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class RecoveryTokenManager extends HibernateDaoSupport {
-	private long tokenExpirationTime = DEFAULT_EXPIRATION_TIME;
+public class RecoveryTokenManager {
+	private SessionFactory sessionFactory;
 
+	private long tokenExpirationTime = DEFAULT_EXPIRATION_TIME;
 	private static final int DEFAULT_EXPIRATION_TIME = 24 * 60 * 60 * 1000;  // 1day
 
 	public RecoveryTokenManager() {
@@ -20,12 +22,11 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 			if (token1 != null) {
 				removeToken(token1);
 			}
-		} catch (TokenExpiredException e) {
-			;
+		} catch (TokenExpiredException ignore) {
 		}
 
 		final RecoveryToken token = new RecoveryToken(player);
-		getHibernateTemplate().persist(token);
+		sessionFactory.getCurrentSession().persist(token);
 		return token;
 	}
 
@@ -37,7 +38,8 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 	 * @throws TokenExpiredException if token exist but already expired
 	 */
 	public RecoveryToken getToken(Account player) throws TokenExpiredException {
-		final RecoveryToken token = getHibernateTemplate().get(RecoveryToken.class, player.getId());
+		final Session session = sessionFactory.getCurrentSession();
+		final RecoveryToken token = (RecoveryToken) session.get(RecoveryToken.class, player.getId());
 		if (token == null) {
 			return null;
 		}
@@ -59,12 +61,14 @@ public class RecoveryTokenManager extends HibernateDaoSupport {
 		if (token == null) {
 			throw new IllegalArgumentException("Removing token can't be null");
 		}
-		if (token != null) {
-			getHibernateTemplate().delete(token);
-		}
+		sessionFactory.getCurrentSession().delete(token);
 	}
 
 	public void setTokenExpirationTime(long tokenExpirationTime) {
 		this.tokenExpirationTime = tokenExpirationTime;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 }
