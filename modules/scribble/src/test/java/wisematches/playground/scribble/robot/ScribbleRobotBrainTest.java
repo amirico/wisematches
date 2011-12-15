@@ -152,7 +152,7 @@ public class ScribbleRobotBrainTest {
 	 * This test doesn't check anything. It just calculate time of move for robot for random and sorted dictionary.
 	 */
 	@Test
-	public void test_calculateSerachTime() throws IOException {
+	public void test_calculateSearchTime() throws IOException {
 		final Set<String> treeSet = new TreeSet<String>();
 		final Set<String> hashSet = new TreeSet<String>();
 

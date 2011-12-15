@@ -70,23 +70,17 @@ public interface TournamentManager {
 	 * @param player			the player to be subscribed.
 	 * @param language		  the language of games.
 	 * @param tournamentSection the subscribing section.
-	 * @throws TournamentSubscriptionException
-	 *                              if player already subscribed for announced tournament
-	 *                              or it's rating is not correct for specified section or if subscription can't be
-	 *                              done by internal error
 	 * @throws NullPointerException if any parameter is null
 	 */
-	void subscribe(Personality player, Language language, TournamentSection tournamentSection) throws TournamentSubscriptionException;
+	void subscribe(Personality player, Language language, TournamentSection section);
 
 	/**
 	 * Unsubscribe player from announced tournament. If player is not subscribed nothing will be happened.
 	 *
 	 * @param player   the player to be unsubscribe.
 	 * @param language the language of games
-	 * @throws TournamentSubscriptionException
-	 *          if subscription can't be done by internal error
 	 */
-	void unsubscribe(Personality player, Language language) throws TournamentSubscriptionException;
+	void unsubscribe(Personality player, Language language);
 
 	/**
 	 * Returns tournament section that the player is subscribed to for specified language. If

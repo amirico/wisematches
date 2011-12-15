@@ -48,6 +48,11 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="tournamentManager" class="wisematches.playground.tournament.impl.HibernateTournamentManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
+    </bean>
+
     <bean id="messagesCleanerJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="messageManager"/>
         <property name="targetMethod" value="cleanup"/>

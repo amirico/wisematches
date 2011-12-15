@@ -39,5 +39,5 @@ public interface Tournament {
 	 *
 	 * @return the status of this tournament.
 	 */
-	TournamentStatus getTournamentStatus();
+	TournamentState getTournamentState();
 }
