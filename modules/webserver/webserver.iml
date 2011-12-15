@@ -18,6 +18,20 @@
     </facet>
     <facet type="Spring" name="Spring">
       <configuration>
+        <fileset id="web: application context" name="MVC application context" removed="false">
+          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/../personality/src/main/resources/config/accounts-config.xml</file>
+          <file>file://$MODULE_DIR$/../playground/src/main/resources/config/playground-config.xml</file>
+          <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/notify-sender-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/server-web-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/application-settings.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-security.xml</file>
+          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/../playground/src/main/resources/config/restriction-config.xml</file>
+          <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/src/test/resources/config/server-web-junit-config.xml</file>
+        </fileset>
         <fileset id="fileset1" name="My Fileset" removed="false">
           <file>file://$MODULE_DIR$/src/test/resources/config/server-web-junit-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-servlet.xml</file>

@@ -8,7 +8,7 @@ package wisematches.playground.tournament;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public enum TournamentStatus {
+public enum TournamentState {
 	/**
 	 * Indicates that tournament was announced but not started yet.
 	 */

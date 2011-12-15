@@ -6,6 +6,9 @@
         <fileset id="fileset1" name="My Fileset" removed="false">
           <file>file://$MODULE_DIR$/src/main/resources/config/playground-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/restriction-config.xml</file>
+          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/../personality/src/main/resources/config/accounts-config.xml</file>
         </fileset>
       </configuration>
     </facet>
