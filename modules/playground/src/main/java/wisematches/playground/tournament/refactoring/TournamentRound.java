@@ -2,7 +2,7 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.refactoring;
 
 import java.util.Date;
 

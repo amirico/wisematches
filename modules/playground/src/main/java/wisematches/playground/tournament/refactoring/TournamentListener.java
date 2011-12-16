@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.refactoring;
 
 /**
  * {@code TournamentListener} allows get notifications about future tournaments and it's states.

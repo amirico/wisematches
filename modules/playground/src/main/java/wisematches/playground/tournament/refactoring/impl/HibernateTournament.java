@@ -1,7 +1,7 @@
-package wisematches.playground.tournament.impl;
+package wisematches.playground.tournament.refactoring.impl;
 
-import wisematches.playground.tournament.Tournament;
-import wisematches.playground.tournament.TournamentState;
+import wisematches.playground.tournament.refactoring.Tournament;
+import wisematches.playground.tournament.refactoring.TournamentState;
 
 import javax.persistence.*;
 import java.util.Date;

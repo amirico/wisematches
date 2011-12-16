@@ -2,7 +2,7 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.refactoring;
 
 /**
  * Indicates state of a game in one group. Each game can be active (in progress) or finished.

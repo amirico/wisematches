@@ -2,10 +2,13 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.refactoring;
 
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
+import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.scheduler.TournamentTicket;
+import wisematches.playground.tournament.scheduler.TournamentTicketListener;
 
 import java.util.Collection;
 
@@ -46,14 +49,14 @@ public interface TournamentManager {
 	 *
 	 * @param l the listener to be added.
 	 */
-	void addTournamentSubscriptionListener(TournamentSubscriptionListener l);
+	void addTournamentSubscriptionListener(TournamentTicketListener l);
 
 	/**
 	 * Removes specified listener from this manager. This listener will not received any notification any more.
 	 *
 	 * @param l the listener to be removed.
 	 */
-	void removeTournamentSubscriptionListener(TournamentSubscriptionListener l);
+	void removeTournamentSubscriptionListener(TournamentTicketListener l);
 
 
 	/**
@@ -98,5 +101,5 @@ public interface TournamentManager {
 	 * @param player the player who's subscriptions
 	 * @return the collection of all subscriptions for specified player.
 	 */
-	Collection<TournamentSubscription> getSubscriptions(Personality player);
+	Collection<TournamentTicket> getSubscriptions(Personality player);
 }

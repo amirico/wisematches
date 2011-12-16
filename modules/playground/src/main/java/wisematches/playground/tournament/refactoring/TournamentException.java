@@ -2,7 +2,7 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.refactoring;
 
 /**
  * This is common exception for any activities related to tournaments.

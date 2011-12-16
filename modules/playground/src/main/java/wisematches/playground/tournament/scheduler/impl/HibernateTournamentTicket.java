@@ -1,10 +1,10 @@
-package wisematches.playground.tournament.impl;
+package wisematches.playground.tournament.scheduler.impl;
 
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
-import wisematches.playground.tournament.Tournament;
 import wisematches.playground.tournament.TournamentSection;
-import wisematches.playground.tournament.TournamentSubscription;
+import wisematches.playground.tournament.scheduler.TournamentPoster;
+import wisematches.playground.tournament.scheduler.TournamentTicket;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,31 +13,34 @@ import java.io.Serializable;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-@Table(name = "tournament_subscription")
-class HibernateTournamentSubscription implements TournamentSubscription {
+@Table(name = "tournament_ticket")
+class HibernateTournamentTicket implements TournamentTicket {
 	@EmbeddedId
-	private PK subscriptionId;
+	private PK pk;
 
 	@Column(name = "section")
 	@Enumerated(EnumType.ORDINAL)
 	private TournamentSection section;
 
-	HibernateTournamentSubscription(Tournament tournament, Personality player, Language language, TournamentSection section) {
-		subscriptionId = new PK(tournament, player, language);
+	HibernateTournamentTicket() {
+	}
+
+	HibernateTournamentTicket(TournamentPoster poster, Personality player, Language language, TournamentSection section) {
+		pk = new PK(poster, player, language);
 		this.section = section;
 	}
 
 	long getPlayerId() {
-		return subscriptionId.getPlayerId();
+		return pk.getPlayer();
 	}
 
 	int getTournamentId() {
-		return subscriptionId.getTournamentId();
+		return pk.getPoster();
 	}
 
 	@Override
 	public Language getLanguage() {
-		return subscriptionId.getLanguage();
+		return pk.getLanguage();
 	}
 
 	@Override
@@ -51,28 +54,31 @@ class HibernateTournamentSubscription implements TournamentSubscription {
 
 	@Embeddable
 	protected static class PK implements Serializable {
-		@Column(name = "tournament")
-		private int tournamentId;
+		@Column(name = "poster")
+		private int poster;
 
 		@Column(name = "player")
-		private long playerId;
+		private long player;
 
 		@Column(name = "language")
 		@Enumerated(EnumType.STRING)
 		private Language language;
 
-		public PK(Tournament tournament, Personality player, Language language) {
-			this.tournamentId = tournament.getNumber();
-			this.playerId = player.getId();
+		PK() {
+		}
+
+		PK(TournamentPoster poster, Personality player, Language language) {
+			this.poster = poster.getNumber();
+			this.player = player.getId();
 			this.language = language;
 		}
 
-		public int getTournamentId() {
-			return tournamentId;
+		public int getPoster() {
+			return poster;
 		}
 
-		public long getPlayerId() {
-			return playerId;
+		public long getPlayer() {
+			return player;
 		}
 
 		public Language getLanguage() {
@@ -85,13 +91,13 @@ class HibernateTournamentSubscription implements TournamentSubscription {
 			if (o == null || getClass() != o.getClass()) return false;
 
 			PK pk = (PK) o;
-			return playerId == pk.playerId && tournamentId == pk.tournamentId && language == pk.language;
+			return player == pk.player && poster == pk.poster && language == pk.language;
 		}
 
 		@Override
 		public int hashCode() {
-			int result = tournamentId;
-			result = 31 * result + (int) (playerId ^ (playerId >>> 32));
+			int result = poster;
+			result = 31 * result + (int) (player ^ (player >>> 32));
 			result = 31 * result + language.hashCode();
 			return result;
 		}

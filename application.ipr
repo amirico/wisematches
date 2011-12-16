@@ -140,7 +140,7 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" hash="0" />
+  <component name="DataSourceManagerImpl" compressed="false" hash="2422688260" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -418,6 +418,7 @@
         <w>tbody</w>
         <w>tuple</w>
         <w>unsubscribed</w>
+        <w>unsubscribes</w>
         <w>uploader</w>
         <w>yandex</w>
       </words>
