@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.scheduler;
 
 import wisematches.personality.Language;
+import wisematches.playground.tournament.TournamentSection;
 
 /**
  * This class contains information about subscription for player.
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface TournamentSubscription {
+public interface TournamentTicket {
 	/**
 	 * Returns tournament language.
 	 *

@@ -2,9 +2,7 @@
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
 
-package wisematches.playground.tournament;
-
-import wisematches.personality.Language;
+package wisematches.playground.tournament.refactoring;
 
 /**
  * {@code TournamentGroup} is a very small part of tournament and contains limited (3 or 4) number of players.

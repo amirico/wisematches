@@ -48,7 +48,8 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="tournamentManager" class="wisematches.playground.tournament.impl.HibernateTournamentManager">
+    <bean id="tournamentScheduleManager"
+          class="wisematches.playground.tournament.scheduler.impl.HibernateTournamentScheduleManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
     </bean>

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-package wisematches.playground.tournament;
+package wisematches.playground.tournament.refactoring;
 
 /**
  * The status of the tournament.
