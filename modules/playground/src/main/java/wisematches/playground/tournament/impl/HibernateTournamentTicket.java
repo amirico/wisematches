@@ -1,10 +1,10 @@
-package wisematches.playground.tournament.scheduler.impl;
+package wisematches.playground.tournament.impl;
 
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
+import wisematches.playground.tournament.TournamentPoster;
 import wisematches.playground.tournament.TournamentSection;
-import wisematches.playground.tournament.scheduler.TournamentPoster;
-import wisematches.playground.tournament.scheduler.TournamentTicket;
+import wisematches.playground.tournament.TournamentTicket;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +21,10 @@ class HibernateTournamentTicket implements TournamentTicket {
 	@Column(name = "section")
 	@Enumerated(EnumType.ORDINAL)
 	private TournamentSection section;
+
+	@Column(name = "processed")
+	private boolean processed;
+
 
 	HibernateTournamentTicket() {
 	}
@@ -50,6 +54,14 @@ class HibernateTournamentTicket implements TournamentTicket {
 
 	public void setSection(TournamentSection section) {
 		this.section = section;
+	}
+
+	boolean isProcessed() {
+		return processed;
+	}
+
+	void setProcessed(boolean processed) {
+		this.processed = processed;
 	}
 
 	@Embeddable

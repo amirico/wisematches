@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.scheduler;
+package wisematches.playground.tournament;
 
 import wisematches.personality.player.Player;
 

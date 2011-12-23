@@ -11,16 +11,17 @@ package wisematches.playground.tournament;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public enum TournamentSection {
-	GRANDMASTER(Integer.MAX_VALUE),
-	EXPERT(2000),
-	ADVANCED(1700),
+	//	!!!WARNING: ORDER IS VERY IMPORTANT. DATABASE MUST BE UPDATED IF CHANGED!!!
+	CASUAL(1300),
 	INTERMEDIATE(1500),
-	CASUAL(1300);
+	ADVANCED(1700),
+	EXPERT(2000),
+	GRANDMASTER(Integer.MAX_VALUE);
 
-	private final int topRating;
+	private final int ratingThreshold;
 
-	TournamentSection(int topRating) {
-		this.topRating = topRating;
+	TournamentSection(int ratingThreshold) {
+		this.ratingThreshold = ratingThreshold;
 	}
 
 	/**
@@ -28,7 +29,7 @@ public enum TournamentSection {
 	 *
 	 * @return the max allowed rating for this group.
 	 */
-	public int getTopRating() {
-		return topRating;
+	public int getRatingThreshold() {
+		return ratingThreshold;
 	}
 }
