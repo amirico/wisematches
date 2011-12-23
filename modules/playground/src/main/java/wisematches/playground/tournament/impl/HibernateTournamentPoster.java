@@ -1,6 +1,6 @@
-package wisematches.playground.tournament.scheduler.impl;
+package wisematches.playground.tournament.impl;
 
-import wisematches.playground.tournament.scheduler.TournamentPoster;
+import wisematches.playground.tournament.TournamentPoster;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,6 +19,12 @@ public class HibernateTournamentPoster implements TournamentPoster {
 	@Column(name = "scheduled")
 	@Temporal(TemporalType.DATE)
 	private Date scheduledDate;
+
+	@Column(name = "started")
+	private boolean started = false;
+
+	@Column(name = "processed")
+	private boolean processed = false;
 
 	@Deprecated
 	HibernateTournamentPoster() {
@@ -40,10 +46,28 @@ public class HibernateTournamentPoster implements TournamentPoster {
 	}
 
 	@Override
+	public boolean isStarted() {
+		return started;
+	}
+
+	void setStarted(boolean started) {
+		this.started = started;
+	}
+
+	boolean isProcessed() {
+		return processed;
+	}
+
+	void setProcessed(boolean processed) {
+		this.processed = processed;
+	}
+
+	@Override
 	public String toString() {
 		return "HibernateTournamentPoster{" +
 				"number=" + number +
 				", scheduledDate=" + scheduledDate +
+				", started=" + started +
 				'}';
 	}
 }

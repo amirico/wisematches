@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.scheduler;
+package wisematches.playground.tournament;
 
 import java.util.Date;
 
@@ -19,4 +19,11 @@ public interface TournamentPoster {
 	 * @return the date for next scheduled tournament.
 	 */
 	Date getScheduledDate();
+
+	/**
+	 * Indicates is the tournament for the poster has been started or not.
+	 *
+	 * @return {@code true} if tournament has been started; {@code false} - otherwise.
+	 */
+	boolean isStarted();
 }

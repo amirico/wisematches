@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
  */
-package wisematches.playground.tournament.scheduler;
+package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
-import wisematches.playground.tournament.TournamentSection;
 
 /**
  * This class contains information about subscription for player.
