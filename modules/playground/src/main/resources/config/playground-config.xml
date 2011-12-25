@@ -62,6 +62,7 @@
     <bean id="tournamentActivator"
           class="wisematches.playground.tournament.impl.TournamentActivator"
           init-method="startTournament">
+        <property name="cronExpression" value="* * * ? * 2#1"/>
         <property name="tournamentManager" ref="tournamentManager"/>
         <property name="tournamentTicketManager" ref="tournamentTicketManager"/>
     </bean>
@@ -89,26 +90,6 @@
             </bean>
         </property>
     </bean>
-
-    <!--
-    <bean id="newTournamentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="cronExpression" value="*/1 * * * * ?"/>
-        &lt;!&ndash;<property name="cronExpression" value="0 30 2 ? * 2#1"/>&ndash;&gt;
-        &lt;!&ndash;First monday of every month &ndash;&gt;
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-                <property name="targetObject" ref="tournamentCenter"/>
-                <property name="targetMethod" value="startNewTournament"/>
-                <property name="arguments">
-                    <array>
-                        <ref local="newTournamentTrigger"/>
-                    </array>
-                </property>
-                <property name="concurrent" value="false"/>
-            </bean>
-        </property>
-    </bean>
--->
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
