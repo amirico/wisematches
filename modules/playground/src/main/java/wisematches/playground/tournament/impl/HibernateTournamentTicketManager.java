@@ -178,6 +178,8 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 		}
 	}
 
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void announceTournament(final Date scheduledDate) {
 		if (sessionFactory == null || transactionTemplate == null) {
 			return;
@@ -192,11 +194,10 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 						poster = new HibernateTournamentPoster(1, scheduledDate);
 					} else {
 						poster.setStarted(true);
-						session.merge(poster);
+						session.update(session.merge(poster));
 						poster = new HibernateTournamentPoster(poster.getNumber() + 1, scheduledDate);
 					}
 					session.save(poster);
-					session.evict(poster);
 				} finally {
 					lock.unlock();
 				}

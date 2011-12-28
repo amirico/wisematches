@@ -136,7 +136,6 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -157,24 +156,6 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" defaultCharsetForPropertiesFiles="UTF-8" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-  </component>
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="android">
-        <modules>
-          <module name="android">
-            <files>
-              <file url="file://$PROJECT_DIR$/modules/android/AndroidManifest.xml" />
-            </files>
-          </module>
-        </modules>
-      </facet-type>
-      <facet-type id="web">
-        <modules>
-          <module name="webserver" />
-        </modules>
-      </facet-type>
-    </autodetection-disabled>
   </component>
   <component name="FacetStructureConfigurable.UI">
     <splitter-proportions>
