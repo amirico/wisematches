@@ -770,16 +770,13 @@ wm.scribble.History = function (board, language) {
         var link = '';
         if (move.type == 'make') {
             var word = move.word;
-            link = '<span class="moveMade"><a href="javascript: board.selectHistoryWord(' +
-                    '{row: ' + word.position.row + ', column: ' + word.position.column +
-                    ', direction: \'' + word.direction + '\', length: ' + word.tiles.length + '})">' +
-                    word.text + '</a></span>';
+            link = '<span class="moveMade">' + word.text + '</span>';
         } else if (move.type == 'exchange') {
             link = '<span class="moveExchange">' + language['exchange'] + '</span>';
         } else if (move.type == 'pass') {
             link = '<span class="movePassed">' + language['passed'] + '</span>';
         }
-        movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points], false);
+        movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
     };
 
     var movesHistoryTable = board.getPlayboardElement('.movesHistory table').dataTable({
@@ -800,15 +797,16 @@ wm.scribble.History = function (board, language) {
         "oLanguage":language
     });
 
-    $(document).ready(function () {
-        $.each(board.getGameMoves(), function (i, move) {
-            addMoveToHistory(move);
-            movesHistoryTable.fnDraw(true);
-        });
 
+    movesHistoryTable.click(function (e) {
+        var pos = movesHistoryTable.fnGetPosition(this);
+        var index = movesHistoryTable.fnGetData(pos[0])[0] - 1;
+        board.selectMove(index);
+    });
+
+    $(document).ready(function () {
         board.bind('gameMoves', function (event, move) {
             addMoveToHistory(move);
-            movesHistoryTable.fnDraw(true);
         });
     });
 };
@@ -1492,6 +1490,9 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     };
 
     var registerBoardMove = function (move, init) {
+        if (!init && move.number < moves.length) {
+            return;
+        }
         if (move.type == 'make') {
             $.each(move.word.tiles, function (i, tile) {
                 tile.row = move.word.position.row + (move.word.direction == 'VERTICAL' ? i : 0 );
@@ -1912,6 +1913,17 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         }
     };
 
+    this.selectMove = function (moveNumber) {
+        if (!enabled) {
+            return;
+        }
+        if (moves[moveNumber].word != undefined) {
+            this.selectHistoryWord(moves[moveNumber].word);
+        } else {
+            clearSelectionImpl();
+        }
+    };
+
     this.selectHistoryWord = function (word) {
         if (!enabled || isWordSelected(word)) {
             return;
@@ -1919,8 +1931,8 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         clearSelectionImpl();
 
         var rowK, columnK;
-        var row = word.row;
-        var column = word.column;
+        var row = word.position.row;
+        var column = word.position.column;
         if (word.direction == 'VERTICAL') {
             rowK = 1;
             columnK = 0;
@@ -1928,7 +1940,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
             rowK = 0;
             columnK = 1;
         }
-        for (var i = 0, count = word.length; i < count; i++) {
+        for (var i = 0, count = word.tiles.length; i < count; i++) {
             changeTileSelection(boardTiles[column + i * columnK][row + i * rowK].get(0), true, false);
         }
         changeSelectedWord(playboard.getSelectedWord());
