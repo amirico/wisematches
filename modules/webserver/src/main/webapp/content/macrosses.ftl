@@ -79,7 +79,7 @@
 
 <#macro fieldInput path attributes="" fieldType="text" size=30 value="">
     <@field path=path>
-    <input type="${fieldType}" id="${spring.state.expression}" name="${spring.state.expression}" size="${size}"
+    <input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
         <#if fieldType=='checkbox'><#if spring.stringStatusValue?has_content && spring.stringStatusValue=='true'>checked="checked"</#if>
            value="true"<#else>
            value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>"</#if> ${attributes}/>
