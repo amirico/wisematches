@@ -58,16 +58,22 @@
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/account/*</url-pattern>
+        <dispatcher>ERROR</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/info/*</url-pattern>
+        <dispatcher>ERROR</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/playground/*</url-pattern>
+        <dispatcher>ERROR</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
