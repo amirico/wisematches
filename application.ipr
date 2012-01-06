@@ -5,16 +5,15 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-1.0-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-2.0-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="webserver/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="database-1.0-SNAPSHOT.jar">
+            <element id="archive" name="database-2.0-SNAPSHOT.jar">
               <element id="module-output" name="database" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.0.0.CR7" />
@@ -58,13 +57,13 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.1" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="archive" name="personality-1.0-SNAPSHOT.jar">
+            <element id="archive" name="personality-2.0-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
             </element>
-            <element id="archive" name="playground-1.0-SNAPSHOT.jar">
+            <element id="archive" name="playground-2.0-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
-            <element id="archive" name="scribble-1.0-SNAPSHOT.jar">
+            <element id="archive" name="scribble-2.0-SNAPSHOT.jar">
               <element id="module-output" name="scribble" />
             </element>
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.2" />
@@ -83,7 +82,7 @@
     </artifact>
     <artifact type="war" name="webserver:war">
       <output-path>$PROJECT_DIR$/modules/webserver/target</output-path>
-      <root id="archive" name="webserver-1.0-SNAPSHOT.war">
+      <root id="archive" name="webserver-2.0-SNAPSHOT.war">
         <element id="artifact" artifact-name="webserver:war exploded" />
       </root>
     </artifact>
@@ -157,6 +156,15 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" defaultCharsetForPropertiesFiles="UTF-8" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
+  </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="web">
+        <modules>
+          <module name="webserver" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
   </component>
   <component name="FacetStructureConfigurable.UI">
     <splitter-proportions>
