@@ -11,6 +11,7 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
+            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-2.0-SNAPSHOT.jar">
@@ -50,10 +51,10 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-tx:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-orm:3.1.0.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.1.0.RC3" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.1.0.RC3" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-crypto:3.1.0.RC3" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.1.0.RC3" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.1.0.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.1.0.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-crypto:3.1.0.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.1" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
@@ -70,8 +71,8 @@
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.2" />
             <element id="library" level="project" name="Maven: org.springframework:spring-web:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.1.0.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.1.0.RC3" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:3.1.0.RC3" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.1.0.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: joda-time:joda-time:2.0" />
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.18" />
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
@@ -970,70 +971,70 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-jcl/1.6.4/slf4j-jcl-1.6.4-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework.security:spring-security-acl:3.1.0.RC3">
+    <library name="Maven: org.springframework.security:spring-security-acl:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-acl/3.1.0.RC3/spring-security-acl-3.1.0.RC3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-acl/3.1.0.RELEASE/spring-security-acl-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-acl/3.1.0.RC3/spring-security-acl-3.1.0.RC3-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-acl/3.1.0.RELEASE/spring-security-acl-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-acl/3.1.0.RC3/spring-security-acl-3.1.0.RC3-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-acl/3.1.0.RELEASE/spring-security-acl-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework.security:spring-security-config:3.1.0.RC3">
+    <library name="Maven: org.springframework.security:spring-security-config:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.1.0.RC3/spring-security-config-3.1.0.RC3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.1.0.RELEASE/spring-security-config-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.1.0.RC3/spring-security-config-3.1.0.RC3-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.1.0.RELEASE/spring-security-config-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.1.0.RC3/spring-security-config-3.1.0.RC3-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/3.1.0.RELEASE/spring-security-config-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework.security:spring-security-core:3.1.0.RC3">
+    <library name="Maven: org.springframework.security:spring-security-core:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.1.0.RC3/spring-security-core-3.1.0.RC3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.1.0.RELEASE/spring-security-core-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.1.0.RC3/spring-security-core-3.1.0.RC3-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.1.0.RELEASE/spring-security-core-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.1.0.RC3/spring-security-core-3.1.0.RC3-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.1.0.RELEASE/spring-security-core-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework.security:spring-security-crypto:3.1.0.RC3">
+    <library name="Maven: org.springframework.security:spring-security-crypto:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/3.1.0.RC3/spring-security-crypto-3.1.0.RC3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/3.1.0.RELEASE/spring-security-crypto-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/3.1.0.RC3/spring-security-crypto-3.1.0.RC3-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/3.1.0.RELEASE/spring-security-crypto-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/3.1.0.RC3/spring-security-crypto-3.1.0.RC3-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/3.1.0.RELEASE/spring-security-crypto-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework.security:spring-security-taglibs:3.1.0.RC3">
+    <library name="Maven: org.springframework.security:spring-security-taglibs:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.1.0.RC3/spring-security-taglibs-3.1.0.RC3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.1.0.RELEASE/spring-security-taglibs-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.1.0.RC3/spring-security-taglibs-3.1.0.RC3-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.1.0.RELEASE/spring-security-taglibs-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.1.0.RC3/spring-security-taglibs-3.1.0.RC3-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.1.0.RELEASE/spring-security-taglibs-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework.security:spring-security-web:3.1.0.RC3">
+    <library name="Maven: org.springframework.security:spring-security-web:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RC3/spring-security-web-3.1.0.RC3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RELEASE/spring-security-web-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RC3/spring-security-web-3.1.0.RC3-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RELEASE/spring-security-web-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RC3/spring-security-web-3.1.0.RC3-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.1.0.RELEASE/spring-security-web-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.springframework:spring-aop:3.1.0.RELEASE">

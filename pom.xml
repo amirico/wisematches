@@ -60,8 +60,7 @@
 
     <properties>
         <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
-        <!-- TODO: because we are using snapshot we must use separate version for security -->
-        <org.springframework.security.version>3.1.0.RC3</org.springframework.security.version>
+        <org.springframework.security.version>3.1.0.RELEASE</org.springframework.security.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -85,15 +84,6 @@
             <artifactId>slf4j-jcl</artifactId>
             <version>1.6.4</version>
         </dependency>
-
-        <!--
-
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-        </dependency>
--->
 
         <dependency>
             <groupId>org.springframework</groupId>
