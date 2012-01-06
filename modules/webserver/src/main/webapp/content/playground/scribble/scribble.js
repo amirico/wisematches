@@ -799,8 +799,8 @@ wm.scribble.History = function (board, language) {
 
 
     movesHistoryTable.click(function (e) {
-        var pos = movesHistoryTable.fnGetPosition(this);
-        var index = movesHistoryTable.fnGetData(pos[0])[0] - 1;
+        var pos = movesHistoryTable.fnGetPosition($(event.target).closest('tr')[0]);
+        var index = movesHistoryTable.fnGetData(pos)[0] - 1;
         board.selectMove(index);
     });
 
@@ -934,33 +934,33 @@ wm.scribble.Controls = function (board, language) {
         });
 
         $('.exchangeTilesPanel').dialog({
-                    title:language['exchange'],
-                    draggable:false,
-                    modal:true,
-                    resizable:false,
-                    width:400,
-                    buttons:[
-                        {
-                            text:language['exchange'],
-                            click:function () {
-                                $(this).dialog("close");
-                                var tiles = new Array();
-                                $.each(tilesPanel.children(), function (i, tw) {
-                                    if (wm.scribble.tile.isTileSelected(tw)) {
-                                        tiles.push($(tw).data('tile'));
-                                    }
-                                });
-                                board.exchangeTiles(tiles, showMoveResult);
+            title:language['exchange'],
+            draggable:false,
+            modal:true,
+            resizable:false,
+            width:400,
+            buttons:[
+                {
+                    text:language['exchange'],
+                    click:function () {
+                        $(this).dialog("close");
+                        var tiles = new Array();
+                        $.each(tilesPanel.children(), function (i, tw) {
+                            if (wm.scribble.tile.isTileSelected(tw)) {
+                                tiles.push($(tw).data('tile'));
                             }
-                        },
-                        {
-                            text:language['cancel'],
-                            click:function () {
-                                $(this).dialog("close");
-                            }
-                        }
-                    ]
+                        });
+                        board.exchangeTiles(tiles, showMoveResult);
+                    }
+                },
+                {
+                    text:language['cancel'],
+                    click:function () {
+                        $(this).dialog("close");
+                    }
                 }
+            ]
+        }
         )
     };
 

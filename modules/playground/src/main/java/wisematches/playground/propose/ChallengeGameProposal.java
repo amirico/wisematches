@@ -11,24 +11,17 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface ChallengeGameProposal<S extends GameSettings> extends GameProposal<S> {
-	/**
-	 * Returns comment for the challenge.
-	 *
-	 * @return the comment for the challenge.
-	 */
-	String getComment();
+    /**
+     * Returns comment for the challenge.
+     *
+     * @return the comment for the challenge.
+     */
+    String getComment();
 
-	/**
-	 * Returns proposal initiator
-	 *
-	 * @return the initiator of the proposal.
-	 */
-	Personality getInitiator();
-
-	/**
-	 * Returns unmodifiable collection of waiting players.
-	 *
-	 * @return the unmodifiable collection of waiting players.
-	 */
-	Collection<Personality> getWaitingPlayers();
+    /**
+     * Returns unmodifiable collection of waiting players.
+     *
+     * @return the unmodifiable collection of waiting players.
+     */
+    Collection<Personality> getWaitingPlayers();
 }
