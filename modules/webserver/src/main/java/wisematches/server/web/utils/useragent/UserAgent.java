@@ -14,5 +14,6 @@ public enum UserAgent {
 	YAHOO_SLURP,
 	MSNBOT,
 	UNKNOWN,
-	WISEMATCHES
+	WISEMATCHES,
+	JAVA
 }

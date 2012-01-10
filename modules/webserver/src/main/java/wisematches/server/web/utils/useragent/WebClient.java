@@ -122,6 +122,9 @@ public class WebClient {
 					ua = UserAgent.IE;
 					ver = userAgentString.substring(userAgentString.indexOf("MSIE ") + 5);
 					ver = ver.substring(0, ver.indexOf(";")).trim();
+				} else if (userAgentString.contains("Java")) {
+					ua = UserAgent.JAVA;
+					ver = userAgentString.substring(userAgentString.indexOf("/1.") + 3);
 				}
 				version = Integer.parseInt(ver.substring(0, ver.indexOf(".")));
 			} catch (Exception ex) {
