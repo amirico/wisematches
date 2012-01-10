@@ -62,7 +62,7 @@
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler"
-                class="wisematches.server.web.security.spring.fixes.ExceptionMappingAuthenticationFailureHandler">
+                class="wisematches.server.web.security.spring.WMAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
         <beans:property name="defaultFailureUrl" value="/account/loginAuth?error=system"/>
         <beans:property name="allowSessionCreation" value="true"/>
@@ -130,7 +130,7 @@
     </beans:bean>
 
     <beans:bean id="concurrentSessionFilter"
-                class="wisematches.server.web.security.spring.fixes.ConcurrentSessionFilter">
+                class="org.springframework.security.web.session.ConcurrentSessionFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
         <beans:property name="expiredUrl" value="/account/loginAuth?error=session"/>
     </beans:bean>
