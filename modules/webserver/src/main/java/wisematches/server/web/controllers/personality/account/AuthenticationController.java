@@ -124,14 +124,13 @@ public class AuthenticationController extends AbstractInfoController {
 
 	private void restoreAccountLoginForm(AccountLoginForm form, HttpSession session) {
 		if (form.getJ_username() == null) {
-			final Authentication authentication;
-			final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-			if (ex != null) {
-				authentication = ex.getAuthentication();
-			} else {
-				authentication = SecurityContextHolder.getContext().getAuthentication();
-			}
-
+			final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//			final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+//			if (ex != null) {
+//				authentication = ex.getAuthentication();
+//			} else {
+//				authentication = ;
+//			}
 			if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
 				form.setJ_username(authentication.getName());
 			}
