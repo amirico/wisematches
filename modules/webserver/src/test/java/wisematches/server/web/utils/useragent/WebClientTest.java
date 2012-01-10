@@ -19,6 +19,12 @@ public class WebClientTest {
 		assertClient(UserAgent.OPERA, 8, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) Opera 8.60 [en]");
 	}
 
+	@Test
+	public void testJava() {
+		assertClient(UserAgent.JAVA, 5, "Java/1.5.0_22");
+	}
+
+
 	private void assertClient(UserAgent u, int v, String a) {
 		final WebClient detect = WebClient.detect(a);
 		Assert.assertEquals(u, detect.getUserAgent());
