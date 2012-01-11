@@ -95,6 +95,7 @@
         <property name="triggers">
             <list>
                 <ref bean="messagesCleanerTrigger"/>
+                <ref bean="tournamentActivationTrigger"/>
             </list>
         </property>
     </bean>

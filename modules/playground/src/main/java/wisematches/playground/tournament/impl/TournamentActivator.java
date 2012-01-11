@@ -1,5 +1,7 @@
 package wisematches.playground.tournament.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.CronExpression;
 import wisematches.playground.tournament.TournamentManager;
 import wisematches.playground.tournament.TournamentPoster;
@@ -19,6 +21,9 @@ public class TournamentActivator {
 	private TournamentManager tournamentManager;
 	private TournamentTicketManager ticketManager;
 
+	private static final Log log = LogFactory.getLog("wisematches.server.tournament");
+
+
 //	private final CronTrigger tr = new CronTrigger();
 
 	public TournamentActivator() {
@@ -29,6 +34,8 @@ public class TournamentActivator {
 	 */
 	public void startTournament() {
 		if (isTournamentDay()) {
+			log.info("It's tournament day! Checking progress or start new tournament");
+
 			final Date nextTournamentDay = getNextTournamentDay();
 			final TournamentPoster poster = ticketManager.getTournamentPoster();
 			if (poster == null || poster.getScheduledDate().equals(nextTournamentDay)) {
@@ -41,7 +48,7 @@ public class TournamentActivator {
 	}
 
 	protected Date getNextTournamentDay() {
-		// TODO: must return midnight time
+		// Always midnight time
 		final long date = ((System.currentTimeMillis() + 86400000L) / 86400000L) * 86400000L;
 		return cronExpression.getNextValidTimeAfter(new Date(date));
 	}

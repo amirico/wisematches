@@ -24,10 +24,12 @@ public interface TournamentTicketManager {
 	/**
 	 * Starts new tournament and move current poster to {@code started} state.
 	 *
+	 * Will be added in the future for mini tournaments.
+	 *
 	 * @param scheduledDate date of new tournament
 	 * @throws IllegalArgumentException if scheduled date in the past.
 	 */
-	void announceTournament(Date scheduledDate);
+//	void announceTournament(Date scheduledDate);
 
 	/**
 	 * Subscribes to next tournament for specified language and section.
@@ -52,15 +54,6 @@ public interface TournamentTicketManager {
 	void sellTicket(Player player, Language language);
 
 	/**
-	 * Returns count of bought tickets.
-	 *
-	 * @param language language of the tournament
-	 * @return the count of bought tickets.
-	 * @throws IllegalStateException if there is no active poster
-	 */
-	TournamentTickets getTournamentTickets(Language language);
-
-	/**
 	 * Returns all tickets for specified player.
 	 *
 	 * @param player the player who's tickets should be returned.
@@ -78,4 +71,13 @@ public interface TournamentTicketManager {
 	 * @throws IllegalStateException if there is no active poster
 	 */
 	TournamentTicket getPlayerTicket(Player player, Language language);
+
+	/**
+	 * Returns count of bought tickets.
+	 *
+	 * @param language language of the tournament
+	 * @return the count of bought tickets.
+	 * @throws IllegalStateException if there is no active poster
+	 */
+	TournamentTicketBatch getTournamentTicketBatch(Language language);
 }
