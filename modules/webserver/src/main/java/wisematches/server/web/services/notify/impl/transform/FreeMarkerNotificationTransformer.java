@@ -56,8 +56,4 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
-
-	public Configuration getFreeMarkerConfig() {
-		return freeMarkerConfig;
-	}
 }

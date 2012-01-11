@@ -7,7 +7,7 @@
         <property name="location" value="classpath:/wisematches-settings.properties"/>
     </bean>
 
-    <bean id="commonFreemarkerConfig"
+    <bean id="commonFreemarkerConfigurer"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value=""/>
         <property name="defaultEncoding" value="UTF-8"/>

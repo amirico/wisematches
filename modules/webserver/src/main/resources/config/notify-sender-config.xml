@@ -26,7 +26,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="notificationFreemarkerConfig" parent="commonFreemarkerConfig" scope="prototype">
+    <bean id="notificationFreemarkerConfigurer" parent="commonFreemarkerConfigurer" scope="prototype">
         <property name="preferFileSystemAccess" value="false"/>
         <property name="templateLoaderPath" value="classpath:/i18n/notify"/>
         <property name="freemarkerVariables">
@@ -37,12 +37,13 @@
         </property>
     </bean>
 
+    <bean id="notificationFreemarkerConfig"
+          factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
+
     <bean id="notificationTransformer"
           class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
         <property name="messageSource" ref="messageSource"/>
-        <property name="freeMarkerConfig">
-            <bean factory-bean="notificationFreemarkerConfig" factory-method="createConfiguration"/>
-        </property>
+        <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
 
     <bean id="mailNotificationPublisher"

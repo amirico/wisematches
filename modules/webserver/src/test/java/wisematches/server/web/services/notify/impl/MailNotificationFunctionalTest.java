@@ -1,5 +1,6 @@
 package wisematches.server.web.services.notify.impl;
 
+import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
 import org.easymock.IMockBuilder;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import wisematches.personality.Language;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.Player;
@@ -28,7 +30,6 @@ import wisematches.server.web.services.notify.NotificationManager;
 import wisematches.server.web.services.notify.NotificationMask;
 import wisematches.server.web.services.notify.NotificationMover;
 import wisematches.server.web.services.notify.impl.publish.mail.MailNotificationPublisher;
-import wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer;
 
 import java.util.*;
 
@@ -56,7 +57,10 @@ public class MailNotificationFunctionalTest {
 	MailNotificationPublisher notificationPublisher;
 
 	@Autowired
-	FreeMarkerNotificationTransformer notificationTransformer;
+	Configuration notificationFreemarkerConfig;
+
+	@Autowired
+	NotificationTransformer notificationTransformer;
 
 	public MailNotificationFunctionalTest() {
 	}
@@ -71,7 +75,7 @@ public class MailNotificationFunctionalTest {
 		expect(playerManager.getPlayer(1002)).andReturn(p2).anyTimes();
 		replay(playerManager);
 
-		notificationTransformer.getFreeMarkerConfig().setSharedVariable("playerManager", playerManager);
+		notificationFreemarkerConfig.setSharedVariable("playerManager", playerManager);
 
 		final NotificationMask mask = new NotificationMask();
 		Collection<NotificationDescription> descriptions = notificationManager.getDescriptions();
