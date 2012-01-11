@@ -2,6 +2,7 @@ package wisematches.server.web.services.notify.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.server.web.services.notify.NotificationMover;
@@ -17,6 +18,7 @@ import java.util.concurrent.Future;
  */
 public abstract class NotificationTransformerPublisher implements NotificationPublisher {
 	private ExecutorService executorService;
+	private TransactionTemplate transactionTemplate;
 	private NotificationTransformer notificationTransformer;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.notify.transform");
@@ -65,6 +67,10 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 
 	public void setExecutorService(ExecutorService executorService) {
 		this.executorService = executorService;
+	}
+
+	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
+		this.transactionTemplate = transactionTemplate;
 	}
 
 	public void setNotificationTransformer(NotificationTransformer notificationTransformer) {

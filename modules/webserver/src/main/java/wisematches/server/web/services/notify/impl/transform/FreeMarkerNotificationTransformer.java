@@ -3,6 +3,8 @@ package wisematches.server.web.services.notify.impl.transform;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.context.MessageSource;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationMover;
@@ -25,6 +27,7 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
 	public Notification createNotification(String code, Account account, NotificationMover mover, NotificationPublisher publisher, Map<String, Object> model) throws Exception {
 		final Locale locale = account.getLanguage().locale();
 
@@ -52,10 +55,6 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
 
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
-	}
-
-	public MessageSource getMessageSource() {
-		return messageSource;
 	}
 
 	public Configuration getFreeMarkerConfig() {

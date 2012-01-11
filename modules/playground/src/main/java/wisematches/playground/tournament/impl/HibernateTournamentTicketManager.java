@@ -11,56 +11,46 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.playground.RatingManager;
-import wisematches.playground.tournament.*;
+import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.TournamentTicket;
+import wisematches.playground.tournament.TournamentTicketBatch;
+import wisematches.playground.tournament.TournamentTicketListener;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateTournamentTicketManager implements TournamentTicketManager {
-	private HibernateTournamentPoster poster;
-
+public class HibernateTournamentTicketManager extends AbstractTournamentTicketManager<HibernateTournamentPoster> {
 	private RatingManager ratingManager;
 	private SessionFactory sessionFactory;
 	private TransactionTemplate transactionTemplate;
-
-	private final Lock lock = new ReentrantLock();
-	private final Collection<TournamentTicketListener> listeners = new CopyOnWriteArraySet<TournamentTicketListener>();
 
 	public HibernateTournamentTicketManager() {
 	}
 
 	@Override
-	public void addTournamentTicketListener(TournamentTicketListener l) {
-		if (l != null) {
-			listeners.add(l);
-		}
+	protected HibernateTournamentPoster createNewPoster() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	@Override
-	public void removeTournamentTicketListener(TournamentTicketListener l) {
-		listeners.remove(l);
+	protected HibernateTournamentPoster loadActivePoster() {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	@Override
-	public TournamentPoster getTournamentPoster() {
-		lock.lock();
-		try {
-			return poster;
-		} finally {
-			lock.unlock();
-		}
+	protected void saveActivePoster(HibernateTournamentPoster poster) {
+		throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
 	}
+
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void buyTicket(Player player, Language language, TournamentSection section) {
 		lock.lock();
 		try {
+			HibernateTournamentPoster poster = getTournamentPoster();
 			if (poster == null) {
 				throw new IllegalStateException("No active poster");
 			}
@@ -80,9 +70,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 				session.update(ticket);
 			}
 
-			for (TournamentTicketListener listener : listeners) {
-				listener.tournamentTicketBought(poster, player, ticket);
-			}
+			fireTicketBought(poster, player, ticket);
 		} finally {
 			lock.unlock();
 		}
@@ -93,6 +81,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 	public void sellTicket(Player player, Language language) {
 		lock.lock();
 		try {
+			HibernateTournamentPoster poster = getTournamentPoster();
 			if (poster == null) {
 				throw new IllegalStateException("No active poster");
 			}
@@ -104,9 +93,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 				session.delete(ticket);
 			}
 
-			for (TournamentTicketListener listener : listeners) {
-				listener.tournamentTicketSold(poster, player, ticket);
-			}
+			fireTicketSold(poster, player, ticket);
 		} finally {
 			lock.unlock();
 		}
@@ -114,9 +101,10 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public TournamentTickets getTournamentTickets(Language language) {
+	public TournamentTicketBatch getTournamentTicketBatch(Language language) {
 		lock.lock();
 		try {
+			HibernateTournamentPoster poster = getTournamentPoster();
 			if (poster == null) {
 				throw new IllegalStateException("No active poster");
 			}
@@ -135,7 +123,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 				final Object[] val = (Object[]) o;
 				res.put((TournamentSection) val[0], (Long) val[1]);
 			}
-			return new TournamentTickets(res);
+			return new TournamentTicketBatch(res);
 		} finally {
 			lock.unlock();
 		}
@@ -147,6 +135,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 	public Collection<TournamentTicket> getPlayerTickets(Player player) {
 		lock.lock();
 		try {
+			HibernateTournamentPoster poster = getTournamentPoster();
 			if (poster == null) {
 				throw new IllegalStateException("No active poster");
 			}
@@ -167,6 +156,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 	public TournamentTicket getPlayerTicket(Player player, Language language) {
 		lock.lock();
 		try {
+			HibernateTournamentPoster poster = getTournamentPoster();
 			if (poster == null) {
 				throw new IllegalStateException("No active poster");
 			}
@@ -178,7 +168,6 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 		}
 	}
 
-	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void announceTournament(final Date scheduledDate) {
 		if (sessionFactory == null || transactionTemplate == null) {
@@ -189,6 +178,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				lock.lock();
 				try {
+					HibernateTournamentPoster poster = getTournamentPoster();
 					final Session session = sessionFactory.getCurrentSession();
 					if (poster == null) {
 						poster = new HibernateTournamentPoster(1, scheduledDate);
@@ -214,6 +204,7 @@ public class HibernateTournamentTicketManager implements TournamentTicketManager
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				lock.lock();
 				try {
+					HibernateTournamentPoster poster = getTournamentPoster();
 					final Session session = sessionFactory.getCurrentSession();
 					final Query query = session.createQuery("" +
 							"from wisematches.playground.tournament.impl.HibernateTournamentPoster p " +

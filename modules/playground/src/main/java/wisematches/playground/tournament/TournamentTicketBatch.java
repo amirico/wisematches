@@ -6,11 +6,11 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TournamentTickets {
+public class TournamentTicketBatch {
 	private final long totalTickets;
 	private final Map<TournamentSection, Long> sectionsMap = new HashMap<TournamentSection, Long>();
 
-	public TournamentTickets(Map<TournamentSection, Long> sectionsMap) {
+	public TournamentTicketBatch(Map<TournamentSection, Long> sectionsMap) {
 		int k = 0;
 		this.sectionsMap.putAll(sectionsMap);
 		for (Long aLong : sectionsMap.values()) {
