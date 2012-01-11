@@ -71,7 +71,7 @@
           class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
     </bean>
 
-    <bean id="freemarkerConfig" parent="commonFreemarkerConfig">
+    <bean id="freemarkerConfig" parent="commonFreemarkerConfigurer">
         <property name="templateLoaderPath" value=""/>
         <property name="freemarkerVariables">
             <map merge="true">
