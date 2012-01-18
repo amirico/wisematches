@@ -2,6 +2,7 @@ package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
+import wisematches.playground.propose.GameRestriction;
 
 import java.util.Collection;
 import java.util.Date;
@@ -20,16 +21,6 @@ public interface TournamentTicketManager {
 	 * @return the information about next tournament: number and scheduled date.
 	 */
 	TournamentPoster getTournamentPoster();
-
-	/**
-	 * Starts new tournament and move current poster to {@code started} state.
-	 *
-	 * Will be added in the future for mini tournaments.
-	 *
-	 * @param scheduledDate date of new tournament
-	 * @throws IllegalArgumentException if scheduled date in the past.
-	 */
-//	void announceTournament(Date scheduledDate);
 
 	/**
 	 * Subscribes to next tournament for specified language and section.

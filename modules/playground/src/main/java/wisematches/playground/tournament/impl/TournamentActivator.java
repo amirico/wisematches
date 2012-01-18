@@ -18,13 +18,10 @@ public class TournamentActivator {
 	private CronExpression cronExpression;
 	private TimeZone timeZone = TimeZone.getTimeZone("GMT");
 
-	private TournamentManager tournamentManager;
-	private TournamentTicketManager ticketManager;
+	private AbstractTournamentManager tournamentManager;
+	private AbstractTournamentTicketManager ticketManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.tournament");
-
-
-//	private final CronTrigger tr = new CronTrigger();
 
 	public TournamentActivator() {
 	}
@@ -39,6 +36,7 @@ public class TournamentActivator {
 			final Date nextTournamentDay = getNextTournamentDay();
 			final TournamentPoster poster = ticketManager.getTournamentPoster();
 			if (poster == null || poster.getScheduledDate().equals(nextTournamentDay)) {
+				initializeNewTournament();
 			}
 		}
 	}
@@ -67,11 +65,15 @@ public class TournamentActivator {
 		}
 	}
 
-	public void setTournamentManager(TournamentManager tournamentManager) {
-		this.tournamentManager = tournamentManager;
+	private void initializeNewTournament() {
+		final TournamentPoster poster = ticketManager.announceTournament(getNextTournamentDay());
 	}
 
-	public void setTournamentTicketManager(TournamentTicketManager ticketManager) {
+	public void setTicketManager(AbstractTournamentTicketManager ticketManager) {
 		this.ticketManager = ticketManager;
+	}
+
+	public void setTournamentManager(AbstractTournamentManager tournamentManager) {
+		this.tournamentManager = tournamentManager;
 	}
 }

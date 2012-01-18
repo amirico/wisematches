@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.impl;
+package wisematches.playground.tournament.impl.hibernate;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,10 +11,11 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.playground.RatingManager;
+import wisematches.playground.tournament.TournamentPoster;
 import wisematches.playground.tournament.TournamentSection;
 import wisematches.playground.tournament.TournamentTicket;
 import wisematches.playground.tournament.TournamentTicketBatch;
-import wisematches.playground.tournament.TournamentTicketListener;
+import wisematches.playground.tournament.impl.AbstractTournamentTicketManager;
 
 import java.util.*;
 
@@ -112,7 +113,7 @@ public class HibernateTournamentTicketManager extends AbstractTournamentTicketMa
 			final Session session = sessionFactory.getCurrentSession();
 			final Query q = session.createQuery("" +
 					"select t.section, count(t.pk.poster) " +
-					"from wisematches.playground.tournament.impl.HibernateTournamentTicket t " +
+					"from wisematches.playground.tournament.impl.hibernate.HibernateTournamentTicket t " +
 					"where t.pk.poster=? and t.pk.language=? group by t.section");
 			q.setParameter(0, poster.getNumber());
 			q.setParameter(1, language);
@@ -141,7 +142,7 @@ public class HibernateTournamentTicketManager extends AbstractTournamentTicketMa
 			}
 			final Session session = sessionFactory.getCurrentSession();
 			final Query query = session.createQuery("" +
-					"from wisematches.playground.tournament.impl.HibernateTournamentTicket t " +
+					"from wisematches.playground.tournament.impl.hibernate.HibernateTournamentTicket t " +
 					"where t.pk.poster = ? and t.pk.player = ?");
 			query.setParameter(0, poster.getNumber());
 			query.setParameter(1, player.getId());
@@ -169,9 +170,9 @@ public class HibernateTournamentTicketManager extends AbstractTournamentTicketMa
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void announceTournament(final Date scheduledDate) {
+	public TournamentPoster announceTournament(final Date scheduledDate) {
 		if (sessionFactory == null || transactionTemplate == null) {
-			return;
+			return null;
 		}
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			@Override
@@ -193,6 +194,7 @@ public class HibernateTournamentTicketManager extends AbstractTournamentTicketMa
 				}
 			}
 		});
+		return null;
 	}
 
 	private void initPoster() {
@@ -207,7 +209,7 @@ public class HibernateTournamentTicketManager extends AbstractTournamentTicketMa
 					HibernateTournamentPoster poster = getTournamentPoster();
 					final Session session = sessionFactory.getCurrentSession();
 					final Query query = session.createQuery("" +
-							"from wisematches.playground.tournament.impl.HibernateTournamentPoster p " +
+							"from wisematches.playground.tournament.impl.hibernate.HibernateTournamentPoster p " +
 							"where p.started=false");
 					query.setMaxResults(1);
 					poster = (HibernateTournamentPoster) query.uniqueResult();
