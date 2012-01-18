@@ -44,7 +44,6 @@
                 <property name="waitForTasksToCompleteOnShutdown" value="true"/>
             </bean>
         </property>
-        <property name="sessionFactory" ref="sessionFactory"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="boardsSearchEngine" ref="scribbleSearchEngineManager"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>

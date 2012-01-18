@@ -2,7 +2,6 @@ package wisematches.playground.expiration.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -43,7 +42,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 	private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.terminator");
-	private SessionFactory sessionFactory;
+//	private SessionFactory sessionFactory;
 
 	public ExpiredGamesTerminator() {
 	}
@@ -130,19 +129,19 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 			log.info("Process game expiration: " + boardId + ": " + task.getExpirationType());
 			final ScheduledFuture scheduledFuture = scheduledExpirations.get(boardId);
 			if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
-				boolean reschedulingRequired = true;
-				if (task.getExpirationType() == null) {
-					reschedulingRequired = transactionTemplate.execute(new TransactionCallback<Boolean>() {
-						@Override
-						public Boolean doInTransaction(TransactionStatus status) {
+				final boolean reschedulingRequired = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+					@Override
+					public Boolean doInTransaction(TransactionStatus status) {
+						if (task.getExpirationType() == null) {
 							return !executeBoardTermination(boardId);
+						} else {
+							for (GameExpirationListener listener : listeners) {
+								listener.gameExpiring(boardId, task.getExpirationType());
+							}
+							return true;
 						}
-					});
-				} else {
-					for (GameExpirationListener listener : listeners) {
-						listener.gameExpiring(boardId, task.getExpirationType());
 					}
-				}
+				});
 
 				if (reschedulingRequired) {
 					scheduleBoardTermination(boardId, task.getExpiringDate());
@@ -199,11 +198,6 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 			lock.unlock();
 		}
 	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
 
 	public void destroy() {
 		lock.lock();

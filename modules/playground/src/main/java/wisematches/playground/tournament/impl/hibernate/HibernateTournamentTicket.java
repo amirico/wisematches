@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.impl;
+package wisematches.playground.tournament.impl.hibernate;
 
 import wisematches.personality.Language;
 import wisematches.personality.Personality;

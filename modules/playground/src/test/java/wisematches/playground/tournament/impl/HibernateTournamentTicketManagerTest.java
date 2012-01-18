@@ -6,15 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.personality.Language;
-import wisematches.personality.player.Player;
-import wisematches.personality.player.computer.robot.RobotPlayer;
-import wisematches.playground.tournament.*;
-
-import java.util.Date;
-import java.util.Iterator;
-
-import static org.junit.Assert.*;
+import wisematches.playground.tournament.TournamentTicketManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -27,8 +19,8 @@ import static org.junit.Assert.*;
 		"classpath:/config/playground-config.xml"
 })
 public class HibernateTournamentTicketManagerTest {
-	@Autowired
-	private TournamentTicketManager tournamentTicketManager;
+//	@Autowired
+//	private TournamentTicketManager tournamentTicketManager;
 
 	public HibernateTournamentTicketManagerTest() {
 	}

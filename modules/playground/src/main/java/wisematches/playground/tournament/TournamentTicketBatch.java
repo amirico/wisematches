@@ -19,15 +19,15 @@ public class TournamentTicketBatch {
 		totalTickets = k;
 	}
 
-	public long getBoughtTicketsCount(TournamentSection section) {
+	public long getTotalTickets() {
+		return totalTickets;
+	}
+
+	public long getBoughtTickets(TournamentSection section) {
 		Long aLong = sectionsMap.get(section);
 		if (aLong == null) {
 			return 0;
 		}
 		return aLong;
-	}
-
-	public long getTotalTickets() {
-		return totalTickets;
 	}
 }

@@ -1,6 +1,8 @@
 package wisematches.playground.tournament.impl;
 
+import wisematches.personality.Language;
 import wisematches.personality.player.Player;
+import wisematches.playground.propose.GameRestriction;
 import wisematches.playground.tournament.TournamentPoster;
 import wisematches.playground.tournament.TournamentTicket;
 import wisematches.playground.tournament.TournamentTicketListener;
@@ -15,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractTournamentTicketManager<P extends TournamentPoster> implements TournamentTicketManager {
+public abstract class AbstractTournamentTicketManager<P extends AbstractTournamentPoster> implements TournamentTicketManager {
 	private P poster;
 
 	protected final Lock lock = new ReentrantLock();
@@ -47,7 +49,17 @@ public abstract class AbstractTournamentTicketManager<P extends TournamentPoster
 		}
 	}
 
-	public void announceRegularTournament(final Date scheduledDate) {
+	public TournamentPoster announceTournament(final Date scheduledDate) {
+		lock.lock();
+		try {
+			final P newPoster = createNewPoster();
+//			poster.setProcessed();
+//			saveActivePoster();
+			poster = newPoster;
+			return poster;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	protected void fireTicketSold(TournamentPoster poster, Player player, TournamentTicket ticket) {
