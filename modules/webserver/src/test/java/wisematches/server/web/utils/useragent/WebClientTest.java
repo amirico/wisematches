@@ -24,6 +24,11 @@ public class WebClientTest {
 		assertClient(UserAgent.JAVA, 5, "Java/1.5.0_22");
 	}
 
+	@Test
+	public void testGoogleAdSense() {
+		assertClient(UserAgent.GOOGLEADSENSE, 0, "Mediapartners-Google");
+		assertClient(UserAgent.GOOGLEADSENSE, 2, "Mediapartners-Google/2.1");
+	}
 
 	private void assertClient(UserAgent u, int v, String a) {
 		final WebClient detect = WebClient.detect(a);

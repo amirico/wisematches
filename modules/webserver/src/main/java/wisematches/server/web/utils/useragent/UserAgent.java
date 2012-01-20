@@ -15,5 +15,6 @@ public enum UserAgent {
 	MSNBOT,
 	UNKNOWN,
 	WISEMATCHES,
-	JAVA
+	JAVA,
+	GOOGLEADSENSE
 }
