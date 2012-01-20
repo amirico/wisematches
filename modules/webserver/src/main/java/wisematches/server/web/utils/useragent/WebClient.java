@@ -125,6 +125,14 @@ public class WebClient {
 				} else if (userAgentString.contains("Java")) {
 					ua = UserAgent.JAVA;
 					ver = userAgentString.substring(userAgentString.indexOf("/1.") + 3);
+				} else if (userAgentString.contains("Mediapartners-Google")) {
+					ua = UserAgent.GOOGLEADSENSE;
+					int i = userAgentString.indexOf("/");
+					if (i != -1) {
+						ver = userAgentString.substring(i + 1);
+					} else {
+						ver = "0.0";
+					}
 				}
 				version = Integer.parseInt(ver.substring(0, ver.indexOf(".")));
 			} catch (Exception ex) {
