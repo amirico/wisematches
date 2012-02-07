@@ -49,19 +49,19 @@
     </bean>
 
 <!--
-    <bean id="tournamentManager" class="wisematches.playground.tournament.impl.hibernate.HibernateTournamentManager">
+    <bean id="tournamentManager" class="wisematches.playground.tournament.r1.impl.hibernate.HibernateTournamentManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="tournamentTicketManager"
-          class="wisematches.playground.tournament.impl.hibernate.HibernateTournamentTicketManager">
+          class="wisematches.playground.tournament.r1.impl.hibernate.HibernateTournamentTicketManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
         <property name="ratingManager" ref="ratingManager"/>
     </bean>
 
     <bean id="tournamentActivator"
-          class="wisematches.playground.tournament.impl.TournamentActivator"
+          class="wisematches.playground.tournament.r1.impl.TournamentActivator"
           init-method="startTournament">
         <property name="cronExpression" value="* * * ? * 2#1"/>
         <property name="ticketManager" ref="tournamentTicketManager"/>
