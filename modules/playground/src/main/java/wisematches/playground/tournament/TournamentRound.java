@@ -1,5 +1,7 @@
 package wisematches.playground.tournament;
 
+import wisematches.personality.Language;
+
 import java.util.Date;
 
 /**
@@ -56,6 +58,13 @@ public interface TournamentRound {
 	 * @return {@code true} if round was finished; otherwise {@code false}.
 	 */
 	boolean isFinished();
+
+	/**
+	 * Returns language for the round.
+	 *
+	 * @return the language for the round.
+	 */
+	Language getLanguage();
 
 	/**
 	 * Returns section of this round.
