@@ -9,7 +9,7 @@ public interface TournamentGroup {
 	 *
 	 * @return the id of tournament's tour
 	 */
-	long getTour();
+	int getRound();
 
 	/**
 	 * Returns the group's number
