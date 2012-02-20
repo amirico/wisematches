@@ -1,11 +1,13 @@
 package wisematches.playground.tournament;
 
+import wisematches.playground.search.DesiredEntityBean;
+
 /**
  * The tournament group is last tournament entity that describes players and games for one group.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentGroup {
+public interface TournamentGroup extends TournamentEntity<TournamentRoundId> {
 	/**
 	 * Returns tournament for the group.
 	 *

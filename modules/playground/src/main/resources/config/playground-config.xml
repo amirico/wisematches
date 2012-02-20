@@ -48,7 +48,14 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-<!--
+    <bean id="tournamentSubscriptionManager"
+          class="wisematches.playground.tournament.upcoming.impl.HibernateTournamentSubscriptionManager">
+        <property name="ratingManager" ref="ratingManager"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="cronExpression" value="* * * ? * 2#1"/>
+    </bean>
+
+    <!--
     <bean id="tournamentManager" class="wisematches.playground.tournament.r1.impl.hibernate.HibernateTournamentManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
@@ -81,7 +88,7 @@
         </property>
     </bean>
 
-<!--
+    <!--
     <bean id="tournamentActivationTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="cronExpression" value="0 30 2 * * ?"/>
         &lt;!&ndash; run every morning at 2:30 AM &ndash;&gt;

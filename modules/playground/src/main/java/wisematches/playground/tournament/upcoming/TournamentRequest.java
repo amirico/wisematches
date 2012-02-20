@@ -22,7 +22,7 @@ public interface TournamentRequest {
 	 *
 	 * @return the number of a tournament.
 	 */
-	int getTournament();
+	int getAnnouncement();
 
 	/**
 	 * Returns tournament's language.
@@ -36,5 +36,5 @@ public interface TournamentRequest {
 	 *
 	 * @return the tournament's section.
 	 */
-	TournamentSection getTournamentSection();
+	TournamentSection getSection();
 }

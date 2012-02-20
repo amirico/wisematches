@@ -1,6 +1,7 @@
 package wisematches.playground.tournament.active;
 
 import wisematches.personality.player.Player;
+import wisematches.playground.search.EntitySearchManager;
 import wisematches.playground.tournament.*;
 
 import java.util.Collection;
@@ -12,7 +13,6 @@ import java.util.Collection;
  * the {@code TournamentSearchManager} because there are a lot of groups and games in one tournament.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see TournamentSearchManager
  */
 public interface TournamentManager {
 	void addTournamentListener(TournamentListener l);
@@ -69,11 +69,11 @@ public interface TournamentManager {
 	 */
 	Collection<TournamentRound> getTournamentRounds(TournamentSectionId sectionId);
 
-
 	/**
 	 * Returns tournament search manager that provides access to groups and games.
 	 *
+	 * @param type type of entity that should be searched.
 	 * @return tournament search manager that provides access to groups and games.
 	 */
-	TournamentSearchManager getTournamentSearchManager();
+	<E extends TournamentEntity<C>, C extends TournamentEntityId> EntitySearchManager<E, C> getTournamentSearchManager(Class<E> type);
 }

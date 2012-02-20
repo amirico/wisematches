@@ -23,9 +23,10 @@ public interface TournamentSubscriptionManager {
 	/**
 	 * Returns announced tournament.
 	 *
+	 * @param language the language of the tournament
 	 * @return the announced tournament.
 	 */
-	TournamentAnnouncement getTournamentAnnouncement();
+	TournamentAnnouncement getTournamentAnnouncement(Language language);
 
 	/**
 	 * Subscribes specified player to announced tournament with specified parameters.
@@ -41,7 +42,7 @@ public interface TournamentSubscriptionManager {
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 * @throws WrongSectionException	  if player can't be subscribed to specified section because has higher rating.
 	 */
-	TournamentRequest subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongSectionException, WrongAnnouncementException;
+	TournamentRequest subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongAnnouncementException, WrongSectionException;
 
 	/**
 	 * Unsubscribes specified player from the tournament.

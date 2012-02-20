@@ -2,26 +2,19 @@ package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
 
-import java.io.Serializable;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class TournamentSectionId implements Serializable {
-	private final int tournament;
+public final class TournamentSectionId extends TournamentEntityId {
 	private final Language language;
 	private final TournamentSection section;
 
 	private static final long serialVersionUID = -6682183322507770407L;
 
 	private TournamentSectionId(int tournament, Language language, TournamentSection section) {
-		this.tournament = tournament;
+		super(tournament);
 		this.language = language;
 		this.section = section;
-	}
-
-	public int getTournament() {
-		return tournament;
 	}
 
 	public Language getLanguage() {
@@ -52,7 +45,6 @@ public final class TournamentSectionId implements Serializable {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		TournamentSectionId sectionId = (TournamentSectionId) o;
-
 		return tournament == sectionId.tournament && language == sectionId.language && section == sectionId.section;
 	}
 
