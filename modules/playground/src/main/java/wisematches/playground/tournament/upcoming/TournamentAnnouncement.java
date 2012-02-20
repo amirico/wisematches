@@ -12,7 +12,7 @@ public interface TournamentAnnouncement {
 
 	Date getStartDate();
 
-	long getTotalTickets();
+	int getTotalTickets();
 
-	long getBoughtTickets(TournamentSection section);
+	int getBoughtTickets(TournamentSection section);
 }

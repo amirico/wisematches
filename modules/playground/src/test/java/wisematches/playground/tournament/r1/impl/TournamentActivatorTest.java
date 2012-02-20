@@ -16,7 +16,7 @@ public class TournamentActivatorTest {
 		TournamentActivator a = new TournamentActivator();
 //		a.setCronExpression("0 30 2 ? * 2#1");
 		a.setCronExpression("* * * ? * 6#4");
-		System.out.println(a.getNextTournamentDay().toGMTString());
+		System.out.println(a.getNextTournamentDay());
 		System.out.println(a.isTournamentDay());
 	}
 }

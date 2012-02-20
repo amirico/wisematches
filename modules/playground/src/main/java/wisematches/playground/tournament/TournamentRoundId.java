@@ -2,18 +2,17 @@ package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
 
-import java.io.Serializable;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class TournamentRoundId implements Serializable {
+public final class TournamentRoundId extends TournamentEntityId {
 	private final TournamentSectionId sectionId;
 	private final int round;
 
 	private static final long serialVersionUID = -6236607047654913384L;
 
 	private TournamentRoundId(TournamentSectionId sectionId, int round) {
+		super(sectionId.tournament);
 		this.sectionId = sectionId;
 		this.round = round;
 	}

@@ -1,6 +1,7 @@
 package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
+import wisematches.playground.search.DesiredEntityBean;
 
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentRound {
+public interface TournamentRound extends TournamentEntity<TournamentSectionId> {
 	/**
 	 * Returns number of the round.
 	 *
@@ -23,6 +24,20 @@ public interface TournamentRound {
 	 * @return the tournament that contains this round.
 	 */
 	int getTournament();
+
+	/**
+	 * Returns language for the round.
+	 *
+	 * @return the language for the round.
+	 */
+	Language getLanguage();
+
+	/**
+	 * Returns section of this round.
+	 *
+	 * @return the section of the round.
+	 */
+	TournamentSection getTournamentSection();
 
 	/**
 	 * Returns date when round was started.
@@ -58,18 +73,4 @@ public interface TournamentRound {
 	 * @return {@code true} if round was finished; otherwise {@code false}.
 	 */
 	boolean isFinished();
-
-	/**
-	 * Returns language for the round.
-	 *
-	 * @return the language for the round.
-	 */
-	Language getLanguage();
-
-	/**
-	 * Returns section of this round.
-	 *
-	 * @return the section of the round.
-	 */
-	TournamentSection getTournamentSection();
 }

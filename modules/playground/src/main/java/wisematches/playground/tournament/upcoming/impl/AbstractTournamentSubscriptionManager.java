@@ -1,11 +1,7 @@
 package wisematches.playground.tournament.upcoming.impl;
 
-import wisematches.personality.Language;
-import wisematches.personality.player.Player;
-import wisematches.playground.tournament.TournamentSection;
 import wisematches.playground.tournament.upcoming.*;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
@@ -14,13 +10,13 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class AbstractTournamentSubscriptionManager implements TournamentSubscriptionManager {
+public abstract class AbstractTournamentSubscriptionManager implements TournamentSubscriptionManager {
 	protected final Lock lock = new ReentrantLock();
 
 	private final Set<TournamentRequestListener> requestListeners = new CopyOnWriteArraySet<TournamentRequestListener>();
 	private final Set<TournamentAnnouncementListener> announcementListeners = new CopyOnWriteArraySet<TournamentAnnouncementListener>();
 
-	public AbstractTournamentSubscriptionManager() {
+	protected AbstractTournamentSubscriptionManager() {
 	}
 
 	@Override
@@ -47,53 +43,21 @@ public class AbstractTournamentSubscriptionManager implements TournamentSubscrip
 		announcementListeners.remove(l);
 	}
 
-	@Override
-	public TournamentAnnouncement getTournamentAnnouncement() {
-		lock.lock();
-		try {
-			throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
-		} finally {
-			lock.unlock();
+	protected void firePlayerSubscribed(TournamentRequest request) {
+		for (TournamentRequestListener listener : requestListeners) {
+			listener.playerSubscribed(request);
 		}
 	}
 
-	@Override
-	public TournamentRequest subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongSectionException, WrongAnnouncementException {
-		lock.lock();
-		try {
-			throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
-		} finally {
-			lock.unlock();
+	protected void firePlayerUnsubscribed(TournamentRequest request) {
+		for (TournamentRequestListener listener : requestListeners) {
+			listener.playerUnsubscribed(request);
 		}
 	}
 
-	@Override
-	public TournamentRequest unsubscribe(int announcement, Player player, Language language) throws WrongAnnouncementException {
-		lock.lock();
-		try {
-			throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	public TournamentRequest getTournamentRequest(int announcement, Player player, Language language) throws WrongAnnouncementException {
-		lock.lock();
-		try {
-			throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	public Collection<TournamentRequest> getTournamentRequests(int announcement, Player player) throws WrongAnnouncementException {
-		lock.lock();
-		try {
-			throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
-		} finally {
-			lock.unlock();
+	protected void fireTournamentAnnounced(TournamentAnnouncement announcement) {
+		for (TournamentAnnouncementListener announcementListener : announcementListeners) {
+			announcementListener.tournamentAnnounced(announcement);
 		}
 	}
 }
