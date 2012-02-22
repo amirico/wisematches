@@ -53,6 +53,10 @@ public class HibernateTournamentRequest implements TournamentRequest {
 		this.section = section;
 	}
 
+	PK getPk() {
+		return pk;
+	}
+
 	@Embeddable
 	static final class PK implements Serializable {
 		@Column(name = "announcement")
