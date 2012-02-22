@@ -23,10 +23,17 @@ public interface TournamentSubscriptionManager {
 	/**
 	 * Returns announced tournament.
 	 *
-	 * @param language the language of the tournament
 	 * @return the announced tournament.
 	 */
-	TournamentAnnouncement getTournamentAnnouncement(Language language);
+	TournamentAnnouncement getTournamentAnnouncement();
+
+	/**
+	 * Returns announcement by it's number.
+	 *
+	 * @param number the announcement's number
+	 * @return announcement by specified number or {@code null} if there is announcement.
+	 */
+	TournamentAnnouncement getTournamentAnnouncement(int number);
 
 	/**
 	 * Subscribes specified player to announced tournament with specified parameters.

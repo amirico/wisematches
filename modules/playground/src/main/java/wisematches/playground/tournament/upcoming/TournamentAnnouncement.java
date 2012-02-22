@@ -1,5 +1,6 @@
 package wisematches.playground.tournament.upcoming;
 
+import wisematches.personality.Language;
 import wisematches.playground.tournament.TournamentSection;
 
 import java.util.Date;
@@ -10,9 +11,9 @@ import java.util.Date;
 public interface TournamentAnnouncement {
 	int getNumber();
 
-	Date getStartDate();
+	Date getScheduledDate();
 
-	int getTotalTickets();
+	int getTotalTickets(Language language);
 
-	int getBoughtTickets(TournamentSection section);
+	int getBoughtTickets(Language language, TournamentSection section);
 }
