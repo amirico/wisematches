@@ -55,9 +55,9 @@ public abstract class AbstractTournamentSubscriptionManager implements Tournamen
 		}
 	}
 
-	protected void fireTournamentAnnounced(TournamentAnnouncement announcement) {
+	protected void fireTournamentAnnounced(TournamentAnnouncement closedAnnouncement, TournamentAnnouncement newAnnouncement) {
 		for (TournamentAnnouncementListener announcementListener : announcementListeners) {
-			announcementListener.tournamentAnnounced(announcement);
+			announcementListener.tournamentAnnounced(closedAnnouncement, newAnnouncement);
 		}
 	}
 }

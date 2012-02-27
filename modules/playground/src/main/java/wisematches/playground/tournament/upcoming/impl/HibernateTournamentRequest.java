@@ -21,10 +21,17 @@ public class HibernateTournamentRequest implements TournamentRequest {
 	@Enumerated(EnumType.ORDINAL)
 	private TournamentSection section;
 
+	@Deprecated
 	private HibernateTournamentRequest() {
 	}
 
 	HibernateTournamentRequest(int tournament, long player, Language language, TournamentSection section) {
+		if (language == null) {
+			throw new NullPointerException("Language cant be null");
+		}
+		if (section == null) {
+			throw new NullPointerException("Section cant be null");
+		}
 		this.pk = new PK(tournament, player, language);
 		this.section = section;
 	}
@@ -50,11 +57,40 @@ public class HibernateTournamentRequest implements TournamentRequest {
 	}
 
 	void setTournamentSection(TournamentSection section) {
+		if (section == null) {
+			throw new NullPointerException("Section cant be null");
+		}
 		this.section = section;
 	}
 
 	PK getPk() {
 		return pk;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof HibernateTournamentRequest)) return false;
+
+		HibernateTournamentRequest that = (HibernateTournamentRequest) o;
+		return pk.equals(that.pk) && section == that.section;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = pk.hashCode();
+		result = 31 * result + section.hashCode();
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("HibernateTournamentRequest");
+		sb.append("{pk=").append(pk);
+		sb.append(", section=").append(section);
+		sb.append('}');
+		return sb.toString();
 	}
 
 	@Embeddable
@@ -109,6 +145,17 @@ public class HibernateTournamentRequest implements TournamentRequest {
 			result = 31 * result + (int) (player ^ (player >>> 32));
 			result = 31 * result + language.hashCode();
 			return result;
+		}
+
+		@Override
+		public String toString() {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("PK");
+			sb.append("{announcement=").append(announcement);
+			sb.append(", player=").append(player);
+			sb.append(", language=").append(language);
+			sb.append('}');
+			return sb.toString();
 		}
 	}
 }

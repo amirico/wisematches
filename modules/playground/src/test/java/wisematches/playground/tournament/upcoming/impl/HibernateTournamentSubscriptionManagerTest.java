@@ -1,7 +1,8 @@
 package wisematches.playground.tournament.upcoming.impl;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,15 +12,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
+import wisematches.personality.account.Account;
+import wisematches.personality.account.impl.HibernateAccountImpl;
+import wisematches.personality.player.Player;
+import wisematches.personality.player.member.MemberPlayer;
+import wisematches.playground.RatingManager;
 import wisematches.playground.tournament.TournamentSection;
-import wisematches.playground.tournament.upcoming.TournamentAnnouncement;
-import wisematches.playground.tournament.upcoming.TournamentSubscriptionManager;
+import wisematches.playground.tournament.upcoming.*;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -43,25 +49,83 @@ public class HibernateTournamentSubscriptionManagerTest {
 
 	@Before
 	public void setUp() throws ParseException {
+		final RatingManager ratingManager = createMock(RatingManager.class);
+		expect(ratingManager.getRating(isA(Player.class))).andReturn((short) 1000).anyTimes();
+		replay(ratingManager);
+
 		tournamentSubscriptionManager = new HibernateTournamentSubscriptionManager();
 		tournamentSubscriptionManager.setSessionFactory(sessionFactory);
 		tournamentSubscriptionManager.setTransactionManager(transactionManager);
+		tournamentSubscriptionManager.setRatingManager(ratingManager);
 		tournamentSubscriptionManager.setCronExpression("0 0 0 * * ?");
 	}
 
 	@Test
-	public void asd() {
+	public void testSubscribeUnsubscribe() throws WrongAnnouncementException, WrongSectionException {
+		final Session currentSession = sessionFactory.getCurrentSession();
+		final Criteria criteria = currentSession.createCriteria(HibernateAccountImpl.class).setMaxResults(2);
+
+		final List list = criteria.list();
+		final List<Player> players = new ArrayList<Player>();
+		for (Object o : list) {
+			players.add(new MemberPlayer((Account) o));
+		}
+
+		// prepare data for testing
 		final TournamentAnnouncement announcement = tournamentSubscriptionManager.getTournamentAnnouncement();
-		assertEquals(2, announcement.getNumber());
-		assertEquals(2, announcement.getBoughtTickets(Language.RU, TournamentSection.GRANDMASTER));
-		assertEquals(1, announcement.getBoughtTickets(Language.RU, TournamentSection.INTERMEDIATE));
+		for (final Player player : players) {
+			final TournamentRequest request = tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player, Language.RU);
+			if (request != null) {
+				tournamentSubscriptionManager.unsubscribe(announcement.getNumber(), player, Language.RU);
+			}
+		}
 
-//		final Date midnight = new Date(((System.currentTimeMillis()) / 86400000L) * 86400000L);
-//		tournamentSubscriptionManager.breakingDayTime(midnight);
-/*
-		tournamentSubscriptionManager.
+		final int totalTickets = announcement.getTotalTickets(Language.RU);
+		final int ticketsExpert = announcement.getBoughtTickets(Language.RU, TournamentSection.EXPERT);
+		final int ticketsGrandmaster = announcement.getBoughtTickets(Language.RU, TournamentSection.GRANDMASTER);
 
-				assertNotNull(tournamentSubscriptionManager);
-*/
+		final Player player1 = players.get(0);
+		final Player player2 = players.get(1);
+
+		final TournamentRequestListener listener = createMock(TournamentRequestListener.class);
+		listener.playerSubscribed(new HibernateTournamentRequest(announcement.getNumber(), player1.getId(), Language.RU, TournamentSection.EXPERT));
+		listener.playerSubscribed(new HibernateTournamentRequest(announcement.getNumber(), player1.getId(), Language.RU, TournamentSection.GRANDMASTER));
+		listener.playerSubscribed(new HibernateTournamentRequest(announcement.getNumber(), player2.getId(), Language.RU, TournamentSection.GRANDMASTER));
+		listener.playerUnsubscribed(new HibernateTournamentRequest(announcement.getNumber(), player2.getId(), Language.RU, TournamentSection.GRANDMASTER));
+		listener.playerSubscribed(new HibernateTournamentRequest(announcement.getNumber(), player2.getId(), Language.RU, TournamentSection.EXPERT));
+		replay(listener);
+		tournamentSubscriptionManager.addTournamentRequestListener(listener);
+
+		try {
+			tournamentSubscriptionManager.subscribe(announcement.getNumber() - 1, player1, Language.RU, TournamentSection.EXPERT);
+			fail("Wrong announcement should be here");
+		} catch (WrongAnnouncementException ignore) {
+		}
+
+		tournamentSubscriptionManager.subscribe(announcement.getNumber(), player1, Language.RU, TournamentSection.EXPERT);
+		assertEquals(TournamentSection.EXPERT, tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player1, Language.RU).getSection());
+
+		tournamentSubscriptionManager.subscribe(announcement.getNumber(), player1, Language.RU, TournamentSection.GRANDMASTER);
+		assertEquals(TournamentSection.GRANDMASTER, tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player1, Language.RU).getSection());
+
+		tournamentSubscriptionManager.subscribe(announcement.getNumber(), player2, Language.RU, TournamentSection.GRANDMASTER);
+		assertEquals(TournamentSection.GRANDMASTER, tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player2, Language.RU).getSection());
+		assertEquals(totalTickets + 2, announcement.getTotalTickets(Language.RU));
+		assertEquals(ticketsExpert, announcement.getBoughtTickets(Language.RU, TournamentSection.EXPERT));
+		assertEquals(ticketsGrandmaster + 2, announcement.getBoughtTickets(Language.RU, TournamentSection.GRANDMASTER));
+
+		tournamentSubscriptionManager.unsubscribe(announcement.getNumber(), player2, Language.RU);
+		assertNull(tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player2, Language.RU));
+		assertEquals(totalTickets + 1, announcement.getTotalTickets(Language.RU));
+		assertEquals(ticketsExpert, announcement.getBoughtTickets(Language.RU, TournamentSection.EXPERT));
+		assertEquals(ticketsGrandmaster + 1, announcement.getBoughtTickets(Language.RU, TournamentSection.GRANDMASTER));
+
+		tournamentSubscriptionManager.subscribe(announcement.getNumber(), player2, Language.RU, TournamentSection.EXPERT);
+		assertEquals(TournamentSection.EXPERT, tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player2, Language.RU).getSection());
+		assertEquals(totalTickets + 2, announcement.getTotalTickets(Language.RU));
+		assertEquals(ticketsExpert + 1, announcement.getBoughtTickets(Language.RU, TournamentSection.EXPERT));
+		assertEquals(ticketsGrandmaster + 1, announcement.getBoughtTickets(Language.RU, TournamentSection.GRANDMASTER));
+
+		verify(listener);
 	}
 }

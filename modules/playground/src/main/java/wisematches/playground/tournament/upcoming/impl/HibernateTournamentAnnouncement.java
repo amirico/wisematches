@@ -25,15 +25,15 @@ public class HibernateTournamentAnnouncement implements TournamentAnnouncement {
 	private boolean closed = false;
 
 	@Transient
-	private volatile int[][] values = new int[Language.values().length][TournamentSection.values().length];
+	private final int[][] values = new int[Language.values().length][TournamentSection.values().length];
 
+	@Deprecated
 	private HibernateTournamentAnnouncement() {
 	}
 
-	public HibernateTournamentAnnouncement(int number, Date scheduledDate, int[][] values) {
+	public HibernateTournamentAnnouncement(int number, Date scheduledDate) {
 		this.number = number;
 		this.scheduledDate = scheduledDate;
-		this.values = values;
 	}
 
 	@Override
@@ -60,11 +60,19 @@ public class HibernateTournamentAnnouncement implements TournamentAnnouncement {
 		return values[language.ordinal()][section.ordinal()];
 	}
 
-	void getBoughtTickets(Language language, TournamentSection section, int count) {
+	void setBoughtTickets(Language language, TournamentSection section, int count) {
 		values[language.ordinal()][section.ordinal()] = count;
+	}
+
+	void changeBoughtTickets(Language language, TournamentSection section, int delta) {
+		values[language.ordinal()][section.ordinal()] += delta;
 	}
 
 	void setClosed(boolean closed) {
 		this.closed = closed;
+	}
+
+	boolean isClosed() {
+		return closed;
 	}
 }
