@@ -1,6 +1,7 @@
 package wisematches.playground.tournament.upcoming;
 
 import wisematches.personality.Language;
+import wisematches.playground.search.DesiredEntityBean;
 import wisematches.playground.tournament.TournamentSection;
 
 /**

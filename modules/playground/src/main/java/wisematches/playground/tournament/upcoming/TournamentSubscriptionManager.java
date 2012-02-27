@@ -82,7 +82,7 @@ public interface TournamentSubscriptionManager {
 	 *
 	 * @param announcement the number of the announcement. The number is used for user actions synchronization with
 	 *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
-	 * @param player	   the player who's requests should be returend.
+	 * @param player	   the player who's requests should be returned.
 	 * @return collection of all active requests.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */

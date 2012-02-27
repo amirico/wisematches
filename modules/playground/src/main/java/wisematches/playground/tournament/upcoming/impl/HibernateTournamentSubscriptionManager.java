@@ -95,8 +95,11 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 			HibernateTournamentRequest request = (HibernateTournamentRequest) getTournamentRequest(announcement, player, language);
 			if (request == null) {
 				request = new HibernateTournamentRequest(announcement, player.getId(), language, section);
+				this.announcement.changeBoughtTickets(language, section, 1);
 				session.save(request);
 			} else {
+				this.announcement.changeBoughtTickets(language, section, 1);
+				this.announcement.changeBoughtTickets(language, request.getSection(), -1);
 				request.setTournamentSection(section);
 				session.update(request);
 			}
@@ -122,6 +125,7 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 			Session session = sessionFactory.getCurrentSession();
 			HibernateTournamentRequest request = (HibernateTournamentRequest) getTournamentRequest(announcement, player, language);
 			if (request != null) {
+				this.announcement.changeBoughtTickets(language, request.getSection(), -1);
 				session.delete(request);
 				firePlayerUnsubscribed(request);
 			}
@@ -181,15 +185,18 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 				if (cronExpression.isSatisfiedBy(midnight)) { // but it's time for new one
 					announcement = createAnnouncement(announcement);
 					session.save(announcement);
-					fireTournamentAnnounced(announcement);
+					fireTournamentAnnounced(null, announcement);
 				}
 			} else {
-				if (announcement.getScheduledDate().equals(midnight)) { // announcement day
-					announcement.setClosed(true);
-					session.update(announcement);
+				// not closed and scheduled for today or in past
+				if (!announcement.isClosed() && announcement.getScheduledDate().compareTo(midnight) <= 0) {
+					final HibernateTournamentAnnouncement old = announcement;
+					old.setClosed(true);
+					session.update(old);
+
 					announcement = createAnnouncement(announcement);
 					session.save(announcement);
-					fireTournamentAnnounced(announcement);
+					fireTournamentAnnounced(old, announcement);
 				}
 			}
 		} finally {
@@ -222,7 +229,7 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 
 	private HibernateTournamentAnnouncement loadAnnouncement(int number) {
 		final Session session = sessionFactory.getCurrentSession();
-		HibernateTournamentAnnouncement res = null;
+		HibernateTournamentAnnouncement res;
 		if (number == -1) {
 			final Criteria ann = session.createCriteria(HibernateTournamentAnnouncement.class)
 					.add(Restrictions.eq("closed", false))
@@ -247,7 +254,7 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 				final Language l = (Language) row[0];
 				final TournamentSection s = (TournamentSection) row[1];
 				final Number c = (Number) row[2];
-				res.getBoughtTickets(l, s, c.intValue());
+				res.setBoughtTickets(l, s, c.intValue());
 			}
 		}
 		return res;
@@ -256,8 +263,7 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 	private HibernateTournamentAnnouncement createAnnouncement(final HibernateTournamentAnnouncement current) {
 		final Date nextTime = getNextAnnouncementTime();
 		final int currentNumber = current != null ? current.getNumber() : 0;
-		final int[][] values = new int[Language.values().length][TournamentSection.values().length];
-		return new HibernateTournamentAnnouncement(currentNumber + 1, nextTime, values);
+		return new HibernateTournamentAnnouncement(currentNumber + 1, nextTime);
 	}
 
 	private Date getMidnight() {
@@ -314,7 +320,6 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 			lock.unlock();
 		}
 	}
-
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		lock.lock();
