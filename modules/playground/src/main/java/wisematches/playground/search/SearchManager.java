@@ -32,12 +32,12 @@ public interface SearchManager<E, C> {
 	/**
 	 * Returns count of filtered items by specified {@code criteria}
 	 *
-	 * @param person   the person who searches entities.
-	 * @param context  the context for search.
-	 * @param criteria the search criteria.
+	 * @param person	the person who searches entities.
+	 * @param context   the context for search.
+	 * @param criterias search criterias
 	 * @return number of items available for search according to specified {@code criteria}
 	 */
-	int getFilteredCount(Personality person, C context, SearchCriteria[] criteria);
+	int getFilteredCount(Personality person, C context, SearchCriteria[] criterias);
 
 	/**
 	 * Searches and returns list of all entities for specified person in specified context and according
@@ -46,12 +46,12 @@ public interface SearchManager<E, C> {
 	 * The result will be sorted according to specified orders and will be limited according to specified
 	 * range.
 	 *
-	 * @param person   the person who searches entities.
-	 * @param context  the context for search.
-	 * @param criteria the search criteria.
-	 * @param order	the order of returned entities.
-	 * @param range	the range of returned entities.
+	 * @param person	the person who searches entities.
+	 * @param context   the context for search.
+	 * @param criterias search criterias
+	 * @param orders	orders of result
+	 * @param range	 the range of returned entities.
 	 * @return list of entities or empty list if no entities are found.
 	 */
-	List<E> searchEntities(Personality person, C context, SearchCriteria[] criteria, Order[] order, Range range);
+	List<E> searchEntities(Personality person, C context, SearchCriteria[] criterias, Order[] orders, Range range);
 }

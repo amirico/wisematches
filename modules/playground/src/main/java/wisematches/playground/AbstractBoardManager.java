@@ -1,7 +1,10 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
+import wisematches.database.Order;
+import wisematches.database.Range;
 import wisematches.personality.Personality;
+import wisematches.playground.search.SearchCriteria;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -114,23 +117,22 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	}
 
 	@Override
-	public Collection<B> getOpenedBoards() {
-		openBoardLock.lock();
-		try {
-			return boardsMap.values();
-		} finally {
-			openBoardLock.unlock();
-		}
+	public int getTotalCount(Personality person, GameState context) {
+		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public Collection<B> getActiveBoards(Personality player) {
-		if (log.isDebugEnabled()) {
-			log.debug("get active boards for player: " + player);
-		}
+	public int getFilteredCount(Personality person, GameState context, SearchCriteria[] criterias) {
+		return loadPlayerBoardsCount(person, context, criterias);
+	}
 
-		final Collection<Long> longs = loadActivePlayerBoards(player);
-		final Collection<B> res = new ArrayList<B>(longs.size());
+	@Override
+	public List<B> searchEntities(Personality person, GameState context, SearchCriteria[] criterias, Order[] orders, Range range) {
+		if (log.isDebugEnabled()) {
+			log.debug("get active boards for player: " + person);
+		}
+		final Collection<Long> longs = loadPlayerBoards(person, context, criterias, orders, range);
+		final List<B> res = new ArrayList<B>(longs.size());
 		for (Long boardId : longs) {
 			try {
 				final B b = openBoard(boardId);
@@ -174,12 +176,26 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	protected abstract void saveBoardImpl(B board);
 
 	/**
+	 * Returns count of boards foe specified player.
+	 *
+	 * @param player   the player who's boards should be loaded.
+	 * @param state	the state of a game.
+	 * @param criteria additional search criterias.
+	 * @return count of boards.
+	 */
+	protected abstract int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criteria);
+
+	/**
 	 * Loads ids of active boards for specified player.
 	 *
-	 * @param player the player whos boards should be loaded.
+	 * @param player   the player who's boards should be loaded.
+	 * @param state	the state of a game.
+	 * @param criteria additional search criterias.
+	 * @param order	order
+	 * @param range	range
 	 * @return the collection of board's ids for specified player or empty collection.
 	 */
-	protected abstract Collection<Long> loadActivePlayerBoards(Personality player);
+	protected abstract Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criteria, Order[] order, Range range);
 
 	public void setRatingManager(RatingManager ratingManager) {
 		this.ratingManager = ratingManager;

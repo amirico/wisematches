@@ -8,16 +8,13 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.playground.*;
+import wisematches.playground.expiration.GameExpirationDescriptor;
 import wisematches.playground.expiration.GameExpirationListener;
 import wisematches.playground.expiration.GameExpirationManager;
 import wisematches.playground.expiration.GameExpirationType;
-import wisematches.playground.search.board.BoardsSearchEngine;
-import wisematches.playground.search.board.LastMoveInfo;
+import wisematches.playground.search.SearchManager;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.Lock;
@@ -32,14 +29,13 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 	private TaskScheduler taskScheduler;
 	private TransactionTemplate transactionTemplate;
 
-	private BoardsSearchEngine boardsSearchEngine;
+	private SearchManager<GameExpirationDescriptor, ?> searchManager;
 	private BoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> boardManager;
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Map<Long, ScheduledFuture> scheduledExpirations = new HashMap<Long, ScheduledFuture>();
 	private final Collection<GameExpirationListener> listeners = new CopyOnWriteArraySet<GameExpirationListener>();
 
-	private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.terminator");
 //	private SessionFactory sessionFactory;
@@ -152,10 +148,6 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
-	protected Date getExpiringDate(int daysPerMove, Date lastMoveTime) {
-		return new Date(lastMoveTime.getTime() + daysPerMove * MILLIS_IN_DAY);
-	}
-
 	public void setTaskScheduler(TaskScheduler taskScheduler) {
 		lock.lock();
 		try {
@@ -166,8 +158,8 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 		}
 	}
 
-	public void setBoardsSearchEngine(BoardsSearchEngine boardsSearchEngine) {
-		this.boardsSearchEngine = boardsSearchEngine;
+	public void setSearchManager(SearchManager<GameExpirationDescriptor, ?> searchManager) {
+		this.searchManager = searchManager;
 	}
 
 	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
@@ -211,16 +203,16 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 	}
 
 	private void initTerminator() {
-		if (boardsSearchEngine == null || boardManager == null || taskScheduler == null || transactionTemplate == null) {
+		if (searchManager == null || boardManager == null || taskScheduler == null || transactionTemplate == null) {
 			return;
 		}
 
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				final Collection<LastMoveInfo> expiring = boardsSearchEngine.findExpiringBoards();
-				for (LastMoveInfo board : expiring) {
-					scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getDaysPerMove(), board.getLastMoveTime()));
+				final List<GameExpirationDescriptor> descriptors = searchManager.searchEntities(null, null, null, null, null);
+				for (GameExpirationDescriptor descriptor : descriptors) {
+					scheduleBoardTermination(descriptor.getBoardId(), descriptor.getExpiringDate());
 				}
 			}
 		});
@@ -266,7 +258,7 @@ public class ExpiredGamesTerminator implements GameExpirationManager {
 
 		@Override
 		public void gameMoveDone(GameBoard board, GameMove move, GameMoveScore moveScore) {
-			scheduleBoardTermination(board.getBoardId(), getExpiringDate(board.getGameSettings().getDaysPerMove(), board.getLastMoveTime()));
+			scheduleBoardTermination(board.getBoardId(), GameExpirationDescriptor.getExpiringDate(board));
 		}
 
 		@Override

@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.search.board;
+package wisematches.playground.scribble.history;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
+import wisematches.playground.GameResolution;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -35,10 +38,19 @@ public class ScribbleHistorySearchManagerTest {
 		final Personality player = Personality.person(1029);
 
 		int finishedGamesCount = historySearchManager.getTotalCount(player, null);
-		System.out.println(finishedGamesCount);
+		List<ScribbleHistoryEntity> historyEntity1 = historySearchManager.searchEntities(player, null, null, null, null);
+		assertEquals(finishedGamesCount, historyEntity1.size());
 
-		List<ScribbleHistoryEntity> historyEntity = historySearchManager.searchEntities(player, null, null, new Order[]{Order.asc("language")}, Range.limit(4, 10));
-		System.out.println("Finished size: " + historyEntity.size());
-		System.out.println(historyEntity);
+		List<ScribbleHistoryEntity> historyEntity2 = historySearchManager.searchEntities(player, null, null, new Order[]{Order.asc("language")}, Range.limit(4, 10));
+		if (finishedGamesCount > 10) {
+			assertEquals(10, historyEntity2.size());
+		} else {
+			assertEquals(finishedGamesCount, historyEntity2.size());
+		}
+
+		historySearchManager.searchEntities(player, GameResolution.FINISHED, null, null, null);
+		historySearchManager.searchEntities(player, GameResolution.RESIGNED, null, null, null);
+		historySearchManager.searchEntities(player, GameResolution.STALEMATE, null, null, null);
+		historySearchManager.searchEntities(player, GameResolution.TIMEOUT, null, null, null);
 	}
 }

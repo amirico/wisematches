@@ -1,14 +1,17 @@
 package wisematches.playground.scribble;
 
-import org.hibernate.Query;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Projection;
 import org.junit.Before;
 import org.junit.Test;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.GameState;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
@@ -137,24 +140,26 @@ public class ScribbleBoardManagerTest {
 	}
 
 	@Test
-	public void testLoadActivePlayerBoards() {
+	public void testActivePlayerBoards() {
 		final List<Long> ids = Arrays.asList(1L, 2L, 3L);
 
-		final Query query = createStrictMock(Query.class);
-		expect(query.setParameter(0, 1L)).andReturn(query);
-		expect(query.list()).andReturn(ids);
-		replay(query);
+		final Criteria criteria = createMock(Criteria.class);
+		expect(criteria.createAlias("playerHands", "hand")).andReturn(criteria);
+		expect(criteria.add(anyObject(Criterion.class))).andReturn(criteria).anyTimes();
+		expect(criteria.setProjection(anyObject(Projection.class))).andReturn(criteria).anyTimes();
+		expect(criteria.list()).andReturn(ids);
+		replay(criteria);
 
-		expect(session.createQuery(isA(String.class))).andReturn(query);
+		expect(session.createCriteria(ScribbleBoard.class)).andReturn(criteria);
 		replay(session);
 
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
 
-		final Collection<Long> longCollection = scribbleRoomManager.loadActivePlayerBoards(Personality.person(1));
+		final Collection<Long> longCollection = scribbleRoomManager.loadPlayerBoards(Personality.person(1), GameState.ACTIVE, null, null, null);
 		assertSame(ids, longCollection);
 
-		verify(query);
+		verify(criteria);
 		verify(session);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);

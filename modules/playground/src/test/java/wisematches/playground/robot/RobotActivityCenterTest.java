@@ -70,6 +70,7 @@ public class RobotActivityCenterTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void initializeManager() throws BoardLoadingException {
 		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.DULL);
 		final RobotPlayer p2 = RobotPlayer.valueOf(RobotType.TRAINEE);
@@ -81,9 +82,9 @@ public class RobotActivityCenterTest {
 		replay(gameBoard);
 
 		boardManager.addBoardStateListener(capture(listener));
-		expect(boardManager.getActiveBoards(p1)).andReturn(Arrays.asList(gameBoard));
-		expect(boardManager.getActiveBoards(p2)).andReturn(Arrays.asList(gameBoard));
-		expect(boardManager.getActiveBoards(p3)).andReturn(Collections.emptyList());
+		expect(boardManager.searchEntities(p1, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(gameBoard));
+		expect(boardManager.searchEntities(p2, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(gameBoard));
+		expect(boardManager.searchEntities(p3, GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
 		replay(boardManager);
 
 		// Where is two robots and two tasks must be executed.
@@ -103,9 +104,9 @@ public class RobotActivityCenterTest {
 		final RobotPlayer p1 = RobotPlayer.valueOf(RobotType.TRAINEE);
 
 		boardManager.addBoardStateListener(capture(listener));
-		expect(boardManager.getActiveBoards(RobotPlayer.valueOf(RobotType.DULL))).andReturn(Collections.emptyList());
-		expect(boardManager.getActiveBoards(RobotPlayer.valueOf(RobotType.TRAINEE))).andReturn(Collections.emptyList());
-		expect(boardManager.getActiveBoards(RobotPlayer.valueOf(RobotType.EXPERT))).andReturn(Collections.emptyList());
+		expect(boardManager.searchEntities(RobotPlayer.valueOf(RobotType.DULL), GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
+		expect(boardManager.searchEntities(RobotPlayer.valueOf(RobotType.TRAINEE), GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
+		expect(boardManager.searchEntities(RobotPlayer.valueOf(RobotType.EXPERT), GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
 		replay(boardManager);
 
 		final Executor executor = createStrictMock(Executor.class);

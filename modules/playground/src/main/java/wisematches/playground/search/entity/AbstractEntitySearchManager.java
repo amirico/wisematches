@@ -15,11 +15,11 @@ import java.util.List;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchManager<E, C> {
-	private final Class<E> entityType;
+	private final Class<?> entityType;
 
 	private SessionFactory sessionFactory;
 
-	protected AbstractEntitySearchManager(Class<E> entityType) {
+	protected AbstractEntitySearchManager(Class<?> entityType) {
 		this.entityType = entityType;
 	}
 
@@ -33,25 +33,38 @@ public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchM
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
+		applyRestrictions(criteria, context, criterias);
 		criteria.setProjection(Projections.rowCount());
-		if (criterias != null) {
-			applyCriterias(criteria, criterias);
-		}
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<E> searchEntities(Personality person, C context, SearchCriteria[] criterias, Order[] order, Range range) {
+	public List<E> searchEntities(Personality person, C context, SearchCriteria[] criterias, Order[] orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
-		criteria.setProjection(Projections.rowCount());
-		if (criterias != null) {
-			applyCriterias(criteria, criterias);
+		applyRestrictions(criteria, context, criterias);
+		applyProjections(criteria, context, criterias);
+		applyOrders(criteria, orders);
+		applyRange(range, criteria);
+		return criteria.list();
+	}
+
+	protected abstract void applyRestrictions(Criteria criteria, C context, SearchCriteria[] criterias);
+
+	protected abstract void applyProjections(Criteria criteria, C context, SearchCriteria[] criterias);
+
+	protected void applyRange(Range range, Criteria criteria) {
+		if (range != null) {
+			criteria.setFirstResult(range.getFirstResult());
+			criteria.setMaxResults(range.getMaxResults());
 		}
-		if (order != null) {
-			for (Order order1 : order) {
+	}
+
+	protected void applyOrders(Criteria criteria, Order[] orders) {
+		if (orders != null) {
+			for (Order order1 : orders) {
 				if (order1.isAscending()) {
 					criteria.addOrder(org.hibernate.criterion.Order.asc(order1.getPropertyName()));
 				} else {
@@ -59,15 +72,7 @@ public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchM
 				}
 			}
 		}
-
-		if (range != null) {
-			criteria.setFirstResult(range.getFirstResult());
-			criteria.setMaxResults(range.getMaxResults());
-		}
-		return criteria.list();
 	}
-
-	protected abstract void applyCriterias(Criteria criteria, SearchCriteria[] criterias);
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

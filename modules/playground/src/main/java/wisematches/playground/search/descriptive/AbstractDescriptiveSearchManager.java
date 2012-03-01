@@ -42,7 +42,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 	}
 
 	@Override
-	public int getFilteredCount(final Personality person, final C context, final SearchCriteria[] criteria) {
+	public int getFilteredCount(final Personality person, final C context, final SearchCriteria[] criterias) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -57,9 +57,9 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 		}
 		query.append(")");
 		query.append(" from ");
-		query.append(getEntitiesList(context, criteria));
+		query.append(getEntitiesList(context, criterias));
 
-		String whereCriterias = getWhereCriterias(context, criteria);
+		String whereCriterias = getWhereCriterias(context, criterias);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
@@ -73,8 +73,8 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> searchEntities(final Personality person, final C context, final SearchCriteria[] criteria, final Order[] order, final Range range) {
-		if (order != null && order.length != 0) {
+	public List<T> searchEntities(final Personality person, final C context, final SearchCriteria[] criterias, final Order[] orders, final Range range) {
+		if (orders != null && orders.length != 0) {
 		}
 
 		final Session session = sessionFactory.getCurrentSession();
@@ -102,23 +102,23 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 		query.setLength(query.length() - 2);
 
 		query.append(" from ");
-		query.append(getEntitiesList(context, criteria));
+		query.append(getEntitiesList(context, criterias));
 
-		String whereCriterias = getWhereCriterias(context, criteria);
+		String whereCriterias = getWhereCriterias(context, criterias);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
 		}
 
-		String groupCriterias = getGroupCriterias(context, criteria);
+		String groupCriterias = getGroupCriterias(context, criterias);
 		if (groupCriterias != null) {
 			query.append(" group by ");
 			query.append(groupCriterias);
 		}
 
-		if (order != null && order.length != 0) {
+		if (orders != null && orders.length != 0) {
 			query.append(" order by ");
-			for (Order o : order) {
+			for (Order o : orders) {
 				final SearchableProperty a = entityDescriptor.getProperty(o.getPropertyName());
 				query.append(a.column());
 				query.append(o.isAscending() ? " asc" : " desc");

@@ -37,7 +37,7 @@ public class RobotActivityCenter {
 		final Collection<RobotPlayer> robotPlayers = RobotPlayer.getRobotPlayers();
 		for (RobotPlayer player : robotPlayers) {
 			@SuppressWarnings("unchecked")
-			final Collection<GameBoard> activeBoards = boardManager.getActiveBoards(player);
+			final Collection<GameBoard> activeBoards = boardManager.searchEntities(player, GameState.ACTIVE, null, null, null);
 			for (GameBoard activeBoard : activeBoards) {
 				processRobotMove(activeBoard);
 			}

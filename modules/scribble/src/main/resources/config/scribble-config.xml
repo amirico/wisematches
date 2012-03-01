@@ -30,8 +30,8 @@
         <property name="proposalsResource" value="${server.proposals.file}"/>
     </bean>
 
-    <bean id="scribbleSearchEngineManager"
-          class="wisematches.playground.scribble.search.board.ScribbleSearchesEngine">
+    <bean id="expirationSearchManager"
+          class="wisematches.playground.scribble.expiration.ScribbleExpirationSearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -45,7 +45,7 @@
             </bean>
         </property>
         <property name="boardManager" ref="scribbleBoardManager"/>
-        <property name="boardsSearchEngine" ref="scribbleSearchEngineManager"/>
+        <property name="searchManager" ref="expirationSearchManager"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
     </bean>
 
@@ -72,11 +72,11 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="playerSearchManager" class="wisematches.playground.scribble.search.player.ScribblePlayerSearchManager">
+    <bean id="playerSearchManager" class="wisematches.playground.scribble.player.ScribblePlayerSearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="historySearchManager" class="wisematches.playground.scribble.search.board.ScribbleHistorySearchManager">
+    <bean id="historySearchManager" class="wisematches.playground.scribble.history.ScribbleHistorySearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

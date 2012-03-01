@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.search.player;
+package wisematches.playground.scribble.player;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
