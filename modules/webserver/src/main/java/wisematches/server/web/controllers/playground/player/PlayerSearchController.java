@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
+import wisematches.playground.scribble.search.player.PlayerEntityBean;
+import wisematches.playground.scribble.search.player.PlayerSearchArea;
 import wisematches.playground.scribble.search.player.ScribblePlayerSearchManager;
-import wisematches.playground.search.player.PlayerEntityBean;
-import wisematches.playground.search.player.PlayerSearchArea;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.playground.AbstractSearchController;
 import wisematches.server.web.i18n.GameMessageSource;
@@ -45,7 +45,7 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 		model.addAttribute("searchArea", area);
 		model.addAttribute("searchAreas", AREAS);
 		model.addAttribute("searchColumns", getColumns());
-		model.addAttribute("searchEntityDescriptor", getDesiredEntityDescriptor());
+		model.addAttribute("searchEntityDescriptor", getEntityDescriptor());
 		return "/content/playground/players/view";
 	}
 

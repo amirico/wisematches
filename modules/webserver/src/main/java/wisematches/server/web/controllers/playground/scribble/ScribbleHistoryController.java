@@ -56,7 +56,7 @@ public class ScribbleHistoryController extends AbstractSearchController<Scribble
 		}
 		model.addAttribute("player", principal);
 		model.addAttribute("searchColumns", getColumns());
-		model.addAttribute("searchEntityDescriptor", getDesiredEntityDescriptor());
+		model.addAttribute("searchEntityDescriptor", getEntityDescriptor());
 		return "/content/playground/scribble/history";
 	}
 

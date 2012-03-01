@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="searchColumns" type="java.util.Collection<java.lang.String>" -->
-<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.playground.search.DesiredEntityDescriptor" -->
-<#-- @ftlvariable name="searchArea" type="wisematches.playground.search.player.PlayerSearchArea" -->
+<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.playground.search.descriptive.SearchableDescriptor" -->
+<#-- @ftlvariable name="searchArea" type="wisematches.playground.scribble.search.player.PlayerSearchArea" -->
 <#-- @ftlvariable name="searchAreas" type="java.util.List<wisematches.server.web.services.search.player.PlayerSearchArea>" -->
 <#include "/core.ftl">
 
@@ -42,7 +42,7 @@
             [<#list searchColumns as c>{
                 "sName":'${c}',
                 "mDataProp":'${c}',
-                "bSortable": ${searchEntityDescriptor.getAttribute(c).sortable()?string}
+                "bSortable": ${searchEntityDescriptor.getProperty(c).sortable()?string}
             }<#if c_has_next>,</#if></#list>],
     ${scriplet?string}, {
                 title:'<@message code="search.label"/>',

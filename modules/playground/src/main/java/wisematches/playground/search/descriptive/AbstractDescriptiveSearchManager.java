@@ -1,4 +1,4 @@
-package wisematches.playground.search;
+package wisematches.playground.search.descriptive;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -8,30 +8,31 @@ import org.hibernate.transform.AliasToBeanResultTransformer;
 import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
+import wisematches.playground.search.SearchCriteria;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean<C>, C> implements EntitySearchManager<T, C> {
+public abstract class AbstractDescriptiveSearchManager<T, C> implements DescriptiveSearchManager<T, C> {
 	private SessionFactory sessionFactory;
 
 	private final boolean sql;
-	private final DesiredEntityDescriptor<T> entityDescriptor;
+	private final SearchableDescriptor entityDescriptor;
 
-	protected AbstractHibernateSearchManager(Class<T> type) {
+	protected AbstractDescriptiveSearchManager(Class<T> type) {
 		this(type, false);
 	}
 
-	protected AbstractHibernateSearchManager(Class<T> type, boolean sql) {
+	protected AbstractDescriptiveSearchManager(Class<T> type, boolean sql) {
 		this.sql = sql;
-		entityDescriptor = new DesiredEntityDescriptor<T>(type);
+		entityDescriptor = SearchableDescriptor.valueOf(type);
 	}
 
 	@Override
-	public DesiredEntityDescriptor getDescriptor() {
+	public SearchableDescriptor getEntityDescriptor() {
 		return entityDescriptor;
 	}
 
@@ -47,7 +48,7 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 		query.append("select ");
 
 		query.append("count(");
-		final SearchAttribute da = entityDescriptor.getDistinctAttribute();
+		final SearchableProperty da = entityDescriptor.getUniformityProperty();
 		if (da != null) {
 			query.append("distinct ");
 			query.append(da.column());
@@ -56,9 +57,9 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 		}
 		query.append(")");
 		query.append(" from ");
-		query.append(getTablesList(context));
+		query.append(getEntitiesList(context, criteria));
 
-		String whereCriterias = getWhereCriterias(context);
+		String whereCriterias = getWhereCriterias(context, criteria);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
@@ -80,39 +81,36 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
 
-		final Map<String, SearchAttribute> attributes = entityDescriptor.getAttributes();
-
-		final SearchAttribute attribute = entityDescriptor.getDistinctAttribute();
+		final SearchableBean bean = entityDescriptor.getBeanAnnotation();
+		final SearchableProperty attribute = entityDescriptor.getUniformityProperty();
 		if (attribute != null) {
 			query.append("distinct ");
 			query.append(attribute.column());
 			query.append(" as ");
-			query.append(entityDescriptor.getDistinctField());
+			query.append(bean.uniformityProperty());
 			query.append(", ");
 		}
 
-		for (Map.Entry<String, SearchAttribute> entry : attributes.entrySet()) {
-			final SearchAttribute value = entry.getValue();
-			if (value == attribute) {
-				continue;
-			}
+		final Set<String> propertyNames = entityDescriptor.getPropertyNames();
+		for (String name : propertyNames) {
+			final SearchableProperty value = entityDescriptor.getProperty(name);
 			query.append(value.column());
 			query.append(" as ");
-			query.append(entry.getKey());
+			query.append(name);
 			query.append(", ");
 		}
 		query.setLength(query.length() - 2);
 
 		query.append(" from ");
-		query.append(getTablesList(context));
+		query.append(getEntitiesList(context, criteria));
 
-		String whereCriterias = getWhereCriterias(context);
+		String whereCriterias = getWhereCriterias(context, criteria);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
 		}
 
-		String groupCriterias = getGroupCriterias(context);
+		String groupCriterias = getGroupCriterias(context, criteria);
 		if (groupCriterias != null) {
 			query.append(" group by ");
 			query.append(groupCriterias);
@@ -121,7 +119,7 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 		if (order != null && order.length != 0) {
 			query.append(" order by ");
 			for (Order o : order) {
-				final SearchAttribute a = attributes.get(o.getPropertyName());
+				final SearchableProperty a = entityDescriptor.getProperty(o.getPropertyName());
 				query.append(a.column());
 				query.append(o.isAscending() ? " asc" : " desc");
 				query.append(", ");
@@ -139,18 +137,23 @@ public abstract class AbstractHibernateSearchManager<T extends DesiredEntityBean
 			query1.setResultTransformer(new AliasToBeanResultTransformer(entityDescriptor.getDesiredEntityType()));
 		}
 		query1.setCacheable(true);
-		query1.setParameter("pid", person.getId());
+		final String[] namedParameters = query1.getNamedParameters();
+		for (String namedParameter : namedParameters) {
+			if ("pid".equals(namedParameter)) {
+				query1.setParameter("pid", person != null ? person.getId() : null);
+			}
+		}
 		if (range != null) {
 			range.apply(query1);
 		}
 		return query1.list();
 	}
 
-	protected abstract String getTablesList(final C context);
+	protected abstract String getEntitiesList(final C context, SearchCriteria[] criteria);
 
-	protected abstract String getWhereCriterias(final C context);
+	protected abstract String getWhereCriterias(final C context, SearchCriteria[] criteria);
 
-	protected abstract String getGroupCriterias(final C context);
+	protected abstract String getGroupCriterias(final C context, SearchCriteria[] criteria);
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

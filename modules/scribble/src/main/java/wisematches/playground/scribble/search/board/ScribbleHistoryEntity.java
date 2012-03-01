@@ -3,9 +3,8 @@ package wisematches.playground.scribble.search.board;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
-import wisematches.playground.search.DesiredEntityBean;
-import wisematches.playground.search.SearchAttribute;
-import wisematches.playground.search.SearchDistinct;
+import wisematches.playground.search.descriptive.SearchableProperty;
+import wisematches.playground.search.descriptive.SearchableBean;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,46 +14,46 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-@SearchDistinct("boardId")
-public class ScribbleHistoryEntity implements DesiredEntityBean<Void> {
+@SearchableBean(uniformityProperty = "boardId")
+public class ScribbleHistoryEntity {
 	@Id
-	@SearchAttribute(column = "board.boardId")
+	@SearchableProperty(column = "board.boardId")
 	private long boardId;
 
-	@SearchAttribute(column = "board.startedDate")
+	@SearchableProperty(column = "board.startedDate")
 	private Date startedDate;
 
-	@SearchAttribute(column = "board.finishedDate")
+	@SearchableProperty(column = "board.finishedDate")
 	private Date finishedDate;
 
-	@SearchAttribute(column = "board.rated")
+	@SearchableProperty(column = "board.rated")
 	private boolean rated;
 
-	@SearchAttribute(column = "UPPER(board.language)")
+	@SearchableProperty(column = "UPPER(board.language)")
 	private Language language;
 
-	@SearchAttribute(column = "board.resolution")
+	@SearchableProperty(column = "board.resolution")
 	private GameResolution resolution;
 
-	@SearchAttribute(column = "board.movesCount")
+	@SearchableProperty(column = "board.movesCount")
 	private int movesCount;
 
-	@SearchAttribute(column = "l.newRating")
+	@SearchableProperty(column = "l.newRating")
 	private short newRating;
 
-	@SearchAttribute(column = "l.newRating - l.oldRating")
+	@SearchableProperty(column = "l.newRating - l.oldRating")
 	private short ratingChange;
 
-	@SearchAttribute(column = "max(if(r.playerIndex=0, r.playerId, 0))", sortable = false)
+	@SearchableProperty(column = "max(if(r.playerIndex=0, r.playerId, 0))", sortable = false)
 	private long player0;
 
-	@SearchAttribute(column = "max(if(r.playerIndex=1, r.playerId, 0))", sortable = false)
+	@SearchableProperty(column = "max(if(r.playerIndex=1, r.playerId, 0))", sortable = false)
 	private long player1;
 
-	@SearchAttribute(column = "max(if(r.playerIndex=2, r.playerId, 0))", sortable = false)
+	@SearchableProperty(column = "max(if(r.playerIndex=2, r.playerId, 0))", sortable = false)
 	private long player2;
 
-	@SearchAttribute(column = "max(if(r.playerIndex=3, r.playerId, 0))", sortable = false)
+	@SearchableProperty(column = "max(if(r.playerIndex=3, r.playerId, 0))", sortable = false)
 	private long player3;
 
 	public ScribbleHistoryEntity() {

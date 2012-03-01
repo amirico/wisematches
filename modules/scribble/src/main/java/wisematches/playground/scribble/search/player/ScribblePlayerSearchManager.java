@@ -1,19 +1,18 @@
 package wisematches.playground.scribble.search.player;
 
-import wisematches.playground.search.AbstractHibernateSearchManager;
-import wisematches.playground.search.player.PlayerEntityBean;
-import wisematches.playground.search.player.PlayerSearchArea;
+import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.descriptive.AbstractDescriptiveSearchManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribblePlayerSearchManager extends AbstractHibernateSearchManager<PlayerEntityBean, PlayerSearchArea> {
+public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManager<PlayerEntityBean, PlayerSearchArea> {
 	public ScribblePlayerSearchManager() {
 		super(PlayerEntityBean.class);
 	}
 
 	@Override
-	protected String getTablesList(PlayerSearchArea area) {
+	protected String getEntitiesList(PlayerSearchArea area, SearchCriteria[] criteria) {
 		String r = "wisematches.personality.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor stats";
 
 		switch (area) {
@@ -29,7 +28,7 @@ public class ScribblePlayerSearchManager extends AbstractHibernateSearchManager<
 	}
 
 	@Override
-	protected String getWhereCriterias(PlayerSearchArea area) {
+	protected String getWhereCriterias(PlayerSearchArea area, SearchCriteria[] criteria) {
 		String r = "account.id=stats.playerId and ";
 		switch (area) {
 			case PLAYERS:
@@ -44,7 +43,7 @@ public class ScribblePlayerSearchManager extends AbstractHibernateSearchManager<
 	}
 
 	@Override
-	protected String getGroupCriterias(PlayerSearchArea context) {
+	protected String getGroupCriterias(PlayerSearchArea context, SearchCriteria[] criteria) {
 		return null;
 	}
 }

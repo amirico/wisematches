@@ -1,11 +1,10 @@
 package wisematches.playground.tournament.upcoming;
 
 import wisematches.personality.Language;
-import wisematches.playground.search.DesiredEntityBean;
 import wisematches.playground.tournament.TournamentSection;
 
 /**
- * The tournament request is player's application for upcomming tournament. It contains
+ * The tournament request is player's application for upcoming tournament. It contains
  * player, section and language.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)

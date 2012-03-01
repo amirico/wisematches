@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import wisematches.personality.account.impl.HibernateAccountImpl;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.RatingManager;
+import wisematches.playground.search.descriptive.DescriptiveSearchManager;
 import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.TournamentSectionId;
 import wisematches.playground.tournament.upcoming.*;
 
 import java.text.ParseException;
@@ -30,6 +33,7 @@ import static org.junit.Assert.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Ignore
 @Transactional()
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -127,5 +131,19 @@ public class HibernateTournamentSubscriptionManagerTest {
 		assertEquals(ticketsGrandmaster + 1, announcement.getBoughtTickets(Language.RU, TournamentSection.GRANDMASTER));
 
 		verify(listener);
+	}
+
+	@Test
+	public void testRequestsSearchManager() {
+		final DescriptiveSearchManager<TournamentRequest, TournamentSectionId> sm = tournamentSubscriptionManager.getRequestsSearchManager();
+/*
+		final DetachedCriteria c = DetachedCriteria.forClass(HibernateTournamentGroup.class);
+		c.add();
+
+		final HibernateSearchCriteria sc = new HibernateSearchCriteria();
+*/
+
+		List<TournamentRequest> tournamentRequests = sm.searchEntities(null, TournamentSectionId.valueOf(1, Language.RU, TournamentSection.GRANDMASTER), null, null, null);
+		System.out.println(tournamentRequests);
 	}
 }

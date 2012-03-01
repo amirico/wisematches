@@ -1,7 +1,6 @@
 package wisematches.playground.tournament;
 
 import wisematches.personality.Language;
-import wisematches.playground.search.DesiredEntityBean;
 
 import java.util.Date;
 

@@ -5,9 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import wisematches.database.Order;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.search.DesiredEntityBean;
-import wisematches.playground.search.DesiredEntityDescriptor;
-import wisematches.playground.search.EntitySearchManager;
+import wisematches.playground.search.descriptive.SearchableDescriptor;
+import wisematches.playground.search.descriptive.DescriptiveSearchManager;
 import wisematches.server.web.controllers.WisematchesController;
 
 import java.util.HashMap;
@@ -18,10 +17,10 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractSearchController<T extends DesiredEntityBean<C>, C> extends WisematchesController {
+public abstract class AbstractSearchController<T, C> extends WisematchesController {
 	private final String[] columns;
 
-	private EntitySearchManager<T, C> entitySearchManager;
+	private DescriptiveSearchManager<T, C> entitySearchManager;
 
 	private static final Object[] EMPTY_DATA = new Object[0];
 
@@ -35,8 +34,8 @@ public abstract class AbstractSearchController<T extends DesiredEntityBean<C>, C
 		return columns;
 	}
 
-	public DesiredEntityDescriptor getDesiredEntityDescriptor() {
-		return entitySearchManager.getDescriptor();
+	public SearchableDescriptor getEntityDescriptor() {
+		return entitySearchManager.getEntityDescriptor();
 	}
 
 	protected Map<String, Object> loadData(Personality personality, final Map<String, Object> request, final C context, final Locale locale) {
@@ -79,7 +78,7 @@ public abstract class AbstractSearchController<T extends DesiredEntityBean<C>, C
 	protected abstract void convertEntity(T entity, Personality personality, Map<String, Object> map, Locale locale);
 
 
-	public <E extends EntitySearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {
+	public <E extends DescriptiveSearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {
 		this.entitySearchManager = entitySearchManager;
 	}
 }
