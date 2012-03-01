@@ -1,4 +1,4 @@
-package wisematches.playground.search;
+package wisematches.playground.search.descriptive;
 
 import java.lang.annotation.*;
 
@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface SearchDistinct {
-	String value();
+public @interface SearchableBean {
+	String uniformityProperty() default "";
 }

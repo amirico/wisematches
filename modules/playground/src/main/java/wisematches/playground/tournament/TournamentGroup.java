@@ -1,7 +1,5 @@
 package wisematches.playground.tournament;
 
-import wisematches.playground.search.DesiredEntityBean;
-
 /**
  * The tournament group is last tournament entity that describes players and games for one group.
  *

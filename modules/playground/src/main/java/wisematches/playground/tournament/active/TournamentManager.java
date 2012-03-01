@@ -1,7 +1,7 @@
 package wisematches.playground.tournament.active;
 
 import wisematches.personality.player.Player;
-import wisematches.playground.search.EntitySearchManager;
+import wisematches.playground.search.SearchManager;
 import wisematches.playground.tournament.*;
 
 import java.util.Collection;
@@ -75,5 +75,5 @@ public interface TournamentManager {
 	 * @param type type of entity that should be searched.
 	 * @return tournament search manager that provides access to groups and games.
 	 */
-	<E extends TournamentEntity<C>, C extends TournamentEntityId> EntitySearchManager<E, C> getTournamentSearchManager(Class<E> type);
+	<E extends TournamentEntity<C>, C extends TournamentEntityId> SearchManager<E, C> getTournamentSearchManager(Class<E> type);
 }

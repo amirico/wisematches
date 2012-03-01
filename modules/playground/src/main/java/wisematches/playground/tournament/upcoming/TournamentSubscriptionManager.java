@@ -2,7 +2,9 @@ package wisematches.playground.tournament.upcoming;
 
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
+import wisematches.playground.search.descriptive.DescriptiveSearchManager;
 import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.TournamentSectionId;
 
 import java.util.Collection;
 
@@ -87,4 +89,6 @@ public interface TournamentSubscriptionManager {
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */
 	Collection<TournamentRequest> getTournamentRequests(int announcement, Player player) throws WrongAnnouncementException;
+
+	DescriptiveSearchManager<TournamentRequest, TournamentSectionId> getRequestsSearchManager();
 }

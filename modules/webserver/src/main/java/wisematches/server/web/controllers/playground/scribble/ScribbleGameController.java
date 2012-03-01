@@ -33,8 +33,8 @@ import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.search.board.ScribbleSearchesEngine;
+import wisematches.playground.scribble.search.player.PlayerSearchArea;
 import wisematches.playground.scribble.search.player.ScribblePlayerSearchManager;
-import wisematches.playground.search.player.PlayerSearchArea;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
@@ -287,7 +287,7 @@ public class ScribbleGameController extends WisematchesController {
 		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
 		model.addAttribute("searchAreas", SEARCH_AREAS);
 		model.addAttribute("searchColumns", SEARCH_COLUMNS);
-		model.addAttribute("searchEntityDescriptor", searchManager.getDescriptor());
+		model.addAttribute("searchEntityDescriptor", searchManager.getEntityDescriptor());
 
 		if (principal.getMembership() == Membership.GUEST) {
 			form.setCreateTab(CreateScribbleTab.ROBOT);
@@ -478,7 +478,6 @@ public class ScribbleGameController extends WisematchesController {
 	private int getActiveGamesCount(Player principal) {
 		return searchesEngine.getActiveBoardsCount(principal) + proposalManager.getPlayerProposals(principal).size();
 	}
-
 
 	@Autowired
 	public void setPlayerManager(PlayerManager playerManager) {

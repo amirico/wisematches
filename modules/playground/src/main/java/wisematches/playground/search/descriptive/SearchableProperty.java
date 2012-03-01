@@ -1,4 +1,4 @@
-package wisematches.playground.search;
+package wisematches.playground.search.descriptive;
 
 import java.lang.annotation.*;
 
@@ -7,13 +7,13 @@ import java.lang.annotation.*;
  * system.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see DesiredEntityBean
+ * @see wisematches.playground.search.DesiredEntityBean
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface SearchAttribute {
+public @interface SearchableProperty {
 	/**
 	 * Returns appropriate column for the attribute.
 	 *

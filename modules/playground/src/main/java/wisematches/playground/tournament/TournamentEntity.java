@@ -1,9 +1,10 @@
 package wisematches.playground.tournament;
 
-import wisematches.playground.search.DesiredEntityBean;
+import wisematches.playground.search.descriptive.SearchableBean;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentEntity<C extends TournamentEntityId> extends DesiredEntityBean<C> {
+@SearchableBean()
+public interface TournamentEntity<C extends TournamentEntityId> {
 }

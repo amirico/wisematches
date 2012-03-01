@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="searchColumns" type="java.lang.String[]" -->
-<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.playground.search.DesiredEntityDescriptor" -->
+<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.playground.search.descriptive.SearchableDescriptor" -->
 <#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 
 <#include "/core.ftl">
@@ -29,7 +29,7 @@
 <script type="text/javascript">
     var history = new wm.game.History(${player.id},
             [<#list searchColumns as c>
-                <#assign d=searchEntityDescriptor.getAttribute(c)!""/>
+                <#assign d=searchEntityDescriptor.getProperty(c)!""/>
                 {
                     "sName": '${c}',
                     "mDataProp": '${c}',

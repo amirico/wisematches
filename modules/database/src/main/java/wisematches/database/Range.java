@@ -9,7 +9,7 @@ public class Range {
 	private final int firstResult;
 	private final int maxResults;
 
-	public static final Range NO = new Range(-1, -1);
+	public static final Range NO = null;
 
 	protected Range(int firstResult, int maxResults) {
 		this.firstResult = firstResult;

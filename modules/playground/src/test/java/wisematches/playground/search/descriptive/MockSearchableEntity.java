@@ -1,22 +1,22 @@
-package wisematches.playground.search;
+package wisematches.playground.search.descriptive;
 
 import wisematches.personality.Language;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@SearchDistinct("pid")
-public class MockDesiredEntityBean implements DesiredEntityBean {
-	@SearchAttribute(column = "account.id", sortable = false)
+@SearchableBean(uniformityProperty = "pid")
+public class MockSearchableEntity {
+	@SearchableProperty(column = "account.id", sortable = false)
 	private long pid;
 
-	@SearchAttribute(column = "account.nickname")
+	@SearchableProperty(column = "account.nickname")
 	private String nickname;
 
-	@SearchAttribute(column = "profile.language")
+	@SearchableProperty(column = "profile.language")
 	private Language language;
 
-	public MockDesiredEntityBean() {
+	public MockSearchableEntity() {
 	}
 
 	public long getPid() {

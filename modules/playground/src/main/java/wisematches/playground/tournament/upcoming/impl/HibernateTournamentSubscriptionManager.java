@@ -18,8 +18,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.playground.RatingManager;
+import wisematches.playground.search.descriptive.DescriptiveSearchManager;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.TournamentSectionId;
 import wisematches.playground.tournament.upcoming.TournamentAnnouncement;
 import wisematches.playground.tournament.upcoming.TournamentRequest;
 import wisematches.playground.tournament.upcoming.WrongAnnouncementException;
@@ -172,6 +174,14 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public DescriptiveSearchManager<TournamentRequest, TournamentSectionId> getRequestsSearchManager() {
+//		DescriptiveRequestSearchManager hibernateRequestSearchManager = new DescriptiveRequestSearchManager();
+//		hibernateRequestSearchManager.setSessionFactory(sessionFactory);
+//		return hibernateRequestSearchManager;
+		return null;
 	}
 
 	@Override
