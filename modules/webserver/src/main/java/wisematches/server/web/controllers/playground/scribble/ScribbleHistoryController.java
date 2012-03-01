@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
-import wisematches.playground.scribble.search.board.ScribbleHistoryEntity;
-import wisematches.playground.scribble.search.board.ScribbleHistorySearchManager;
+import wisematches.playground.GameResolution;
+import wisematches.playground.scribble.history.ScribbleHistoryEntity;
+import wisematches.playground.scribble.history.ScribbleHistorySearchManager;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.AbstractSearchController;
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/scribble/history")
-public class ScribbleHistoryController extends AbstractSearchController<ScribbleHistoryEntity, Void> {
+public class ScribbleHistoryController extends AbstractSearchController<ScribbleHistoryEntity, GameResolution> {
 	private PlayerManager playerManager;
 	private GameMessageSource messageSource;
 	private PlayerStateManager playerStateManager;

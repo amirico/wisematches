@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.search.player;
+package wisematches.playground.scribble.player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

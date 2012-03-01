@@ -8,14 +8,15 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.playground.*;
+import wisematches.playground.expiration.GameExpirationDescriptor;
 import wisematches.playground.expiration.GameExpirationListener;
 import wisematches.playground.expiration.GameExpirationType;
-import wisematches.playground.search.board.BoardsSearchEngine;
-import wisematches.playground.search.board.LastMoveInfo;
+import wisematches.playground.search.SearchManager;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 
@@ -24,7 +25,7 @@ import static org.easymock.EasyMock.*;
  */
 public class ExpiredGamesTerminatorTest {
 	private BoardManager boardManager;
-	private BoardsSearchEngine searchesEngine;
+	private SearchManager<GameExpirationDescriptor, ?> searchManager;
 
 	private Capture<BoardStateListener> boardStateListener;
 
@@ -39,8 +40,9 @@ public class ExpiredGamesTerminatorTest {
 	}
 
 	@Before
+	@SuppressWarnings("unchecked")
 	public void setUp() {
-		searchesEngine = createMock(BoardsSearchEngine.class);
+		searchManager = createMock(SearchManager.class);
 
 		boardStateListener = new Capture<BoardStateListener>();
 
@@ -59,7 +61,7 @@ public class ExpiredGamesTerminatorTest {
 
 		gamesTerminator = new ExpiredGamesTerminator();
 		gamesTerminator.setTaskScheduler(taskScheduler);
-		gamesTerminator.setBoardsSearchEngine(searchesEngine);
+		gamesTerminator.setSearchManager(searchManager);
 		gamesTerminator.setTransactionTemplate(transactionTemplate);
 	}
 
@@ -68,14 +70,15 @@ public class ExpiredGamesTerminatorTest {
 	public void testTerminatorInitialization() throws InterruptedException, GameMoveException, BoardLoadingException {
 		final long time = System.currentTimeMillis();
 
-		expect(searchesEngine.findExpiringBoards()).andReturn(Arrays.asList(
-				new LastMoveInfo(12L, 3, new Date(time - MILLIS_IN_DAY * 2 + 200)), // DAY
-				new LastMoveInfo(13L, 3, new Date(time - MILLIS_IN_DAY * 2 - MILLIS_IN_DAY / 2 + 200)), // HALF
-				new LastMoveInfo(14L, 3, new Date(time - MILLIS_IN_DAY * 3 + MILLIS_IN_DAY / 24 + 200)), // HOUR
-				new LastMoveInfo(15L, 3, new Date(time - MILLIS_IN_DAY * 4)), // OUT OF DATE
-				new LastMoveInfo(16L, 3, new Date(time - MILLIS_IN_DAY * 4)) // OUT OF DATE FINISHED
-		));
-		replay(searchesEngine);
+		List<GameExpirationDescriptor> mockGameExpirationDescriptors = Arrays.<GameExpirationDescriptor>asList(
+				new GameExpirationDescriptor(12L, 3, new Date(time - MILLIS_IN_DAY * 2 + 200)), // DAY
+				new GameExpirationDescriptor(13L, 3, new Date(time - MILLIS_IN_DAY * 2 - MILLIS_IN_DAY / 2 + 200)), // HALF
+				new GameExpirationDescriptor(14L, 3, new Date(time - MILLIS_IN_DAY * 3 + MILLIS_IN_DAY / 24 + 200)), // HOUR
+				new GameExpirationDescriptor(15L, 3, new Date(time - MILLIS_IN_DAY * 4)), // OUT OF DATE
+				new GameExpirationDescriptor(16L, 3, new Date(time - MILLIS_IN_DAY * 4)) // OUT OF DATE FINISHED
+		);
+		expect(searchManager.searchEntities(null, null, null, null, null)).andReturn(mockGameExpirationDescriptors);
+		replay(searchManager);
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
 		expect(gameBoard.isGameActive()).andReturn(false);
@@ -104,7 +107,7 @@ public class ExpiredGamesTerminatorTest {
 
 		Thread.sleep(500);
 
-		verify(searchesEngine, l, gameBoard, gameBoard2, boardManager);
+		verify(searchManager, l, gameBoard, gameBoard2, boardManager);
 	}
 
 	@Test
@@ -112,8 +115,8 @@ public class ExpiredGamesTerminatorTest {
 	public void testListeners() throws InterruptedException, GameMoveException, BoardLoadingException {
 		final long time = System.currentTimeMillis();
 
-		expect(searchesEngine.findExpiringBoards()).andReturn(Collections.<LastMoveInfo>emptyList());
-		replay(searchesEngine);
+		expect(searchManager.searchEntities(null, null, null, null, null)).andReturn(Collections.<GameExpirationDescriptor>emptyList());
+		replay(searchManager);
 
 		final GameSettings gs = createStrictMock(GameSettings.class);
 		expect(gs.getDaysPerMove()).andReturn(3).times(2);
@@ -143,6 +146,6 @@ public class ExpiredGamesTerminatorTest {
 
 		Thread.sleep(500);
 
-		verify(searchesEngine, l, gameBoard, boardManager);
+		verify(searchManager, l, gameBoard, boardManager);
 	}
 }

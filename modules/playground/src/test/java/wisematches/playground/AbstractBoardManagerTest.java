@@ -4,7 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.IAnswer;
 import org.junit.Test;
+import wisematches.database.Order;
+import wisematches.database.Range;
 import wisematches.personality.Personality;
+import wisematches.playground.search.SearchCriteria;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -138,14 +141,14 @@ public class AbstractBoardManagerTest {
 		replay(board2);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
-		expect(dao.loadActivePlayerBoards(player)).andReturn(Arrays.asList(1L, 2L));
+		expect(dao.loadPlayerBoards(player, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(1L, 2L));
 		expect(dao.loadBoard(1L)).andReturn(board1);
 		expect(dao.loadBoard(2L)).andReturn(board2);
 		replay(dao);
 
 		final MockBoardManager mock = new MockBoardManager(dao);
 
-		final Collection<AbstractGameBoard<GameSettings, GamePlayerHand>> waitingBoards = mock.getActiveBoards(player);
+		final Collection<AbstractGameBoard<GameSettings, GamePlayerHand>> waitingBoards = mock.searchEntities(player, GameState.ACTIVE, null, null, null);
 		assertEquals(2, waitingBoards.size());
 		assertTrue(waitingBoards.contains(board1));
 		assertTrue(waitingBoards.contains(board2));
@@ -221,7 +224,9 @@ public class AbstractBoardManagerTest {
 
 		void saveBoard(AbstractGameBoard board);
 
-		Collection<Long> loadActivePlayerBoards(Personality player);
+		Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criteria, Order[] order, Range range);
+
+		int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criteria);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -239,6 +244,11 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
+		protected int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criteria) {
+			return gameBoardDao.loadPlayerBoardsCount(player, state, criteria);
+		}
+
+		@Override
 		protected AbstractGameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
 			return gameBoardDao.createBoard(gameSettings, players);
 		}
@@ -249,8 +259,8 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected Collection<Long> loadActivePlayerBoards(Personality player) {
-			return gameBoardDao.loadActivePlayerBoards(player);
+		protected Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criteria, Order[] order, Range range) {
+			return gameBoardDao.loadPlayerBoards(player, state, criteria, order, range);
 		}
 	}
 }

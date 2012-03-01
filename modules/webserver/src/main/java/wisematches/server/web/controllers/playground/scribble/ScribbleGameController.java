@@ -19,6 +19,7 @@ import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.BoardManagementException;
+import wisematches.playground.GameState;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.blacklist.BlacklistedException;
 import wisematches.playground.propose.GameProposal;
@@ -32,9 +33,8 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.playground.scribble.search.board.ScribbleSearchesEngine;
-import wisematches.playground.scribble.search.player.PlayerSearchArea;
-import wisematches.playground.scribble.search.player.ScribblePlayerSearchManager;
+import wisematches.playground.scribble.player.PlayerSearchArea;
+import wisematches.playground.scribble.player.ScribblePlayerSearchManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
@@ -60,7 +60,6 @@ public class ScribbleGameController extends WisematchesController {
 	private ScribbleBoardManager boardManager;
 	private RestrictionManager restrictionManager;
 	private PlayerStateManager playerStateManager;
-	private ScribbleSearchesEngine searchesEngine;
 	private ScribblePlayerSearchManager searchManager;
 	private GameProposalManager<ScribbleSettings> proposalManager;
 
@@ -89,7 +88,7 @@ public class ScribbleGameController extends WisematchesController {
 		}
 		model.addAttribute("player", principal);
 
-		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
+		final Collection<ScribbleBoard> activeBoards = boardManager.searchEntities(principal, GameState.ACTIVE, null, null, null);
 		model.addAttribute("activeBoards", activeBoards);
 		if (log.isDebugEnabled()) {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
@@ -124,7 +123,7 @@ public class ScribbleGameController extends WisematchesController {
 			log.debug("Loading active games for personality: " + principal);
 		}
 
-		final Collection<ScribbleBoard> activeBoards = boardManager.getActiveBoards(principal);
+		final Collection<ScribbleBoard> activeBoards = boardManager.searchEntities(principal, GameState.ACTIVE, null, null, null);
 		final List<ScribbleInfoForm> forms = new ArrayList<ScribbleInfoForm>(activeBoards.size());
 		for (ScribbleBoard board : activeBoards) {
 			final ScribbleSettings settings = board.getGameSettings();
@@ -476,7 +475,7 @@ public class ScribbleGameController extends WisematchesController {
 	}
 
 	private int getActiveGamesCount(Player principal) {
-		return searchesEngine.getActiveBoardsCount(principal) + proposalManager.getPlayerProposals(principal).size();
+		return boardManager.getTotalCount(principal, GameState.ACTIVE) + proposalManager.getPlayerProposals(principal).size();
 	}
 
 	@Autowired
@@ -497,11 +496,6 @@ public class ScribbleGameController extends WisematchesController {
 	@Autowired
 	public void setBlacklistManager(BlacklistManager blacklistManager) {
 		this.blacklistManager = blacklistManager;
-	}
-
-	@Autowired
-	public void setSearchesEngine(ScribbleSearchesEngine searchesEngine) {
-		this.searchesEngine = searchesEngine;
 	}
 
 	@Autowired

@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.search.board;
+package wisematches.playground.scribble.history;
 
 import wisematches.personality.Language;
 import wisematches.personality.Personality;

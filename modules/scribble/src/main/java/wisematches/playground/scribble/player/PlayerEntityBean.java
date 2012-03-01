@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.search.player;
+package wisematches.playground.scribble.player;
 
 import wisematches.personality.Language;
 import wisematches.playground.search.descriptive.SearchableProperty;
