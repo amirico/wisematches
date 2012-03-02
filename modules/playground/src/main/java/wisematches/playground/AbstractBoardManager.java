@@ -1,10 +1,10 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
-import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.SearchFilter;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -122,16 +122,16 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	}
 
 	@Override
-	public int getFilteredCount(Personality person, GameState context, SearchCriteria[] criterias) {
-		return loadPlayerBoardsCount(person, context, criterias);
+	public int getFilteredCount(Personality person, GameState context, SearchFilter filter) {
+		return loadPlayerBoardsCount(person, context, filter);
 	}
 
 	@Override
-	public List<B> searchEntities(Personality person, GameState context, SearchCriteria[] criterias, Order[] orders, Range range) {
+	public List<B> searchEntities(Personality person, GameState context, SearchFilter filter, Orders orders, Range range) {
 		if (log.isDebugEnabled()) {
 			log.debug("get active boards for player: " + person);
 		}
-		final Collection<Long> longs = loadPlayerBoards(person, context, criterias, orders, range);
+		final Collection<Long> longs = loadPlayerBoards(person, context, filter, orders, range);
 		final List<B> res = new ArrayList<B>(longs.size());
 		for (Long boardId : longs) {
 			try {
@@ -178,24 +178,24 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	/**
 	 * Returns count of boards foe specified player.
 	 *
-	 * @param player   the player who's boards should be loaded.
-	 * @param state	the state of a game.
-	 * @param criteria additional search criterias.
+	 * @param player the player who's boards should be loaded.
+	 * @param state  the state of a game.
+	 * @param filter additional search filters.
 	 * @return count of boards.
 	 */
-	protected abstract int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criteria);
+	protected abstract int loadPlayerBoardsCount(Personality player, GameState state, SearchFilter filter);
 
 	/**
 	 * Loads ids of active boards for specified player.
 	 *
-	 * @param player   the player who's boards should be loaded.
-	 * @param state	the state of a game.
-	 * @param criteria additional search criterias.
-	 * @param order	order
-	 * @param range	range
+	 * @param player the player who's boards should be loaded.
+	 * @param state  the state of a game.
+	 * @param filter additional search filters.
+	 * @param orders the orders of result.
+	 * @param range  range
 	 * @return the collection of board's ids for specified player or empty collection.
 	 */
-	protected abstract Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criteria, Order[] order, Range range);
+	protected abstract Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchFilter filter, Orders orders, Range range);
 
 	public void setRatingManager(RatingManager ratingManager) {
 		this.ratingManager = ratingManager;
@@ -242,18 +242,6 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 				log.debug("Add board to boards map: " + id);
 			}
 			boardsReferences.put(id, value);
-		}
-
-		Collection<B> values() {
-			final Collection<BoardWeakReference<B>> referenceCollection = boardsReferences.values();
-			final Collection<B> res = new ArrayList<B>(referenceCollection.size());
-			for (BoardWeakReference<B> reference : referenceCollection) {
-				final B b = reference.get();
-				if (b != null) {
-					res.add(b);
-				}
-			}
-			return res;
 		}
 
 		/**

@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.personality.Personality;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class ScribblePlayerSearchManagerTest {
 		int playersCount = playerSearchManager.getTotalCount(Personality.person(1029), PlayerSearchArea.PLAYERS);
 		System.out.println(playersCount);
 
-		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(Personality.person(1029), PlayerSearchArea.PLAYERS, null, new Order[]{Order.desc("nickname"), Order.asc("language")}, null);
+		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(Personality.person(1029), PlayerSearchArea.PLAYERS, null, Orders.of(Order.desc("nickname"), Order.asc("language")), null);
 		System.out.println(playerBeans);
 	}
 }

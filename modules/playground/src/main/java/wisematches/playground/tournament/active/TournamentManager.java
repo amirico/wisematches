@@ -14,7 +14,7 @@ import java.util.Collection;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentManager {
+public interface TournamentManager<E extends TournamentEntity<C>, C extends TournamentEntityId> extends SearchManager<E, C> {
 	void addTournamentListener(TournamentListener l);
 
 	void removeTournamentListener(TournamentListener l);
@@ -59,21 +59,4 @@ public interface TournamentManager {
 	 * @return collection of player's tournaments or empty collection.
 	 */
 	Collection<Tournament> getPlayerTournaments(Player player);
-
-	/**
-	 * Returns collection of all rounds for specified tournament, language and section.
-	 *
-	 * @param sectionId returns list of all rounds for specified section.
-	 * @return collection of all round in the tournament for specified language and section. If there are no rounds
-	 *         empty collection will be returned. If there is no tournament {@code null} will be returned.
-	 */
-	Collection<TournamentRound> getTournamentRounds(TournamentSectionId sectionId);
-
-	/**
-	 * Returns tournament search manager that provides access to groups and games.
-	 *
-	 * @param type type of entity that should be searched.
-	 * @return tournament search manager that provides access to groups and games.
-	 */
-	<E extends TournamentEntity<C>, C extends TournamentEntityId> SearchManager<E, C> getTournamentSearchManager(Class<E> type);
 }

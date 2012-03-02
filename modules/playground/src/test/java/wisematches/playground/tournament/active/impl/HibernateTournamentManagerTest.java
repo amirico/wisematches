@@ -2,8 +2,11 @@ package wisematches.playground.tournament.active.impl;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import wisematches.personality.Language;
 import wisematches.playground.search.SearchManager;
 import wisematches.playground.tournament.*;
+
+import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -19,13 +22,14 @@ public class HibernateTournamentManagerTest {
 	public void testSearchManager() {
 		final HibernateTournamentManager m = new HibernateTournamentManager();
 
-		SearchManager<TournamentSection, TournamentId> sm = m.getTournamentSearchManager(TournamentSection.class);
-		assertNotNull(sm);
+		TournamentSectionId context = TournamentSectionId.valueOf(0, Language.RU, TournamentSection.GRANDMASTER);
+		TournamentRoundId context1 = TournamentRoundId.valueOf(0, Language.RU, TournamentSection.GRANDMASTER, 12);
+		TournamentGroupId context2 = TournamentGroupId.valueOf(0, Language.RU, TournamentSection.GRANDMASTER, 12, 13);
 
-		SearchManager<TournamentRound, TournamentSectionId> rm = m.getTournamentSearchManager(TournamentRound.class);
-		assertNotNull(rm);
+		int totalCount1 = m.getTotalCount(null, context);
+		int totalCount2 = m.getTotalCount(null, context1);
+		int totalCount3 = m.getTotalCount(null, context2);
 
-		SearchManager<TournamentGroup, TournamentRoundId> gm = m.getTournamentSearchManager(TournamentGroup.class);
-		assertNotNull(gm);
+//		List<TournamentRound> list = m.searchEntities(null, context, null, null, null);
 	}
 }

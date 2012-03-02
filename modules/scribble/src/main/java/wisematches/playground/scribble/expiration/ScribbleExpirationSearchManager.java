@@ -4,10 +4,9 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanConstructorResultTransformer;
-import wisematches.database.Order;
 import wisematches.playground.expiration.GameExpirationDescriptor;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.entity.AbstractEntitySearchManager;
 
 import java.lang.reflect.Constructor;
@@ -25,12 +24,12 @@ public class ScribbleExpirationSearchManager extends AbstractEntitySearchManager
 	}
 
 	@Override
-	protected void applyRestrictions(Criteria criteria, Void context, SearchCriteria[] criterias) {
+	protected void applyRestrictions(Criteria criteria, Void context, SearchFilter filters) {
 		criteria.add(Restrictions.isNull("gameResolution"));
 	}
 
 	@Override
-	protected void applyProjections(Criteria criteria, Void context, SearchCriteria[] criterias) {
+	protected void applyProjections(Criteria criteria, Void context, SearchFilter filters) {
 		criteria.setProjection(Projections.projectionList()
 				.add(Projections.property("boardId"))
 				.add(Projections.property("gameSettings.daysPerMove").as("daysPerMove"))
