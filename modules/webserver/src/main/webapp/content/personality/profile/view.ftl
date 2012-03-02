@@ -23,8 +23,8 @@
     <div class="player">
     <#if (profile.realName?? && profile.realName?has_content)>
         <strong>${profile.realName}</strong>
-    <#else>
-        <strong>${player.nickname}</strong>
+        <#else>
+            <strong>${player.nickname}</strong>
     </#if>
     </div>
     <div class="registered">
@@ -106,11 +106,11 @@
                         <div><@message code="profile.rating.op.low"/>:</div>
                         <div>
                         <#if statistics.lowestLostOpponentId==0>
-                            <@message code="profile.undefined"/>
-                        <#else>
-                        ${statistics.lowestLostOpponentRating}
-                            <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                            <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
+                        <@message code="profile.undefined"/>
+                            <#else>
+                            ${statistics.lowestLostOpponentRating}
+                                <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
+                                <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -118,12 +118,12 @@
                         <div><@message code="profile.rating.op.hi"/>:</div>
                         <div>
                         <#if statistics.highestWonOpponentId==0>
-                            <@message code="profile.undefined"/>
-                        <#else>
-                        ${statistics.highestWonOpponentRating}
-                            <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
-                            <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
-                                )</#if>
+                        <@message code="profile.undefined"/>
+                            <#else>
+                            ${statistics.highestWonOpponentRating}
+                                <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
+                                <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
+                                    )</#if>
                         </#if>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                         <#if statistics.lastMoveTime??>
                                 ${gameMessageSource.formatDate(statistics.lastMoveTime, locale)}
                                 <#else>
-                            <@message code="profile.undefined"/>
+                        <@message code="profile.undefined"/>
                         </#if>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <#if statistics.averageMoveTime != 0>
                             ${gameMessageSource.formatMinutes(statistics.averageMoveTime/1000/60, locale)}
                             <#else>
-                            <@message code="profile.undefined"/>
+                        <@message code="profile.undefined"/>
                         </#if>
                         </div>
                     </div>
@@ -225,7 +225,7 @@
                          style="background-position: -${tile.cost*22}px 0; top: 0; left: ${tile_index*22}px; padding: 0;">
                         <span>${tile.letter?upper_case}</span></div>
                 </#list>
-            <#else>
+                <#else>
                 <@message code="profile.undefined"/>
             </#if>
             </div>
@@ -239,7 +239,7 @@
                          style="background-position: -${tile.cost*22}px 0; top: 0; left: ${tile_index*22}px; padding: 0;">
                         <span>${tile.letter?upper_case}</span></div>
                 </#list>
-            <#else>
+                <#else>
                 <@message code="profile.undefined"/>
             </#if>
             </div>
@@ -272,7 +272,7 @@
     <div><strong>${player.nickname}</strong></div>
     <div>
     <#if profile.gender??>
-        <@message code="gender." + profile.gender.name()?lower_case/>,
+    <@message code="gender." + profile.gender.name()?lower_case/>,
     </#if>
     <#if profile.birthday??>${gameMessageSource.getAge(profile.birthday)} <@message code="profile.edit.years"/>,</#if>
     </div>
@@ -333,11 +333,12 @@
 
     function drawGamesChart() {
         var data = new google.visualization.DataTable();
+        data.addColumn('string', '');
         data.addColumn('number', '<@message code="profile.wins"/>');
         data.addColumn('number', '<@message code="profile.loses"/>');
         data.addColumn('number', '<@message code="profile.draws"/>');
         data.addRows([
-            [${statistics.wins}, ${statistics.loses}, ${statistics.draws}]
+            ['', ${statistics.wins}, ${statistics.loses}, ${statistics.draws}]
         ]);
 
         new google.visualization.BarChart(document.getElementById('gamesChart')).
@@ -345,7 +346,6 @@
             axisTitlesPosition:'in',
             colors:['#008000', 'AA0033', '#FF9900'],
             backgroundColor:'transparent',
-            interpolateNulls:true,
             legend:'none',
             isStacked:true,
             width:300,
@@ -359,10 +359,11 @@
         });
 
         var data2 = new google.visualization.DataTable();
+        data2.addColumn('string', '');
         data2.addColumn('number', '<@message code="profile.timeouts"/>');
         data2.addColumn('number', '<@message code="profile.well"/>');
         data2.addRows([
-            [${statistics.loses}, ${statistics.wins}]
+            ['',${statistics.loses}, ${statistics.wins}]
         ]);
 
         new google.visualization.BarChart(document.getElementById('timeoutsChart')).
