@@ -3,6 +3,7 @@ package wisematches.server.web.controllers.playground;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.playground.search.descriptive.SearchableDescriptor;
@@ -63,7 +64,7 @@ public abstract class AbstractSearchController<T, C> extends WisematchesControll
 			int index = 0;
 			final Range limit = Range.limit((Integer) request.get("iDisplayStart"), (Integer) request.get("iDisplayLength"));
 
-			final List<T> response = entitySearchManager.searchEntities(personality, context, null, orders, limit);
+			final List<T> response = entitySearchManager.searchEntities(personality, context, null, Orders.all(orders), limit);
 			final Object[] data = new Object[response.size()];
 			for (T entity : response) {
 				final Map<String, Object> a = new HashMap<String, Object>();

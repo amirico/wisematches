@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
@@ -41,7 +42,7 @@ public class ScribbleHistorySearchManagerTest {
 		List<ScribbleHistoryEntity> historyEntity1 = historySearchManager.searchEntities(player, null, null, null, null);
 		assertEquals(finishedGamesCount, historyEntity1.size());
 
-		List<ScribbleHistoryEntity> historyEntity2 = historySearchManager.searchEntities(player, null, null, new Order[]{Order.asc("language")}, Range.limit(4, 10));
+		List<ScribbleHistoryEntity> historyEntity2 = historySearchManager.searchEntities(player, null, null, Orders.of(Order.asc("language")), Range.limit(4, 10));
 		if (finishedGamesCount > 10) {
 			assertEquals(10, historyEntity2.size());
 		} else {

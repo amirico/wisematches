@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
@@ -22,7 +23,7 @@ import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
-import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.SearchFilter;
 
 import java.util.Collection;
 
@@ -88,7 +89,7 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	protected int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criterias) {
+	protected int loadPlayerBoardsCount(Personality player, GameState state, SearchFilter filters) {
 		final Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(ScribbleBoard.class)
 				.createAlias("playerHands", "hand")
@@ -101,7 +102,7 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	protected Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criterias, Order[] order, Range range) {
+	protected Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchFilter filters, Orders orders, Range range) {
 		if (player == null) {
 			throw new NullPointerException("Player  can't be null");
 		}
@@ -116,8 +117,8 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 				.add(state == GameState.ACTIVE ? Restrictions.isNull("gameResolution") : Restrictions.isNotNull("gameResolution"))
 				.setProjection(Projections.property("boardId"));
 
-		if (order != null) {
-			for (Order o : order) {
+		if (orders != null) {
+			for (Order o : orders) {
 				criteria.addOrder(
 						o.isAscending() ?
 								org.hibernate.criterion.Order.asc(o.getPropertyName()) :

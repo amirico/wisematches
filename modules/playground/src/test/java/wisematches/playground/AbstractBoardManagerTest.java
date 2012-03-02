@@ -4,10 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.IAnswer;
 import org.junit.Test;
-import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.SearchFilter;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -224,9 +224,9 @@ public class AbstractBoardManagerTest {
 
 		void saveBoard(AbstractGameBoard board);
 
-		Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criteria, Order[] order, Range range);
+		Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchFilter filter, Orders orders, Range range);
 
-		int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criteria);
+		int loadPlayerBoardsCount(Personality player, GameState state, SearchFilter filter);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -244,8 +244,8 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected int loadPlayerBoardsCount(Personality player, GameState state, SearchCriteria[] criteria) {
-			return gameBoardDao.loadPlayerBoardsCount(player, state, criteria);
+		protected int loadPlayerBoardsCount(Personality player, GameState state, SearchFilter filter) {
+			return gameBoardDao.loadPlayerBoardsCount(player, state, filter);
 		}
 
 		@Override
@@ -259,8 +259,8 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchCriteria[] criteria, Order[] order, Range range) {
-			return gameBoardDao.loadPlayerBoards(player, state, criteria, order, range);
+		protected Collection<Long> loadPlayerBoards(Personality player, GameState state, SearchFilter filter, Orders orders, Range range) {
+			return gameBoardDao.loadPlayerBoards(player, state, filter, orders, range);
 		}
 	}
 }

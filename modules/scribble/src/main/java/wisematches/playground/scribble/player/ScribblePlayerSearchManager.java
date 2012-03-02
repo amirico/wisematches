@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.player;
 
-import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.descriptive.AbstractDescriptiveSearchManager;
 
 /**
@@ -12,7 +12,7 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 	}
 
 	@Override
-	protected String getEntitiesList(PlayerSearchArea area, SearchCriteria[] criteria) {
+	protected String getEntitiesList(PlayerSearchArea area, SearchFilter filter) {
 		String r = "wisematches.personality.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor stats";
 
 		switch (area) {
@@ -23,12 +23,12 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 			case FORMERLY:
 				return r + ", wisematches.playground.scribble.ScribbleBoard board left join board.playerHands l left join board.playerHands r";
 			default:
-				throw new UnsupportedOperationException("Area criteria not implemented for " + area);
+				throw new UnsupportedOperationException("Area filter not implemented for " + area);
 		}
 	}
 
 	@Override
-	protected String getWhereCriterias(PlayerSearchArea area, SearchCriteria[] criteria) {
+	protected String getWhereCriterias(PlayerSearchArea area, SearchFilter filter) {
 		String r = "account.id=stats.playerId and ";
 		switch (area) {
 			case PLAYERS:
@@ -38,12 +38,12 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 			case FORMERLY:
 				return r + "r.playerId=account.id and not r.playerId=l.playerId and l.playerId=:pid";
 			default:
-				throw new UnsupportedOperationException("Area criteria not implemented for " + area);
+				throw new UnsupportedOperationException("Area filter not implemented for " + area);
 		}
 	}
 
 	@Override
-	protected String getGroupCriterias(PlayerSearchArea context, SearchCriteria[] criteria) {
+	protected String getGroupCriterias(PlayerSearchArea context, SearchFilter filter) {
 		return null;
 	}
 }

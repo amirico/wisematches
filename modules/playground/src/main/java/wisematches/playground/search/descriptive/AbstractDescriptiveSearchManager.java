@@ -6,9 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.search.SearchCriteria;
+import wisematches.playground.search.SearchFilter;
 
 import java.util.List;
 import java.util.Set;
@@ -42,7 +43,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 	}
 
 	@Override
-	public int getFilteredCount(final Personality person, final C context, final SearchCriteria[] criterias) {
+	public int getFilteredCount(final Personality person, final C context, final SearchFilter filter) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -57,9 +58,9 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 		}
 		query.append(")");
 		query.append(" from ");
-		query.append(getEntitiesList(context, criterias));
+		query.append(getEntitiesList(context, filter));
 
-		String whereCriterias = getWhereCriterias(context, criterias);
+		String whereCriterias = getWhereCriterias(context, filter);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
@@ -73,10 +74,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> searchEntities(final Personality person, final C context, final SearchCriteria[] criterias, final Order[] orders, final Range range) {
-		if (orders != null && orders.length != 0) {
-		}
-
+	public List<T> searchEntities(final Personality person, final C context, final SearchFilter filter, final Orders orders, final Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -102,21 +100,21 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 		query.setLength(query.length() - 2);
 
 		query.append(" from ");
-		query.append(getEntitiesList(context, criterias));
+		query.append(getEntitiesList(context, filter));
 
-		String whereCriterias = getWhereCriterias(context, criterias);
+		String whereCriterias = getWhereCriterias(context, filter);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
 		}
 
-		String groupCriterias = getGroupCriterias(context, criterias);
+		String groupCriterias = getGroupCriterias(context, filter);
 		if (groupCriterias != null) {
 			query.append(" group by ");
 			query.append(groupCriterias);
 		}
 
-		if (orders != null && orders.length != 0) {
+		if (orders != null) {
 			query.append(" order by ");
 			for (Order o : orders) {
 				final SearchableProperty a = entityDescriptor.getProperty(o.getPropertyName());
@@ -149,11 +147,11 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 		return query1.list();
 	}
 
-	protected abstract String getEntitiesList(final C context, SearchCriteria[] criteria);
+	protected abstract String getEntitiesList(final C context, SearchFilter filter);
 
-	protected abstract String getWhereCriterias(final C context, SearchCriteria[] criteria);
+	protected abstract String getWhereCriterias(final C context, SearchFilter filter);
 
-	protected abstract String getGroupCriterias(final C context, SearchCriteria[] criteria);
+	protected abstract String getGroupCriterias(final C context, SearchFilter filter);
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

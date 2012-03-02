@@ -15,10 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+import wisematches.database.Orders;
+import wisematches.database.Range;
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.RatingManager;
-import wisematches.playground.search.descriptive.DescriptiveSearchManager;
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tournament.TournamentSection;
 import wisematches.playground.tournament.TournamentSectionId;
@@ -28,7 +31,10 @@ import wisematches.playground.tournament.upcoming.WrongAnnouncementException;
 import wisematches.playground.tournament.upcoming.WrongSectionException;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -177,11 +183,47 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 	}
 
 	@Override
-	public DescriptiveSearchManager<TournamentRequest, TournamentSectionId> getRequestsSearchManager() {
-//		DescriptiveRequestSearchManager hibernateRequestSearchManager = new DescriptiveRequestSearchManager();
-//		hibernateRequestSearchManager.setSessionFactory(sessionFactory);
-//		return hibernateRequestSearchManager;
-		return null;
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getTotalCount(Personality person, TournamentSectionId context) {
+		return getFilteredCount(person, context, null);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getFilteredCount(Personality person, TournamentSectionId context, SearchFilter filter) {
+		lock.lock();
+		try {
+			if (context == null) {
+				throw new NullPointerException("Context can't be null");
+			}
+
+			final Criteria criteria = createSearchCriteria(person, context).setProjection(Projections.rowCount());
+			return ((Number) criteria.uniqueResult()).intValue();
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<TournamentRequest> searchEntities(Personality person, TournamentSectionId context, SearchFilter filter, Orders orders, Range range) {
+		lock.lock();
+		try {
+			if (context == null) {
+				throw new NullPointerException("Context can't be null");
+			}
+			final Criteria criteria = createSearchCriteria(person, context);
+			if (orders != null) {
+				orders.apply(criteria);
+			}
+			if (range != null) {
+				range.apply(criteria);
+			}
+			return criteria.list();
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -274,6 +316,18 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 		final Date nextTime = getNextAnnouncementTime();
 		final int currentNumber = current != null ? current.getNumber() : 0;
 		return new HibernateTournamentAnnouncement(currentNumber + 1, nextTime);
+	}
+
+	private Criteria createSearchCriteria(Personality person, TournamentSectionId context) {
+		final Session session = sessionFactory.getCurrentSession();
+		final Criteria criteria = session.createCriteria(HibernateTournamentRequest.class)
+				.add(Restrictions.eq("pk.announcement", context.getTournament()))
+				.add(Restrictions.eq("pk.language", context.getLanguage()))
+				.add(Restrictions.eq("section", context.getSection()));
+		if (person != null) {
+			criteria.add(Restrictions.eq("pk.player", person.getId()));
+		}
+		return criteria;
 	}
 
 	private Date getMidnight() {

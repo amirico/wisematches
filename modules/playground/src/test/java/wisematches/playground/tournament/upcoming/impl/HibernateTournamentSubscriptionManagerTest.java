@@ -12,6 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.personality.Language;
 import wisematches.personality.account.Account;
 import wisematches.personality.account.impl.HibernateAccountImpl;
@@ -33,7 +35,6 @@ import static org.junit.Assert.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Ignore
 @Transactional()
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -135,15 +136,12 @@ public class HibernateTournamentSubscriptionManagerTest {
 
 	@Test
 	public void testRequestsSearchManager() {
-		final DescriptiveSearchManager<TournamentRequest, TournamentSectionId> sm = tournamentSubscriptionManager.getRequestsSearchManager();
-/*
-		final DetachedCriteria c = DetachedCriteria.forClass(HibernateTournamentGroup.class);
-		c.add();
+		final TournamentAnnouncement announcement = tournamentSubscriptionManager.getTournamentAnnouncement();
 
-		final HibernateSearchCriteria sc = new HibernateSearchCriteria();
-*/
+		final TournamentSectionId sid = TournamentSectionId.valueOf(announcement.getNumber(), Language.RU, TournamentSection.EXPERT);
 
-		List<TournamentRequest> tournamentRequests = sm.searchEntities(null, TournamentSectionId.valueOf(1, Language.RU, TournamentSection.GRANDMASTER), null, null, null);
-		System.out.println(tournamentRequests);
+		int totalCount = tournamentSubscriptionManager.getTotalCount(null, sid);
+		List<TournamentRequest> tournamentRequests = tournamentSubscriptionManager.searchEntities(null, sid, null, null, null);
+		assertEquals(totalCount, tournamentRequests.size());
 	}
 }

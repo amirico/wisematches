@@ -8,6 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.playground.expiration.GameExpirationDescriptor;
@@ -44,7 +45,7 @@ public class ScribbleExpirationSearchManagerTest {
 		final List<GameExpirationDescriptor> descriptors = expirationSearchManager.searchEntities(player, null, null, null, null);
 		assertEquals(finishedGamesCount, descriptors.size());
 
-		expirationSearchManager.searchEntities(player, null, null, new Order[]{Order.desc("daysPerMove"), Order.asc("lastMoveTime"), Order.asc("boardId")}, null);
+		expirationSearchManager.searchEntities(player, null, null, Orders.of(Order.desc("daysPerMove"), Order.asc("lastMoveTime"), Order.asc("boardId")), null);
 		expirationSearchManager.searchEntities(player, null, null, null, Range.limit(1, 3));
 	}
 }

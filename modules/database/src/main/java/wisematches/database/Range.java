@@ -1,5 +1,6 @@
 package wisematches.database;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 
 /**
@@ -50,6 +51,19 @@ public class Range {
 		}
 		if (maxResults != -1) {
 			query.setMaxResults(maxResults);
+		}
+	}
+
+	public void apply(Criteria criteria) {
+		if (this == NO) {
+			return;
+		}
+
+		if (firstResult != -1) {
+			criteria.setFirstResult(firstResult);
+		}
+		if (maxResults != -1) {
+			criteria.setMaxResults(maxResults);
 		}
 	}
 
