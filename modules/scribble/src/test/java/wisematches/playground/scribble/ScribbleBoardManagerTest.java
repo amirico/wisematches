@@ -32,11 +32,12 @@ import static org.junit.Assert.assertSame;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribbleBoardManagerTest {
-	private ScribbleBoardManager scribbleRoomManager;
-
 	private Session session;
+
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
+
+	private ScribbleBoardManager scribbleRoomManager;
 
 	private static final Locale LOCALE = new Locale("en");
 
