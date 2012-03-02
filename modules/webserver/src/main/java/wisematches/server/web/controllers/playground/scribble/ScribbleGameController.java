@@ -277,6 +277,9 @@ public class ScribbleGameController extends WisematchesController {
 			}
 		}
 
+//		int finishedGames = boardManager.getTotalCount(getPersonality(), GameState.FINISHED);
+		// TODO: check games count here. Statistic should be used.
+
 		final Player principal = getPrincipal();
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
@@ -470,7 +473,7 @@ public class ScribbleGameController extends WisematchesController {
 	}
 
 	private void initDefaultForm(CreateScribbleForm form, String parameter, Locale locale) {
-		form.setCreateTab(CreateScribbleTab.WAIT);
+		form.setCreateTab(CreateScribbleTab.ROBOT);
 		form.setOpponentsCount(1);
 	}
 

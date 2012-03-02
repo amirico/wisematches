@@ -13,7 +13,11 @@ public enum GameState {
 	 */
 	ACTIVE,
 	/**
-	 * Indicates that game is closed.
+	 * Indicates that game was finished not by timeout
 	 */
-	CLOSED
+	FINISHED,
+	/**
+	 * Indicates that game was finished by timeout
+	 */
+	INTERRUPTED
 }

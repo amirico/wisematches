@@ -9,15 +9,11 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.database.Order;
 import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
-import wisematches.playground.AbstractBoardManager;
-import wisematches.playground.BoardCreationException;
-import wisematches.playground.BoardLoadingException;
-import wisematches.playground.GameState;
+import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
@@ -90,12 +86,13 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	protected int loadPlayerBoardsCount(Personality player, GameState state, SearchFilter filters) {
-		final Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(ScribbleBoard.class)
-				.createAlias("playerHands", "hand")
-				.add(Restrictions.eq("hand.playerId", player.getId()))
-				.add(state == GameState.ACTIVE ? Restrictions.isNull("gameResolution") : Restrictions.isNotNull("gameResolution"))
-				.setProjection(Projections.rowCount());
+		if (player == null) {
+			throw new NullPointerException("Player  can't be null");
+		}
+		if (state == null) {
+			throw new NullPointerException("Game state can't be null");
+		}
+		final Criteria criteria = createSearchCriteria(player, state).setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
@@ -110,26 +107,35 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 			throw new NullPointerException("Game state can't be null");
 		}
 
+		final Criteria criteria = createSearchCriteria(player, state).setProjection(Projections.property("boardId"));
+		if (orders != null) {
+			orders.apply(criteria);
+		}
+		if (range != null) {
+			range.apply(criteria);
+		}
+		return criteria.list();
+	}
+
+	private Criteria createSearchCriteria(Personality player, GameState state) {
 		final Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(ScribbleBoard.class)
 				.createAlias("playerHands", "hand")
-				.add(Restrictions.eq("hand.playerId", player.getId()))
-				.add(state == GameState.ACTIVE ? Restrictions.isNull("gameResolution") : Restrictions.isNotNull("gameResolution"))
-				.setProjection(Projections.property("boardId"));
-
-		if (orders != null) {
-			for (Order o : orders) {
-				criteria.addOrder(
-						o.isAscending() ?
-								org.hibernate.criterion.Order.asc(o.getPropertyName()) :
-								org.hibernate.criterion.Order.desc(o.getPropertyName()));
-			}
+				.add(Restrictions.eq("hand.playerId", player.getId()));
+		switch (state) {
+			case ACTIVE:
+				criteria.add(Restrictions.isNull("gameResolution"));
+				break;
+			case FINISHED:
+				criteria.add(Restrictions.isNotNull("gameResolution"));
+				criteria.add(Restrictions.not(Restrictions.eq("gameResolution", GameResolution.TIMEOUT)));
+				break;
+			case INTERRUPTED:
+				criteria.add(Restrictions.isNotNull("gameResolution"));
+				criteria.add(Restrictions.eq("gameResolution", GameResolution.TIMEOUT));
+				break;
 		}
-		if (range != null) {
-			criteria.setMaxResults(range.getMaxResults());
-			criteria.setFirstResult(range.getFirstResult());
-		}
-		return criteria.list();
+		return criteria;
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
