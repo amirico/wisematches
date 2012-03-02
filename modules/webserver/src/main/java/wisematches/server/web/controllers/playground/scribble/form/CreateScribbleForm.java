@@ -139,4 +139,26 @@ public class CreateScribbleForm {
     public void setCommonError(boolean commonError) {
         this.commonError = commonError;
     }
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("CreateScribbleForm");
+		sb.append("{title='").append(title).append('\'');
+		sb.append(", daysPerMove=").append(daysPerMove);
+		sb.append(", boardLanguage='").append(boardLanguage).append('\'');
+		sb.append(", createTab=").append(createTab);
+		sb.append(", minRating=").append(minRating);
+		sb.append(", maxRating=").append(maxRating);
+		sb.append(", robotType=").append(robotType);
+		sb.append(", opponentsCount=").append(opponentsCount);
+		sb.append(", opponents=").append(opponents == null ? "null" : "");
+		for (int i = 0; opponents != null && i < opponents.length; ++i)
+			sb.append(i == 0 ? "" : ", ").append(opponents[i]);
+		sb.append(", challengeMessage='").append(challengeMessage).append('\'');
+		sb.append(", commonError=").append(commonError);
+		sb.append(", rotten=").append(rotten);
+		sb.append('}');
+		return sb.toString();
+	}
 }
