@@ -11,7 +11,7 @@
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
         <span class="player"><a
                 href="/playground/scribble/board?b=${board.getBoardId()}"><strong><@message code="game.status.move_you"/></strong></a></span>
-        <#else>
+            <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
     </#if>
@@ -24,7 +24,7 @@
         <td width="100%" nowrap="nowrap">
             <#if player != principal>
                 <div class="title">
-                    <@message code="game.dashboard.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
+                <@message code="game.dashboard.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
                 </div>
             </#if>
         </td>
@@ -81,7 +81,7 @@
 
                 <div style="text-align: right;">
                     <a href="decline?p=${proposal.id}" onclick="cancelProposal(${proposal.id}); return false;">
-                        <@message code="game.proposal.cancel"/>
+                    <@message code="game.proposal.cancel"/>
                     </a>
                 </div>
             </td>
@@ -91,7 +91,7 @@
             <td>
                 <#list proposal.players as p>
                     <div>
-                        <@wm.player player=playerManager.getPlayer(p)/>
+                    <@wm.player player=playerManager.getPlayer(p)/>
                     </div>
                 </#list>
                 <#list (proposal.players?size)..(proposal.playersCount-1) as i>
@@ -115,8 +115,7 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    $('#dashboard').dataTable({
-        "bJQueryUI":true,
+    wm.ui.dataTable('#dashboard', {
         "bStateSave":true,
         "bFilter":false,
         "bSortClasses":false,

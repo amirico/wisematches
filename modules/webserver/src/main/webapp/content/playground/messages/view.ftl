@@ -9,7 +9,7 @@
 <div>
     <div style="float: left;">
         <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
-            <@message code="messages.delete.selected"/>
+        <@message code="messages.delete.selected"/>
         </button>
     </div>
 
@@ -52,7 +52,7 @@
 
                 <div class="message-controls">
                     <#if !m.notification>
-                        <@replyMessage pid=m.id><@message code="messages.reply"/></@replyMessage>
+                    <@replyMessage pid=m.id><@message code="messages.reply"/></@replyMessage>
                     <#--<#if m.original != 0>-->
                     <#--&nbsp;-->
                     <#--<a title="This message has been replied to"-->
@@ -62,7 +62,7 @@
                         <a href="#"
                            onclick="wm.messages.reportAbuse(${m.id});"><@message code="messages.abuse"/></a>
                         &nbsp;
-                        <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
+                    <@blacklist pid=m.sender><@message code="messages.ignore"/></@blacklist>
                         &nbsp;
                     </#if>
                     <a href="#"
@@ -76,7 +76,7 @@
 
 <div>
     <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
-        <@message code="messages.delete.selected"/>
+    <@message code="messages.delete.selected"/>
     </button>
 </div>
 </@wm.playground>
@@ -84,8 +84,7 @@
 <script type="text/javascript">
     $("#messagesWidget button").button();
 
-    $('#messages').dataTable({
-        "bJQueryUI":true,
+    wm.ui.dataTable('#messages', {
         "bSortClasses":false,
         "aaSorting":[
         ],

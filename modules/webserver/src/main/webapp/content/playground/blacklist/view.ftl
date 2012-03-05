@@ -64,8 +64,7 @@
 <script type="text/javascript">
     $("#blacklistWidget button").button();
 
-    $('#blacklist').dataTable({
-        "bJQueryUI": true,
+    wm.ui.dataTable('#blacklist', {
         "bSortClasses": false,
         "aoColumns": [
             { "bSortable": false },

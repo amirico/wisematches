@@ -11,8 +11,7 @@
     $(document).ready(function() {
         $("#refreshGameboard").button({icons: {primary: 'ui-icon-refresh'}});
 
-        $('#gameboard').dataTable({
-            "bJQueryUI": true,
+        wm.ui.dataTable('#gameboard', {
             "bStateSave": true,
             "bFilter": false,
             "bSort": false,
@@ -32,22 +31,11 @@
     <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
     </#if>
 
-    <table width="100%">
-        <tr>
-            <td width="100%" nowrap="nowrap">
-                <#if joinError??>
-                    <div class="ui-state-error ui-corner-all" style="padding: 4px;">
-                        <div class="ui-state-error-text error-msg"><@message code=joinError args=joinErrorArgs/></div>
-                    </div>
-                </#if>
-            </td>
-            <td nowrap="nowrap">
-                <button id="refreshGameboard" onclick="window.location.reload()">
-                <@message code="refresh.label"/>
-                </button>
-            </td>
-        </tr>
-    </table>
+    <#if joinError??>
+        <div class="ui-state-error ui-corner-all" style="padding: 4px; margin-bottom: 3px;">
+            <div class="ui-state-error-text error-msg"><@message code=joinError args=joinErrorArgs/></div>
+        </div>
+    </#if>
 
     <table id="gameboard" width="100%" class="display">
         <thead>

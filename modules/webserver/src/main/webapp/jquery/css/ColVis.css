@@ -1,8 +1,9 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * ColVis styles
- */
+* ColVis styles
+*/
 .ColVis {
-    float: right; /*margin-bottom: 1em; WM commented */
+    float: right;
+    margin-bottom: 1em;
 }
 
 .ColVis_Button {

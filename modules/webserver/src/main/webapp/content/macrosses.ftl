@@ -7,6 +7,40 @@
 <script type="text/javascript" src="/jquery/js/ColReorder.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/jquery/css/ColVis.css"/>
 <script type="text/javascript" src="/jquery/js/ColVis.min.js"></script>
+
+<script type="text/javascript">
+    wm.ui.dataTable = function(selector, opts) {
+        var dataTableLanguage = {
+            "bJQueryUI":true
+        };
+        <#if locale='ru'>
+            dataTableLanguage = $.extend(true, dataTableLanguage, {
+                "oLanguage": {
+                    "sProcessing":   "Подождите...",
+                    "sLengthMenu":   "Показать _MENU_ записей",
+                    "sZeroRecords":  "Записи отсутствуют.",
+                    "sInfo":         "Записи с _START_ до _END_ из _TOTAL_ записей",
+                    "sInfoEmpty":    "Записи с 0 до 0 из 0 записей",
+                    "sInfoFiltered": "(отфильтровано из _MAX_ записей)",
+                    "sInfoPostFix":  "",
+                    "sSearch":       "Поиск:",
+                    "sUrl":          "",
+                    "oPaginate": {
+                        "sFirst": "Первая",
+                        "sPrevious": "Предыдущая",
+                        "sNext": "Следующая",
+                        "sLast": "Последняя"
+                    }
+                },
+                "oColVis": {
+                    "buttonText" : 'Показать / скрыть колонки'
+                }
+            });
+            <#else>
+        </#if>
+        return $(selector).dataTable($.extend(true, dataTableLanguage, opts));
+    };
+</script>
 </#macro>
 
 <#macro playground id>
@@ -63,7 +97,7 @@
 </#macro>
 
 <#macro field path id="" class="">
-    <@spring.bind path/>
+<@spring.bind path/>
 <div <#if id?has_content>id="${id}"</#if>
      class="<#if spring.status.error>field-error<#else>field-ok</#if><#if class?has_content> ${class}</#if>">
     <#assign status=spring.status>
@@ -78,13 +112,13 @@
 </#macro>
 
 <#macro fieldInput path attributes="" fieldType="text" size=30 value="">
-    <@field path=path>
-    <input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
-        <#if fieldType=='checkbox'><#if spring.stringStatusValue?has_content && spring.stringStatusValue=='true'>checked="checked"</#if>
-           value="true"<#else>
-           value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>"</#if> ${attributes}/>
-        <#nested>
-    </@field>
+<@field path=path>
+<input type="${fieldType}" id="${spring.status.expression}" name="${spring.status.expression}" size="${size}"
+    <#if fieldType=='checkbox'><#if spring.stringStatusValue?has_content && spring.stringStatusValue=='true'>checked="checked"</#if>
+       value="true"<#else>
+       value="<#if fieldType!="password"><#if spring.stringStatusValue?has_content>${spring.stringStatusValue}<#else><@message code=value/></#if></#if>"</#if> ${attributes}/>
+    <#nested>
+</@field>
 </#macro>
 
 <#macro captcha path>
@@ -100,7 +134,7 @@
                 <a class="ui-icon ui-icon-info" href="#" onclick="return false" rel="/info/tip.ajax?s=${help}"></a>
             </div>
         </#if>
-        <@message code=title/>
+    <@message code=title/>
     </div>
     <div <#if id?has_content>id="${id}"</#if> class="ui-widget-content ui-corner-all shadow">
         <#nested/>
@@ -109,21 +143,21 @@
 </#macro>
 
 <#macro topRoundPanel id="" class="" style="">
-    <@abstractPanel id="${id}" class="ui-corner-top ${class}" style="${style}">
-        <#nested>
-    </@abstractPanel>
+<@abstractPanel id="${id}" class="ui-corner-top ${class}" style="${style}">
+    <#nested>
+</@abstractPanel>
 </#macro >
 
 <#macro bottomRoundPanel id="" class="" style="">
-    <@abstractPanel id="${id}" class="ui-corner-bottom ${class}" style="${style}">
-        <#nested>
-    </@abstractPanel>
+<@abstractPanel id="${id}" class="ui-corner-bottom ${class}" style="${style}">
+    <#nested>
+</@abstractPanel>
 </#macro >
 
 <#macro roundPanel id="" class="" style="">
-    <@abstractPanel id="${id}" class="ui-corner-all ${class}" style="${style}">
-        <#nested>
-    </@abstractPanel>
+<@abstractPanel id="${id}" class="ui-corner-all ${class}" style="${style}">
+    <#nested>
+</@abstractPanel>
 </#macro >
 
 <#macro abstractPanel class style id="">

@@ -488,8 +488,7 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
     };
 
 
-    var memoryTable = memoryWordTable.dataTable({
-        "bJQueryUI":true,
+    var memoryTable = wm.ui.dataTable(memoryWordTable, {
         "bFilter":false,
         "bSort":true,
         "bSortClasses":true,
@@ -779,8 +778,7 @@ wm.scribble.History = function (board, language) {
         movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
     };
 
-    var movesHistoryTable = board.getPlayboardElement('.movesHistory table').dataTable({
-        "bJQueryUI":true,
+    var movesHistoryTable = wm.ui.dataTable('.movesHistory table', {
         "bSort":true,
         "bSortClasses":false,
         "aaSorting":[
