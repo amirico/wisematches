@@ -7,7 +7,7 @@
 <div>
     <div style="float: left;">
         <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
-            <@message code="messages.delete.selected"/>
+        <@message code="messages.delete.selected"/>
         </button>
     </div>
 </div>
@@ -51,7 +51,7 @@
 
 <div>
     <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
-        <@message code="messages.delete.selected"/>
+    <@message code="messages.delete.selected"/>
     </button>
 </div>
 </@wm.playground>
@@ -59,8 +59,7 @@
 <script type="text/javascript">
     $("#messagesWidget button").button();
 
-    $('#messages').dataTable({
-        "bJQueryUI":true,
+    wm.ui.dataTable('#messages', {
         "bSortClasses":false,
         "aaSorting":[
         ],

@@ -59,8 +59,7 @@ wm.game.History = function(pid, columns, language) {
         }
     });
 
-    $('#history').dataTable({
-        "bJQueryUI":true,
+    wm.ui.dataTable('#history', {
         "bStateSave":false,
         "bFilter":false,
         "bSortClasses":false,
@@ -99,8 +98,7 @@ wm.game.Search = function(columns, scriplet, language) {
         }
     });
 
-    var resultTable = $('#searchResult').dataTable({
-        "bJQueryUI":true,
+    var resultTable = wm.ui.dataTable('#searchResult', {
         "bSortClasses":false,
         "aoColumns":columns,
         "bProcessing":true,
@@ -224,10 +222,10 @@ wm.game.Create = function(maxOpponents, opponentsCount, playerSearch) {
     });
 
     $(".player-search-action").hover(function() {
-        $(this).addClass("ui-state-hover");
-    }, function() {
-        $(this).removeClass("ui-state-hover");
-    });
+                $(this).addClass("ui-state-hover");
+            }, function() {
+                $(this).removeClass("ui-state-hover");
+            });
 };
 
 wm.game.settings.Board = function() {

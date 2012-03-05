@@ -68,8 +68,7 @@
 <script type="text/javascript">
     $("#friendsWidget button").button();
 
-    $('#friends').dataTable({
-        "bJQueryUI": true,
+    wm.ui.dataTable('#friends', {
         "bSortClasses": false,
         "aoColumns": [
             { "bSortable": false },
