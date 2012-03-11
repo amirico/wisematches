@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="context" type="wisematches.playground.propose.ChallengeGameProposal" -->
+<#-- @ftlvariable name="context" type="wisematches.playground.propose.GameChallenge" -->
 <#import "../../utils.ftl" as notify>
 
 <p>

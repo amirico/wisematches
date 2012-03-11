@@ -1,12 +1,12 @@
-package wisematches.playground.propose.restrictions;
+package wisematches.playground.restrictions;
 
-import wisematches.playground.propose.GameRestriction;
+import wisematches.playground.GameRestriction;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class GameRestrictionLogical {
-    private GameRestrictionLogical() {
+public final class GameRestrictionJunction {
+    private GameRestrictionJunction() {
     }
 
     public static GameRestriction or(GameRestriction r1, GameRestriction... rn) {

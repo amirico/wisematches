@@ -10,7 +10,7 @@ import java.util.Collection;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface ChallengeGameProposal<S extends GameSettings> extends GameProposal<S> {
+public interface GameChallenge<S extends GameSettings> extends GameProposal<S> {
     /**
      * Returns comment for the challenge.
      *
