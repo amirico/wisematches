@@ -1,8 +1,9 @@
-package wisematches.playground.propose.restrictions;
+package wisematches.playground.restrictions;
 
 import wisematches.personality.player.Player;
-import wisematches.playground.propose.GameRestriction;
-import wisematches.playground.propose.ViolatedRestrictionException;
+import wisematches.playground.GameRestriction;
+import wisematches.playground.ViolatedRestrictionException;
+import wisematches.playground.tracking.Statistics;
 
 /**
  * Validates player's nickname and throws {@code ViolatedRestrictionException} with code {@code nickname}
@@ -26,7 +27,7 @@ public final class GameRestrictionNickname implements GameRestriction {
     }
 
     @Override
-    public void validatePlayer(Player player) throws ViolatedRestrictionException {
+    public void validatePlayer(Player player, Statistics statistics) throws ViolatedRestrictionException {
         final String actual = player.getNickname();
         if (matcher) {
             if (!actual.matches(nickname)) {

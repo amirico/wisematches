@@ -21,9 +21,10 @@ public interface GameProposalListener {
     void gameProposalUpdated(GameProposal proposal);
 
     /**
-     * Indicates that proposal has been closed because it's ready for play.
+     * Indicates that proposal has been finalized because it's ready for play or has been cancelled.
      *
-     * @param proposal the closed proposal.
+     * @param proposal the finalized proposal.
+     * @param reason   the type of finalization.
      */
-    void gameProposalClosed(GameProposal proposal);
+    void gameProposalFinalized(GameProposal proposal, FinalizationType reason);
 }
