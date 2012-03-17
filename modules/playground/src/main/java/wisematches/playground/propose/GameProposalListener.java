@@ -26,5 +26,5 @@ public interface GameProposalListener {
      * @param proposal the finalized proposal.
      * @param reason   the type of finalization.
      */
-    void gameProposalFinalized(GameProposal proposal, FinalizationType reason);
+    void gameProposalFinalized(GameProposal proposal, ProposalResolution reason);
 }

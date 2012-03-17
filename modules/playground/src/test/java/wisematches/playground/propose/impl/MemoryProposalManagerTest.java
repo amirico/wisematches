@@ -8,8 +8,7 @@ import wisematches.personality.player.computer.guest.GuestPlayer;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.ViolatedRestrictionException;
-import wisematches.playground.propose.FinalizationType;
+import wisematches.playground.propose.ProposalResolution;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
 
@@ -43,19 +42,19 @@ public class MemoryProposalManagerTest {
         final GameProposalListener listener = createStrictMock(GameProposalListener.class);
         listener.gameProposalInitiated(proposal);
         listener.gameProposalUpdated(proposal);
-        listener.gameProposalFinalized(proposal, FinalizationType.TERMINATED);
+        listener.gameProposalFinalized(proposal, ProposalResolution.TERMINATED);
         replay(listener);
 
         proposalManager.addGameProposalListener(listener);
 
         proposalManager.fireGameProposalInitiated(proposal);
         proposalManager.fireGameProposalUpdated(proposal);
-        proposalManager.fireGameProposalFinalized(proposal, FinalizationType.TERMINATED);
+        proposalManager.fireGameProposalFinalized(proposal, ProposalResolution.TERMINATED);
         verify(listener);
     }
 
     @Test
-    public void initiateGameProposal() throws ViolatedRestrictionException {
+    public void initiateGameProposal() throws ViolatedCriterionException {
         final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
 
         final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -66,12 +65,12 @@ public class MemoryProposalManagerTest {
         proposalManager.addGameProposalListener(listener);
 
         final GameSettings settings = new MockGameSettings("Mock", 3);
-        final GameProposal gameProposal1 = proposalManager.initiateWaitingProposal(settings, PERSON1, 3, null);
+        final GameProposal gameProposal1 = proposalManager.initiateProposal(PERSON1, settings, 3, null);
         // We don't have to check all exception. See DefaultWaitingGameProposalTest file to get more.
         assertTrue(gameProposal1 instanceof AbstractGameProposal);
         assertSame(gameProposal1, proposalCapture.getValue());
 
-        final GameProposal gameProposal2 = proposalManager.initiateWaitingProposal(settings, PERSON1, 3, null);
+        final GameProposal gameProposal2 = proposalManager.initiateProposal(PERSON1, settings, 3, null);
         assertTrue(gameProposal2 instanceof AbstractGameProposal);
         assertSame(gameProposal2, proposalCapture.getValue());
 
@@ -84,7 +83,7 @@ public class MemoryProposalManagerTest {
     }
 
     @Test
-    public void attachDetachPlayer() throws ViolatedRestrictionException {
+    public void attachDetachPlayer() throws ViolatedCriterionException {
         final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
 
         final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -93,7 +92,7 @@ public class MemoryProposalManagerTest {
         replay(listener);
 
         final GameSettings settings = new MockGameSettings("Mock", 3);
-        final GameProposal gameProposal1 = proposalManager.initiateWaitingProposal(settings, PERSON1, 3, null);
+        final GameProposal gameProposal1 = proposalManager.initiateProposal(PERSON1, settings, 3, null);
 
         proposalManager.addGameProposalListener(listener);
         assertNull(proposalManager.attachPlayer(0, PERSON2));
@@ -110,13 +109,13 @@ public class MemoryProposalManagerTest {
     }
 
     @Test
-    public void getPlayerProposals() throws ViolatedRestrictionException {
+    public void getPlayerProposals() throws ViolatedCriterionException {
         final GameSettings settings = new MockGameSettings("Mock", 3);
-        final GameProposal<GameSettings> proposal1 = proposalManager.initiateWaitingProposal(settings, PERSON1, 4, null);
-        final GameProposal<GameSettings> proposal2 = proposalManager.initiateWaitingProposal(settings, PERSON1, 4, null);
+        final GameProposal<GameSettings> proposal1 = proposalManager.initiateProposal(PERSON1, settings, 4, null);
+        final GameProposal<GameSettings> proposal2 = proposalManager.initiateProposal(PERSON1, settings, 4, null);
         proposalManager.attachPlayer(proposal2.getId(), PERSON2);
 
-        final GameProposal<GameSettings> proposal3 = proposalManager.initiateWaitingProposal(settings, PERSON2, 4, null);
+        final GameProposal<GameSettings> proposal3 = proposalManager.initiateProposal(PERSON2, settings, 4, null);
         proposalManager.attachPlayer(proposal3.getId(), PERSON3);
         proposalManager.attachPlayer(proposal3.getId(), PERSON4);
 

@@ -22,6 +22,7 @@ import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.blacklist.BlacklistedException;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalManager;
+import wisematches.playground.propose.a.GameRestriction;
 import wisematches.playground.restriction.RestrictionException;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.restrictions.GameRestrictionRating;
@@ -193,7 +194,7 @@ public class ScribbleGameController extends WisematchesController {
             }
         } catch (BlacklistedException e) {
             model.addAttribute("joinError", "game.error.restriction.blacklist.description");
-        } catch (ViolatedRestrictionException e) {
+        } catch (ViolatedCriterionException e) {
             model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
             model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
         }
@@ -221,7 +222,7 @@ public class ScribbleGameController extends WisematchesController {
             if (proposal == null) {
                 model.addAttribute("joinError", "game.error.restriction.ready.description");
             }
-        } catch (ViolatedRestrictionException e) {
+        } catch (ViolatedCriterionException e) {
             model.addAttribute("joinError", "game.error.restriction." + e.getCode() + ".description");
             model.addAttribute("joinErrorArgs", new Object[]{e.getActualValue(), e.getExpectedValue()});
         }
@@ -243,7 +244,7 @@ public class ScribbleGameController extends WisematchesController {
             return ServiceResponse.SUCCESS;
         } catch (NumberFormatException ex) {
             return ServiceResponse.failure("format");
-        } catch (ViolatedRestrictionException e) {
+        } catch (ViolatedCriterionException e) {
             return ServiceResponse.failure("active");
         }
     }
@@ -373,14 +374,14 @@ public class ScribbleGameController extends WisematchesController {
                 players.add(getPrincipal());
                 board = boardManager.createBoard(s, players);
             } else { // challenge
-                proposalManager.initiateChallengeProposal(s, form.getChallengeMessage(), getPrincipal(), players);
+                proposalManager.initiateProposal(getPrincipal(), s, form.getChallengeMessage(), players);
             }
         } else if (players.size() == 0) { // waiting
             GameRestriction r = null;
             if (form.getMinRating() != 0 || form.getMaxRating() != 0) {
                 r = new GameRestrictionRating(form.getMinRating(), form.getMaxRating());
             }
-            proposalManager.initiateWaitingProposal(s, getPrincipal(), opponents.length + 1, r);
+            proposalManager.initiateProposal(getPrincipal(), s, opponents.length + 1, r);
         } else {
             result.rejectValue("commonError", "game.create.opponents.err.mixed");
             return createGamePage(null, null, form, model, locale);

@@ -9,7 +9,6 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.playground.GameBoard;
 import wisematches.playground.GameSettings;
-import wisematches.playground.ViolatedRestrictionException;
 import wisematches.playground.propose.GameProposal;
 
 import java.text.DateFormat;
@@ -208,7 +207,7 @@ public class GameMessageSource {
         try {
             proposal.isSuitablePlayer(player);
             return null;
-        } catch (ViolatedRestrictionException ex) {
+        } catch (ViolatedCriterionException ex) {
             return getMessage("game.error.restriction." + ex.getCode() + ".label", locale, ex.getExpectedValue(), ex.getActualValue());
         }
     }

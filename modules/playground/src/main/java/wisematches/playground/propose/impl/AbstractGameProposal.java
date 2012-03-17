@@ -3,7 +3,6 @@ package wisematches.playground.propose.impl;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
-import wisematches.playground.ViolatedRestrictionException;
 import wisematches.playground.propose.GameProposal;
 
 import java.io.Serializable;
@@ -55,7 +54,7 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
     }
 
     @Override
-    public Date getInitiationDate() {
+    public Date getCreationDate() {
         return initiationDate;
     }
 
@@ -80,12 +79,12 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
     }
 
     @Override
-    public void isSuitablePlayer(Player player) throws ViolatedRestrictionException {
+    public void isSuitablePlayer(Player player) throws ViolatedCriterionException {
         if (player == null) {
-            throw new ViolatedRestrictionException("player.null");
+            throw new ViolatedCriterionException("player.null");
         }
         if (players.contains(player)) {
-            throw new ViolatedRestrictionException("player.exist");
+            throw new ViolatedCriterionException("player.exist");
         }
 
         validateRestrictions(player);
@@ -101,7 +100,7 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
         return players.size() == playersCount;
     }
 
-    protected abstract void validateRestrictions(Player player) throws ViolatedRestrictionException;
+    protected abstract void validateRestrictions(Player player) throws ViolatedCriterionException;
 
     /**
      * Attaches this player to this proposal.
@@ -109,17 +108,17 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
      * @param player the player to be attached
      * @throws IllegalArgumentException     if player is null
      * @throws IllegalStateException        if proposal already full and new player can't be added.
-     * @throws ViolatedRestrictionException if player can't be attached because one or more restrictions are broken.
+     * @throws wisematches.playground.propose.ViolatedCriterionException if player can't be attached because one or more restrictions are broken.
      */
-    void attachPlayer(Player player) throws ViolatedRestrictionException {
+    void attachPlayer(Player player) throws ViolatedCriterionException {
         if (player == null) {
-            throw new ViolatedRestrictionException("player.null");
+            throw new ViolatedCriterionException("player.null");
         }
         if (this.players.contains(player)) {
-            throw new ViolatedRestrictionException("player.exist");
+            throw new ViolatedCriterionException("player.exist");
         }
         if (isReady()) {
-            throw new ViolatedRestrictionException("ready");
+            throw new ViolatedCriterionException("ready");
         }
         validateRestrictions(player);
         players.add(Personality.untie(player));
@@ -130,11 +129,11 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
      *
      * @param player the player to be attached
      * @throws IllegalArgumentException     if player is null
-     * @throws ViolatedRestrictionException if player can't be detached because one or more restrictions are broken.
+     * @throws wisematches.playground.propose.ViolatedCriterionException if player can't be detached because one or more restrictions are broken.
      */
-    void detachPlayer(Player player) throws ViolatedRestrictionException {
+    void detachPlayer(Player player) throws ViolatedCriterionException {
         if (player == null) {
-            throw new ViolatedRestrictionException("player.null");
+            throw new ViolatedCriterionException("player.null");
         }
         players.remove(player);
     }
