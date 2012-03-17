@@ -1,10 +1,8 @@
 package wisematches.playground.propose.impl;
 
 import wisematches.personality.player.Player;
-import wisematches.playground.GameRestriction;
+import wisematches.playground.propose.a.GameRestriction;
 import wisematches.playground.GameSettings;
-import wisematches.playground.ViolatedRestrictionException;
-import wisematches.playground.propose.GameWaiting;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -24,7 +22,7 @@ public final class DefaultGameWaiting<S extends GameSettings> extends AbstractGa
     }
 
     @Override
-    protected void validateRestrictions(Player player) throws ViolatedRestrictionException {
+    protected void validateRestrictions(Player player) throws ViolatedCriterionException {
         if (gameRestriction != null) {
             gameRestriction.validatePlayer(player, null);
         }

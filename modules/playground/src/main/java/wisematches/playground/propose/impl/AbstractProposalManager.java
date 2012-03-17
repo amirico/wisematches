@@ -3,9 +3,8 @@ package wisematches.playground.propose.impl;
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
-import wisematches.playground.GameRestriction;
+import wisematches.playground.propose.a.GameRestriction;
 import wisematches.playground.GameSettings;
-import wisematches.playground.ViolatedRestrictionException;
 import wisematches.playground.propose.*;
 
 import java.util.ArrayList;
@@ -56,12 +55,12 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
     }
 
     @Override
-    public GameWaiting<S> initiateWaitingProposal(S settings, Player initiator, int playersCount, GameRestriction restriction) {
+    public GameWaiting<S> initiateProposal(Player initiator, S settings, int playersCount, GameRestriction restriction) {
         return registerProposal(new DefaultGameWaiting<S>(proposalIds.incrementAndGet(), settings, playersCount, initiator, restriction));
     }
 
     @Override
-    public GameChallenge<S> initiateChallengeProposal(S settings, String comment, Player initiator, Collection<Player> opponents) {
+    public GameChallenge<S> initiateProposal(Player initiator, S settings, String comment, Collection<Player> opponents) {
         return registerProposal(new DefaultGameChallenge<S>(proposalIds.incrementAndGet(), settings, comment, initiator, opponents));
     }
 
@@ -78,7 +77,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
     }
 
     @Override
-    public GameProposal<S> attachPlayer(long proposalId, Player player) throws ViolatedRestrictionException {
+    public GameProposal<S> attachPlayer(long proposalId, Player player) throws ViolatedCriterionException {
         lock.lock();
         try {
             final AbstractGameProposal<S> proposal = (AbstractGameProposal<S>) proposals.get(proposalId);
@@ -89,7 +88,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
             if (proposal.isReady()) {
                 proposals.remove(proposalId);
                 removeGameProposal(proposal);
-                fireGameProposalFinalized(proposal, FinalizationType.READY);
+                fireGameProposalFinalized(proposal, ProposalResolution.READY);
             } else {
                 storeGameProposal(proposal);
                 fireGameProposalUpdated(proposal);
@@ -101,7 +100,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
     }
 
     @Override
-    public GameProposal<S> detachPlayer(long proposalId, Player player) throws ViolatedRestrictionException {
+    public GameProposal<S> detachPlayer(long proposalId, Player player) throws ViolatedCriterionException {
         lock.lock();
         try {
             final AbstractGameProposal<S> proposal = (AbstractGameProposal<S>) proposals.get(proposalId);
@@ -112,7 +111,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
             if (proposal.getInitiator().equals(player)) {
                 proposals.remove(proposalId);
                 removeGameProposal(proposal);
-                fireGameProposalFinalized(proposal, FinalizationType.REPUDIATED);
+                fireGameProposalFinalized(proposal, ProposalResolution.REPUDIATED);
             } else {
                 proposal.detachPlayer(player);
                 storeGameProposal(proposal);
@@ -125,7 +124,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
     }
 
     @Override
-    public GameProposal<S> cancel(long proposalId, Player player) throws ViolatedRestrictionException {
+    public GameProposal<S> cancel(long proposalId, Player player) throws ViolatedCriterionException {
         lock.lock();
         try {
             final AbstractGameProposal<S> proposal = (AbstractGameProposal<S>) proposals.get(proposalId);
@@ -135,17 +134,17 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
             if (proposal instanceof GameChallenge<?>) {
                 final GameChallenge cgp = (GameChallenge) proposal;
                 if (!cgp.getWaitingPlayers().contains(player) && !cgp.getInitiator().equals(player)) {
-                    throw new ViolatedRestrictionException("player.unsuitable");
+                    throw new ViolatedCriterionException("player.unsuitable");
                 }
             } else {
                 if (!proposal.getInitiator().equals(player)) {
-                    throw new ViolatedRestrictionException("player.unsuitable");
+                    throw new ViolatedCriterionException("player.unsuitable");
                 }
             }
 
             proposals.remove(proposalId);
             removeGameProposal(proposal);
-            fireGameProposalFinalized(proposal, FinalizationType.REJECTED);
+            fireGameProposalFinalized(proposal, ProposalResolution.REJECTED);
             return proposal;
         } finally {
             lock.unlock();
@@ -161,7 +160,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
             }
             proposals.remove(proposalId);
             removeGameProposal(proposal);
-            fireGameProposalFinalized(proposal, FinalizationType.TERMINATED);
+            fireGameProposalFinalized(proposal, ProposalResolution.TERMINATED);
             return proposal;
         } finally {
             lock.unlock();
@@ -222,7 +221,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
         }
     }
 
-    protected void fireGameProposalFinalized(GameProposal<S> proposal, FinalizationType reason) {
+    protected void fireGameProposalFinalized(GameProposal<S> proposal, ProposalResolution reason) {
         for (GameProposalListener proposalListener : proposalListeners) {
             proposalListener.gameProposalFinalized(proposal, reason);
         }

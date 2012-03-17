@@ -6,7 +6,6 @@ import wisematches.personality.player.computer.guest.GuestPlayer;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.ViolatedRestrictionException;
 import wisematches.playground.restrictions.GameRestrictionNickname;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ public class DefaultWaitingGameProposalTest {
     }
 
     @Test
-    public void constructor() throws ViolatedRestrictionException {
+    public void constructor() throws ViolatedCriterionException {
         try {
             new DefaultGameWaiting<GameSettings>(0, new MockGameSettings("Mock", 3), PERSON1, 3);
             fail("Exception must be here");
@@ -66,13 +65,13 @@ public class DefaultWaitingGameProposalTest {
     }
 
     @Test
-    public void attachPlayer() throws ViolatedRestrictionException {
+    public void attachPlayer() throws ViolatedCriterionException {
         final AbstractGameProposal<GameSettings> mock = new DefaultGameWaiting<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, 3);
         assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
         try {
             mock.attachPlayer(PERSON1);
             fail("Exception must be here");
-        } catch (ViolatedRestrictionException ex) {
+        } catch (ViolatedCriterionException ex) {
             assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
         }
 
@@ -85,18 +84,18 @@ public class DefaultWaitingGameProposalTest {
         try {
             mock.attachPlayer(PERSON4);
             fail("Exception must be here");
-        } catch (ViolatedRestrictionException ex) {
+        } catch (ViolatedCriterionException ex) {
             assertArrayEquals(Arrays.asList(PERSON1, PERSON2, PERSON3).toArray(), mock.getPlayers().toArray());
         }
     }
 
     @Test
-    public void detachPlayer() throws ViolatedRestrictionException {
+    public void detachPlayer() throws ViolatedCriterionException {
         final AbstractGameProposal<GameSettings> mock = new DefaultGameWaiting<GameSettings>(1, new MockGameSettings("Mock", 3), PERSON1, 3);
         try {
             mock.detachPlayer(null);
             fail("Exception must be here");
-        } catch (ViolatedRestrictionException ex) {
+        } catch (ViolatedCriterionException ex) {
             assertArrayEquals(Arrays.asList(PERSON1).toArray(), mock.getPlayers().toArray());
         }
         mock.detachPlayer(PERSON1);
@@ -104,12 +103,12 @@ public class DefaultWaitingGameProposalTest {
     }
 
     @Test
-    public void gameRestriction() throws ViolatedRestrictionException {
+    public void gameRestriction() throws ViolatedCriterionException {
         final AbstractGameProposal<GameSettings> mock = new DefaultGameWaiting<GameSettings>(1, new MockGameSettings("Mock", 3), 2, PERSON1, new GameRestrictionNickname(PERSON4.getNickname()));
         try {
             mock.attachPlayer(PERSON2);
             fail("Exception must be here");
-        } catch (ViolatedRestrictionException ex) {
+        } catch (ViolatedCriterionException ex) {
         }
         mock.attachPlayer(PERSON4);
     }

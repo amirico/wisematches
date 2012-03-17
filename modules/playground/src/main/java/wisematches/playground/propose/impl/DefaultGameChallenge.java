@@ -3,8 +3,6 @@ package wisematches.playground.propose.impl;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.GameSettings;
-import wisematches.playground.ViolatedRestrictionException;
-import wisematches.playground.propose.GameChallenge;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -43,14 +41,14 @@ public class DefaultGameChallenge<S extends GameSettings> extends AbstractGamePr
     }
 
     @Override
-    protected void validateRestrictions(Player player) throws ViolatedRestrictionException {
+    protected void validateRestrictions(Player player) throws ViolatedCriterionException {
         boolean expected = false;
         for (Personality restriction : waitingPlayers) {
             expected |= restriction.equals(player);
         }
 
         if (!expected) {
-            throw new ViolatedRestrictionException("player.unsuitable");
+            throw new ViolatedCriterionException("player.unsuitable");
         }
     }
 }

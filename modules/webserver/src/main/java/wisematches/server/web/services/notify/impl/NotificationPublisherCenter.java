@@ -126,11 +126,11 @@ public class NotificationPublisherCenter {
         }
 
         @Override
-        public void gameProposalFinalized(GameProposal proposal, FinalizationType reason) {
+        public void gameProposalFinalized(GameProposal proposal, ProposalResolution reason) {
 //            final Collection<Personality> players = new ArrayList<Personality>(proposal.getPlayers());
-            if (reason == FinalizationType.REPUDIATED) {
+            if (reason == ProposalResolution.REPUDIATED) {
 
-            } else if (reason == FinalizationType.REJECTED) {
+            } else if (reason == ProposalResolution.REJECTED) {
                 if (proposal instanceof GameChallenge) {
                     processNotification(proposal.getInitiator(), "game.challenge.rejected", proposal);
                 }

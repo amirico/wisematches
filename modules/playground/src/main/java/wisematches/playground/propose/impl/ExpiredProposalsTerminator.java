@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.TaskScheduler;
 import wisematches.playground.GameSettings;
-import wisematches.playground.propose.FinalizationType;
+import wisematches.playground.propose.ProposalResolution;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
 
@@ -79,7 +79,7 @@ public class ExpiredProposalsTerminator implements InitializingBean {
         }
 
         @Override
-        public void gameProposalFinalized(GameProposal proposal, FinalizationType reason) {
+        public void gameProposalFinalized(GameProposal proposal, ProposalResolution reason) {
         }
     }
 }
