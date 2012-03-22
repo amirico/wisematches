@@ -66,25 +66,6 @@ public abstract class GameSettings implements Serializable {
 		this.scratch = scratch;
 	}
 
-	/**
-	 * Returns timeout in seconds of each turn for one player.
-	 * <p/>
-	 * Method must return zero for unlimited time.
-	 *
-	 * @return the timeout of one turn.
-	 */
-	public int getDaysPerMove() {
-		return daysPerMove;
-	}
-
-	/**
-	 * Indicates is this game a timed.
-	 *
-	 * @return <code>true</code> if game has a timeout; <code>false</code> - otherwise.
-	 */
-	public boolean isTimedGame() {
-		return daysPerMove != 0;
-	}
 
 	/**
 	 * Return title of the game.
@@ -96,15 +77,16 @@ public abstract class GameSettings implements Serializable {
 	}
 
 	/**
-	 * Indicates should be game rated or not.
+	 * Returns timeout in seconds of each turn for one player.
 	 * <p/>
-	 * This method is used only in {@code AbstractGameBoard} constructor.
+	 * Method must return zero for unlimited time.
 	 *
-	 * @return {@code true} if game should be rated; {@code false} - otherwise.
+	 * @return the timeout of one turn.
 	 */
-	boolean isRatedGame() {
-		return ratedGame;
+	public int getDaysPerMove() {
+		return daysPerMove;
 	}
+
 
 	/**
 	 * Indicates should be we game stored in database or only in memory.
@@ -117,6 +99,40 @@ public abstract class GameSettings implements Serializable {
 	public boolean isScratch() {
 		return scratch;
 	}
+
+	/**
+	 * Indicates should be game rated or not.
+	 * <p/>
+	 * This method is used only in {@code AbstractGameBoard} constructor.
+	 *
+	 * @return {@code true} if game should be rated; {@code false} - otherwise.
+	 */
+	public boolean isRatedGame() {
+		return ratedGame;
+	}
+
+	/**
+	 * Indicates is this game a timed.
+	 *
+	 * @return <code>true</code> if game has a timeout; <code>false</code> - otherwise.
+	 */
+	public boolean isTimedGame() {
+		return daysPerMove != 0;
+	}
+
+	/**
+	 * Returns minimal players count for this game.
+	 *
+	 * @return the minimal players count for this game.
+	 */
+	public abstract int getMinPlayers();
+
+	/**
+	 * Returns maximal players count for this game.
+	 *
+	 * @return the maximal players count for this game.
+	 */
+	public abstract int getMaxPlayers();
 
 	protected abstract static class Builder {
 		protected String title;

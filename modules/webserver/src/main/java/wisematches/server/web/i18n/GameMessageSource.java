@@ -204,12 +204,16 @@ public class GameMessageSource {
     }
 
     public String formatJoinException(GameProposal<? extends GameSettings> proposal, Player player, Locale locale) {
+/*
         try {
             proposal.isSuitablePlayer(player);
             return null;
         } catch (ViolatedCriterionException ex) {
             return getMessage("game.error.restriction." + ex.getCode() + ".label", locale, ex.getExpectedValue(), ex.getActualValue());
         }
+*/
+		// TODO: commented
+		throw new UnsupportedOperationException("Not implemented");
     }
 
     public void setMessageSource(MessageSource messageSource) {

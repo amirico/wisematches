@@ -7,45 +7,39 @@ import wisematches.playground.tracking.Statistics;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @SuppressWarnings("unchecked")
-public enum PropertyOperator {
+public enum ComparableOperator {
 	EQ() {
 		@Override
-		public <T extends Comparable> boolean test(T a, T b) {
+		<T extends Comparable> boolean test(T a, T b) {
 			return a.compareTo(b) == 0;
 		}
 	},
 	LT() {
 		@Override
-		public <T extends Comparable> boolean test(T a, T b) {
+		<T extends Comparable> boolean test(T a, T b) {
 			return a.compareTo(b) < 0;
 		}
 	},
 	LE() {
 		@Override
-		public <T extends Comparable> boolean test(T a, T b) {
+		<T extends Comparable> boolean test(T a, T b) {
 			return a.compareTo(b) <= 0;
 		}
 	},
 	GT() {
 		@Override
-		public <T extends Comparable> boolean test(T a, T b) {
+		<T extends Comparable> boolean test(T a, T b) {
 			return a.compareTo(b) > 0;
 		}
 	},
 	GE() {
 		@Override
-		public <T extends Comparable> boolean test(T a, T b) {
+		<T extends Comparable> boolean test(T a, T b) {
 			return a.compareTo(b) >= 0;
-		}
-	},
-	LIKE() {
-		@Override
-		public <T extends Comparable> boolean test(T a, T b) {
-			return ((String) a).matches((String) b);
 		}
 	};
 
-	public abstract <T extends Comparable> boolean test(T a, T b);
+	abstract <T extends Comparable> boolean test(T a, T b);
 
 	PlayerCriterion createCriterion(final String code, final Comparable value, final PlayerProperty property) {
 		return new PlayerCriterion() {

@@ -8,6 +8,7 @@ import wisematches.playground.GameSettings;
 import wisematches.playground.propose.ProposalResolution;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.GameProposalListener;
+import wisematches.playground.propose.impl.AbstractProposalManager;
 
 import java.util.Collection;
 import java.util.concurrent.locks.Lock;
@@ -32,10 +33,12 @@ public class ExpiredProposalsTerminator implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         lock.lock();
         try {
+/*
             final Collection<? extends GameProposal<? extends GameSettings>> proposals = proposalManager.getActiveProposals();
             for (GameProposal<? extends GameSettings> proposal : proposals) {
                 processProposalInitiated(proposal);
             }
+*/
         } finally {
             lock.unlock();
         }

@@ -1,9 +1,12 @@
-package wisematches.playground.propose.impl;
+package wisematches.playground.propose.impl.file;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
+import wisematches.playground.propose.ProposalRightholder;
+import wisematches.playground.propose.impl.AbstractProposalManager;
+import wisematches.playground.propose.impl.DefaultGameProposal;
 
 import java.io.*;
 import java.nio.channels.Channels;
@@ -11,6 +14,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -25,7 +29,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Collection<GameProposal<S>> loadGameProposals() {
+	protected Collection<DefaultGameProposal<S>> loadGameProposals() {
 		try {
 			if (proposalFile.size() == 0) {
 				return Collections.emptyList();
@@ -37,9 +41,9 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 				return Collections.emptyList();
 			}
 
-			final Collection<GameProposal<S>> res = new ArrayList<GameProposal<S>>(count);
+			final Collection<DefaultGameProposal<S>> res = new ArrayList<DefaultGameProposal<S>>(count);
 			while (count-- != 0) {
-				res.add((GameProposal<S>) inputStream.readObject());
+				res.add((DefaultGameProposal<S>) inputStream.readObject());
 			}
 			return res;
 		} catch (EOFException ex) {
@@ -53,18 +57,18 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	}
 
 	@Override
-	protected void storeGameProposal(GameProposal<S> sGameProposal) {
+	protected void storeGameProposal(DefaultGameProposal<S> proposal) {
 		saveAllProposals();
 	}
 
 	@Override
-	protected void removeGameProposal(GameProposal<S> sGameProposal) {
+	protected void removeGameProposal(DefaultGameProposal<S> proposal) {
 		saveAllProposals();
 	}
 
 	private void saveAllProposals() {
 		try {
-			final Collection<GameProposal<S>> activeProposals = getActiveProposals();
+			final List<GameProposal<S>> activeProposals = searchEntities(null, ProposalRightholder.ANY, null, null, null);
 			proposalFile.position(0);
 			final ObjectOutputStream outputStream = new ObjectOutputStream(Channels.newOutputStream(this.proposalFile));
 			outputStream.writeInt(activeProposals.size());

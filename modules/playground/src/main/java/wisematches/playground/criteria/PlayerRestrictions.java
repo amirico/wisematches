@@ -12,26 +12,26 @@ public final class PlayerRestrictions {
 	}
 
 	public static PlayerCriterion id(final long id) {
-		return PropertyOperator.EQ.createCriterion("player.id", id, PlayerProperty.ID);
+		return ComparableOperator.EQ.createCriterion("player.id", id, PlayerProperty.ID);
 	}
 
-	public static PlayerCriterion rating(final short rating, final PropertyOperator operator) {
+	public static PlayerCriterion rating(final short rating, final ComparableOperator operator) {
 		return operator.createCriterion("player.rating", rating, PlayerProperty.RATING);
 	}
 
-	public static PlayerCriterion ratingA(final short rating, final PropertyOperator operator) {
+	public static PlayerCriterion ratingA(final short rating, final ComparableOperator operator) {
 		return operator.createCriterion("player.rating.average", rating, PlayerProperty.RATING_AVERAGE);
 	}
 
-	public static PlayerCriterion ratingL(final short rating, final PropertyOperator operator) {
+	public static PlayerCriterion ratingL(final short rating, final ComparableOperator operator) {
 		return operator.createCriterion("player.rating.min", rating, PlayerProperty.RATING_MIN);
 	}
 
-	public static PlayerCriterion ratingH(final short rating, final PropertyOperator operator) {
+	public static PlayerCriterion ratingH(final short rating, final ComparableOperator operator) {
 		return operator.createCriterion("player.rating.max", rating, PlayerProperty.RATING_MAX);
 	}
 
-	public static PlayerCriterion completed(final short rating, final PropertyOperator operator) {
+	public static PlayerCriterion completed(final short rating, final ComparableOperator operator) {
 		return operator.createCriterion("games.completed", rating, PlayerProperty.COMPLETED_GAMES);
 	}
 

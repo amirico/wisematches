@@ -23,8 +23,8 @@ public class CreateScribbleForm {
     @NotNull(message = "game.create.opponent.err.blank")
     private CreateScribbleTab createTab = CreateScribbleTab.ROBOT;
 
-    private int minRating = 0;
-    private int maxRating = 0;
+    private short minRating = 0;
+    private short maxRating = 0;
 
     private RobotType robotType = RobotType.TRAINEE;
 
@@ -84,19 +84,19 @@ public class CreateScribbleForm {
         this.robotType = robotType;
     }
 
-    public int getMinRating() {
+    public short getMinRating() {
         return minRating;
     }
 
-    public void setMinRating(int minRating) {
+    public void setMinRating(short minRating) {
         this.minRating = minRating;
     }
 
-    public int getMaxRating() {
+    public short getMaxRating() {
         return maxRating;
     }
 
-    public void setMaxRating(int maxRating) {
+    public void setMaxRating(short maxRating) {
         this.maxRating = maxRating;
     }
 

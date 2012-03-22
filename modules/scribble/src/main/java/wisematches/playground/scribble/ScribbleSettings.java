@@ -21,7 +21,7 @@ public final class ScribbleSettings extends GameSettings {
 	/**
 	 * This is Hibernate constructor.
 	 */
-	ScribbleSettings() {
+	protected ScribbleSettings() {
 	}
 
 	/**
@@ -48,6 +48,16 @@ public final class ScribbleSettings extends GameSettings {
 	public ScribbleSettings(String title, Language language, int daysPerMove, boolean ratedGame, boolean scratch) {
 		super(title, daysPerMove, ratedGame, scratch);
 		this.language = language.code();
+	}
+
+	@Override
+	public int getMinPlayers() {
+		return 2;
+	}
+
+	@Override
+	public int getMaxPlayers() {
+		return 4;
 	}
 
 	/**
