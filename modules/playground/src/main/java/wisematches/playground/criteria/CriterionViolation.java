@@ -7,18 +7,15 @@ import java.io.Serializable;
  */
 public final class CriterionViolation implements Serializable {
 	private final String code;
-	private final Comparable expected;
-	private final Comparable received;
+	private final Object expected;
+	private final Object received;
 	private final PlayerCriterion criterion;
 
 	private static final long serialVersionUID = 4808346159699224069L;
 
-	public CriterionViolation(String code, Comparable expected, Comparable received, PlayerCriterion criterion) {
+	public CriterionViolation(String code, Object expected, Object received, PlayerCriterion criterion) {
 		if (code == null) {
 			throw new NullPointerException("Code can't be null");
-		}
-		if (criterion == null) {
-			throw new NullPointerException("Criterion can't be null");
 		}
 		this.code = code;
 		this.expected = expected;
@@ -30,11 +27,11 @@ public final class CriterionViolation implements Serializable {
 		return code;
 	}
 
-	public Comparable getExpected() {
+	public Object getExpected() {
 		return expected;
 	}
 
-	public Comparable getReceived() {
+	public Object getReceived() {
 		return received;
 	}
 

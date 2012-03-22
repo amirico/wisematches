@@ -16,36 +16,38 @@ import java.util.Collection;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameProposalManager<S extends GameSettings> extends SearchManager<GameProposal<S>, Void> {
+public interface GameProposalManager<S extends GameSettings> extends SearchManager<GameProposal<S>, ProposalRightholder> {
 	void addGameProposalListener(GameProposalListener l);
 
 	void removeGameProposalListener(GameProposalListener l);
 
 
 	/**
-	 * Initializes new challenge proposal.
+	 * Initiates new challenge if it's possible.
 	 *
-	 * @param initiator the proposal initiator.
-	 * @param settings  the game settings
-	 * @param comment   the comment for the challenge
-	 * @param opponents the other opponents   @return created game proposal.
+	 * @param settings   the game settings
+	 * @param initiator  the proposal initiator.
+	 * @param opponents  the other opponents   @return created game proposal.
+	 * @param commentary the comment for the challenge
 	 * @return the initiated challenge
+	 * @throws NullPointerException	 if any parameter except {@code commentary} is null.
+	 * @throws IllegalArgumentException if {@code opponents} collection impossible opponents number.
 	 */
-	GameProposal<S> initiateProposal(Player initiator, S settings, String comment, Collection<Player> opponents);
+	GameProposal<S> initiate(S settings, Player initiator, Collection<Player> opponents, String commentary);
 
 	/**
-	 * Opens new waiting game in this manager.
+	 * Initiates new waiting proposal.
 	 *
-	 * @param initiator	a player who has initiated that proposal.
-	 * @param settings	 the original game settings
-	 * @param playersCount the max players count
-	 * @param criteria	 the array of proposal criteria. Can be null if there is no any.
+	 * @param settings			   the original game settings
+	 * @param initiator			  a player who has initiated that proposal.
+	 * @param expectedOpponentsCount number of expected players
+	 * @param criteria			   the array of proposal criteria. Can be null if there is no any.
 	 * @return created game proposal.
 	 * @throws IllegalArgumentException if {@code settings} or {@code players} are null or if {@code playersCount}
 	 *                                  is less than two or if {@code players} collection size more than
 	 *                                  {@code playersCount} or contains null.
 	 */
-	GameProposal<S> initiateProposal(Player initiator, S settings, int playersCount, PlayerCriterion... criteria);
+	GameProposal<S> initiate(S settings, Player initiator, int expectedOpponentsCount, PlayerCriterion... criteria);
 
 
 	/**
@@ -56,51 +58,49 @@ public interface GameProposalManager<S extends GameSettings> extends SearchManag
 	 */
 	GameProposal<S> getProposal(long proposalId);
 
+
 	/**
-	 * Cancels a game proposal with specified {@code proposalId}. A proposal can be cancelled only
-	 * by person who initialised a waiting proposal of by anyone who in a challenge proposal.
+	 * Accept proposal with specified id by specified {@code player}
 	 *
-	 * @param proposalId the proposal id
-	 * @param player	 a player who wants cancel the proposal.
-	 * @return cancelled game proposal or {@code null} if there is no proposals with specified id.
-	 * @throws ViolatedCriteriaException if specified player can't cancel the proposal.
+	 * @param proposalId the id of proposal
+	 * @param player	 the player who wants accept the proposal.
+	 * @return the accepted proposal or {@code null} if there is no proposal with specified id.
+	 * @throws NullPointerException	  if {@code player} is null;
+	 * @throws ViolatedCriteriaException if player violates one ore more proposal's restrictions.
 	 */
-	GameProposal<S> cancel(long proposalId, Player player) throws ViolatedCriteriaException;
-
+	GameProposal<S> accept(long proposalId, Player player) throws ViolatedCriteriaException;
 
 	/**
-	 * Attaches specified player to the waiting game.
+	 * The player would like reject accepted proposal or received challenge.
 	 * <p/>
-	 * If game is marked as a ready after attachment the waiting info is removed from the manager so the returned
-	 * waiting info must be checked after this method execution.
+	 * If player don't accept the proposal when nothing is happened.
+	 * <p/>
+	 * The proposal can be cancelled if it's rejected by initiator or it's challenge.
 	 *
-	 * @param proposalId the waiting game id
-	 * @param player	 the player to be added.
-	 * @return the modified waiting game info or {@code null} if no proposal with specified id.
-	 * @throws IllegalArgumentException  if specified player is null.
-	 * @throws ViolatedCriteriaException if player can't be attached because the player is not suitable
-	 *                                   (@link #checkViolation(Player, GameProposal))
+	 * @param proposalId the proposal
+	 * @param player	 the player who rejected the proposal.
+	 * @return rejected proposal or {@code null} if player doesn't belong to the proposal.
+	 * @throws NullPointerException	  if {@code player} is null;
+	 * @throws ViolatedCriteriaException if player violates one ore more proposal's restrictions.
 	 */
-	GameProposal<S> attachPlayer(long proposalId, Player player) throws ViolatedCriteriaException;
+	GameProposal<S> reject(long proposalId, Player player) throws ViolatedCriteriaException;
 
 	/**
-	 * Detaches specified player from the waiting game. If player is not in the proposal nothing is happen.
+	 * Terminates specified proposal. This is system function and usually is executed by administrator or
+	 * a component.
 	 *
-	 * @param proposalId the waiting game id.
-	 * @param player	 the player to be attached.
-	 * @return the modified waiting game info or {@code null} if no proposal with specified id.
-	 * @throws IllegalArgumentException  if specified player is null.
-	 * @throws ViolatedCriteriaException if player can't be detached from the proposal.
+	 * @param proposalId the proposal to be cancelled.
+	 * @return cancelled proposal or {@code null} if there is no proposal with specified id.
 	 */
-	GameProposal<S> detachPlayer(long proposalId, Player player) throws ViolatedCriteriaException;
+	GameProposal<S> terminate(long proposalId);
 
 
 	/**
 	 * Checks that the player doesn't violate criteria of the proposal.
 	 *
-	 * @param player   the player to be checked
-	 * @param proposal the proposal to be checked
+	 * @param proposalId the proposal id to be validated.
+	 * @param player	 the player to be checked
 	 * @return unmodifiable collection of violated criteria or {@code null} if there no such.
 	 */
-	Collection<CriterionViolation> checkViolation(Player player, GameProposal<S> proposal);
+	Collection<CriterionViolation> validate(long proposalId, Player player);
 }

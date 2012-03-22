@@ -23,6 +23,12 @@ public class ViolatedCriteriaException extends Exception {
 		this.violations = new ArrayList<CriterionViolation>(violations);
 	}
 
+	public CriterionViolation getViolatedCriterion() {
+		if (violations != null && violations.size() > 0) {
+			return violations.iterator().next();
+		}
+		return null;
+	}
 
 	public Collection<CriterionViolation> getViolatedCriteria() {
 		return Collections.unmodifiableCollection(violations);
