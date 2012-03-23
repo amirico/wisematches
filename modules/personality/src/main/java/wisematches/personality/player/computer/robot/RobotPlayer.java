@@ -1,6 +1,7 @@
 package wisematches.personality.player.computer.robot;
 
 import wisematches.personality.Membership;
+import wisematches.personality.Personality;
 import wisematches.personality.player.computer.ComputerPlayer;
 
 import java.util.Arrays;
@@ -48,6 +49,10 @@ public class RobotPlayer extends ComputerPlayer {
 			default:
 				return null;
 		}
+	}
+
+	public static boolean isRobotPlayer(Personality personality) {
+		return personality.getId() >= 2 && personality.getId() <= 4;
 	}
 
 	public static Collection<RobotPlayer> getRobotPlayers() {

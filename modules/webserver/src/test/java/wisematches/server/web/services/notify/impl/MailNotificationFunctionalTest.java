@@ -10,8 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
-import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.BoardLoadingException;
@@ -19,6 +19,7 @@ import wisematches.playground.GameMoveException;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.impl.HibernateMessage;
+import wisematches.playground.propose.impl.DefaultGameProposal;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.bank.TilesBank;
@@ -116,17 +117,13 @@ public class MailNotificationFunctionalTest {
         notificationPublisher.raiseNotification("game.message", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
         notificationPublisher.raiseNotification("game.message", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
 
-		// TODO: commented
-
-/*
-        DefaultGameChallenge<ScribbleSettings> proposal1 = new DefaultGameChallenge<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.<Player>asList(p2));
+        DefaultGameProposal<ScribbleSettings> proposal1 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[] {p2});
         notificationPublisher.raiseNotification("game.challenge.received", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
         notificationPublisher.raiseNotification("game.challenge.received", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
 
-        DefaultGameChallenge<ScribbleSettings> proposal2 = new DefaultGameChallenge<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.<Player>asList(p2));
+        DefaultGameProposal<ScribbleSettings> proposal2 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[] {p2});
         notificationPublisher.raiseNotification("game.challenge.rejected", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));
         notificationPublisher.raiseNotification("game.challenge.rejected", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));
-*/
 
         notificationPublisher.raiseNotification("account.created", p1.getAccount(), NotificationMover.ACCOUNTS, null);
         notificationPublisher.raiseNotification("account.created", p2.getAccount(), NotificationMover.ACCOUNTS, null);

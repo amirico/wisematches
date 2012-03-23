@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
+import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.*;
 import wisematches.playground.expiration.GameExpirationListener;
@@ -111,34 +112,34 @@ public class NotificationPublisherCenter {
 		}
 
 		@Override
-		public void gameProposalInitiated(GameProposal proposal) {
-		// TODO: commented
+		public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
+			List<Personality> players = proposal.getPlayers();
+			for (Personality player : players) {
+				if (player == null || proposal.getInitiator().equals(player) || RobotPlayer.isRobotPlayer(player)) {
+					continue;
+				}
+				processNotification(player, "game.challenge.received", proposal);
+			}
+		}
+
+		@Override
+		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal) {
+		}
+
+		@Override
+		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution reason) {
+			if (reason == ProposalResolution.REPUDIATED) {
 /*
-			if (proposal.getProposalType() == ProposalRightholder.CHALLENGE) {
-				final List players = proposal.getPlayers();
-				for (Object player : players) {
-					if (player == null || player.equals(proposal.getInitiator())) {
-						processNotification((Personality) player, "game.challenge.received", proposal);
+				for (Personality personality : proposal.getJoinedPlayers()) {
+					if (personality != null && !proposal.getInitiator().equals(personality)) {
+						processNotification(personality, "game.challenge.repudiated", proposal);
 					}
 				}
-			}
 */
-		}
-
-		@Override
-		public void gameProposalUpdated(GameProposal proposal) {
-		}
-
-		@Override
-		public void gameProposalFinalized(GameProposal proposal, ProposalResolution reason) {
-		// TODO: commented
-//            final Collection<Personality> players = new ArrayList<Personality>(proposal.getPlayers());
-			if (reason == ProposalResolution.REPUDIATED) {
-
 			} else if (reason == ProposalResolution.REJECTED) {
-//				if (proposal instanceof GameChallenge) {
-//					processNotification(proposal.getInitiator(), "game.challenge.rejected", proposal);
-//				}
+				processNotification(proposal.getInitiator(), "game.challenge.rejected", proposal);
+			} else if (reason == ProposalResolution.TERMINATED) {
+				processNotification(proposal.getInitiator(), "game.challenge.terminated", proposal);
 			}
 		}
 

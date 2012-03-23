@@ -1,5 +1,7 @@
 package wisematches.playground.propose;
 
+import wisematches.playground.GameSettings;
+
 /**
  * Listener interface for {@code wisematches.server.playground.propose.GameProposalManager}.
  *
@@ -11,14 +13,14 @@ public interface GameProposalListener {
      *
      * @param proposal the initiated proposal.
      */
-    void gameProposalInitiated(GameProposal proposal);
+    void gameProposalInitiated(GameProposal<? extends GameSettings> proposal);
 
     /**
      * Indicates that a proposal has been updated (usually, new player has joined)
      *
      * @param proposal the updated proposal.
      */
-    void gameProposalUpdated(GameProposal proposal);
+    void gameProposalUpdated(GameProposal<? extends GameSettings> proposal);
 
     /**
      * Indicates that proposal has been finalized because it's ready for play or has been cancelled.
@@ -26,5 +28,5 @@ public interface GameProposalListener {
      * @param proposal the finalized proposal.
      * @param reason   the type of finalization.
      */
-    void gameProposalFinalized(GameProposal proposal, ProposalResolution reason);
+    void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution reason);
 }
