@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
-import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.BoardLoadingException;
@@ -118,12 +117,11 @@ public class MailNotificationFunctionalTest {
         notificationPublisher.raiseNotification("game.message", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
         notificationPublisher.raiseNotification("game.message", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
 
-		// TODO: check that part
-        DefaultGameProposal<ScribbleSettings> proposal1 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[] {p2});
+        DefaultGameProposal<ScribbleSettings> proposal1 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2});
         notificationPublisher.raiseNotification("game.challenge.received", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
         notificationPublisher.raiseNotification("game.challenge.received", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
 
-        DefaultGameProposal<ScribbleSettings> proposal2 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[] {p2});
+        DefaultGameProposal<ScribbleSettings> proposal2 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2});
         notificationPublisher.raiseNotification("game.challenge.rejected", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));
         notificationPublisher.raiseNotification("game.challenge.rejected", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));
 

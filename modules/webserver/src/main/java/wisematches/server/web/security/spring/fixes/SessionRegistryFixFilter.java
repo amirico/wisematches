@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * TODO: this is fix for: https://jira.springsource.org/browse/SEC-1832.
  * Internal issue: http://code.google.com/p/wisematches/issues/detail?id=107
  * <p/>
  * This filter must be after SESSION_MANAGEMENT_FILTER
@@ -23,29 +22,29 @@ import java.io.IOException;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class SessionRegistryFixFilter extends GenericFilterBean {
-	private SessionRegistry sessionRegistry;
+    private SessionRegistry sessionRegistry;
 
-	public SessionRegistryFixFilter() {
-	}
+    public SessionRegistryFixFilter() {
+    }
 
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-		final HttpServletRequest request = (HttpServletRequest) req;
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        final HttpServletRequest request = (HttpServletRequest) req;
 
-		final HttpSession session = request.getSession(false);
-		if (session != null) {
-			final SessionInformation info = sessionRegistry.getSessionInformation(session.getId());
-			if (info == null) {
-				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-				if (authentication != null && authentication.getPrincipal() != null) {
-					sessionRegistry.registerNewSession(session.getId(), authentication.getPrincipal());
-				}
-			}
-		}
-		chain.doFilter(req, res);
-	}
+        final HttpSession session = request.getSession(false);
+        if (session != null) {
+            final SessionInformation info = sessionRegistry.getSessionInformation(session.getId());
+            if (info == null) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null && authentication.getPrincipal() != null) {
+                    sessionRegistry.registerNewSession(session.getId(), authentication.getPrincipal());
+                }
+            }
+        }
+        chain.doFilter(req, res);
+    }
 
-	public void setSessionRegistry(SessionRegistry sessionRegistry) {
-		this.sessionRegistry = sessionRegistry;
-	}
+    public void setSessionRegistry(SessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
+    }
 }
