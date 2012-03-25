@@ -6,48 +6,56 @@ import java.io.Serializable;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class CriterionViolation implements Serializable {
-	private final String code;
-	private final Object expected;
-	private final Object received;
-	private final PlayerCriterion criterion;
+    private final String code;
+    private final Object expected;
+    private final Object received;
+    private final PlayerCriterion criterion;
 
-	private static final long serialVersionUID = 4808346159699224069L;
+    private static final long serialVersionUID = 4808346159699224069L;
 
-	public CriterionViolation(String code, Object expected, Object received, PlayerCriterion criterion) {
-		if (code == null) {
-			throw new NullPointerException("Code can't be null");
-		}
-		this.code = code;
-		this.expected = expected;
-		this.received = received;
-		this.criterion = criterion;
-	}
+    public CriterionViolation(String code, Object received) {
+        this(code, received, null);
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public CriterionViolation(String code, Object received, Object expected) {
+        this(code, received, expected, null);
+    }
 
-	public Object getExpected() {
-		return expected;
-	}
+    public CriterionViolation(String code, Object received, Object expected, PlayerCriterion criterion) {
+        if (code == null) {
+            throw new NullPointerException("Code can't be null");
+        }
+        this.code = code;
+        this.expected = expected;
+        this.received = received;
+        this.criterion = criterion;
+    }
 
-	public Object getReceived() {
-		return received;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public PlayerCriterion getCriterion() {
-		return criterion;
-	}
+    public Object getExpected() {
+        return expected;
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("CriterionViolation");
-		sb.append("{code='").append(code).append('\'');
-		sb.append(", expected=").append(expected);
-		sb.append(", received=").append(received);
-		sb.append(", criterion=").append(criterion);
-		sb.append('}');
-		return sb.toString();
-	}
+    public Object getReceived() {
+        return received;
+    }
+
+    public PlayerCriterion getCriterion() {
+        return criterion;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("CriterionViolation");
+        sb.append("{code='").append(code).append('\'');
+        sb.append(", expected=").append(expected);
+        sb.append(", received=").append(received);
+        sb.append(", criterion=").append(criterion);
+        sb.append('}');
+        return sb.toString();
+    }
 }

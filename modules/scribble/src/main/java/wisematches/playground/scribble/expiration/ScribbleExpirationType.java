@@ -1,11 +1,11 @@
-package wisematches.playground.expiration;
+package wisematches.playground.scribble.expiration;
 
-import java.util.Date;
+import wisematches.playground.expiration.ExpirationType;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public enum GameExpirationType {
+public enum ScribbleExpirationType implements ExpirationType {
     /**
      * Player has one day before time is up.
      */
@@ -22,26 +22,18 @@ public enum GameExpirationType {
     private final String code;
     private final long expiringMillis;
 
-    GameExpirationType(String code, long expiringMillis) {
+    ScribbleExpirationType(String code, long expiringMillis) {
         this.code = code;
         this.expiringMillis = expiringMillis;
     }
 
+    @Override
     public String getCode() {
         return code;
     }
 
-    public Date getExpirationTriggerTime(Date expiringDate) {
-        return new Date(expiringDate.getTime() - expiringMillis);
-    }
-
-    public static GameExpirationType nextExpiringPoint(Date expiringDate) {
-        final long currentTime = System.currentTimeMillis();
-        for (GameExpirationType type : values()) {
-            if (expiringDate.getTime() - currentTime >= type.expiringMillis) {
-                return type;
-            }
-        }
-        return null;
+    @Override
+    public long getTriggerTime(long extinctionTime) {
+        return extinctionTime - expiringMillis;
     }
 }

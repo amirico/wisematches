@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.member.MemberPlayer;
@@ -19,6 +20,7 @@ import wisematches.playground.BoardLoadingException;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageManager;
+import wisematches.playground.propose.impl.DefaultGameProposal;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
@@ -105,9 +107,9 @@ public class NotificationFunctionalTest {
         notificationPublisherCenter.processNotification(p1, "game.timeout.half", b2);
         notificationPublisherCenter.processNotification(p1, "game.timeout.hour", b2);
         notificationPublisherCenter.processNotification(p1, "game.message", createMock(Message.class));
-		// TODO: commented
-//        notificationPublisherCenter.processNotification(p1, "game.challenge.received", new DefaultGameChallenge<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.asList(p2)));
-//        notificationPublisherCenter.processNotification(p1, "game.challenge.rejected", new DefaultGameChallenge<ScribbleSettings>(12, new ScribbleSettings("mock1", Language.RU, 3), "comment", p1, Arrays.asList(p2)));
+        notificationPublisherCenter.processNotification(p1, "game.challenge.received", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
+        notificationPublisherCenter.processNotification(p1, "game.challenge.rejected", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
+        notificationPublisherCenter.processNotification(p1, "game.challenge.terminated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
 
         Thread.sleep(1000);
         verify(mailSender, messageManager);

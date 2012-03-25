@@ -34,9 +34,10 @@
         <property name="proposalsResource" value="${server.proposals.file}"/>
     </bean>
 
-    <bean id="expirationSearchManager"
-          class="wisematches.playground.scribble.expiration.ScribbleExpirationSearchManager">
+    <bean id="scribbleExpirationManager"
+          class="wisematches.playground.scribble.expiration.ScribbleExpirationManager" destroy-method="destroy">
         <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
     </bean>
 
     <bean id="scribbleTerminator" class="wisematches.playground.expiration.impl.ExpiredGamesTerminator"
@@ -49,7 +50,7 @@
             </bean>
         </property>
         <property name="boardManager" ref="scribbleBoardManager"/>
-        <property name="searchManager" ref="expirationSearchManager"/>
+        <property name="searchManager" ref="scribbleExpirationManager"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
     </bean>
 

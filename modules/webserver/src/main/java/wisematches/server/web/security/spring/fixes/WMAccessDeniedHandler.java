@@ -19,49 +19,49 @@ import java.io.IOException;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMAccessDeniedHandler implements AccessDeniedHandler {
-	private String restrictedErrorPage;
-	private String insufficientErrorPage;
+    private String restrictedErrorPage;
+    private String insufficientErrorPage;
 
-	private RequestCache requestCache = new HttpSessionRequestCache();
+    private RequestCache requestCache = new HttpSessionRequestCache();
 
-	private final AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+    private final AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
 
-	public WMAccessDeniedHandler() {
-	}
+    public WMAccessDeniedHandler() {
+    }
 
-	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		if (!response.isCommitted()) {
-			//TODO: https://jira.springsource.org/browse/SEC-1773
-			requestCache.saveRequest(request, response);
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        if (!response.isCommitted()) {
+            // https://jira.springsource.org/browse/SEC-1773
+            requestCache.saveRequest(request, response);
 
-			final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			final boolean rememberMe = authenticationTrustResolver.isRememberMe(auth);
-			if (rememberMe && insufficientErrorPage != null) {
-				request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				request.getRequestDispatcher(insufficientErrorPage).forward(request, response);
-			} else if (restrictedErrorPage != null) {
-				request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				request.getRequestDispatcher(restrictedErrorPage).forward(request, response);
-			} else {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
-			}
-		}
-	}
+            final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            final boolean rememberMe = authenticationTrustResolver.isRememberMe(auth);
+            if (rememberMe && insufficientErrorPage != null) {
+                request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                request.getRequestDispatcher(insufficientErrorPage).forward(request, response);
+            } else if (restrictedErrorPage != null) {
+                request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                request.getRequestDispatcher(restrictedErrorPage).forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
+            }
+        }
+    }
 
-	public void setRestrictedErrorPage(String restrictedErrorPage) {
-		if ((restrictedErrorPage != null) && !restrictedErrorPage.startsWith("/")) {
-			throw new IllegalArgumentException("errorPage must begin with '/'");
-		}
-		this.restrictedErrorPage = restrictedErrorPage;
-	}
+    public void setRestrictedErrorPage(String restrictedErrorPage) {
+        if ((restrictedErrorPage != null) && !restrictedErrorPage.startsWith("/")) {
+            throw new IllegalArgumentException("errorPage must begin with '/'");
+        }
+        this.restrictedErrorPage = restrictedErrorPage;
+    }
 
-	public void setInsufficientErrorPage(String insufficientErrorPage) {
-		if ((insufficientErrorPage != null) && !insufficientErrorPage.startsWith("/")) {
-			throw new IllegalArgumentException("errorPage must begin with '/'");
-		}
-		this.insufficientErrorPage = insufficientErrorPage;
-	}
+    public void setInsufficientErrorPage(String insufficientErrorPage) {
+        if ((insufficientErrorPage != null) && !insufficientErrorPage.startsWith("/")) {
+            throw new IllegalArgumentException("errorPage must begin with '/'");
+        }
+        this.insufficientErrorPage = insufficientErrorPage;
+    }
 }

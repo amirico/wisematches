@@ -1,29 +1,10 @@
 package wisematches.playground.expiration.impl;
 
-import org.easymock.Capture;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.transaction.TransactionException;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
-import wisematches.playground.*;
-import wisematches.playground.expiration.GameExpirationDescriptor;
-import wisematches.playground.expiration.GameExpirationListener;
-import wisematches.playground.expiration.GameExpirationType;
-import wisematches.playground.search.SearchManager;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ExpiredGamesTerminatorTest {
+/*
 	private BoardManager boardManager;
 	private SearchManager<GameExpirationDescriptor, ?> searchManager;
 
@@ -148,4 +129,5 @@ public class ExpiredGamesTerminatorTest {
 
 		verify(searchManager, l, gameBoard, boardManager);
 	}
+*/
 }
