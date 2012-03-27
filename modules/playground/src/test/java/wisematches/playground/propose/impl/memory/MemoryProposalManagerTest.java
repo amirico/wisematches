@@ -31,7 +31,7 @@ public class MemoryProposalManagerTest {
 		assertEquals(0, proposalManager.loadGameProposals().size());
 
 		final MockGameSettings mockGameSettings = new MockGameSettings("asd", 2);
-		final DefaultGameProposal<GameSettings> p1 = new DefaultGameProposal<GameSettings>(1, mockGameSettings, Personality.person(1), new Personality[]{Personality.person(2), Personality.person(12), null});
+		final DefaultGameProposal<GameSettings> p1 = new DefaultGameProposal<GameSettings>(1, mockGameSettings, Personality.person(1), new Personality[]{Personality.person(2), Personality.person(3), null});
 		proposalManager.storeGameProposal(p1);
 		assertEquals(1, proposalManager.loadGameProposals().size());
 
