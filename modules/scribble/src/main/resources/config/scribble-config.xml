@@ -34,24 +34,26 @@
         <property name="proposalsResource" value="${server.proposals.file}"/>
     </bean>
 
-    <bean id="scribbleExpirationManager"
+    <bean id="expirationTaskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+        <property name="poolSize" value="2"/>
+        <property name="threadGroupName" value="ExpirationSchedulers"/>
+        <property name="threadNamePrefix" value="ExpirationScheduler"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <bean id="scribbleGameExpirationManager"
           class="wisematches.playground.scribble.expiration.ScribbleExpirationManager" destroy-method="destroy">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="taskScheduler" ref="expirationTaskScheduler"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
     </bean>
 
-    <bean id="scribbleTerminator" class="wisematches.playground.expiration.impl.ExpiredGamesTerminator"
-          destroy-method="destroy">
-        <property name="taskScheduler">
-            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
-                <property name="threadGroupName" value="GameTimeoutTerminator"/>
-                <property name="threadNamePrefix" value="GameTimeoutTerminator"/>
-                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
-            </bean>
-        </property>
-        <property name="boardManager" ref="scribbleBoardManager"/>
-        <property name="searchManager" ref="scribbleExpirationManager"/>
-        <property name="transactionTemplate" ref="transactionRequiresNew"/>
+    <bean id="scribbleProposalExpirationManager" class="wisematches.playground.propose.ProposalExpirationManager">
+        <property name="intentionExpirationMillis" value="0"/>
+        <property name="challengeExpirationMillis" value="604800000"/>
+        <property name="taskScheduler" ref="expirationTaskScheduler"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
     </bean>
 
     <bean id="scribbleRobotBrain" class="wisematches.playground.scribble.robot.ScribbleRobotBrain"/>

@@ -118,8 +118,8 @@ public class MailNotificationFunctionalTest {
         notificationPublisher.raiseNotification("game.message", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", m));
 
         DefaultGameProposal<ScribbleSettings> proposal1 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2});
-        notificationPublisher.raiseNotification("game.challenge.received", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
-        notificationPublisher.raiseNotification("game.challenge.received", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
+        notificationPublisher.raiseNotification("game.challenge.initiated", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
+        notificationPublisher.raiseNotification("game.challenge.initiated", p2, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1));
 
         DefaultGameProposal<ScribbleSettings> proposal2 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2});
         notificationPublisher.raiseNotification("game.challenge.rejected", p1, NotificationMover.SUPPORT, Collections.<String, Object>singletonMap("context", proposal2));

@@ -107,7 +107,7 @@ public class NotificationFunctionalTest {
         notificationPublisherCenter.processNotification(p1, "game.timeout.half", b2);
         notificationPublisherCenter.processNotification(p1, "game.timeout.hour", b2);
         notificationPublisherCenter.processNotification(p1, "game.message", createMock(Message.class));
-        notificationPublisherCenter.processNotification(p1, "game.challenge.received", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
+        notificationPublisherCenter.processNotification(p1, "game.challenge.initiated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
         notificationPublisherCenter.processNotification(p1, "game.challenge.rejected", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
         notificationPublisherCenter.processNotification(p1, "game.challenge.terminated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
 

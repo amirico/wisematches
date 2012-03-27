@@ -18,12 +18,14 @@
             <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %p [%t] %c{3}.%M - %m%n"/>
         </layout>
     </appender>
+<!--
 
     <logger name="wisematches">
         <level value="DEBUG"/>
-        <!--<appender-ref ref="FileAppender"/>-->
+        &lt;!&ndash;<appender-ref ref="FileAppender"/>&ndash;&gt;
         <appender-ref ref="ConsoleAppender"/>
     </logger>
+-->
 
     <root>
         <level value="DEBUG"/>

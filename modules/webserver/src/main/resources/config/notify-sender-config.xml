@@ -93,10 +93,13 @@
                 <bean parent="notification" c:name="game.timeout.hour"
                       c:group="expiration" c:enabled="true" c:evenOnline="true"/>
 
-                <bean parent="notification" c:name="game.challenge.received"
+                <bean parent="notification" c:name="game.challenge.initiated"
                       c:group="challenge" c:enabled="true" c:evenOnline="false" c:series="game.challenge"/>
 
                 <bean parent="notification" c:name="game.challenge.rejected"
+                      c:group="challenge" c:enabled="false" c:evenOnline="false" c:series="game.challenge"/>
+
+                <bean parent="notification" c:name="game.challenge.terminated"
                       c:group="challenge" c:enabled="false" c:evenOnline="false" c:series="game.challenge"/>
 
                 <bean parent="notification" c:name="game.message"
@@ -110,15 +113,17 @@
         <property name="playerManager" ref="playerManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="proposalManager" ref="scribbleProposalManager"/>
-        <property name="expirationManager" ref="scribbleTerminator"/>
+        <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
+        <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
         <property name="notificationPublisher">
             <list>
                 <bean class="wisematches.server.web.services.notify.impl.publish.reducer.FilteringNotificationPublisher">
                     <property name="acceptedNotifications">
                         <set>
                             <value>game.state.finished</value>
-                            <value>game.challenge.received</value>
+                            <value>game.challenge.initiated</value>
                             <value>game.challenge.rejected</value>
+                            <value>game.challenge.terminated</value>
                         </set>
                     </property>
                     <property name="notificationPublisher" ref="messageNotificationPublisher"/>
