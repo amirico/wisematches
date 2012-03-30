@@ -1,11 +1,11 @@
-<#-- @ftlvariable name="context" type="wisematches.playground.propose.GameChallenge" -->
+<#-- @ftlvariable name="context" type="wisematches.playground.propose.GameProposal" -->
 <#import "../../utils.ftl" as notify>
 
 <p>
     You have received new challenge #${context.id} "${context.gameSettings.title!""}" from player
     <strong><@notify.player player=context.initiator/></strong>
-<#if context.comment?has_content>
-    with the comment: </p><p style="padding-left: 10px; font-style: italic;">${context.comment}.
+<#if context.commentary?has_content>
+    with the comment: </p><p style="padding-left: 10px; font-style: italic;">${context.commentary}.
 </#if>
 </p>
 <p>

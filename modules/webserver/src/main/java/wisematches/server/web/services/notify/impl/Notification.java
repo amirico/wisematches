@@ -1,7 +1,7 @@
 package wisematches.server.web.services.notify.impl;
 
 import wisematches.personality.account.Account;
-import wisematches.server.web.services.notify.NotificationMover;
+import wisematches.server.web.services.notify.NotificationSender;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -11,14 +11,14 @@ public class Notification {
 	private final String subject;
 	private final String message;
 	private final Account account;
-	private final NotificationMover mover;
+	private final NotificationSender sender;
 
-	public Notification(String code, String subject, String message, Account account, NotificationMover mover) {
+	public Notification(String code, String subject, String message, Account account, NotificationSender sender) {
 		this.code = code;
 		this.subject = subject;
 		this.message = message;
 		this.account = account;
-		this.mover = mover;
+		this.sender = sender;
 	}
 
 	public String getCode() {
@@ -37,7 +37,7 @@ public class Notification {
 		return account;
 	}
 
-	public NotificationMover getMover() {
-		return mover;
+	public NotificationSender getSender() {
+		return sender;
 	}
 }

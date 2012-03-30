@@ -16,6 +16,8 @@ class NotificationContainer {
 	}
 
 	boolean addNotification(NotificationInfo info) {
+/*
+TODO: refactored
 		final String s = info.description.getSeries();
 		if (s != null && !s.isEmpty()) {
 			if (series.contains(s)) {
@@ -24,6 +26,7 @@ class NotificationContainer {
 				series.add(s);
 			}
 		}
+*/
 		notifications.add(info);
 		return true;
 	}

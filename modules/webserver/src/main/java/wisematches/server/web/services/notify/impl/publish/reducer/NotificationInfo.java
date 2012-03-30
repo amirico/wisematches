@@ -2,7 +2,7 @@ package wisematches.server.web.services.notify.impl.publish.reducer;
 
 import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationDescription;
-import wisematches.server.web.services.notify.NotificationMover;
+import wisematches.server.web.services.notify.NotificationSender;
 
 import java.util.Map;
 
@@ -11,13 +11,13 @@ import java.util.Map;
  */
 class NotificationInfo {
 	final Account account;
-	final NotificationMover mover;
+	final NotificationSender sender;
 	final Map<String, Object> model;
 	final NotificationDescription description;
 
-	NotificationInfo(Account account, NotificationMover mover, NotificationDescription description, Map<String, Object> model) {
+	NotificationInfo(Account account, NotificationSender sender, NotificationDescription description, Map<String, Object> model) {
 		this.account = account;
-		this.mover = mover;
+		this.sender = sender;
 		this.model = model;
 		this.description = description;
 	}

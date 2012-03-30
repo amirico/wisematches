@@ -56,7 +56,7 @@
 </p>
 <#else>
 <p>
-    Because game wasn't rated your rating and ratings of your opponents was not changed and
+    Because game isn't rated your rating and ratings of your opponents was not changed and
     still is ${context.getRatingChange(context.getPlayerHand(principal.id)).newRating?string}.
 </p>
 </#if>
