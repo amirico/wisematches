@@ -3,7 +3,7 @@ package wisematches.server.web.services.notify;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum NotificationMover {
+public enum NotificationSender {
 	/**
 	 * This is abstract e-mail notification.
 	 */
@@ -26,7 +26,7 @@ public enum NotificationMover {
 
 	private final String userInfo;
 
-	NotificationMover(String userInfo) {
+	NotificationSender(String userInfo) {
 		this.userInfo = userInfo;
 	}
 

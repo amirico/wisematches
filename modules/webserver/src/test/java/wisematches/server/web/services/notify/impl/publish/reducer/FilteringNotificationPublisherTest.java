@@ -3,7 +3,7 @@ package wisematches.server.web.services.notify.impl.publish.reducer;
 import org.junit.Test;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
-import wisematches.server.web.services.notify.NotificationMover;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationPublisher;
 
 import java.util.Arrays;
@@ -32,14 +32,14 @@ public class FilteringNotificationPublisherTest {
 		p.setNotificationPublisher(publisher);
 		p.setAcceptedNotifications(new HashSet<String>(Arrays.asList("game.state.finished", "game.challenge.initiated")));
 
-		expect(publisher.raiseNotification("game.state.finished", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.challenge.initiated", account, NotificationMover.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.challenge.initiated", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
-		p.raiseNotification("asd", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("game.state.finished", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("game.challenge.initiated", player, NotificationMover.ACCOUNTS, model);
-		p.raiseNotification("qwe", player, NotificationMover.ACCOUNTS, model);
+		p.raiseNotification("asd", player, NotificationSender.ACCOUNTS, model);
+		p.raiseNotification("game.state.finished", player, NotificationSender.ACCOUNTS, model);
+		p.raiseNotification("game.challenge.initiated", player, NotificationSender.ACCOUNTS, model);
+		p.raiseNotification("qwe", player, NotificationSender.ACCOUNTS, model);
 		verify(publisher);
 	}
 }

@@ -3,7 +3,9 @@
 <#macro board board><@link href="playground/scribble/board?b=${board.boardId}">#${board.boardId} (${board.gameSettings.title})</@link></#macro>
 
 <#macro player player showRating=false>
-    <#assign person=player><#if player?is_number><#assign person=playerManager.getPlayer(player?number)></#if>
+    <#assign person=player>
+    <#if player?is_number><#assign person=playerManager.getPlayer(player?number)></#if>
+    <#if player.class.simpleName="Personality"><#assign person=playerManager.getPlayer(player.id)></#if>
     <#assign computerPlayer=(person.membership == "GUEST") || (person.membership == "ROBOT")/>
     <#if computerPlayer>
     <em>${gameMessageSource.getPlayerNick(person, locale)}</em>

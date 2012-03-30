@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
 <#import "../../utils.ftl" as notify>
 
-<#assign move=context.getGameMoves().get(context.gameMovesCount - 1)/>
+<#assign move=context.gameMoves[context.gameMovesCount - 1]/>
 
 <p>Состояние игры <@notify.board board=context/> было изменено:
     игрок <@notify.player player=move.playerMove.playerId/>

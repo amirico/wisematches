@@ -19,7 +19,7 @@ import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.personality.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.services.notify.NotificationMover;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationPublisher;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
@@ -84,7 +84,7 @@ public class RecoveryController {
 					mailModel.put("recoveryToken", encodeToken(token));
 					mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-					Future<Void> voidFuture = notificationPublisher.raiseNotification("account.recovery", player, NotificationMover.ACCOUNTS, mailModel);
+					Future<Void> voidFuture = notificationPublisher.raiseNotification("account.recovery", player, NotificationSender.ACCOUNTS, mailModel);
 					voidFuture.get();
 					//noinspection SpringMVCViewInspection
 					return "redirect:/account/recovery/expectation";
@@ -165,7 +165,7 @@ public class RecoveryController {
 
 		try {
 			accountManager.updateAccount(e.createAccount());
-			notificationPublisher.raiseNotification("account.updated", player, NotificationMover.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
+			notificationPublisher.raiseNotification("account.updated", player, NotificationSender.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
 			return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 		} catch (Exception e1) {
 			if (log.isDebugEnabled()) {

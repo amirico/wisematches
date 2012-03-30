@@ -6,21 +6,21 @@ package wisematches.server.web.services.notify;
 public final class NotificationDescription {
 	private final String name;
 	private final String group;
-	private final String series;
+	private final String template;
 	private final boolean enabled;
 	private final boolean evenOnline;
 
 	public NotificationDescription(String name, String group, boolean enabled, boolean evenOnline) {
-		this(name, group, null, enabled, evenOnline);
+		this(name, group, name, enabled, evenOnline);
 	}
 
-	public NotificationDescription(String name, String group, String series, boolean enabled, boolean evenOnline) {
+	public NotificationDescription(String name, String group, String template, boolean enabled, boolean evenOnline) {
 		if (name == null) {
 			throw new NullPointerException("Notification name can't be null");
 		}
 		this.name = name;
+		this.template = template;
 		this.group = group;
-		this.series = series;
 		this.enabled = enabled;
 		this.evenOnline = evenOnline;
 	}
@@ -33,8 +33,8 @@ public final class NotificationDescription {
 		return group;
 	}
 
-	public String getSeries() {
-		return series;
+	public String getTemplate() {
+		return template;
 	}
 
 	public boolean isEnabled() {
@@ -51,7 +51,7 @@ public final class NotificationDescription {
 		sb.append("NotificationDescription");
 		sb.append("{name='").append(name).append('\'');
 		sb.append(", group='").append(group).append('\'');
-		sb.append(", series='").append(series).append('\'');
+		sb.append(", template='").append(template).append('\'');
 		sb.append(", enabled=").append(enabled);
 		sb.append(", evenOnline=").append(evenOnline);
 		sb.append('}');

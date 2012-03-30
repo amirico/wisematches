@@ -41,88 +41,89 @@ import static org.easymock.EasyMock.*;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/config/database-junit-config.xml",
-        "classpath:/config/accounts-config.xml",
-        "classpath:/config/playground-config.xml",
-        "classpath:/config/scribble-junit-config.xml",
-        "classpath:/config/application-settings.xml",
-        "classpath:/config/notify-sender-config.xml",
-        "classpath:/config/server-web-config.xml"
+		"classpath:/config/database-junit-config.xml",
+		"classpath:/config/accounts-config.xml",
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-junit-config.xml",
+		"classpath:/config/application-settings.xml",
+		"classpath:/config/notify-sender-config.xml",
+		"classpath:/config/server-web-config.xml"
 })
 public class NotificationFunctionalTest {
-    @Autowired
-    ScribbleBoardManager boardManager;
+	@Autowired
+	ScribbleBoardManager boardManager;
 
-    @Autowired
-    MailNotificationPublisher mailNotificationPublisher;
+	@Autowired
+	MailNotificationPublisher mailNotificationPublisher;
 
-    @Autowired
-    MessageNotificationPublisher messageNotificationPublisher;
+	@Autowired
+	MessageNotificationPublisher messageNotificationPublisher;
 
-    @Autowired
-    NotificationManager notificationManager;
+	@Autowired
+	NotificationManager notificationManager;
 
-    @Autowired
-    NotificationPublisherCenter notificationPublisherCenter;
+	@Autowired
+	NotificationPublisherCenter notificationPublisherCenter;
 
-    public NotificationFunctionalTest() {
-    }
+	public NotificationFunctionalTest() {
+	}
 
-    @Test
-    public void test() throws BoardLoadingException, InterruptedException {
-        final Player p1 = createMockPlayer(1001, Language.RU);
-        final Player p2 = createMockPlayer(1002, Language.EN);
+	@Test
+	public void test() throws BoardLoadingException, InterruptedException {
+		final Player p1 = createMockPlayer(1029, Language.RU);
+		final Player p2 = createMockPlayer(1030, Language.EN);
 
-        final JavaMailSender mailSender = createStrictMock(JavaMailSender.class);
-        mailSender.send(isA(MimeMessagePreparator.class));
-        mailSender.send(isA(MimeMessagePreparator.class));
-        mailSender.send(isA(MimeMessagePreparator.class));
-        mailSender.send(isA(MimeMessagePreparator.class));
-        mailSender.send(isA(MimeMessagePreparator.class));
-        mailSender.send(isA(MimeMessagePreparator.class));
-        mailSender.send(isA(MimeMessagePreparator.class));
+		final JavaMailSender mailSender = createStrictMock(JavaMailSender.class);
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
+		mailSender.send(isA(MimeMessagePreparator.class));
 
-        final Capture<String> message1 = new Capture<String>();
-        final Capture<String> message2 = new Capture<String>();
+		final Capture<String> message1 = new Capture<String>();
+		final Capture<String> message2 = new Capture<String>();
 
-        final MessageManager messageManager = createStrictMock(MessageManager.class);
-        messageManager.sendNotification(same(p1), capture(message1));
-        messageManager.sendNotification(same(p1), capture(message2));
-        replay(mailSender, messageManager);
+		final MessageManager messageManager = createStrictMock(MessageManager.class);
+		messageManager.sendNotification(same(p1), capture(message1));
+		messageManager.sendNotification(same(p1), capture(message2));
+		replay(mailSender, messageManager);
 
-        final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo());
-        final Dictionary dictionary = createNiceMock(Dictionary.class);
+		final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo());
+		final Dictionary dictionary = createNiceMock(Dictionary.class);
 
-        mailNotificationPublisher.setMailSender(mailSender);
-        messageNotificationPublisher.setMessageManager(messageManager);
+		mailNotificationPublisher.setMailSender(mailSender);
+		messageNotificationPublisher.setMessageManager(messageManager);
 
-        final ScribbleBoard b1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), tilesBank, dictionary);
-        final ScribbleBoard b2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), tilesBank, dictionary);
+		final ScribbleBoard b1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), tilesBank, dictionary);
+		final ScribbleBoard b2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), tilesBank, dictionary);
 
-        notificationPublisherCenter.processNotification(p1, "game.state.started", b2);
-        notificationPublisherCenter.processNotification(p1, "game.state.finished", b1);
-        notificationPublisherCenter.processNotification(p1, "game.move.your", b2);
-        notificationPublisherCenter.processNotification(p1, "game.move.opponent", b2);
-        notificationPublisherCenter.processNotification(p1, "game.timeout.day", b2);
-        notificationPublisherCenter.processNotification(p1, "game.timeout.half", b2);
-        notificationPublisherCenter.processNotification(p1, "game.timeout.hour", b2);
-        notificationPublisherCenter.processNotification(p1, "game.message", createMock(Message.class));
-        notificationPublisherCenter.processNotification(p1, "game.challenge.initiated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
-        notificationPublisherCenter.processNotification(p1, "game.challenge.rejected", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
-        notificationPublisherCenter.processNotification(p1, "game.challenge.terminated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
+		notificationPublisherCenter.processNotification(p1, "game.state.started", b2);
+		notificationPublisherCenter.processNotification(p1, "game.state.finished", b1);
+		notificationPublisherCenter.processNotification(p1, "game.move.your", b2);
+		notificationPublisherCenter.processNotification(p1, "game.move.opponent", b2);
+		notificationPublisherCenter.processNotification(p1, "game.timeout.day", b2);
+		notificationPublisherCenter.processNotification(p1, "game.timeout.half", b2);
+		notificationPublisherCenter.processNotification(p1, "game.timeout.hour", b2);
+		notificationPublisherCenter.processNotification(p1, "game.message", createMock(Message.class));
+		notificationPublisherCenter.processNotification(p1, "game.challenge.initiated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
+		notificationPublisherCenter.processNotification(p1, "game.challenge.rejected", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
+		notificationPublisherCenter.processNotification(p1, "game.challenge.terminated", new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2}));
 
-        Thread.sleep(1000);
-        verify(mailSender, messageManager);
-    }
+		Thread.sleep(1000);
+		verify(mailSender, messageManager);
+	}
 
-    private MemberPlayer createMockPlayer(long i, Language en) {
-        IMockBuilder<Account> mockBuilder = createMockBuilder(Account.class);
-        mockBuilder.withConstructor(i);
+	private MemberPlayer createMockPlayer(long i, Language en) {
+		IMockBuilder<Account> mockBuilder = createMockBuilder(Account.class);
+		mockBuilder.withConstructor(i);
 
-        final Account mock = mockBuilder.createMock("mock" + i);
-        expect(mock.getLanguage()).andReturn(en).anyTimes();
-        expect(mock.getNickname()).andReturn("mock" + i).anyTimes();
-        replay(mock);
-        return new MemberPlayer(mock);
-    }
+		final Account mock = mockBuilder.createMock("mock" + i);
+		expect(mock.getLanguage()).andReturn(en).anyTimes();
+		expect(mock.getNickname()).andReturn("mock" + i).anyTimes();
+		replay(mock);
+		return new MemberPlayer(mock);
+	}
 }
