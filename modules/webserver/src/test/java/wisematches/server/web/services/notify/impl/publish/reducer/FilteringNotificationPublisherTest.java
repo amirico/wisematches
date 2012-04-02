@@ -3,8 +3,8 @@ package wisematches.server.web.services.notify.impl.publish.reducer;
 import org.junit.Test;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,14 +32,14 @@ public class FilteringNotificationPublisherTest {
 		p.setNotificationPublisher(publisher);
 		p.setAcceptedNotifications(new HashSet<String>(Arrays.asList("game.state.finished", "game.challenge.initiated")));
 
-		expect(publisher.raiseNotification("game.state.finished", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.challenge.initiated", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", account, NotificationOriginator.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.challenge.initiated", account, NotificationOriginator.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
-		p.raiseNotification("asd", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("game.state.finished", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("game.challenge.initiated", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("qwe", player, NotificationSender.ACCOUNTS, model);
+		p.raiseNotification("asd", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("game.state.finished", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("game.challenge.initiated", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("qwe", player, NotificationOriginator.ACCOUNTS, model);
 		verify(publisher);
 	}
 }

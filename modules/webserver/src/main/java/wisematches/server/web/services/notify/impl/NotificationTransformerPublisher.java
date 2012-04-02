@@ -5,8 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -25,35 +25,35 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 	}
 
 	@Override
-	public Future<Void> raiseNotification(String code, Account account, NotificationSender sender, Map<String, Object> model) {
+	public Future<Void> raiseNotification(String code, Account account, NotificationOriginator originator, Map<String, Object> model) {
 		if (account == null) {
 			throw new NullPointerException("Player can't be null");
 		}
 		if (code == null) {
 			throw new NullPointerException("Code can't be null");
 		}
-		if (sender == null) {
+		if (originator == null) {
 			throw new NullPointerException("Sender can't be null");
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Put notification '" + code + "' into queue for " + account);
 		}
-		return taskExecutor.submit(new NotificationTask(code, account, sender, model));
+		return taskExecutor.submit(new NotificationTask(code, account, originator, model));
 	}
 
 	@Override
-	public final Future<Void> raiseNotification(String code, MemberPlayer player, NotificationSender sender, Map<String, Object> model) {
-		return raiseNotification(code, player.getAccount(), sender, model);
+	public final Future<Void> raiseNotification(String code, MemberPlayer player, NotificationOriginator originator, Map<String, Object> model) {
+		return raiseNotification(code, player.getAccount(), originator, model);
 	}
 
 	protected abstract void raiseNotification(Notification notification) throws Exception;
 
-	private void processNotification(String code, String template, Account account, NotificationSender sender, Map<String, Object> model) throws Exception {
+	private void processNotification(String code, String template, Account account, NotificationOriginator originator, Map<String, Object> model) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("Process notification '" + code + "[" + template + "]" + " ' for " + account);
 		}
 		try {
-			raiseNotification(notificationTransformer.createNotification(code, template, account, sender, this, model));
+			raiseNotification(notificationTransformer.createNotification(code, template, account, originator, this, model));
 		} catch (Exception ex) {
 			log.error("Notification '" + code + "' for '" + account + "' can't be processed", ex);
 			throw ex;
@@ -75,20 +75,20 @@ public abstract class NotificationTransformerPublisher implements NotificationPu
 		private final String code;
 		private final String template;
 		private final Account account;
-		private final NotificationSender sender;
+		private final NotificationOriginator originator;
 		private final Map<String, Object> model;
 
-		private NotificationTask(String code, String template, Account account, NotificationSender sender, Map<String, Object> model) {
+		private NotificationTask(String code, String template, Account account, NotificationOriginator originator, Map<String, Object> model) {
 			this.account = account;
 			this.template = template;
 			this.code = code;
-			this.sender = sender;
+			this.originator = originator;
 			this.model = model;
 		}
 
 		@Override
 		public Void call() throws Exception {
-			processNotification(code, template, account, sender, model);
+			processNotification(code, template, account, originator, model);
 			return null;
 		}
 	}

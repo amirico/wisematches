@@ -1,4 +1,4 @@
-package wisematches.server.web.services.notify.impl.manager;
+package wisematches.server.web.services.notify.hearer.impl;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
 import wisematches.server.web.services.notify.NotificationDescription;
-import wisematches.server.web.services.notify.NotificationManager;
-import wisematches.server.web.services.notify.NotificationMask;
+import wisematches.server.web.services.notify.hearer.NotificationManager;
+import wisematches.server.web.services.notify.hearer.NotificationMask;
 
 import java.util.Collection;
 import java.util.Collections;

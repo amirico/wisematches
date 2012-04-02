@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.personality.Language;
 import wisematches.personality.account.Account;
-import wisematches.server.web.services.notify.NotificationSender;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 import wisematches.server.web.services.notify.impl.Notification;
 import wisematches.server.web.services.notify.impl.NotificationTransformerPublisher;
 
@@ -49,7 +49,7 @@ public class MailNotificationPublisher extends NotificationTransformerPublisher 
 				final Language language = account.getLanguage();
 
 				final InternetAddress to = new InternetAddress(account.getEmail(), account.getNickname(), "UTF-8");
-				final InternetAddress from = getInternetAddress(notification.getSender(), language);
+				final InternetAddress from = getInternetAddress(notification.getOriginator(), language);
 
 				final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 				message.setFrom(from);
@@ -61,8 +61,8 @@ public class MailNotificationPublisher extends NotificationTransformerPublisher 
 		mailSender.send(mm);
 	}
 
-	protected InternetAddress getInternetAddress(NotificationSender sender, Language language) {
-		return addressesCache.get(new SenderKey(sender, language));
+	protected InternetAddress getInternetAddress(NotificationOriginator originator, Language language) {
+		return addressesCache.get(new SenderKey(originator, language));
 	}
 
 	private void validateAddressesCache() {
@@ -72,16 +72,16 @@ public class MailNotificationPublisher extends NotificationTransformerPublisher 
 			return;
 		}
 
-		for (NotificationSender sender : NotificationSender.values()) {
+		for (NotificationOriginator originator : NotificationOriginator.values()) {
 			for (Language language : Language.values()) {
 				try {
-					final String address = messageSource.getMessage("mail.address." + sender.getUserInfo(),
-							null, sender.getUserInfo() + "@" + serverHostName, language.locale());
+					final String address = messageSource.getMessage("mail.address." + originator.getUserInfo(),
+							null, originator.getUserInfo() + "@" + serverHostName, language.locale());
 
-					final String personal = messageSource.getMessage("mail.personal." + sender.getUserInfo(),
-							null, sender.name(), language.locale());
+					final String personal = messageSource.getMessage("mail.personal." + originator.getUserInfo(),
+							null, originator.name(), language.locale());
 
-					addressesCache.put(new SenderKey(sender, language), new InternetAddress(address, personal, "UTF-8"));
+					addressesCache.put(new SenderKey(originator, language), new InternetAddress(address, personal, "UTF-8"));
 				} catch (UnsupportedEncodingException ex) {
 					log.fatal("JAVA SYSTEM ERROR - NOT UTF8!", ex);
 				}
@@ -98,17 +98,17 @@ public class MailNotificationPublisher extends NotificationTransformerPublisher 
 		validateAddressesCache();
 	}
 
-	public void setServerHostName(String serverHostName) {
+	public void setHostName(String serverHostName) {
 		this.serverHostName = serverHostName;
 		validateAddressesCache();
 	}
 
 	private static final class SenderKey {
 		private final Language language;
-		private final NotificationSender sender;
+		private final NotificationOriginator originator;
 
-		private SenderKey(NotificationSender sender, Language language) {
-			this.sender = sender;
+		private SenderKey(NotificationOriginator originator, Language language) {
+			this.originator = originator;
 			this.language = language;
 		}
 
@@ -118,13 +118,13 @@ public class MailNotificationPublisher extends NotificationTransformerPublisher 
 			if (o == null || getClass() != o.getClass()) return false;
 
 			SenderKey senderKey = (SenderKey) o;
-			return language == senderKey.language && sender == senderKey.sender;
+			return language == senderKey.language && originator == senderKey.originator;
 		}
 
 		@Override
 		public int hashCode() {
 			int result = language.hashCode();
-			result = 31 * result + sender.hashCode();
+			result = 31 * result + originator.hashCode();
 			return result;
 		}
 	}

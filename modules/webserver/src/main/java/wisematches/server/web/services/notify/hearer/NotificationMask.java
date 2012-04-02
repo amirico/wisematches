@@ -1,4 +1,4 @@
-package wisematches.server.web.services.notify;
+package wisematches.server.web.services.notify.hearer;
 
 import java.util.Collections;
 import java.util.HashMap;

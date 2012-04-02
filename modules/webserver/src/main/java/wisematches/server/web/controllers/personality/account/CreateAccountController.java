@@ -23,8 +23,8 @@ import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -126,7 +126,7 @@ public class CreateAccountController {
 			}
 
 			status.setComplete();
-			notificationPublisher.raiseNotification("account.created", player, NotificationSender.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
+			notificationPublisher.raiseNotification("account.created", player, NotificationOriginator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
 			return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 		}
 	}
