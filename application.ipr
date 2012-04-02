@@ -11,7 +11,6 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-2.0-SNAPSHOT.jar">
@@ -157,15 +156,6 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" defaultCharsetForPropertiesFiles="UTF-8" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-  </component>
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="web">
-        <modules>
-          <module name="webserver" />
-        </modules>
-      </facet-type>
-    </autodetection-disabled>
   </component>
   <component name="FacetStructureConfigurable.UI">
     <splitter-proportions>
@@ -434,6 +424,7 @@
         <w>millis</w>
         <w>rect</w>
         <w>scriplet</w>
+        <w>spamless</w>
         <w>springframework</w>
         <w>wisematches</w>
       </words>

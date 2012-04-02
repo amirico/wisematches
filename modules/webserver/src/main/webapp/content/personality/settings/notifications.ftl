@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="notificationMask" type="wisematches.server.web.services.notify.hearer.NotificationMask" -->
-<#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.notify.NotificationDescription>" -->
+<#-- @ftlvariable name="notificationMask" type="wisematches.server.web.services.notify.manager.NotificationCondition" -->
+<#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.notify.impl.NotificationDescription>" -->
 
 <#include "/core.ftl">
 
@@ -16,7 +16,7 @@
         <tr>
             <td colspan="2">
                 <h2 style="margin-bottom: 0;">
-                <@message code="account.modify.notice.group.${desc.group?lower_case}"/>
+                    <@message code="account.modify.notice.group.${desc.group?lower_case}"/>
                 </h2>
             </td>
         </tr>
@@ -30,11 +30,11 @@
         <td>
             <div>
                 <label for="field${desc.name}">
-                <@message code="account.modify.notice.${desc.name?lower_case}.label"/>
+                    <@message code="account.modify.notice.${desc.name?lower_case}.label"/>
                 </label>
             </div>
             <div class="sample">
-            <@message code="account.modify.notice.${desc.name?lower_case}.description"/>
+                <@message code="account.modify.notice.${desc.name?lower_case}.description"/>
             </div>
         </td>
     </tr>
