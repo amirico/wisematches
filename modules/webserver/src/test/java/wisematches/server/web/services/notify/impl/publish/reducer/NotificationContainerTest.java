@@ -3,7 +3,7 @@ package wisematches.server.web.services.notify.impl.publish.reducer;
 import org.junit.Test;
 import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationDescription;
-import wisematches.server.web.services.notify.NotificationSender;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 
 import java.util.List;
 
@@ -27,12 +27,12 @@ public class NotificationContainerTest {
 		final NotificationDescription d4 = new NotificationDescription("game.message", null, "message", false, false);
 
 		final NotificationContainer container = new NotificationContainer();
-		container.addNotification(new NotificationInfo(account, NotificationSender.ACCOUNTS, d1, null));
-		container.addNotification(new NotificationInfo(account, NotificationSender.ACCOUNTS, d2, null));
-		container.addNotification(new NotificationInfo(account, NotificationSender.ACCOUNTS, d3, null));
-		container.addNotification(new NotificationInfo(account, NotificationSender.ACCOUNTS, d4, null));
-		container.addNotification(new NotificationInfo(account, NotificationSender.ACCOUNTS, d4, null));
-		container.addNotification(new NotificationInfo(account, NotificationSender.ACCOUNTS, d4, null));
+		container.addNotification(new NotificationInfo(account, NotificationOriginator.ACCOUNTS, d1, null));
+		container.addNotification(new NotificationInfo(account, NotificationOriginator.ACCOUNTS, d2, null));
+		container.addNotification(new NotificationInfo(account, NotificationOriginator.ACCOUNTS, d3, null));
+		container.addNotification(new NotificationInfo(account, NotificationOriginator.ACCOUNTS, d4, null));
+		container.addNotification(new NotificationInfo(account, NotificationOriginator.ACCOUNTS, d4, null));
+		container.addNotification(new NotificationInfo(account, NotificationOriginator.ACCOUNTS, d4, null));
 
 		final List<NotificationInfo> notifications = container.getNotifications();
 		assertEquals(3, notifications.size());

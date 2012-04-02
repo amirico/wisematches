@@ -15,8 +15,8 @@ import wisematches.playground.propose.*;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class NotificationPublisherCenter {
 		}
 
 		for (NotificationPublisher publisher : publishers) {
-			publisher.raiseNotification(code, player, NotificationSender.GAME, Collections.singletonMap("context", context));
+			publisher.raiseNotification(code, player, NotificationOriginator.GAME, Collections.singletonMap("context", context));
 		}
 	}
 

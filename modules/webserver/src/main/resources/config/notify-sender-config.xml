@@ -45,10 +45,10 @@
 
     <bean id="mailNotificationPublisher"
           class="wisematches.server.web.services.notify.impl.publish.mail.MailNotificationPublisher">
+        <property name="hostName" value="${server.hostname}"/>
         <property name="mailSender" ref="springMailSender"/>
         <property name="messageSource" ref="messageSource"/>
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
-        <property name="serverHostName" value="${server.hostname}"/>
         <property name="notificationTransformer" ref="notificationTransformer"/>
     </bean>
 
@@ -64,10 +64,14 @@
           abstract="true"/>
 
     <bean id="notificationManager"
-          class="wisematches.server.web.services.notify.impl.manager.HibernateNotificationManager">
+          class="wisematches.server.web.services.notify.hearer.impl.HibernateNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDescription">
             <list>
+                <bean parent="notification" c:name="account."
+                      c:group="account" c:enabled="true" c:evenOnline="false"/>
+
+
                 <bean parent="notification" c:name="playground.game.started"
                       c:group="game.state" c:enabled="true" c:evenOnline="false"/>
 

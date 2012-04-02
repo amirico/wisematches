@@ -23,8 +23,8 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.settings.form.SettingsForm;
 import wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo;
 import wisematches.server.web.services.notify.NotificationDescription;
-import wisematches.server.web.services.notify.NotificationManager;
-import wisematches.server.web.services.notify.NotificationMask;
+import wisematches.server.web.services.notify.hearer.NotificationManager;
+import wisematches.server.web.services.notify.hearer.NotificationMask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

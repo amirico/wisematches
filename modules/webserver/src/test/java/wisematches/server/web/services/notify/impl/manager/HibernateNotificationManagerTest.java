@@ -8,8 +8,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
 import wisematches.server.web.services.notify.NotificationDescription;
-import wisematches.server.web.services.notify.NotificationManager;
-import wisematches.server.web.services.notify.NotificationMask;
+import wisematches.server.web.services.notify.hearer.NotificationManager;
+import wisematches.server.web.services.notify.hearer.NotificationMask;
 
 import java.util.Collection;
 

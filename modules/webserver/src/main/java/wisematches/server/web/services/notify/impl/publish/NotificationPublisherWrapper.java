@@ -1,6 +1,6 @@
 package wisematches.server.web.services.notify.impl.publish;
 
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationPublisher;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

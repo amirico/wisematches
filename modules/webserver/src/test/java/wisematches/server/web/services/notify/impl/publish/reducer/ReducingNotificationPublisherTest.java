@@ -5,9 +5,9 @@ import org.junit.Test;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.server.web.services.notify.NotificationDescription;
-import wisematches.server.web.services.notify.NotificationManager;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.hearer.NotificationManager;
+import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 import wisematches.server.web.services.state.PlayerStateListener;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -34,10 +34,10 @@ public class ReducingNotificationPublisherTest {
 		final NotificationDescription d3 = new NotificationDescription("game.message", null, "message", false, false);
 
 		final NotificationPublisher publisher = createStrictMock(NotificationPublisher.class);
-		expect(publisher.raiseNotification("asd", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.state.started", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.state.finished", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
-		expect(publisher.raiseNotification("game.message", account, NotificationSender.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("asd", account, NotificationOriginator.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.started", account, NotificationOriginator.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.state.finished", account, NotificationOriginator.ACCOUNTS, model)).andReturn(null);
+		expect(publisher.raiseNotification("game.message", account, NotificationOriginator.ACCOUNTS, model)).andReturn(null);
 		replay(publisher);
 
 		final Capture<PlayerStateListener> listener = new Capture<PlayerStateListener>();
@@ -66,17 +66,17 @@ public class ReducingNotificationPublisherTest {
 		p.setPlayerStateManager(playerStateManager);
 		p.setNotificationManager(notificationManager);
 
-		p.raiseNotification("asd", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("game.state.started", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("game.state.finished", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("game.message", player, NotificationSender.ACCOUNTS, model);
-		p.raiseNotification("game.message", player, NotificationSender.ACCOUNTS, model);
+		p.raiseNotification("asd", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("game.state.started", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("game.state.finished", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("game.message", player, NotificationOriginator.ACCOUNTS, model);
+		p.raiseNotification("game.message", player, NotificationOriginator.ACCOUNTS, model);
 
 		// check messages
 		listener.getValue().playerOffline(player);
 
 		// check clear
-		p.raiseNotification("game.message", player, NotificationSender.ACCOUNTS, model);
+		p.raiseNotification("game.message", player, NotificationOriginator.ACCOUNTS, model);
 		listener.getValue().playerAlive(player);
 		listener.getValue().playerOffline(player);
 

@@ -26,7 +26,7 @@ import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
-import wisematches.server.web.services.notify.NotificationManager;
+import wisematches.server.web.services.notify.hearer.NotificationManager;
 import wisematches.server.web.services.notify.impl.publish.mail.MailNotificationPublisher;
 import wisematches.server.web.services.notify.impl.publish.message.MessageNotificationPublisher;
 

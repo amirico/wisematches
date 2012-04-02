@@ -1,7 +1,6 @@
-package wisematches.server.web.services.notify.impl;
+package wisematches.server.web.services.notify.publisher;
 
 import wisematches.personality.account.Account;
-import wisematches.server.web.services.notify.publisher.NotificationOriginator;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

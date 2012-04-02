@@ -1,9 +1,9 @@
-package wisematches.server.web.services.notify;
+package wisematches.server.web.services.notify.publisher;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum NotificationSender {
+public enum NotificationOriginator {
 	/**
 	 * This is abstract e-mail notification.
 	 */
@@ -26,7 +26,7 @@ public enum NotificationSender {
 
 	private final String userInfo;
 
-	NotificationSender(String userInfo) {
+	NotificationOriginator(String userInfo) {
 		this.userInfo = userInfo;
 	}
 
