@@ -38,7 +38,7 @@
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
     <bean id="notificationTransformer"
-          class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
+          class="wisematches.server.web.services.notify.publisher.converter.FreeMarkerNotificationConverter">
         <property name="messageSource" ref="messageSource"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
@@ -60,11 +60,11 @@
         <property name="transactionRequiresNew" ref="transactionRequiresNew"/>
     </bean>
 
-    <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescription"
+    <bean id="notification" class="wisematches.server.web.services.notify.impl.NotificationDescription"
           abstract="true"/>
 
     <bean id="notificationManager"
-          class="wisematches.server.web.services.notify.hearer.impl.HibernateNotificationManager">
+          class="wisematches.server.web.services.notify.manager.impl.HibernateNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDescription">
             <list>

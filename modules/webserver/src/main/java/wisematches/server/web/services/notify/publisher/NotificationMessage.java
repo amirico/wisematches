@@ -1,28 +1,25 @@
-package wisematches.server.web.services.notify.impl;
+package wisematches.server.web.services.notify.publisher;
 
 import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationCreator;
+import wisematches.server.web.services.notify.NotificationDescriptor;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class Notification {
-    private final String code;
+public class NotificationMessage {
     private final String subject;
     private final String message;
     private final Account account;
     private final NotificationCreator creator;
+    private final NotificationDescriptor descriptor;
 
-    public Notification(String code, String subject, String message, Account account, NotificationCreator creator) {
-        this.code = code;
-        this.subject = subject;
-        this.message = message;
-        this.account = account;
+    public NotificationMessage(String subject, String message, Account account, NotificationCreator creator, NotificationDescriptor descriptor) {
+        this.descriptor = descriptor;
         this.creator = creator;
-    }
-
-    public String getCode() {
-        return code;
+        this.account = account;
+        this.message = message;
+        this.subject = subject;
     }
 
     public String getSubject() {
@@ -39,5 +36,9 @@ public class Notification {
 
     public NotificationCreator getCreator() {
         return creator;
+    }
+
+    public NotificationDescriptor getDescriptor() {
+        return descriptor;
     }
 }
