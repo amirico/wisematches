@@ -3,7 +3,6 @@ package wisematches.server.web.controllers.personality.account;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,7 @@ import wisematches.server.web.controllers.personality.account.form.RecoveryConfi
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.NotificationProcessor;
+import wisematches.server.web.services.notify.NotificationPublisher;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
@@ -33,7 +32,6 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -47,7 +45,7 @@ public class RecoveryController {
     private AccountManager accountManager;
     private CaptchaService captchaService;
     private RecoveryTokenManager recoveryTokenManager;
-    private NotificationProcessor notificationProcessor;
+    private NotificationPublisher notificationPublisher;
     private AccountSecurityService accountSecurityService;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
@@ -84,7 +82,7 @@ public class RecoveryController {
                     mailModel.put("recoveryToken", encodeToken(token));
                     mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-                    Future<Void> voidFuture = notificationProcessor.raiseNotification("account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
+                    Future<?> voidFuture = notificationPublisher.raiseNotification("account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
                     voidFuture.get();
                     //noinspection SpringMVCViewInspection
                     return "redirect:/account/recovery/expectation";
@@ -165,7 +163,7 @@ public class RecoveryController {
 
         try {
             accountManager.updateAccount(e.createAccount());
-            notificationProcessor.raiseNotification("account.updated", player, NotificationCreator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
+            notificationPublisher.raiseNotification("account.updated", player, NotificationCreator.ACCOUNTS, player);
             return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         } catch (Exception e1) {
             if (log.isDebugEnabled()) {
@@ -193,14 +191,13 @@ public class RecoveryController {
     }
 
     @Autowired
-    @Qualifier("mailNotificationPublisher")
-    public void setNotificationProcessor(NotificationProcessor notificationProcessor) {
-        this.notificationProcessor = notificationProcessor;
+    public void setAccountManager(AccountManager accountManager) {
+        this.accountManager = accountManager;
     }
 
     @Autowired
-    public void setAccountManager(AccountManager accountManager) {
-        this.accountManager = accountManager;
+    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+        this.notificationPublisher = notificationPublisher;
     }
 
     @Autowired

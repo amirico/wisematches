@@ -1,3 +1,4 @@
+/*
 package wisematches.server.web.services.tbr.notify.impl;
 
 import org.easymock.Capture;
@@ -34,9 +35,11 @@ import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
 
+*/
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
- */
+ *//*
+
 @Ignore
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,7 +49,7 @@ import static org.easymock.EasyMock.*;
         "classpath:/config/playground-config.xml",
         "classpath:/config/scribble-junit-config.xml",
         "classpath:/config/application-settings.xml",
-        "classpath:/config/notify-sender-config.xml",
+        "classpath:/config/notifications-config.xml",
         "classpath:/config/server-web-config.xml"
 })
 public class NotificationFunctionalTest {
@@ -127,3 +130,4 @@ public class NotificationFunctionalTest {
         return new MemberPlayer(mock);
     }
 }
+*/

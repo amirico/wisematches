@@ -7,7 +7,6 @@ package wisematches.server.web.controllers.personality.account;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.NotificationProcessor;
+import wisematches.server.web.services.notify.NotificationPublisher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +31,6 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -43,7 +41,7 @@ import java.util.Set;
 public class CreateAccountController {
     private AccountManager accountManager;
     private CaptchaService captchaService;
-    private NotificationProcessor notificationProcessor;
+    private NotificationPublisher notificationPublisher;
     private AccountSecurityService accountSecurityService;
 
     private Membership defaultMembership = Membership.BASIC;
@@ -126,7 +124,7 @@ public class CreateAccountController {
             }
 
             status.setComplete();
-            notificationProcessor.raiseNotification("account.created", player, NotificationCreator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
+            notificationPublisher.raiseNotification("account.created", player, NotificationCreator.ACCOUNTS, null);
             return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         }
     }
@@ -239,14 +237,13 @@ public class CreateAccountController {
     }
 
     @Autowired
-    @Qualifier("mailNotificationPublisher")
-    public void setNotificationProcessor(NotificationProcessor notificationProcessor) {
-        this.notificationProcessor = notificationProcessor;
+    public void setAccountManager(AccountManager accountManager) {
+        this.accountManager = accountManager;
     }
 
     @Autowired
-    public void setAccountManager(AccountManager accountManager) {
-        this.accountManager = accountManager;
+    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+        this.notificationPublisher = notificationPublisher;
     }
 
     @Autowired

@@ -9,45 +9,34 @@ import wisematches.server.web.services.notify.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultNotificationProcessor implements NotificationProcessor {
-	private String name;
-	private boolean manageable;
-	private NotificationTransport transport;
-	private NotificationTransformer transformer;
+    private boolean manageable;
+    private NotificationTransport transport;
+    private NotificationTransformer transformer;
 
-	public DefaultNotificationProcessor() {
-	}
+    public DefaultNotificationProcessor() {
+    }
 
-	@Override
-	public String getName() {
-		return name;
+    @Override
+    public boolean isManageable() {
+        return manageable;
+    }
 
-	}
+    @Override
+    public boolean publishNotification(NotificationTemplate template) throws Exception {
+        NotificationMessage message = transformer.convertNotification(template);
+        transport.sendNotification(message);
+        return true;
+    }
 
-	@Override
-	public boolean isManageable() {
-		return manageable;
-	}
+    public void setManageable(boolean manageable) {
+        this.manageable = manageable;
+    }
 
-	@Override
-	public boolean publishNotification(NotificationTemplate template) throws Exception {
-		NotificationMessage message = transformer.convertNotification(template);
-		transport.sendNotification(message);
-		return true;
-	}
+    public void setTransport(NotificationTransport transport) {
+        this.transport = transport;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setManageable(boolean manageable) {
-		this.manageable = manageable;
-	}
-
-	public void setTransport(NotificationTransport transport) {
-		this.transport = transport;
-	}
-
-	public void setTransformer(NotificationTransformer transformer) {
-		this.transformer = transformer;
-	}
+    public void setTransformer(NotificationTransformer transformer) {
+        this.transformer = transformer;
+    }
 }
