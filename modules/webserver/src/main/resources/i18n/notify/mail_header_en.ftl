@@ -1,1 +1,0 @@
-Dear, <b>${principal.nickname}</b>.

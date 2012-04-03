@@ -20,7 +20,7 @@ import wisematches.server.web.controllers.personality.account.form.RecoveryConfi
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationProcessor;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
@@ -47,7 +47,7 @@ public class RecoveryController {
     private AccountManager accountManager;
     private CaptchaService captchaService;
     private RecoveryTokenManager recoveryTokenManager;
-    private NotificationPublisher notificationPublisher;
+    private NotificationProcessor notificationProcessor;
     private AccountSecurityService accountSecurityService;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
@@ -84,7 +84,7 @@ public class RecoveryController {
                     mailModel.put("recoveryToken", encodeToken(token));
                     mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-                    Future<Void> voidFuture = notificationPublisher.raiseNotification("account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
+                    Future<Void> voidFuture = notificationProcessor.raiseNotification("account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
                     voidFuture.get();
                     //noinspection SpringMVCViewInspection
                     return "redirect:/account/recovery/expectation";
@@ -165,7 +165,7 @@ public class RecoveryController {
 
         try {
             accountManager.updateAccount(e.createAccount());
-            notificationPublisher.raiseNotification("account.updated", player, NotificationCreator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
+            notificationProcessor.raiseNotification("account.updated", player, NotificationCreator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
             return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         } catch (Exception e1) {
             if (log.isDebugEnabled()) {
@@ -194,8 +194,8 @@ public class RecoveryController {
 
     @Autowired
     @Qualifier("mailNotificationPublisher")
-    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
-        this.notificationPublisher = notificationPublisher;
+    public void setNotificationProcessor(NotificationProcessor notificationProcessor) {
+        this.notificationProcessor = notificationProcessor;
     }
 
     @Autowired

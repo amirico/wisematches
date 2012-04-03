@@ -1,1 +1,0 @@
-Многоуважаемый (-ая) <b>${principal.nickname}</b>.

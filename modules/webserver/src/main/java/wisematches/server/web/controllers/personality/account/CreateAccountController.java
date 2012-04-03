@@ -24,7 +24,7 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.publisher.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationProcessor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +43,7 @@ import java.util.Set;
 public class CreateAccountController {
     private AccountManager accountManager;
     private CaptchaService captchaService;
-    private NotificationPublisher notificationPublisher;
+    private NotificationProcessor notificationProcessor;
     private AccountSecurityService accountSecurityService;
 
     private Membership defaultMembership = Membership.BASIC;
@@ -126,7 +126,7 @@ public class CreateAccountController {
             }
 
             status.setComplete();
-            notificationPublisher.raiseNotification("account.created", player, NotificationCreator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
+            notificationProcessor.raiseNotification("account.created", player, NotificationCreator.ACCOUNTS, Collections.<String, Object>singletonMap("context", player));
             return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         }
     }
@@ -240,8 +240,8 @@ public class CreateAccountController {
 
     @Autowired
     @Qualifier("mailNotificationPublisher")
-    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
-        this.notificationPublisher = notificationPublisher;
+    public void setNotificationProcessor(NotificationProcessor notificationProcessor) {
+        this.notificationProcessor = notificationProcessor;
     }
 
     @Autowired

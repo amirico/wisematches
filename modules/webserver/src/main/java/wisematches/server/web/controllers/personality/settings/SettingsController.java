@@ -22,9 +22,8 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.settings.form.SettingsForm;
 import wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo;
-import wisematches.server.web.services.notify.impl.NotificationDescription;
-import wisematches.server.web.services.notify.manager.NotificationCondition;
-import wisematches.server.web.services.notify.manager.NotificationManager;
+import wisematches.server.web.services.notify.NotificationCondition;
+import wisematches.server.web.services.notify.NotificationManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
