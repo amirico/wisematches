@@ -23,6 +23,7 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.settings.form.SettingsForm;
 import wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo;
 import wisematches.server.web.services.notify.NotificationCondition;
+import wisematches.server.web.services.notify.NotificationDescriptor;
 import wisematches.server.web.services.notify.NotificationManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,8 +58,8 @@ public class SettingsController extends WisematchesController {
         form.setLanguage(principal.getLanguage().name().toLowerCase());
         form.setEmail(principal.getEmail());
         model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
-        model.addAttribute("notificationMask", notificationManager.getNotificationCondition(principal));
-        model.addAttribute("notificationDescriptions", new ArrayList<NotificationDescription>(notificationManager.getDescriptions()));
+        model.addAttribute("notificationCondition", notificationManager.getNotificationCondition(principal));
+        model.addAttribute("notificationDescriptors", new ArrayList<NotificationDescriptor>(notificationManager.getDescriptors()));
 
         final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
         form.setTilesClass(settings.getTilesClass());
@@ -86,10 +87,10 @@ public class SettingsController extends WisematchesController {
 
 
         final NotificationCondition condition = notificationManager.getNotificationCondition(personality);
-        final Collection<NotificationDescription> descriptions = notificationManager.getDescriptions();
-        for (NotificationDescription description : descriptions) {
-            final String parameter = request.getParameter(description.getName());
-            condition.setEnabled(description.getName(), parameter != null && Boolean.parseBoolean(parameter));
+        final Collection<NotificationDescriptor> descriptions = notificationManager.getDescriptors();
+        for (NotificationDescriptor description : descriptions) {
+            final String parameter = request.getParameter(description.getCode());
+            condition.setEnabled(description.getCode(), parameter != null && Boolean.parseBoolean(parameter));
         }
         notificationManager.setNotificationCondition(personality, condition);
 

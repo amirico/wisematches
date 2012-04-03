@@ -38,7 +38,7 @@
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
     <bean id="notificationConverter"
-          class="wisematches.server.web.services.notify.impl.transformer.FreeMarkerNotificationTransformer">
+          class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
         <property name="messageSource" ref="messageSource"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
@@ -149,7 +149,7 @@
     </bean>
 
     <bean id="notificationPublisherCenter"
-          class="wisematches.server.web.services.tbr.notify.impl.NotificationPublisherCenter">
+          class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
         <property name="playerManager" ref="playerManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="proposalManager" ref="scribbleProposalManager"/>

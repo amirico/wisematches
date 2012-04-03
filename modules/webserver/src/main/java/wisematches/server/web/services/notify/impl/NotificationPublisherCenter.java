@@ -1,4 +1,4 @@
-package wisematches.server.web.services.tbr.notify.impl;
+package wisematches.server.web.services.notify.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,12 +16,9 @@ import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.NotificationProcessor;
-import wisematches.server.web.services.notify.impl.processor.DefaultNotificationProcessor;
+import wisematches.server.web.services.notify.NotificationPublisher;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,11 +31,11 @@ public class NotificationPublisherCenter {
     private ScribbleExpirationManager scribbleExpirationManager;
     private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
+    private NotificationPublisher notificationPublisher;
+
     private final TheNotificationListener notificationListener = new TheNotificationListener();
     private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
     private final TheScribbleProposalExpirationListener proposalExpirationListener = new TheScribbleProposalExpirationListener();
-
-    private final Collection<NotificationProcessor> processors = new ArrayList<NotificationProcessor>();
 
     private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
 
@@ -48,25 +45,22 @@ public class NotificationPublisherCenter {
     protected void processNotification(long person, String code, Object context) {
         final Player player = playerManager.getPlayer(person);
         if (player instanceof MemberPlayer) {
-            fireNotification((MemberPlayer) player, code, context);
+            fireNotification(code, (MemberPlayer) player, context);
         }
     }
 
     protected void processNotification(Personality person, String code, Object context) {
         final Player player = playerManager.getPlayer(person);
         if (player instanceof MemberPlayer) {
-            fireNotification((MemberPlayer) player, code, context);
+            fireNotification(code, (MemberPlayer) player, context);
         }
     }
 
-    private void fireNotification(MemberPlayer player, String code, Object context) {
+    private void fireNotification(String code, MemberPlayer player, Object context) {
         if (log.isInfoEnabled()) {
             log.info("Fire notification " + code + " to person " + player);
         }
-
-        for (DefaultNotificationProcessor publisher : processors) {
-            publisher.raiseNotification(code, player, NotificationCreator.GAME, Collections.singletonMap("context", context));
-        }
+        notificationPublisher.raiseNotification(code, player, NotificationCreator.GAME, context);
     }
 
     public void setPlayerManager(PlayerManager playerManager) {
@@ -119,12 +113,8 @@ public class NotificationPublisherCenter {
         }
     }
 
-    public void setNotificationPublisher(Collection<NotificationProcessor> processors) {
-        this.processors.clear();
-
-        if (processors != null) {
-            this.processors.addAll(processors);
-        }
+    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+        this.notificationPublisher = notificationPublisher;
     }
 
     private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {

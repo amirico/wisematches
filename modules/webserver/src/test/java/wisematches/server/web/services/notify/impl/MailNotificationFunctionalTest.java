@@ -1,3 +1,4 @@
+/*
 package wisematches.server.web.services.tbr.notify.impl;
 
 import freemarker.template.Configuration;
@@ -31,9 +32,11 @@ import java.util.concurrent.ExecutionException;
 
 import static org.easymock.EasyMock.*;
 
+*/
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
- */
+ *//*
+
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -42,7 +45,7 @@ import static org.easymock.EasyMock.*;
         "classpath:/config/playground-config.xml",
         "classpath:/config/scribble-junit-config.xml",
         "classpath:/config/application-settings.xml",
-        "classpath:/config/notify-sender-config.xml",
+        "classpath:/config/notifications-config.xml",
         "classpath:/config/server-web-config.xml"
 })
 public class MailNotificationFunctionalTest {
@@ -87,6 +90,7 @@ public class MailNotificationFunctionalTest {
         notificationManager.setNotificationCondition(p1, condition);
         notificationManager.setNotificationCondition(p2, condition);
 
+*/
 /*
 		final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo());
 		final Dictionary dictionary = createNiceMock(Dictionary.class);
@@ -123,7 +127,8 @@ public class MailNotificationFunctionalTest {
 		final Message m = new HibernateMessage(p2, "asdqwe adf", p1);
 		notificationProcessor.raiseNotification("game.message", p1, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", m)).get();
 		notificationProcessor.raiseNotification("game.message", p2, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", m)).get();
-*/
+*//*
+
 
         final DefaultGameProposal<ScribbleSettings> proposal1 = new DefaultGameProposal<ScribbleSettings>(12, "comment", new ScribbleSettings("mock1", Language.RU, 3), p1, new Personality[]{p2});
         notificationPublisher.raiseNotification("game.challenge.initiated", p1, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", proposal1)).get();
@@ -137,6 +142,7 @@ public class MailNotificationFunctionalTest {
         notificationPublisher.raiseNotification("game.challenge.terminated", p1, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", proposal3)).get();
         notificationPublisher.raiseNotification("game.challenge.terminated", p2, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", proposal3)).get();
 
+*/
 /*
 		notificationProcessor.raiseNotification("account.created", p1.getAccount(), NotificationCreator.ACCOUNTS, null).get();
 		notificationProcessor.raiseNotification("account.created", p2.getAccount(), NotificationCreator.ACCOUNTS, null).get();
@@ -149,7 +155,8 @@ public class MailNotificationFunctionalTest {
 
 		notificationProcessor.raiseNotification("account.updated", p1.getAccount(), NotificationCreator.ACCOUNTS, null);
 		notificationProcessor.raiseNotification("account.updated", p2.getAccount(), NotificationCreator.ACCOUNTS, null);
-*/
+*//*
+
     }
 
     private MemberPlayer createMockPlayer(long i, Language en) {
@@ -165,3 +172,4 @@ public class MailNotificationFunctionalTest {
         return new MemberPlayer(mock);
     }
 }
+*/
