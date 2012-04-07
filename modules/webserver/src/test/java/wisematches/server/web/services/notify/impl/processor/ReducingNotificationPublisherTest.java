@@ -1,12 +1,18 @@
 package wisematches.server.web.services.notify.impl.processor;
 
+import org.junit.Test;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ReducingNotificationPublisherTest {
-    public ReducingNotificationPublisherTest() {
-        throw new UnsupportedOperationException("TODO: commented");
-    }
+	public ReducingNotificationPublisherTest() {
+	}
+
+	@Test
+	public void test() {
+		throw new UnsupportedOperationException("TODO: commented");
+	}
 
 /*
     @Test
