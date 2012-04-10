@@ -1,4 +1,4 @@
-package wisematches.server.web.services.notify.impl.processor;
+package wisematches.server.web.services.notify.impl.publisher;
 
 import org.junit.Test;
 
@@ -6,13 +6,13 @@ import org.junit.Test;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ReducingNotificationPublisherTest {
-	public ReducingNotificationPublisherTest() {
-	}
+    public ReducingNotificationPublisherTest() {
+    }
 
-	@Test
-	public void test() {
-		throw new UnsupportedOperationException("TODO: commented");
-	}
+    @Test
+    public void test() {
+        throw new UnsupportedOperationException("TODO: commented");
+    }
 
 /*
     @Test
@@ -25,12 +25,12 @@ public class ReducingNotificationPublisherTest {
         final NotificationDescription d2 = new NotificationDescription("game.state.finished", null, "game", false, true);
         final NotificationDescription d3 = new NotificationDescription("game.message", null, "message", false, false);
 
-        final NotificationProcessor processor = createStrictMock(DefaultNotificationProcessor.class);
-        expect(processor.raiseNotification("asd", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
-        expect(processor.raiseNotification("game.state.started", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
-        expect(processor.raiseNotification("game.state.finished", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
-        expect(processor.raiseNotification("game.message", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
-        replay(processor);
+        final NotificationPublisher publisher = createStrictMock(DefaultNotificationPublisher.class);
+        expect(publisher.raiseNotification("asd", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
+        expect(publisher.raiseNotification("game.state.started", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
+        expect(publisher.raiseNotification("game.state.finished", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
+        expect(publisher.raiseNotification("game.message", account, NotificationCreator.ACCOUNTS, model)).andReturn(null);
+        replay(publisher);
 
         final Capture<PlayerStateListener> listener = new Capture<PlayerStateListener>();
 
@@ -54,7 +54,7 @@ public class ReducingNotificationPublisherTest {
         replay(notificationManager);
 
         final ReducingNotificationPublisher p = new ReducingNotificationPublisher();
-        p.setNotificationPublisher(processor);
+        p.setNotificationDistributor(publisher);
         p.setPlayerStateManager(playerStateManager);
         p.setNotificationManager(notificationManager);
 
@@ -72,7 +72,7 @@ public class ReducingNotificationPublisherTest {
         listener.getValue().playerAlive(player);
         listener.getValue().playerOffline(player);
 
-        verify(processor, playerStateManager, notificationManager);
+        verify(publisher, playerStateManager, notificationManager);
     }
 */
 }

@@ -1,6 +1,7 @@
-package wisematches.server.web.services.notify.impl.processor;
+package wisematches.server.web.services.notify.impl.publisher;
 
 import wisematches.server.web.services.notify.NotificationTemplate;
+import wisematches.server.web.services.notify.PublicationException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,15 +9,15 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class MatchingNotificationProcessor extends FilteringNotificationProcessor {
+public class MatchingNotificationPublisher extends FilteringNotificationPublisher {
     private final Set<String> allowedNotifications = new HashSet<String>();
 
-    public MatchingNotificationProcessor() {
+    public MatchingNotificationPublisher() {
     }
 
     @Override
-    public boolean publishNotification(NotificationTemplate template) throws Exception {
-        return allowedNotifications.contains(template.getCode()) && super.publishNotification(template);
+    public boolean publishNotification(NotificationTemplate notification) throws PublicationException {
+        return allowedNotifications.contains(notification.getCode()) && super.publishNotification(notification);
     }
 
     public void setAllowedNotifications(Set<String> allowedNotifications) {

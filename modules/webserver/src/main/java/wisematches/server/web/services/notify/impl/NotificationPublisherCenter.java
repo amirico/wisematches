@@ -16,7 +16,7 @@ import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationDistributor;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +31,7 @@ public class NotificationPublisherCenter {
     private ScribbleExpirationManager scribbleExpirationManager;
     private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
-    private NotificationPublisher notificationPublisher;
+    private NotificationDistributor notificationDistributor;
 
     private final TheNotificationListener notificationListener = new TheNotificationListener();
     private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
@@ -60,7 +60,7 @@ public class NotificationPublisherCenter {
         if (log.isInfoEnabled()) {
             log.info("Fire notification " + code + " to person " + player);
         }
-        notificationPublisher.raiseNotification(code, player, NotificationCreator.GAME, context);
+        notificationDistributor.raiseNotification(code, player, NotificationCreator.GAME, context);
     }
 
     public void setPlayerManager(PlayerManager playerManager) {
@@ -113,8 +113,8 @@ public class NotificationPublisherCenter {
         }
     }
 
-    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
-        this.notificationPublisher = notificationPublisher;
+    public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
+        this.notificationDistributor = notificationDistributor;
     }
 
     private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {

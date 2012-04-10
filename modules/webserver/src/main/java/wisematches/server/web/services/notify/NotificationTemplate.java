@@ -6,54 +6,62 @@ import wisematches.personality.account.Account;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class NotificationTemplate {
-	private final String code;
-	private final String template;
-	private final Account recipient;
-	private final NotificationCreator creator;
-	private final Object context;
+    private final String code;
+    private final String template;
+    private final Account recipient;
+    private final NotificationCreator creator;
+    private final Object context;
 
-	public NotificationTemplate(String code, String template, Account recipient, NotificationCreator creator) {
-		this(code, template, recipient, creator, null);
-	}
+    public NotificationTemplate(String code, Account recipient, NotificationCreator creator) {
+        this(code, recipient, creator, null);
+    }
 
-	public NotificationTemplate(String code, String template, Account recipient, NotificationCreator creator, Object context) {
-		this.code = code;
-		this.context = context;
-		this.template = template;
-		this.creator = creator;
-		this.recipient = recipient;
-	}
+    public NotificationTemplate(String code, Account recipient, NotificationCreator creator, Object context) {
+        this(code, code, recipient, creator, context);
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public NotificationTemplate(String code, String template, Account recipient, NotificationCreator creator) {
+        this(code, template, recipient, creator, null);
+    }
 
-	public String getTemplate() {
-		return template;
-	}
+    public NotificationTemplate(String code, String template, Account recipient, NotificationCreator creator, Object context) {
+        this.code = code;
+        this.context = context;
+        this.template = template;
+        this.creator = creator;
+        this.recipient = recipient;
+    }
 
-	public Account getRecipient() {
-		return recipient;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public NotificationCreator getCreator() {
-		return creator;
-	}
+    public String getTemplate() {
+        return template;
+    }
 
-	public Object getContext() {
-		return context;
-	}
+    public Account getRecipient() {
+        return recipient;
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Notification");
-		sb.append("{code='").append(code).append('\'');
-		sb.append(", template='").append(template).append('\'');
-		sb.append(", recipient=").append(recipient);
-		sb.append(", creator=").append(creator);
-		sb.append(", context=").append(context);
-		sb.append('}');
-		return sb.toString();
-	}
+    public NotificationCreator getCreator() {
+        return creator;
+    }
+
+    public Object getContext() {
+        return context;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Notification");
+        sb.append("{code='").append(code).append('\'');
+        sb.append(", template='").append(template).append('\'');
+        sb.append(", recipient=").append(recipient);
+        sb.append(", creator=").append(creator);
+        sb.append(", context=").append(context);
+        sb.append('}');
+        return sb.toString();
+    }
 }

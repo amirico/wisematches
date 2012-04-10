@@ -3,6 +3,7 @@ package wisematches.server.web.services.notify.impl.transport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -11,6 +12,7 @@ import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.NotificationCreator;
 import wisematches.server.web.services.notify.NotificationMessage;
 import wisematches.server.web.services.notify.NotificationTransport;
+import wisematches.server.web.services.notify.TransmissionException;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -34,7 +36,7 @@ public class MailNotificationTransport implements NotificationTransport {
     }
 
     @Override
-    public void sendNotification(final NotificationMessage message) {
+    public void sendNotification(final NotificationMessage message) throws TransmissionException {
         if (log.isDebugEnabled()) {
             log.debug("Send mail notification '" + message.getCode() + "' to " + message.getAccount());
         }
@@ -53,7 +55,11 @@ public class MailNotificationTransport implements NotificationTransport {
                 msg.setText(message.getMessage(), true);
             }
         };
-        mailSender.send(mm);
+        try {
+            mailSender.send(mm);
+        } catch (MailException ex) {
+            throw new TransmissionException(ex);
+        }
     }
 
     protected InternetAddress getInternetAddress(NotificationCreator creator, Language language) {
