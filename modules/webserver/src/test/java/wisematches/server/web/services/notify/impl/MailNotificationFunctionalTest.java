@@ -101,32 +101,32 @@ public class MailNotificationFunctionalTest {
 		final ScribbleBoard b2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), tilesBank, dictionary);
 		b2.makeMove(new PassTurnMove(b2.getPlayerTurn().getPlayerId()));
 
-		notificationProcessor.raiseNotification("game.state.started", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.state.started", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.state.started", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.state.started", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
-		notificationProcessor.raiseNotification("game.move.your", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.move.your", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.move.your", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.move.your", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
-		notificationProcessor.raiseNotification("game.move.opponent", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.move.opponent", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.move.opponent", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.move.opponent", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
-		notificationProcessor.raiseNotification("game.timeout.day", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.timeout.day", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.timeout.day", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.timeout.day", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
-		notificationProcessor.raiseNotification("game.timeout.half", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.timeout.half", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.timeout.half", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.timeout.half", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
-		notificationProcessor.raiseNotification("game.timeout.hour", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.timeout.hour", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.timeout.hour", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.timeout.hour", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
 		b1.resign(b1.getPlayerHand(p1.getId()));
 		b2.resign(b2.getPlayerHand(p1.getId()));
-		notificationProcessor.raiseNotification("game.state.finished", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
-		notificationProcessor.raiseNotification("game.state.finished", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
+		notificationPublisher.raiseNotification("game.state.finished", p1, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b1)).get();
+		notificationPublisher.raiseNotification("game.state.finished", p2, NotificationCreator.GAME, Collections.<String, Object>singletonMap("context", b2)).get();
 
 		final Message m = new HibernateMessage(p2, "asdqwe adf", p1);
-		notificationProcessor.raiseNotification("game.message", p1, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", m)).get();
-		notificationProcessor.raiseNotification("game.message", p2, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", m)).get();
+		notificationPublisher.raiseNotification("game.message", p1, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", m)).get();
+		notificationPublisher.raiseNotification("game.message", p2, NotificationCreator.SUPPORT, Collections.<String, Object>singletonMap("context", m)).get();
 *//*
 
 
@@ -144,17 +144,17 @@ public class MailNotificationFunctionalTest {
 
 */
 /*
-		notificationProcessor.raiseNotification("account.created", p1.getAccount(), NotificationCreator.ACCOUNTS, null).get();
-		notificationProcessor.raiseNotification("account.created", p2.getAccount(), NotificationCreator.ACCOUNTS, null).get();
+		notificationPublisher.raiseNotification("account.created", p1.getAccount(), NotificationCreator.ACCOUNTS, null).get();
+		notificationPublisher.raiseNotification("account.created", p2.getAccount(), NotificationCreator.ACCOUNTS, null).get();
 
 		final Map<String, Object> asd = new HashMap<String, Object>();
 		asd.put("confirmationUrl", "a/a/w");
 		asd.put("recoveryToken", "eeee");
-		notificationProcessor.raiseNotification("account.recovery", p1.getAccount(), NotificationCreator.ACCOUNTS, asd);
-		notificationProcessor.raiseNotification("account.recovery", p2.getAccount(), NotificationCreator.ACCOUNTS, asd);
+		notificationPublisher.raiseNotification("account.recovery", p1.getAccount(), NotificationCreator.ACCOUNTS, asd);
+		notificationPublisher.raiseNotification("account.recovery", p2.getAccount(), NotificationCreator.ACCOUNTS, asd);
 
-		notificationProcessor.raiseNotification("account.updated", p1.getAccount(), NotificationCreator.ACCOUNTS, null);
-		notificationProcessor.raiseNotification("account.updated", p2.getAccount(), NotificationCreator.ACCOUNTS, null);
+		notificationPublisher.raiseNotification("account.updated", p1.getAccount(), NotificationCreator.ACCOUNTS, null);
+		notificationPublisher.raiseNotification("account.updated", p2.getAccount(), NotificationCreator.ACCOUNTS, null);
 *//*
 
     }

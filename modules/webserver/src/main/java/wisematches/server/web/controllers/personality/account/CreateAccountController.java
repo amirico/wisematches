@@ -23,7 +23,7 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.NotificationCreator;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationDistributor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ import java.util.Set;
 public class CreateAccountController {
     private AccountManager accountManager;
     private CaptchaService captchaService;
-    private NotificationPublisher notificationPublisher;
+    private NotificationDistributor notificationDistributor;
     private AccountSecurityService accountSecurityService;
 
     private Membership defaultMembership = Membership.BASIC;
@@ -67,7 +67,7 @@ public class CreateAccountController {
     }
 
     /**
-     * This is action processor for new account. Get model from HTTP POST request and creates new account, if possible.	 *
+     * This is action publisher for new account. Get model from HTTP POST request and creates new account, if possible.	 *
      *
      * @param model    the all model
      * @param request  original http request
@@ -124,7 +124,7 @@ public class CreateAccountController {
             }
 
             status.setComplete();
-            notificationPublisher.raiseNotification("account.created", player, NotificationCreator.ACCOUNTS, null);
+            notificationDistributor.raiseNotification("account.created", player, NotificationCreator.ACCOUNTS, null);
             return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         }
     }
@@ -242,8 +242,8 @@ public class CreateAccountController {
     }
 
     @Autowired
-    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
-        this.notificationPublisher = notificationPublisher;
+    public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
+        this.notificationDistributor = notificationDistributor;
     }
 
     @Autowired

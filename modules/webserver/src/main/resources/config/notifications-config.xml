@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -37,7 +37,7 @@
     <bean id="notificationFreemarkerConfig"
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
-    <bean id="notificationConverter"
+    <bean id="notificationTransformer"
           class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
         <property name="messageSource" ref="messageSource"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
@@ -56,125 +56,141 @@
     </bean>
 
     <bean id="mailNotificationPublisher"
-          class="wisematches.server.web.services.notify.impl.processor.NotificationPublisherFactory">
-        <property name="stateDepending" value="true"/>
+          class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
-        <property name="converter">
-            <bean parent="notificationConverter">
-                <property name="layoutTemplate" value="layoutMail.ftl"/>
-            </bean>
+        <property name="transformer">
+            <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
         </property>
     </bean>
 
     <bean id="messageNotificationPublisher"
-          class="wisematches.server.web.services.notify.impl.processor.NotificationPublisherFactory">
-        <property name="stateDepending" value="false"/>
+          class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
-        <property name="converter">
-            <bean parent="notificationConverter">
-                <property name="layoutTemplate" value="layoutMessage.ftl"/>
-            </bean>
+        <property name="transformer">
+            <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
         </property>
     </bean>
 
-    <bean id="notification" class="wisematches.server.web.services.tbr.notify.impl.NotificationDescription"
-          abstract="true"/>
+    <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
 
     <bean id="notificationManager"
           class="wisematches.server.web.services.notify.impl.manager.HibernateNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDescription">
             <list>
-                <bean parent="notification" c:name="account."
-                      c:group="account" c:enabled="true" c:evenOnline="false"/>
+                <bean parent="notification" c:code="account."
+                      c:group="account" c:enabled="true"/>
 
 
-                <bean parent="notification" c:name="playground.game.started"
-                      c:group="game.state" c:enabled="true" c:evenOnline="false"/>
+                <bean parent="notification" c:code="playground.game.started"
+                      c:group="game.state" c:enabled="true"/>
 
-                <bean parent="notification" c:name="playground.game.turn.your"
-                      c:group="game.state" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.game.turn.your"
+                      c:group="game.state" c:enabled="true"
                       c:template="playground.game.turn"/>
 
-                <bean parent="notification" c:name="playground.game.turn.opponent"
-                      c:group="game.state" c:enabled="false" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.game.turn.opponent"
+                      c:group="game.state" c:enabled="false"
                       c:template="playground.game.turn"/>
 
-                <bean parent="notification" c:name="playground.game.finished"
-                      c:group="game.state" c:enabled="true" c:evenOnline="true"/>
+                <bean parent="notification" c:code="playground.game.finished"
+                      c:group="game.state" c:enabled="true"/>
 
 
-                <bean parent="notification" c:name="playground.game.expiration.day"
-                      c:group="game.expiration" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.game.expiration.day"
+                      c:group="game.expiration" c:enabled="true"
                       c:template="playground.game.expiration"/>
 
-                <bean parent="notification" c:name="playground.game.expiration.half"
-                      c:group="game.expiration" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.game.expiration.half"
+                      c:group="game.expiration" c:enabled="true"
                       c:template="playground.game.expiration"/>
 
-                <bean parent="notification" c:name="playground.game.expiration.hour"
-                      c:group="game.expiration" c:enabled="true" c:evenOnline="true"
+                <bean parent="notification" c:code="playground.game.expiration.hour"
+                      c:group="game.expiration" c:enabled="true"
                       c:template="playground.game.expiration"/>
 
 
-                <bean parent="notification" c:name="playground.proposal.initiated"
-                      c:group="proposal.state" c:enabled="true" c:evenOnline="false"/>
+                <bean parent="notification" c:code="playground.proposal.initiated"
+                      c:group="proposal.state" c:enabled="true"/>
 
-                <bean parent="notification" c:name="playground.proposal.rejected"
-                      c:group="proposal.state" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.proposal.rejected"
+                      c:group="proposal.state" c:enabled="true"
                       c:template="playground.proposal.finalized"/>
 
-                <bean parent="notification" c:name="playground.proposal.repudiated"
-                      c:group="proposal.state" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.proposal.repudiated"
+                      c:group="proposal.state" c:enabled="true"
                       c:template="playground.proposal.finalized"/>
 
-                <bean parent="notification" c:name="playground.proposal.terminated"
-                      c:group="proposal.state" c:enabled="false" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.proposal.terminated"
+                      c:group="proposal.state" c:enabled="false"
                       c:template="playground.proposal.finalized"/>
 
 
-                <bean parent="notification" c:name="playground.proposal.expiration.days"
-                      c:group="proposal.expiration" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.proposal.expiration.days"
+                      c:group="proposal.expiration" c:enabled="true"
                       c:template="playground.proposal.expiration"/>
 
-                <bean parent="notification" c:name="playground.proposal.expiration.day"
-                      c:group="proposal.expiration" c:enabled="true" c:evenOnline="false"
+                <bean parent="notification" c:code="playground.proposal.expiration.day"
+                      c:group="proposal.expiration" c:enabled="true"
                       c:template="playground.proposal.expiration"/>
 
 
-                <bean parent="notification" c:name="playground.message.received"
-                      c:group="playground.message" c:enabled="true" c:evenOnline="false"/>
+                <bean parent="notification" c:code="playground.message.received"
+                      c:group="playground.message" c:enabled="true"/>
             </list>
         </property>
     </bean>
 
-    <bean id="notificationPublisherCenter"
-          class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
-        <property name="playerManager" ref="playerManager"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
-        <property name="proposalManager" ref="scribbleProposalManager"/>
-        <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
-        <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
-        <property name="notificationPublisher">
-            <list>
-                <bean class="wisematches.server.web.services.tbr.notify.impl.publish.reducer.FilteringNotificationPublisher">
-                    <property name="acceptedNotifications">
-                        <set>
-                            <value>game.state.finished</value>
-                            <value>game.challenge.initiated</value>
-                            <value>game.challenge.rejected</value>
-                            <value>game.challenge.terminated</value>
-                        </set>
-                    </property>
-                    <property name="notificationPublisher" ref="messageNotificationPublisher"/>
-                </bean>
+    <bean id="notificationDistributor"
+          class="wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor">
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="notificationManager" ref="notificationManager"/>
 
-                <bean class="wisematches.server.web.services.tbr.notify.impl.publish.reducer.ReducingNotificationPublisher">
-                    <property name="playerStateManager" ref="playerStateManager"/>
-                    <property name="notificationManager" ref="notificationManager"/>
-                    <property name="notificationPublisher" ref="mailNotificationPublisher"/>
-                </bean>
-            </list>
+        <property name="unimpededPublishers">
+            <bean id="asd" class="wisematches.server.web.services.notify.impl.publisher.MatchingNotificationPublisher">
+                <property name="notificationPublisher" ref="messageNotificationPublisher"/>
+                <property name="allowedNotifications">
+                    <set>
+                        <value>playground.game.finished</value>
+                        <value>playground.proposal.initiated</value>
+                        <value>playground.proposal.rejected</value>
+                        <value>playground.proposal.terminated</value>
+                    </set>
+                </property>
+            </bean>
+        </property>
+
+        <property name="customizablePublishers">
+            <bean id="qwe"
+                  class="wisematches.server.web.services.notify.impl.publisher.ReducingNotificationPublisher">
+                <property name="groupedNotifications">
+                    <map>
+                        <entry key="playground.game.turn.your" value="playground.game.turn"/>
+                        <entry key="playground.game.turn.opponent" value="playground.game.turn"/>
+                    </map>
+                </property>
+                <property name="stateIndependentNotifications">
+                    <set>
+                        <value>playground.game.finished</value>
+                        <value>playground.game.expiration.hour</value>
+                    </set>
+                </property>
+                <property name="playerStateManager" ref="playerStateManager"/>
+                <property name="notificationPublisher" ref="mailNotificationPublisher"/>
+            </bean>
         </property>
     </bean>
+    <!--
+
+        <bean id="notificationPublisherCenter"
+              class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
+            <property name="playerManager" ref="playerManager"/>
+            <property name="boardManager" ref="scribbleBoardManager"/>
+            <property name="proposalManager" ref="scribbleProposalManager"/>
+            <property name="notificationDistributor" ref="notificationDistributor"/>
+            <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
+            <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
+        </bean>
+    -->
 </beans>

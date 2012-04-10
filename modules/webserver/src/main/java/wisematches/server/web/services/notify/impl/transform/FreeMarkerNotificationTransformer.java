@@ -2,6 +2,7 @@ package wisematches.server.web.services.notify.impl.transform;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.springframework.context.MessageSource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,9 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import wisematches.server.web.services.notify.NotificationMessage;
 import wisematches.server.web.services.notify.NotificationTemplate;
 import wisematches.server.web.services.notify.NotificationTransformer;
+import wisematches.server.web.services.notify.TransformationException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,7 +30,7 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
-    public NotificationMessage convertNotification(NotificationTemplate notificationTemplate) throws Exception {
+    public NotificationMessage transformNotification(NotificationTemplate notificationTemplate) throws TransformationException {
         final Locale locale = notificationTemplate.getRecipient().getLanguage().locale();
 
         final String subject = messageSource.getMessage("notify.subject." + notificationTemplate.getCode(), null, locale);
@@ -43,9 +46,15 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
         variables.put("locale", locale);
         variables.put("context", notificationTemplate.getContext());
 
-        final Template ft = freeMarkerConfig.getTemplate(layoutTemplate, locale, "UTF-8");
-        final String message = FreeMarkerTemplateUtils.processTemplateIntoString(ft, variables);
-        return new NotificationMessage(notificationTemplate.getCode(), subject, message, notificationTemplate.getRecipient(), notificationTemplate.getCreator());
+        try {
+            final Template ft = freeMarkerConfig.getTemplate(layoutTemplate, locale, "UTF-8");
+            final String message = FreeMarkerTemplateUtils.processTemplateIntoString(ft, variables);
+            return new NotificationMessage(notificationTemplate.getCode(), subject, message, notificationTemplate.getRecipient(), notificationTemplate.getCreator());
+        } catch (IOException ex) {
+            throw new TransformationException(ex);
+        } catch (TemplateException ex) {
+            throw new TransformationException(ex);
+        }
     }
 
     public void setLayoutTemplate(String layoutTemplate) {

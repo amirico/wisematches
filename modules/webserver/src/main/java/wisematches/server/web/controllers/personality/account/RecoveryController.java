@@ -3,6 +3,7 @@ package wisematches.server.web.controllers.personality.account;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import wisematches.server.web.controllers.personality.account.form.RecoveryReque
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.NotificationCreator;
 import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationTemplate;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
@@ -34,7 +36,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -82,8 +83,9 @@ public class RecoveryController {
                     mailModel.put("recoveryToken", encodeToken(token));
                     mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-                    Future<?> voidFuture = notificationPublisher.raiseNotification("account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
-                    voidFuture.get();
+                    final NotificationTemplate template = new NotificationTemplate("account.recovery", "account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
+                    notificationPublisher.publishNotification(template);
+
                     //noinspection SpringMVCViewInspection
                     return "redirect:/account/recovery/expectation";
                 } catch (NullPointerException ex) {
@@ -163,7 +165,7 @@ public class RecoveryController {
 
         try {
             accountManager.updateAccount(e.createAccount());
-            notificationPublisher.raiseNotification("account.updated", player, NotificationCreator.ACCOUNTS, player);
+            notificationPublisher.publishNotification(new NotificationTemplate("account.updated", player, NotificationCreator.ACCOUNTS, player));
             return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         } catch (Exception e1) {
             if (log.isDebugEnabled()) {
@@ -196,6 +198,7 @@ public class RecoveryController {
     }
 
     @Autowired
+    @Qualifier("mailNotificationPublisher")
     public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
         this.notificationPublisher = notificationPublisher;
     }
