@@ -2,6 +2,7 @@ package wisematches.server.web.services.notify.impl.publisher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.task.TaskExecutor;
 import wisematches.personality.Personality;
 import wisematches.server.web.services.notify.NotificationTemplate;
 import wisematches.server.web.services.notify.PublicationException;
@@ -16,130 +17,145 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ReducingNotificationPublisher extends FilteringNotificationPublisher {
-    private PlayerStateManager playerStateManager;
+	private TaskExecutor taskExecutor;
+	private PlayerStateManager playerStateManager;
 
-    private final Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
-    private final Set<String> stateIndependentNotifications = new HashSet<String>();
-    private final Map<String, String> groupedNotifications = new HashMap<String, String>();
-    private final Map<Personality, Collection<NotificationTemplate>> waitingNotifications = new HashMap<Personality, Collection<NotificationTemplate>>();
+	private final Set<String> stateIndependentNotifications = new HashSet<String>();
+	private final Map<String, String> groupedNotifications = new HashMap<String, String>();
+	private final Map<Personality, Collection<NotificationTemplate>> waitingNotifications = new HashMap<Personality, Collection<NotificationTemplate>>();
 
-    private final ThePlayerStateListener playerStateListener = new ThePlayerStateListener();
+	private final ThePlayerStateListener playerStateListener = new ThePlayerStateListener();
 
-    private static final Log log = LogFactory.getLog("wisematches.server.notify.distributor");
+	private static final Log log = LogFactory.getLog("wisematches.server.notify.distributor");
 
-    public ReducingNotificationPublisher() {
-    }
+	public ReducingNotificationPublisher() {
+	}
 
-    @Override
-    public boolean publishNotification(NotificationTemplate template) throws PublicationException {
-        lock.lock();
-        try {
-            if (!playerStateManager.isPlayerOnline(template.getRecipient()) ||
-                    stateIndependentNotifications.contains(template.getCode())) {
-                return super.publishNotification(template);
-            }
+	@Override
+	public boolean publishNotification(NotificationTemplate template) throws PublicationException {
+		lock.lock();
+		try {
+			if (!playerStateManager.isPlayerOnline(template.getRecipient())) {
 
-            Collection<NotificationTemplate> templates = waitingNotifications.get(template.getRecipient());
-            if (templates == null) { // new notification for a player
-                templates = new ArrayList<NotificationTemplate>();
-                waitingNotifications.put(template.getRecipient(), templates);
-            }
+			} else {
 
-            String group = groupedNotifications.get(template.getCode());
-            if (group != null) { // if grouped notification: try to find is there any
-                for (NotificationTemplate t : templates) {
-                    if (group.equals(groupedNotifications.get(t.getCode()))) {
-                        return false; // already has the same group
-                    }
-                }
-            }
-            return templates.add(template);
-        } finally {
-            lock.unlock();
-        }
-    }
+			}
 
-    private void processUnpublishedNotifications(Personality person) {
-        // TODO: MUST BE IN TRANSACTION
-        final Collection<NotificationTemplate> templates = waitingNotifications.remove(person);
-        for (NotificationTemplate template : templates) {
-            try {
-                super.publishNotification(template);
-            } catch (PublicationException ex) {
-                log.error("Notification can't be post processed", ex);
-            }
-        }
-    }
+//			 ||
+//					stateIndependentNotifications.contains(template.getCode())) {
+//				return super.publishNotification(template);
+//			}
 
-    public void setPlayerStateManager(PlayerStateManager playerStateManager) {
-        lock.lock();
-        try {
-            if (this.playerStateManager != null) {
-                this.playerStateManager.removePlayerStateListener(playerStateListener);
-            }
+			Collection<NotificationTemplate> templates = waitingNotifications.get(template.getRecipient());
+			if (templates == null) { // new notification for a player
+				templates = new ArrayList<NotificationTemplate>();
+				waitingNotifications.put(template.getRecipient(), templates);
+			}
 
-            this.playerStateManager = playerStateManager;
+			String group = groupedNotifications.get(template.getCode());
+			if (group != null) { // if grouped notification: try to find is there any
+				for (NotificationTemplate t : templates) {
+					if (group.equals(groupedNotifications.get(t.getCode()))) {
+						return false; // already has the same group
+					}
+				}
+			}
+			return templates.add(template);
+		} finally {
+			lock.unlock();
+		}
+	}
 
-            if (this.playerStateManager != null) {
-                this.playerStateManager.addPlayerStateListener(playerStateListener);
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
+	private void processUnpublishedNotifications(final Personality person) {
+		final Collection<NotificationTemplate> templates = waitingNotifications.remove(person);
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				for (NotificationTemplate template : templates) {
+					try {
+						ReducingNotificationPublisher.super.publishNotification(template);
+					} catch (PublicationException ex) {
+						log.error("Notification can't be post processed", ex);
+					}
+				}
+			}
+		});
+	}
 
-    public void setGroupedNotifications(Map<String, String> groupedNotifications) {
-        lock.lock();
-        try {
-            this.groupedNotifications.clear();
-            if (groupedNotifications != null) {
-                this.groupedNotifications.putAll(groupedNotifications);
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
 
-    public void setStateIndependentNotifications(Set<String> stateIndependentNotifications) {
-        lock.lock();
-        try {
-            this.stateIndependentNotifications.clear();
-            if (stateIndependentNotifications != null) {
-                this.stateIndependentNotifications.addAll(stateIndependentNotifications);
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
+	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
+		lock.lock();
+		try {
+			if (this.playerStateManager != null) {
+				this.playerStateManager.removePlayerStateListener(playerStateListener);
+			}
 
-    private class ThePlayerStateListener implements PlayerStateListener {
-        private ThePlayerStateListener() {
-        }
+			this.playerStateManager = playerStateManager;
 
-        @Override
-        public void playerOnline(Personality person) {
-            playerAlive(person);
-        }
+			if (this.playerStateManager != null) {
+				this.playerStateManager.addPlayerStateListener(playerStateListener);
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
 
-        @Override
-        public void playerAlive(Personality person) {
-            lock.lock();
-            try {
-                waitingNotifications.remove(person);
-            } finally {
-                lock.unlock();
-            }
-        }
+	public void setGroupedNotifications(Map<String, String> groupedNotifications) {
+		lock.lock();
+		try {
+			this.groupedNotifications.clear();
+			if (groupedNotifications != null) {
+				this.groupedNotifications.putAll(groupedNotifications);
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
 
-        @Override
-        public void playerOffline(Personality person) {
-            lock.lock();
-            try {
-                processUnpublishedNotifications(person);
-            } finally {
-                lock.unlock();
-            }
-        }
-    }
+	public void setStateIndependentNotifications(Set<String> stateIndependentNotifications) {
+		lock.lock();
+		try {
+			this.stateIndependentNotifications.clear();
+			if (stateIndependentNotifications != null) {
+				this.stateIndependentNotifications.addAll(stateIndependentNotifications);
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	private class ThePlayerStateListener implements PlayerStateListener {
+		private ThePlayerStateListener() {
+		}
+
+		@Override
+		public void playerOnline(Personality person) {
+			playerAlive(person);
+		}
+
+		@Override
+		public void playerAlive(Personality person) {
+			lock.lock();
+			try {
+				waitingNotifications.remove(person);
+			} finally {
+				lock.unlock();
+			}
+		}
+
+		@Override
+		public void playerOffline(Personality person) {
+			lock.lock();
+			try {
+				processUnpublishedNotifications(person);
+			} finally {
+				lock.unlock();
+			}
+		}
+	}
 }
