@@ -1,18 +1,80 @@
 package wisematches.server.web.services.notify.impl.publisher;
 
+import org.easymock.Capture;
+import org.easymock.IMockBuilder;
 import org.junit.Test;
+import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
+import wisematches.personality.account.Account;
+import wisematches.server.web.services.notify.NotificationCreator;
+import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationTemplate;
+import wisematches.server.web.services.notify.PublicationException;
+import wisematches.server.web.services.state.PlayerStateListener;
+import wisematches.server.web.services.state.PlayerStateManager;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class ReducingNotificationPublisherTest {
-    public ReducingNotificationPublisherTest() {
-    }
+	public ReducingNotificationPublisherTest() {
+	}
 
-    @Test
-    public void test() {
-        throw new UnsupportedOperationException("TODO: commented");
-    }
+	@Test
+	public void testPublishNotification() throws PublicationException {
+		final Account P1 = mockAccount(1);
+
+		final NotificationTemplate TA11 = new NotificationTemplate("n.a.1", P1, NotificationCreator.GAME);
+		final NotificationTemplate TA21 = new NotificationTemplate("n.a.2", P1, NotificationCreator.GAME);
+		final NotificationTemplate TB11 = new NotificationTemplate("n.b.1", P1, NotificationCreator.GAME);
+		final NotificationTemplate TB21 = new NotificationTemplate("n.b.2", P1, NotificationCreator.GAME);
+
+		final Map<String, String> groups = new HashMap<String, String>();
+		groups.put("n.a.1", "n.a");
+		groups.put("n.a.2", "n.a");
+
+		final HashSet<String> states = new HashSet<String>();
+		states.add("n.a.2");
+		states.add("n.b.1");
+
+		final Capture<PlayerStateListener> stateListenerCapture = new Capture<PlayerStateListener>();
+
+		final PlayerStateManager playerStateManager = createStrictMock(PlayerStateManager.class);
+		playerStateManager.addPlayerStateListener(capture(stateListenerCapture));
+		expect(playerStateManager.isPlayerOnline(P1)).andReturn(false);
+		expect(playerStateManager.isPlayerOnline(P1)).andReturn(false);
+		expect(playerStateManager.isPlayerOnline(P1)).andReturn(false);
+		replay(playerStateManager);
+
+		final NotificationPublisher originalPublisher = createStrictMock(NotificationPublisher.class);
+		expect(originalPublisher.publishNotification(TB11)).andReturn(true);
+		expect(originalPublisher.publishNotification(TA21)).andReturn(true);
+		replay(originalPublisher);
+
+		final ReducingNotificationPublisher publisher = new ReducingNotificationPublisher();
+		publisher.setGroupedNotifications(groups);
+		publisher.setStateIndependentNotifications(states);
+		publisher.setNotificationPublisher(originalPublisher);
+		publisher.setPlayerStateManager(playerStateManager);
+		publisher.setTaskExecutor(new ConcurrentTaskExecutor());
+
+		publisher.publishNotification(TB11); // not grouped
+		publisher.publishNotification(TA11); // first in group, wasn't sent
+		publisher.publishNotification(TA21); // send in group, must be ignored
+
+		verify(originalPublisher, playerStateManager);
+	}
+
+	private Account mockAccount(final long id) {
+		IMockBuilder<Account> mockBuilder = createMockBuilder(Account.class);
+		mockBuilder.withConstructor(id);
+		return mockBuilder.createMock("MockAccount_" + id);
+	}
 
 /*
     @Test

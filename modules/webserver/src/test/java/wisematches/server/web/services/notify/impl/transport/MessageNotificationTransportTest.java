@@ -8,6 +8,7 @@ import wisematches.server.web.services.notify.NotificationCreator;
 import wisematches.server.web.services.notify.NotificationMessage;
 
 import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 /**
@@ -23,6 +24,7 @@ public class MessageNotificationTransportTest {
 
         final MessageManager manager = createStrictMock(MessageManager.class);
         manager.sendNotification(account, "mock.message", true);
+		replay(manager);
 
         final MessageNotificationTransport transport = new MessageNotificationTransport();
         transport.setMessageManager(manager);

@@ -37,6 +37,7 @@
     <bean id="notificationFreemarkerConfig"
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
+
     <bean id="notificationTransformer"
           class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
         <property name="messageSource" ref="messageSource"/>
@@ -59,7 +60,12 @@
           class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
         <property name="transformer">
-            <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
+            <bean class="wisematches.server.web.services.notify.impl.transform.OpenSessionNotificationTransformer">
+                <property name="sessionFactory" ref="sessionFactory"/>
+                <property name="notificationTransformer">
+                    <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
+                </property>
+            </bean>
         </property>
     </bean>
 
@@ -67,7 +73,12 @@
           class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
         <property name="transformer">
-            <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
+            <bean class="wisematches.server.web.services.notify.impl.transform.OpenSessionNotificationTransformer">
+                <property name="sessionFactory" ref="sessionFactory"/>
+                <property name="notificationTransformer">
+                    <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
+                </property>
+            </bean>
         </property>
     </bean>
 
@@ -76,11 +87,10 @@
     <bean id="notificationManager"
           class="wisematches.server.web.services.notify.impl.manager.HibernateNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="notificationDescription">
+        <property name="notificationDescriptors">
             <list>
                 <bean parent="notification" c:code="account."
                       c:group="account" c:enabled="true"/>
-
 
                 <bean parent="notification" c:code="playground.game.started"
                       c:group="game.state" c:enabled="true"/>
@@ -144,7 +154,6 @@
     <bean id="notificationDistributor"
           class="wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor">
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
-        <property name="transactionManager" ref="transactionManager"/>
         <property name="notificationManager" ref="notificationManager"/>
 
         <property name="unimpededPublishers">
@@ -180,6 +189,10 @@
                 <property name="notificationPublisher" ref="mailNotificationPublisher"/>
             </bean>
         </property>
+    </bean>
+    <bean class="wisematches.server.web.services.notify.impl.publisher.ReducingNotificationPublisher"
+          id="reducingNotificationPublisher">
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
     </bean>
     <!--
 
