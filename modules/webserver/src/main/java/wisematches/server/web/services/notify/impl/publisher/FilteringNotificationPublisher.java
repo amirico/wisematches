@@ -1,28 +1,36 @@
 package wisematches.server.web.services.notify.impl.publisher;
 
+import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationPublisher;
-import wisematches.server.web.services.notify.NotificationTemplate;
 import wisematches.server.web.services.notify.PublicationException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FilteringNotificationPublisher implements NotificationPublisher {
-    protected NotificationPublisher notificationPublisher;
+	private NotificationPublisher notificationPublisher;
+	private final Set<String> allowedNotifications = new HashSet<String>();
 
-    public FilteringNotificationPublisher() {
-    }
+	public FilteringNotificationPublisher() {
+	}
 
-    public FilteringNotificationPublisher(NotificationPublisher notificationPublisher) {
-        this.notificationPublisher = notificationPublisher;
-    }
+	@Override
+	public boolean publishNotification(Notification notification) throws PublicationException {
+		return allowedNotifications.contains(notification.getCode()) && notificationPublisher.publishNotification(notification);
+	}
 
-    @Override
-    public boolean publishNotification(NotificationTemplate template) throws PublicationException {
-        return notificationPublisher.publishNotification(template);
-    }
+	public void setAllowedNotifications(Set<String> allowedNotifications) {
+		this.allowedNotifications.clear();
 
-    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
-        this.notificationPublisher = notificationPublisher;
-    }
+		if (allowedNotifications != null) {
+			this.allowedNotifications.addAll(allowedNotifications);
+		}
+	}
+
+	public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+		this.notificationPublisher = notificationPublisher;
+	}
 }

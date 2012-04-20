@@ -22,7 +22,7 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.settings.form.SettingsForm;
 import wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo;
-import wisematches.server.web.services.notify.NotificationCondition;
+import wisematches.server.web.services.notify.NotificationSettings;
 import wisematches.server.web.services.notify.NotificationDescriptor;
 import wisematches.server.web.services.notify.NotificationManager;
 
@@ -86,13 +86,13 @@ public class SettingsController extends WisematchesController {
         }
 
 
-        final NotificationCondition condition = notificationManager.getNotificationCondition(personality);
+        final NotificationSettings settings = notificationManager.getNotificationCondition(personality);
         final Collection<NotificationDescriptor> descriptions = notificationManager.getDescriptors();
         for (NotificationDescriptor description : descriptions) {
             final String parameter = request.getParameter(description.getCode());
-            condition.setEnabled(description.getCode(), parameter != null && Boolean.parseBoolean(parameter));
+            settings.setEnabled(description.getCode(), parameter != null && Boolean.parseBoolean(parameter));
         }
-        notificationManager.setNotificationCondition(personality, condition);
+        notificationManager.setNotificationCondition(personality, settings);
 
         boardSettingsManager.setScribbleSettings(personality,
                 new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.getTilesClass()));

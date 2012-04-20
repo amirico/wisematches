@@ -4,6 +4,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 ALTER TABLE `wisematches`.`settings_notice` ADD COLUMN `game.challenge.terminated` INT(1) NULL DEFAULT 0  AFTER `game.challenge.rejected` , CHANGE COLUMN `game.challenge.received` `game.challenge.initiated` INT(1) NULL DEFAULT 1;
 
+ALTER TABLE `wisematches`.`player_activity` ADD COLUMN `last_activity` TIMESTAMP NULL DEFAULT NULL  AFTER `last_messages_check` ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

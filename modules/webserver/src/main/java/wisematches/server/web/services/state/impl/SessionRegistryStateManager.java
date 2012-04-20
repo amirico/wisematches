@@ -9,6 +9,8 @@ import wisematches.server.web.services.state.PlayerStateListener;
 import wisematches.server.web.services.state.PlayerStateManager;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -38,18 +40,27 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 	}
 
 	@Override
+	public Date getLastActivityDate(Personality personality) {
+		Date date = null;
+		final List<SessionInformation> allSessions = getAllSessions(personality, true);
+		for (SessionInformation session : allSessions) {
+			final Date lastRequest = session.getLastRequest();
+			if (date == null) {
+				date = lastRequest;
+			} else if (date.before(lastRequest)) {
+				date = lastRequest;
+			}
+		}
+		return date;
+	}
+
+	@Override
 	public void registerNewSession(String sessionId, Object principal) {
 		super.registerNewSession(sessionId, principal);
 
 		final SessionInformation info = getSessionInformation(sessionId);
 		if (info != null && info.getPrincipal() instanceof WMUserDetails) {
-			final Player player = ((WMUserDetails) info.getPrincipal()).getPlayer();
-			// notify listeners only about first session
-			if (getAllSessions(player, true).size() == 1) {
-				for (PlayerStateListener listener : listeners) {
-					listener.playerOnline(player);
-				}
-			}
+			processPlayerOnline(player(info));
 		}
 	}
 
@@ -59,9 +70,7 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 
 		final SessionInformation info = getSessionInformation(sessionId);
 		if (info != null && info.getPrincipal() instanceof WMUserDetails) {
-			for (PlayerStateListener listener : listeners) {
-				listener.playerAlive(((WMUserDetails) info.getPrincipal()).getPlayer());
-			}
+			processPlayerAlive(player(info));
 		}
 	}
 
@@ -72,13 +81,36 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 		super.removeSessionInformation(sessionId);
 
 		if (info != null && info.getPrincipal() instanceof WMUserDetails) {
-			final Player player = ((WMUserDetails) info.getPrincipal()).getPlayer();
+			final Player player = player(info);
 			// notify listeners only about last session
 			if (getAllSessions(player, true).isEmpty()) {
-				for (PlayerStateListener listener : listeners) {
-					listener.playerOffline(((WMUserDetails) info.getPrincipal()).getPlayer());
-				}
+				processPlayerOffline(player(info));
 			}
+		}
+	}
+
+	private Player player(SessionInformation info) {
+		return ((WMUserDetails) info.getPrincipal()).getPlayer();
+	}
+
+	protected void processPlayerOnline(Player player) {
+		// notify listeners only about first session
+		if (getAllSessions(player, true).size() == 1) {
+			for (PlayerStateListener listener : listeners) {
+				listener.playerOnline(player);
+			}
+		}
+	}
+
+	protected void processPlayerAlive(Player player) {
+		for (PlayerStateListener listener : listeners) {
+			listener.playerAlive(player);
+		}
+	}
+
+	protected void processPlayerOffline(Player player) {
+		for (PlayerStateListener listener : listeners) {
+			listener.playerOffline(player);
 		}
 	}
 }

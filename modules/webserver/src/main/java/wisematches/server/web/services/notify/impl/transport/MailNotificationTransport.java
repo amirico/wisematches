@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.personality.Language;
 import wisematches.personality.account.Account;
-import wisematches.server.web.services.notify.NotificationCreator;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationMessage;
 import wisematches.server.web.services.notify.NotificationTransport;
 import wisematches.server.web.services.notify.TransmissionException;
@@ -46,7 +46,7 @@ public class MailNotificationTransport implements NotificationTransport {
                 final Language language = account.getLanguage();
 
                 final InternetAddress to = new InternetAddress(account.getEmail(), account.getNickname(), "UTF-8");
-                final InternetAddress from = getInternetAddress(message.getCreator(), language);
+                final InternetAddress from = getInternetAddress(message.getSender(), language);
 
                 final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, false, "UTF-8");
                 msg.setFrom(from);
@@ -62,8 +62,8 @@ public class MailNotificationTransport implements NotificationTransport {
         }
     }
 
-    protected InternetAddress getInternetAddress(NotificationCreator creator, Language language) {
-        return addressesCache.get(new SenderKey(creator, language));
+    protected InternetAddress getInternetAddress(NotificationSender sender, Language language) {
+        return addressesCache.get(new SenderKey(sender, language));
     }
 
     private void validateAddressesCache() {
@@ -73,16 +73,16 @@ public class MailNotificationTransport implements NotificationTransport {
             return;
         }
 
-        for (NotificationCreator creator : NotificationCreator.values()) {
+        for (NotificationSender sender : NotificationSender.values()) {
             for (Language language : Language.values()) {
                 try {
-                    final String address = messageSource.getMessage("mail.address." + creator.getUserInfo(),
-                            null, creator.getUserInfo() + "@" + serverHostName, language.locale());
+                    final String address = messageSource.getMessage("mail.address." + sender.getUserInfo(),
+                            null, sender.getUserInfo() + "@" + serverHostName, language.locale());
 
-                    final String personal = messageSource.getMessage("mail.personal." + creator.getUserInfo(),
-                            null, creator.name(), language.locale());
+                    final String personal = messageSource.getMessage("mail.personal." + sender.getUserInfo(),
+                            null, sender.name(), language.locale());
 
-                    addressesCache.put(new SenderKey(creator, language), new InternetAddress(address, personal, "UTF-8"));
+                    addressesCache.put(new SenderKey(sender, language), new InternetAddress(address, personal, "UTF-8"));
                 } catch (UnsupportedEncodingException ex) {
                     log.fatal("JAVA SYSTEM ERROR - NOT UTF8!", ex);
                 }
@@ -106,10 +106,10 @@ public class MailNotificationTransport implements NotificationTransport {
 
     private static final class SenderKey {
         private final Language language;
-        private final NotificationCreator creator;
+        private final NotificationSender sender;
 
-        private SenderKey(NotificationCreator creator, Language language) {
-            this.creator = creator;
+        private SenderKey(NotificationSender sender, Language language) {
+            this.sender = sender;
             this.language = language;
         }
 
@@ -119,13 +119,13 @@ public class MailNotificationTransport implements NotificationTransport {
             if (o == null || getClass() != o.getClass()) return false;
 
             SenderKey senderKey = (SenderKey) o;
-            return language == senderKey.language && creator == senderKey.creator;
+            return language == senderKey.language && sender == senderKey.sender;
         }
 
         @Override
         public int hashCode() {
             int result = language.hashCode();
-            result = 31 * result + creator.hashCode();
+            result = 31 * result + sender.hashCode();
             return result;
         }
     }

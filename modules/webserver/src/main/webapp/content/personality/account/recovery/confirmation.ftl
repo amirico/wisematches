@@ -14,7 +14,7 @@
             <table class="x-panel" style="padding-left: 10px; padding-right: 10px; width: 400px;">
                 <tr>
                     <td colspan="2">
-                        <div class="group label"><@message code="account.recovery.check.email.label"/></div>
+                        <div class="section label"><@message code="account.recovery.check.email.label"/></div>
                     </td>
                 </tr>
                 <tr>
@@ -40,7 +40,7 @@
 
                 <tr>
                     <td colspan="2">
-                        <div class="group label"><@message code="account.recovery.check.pwd.label"/></div>
+                        <div class="section label"><@message code="account.recovery.check.pwd.label"/></div>
                     </td>
                 </tr>
                 <tr>
@@ -81,7 +81,7 @@
 
                 <tr>
                     <td colspan="2">
-                        <div class="group label"><@message code="captcha.label"/></div>
+                        <div class="section label"><@message code="captcha.label"/></div>
                     </td>
                 </tr>
                 <tr>

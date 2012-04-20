@@ -16,8 +16,8 @@ public class DefaultNotificationPublisher implements NotificationPublisher {
     public DefaultNotificationPublisher() {
     }
 
-    public boolean publishNotification(NotificationTemplate template) throws PublicationException {
-        NotificationMessage message = transformer.transformNotification(template);
+    public boolean publishNotification(Notification notification) throws PublicationException {
+        NotificationMessage message = transformer.createMessage(notification);
         transport.sendNotification(message);
         return true;
     }

@@ -15,7 +15,7 @@ import wisematches.playground.propose.*;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
-import wisematches.server.web.services.notify.NotificationCreator;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationDistributor;
 
 import java.util.Collection;
@@ -60,7 +60,7 @@ public class NotificationPublisherCenter {
         if (log.isInfoEnabled()) {
             log.info("Fire notification " + code + " to person " + player);
         }
-        notificationDistributor.raiseNotification(code, player, NotificationCreator.GAME, context);
+        notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
     }
 
     public void setPlayerManager(PlayerManager playerManager) {

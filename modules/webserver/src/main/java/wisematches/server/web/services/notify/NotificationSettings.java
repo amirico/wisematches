@@ -8,10 +8,10 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class NotificationCondition {
+public final class NotificationSettings {
     private final Map<String, Boolean> notifications = new HashMap<String, Boolean>();
 
-    public NotificationCondition() {
+    public NotificationSettings() {
     }
 
     public Set<String> getNotificationNames() {

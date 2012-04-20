@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="notificationMask" type="wisematches.server.web.services.notify.NotificationCondition" -->
+<#-- @ftlvariable name="notificationMask" type="wisematches.server.web.services.notify.NotificationSettings" -->
 <#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.tbr.notify.impl.NotificationDescription>" -->
 
 <#include "/core.ftl">
@@ -6,22 +6,22 @@
 <#assign lastGroup=""/>
 <table class="common-settings ui-widget-content ui-state-default shadow ui-corner-all" style="background-image: none;"
        width="100%">
-<#list notificationDescriptions?sort_by('group') as desc>
-    <#if (desc_index !=0 && lastGroup!=desc.group)>
+<#list notificationDescriptions?sort_by('section') as desc>
+    <#if (desc_index !=0 && lastGroup!=desc.section)>
         <tr>
             <td colspan="2" class="ui-state-default shadow"></td>
         </tr>
     </#if>
-    <#if lastGroup!=desc.group>
+    <#if lastGroup!=desc.section>
         <tr>
             <td colspan="2">
                 <h2 style="margin-bottom: 0;">
-                    <@message code="account.modify.notice.group.${desc.group?lower_case}"/>
+                    <@message code="account.modify.notice.section.${desc.section?lower_case}"/>
                 </h2>
             </td>
         </tr>
     </#if>
-    <#assign lastGroup=desc.group/>
+    <#assign lastGroup=desc.section/>
     <tr>
         <td style="padding-top: 4px; width: 10px;">
             <input id="field${desc.name}" name="${desc.name}" type="checkbox"
