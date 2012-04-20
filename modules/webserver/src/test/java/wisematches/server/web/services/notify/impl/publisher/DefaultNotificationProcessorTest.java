@@ -16,15 +16,15 @@ public class DefaultNotificationProcessorTest {
     @Test
     public void test() throws Exception {
         final Account account = createNiceMock(Account.class);
-        final NotificationTemplate template = new NotificationTemplate("mock.code", "mock.template", account, NotificationCreator.GAME);
-        final NotificationMessage message = new NotificationMessage("mock.code", "mock.subject", "mock.message", account, NotificationCreator.GAME);
+        final Notification template = new Notification("mock.code", "mock.template", account, NotificationSender.GAME);
+        final NotificationMessage message = new NotificationMessage("mock.code", "mock.subject", "mock.message", account, NotificationSender.GAME);
 
         final NotificationTransport transport = createStrictMock(NotificationTransport.class);
         transport.sendNotification(message);
         replay(transport);
 
         final NotificationTransformer transformer = createStrictMock(NotificationTransformer.class);
-        expect(transformer.transformNotification(template)).andReturn(message);
+        expect(transformer.createMessage(template)).andReturn(message);
         replay(transformer);
 
         final DefaultNotificationPublisher processor = new DefaultNotificationPublisher();

@@ -16,7 +16,12 @@ import wisematches.personality.player.member.MemberPlayer;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface NotificationDistributor {
-    void raiseNotification(String code, Account recipient, NotificationCreator creator, Object context);
+	void addNotificationDistributorListener(NotificationDistributorListener l);
 
-    void raiseNotification(String code, MemberPlayer recipient, NotificationCreator creator, Object context);
+	void removeNotificationDistributorListener(NotificationDistributorListener l);
+
+
+	void raiseNotification(String code, Account recipient, NotificationSender sender, Object context);
+
+	void raiseNotification(String code, MemberPlayer recipient, NotificationSender sender, Object context);
 }

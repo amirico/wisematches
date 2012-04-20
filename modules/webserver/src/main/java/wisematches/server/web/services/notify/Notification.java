@@ -7,32 +7,32 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class NotificationTemplate {
+public final class Notification {
 	private final String code;
+	private final Date initiated;
 	private final String template;
-	private final Date inititated;
 	private final Account recipient;
-	private final NotificationCreator creator;
+	private final NotificationSender sender;
 	private final Object context;
 
-	public NotificationTemplate(String code, Account recipient, NotificationCreator creator) {
-		this(code, recipient, creator, null);
+	public Notification(String code, Account recipient, NotificationSender sender) {
+		this(code, recipient, sender, null);
 	}
 
-	public NotificationTemplate(String code, Account recipient, NotificationCreator creator, Object context) {
-		this(code, code, recipient, creator, context);
+	public Notification(String code, Account recipient, NotificationSender sender, Object context) {
+		this(code, code, recipient, sender, context);
 	}
 
-	public NotificationTemplate(String code, String template, Account recipient, NotificationCreator creator) {
-		this(code, template, recipient, creator, null);
+	public Notification(String code, String template, Account recipient, NotificationSender sender) {
+		this(code, template, recipient, sender, null);
 	}
 
-	public NotificationTemplate(String code, String template, Account recipient, NotificationCreator creator, Object context) {
+	public Notification(String code, String template, Account recipient, NotificationSender sender, Object context) {
 		this.code = code;
-		this.inititated = new Date();
+		this.initiated = new Date();
 		this.context = context;
 		this.template = template;
-		this.creator = creator;
+		this.sender = sender;
 		this.recipient = recipient;
 	}
 
@@ -41,7 +41,7 @@ public final class NotificationTemplate {
 	}
 
 	public Date getInitiated() {
-		return inititated;
+		return initiated;
 	}
 
 	public String getTemplate() {
@@ -52,8 +52,8 @@ public final class NotificationTemplate {
 		return recipient;
 	}
 
-	public NotificationCreator getCreator() {
-		return creator;
+	public NotificationSender getSender() {
+		return sender;
 	}
 
 	public Object getContext() {
@@ -65,9 +65,10 @@ public final class NotificationTemplate {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Notification");
 		sb.append("{code='").append(code).append('\'');
+		sb.append(", initiated='").append(initiated).append('\'');
 		sb.append(", template='").append(template).append('\'');
 		sb.append(", recipient=").append(recipient);
-		sb.append(", creator=").append(creator);
+		sb.append(", sender=").append(sender);
 		sb.append(", context=").append(context);
 		sb.append('}');
 		return sb.toString();

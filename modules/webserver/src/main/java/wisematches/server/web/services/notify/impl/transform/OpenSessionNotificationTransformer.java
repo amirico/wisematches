@@ -10,8 +10,8 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.orm.hibernate4.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationMessage;
-import wisematches.server.web.services.notify.NotificationTemplate;
 import wisematches.server.web.services.notify.NotificationTransformer;
 import wisematches.server.web.services.notify.TransformationException;
 
@@ -32,7 +32,7 @@ public class OpenSessionNotificationTransformer implements NotificationTransform
 	}
 
 	@Override
-	public NotificationMessage transformNotification(NotificationTemplate notificationTemplate) throws TransformationException {
+	public NotificationMessage createMessage(Notification notification) throws TransformationException {
 		boolean participate = false;
 
 		if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
@@ -45,7 +45,7 @@ public class OpenSessionNotificationTransformer implements NotificationTransform
 		}
 
 		try {
-			return notificationTransformer.transformNotification(notificationTemplate);
+			return notificationTransformer.createMessage(notification);
 		} finally {
 			if (!participate) {
 				SessionHolder sessionHolder =

@@ -4,7 +4,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 import wisematches.personality.account.Account;
 import wisematches.playground.message.MessageManager;
-import wisematches.server.web.services.notify.NotificationCreator;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationMessage;
 
 import static org.easymock.EasyMock.createStrictMock;
@@ -29,7 +29,7 @@ public class MessageNotificationTransportTest {
         final MessageNotificationTransport transport = new MessageNotificationTransport();
         transport.setMessageManager(manager);
 
-        transport.sendNotification(new NotificationMessage("mock.code", "mock.subject", "mock.message", account, NotificationCreator.GAME));
+        transport.sendNotification(new NotificationMessage("mock.code", "mock.subject", "mock.message", account, NotificationSender.GAME));
 
         verify(manager);
     }

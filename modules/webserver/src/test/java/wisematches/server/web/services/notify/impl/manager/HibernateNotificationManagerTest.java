@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.server.web.services.notify.NotificationCondition;
+import wisematches.server.web.services.notify.NotificationSettings;
 import wisematches.server.web.services.notify.NotificationDescriptor;
 import wisematches.server.web.services.notify.NotificationManager;
 
@@ -41,31 +41,31 @@ public class HibernateNotificationManagerTest {
     public void test() {
         final Personality person = Personality.person(1);
 
-        NotificationCondition condition = notificationManager.getNotificationCondition(person);
-        for (String name : condition.getNotificationNames()) {
-            condition.setEnabled(name, true);
+        NotificationSettings settings = notificationManager.getNotificationCondition(person);
+        for (String name : settings.getNotificationNames()) {
+            settings.setEnabled(name, true);
         }
-        notificationManager.setNotificationCondition(person, condition);
+        notificationManager.setNotificationCondition(person, settings);
 
         final Collection<NotificationDescriptor> descriptions = notificationManager.getDescriptors();
         for (NotificationDescriptor d : descriptions) {
             assertTrue(notificationManager.isNotificationEnabled(person, d.getCode()));
         }
 
-        condition = notificationManager.getNotificationCondition(person);
-        System.out.println(condition);
-        for (String name : condition.getNotificationNames()) {
-            assertTrue(condition.isEnabled(name));
-            condition.setEnabled(name, false);
+        settings = notificationManager.getNotificationCondition(person);
+        System.out.println(settings);
+        for (String name : settings.getNotificationNames()) {
+            assertTrue(settings.isEnabled(name));
+            settings.setEnabled(name, false);
         }
-        notificationManager.setNotificationCondition(person, condition);
+        notificationManager.setNotificationCondition(person, settings);
 
         for (NotificationDescriptor d : descriptions) {
             assertFalse(notificationManager.isNotificationEnabled(person, d.getCode()));
         }
-        condition = notificationManager.getNotificationCondition(person);
-        for (String name : condition.getNotificationNames()) {
-            assertFalse(condition.isEnabled(name));
+        settings = notificationManager.getNotificationCondition(person);
+        for (String name : settings.getNotificationNames()) {
+            assertFalse(settings.isEnabled(name));
         }
     }
 }

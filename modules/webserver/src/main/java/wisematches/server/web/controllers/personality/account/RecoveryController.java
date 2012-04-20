@@ -19,9 +19,9 @@ import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.personality.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.services.notify.NotificationCreator;
+import wisematches.server.web.services.notify.Notification;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationPublisher;
-import wisematches.server.web.services.notify.NotificationTemplate;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
@@ -83,7 +83,7 @@ public class RecoveryController {
                     mailModel.put("recoveryToken", encodeToken(token));
                     mailModel.put("confirmationUrl", "account/recovery/confirmation");
 
-                    final NotificationTemplate template = new NotificationTemplate("account.recovery", "account.recovery", player, NotificationCreator.ACCOUNTS, mailModel);
+                    final Notification template = new Notification("account.recovery", "account.recovery", player, NotificationSender.ACCOUNTS, mailModel);
                     notificationPublisher.publishNotification(template);
 
                     //noinspection SpringMVCViewInspection
@@ -165,7 +165,7 @@ public class RecoveryController {
 
         try {
             accountManager.updateAccount(e.createAccount());
-            notificationPublisher.publishNotification(new NotificationTemplate("account.updated", player, NotificationCreator.ACCOUNTS, player));
+            notificationPublisher.publishNotification(new Notification("account.updated", player, NotificationSender.ACCOUNTS, player));
             return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         } catch (Exception e1) {
             if (log.isDebugEnabled()) {

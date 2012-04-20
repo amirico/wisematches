@@ -1,7 +1,6 @@
 package wisematches.server.web.services.notify;
 
 import wisematches.personality.account.Account;
-import wisematches.server.web.services.notify.NotificationCreator;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -11,14 +10,14 @@ public class NotificationMessage {
 	private final String subject;
 	private final String message;
 	private final Account account;
-	private final NotificationCreator creator;
+	private final NotificationSender sender;
 
-	public NotificationMessage(String code, String subject, String message, Account account, NotificationCreator creator) {
+	public NotificationMessage(String code, String subject, String message, Account account, NotificationSender sender) {
 		this.code = code;
 		this.subject = subject;
 		this.message = message;
 		this.account = account;
-		this.creator = creator;
+		this.sender = sender;
 	}
 
 	public String getCode() {
@@ -37,7 +36,7 @@ public class NotificationMessage {
 		return account;
 	}
 
-	public NotificationCreator getCreator() {
-		return creator;
+	public NotificationSender getSender() {
+		return sender;
 	}
 }

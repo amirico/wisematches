@@ -6,14 +6,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.server.web.services.notify.NotificationCondition;
-import wisematches.server.web.services.notify.NotificationDescriptor;
-import wisematches.server.web.services.notify.NotificationManager;
+import wisematches.server.web.services.notify.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -22,9 +17,25 @@ public class HibernateNotificationManager implements NotificationManager {
 	private static final Integer INT_TRUE = 1;
 
 	private SessionFactory sessionFactory;
+	private NotificationDistributor notificationDescriptor;
+
 	private final Map<String, NotificationDescriptor> descriptors = new HashMap<String, NotificationDescriptor>();
+	private final Collection<NotificationManagerListener> listeners = new ArrayList<NotificationManagerListener>();
+	private final TheNotificationDistributorListener distributorListener = new TheNotificationDistributorListener();
 
 	public HibernateNotificationManager() {
+	}
+
+	@Override
+	public void addNotificationManagerListener(NotificationManagerListener l) {
+		if (l != null) {
+			listeners.add(l);
+		}
+	}
+
+	@Override
+	public void removeNotificationManagerListener(NotificationManagerListener l) {
+		listeners.remove(l);
 	}
 
 	@Override
@@ -35,6 +46,12 @@ public class HibernateNotificationManager implements NotificationManager {
 	@Override
 	public Collection<NotificationDescriptor> getDescriptors() {
 		return Collections.unmodifiableCollection(descriptors.values());
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Date getNotificationDate(Personality personality, String code) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
@@ -56,24 +73,29 @@ public class HibernateNotificationManager implements NotificationManager {
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public NotificationCondition getNotificationCondition(Personality personality) {
-		NotificationCondition condition = loadNotificationMask(personality);
-		if (condition == null) {
-			condition = new NotificationCondition();
+	public NotificationSettings getNotificationCondition(Personality personality) {
+		NotificationSettings settings = loadNotificationMask(personality);
+		if (settings == null) {
+			settings = new NotificationSettings();
 			for (NotificationDescriptor d : descriptors.values()) {
-				condition.setEnabled(d.getCode(), d.isEnabled());
+				settings.setEnabled(d.getCode(), d.isEnabled());
 			}
 		}
-		return condition;
+		return settings;
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void setNotificationCondition(Personality personality, NotificationCondition condition) {
-		saveNotificationMask(personality, condition);
+	public void setNotificationCondition(Personality personality, NotificationSettings settings) {
+		saveNotificationMask(personality, settings);
 	}
 
-	private NotificationCondition loadNotificationMask(final Personality personality) {
+
+	private boolean isEnabled(Object v) {
+		return INT_TRUE.equals(v) || Boolean.TRUE.equals(v);
+	}
+
+	private NotificationSettings loadNotificationMask(final Personality personality) {
 		final Session session = sessionFactory.getCurrentSession();
 		final String[] names = descriptors.keySet().toArray(new String[descriptors.keySet().size()]);
 		final StringBuilder b = new StringBuilder();
@@ -91,18 +113,14 @@ public class HibernateNotificationManager implements NotificationManager {
 		if (values == null) {
 			return null;
 		}
-		final NotificationCondition m = new NotificationCondition();
+		final NotificationSettings m = new NotificationSettings();
 		for (int i = 0; i < names.length; i++) {
 			m.setEnabled(names[i], isEnabled(values[i]));
 		}
 		return m;
 	}
 
-	private boolean isEnabled(Object v) {
-		return INT_TRUE.equals(v) || Boolean.TRUE.equals(v);
-	}
-
-	private void saveNotificationMask(final Personality personality, final NotificationCondition condition) {
+	private void saveNotificationMask(final Personality personality, final NotificationSettings settings) {
 		final Session session = sessionFactory.getCurrentSession();
 		final String[] names = descriptors.keySet().toArray(new String[descriptors.keySet().size()]);
 		final StringBuilder b = new StringBuilder();
@@ -131,7 +149,7 @@ public class HibernateNotificationManager implements NotificationManager {
 		sqlQuery.setLong(0, personality.getId());
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < names.length; i++) {
-				sqlQuery.setBoolean(names.length * j + i + 1, condition.isEnabled(names[i]));
+				sqlQuery.setBoolean(names.length * j + i + 1, settings.isEnabled(names[i]));
 			}
 		}
 		sqlQuery.executeUpdate();
@@ -140,6 +158,18 @@ public class HibernateNotificationManager implements NotificationManager {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+
+	public void setNotificationDescriptor(NotificationDistributor notificationDescriptor) {
+		if (this.notificationDescriptor != null) {
+			this.notificationDescriptor.removeNotificationDistributorListener(distributorListener);
+		}
+
+		this.notificationDescriptor = notificationDescriptor;
+
+		if (this.notificationDescriptor != null) {
+			this.notificationDescriptor.addNotificationDistributorListener(distributorListener);
+		}
 	}
 
 	public void setNotificationDescriptors(Collection<NotificationDescriptor> descriptors) {
@@ -153,5 +183,19 @@ public class HibernateNotificationManager implements NotificationManager {
 		}
 		this.descriptors.clear();
 		this.descriptors.putAll(desc);
+	}
+
+	private class TheNotificationDistributorListener implements NotificationDistributorListener {
+		private TheNotificationDistributorListener() {
+		}
+
+		@Override
+		public void notificationRejected(Notification notification, PublicationType type) {
+		}
+
+		@Override
+		public void notificationPublished(Notification notification, PublicationType type) {
+			throw new UnsupportedOperationException("TODO: Not implemented");
+		}
 	}
 }

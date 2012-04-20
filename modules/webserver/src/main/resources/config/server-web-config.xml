@@ -7,14 +7,16 @@
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
-    <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.SessionRegistryStateManager"/>
-
     <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="playerImagesManager" class="wisematches.server.web.services.images.impl.FilePlayerImagesManager">
         <property name="imagesFolder" value="${server.images.path}/players"/>
+    </bean>
+
+    <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.HibernatePlayerStateManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="scribbleObjectsConverter"
