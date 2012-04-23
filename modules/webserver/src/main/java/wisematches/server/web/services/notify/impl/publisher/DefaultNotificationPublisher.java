@@ -9,24 +9,23 @@ import wisematches.server.web.services.notify.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultNotificationPublisher implements NotificationPublisher {
-    private NotificationTransport transport;
-    private NotificationTransformer transformer;
+	private NotificationTransport transport;
+	private NotificationTransformer transformer;
 
+	public DefaultNotificationPublisher() {
+	}
 
-    public DefaultNotificationPublisher() {
-    }
+	public boolean publishNotification(Notification notification) throws PublicationException {
+		NotificationMessage message = transformer.createMessage(notification);
+		transport.sendNotification(message);
+		return true;
+	}
 
-    public boolean publishNotification(Notification notification) throws PublicationException {
-        NotificationMessage message = transformer.createMessage(notification);
-        transport.sendNotification(message);
-        return true;
-    }
+	public void setTransport(NotificationTransport transport) {
+		this.transport = transport;
+	}
 
-    public void setTransport(NotificationTransport transport) {
-        this.transport = transport;
-    }
-
-    public void setTransformer(NotificationTransformer transformer) {
-        this.transformer = transformer;
-    }
+	public void setTransformer(NotificationTransformer transformer) {
+		this.transformer = transformer;
+	}
 }

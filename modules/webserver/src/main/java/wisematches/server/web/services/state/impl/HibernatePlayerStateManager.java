@@ -53,7 +53,15 @@ public class HibernatePlayerStateManager extends SessionRegistryStateManager {
 		super.processPlayerOffline(player);
 		final Date remove = lastActivityMap.remove(player);
 		if (remove != null) {
-			sessionFactory.getCurrentSession().saveOrUpdate(new HibernatePlayerActivity(player.getId(), remove));
+			final Session session = sessionFactory.getCurrentSession();
+			HibernatePlayerActivity a = (HibernatePlayerActivity) session.get(HibernatePlayerActivity.class, player.getId());
+			if (a == null) {
+				a = new HibernatePlayerActivity(player.getId(), remove);
+				session.save(a);
+			} else {
+				a.setLastActivityDate(remove);
+				session.update(a);
+			}
 		}
 	}
 

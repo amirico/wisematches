@@ -17,10 +17,15 @@
         </property>
     </bean>
 
-    <bean id="notificationTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
-        <property name="poolSize" value="1"/>
-        <property name="threadNamePrefix" value="NotificationManager"/>
-        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    <bean id="notificationTaskExecutor" class="wisematches.database.concurrent.TransactionalTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
     <bean id="notificationFreemarkerConfigurer" parent="commonFreemarkerConfigurer" scope="prototype">
@@ -60,12 +65,7 @@
           class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
         <property name="transformer">
-            <bean class="wisematches.server.web.services.notify.impl.transform.OpenSessionNotificationTransformer">
-                <property name="sessionFactory" ref="sessionFactory"/>
-                <property name="notificationTransformer">
-                    <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
-                </property>
-            </bean>
+            <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
         </property>
     </bean>
 
@@ -73,108 +73,88 @@
           class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
         <property name="transformer">
-            <bean class="wisematches.server.web.services.notify.impl.transform.OpenSessionNotificationTransformer">
-                <property name="sessionFactory" ref="sessionFactory"/>
-                <property name="notificationTransformer">
-                    <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
-                </property>
-            </bean>
+            <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
         </property>
     </bean>
 
     <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
 
     <bean id="notificationManager"
-          class="wisematches.server.web.services.notify.impl.manager.HibernateNotificationManager">
+          class="wisematches.server.web.services.notify.impl.manager.MySQLNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationDistributor" ref="notificationDistributor"/>
+
         <property name="notificationDescriptors">
             <list>
-                <bean parent="notification" c:code="account."
-                      c:section="account" c:enabled="true"/>
+                <bean parent="notification" c:code="game.state.started" c:enabled="true"/>
 
-                <bean parent="notification" c:code="playground.game.started"
-                      c:section="game.state" c:enabled="true"/>
+                <bean parent="notification" c:code="game.state.turn" c:enabled="true"/>
 
-                <bean parent="notification" c:code="playground.game.turn"
-                      c:section="game.state" c:enabled="true"/>
-
-                <bean parent="notification" c:code="playground.game.finished"
-                      c:section="game.state" c:enabled="true"/>
+                <bean parent="notification" c:code="game.state.finished" c:enabled="true"/>
 
 
-                <bean parent="notification" c:code="playground.game.expiration.day"
-                      c:section="game.expiration" c:enabled="true"
-                      c:template="playground.game.expiration"/>
+                <bean parent="notification" c:code="game.expiration.day" c:enabled="true"
+                      c:template="game.expiration"/>
 
-                <bean parent="notification" c:code="playground.game.expiration.half"
-                      c:section="game.expiration" c:enabled="true"
-                      c:template="playground.game.expiration"/>
+                <bean parent="notification" c:code="game.expiration.half" c:enabled="true"
+                      c:template="game.expiration"/>
 
-                <bean parent="notification" c:code="playground.game.expiration.hour"
-                      c:section="game.expiration" c:enabled="true"
-                      c:template="playground.game.expiration"/>
+                <bean parent="notification" c:code="game.expiration.hour" c:enabled="true"
+                      c:template="game.expiration"/>
 
 
-                <bean parent="notification" c:code="playground.challenge.initiated"
-                      c:section="challenge.state" c:enabled="true"/>
+                <bean parent="notification" c:code="challenge.state.initiated" c:enabled="true"/>
 
-                <bean parent="notification" c:code="playground.challenge.rejected"
-                      c:section="challenge.state" c:enabled="true"
-                      c:template="playground.challenge.finalized"/>
+                <bean parent="notification" c:code="challenge.state.rejected" c:enabled="false"
+                      c:template="challenge.finalized"/>
 
-                <bean parent="notification" c:code="playground.challenge.repudiated"
-                      c:section="challenge.state" c:enabled="true"
-                      c:template="playground.challenge.finalized"/>
+                <bean parent="notification" c:code="challenge.state.repudiated" c:enabled="false"
+                      c:template="challenge.finalized"/>
 
-                <bean parent="notification" c:code="playground.challenge.terminated"
-                      c:section="challenge.state" c:enabled="false"
-                      c:template="playground.challenge.finalized"/>
+                <bean parent="notification" c:code="challenge.state.terminated" c:enabled="false"
+                      c:template="challenge.finalized"/>
 
 
-                <bean parent="notification" c:code="playground.challenge.expiration.days"
-                      c:section="proposal.expiration" c:enabled="true"
-                      c:template="playground.challenge.expiration"/>
+                <bean parent="notification" c:code="challenge.expiration.days" c:enabled="true"
+                      c:template="challenge.expiration"/>
 
-                <bean parent="notification" c:code="playground.challenge.expiration.day"
-                      c:section="proposal.expiration" c:enabled="true"
-                      c:template="playground.challenge.expiration"/>
+                <bean parent="notification" c:code="challenge.expiration.day" c:enabled="true"
+                      c:template="challenge.expiration"/>
 
 
-                <bean parent="notification" c:code="playground.message.received"
-                      c:section="playground.message" c:enabled="true"/>
+                <bean parent="notification" c:code="message.received" c:enabled="true"/>
             </list>
         </property>
     </bean>
 
     <bean id="notificationDistributor"
           class="wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor">
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
+        <property name="playerStateManager" ref="playerStateManager"/>
+        <property name="notificationManager" ref="notificationManager"/>
 
         <property name="mandatoryNotifications">
             <set>
-                <value>playground.game.finished</value>
-                <value>playground.game.expiration.hour</value>
+                <value>game.state.finished</value>
+                <value>game.expiration.hour</value>
             </set>
         </property>
 
         <property name="redundantNotifications">
             <set>
-                <value>playground.game.turn</value>
+                <value>game.state.turn</value>
             </set>
         </property>
-
-        <property name="taskExecutor" ref="notificationTaskExecutor"/>
-        <property name="playerStateManager" ref="playerStateManager"/>
-        <property name="notificationManager" ref="notificationManager"/>
 
         <property name="internalPublisher">
             <bean class="wisematches.server.web.services.notify.impl.publisher.FilteringNotificationPublisher">
                 <property name="notificationPublisher" ref="messageNotificationPublisher"/>
                 <property name="allowedNotifications">
                     <set>
-                        <value>playground.game.finished</value>
-                        <value>playground.proposal.initiated</value>
-                        <value>playground.proposal.rejected</value>
-                        <value>playground.proposal.terminated</value>
+                        <value>game.state.finished</value>
+                        <value>challenge.state.initiated</value>
+                        <value>challenge.state.rejected</value>
+                        <value>challenge.state.terminated</value>
                     </set>
                 </property>
             </bean>
@@ -184,7 +164,6 @@
     </bean>
 
     <!--
-
         <bean id="notificationPublisherCenter"
               class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
             <property name="playerManager" ref="playerManager"/>

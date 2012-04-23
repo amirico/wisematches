@@ -75,16 +75,16 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	}
 
 
-	private void processNotification(Notification notification) {
+	protected void processNotification(Notification notification) {
 		processInternalNotification(notification);
 		processExternalNotification(notification);
 	}
 
-	private void processInternalNotification(Notification notification) {
+	protected void processInternalNotification(Notification notification) {
 		publishNotification(notification, PublicationType.INTERNAL);
 	}
 
-	private void processExternalNotification(Notification notification) {
+	protected void processExternalNotification(Notification notification) {
 		final String code = notification.getCode();
 		final Personality recipient = notification.getRecipient();
 		if (notificationManager.isNotificationEnabled(recipient, code)) {

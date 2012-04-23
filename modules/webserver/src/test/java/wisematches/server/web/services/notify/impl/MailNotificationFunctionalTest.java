@@ -87,8 +87,8 @@ public class MailNotificationFunctionalTest {
         for (NotificationDescription description : descriptions) {
             condition.setEnabled(description.getName(), true);
         }
-        notificationManager.setNotificationCondition(p1, condition);
-        notificationManager.setNotificationCondition(p2, condition);
+        notificationManager.setNotificationSettings(p1, condition);
+        notificationManager.setNotificationSettings(p2, condition);
 
 */
 /*

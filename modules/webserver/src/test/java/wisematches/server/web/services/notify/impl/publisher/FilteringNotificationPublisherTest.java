@@ -19,8 +19,8 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class MatchingNotificationProcessorTest {
-    public MatchingNotificationProcessorTest() {
+public class FilteringNotificationPublisherTest {
+    public FilteringNotificationPublisherTest() {
     }
 
     @Test
