@@ -8,7 +8,6 @@ package wisematches.server.web.services.notify;
  */
 public class NotificationDescriptor {
 	private final String code;
-	private final String section;
 	private final String template;
 	private final boolean enabled;
 
@@ -16,13 +15,8 @@ public class NotificationDescriptor {
 		this(code, null, enabled);
 	}
 
-	public NotificationDescriptor(String code, String section, boolean enabled) {
-		this(code, section, code, enabled);
-	}
-
-	public NotificationDescriptor(String code, String section, String template, boolean enabled) {
+	public NotificationDescriptor(String code, String template, boolean enabled) {
 		this.code = code;
-		this.section = section;
 		this.template = template;
 		this.enabled = enabled;
 	}
@@ -37,12 +31,12 @@ public class NotificationDescriptor {
 	}
 
 	/**
-	 * Returns section name for the notification.
+	 * Returns section for this descriptor. Section is part of {@code code} til last dot.
 	 *
-	 * @return the section name or {@code null} if notification doesn't have a section.
+	 * @return the section for this descriptor
 	 */
 	public String getSection() {
-		return section;
+		return code.substring(0, code.lastIndexOf("."));
 	}
 
 	/**
@@ -69,7 +63,6 @@ public class NotificationDescriptor {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("NotificationDescriptor");
 		sb.append("{code='").append(code).append('\'');
-		sb.append(", section='").append(section).append('\'');
 		sb.append(", template='").append(template).append('\'');
 		sb.append(", enabled=").append(enabled);
 		sb.append('}');

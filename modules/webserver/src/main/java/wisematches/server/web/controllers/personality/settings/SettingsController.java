@@ -58,7 +58,7 @@ public class SettingsController extends WisematchesController {
         form.setLanguage(principal.getLanguage().name().toLowerCase());
         form.setEmail(principal.getEmail());
         model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
-        model.addAttribute("notificationCondition", notificationManager.getNotificationCondition(principal));
+        model.addAttribute("notificationCondition", notificationManager.getNotificationSettings(principal));
         model.addAttribute("notificationDescriptors", new ArrayList<NotificationDescriptor>(notificationManager.getDescriptors()));
 
         final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
@@ -86,13 +86,13 @@ public class SettingsController extends WisematchesController {
         }
 
 
-        final NotificationSettings settings = notificationManager.getNotificationCondition(personality);
+        final NotificationSettings settings = notificationManager.getNotificationSettings(personality);
         final Collection<NotificationDescriptor> descriptions = notificationManager.getDescriptors();
         for (NotificationDescriptor description : descriptions) {
             final String parameter = request.getParameter(description.getCode());
             settings.setEnabled(description.getCode(), parameter != null && Boolean.parseBoolean(parameter));
         }
-        notificationManager.setNotificationCondition(personality, settings);
+        notificationManager.setNotificationSettings(personality, settings);
 
         boardSettingsManager.setScribbleSettings(personality,
                 new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.getTilesClass()));

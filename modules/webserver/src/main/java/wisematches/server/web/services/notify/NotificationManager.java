@@ -57,7 +57,7 @@ public interface NotificationManager {
 	 * @param personality the personality who's mask should be returned.
 	 * @return the notification's mask.
 	 */
-	NotificationSettings getNotificationCondition(Personality personality);
+	NotificationSettings getNotificationSettings(Personality personality);
 
 	/**
 	 * Updates notifications mask for specified player.
@@ -65,5 +65,5 @@ public interface NotificationManager {
 	 * @param personality the player who's notifications mask should be updated.
 	 * @param conditions  the new notification's mask.
 	 */
-	void setNotificationCondition(Personality personality, NotificationSettings conditions);
+	void setNotificationSettings(Personality personality, NotificationSettings conditions);
 }

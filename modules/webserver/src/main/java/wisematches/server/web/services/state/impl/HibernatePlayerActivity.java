@@ -32,4 +32,8 @@ public class HibernatePlayerActivity {
 	public Date getLastActivityDate() {
 		return lastActivityDate;
 	}
+
+	public void setLastActivityDate(Date lastActivityDate) {
+		this.lastActivityDate = lastActivityDate;
+	}
 }
