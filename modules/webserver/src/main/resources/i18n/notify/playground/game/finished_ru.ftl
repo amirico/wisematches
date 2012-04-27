@@ -1,24 +1,28 @@
-<#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
-<#-- @ftlvariable name="scribbleStatisticManager" type="wisematches.playground.tracking.PlayerStatisticManager" -->
-<#import "../../utils.ftl" as notify>
+<#-- @ftlvariable name="board" type="wisematches.playground.GameBoard" -->
+<#-- @ftlvariable name="resolution" type="wisematches.playground.GameResolution" -->
+<#-- @ftlvariable name="winners" type="java.util.Collection<wisematches.playground.GamePlayerHand>" -->
+<#import "../../utils.ftl" as util>
+<#assign board=context.board/>
+<#assign resolution=context.resolution/>
+<#assign winners=context.winners/>
 
-<p> Игра <@notify.board board=context/> была завершена</p>
+<p> Игра <@util.board board=board/> была завершена</p>
 
 <p>
-<#switch context.gameResolution>
+<#switch resolution>
     <#case "RESIGNED">
-        <#if context.playerTurn.playerId == principal.id>
+        <#if board.playerTurn.playerId == principal.id>
             Игра была прервана вами.
         <#else>
-            Игрок <@notify.player player=context.playerTurn.playerId/> прервал
+            Игрок <@util.player player=board.playerTurn.playerId/> прервал
             игру.
         </#if>
         <#break>
     <#case "TIMEOUT">
-        <#if context.playerTurn.playerId == principal.id>
+        <#if board.playerTurn.playerId == principal.id>
             Время вашего хода истекло и игра была прервана.
         <#else>
-            Время хода игрока <@notify.player player=context.playerTurn.playerId/>
+            Время хода игрока <@util.player player=board.playerTurn.playerId/>
             истекло и игра была прервана.
         </#if>
         <#break>
@@ -27,12 +31,12 @@
         <#break>
     <#default>
         Победитель/победители в игре:
-        <#list context.wonPlayers as w>
-            <@notify.player player=w.playerId/><#if w_has_next>, </#if></#list>
+        <#list winners as w>
+            <@util.player player=w.playerId/><#if w_has_next>, </#if></#list>
 </#switch>
 </p>
 
-<#if context.ratedGame>
+<#if board.ratedGame>
 <p>
     Рейтинги всех игроков (за исключением роботов) были пересчитаны:
 <table>
@@ -42,9 +46,9 @@
         <td align="center"><b>Старый Рейтинг</b></td>
         <td align="center"><b>Новый Рейтинг</b></td>
     </tr>
-    <#list context.ratingChanges as change>
+    <#list board.ratingChanges as change>
         <tr>
-            <td><@notify.player player=change.playerId/> <#if change.playerId==principal.id>(<b>Вы</b>)</#if></td>
+            <td><@util.player player=change.playerId/> <#if change.playerId==principal.id>(<b>Вы</b>)</#if></td>
             <td align="center">${change.points}</td>
             <td align="center">${change.oldRating}</td>
             <td align="center">${change.newRating}</td>
@@ -53,11 +57,11 @@
 </table>
 </p>
 <p>
-    Вы можете узнать больше о способе расчета рейтингов здесь: <@notify.link href="info/rating"/>.
+    Вы можете узнать больше о способе расчета рейтингов здесь: <@util.link href="info/rating"/>.
 </p>
 <#else>
 <p>
     Данная игра не влияет на рейтинг и ваш рейтинг не изменился
-    и равен ${context.getRatingChange(context.getPlayerHand(principal.id)).newRating?string}.
+    и равен ${board.getRatingChange(board.getPlayerHand(principal.id)).newRating?string}.
 </p>
 </#if>

@@ -88,7 +88,7 @@ public class ProposalExpirationManager<S extends GameSettings> extends AbstractE
 		}
 
 		@Override
-		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, Personality player, ProposalResolution reason) {
+		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution reason, Personality player) {
 			cancelTermination(proposal.getId());
 		}
 	}

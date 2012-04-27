@@ -85,18 +85,28 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	P getNextPlayerTurn();
 
 	/**
-	 * Returns unmodifiable collection of maden moves.
-	 *
-	 * @return the unmodifiable collection of maden moves.
-	 */
-	List<GameMove> getGameMoves();
-
-	/**
 	 * Returns game moves count.
 	 *
 	 * @return the game moves count.
 	 */
 	int getGameMovesCount();
+
+	/**
+	 * Returns unmodifiable collection of done moves.
+	 *
+	 * @return the unmodifiable collection of done moves.
+	 */
+	List<GameMove> getGameMoves();
+
+	/**
+	 * Returns collection of moves which were done after last move of specified player.
+	 * <p/>
+	 * If there are no new moves or no one move empty collection will be returned.
+	 *
+	 * @param playerId the player last change should be returned for whom
+	 * @return collection of moves which were done after last move of specified player.
+	 */
+	List<GameMove> getGameChanges(long playerId);
 
 	/**
 	 * Makes move for active player and returns points for this turn.
@@ -113,6 +123,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * @param playerId the player id who hand should be returned.
 	 * @return the player's hand.
 	 */
+
 	P getPlayerHand(long playerId);
 
 	/**
@@ -153,7 +164,7 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @param player the player who closed the game
 	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
-	 * @throws GameFinishedException	 if game already finished.
+	 * @throws GameFinishedException     if game already finished.
 	 * @see GameResolution#RESIGNED
 	 */
 	void resign(P player) throws GameMoveException;
@@ -162,8 +173,8 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * Terminates this game. This method is used to terminate game by timeout.
 	 *
 	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
-	 * @throws GameFinishedException	 if game already finished.
-	 * @throws IllegalStateException	 if timeout is not expired by this method was called.
+	 * @throws GameFinishedException     if game already finished.
+	 * @throws IllegalStateException     if timeout is not expired by this method was called.
 	 * @see GameResolution#TIMEOUT
 	 */
 	void terminate() throws GameMoveException;

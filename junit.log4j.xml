@@ -2,12 +2,13 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
     <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="DEBUG"/>
+        <param name="Threshold" value="WARN"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %p [%t] %c{3}.%M - %m%n"/>
         </layout>
     </appender>
 
+<!--
     <logger name="wisematches">
         <level value="DEBUG"/>
     </logger>
@@ -23,9 +24,10 @@
     <logger name="org.springframework.security">
         <level value="INFO"/>
     </logger>
+-->
 
     <root>
-        <level value="INFO"/>
+        <level value="WARN"/>
         <appender-ref ref="ConsoleAppender"/>
     </root>
 </log4j:configuration>

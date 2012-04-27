@@ -11,6 +11,7 @@ import wisematches.playground.*;
 import wisematches.playground.expiration.ExpirationListener;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageListener;
+import wisematches.playground.message.MessageManager;
 import wisematches.playground.propose.*;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
@@ -18,195 +19,238 @@ import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationDistributor;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class NotificationPublisherCenter {
-    private BoardManager boardManager;
-    private PlayerManager playerManager;
-    private GameProposalManager proposalManager;
-    private ScribbleExpirationManager scribbleExpirationManager;
-    private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
+	private MessageManager manager;
+	private BoardManager boardManager;
+	private PlayerManager playerManager;
+	private GameProposalManager proposalManager;
+	private ScribbleExpirationManager scribbleExpirationManager;
+	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
-    private NotificationDistributor notificationDistributor;
+	private NotificationDistributor notificationDistributor;
 
-    private final TheNotificationListener notificationListener = new TheNotificationListener();
-    private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
-    private final TheScribbleProposalExpirationListener proposalExpirationListener = new TheScribbleProposalExpirationListener();
+	private final TheNotificationListener notificationListener = new TheNotificationListener();
+	private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
+	private final TheScribbleProposalExpirationListener proposalExpirationListener = new TheScribbleProposalExpirationListener();
 
-    private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
+	private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
 
-    public NotificationPublisherCenter() {
-    }
+	public NotificationPublisherCenter() {
+	}
 
-    protected void processNotification(long person, String code, Object context) {
-        final Player player = playerManager.getPlayer(person);
-        if (player instanceof MemberPlayer) {
-            fireNotification(code, (MemberPlayer) player, context);
-        }
-    }
+	protected void processNotification(long person, String code, Object context) {
+		final Player player = playerManager.getPlayer(person);
+		if (player instanceof MemberPlayer) {
+			fireNotification(code, (MemberPlayer) player, context);
+		}
+	}
 
-    protected void processNotification(Personality person, String code, Object context) {
-        final Player player = playerManager.getPlayer(person);
-        if (player instanceof MemberPlayer) {
-            fireNotification(code, (MemberPlayer) player, context);
-        }
-    }
+	protected void processNotification(Personality person, String code, Object context) {
+		final Player player = playerManager.getPlayer(person);
+		if (player instanceof MemberPlayer) {
+			fireNotification(code, (MemberPlayer) player, context);
+		}
+	}
 
-    private void fireNotification(String code, MemberPlayer player, Object context) {
-        if (log.isInfoEnabled()) {
-            log.info("Fire notification " + code + " to person " + player);
-        }
-        notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
-    }
+	private void fireNotification(String code, MemberPlayer player, Object context) {
+		if (log.isInfoEnabled()) {
+			log.info("Fire notification " + code + " to person " + player);
+		}
+		notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
+	}
 
-    public void setPlayerManager(PlayerManager playerManager) {
-        this.playerManager = playerManager;
-    }
+	public void setMessageManager(MessageManager manager) {
+		if (this.manager != null) {
+			this.manager.removeMessageListener(notificationListener);
+		}
 
-    public void setBoardManager(BoardManager boardManager) {
-        if (this.boardManager != null) {
-            this.boardManager.removeBoardStateListener(notificationListener);
-        }
-        this.boardManager = boardManager;
-        if (this.boardManager != null) {
-            this.boardManager.addBoardStateListener(notificationListener);
-        }
-    }
+		this.manager = manager;
 
-    public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
-        if (this.scribbleExpirationManager != null) {
-            this.scribbleExpirationManager.removeExpirationListener(gameExpirationListener);
-        }
+		if (this.manager != null) {
+			this.manager.addMessageListener(notificationListener);
+		}
+	}
 
-        this.scribbleExpirationManager = expirationManager;
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
+	}
 
-        if (this.scribbleExpirationManager != null) {
-            this.scribbleExpirationManager.addExpirationListener(gameExpirationListener);
-        }
-    }
+	public void setBoardManager(BoardManager boardManager) {
+		if (this.boardManager != null) {
+			this.boardManager.removeBoardStateListener(notificationListener);
+		}
+		this.boardManager = boardManager;
+		if (this.boardManager != null) {
+			this.boardManager.addBoardStateListener(notificationListener);
+		}
+	}
 
-    public void setProposalExpirationManager(ProposalExpirationManager<ScribbleSettings> proposalExpirationManager) {
-        if (this.proposalExpirationManager != null) {
-            this.proposalExpirationManager.removeExpirationListener(proposalExpirationListener);
-        }
+	public void setProposalManager(GameProposalManager proposalManager) {
+		if (this.proposalManager != null) {
+			this.proposalManager.removeGameProposalListener(notificationListener);
+		}
 
-        this.proposalExpirationManager = proposalExpirationManager;
+		this.proposalManager = proposalManager;
 
-        if (this.proposalExpirationManager != null) {
-            this.proposalExpirationManager.addExpirationListener(proposalExpirationListener);
-        }
-    }
+		if (this.proposalManager != null) {
+			this.proposalManager.addGameProposalListener(notificationListener);
+		}
+	}
 
-    public void setProposalManager(GameProposalManager proposalManager) {
-        if (this.proposalManager != null) {
-            this.proposalManager.removeGameProposalListener(notificationListener);
-        }
+	public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
+		if (this.scribbleExpirationManager != null) {
+			this.scribbleExpirationManager.removeExpirationListener(gameExpirationListener);
+		}
 
-        this.proposalManager = proposalManager;
+		this.scribbleExpirationManager = expirationManager;
 
-        if (this.proposalManager != null) {
-            this.proposalManager.addGameProposalListener(notificationListener);
-        }
-    }
+		if (this.scribbleExpirationManager != null) {
+			this.scribbleExpirationManager.addExpirationListener(gameExpirationListener);
+		}
+	}
 
-    public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
-        this.notificationDistributor = notificationDistributor;
-    }
+	public void setProposalExpirationManager(ProposalExpirationManager<ScribbleSettings> proposalExpirationManager) {
+		if (this.proposalExpirationManager != null) {
+			this.proposalExpirationManager.removeExpirationListener(proposalExpirationListener);
+		}
 
-    private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {
-        private TheScribbleGameExpirationListener() {
-        }
+		this.proposalExpirationManager = proposalExpirationManager;
 
-        @Override
-        public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
-            try {
-                final GameBoard board = boardManager.openBoard(boardId);
-                if (board != null) {
-                    final GamePlayerHand hand = board.getPlayerTurn();
-                    if (hand != null) {
-                        processNotification(Personality.person(hand.getPlayerId()), type.getCode(), board);
-                    }
-                }
-            } catch (BoardLoadingException ignored) {
-            }
-        }
-    }
+		if (this.proposalExpirationManager != null) {
+			this.proposalExpirationManager.addExpirationListener(proposalExpirationListener);
+		}
+	}
 
-    private class TheScribbleProposalExpirationListener implements ExpirationListener<Long, ProposalExpirationType> {
-        private TheScribbleProposalExpirationListener() {
-        }
+	public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
+		this.notificationDistributor = notificationDistributor;
+	}
 
-        @Override
-        public void expirationTriggered(Long entity, ProposalExpirationType type) {
-        }
-    }
+	private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {
+		private TheScribbleGameExpirationListener() {
+		}
 
-    private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener {
-        private TheNotificationListener() {
-        }
+		@Override
+		public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
+			try {
+				final GameBoard board = boardManager.openBoard(boardId);
+				if (board != null) {
+					final GamePlayerHand hand = board.getPlayerTurn();
+					if (hand != null) {
+						Map<String, Object> c = new HashMap<String, Object>();
+						c.put("board", board);
+						c.put("expirationType", type);
+						processNotification(Personality.person(hand.getPlayerId()), type.getCode(), c);
+					}
+				}
+			} catch (BoardLoadingException ignored) {
+			}
+		}
+	}
 
-        @Override
-        public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
-            List<Personality> players = proposal.getPlayers();
-            for (Personality player : players) {
-                if (player == null || proposal.getInitiator().equals(player) || RobotPlayer.isRobotPlayer(player)) {
-                    continue;
-                }
-                processNotification(player, "game.challenge.initiated", proposal);
-            }
-        }
+	private class TheScribbleProposalExpirationListener implements ExpirationListener<Long, ProposalExpirationType> {
+		private TheScribbleProposalExpirationListener() {
+		}
 
-        @Override
-        public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Personality player, ProposalDirective directive) {
-        }
+		@Override
+		public void expirationTriggered(Long entity, ProposalExpirationType type) {
+			final GameProposal<?> proposal = proposalManager.getProposal(entity);
+			if (proposal == null || proposal.isReady()) {
+				return;
+			}
+			final List<Personality> waiting = new ArrayList<Personality>(proposal.getPlayers());
+			waiting.removeAll(proposal.getJoinedPlayers());
+			if (!waiting.isEmpty()) {
+				Map<String, Object> c = new HashMap<String, Object>();
+				c.put("proposal", proposal);
+				c.put("expirationType", type);
+				for (Personality personality : waiting) {
+					processNotification(personality, type.getCode(), c);
+				}
+			}
+		}
+	}
 
-        @Override
-        public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, Personality player, ProposalResolution reason) {
-            if (reason == ProposalResolution.REPUDIATED) {
-            } else if (reason == ProposalResolution.REJECTED) {
-                processNotification(proposal.getInitiator(), "game.challenge.rejected", proposal);
-            } else if (reason == ProposalResolution.TERMINATED) {
-                processNotification(proposal.getInitiator(), "game.challenge.terminated", proposal);
-            }
-        }
+	private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener {
+		private TheNotificationListener() {
+		}
 
-        @Override
-        public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-            final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-            for (GamePlayerHand hand : playersHands) {
-                processNotification(hand.getPlayerId(), "game.state.started", board);
-            }
-        }
+		@Override
+		public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
+			List<Personality> players = proposal.getPlayers();
+			for (Personality player : players) {
+				if (player == null || proposal.getInitiator().equals(player) || RobotPlayer.isRobotPlayer(player)) {
+					continue;
+				}
+				processNotification(player, "playground.challenge.initiated", Collections.singletonMap("proposal", proposal));
+			}
+		}
 
-        @Override
-        public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
-            final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-            for (GamePlayerHand hand : playersHands) {
-                if (board.getPlayerTurn() != null && board.getPlayerTurn().equals(hand)) {
-                    processNotification(Personality.person(hand.getPlayerId()), "game.move.your", board);
-                } else if (board.getPlayersHands().size() > 2) {
-                    processNotification(Personality.person(hand.getPlayerId()), "game.move.opponent", board);
-                }
-            }
-        }
+		@Override
+		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Personality player, ProposalDirective directive) {
+		}
 
-        @Override
-        public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
-            final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-            for (GamePlayerHand hand : playersHands) {
-                processNotification(Personality.person(hand.getPlayerId()), "game.state.finished", board);
-            }
-        }
+		@Override
+		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution resolution, Personality player) {
+			Map<String, Object> c = new HashMap<String, Object>();
+			c.put("proposal", proposal);
+			c.put("player", player);
+			c.put("resolution", resolution);
 
-        @Override
-        public void messageSent(Message message, boolean quite) {
-            if (!quite) {
-                processNotification(Personality.person(message.getRecipient()), "game.message", message);
-            }
-        }
-    }
+			for (Personality personality : proposal.getJoinedPlayers()) {
+				if (personality.equals(player)) {
+					continue;
+				}
+				if (resolution == ProposalResolution.REJECTED) {
+					processNotification(personality, "playground.challenge.rejected", c);
+				} else if (resolution == ProposalResolution.REPUDIATED) {
+					processNotification(personality, "playground.challenge.repudiated", c);
+				} else if (resolution == ProposalResolution.TERMINATED) {
+					processNotification(personality, "playground.challenge.terminated", c);
+				}
+			}
+		}
+
+		@Override
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			for (GamePlayerHand hand : playersHands) {
+				processNotification(hand.getPlayerId(), "playground.game.started", Collections.singletonMap("board", board));
+			}
+		}
+
+		@Override
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+			final GamePlayerHand playerTurn = board.getPlayerTurn();
+			if (playerTurn != null) {
+				final Map<String, Object> map = new HashMap<String, Object>();
+				map.put("board", board);
+				map.put("changes", board.getGameChanges(playerTurn.getPlayerId()));
+				processNotification(Personality.person(playerTurn.getPlayerId()), "playground.game.turn", map);
+			}
+		}
+
+		@Override
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			final Map<String, Object> map = new HashMap<String, Object>();
+			map.put("board", board);
+			map.put("winners", winners);
+			map.put("resolution", resolution);
+			for (GamePlayerHand hand : playersHands) {
+				processNotification(Personality.person(hand.getPlayerId()), "playground.game.finished", map);
+			}
+		}
+
+		@Override
+		public void messageSent(Message message, boolean quite) {
+			if (!quite) {
+				processNotification(Personality.person(message.getRecipient()), "playground.message.received", Collections.singletonMap("message", message));
+			}
+		}
+	}
 }

@@ -94,7 +94,7 @@ public class SmallRobotsGameTest {
 			}
 
 			@Override
-			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
+			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
 				if (board.getBoardId() == b.getBoardId()) {
 					notifyGameFinished();
 				}

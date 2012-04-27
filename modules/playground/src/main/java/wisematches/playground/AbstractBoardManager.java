@@ -313,13 +313,13 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 			saveBoardImpl((B) board);
 
 			for (BoardStateListener statesListener : boardStateListeners) {
-				statesListener.gameMoveDone(board, move, null);
+				statesListener.gameMoveDone(board, move, moveScore);
 			}
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
 			final List<? extends GamePlayerHand> playersHands = board.getPlayersHands();
 			final List<GameRatingChange> changes = ratingManager.calculateRatings(playersHands);
 
@@ -333,7 +333,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 			saveBoardImpl((B) board);
 
 			for (BoardStateListener statesListener : boardStateListeners) {
-				statesListener.gameFinished(board, resolution, wonPlayers);
+				statesListener.gameFinished(board, resolution, winners);
 			}
 		}
 	}

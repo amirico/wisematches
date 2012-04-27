@@ -72,10 +72,10 @@ public class AbstractProposalManagerTest {
         listener.gameProposalInitiated(proposal);
         listener.gameProposalUpdated(proposal, PERSON1, ProposalDirective.ACCEPTED);
         listener.gameProposalUpdated(proposal, PERSON1, ProposalDirective.REJECTED);
-        listener.gameProposalFinalized(proposal, PERSON1, ProposalResolution.READY);
-        listener.gameProposalFinalized(proposal, PERSON1, ProposalResolution.REJECTED);
-        listener.gameProposalFinalized(proposal, PERSON1, ProposalResolution.REPUDIATED);
-        listener.gameProposalFinalized(proposal, PERSON1, ProposalResolution.TERMINATED);
+        listener.gameProposalFinalized(proposal, ProposalResolution.READY, PERSON1);
+        listener.gameProposalFinalized(proposal, ProposalResolution.REJECTED, PERSON1);
+        listener.gameProposalFinalized(proposal, ProposalResolution.REPUDIATED, PERSON1);
+        listener.gameProposalFinalized(proposal, ProposalResolution.TERMINATED, PERSON1);
         replay(listener);
 
         proposalManager.addGameProposalListener(listener);
@@ -151,7 +151,7 @@ public class AbstractProposalManagerTest {
         final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
 
         final GameProposalListener listener = createStrictMock(GameProposalListener.class);
-        listener.gameProposalFinalized(capture(proposalCapture), same(PERSON4), same(ProposalResolution.REJECTED));
+        listener.gameProposalFinalized(capture(proposalCapture), same(ProposalResolution.REJECTED), same(PERSON4));
         replay(listener);
 
         final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, Arrays.asList(PERSON4), "asd");
@@ -177,7 +177,7 @@ public class AbstractProposalManagerTest {
         final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
 
         final GameProposalListener listener = createStrictMock(GameProposalListener.class);
-        listener.gameProposalFinalized(capture(proposalCapture), same(PERSON1), same(ProposalResolution.REPUDIATED));
+        listener.gameProposalFinalized(capture(proposalCapture), same(ProposalResolution.REPUDIATED), same(PERSON1));
         replay(listener);
 
         final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, Arrays.asList(PERSON4), "asd");
@@ -196,7 +196,7 @@ public class AbstractProposalManagerTest {
         final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
 
         final GameProposalListener listener = createStrictMock(GameProposalListener.class);
-        listener.gameProposalFinalized(capture(proposalCapture), EasyMock.<Personality>isNull(), same(ProposalResolution.TERMINATED));
+        listener.gameProposalFinalized(capture(proposalCapture), same(ProposalResolution.TERMINATED), EasyMock.<Personality>isNull());
         replay(listener);
 
         final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, Arrays.asList(PERSON4), "asd");

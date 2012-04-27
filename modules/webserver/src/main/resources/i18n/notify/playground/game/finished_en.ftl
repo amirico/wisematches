@@ -1,23 +1,28 @@
-<#-- @ftlvariable name="context" type="wisematches.playground.GameBoard" -->
-<#import "../../utils.ftl" as notify>
+<#-- @ftlvariable name="board" type="wisematches.playground.GameBoard" -->
+<#-- @ftlvariable name="resolution" type="wisematches.playground.GameResolution" -->
+<#-- @ftlvariable name="winners" type="java.util.Collection<wisematches.playground.GamePlayerHand>" -->
+<#import "../../utils.ftl" as util>
+<#assign board=context.board/>
+<#assign resolution=context.resolution/>
+<#assign winners=context.winners/>
 
-<p>A game <@notify.board board=context/> has been finished.</p>
+<p>A game <@util.board board=board/> has been finished.</p>
 
 <p>
-<#switch context.gameResolution>
+<#switch resolution>
     <#case "RESIGNED">
-        <#if context.playerTurn.playerId == principal.id>
+        <#if board.playerTurn.playerId == principal.id>
             You have resigned a game.
         <#else>
-            The player <@notify.player player=context.playerTurn.playerId/> has
+            The player <@util.player player=board.playerTurn.playerId/> has
             resigned a game.
         </#if>
         <#break>
     <#case "TIMEOUT">
-        <#if context.playerTurn.playerId == principal.id>
+        <#if board.playerTurn.playerId == principal.id>
             Your move time run up and the game has been interrupted.
         <#else>
-            The player <@notify.player player=context.playerTurn.playerId/> move
+            The player <@util.player player=board.playerTurn.playerId/>'s move
             time run up and the game has been interrupted.
         </#if>
         <#break>
@@ -25,13 +30,13 @@
         There is no winner. Stalemate.
         <#break>
     <#default>
-        The following <#if context.wonPlayers?size == 1>player has<#else>players have</#if> won the game:
-        <#list context.wonPlayers as w>
-            <@notify.player player=w.playerId/><#if w_has_next>, </#if></#list>
+        The following <#if winners?size == 1>player has<#else>players have</#if> won the game:
+        <#list winners as w>
+            <@util.player player=w.playerId/><#if w_has_next>, </#if></#list>
 </#switch>
 </p>
 
-<#if context.ratedGame>
+<#if board.ratedGame>
 <p>
     Ratings of all players player (except robots) were changed:
 <table>
@@ -41,9 +46,9 @@
         <td align="center"><b>Old Rating</b></td>
         <td align="center"><b>New Rating</b></td>
     </tr>
-    <#list context.ratingChanges as change>
+    <#list board.ratingChanges as change>
         <tr>
-            <td><@notify.player player=change.playerId/> <#if change.playerId==principal.id>(<b>You</b>)</#if></td>
+            <td><@util.player player=change.playerId/> <#if change.playerId==principal.id>(<b>You</b>)</#if></td>
             <td align="center">${change.points}</td>
             <td align="center">${change.oldRating}</td>
             <td align="center">${change.newRating}</td>
@@ -52,11 +57,11 @@
 </table>
 </p>
 <p>
-    You can read more about rating calculation here: <@notify.link href="info/rating"/>.
+    You can read more about rating calculation here: <@util.link href="info/rating"/>.
 </p>
 <#else>
 <p>
     Because game isn't rated your rating and ratings of your opponents was not changed and
-    still is ${context.getRatingChange(context.getPlayerHand(principal.id)).newRating?string}.
+    still is ${board.getRatingChange(board.getPlayerHand(principal.id)).newRating?string}.
 </p>
 </#if>

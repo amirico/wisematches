@@ -28,9 +28,9 @@ public interface GameProposalListener {
     /**
      * Indicates that proposal has been finalized because it's ready for play or has been cancelled.
      *
-     * @param proposal the finalized proposal.
-     * @param player   the player who finalized the proposal.In case of ready or terminated proposal contains {@code null}.
-     * @param reason   the type of finalization.
-     */
-    void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, Personality player, ProposalResolution reason);
+	 * @param proposal the finalized proposal.
+	 * @param reason   the type of finalization.
+	 * @param player   the player who finalized the proposal.In case of ready or terminated proposal contains {@code null}.
+	 */
+    void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution reason, Personality player);
 }

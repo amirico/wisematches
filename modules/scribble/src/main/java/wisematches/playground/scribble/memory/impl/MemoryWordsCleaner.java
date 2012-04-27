@@ -52,7 +52,7 @@ public class MemoryWordsCleaner {
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
 			if (log.isDebugEnabled()) {
 				log.debug("Game on board" + board.getBoardId() + " has been finished and all memory words will be cleaned.");
 			}
