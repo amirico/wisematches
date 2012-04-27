@@ -110,7 +110,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * Creates new board with specified settings. Game created with this constructor is rated.
 	 *
 	 * @param gameSettings the game settings.
-	 * @param players	  the collection of all players.
+	 * @param players      the collection of all players.
 	 * @throws NullPointerException if setting is {@code null}
 	 */
 	@SuppressWarnings("unchecked")
@@ -272,6 +272,16 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	}
 
 	@Override
+	public int getGameMovesCount() {
+		lock.lock();
+		try {
+			return movesCount;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
 	public List<GameMove> getGameMoves() {
 		lock.lock();
 		try {
@@ -282,14 +292,35 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	}
 
 	@Override
-	public int getGameMovesCount() {
+	public List<GameMove> getGameChanges(long playerId) {
 		lock.lock();
 		try {
-			return movesCount;
+			final ListIterator<GameMove> iterator = moves.listIterator(moves.size());
+			if (!iterator.hasPrevious()) {
+				return Collections.emptyList();
+			}
+
+			GameMove previous = iterator.previous();
+			if (previous.getPlayerMove().getPlayerId() == playerId) { // no new moves
+				return Collections.emptyList();
+			}
+
+			final List<GameMove> res = new ArrayList<GameMove>();
+			res.add(previous);
+			while (iterator.hasPrevious()) {
+				previous = iterator.previous();
+				if (previous.getPlayerMove().getPlayerId() == playerId) { // no new moves
+					break;
+				}
+				res.add(previous);
+			}
+			Collections.reverse(res);
+			return res;
 		} finally {
 			lock.unlock();
 		}
 	}
+
 
 	@Override
 	public P getPlayerHand(long playerId) {
@@ -317,14 +348,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	}
 
 	@Override
-	public GameRatingChange getRatingChange(GamePlayerHand hand) {
-		if (gameResolution == null) {
-			return null;
-		}
-		return new GameRatingChange(hand);
-	}
-
-	@Override
 	public Collection<GameRatingChange> getRatingChanges() {
 		if (gameResolution == null) {
 			return null;
@@ -334,6 +357,14 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			changes.add(getRatingChange(hand));
 		}
 		return changes;
+	}
+
+	@Override
+	public GameRatingChange getRatingChange(GamePlayerHand hand) {
+		if (gameResolution == null) {
+			return null;
+		}
+		return new GameRatingChange(hand);
 	}
 
 	@Override
@@ -448,7 +479,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * Implementation of this method selects random player from all players in specified list.
 	 *
 	 * @param gameSettings the game settings.
-	 * @param players	  the list of all players to select first.
+	 * @param players      the list of all players to select first.
 	 * @return the player who should be first.
 	 */
 	protected byte selectFirstPlayer(S gameSettings, List<P> players) {

@@ -56,8 +56,8 @@ public class AbstractExpirationManagerTest {
 
 		final long time = System.currentTimeMillis();
 
-		expirationManager.scheduleTermination(12L, new Date(time + MockExpirationType.ONE.getDiff() + 200)); // expired in first tick
-		expirationManager.scheduleTermination(13L, new Date(time + MockExpirationType.TWO.getDiff() + 200)); // expired in second tick
+		expirationManager.scheduleTermination(12L, new Date(time + MockExpirationType.ONE.getRemainedTime() + 200)); // expired in first tick
+		expirationManager.scheduleTermination(13L, new Date(time + MockExpirationType.TWO.getRemainedTime() + 200)); // expired in second tick
 		expirationManager.scheduleTermination(14L, new Date(time - 200)); // already expired
 		expirationManager.scheduleTermination(15L, new Date(time + 200)); // will expire in a mig
 
@@ -68,10 +68,10 @@ public class AbstractExpirationManagerTest {
 
 	@Test
 	public void test_nextExpiringType() {
-		assertEquals(MockExpirationType.ONE, expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + 2 * MockExpirationType.ONE.getDiff())));
-		assertEquals(MockExpirationType.ONE, expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + MockExpirationType.ONE.getDiff())));
-		assertEquals(MockExpirationType.TWO, expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + MockExpirationType.TWO.getDiff() + 100)));
-		assertNull(expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + MockExpirationType.TWO.getDiff() / 2)));
+		assertEquals(MockExpirationType.ONE, expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + 2 * MockExpirationType.ONE.getRemainedTime())));
+		assertEquals(MockExpirationType.ONE, expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + MockExpirationType.ONE.getRemainedTime())));
+		assertEquals(MockExpirationType.TWO, expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + MockExpirationType.TWO.getRemainedTime() + 100)));
+		assertNull(expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() + MockExpirationType.TWO.getRemainedTime() / 2)));
 		assertNull(expirationManager.nextExpiringPoint(new Date(System.currentTimeMillis() - 1)));
 	}
 }

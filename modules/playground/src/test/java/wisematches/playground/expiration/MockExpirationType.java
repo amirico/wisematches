@@ -22,7 +22,8 @@ public enum MockExpirationType implements ExpirationType {
 		return code;
 	}
 
-	public long getDiff() {
+	@Override
+	public long getRemainedTime() {
 		return diff;
 	}
 

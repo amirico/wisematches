@@ -4,8 +4,7 @@
 
 <#macro player player showRating=false>
     <#assign person=player>
-    <#if player?is_number><#assign person=playerManager.getPlayer(player?number)></#if>
-    <#if player.class.simpleName="Personality"><#assign person=playerManager.getPlayer(player.id)></#if>
+    <#if player?is_number><#assign person=playerManager.getPlayer(player?number)><#else><#assign person=playerManager.getPlayer(player)></#if>
     <#assign computerPlayer=(person.membership == "GUEST") || (person.membership == "ROBOT")/>
     <#if computerPlayer>
     <em>${gameMessageSource.getPlayerNick(person, locale)}</em>

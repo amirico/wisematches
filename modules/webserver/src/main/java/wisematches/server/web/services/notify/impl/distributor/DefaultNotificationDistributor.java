@@ -145,11 +145,19 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 
 	private void publishNotification(final Notification notification, final PublicationType type) {
 		try {
-			boolean res;
+			boolean res = false;
 			if (type == PublicationType.EXTERNAL) {
-				res = externalPublisher.publishNotification(notification);
+				if (externalPublisher != null) {
+					res = externalPublisher.publishNotification(notification);
+				} else {
+					return;
+				}
 			} else if (type == PublicationType.INTERNAL) {
-				res = internalPublisher.publishNotification(notification);
+				if (internalPublisher != null) {
+					res = internalPublisher.publishNotification(notification);
+				} else {
+					return;
+				}
 			} else {
 				throw new UnsupportedOperationException("Publisher type is not supported: " + type);
 			}
@@ -164,7 +172,7 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 				}
 			}
 		} catch (Exception e) {
-			log.error("External notification can't be sent: " + notification);
+			log.error("External notification can't be sent: " + notification, e);
 		}
 	}
 

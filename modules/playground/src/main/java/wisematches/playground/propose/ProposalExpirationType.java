@@ -6,16 +6,16 @@ import wisematches.playground.expiration.ExpirationType;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum ProposalExpirationType implements ExpirationType {
-	THREE_DAYS("proposal.timeout.days", 3 * 24 * 60 * 60 * 1000),
+	ONE_DAY("playground.challenge.expiration.day", 24 * 60 * 60 * 1000),
 
-	ONE_DAY("proposal.timeout.day", 24 * 60 * 60 * 1000);
+	THREE_DAYS("playground.challenge.expiration.days", 3 * 24 * 60 * 60 * 1000);
 
 	private final String code;
-	private final long triggerDiff;
+	private final long remainedMillis;
 
-	ProposalExpirationType(String code, long triggerDiff) {
+	ProposalExpirationType(String code, long remainedMillis) {
 		this.code = code;
-		this.triggerDiff = triggerDiff;
+		this.remainedMillis = remainedMillis;
 	}
 
 	@Override
@@ -24,7 +24,12 @@ public enum ProposalExpirationType implements ExpirationType {
 	}
 
 	@Override
+	public long getRemainedTime() {
+		return remainedMillis;
+	}
+
+	@Override
 	public long getTriggerTime(long extinctionTime) {
-		return extinctionTime - triggerDiff;
+		return extinctionTime - remainedMillis;
 	}
 }

@@ -42,14 +42,14 @@ public abstract class AbstractExpirationManager<ID, T extends Enum<? extends Exp
 	}
 
 	@Override
-	public final void addExpirationListener(ExpirationListener<ID, T> l) {
+	public void addExpirationListener(ExpirationListener<ID, T> l) {
 		if (l != null) {
 			listeners.add(l);
 		}
 	}
 
 	@Override
-	public final void removeExpirationListener(ExpirationListener<ID, T> l) {
+	public void removeExpirationListener(ExpirationListener<ID, T> l) {
 		listeners.remove(l);
 	}
 

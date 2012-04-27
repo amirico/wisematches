@@ -173,7 +173,7 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_gameMoves() throws GameMoveException {
 		final BoardStateListener l = createStrictMock(BoardStateListener.class);
-		//move maden
+		//move done
 		final PlayerMove m1 = new MakeTurnMove(board.getPlayerTurn().getPlayerId());
 		final Capture<GameMove> move = new Capture<GameMove>();
 		l.gameMoveDone(same(board), capture(move), isA(GameMoveScore.class));
@@ -183,8 +183,12 @@ public class AbstractGameBoardTest {
 		board.setMoveFinished(false);
 		board.setStateListener(l);
 
-		GamePlayerHand turn = board.getPlayerTurn();
-		GamePlayerHand nextTurn = board.getNextPlayerTurn();
+		final GamePlayerHand turn1 = board.getPlayerTurn();
+		final GamePlayerHand nextTurn1 = board.getNextPlayerTurn();
+
+		assertEquals(0, board.getGameChanges(h1.getPlayerId()).size());
+		assertEquals(0, board.getGameChanges(h2.getPlayerId()).size());
+		assertEquals(0, board.getGameChanges(h3.getPlayerId()).size());
 
 		board.makeMove(m1);
 		assertEquals(10, move.getValue().getPoints());
@@ -192,9 +196,11 @@ public class AbstractGameBoardTest {
 		assertSame(m1, board.getGameMoves().get(0).getPlayerMove());
 		assertSame(10, board.getGameMoves().get(0).getPoints());
 		assertSame(0, board.getGameMoves().get(0).getMoveNumber());
-		assertEquals(10, turn.getPoints());
-		assertSame(nextTurn, board.getPlayerTurn());
+		assertEquals(10, turn1.getPoints());
+		assertSame(nextTurn1, board.getPlayerTurn());
 		assertTrue(board.isMoveFinished());
+		assertEquals(0, board.getGameChanges(turn1.getPlayerId()).size());
+		assertEquals(1, board.getGameChanges(nextTurn1.getPlayerId()).size());
 		verify(l);
 
 		//move passed
@@ -204,18 +210,21 @@ public class AbstractGameBoardTest {
 		l.gameMoveDone(same(board), capture(gm2), isA(GameMoveScore.class));
 		replay(l);
 
-		turn = board.getPlayerTurn();
-		nextTurn = board.getNextPlayerTurn();
+		final GamePlayerHand turn2 = board.getPlayerTurn();
+		final GamePlayerHand nextTurn2 = board.getNextPlayerTurn();
 
 		board.setPoints((short) 2);
 		board.setMoveFinished(false);
 		board.makeMove(m2);
 		assertEquals(2, board.getGameMoves().size());
-		assertSame(nextTurn, board.getPlayerTurn());
+		assertSame(nextTurn2, board.getPlayerTurn());
 		assertSame(m2, board.getGameMoves().get(1).getPlayerMove());
 		assertSame(2, board.getGameMoves().get(1).getPoints());
 		assertSame(1, board.getGameMoves().get(1).getMoveNumber());
 		assertTrue(board.isMoveFinished());
+		assertEquals(1, board.getGameChanges(turn1.getPlayerId()).size());
+		assertEquals(0, board.getGameChanges(turn2.getPlayerId()).size());
+		assertEquals(2, board.getGameChanges(nextTurn2.getPlayerId()).size());
 		verify(l);
 	}
 

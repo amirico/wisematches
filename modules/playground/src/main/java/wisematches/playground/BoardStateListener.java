@@ -27,7 +27,7 @@ public interface BoardStateListener {
 	 *
 	 * @param board	  the game board
 	 * @param resolution the game finalization resolution
-	 * @param wonPlayers the winners list or empty list if no winners (draw).
+	 * @param winners the winners list or empty list if no winners (draw).
 	 */
-	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> wonPlayers);
+	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners);
 }

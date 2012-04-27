@@ -107,7 +107,7 @@ public class ProposalExpirationManagerTest {
 
 		proposalListenerCapture.getValue().gameProposalInitiated(proposal1);
 		proposalListenerCapture.getValue().gameProposalUpdated(proposal1, null, ProposalDirective.ACCEPTED);
-		proposalListenerCapture.getValue().gameProposalFinalized(proposal1, null, ProposalResolution.READY);
+		proposalListenerCapture.getValue().gameProposalFinalized(proposal1, ProposalResolution.READY, null);
 
 		Thread.sleep(500);
 

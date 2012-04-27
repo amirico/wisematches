@@ -12,7 +12,7 @@ public class NotificationDescriptor {
 	private final boolean enabled;
 
 	public NotificationDescriptor(String code, boolean enabled) {
-		this(code, null, enabled);
+		this(code, code, enabled);
 	}
 
 	public NotificationDescriptor(String code, String template, boolean enabled) {
