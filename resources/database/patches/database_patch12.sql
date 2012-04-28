@@ -1,14 +1,33 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=''TRADITIONAL'';
 
-ALTER TABLE `wisematches`.`settings_notice` ADD COLUMN `game.challenge.terminated` INT(1) NULL DEFAULT 0  AFTER `game.challenge.rejected` , CHANGE COLUMN `game.challenge.received` `game.challenge.initiated` INT(1) NULL DEFAULT 1;
+ALTER TABLE `wisematches`.`scribble_statistic` CHANGE COLUMN `updateTime` `updateTime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP  ;
 
 ALTER TABLE `wisematches`.`player_activity` ADD COLUMN `last_activity` TIMESTAMP NULL DEFAULT NULL  AFTER `last_messages_check` ;
 
-ALTER TABLE `wisematches`.`settings_notice` DROP COLUMN `game.move.opponent` , ADD COLUMN `playground.challenge.terminated` INT(1) NULL DEFAULT 0  AFTER `playground.challenge.repudiated` , ADD COLUMN `playground.challenge.expiration.days` INT(1) NULL DEFAULT 1  AFTER `playground.challenge.terminated` , ADD COLUMN `playground.challenge.expiration.day` INT(1) NULL DEFAULT 1  AFTER `playground.challenge.expiration.days` , CHANGE COLUMN `game.state.started` `playground.game.started` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.state.finished` `playground.game.finished` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.move.your` `playground.game.turn` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.timeout.day` `playground.game.expiration.day` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.timeout.half` `playground.game.expiration.half` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.timeout.hour` `playground.game.expiration.hour` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.challenge.initiated` `playground.challenge.initiated` INT(1) NULL DEFAULT 1  , CHANGE COLUMN `game.challenge.rejected` `playground.challenge.rejected` INT(1) NULL DEFAULT 0  , CHANGE COLUMN `game.challenge.terminated` `playground.challenge.repudiated` INT(1) NULL DEFAULT 0  , CHANGE COLUMN `game.message` `playground.message.received` INT(1) NULL DEFAULT 1  , RENAME TO  `wisematches`.`player_notification` ;
+CREATE  TABLE IF NOT EXISTS `wisematches`.`player_notification` (
+  `pid` BIGINT(20) NOT NULL ,
+  `playground.game.started` DATETIME NULL DEFAULT NULL ,
+  `playground.game.turn` DATETIME NULL DEFAULT NULL ,
+  `playground.game.finished` DATETIME NULL DEFAULT NULL ,
+  `playground.game.expiration.day` DATETIME NULL DEFAULT NULL ,
+  `playground.game.expiration.half` DATETIME NULL DEFAULT NULL ,
+  `playground.game.expiration.hour` DATETIME NULL DEFAULT NULL ,
+  `playground.challenge.initiated` DATETIME NULL DEFAULT NULL ,
+  `playground.challenge.rejected` DATETIME NULL DEFAULT NULL ,
+  `playground.challenge.repudiated` DATETIME NULL DEFAULT NULL ,
+  `playground.challenge.terminated` DATETIME NULL DEFAULT NULL ,
+  `playground.challenge.expiration.days` DATETIME NULL DEFAULT NULL ,
+  `playground.challenge.expiration.day` DATETIME NULL DEFAULT NULL ,
+  `playground.message.received` DATETIME NULL DEFAULT NULL ,
+  PRIMARY KEY (`pid`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
-ALTER TABLE `wisematches`.`player_notification` DROP COLUMN `playground.message.received` , DROP COLUMN `playground.challenge.expiration.day` , DROP COLUMN `playground.challenge.expiration.days` , DROP COLUMN `playground.challenge.terminated` , DROP COLUMN `playground.challenge.repudiated` , DROP COLUMN `playground.challenge.rejected` , DROP COLUMN `playground.challenge.initiated` , DROP COLUMN `playground.game.expiration.hour` , DROP COLUMN `playground.game.expiration.half` , DROP COLUMN `playground.game.expiration.day` , DROP COLUMN `playground.game.turn` , DROP COLUMN `playground.game.finished` , DROP COLUMN `playground.game.started` , ADD COLUMN `game.state.started` DATETIME NULL DEFAULT NULL  AFTER `pid` , ADD COLUMN `game.state.turn` DATETIME NULL DEFAULT NULL  AFTER `game.state.started` , ADD COLUMN `game.state.finished` DATETIME NULL DEFAULT NULL  AFTER `game.state.turn` , ADD COLUMN `game.expiration.day` DATETIME NULL DEFAULT NULL  AFTER `game.state.finished` , ADD COLUMN `game.expiration.half` DATETIME NULL DEFAULT NULL  AFTER `game.expiration.day` , ADD COLUMN `game.expiration.hour` DATETIME NULL DEFAULT NULL  AFTER `game.expiration.half` , ADD COLUMN `challenge.state.initiated` DATETIME NULL DEFAULT NULL  AFTER `game.expiration.hour` , ADD COLUMN `challenge.state.rejected` DATETIME NULL DEFAULT NULL  AFTER `challenge.state.initiated` , ADD COLUMN `challenge.state.repudiated` DATETIME NULL DEFAULT NULL  AFTER `challenge.state.rejected` , ADD COLUMN `challenge.state.terminated` DATETIME NULL DEFAULT NULL  AFTER `challenge.state.repudiated` , ADD COLUMN `challenge.expiration.days` DATETIME NULL DEFAULT NULL  AFTER `challenge.state.terminated` , ADD COLUMN `challenge.expiration.day` DATETIME NULL DEFAULT NULL  AFTER `challenge.expiration.days` , ADD COLUMN `message.received` DATETIME NULL DEFAULT NULL  AFTER `challenge.expiration.day` ;
+DROP TABLE IF EXISTS `wisematches`.`settings_notice` ;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
