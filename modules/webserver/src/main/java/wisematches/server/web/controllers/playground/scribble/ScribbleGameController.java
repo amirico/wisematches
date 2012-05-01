@@ -41,6 +41,7 @@ import wisematches.server.web.controllers.playground.scribble.form.CreateScribbl
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleTab;
 import wisematches.server.web.controllers.playground.scribble.form.PlayerInfoForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleInfoForm;
+import wisematches.server.web.controllers.playground.scribble.view.GameProposalView;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -87,7 +88,17 @@ public class ScribbleGameController extends WisematchesController {
         }
         model.addAttribute("player", principal);
 
-        final Collection<ScribbleBoard> activeBoards = boardManager.searchEntities(principal, GameState.ACTIVE, null, null, null);
+        final Collection<ScribbleBoard> activeBoards = new ArrayList<ScribbleBoard>(boardManager.searchEntities(principal, GameState.ACTIVE, null, null, null));
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+        activeBoards.addAll(activeBoards);
+
+
         model.addAttribute("activeBoards", activeBoards);
         if (log.isDebugEnabled()) {
             log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
@@ -154,13 +165,22 @@ public class ScribbleGameController extends WisematchesController {
             log.debug("Loading waiting games for personality: " + principal);
         }
         final List<GameProposal<ScribbleSettings>> proposals = proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null, null);
+        final List<GameProposalView> activeProposals = new ArrayList<GameProposalView>();
+        for (GameProposal<ScribbleSettings> proposal : proposals) {
+            boolean blacklisted = false;
+            for (Personality personality : proposal.getPlayers()) {
+                if (personality != null && !principal.equals(personality)) {
+                    blacklisted |= blacklistManager.isBlacklisted(personality, principal);
+                }
+            }
+            activeProposals.add(new GameProposalView(proposal, proposalManager.validate(proposal.getId(), principal), blacklisted));
+        }
         if (log.isDebugEnabled()) {
-            log.debug("Found " + proposals.size() + " proposals for personality: " + principal);
+            log.debug("Found " + activeProposals.size() + " proposals for personality: " + principal);
         }
         model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
         model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
-        model.addAttribute("activeProposals", proposals);
-        model.addAttribute("blacklistManager", blacklistManager);
+        model.addAttribute("activeProposals", activeProposals);
         return "/content/playground/scribble/join";
     }
 
@@ -184,7 +204,9 @@ public class ScribbleGameController extends WisematchesController {
             GameProposal<ScribbleSettings> proposal = proposalManager.getProposal(id);
             if (proposal != null) {
                 for (Personality personality : proposal.getPlayers()) {
-                    blacklistManager.checkBlacklist(personality, principal);
+                    if (personality != null) {
+                        blacklistManager.checkBlacklist(personality, principal);
+                    }
                 }
             }
 
@@ -388,10 +410,10 @@ public class ScribbleGameController extends WisematchesController {
         } else if (players.size() == 0) { // waiting
             final List<PlayerCriterion> res = new ArrayList<PlayerCriterion>();
             if (form.getMinRating() != 0) {
-                res.add(PlayerRestrictions.rating(form.getMinRating(), ComparableOperator.GE));
+                res.add(PlayerRestrictions.rating("player.rating.min", form.getMinRating(), ComparableOperator.GE));
             }
             if (form.getMaxRating() != 0) {
-                res.add(PlayerRestrictions.rating(form.getMaxRating(), ComparableOperator.LE));
+                res.add(PlayerRestrictions.rating("player.rating.max", form.getMaxRating(), ComparableOperator.LE));
             }
             proposalManager.initiate(s, getPrincipal(), opponents.length, res.toArray(new PlayerCriterion[res.size()]));
         } else {

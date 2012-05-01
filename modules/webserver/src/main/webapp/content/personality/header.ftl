@@ -15,14 +15,14 @@
                         <@message code=headerTitle!"title.default"/>
                     </td>
                     <td style="text-align: right;">
-                        <div id="language-combobox" class="ui-widget">
+                        <div id="language-combobox" class="ui-widget" style="display:  inline-block;">
                             <div class="dropdown ui-state-default ui-corner-all">
                                 <span style="padding-right: 20px;">
                                     <#switch locale>
                                         <#case "ru">Русский
-                                        <#break>
+                                            <#break>
                                         <#case "en">English
-                                        <#break>
+                                            <#break>
                                     </#switch>
                                 </span>
                                 <span style="position: absolute; right: 0;"

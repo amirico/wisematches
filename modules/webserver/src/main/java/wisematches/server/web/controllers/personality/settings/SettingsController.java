@@ -22,13 +22,12 @@ import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.settings.form.SettingsForm;
 import wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo;
-import wisematches.server.web.services.notify.NotificationSettings;
 import wisematches.server.web.services.notify.NotificationDescriptor;
 import wisematches.server.web.services.notify.NotificationManager;
+import wisematches.server.web.services.notify.NotificationSettings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TimeZone;
@@ -58,8 +57,8 @@ public class SettingsController extends WisematchesController {
         form.setLanguage(principal.getLanguage().name().toLowerCase());
         form.setEmail(principal.getEmail());
         model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
-        model.addAttribute("notificationCondition", notificationManager.getNotificationSettings(principal));
-        model.addAttribute("notificationDescriptors", new ArrayList<NotificationDescriptor>(notificationManager.getDescriptors()));
+        model.addAttribute("notificationSettings", notificationManager.getNotificationSettings(principal));
+        model.addAttribute("notificationDescriptors", notificationManager.getDescriptors());
 
         final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
         form.setTilesClass(settings.getTilesClass());

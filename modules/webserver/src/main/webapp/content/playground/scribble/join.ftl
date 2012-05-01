@@ -1,25 +1,24 @@
 <#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
 <#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="blacklistManager" type="wisematches.playground.blacklist.BlacklistManager" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.scribble.ScribbleBoard>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.web.controllers.playground.scribble.view.GameProposalView>" -->
 <#include "/core.ftl">
 
 <@wm.jstable/>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $("#refreshGameboard").button({icons: {primary: 'ui-icon-refresh'}});
+    $(document).ready(function () {
+        $("#refreshGameboard").button({icons:{primary:'ui-icon-refresh'}});
 
         wm.ui.dataTable('#gameboard', {
-            "bStateSave": true,
-            "bFilter": false,
-            "bSort": false,
-            "bSortClasses": false,
-            "sDom": '<"H"lCr>t<"F"ip>',
-            "sPaginationType": "full_numbers",
-            "oLanguage": {
-                "sEmptyTable": "<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
+            "bStateSave":true,
+            "bFilter":false,
+            "bSort":false,
+            "bSortClasses":false,
+            "sDom":'<"H"lCr>t<"F"ip>',
+            "sPaginationType":"full_numbers",
+            "oLanguage":{
+                "sEmptyTable":"<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
             }
         });
     });
@@ -28,7 +27,7 @@
 <div id="join-game">
 <@wm.playground id="waitingGamesWidget">
     <#if restricted>
-    <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
+        <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
     </#if>
 
     <#if joinError??>
@@ -49,39 +48,42 @@
         </thead>
         <tbody>
             <#list activeProposals as proposal>
+                <#assign settings=proposal.proposal.gameSettings/>
             <tr>
-                <td>${proposal.gameSettings.title}</td>
-                <td><@message code="language.${proposal.gameSettings.language}"/></td>
-                <td align="center">${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove*24*60,locale)}</td>
+                <td>${settings.title}</td>
+                <td><@message code="language.${settings.language}"/></td>
+                <td align="center">${gameMessageSource.formatMinutes(settings.daysPerMove*24*60,locale)}</td>
                 <td>
-                    <#assign blacklisted=restricted/>
-                    <#list proposal.players as p>
-                        <#assign blacklisted=blacklisted || blacklistManager.isBlacklisted(p, principal)/>
-                        <div>
-                        <@wm.player player=playerManager.getPlayer(p)/>
+                    <#list proposal.proposal.players as p>
+                    <div>
+                        <#if p??>
+                            <@wm.player player=playerManager.getPlayer(p)/>
+                        <#else>
+                            <span class="player"><span
+                                    class="waiting"><@message code="game.status.waiting"/></span></span>
                         </div>
-                    </#list>
-                    <#list (proposal.players?size)..(proposal.playersCount-1) as i>
-                        <div>
-                                    <span class="player"><span
-                                            class="waiting"><@message code="game.status.waiting"/></span></span>
-                        </div>
+                        </#if>
                     </#list>
                 </td>
                 <td class="center">
-                    <#assign msg=gameMessageSource.formatJoinException(proposal, principal, locale)!""/>
-                    <#if msg?has_content>
-                        <span class="game-join-error">${msg}</span>
-                        <#elseif principal.membership == "GUEST">
-                            <span class="game-join-error"><@message code="game.join.err.guest"/></span>
-                        <#elseif restricted || blacklisted>
-                            <span class="game-join-error"><@message code="game.join.err.forbidden"/></span>
-                        <#else>
-                            <a href="/playground/scribble/join?p=${proposal.id}">&raquo; <@message code="game.join.label"/></a>
-                            <#if proposal.class.simpleName=="DefaultChallengeGameProposal">
-                                <br>
-                                <a href="/playground/scribble/decline?p=${proposal.id}">&raquo; <@message code="game.decline.label"/></a>
-                            </#if>
+                    <#if proposal.blacklisted || restricted>
+                        <span class="game-join-error"><@message code="game.join.err.forbidden.label"/></span>
+                    <#elseif principal.membership == "GUEST">
+                        <span class="game-join-error"><@message code="game.join.err.guest.label"/></span>
+                    <#elseif proposal.violations?? && !proposal.violations.empty>
+                        <#list proposal.violations as violation>
+                            <#assign errorCode="game.join.err.${violation.code}"/>
+                            <#if violation.operator?? && violation.operator?has_content><#assign errorCode="${errorCode}.${violation.operator}"/></#if>
+                            <#assign errorCode="${errorCode}.label"/>
+
+                            <div class="game-join-error">${gameMessageSource.getMessage(errorCode, locale, violation.expected, violation.received)}</div>
+                        </#list>
+                    <#else>
+                        <a href="/playground/scribble/join?p=${proposal.proposal.id}">&raquo; <@message code="game.join.label"/></a>
+                        <#if proposal.proposal.proposalType == "CHALLENGE">
+                            <br>
+                            <a href="/playground/scribble/decline?p=${proposal.proposal.id}">&raquo; <@message code="game.decline.label"/></a>
+                        </#if>
                     </#if>
                 </td>
             </tr>

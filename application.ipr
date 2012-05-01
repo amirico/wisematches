@@ -11,6 +11,7 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
+            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-2.0-SNAPSHOT.jar">
@@ -204,6 +205,9 @@
     <option name="PROJECT_PROFILE" value="Project Default" />
     <option name="USE_PROJECT_PROFILE" value="true" />
     <version value="1.0" />
+  </component>
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/playground/header.ftl" libraries="{plusone}" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.6" />
