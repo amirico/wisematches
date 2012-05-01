@@ -23,6 +23,9 @@
                                 </a>
                             </span>
                     </#if>
+                        <div style="width: 24px; display: inline-block; vertical-align: bottom; padding-bottom: 2px">
+                            <g:plusone size="small" annotation="none"></g:plusone>
+                        </div>
                     <#--<#if false>-->
                     <#--|-->
                     <#--<a href="/info/features" style="color: red; font-weight: bold;">New Features!</a>-->

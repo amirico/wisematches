@@ -202,8 +202,8 @@ public class DefaultGameProposalTest {
 
         final DefaultGameProposal<MockGameSettings> mock = new DefaultGameProposal<MockGameSettings>(1, new MockGameSettings("Mock", 3), PERSON4, new Personality[]{null, null},
                 new PlayerCriterion[]{
-                        PlayerRestrictions.rating((short) 900, ComparableOperator.GE),
-                        PlayerRestrictions.rating((short) 1300, ComparableOperator.LE),
+                        PlayerRestrictions.rating("player.rating", (short) 900, ComparableOperator.GE),
+                        PlayerRestrictions.rating("player.rating", (short) 1300, ComparableOperator.LE),
                 });
 
         final CriterionViolation v1 = mock.checkViolation(PERSON1, statistics).iterator().next();

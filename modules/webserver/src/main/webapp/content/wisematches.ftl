@@ -4,6 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="canonical" href="http://www.wisematches.net?language=${locale}"/>
     <title><@message code=headerTitle!"title.default"/></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -32,7 +33,6 @@
     <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
     <script type="text/javascript" src="/content/playground/game.js"></script>
 </#if>
-
 <#include 'templates/localization.ftl'/>
 <#include "templates/analytics.ftl">
 </head>
@@ -52,8 +52,10 @@
 </div>
 
 <#if !errorCode??>
-    <#if principal??><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
+    <#if principal?? && principal?has_content><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
 </#if>
+
+<#include 'templates/googlePlus.ftl'/>
 
 </body>
 </html>

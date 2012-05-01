@@ -49,13 +49,11 @@ public final class CriterionViolation implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("CriterionViolation");
-        sb.append("{code='").append(code).append('\'');
-        sb.append(", expected=").append(expected);
-        sb.append(", received=").append(received);
-        sb.append(", criterion=").append(criterion);
-        sb.append('}');
-        return sb.toString();
+        return "CriterionViolation{" +
+                "code='" + code + '\'' +
+                ", expected=" + expected +
+                ", received=" + received +
+                ", criterion=" + criterion +
+                '}';
     }
 }

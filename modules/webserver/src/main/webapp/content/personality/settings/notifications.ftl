@@ -1,12 +1,12 @@
-<#-- @ftlvariable name="notificationMask" type="wisematches.server.web.services.notify.NotificationSettings" -->
-<#-- @ftlvariable name="notificationDescriptions" type="java.util.Collection<wisematches.server.web.services.tbr.notify.impl.NotificationDescription>" -->
+<#-- @ftlvariable name="notificationSettings" type="wisematches.server.web.services.notify.NotificationSettings" -->
+<#-- @ftlvariable name="notificationDescriptors" type="java.util.Collection<wisematches.server.web.services.notify.NotificationDescriptor>" -->
 
 <#include "/core.ftl">
 
 <#assign lastGroup=""/>
 <table class="common-settings ui-widget-content ui-state-default shadow ui-corner-all" style="background-image: none;"
        width="100%">
-<#list notificationDescriptions?sort_by('section') as desc>
+<#list notificationDescriptors as desc>
     <#if (desc_index !=0 && lastGroup!=desc.section)>
         <tr>
             <td colspan="2" class="ui-state-default shadow"></td>
@@ -24,17 +24,17 @@
     <#assign lastGroup=desc.section/>
     <tr>
         <td style="padding-top: 4px; width: 10px;">
-            <input id="field${desc.name}" name="${desc.name}" type="checkbox"
-                   <#if notificationMask.isEnabled(desc.name)>checked="checked"</#if> value="true">
+            <input id="field${desc.code}" name="${desc.code}" type="checkbox"
+                   <#if notificationSettings.isEnabled(desc.code)>checked="checked"</#if> value="true">
         </td>
         <td>
             <div>
-                <label for="field${desc.name}">
-                    <@message code="account.modify.notice.${desc.name?lower_case}.label"/>
+                <label for="field${desc.code}">
+                    <@message code="account.modify.notice.${desc.code?lower_case}.label"/>
                 </label>
             </div>
             <div class="sample">
-                <@message code="account.modify.notice.${desc.name?lower_case}.description"/>
+                <@message code="account.modify.notice.${desc.code?lower_case}.description"/>
             </div>
         </td>
     </tr>

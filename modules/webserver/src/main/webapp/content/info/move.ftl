@@ -5,6 +5,8 @@
 <#-- @ftlvariable name="memoryWords" type="java.util.Collection<wisematches.playground.scribble.Word>" -->
 
 <#include "/core.ftl">
+<#assign oldPrincipal=principal!""/>
+<#assign principal=player/>
 
 <style type="text/css">
     span.ui-icon {
@@ -26,8 +28,8 @@
 </style>
 
 <script type="text/javascript">
-    var scribbleController = new function() {
-        this.execute = function(widget, type, params, data, callback) {
+    var scribbleController = new function () {
+        this.execute = function (widget, type, params, data, callback) {
             if (widget == 'memory') {
                 if (type == 'load') {
                     callback({success:true, data:{
@@ -169,3 +171,5 @@
 <script type="text/javascript">
     $("#board${board.boardId} .scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
 </script>
+
+<#assign principal=oldPrincipal/>

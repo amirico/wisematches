@@ -32,6 +32,7 @@
     <bean id="scribbleProposalManager"
           class="wisematches.playground.propose.impl.file.FileProposalManager">
         <property name="proposalsResource" value="${server.proposals.file}"/>
+        <property name="playerStatisticManager" ref="scribbleTrackingCenter"/>
     </bean>
 
     <bean id="expirationTaskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
