@@ -155,7 +155,7 @@ public class DefaultGameProposalTest {
         try {
             mock.detach(PERSON4);
             fail("Initiator can't be detached");
-        } catch (ViolatedCriteriaException ex) {
+        } catch (IllegalArgumentException ex) {
         }
     }
 

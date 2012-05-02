@@ -4,55 +4,6 @@
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
 
-<@wm.jstable/>
-
-<style type="text/css">
-    #dashboard.dataTable th {
-        border: none;
-    }
-
-    .first {
-        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAMAAADzjKfhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFZmZm////c0tZqAAAAAJ0Uk5T/wDltzBKAAAAHklEQVR42mJgYAQBBgYGKMUApRigFBIfLg9kAAQYAAMdABu5MVT6AAAAAElFTkSuQmCC') no-repeat center center !important;
-        padding-right: 3px;
-    }
-
-    .previous {
-        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAMAAADzjKfhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAwBQTFRFZmZm////AgICAwMDBAQEBQUFBgYGBwcHCAgICQkJCgoKCwsLDAwMDQ0NDg4ODw8PEBAQEREREhISExMTFBQUFRUVFhYWFxcXGBgYGRkZGhoaGxsbHBwcHR0dHh4eHx8fICAgISEhIiIiIyMjJCQkJSUlJiYmJycnKCgoKSkpKioqKysrLCwsLS0tLi4uLy8vMDAwMTExMjIyMzMzNDQ0NTU1NjY2Nzc3ODg4OTk5Ojo6Ozs7PDw8PT09Pj4+Pz8/QEBAQUFBQkJCQ0NDRERERUVFRkZGR0dHSEhISUlJSkpKS0tLTExMTU1NTk5OT09PUFBQUVFRUlJSU1NTVFRUVVVVVlZWV1dXWFhYWVlZWlpaW1tbXFxcXV1dXl5eX19fYGBgYWFhYmJiY2NjZGRkZWVlZmZmZ2dnaGhoaWlpampqa2trbGxsbW1tbm5ub29vcHBwcXFxcnJyc3NzdHR0dXV1dnZ2d3d3eHh4eXl5enp6e3t7fHx8fX19fn5+f39/gICAgYGBgoKCg4ODhISEhYWFhoaGh4eHiIiIiYmJioqKi4uLjIyMjY2Njo6Oj4+PkJCQkZGRkpKSk5OTlJSUlZWVlpaWl5eXmJiYmZmZmpqam5ubnJycnZ2dnp6en5+foKCgoaGhoqKio6OjpKSkpaWlpqamp6enqKioqampqqqqq6urrKysra2trq6ur6+vsLCwsbGxsrKys7OztLS0tbW1tra2t7e3uLi4ubm5urq6u7u7vLy8vb29vr6+v7+/wMDAwcHBwsLCw8PDxMTExcXFxsbGx8fHyMjIycnJysrKy8vLzMzMzc3Nzs7Oz8/P0NDQ0dHR0tLS09PT1NTU1dXV1tbW19fX2NjY2dnZ2tra29vb3Nzc3d3d3t7e39/f4ODg4eHh4uLi4+Pj5OTk5eXl5ubm5+fn6Ojo6enp6urq6+vr7Ozs7e3t7u7u7+/v8PDw8fHx8vLy8/Pz9PT09fX19vb29/f3+Pj4+fn5+vr6+/v7/Pz8/f39/v7+////AADF2QAAAAJ0Uk5T/wDltzBKAAAAH0lEQVR42mJgBII0RkYGEAWh0yB0WhoqHy4PVg8QYAC1igaCyzmL4AAAAABJRU5ErkJggg==') no-repeat center center !important;
-        padding-right: 3px;
-    }
-
-    .next {
-        padding-left: 3px;
-        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAMAAADzjKfhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAwBQTFRFZmZm////AgICAwMDBAQEBQUFBgYGBwcHCAgICQkJCgoKCwsLDAwMDQ0NDg4ODw8PEBAQEREREhISExMTFBQUFRUVFhYWFxcXGBgYGRkZGhoaGxsbHBwcHR0dHh4eHx8fICAgISEhIiIiIyMjJCQkJSUlJiYmJycnKCgoKSkpKioqKysrLCwsLS0tLi4uLy8vMDAwMTExMjIyMzMzNDQ0NTU1NjY2Nzc3ODg4OTk5Ojo6Ozs7PDw8PT09Pj4+Pz8/QEBAQUFBQkJCQ0NDRERERUVFRkZGR0dHSEhISUlJSkpKS0tLTExMTU1NTk5OT09PUFBQUVFRUlJSU1NTVFRUVVVVVlZWV1dXWFhYWVlZWlpaW1tbXFxcXV1dXl5eX19fYGBgYWFhYmJiY2NjZGRkZWVlZmZmZ2dnaGhoaWlpampqa2trbGxsbW1tbm5ub29vcHBwcXFxcnJyc3NzdHR0dXV1dnZ2d3d3eHh4eXl5enp6e3t7fHx8fX19fn5+f39/gICAgYGBgoKCg4ODhISEhYWFhoaGh4eHiIiIiYmJioqKi4uLjIyMjY2Njo6Oj4+PkJCQkZGRkpKSk5OTlJSUlZWVlpaWl5eXmJiYmZmZmpqam5ubnJycnZ2dnp6en5+foKCgoaGhoqKio6OjpKSkpaWlpqamp6enqKioqampqqqqq6urrKysra2trq6ur6+vsLCwsbGxsrKys7OztLS0tbW1tra2t7e3uLi4ubm5urq6u7u7vLy8vb29vr6+v7+/wMDAwcHBwsLCw8PDxMTExcXFxsbGx8fHyMjIycnJysrKy8vLzMzMzc3Nzs7Oz8/P0NDQ0dHR0tLS09PT1NTU1dXV1tbW19fX2NjY2dnZ2tra29vb3Nzc3d3d3t7e39/f4ODg4eHh4uLi4+Pj5OTk5eXl5ubm5+fn6Ojo6enp6urq6+vr7Ozs7e3t7u7u7+/v8PDw8fHx8vLy8/Pz9PT09fX19vb29/f3+Pj4+fn5+vr6+/v7/Pz8/f39/v7+////AADF2QAAAAJ0Uk5T/wDltzBKAAAAH0lEQVR42mJgZExjBAIGIJ0Go9NgdBoqHyoPUg8QYAC3HgaCbKesXAAAAABJRU5ErkJggg==') no-repeat center center !important;
-    }
-
-    .last {
-        padding-left: 3px;
-        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAMAAADzjKfhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFZmZm////c0tZqAAAAAJ0Uk5T/wDltzBKAAAAHElEQVR42mJgYAQBBiCA0QwwmgGVD5WHqAcIMAADAwAbezQSkgAAAABJRU5ErkJggg==') no-repeat center center !important;
-    }
-
-    .asd {
-        padding: 2px;
-    }
-
-    .dataTables_wrapper {
-        text-align: right;
-        /*background-color: #ddd;*/
-    }
-
-    .dataTables_length {
-        padding-right: 10px;
-    }
-
-    .dataTables_length, .dataTables_info, .dataTables_paginate {
-        width: auto;
-        float: none;
-        text-align: right;
-        display: inline-block;
-        padding-left: 10px;
-    }
-</style>
-
 <#macro gameStatus board>
     <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
@@ -64,32 +15,26 @@
     </#if>
 </#macro>
 
+<@wm.jstable/>
+
 <@wm.playground id="activeGamesWidget">
-<div>
-    <div class="ui-widget-header ui-corner-top"
-         style="border-top-color: #CCC; border-left-color: #CCC; border-right-color: #CCC; border-bottom-width:0">
-        <div>
-            Мои Игры >
-            <#if player != principal>
-                <@message code="game.dashboard.label"/> <@message code="separator.for"/> <@wm.player player=player showState=true showType=true/>
-            <#else>
-                Текущие игры
-            </#if>
-        </div>
-    </div>
+    <@wm.dtHeader>
+        <#if player != principal>
+            <@message code="game.player"/> <@wm.player player=player showState=true showType=true/>
+        <#else><@message code="game.menu.games.label"/>
+        </#if>
+    > <@message code="game.dashboard.label"/>
+    </@wm.dtHeader>
 
-    <div style="height: 3px; background-color: blue; border-right: 1px solid #CCC;border-left: 1px solid #CCC;">
-    </div>
+    <@wm.dtToolbar>
+        <#if player == principal>
+        <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
+        <#else>
+        <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
+        </#if>
+    </@wm.dtToolbar>
 
-        <div class="ui-widget-content"
-        style="border: 0; border-right: 1px solid #CCC;border-left: 1px solid #CCC;>
-    <#if player == principal>
-            <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
-    </#if>
-</div>
-
-<div class="ui-widget-content"
-     style="padding: 0; border-width: 2px; margin: 0; border-left: 1px solid #CCC; border-right: 1px solid #CCC;">
+    <@wm.dtContent>
     <table id="dashboard" width="100%" class="display">
         <thead>
         <tr>
@@ -131,10 +76,12 @@
                 <td>${proposal.gameSettings.title}</td>
                 <td><@message code="language.${proposal.gameSettings.language}"/></td>
                 <td>
-                    <span class="player"><span class="waiting"><@message code="game.status.waiting"/></span></span>
+                            <span class="player"><span
+                                    class="waiting"><@message code="game.status.waiting"/></span></span>
 
                     <div style="text-align: right;">
-                        <a href="decline?p=${proposal.id}" onclick="cancelProposal(${proposal.id}); return false;">
+                        <a href="decline?p=${proposal.id}"
+                           onclick="cancelProposal(${proposal.id}); return false;">
                             <@message code="game.proposal.cancel"/>
                         </a>
                     </div>
@@ -164,12 +111,9 @@
             </#list>
         </tbody>
     </table>
-</div>
+    </@wm.dtContent>
 
-<div class="ui-corner-bottom"
-     style="height: 3px; border-bottom: 1px solid #CCC; border-right: 1px solid #CCC;border-left: 1px solid #CCC;">
-</div>
-</div>
+    <@wm.dtFooter/>
 </@wm.playground>
 
 <script type="text/javascript">
@@ -188,18 +132,14 @@
             { "bSortable":false },
             { "bSortable":false }
         ],
-        "sDom":'<<t><"asd"lip>>',
-        "sPaginationType":"full_numbers",
         "oLanguage":{
-            "sLengthMenu":"Показать строки: _MENU_",
-            "sInfo":"_START_ - _END_ из _TOTAL_",
-            "sInfoEmpty":"Showing 0 to 0 of 0 records",
-            "sInfoFiltered":"(filtered from _MAX_ total records)",
         <#if player == principal>
             "sEmptyTable":"<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
         </#if>
         }
     });
+
+    $(".data-table-toolbar div").buttonset();
 
     function cancelProposal(id) {
         $.ajax('decline.ajax?p=' + id, {
