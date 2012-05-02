@@ -550,10 +550,11 @@ tr.even.gradeU td.sorting_3 {
 }
 
 .data-table-footer {
-    height: 3px;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
+    min-height: 3px;
+    background-color: #F2F6FA;
     border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
 }
 
 .dataTables_paginate .first {
