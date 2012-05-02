@@ -475,19 +475,6 @@
 
 #history td {
     white-space: nowrap;
-    border: none;
-}
-
-#history tr.odd td {
-    background-color: #DFEFFC;
-}
-
-#history tr.even td {
-    background-color: #d7e8f5;
-}
-
-#history tr.even:hover td, #history tr.odd:hover td {
-    background-color: #C5DBEC;
 }
 
 #pastGamesWidget .title, #pastGamesWidget .title span, #activeGamesWidget .title, #activeGamesWidget .title span {

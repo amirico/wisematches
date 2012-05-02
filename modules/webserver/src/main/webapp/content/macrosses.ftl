@@ -15,15 +15,16 @@
         };
         <#if locale='ru'>
             dataTableLanguage = $.extend(true, dataTableLanguage, {
+                "sDom":'<"data-table-top"<"ui-widget-content">><"data-table-content"t><"data-table-bottom"<"ui-widget-content"rlip>>',
+                "sPaginationType":"full_numbers",
                 "oLanguage":{
-                    "sProcessing":"Подождите...",
-                    "sLengthMenu":"Показать _MENU_ записей",
-                    "sZeroRecords":"Записи отсутствуют.",
-                    "sInfo":"Записи с _START_ до _END_ из _TOTAL_ записей",
-                    "sInfoEmpty":"Записи с 0 до 0 из 0 записей",
-                    "sInfoFiltered":"(отфильтровано из _MAX_ записей)",
+                    "sProcessing":"<@message code="datatable.processing.label"/>",
+                    "sLengthMenu":"<@message code="datatable.menu.label"/>",
+                    "sZeroRecords":"<@message code="datatable.zero.records.label"/>",
+                    "sInfo":"_START_ - _END_ <@message code="datatable.of.label"/> _TOTAL_",
+                    "sInfoEmpty":"<@message code="datatable.info.empty.label"/>",
+                    "sLoadingRecords": "<@message code="datatable.loading.records.label"/>",
                     "sInfoPostFix":"",
-                    "sSearch":"Поиск:",
                     "sUrl":"",
                     "oPaginate":{
                         "sFirst":"&nbsp;",
@@ -31,16 +32,30 @@
                         "sNext":"&nbsp",
                         "sLast":"&nbsp"
                     }
-                },
-                "oColVis":{
-                    "buttonText":'Показать / скрыть колонки'
-                }
-            });
+                }});
         <#else>
         </#if>
         return $(selector).dataTable($.extend(true, dataTableLanguage, opts));
     };
 </script>
+</#macro>
+
+<#macro dtHeader>
+<div class="data-table-header ui-widget-header ui-corner-top"><#nested/></div>
+</#macro>
+
+<#macro dtToolbar>
+<div class="data-table-toolbar ui-widget-content">
+    <div class="ui-state-hover"><#nested/></div>
+</div>
+</#macro>
+
+<#macro dtContent>
+    <#nested/>
+</#macro>
+
+<#macro dtFooter>
+<div class="data-table-footer ui-corner-bottom"><#nested/></div>
 </#macro>
 
 <#macro playground id>
@@ -55,7 +70,7 @@
         <td valign="top">
             <#nested/>
         </td>
-        <td width="165px" valign="top" align="right">&nbsp;</td>
+    <#--<td width="165px" valign="top" align="right">&nbsp;</td>-->
     </tr>
 </table>
 </#macro>

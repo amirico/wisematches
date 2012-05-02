@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="searchColumns" type="java.util.Collection<java.lang.String>" -->
 <#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.playground.search.descriptive.SearchableDescriptor" -->
-<#-- @ftlvariable name="searchArea" type="wisematches.playground.scribble.search.player.PlayerSearchArea" -->
+<#-- @ftlvariable name="searchArea" type="wisematches.playground.scribble.player.PlayerSearchArea" -->
 <#-- @ftlvariable name="searchAreas" type="java.util.List<wisematches.server.web.services.search.player.PlayerSearchArea>" -->
 <#include "/core.ftl">
 
@@ -9,16 +9,20 @@
 
 <#if !scriplet??><#assign scriplet=true/></#if>
 
-<div id="searchPlayerWidget" <#if scriplet>class="ui-helper-hidden"</#if>>
-    <div id="searchTypes">
-    <#list searchAreas as a>
-        <input id="search${a.name()?lower_case?capitalize}" name="searchTypes" type="radio" value="${a.name()}"
-               <#if a=searchArea>checked="checked"</#if>/>
-        <label for="search${a.name()?lower_case?capitalize}"><@message code="search.type.${a.name()?lower_case}"/></label>
-    </#list>
+<div id="searchPlayerWidget" <#if scriplet>class="ui-helper-hidden" style="padding-top: 10px" </#if>>
+    <div class="dataTables_header ui-widget-content" style="padding: 0; margin: 0; border: 0">
+        <div id="searchTypes" class="ui-state-hover"
+             style="border-width: 0; border-top-width: 3px; margin: 0; background-image: none; padding: 5px; text-align: right">
+        <#list searchAreas as a>
+            <input id="search${a.name()?lower_case?capitalize}" name="searchTypes" type="radio" value="${a.name()}"
+                   <#if a=searchArea>checked="checked"</#if>/>
+            <label for="search${a.name()?lower_case?capitalize}"><@message code="search.type.${a.name()?lower_case}"/></label>
+        </#list>
+        </div>
     </div>
 
-    <div>
+    <div class="ui-widget-content"
+         style="border-width: 0; padding: 0; margin: 0; border-bottom-width: 2px; border-top-width: 2px;">
         <table id="searchResult" class="display">
             <thead>
             <tr>
