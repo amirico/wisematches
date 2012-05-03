@@ -1,0 +1,1 @@
+This is test administration page. Only users with 'admin' roles can have access to this page.

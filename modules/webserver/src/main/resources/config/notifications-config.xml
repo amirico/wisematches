@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.server.host}"/>
+        <property name="port" value="${mail.server.port}"/>
+        <property name="username" value="${mail.server.username}"/>
+        <property name="password" value="${mail.server.password}"/>
+
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.server.auth}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="notificationTaskExecutor" class="wisematches.database.concurrent.TransactionalTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="notificationFreemarkerConfigurer" parent="commonFreemarkerConfigurer" scope="prototype">
+        <property name="preferFileSystemAccess" value="false"/>
+        <property name="templateLoaderPath" value="classpath:/i18n/notify"/>
+        <property name="freemarkerVariables">
+            <map merge="true">
+                <entry key="serverHostName" value="${server.hostname}"/>
+                <entry key="ratingManager" value-ref="ratingManager"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="notificationFreemarkerConfig"
+          factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
+
+
+    <bean id="notificationTransformer"
+          class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
+        <property name="messageSource" ref="messageSource"/>
+        <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
+    </bean>
+
+    <bean id="mailNotificationTransport"
+          class="wisematches.server.web.services.notify.impl.transport.MailNotificationTransport">
+        <property name="hostName" value="${server.hostname}"/>
+        <property name="mailSender" ref="springMailSender"/>
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="messageNotificationTransport"
+          class="wisematches.server.web.services.notify.impl.transport.MessageNotificationTransport">
+        <property name="messageManager" ref="messageManager"/>
+    </bean>
+
+    <bean id="mailNotificationPublisher"
+          class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
+        <property name="transport" ref="mailNotificationTransport"/>
+        <property name="transformer">
+            <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
+        </property>
+    </bean>
+
+    <bean id="messageNotificationPublisher"
+          class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
+        <property name="transport" ref="mailNotificationTransport"/>
+        <property name="transformer">
+            <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
+        </property>
+    </bean>
+
+    <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
+
+    <bean id="notificationManager"
+          class="wisematches.server.web.services.notify.impl.manager.MySQLNotificationManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationDistributor" ref="notificationDistributor"/>
+
+        <property name="notificationDescriptors">
+            <list>
+                <bean parent="notification" c:code="playground.game.started" c:enabled="true"/>
+
+                <bean parent="notification" c:code="playground.game.turn" c:enabled="true"/>
+
+                <bean parent="notification" c:code="playground.game.finished" c:enabled="true"/>
+
+
+                <bean parent="notification" c:code="playground.game.expiration.day" c:enabled="true"
+                      c:template="playground.game.expiring"/>
+
+                <bean parent="notification" c:code="playground.game.expiration.half" c:enabled="true"
+                      c:template="playground.game.expiring"/>
+
+                <bean parent="notification" c:code="playground.game.expiration.hour" c:enabled="true"
+                      c:template="playground.game.expiring"/>
+
+
+                <bean parent="notification" c:code="playground.challenge.initiated" c:enabled="true"/>
+
+                <bean parent="notification" c:code="playground.challenge.rejected" c:enabled="false"
+                      c:template="playground.challenge.finalized"/>
+
+                <bean parent="notification" c:code="playground.challenge.repudiated" c:enabled="false"
+                      c:template="playground.challenge.finalized"/>
+
+                <bean parent="notification" c:code="playground.challenge.terminated" c:enabled="false"
+                      c:template="playground.challenge.finalized"/>
+
+
+                <bean parent="notification" c:code="playground.challenge.expiration.day" c:enabled="true"
+                      c:template="playground.challenge.expiring"/>
+
+                <bean parent="notification" c:code="playground.challenge.expiration.days" c:enabled="false"
+                      c:template="playground.challenge.expiring"/>
+
+                <bean parent="notification" c:code="playground.message.received" c:enabled="true"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="notificationDistributor"
+          class="wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor">
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
+        <property name="playerStateManager" ref="playerStateManager"/>
+        <property name="notificationManager" ref="notificationManager"/>
+
+        <property name="mandatoryNotifications">
+            <set>
+                <value>playground.game.finished</value>
+                <value>playground.game.expiration.hour</value>
+            </set>
+        </property>
+
+        <property name="redundantNotifications">
+            <set>
+                <value>playground.game.turn</value>
+            </set>
+        </property>
+
+        <property name="internalPublisher">
+            <bean class="wisematches.server.web.services.notify.impl.publisher.FilteringNotificationPublisher">
+                <property name="notificationPublisher" ref="messageNotificationPublisher"/>
+                <property name="allowedNotifications">
+                    <set>
+                        <value>playground.game.finished</value>
+                        <value>playground.challenge.initiated</value>
+                        <value>playground.challenge.rejected</value>
+                        <value>playground.challenge.repudiated</value>
+                        <value>playground.challenge.terminated</value>
+                        <value>playground.challenge.expiration.day</value>
+                        <value>playground.challenge.expiration.days</value>
+                    </set>
+                </property>
+            </bean>
+        </property>
+
+        <property name="externalPublisher" ref="mailNotificationPublisher"/>
+    </bean>
+
+    <bean id="notificationPublisherCenter"
+          class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="messageManager" ref="messageManager"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
+        <property name="notificationDistributor" ref="notificationDistributor"/>
+        <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
+        <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
+    </bean>
+</beans>
