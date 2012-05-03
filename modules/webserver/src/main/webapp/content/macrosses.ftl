@@ -103,10 +103,12 @@
 <div class="help-tooltip ui-icon ui-icon-info" title="<#nested>"></div>
 </#macro>
 
-<#macro restriction style="">
+<#macro restriction style="" showIcon=true showLabel=true>
 <div class="restriction ui-state-error ui-corner-all shadow" <#if style?has_content>style="${style}"</#if>>
-    <div class="restriction-icon wm-icon-forbidden"></div>
-    <div class="restriction-name"><@message code="restriction.label"/></div>
+    <#if showIcon>
+        <div class="restriction-icon wm-icon-forbidden"></div></#if>
+    <#if showLabel>
+        <div class="restriction-name"><@message code="restriction.label"/></div></#if>
     <div class="restriction-message"><#nested></div>
 </div>
 </#macro>
