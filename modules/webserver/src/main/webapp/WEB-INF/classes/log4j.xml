@@ -19,7 +19,7 @@
         </layout>
     </appender>
 
-    <logger name="wisematches">
+    <logger name="wisematches" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="FileAppender"/>
     </logger>
