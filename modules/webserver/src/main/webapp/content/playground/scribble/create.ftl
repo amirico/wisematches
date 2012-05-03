@@ -9,25 +9,26 @@
 
 <@wm.playground id="createGameWidget">
 <div id="createGame">
-<div>
-    <#if restricted>
-        <@wm.restriction style="margin-bottom: 10px"><@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/></@wm.restriction>
-    </#if>
+    <@wm.dtHeader>
+        <@message code="game.menu.games.label"/> > <@message code="game.create.label"/>
+    </@wm.dtHeader>
 
-<div class="ui-widget-header ui-corner-all shadow">
-    <@message code="game.create.label"/>
+    <@wm.dtToolbar>
+    <div style="float: left">
+        <@wm.field path="create.commonError"><#if !spring.status.error>&nbsp;</#if></@wm.field>
+    </div>
+    <div>
+        <a href="/playground/scribble/join"><@message code="game.join.label"/></a>
+    </div>
+    </@wm.dtToolbar>
+
+<div class="data-table-top">
+    <div class="ui-widget-content"></div>
 </div>
-<div class="ui-widget-content ui-corner-all shadow" style="margin: 0">
-    <form id="form" class="form" style="margin: 0" action="/playground/scribble/create" method="post">
-        <table class="create-game ui-widget-content ui-state-default shadow ui-corner-all"
-               style="background-image: none;"
-               width="100%">
-            <tr>
-                <td colspan="2">
-                    <@message code="game.create.description"/>
-                </td>
-            </tr>
 
+<form id="form" class="form" style="margin: 0" action="/playground/scribble/create" method="post">
+    <div class="data-table-content ui-widget-content">
+        <table class="create-game" width="100%">
             <tr>
                 <td>
                 <#--@declare id="title"-->
@@ -196,27 +197,31 @@
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <@wm.field path="create.commonError"/>
-                    </div>
                 </td>
             </tr>
         </table>
 
         <input name="rotten" type="hidden" value="true"/>
+    </div>
 
-        <#if !restricted>
-            <div style="padding-top: 5px">
-                <div>
-                    <button><@message code="game.create.submit"/></button>
-                </div>
-            </div>
+    <div class="data-table-bottom">
+        <div class="ui-widget-content" style="text-align: left">
+            <#if !restricted>
+                <button><@message code="game.create.submit"/></button>
+            <#else>
+                &nbsp;
+            </#if>
+        </div>
+    </div>
+</form>
+
+    <@wm.dtFooter>
+        <#if restricted>
+        <div class="sample" style="padding: 5px;">
+            <@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/>
+        </div>
         </#if>
-    </form>
-</div>
-</div>
-</div>
+    </@wm.dtFooter>
 
     <#include "/content/playground/players/scriplet.ftl">
 </@wm.playground>

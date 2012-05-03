@@ -9,7 +9,7 @@
                 $("#sendPrivateMessage").button("enable");
             });
             dlg.dialog({
-                title: "<@message code="messages.label"/>",
+                title: "<@message code="messages.send.label"/>",
                 width: 550,
                 minHeight : 350,
                 modal: true,
@@ -17,7 +17,7 @@
                 buttons: [
                     {
                         id: "sendPrivateMessage",
-                        text: "<@message code="messages.label"/>",
+                        text: "<@message code="messages.send.label"/>",
                         disabled: true,
                         click:function() {
                             wm.ui.showStatus("<@message code="messages.status.sending"/>", false, true);

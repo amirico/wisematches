@@ -52,6 +52,4 @@
                 "sEmptyTable":"<@message code="game.past.history.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
             }
     );
-
-    $(".data-table-toolbar div").buttonset();
 </script>

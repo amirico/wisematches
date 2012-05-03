@@ -23,7 +23,7 @@
                     "sZeroRecords":"<@message code="datatable.zero.records.label"/>",
                     "sInfo":"_START_ - _END_ <@message code="datatable.of.label"/> _TOTAL_",
                     "sInfoEmpty":"<@message code="datatable.info.empty.label"/>",
-                    "sLoadingRecords": "<@message code="datatable.loading.records.label"/>",
+                    "sLoadingRecords":"<@message code="datatable.loading.records.label"/>",
                     "sInfoPostFix":"",
                     "sUrl":"",
                     "oPaginate":{
@@ -44,9 +44,9 @@
 <div class="data-table-header ui-widget-header ui-corner-top"><#nested/></div>
 </#macro>
 
-<#macro dtToolbar>
+<#macro dtToolbar align="right">
 <div class="data-table-toolbar ui-widget-content">
-    <div class="ui-state-hover"><#nested/></div>
+    <div class="ui-state-hover" style="text-align: ${align}"><#nested/></div>
 </div>
 </#macro>
 

@@ -516,7 +516,6 @@ tr.even.gradeU td.sorting_3 {
     margin: 0;
     background-image: none;
     padding: 5px;
-    text-align: right;
 }
 
 .data-table-top .ui-widget-content {
@@ -538,13 +537,14 @@ tr.even.gradeU td.sorting_3 {
 }
 
 .data-table-bottom .ui-widget-content {
-    text-align: right;
     border-width: 0;
+    text-align: right;
+    white-space: nowrap;
     border-top-width: 1px;
     border-bottom-width: 2px;
 }
 
-.data-table-bottom .ui-widget-content div {
+.data-table-toolbar .ui-state-hover div, .data-table-bottom .ui-widget-content div {
     width: auto;
     display: inline-block;
 }
