@@ -69,6 +69,7 @@
         </td>
         <td valign="top">
             <#nested/>
+            <#include "playground/footer.ftl"/>
         </td>
     <#--<td width="165px" valign="top" align="right">&nbsp;</td>-->
     </tr>
