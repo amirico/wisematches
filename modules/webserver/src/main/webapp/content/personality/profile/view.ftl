@@ -254,7 +254,7 @@
     <br>
     <a href="/playground/scribble/create?t=challenge&p=${player.id}"><@message code="game.challenge.label"/></a>
     |
-<@privateMessage pid=player.id><@message code="messages.label"/></@privateMessage>
+<@privateMessage pid=player.id><@message code="messages.send.label"/></@privateMessage>
     |
 <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
     |

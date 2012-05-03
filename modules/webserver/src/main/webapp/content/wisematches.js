@@ -4,14 +4,14 @@
 
 if (wm == null) var wm = {};
 
-wm.i18n = new function() {
+wm.i18n = new function () {
     var values = {};
 
-    var lookup = function(key) {
+    var lookup = function (key) {
         return values[key] || null;
     };
 
-    var getValue = function(key, defaultValue, options) {
+    var getValue = function (key, defaultValue, options) {
         var value = lookup(key);
         if (value == null) return defaultValue;
 
@@ -23,21 +23,21 @@ wm.i18n = new function() {
         return value;
     };
 
-    this.extend = function(hash) {
+    this.extend = function (hash) {
         $.extend(values, hash);
     };
 
-    this.value = function(key, defaultValue, options) {
+    this.value = function (key, defaultValue, options) {
         return getValue(key, defaultValue, options);
     };
 
-    this.locale = function() {
+    this.locale = function () {
         return this.value('locale');
     }
 };
 
-wm.util = new function() {
-    this.createMatrix = function(size) {
+wm.util = new function () {
+    this.createMatrix = function (size) {
         var m = new Array(size);
         for (var i = 0; i < size; i++) {
             m[i] = new Array(size);
@@ -46,12 +46,12 @@ wm.util = new function() {
     };
 };
 
-wm.util.url = new function() {
-    this.redirect = function(url) {
+wm.util.url = new function () {
+    this.redirect = function (url) {
         window.location = url;
     };
 
-    this.extend = function(sourceUrl, parameterName, parameterValue, replaceDuplicates) {
+    this.extend = function (sourceUrl, parameterName, parameterValue, replaceDuplicates) {
         if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
         var urlParts = sourceUrl.split("?");
         var newQueryString = "";
@@ -78,16 +78,16 @@ wm.util.url = new function() {
     };
 };
 
-wm.ui = new function() {
+wm.ui = new function () {
     var activeWindows = true;
 
-    var alertTemplate = function(title, message) {
+    var alertTemplate = function (title, message) {
         var e;
         e = ['<div>', '<div class="content">', '<h2>' + title + '</h2>', '<p>' + message + '</p>', '</div>', '<span class="icon"></span>', '<span class="close"></span>', '</div>'].join("");
         return e;
     };
 
-    var statusTemplate = function(title, message) {
+    var statusTemplate = function (title, message) {
         return '<div><div class="content">' + message + '</div></div>';
     };
 
@@ -117,7 +117,7 @@ wm.ui = new function() {
         contentType:'application/json'
     });
 
-    this.showConfirm = function(title, msg, approvedAction) {
+    this.showConfirm = function (title, msg, approvedAction) {
         $('<div></div>').html(msg).dialog({
             title:title,
             draggable:false,
@@ -127,14 +127,14 @@ wm.ui = new function() {
             buttons:[
                 {
                     text:wm.i18n.value('button.ok', 'Ok'),
-                    click:function() {
+                    click:function () {
                         $(this).dialog("close");
                         approvedAction(true);
                     }
                 },
                 {
                     text:wm.i18n.value('button.cancel', 'Cancel'),
-                    click:function() {
+                    click:function () {
                         $(this).dialog("close");
                         approvedAction(false);
                     }
@@ -143,7 +143,7 @@ wm.ui = new function() {
         });
     };
 
-    this.showWaitMessage = function(message) {
+    this.showWaitMessage = function (message) {
         $.blockUI({
             blockMsgClass:'ui-corner-all ui-state-default',
             css:{
@@ -153,7 +153,7 @@ wm.ui = new function() {
             message:message });
     };
 
-    this.showMessage = function(opts) {
+    this.showMessage = function (opts) {
         opts = opts || {};
         var v = $.extend(opts, {
             message:'<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
@@ -164,7 +164,7 @@ wm.ui = new function() {
         $('.blockOverlay').click($.unblockUI);
     };
 
-    this.showAlert = function(title, message, type, error) {
+    this.showAlert = function (title, message, type, error) {
         $("#alerts-widget-pane").freeow(title, message, {
             classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
             showStyle:{opacity:.95},
@@ -174,11 +174,11 @@ wm.ui = new function() {
         wm.ui.getAttention(title);
     };
 
-    this.getAttention = function(title) {
+    this.getAttention = function (title) {
         if (!activeWindows) {
             $(window).stopTime('attention-timer');
             var documentTitle = document.title;
-            $(window).everyTime(500, 'attention-timer', function(i) {
+            $(window).everyTime(500, 'attention-timer', function (i) {
                 if (i % 2 == 0) {
                     document.title = "*** " + title + " ***";
                 } else {
@@ -188,7 +188,7 @@ wm.ui = new function() {
         }
     };
 
-    this.showStatus = function(message, error, stick) {
+    this.showStatus = function (message, error, stick) {
 //        wm.ui.clearStatus();
         $("#status-widget-pane").empty();
 
@@ -204,7 +204,7 @@ wm.ui = new function() {
         });
     };
 
-    this.clearStatus = function() {
+    this.clearStatus = function () {
         var freeow = $("#status-widget-pane").children().data("freeow");
         if (freeow != null) {
             freeow.hide();
@@ -213,7 +213,7 @@ wm.ui = new function() {
         }
     };
 
-    this.refreshImage = function(element) {
+    this.refreshImage = function (element) {
         var el = $(element);
         if (el.attr('src').indexOf("?") < 0) {
             el.attr('src', el.attr('src') + '?' + new Date().getTime());
@@ -222,7 +222,7 @@ wm.ui = new function() {
         }
     };
 
-    this.player = function(info, hideLink) {
+    this.player = function (info, hideLink) {
         var id = (info.playerId != undefined ? info.playerId : info.id);
         var html = '<span class="player ' + (id > 1000 ? 'member' : 'computer') + '">';
         if (info.online) {
@@ -242,79 +242,79 @@ wm.ui = new function() {
         return html;
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("body").prepend($("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>"));
         $("body").prepend($("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>"));
 
         var activeWindowTitle = document.title;
-        $(window).bind("focus", function() {
+        $(window).bind("focus", function () {
             activeWindows = true;
             if (activeWindowTitle != undefined) {
                 document.title = activeWindowTitle;
             }
             $(window).stopTime('attention-timer');
         });
-        $(window).bind("blur", function() {
+        $(window).bind("blur", function () {
             activeWindows = false;
             activeWindowTitle = document.title;
         });
     });
 };
 
-wm.ui.editor = new function() {
-    var TextEditor = function() {
+wm.ui.editor = new function () {
+    var TextEditor = function () {
         var editor = $("<input>");
 
-        this.createEditor = function(currentValue) {
+        this.createEditor = function (currentValue) {
             return editor.val(currentValue);
         };
 
-        this.getValue = function() {
+        this.getValue = function () {
             return editor.val();
         };
 
-        this.getDisplayValue = function() {
+        this.getDisplayValue = function () {
             return editor.val();
         };
     };
 
-    var DateEditor = function(ops) {
+    var DateEditor = function (ops) {
         var editor = $("<div></div>").datepicker(ops);
 
-        this.createEditor = function(currentValue) {
+        this.createEditor = function (currentValue) {
             return editor.datepicker("setDate", currentValue);
         };
 
-        this.getValue = function() {
+        this.getValue = function () {
             return $.datepicker.formatDate(ops.dateFormat, editor.datepicker("getDate"));
         };
 
-        this.getDisplayValue = function() {
+        this.getDisplayValue = function () {
             return $.datepicker.formatDate(ops.displayFormat, editor.datepicker("getDate"));
         };
     };
 
-    var SelectEditor = function(values) {
+    var SelectEditor = function (values) {
         var editor = $('<select></select>');
 
-        $.each(values, function(key, value) {
+        $.each(values, function (key, value) {
             editor.append($('<option value="' + key + '">' + value + '</option>'));
         });
 
-        this.createEditor = function(currentValue) {
+        this.createEditor = function (currentValue) {
             return editor.val(currentValue);
         };
 
-        this.getValue = function() {
+        this.getValue = function () {
             return editor.val();
         };
 
-        this.getDisplayValue = function() {
+        this.getDisplayValue = function () {
             return editor.children("option:selected").text();
         };
     };
 
-    this.Controller = function(view, committer, editorsInfo) {
+    this.Controller = function (view, committer, editorsInfo) {
         var activeElement;
         var activeEditor;
         var previousValue;
@@ -334,7 +334,7 @@ wm.ui.editor = new function() {
         var saveButton = $(editorDialog).find('.ui-editor-save');
         var cancelButton = $(editorDialog).find('.ui-editor-cancel');
 
-        var commitEditing = function() {
+        var commitEditing = function () {
             saveButton.attr('disabled', 'disabled');
             cancelButton.attr('disabled', 'disabled');
 
@@ -344,10 +344,10 @@ wm.ui.editor = new function() {
             });
 
             var values = {};
-            $.each($(view).find('input').serializeArray(), function(i, field) {
+            $.each($(view).find('input').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
-            committer(activeElement.id, values, function(errorMsg) {
+            committer(activeElement.id, values, function (errorMsg) {
                 if (errorMsg != undefined) {
                     editorDialog.addClass('ui-state-error');
                     editorDialog.find(".ui-editor-error").html(errorMsg);
@@ -360,7 +360,7 @@ wm.ui.editor = new function() {
             });
         };
 
-        var revertEditing = function() {
+        var revertEditing = function () {
             setViewInfo(activeElement, {
                 value:previousValue.value,
                 view:previousValue.view
@@ -369,7 +369,7 @@ wm.ui.editor = new function() {
             return false;
         };
 
-        var createNewEditor = function(editorInfo) {
+        var createNewEditor = function (editorInfo) {
             if (editorInfo.type == 'text') {
                 return new TextEditor();
             } else if (editorInfo.type == 'select') {
@@ -379,7 +379,7 @@ wm.ui.editor = new function() {
             }
         };
 
-        var setViewInfo = function(view, info) {
+        var setViewInfo = function (view, info) {
             var a = $(view).children(".ui-editor-view");
             if (info.value == "") {
                 a.addClass('sample');
@@ -391,7 +391,7 @@ wm.ui.editor = new function() {
             $(view).children("input").val(info.value);
         };
 
-        var getViewInfo = function(view) {
+        var getViewInfo = function (view) {
             return {
                 label:$(view).children(".ui-editor-label").text(),
                 view:$(view).children(".ui-editor-view").html(),
@@ -399,7 +399,7 @@ wm.ui.editor = new function() {
             };
         };
 
-        var closeEditor = function() {
+        var closeEditor = function () {
             saveButton.removeAttr('disabled');
             cancelButton.removeAttr('disabled');
 
@@ -414,7 +414,7 @@ wm.ui.editor = new function() {
             previousValue = null;
         };
 
-        var openEditor = function(view, editor) {
+        var openEditor = function (view, editor) {
             activeElement = view;
             activeEditor = editor;
             previousValue = getViewInfo(view);
@@ -444,9 +444,9 @@ wm.ui.editor = new function() {
         saveButton.click(commitEditing);
         cancelButton.click(revertEditing);
 
-        $.each($(view).find('.ui-editor-item'), function(i, v) {
+        $.each($(view).find('.ui-editor-item'), function (i, v) {
             if (editorsInfo[v.id] != undefined) {
-                $(v).click(function() {
+                $(v).click(function () {
                     openEditor(v, createNewEditor(editorsInfo[v.id]));
                 });
             }
@@ -454,7 +454,7 @@ wm.ui.editor = new function() {
     };
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
     $("[title]").cluetip({ showTitle:false});
 
     var notifications = $(".notification");
@@ -464,12 +464,12 @@ $(document).ready(function() {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-            function() {
+            function () {
                 if (!$(this).hasClass('ui-state-active')) {
                     $(this).attr('class', 'quickInfo ui-state-hover');
                 }
             },
-            function() {
+            function () {
                 if (!$(this).hasClass('ui-state-active')) {
                     $(this).attr('class', 'quickInfo ui-state-default');
                 }
@@ -485,7 +485,7 @@ $(document).ready(function() {
         closeText:wm.i18n.value('button.close'),
         arrows:false,
         sticky:true,
-        ajaxProcess:function(E) {
+        ajaxProcess:function (E) {
             return E.summary;
         },
         ajaxSettings:{
@@ -493,7 +493,7 @@ $(document).ready(function() {
             dataType:'json',
             contentType:'application/json'
         },
-        onActivate:function(e) {
+        onActivate:function (e) {
             if (activeQuickInfo != undefined) {
                 activeQuickInfo.parent().attr('class', 'quickInfo ui-state-default');
             }
@@ -501,9 +501,11 @@ $(document).ready(function() {
             e.parent().attr('class', 'quickInfo ui-state-active');
             return true;
         },
-        onHide:function(ct, ci) {
+        onHide:function (ct, ci) {
             $(this).parent().attr('class', 'quickInfo ui-state-default');
             activeQuickInfo = undefined;
         }
     });
+
+    $(".data-table-toolbar a").button();
 });

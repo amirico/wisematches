@@ -23,17 +23,18 @@
 <div id="join-game">
 <@wm.playground id="waitingGamesWidget">
     <@wm.dtHeader>
-        <@message code="game.menu.games.label"/> > <@message code="game.menu.join.label"/>
+        <@message code="game.menu.games.label"/> > <@message code="game.join.label"/>
     </@wm.dtHeader>
 
     <@wm.dtToolbar>
         <#if joinError??>
-            <div style="text-align: left">
-                <div class="ui-state-error-text error-msg"><@message code=joinError args=joinErrorArgs/></div>
+            <div class="ui-state-error-text error-msg" style="float: left;">
+                <@message code=joinError args=joinErrorArgs/>
             </div>
-        <#else>
-            &nbsp;
         </#if>
+        <div>
+            <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
+        </div>
     </@wm.dtToolbar>
 
     <@wm.dtContent>
@@ -80,10 +81,10 @@
                                 <div class="game-join-error">${gameMessageSource.getMessage(errorCode, locale, violation.expected, violation.received)}</div>
                             </#list>
                         <#else>
-                            <a href="/playground/scribble/join?p=${proposal.proposal.id}">&raquo; <@message code="game.join.label"/></a>
+                            <a href="/playground/scribble/join?p=${proposal.proposal.id}">&raquo; <@message code="game.join.accept.label"/></a>
                             <#if proposal.proposal.proposalType == "CHALLENGE">
                                 <br>
-                                <a href="/playground/scribble/decline?p=${proposal.proposal.id}">&raquo; <@message code="game.decline.label"/></a>
+                                <a href="/playground/scribble/decline?p=${proposal.proposal.id}">&raquo; <@message code="game.join.decline.label"/></a>
                             </#if>
                         </#if>
                     </td>

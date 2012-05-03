@@ -139,8 +139,6 @@
         }
     });
 
-    $(".data-table-toolbar div").buttonset();
-
     function cancelProposal(id) {
         $.ajax('decline.ajax?p=' + id, {
             success:function (data, textStatus, jqXHR) {
