@@ -56,7 +56,7 @@
     </beans:bean>
 
     <beans:bean id="authenticationSuccessHandler"
-                class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+                class="wisematches.server.web.security.spring.WMAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/playground/scribble/active"/>
         <beans:property name="targetUrlParameter" value="continue"/>
     </beans:bean>
