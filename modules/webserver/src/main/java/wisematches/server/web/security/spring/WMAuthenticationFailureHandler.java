@@ -29,92 +29,91 @@ import java.util.Map;
  * @see org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler
  */
 public class WMAuthenticationFailureHandler implements AuthenticationFailureHandler {
-    private String defaultFailureUrl;
-    private boolean allowSessionCreation = true;
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-    private final Map<String, String> failureUrlMap = new HashMap<String, String>();
+	private String defaultFailureUrl;
+	private boolean allowSessionCreation = true;
+	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+	private final Map<String, String> failureUrlMap = new HashMap<String, String>();
 
-    private static final Log log = LogFactory.getLog("wisematches.server.web.security");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.security");
 
-    public WMAuthenticationFailureHandler() {
-    }
+	public WMAuthenticationFailureHandler() {
+	}
 
-    /**
-     * Performs the redirect or forward to the {@code defaultFailureUrl} if set, otherwise returns a 401 error code.
-     * <p/>
-     * If redirecting or forwarding, {@code saveException} will be called to cache the exception for use in
-     * the target view.
-     */
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException {
-        String url = failureUrlMap.get(exception.getClass().getName());
-        if (url != null) {
-            redirect(request, response, url, exception);
-        } else if (defaultFailureUrl == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("No failure URL set, sending 401 Unauthorized error");
-            }
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed: " + exception.getMessage());
-        } else {
-            redirect(request, response, url, exception);
-        }
-    }
+	/**
+	 * Performs the redirect or forward to the {@code defaultFailureUrl} if set, otherwise returns a 401 error code.
+	 * <p/>
+	 * If redirecting or forwarding, {@code saveException} will be called to cache the exception for use in
+	 * the target view.
+	 */
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+										AuthenticationException exception) throws IOException, ServletException {
+		String url = failureUrlMap.get(exception.getClass().getName());
+		if (url != null) {
+			redirect(request, response, url, exception);
+		} else if (defaultFailureUrl == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("No failure URL set, sending 401 Unauthorized error");
+			}
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed: " + exception.getMessage());
+		} else {
+			redirect(request, response, url, exception);
+		}
+	}
 
-    protected void redirect(HttpServletRequest request, HttpServletResponse response, String url, AuthenticationException exception) throws IOException {
-        saveException(request, exception);
-        if (log.isDebugEnabled()) {
-            log.debug("Redirecting to " + url);
-        }
-        redirectStrategy.sendRedirect(request, response, url);
-    }
+	protected void redirect(HttpServletRequest request, HttpServletResponse response, String url, AuthenticationException exception) throws IOException {
+		saveException(request, exception);
+		if (log.isDebugEnabled()) {
+			log.debug("Redirecting to " + url);
+		}
+		redirectStrategy.sendRedirect(request, response, url);
+	}
 
-    protected void saveException(HttpServletRequest request, AuthenticationException exception) {
-        HttpSession session = request.getSession(false);
+	protected void saveException(HttpServletRequest request, AuthenticationException exception) {
+		HttpSession session = request.getSession(false);
 
-        if (session != null || allowSessionCreation) {
+		if (session != null || allowSessionCreation) {
+			request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, exception);
+		}
+	}
 
-            request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, exception);
-        }
-    }
+	public void setDefaultFailureUrl(String defaultFailureUrl) {
+		Assert.isTrue(UrlUtils.isValidRedirectUrl(defaultFailureUrl),
+				"'" + defaultFailureUrl + "' is not a valid redirect URL");
+		this.defaultFailureUrl = defaultFailureUrl;
+	}
 
-    public void setDefaultFailureUrl(String defaultFailureUrl) {
-        Assert.isTrue(UrlUtils.isValidRedirectUrl(defaultFailureUrl),
-                "'" + defaultFailureUrl + "' is not a valid redirect URL");
-        this.defaultFailureUrl = defaultFailureUrl;
-    }
+	public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+		this.redirectStrategy = redirectStrategy;
+	}
 
-    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-        this.redirectStrategy = redirectStrategy;
-    }
+	protected RedirectStrategy getRedirectStrategy() {
+		return redirectStrategy;
+	}
 
-    protected RedirectStrategy getRedirectStrategy() {
-        return redirectStrategy;
-    }
+	protected boolean isAllowSessionCreation() {
+		return allowSessionCreation;
+	}
 
-    protected boolean isAllowSessionCreation() {
-        return allowSessionCreation;
-    }
+	public void setAllowSessionCreation(boolean allowSessionCreation) {
+		this.allowSessionCreation = allowSessionCreation;
+	}
 
-    public void setAllowSessionCreation(boolean allowSessionCreation) {
-        this.allowSessionCreation = allowSessionCreation;
-    }
-
-    /**
-     * Sets the map of exception types (by name) to URLs.
-     *
-     * @param failureUrlMap the map keyed by the fully-qualified name of the exception class, with the corresponding
-     *                      failure URL as the value.
-     * @throws IllegalArgumentException if the entries are not Strings or the URL is not valid.
-     */
-    public void setExceptionMappings(Map<?, ?> failureUrlMap) {
-        this.failureUrlMap.clear();
-        for (Map.Entry<?, ?> entry : failureUrlMap.entrySet()) {
-            Object exception = entry.getKey();
-            Object url = entry.getValue();
-            Assert.isInstanceOf(String.class, exception, "Exception key must be a String (the exception classname).");
-            Assert.isInstanceOf(String.class, url, "URL must be a String");
-            Assert.isTrue(UrlUtils.isValidRedirectUrl((String) url), "Not a valid redirect URL: " + url);
-            this.failureUrlMap.put((String) exception, (String) url);
-        }
-    }
+	/**
+	 * Sets the map of exception types (by name) to URLs.
+	 *
+	 * @param failureUrlMap the map keyed by the fully-qualified name of the exception class, with the corresponding
+	 *                      failure URL as the value.
+	 * @throws IllegalArgumentException if the entries are not Strings or the URL is not valid.
+	 */
+	public void setExceptionMappings(Map<?, ?> failureUrlMap) {
+		this.failureUrlMap.clear();
+		for (Map.Entry<?, ?> entry : failureUrlMap.entrySet()) {
+			Object exception = entry.getKey();
+			Object url = entry.getValue();
+			Assert.isInstanceOf(String.class, exception, "Exception key must be a String (the exception classname).");
+			Assert.isInstanceOf(String.class, url, "URL must be a String");
+			Assert.isTrue(UrlUtils.isValidRedirectUrl((String) url), "Not a valid redirect URL: " + url);
+			this.failureUrlMap.put((String) exception, (String) url);
+		}
+	}
 }

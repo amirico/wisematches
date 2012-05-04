@@ -56,12 +56,8 @@ public class AuthenticationController extends AbstractInfoController {
 										 HttpSession session, Model model, Locale locale) {
 		restoreAccountLoginForm(form, session);
 		enableFullView(model);
+		result.rejectValue("j_password", "account.login.err.credential");
 
-		if (!form.hasUsername()) {
-			result.rejectValue("j_username", "account.login.email.err.blank");
-		} else {
-			result.rejectValue("j_password", "account.login.err.credential");
-		}
 		return processLoginPage("info/general", model, locale);
 	}
 
@@ -122,15 +118,16 @@ public class AuthenticationController extends AbstractInfoController {
 		return "title.authentication";
 	}
 
+	@SuppressWarnings("deprecation")
 	private void restoreAccountLoginForm(AccountLoginForm form, HttpSession session) {
 		if (form.getJ_username() == null) {
-			final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//			final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-//			if (ex != null) {
-//				authentication = ex.getAuthentication();
-//			} else {
-//				authentication = ;
-//			}
+			final Authentication authentication;
+			final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+			if (ex != null) {
+				authentication = ex.getAuthentication();
+			} else {
+				authentication = SecurityContextHolder.getContext().getAuthentication();
+			}
 			if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
 				form.setJ_username(authentication.getName());
 			}

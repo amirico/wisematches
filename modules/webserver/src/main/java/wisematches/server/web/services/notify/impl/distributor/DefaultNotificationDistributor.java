@@ -112,9 +112,8 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 					final Date notificationDate = notificationManager.getNotificationDate(recipient, code);
 					if (notificationDate == null || (activityDate != null && notificationDate.before(activityDate))) {
 						publishNotification(notification, PublicationType.EXTERNAL);
-					} else {
-						return; // ignore
 					}
+					// ignore
 				} else {
 					publishNotification(notification, PublicationType.EXTERNAL);
 				}
@@ -150,7 +149,7 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 
 	private void publishNotification(final Notification notification, final PublicationType type) {
 		try {
-			boolean res = false;
+			boolean res;
 			if (type == PublicationType.EXTERNAL) {
 				if (externalPublisher != null) {
 					res = externalPublisher.publishNotification(notification);
@@ -211,7 +210,7 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 			this.mandatoryNotifications.clear();
 		}
 
-		if (mandatoryNotifications != null) {
+		if (this.mandatoryNotifications != null && mandatoryNotifications != null) {
 			this.mandatoryNotifications.addAll(mandatoryNotifications);
 		}
 	}
@@ -221,7 +220,7 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 			this.redundantNotifications.clear();
 		}
 
-		if (redundantNotifications != null) {
+		if (this.redundantNotifications != null && redundantNotifications != null) {
 			this.redundantNotifications.addAll(redundantNotifications);
 		}
 	}
