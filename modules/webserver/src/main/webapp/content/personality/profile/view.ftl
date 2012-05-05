@@ -23,8 +23,8 @@
     <div class="player">
     <#if (profile.realName?? && profile.realName?has_content)>
         <strong>${profile.realName}</strong>
-        <#else>
-            <strong>${player.nickname}</strong>
+    <#else>
+        <strong>${player.nickname}</strong>
     </#if>
     </div>
     <div class="registered">
@@ -37,9 +37,9 @@
 </div>
 </#if>
 <#assign p_wins=0 p_loses=0 p_draws=0 p_timeouts=0/>
-<#assign wins=statistics.wins loses=statistics.loses draws=statistics.draws timeouts=statistics.timeouts finished=statistics.finishedGames/>
-<#if finished != 0>
-    <#assign p_wins=(wins/finished*100) p_loses=(loses/finished*100) p_draws=(draws/finished*100) p_timeouts=(timeouts/finished*100)/>
+<#assign active=statistics.activeGames wins=statistics.wins loses=statistics.loses draws=statistics.draws timeouts=statistics.timeouts completed=statistics.finishedGames-statistics.timeouts/>
+<#if completed != 0>
+    <#assign p_wins=(wins/completed*100)?round p_loses=(loses/completed*100)?round p_draws=100-p_wins-p_loses p_timeouts=(timeouts/(completed + timeouts)*100)?round/>
 </#if>
 <div style="width: 100%; text-align: left;">
 <table width="100%" class="statistic" style="padding: 0">
@@ -71,7 +71,7 @@
                     <td class="ui-state-default">${wins} <span>(${p_wins?string("0")}%)</span></td>
                     <td class="ui-state-default">${loses} <span>(${p_loses?string("0")}%)</span></td>
                     <td class="ui-state-default">${draws} <span>(${p_draws?string("0")}%)</span></td>
-                    <td class="ui-state-default">${finished}</td>
+                    <td class="ui-state-default">${completed}</td>
                 </tr>
                 </tbody>
             </table>
@@ -106,11 +106,11 @@
                         <div><@message code="profile.rating.op.low"/>:</div>
                         <div>
                         <#if statistics.lowestLostOpponentId==0>
-                        <@message code="profile.undefined"/>
-                            <#else>
-                            ${statistics.lowestLostOpponentRating}
-                                <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                                <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
+                            <@message code="profile.undefined"/>
+                        <#else>
+                        ${statistics.lowestLostOpponentRating}
+                            <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
+                            <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -118,19 +118,21 @@
                         <div><@message code="profile.rating.op.hi"/>:</div>
                         <div>
                         <#if statistics.highestWonOpponentId==0>
-                        <@message code="profile.undefined"/>
-                            <#else>
-                            ${statistics.highestWonOpponentRating}
-                                <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
-                                <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
-                                    )</#if>
+                            <@message code="profile.undefined"/>
+                        <#else>
+                        ${statistics.highestWonOpponentRating}
+                            <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
+                            <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
+                                )</#if>
                         </#if>
                         </div>
                     </div>
                 </div>
             </div>
             <div style="text-align: right; width: 300px">
-                <div id="ratingChart"></div>
+                <div id="ratingChart" style="width:300px; height:150px">
+                    <div class="loading-image" style="height: 150px"></div>
+                </div>
                 <div class="sample"><sub>(<@message code="profile.rating.pastyear"/>)</sub></div>
             </div>
         </div>
@@ -144,15 +146,15 @@
                 <div class="ui-layout-table">
                     <div>
                         <div><@message code="profile.active"/>:</div>
-                        <div>${statistics.activeGames}</div>
+                        <div>${active}</div>
                     </div>
                     <div>
                         <div><@message code="profile.finished"/>:</div>
-                        <div>${statistics.finishedGames}</div>
+                        <div>${completed}</div>
                     </div>
                     <div>
                         <div><@message code="profile.interrupted"/>:</div>
-                        <div>${statistics.timeouts}</div>
+                        <div>${timeouts}</div>
                     </div>
                 </div>
                 <div class="ui-layout-table" style="padding-top: 10px">
@@ -162,7 +164,7 @@
                         <#if statistics.lastMoveTime??>
                                 ${gameMessageSource.formatDate(statistics.lastMoveTime, locale)}
                                 <#else>
-                        <@message code="profile.undefined"/>
+                            <@message code="profile.undefined"/>
                         </#if>
                         </div>
                     </div>
@@ -172,7 +174,7 @@
                         <#if statistics.averageMoveTime != 0>
                             ${gameMessageSource.formatMinutes(statistics.averageMoveTime/1000/60, locale)}
                             <#else>
-                        <@message code="profile.undefined"/>
+                            <@message code="profile.undefined"/>
                         </#if>
                         </div>
                     </div>
@@ -185,11 +187,15 @@
             <div style="vertical-align: top; width: 300px">
                 <span class="sample"><@message code="profile.successfulness"/></span>
 
-                <div id="gamesChart"></div>
+                <div id="gamesChart" style="width:300px; height:75px">
+                    <div class="loading-image" style="height: 50px"></div>
+                </div>
 
                 <span class="sample"><@message code="profile.punctual"/></span>
 
-                <div id="timeoutsChart"></div>
+                <div id="timeoutsChart" style="width:300px; height:75px">
+                    <div class="loading-image" style="height: 50px"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -225,7 +231,7 @@
                          style="background-position: -${tile.cost*22}px 0; top: 0; left: ${tile_index*22}px; padding: 0;">
                         <span>${tile.letter?upper_case}</span></div>
                 </#list>
-                <#else>
+            <#else>
                 <@message code="profile.undefined"/>
             </#if>
             </div>
@@ -239,7 +245,7 @@
                          style="background-position: -${tile.cost*22}px 0; top: 0; left: ${tile_index*22}px; padding: 0;">
                         <span>${tile.letter?upper_case}</span></div>
                 </#list>
-                <#else>
+            <#else>
                 <@message code="profile.undefined"/>
             </#if>
             </div>
@@ -251,14 +257,14 @@
     <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
     |
     <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
-    <br>
-    <a href="/playground/scribble/create?t=challenge&p=${player.id}"><@message code="game.challenge.label"/></a>
     |
+    <a href="/playground/scribble/create?t=challenge&p=${player.id}"><@message code="game.challenge.label"/></a>
+    <br>
 <@privateMessage pid=player.id><@message code="messages.send.label"/></@privateMessage>
     |
-<@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
-    |
 <@friends pid=player.id><@message code="friends.add.label"/></@friends>
+    |
+<@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
 </div>
 </div>
 
@@ -272,7 +278,7 @@
     <div><strong>${player.nickname}</strong></div>
     <div>
     <#if profile.gender??>
-    <@message code="gender." + profile.gender.name()?lower_case/>,
+        <@message code="gender." + profile.gender.name()?lower_case/>,
     </#if>
     <#if profile.birthday??>${gameMessageSource.getAge(profile.birthday)} <@message code="profile.edit.years"/>,</#if>
     </div>
@@ -338,7 +344,7 @@
         data.addColumn('number', '<@message code="profile.loses"/>');
         data.addColumn('number', '<@message code="profile.draws"/>');
         data.addRows([
-            ['', ${statistics.wins}, ${statistics.loses}, ${statistics.draws}]
+            ['', ${wins}, ${loses}, ${draws}]
         ]);
 
         new google.visualization.BarChart(document.getElementById('gamesChart')).
@@ -363,7 +369,7 @@
         data2.addColumn('number', '<@message code="profile.timeouts"/>');
         data2.addColumn('number', '<@message code="profile.well"/>');
         data2.addRows([
-            ['',${statistics.loses}, ${statistics.wins}]
+            ['',${p_timeouts}, ${100-p_timeouts}]
         ]);
 
         new google.visualization.BarChart(document.getElementById('timeoutsChart')).
