@@ -3,6 +3,8 @@ package wisematches.server.web.utils.useragent;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNull;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -28,6 +30,13 @@ public class WebClientTest {
 	public void testGoogleAdSense() {
 		assertClient(UserAgent.GOOGLEADSENSE, 0, "Mediapartners-Google");
 		assertClient(UserAgent.GOOGLEADSENSE, 2, "Mediapartners-Google/2.1");
+	}
+
+	@Test
+	public void testRobots() {
+		assertNull(WebClient.detect("Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"));
+		assertNull(WebClient.detect("Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"));
+		assertNull(WebClient.detect("Mozilla/5.0 (compatible; news bot /2.1)"));
 	}
 
 	private void assertClient(UserAgent u, int v, String a) {

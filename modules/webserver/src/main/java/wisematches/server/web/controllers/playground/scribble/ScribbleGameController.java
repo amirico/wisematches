@@ -399,11 +399,17 @@ public class ScribbleGameController extends WisematchesController {
 			}
 		} else if (players.size() == 0) { // waiting
 			final List<PlayerCriterion> res = new ArrayList<PlayerCriterion>();
-			if (form.getMinRating() != 0) {
+			if (form.getMinRating() > 0) {
 				res.add(PlayerRestrictions.rating("player.rating.min", form.getMinRating(), ComparableOperator.GE));
 			}
-			if (form.getMaxRating() != 0) {
+			if (form.getMaxRating() > 0) {
 				res.add(PlayerRestrictions.rating("player.rating.max", form.getMaxRating(), ComparableOperator.LE));
+			}
+			if (form.getTimeouts() > 0) {
+				res.add(PlayerRestrictions.timeouts("game.timeouts", form.getTimeouts(), ComparableOperator.LE));
+			}
+			if (form.getCompleted() > 0) {
+				res.add(PlayerRestrictions.completed("game.completed", form.getCompleted(), ComparableOperator.GE));
 			}
 			proposalManager.initiate(s, getPrincipal(), opponents.length, res.toArray(new PlayerCriterion[res.size()]));
 		} else {
