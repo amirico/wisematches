@@ -69,8 +69,7 @@ public class WebClient {
 	}
 
 	public static WebClient detect(String userAgentString) {
-		UserAgent ua = UserAgent.UNKNOWN;
-		int version = 0;
+		UserAgent ua = null;
 		String ver = null;
 		if (userAgentString != null && !userAgentString.isEmpty()) {
 			try {
@@ -134,14 +133,14 @@ public class WebClient {
 						ver = "0.0";
 					}
 				}
-				version = Integer.parseInt(ver.substring(0, ver.indexOf(".")));
+				if (ver != null && ua != null) {
+					return new WebClient(ua, Integer.parseInt(ver.substring(0, ver.indexOf("."))), ver);
+				}
 			} catch (Exception ex) {
-				ver = null;
-				version = 0;
 				log.error("WebClient can't be parsed for " + userAgentString, ex);
 			}
 		}
-		return new WebClient(ua, version, ver);
+		return null;
 	}
 
 	@Override
