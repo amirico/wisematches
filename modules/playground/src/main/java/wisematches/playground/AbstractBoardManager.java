@@ -150,7 +150,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	 * Creates new board with specified settings.
 	 *
 	 * @param gameSettings the game settings.
-	 * @param players	  the list of board players.
+	 * @param players      the list of board players.
 	 * @return the created game board.
 	 * @throws BoardCreationException if board can't be created by some reasones.
 	 */
@@ -270,8 +270,8 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 			while (reference != null) {
 				final BoardWeakReference ref = (BoardWeakReference) reference;
 				final long id = ref.getBoardId();
-				if (log.isInfoEnabled()) {
-					log.info("Board is expired and removed from map: " + id);
+				if (log.isDebugEnabled()) {
+					log.debug("Board is expired and removed from map: " + id);
 				}
 				boardsReferences.remove(id);
 				reference = boardsQueue.poll();
