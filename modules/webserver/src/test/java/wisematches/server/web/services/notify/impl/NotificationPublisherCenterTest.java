@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.database.concurrent.TransactionalTaskExecutor;
+import wisematches.database.concurrent.TransactionAwareTaskExecutor;
 import wisematches.personality.Language;
 import wisematches.personality.Membership;
 import wisematches.personality.Personality;
@@ -118,7 +118,7 @@ public class NotificationPublisherCenterTest {
         }).anyTimes();
         replay(notificationManager);
 
-        final TransactionalTaskExecutor taskExecutor = new TransactionalTaskExecutor();
+        final TransactionAwareTaskExecutor taskExecutor = new TransactionAwareTaskExecutor();
         taskExecutor.setTaskExecutor(new SyncTaskExecutor());
         taskExecutor.setTransactionManager(transactionManager);
 

@@ -14,13 +14,13 @@ import org.springframework.transaction.support.TransactionTemplate;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TransactionalTaskExecutor implements TaskExecutor {
+public class TransactionAwareTaskExecutor implements TaskExecutor {
 	private TaskExecutor taskExecutor;
 	private PlatformTransactionManager transactionManager;
 
 	private TransactionTemplate transactionTemplate;
 
-	public TransactionalTaskExecutor() {
+	public TransactionAwareTaskExecutor() {
 	}
 
 	@Override
