@@ -21,6 +21,7 @@ import wisematches.playground.restriction.RestrictionDescription;
 import wisematches.playground.restriction.RestrictionManager;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -155,8 +156,12 @@ public class HibernateMessageManager implements MessageManager {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Collection<Message> getMessages(Personality person, MessageDirection direction) {
+		if (direction == MessageDirection.RECEIVED) {
+			updateLastCheckTime(person);
+		}
+
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query;
 		if (direction == MessageDirection.SENT) {
@@ -195,6 +200,17 @@ public class HibernateMessageManager implements MessageManager {
 		} finally {
 			removesLock.unlock();
 		}
+	}
+
+	private void updateLastCheckTime(Personality person) {
+		final Session session = sessionFactory.getCurrentSession();
+		HibernateMessageActivity hibernateMessageActivity = (HibernateMessageActivity) session.get(HibernateMessageActivity.class, person.getId());
+		if (hibernateMessageActivity == null) {
+			hibernateMessageActivity = new HibernateMessageActivity(person.getId(), new Date());
+		} else {
+			hibernateMessageActivity.setLastCheckTime(new Date());
+		}
+		session.saveOrUpdate(hibernateMessageActivity);
 	}
 
 	@Override

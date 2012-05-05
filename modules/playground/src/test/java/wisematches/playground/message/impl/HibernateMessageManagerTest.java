@@ -52,14 +52,42 @@ public class HibernateMessageManagerTest {
 		assertEquals(0, messageManager.getTodayMessagesCount(p2, MessageDirection.SENT));
 		assertEquals(0, messageManager.getTodayMessagesCount(p2, MessageDirection.RECEIVED));
 
+		assertEquals(0, messageManager.getTodayMessagesCount(p1, MessageDirection.RECEIVED));
+		assertEquals(0, messageManager.getTodayMessagesCount(p1, MessageDirection.SENT));
+		assertEquals(0, messageManager.getTodayMessagesCount(p2, MessageDirection.SENT));
+		assertEquals(0, messageManager.getTodayMessagesCount(p2, MessageDirection.RECEIVED));
+
+		assertEquals(0, messageManager.getNewMessagesCount(p1));
+		assertEquals(0, messageManager.getNewMessagesCount(p2));
+
 		messageManager.sendMessage(p1, p2, "B1");
+		assertEquals(0, messageManager.getNewMessagesCount(p1));
+		assertEquals(1, messageManager.getNewMessagesCount(p2));
+
 		messageManager.sendMessage(p1, p2, "B2");
+		assertEquals(0, messageManager.getNewMessagesCount(p1));
+		assertEquals(2, messageManager.getNewMessagesCount(p2));
+
 		messageManager.sendMessage(p2, p1, "B3");
+		assertEquals(1, messageManager.getNewMessagesCount(p1));
+		assertEquals(2, messageManager.getNewMessagesCount(p2));
+
+		assertEquals(2, messageManager.getMessages(p1, MessageDirection.SENT).size());
+		assertEquals(1, messageManager.getNewMessagesCount(p1));
+		assertEquals(2, messageManager.getNewMessagesCount(p2));
+
+		assertEquals(1, messageManager.getMessages(p2, MessageDirection.SENT).size());
+		assertEquals(1, messageManager.getNewMessagesCount(p1));
+		assertEquals(2, messageManager.getNewMessagesCount(p2));
 
 		assertEquals(1, messageManager.getMessages(p1, MessageDirection.RECEIVED).size());
+		assertEquals(1, messageManager.getNewMessagesCount(p1)); // READ_COMMITTED isolation.
+		assertEquals(2, messageManager.getNewMessagesCount(p2));  // READ_COMMITTED isolation.
+
 		assertEquals(2, messageManager.getMessages(p2, MessageDirection.RECEIVED).size());
-		assertEquals(2, messageManager.getMessages(p1, MessageDirection.SENT).size());
-		assertEquals(1, messageManager.getMessages(p2, MessageDirection.SENT).size());
+		assertEquals(1, messageManager.getNewMessagesCount(p1));  // READ_COMMITTED isolation.
+		assertEquals(2, messageManager.getNewMessagesCount(p2));  // READ_COMMITTED isolation.
+
 		assertEquals(1, messageManager.getTodayMessagesCount(p2, MessageDirection.SENT));
 		assertEquals(2, messageManager.getTodayMessagesCount(p1, MessageDirection.SENT));
 		assertEquals(2, messageManager.getTodayMessagesCount(p2, MessageDirection.RECEIVED));
@@ -122,7 +150,7 @@ public class HibernateMessageManagerTest {
 		final SQLQuery query = createMock(SQLQuery.class);
 		expect(query.executeUpdate()).andReturn(1);
 		replay(query);
-		
+
 		final Session session = createMock(Session.class);
 		expect(session.createSQLQuery(isA(String.class))).andReturn(query);
 		replay(session);

@@ -44,10 +44,6 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="activityManager" class="wisematches.playground.activity.impl.HibernateActivityManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
     <bean id="tournamentSubscriptionManager"
           class="wisematches.playground.tournament.upcoming.impl.HibernateTournamentSubscriptionManager">
         <property name="ratingManager" ref="ratingManager"/>
