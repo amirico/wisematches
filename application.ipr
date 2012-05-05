@@ -11,7 +11,6 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-2.0-SNAPSHOT.jar">
@@ -56,7 +55,7 @@
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-crypto:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.1.0.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.0.RELEASE" />
-            <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.1" />
+            <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.4" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
             <element id="archive" name="personality-2.0-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
@@ -924,15 +923,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.2/objenesis-1.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.quartz-scheduler:quartz:2.1.1">
+    <library name="Maven: org.quartz-scheduler:quartz:2.1.4">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.1/quartz-2.1.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.4/quartz-2.1.4.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.1/quartz-2.1.1-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.4/quartz-2.1.4-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.1/quartz-2.1.1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.4/quartz-2.1.4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.6.1">
