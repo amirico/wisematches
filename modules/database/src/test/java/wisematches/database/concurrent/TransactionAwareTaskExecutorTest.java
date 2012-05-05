@@ -13,8 +13,8 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TransactionalTaskExecutorTest {
-	public TransactionalTaskExecutorTest() {
+public class TransactionAwareTaskExecutorTest {
+	public TransactionAwareTaskExecutorTest() {
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class TransactionalTaskExecutorTest {
 		transactionManager.commit(transactionStatus);
 		replay(transactionManager);
 
-		final TransactionalTaskExecutor executor = new TransactionalTaskExecutor();
+		final TransactionAwareTaskExecutor executor = new TransactionAwareTaskExecutor();
 		executor.setTaskExecutor(new SyncTaskExecutor());
 		executor.setTransactionManager(transactionManager);
 

@@ -45,7 +45,7 @@
                 <th><@message code="game.language.label"/></th>
                 <th><@message code="game.time.label"/></th>
                 <th><@message code="game.opponents.label"/></th>
-                <th><@message code="game.join.label"/></th>
+                <th><@message code="game.restrictions.label"/></th>
             </tr>
             </thead>
             <tbody>

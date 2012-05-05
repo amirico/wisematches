@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.ComputerPlayer;
-import wisematches.playground.activity.ActivityManager;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageDirection;
@@ -35,7 +34,6 @@ import java.util.Locale;
 public class MessageController extends WisematchesController {
 	private PlayerManager playerManager;
 	private MessageManager messageManager;
-	private ActivityManager activityManager;
 	private GameMessageSource messageSource;
 	private BlacklistManager blacklistManager;
 	private RestrictionManager restrictionManager;
@@ -49,7 +47,6 @@ public class MessageController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String showReceivedMessage(Model model) {
 		final Player principal = getPrincipal();
-		activityManager.messagesChecked(principal);
 		model.addAttribute("messages", messageManager.getMessages(principal, MessageDirection.RECEIVED));
 		return "/content/playground/messages/view";
 	}
@@ -208,11 +205,6 @@ public class MessageController extends WisematchesController {
 	@Autowired
 	public void setRestrictionManager(RestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
-	}
-
-	@Autowired
-	public void setActivityManager(ActivityManager activityManager) {
-		this.activityManager = activityManager;
 	}
 
 	@Override
