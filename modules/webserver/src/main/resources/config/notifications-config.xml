@@ -71,7 +71,7 @@
 
     <bean id="messageNotificationPublisher"
           class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
-        <property name="transport" ref="mailNotificationTransport"/>
+        <property name="transport" ref="messageNotificationTransport"/>
         <property name="transformer">
             <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
         </property>
