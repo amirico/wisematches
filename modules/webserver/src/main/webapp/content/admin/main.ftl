@@ -1,0 +1,1 @@
+<a href="regenerateStatistic">Regenerate All Statistic</a>

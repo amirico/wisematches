@@ -36,10 +36,10 @@
     <button onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="profile.edit"/></button>
 </div>
 </#if>
-<#assign p_wins=0 p_loses=0 p_draws=0 p_timeouts=0/>
-<#assign active=statistics.activeGames wins=statistics.wins loses=statistics.loses draws=statistics.draws timeouts=statistics.timeouts completed=statistics.finishedGames-statistics.timeouts/>
-<#if completed != 0>
-    <#assign p_wins=(wins/completed*100)?round p_loses=(loses/completed*100)?round p_draws=100-p_wins-p_loses p_timeouts=(timeouts/(completed + timeouts)*100)?round/>
+<#assign p_wins=0 p_loses=0 p_draws=0/>
+<#assign active=statistics.activeGames wins=statistics.wins loses=statistics.loses draws=statistics.draws rated=statistics.ratedGames/>
+<#if rated != 0>
+    <#assign p_wins=(wins/rated*100)?round p_loses=(loses/rated*100)?round p_draws=100-p_wins-p_loses/>
 </#if>
 <div style="width: 100%; text-align: left;">
 <table width="100%" class="statistic" style="padding: 0">
@@ -71,7 +71,13 @@
                     <td class="ui-state-default">${wins} <span>(${p_wins?string("0")}%)</span></td>
                     <td class="ui-state-default">${loses} <span>(${p_loses?string("0")}%)</span></td>
                     <td class="ui-state-default">${draws} <span>(${p_draws?string("0")}%)</span></td>
-                    <td class="ui-state-default">${completed}</td>
+                    <td class="ui-state-default">${rated}</td>
+                </tr>
+                <tr>
+                    <td class="ui-state-default" style="padding: 0" colspan="5">
+                        <div class="sample"
+                             style="font-size: x-small;"><@message code="profile.excluded.unrated" args=[statistics.unratedGames]/></div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -86,7 +92,7 @@
                 <div class="ui-layout-table">
                     <div>
                         <div><@message code="profile.rating.avg"/>:</div>
-                        <div><@undefined value=statistics.averageRating/></div>
+                        <div><@undefined value=statistics.averageRating?round/></div>
                     </div>
                     <div>
                         <div><@message code="profile.rating.low"/>:</div>
@@ -100,7 +106,7 @@
                 <div class="ui-layout-table" style="padding-top: 10px">
                     <div>
                         <div><@message code="profile.rating.op.avg"/>:</div>
-                        <div><@undefined value=statistics.averageOpponentRating/></div>
+                        <div><@undefined value=statistics.averageOpponentRating?round/></div>
                     </div>
                     <div>
                         <div><@message code="profile.rating.op.low"/>:</div>
@@ -150,11 +156,17 @@
                     </div>
                     <div>
                         <div><@message code="profile.finished"/>:</div>
-                        <div>${completed}</div>
+                        <div>${statistics.finishedGames}</div>
+                    </div>
+                </div>
+                <div class="ui-layout-table" style="padding-top: 10px">
+                    <div>
+                        <div><@message code="profile.resigned"/>:</div>
+                        <div>${statistics.resigned}</div>
                     </div>
                     <div>
                         <div><@message code="profile.interrupted"/>:</div>
-                        <div>${timeouts}</div>
+                        <div>${statistics.timeouts}</div>
                     </div>
                 </div>
                 <div class="ui-layout-table" style="padding-top: 10px">
@@ -172,7 +184,7 @@
                         <div><@message code="profile.avg.time"/>:</div>
                         <div>
                         <#if statistics.averageMoveTime != 0>
-                            ${gameMessageSource.formatMinutes(statistics.averageMoveTime/1000/60, locale)}
+                            ${gameMessageSource.formatMinutes(statistics.averageMoveTime/1000/60?round, locale)}
                             <#else>
                             <@message code="profile.undefined"/>
                         </#if>
@@ -180,7 +192,7 @@
                     </div>
                     <div>
                         <div><@message code="profile.avg.moves"/>:</div>
-                        <div><@undefined value=statistics.averageMovesPerGame/></div>
+                        <div><@undefined value=statistics.averageMovesPerGame?round/></div>
                     </div>
                 </div>
             </div>
@@ -204,8 +216,12 @@
 <div class="statistic ui-corner-all ui-state-default shadow">
     <div class="ui-layout-table">
         <div>
+            <div><@message code="profile.points.allHandBonuses"/>:</div>
+            <div>${statistics.allHandTilesBonuses}</div>
+        </div>
+        <div>
             <div><@message code="profile.points.avg"/>:</div>
-            <div><@undefined value=statistics.averagePoints/></div>
+            <div><@undefined value=statistics.averagePoints?round/></div>
         </div>
         <div>
             <div><@message code="profile.points.lo"/>:</div>
@@ -214,10 +230,6 @@
         <div>
             <div><@message code="profile.points.hi"/>:</div>
             <div><@undefined value=statistics.highestPoints/></div>
-        </div>
-        <div>
-            <div><@message code="profile.points.allHandBonuses"/>:</div>
-            <div>${statistics.allHandTilesBonuses}</div>
         </div>
     </div>
 
@@ -366,15 +378,16 @@
 
         var data2 = new google.visualization.DataTable();
         data2.addColumn('string', '');
-        data2.addColumn('number', '<@message code="profile.timeouts"/>');
+        data2.addColumn('number', '<@message code="profile.resigned"/>');
+        data2.addColumn('number', '<@message code="profile.interrupted"/>');
         data2.addColumn('number', '<@message code="profile.well"/>');
         data2.addRows([
-            ['',${p_timeouts}, ${100-p_timeouts}]
+            ['',${statistics.resigned},${statistics.timeouts}, ${statistics.finishedGames - statistics.timeouts}]
         ]);
 
         new google.visualization.BarChart(document.getElementById('timeoutsChart')).
                 draw(data2, {
-            colors:['gray', '#00cc66'],
+            colors:['lightgrey', 'darkgrey', '#00cc66'],
             backgroundColor:'transparent',
             legend:'none',
             isStacked:true,

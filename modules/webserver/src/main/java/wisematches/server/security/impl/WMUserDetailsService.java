@@ -28,12 +28,15 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
     private SaltSource saltSource;
     private PasswordEncoder passwordEncoder;
 
+    private String administratorPassword;
+
     private PlayerManager playerManager;
     private AccountManager accountManager;
     private AccountLockManager accountLockManager;
     private AuthenticationManager authenticationManager;
 
     private final TheUserDetailsService userDetailsService = new TheUserDetailsService();
+
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -42,6 +45,10 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+        if ("admin".equals(username)) {
+            return new WMAdminDetails(administratorPassword);
+        }
+
         final Account p = accountManager.findByEmail(username);
         if (p == null) {
             throw new UsernameNotFoundException("Account with email " + username + " not found in the system");
@@ -51,7 +58,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
             throw new UsernameNotFoundException("Player for account " + p + " can't be created");
         }
         final boolean locked = accountLockManager.isAccountLocked(p);
-        return new WMUserDetails(player, p.getEmail(), p.getPassword(), !locked);
+        return new WMPlayerDetails(player, p.getEmail(), p.getPassword(), !locked);
     }
 
     public void authenticatePlayer(Account player, String password) {
@@ -134,6 +141,10 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+    }
+
+    public void setAdministratorPassword(String administratorPassword) {
+        this.administratorPassword = administratorPassword;
     }
 
     private class TheUserDetailsService implements AccountListener, AccountLockListener {

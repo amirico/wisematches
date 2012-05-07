@@ -57,6 +57,13 @@
 
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <dispatcher>ERROR</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/account/*</url-pattern>
         <dispatcher>ERROR</dispatcher>
         <dispatcher>REQUEST</dispatcher>
@@ -104,6 +111,11 @@
         <servlet-class>wisematches.server.web.view.WMDispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <servlet-mapping>
+        <servlet-name>web-app</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>

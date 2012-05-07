@@ -17,6 +17,14 @@
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
     </bean>
 
+    <bean id="scribbleStatisticValidator"
+          class="wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
+        <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
+    </bean>
+
     <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.CacheablePlayerStatisticManager">
         <property name="playerStatisticManager">
             <bean class="wisematches.playground.tracking.impl.PlayerStatisticManagerImpl">

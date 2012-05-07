@@ -42,6 +42,7 @@
         <beans:property name="accountManager" ref="accountManager"/>
         <beans:property name="accountLockManager" ref="lockAccountManager"/>
         <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="administratorPassword" value="${server.admin.password}"/>
 
         <beans:property name="saltSource" ref="saltSource"/>
         <beans:property name="passwordEncoder" ref="passwordEncoder"/>
