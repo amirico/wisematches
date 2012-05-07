@@ -8,107 +8,131 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface Statistics {
-	/**
-	 * Returns id of a player who that statistic belongs to.
-	 *
-	 * @return the player id
-	 */
-	long getPlayerId();
+    /**
+     * Returns id of a player who that statistic belongs to.
+     *
+     * @return the player id
+     */
+    long getPlayerId();
 
-	/**
-	 * Returns date when the statistic was updated last time
-	 *
-	 * @return date when the statistic was updated last time
-	 */
-	Date getUpdateTime();
+    /**
+     * Returns date when the statistic was updated last time
+     *
+     * @return date when the statistic was updated last time
+     */
+    Date getUpdateTime();
 
-	/**
-	 * Returns current player's rating
-	 *
-	 * @return current player's rating
-	 */
-	short getRating();
-
-	/**
-	 * Returns number of wins
-	 *
-	 * @return number of wins
-	 */
-	int getWins();
-
-	/**
-	 * Returns number of loses
-	 *
-	 * @return number of loses
-	 */
-	int getLoses();
-
-	/**
-	 * Returns number of draws
-	 *
-	 * @return number of draws
-	 */
-	int getDraws();
-
-	/**
-	 * Returns number of games interrupted by timeout.
-	 *
-	 * @return number of games interrupted by timeout.
-	 */
-	int getTimeouts();
-
-	/**
-	 * Returns number of active games.
-	 *
-	 * @return number of active games.
-	 */
-	int getActiveGames();
-
-	/**
-	 * Returns number of finished games.
-	 *
-	 * @return number of finished games.
-	 */
-	int getFinishedGames();
-
-	/**
-	 * Returns number of finished games which were not rated.
-	 *
-	 * @return number of finished games which were not rated.
-	 */
-	int getUnratedGames();
+    /**
+     * Returns current player's rating
+     *
+     * @return current player's rating
+     */
+    short getRating();
 
 
-	short getAverageRating();
+    /**
+     * Returns number of active games.
+     *
+     * @return number of active games.
+     */
+    int getActiveGames();
 
-	short getHighestRating();
-
-	short getLowestRating();
-
-	short getAverageOpponentRating();
-
-	short getHighestWonOpponentRating();
-
-	long getHighestWonOpponentId();
-
-	short getLowestLostOpponentRating();
-
-	long getLowestLostOpponentId();
+    /**
+     * Returns number of finished games.
+     *
+     * @return number of finished games.
+     */
+    int getFinishedGames();
 
 
-	Date getLastMoveTime();
+    /**
+     * Returns number of wins
+     *
+     * @return number of wins
+     */
+    int getWins();
 
-	int getAverageMoveTime();
+    /**
+     * Returns number of loses
+     *
+     * @return number of loses
+     */
+    int getLoses();
 
-	int getAverageMovesPerGame();
+    /**
+     * Returns number of draws
+     *
+     * @return number of draws
+     */
+    int getDraws();
 
-	int getTurnsCount();
 
-	int getPassesCount();
+    /**
+     * Returns number of resigned games.
+     *
+     * @return number of resigned games.
+     */
+    int getResigned();
 
-	int getLowestPoints();
+    /**
+     * Returns number of games interrupted by timeout.
+     *
+     * @return number of games interrupted by timeout.
+     */
+    int getTimeouts();
 
-	int getAveragePoints();
+    /**
+     * Returns number of stalemates games.
+     *
+     * @return number of stalemates games.
+     */
+    int getStalemates();
 
-	int getHighestPoints();
+    /**
+     * Returns number of all rated games. It's just sum of wins, loses and draws.
+     *
+     * @return number of all rated games.
+     */
+    int getRatedGames();
+
+    /**
+     * Returns number of finished games which were not rated. It's number of all finished games minus rated games.
+     *
+     * @return number of finished games which were not rated.
+     */
+    int getUnratedGames();
+
+
+    float getAverageRating();
+
+    short getHighestRating();
+
+    short getLowestRating();
+
+    float getAverageOpponentRating();
+
+    short getHighestWonOpponentRating();
+
+    long getHighestWonOpponentId();
+
+    short getLowestLostOpponentRating();
+
+    long getLowestLostOpponentId();
+
+
+    Date getLastMoveTime();
+
+    float getAverageMoveTime();
+
+    float getAverageMovesPerGame();
+
+    int getTurnsCount();
+
+    int getPassesCount();
+
+    int getLowestPoints();
+
+    float getAveragePoints();
+
+    int getHighestPoints();
 }

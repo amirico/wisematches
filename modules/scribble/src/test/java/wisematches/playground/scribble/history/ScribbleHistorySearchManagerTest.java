@@ -22,36 +22,38 @@ import static org.junit.Assert.assertEquals;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-junit-config.xml"
+        "classpath:/config/database-junit-config.xml",
+        "classpath:/config/accounts-config.xml",
+        "classpath:/config/playground-config.xml",
+        "classpath:/config/scribble-junit-config.xml"
 })
 public class ScribbleHistorySearchManagerTest {
-	@Autowired
-	private ScribbleHistorySearchManager historySearchManager;
+    @Autowired
+    private ScribbleHistorySearchManager historySearchManager;
 
-	public ScribbleHistorySearchManagerTest() {
-	}
+    public ScribbleHistorySearchManagerTest() {
+    }
 
-	@Test
-	public void testName() throws Exception {
-		final Personality player = Personality.person(1029);
+    @Test
+    public void testName() throws Exception {
+        final Personality player = Personality.person(1029);
 
-		int finishedGamesCount = historySearchManager.getTotalCount(player, null);
-		List<ScribbleHistoryEntity> historyEntity1 = historySearchManager.searchEntities(player, null, null, null, null);
-		assertEquals(finishedGamesCount, historyEntity1.size());
+        int finishedGamesCount = historySearchManager.getTotalCount(player, null);
+        List<ScribbleHistoryEntity> historyEntity1 = historySearchManager.searchEntities(player, null, null, null, null);
+        assertEquals(finishedGamesCount, historyEntity1.size());
 
-		List<ScribbleHistoryEntity> historyEntity2 = historySearchManager.searchEntities(player, null, null, Orders.of(Order.asc("language")), Range.limit(4, 10));
-		if (finishedGamesCount > 10) {
-			assertEquals(10, historyEntity2.size());
-		} else {
-			assertEquals(finishedGamesCount, historyEntity2.size());
-		}
+        List<ScribbleHistoryEntity> historyEntity2 = historySearchManager.searchEntities(player, null, null, Orders.of(Order.asc("language")), Range.limit(4, 10));
+        if (finishedGamesCount < 4) {
+            assertEquals(0, historyEntity2.size());
+        } else if (finishedGamesCount > 10) {
+            assertEquals(10, historyEntity2.size());
+        } else {
+            assertEquals(finishedGamesCount, historyEntity2.size());
+        }
 
-		historySearchManager.searchEntities(player, GameResolution.FINISHED, null, null, null);
-		historySearchManager.searchEntities(player, GameResolution.RESIGNED, null, null, null);
-		historySearchManager.searchEntities(player, GameResolution.STALEMATE, null, null, null);
-		historySearchManager.searchEntities(player, GameResolution.TIMEOUT, null, null, null);
-	}
+        historySearchManager.searchEntities(player, GameResolution.FINISHED, null, null, null);
+        historySearchManager.searchEntities(player, GameResolution.RESIGNED, null, null, null);
+        historySearchManager.searchEntities(player, GameResolution.STALEMATE, null, null, null);
+        historySearchManager.searchEntities(player, GameResolution.TIMEOUT, null, null, null);
+    }
 }

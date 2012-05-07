@@ -20,50 +20,50 @@ import java.io.IOException;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class GuestAuthenticationFilter extends GenericFilterBean implements InitializingBean {
-	private AuthenticationFailureHandler failureHandle;
-	private AuthenticationSuccessHandler successHandler;
+    private AuthenticationFailureHandler failureHandle;
+    private AuthenticationSuccessHandler successHandler;
 
-	private String guestProcessingUrl = DEFAULT_GUEST_PROCESSING_URL;
+    private String guestProcessingUrl = DEFAULT_GUEST_PROCESSING_URL;
 
-	private static final String DEFAULT_GUEST_PROCESSING_URL = "/j_spring_security_guest";
+    private static final String DEFAULT_GUEST_PROCESSING_URL = "/j_spring_security_guest";
 
-	private static final WMUserDetails USER_DETAILS = new WMUserDetails(GuestPlayer.GUEST, "guest", "guest", true);
-	private static final GuestAuthenticationToken GUEST_AUTHORIZATION = new GuestAuthenticationToken("guestAuthorizationKey", USER_DETAILS);
+    private static final WMPlayerDetails PLAYER_DETAILS = new WMPlayerDetails(GuestPlayer.GUEST, "guest", "guest", true);
+    private static final GuestAuthenticationToken GUEST_AUTHORIZATION = new GuestAuthenticationToken("guestAuthorizationKey", PLAYER_DETAILS);
 
-	public GuestAuthenticationFilter() {
-	}
+    public GuestAuthenticationFilter() {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		if (applyGuestForThisRequest((HttpServletRequest) request)) {
-			if (SecurityContextHolder.getContext().getAuthentication() == null) {
-				SecurityContextHolder.getContext().setAuthentication(GUEST_AUTHORIZATION);
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (applyGuestForThisRequest((HttpServletRequest) request)) {
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                SecurityContextHolder.getContext().setAuthentication(GUEST_AUTHORIZATION);
 
-				if (logger.isDebugEnabled()) {
-					logger.debug("Populated SecurityContextHolder with guest token: '"
-							+ SecurityContextHolder.getContext().getAuthentication() + "'");
-				}
-			}
-			successHandler.onAuthenticationSuccess((HttpServletRequest) request, (HttpServletResponse) response, GUEST_AUTHORIZATION);
-		} else {
-			chain.doFilter(request, response);
-		}
-	}
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Populated SecurityContextHolder with guest token: '"
+                            + SecurityContextHolder.getContext().getAuthentication() + "'");
+                }
+            }
+            successHandler.onAuthenticationSuccess((HttpServletRequest) request, (HttpServletResponse) response, GUEST_AUTHORIZATION);
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-	protected boolean applyGuestForThisRequest(HttpServletRequest request) {
-		return guestProcessingUrl.equals(request.getRequestURI());
-	}
+    protected boolean applyGuestForThisRequest(HttpServletRequest request) {
+        return guestProcessingUrl.equals(request.getRequestURI());
+    }
 
-	public void setGuestProcessingUrl(String guestProcessingUrl) {
-		Assert.hasText(guestProcessingUrl, "Guest processing url must not be empty or null");
-		this.guestProcessingUrl = guestProcessingUrl;
-	}
+    public void setGuestProcessingUrl(String guestProcessingUrl) {
+        Assert.hasText(guestProcessingUrl, "Guest processing url must not be empty or null");
+        this.guestProcessingUrl = guestProcessingUrl;
+    }
 
-	public void setSuccessHandler(AuthenticationSuccessHandler successHandler) {
-		this.successHandler = successHandler;
-	}
+    public void setSuccessHandler(AuthenticationSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
 
-	public void setFailureHandle(AuthenticationFailureHandler failureHandle) {
-		this.failureHandle = failureHandle;
-	}
+    public void setFailureHandle(AuthenticationFailureHandler failureHandle) {
+        this.failureHandle = failureHandle;
+    }
 }
