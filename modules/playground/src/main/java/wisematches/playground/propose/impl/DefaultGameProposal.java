@@ -220,7 +220,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
                     return null;
                 }
             }
-            return new CriterionViolation("player.unexpected", "", player);
+            return new CriterionViolation("player.unexpected", player, "");
         }
         return null;
     }
