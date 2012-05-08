@@ -11,11 +11,13 @@
 <br>
 <p>
     Если вы примете данное предложение новая игра "${context.proposal.gameSettings.title!""}"
-    будет создана с ограничением в ${gameMessageSource.formatMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} на
+    будет создана с ограничением
+    в ${gameMessageSource.formatMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} на
     каждый ход.
 </p>
 <p>
-    В игре будет использован ${gameMessageSource.getMessage("language.${context.proposal.gameSettings.language}", locale)}
+    В игре будет
+    использован ${gameMessageSource.getMessage("language.${context.proposal.gameSettings.language}", locale)}
     язык. Если не знаете этот язык мы не советуем вам принимать принимать это предложение.
 </p>
 <br>
@@ -29,12 +31,13 @@
     можете <@util.link href="playground/scribble/decline?p=${context.proposal.id}">отказать от игры</@util.link>.
 </p>
 <p>
-    Вы таже можете принять/отказать от игры использую страницу <@util.link href="playground/join">ожидание
+    Вы таже можете принять/отказать от игры использую страницу <@util.link href="playground/scribble/join">ожидание
     противников</@util.link>.
 </p>
 <p>
     Если вы не хотите в будущем получать новые вызовы от этого игрока, вы можете
-<@util.link href="playground/profile/view?p=${context.proposal.initiator.id}&blacklist=true">добавить его/ее в свой черный
+<@util.link href="playground/profile/view?p=${context.proposal.initiator.id}&blacklist=true">добавить его/ее в свой
+    черный
     список</@util.link>.
     В этом случае вы не будите получать вызовы и личные сообщения. Так же этот игрок не сможет присоединяться к вашим
     играм.

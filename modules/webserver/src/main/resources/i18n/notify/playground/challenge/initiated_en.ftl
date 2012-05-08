@@ -27,7 +27,8 @@
     can <@util.link href="playground/scribble/decline?p=${context.proposal.id}">decline the challenge</@util.link>.
 </p>
 <p>
-    If also can accept or decline the challenge on <@util.link href="playground/join">playground</@util.link> page.
+    If also can accept or decline the challenge on <@util.link href="playground/scribble/join">playground</@util.link>
+    page.
     Please use appropriate context.proposal buttons.
 </p>
 <p>
