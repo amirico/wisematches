@@ -172,7 +172,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
         }
         if (proposal.getProposalType() == ProposalType.CHALLENGE) {
             if (!proposal.isPlayerWaiting(player)) {
-                return Collections.singleton(new CriterionViolation("player.unexpected", "", player));
+                return Collections.singleton(new CriterionViolation("player.unexpected", player, ""));
             }
             return null;
         }
