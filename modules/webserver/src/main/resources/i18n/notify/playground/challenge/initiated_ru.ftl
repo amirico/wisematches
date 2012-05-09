@@ -12,7 +12,7 @@
 <p>
     Если вы примете данное предложение новая игра "${context.proposal.gameSettings.title!""}"
     будет создана с ограничением
-    в ${gameMessageSource.formatMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} на
+    в ${gameMessageSource.formatTimeMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} на
     каждый ход.
 </p>
 <p>
@@ -23,15 +23,7 @@
 <br>
 
 <p>
-    Вы можете <@util.link href="playground/scribble/accept?p=${context.proposal.id}">принять вызов</@util.link> и начать
-    игру.
-</p>
-<p>
-    Если вы не хотите играть с этим игроком, вы
-    можете <@util.link href="playground/scribble/decline?p=${context.proposal.id}">отказать от игры</@util.link>.
-</p>
-<p>
-    Вы таже можете принять/отказать от игры использую страницу <@util.link href="playground/scribble/join">ожидание
+    Вы можете принять/отказаться от игры использую страницу <@util.link href="playground/scribble/join">ожидание
     противников</@util.link>.
 </p>
 <p>

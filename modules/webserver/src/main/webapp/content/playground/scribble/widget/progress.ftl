@@ -141,7 +141,7 @@
 
     <@element passiveVisible=false>
         <td nowrap="nowrap"><strong><@message code="game.state.time"/>:</strong></td>
-        <td>${board.gameSettings.daysPerMove} <@message code="game.state.per"/></td>
+        <td>${board.gameSettings.daysPerMove} ${gameMessageSource.formatDays(board.gameSettings.daysPerMove, locale)} <@message code="game.state.move"/></td>
     </@element>
 
     <#if board.gameSettings.scratch>

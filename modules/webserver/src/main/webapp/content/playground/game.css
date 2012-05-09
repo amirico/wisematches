@@ -26,10 +26,6 @@
     padding-right: 5px;
 }
 
-#join-game .ui-state-error-text {
-    font-weight: bold;
-}
-
 #game-header {
     border-bottom: 1px solid #C9D7F1;
 }

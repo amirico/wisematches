@@ -1,4 +1,4 @@
-package wisematches.server.web.controllers.playground.scribble;
+package wisematches.server.web.controllers.playground.scribble.controller.board;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

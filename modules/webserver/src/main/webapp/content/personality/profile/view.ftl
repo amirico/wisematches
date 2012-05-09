@@ -184,7 +184,7 @@
                         <div><@message code="profile.avg.time"/>:</div>
                         <div>
                         <#if statistics.averageMoveTime != 0>
-                            ${gameMessageSource.formatMinutes(statistics.averageMoveTime/1000/60?round, locale)}
+                            ${gameMessageSource.formatTimeMinutes(statistics.averageMoveTime/1000/60?round, locale)}
                             <#else>
                             <@message code="profile.undefined"/>
                         </#if>

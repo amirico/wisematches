@@ -162,20 +162,20 @@ wm.game.Search = function (columns, scriplet, language) {
 wm.game.Create = function (maxOpponents, opponentsCount, playerSearch) {
     var attachPlayerSearchActions = function (a) {
         $(a).hover(
-                function () {
-                    $(this).addClass("player-search-remove");
-                },
-                function () {
-                    $(this).removeClass("player-search-remove");
-                }).click(function () {
-                    $(this).fadeOut('fast', function () {
-                        $(this).remove();
-                        if (opponentsCount == maxOpponents) {
-                            $("#opponentsControl").fadeIn('slow');
-                        }
-                        opponentsCount--;
-                    });
+            function () {
+                $(this).addClass("player-search-remove");
+            },
+            function () {
+                $(this).removeClass("player-search-remove");
+            }).click(function () {
+                $(this).fadeOut('fast', function () {
+                    $(this).remove();
+                    if (opponentsCount == maxOpponents) {
+                        $("#opponentsControl").fadeIn('slow');
+                    }
+                    opponentsCount--;
                 });
+            });
     };
 
     this.selectOpponent = function () {
@@ -224,6 +224,50 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch) {
     });
 };
 
+wm.game.Join = function (language) {
+    var gameboardTable = wm.ui.dataTable('#gameboard', {
+        "bStateSave":true,
+        "bFilter":false,
+        "bSort":false,
+        "bSortClasses":false,
+        "oLanguage":language
+    });
+
+    this.accept = function (id) {
+        wm.ui.showStatus(language['accepting'], false, true);
+        gameboardTable.block({ message:null});
+
+        $.post("/playground/scribble/accept.ajax?p=" + id, function (result) {
+            if (result.success) {
+                if (result.data.board == undefined) {
+                    wm.util.url.redirect('/playground/scribble/join');
+                } else {
+                    wm.util.url.redirect('/playground/scribble/board?b=' + result.data.board);
+                }
+            } else {
+                wm.ui.showMessage({message:result.summary, error:true});
+                gameboardTable.unblock();
+                wm.ui.clearStatus();
+            }
+        });
+    };
+
+    this.decline = function (id) {
+        wm.ui.showStatus(language['declining'], false, true);
+        gameboardTable.block({ message:null});
+
+        $.post("/playground/scribble/decline.ajax?p=" + id, function (result) {
+            if (result.success) {
+                wm.util.url.redirect('/playground/scribble/join');
+            } else {
+                wm.ui.showMessage({message:result.summary, error:true});
+                gameboardTable.unblock();
+                wm.ui.clearStatus();
+            }
+        });
+    };
+};
+
 wm.game.settings.Board = function () {
     var prevSet = $(".tiles-set-prev");
     var nextSet = $(".tiles-set-next");
@@ -263,16 +307,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-            function () {
-                if ($(this).attr('disabled') == undefined) {
-                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-                }
-            },
-            function () {
-                if ($(this).attr('disabled') == undefined) {
-                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-                }
-            });
+        function () {
+            if ($(this).attr('disabled') == undefined) {
+                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+            }
+        },
+        function () {
+            if ($(this).attr('disabled') == undefined) {
+                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+            }
+        });
 
     prevSet.click(function () {
         if (selected > 0) {

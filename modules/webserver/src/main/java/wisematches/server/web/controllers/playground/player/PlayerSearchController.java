@@ -74,7 +74,7 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
         map.put("activeGames", info.getActiveGames());
         map.put("finishedGames", info.getFinishedGames());
         map.put("playerOnline", stateManager.isPlayerOnline(Personality.person(info.getPid())));
-        map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatMinutes((long) (info.getAverageMoveTime() / 1000 / 60), locale) : messageSource.getMessage("search.err.nomoves", locale));
+        map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatTimeMinutes((long) (info.getAverageMoveTime() / 1000 / 60), locale) : messageSource.getMessage("search.err.nomoves", locale));
     }
 
     @Autowired

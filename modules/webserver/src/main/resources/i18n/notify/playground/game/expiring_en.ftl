@@ -6,7 +6,7 @@
 
 <p>
     You have
-    <strong><em>${gameMessageSource.formatMillis(context.expirationType.remainedTime, locale)}</em></strong>
+    <strong><em>${gameMessageSource.formatTimeMillis(context.expirationType.remainedTime, locale)}</em></strong>
     to make a turn or game will be terminated and you will be
     defeated.
 </p>

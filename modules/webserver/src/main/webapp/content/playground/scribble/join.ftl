@@ -1,24 +1,8 @@
-<#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
-<#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.scribble.ScribbleBoard>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.web.controllers.playground.scribble.view.GameProposalView>" -->
+<#-- @ftlvariable name="waitingGames" type="wisematches.server.web.controllers.playground.scribble.view.WaitingGamesView" -->
+
 <#include "/core.ftl">
 
 <@wm.jstable/>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        wm.ui.dataTable('#gameboard', {
-            "bStateSave":true,
-            "bFilter":false,
-            "bSort":false,
-            "bSortClasses":false,
-            "oLanguage":{
-                "sEmptyTable":"<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
-            }
-        });
-    });
-</script>
 
 <div id="join-game">
 <@wm.playground id="waitingGamesWidget">
@@ -27,11 +11,6 @@
     </@wm.dtHeader>
 
     <@wm.dtToolbar>
-        <#if joinError??>
-            <div class="ui-state-error-text error-msg" style="float: left;">
-                <@message code=joinError args=joinErrorArgs/>
-            </div>
-        </#if>
         <div>
             <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
         </div>
@@ -45,18 +24,18 @@
                 <th><@message code="game.language.label"/></th>
                 <th><@message code="game.time.label"/></th>
                 <th><@message code="game.opponents.label"/></th>
-                <th><@message code="game.restrictions.label"/></th>
+                <th><@message code="game.join.action.label"/></th>
             </tr>
             </thead>
             <tbody>
-                <#list activeProposals as proposal>
-                    <#assign settings=proposal.proposal.gameSettings/>
+                <#list waitingGames.proposalViews as view>
+                    <#assign settings=view.proposal.gameSettings/>
                 <tr>
                     <td>${settings.title}</td>
                     <td><@message code="language.${settings.language}"/></td>
-                    <td align="center">${gameMessageSource.formatMinutes(settings.daysPerMove*24*60,locale)}</td>
+                    <td align="center">${gameMessageSource.formatTimeMinutes(settings.daysPerMove*24*60,locale)}</td>
                     <td>
-                        <#list proposal.proposal.players as p>
+                        <#list view.proposal.players as p>
                         <div>
                             <#if p??>
                                 <@wm.player player=playerManager.getPlayer(p)/>
@@ -68,23 +47,20 @@
                         </#list>
                     </td>
                     <td class="center">
-                        <#if proposal.blacklisted || restricted>
-                            <span class="game-join-error"><@message code="game.join.err.forbidden.label"/></span>
-                        <#elseif principal.membership == "GUEST">
-                            <span class="game-join-error"><@message code="game.join.err.guest.label"/></span>
-                        <#elseif proposal.violations?? && !proposal.violations.empty>
-                            <#list proposal.violations as violation>
-                                <#assign errorCode="game.join.err.${violation.code}"/>
-                                <#if violation.operator?? && violation.operator?has_content><#assign errorCode="${errorCode}.${violation.operator}"/></#if>
-                                <#assign errorCode="${errorCode}.label"/>
-
-                                <div class="game-join-error">${gameMessageSource.getMessage(errorCode, locale, violation.expected, violation.received)}</div>
+                        <#if view.violations?? && !view.violations.empty>
+                            <#list view.violations as violation>
+                                <div class="game-join-error">${gameMessageSource.formatViolation(violation, locale, true)}</div>
                             </#list>
                         <#else>
-                            <a href="/playground/scribble/join?p=${proposal.proposal.id}">&raquo; <@message code="game.join.accept.label"/></a>
-                            <#if proposal.proposal.proposalType == "CHALLENGE">
+                            <#if view.proposal.proposalType == "CHALLENGE">
+                                <a href="#accept"
+                                   onclick="join.accept(${view.proposal.id}); return false;">&raquo; <@message code="game.join.accept.label"/></a>
                                 <br>
-                                <a href="/playground/scribble/decline?p=${proposal.proposal.id}">&raquo; <@message code="game.join.decline.label"/></a>
+                                <a href="#decline"
+                                   onclick="join.decline(${view.proposal.id}); return false;">&raquo; <@message code="game.join.decline.label"/></a>
+                            <#else>
+                                <a href="#join"
+                                   onclick="join.accept(${view.proposal.id}); return false;">&raquo; <@message code="game.join.join.label"/></a>
                             </#if>
                         </#if>
                     </td>
@@ -95,11 +71,19 @@
     </@wm.dtContent>
 
     <@wm.dtFooter>
-        <#if restricted>
-            <div class="sample" style="padding: 5px;">
-                <@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/>
+        <#if waitingGames.globalViolation??>
+            <div class="ui-state-error-text" style="padding: 5px;">
+            ${gameMessageSource.formatViolation(waitingGames.globalViolation, locale, false)}
             </div>
         </#if>
     </@wm.dtFooter>
 </@wm.playground>
+
+    <script type="text/javascript">
+        var join = new wm.game.Join({
+            "accepting":"<@message code="game.join.accepting"/>",
+            "declining":"<@message code="game.join.declining"/>",
+            "sEmptyTable":"<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
+        });
+    </script>
 </div>

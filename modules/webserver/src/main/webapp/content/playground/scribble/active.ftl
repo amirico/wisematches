@@ -87,7 +87,7 @@
                     </div>
                 </td>
                 <td class="center">
-                ${gameMessageSource.formatMinutes(proposal.gameSettings.daysPerMove *24 * 60, locale)}
+                ${gameMessageSource.formatTimeMinutes(proposal.gameSettings.daysPerMove *24 * 60, locale)}
                 </td>
                 <td>
                     <#list proposal.players as p>
