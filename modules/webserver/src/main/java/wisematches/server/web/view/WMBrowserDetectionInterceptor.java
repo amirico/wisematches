@@ -15,39 +15,42 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMBrowserDetectionInterceptor extends HandlerInterceptorAdapter {
-	private Map<UserAgent, Integer> supportedBrowsers = new HashMap<UserAgent, Integer>();
+    private Map<UserAgent, Integer> supportedBrowsers = new HashMap<UserAgent, Integer>();
 
-	public WMBrowserDetectionInterceptor() {
-	}
+    public WMBrowserDetectionInterceptor() {
+    }
 
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		if (modelAndView != null) {
-			final HttpSession session = request.getSession();
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        if (modelAndView != null) {
+            final HttpSession session = request.getSession();
 
-			Object supportedBrowser = null;
-			if (session != null) {
-				supportedBrowser = session.getAttribute("IS_BROWSED_SUPPORTED");
-			}
-			if (supportedBrowser == null) {
-				supportedBrowser = checkBrowserVersion(WebClient.detect(request));
-			}
-			if (session != null) {
-				session.setAttribute("IS_BROWSED_SUPPORTED", supportedBrowser);
-			}
-			modelAndView.addObject("supportedBrowser", supportedBrowser);
-		}
-	}
+            Object supportedBrowser = null;
+            if (session != null) {
+                supportedBrowser = session.getAttribute("IS_BROWSED_SUPPORTED");
+            }
+            if (supportedBrowser == null) {
+                supportedBrowser = checkBrowserVersion(WebClient.detect(request));
+            }
+            if (session != null) {
+                session.setAttribute("IS_BROWSED_SUPPORTED", supportedBrowser);
+            }
+            modelAndView.addObject("supportedBrowser", supportedBrowser);
+        }
+    }
 
-	private Boolean checkBrowserVersion(WebClient detect) {
-		Integer integer = supportedBrowsers.get(detect.getUserAgent());
-		if (integer == null) {
-			return Boolean.FALSE;
-		}
-		return detect.getMajorVersion() >= integer;
-	}
+    private Boolean checkBrowserVersion(WebClient detect) {
+        if (detect == null) {
+            return Boolean.FALSE;
+        }
+        Integer integer = supportedBrowsers.get(detect.getUserAgent());
+        if (integer == null) {
+            return Boolean.FALSE;
+        }
+        return detect.getMajorVersion() >= integer;
+    }
 
-	public void setSupportedBrowsers(Map<UserAgent, Integer> supportedBrowsers) {
-		this.supportedBrowsers = supportedBrowsers;
-	}
+    public void setSupportedBrowsers(Map<UserAgent, Integer> supportedBrowsers) {
+        this.supportedBrowsers = supportedBrowsers;
+    }
 }
