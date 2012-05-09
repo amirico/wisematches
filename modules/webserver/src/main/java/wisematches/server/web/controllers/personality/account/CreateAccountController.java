@@ -7,6 +7,7 @@ package wisematches.server.web.controllers.personality.account;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +23,10 @@ import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.services.notify.Notification;
+import wisematches.server.web.services.notify.NotificationPublisher;
 import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationDistributor;
+import wisematches.server.web.services.notify.PublicationException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +44,7 @@ import java.util.Set;
 public class CreateAccountController {
     private AccountManager accountManager;
     private CaptchaService captchaService;
-    private NotificationDistributor notificationDistributor;
+    private NotificationPublisher notificationPublisher;
     private AccountSecurityService accountSecurityService;
 
     private Membership defaultMembership = Membership.BASIC;
@@ -124,7 +127,11 @@ public class CreateAccountController {
             }
 
             status.setComplete();
-            notificationDistributor.raiseNotification("account.created", player, NotificationSender.ACCOUNTS, null);
+            try {
+                notificationPublisher.publishNotification(new Notification("account.created", player, NotificationSender.ACCOUNTS, null));
+            } catch (PublicationException e) {
+                log.error("Notification about new account can't be sent", e);
+            }
             return forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
         }
     }
@@ -242,8 +249,9 @@ public class CreateAccountController {
     }
 
     @Autowired
-    public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
-        this.notificationDistributor = notificationDistributor;
+    @Qualifier("mailNotificationPublisher")
+    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+        this.notificationPublisher = notificationPublisher;
     }
 
     @Autowired
