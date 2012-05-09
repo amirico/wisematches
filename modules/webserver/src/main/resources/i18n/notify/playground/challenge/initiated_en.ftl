@@ -11,7 +11,7 @@
 <br>
 <p>
     If you accept the proposal new game "${context.proposal.gameSettings.title!""}"
-    with ${gameMessageSource.formatMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} time limit.
+    with ${gameMessageSource.formatTimeMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} time limit.
 </p>
 <p>
     The ${gameMessageSource.getMessage("language.${context.proposal.gameSettings.language}", locale)} language
@@ -19,17 +19,8 @@
 </p>
 <br>
 <p>
-    You can <@util.link href="playground/scribble/accept?p=${context.proposal.id}">accept the challenge</@util.link> and
-    start new game.
-</p>
-<p>
-    If you don't want play with the initiator you
-    can <@util.link href="playground/scribble/decline?p=${context.proposal.id}">decline the challenge</@util.link>.
-</p>
-<p>
-    If also can accept or decline the challenge on <@util.link href="playground/scribble/join">playground</@util.link>
-    page.
-    Please use appropriate context.proposal buttons.
+    You can accept or decline the challenge on <@util.link href="playground/scribble/join">playground</@util.link>
+    page. Please use appropriate proposal button.
 </p>
 <p>
     If you don't want receive new challenges from the initiator, you

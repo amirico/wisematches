@@ -20,7 +20,7 @@ public class GameMessageSourceTest {
         GameMessageSource s = new GameMessageSource();
         s.setMessageSource(messageSource);
         for (int i = 0; i < 100; i++) {
-            System.out.println(i + " " + s.formatMinutes(i * 24 * 15, ru));
+            System.out.println(i + " " + s.formatTimeMinutes(i * 24 * 15, ru));
         }
     }
 }

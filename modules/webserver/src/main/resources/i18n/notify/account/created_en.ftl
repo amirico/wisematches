@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="context" type="" -->
 <#import "../utils.ftl" as util>
 
 <p>Congratulations on creating your new WiseMatches account.</p>
