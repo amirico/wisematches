@@ -424,8 +424,10 @@
     <dictionary name="sergey">
       <words>
         <w>millis</w>
+        <w>noheader</w>
         <w>rect</w>
         <w>scriplet</w>
+        <w>scrrible</w>
         <w>spamless</w>
         <w>springframework</w>
         <w>wisematches</w>

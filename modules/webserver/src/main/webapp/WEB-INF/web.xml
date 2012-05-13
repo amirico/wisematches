@@ -52,6 +52,10 @@
     </listener>
 
     <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+
+    <listener>
         <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
     </listener>
 
@@ -79,6 +83,14 @@
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/playground/*</url-pattern>
+        <dispatcher>ERROR</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+
+    <filter-mapping>
+        <filter-name>openSessionInViewFilter</filter-name>
+        <url-pattern>/view/*</url-pattern>
         <dispatcher>ERROR</dispatcher>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
@@ -120,6 +132,11 @@
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
         <url-pattern>/account/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>web-app</servlet-name>
+        <url-pattern>/view/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

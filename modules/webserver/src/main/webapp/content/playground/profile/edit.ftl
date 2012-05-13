@@ -37,7 +37,8 @@
 
         <div class="info">
             <div class="photo">
-                <img class="shadow" style="width: 200px; height: 200px;" src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
+                <img class="shadow" style="width: 200px; height: 200px;"
+                     src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
 
                 <div class="remove">
                     <img title="<@message code="profile.edit.photo.remove.label"/>" src="/resources/images/close.png"
@@ -72,7 +73,8 @@
 
             <td valign="top" align="center">
                 <div class="qq-upload-drop-area preview">
-                    <img class="shadow" width="200px" height="200px" src="/playground/profile/image/view?pid=${player.id}&preview=true">
+                    <img class="shadow" width="200px" height="200px"
+                         src="/playground/profile/image/view?pid=${player.id}&preview=true">
                 </div>
                 <div class="sample">(<@message code="profile.edit.photo.drop"/>)</div>
             </td>
@@ -81,7 +83,7 @@
 </div>
 
 <script type="text/javascript">
-    wm.ui.profile = new function() {
+    wm.ui.profile = new function () {
         var dialogElement = $("#changeProfileDialog");
         var chooseButton = dialogElement.find(".qq-upload-button");
         var errorMessage = dialogElement.find(".qq-upload-failed-text");
@@ -89,46 +91,46 @@
         var cancelButton = $("<button>Cancel</button>").button();
         var updateButton = $("<button>Set as default</button>").button();
 
-        chooseButton.hover(function() {
+        chooseButton.hover(function () {
             chooseButton.addClass("ui-state-hover");
-        }, function() {
+        }, function () {
             chooseButton.removeClass("ui-state-hover");
         });
 
-        var updateProfileImage = function() {
+        var updateProfileImage = function () {
             wm.ui.refreshImage($(".profile .info .photo > img"));
         };
 
-        var updatePreviewImage = function() {
+        var updatePreviewImage = function () {
             wm.ui.refreshImage($(".qq-upload-drop-area > img"));
         };
 
-        var showErrorMessage = function(message) {
+        var showErrorMessage = function (message) {
             errorMessage.html(message).show();
         };
 
         var uploader = new qq.FileUploader({
-            element: dialogElement[0],
-            action: 'image/preview',
-            fileTemplate: '<div>' +
+            element:dialogElement[0],
+            action:'image/preview',
+            fileTemplate:'<div>' +
                     '<span class="qq-upload-file"></span>' +
                     '<span class="qq-upload-spinner"></span>' +
                     '<span class="qq-upload-size"></span>' +
                     '<a class="qq-upload-cancel" href="#"><@message code="button.cancel"/></a>' +
                     '</div>',
-            sizeLimit: 512000,
-            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
-            messages: {
-                typeError: "<@message code="profile.edit.error.photo.type"/>",
-                sizeError: "<@message code="profile.edit.error.photo.size"/>",
-                emptyError: "<@message code="profile.edit.error.photo.empty"/>",
-                onLeave: "<@message code="profile.edit.error.photo.leave"/>"
+            sizeLimit:512000,
+            allowedExtensions:['jpg', 'jpeg', 'png', 'gif'],
+            messages:{
+                typeError:"<@message code="profile.edit.error.photo.type"/>",
+                sizeError:"<@message code="profile.edit.error.photo.size"/>",
+                emptyError:"<@message code="profile.edit.error.photo.empty"/>",
+                onLeave:"<@message code="profile.edit.error.photo.leave"/>"
             },
-            onSubmit: function(id, fileName) {
+            onSubmit:function (id, fileName) {
                 chooseButton.hide();
                 errorMessage.hide();
             },
-            onComplete: function(id, fileName, responseJSON) {
+            onComplete:function (id, fileName, responseJSON) {
                 chooseButton.show();
                 dialogElement.find(".qq-upload-list span").empty();
                 $(dialogElement.parent().find("button")[1]).button("enable");
@@ -139,16 +141,16 @@
                     this.showMessage(responseJSON.summary);
                 }
             },
-            onCancel: function(id, fileName) {
+            onCancel:function (id, fileName) {
                 dialogElement.find(".qq-upload-list").hide();
                 chooseButton.show();
             },
-            showMessage: showErrorMessage
+            showMessage:showErrorMessage
         });
 
-        this.removeProfilePhoto = function() {
+        this.removeProfilePhoto = function () {
             $.ajax('image/remove', {
-                success: function(data, textStatus, jqXHR) {
+                success:function (data, textStatus, jqXHR) {
                     if (data.success) {
                         updateProfileImage();
                     } else {
@@ -159,28 +161,28 @@
             return false;
         };
 
-        this.chooseProfilePhoto = function() {
+        this.chooseProfilePhoto = function () {
             updatePreviewImage();
 
             dialogElement.dialog({
-                title: "<@message code="profile.edit.photo.title"/>",
-                modal: true,
-                minWidth: 550,
-                height: 'auto',
-                resizable: false,
-                buttons: [
+                title:"<@message code="profile.edit.photo.title"/>",
+                modal:true,
+                minWidth:550,
+                height:'auto',
+                resizable:false,
+                buttons:[
                     {
-                        text: "<@message code="button.cancel"/>",
-                        click: function() {
+                        text:"<@message code="button.cancel"/>",
+                        click:function () {
                             $(this).dialog("close");
                         }
                     },
                     {
-                        text: "<@message code="profile.edit.photo.set"/>",
-                        disabled: true,
-                        click: function() {
+                        text:"<@message code="profile.edit.photo.set"/>",
+                        disabled:true,
+                        click:function () {
                             $.ajax('image/set', {
-                                success: function(data, textStatus, jqXHR) {
+                                success:function (data, textStatus, jqXHR) {
                                     if (data.success) {
                                         updateProfileImage();
                                         dialogElement.dialog("close");
@@ -198,68 +200,68 @@
     };
 
     var editorController = new wm.ui.editor.Controller($('.profile'),
-            function(field, data, callback) {
-                wm.ui.showStatus("<@message code="profile.edit.saving"/>");
+                    function (field, data, callback) {
+                        wm.ui.showStatus("<@message code="profile.edit.saving"/>");
 
-                $.ajax({
-                    url: 'save',
-                    cache: false,
-                    data: $.toJSON(data),
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        callback(textStatus);
+                        $.ajax({
+                            url:'save',
+                            cache:false,
+                            data:$.toJSON(data),
+                            error:function (jqXHR, textStatus, errorThrown) {
+                                callback(textStatus);
+                            },
+                            success:function (data, textStatus, jqXHR) {
+                                if (!data.success) {
+                                    wm.ui.showStatus("<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
+                                    callback(data.summary);
+                                } else {
+                                    wm.ui.showStatus("<@message code="profile.edit.saved"/>");
+                                    callback();
+                                }
+                            }
+                        });
                     },
-                    success: function(data, textStatus, jqXHR) {
-                        if (!data.success) {
-                            wm.ui.showStatus("<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
-                            callback(data.summary);
-                        } else {
-                            wm.ui.showStatus("<@message code="profile.edit.saved"/>");
-                            callback();
-                        }
-                    }
-                });
-            },
-            {
-                realName: {
-                    type: 'text'
-                },
-                comments: {
-                    type: 'text'
-                },
-                gender: {
-                    type: 'select',
-                    values: {
-                        male: '<@message code="gender.male"/>',
-                        female: '<@message code="gender.female"/>',
-                        other: '<@message code="gender.other"/>'
-                    }
-                },
-                birthday: {
-                    type: 'date',
-                    opts: {
-                        changeMonth: true,
-                        changeYear: true,
-                        dateFormat: 'dd-mm-yy',
-                        displayFormat: 'MM d, yy',
-                        yearRange: '1900:2011'
+                    {
+                        realName:{
+                            type:'text'
+                        },
+                        comments:{
+                            type:'text'
+                        },
+                        gender:{
+                            type:'select',
+                            values:{
+                                male:'<@message code="gender.male"/>',
+                                female:'<@message code="gender.female"/>',
+                                other:'<@message code="gender.other"/>'
+                            }
+                        },
+                        birthday:{
+                            type:'date',
+                            opts:{
+                                changeMonth:true,
+                                changeYear:true,
+                                dateFormat:'dd-mm-yy',
+                                displayFormat:'MM d, yy',
+                                yearRange:'1900:2011'
 
-                    }
-                },
-                primaryLanguage: {
-                    type: 'select',
-                    values: {
-                        en: '<@message code="language.en"/>',
-                        ru: '<@message code="language.ru"/>'
-                    }
-                },
-                countryCode: {
-                    type: 'select',
-                    values: {
-                    <#list countries as country>
-                        '${country.code}': "${country.name}"<#if country_has_next>,</#if>
-                    </#list>
-                    }
-                }
-            })
+                            }
+                        },
+                        primaryLanguage:{
+                            type:'select',
+                            values:{
+                                en:'<@message code="language.en"/>',
+                                ru:'<@message code="language.ru"/>'
+                            }
+                        },
+                        countryCode:{
+                            type:'select',
+                            values:{
+                            <#list countries as country>
+                                '${country.code}':"${country.name}"<#if country_has_next>,</#if>
+                            </#list>
+                            }
+                        }
+                    })
             ;
 </script>

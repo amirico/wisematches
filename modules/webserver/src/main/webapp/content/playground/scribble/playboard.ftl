@@ -1,7 +1,6 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
-<#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.playground.GameRatingChange>" -->
 <#include "/core.ftl">
 
 <#include "scriplet.ftl"/>
@@ -17,7 +16,7 @@
 
             <td style="vertical-align: top;">
             <@wm.widget class="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"  help="board.playboard"/>
-        <#if !viewMode><#include "widget/controls.ftl"/></#if>
+        <#include "widget/controls.ftl"/>
             <#if playerHand?has_content><#include "widget/annotation.ftl"/></#if>
             </td>
 

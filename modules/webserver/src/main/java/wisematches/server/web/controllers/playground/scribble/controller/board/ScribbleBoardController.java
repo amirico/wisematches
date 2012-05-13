@@ -20,6 +20,7 @@ import wisematches.playground.scribble.ExchangeTilesMove;
 import wisematches.playground.scribble.MakeWordMove;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
@@ -48,6 +49,7 @@ public class ScribbleBoardController extends WisematchesController {
     private ScribbleObjectsConverter scribbleObjectsConverter;
 
     private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
+    public static final BoardSettings BOARD_SETTINGS = new BoardSettings(false, false, true, "tiles-set-classic");
 
     public ScribbleBoardController() {
     }
@@ -62,13 +64,16 @@ public class ScribbleBoardController extends WisematchesController {
             }
 
             model.addAttribute("board", board);
-            model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
             model.addAttribute("thesaurusHouse", thesaurusHouse);
-            model.addAttribute("viewMode", !board.isGameActive() || player == null || board.getPlayerHand(player.getId()) == null);
-            if (!board.isGameActive()) {
-                model.addAttribute("ratings", board.getRatingChanges());
+            if (player == null) {
+                model.addAttribute("viewMode", Boolean.TRUE);
+                model.addAttribute("boardSettings", BOARD_SETTINGS);
+                return "/content/playground/gateway/board";
+            } else {
+                model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
+                model.addAttribute("viewMode", !board.isGameActive() || board.getPlayerHand(player.getId()) == null);
+                return "/content/playground/scribble/playboard";
             }
-            return "/content/playground/scribble/playboard";
         } catch (BoardLoadingException ex) {
             log.error("Board " + gameId + " can't be loaded", ex);
             throw new UnknownEntityException(gameId, "board");

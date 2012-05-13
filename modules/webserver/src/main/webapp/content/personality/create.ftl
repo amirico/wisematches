@@ -7,11 +7,11 @@
         $('#terms-' + name + '-page-link').addClass('active');
 
         $.get('/info/' + name + '?plain=true',
-                function(data) {
+                function (data) {
                     var el = $('#terms_panel');
                     el.height($('#form').height() - $('#terms_tabs').height() - 5);
                     el.html(data);
-                }).error(function(jqXHR, textStatus, errorThrown) {
+                }).error(function (jqXHR, textStatus, errorThrown) {
                     if (textStatus == 'parsererror') {
                         var el = $('#terms_panel');
                         el.height($('#form').height() - $('#terms_tabs').height() - 5);
@@ -20,7 +20,7 @@
                 });
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadTermsPage('${termsPages[0]}');
     });
 </script>
@@ -126,7 +126,7 @@
                                 <select id="language" name="language" style="width: 170px;">
                                     <#list ["en", "ru"] as l>
                                         <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
-                                        <@message code="language.${l}"/>
+                                            <@message code="language.${l}"/>
                                         </option>
                                     </#list>
                                 </select>
@@ -173,7 +173,7 @@
                         <a id="terms-${page}-page-link" class="ui-widget-content tab <#if page_index == 0>active</#if>"
                            style="padding: 0"
                            href="javascript: loadTermsPage('${page}');">
-                        <@message code="info.policies.${page}.label"/>
+                            <@message code="info.policies.${page}.label"/>
                         </a>
                     </#list>
                         <div style="clear: left;"></div>

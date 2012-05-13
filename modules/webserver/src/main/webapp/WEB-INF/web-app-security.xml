@@ -153,12 +153,14 @@
     <http pattern="/resources/**" security="none"/>
 
     <http use-expressions="true">
+        <intercept-url pattern="/**" access="permitAll"/>
+        <intercept-url pattern="/playground/profile/view" access="permitAll"/>
+        <intercept-url pattern="/playground/scribble/board" access="permitAll"/>
+
         <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/membership/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/modify" access="isFullyAuthenticated()"/>
         <intercept-url pattern="/admin/**" access="hasRole('admin') and isFullyAuthenticated()"/>
-
-        <intercept-url pattern="/**" access="permitAll"/>
 
         <custom-filter before="ANONYMOUS_FILTER" ref="guestFilter"/>
         <custom-filter after="SESSION_MANAGEMENT_FILTER" ref="sessionRegistryFixFilter"/>

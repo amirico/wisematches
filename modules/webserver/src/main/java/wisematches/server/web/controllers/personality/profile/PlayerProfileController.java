@@ -104,7 +104,12 @@ public class PlayerProfileController extends WisematchesController {
             model.addAttribute("statistics", statistics);
             model.addAttribute("ratingChart", new RatingChart(ratingCurve, middle));
             model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPersonality()));
-            return "/content/personality/profile/view";
+
+            if (getPersonality() != null) {
+                return "/content/playground/profile/view";
+            } else {
+                return "/content/playground/gateway/profile";
+            }
         } catch (NumberFormatException ex) {
             throw new UnknownEntityException(profileId, "profile");
         }
@@ -143,7 +148,7 @@ public class PlayerProfileController extends WisematchesController {
         model.addAttribute("profile", profile);
         model.addAttribute("profileForm", form);
         model.addAttribute("countries", countriesManager.getCountries(Language.byLocale(locale)));
-        return "/content/personality/profile/edit";
+        return "/content/playground/profile/edit";
     }
 
     @ResponseBody

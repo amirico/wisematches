@@ -66,7 +66,7 @@ public class CreateAccountController {
                                     @ModelAttribute("registration")
                                     AccountRegistrationForm form) {
         model.addAttribute("infoId", "create");
-        return "/content/personality/account/create";
+        return "/content/personality/create";
     }
 
     /**

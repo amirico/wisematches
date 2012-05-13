@@ -31,7 +31,7 @@
     <@message code="profile.registered"/>: ${gameMessageSource.formatDate(profile.creationDate, locale)}
     </div>
 </div>
-<#if principal.id == player.id>
+<#if principal?? && principal.id == player.id>
 <div class="edit">
     <button onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="profile.edit"/></button>
 </div>
@@ -265,6 +265,7 @@
     </div>
 </div>
 
+<#if principal??>
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
     <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
     |
@@ -272,12 +273,13 @@
     |
     <a href="/playground/scribble/create?t=challenge&p=${player.id}"><@message code="game.challenge.label"/></a>
     <br>
-<@privateMessage pid=player.id><@message code="messages.send.label"/></@privateMessage>
+    <@privateMessage pid=player.id><@message code="messages.send.label"/></@privateMessage>
     |
-<@friends pid=player.id><@message code="friends.add.label"/></@friends>
+    <@friends pid=player.id><@message code="friends.add.label"/></@friends>
     |
-<@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
+    <@blacklist pid=player.id><@message code="blacklist.add.label"/></@blacklist>
 </div>
+</#if>
 </div>
 
 </div>
