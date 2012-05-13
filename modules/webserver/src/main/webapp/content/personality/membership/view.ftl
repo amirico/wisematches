@@ -33,15 +33,15 @@
                     <#if principal.membership == "GUEST" && m == "BASIC">
                         <div class="center">
                             <button onclick="wm.util.url.redirect('/account/create')">
-                            <@message code="membership.register"/>
+                                <@message code="membership.register"/>
                             </button>
                         </div>
-                        <#elseif (principal.membership.ordinal() < m.ordinal())>
-                            <div class="center sample">
-                                <button disabled="disabled"><@message code="membership.subscribe"/></button>
-                            </div>
-                        <#else>
-                            <div></div>
+                    <#elseif (principal.membership.ordinal() < m.ordinal())>
+                        <div class="center sample">
+                            <button disabled="disabled"><@message code="membership.subscribe"/></button>
+                        </div>
+                    <#else>
+                        <div></div>
                     </#if>
                 </#list>
                 </div>

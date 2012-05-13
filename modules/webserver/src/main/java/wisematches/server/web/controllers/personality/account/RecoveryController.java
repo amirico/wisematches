@@ -20,8 +20,8 @@ import wisematches.server.web.controllers.personality.account.form.RecoveryConfi
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.services.notify.Notification;
-import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.recovery.RecoveryToken;
 import wisematches.server.web.services.recovery.RecoveryTokenManager;
 import wisematches.server.web.services.recovery.TokenExpiredException;
@@ -56,7 +56,7 @@ public class RecoveryController {
 
     @RequestMapping(value = "request")
     public String recoveryRequestPage(Model model, @ModelAttribute("recovery") RecoveryRequestForm form) {
-        return "/content/personality/account/recovery/request";
+        return "/content/personality/recovery/request";
     }
 
     @RequestMapping(value = "request", method = RequestMethod.POST)
@@ -109,7 +109,7 @@ public class RecoveryController {
     @RequestMapping(value = "confirmation")
     public String recoveredConfirmationPage(Model model,
                                             @ModelAttribute("recovery") RecoveryConfirmationForm form) {
-        return "/content/personality/account/recovery/confirmation";
+        return "/content/personality/recovery/confirmation";
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -179,7 +179,7 @@ public class RecoveryController {
     @RequestMapping(value = "expectation")
     public String recoveredExpectationPage(Model model) {
         model.addAttribute("infoId", "recovery/expectation");
-        return "/content/personality/account/recovery/expectation";
+        return "/content/personality/recovery/expectation";
     }
 
     @ModelAttribute("headerTitle")

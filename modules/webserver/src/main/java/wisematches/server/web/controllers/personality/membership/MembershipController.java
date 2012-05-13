@@ -31,7 +31,7 @@ public class MembershipController extends AbstractInfoController {
     public String viewMembershipPages(Model model) {
         model.addAttribute("memberships", Arrays.asList(Membership.GUEST, Membership.BASIC, Membership.SILVER, Membership.GOLD, Membership.PLATINUM));
         model.addAttribute("restrictionDescriptions", restrictionManager.getRestrictionDescriptions());
-        return "/content/personality/account/membership/view";
+        return "/content/personality/membership/view";
     }
 
     @ModelAttribute("headerTitle")

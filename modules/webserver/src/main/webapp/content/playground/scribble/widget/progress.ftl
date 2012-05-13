@@ -27,47 +27,6 @@
 </#macro>
 
 <@wm.widget class="gameInfo" title="game.state.label" help="board.progress">
-<div class="tiles-bank ui-widget-content ui-helper-hidden ${boardSettings.tilesClass}">
-
-    <div style="display: inline-block; vertical-align: top;">
-        <div class="tiles" style="position: relative;"></div>
-    </div>
-
-    <div class="info" style="display: inline-block; vertical-align: top; padding-left: 30px;">
-        <table border="0" width="250px">
-            <@element showSeparator=false>
-                <td nowrap="nowrap"><strong><@message code="game.state.bank.cost"/>:</strong></td>
-                <td align="center" class="tileCost"></td>
-            </@element>
-
-            <@element>
-                <td nowrap="nowrap"><strong><@message code="game.state.bank.view"/>:</strong></td>
-                <td align="center">
-                    <div class="tileView" style="position: relative; width: 22px; height: 22px"></div>
-                </td>
-            </@element>
-
-            <tr>
-                <td colspan="2" style="height: 25px;">&nbsp;</td>
-            </tr>
-
-            <@element showSeparator=false>
-                <td nowrap="nowrap"><strong><@message code="game.state.bank.total"/>:</strong>
-                </td>
-                <td align="center" class="totalCount"></td>
-            </@element>
-
-            <@element>
-                <td nowrap="nowrap"><strong><@message code="game.state.bank.board"/>:</strong></td>
-                <td align="center" class="boardCount"></td>
-            </@element>
-        </table>
-    </div>
-
-    <div style="padding-top: 5px">
-        <div class="sample"><@message code="game.state.bank.info"/></div>
-    </div>
-</div>
 
 <table width="100%" border="0">
     <@element showSeparator=false>

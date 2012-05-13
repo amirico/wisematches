@@ -35,12 +35,16 @@
     display: inline-block;
 }
 
-.player a, .player .nickname {
+.player>span, .player a, .player .nickname {
     color: #a52a2a;
     text-decoration: none;
 }
 
-.player.member a, .player.member .nickname {
+.player.member a {
+    border: none !important;
+}
+
+.player.member>span {
     border-bottom: 1px solid #a52a2a;
 }
 

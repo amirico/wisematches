@@ -2,14 +2,15 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
-<#-- @ftlvariable name="ratings" type="java.util.Collection<wisematches.playground.GameRatingChange>" -->
 <#include "/core.ftl">
 
 <#macro tileToJS tile><#if tile?has_content>{number: ${tile.number}, letter: '${tile.letter?string}', cost: ${tile.cost}, wildcard: ${tile.wildcard?string} }</#if></#macro>
 
 <@wm.jstable/>
 
-<#if !player??><#assign player=principal></#if>
+<#if principal??>
+    <#if !player??><#assign player=principal></#if>
+</#if>
 
 <link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
 <script type="text/javascript" src="/content/playground/scribble/scribble.js"></script>
@@ -45,9 +46,9 @@
             {playerId: ${hand.playerId}, nickname:'${gameMessageSource.getPlayerNick(p, locale)}', membership:'${p.membership!""}', points: ${hand.points}}<#if hand_has_next>,</#if>
         </#list>],
 
-    <#if ratings??>
+    <#if !board.gameActive>
         ratings:[
-            <#list ratings as rating>
+            <#list board.ratingChanges as rating>
                 {playerId: ${rating.playerId}, oldRating: ${rating.oldRating}, newRating: ${rating.newRating}, ratingDelta: ${rating.ratingDelta}, points: ${rating.points}}<#if rating_has_next>,</#if>
             </#list>
         ],
@@ -85,12 +86,14 @@
                 <#list board.lettersDistribution.letterDescriptions as tbi>{letter:'${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}, wildcard: ${(tbi.cost==0)?string}}<#if tbi_has_next>,</#if></#list>]
         }
 
-    <#assign playerHand=board.getPlayerHand(player.getId())!""/>
-    <#if playerHand?has_content>
-        ,
-        privacy:{
-            handTiles:[<#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
-        }
+    <#if player??>
+        <#assign playerHand=board.getPlayerHand(player.getId())!""/>
+        <#if playerHand?has_content>
+            ,
+            privacy:{
+                handTiles:[<#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
+            }
+        </#if>
     </#if>
     };
 
@@ -102,13 +105,16 @@
         scribbleController = new wm.scribble.AjaxController();
     }
     var boardSettings = {
+    <#if boardSettings??>
         clearByClick: ${boardSettings.clearByClick?string}
+    </#if>
     };
-    var board = new wm.scribble.Board(scribbleGame, ${player.id}, "wildcardSelectionPanel", scribbleController, boardSettings);
+    var board = new wm.scribble.Board(scribbleGame, <#if player??>${player.id}<#else>0</#if>, "wildcardSelectionPanel", scribbleController, boardSettings);
 </script>
 
 <#if !viewMode>
-<div id="wildcardSelectionPanel" class="${boardSettings.tilesClass}" title="<@message code="game.play.wildcard.label"/>" style="display: none;">
+<div id="wildcardSelectionPanel" class="${boardSettings.tilesClass}" title="<@message code="game.play.wildcard.label"/>"
+     style="display: none;">
     <div><@message code="game.play.wildcard.description"/></div>
     <div style="position: relative; height: ${(((board.lettersDistribution?size)/15)?ceiling)*22}px;"></div>
 </div>

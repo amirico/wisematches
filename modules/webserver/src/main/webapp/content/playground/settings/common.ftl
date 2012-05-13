@@ -13,7 +13,7 @@
             <select id="language" name="language" style="width: 170px;">
                 <#list ["en", "ru"] as l>
                     <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
-                    <@message code="language.${l}"/>
+                        <@message code="language.${l}"/>
                     </option>
                 </#list>
             </select>
@@ -78,15 +78,15 @@
 </table>
 
 <script type="text/javascript">
-    wm.setting = new function() {
-        this.changeEmail = function(link) {
+    wm.setting = new function () {
+        this.changeEmail = function (link) {
             $(link).slideUp();
             $('#emailPane').slideDown();
             $('#changeEmail').val('true');
             return false;
         };
 
-        this.changePassword = function(link) {
+        this.changePassword = function (link) {
             $(link).slideUp();
             $('#passwordPane').slideDown();
             $('#changePassword').val('true');
@@ -94,7 +94,7 @@
         };
 
     <#if saved??>
-        $(document).ready(function() {
+        $(document).ready(function () {
             wm.ui.showStatus("<@message code="account.modify.saved"/>");
         });
     </#if>

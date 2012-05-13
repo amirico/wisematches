@@ -26,8 +26,8 @@
     <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
     <script type="text/javascript" src="/content/wisematches.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/content/personality/account/account.css"/>
-    <script type="text/javascript" src="/content/personality/account/account.js"></script>
+    <link rel="stylesheet" type="text/css" href="/content/personality/account.css"/>
+    <script type="text/javascript" src="/content/personality/account.js"></script>
 
 <#if principal??>
     <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>

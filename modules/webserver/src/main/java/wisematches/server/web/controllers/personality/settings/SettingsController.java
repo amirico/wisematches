@@ -65,7 +65,7 @@ public class SettingsController extends WisematchesController {
         form.setCheckWords(settings.isCheckWords());
         form.setCleanMemory(settings.isCleanMemory());
         form.setClearByClick(settings.isClearByClick());
-        return "/content/personality/settings/template";
+        return "/content/playground/settings/template";
     }
 
     @RequestMapping(value = "done")

@@ -18,9 +18,11 @@
                         </span>
                     <#else>
                         <span class="player member">
+                            <span>
                                 <a href="/playground/profile/view">
                                     <span class="nickname">${principal.nickname} (${principal.account.email})</span>
                                 </a>
+                            </span>
                             </span>
                     </#if>
                         <div style="width: 24px; display: inline-block; vertical-align: bottom; padding-bottom: 2px">

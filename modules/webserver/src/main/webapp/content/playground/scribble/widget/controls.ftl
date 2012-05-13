@@ -1,13 +1,17 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 
 <#include "/core.ftl">
+<#if !viewMode??><#assign viewMode=true/></#if>
 
 <div class="boardActionsToolbar ui-widget-content ui-corner-all shadow" align="center">
     <div>
+    <#if !viewMode>
         <button class="makeTurnButton" onclick="boardActionsToolbar.makeTurn()">
-        <@message code="game.play.make"/>
+            <@message code="game.play.make"/>
         </button>
+    </#if>
         <button class="clearSelectionButton" onclick="board.clearSelection()">
         <@message code="game.play.clear"/>
         </button>
@@ -15,22 +19,67 @@
         <@message code="game.play.highlight"/>
         </button>
     </div>
+<#if !viewMode>
     <div>
         <button class="exchangeTilesButton" onclick="boardActionsToolbar.exchangeTiles()">
-        <@message code="game.play.exchange"/>
+            <@message code="game.play.exchange"/>
         </button>
         <button class="passTurnButton" onclick="boardActionsToolbar.passTurn()">
-        <@message code="game.play.pass"/>
+            <@message code="game.play.pass"/>
         </button>
         <button class="resignGameButton" onclick="boardActionsToolbar.resignGame()">
-        <@message code="game.play.resign"/>
+            <@message code="game.play.resign"/>
         </button>
     </div>
+</#if>
 </div>
 
+<#if !viewMode>
 <div class="exchangeTilesPanel ui-helper-hidden ${boardSettings.tilesClass}">
     <div><@message code="game.play.exchange.description"/></div>
     <div style="height: 16px; position: relative;"></div>
+</div>
+</#if>
+
+<div class="tiles-bank ui-widget-content ui-helper-hidden ${boardSettings.tilesClass}">
+    <div style="display: inline-block; vertical-align: top;">
+        <div class="tiles" style="position: relative;"></div>
+    </div>
+
+    <div class="info" style="display: inline-block; vertical-align: top; padding-left: 30px;">
+        <table border="0" width="250px">
+            <tr>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.cost"/>:</strong></td>
+                <td align="center" class="tileCost"></td>
+            </tr>
+
+            <tr>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.view"/>:</strong></td>
+                <td align="center">
+                    <div class="tileView" style="position: relative; width: 22px; height: 22px"></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="height: 25px;">&nbsp;</td>
+            </tr>
+
+            <tr>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.total"/>:</strong>
+                </td>
+                <td align="center" class="totalCount"></td>
+            </tr>
+
+            <tr>
+                <td nowrap="nowrap"><strong><@message code="game.state.bank.board"/>:</strong></td>
+                <td align="center" class="boardCount"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding-top: 5px">
+        <div class="sample"><@message code="game.state.bank.info"/></div>
+    </div>
 </div>
 
 <script type="text/javascript">
