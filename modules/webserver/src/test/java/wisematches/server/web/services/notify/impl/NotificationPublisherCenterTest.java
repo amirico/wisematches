@@ -131,7 +131,6 @@ public class NotificationPublisherCenterTest {
         expectLastCall().anyTimes();
         replay(distributorListener);
 
-        final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo());
         final Dictionary dictionary = createNiceMock(Dictionary.class);
         expect(dictionary.getWord(isA(CharSequence.class))).andAnswer(new IAnswer<Word>() {
             @Override
@@ -141,10 +140,10 @@ public class NotificationPublisherCenterTest {
         }).anyTimes();
         replay(dictionary);
 
-        board1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), tilesBank, dictionary);
+        board1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), dictionary);
 
         do {
-            board2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), tilesBank, dictionary);
+            board2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), dictionary);
         } while (board1.getPlayerTurn().getPlayerId() == board2.getPlayerTurn().getPlayerId());
 
         final NotificationPublisher publisher = createMock(NotificationPublisher.class);

@@ -26,7 +26,7 @@
                             </span>
                     </#if>
                         <div style="width: 24px; display: inline-block; vertical-align: bottom; padding-bottom: 2px">
-                            <g:plusone size="small" annotation="none"></g:plusone>
+                            <g:plusone size="small" annotation="none" href="http://www.wisematches.net"></g:plusone>
                         </div>
                     <#--<#if false>-->
                     <#--|-->

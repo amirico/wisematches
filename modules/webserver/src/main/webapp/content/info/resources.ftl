@@ -24,13 +24,12 @@
     <#if .node?children??>
     <ol>
         <#assign nodes=.node?children/>
-        <#if reverse><#assign nodes=nodes?reverse/></#if>
+        <#if reverse><#assign nodes=nodes?reverse/><#global reverse=false/></#if>
         <#list nodes as item>
             <li><#visit item></li>
         </#list>
     </ol>
     </#if>
-    <#global reverse=false/>
 </#macro>
 
 <#macro item>

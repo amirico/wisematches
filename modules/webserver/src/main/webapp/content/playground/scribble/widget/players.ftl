@@ -21,14 +21,12 @@
         </tbody>
     </table>
 </div>
-
     <#if playerInGame>
     <div class="createChallenge <#if board.gameActive>ui-helper-hidden</#if>" style="width: 100%; padding-top: 6px">
         <button><@message code="game.challenge.label"/></button>
     </div>
     </#if>
 </@wm.widget>
-
 <script type="text/javascript">
     new wm.scribble.Players(board);
 

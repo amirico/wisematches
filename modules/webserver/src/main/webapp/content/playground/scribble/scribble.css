@@ -36,6 +36,10 @@
     font-style: italic;
 }
 
+.movesHistory .dataTables_scrollBody {
+    overflow-x: hidden !important;
+}
+
 .createChallenge button, .createChallenge span {
     width: 100%;
     font-weight: bold;
@@ -48,6 +52,7 @@
     height: 16px;
     width: 100%;
     padding: 0;
+    overflow: visible !important;
     background-color: transparent;
     position: relative;
 }
