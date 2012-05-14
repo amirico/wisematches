@@ -4,7 +4,6 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <link rel="canonical" href="http://www.wisematches.net?language=${locale}"/>
     <title><@message code=headerTitle!"title.default"/></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>

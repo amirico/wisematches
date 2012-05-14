@@ -2,6 +2,7 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 
 <#include "/core.ftl">
+<#include "/content/templates/addthis.ftl"/>
 
 <#macro row activeVisible=true passiveVisible=true>
     <#if !passiveVisible && !board.gameActive> <#-- nothing to do if not active and -->
@@ -85,6 +86,15 @@
             </div>
         </td>
     </@element>
+
+    <#if principal??>
+        <@element>
+            <td><strong><@message code="game.state.share.label"/>:</strong></td>
+            <td style="padding-top: 4px">
+                <@addthis/>
+            </td>
+        </@element>
+    </#if>
 
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>

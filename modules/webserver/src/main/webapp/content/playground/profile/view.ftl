@@ -6,6 +6,8 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
+<#include "/content/templates/addthis.ftl"/>
+
 <#include "/content/playground/messages/scriplet.ftl">
 <#include "/content/playground/blacklist/scriplet.ftl">
 <#include "/content/playground/friends/scriplet.ftl">
@@ -289,8 +291,13 @@
         <img class="shadow" style="width: 200px; height: 200px;" src="/playground/profile/image/view?pid=${player.id}"
              alt="Photo">
     </div>
-    <div><strong>${player.nickname}</strong></div>
     <div>
+        <strong>${player.nickname}</strong>
+    <#if principal?? && principal.id == player.id>
+        <@addthis href="http://www.wisematches.net/playground/profile/view?p=${profile.playerId}"/>
+    </#if>
+    </div>
+    <div style="padding-top: 4px">
     <#if profile.gender??>
         <@message code="gender." + profile.gender.name()?lower_case/>,
     </#if>

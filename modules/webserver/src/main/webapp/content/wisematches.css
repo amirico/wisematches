@@ -297,7 +297,7 @@ div.space-line {
 }
 
 /* About & features styles */
-.info-about-item, .info-features-item {
+.info-about-item {
     padding-top: 20px;
     padding-left: 10px;
 }
@@ -583,4 +583,14 @@ a.ui-icon {
     cursor: help;
     vertical-align: text-bottom;
     display: inline-block !important;
+}
+
+/* addthis styles */
+.addthis_toolbox {
+    height: 18px;
+}
+
+.addthis_toolbox, .addthis_toolbox a, #at20mc a {
+    border: none;
+    text-align: center
 }

@@ -32,6 +32,7 @@
                         <td style="vertical-align: top; width: 280px">
                         <#include "/content/playground/scribble/widget/players.ftl"/>
                             <#include "/content/playground/scribble/widget/selection.ftl"/>
+                                            <#include "/content/playground/scribble/widget/thesaurus.ftl"/>
                         </td>
                     </tr>
                 </table>
