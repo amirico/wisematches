@@ -147,9 +147,9 @@ public class AuthenticationController extends AbstractInfoController {
     }
 
     private String processLoginPage(String page, Model model, Locale locale) {
-        if (!processInfoPage(page, model, locale)) { // process page with a error
+        if (!processInfoPage(page, false, model, locale)) { // process page with a error
             // if appropriate content for error page not found - process with default value
-            processInfoPage("info/general", model, locale);
+            processInfoPage("info/general", false, model, locale);
         }
         model.addAttribute("infoId", "general"); // this is CSS class name and FTL page name. Always login.
         return "/content/personality/general";

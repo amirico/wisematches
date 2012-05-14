@@ -1,5 +1,8 @@
 <#-- @ftlvariable name="infoId" type="java.lang.String" -->
 <#-- @ftlvariable name="infoModel" type="freemarker.ext.dom.NodeModel" -->
+<#-- @ftlvariable name="reverseOrder" type="java.lang.Boolean" -->
+
+<#global reverse=reverseOrder/>
 
 <div id="info-${infoId}">
     <div id="info-${infoId}-header" class="info-header">
@@ -20,11 +23,14 @@
 <#macro items>
     <#if .node?children??>
     <ol>
-        <#list .node?children as item>
+        <#assign nodes=.node?children/>
+        <#if reverse><#assign nodes=nodes?reverse/></#if>
+        <#list nodes as item>
             <li><#visit item></li>
         </#list>
     </ol>
     </#if>
+    <#global reverse=false/>
 </#macro>
 
 <#macro item>
