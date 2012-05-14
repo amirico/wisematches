@@ -29,7 +29,7 @@ public class InformationController extends AbstractInfoController {
     public String infoPages(@PathVariable String pageName,
                             @RequestParam(value = "plain", required = false) String plain,
                             Model model, Locale locale) {
-        if (!processInfoPage(pageName, model, locale)) {
+        if (!processInfoPage(pageName, "features".equals(pageName), model, locale)) {
             return null;
         }
 

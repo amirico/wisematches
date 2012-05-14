@@ -33,6 +33,9 @@
                     <#--<a href="/info/features" style="color: red; font-weight: bold;">New Features!</a>-->
                     <#--</#if>-->
                         |
+                        <a href="/info/features"
+                           style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
+                        |
                     <#if principal.membership != 'GUEST'><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>
                         |

@@ -302,6 +302,10 @@ div.space-line {
     padding-left: 10px;
 }
 
+#info-about-items li, #info-features-items li {
+    list-style: none;
+}
+
 .info-about-image, .info-features-image {
     float: left;
     width: 48px;
