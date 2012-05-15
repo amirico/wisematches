@@ -1,7 +1,5 @@
 package wisematches.server.web.controllers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.web.authentication.rememberme.CookieTheftException;
@@ -24,8 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/info/error")
 public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolver {
-    private static final Log log = LogFactory.getLog("wisematches.server.web.exceptions");
-
     public WMExceptionResolver() {
     }
 
@@ -69,9 +65,6 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
     }
 
     private ModelAndView processException(String errorCode, Exception exception, Object... arguments) {
-        if (exception != null) {
-            log.error("Error notification received", exception);
-        }
         final ModelAndView res = new ModelAndView("/content/templates/errors");
         res.addObject("errorCode", errorCode);
         res.addObject("errorArguments", arguments);
