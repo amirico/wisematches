@@ -77,7 +77,8 @@
                                     <td colspan="2" height="33.0" align="center" valign="bottom"
                                         style="text-align: center; vertical-align: bottom;">
                                         <div>
-                                            <a href="/account/recovery/request"><@message code="account.login.recovery.label"/></a>
+                                            <a id="recoveryLink"
+                                               href="/account/recovery/request"><@message code="account.login.recovery.label"/></a>
                                         </div>
                                         <#if showPredefinedUsername>
                                             <div>
@@ -119,3 +120,10 @@
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+    $("#recoveryLink").click(function () {
+        wm.util.url.redirect(wm.util.url.extend($(this).attr('href'), "email", $("#j_username").val(), true));
+        return false;
+    });
+</script>

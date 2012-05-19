@@ -2,21 +2,23 @@
 <#import "../utils.ftl" as util>
 
 <p>
-    Чтобы изменить пароль аккаунта WiseMatches ${principal.nickname} нажмите на расположенную ниже ссылку
+    Данное письмо содержит код для смены вашего пароля. Скопируйте его в соответствующее поле восстановления и введите
+    новый пароль для вашего WiseMatches аккаунта.
+</p>
+<p>
+    Код восстановления: ${context.recoveryToken}.
 </p>
 
 <p>
-<@util.link href='${confirmationUrl}?language=${principal.language.code()}&token=${recoveryToken}'/>
-</p>
-<p>
-    Если эта ссылка не работает, откройте новое окно браузера, а затем скопируйте и вставьте URL-адрес в адресную
-    строку.
-    Спасибо за то, использование WiseMatches.
+    Вы так же можете восстановить пароль использую специальную ссылку:
+<@util.link href='/account/recovery/confirmation?language=${context.principal.language.code()}&email=${context.principal.email}&token=${context.recoveryToken}'/>
 </p>
 
 <br>
+
 <p>
-    Если вы начинали процедуру восстановления пароля WiseMatches и получение данного письма вызывает у вас недоумение,
-    это значит что кто-то пытается взламать ваш WiseMatches аккаунт. Мы рекомендуем обратиться в службу поддержки
+    Если вы не начинали процедуру восстановления пароля WiseMatches и получение данного письма вызывает у вас
+    недоумение,
+    это значит что кто-то пытается взламать ваш WiseMatches аккаунт. Мы рекомендуем вам обратиться в службу поддержки
     WiseMatches по адресу: <@util.mailto box="account-support"/>.
 </p>
