@@ -28,13 +28,11 @@
                         <div style="width: 24px; display: inline-block; vertical-align: bottom; padding-bottom: 2px">
                             <g:plusone size="small" annotation="none" href="http://www.wisematches.net"></g:plusone>
                         </div>
-                    <#--<#if false>-->
-                    <#--|-->
-                    <#--<a href="/info/features" style="color: red; font-weight: bold;">New Features!</a>-->
-                    <#--</#if>-->
-                        |
-                        <a href="/info/features"
-                           style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
+                    <#--
+                                            |
+                                            <a href="/info/features"
+                                               style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
+                    -->
                         |
                     <#if principal.membership != 'GUEST'><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>

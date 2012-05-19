@@ -1,19 +1,19 @@
-<#-- @ftlvariable name="recoveryToken" type="java.lang.String" -->
-<#-- @ftlvariable name="confirmationUrl" type="java.lang.String" -->
+<#-- @ftlvariable name="context.principal" type="wisematches.personality.account.Account" -->
+<#-- @ftlvariable name="context.recoveryToken" type="java.lang.String" -->
 <#import "../utils.ftl" as util>
 
+
 <p>
-    To initiate the process for resetting the password for your ${principal.nickname} WiseMatches Account, visit the
-    link
-    below
+    This email contains account recovery token. Please copy and paste the token to appropriate field of
+    recovery password form.
+</p>
+<p>
+    Recovery Token: ${context.recoveryToken}.
 </p>
 
 <p>
-<@util.link href='${confirmationUrl}?language=${principal.language.code()}&token=${recoveryToken}'/>
-</p>
-<p>
-    If clicking on the link above does not work, copy and paste the URL in a new browser window instead. Thank you for
-    using WiseMatches.
+    You also can use the following link for your account recovering:
+<@util.link href='/account/recovery/confirmation?language=${context.principal.language.code()}&email=${context.principal.email}&token=${context.recoveryToken}'/>
 </p>
 
 <br>

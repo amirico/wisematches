@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<div id="recovery" style="width: 550px">
+<div id="recovery">
     <div id="info-recovery-header" class="info-header">
         <div class="info-label"><@message code="account.recovery.request.label"/></div>
 
@@ -19,7 +19,7 @@
                 <button id="recoveryAccount"
                         name="recoveryAccount"
                         type="submit"
-                        value="submit"><@message code='account.recovery.submit.label'/></button>
+                        value="true"><@message code='account.recovery.submit.label'/></button>
             </div>
         </form>
     </div>

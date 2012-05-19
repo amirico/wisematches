@@ -1,17 +1,17 @@
+<#-- @ftlvariable name="submittedEmail" type="java.lang.String" -->
+<#-- @ftlvariable name="notificationWasSent" type="java.lang.Boolean" -->
 <#include "/core.ftl">
 
 <div id="recovery">
     <div id="info-recovery-header" class="info-header">
         <div class="info-label"><@message code="account.recovery.check.label"/></div>
 
-        <div class="info-description">
-        <@message code="account.recovery.check.description"/>
-        </div>
+        <div class="info-description"><@message code="account.recovery.check.description"/></div>
     </div>
 
     <div id="info-recovery-form">
         <form id="recoveryForm" action="confirmation" method="post">
-            <table class="x-panel" style="padding-left: 10px; padding-right: 10px; width: 400px;">
+            <table class="x-panel" style="padding-left: 10px; padding-right: 10px;">
                 <tr>
                     <td colspan="2">
                         <div class="section label"><@message code="account.recovery.check.email.label"/></div>
@@ -23,12 +23,18 @@
                         <label for="email"><@message code="account.register.email.label"/>:</label>
                     </td>
                     <td>
-                    <@wm.field path="recovery.token">
-                        <input type="hidden" id="token" name="token" value="${spring.stringStatusValue}">
-                    </@wm.field>
-
-                    <@wm.fieldInput path="recovery.email"/>
-                        <span class="sample"><@message code="account.recovery.email.description"/></span>
+                        <div>${submittedEmail}</div>
+                        <div class="sample"><@message code="account.recovery.check.email.description" args=[submittedEmail]/></div>
+                        <input type="hidden" name="email" value="${submittedEmail}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <#--@declare id="token"-->
+                        <label for="token"><@message code="account.recovery.check.token.label"/>:</label>
+                    </td>
+                    <td>
+                    <@wm.fieldInput path="recovery.token"/>
                     </td>
                 </tr>
 
@@ -72,7 +78,6 @@
                     </td>
                 </tr>
 
-
                 <tr>
                     <td colspan="2">
                         <hr>
@@ -85,8 +90,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <div style="float: right;">
+                    <td>
+                    </td>
+                    <td>
+                        <div>
                         <@wm.captcha path="recovery.captcha"/>
                             <span class="sample"><@message code="captcha.description"/></span>
                         </div>
@@ -99,7 +106,7 @@
                         <button id="recoveryAccount"
                                 name="recoveryAccount"
                                 type="submit"
-                                value="submit"><@message code='account.recovery.submit.label'/></button>
+                                value="true"><@message code='account.recovery.submit.label'/></button>
                     </td>
                 </tr>
             </table>

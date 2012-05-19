@@ -552,6 +552,11 @@ div.space-line {
     margin-bottom: 3px;
 }
 
+.section {
+    font-size: larger;
+    font-weight: bold;
+}
+
 .quickInfo {
     float: right;
     cursor: pointer;
