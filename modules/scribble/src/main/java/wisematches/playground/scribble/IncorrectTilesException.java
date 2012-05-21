@@ -6,7 +6,7 @@ import static wisematches.playground.scribble.IncorrectTilesException.Type.*;
 
 /**
  * Indicates that a tile of word are incorrect of can not be placed on board by some
- * reasones.
+ * reasons.
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */

@@ -481,10 +481,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	private void checkExchangeTilesMove(ExchangeTilesMove move) throws IncorrectMoveException {
 		final int[] ints = move.getTilesIds();
 		if (ints.length == 0) {
-			throw new IncorrectTilesException(false);
+			throw new IncorrectExchangeException("No tiles for exchange", IncorrectExchangeException.Type.EMPTY_TILES);
 		}
 		if (ints.length > tilesBank.getTilesLimit()) {
-			throw new IncorrectMoveException("Not required tiles to in bank");
+			throw new IncorrectExchangeException("Not required tiles to in bank", IncorrectExchangeException.Type.EMPTY_BANK);
 		}
 
 		final Tile[] tiles = getPlayerTurn().getTiles();
@@ -499,7 +499,8 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			}
 
 			if (!found) {
-				throw new IncorrectMoveException("Player does not contains tiles to exchange");
+				throw new IncorrectExchangeException("Player does not contains tiles to exchange",
+						IncorrectExchangeException.Type.UNKNOWN_TILES);
 			}
 		}
 	}
