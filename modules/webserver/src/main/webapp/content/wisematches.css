@@ -317,10 +317,15 @@ div.space-line {
     padding-left: 10px;
 }
 
+.info-general-item {
+    padding-bottom: 5px;
+}
+
 .info-general-image {
     float: left;
     text-align: left;
     padding-left: 15px;
+    padding-right: 5px;
 }
 
 .info-general-links {
