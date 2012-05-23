@@ -91,7 +91,11 @@
         <@element>
             <td><strong><@message code="game.state.share.label"/>:</strong></td>
             <td style="padding-top: 4px">
-                <@addthis/>
+                <#if board.getPlayerHand(principal.id)??>
+                <@addthis title="share.board.my.label" description="share.board.my.description" args=[principal.nickname]/>
+                    <#else>
+                    <@addthis title="share.board.other.label" description="share.board.other.description" args=[principal.nickname]/>
+                </#if>
             </td>
         </@element>
     </#if>

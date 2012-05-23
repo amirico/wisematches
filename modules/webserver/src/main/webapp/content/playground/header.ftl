@@ -19,7 +19,7 @@
                     <#else>
                         <span class="player member">
                             <span>
-                                <a href="/playground/profile/view">
+                                <a href="/playground/profile/view?p=${principal.id}">
                                     <span class="nickname">${principal.nickname} (${principal.account.email})</span>
                                 </a>
                             </span>
