@@ -14,9 +14,6 @@
     </@wm.dtHeader>
 
     <@wm.dtToolbar>
-    <div style="float: left">
-        <@wm.field path="create.commonError"><#if !spring.status.error>&nbsp;</#if></@wm.field>
-    </div>
     <div>
         <a href="/playground/scribble/join"><@message code="game.join.label"/></a>
     </div>
@@ -215,7 +212,7 @@
                             <div>
                                 <#assign player=playerManager.getPlayer(p?number)!""/>
                                 <@wm.player player=player hideLink=true showState=false/>
-                                <input type="hidden" name="opponents" value="${player.id}"/>
+                                <input type="hidden" name="opponent${p_index+1}" value="${player.id}"/>
                             </div>
                         </#if>
                     </#list>
@@ -248,9 +245,9 @@
 </div>
 
 <div class="data-table-bottom">
-    <div class="ui-widget-content" style="text-align: left">
+    <div class="ui-widget-content" style="text-align: left; white-space: normal;">
         <#if !restricted>
-            <button><@message code="game.create.submit"/></button>
+            <button onclick="create.submitForm(); return false;"><@message code="game.create.submit"/></button>
         <#else>
             &nbsp;
         </#if>
@@ -261,14 +258,17 @@
     <@wm.dtFooter>
         <#if restricted>
         <div class="ui-state-error-text" style="padding: 5px;">
-            <@message code="game.create.forbidden" args=[gamesCount, '/playground/scribble/active', '/account/membership']/>
+            <@message code="game.create.forbidden" args=[gamesCount]/>
         </div>
         </#if>
     </@wm.dtFooter>
+
 
     <#include "/content/playground/players/scriplet.ftl">
 </@wm.playground>
 
 <script type="text/javascript">
-    var create = new wm.game.Create(${maxOpponents}, ${opponentsCount}, playerSearch);
+    var create = new wm.game.Create(${maxOpponents}, ${opponentsCount}, playerSearch, {
+        waiting: "<@message code="game.create.waiting.label"/>"
+    });
 </script>
