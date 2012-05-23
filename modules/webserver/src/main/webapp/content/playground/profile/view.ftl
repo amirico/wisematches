@@ -294,7 +294,9 @@
     <div>
         <strong>${player.nickname}</strong>
     <#if principal?? && principal.id == player.id>
-        <@addthis href="http://www.wisematches.net/playground/profile/view?p=${profile.playerId}"/>
+        <@addthis title="share.profile.my.label" description="share.profile.my.description" args=[principal.nickname]/>
+    <#else>
+        <@addthis title="share.profile.other.label" description="share.profile.other.description" args=[principal.nickname]/>
     </#if>
     </div>
     <div style="padding-top: 4px">
@@ -370,20 +372,20 @@
 
         new google.visualization.BarChart(document.getElementById('gamesChart')).
                 draw(data, {
-            axisTitlesPosition:'in',
-            colors:['#008000', 'AA0033', '#FF9900'],
-            backgroundColor:'transparent',
-            legend:'none',
-            isStacked:true,
-            width:300,
-            height:75,
-            chartArea:{
-                top:0,
-                left:0,
-                width:280,
-                height:40
-            }
-        });
+                    axisTitlesPosition:'in',
+                    colors:['#008000', 'AA0033', '#FF9900'],
+                    backgroundColor:'transparent',
+                    legend:'none',
+                    isStacked:true,
+                    width:300,
+                    height:75,
+                    chartArea:{
+                        top:0,
+                        left:0,
+                        width:280,
+                        height:40
+                    }
+                });
 
         var data2 = new google.visualization.DataTable();
         data2.addColumn('string', '');
@@ -396,19 +398,19 @@
 
         new google.visualization.BarChart(document.getElementById('timeoutsChart')).
                 draw(data2, {
-            colors:['lightgrey', 'darkgrey', '#00cc66'],
-            backgroundColor:'transparent',
-            legend:'none',
-            isStacked:true,
-            width:300,
-            height:75,
-            chartArea:{
-                top:0,
-                left:0,
-                width:280,
-                height:40
-            }
-        })
+                    colors:['lightgrey', 'darkgrey', '#00cc66'],
+                    backgroundColor:'transparent',
+                    legend:'none',
+                    isStacked:true,
+                    width:300,
+                    height:75,
+                    chartArea:{
+                        top:0,
+                        left:0,
+                        width:280,
+                        height:40
+                    }
+                })
     }
 
     google.setOnLoadCallback(drawGamesChart);

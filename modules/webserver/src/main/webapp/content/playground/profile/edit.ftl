@@ -8,7 +8,7 @@
 
 <div class="notification shadow ui-state-highlight" style="text-align: center; padding: 5px;">
 <@message code="profile.edit.description"/>
-    <button onclick="wm.util.url.redirect('/playground/profile/view')"><@message code="profile.edit.done"/></button>
+    <button onclick="wm.util.url.redirect('/playground/profile/view?p=${profile.playerId}')"><@message code="profile.edit.done"/></button>
 </div>
 
 <div style="width: 100%">

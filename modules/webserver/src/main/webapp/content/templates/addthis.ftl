@@ -1,6 +1,7 @@
 <#-- @ftlvariable name="addThisCode" type="java.lang.String" -->
+<#include "/core.ftl">
 
-<#macro addthis href="" counter=false>
+<#macro addthis href="" title="" description="share.description" args=[] counter=false>
     <#if addThisCode??>
     <div class="addthis_toolbox addthis_default_style">
         <a class="addthis_button_facebook"></a>
@@ -18,11 +19,12 @@
             "ui_language":"${locale.language?lower_case}"
         };
 
-            <#if href?? && href?has_content>
-            var addthis_share = {
-                "url":"${href}"
-            };
-            </#if>
+        var addthis_share = {
+                <#if href?? && href?has_content>"url":"${href}",</#if>
+                <#if title?? && title?has_content>"title":"<@message code=title args=args/>",</#if>
+            "description":"<@message code=description args=args/>"
+        };
+
     </script>
     <script type="text/javascript"
             src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=${addThisCode}"></script>
