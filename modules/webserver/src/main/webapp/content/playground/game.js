@@ -159,23 +159,23 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.Create = function (maxOpponents, opponentsCount, playerSearch) {
+wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
     var attachPlayerSearchActions = function (a) {
         $(a).hover(
-            function () {
-                $(this).addClass("player-search-remove");
-            },
-            function () {
-                $(this).removeClass("player-search-remove");
-            }).click(function () {
-                $(this).fadeOut('fast', function () {
-                    $(this).remove();
-                    if (opponentsCount == maxOpponents) {
-                        $("#opponentsControl").fadeIn('slow');
-                    }
-                    opponentsCount--;
+                function () {
+                    $(this).addClass("player-search-remove");
+                },
+                function () {
+                    $(this).removeClass("player-search-remove");
+                }).click(function () {
+                    $(this).fadeOut('fast', function () {
+                        $(this).remove();
+                        if (opponentsCount == maxOpponents) {
+                            $("#opponentsControl").fadeIn('slow');
+                        }
+                        opponentsCount--;
+                    });
                 });
-            });
     };
 
     this.selectOpponent = function () {
@@ -222,6 +222,36 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch) {
     }, function () {
         $(this).removeClass("ui-state-hover");
     });
+
+    this.submitForm = function () {
+        var form = $("#form");
+        wm.ui.showStatus(language['waiting'], false, true);
+        form.block({ message:null});
+
+        var serializeObject = form.serializeObject();
+        if (serializeObject.opponents != undefined && !$.isArray(serializeObject.opponents)) {
+            serializeObject.opponents = [serializeObject.opponents];
+        }
+        $.post("create.ajax", $.toJSON(serializeObject),
+                function (response) {
+                    if (response.success) {
+                        if (response.data == null || response.data.board == undefined) {
+                            wm.util.url.redirect('/playground/scribble/active');
+                        } else {
+                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        }
+                    } else {
+                        wm.ui.showMessage({message:response.summary, error:true});
+                        form.unblock();
+                        wm.ui.clearStatus();
+                    }
+                }, 'json')
+                .error(function (jqXHR, textStatus, errorThrown) {
+                    wm.ui.showMessage({message:textStatus, error:true});
+                    form.unblock();
+                    wm.ui.clearStatus();
+                });
+    };
 };
 
 wm.game.Join = function (language) {
@@ -307,16 +337,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-            }
-        },
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-            }
-        });
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+                }
+            },
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+                }
+            });
 
     prevSet.click(function () {
         if (selected > 0) {

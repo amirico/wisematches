@@ -320,13 +320,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-            "<div class='ui-editor-label'></div>" +
-            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-            "<div class='ui-editor-error'></div>" +
-            "<button class='ui-editor-save'>Save</button> " +
-            "<button class='ui-editor-cancel'>Cancel</button>" +
-            "</div></div>" +
-            "</div></div></div>");
+                "<div class='ui-editor-label'></div>" +
+                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+                "<div class='ui-editor-error'></div>" +
+                "<button class='ui-editor-save'>Save</button> " +
+                "<button class='ui-editor-cancel'>Cancel</button>" +
+                "</div></div>" +
+                "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -455,6 +455,36 @@ wm.ui.editor = new function () {
 };
 
 $(document).ready(function () {
+    jQuery.fn.extend({
+        serializeObject:function () {
+            var arrayData, objectData;
+            arrayData = this.serializeArray();
+            objectData = {};
+
+            $.each(arrayData, function () {
+                var value;
+
+                if (this.value != null) {
+                    value = this.value;
+                } else {
+                    value = '';
+                }
+
+                if (objectData[this.name] != null) {
+                    if (!objectData[this.name].push) {
+                        objectData[this.name] = [objectData[this.name]];
+                    }
+
+                    objectData[this.name].push(value);
+                } else {
+                    objectData[this.name] = value;
+                }
+            });
+
+            return objectData;
+        }
+    });
+
     $("[title]").cluetip({ showTitle:false});
 
     var notifications = $(".notification");
@@ -464,16 +494,16 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-hover');
-            }
-        },
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-default');
-            }
-        });
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-hover');
+                }
+            },
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-default');
+                }
+            });
 
     var activeQuickInfo = undefined;
     $(".quickInfo a").cluetip({
