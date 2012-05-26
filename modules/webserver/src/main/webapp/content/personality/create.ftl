@@ -40,7 +40,7 @@
                     <table class="ui-widget-content" width="100%">
                         <tr>
                             <td colspan="2">
-                                <div class="section label"><@message code="account.register.section.required.label"/></div>
+                                <div class="section label"><@message code="account.register.group.required.label"/></div>
                             </td>
                         </tr>
                         <tr>
@@ -113,7 +113,7 @@
 
                         <tr>
                             <td colspan="2">
-                                <div class="section label"><@message code="account.register.section.getstarted.label"/></div>
+                                <div class="section label"><@message code="account.register.group.getstarted.label"/></div>
                             </td>
                         </tr>
 
