@@ -604,3 +604,7 @@ a.ui-icon {
     border: none;
     text-align: center
 }
+
+.blockUI.blockOverlay {
+    background: url('/resources/images/thumbnail.png') repeat left top;
+}
