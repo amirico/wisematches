@@ -11,7 +11,6 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-2.0-SNAPSHOT.jar">

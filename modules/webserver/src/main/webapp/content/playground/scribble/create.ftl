@@ -262,13 +262,13 @@
         </div>
         </#if>
     </@wm.dtFooter>
-
+</div>
 
     <#include "/content/playground/players/scriplet.ftl">
 </@wm.playground>
 
 <script type="text/javascript">
     var create = new wm.game.Create(${maxOpponents}, ${opponentsCount}, playerSearch, {
-        waiting: "<@message code="game.create.waiting.label"/>"
+        waiting:"<@message code="game.create.waiting.label"/>"
     });
 </script>

@@ -18,6 +18,7 @@
             <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %p [%t] %c{3}.%M - %m%n"/>
         </layout>
     </appender>
+
 <!--
 
     <logger name="wisematches">

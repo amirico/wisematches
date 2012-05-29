@@ -224,11 +224,11 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
     });
 
     this.submitForm = function () {
-        var form = $("#form");
+        wm.ui.lock($("#createGame"), "awdas das dasdads");
 //        wm.ui.showStatus(language['waiting'], false, true);
-        form.block({ message:"<div style='background-color: blue;'>asdfasdf asdf sadf</div>"});
+//        form.block({ message:"&nbsp;"});
 
-        var serializeObject = form.serializeObject();
+        var serializeObject = $("#form").serializeObject();
         if (serializeObject.opponents != undefined && !$.isArray(serializeObject.opponents)) {
             serializeObject.opponents = [serializeObject.opponents];
         }
@@ -242,13 +242,14 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
                     }
                 } else {
                     wm.ui.showMessage({message:response.summary, error:true});
-                    form.unblock();
+                    wm.ui.unlock();
                     wm.ui.clearStatus();
                 }
             }, 'json')
             .error(function (jqXHR, textStatus, errorThrown) {
-                wm.ui.showMessage({message:textStatus, error:true});
-                form.unblock();
+                wm.ui.unlock();
+//                wm.ui.showMessage(form, {message:textStatus, error:true});
+//                form.unblock();
                 wm.ui.clearStatus();
             });
     };
