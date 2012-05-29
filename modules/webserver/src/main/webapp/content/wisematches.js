@@ -80,16 +80,9 @@ wm.util.url = new function () {
 
 wm.ui = new function () {
     var activeWindows = true;
+    var lockedElement = null;
 
-    var alertTemplate = function (title, message) {
-        var e;
-        e = ['<div>', '<div class="content">', '<h2>' + title + '</h2>', '<p>' + message + '</p>', '</div>', '<span class="icon"></span>', '<span class="close"></span>', '</div>'].join("");
-        return e;
-    };
-
-    var statusTemplate = function (title, message) {
-        return '<div><div class="content">' + message + '</div></div>';
-    };
+    $.blockUI.defaults.message = null;
 
     $.blockUI.defaults.css = {
         padding:0,
@@ -102,7 +95,6 @@ wm.ui = new function () {
     };
 
     $.blockUI.defaults.overlayCSS = {
-//        backgroundColor: '#000',
         opacity:0.2,
         cursor:'wait',
         '-moz-border-radius':'5px',
@@ -117,7 +109,56 @@ wm.ui = new function () {
         contentType:'application/json'
     });
 
-    this.showConfirm = function (title, msg, approvedAction) {
+    var alertTemplate = function (title, message) {
+        var e;
+        e = ['<div>', '<div class="content">', '<h2>' + title + '</h2>', '<p>' + message + '</p>', '</div>', '<span class="icon"></span>', '<span class="close"></span>', '</div>'].join("");
+        return e;
+    };
+
+    var messageTemplate = function (title, message) {
+        return '<div style="padding: 10px 24px; padding-bottom: 10px">' + message + '</div><div class="closeButton"><a href="#"><img src="/resources/images/close.png"></a></div>';
+    };
+
+    var statusTemplate = function (title, message) {
+        return '<div><div class="content">' + message + '</div></div>';
+    };
+
+    this.lock = function (element, message) {
+        lockedElement = element;
+        element.block({message:null});
+        wm.ui.showStatus(message, false, true);
+    };
+
+    this.unlock = function () {
+        wm.ui.clearStatus();
+        lockedElement.unblock();
+    };
+
+    this.message = function (element, message, error) {
+        var v = {
+            message:messageTemplate(null, message),
+            blockMsgClass:'ui-corner-all' + (error ? ' ui-state-error' : ' ui-state-default'),
+            draggable:false
+        };
+
+        if (element != undefined && element != null) {
+            element.block(v);
+        } else {
+            $.blockUI(v);
+        }
+
+        var processClose = function () {
+            if (element != undefined && element != null) {
+                element.unblock();
+            } else {
+                $.unblockUI();
+            }
+        };
+        $('.closeButton').click(processClose);
+        $('.blockOverlay').click(processClose);
+    };
+
+    this.confirm = function (title, msg, approvedAction) {
         $('<div></div>').html(msg).dialog({
             title:title,
             draggable:false,
@@ -143,38 +184,14 @@ wm.ui = new function () {
         });
     };
 
-    this.showWaitMessage = function (message) {
-        $.blockUI({
-            blockMsgClass:'ui-corner-all ui-state-default',
-            css:{
-                padding:'15px',
-                opacity:.85
-            },
-            message:message });
-    };
-
-    this.showMessage = function (opts) {
-        opts = opts || {};
-        var v = $.extend(opts, {
-            message:'<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
-            blockMsgClass:'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
-            draggable:false
-        });
-        $.blockUI(v);
-        $('.blockOverlay').click($.unblockUI);
-    };
-
-    this.showAlert = function (title, message, type, error) {
+    this.notification = function (title, message, type, error) {
         $("#alerts-widget-pane").freeow(title, message, {
             classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
             showStyle:{opacity:.95},
             template:alertTemplate,
             autoHideDelay:10000
         });
-        wm.ui.getAttention(title);
-    };
 
-    this.getAttention = function (title) {
         if (!activeWindows) {
             $(window).stopTime('attention-timer');
             var documentTitle = document.title;
@@ -189,7 +206,6 @@ wm.ui = new function () {
     };
 
     this.showStatus = function (message, error, stick) {
-//        wm.ui.clearStatus();
         $("#status-widget-pane").empty();
 
         if (stick == undefined) {
@@ -211,6 +227,28 @@ wm.ui = new function () {
         } else {
             $("#status-widget-pane").empty();
         }
+    };
+
+
+    this.showWaitMessage = function (message) {
+        $.blockUI({
+            blockMsgClass:'ui-corner-all ui-state-default',
+            css:{
+                padding:'15px',
+                opacity:.85
+            },
+            message:message });
+    };
+
+    this.showMessage = function (opts) {
+        opts = opts || {};
+        var v = $.extend(opts, {
+            message:'<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
+            blockMsgClass:'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
+            draggable:false
+        });
+        $.blockUI(v);
+        $('.blockOverlay').click($.unblockUI);
     };
 
     this.refreshImage = function (element) {
@@ -320,13 +358,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-                "<div class='ui-editor-label'></div>" +
-                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-                "<div class='ui-editor-error'></div>" +
-                "<button class='ui-editor-save'>Save</button> " +
-                "<button class='ui-editor-cancel'>Cancel</button>" +
-                "</div></div>" +
-                "</div></div></div>");
+            "<div class='ui-editor-label'></div>" +
+            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+            "<div class='ui-editor-error'></div>" +
+            "<button class='ui-editor-save'>Save</button> " +
+            "<button class='ui-editor-cancel'>Cancel</button>" +
+            "</div></div>" +
+            "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -494,16 +532,16 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-            function () {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-hover');
-                }
-            },
-            function () {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-default');
-                }
-            });
+        function () {
+            if (!$(this).hasClass('ui-state-active')) {
+                $(this).attr('class', 'quickInfo ui-state-hover');
+            }
+        },
+        function () {
+            if (!$(this).hasClass('ui-state-active')) {
+                $(this).attr('class', 'quickInfo ui-state-default');
+            }
+        });
 
     var activeQuickInfo = undefined;
     $(".quickInfo a").cluetip({

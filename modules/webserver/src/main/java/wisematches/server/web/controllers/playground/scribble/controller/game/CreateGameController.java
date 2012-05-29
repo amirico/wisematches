@@ -105,7 +105,7 @@ public class CreateGameController extends AbstractGameController {
         }
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
             return ServiceResponse.failure();
         } catch (InterruptedException ex) {
         }

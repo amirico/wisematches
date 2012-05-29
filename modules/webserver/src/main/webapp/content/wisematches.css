@@ -116,8 +116,7 @@ a.action {
     padding: 0;
     height: 1px;
     border-width: 0;
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
+    border-bottom: 1px dotted;
 }
 
 a.ui-dialog-titlebar-close {
@@ -148,6 +147,13 @@ tr.even:hover td, tr.odd:hover td {
 .button-wait-icon {
     padding-left: 22px !important;
     background-image: url('/resources/images/wait.gif');
+}
+
+.wm-icon-wait {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    background: url(/resources/images/wait.gif) no-repeat left center;
 }
 
 .wm-icon-forbidden {
@@ -605,6 +611,6 @@ a.ui-icon {
     text-align: center
 }
 
-.blockUI.blockOverlay {
+.blockUI.blockOverlay, .ui-widget-overlay {
     background: url('/resources/images/thumbnail.png') repeat left top;
 }
