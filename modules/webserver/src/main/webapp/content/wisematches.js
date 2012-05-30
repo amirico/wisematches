@@ -4,6 +4,18 @@
 
 if (wm == null) var wm = {};
 
+STATE = {
+    DEFAULT:{
+        class:'ui-state-highlight'
+    },
+    INFO:{
+        class:'ui-state-active'
+    },
+    ERROR:{
+        class:'ui-state-error'
+    }
+};
+
 wm.i18n = new function () {
     var values = {};
 
@@ -80,7 +92,6 @@ wm.util.url = new function () {
 
 wm.ui = new function () {
     var activeWindows = true;
-    var lockedElement = null;
 
     $.blockUI.defaults.message = null;
 
@@ -123,16 +134,63 @@ wm.ui = new function () {
         return '<div><div class="content">' + message + '</div></div>';
     };
 
-    this.lock = function (element, message) {
-        lockedElement = element;
-        element.block({message:null});
-        wm.ui.showStatus(message, false, true);
+    var showStatus = function (message, severity, stick) {
+        $("#status-widget-pane").empty();
+
+        if (stick == undefined) {
+            stick = false;
+        }
+
+        var opts = {
+            classes:[ severity.class, "ui-corner-all"],
+            template:statusTemplate,
+            autoHide:!stick,
+            autoHideDelay:10000
+        };
+        if (stick) {
+            opts = $.extend(opts, {onClick:function () {
+            }, onHover:function () {
+            }});
+        }
+        $("#status-widget-pane").freeow(null, message, opts);
     };
 
-    this.unlock = function () {
-        wm.ui.clearStatus();
-        lockedElement.unblock();
+    var clearStatus = function () {
+        var freeow = $("#status-widget-pane").children().data("freeow");
+        if (freeow != null) {
+            freeow.hide();
+        } else {
+            $("#status-widget-pane").empty();
+        }
     };
+
+    this.lock = function (element, message) {
+        if (element != null && element != undefined) {
+            element.block({message:null});
+        } else {
+            $.blockUI({message:null});
+        }
+        showStatus(message, STATE.DEFAULT, true);
+    };
+
+    this.unlock = function (element, message, error) {
+        if (error == null || error == undefined) {
+            error = false;
+        }
+
+        if (element != null && element != undefined) {
+            element.unblock();
+        } else {
+            $.unblockUI();
+        }
+
+        if (message == null || message == undefined) {
+            clearStatus();
+        } else {
+            showStatus(message, error ? STATE.ERROR : STATE.INFO, false);
+        }
+    };
+
 
     this.message = function (element, message, error) {
         var v = {
@@ -184,6 +242,7 @@ wm.ui = new function () {
         });
     };
 
+
     this.notification = function (title, message, type, error) {
         $("#alerts-widget-pane").freeow(title, message, {
             classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
@@ -205,51 +264,6 @@ wm.ui = new function () {
         }
     };
 
-    this.showStatus = function (message, error, stick) {
-        $("#status-widget-pane").empty();
-
-        if (stick == undefined) {
-            stick = false;
-        }
-
-        $("#status-widget-pane").freeow(null, message, {
-            classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-bottom"],
-            template:statusTemplate,
-            autoHide:!stick,
-            autoHideDelay:10000
-        });
-    };
-
-    this.clearStatus = function () {
-        var freeow = $("#status-widget-pane").children().data("freeow");
-        if (freeow != null) {
-            freeow.hide();
-        } else {
-            $("#status-widget-pane").empty();
-        }
-    };
-
-
-    this.showWaitMessage = function (message) {
-        $.blockUI({
-            blockMsgClass:'ui-corner-all ui-state-default',
-            css:{
-                padding:'15px',
-                opacity:.85
-            },
-            message:message });
-    };
-
-    this.showMessage = function (opts) {
-        opts = opts || {};
-        var v = $.extend(opts, {
-            message:'<div style="padding: 10px 24px; padding-bottom: 10px">' + opts.message + '</div><div class="closeButton"><a href="javascript: $.unblockUI()"><img src="/resources/images/close.png"></a></div>',
-            blockMsgClass:'ui-corner-all' + (opts.error ? ' ui-state-error' : ' ui-state-default'),
-            draggable:false
-        });
-        $.blockUI(v);
-        $('.blockOverlay').click($.unblockUI);
-    };
 
     this.refreshImage = function (element) {
         var el = $(element);
@@ -281,8 +295,24 @@ wm.ui = new function () {
     };
 
     $(document).ready(function () {
-        $("body").prepend($("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>"));
-        $("body").prepend($("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>"));
+        var $status = $("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>").appendTo($("body"));
+        var $alerts = $("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>").appendTo($("body"));
+
+        var $window = $(window);
+        var $header = $("#header");
+        var windowScroll = function () {
+            var height = $header.outerHeight(true);
+            var scrollY = $window.scrollTop();
+            if (height - scrollY >= 0) {
+                $status.css({top:height - scrollY});
+                $alerts.css({top:height - scrollY});
+            } else if ($status.offset().top != 0) {
+                $status.css({top:0});
+                $alerts.css({top:0});
+            }
+        };
+        $window.scroll(windowScroll).resize(windowScroll);
+        windowScroll();
 
         var activeWindowTitle = document.title;
         $(window).bind("focus", function () {
@@ -358,13 +388,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-            "<div class='ui-editor-label'></div>" +
-            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-            "<div class='ui-editor-error'></div>" +
-            "<button class='ui-editor-save'>Save</button> " +
-            "<button class='ui-editor-cancel'>Cancel</button>" +
-            "</div></div>" +
-            "</div></div></div>");
+                "<div class='ui-editor-label'></div>" +
+                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+                "<div class='ui-editor-error'></div>" +
+                "<button class='ui-editor-save'>Save</button> " +
+                "<button class='ui-editor-cancel'>Cancel</button>" +
+                "</div></div>" +
+                "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -532,16 +562,16 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-hover');
-            }
-        },
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-default');
-            }
-        });
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-hover');
+                }
+            },
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-default');
+                }
+            });
 
     var activeQuickInfo = undefined;
     $(".quickInfo a").cluetip({

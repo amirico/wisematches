@@ -150,12 +150,6 @@ public class MessageController extends WisematchesController {
 			if (message.getRecipient() == getPrincipal().getId()) {
 				log.error("Abuse report has been received for message: " + message.getId());
 				return ServiceResponse.success();
-//				try {
-//					mailService.sendSupportRequest("Abuse report", "game/abuse", Collections.singletonMap("message", mid));
-//				} catch (MailException e) {
-//					log.error("Abuse report can't be sent for message: " + mid, e);
-//					return ServiceResponse.failure(messageSource.getMessage("messages.err.abuse", locale));
-//				}
 			} else {
 				return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
 			}

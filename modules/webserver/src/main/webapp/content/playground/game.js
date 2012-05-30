@@ -23,6 +23,165 @@ wm.game.help = new function () {
     };
 };
 
+wm.game.Active = function (language) {
+    var widget = $("#activeGamesWidget");
+    wm.ui.dataTable('#dashboard', {
+        "bStateSave":true,
+        "bFilter":false,
+        "bSortClasses":false,
+        "aaSorting":[
+            [3, 'asc']
+        ],
+        "aoColumns":[
+            null,
+            null,
+            null,
+            null,
+            { "bSortable":false },
+            { "bSortable":false }
+        ],
+        "oLanguage":language
+    });
+
+    this.cancelProposal = function (id) {
+        wm.ui.lock(widget, language['cancelling']);
+        $.ajax('decline.ajax?p=' + id, {
+            success:function (result) {
+                if (result.success) {
+                    $("#proposal" + id).fadeOut();
+                    wm.ui.unlock(widget, language['cancelled']);
+                } else {
+                    wm.ui.unlock(widget, result.summary, true);
+                }
+            }
+        });
+    }
+};
+
+wm.game.Join = function (language) {
+    var widget = $("#waitingGamesWidget");
+    wm.ui.dataTable('#gameboard', {
+        "bStateSave":true,
+        "bFilter":false,
+        "bSort":false,
+        "bSortClasses":false,
+        "oLanguage":language
+    });
+
+    this.accept = function (id) {
+        wm.ui.lock(widget, language['accepting']);
+        $.post("/playground/scribble/accept.ajax?p=" + id, function (result) {
+            if (result.success) {
+                if (result.data.board == undefined) {
+                    wm.util.url.redirect('/playground/scribble/join');
+                } else {
+                    wm.util.url.redirect('/playground/scribble/board?b=' + result.data.board);
+                }
+            } else {
+                wm.ui.unlock(widget, result.summary, true);
+            }
+        });
+    };
+
+    this.decline = function (id) {
+        wm.ui.lock(widget, language['declining']);
+        $.post("/playground/scribble/decline.ajax?p=" + id, function (result) {
+            if (result.success) {
+                wm.util.url.redirect('/playground/scribble/join');
+            } else {
+                wm.ui.unlock(widget, result.summary, true);
+            }
+        });
+    };
+};
+
+wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
+    var attachPlayerSearchActions = function (a) {
+        $(a).hover(
+                function () {
+                    $(this).addClass("player-search-remove");
+                },
+                function () {
+                    $(this).removeClass("player-search-remove");
+                }).click(function () {
+                    $(this).fadeOut('fast', function () {
+                        $(this).remove();
+                        if (opponentsCount == maxOpponents) {
+                            $("#opponentsControl").fadeIn('slow');
+                        }
+                        opponentsCount--;
+                    });
+                });
+    };
+
+    this.selectOpponent = function () {
+        playerSearch.openDialog(insertPlayer);
+        return false;
+    };
+
+    var insertPlayer = function (playerInfo) {
+        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.id + '"/></div>');
+        attachPlayerSearchActions(s);
+        $("#opponentsList").append(s);
+        $("#opponentsList .ui-state-error-text").remove();
+        s.fadeIn('fast');
+        opponentsCount++;
+        if (opponentsCount == maxOpponents) {
+            $("#opponentsControl").fadeOut('slow');
+        }
+    };
+
+    $("#opponentsList div").each(function (i, a) {
+        attachPlayerSearchActions(a);
+    });
+
+    $("#createGame #radio").buttonset();
+    $("#createGame button").button();
+
+    $("#createTabRobot").change(function () {
+        $(".create-form").slideUp();
+        $("#robotForm").slideDown();
+    });
+
+    $("#createTabWait").change(function () {
+        $(".create-form").slideUp();
+        $("#waitingForm").slideDown();
+    });
+
+    $("#createTabChallenge").change(function () {
+        $(".create-form").slideUp();
+        $("#challengeForm").slideDown();
+    });
+
+    $(".player-search-action").hover(function () {
+        $(this).addClass("ui-state-hover");
+    }, function () {
+        $(this).removeClass("ui-state-hover");
+    });
+
+    this.submitForm = function () {
+        var $gameWidget = $("#createGame");
+
+        wm.ui.lock($gameWidget, language['waiting']);
+        var serializeObject = $("#form").serializeObject();
+        if (serializeObject.opponents != undefined && !$.isArray(serializeObject.opponents)) {
+            serializeObject.opponents = [serializeObject.opponents];
+        }
+        $.post("create.ajax", $.toJSON(serializeObject),
+                function (response) {
+                    if (response.success) {
+                        if (response.data == null || response.data.board == undefined) {
+                            wm.util.url.redirect('/playground/scribble/active');
+                        } else {
+                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        }
+                    } else {
+                        wm.ui.unlock($gameWidget, response.summary, true);
+                    }
+                }, 'json');
+    };
+};
+
 wm.game.History = function (pid, columns, language) {
     $.each(columns, function (i, a) {
         if (a.sName == 'players') {
@@ -159,146 +318,6 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
-    var attachPlayerSearchActions = function (a) {
-        $(a).hover(
-            function () {
-                $(this).addClass("player-search-remove");
-            },
-            function () {
-                $(this).removeClass("player-search-remove");
-            }).click(function () {
-                $(this).fadeOut('fast', function () {
-                    $(this).remove();
-                    if (opponentsCount == maxOpponents) {
-                        $("#opponentsControl").fadeIn('slow');
-                    }
-                    opponentsCount--;
-                });
-            });
-    };
-
-    this.selectOpponent = function () {
-        playerSearch.openDialog(insertPlayer);
-        return false;
-    };
-
-    var insertPlayer = function (playerInfo) {
-        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.id + '"/></div>');
-        attachPlayerSearchActions(s);
-        $("#opponentsList").append(s);
-        $("#opponentsList .ui-state-error-text").remove();
-        s.fadeIn('fast');
-        opponentsCount++;
-        if (opponentsCount == maxOpponents) {
-            $("#opponentsControl").fadeOut('slow');
-        }
-    };
-
-    $("#opponentsList div").each(function (i, a) {
-        attachPlayerSearchActions(a);
-    });
-
-    $("#createGame #radio").buttonset();
-    $("#createGame button").button();
-
-    $("#createTabRobot").change(function () {
-        $(".create-form").slideUp();
-        $("#robotForm").slideDown();
-    });
-
-    $("#createTabWait").change(function () {
-        $(".create-form").slideUp();
-        $("#waitingForm").slideDown();
-    });
-
-    $("#createTabChallenge").change(function () {
-        $(".create-form").slideUp();
-        $("#challengeForm").slideDown();
-    });
-
-    $(".player-search-action").hover(function () {
-        $(this).addClass("ui-state-hover");
-    }, function () {
-        $(this).removeClass("ui-state-hover");
-    });
-
-    this.submitForm = function () {
-        wm.ui.lock($("#createGame"), "awdas das dasdads");
-//        wm.ui.showStatus(language['waiting'], false, true);
-//        form.block({ message:"&nbsp;"});
-
-        var serializeObject = $("#form").serializeObject();
-        if (serializeObject.opponents != undefined && !$.isArray(serializeObject.opponents)) {
-            serializeObject.opponents = [serializeObject.opponents];
-        }
-        $.post("create.ajax", $.toJSON(serializeObject),
-            function (response) {
-                if (response.success) {
-                    if (response.data == null || response.data.board == undefined) {
-                        wm.util.url.redirect('/playground/scribble/active');
-                    } else {
-                        wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
-                    }
-                } else {
-                    wm.ui.showMessage({message:response.summary, error:true});
-                    wm.ui.unlock();
-                    wm.ui.clearStatus();
-                }
-            }, 'json')
-            .error(function (jqXHR, textStatus, errorThrown) {
-                wm.ui.unlock();
-//                wm.ui.showMessage(form, {message:textStatus, error:true});
-//                form.unblock();
-                wm.ui.clearStatus();
-            });
-    };
-};
-
-wm.game.Join = function (language) {
-    var gameboardTable = wm.ui.dataTable('#gameboard', {
-        "bStateSave":true,
-        "bFilter":false,
-        "bSort":false,
-        "bSortClasses":false,
-        "oLanguage":language
-    });
-
-    this.accept = function (id) {
-        wm.ui.showStatus(language['accepting'], false, true);
-        gameboardTable.block({ message:null});
-
-        $.post("/playground/scribble/accept.ajax?p=" + id, function (result) {
-            if (result.success) {
-                if (result.data.board == undefined) {
-                    wm.util.url.redirect('/playground/scribble/join');
-                } else {
-                    wm.util.url.redirect('/playground/scribble/board?b=' + result.data.board);
-                }
-            } else {
-                wm.ui.showMessage({message:result.summary, error:true});
-                gameboardTable.unblock();
-                wm.ui.clearStatus();
-            }
-        });
-    };
-
-    this.decline = function (id) {
-        wm.ui.showStatus(language['declining'], false, true);
-        gameboardTable.block({ message:null});
-
-        $.post("/playground/scribble/decline.ajax?p=" + id, function (result) {
-            if (result.success) {
-                wm.util.url.redirect('/playground/scribble/join');
-            } else {
-                wm.ui.showMessage({message:result.summary, error:true});
-                gameboardTable.unblock();
-                wm.ui.clearStatus();
-            }
-        });
-    };
-};
-
 wm.game.settings.Board = function () {
     var prevSet = $(".tiles-set-prev");
     var nextSet = $(".tiles-set-next");
@@ -338,16 +357,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-            }
-        },
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-            }
-        });
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+                }
+            },
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+                }
+            });
 
     prevSet.click(function () {
         if (selected > 0) {
