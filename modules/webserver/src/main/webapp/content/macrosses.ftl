@@ -59,19 +59,22 @@
 </#macro>
 
 <#macro playground id>
-<table <#if id?has_content>id="${id}"</#if> width="100%">
+<table width="100%">
     <tr>
-        <td width="165px" valign="top" align="left">
+        <td width="165px" valign="top" align="left" rowspan="2">
             <#if principal.membership.adsVisible>
             <#assign advertisementBlock=advertisementManager.getAdvertisementBlock(id, locale)!""/>
             <#include "/content/templates/advertisement.ftl">
             </#if>
         </td>
         <td valign="top">
-            <#nested/>
-            <#include "playground/footer.ftl"/>
+            <div <#if id?has_content>id="${id}"</#if>>
+                <#nested/>
+            </div>
         </td>
-    <#--<td width="165px" valign="top" align="right">&nbsp;</td>-->
+    </tr>
+    <tr>
+        <td><#include "playground/footer.ftl"/></td>
     </tr>
 </table>
 </#macro>

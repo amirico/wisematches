@@ -81,7 +81,7 @@
 
                     <div style="text-align: right;">
                         <a href="decline?p=${proposal.id}"
-                           onclick="cancelProposal(${proposal.id}); return false;">
+                           onclick="activeGames.cancelProposal(${proposal.id}); return false;">
                             <@message code="game.proposal.cancel"/>
                         </a>
                     </div>
@@ -117,38 +117,11 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    wm.ui.dataTable('#dashboard', {
-        "bStateSave":true,
-        "bFilter":false,
-        "bSortClasses":false,
-        "aaSorting":[
-            [3, 'asc']
-        ],
-        "aoColumns":[
-            null,
-            null,
-            null,
-            null,
-            { "bSortable":false },
-            { "bSortable":false }
-        ],
-        "oLanguage":{
-        <#if player == principal>
-            "sEmptyTable":"<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
-        </#if>
-        }
+    var activeGames = new wm.game.Active({
+        cancelled:"<@message code="game.proposal.cancelled"/>",
+        cancelling:"<@message code="game.proposal.cancelling"/>"
+    <#if player == principal>
+        , "sEmptyTable":"<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
+    </#if>
     });
-
-    function cancelProposal(id) {
-        $.ajax('decline.ajax?p=' + id, {
-            success:function (data, textStatus, jqXHR) {
-                if (data.success) {
-                    $("#proposal" + id).fadeOut();
-                    wm.ui.showStatus("<@message code="game.proposal.canceled"/>", false);
-                } else {
-                    wm.ui.showStatus("<@message code="game.proposal.cancel.error"/>", true);
-                }
-            }
-        });
-    }
 </script>

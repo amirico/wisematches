@@ -123,7 +123,10 @@
         };
 
         this.remove = function (msgs) {
-            wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);
+            var el = $("#messagesWidget");
+            wm.ui.lock(el, "<@message code="messages.status.remove.sending"/>");
+
+        <#--wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);-->
             $.ajax('remove.ajax', {
                 type:'post',
                 contentType:'application/x-www-form-urlencoded',
@@ -135,13 +138,15 @@
                             $.each(msgs, function (i, v) {
                                 dataTable.fnDeleteRow($("#messages #message" + v).get(0));
                             });
-                            wm.ui.showStatus("<@message code="messages.status.remove.sent"/>");
+                        <#--wm.ui.showStatus("<@message code="messages.status.remove.sent"/>");-->
                         } else {
-                            wm.ui.showStatus(response.summary, true);
+                        <#--wm.ui.unlock(el, "<@message code="messages.status.remove.sent"/>", true);-->
+                            wm.ui.unlock(el, response.summary, STATE.INFO);
+//                            wm.ui.showStatus(response.summary, true);
                         }
                     })
                     .error(function (jqXHR, textStatus, errorThrown) {
-                        wm.ui.showStatus(textStatus, true);
+//                        wm.ui.showStatus(textStatus, true);
                     });
             return false;
         };
