@@ -3,3 +3,4 @@ Allow: /
 
 User-agent: *
 Disallow: /resources/
+Disallow: /*.ajax$
