@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget class="moveInfo" title="game.selection.label" style="padding-top: 10px;" help="board.selection">
+<@wm.widget class="moveInfo" title="game.selection.label" help="board.selection">
 <table width="100%">
     <tr>
         <td height="22" valign="bottom"><b><@message code="game.selection.tiles"/>:</b></td>

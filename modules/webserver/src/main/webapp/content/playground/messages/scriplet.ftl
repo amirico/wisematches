@@ -1,43 +1,41 @@
 <#include "/core.ftl">
 
 <script type="text/javascript">
-    wm.messages = $.extend({}, wm.messages, new function() {
-        var sendRequest = function(id, reply) {
+    wm.messages = $.extend({}, wm.messages, new function () {
+        var sendRequest = function (id, reply) {
             var dlg = $("#privateMessageDialog");
             dlg.html('<div class="loading-image" style="height: 350px"></div>');
-            dlg.load("/playground/messages/create?dialog=true&pid=" + id + "&reply=" + reply, function() {
+            dlg.load("/playground/messages/create?dialog=true&pid=" + id + "&reply=" + reply, function () {
                 $("#sendPrivateMessage").button("enable");
             });
             dlg.dialog({
-                title: "<@message code="messages.send.label"/>",
-                width: 550,
-                minHeight : 350,
-                modal: true,
-                resizable: false,
-                buttons: [
+                title:"<@message code="messages.send.label"/>",
+                width:550,
+                minHeight:350,
+                modal:true,
+                resizable:false,
+                buttons:[
                     {
-                        id: "sendPrivateMessage",
-                        text: "<@message code="messages.send.label"/>",
-                        disabled: true,
-                        click:function() {
-                            wm.ui.showStatus("<@message code="messages.status.sending"/>", false, true);
-                            dlg.closest(".ui-dialog").block({ message: ""});
-
+                        id:"sendPrivateMessage",
+                        text:"<@message code="messages.send.label"/>",
+                        disabled:true,
+                        click:function () {
+                            var widget = dlg.closest(".ui-dialog");
+                            wm.ui.lock(widget, "<@message code="messages.status.sending"/>");
                             var msg = $("#privateMessageDialog textarea").val();
-                            $.post('/playground/messages/send.ajax', $.toJSON({pid: id, reply: reply, message: msg}), function(result) {
-                                dlg.closest(".ui-dialog").unblock();
+                            $.post('/playground/messages/send.ajax', $.toJSON({pid:id, reply:reply, message:msg}), function (result) {
                                 if (result.success) {
-                                    wm.ui.showStatus("<@message code="messages.status.sent"/>");
+                                    wm.ui.unlock(widget, "<@message code="messages.status.sent"/>");
                                     dlg.dialog("close");
                                 } else {
-                                    wm.ui.showStatus(result.summary, true);
+                                    wm.ui.unlock(widget, result.summary, true);
                                 }
                             });
                         }
                     },
                     {
-                        text: "<@message code="button.cancel"/>",
-                        click: function() {
+                        text:"<@message code="button.cancel"/>",
+                        click:function () {
                             dlg.dialog("close");
                         }
 
@@ -46,12 +44,12 @@
             });
         };
 
-        this.reply = function(original) {
+        this.reply = function (original) {
             sendRequest(original, true);
             return false;
         };
 
-        this.create = function(pid) {
+        this.create = function (pid) {
             sendRequest(pid, false);
             return false;
         };

@@ -82,27 +82,29 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    $("#messagesWidget button").button();
-
-    wm.ui.dataTable('#messages', {
-        "bSortClasses":false,
-        "aaSorting":[
-        ],
-        "aoColumns":[
-            { "bSortable":false },
-            { "bSortable":false },
-            { "bSortable":false }
-        ]
-    });
-
     wm.messages = $.extend({}, wm.messages, new function () {
+        var widget = $("#messagesWidget");
+
+        $("#messagesWidget button").button();
+
+        wm.ui.dataTable('#messages', {
+            "bSortClasses":false,
+            "aaSorting":[
+            ],
+            "aoColumns":[
+                { "bSortable":false },
+                { "bSortable":false },
+                { "bSortable":false }
+            ]
+        });
+
         this.reportAbuse = function (id) {
-            wm.ui.showStatus("<@message code="messages.status.abuse.sending"/>");
+            wm.ui.lock(widget, "<@message code="messages.status.abuse.sending"/>");
             $.post('/playground/messages/abuse.ajax?m=' + id, function (result) {
                 if (result.success) {
-                    wm.ui.showStatus("<@message code="messages.status.abuse.sent"/>");
+                    wm.ui.unlock(widget, "<@message code="messages.status.abuse.sent"/>");
                 } else {
-                    wm.ui.showStatus(result.summary, true);
+                    wm.ui.unlock(widget, result.summary, true);
                 }
             });
             return false;
@@ -123,10 +125,7 @@
         };
 
         this.remove = function (msgs) {
-            var el = $("#messagesWidget");
-            wm.ui.lock(el, "<@message code="messages.status.remove.sending"/>");
-
-        <#--wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);-->
+            wm.ui.lock(widget, "<@message code="messages.status.remove.sending"/>");
             $.ajax('remove.ajax', {
                 type:'post',
                 contentType:'application/x-www-form-urlencoded',
@@ -138,15 +137,10 @@
                             $.each(msgs, function (i, v) {
                                 dataTable.fnDeleteRow($("#messages #message" + v).get(0));
                             });
-                        <#--wm.ui.showStatus("<@message code="messages.status.remove.sent"/>");-->
+                            wm.ui.unlock(widget, "<@message code="messages.status.remove.sent"/>");
                         } else {
-                        <#--wm.ui.unlock(el, "<@message code="messages.status.remove.sent"/>", true);-->
-                            wm.ui.unlock(el, response.summary, STATE.INFO);
-//                            wm.ui.showStatus(response.summary, true);
+                            wm.ui.unlock(widget, response.summary, true);
                         }
-                    })
-                    .error(function (jqXHR, textStatus, errorThrown) {
-//                        wm.ui.showStatus(textStatus, true);
                     });
             return false;
         };

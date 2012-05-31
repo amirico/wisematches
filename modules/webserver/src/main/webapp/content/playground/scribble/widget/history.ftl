@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget class="movesHistory" title="game.history.label" style="padding-top: 10px" help="board.history">
+<@wm.widget class="movesHistory" title="game.history.label" help="board.history">
 <table width="100%" class="display">
     <thead>
     <tr>

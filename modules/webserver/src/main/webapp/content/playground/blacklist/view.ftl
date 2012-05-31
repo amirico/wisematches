@@ -62,26 +62,27 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    $("#blacklistWidget button").button();
-
-    wm.ui.dataTable('#blacklist', {
-        "bSortClasses":false,
-        "aoColumns":[
-            { "bSortable":false },
-            { "bSortable":true },
-            { "bSortable":true },
-            { "bSortable":false }
-        ]
-    });
-
     wm.blacklist = new function () {
+        var widget = $("#blacklistWidget");
+        $("#blacklistWidget button").button();
+
+        wm.ui.dataTable('#blacklist', {
+            "bSortClasses":false,
+            "aoColumns":[
+                { "bSortable":false },
+                { "bSortable":true },
+                { "bSortable":true },
+                { "bSortable":false }
+            ]
+        });
+
         this.selectAll = function () {
             $(".blacklist-checkbox input").prop("checked", $("#removeAll").prop("checked"));
             return false;
         };
 
         this.remove = function (ids) {
-            wm.ui.showStatus("<@message code="blacklist.status.removing"/>", false, true);
+            wm.ui.lock(widget, "<@message code="blacklist.status.removing"/>");
             $.ajax('remove.ajax', {
                 type:'post',
                 contentType:'application/x-www-form-urlencoded',
@@ -93,13 +94,10 @@
                             $.each(ids, function (i, v) {
                                 dataTable.fnDeleteRow($("#blacklist #blacklist" + v).get(0));
                             });
-                            wm.ui.showStatus("<@message code="blacklist.status.removed"/>");
+                            wm.ui.unlock(widget, "<@message code="blacklist.status.removed"/>");
                         } else {
-                            wm.ui.showStatus(response.summary, true);
+                            wm.ui.unlock(widget, response.summary, true);
                         }
-                    })
-                    .error(function (jqXHR, textStatus, errorThrown) {
-                        wm.ui.showStatus(textStatus, true);
                     });
             return false;
         };

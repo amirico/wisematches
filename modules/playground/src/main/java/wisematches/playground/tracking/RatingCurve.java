@@ -11,7 +11,7 @@ import java.util.List;
 @NamedNativeQueries({
 		@NamedNativeQuery(
 				name = "rating.curve",
-				query = "SELECT ROUND(((UNIX_TIMESTAMP(date(b.finishedDate))-UNIX_TIMESTAMP(date(:start)))/60/60/24)/:resolution) as position, " +
+				query = "SELECT FLOOR(((UNIX_TIMESTAMP(date(b.finishedDate))-UNIX_TIMESTAMP(date(:start)))/60/60/24)/:resolution) as position, " +
 						"min(p.newRating) as ratingMin, avg(p.newRating) as ratingAvg, max(p.newRating) as ratingMax " +
 						"FROM scribble_board b, scribble_player p " +
 						"WHERE b.boardId=p.boardId and not b.finishedDate is null and p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:end GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +

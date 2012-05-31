@@ -333,7 +333,7 @@
         for (m in months) for (i = 0; i < resolution; i++) data.setValue(m * resolution + i, 0, months[m]);
 
     <#list ratingChart.ratingsPoint as p>
-        data.setValue(${p}, 1, ${ratingChart.ratingsAvg[p_index]});
+        data.setValue(${p-1}, 1, ${ratingChart.ratingsAvg[p_index]});
     </#list>
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).

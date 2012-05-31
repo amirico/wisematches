@@ -19,7 +19,8 @@
         </div>
         <div class="label">
             <b><@message code="game.comment.label"/></b>
-            <span class="new ui-helper-hidden ui-state-hover">(<span class="value">7</span> <@message code="game.comment.new"/>)</span>
+            <span class="new ui-helper-hidden ui-state-hover">(<span
+                    class="value">7</span> <@message code="game.comment.new"/>)</span>
         </div>
     </div>
 
@@ -57,6 +58,9 @@
     var comments = new wm.scribble.Comments(board, scribbleController, {
         "ago":"<@message code='game.comment.ago'/>",
         "of":"<@message code='separator.of'/>",
-        "empty":"<@message code='game.comment.err.empty'/>"
+        "empty":"<@message code='game.comment.err.empty'/>",
+        "saved":"<@message code='game.comment.saved'/>",
+        "saving":"<@message code='game.comment.saving'/>",
+        "loading":"<@message code='game.comment.loading'/>"
     });
 </script>

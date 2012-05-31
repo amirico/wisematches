@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<div class="boardInfoWidget" style="padding-top: 10px;">
+<div class="boardInfoWidget">
     <div class="ui-widget-content ui-corner-all shadow" align="center">
         <div>
             <a href="/info/move" target="_blank"><@messageCapFirst code="info.rules.move.label"/></a>
