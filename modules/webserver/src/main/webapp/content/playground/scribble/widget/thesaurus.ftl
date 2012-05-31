@@ -4,7 +4,7 @@
 <#-- @ftlvariable name="thesaurusHouse" type="wisematches.server.web.services.thesaurus.ThesaurusHouse" -->
 <#include "/core.ftl">
 
-<@wm.widget class="thesaurusWidget" title="game.thesaurus.label" style="padding-top: 10px;" help="board.thesaurus">
+<@wm.widget class="thesaurusWidget" title="game.thesaurus.label" help="board.thesaurus">
 <table width="100%">
     <tr>
         <td width="100%"><input class="word-value" style="width: 100%"></td>

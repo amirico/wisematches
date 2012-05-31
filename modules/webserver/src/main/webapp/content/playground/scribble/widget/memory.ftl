@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
-<@wm.widget class="memoryWordsWidget" title="game.memory.label" style="padding-top: 10px;" help="board.memory">
+<@wm.widget class="memoryWordsWidget" title="game.memory.label" help="board.memory">
 <table class="memoryWords display" width="100%">
     <thead>
     <tr>

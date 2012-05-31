@@ -1,33 +1,32 @@
 <#include "/core.ftl">
 
 <script type="text/javascript">
-    wm.friends = new function() {
-        var execute = function(pid, comment, callback) {
-            wm.ui.showStatus("<@message code="friends.status.adding"/>");
-            $.post('/playground/friends/add.ajax', $.toJSON({person: pid, comment: comment}), function(result) {
-                if (result.success) {
-                    wm.ui.showStatus("<@message code="friends.status.added"/>");
-                    if (callback != undefined) {
-                        callback(pid);
-                    }
-                } else {
-                    wm.ui.showStatus(result.summary, true);
-                }
-            });
-        };
-
-        this.add = function(pid, callback) {
-            $("#friendInfoDialog").dialog({
-                title: "<@message code="friends.confirm.label"/>",
-                width: 400,
-                modal: true,
-                buttons: {
-                    "<@message code="friends.confirm.execute"/>": function() {
-                        $(this).dialog("close");
-                        execute(pid, $("#friendInfoDialog textarea").val(), callback);
+    wm.friends = new function () {
+        this.add = function (pid, callback) {
+            var dlg = $("#friendInfoDialog");
+            dlg.dialog({
+                title:"<@message code="friends.confirm.label"/>",
+                width:400,
+                modal:true,
+                buttons:{
+                    "<@message code="friends.confirm.execute"/>":function () {
+                        var widget = dlg.closest(".ui-dialog");
+                        var comment = $("#friendInfoDialog textarea").val()
+                        wm.ui.lock(widget, "<@message code="friends.status.adding"/>");
+                        $.post('/playground/friends/add.ajax', $.toJSON({person:pid, comment:comment}), function (result) {
+                            if (result.success) {
+                                wm.ui.unlock(widget, "<@message code="friends.status.added"/>");
+                                if (callback != undefined) {
+                                    callback(pid);
+                                }
+                                dlg.dialog("close");
+                            } else {
+                                wm.ui.unlock(widget, result.summary, true);
+                            }
+                        });
                     },
-                    "<@message code="button.cancel"/>": function() {
-                        $(this).dialog("close");
+                    "<@message code="button.cancel"/>":function () {
+                        dlg.dialog("close");
                     }
                 }});
             return false;

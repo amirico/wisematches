@@ -66,19 +66,20 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    $("#friendsWidget button").button();
-
-    wm.ui.dataTable('#friends', {
-        "bSortClasses":false,
-        "aoColumns":[
-            { "bSortable":false },
-            { "bSortable":true },
-            { "bSortable":true },
-            { "bSortable":false }
-        ]
-    });
-
     wm.friends = $.extend({}, wm.friends, new function () {
+        var widget = $("#friendsWidget");
+        $("#friendsWidget button").button();
+
+        wm.ui.dataTable('#friends', {
+            "bSortClasses":false,
+            "aoColumns":[
+                { "bSortable":false },
+                { "bSortable":true },
+                { "bSortable":true },
+                { "bSortable":false }
+            ]
+        });
+
         this.selectAll = function () {
             $(".friend-checkbox input").prop("checked", $("#removeAll").prop("checked"));
             return false;
@@ -94,7 +95,7 @@
         };
 
         this.remove = function (persons) {
-            wm.ui.showStatus("<@message code="friends.status.remove.sending"/>", false, true);
+            wm.ui.lock(widget, "<@message code="friends.status.removing"/>");
             $.ajax('remove.ajax', {
                 type:'post',
                 contentType:'application/x-www-form-urlencoded',
@@ -106,13 +107,10 @@
                             $.each(persons, function (i, v) {
                                 dataTable.fnDeleteRow($("#friends #friend" + v).get(0));
                             });
-                            wm.ui.showStatus("<@message code="friends.status.remove.sent"/>");
+                            wm.ui.unlock(widget, "<@message code="friends.status.removed"/>");
                         } else {
-                            wm.ui.showStatus(response.summary, true);
+                            wm.ui.unlock(widget, response.summary, true);
                         }
-                    })
-                    .error(function (jqXHR, textStatus, errorThrown) {
-                        wm.ui.showStatus(textStatus, true);
                     });
             return false;
         };

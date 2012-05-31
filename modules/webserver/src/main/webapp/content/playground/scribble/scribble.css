@@ -513,8 +513,11 @@ ul.bonuses .bonus-cell {
     padding: 2px 1px;
 }
 
+.annotation, .boardInfoWidget, .movesHistory, .memoryWordsWidget, .moveInfo, .thesaurusWidget {
+    margin-top: 10px;
+}
+
 .annotation {
-    padding-top: 10px;
     max-width: 445px;
 }
 

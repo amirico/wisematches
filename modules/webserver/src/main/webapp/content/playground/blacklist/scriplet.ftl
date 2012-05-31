@@ -1,33 +1,32 @@
 <#include "/core.ftl">
 
 <script type="text/javascript">
-    wm.blacklist = new function() {
-        var execute = function(pid, comment, callback) {
-            wm.ui.showStatus("<@message code="blacklist.status.adding"/>");
-            $.post('/playground/blacklist/add.ajax', $.toJSON({person: pid, comment: comment}), function(result) {
-                if (result.success) {
-                    wm.ui.showStatus("<@message code="blacklist.status.added"/>");
-                    if (callback != undefined) {
-                        callback(pid);
-                    }
-                } else {
-                    wm.ui.showStatus(result.summary, true);
-                }
-            });
-        };
-
-        this.add = function(pid, callback) {
-            $("#blacklistConfirmDialog").dialog({
-                title: "<@message code="blacklist.confirm.label"/>",
-                width: 400,
-                modal: true,
-                buttons: {
-                    "<@message code="blacklist.confirm.execute"/>": function() {
-                        $(this).dialog("close");
-                        execute(pid, $("#blacklistConfirmDialog textarea").val(), callback);
+    wm.blacklist = new function () {
+        this.add = function (pid, callback) {
+            var dlg = $("#blacklistConfirmDialog");
+            dlg.dialog({
+                title:"<@message code="blacklist.confirm.label"/>",
+                width:400,
+                modal:true,
+                buttons:{
+                    "<@message code="blacklist.confirm.execute"/>":function () {
+                        var widget = dlg.closest(".ui-dialog");
+                        var comment = $("#blacklistConfirmDialog textarea").val()
+                        wm.ui.lock(widget, "<@message code="blacklist.status.adding"/>");
+                        $.post('/playground/blacklist/add.ajax', $.toJSON({person:pid, comment:comment}), function (result) {
+                            if (result.success) {
+                                wm.ui.unlock(widget, "<@message code="blacklist.status.added"/>");
+                                if (callback != undefined) {
+                                    callback(pid);
+                                }
+                                dlg.dialog("close");
+                            } else {
+                                wm.ui.unlock(widget, result.summary, true);
+                            }
+                        });
                     },
-                    "<@message code="button.cancel"/>": function() {
-                        $(this).dialog("close");
+                    "<@message code="button.cancel"/>":function () {
+                        dlg.dialog("close");
                     }
                 }});
             return false;

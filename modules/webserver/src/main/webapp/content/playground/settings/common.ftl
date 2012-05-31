@@ -92,11 +92,5 @@
             $('#changePassword').val('true');
             return false;
         };
-
-    <#if saved??>
-        $(document).ready(function () {
-            wm.ui.showStatus("<@message code="account.modify.saved"/>");
-        });
-    </#if>
     };
 </script>

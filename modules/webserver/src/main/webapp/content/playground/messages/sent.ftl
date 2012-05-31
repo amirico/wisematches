@@ -65,20 +65,21 @@
 </@wm.playground>
 
 <script type="text/javascript">
-    $("#messagesWidget button").button();
-
-    wm.ui.dataTable('#messages', {
-        "bSortClasses":false,
-        "aaSorting":[
-        ],
-        "aoColumns":[
-            { "bSortable":false },
-            { "bSortable":false },
-            { "bSortable":false }
-        ]
-    });
-
     wm.messages = $.extend({}, wm.messages, new function () {
+        var widget = $("#messagesWidget");
+        $("#messagesWidget button").button();
+
+        wm.ui.dataTable('#messages', {
+            "bSortClasses":false,
+            "aaSorting":[
+            ],
+            "aoColumns":[
+                { "bSortable":false },
+                { "bSortable":false },
+                { "bSortable":false }
+            ]
+        });
+
         this.selectAll = function () {
             $(".message-checkbox input").prop("checked", $("#removeAll").prop("checked"));
             return false;
@@ -94,7 +95,7 @@
         };
 
         this.remove = function (msgs) {
-            wm.ui.showStatus("<@message code="messages.status.remove.sending"/>", false, true);
+            wm.ui.lock(widget, "<@message code="messages.status.remove.sending"/>");
             $.ajax('remove.ajax?sent=true', {
                 type:'post',
                 contentType:'application/x-www-form-urlencoded',
@@ -106,13 +107,10 @@
                             $.each(msgs, function (i, v) {
                                 dataTable.fnDeleteRow($("#messages #message" + v).get(0));
                             });
-                            wm.ui.showStatus("<@message code="messages.status.remove.sent"/>");
+                            wm.ui.unlock(widget, "<@message code="messages.status.remove.sent"/>");
                         } else {
-                            wm.ui.showStatus(response.summary, true);
+                            wm.ui.unlock(widget, response.summary, true);
                         }
-                    })
-                    .error(function (jqXHR, textStatus, errorThrown) {
-                        wm.ui.showStatus(textStatus, true);
                     });
             return false;
         };

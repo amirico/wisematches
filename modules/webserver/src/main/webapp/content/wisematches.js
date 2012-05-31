@@ -142,7 +142,7 @@ wm.ui = new function () {
         }
 
         var opts = {
-            classes:[ severity.class, "ui-corner-all"],
+            classes:[ severity.class, "ui-corner-all shadow"],
             template:statusTemplate,
             autoHide:!stick,
             autoHideDelay:10000
@@ -195,7 +195,7 @@ wm.ui = new function () {
     this.message = function (element, message, error) {
         var v = {
             message:messageTemplate(null, message),
-            blockMsgClass:'ui-corner-all' + (error ? ' ui-state-error' : ' ui-state-default'),
+            blockMsgClass:'ui-corner-all shadow' + (error ? ' ui-state-error' : ' ui-state-default'),
             draggable:false
         };
 
@@ -245,7 +245,7 @@ wm.ui = new function () {
 
     this.notification = function (title, message, type, error) {
         $("#alerts-widget-pane").freeow(title, message, {
-            classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", type],
+            classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "shadow", type],
             showStyle:{opacity:.95},
             template:alertTemplate,
             autoHideDelay:10000

@@ -154,7 +154,7 @@
                     if (data.success) {
                         updateProfileImage();
                     } else {
-                        wm.ui.showStatus("<@message code="profile.edit.error.remove"/>", true);
+                        wm.ui.unlock(null, "<@message code="profile.edit.error.remove"/>", true);
                     }
                 }
             });
@@ -201,7 +201,7 @@
 
     var editorController = new wm.ui.editor.Controller($('.profile'),
                     function (field, data, callback) {
-                        wm.ui.showStatus("<@message code="profile.edit.saving"/>");
+                        wm.ui.lock(null, "<@message code="profile.edit.saving"/>");
 
                         $.ajax({
                             url:'save',
@@ -212,10 +212,10 @@
                             },
                             success:function (data, textStatus, jqXHR) {
                                 if (!data.success) {
-                                    wm.ui.showStatus("<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
+                                    wm.ui.unlock(null, "<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
                                     callback(data.summary);
                                 } else {
-                                    wm.ui.showStatus("<@message code="profile.edit.saved"/>");
+                                    wm.ui.unlock(null, "<@message code="profile.edit.saved"/>");
                                     callback();
                                 }
                             }
