@@ -8,6 +8,7 @@ public class BoardSettingsForm {
 	private boolean checkWords;
 	private boolean cleanMemory;
 	private boolean clearByClick;
+	private boolean showCaptions;
 
 	public BoardSettingsForm() {
 	}
@@ -42,5 +43,13 @@ public class BoardSettingsForm {
 
 	public void setClearByClick(boolean clearByClick) {
 		this.clearByClick = clearByClick;
+	}
+
+	public boolean isShowCaptions() {
+		return showCaptions;
+	}
+
+	public void setShowCaptions(boolean showCaptions) {
+		this.showCaptions = showCaptions;
 	}
 }

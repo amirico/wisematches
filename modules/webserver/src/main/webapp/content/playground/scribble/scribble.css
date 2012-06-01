@@ -150,50 +150,84 @@
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    width: 342px !important;
-    height: 366px !important;
-    background: url('/resources/images/scribble/board/border.gif');
+    width: 356px !important;
+    height: 373px !important;
+    background: transparent;
+}
+
+.scribble .border {
+    z-index: 0;
+    width: 356px;
+    height: 356px;
+    position: absolute;
+    background: #daecf2;
+    border: 1px solid #cadbe1;
+}
+
+.scribble .border span {
+    color: #3c3c3c;
+    position: absolute;
+    text-align: center;
+    font-size: 8px !important;
+}
+
+.scribble .border .v {
+    width: 8px;
+    height: 22px;
+}
+
+.scribble .border .h {
+    width: 22px;
+    height: 8px;
 }
 
 .scribble .background {
+    top: 10px;
+    left: 10px;
     z-index: 1;
     position: absolute;
-    top: 4px !important;
-    left: 4px !important;
-    width: 334px !important;
-    height: 335px !important;
+    width: 336px !important;
+    height: 337px !important;
+    border: 1px solid black;
 }
 
-.scribble .color {
-    z-index: 1;
+.scribble .background .color {
+    z-index: 2;
     position: absolute;
-    width: 100%;
-    height: 100%;
     background: #558be7;
+    width: 334px !important;
+    height: 335px !important;
+    border: 1px solid white;
     background: -moz-linear-gradient(-45deg, #1a49d6, #75b0f1);
     background: -webkit-gradient(linear, left top, right bottom, from(#1a49d6), to(#75b0f1));
     background: -o-linear-gradient(top left, #1a49d6, #75b0f1);
 }
 
-.scribble .grid {
-    z-index: 2;
+.scribble .background .grid {
+    z-index: 3;
     position: absolute;
+    top: 1px;
+    left: 1px;
     width: 328px !important;
     height: 329px !important;
     border: 3px solid transparent;
     background: url('/resources/images/scribble/board/grid.gif') repeat;
 }
 
+.scribble .background .bonuses {
+    top: 3px;
+    left: 3px;
+    z-index: 4;
+    position: absolute;
+}
+
 .scribble .field {
     z-index: 2;
     position: absolute;
-    top: 6px !important;
-    left: 6px !important;
-}
-
-.scribble .bonuses {
-    position: absolute;
-    z-index: 3;
+    top: 13px !important;
+    left: 13px !important;
+    width: 334px !important;
+    height: 335px !important;
 }
 
 .scribble .board {
@@ -205,9 +239,20 @@
 }
 
 .scribble .hand {
+    width: 222px;
+    height: 25px;
     position: absolute;
-    left: 88px !important;
-    top: 335px !important;
+}
+
+.scribble .field .hand {
+    top: 336px !important;
+    left: 89px !important;
+}
+
+.scribble .background .hand {
+    top: 336px !important;
+    left: 57px !important;
+    background: url('/resources/images/scribble/board/hand.gif');
 }
 
 .scribble .highlighting {

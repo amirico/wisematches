@@ -3,11 +3,12 @@ package wisematches.server.web.controllers.personality.settings.form;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import wisematches.server.web.controllers.playground.scribble.form.BoardSettingsForm;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class SettingsForm {
+public class SettingsForm extends BoardSettingsForm {
 	@NotEmpty(message = "account.register.language.err.blank")
 	private String language;
 
@@ -23,11 +24,6 @@ public class SettingsForm {
 
 	@Length(max = 100, message = "account.register.pwd-cfr.err.max")
 	private String confirm;
-
-	private String tilesClass;
-	private boolean checkWords;
-	private boolean cleanMemory;
-	private boolean clearByClick;
 
 	private boolean changeEmail = false;
 	private boolean changePassword = false;
@@ -91,35 +87,4 @@ public class SettingsForm {
 		this.changePassword = changePassword;
 	}
 
-	public boolean isCleanMemory() {
-		return cleanMemory;
-	}
-
-	public void setCleanMemory(boolean cleanMemory) {
-		this.cleanMemory = cleanMemory;
-	}
-
-	public boolean isCheckWords() {
-		return checkWords;
-	}
-
-	public void setCheckWords(boolean checkWords) {
-		this.checkWords = checkWords;
-	}
-
-	public String getTilesClass() {
-		return tilesClass;
-	}
-
-	public void setTilesClass(String tilesClass) {
-		this.tilesClass = tilesClass;
-	}
-
-	public boolean isClearByClick() {
-		return clearByClick;
-	}
-
-	public void setClearByClick(boolean clearByClick) {
-		this.clearByClick = clearByClick;
-	}
 }

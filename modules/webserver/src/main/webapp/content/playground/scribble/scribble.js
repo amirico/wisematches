@@ -801,7 +801,7 @@ wm.scribble.History = function (board, language) {
 
 wm.scribble.Controls = function (board, language) {
     var widget = board.getPlayboardElement(".playboard");
-    var toolbarElement = board.getPlayboardElement(".boardActionsToolbar");
+    var toolbarElement = board.getPlayboardElement(".board-controls");
 
     var markTurnButton = board.getPlayboardElement(".makeTurnButton");
     var clearSelectionButton = board.getPlayboardElement(".clearSelectionButton");
@@ -1158,14 +1158,17 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var playboard = this;
 
     var scribble = $("<div></div>").addClass('scribble');
-    var gameBackground = $("<div></div>").addClass('background').appendTo(scribble);
-    $("<div></div>").addClass('color').appendTo(gameBackground);
-    $("<div></div>").addClass('grid').appendTo(gameBackground);
-    var gameField = $("<div></div>").addClass('field').appendTo(scribble);
 
-    var hand = $("<div></div>").addClass('hand').appendTo($(gameField));
-    var board = $("<div></div>").addClass('board').appendTo($(gameField));
-    var bonuses = $("<div></div>").addClass('bonuses').appendTo($(gameField));
+    var background = $("<div></div>").addClass('background').appendTo(scribble);
+    $("<div></div>").addClass('color').appendTo(background);
+    $("<div></div>").addClass('grid').appendTo(background);
+    $("<div></div>").addClass('hand').appendTo(background);
+    var bonuses = $("<div></div>").addClass('bonuses').appendTo($(background));
+
+    var field = $("<div></div>").addClass('field').appendTo(scribble);
+
+    var hand = $("<div></div>").addClass('hand').appendTo($(field));
+    var board = $("<div></div>").addClass('board').appendTo($(field));
 
     var id = gameInfo.id;
     var state = gameInfo.state;
@@ -1188,7 +1191,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var wildcardSelectionDialog = null;
 
     var highlighting = new function () {
-        var element = $('<div></div>').addClass('highlighting').hide().appendTo(gameField);
+        var element = $('<div></div>').addClass('highlighting').hide().appendTo(field);
         var previousCell = null;
 
         var updatePosition = function (cell) {
@@ -1234,6 +1237,21 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var scoreEngine = new wm.scribble.ScoreEngine(gameInfo.board.bonuses, this);
 
     var initializeGame = function () {
+        if (settings.showCaptions == undefined || settings.showCaptions) {
+            var gameBorder = $("<div></div>").addClass('border ui-corner-all').appendTo(scribble);
+            for (var b = 0; b < 15; b++) {
+                var z = wm.i18n.value('board.captions', 'ABCDEFGHIJKLMNO');
+                var vv = z.charAt(b);
+                var vh = '' + (b + 1);
+                var pv = 18 + 22 * b;
+                var ph = 12 + 22 * b;
+                gameBorder.append("<span class='v' style='right: 1px; top: " + pv + "px;'>" + vv + "</span>");
+                gameBorder.append("<span class='v' style='left: 0; top: " + pv + "px;'>" + vv + "</span>");
+                gameBorder.append("<span class='h' style='top: -1px; left: " + ph + "px;'>" + vh + "</span>");
+                gameBorder.append("<span class='h' style='bottom: 2px; left: " + ph + "px;'>" + vh + "</span>");
+            }
+        }
+
         for (var i = 0; i < 15; i++) {
             for (var j = 0; j < 15; j++) {
                 var bonus = scoreEngine.getCellBonus(i, j);

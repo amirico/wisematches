@@ -17,16 +17,20 @@ public class BoardSettings implements Cloneable {
 	@Column(name = "clearByClick")
 	private boolean clearByClick = true;
 
+	@Column(name = "showCaptions")
+	private boolean showCaptions = true;
+
 	@Column(name = "tilesClass")
 	private String tilesClass;
 
 	public BoardSettings() {
 	}
 
-	public BoardSettings(boolean cleanMemory, boolean checkWords, boolean clearByClick, String tilesClass) {
+	public BoardSettings(boolean cleanMemory, boolean checkWords, boolean clearByClick, boolean showCaptions, String tilesClass) {
 		this.cleanMemory = cleanMemory;
 		this.checkWords = checkWords;
 		this.clearByClick = clearByClick;
+		this.showCaptions = showCaptions;
 		this.tilesClass = tilesClass;
 	}
 
@@ -62,6 +66,14 @@ public class BoardSettings implements Cloneable {
 		this.clearByClick = clearByClick;
 	}
 
+	public boolean isShowCaptions() {
+		return showCaptions;
+	}
+
+	public void setShowCaptions(boolean showCaptions) {
+		this.showCaptions = showCaptions;
+	}
+
 	@Override
 	public BoardSettings clone() {
 		try {
@@ -77,6 +89,7 @@ public class BoardSettings implements Cloneable {
 				", cleanMemory=" + cleanMemory +
 				", checkWords=" + checkWords +
 				", tilesClass='" + tilesClass + '\'' +
+				", showCaptions='" + showCaptions + '\'' +
 				'}';
 	}
 }

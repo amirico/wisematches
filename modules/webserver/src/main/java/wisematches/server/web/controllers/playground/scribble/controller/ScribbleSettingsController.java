@@ -23,40 +23,42 @@ import wisematches.server.web.controllers.playground.scribble.form.BoardSettings
 @Controller
 @RequestMapping("/playground/scribble/settings")
 public class ScribbleSettingsController extends WisematchesController {
-    private BoardSettingsManager boardSettingsManager;
+	private BoardSettingsManager boardSettingsManager;
 
-    private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
-    public ScribbleSettingsController() {
-    }
+	public ScribbleSettingsController() {
+	}
 
-    @RequestMapping("load")
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public String loadBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
-        final Player principal = getPrincipal();
+	@RequestMapping("load")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String loadBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
+		final Player principal = getPrincipal();
 
-        final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
-        form.setTilesClass(settings.getTilesClass());
-        form.setCheckWords(settings.isCheckWords());
-        form.setCleanMemory(settings.isCleanMemory());
-        form.setClearByClick(settings.isClearByClick());
+		final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
+		form.setTilesClass(settings.getTilesClass());
+		form.setCheckWords(settings.isCheckWords());
+		form.setCleanMemory(settings.isCleanMemory());
+		form.setClearByClick(settings.isClearByClick());
+		form.setShowCaptions(settings.isShowCaptions());
 
-        model.addAttribute("plain", Boolean.TRUE);
+		model.addAttribute("plain", Boolean.TRUE);
 
-        return "/content/playground/scribble/settings";
-    }
+		return "/content/playground/scribble/settings";
+	}
 
 
-    @ResponseBody
-    @RequestMapping("save")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ServiceResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
-        boardSettingsManager.setScribbleSettings(getPersonality(), new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.getTilesClass()));
-        return ServiceResponse.success(null, "settings", form);
-    }
+	@ResponseBody
+	@RequestMapping("save")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
+		final BoardSettings settings = new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.isShowCaptions(), form.getTilesClass());
+		boardSettingsManager.setScribbleSettings(getPersonality(), settings);
+		return ServiceResponse.success(null, "settings", form);
+	}
 
-    @Autowired
-    public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
-        this.boardSettingsManager = boardSettingsManager;
-    }
+	@Autowired
+	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
+		this.boardSettingsManager = boardSettingsManager;
+	}
 }

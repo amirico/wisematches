@@ -154,6 +154,7 @@
 
     <http use-expressions="true">
         <intercept-url pattern="/playground/profile/view" access="permitAll"/>
+        <intercept-url pattern="/playground/profile/image/view" access="permitAll"/>
         <intercept-url pattern="/playground/scribble/board" access="permitAll"/>
 
         <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
