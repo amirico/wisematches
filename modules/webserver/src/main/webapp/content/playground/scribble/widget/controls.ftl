@@ -5,10 +5,10 @@
 <#include "/core.ftl">
 <#if !viewMode??><#assign viewMode=true/></#if>
 
-<div class="boardActionsToolbar ui-widget-content ui-corner-all shadow" align="center">
+<div class="board-controls ui-widget-content ui-corner-all shadow" align="center">
     <div>
     <#if !viewMode>
-        <button class="makeTurnButton" onclick="boardActionsToolbar.makeTurn()">
+        <button class="makeTurnButton" onclick="boardControls.makeTurn()">
             <@message code="game.play.make"/>
         </button>
     </#if>
@@ -20,14 +20,14 @@
         </button>
     </div>
 <#if !viewMode>
-    <div>
-        <button class="exchangeTilesButton" onclick="boardActionsToolbar.exchangeTiles()">
+    <div style="padding-top: 3px">
+        <button class="exchangeTilesButton" onclick="boardControls.exchangeTiles()">
             <@message code="game.play.exchange"/>
         </button>
-        <button class="passTurnButton" onclick="boardActionsToolbar.passTurn()">
+        <button class="passTurnButton" onclick="boardControls.passTurn()">
             <@message code="game.play.pass"/>
         </button>
-        <button class="resignGameButton" onclick="boardActionsToolbar.resignGame()">
+        <button class="resignGameButton" onclick="boardControls.resignGame()">
             <@message code="game.play.resign"/>
         </button>
     </div>
@@ -85,7 +85,7 @@
 <script type="text/javascript">
     var bankInfo = new wm.scribble.BankInfo(board, {'title':'<@message code="game.state.bankinfo.label"/>'});
 
-    var boardActionsToolbar = new wm.scribble.Controls(board, {
+    var boardControls = new wm.scribble.Controls(board, {
         "acceptedLabel":"<@message code="game.move.accepted.label"/>",
         "acceptedDescription":"<@message code="game.move.accepted.description"/>",
         "updatedLabel":"<@message code="game.move.updated.label"/>",

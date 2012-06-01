@@ -20,8 +20,8 @@ public class HibernateBoardSettings extends BoardSettings {
 	protected HibernateBoardSettings() {
 	}
 
-	protected HibernateBoardSettings(long playerId, boolean cleanMemory, boolean checkWords, boolean clearByClick, String tilesClass) {
-		super(cleanMemory, checkWords, clearByClick, tilesClass);
+	protected HibernateBoardSettings(long playerId, boolean cleanMemory, boolean checkWords, boolean clearByClick, boolean showCaptions, String tilesClass) {
+		super(cleanMemory, checkWords, clearByClick, showCaptions, tilesClass);
 		this.playerId = playerId;
 	}
 
@@ -30,6 +30,7 @@ public class HibernateBoardSettings extends BoardSettings {
 		setCleanMemory(s.isCleanMemory());
 		setClearByClick(s.isClearByClick());
 		setTilesClass(s.getTilesClass());
+		setShowCaptions(s.isShowCaptions());
 	}
 
 	public long getPlayerId() {

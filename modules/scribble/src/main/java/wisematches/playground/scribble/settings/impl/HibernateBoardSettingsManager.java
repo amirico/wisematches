@@ -20,6 +20,7 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 
 	private boolean checkWordsDefault = true;
 	private boolean clearMemoryDefault = true;
+	private boolean showCaptionsDefault = true;
 	private boolean clearByClickDefault = true;
 
 	private String tilesClassDefault = "tilesSetClassic";
@@ -33,7 +34,7 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BoardSettings getScribbleSettings(Personality personality) {
 		if (personality == null) {
-			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, tilesClassDefault);
+			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, showCaptionsDefault, tilesClassDefault);
 		}
 
 		lock.lock();
@@ -66,7 +67,7 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 		if (settings == null) {
 			settings = new HibernateBoardSettings(personality.getId(),
 					clearMemoryDefault, checkWordsDefault,
-					clearByClickDefault, tilesClassDefault);
+					clearByClickDefault, showCaptionsDefault, tilesClassDefault);
 			cache.put(personality, settings);
 		}
 		return settings;
@@ -114,5 +115,13 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 
 	public void setClearByClickDefault(boolean clearByClickDefault) {
 		this.clearByClickDefault = clearByClickDefault;
+	}
+
+	public boolean isShowCaptionsDefault() {
+		return showCaptionsDefault;
+	}
+
+	public void setShowCaptionsDefault(boolean showCaptionsDefault) {
+		this.showCaptionsDefault = showCaptionsDefault;
 	}
 }

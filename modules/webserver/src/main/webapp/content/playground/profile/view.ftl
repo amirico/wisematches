@@ -295,7 +295,7 @@
         <strong>${player.nickname}</strong>
     <#if principal?? && principal.id == player.id>
         <@addthis title="share.profile.my.label" description="share.profile.my.description" args=[principal.nickname]/>
-    <#else>
+    <#elseif principal??>
         <@addthis title="share.profile.other.label" description="share.profile.other.description" args=[principal.nickname]/>
     </#if>
     </div>

@@ -97,7 +97,10 @@
     </#if>
     };
 
-    wm.i18n.extend({'2l':'<@message code="game.play.bonus.2l"/>', '3l':'<@message code="game.play.bonus.3l"/>', '2w':'<@message code="game.play.bonus.2w"/>', '3w':'<@message code="game.play.bonus.3w"/>'});
+    wm.i18n.extend({
+        '2l':'<@message code="game.play.bonus.2l"/>', '3l':'<@message code="game.play.bonus.3l"/>',
+        '2w':'<@message code="game.play.bonus.2w"/>', '3w':'<@message code="game.play.bonus.3w"/>',
+        'board.captions':'<@message code="game.play.captions"/>'});
 </script>
 
 <script type="text/javascript">
@@ -106,7 +109,8 @@
     }
     var boardSettings = {
     <#if boardSettings??>
-        clearByClick: ${boardSettings.clearByClick?string}
+        clearByClick: ${boardSettings.clearByClick?string},
+        showCaptions:${boardSettings.showCaptions?string}
     </#if>
     };
     var board = new wm.scribble.Board(scribbleGame, <#if player??>${player.id}<#else>0</#if>, "wildcardSelectionPanel", scribbleController, boardSettings);
