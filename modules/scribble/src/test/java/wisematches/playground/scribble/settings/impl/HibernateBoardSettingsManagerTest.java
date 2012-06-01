@@ -32,26 +32,29 @@ public class HibernateBoardSettingsManagerTest {
 	@Test
 	public void test() {
 		final BoardSettings s1 = boardSettingsManager.getScribbleSettings(Personality.person(123));
-		assertSettings(s1, true, true, "tiles-set-classic");
+		assertSettings(s1, true, true, true, "tiles-set-classic");
 
 		final BoardSettings s2 = boardSettingsManager.getScribbleSettings(Personality.person(1001));
-		assertSettings(s2, true, true, "tiles-set-classic");
+		assertSettings(s2, true, true, true, "tiles-set-classic");
 		s2.setTilesClass("mock-tiles");
 		s2.setCheckWords(false);
 		s2.setCleanMemory(false);
+		s2.setShowCaptions(false);
 		boardSettingsManager.setScribbleSettings(Personality.person(1001), s2);
 
 		final BoardSettings s3 = boardSettingsManager.getScribbleSettings(Personality.person(1001));
-		assertSettings(s3, false, false, "mock-tiles");
+		assertSettings(s3, false, false, false, "mock-tiles");
 		s3.setTilesClass("tiles-set-classic");
 		s3.setCheckWords(true);
 		s3.setCleanMemory(true);
+		s3.setShowCaptions(true);
 		boardSettingsManager.setScribbleSettings(Personality.person(1001), s3);
 	}
 
-	private void assertSettings(BoardSettings s, boolean checkWords, boolean clearMemory, String tilesClass) {
+	private void assertSettings(BoardSettings s, boolean checkWords, boolean clearMemory, boolean showCaptions, String tilesClass) {
 		assertEquals(s.getTilesClass(), tilesClass);
 		assertEquals(s.isCheckWords(), checkWords);
 		assertEquals(s.isCleanMemory(), clearMemory);
+		assertEquals(s.isShowCaptions(), showCaptions);
 	}
 }
