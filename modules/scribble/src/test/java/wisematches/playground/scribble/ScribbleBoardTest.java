@@ -69,7 +69,7 @@ public class ScribbleBoardTest extends TestCase {
 
 	public void test_smallGamePlay() throws GameMoveException {
 		final Dictionary dictionary = createDictionary("abcde", "qrdts", "skel");
-		final TilesBank tilesBank = createTilesBank("abcd*qrt*1kelt", 19);
+		final TilesBank tilesBank = createTilesBank("abcd*qrt*lkelt", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
 				Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
@@ -83,37 +83,62 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(12, tilesBank.getTilesLimit());
 
 		ScribblePlayerHand hand = board.getPlayerTurn();
-		hand.setTiles(tilesBank.getTiles(0, 1, 2, 3, 4, 14, 15));
+		hand.setTiles(new Tile[]{
+				getTile(tilesBank, 'a', 0),
+				getTile(tilesBank, 'b', 0),
+				getTile(tilesBank, 'c', 0),
+				getTile(tilesBank, 'd', 0),
+				getTile(tilesBank, '*', 0),
+				getTile(tilesBank, 'z', 0),
+				getTile(tilesBank, 'z', 1)
+		});
+
 		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(4, 7), Direction.VERTICAL,
-				tilesBank.getTile(0),
-				tilesBank.getTile(1),
-				tilesBank.getTile(2),
-				tilesBank.getTile(3),
-				tilesBank.getTile(4).redefine('e')
+				getTile(tilesBank, 'a', 0),
+				getTile(tilesBank, 'b', 0),
+				getTile(tilesBank, 'c', 0),
+				getTile(tilesBank, 'd', 0),
+				getTile(tilesBank, '*', 0).redefine('e')
 		)));
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(7, tilesBank.getTilesLimit());
 
 		hand = board.getPlayerTurn();
-		hand.setTiles(tilesBank.getTiles(5, 6, 7, 8, 9, 16, 17));
+		hand.setTiles(new Tile[]{
+				getTile(tilesBank, 'q', 0),
+				getTile(tilesBank, 'r', 0),
+				getTile(tilesBank, 't', 0),
+				getTile(tilesBank, '*', 1),
+				getTile(tilesBank, 'l', 0),
+				getTile(tilesBank, 'z', 2),
+				getTile(tilesBank, 'z', 3)
+		});
 
 		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 5), Direction.HORIZONTAL,
-				tilesBank.getTile(5),
-				tilesBank.getTile(6),
-				tilesBank.getTile(3),
-				tilesBank.getTile(7),
-				tilesBank.getTile(8).redefine('s')
+				getTile(tilesBank, 'q', 0),
+				getTile(tilesBank, 'r', 0),
+				getTile(tilesBank, 'd', 0),
+				getTile(tilesBank, 't', 0),
+				getTile(tilesBank, '*', 1).redefine('s')
 		)));
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(3, tilesBank.getTilesLimit());
 
 		hand = board.getPlayerTurn();
-		hand.setTiles(tilesBank.getTiles(10, 11, 12, 18, 19, 20, 21));
+		hand.setTiles(new Tile[]{
+				getTile(tilesBank, 'k', 0),
+				getTile(tilesBank, 'e', 0),
+				getTile(tilesBank, 'l', 1),
+				getTile(tilesBank, 'z', 4),
+				getTile(tilesBank, 'z', 5),
+				getTile(tilesBank, 'z', 6),
+				getTile(tilesBank, 'z', 7)
+		});
 		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 9), Direction.VERTICAL,
-				tilesBank.getTile(8).redefine('s'),
-				tilesBank.getTile(10),
-				tilesBank.getTile(11),
-				tilesBank.getTile(12)
+				getTile(tilesBank, '*', 1).redefine('s'),
+				getTile(tilesBank, 'k', 0),
+				getTile(tilesBank, 'e', 0),
+				getTile(tilesBank, 'l', 1)
 		)));
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(0, tilesBank.getTilesLimit());
@@ -131,7 +156,7 @@ public class ScribbleBoardTest extends TestCase {
 	}
 
 	public void test_checkMove_Incorrect() throws GameMoveException, DictionaryNotFoundException {
-		final Dictionary dictionary = createDictionary("abc");
+		final Dictionary dictionary = createDictionary("aad");
 		final TilesBank tilesBank = createTilesBank("abcabcd", 19);
 
 		final ScribbleBoard board = new ScribbleBoard(settings,
@@ -521,13 +546,36 @@ public class ScribbleBoardTest extends TestCase {
 	}
 
 	private TilesBank createTilesBank(String tiles, int stubChars) {
-		final char[] chars = tiles.toCharArray();
 		final TilesBankInfoEditor editor = new TilesBankInfoEditor(Language.EN);
-		for (final char ch : chars) {
-			final int cost = (ch == '*' ? 0 : 1);
-			editor.add(ch, 1, cost);
+		String s = "*qwertyuiopasdfghjklzxcvbnm";
+		for (char c : s.toCharArray()) {
+			int count = 0;
+			int index = -1;
+			while ((index = tiles.indexOf(c, index + 1)) != -1) {
+				count++;
+			}
+			if (count != 0) {
+				final int cost = (c == '*' ? 0 : 1);
+				editor.add(c, count, cost);
+			}
 		}
-		editor.add('a', stubChars, 1);
+		editor.add('z', stubChars, 1);
 		return new TilesBank(editor.createTilesBankInfo());
+	}
+
+	private Tile getTile(TilesBank bank, char ch, int pos) {
+		int index = 0;
+		final int bankCapacity = bank.getBankCapacity();
+		for (int i = 0; i < bankCapacity; i++) {
+			final Tile tile = bank.getTile(i);
+			if ((ch == '*' && tile.getCost() == 0) || (ch != '*' && tile.getLetter() == ch && tile.getCost() != 0)) {
+				if (pos == index) {
+					return tile;
+				} else {
+					index++;
+				}
+			}
+		}
+		throw new IllegalArgumentException("Unknown tile: " + ch + "[" + pos + "]");
 	}
 }
