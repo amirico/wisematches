@@ -1,6 +1,7 @@
 <#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="tiles" type="wisematches.playground.scribble.Tile[]" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
@@ -16,6 +17,13 @@
 <script type="text/javascript" src="/content/playground/scribble/scribble.js"></script>
 
 <script type="text/javascript">
+    <#if player??>
+        <#assign playerHand=board.getPlayerHand(player.getId())!""/>
+        <#if playerHand?has_content>
+            <#assign tiles=playerHand.tiles/>
+        </#if>
+    </#if>
+
     var scribbleGame = {
         id: ${board.boardId},
         readOnly: ${viewMode?string},
@@ -86,14 +94,11 @@
                 <#list board.lettersDistribution.letterDescriptions as tbi>{letter:'${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}, wildcard: ${(tbi.cost==0)?string}}<#if tbi_has_next>,</#if></#list>]
         }
 
-    <#if player??>
-        <#assign playerHand=board.getPlayerHand(player.getId())!""/>
-        <#if playerHand?has_content>
-            ,
-            privacy:{
-                handTiles:[<#list playerHand.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
-            }
-        </#if>
+    <#if tiles??>
+        ,
+        privacy:{
+            handTiles:[<#list tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
+        }
     </#if>
     };
 

@@ -31,12 +31,17 @@ public class TilesBankInfoEditor {
 	private static final class TheLettersDistribution implements LettersDistribution {
 		private final int lettersCount;
 		private final Language language;
-		private final List<LetterDescription> descriptions = new ArrayList<LetterDescription>();
+		private final Map<Character, LetterDescription> descriptions = new LinkedHashMap<Character, LetterDescription>();
 
 		private TheLettersDistribution(Language language, int lettersCount, List<LetterDescription> descriptions) {
 			this.language = language;
 			this.lettersCount = lettersCount;
-			this.descriptions.addAll(descriptions);
+
+			for (LetterDescription description : descriptions) {
+				if (this.descriptions.put(description.getLetter(), description) != null) {
+					throw new IllegalArgumentException("Duplicate definition of letter " + description.getLetter());
+				}
+			}
 		}
 
 		@Override
@@ -50,8 +55,13 @@ public class TilesBankInfoEditor {
 		}
 
 		@Override
+		public LetterDescription getLetterDescription(char letter) {
+			return descriptions.get(letter);
+		}
+
+		@Override
 		public Collection<LetterDescription> getLetterDescriptions() {
-			return Collections.unmodifiableCollection(descriptions);
+			return Collections.unmodifiableCollection(descriptions.values());
 		}
 
 		@Override

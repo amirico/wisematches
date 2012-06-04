@@ -28,6 +28,14 @@ public interface LettersDistribution extends Iterable<LetterDescription> {
 	Language getLanguage();
 
 	/**
+	 * Returns description for one letter
+	 *
+	 * @param letter the letter
+	 * @return the description or {@code null} if letter is unknown.
+	 */
+	LetterDescription getLetterDescription(char letter);
+
+	/**
 	 * Returns unmodifiable collection of all letter descriptions.
 	 *
 	 * @return unmodifiable collection of all letter descriptions.

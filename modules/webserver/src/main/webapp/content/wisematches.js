@@ -63,9 +63,32 @@ wm.util.url = new function () {
         window.location = url;
     };
 
+    this.remove = function (sourceUrl, parameterName) {
+        if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
+        var split = sourceUrl.split("#");
+        var urlParts = split[0].split("?");
+        var newQueryString = "";
+        if (urlParts.length > 1) {
+            var parameters = urlParts[1].split("&");
+            for (var i = 0; (i < parameters.length); i++) {
+                var parameterParts = parameters[i].split("=");
+                if (parameterParts[0] != parameterName) {
+                    if (newQueryString == "")
+                        newQueryString = "?";
+                    else
+                        newQueryString += "&";
+                    newQueryString += parameterParts[0] + "=" + parameterParts[1];
+                }
+            }
+        }
+        return urlParts[0] + newQueryString + (split[1] != undefined ? "#" + split[1] : "");
+    };
+
     this.extend = function (sourceUrl, parameterName, parameterValue, replaceDuplicates) {
         if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
-        var urlParts = sourceUrl.split("?");
+
+        var split = sourceUrl.split("#");
+        var urlParts = split[0].split("?");
         var newQueryString = "";
         if (urlParts.length > 1) {
             var parameters = urlParts[1].split("&");
@@ -85,8 +108,7 @@ wm.util.url = new function () {
         else
             newQueryString += "&";
         newQueryString += parameterName + "=" + parameterValue;
-
-        return urlParts[0] + newQueryString;
+        return urlParts[0] + newQueryString + (split[1] != undefined ? "#" + split[1] : "");
     };
 };
 
