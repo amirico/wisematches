@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * FIX FOR: https://jira.springsource.org/browse/SEC-1964
+ *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMPersistentTokenRepository extends JdbcTokenRepositoryImpl {
