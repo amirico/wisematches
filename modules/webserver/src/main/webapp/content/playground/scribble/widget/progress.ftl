@@ -98,7 +98,8 @@
                              style="position: absolute; top: 18px; left: 0; padding: 2px">
                             <input type="checkbox" id="shareHandInput" name="shareHandInput"
                                    style="vertical-align: text-bottom;">
-                            <label for="shareHandInput" style="padding-left: 3px">включая личные фишки</label>
+                            <label for="shareHandInput"
+                                   style="padding-left: 3px"><@message code="share.board.tiles.label"/></label>
                         </div>
                     </div>
                 <#else>
