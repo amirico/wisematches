@@ -1157,19 +1157,6 @@ wm.scribble.ScoreEngine = function (gameBonuses, board) {
 wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, controller, settings) {
     var playboard = this;
 
-    var scribble = $("<div></div>").addClass('scribble');
-
-    var background = $("<div></div>").addClass('background').appendTo(scribble);
-    $("<div></div>").addClass('color').appendTo(background);
-    $("<div></div>").addClass('grid').appendTo(background);
-    $("<div></div>").addClass('hand').appendTo(background);
-    var bonuses = $("<div></div>").addClass('bonuses').appendTo($(background));
-
-    var field = $("<div></div>").addClass('field').appendTo(scribble);
-
-    var hand = $("<div></div>").addClass('hand').appendTo($(field));
-    var board = $("<div></div>").addClass('board').appendTo($(field));
-
     var id = gameInfo.id;
     var state = gameInfo.state;
     var bank = gameInfo.bank;
@@ -1179,6 +1166,13 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var language = gameInfo.language;
 
     var enabled = true;
+    var readOnly = true;
+    $.each(players, function (i, player) {
+        if (player.playerId == boardViewer) {
+            readOnly = false;
+            return false;
+        }
+    });
 
     var handTiles = new Array(7);
     var boardTiles = wm.util.createMatrix(15);
@@ -1189,6 +1183,21 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var selectedTileWidgets = [];
 
     var wildcardSelectionDialog = null;
+
+    var scribble = $("<div></div>").addClass('scribble');
+
+    var background = $("<div></div>").addClass('background').appendTo(scribble);
+    $("<div></div>").addClass('color').appendTo(background);
+    $("<div></div>").addClass('grid').appendTo(background);
+    if (!readOnly) {
+        $("<div></div>").addClass('hand').appendTo(background);
+    }
+    var bonuses = $("<div></div>").addClass('bonuses').appendTo($(background));
+
+    var field = $("<div></div>").addClass('field').appendTo(scribble);
+
+    var hand = $("<div></div>").addClass('hand').appendTo($(field));
+    var board = $("<div></div>").addClass('board').appendTo($(field));
 
     var highlighting = new function () {
         var element = $('<div></div>').addClass('highlighting').hide().appendTo(field);
@@ -1728,7 +1737,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     };
 
     this.getPlayerInfo = function (playerId) {
-        var res;
+        var res = null;
         $.each(players, function (i, player) {
             if (player.playerId == playerId) {
                 res = player;
