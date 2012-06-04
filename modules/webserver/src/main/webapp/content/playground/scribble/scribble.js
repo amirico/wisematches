@@ -1166,14 +1166,6 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var language = gameInfo.language;
 
     var enabled = true;
-    var readOnly = true;
-    $.each(players, function (i, player) {
-        if (player.playerId == boardViewer) {
-            readOnly = false;
-            return false;
-        }
-    });
-
     var handTiles = new Array(7);
     var boardTiles = wm.util.createMatrix(15);
 
@@ -1189,9 +1181,6 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var background = $("<div></div>").addClass('background').appendTo(scribble);
     $("<div></div>").addClass('color').appendTo(background);
     $("<div></div>").addClass('grid').appendTo(background);
-    if (!readOnly) {
-        $("<div></div>").addClass('hand').appendTo(background);
-    }
     var bonuses = $("<div></div>").addClass('bonuses').appendTo($(background));
 
     var field = $("<div></div>").addClass('field').appendTo(scribble);
@@ -1279,6 +1268,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         });
 
         if (gameInfo.privacy != null && gameInfo.privacy != undefined) {
+            $("<div></div>").addClass('hand').appendTo(background);
             validateHandTile(gameInfo.privacy.handTiles);
         }
 

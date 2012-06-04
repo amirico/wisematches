@@ -16,10 +16,9 @@ import wisematches.personality.player.Player;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.DictionaryNotFoundException;
-import wisematches.playground.scribble.ExchangeTilesMove;
-import wisematches.playground.scribble.MakeWordMove;
-import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.*;
+import wisematches.playground.scribble.bank.LetterDescription;
+import wisematches.playground.scribble.bank.LettersDistribution;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.controllers.ServiceResponse;
@@ -55,7 +54,9 @@ public class ScribbleBoardController extends WisematchesController {
 	}
 
 	@RequestMapping("")
-	public String showPlayboard(@RequestParam("b") long gameId, Model model) throws UnknownEntityException {
+	public String showPlayboard(@RequestParam("b") long gameId,
+								@RequestParam(value = "t", required = false) String tiles,
+								Model model) throws UnknownEntityException {
 		try {
 			final Player player = getPrincipal();
 			final ScribbleBoard board = boardManager.openBoard(gameId);
@@ -65,6 +66,29 @@ public class ScribbleBoardController extends WisematchesController {
 
 			model.addAttribute("board", board);
 			model.addAttribute("thesaurusHouse", thesaurusHouse);
+
+			// Issue 206: Share tiles
+			if (tiles != null && !tiles.isEmpty()) {
+				final char[] ts = tiles.toCharArray();
+				if (ts.length > 0 && ts.length < 8) {
+					boolean valid = true;
+					final Tile[] t = new Tile[ts.length];
+					final LettersDistribution lettersDistribution = board.getLettersDistribution();
+					for (int i = 0; i < t.length && valid; i++) {
+						final LetterDescription description = lettersDistribution.getLetterDescription(Character.toLowerCase(ts[i]));
+						if (description != null) {
+							t[i] = new Tile(0, description.getLetter(), description.getCost());
+						} else {
+							valid = false;
+						}
+					}
+
+					if (valid) {
+						model.addAttribute("tiles", t);
+					}
+				}
+			}
+
 			if (player == null) {
 				model.addAttribute("viewMode", Boolean.TRUE);
 				model.addAttribute("boardSettings", BOARD_SETTINGS);
