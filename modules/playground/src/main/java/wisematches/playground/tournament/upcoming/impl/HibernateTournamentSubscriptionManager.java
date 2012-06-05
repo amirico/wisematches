@@ -174,8 +174,8 @@ public class HibernateTournamentSubscriptionManager extends AbstractTournamentSu
 			}
 			final Session session = sessionFactory.getCurrentSession();
 			final Criteria criteria = session.createCriteria(HibernateTournamentRequest.class)
-					.add(Restrictions.eq("announcement", announcement))
-					.add(Restrictions.eq("player", player.getId()));
+					.add(Restrictions.eq("pk.announcement", announcement))
+					.add(Restrictions.eq("pk.player", player.getId()));
 			return criteria.list();
 		} finally {
 			lock.unlock();

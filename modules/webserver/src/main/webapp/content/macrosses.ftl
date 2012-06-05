@@ -50,8 +50,15 @@
 </div>
 </#macro>
 
-<#macro dtContent>
-    <#nested/>
+<#macro dtContent wrap=false>
+    <#if wrap>
+    <div class="data-table-content ui-widget-content"></#if><#nested/><#if wrap></div></#if>
+</#macro>
+
+<#macro dtStatusbar align="right">
+<div class="data-table-bottom">
+    <div class="ui-widget-content" style="text-align: ${align}"><#nested/></div>
+</div>
 </#macro>
 
 <#macro dtFooter>
