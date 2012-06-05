@@ -15,7 +15,7 @@
 
     <@wm.dtToolbar>
     <div>
-        <a href="/playground/scribble/join"><@message code="game.join.label"/></a>
+        <a href="/playground/scribble/join" style=""><@message code="game.join.label"/></a>
     </div>
     </@wm.dtToolbar>
 
