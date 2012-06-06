@@ -3,147 +3,84 @@
 <#include "/core.ftl">
 
 <style type="text/css">
-    #completedTournaments td, #completedTournaments th {
+    .data-table-toolbar div, .data-table-toolbar a {
+        white-space: nowrap;
+    }
+
+    #tournaments td, #tournaments th {
         white-space: nowrap;
     }
 </style>
 
 <@wm.jstable/>
 
-<@wm.playground id="tournamentWidget">
+<@wm.playground id="tournamenstWidget">
     <@wm.dtHeader>
     <div style="text-align: right">
         <div style="float: left; display: inline-block;">
-            Tournament > Dashboard
+            Tournament > My Active
         </div>
         <div style="display: inline-block; text-align: right">
+            <a href="/info/tournament" style="white-space: nowrap;">Tournament Rules</a>
         </div>
     </div>
     </@wm.dtHeader>
 
     <@wm.dtToolbar>
-    <a href="/info/tournament" style="white-space: nowrap;">Tournament Rules</a>
+    <div style="float: left;">
+        <a href="/playground/tournament/subscription?a=${announcement.number}">
+            Subscribe to ${announcement.number}st WiseMatches Tournament
+        </a>
+    </div>
+    <div>
+        <a href="/playground/tournament/active">Active Tournaments</a>
+        <a href="/playground/tournament/history">Completed Tournaments</a>
+    </div>
     </@wm.dtToolbar>
 
-
-    <@wm.dtContent wrap=true>
-    <div id="accordion" style="padding: 5px; width: auto;">
-        <h3><a href="#" style="border: none">afdasdfasdf</a></h3>
-
-        <div style="padding: 0; margin: 0">
-            adsf adsf asdf
-        </div>
-
-        <h3><a href="#" style="border: none">afdasdfasdf</a></h3>
-
-        <div style="padding: 0; margin: 0">
-            <table id="completedTournaments" width="100%" class="display">
-                <thead>
-                <tr>
-                    <th width="100%">Name</th>
-                    <th>Start Date</th>
-                    <th>Finish Date</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><a href="/playground/tournament/view?t=1">1st WiseMatches Tournament</a></td>
-                    <td>asdf asd</td>
-                    <td>asfd 3q fasf</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <@wm.dtContent>
+    <table id="tournaments" width="100%" class="display">
+        <thead>
+        <tr>
+            <th width="100%">Tournament Name</th>
+            <th>Start Date</th>
+            <th>Section</th>
+            <th>Active Round</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="/playground/tournament/view?t=">1st WiseMatches Tournament</a></td>
+            <td>17th Aug 2012</td>
+            <td>Casual (rating < 1300)</td>
+            <td><a href="/playground/tournament/round?t=&r=">Round 3</a></td>
+        </tr>
+        </tbody>
+    </table>
     </@wm.dtContent>
 
-<#--<div>-->
-<#--<@wm.dtContent wrap=true>&nbsp;</@wm.dtContent>-->
-
-
-<#--<@wm.dtContent wrap=true>-->
-<#--<#if announcement??>-->
-<#--${announcement.number}th WiseMatches Tournament-->
-<#--${announcement.scheduledDate}-->
-<#--<#if !requests?? || requests?size == 0>-->
-<#--You are not subscribed. <a-->
-<#--href="/playground/tournament/subscription?t=${announcement.number}&a=s">Subscribe-->
-<#--Now</a>.-->
-<#--<#else>-->
-<#--You are not subscribed. <a-->
-<#--href="/playground/tournament/subscription?t=${announcement.number}&a=u">Subscribe-->
-<#--Now</a>.-->
-<#--</#if>-->
-<#--<#else>-->
-<#--There is no active announcements yet. Please wait for a while and new tournament will be announced.-->
-<#--We-->
-<#--will send a notification to your email.-->
-<#--</#if>-->
-<#--</@wm.dtContent>-->
-
-<#--<@wm.dtContent wrap=true>&nbsp;</@wm.dtContent>-->
-
-<#--<@wm.dtToolbar align="left">-->
-<#--Active Tournaments-->
-<#--</@wm.dtToolbar>-->
-
-<#--<@wm.dtContent wrap=true>-->
-<#--asfsadfafd-->
-<#--</@wm.dtContent>-->
-
-<#--<@wm.dtContent wrap=true>&nbsp;</@wm.dtContent>-->
-
-<#--<@wm.dtToolbar align="left">-->
-<#--Completed Tournaments-->
-<#--</@wm.dtToolbar>-->
-
-<#--<@wm.dtContent>-->
-<#--</@wm.dtContent>-->
-
-<#--<@wm.dtContent wrap=true>&nbsp;</@wm.dtContent>-->
-<#--</div>-->
-    <@wm.dtStatusbar align="left">
-    asdf asdf asdf
-    </@wm.dtStatusbar>
-
     <@wm.dtFooter>
-    This is footer
+    The ${announcement.number}th WiseMatches
+    Tournament is going to be started on ${gameMessageSource.formatDate(announcement.scheduledDate, locale)}
+        <#if !requests?? || requests?size == 0>
+        You are <a href="/playground/tournament/subscription?a=${announcement.number}">not subscribed</a> to the
+        tournament.
+        <#else>
+            <#assign request=requests[0]/>
+        You are already <a href="/playground/tournament/subscription?a=${request.announcement}">subscribed</a>
+        to '${request.section}' section on '${request.language}' language.
+        </#if>
     </@wm.dtFooter>
 </@wm.playground>
 
-
-<#--
-<#if announcement??>
-<div>
-    Announcement: ${announcement.number} ${announcement.scheduledDate}
-</div>
-</#if>
--->
-
-<#--
-<#if requests??>
-    <#list requests as r>
-    <div>
-        Request: ${r.toString()}
-    </div>
-    </#list>
-<#else>
-<div>
-    asdf asdf
-</div>
-</#if>-->
-
 <script type="text/javascript">
-    $(function () {
-        $("#accordion").accordion();
-    });
-
-    wm.ui.dataTable('#completedTournaments', {
+    wm.ui.dataTable('#tournaments', {
         "bSortClasses":false,
         "aoColumns":[
             { "bSortable":true },
             { "bSortable":true },
-            { "bSortable":true }
+            { "bSortable":true },
+            { "bSortable":false }
         ]
     });
 </script>

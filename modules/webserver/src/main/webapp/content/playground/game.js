@@ -318,6 +318,30 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
+wm.game.Tournament = function (fullness, language) {
+    var languageBox = $("#tournament #language");
+    languageBox.change(function () {
+        var f = fullness[languageBox.val()];
+        $.each(f, function (n, v) {
+            $("#sectionFullness" + n).html("(" + v + ")");
+        });
+    });
+
+    this.subscribe = function () {
+        var tournamentWidget = $("#tournamentWidget");
+
+        wm.ui.lock(tournamentWidget, language['waiting']);
+        $.post("subscription.ajax", $.toJSON($("#form").serializeObject()),
+                function (response) {
+                    if (response.success) {
+                        wm.util.url.redirect('/playground/tournament');
+                    } else {
+                        wm.ui.unlock(tournamentWidget, response.summary, true);
+                    }
+                }, 'json');
+    };
+};
+
 wm.game.settings.Board = function () {
     var prevSet = $(".tiles-set-prev");
     var nextSet = $(".tiles-set-next");

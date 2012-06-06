@@ -13,7 +13,6 @@ import wisematches.playground.friends.FriendsManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.player.form.FriendRelationForm;
-import wisematches.server.web.i18n.GameMessageSource;
 
 import java.util.List;
 import java.util.Locale;
@@ -26,7 +25,6 @@ import java.util.Locale;
 public class FriendsController extends WisematchesController {
 	private PlayerManager playerManager;
 	private FriendsManager friendsManager;
-	private GameMessageSource gameMessageSource;
 
 	public FriendsController() {
 	}
@@ -70,10 +68,5 @@ public class FriendsController extends WisematchesController {
 	@Autowired
 	public void setFriendsManager(FriendsManager friendsManager) {
 		this.friendsManager = friendsManager;
-	}
-
-	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
 	}
 }

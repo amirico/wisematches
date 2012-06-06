@@ -1,5 +1,6 @@
 package wisematches.server.web.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -7,6 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.server.security.WMSecurityContext;
+import wisematches.server.web.i18n.GameMessageSource;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,27 +17,34 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public abstract class WisematchesController {
-    protected WisematchesController() {
-    }
+	protected GameMessageSource gameMessageSource;
 
-    @ModelAttribute("principal")
-    public Player getPrincipal() {
-        return WMSecurityContext.getPrincipal();
-    }
+	protected WisematchesController() {
+	}
 
-    @ModelAttribute("personality")
-    public Personality getPersonality() {
-        return WMSecurityContext.getPersonality();
-    }
+	@ModelAttribute("principal")
+	public Player getPrincipal() {
+		return WMSecurityContext.getPrincipal();
+	}
 
-    @ModelAttribute("headerTitle")
-    public String getHeaderTitle() {
-        return "title.playboard";
-    }
+	@ModelAttribute("personality")
+	public Personality getPersonality() {
+		return WMSecurityContext.getPersonality();
+	}
 
-    @ModelAttribute("requestQueryString")
-    public String getRequestQueryString() {
-        final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        return request.getQueryString();
-    }
+	@ModelAttribute("headerTitle")
+	public String getHeaderTitle() {
+		return "title.playboard";
+	}
+
+	@ModelAttribute("requestQueryString")
+	public String getRequestQueryString() {
+		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		return request.getQueryString();
+	}
+
+	@Autowired
+	public void setGameMessageSource(GameMessageSource gameMessageSource) {
+		this.gameMessageSource = gameMessageSource;
+	}
 }
