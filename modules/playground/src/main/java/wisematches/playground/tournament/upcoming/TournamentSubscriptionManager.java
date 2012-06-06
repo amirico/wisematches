@@ -3,7 +3,6 @@ package wisematches.playground.tournament.upcoming;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.playground.search.SearchManager;
-import wisematches.playground.search.descriptive.DescriptiveSearchManager;
 import wisematches.playground.tournament.TournamentSection;
 import wisematches.playground.tournament.TournamentSectionId;
 
@@ -45,12 +44,12 @@ public interface TournamentSubscriptionManager extends SearchManager<TournamentR
 	 *
 	 * @param announcement the number of the announcement. The number is used for user actions synchronization with
 	 *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
-	 * @param player	   the player who would like take part in the tournament.
-	 * @param language	 the language of the tournament.
-	 * @param section	  the section of the tournament.
+	 * @param player       the player who would like take part in the tournament.
+	 * @param language     the language of the tournament.
+	 * @param section      the section of the tournament.
 	 * @return created tournament request.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
-	 * @throws WrongSectionException	  if player can't be subscribed to specified section because has higher rating.
+	 * @throws WrongSectionException      if player can't be subscribed to specified section because has higher rating.
 	 */
 	TournamentRequest subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongAnnouncementException, WrongSectionException;
 
@@ -61,8 +60,8 @@ public interface TournamentSubscriptionManager extends SearchManager<TournamentR
 	 *
 	 * @param announcement the number of the announcement. The number is used for user actions synchronization with
 	 *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
-	 * @param player	   the player who would like take part in the tournament.
-	 * @param language	 the language of the tournament.
+	 * @param player       the player who would like take part in the tournament.
+	 * @param language     the language of the tournament.
 	 * @return original request or {@code null} if player wasn't subscribed.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */
@@ -73,8 +72,8 @@ public interface TournamentSubscriptionManager extends SearchManager<TournamentR
 	 *
 	 * @param announcement the number of the announcement. The number is used for user actions synchronization with
 	 *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
-	 * @param player	   the player who's request should be returned.
-	 * @param language	 the language of the tournament.
+	 * @param player       the player who's request should be returned.
+	 * @param language     the language of the tournament.
 	 * @return the player's request or {@code null} if plyaer is not subscribed to the tournament.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */
@@ -85,7 +84,7 @@ public interface TournamentSubscriptionManager extends SearchManager<TournamentR
 	 *
 	 * @param announcement the number of the announcement. The number is used for user actions synchronization with
 	 *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
-	 * @param player	   the player who's requests should be returned.
+	 * @param player       the player who's requests should be returned.
 	 * @return collection of all active requests.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */

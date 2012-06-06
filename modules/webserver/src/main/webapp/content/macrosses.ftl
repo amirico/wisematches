@@ -40,8 +40,8 @@
 </script>
 </#macro>
 
-<#macro dtHeader>
-<div class="data-table-header ui-widget-header ui-corner-top"><#nested/></div>
+<#macro dtHeader align="left">
+<div class="data-table-header ui-widget-header ui-corner-top" style="text-align: ${align}"><#nested/></div>
 </#macro>
 
 <#macro dtToolbar align="right">
@@ -62,7 +62,7 @@
 </#macro>
 
 <#macro dtFooter>
-<div class="data-table-footer ui-corner-bottom"><#nested/></div>
+<div class="data-table-footer ui-corner-bottom" style="padding: 5px"><#nested/></div>
 </#macro>
 
 <#macro playground id>
@@ -115,6 +115,11 @@
 
 <#macro info>
 <div class="help-tooltip ui-icon ui-icon-info" title="<#nested>"></div>
+</#macro>
+
+<#macro tournament number short=false>
+${number}${gameMessageSource.getNumeralEnding(number, locale)}
+    <#if short><@message code="tournament.short.label"/><#else><@message code="tournament.long.label"/></#if>
 </#macro>
 
 <#macro restriction style="" showIcon=true showLabel=true>

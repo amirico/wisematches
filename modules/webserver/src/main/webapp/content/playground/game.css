@@ -490,3 +490,17 @@
 #boardLegend table td {
     white-space: nowrap;
 }
+
+#tournament .data-table-header div {
+    display: inline-block;
+}
+
+#tournament .info-header .info-label {
+    padding: 0 0 0 5px;
+}
+
+#tournament .data-table-content table {
+    border-spacing: 5px;
+    white-space: nowrap;
+}
+

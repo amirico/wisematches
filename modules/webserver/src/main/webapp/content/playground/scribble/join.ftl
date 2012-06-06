@@ -72,7 +72,7 @@
 
     <@wm.dtFooter>
         <#if waitingGames.globalViolation??>
-            <div class="ui-state-error-text" style="padding: 5px;">
+            <div class="ui-state-error-text">
             ${gameMessageSource.formatViolation(waitingGames.globalViolation, locale, false)}
             </div>
         </#if>
