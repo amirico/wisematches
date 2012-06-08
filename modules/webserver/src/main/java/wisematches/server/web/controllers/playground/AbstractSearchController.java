@@ -6,8 +6,9 @@ import wisematches.database.Order;
 import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
-import wisematches.playground.search.descriptive.SearchableDescriptor;
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.descriptive.DescriptiveSearchManager;
+import wisematches.playground.search.descriptive.SearchableDescriptor;
 import wisematches.server.web.controllers.WisematchesController;
 
 import java.util.HashMap;
@@ -18,10 +19,10 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractSearchController<T, C> extends WisematchesController {
+public abstract class AbstractSearchController<T, C, F extends SearchFilter> extends WisematchesController {
 	private final String[] columns;
 
-	private DescriptiveSearchManager<T, C> entitySearchManager;
+	private DescriptiveSearchManager<T, C, F> entitySearchManager;
 
 	private static final Object[] EMPTY_DATA = new Object[0];
 
@@ -79,7 +80,7 @@ public abstract class AbstractSearchController<T, C> extends WisematchesControll
 	protected abstract void convertEntity(T entity, Personality personality, Map<String, Object> map, Locale locale);
 
 
-	public <E extends DescriptiveSearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {
+	public <E extends DescriptiveSearchManager<T, C, F>> void setEntitySearchManager(E entitySearchManager) {
 		this.entitySearchManager = entitySearchManager;
 	}
 }

@@ -1,6 +1,7 @@
 package wisematches.playground;
 
 import wisematches.personality.Personality;
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.SearchManager;
 
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>> extends SearchManager<B, GameState> {
+public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>> extends SearchManager<B, GameState, SearchFilter> {
 	void addBoardStateListener(BoardStateListener l);
 
 	void removeBoardStateListener(BoardStateListener l);
@@ -26,7 +27,7 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	 * Creates new game board with specified settings.
 	 *
 	 * @param gameSettings the settings for new game
-	 * @param players	  the list of players.
+	 * @param players      the list of players.
 	 * @return the created game.
 	 * @throws BoardCreationException if board can't be created by some reasons.
 	 */

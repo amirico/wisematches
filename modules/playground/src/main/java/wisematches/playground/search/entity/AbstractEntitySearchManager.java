@@ -4,7 +4,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
-import wisematches.database.Order;
 import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchManager<E, C> {
+public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> implements EntitySearchManager<E, C, F> {
 	private final Class<?> entityType;
 
 	private SessionFactory sessionFactory;
@@ -30,7 +29,7 @@ public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchM
 	}
 
 	@Override
-	public int getFilteredCount(Personality person, C context, SearchFilter filter) {
+	public int getFilteredCount(Personality person, C context, F filter) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
@@ -41,7 +40,7 @@ public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchM
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<E> searchEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range) {
+	public List<E> searchEntities(Personality person, C context, F filter, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);

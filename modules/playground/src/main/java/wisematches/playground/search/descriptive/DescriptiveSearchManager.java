@@ -1,5 +1,6 @@
 package wisematches.playground.search.descriptive;
 
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.SearchManager;
 
 /**
@@ -12,7 +13,7 @@ import wisematches.playground.search.SearchManager;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface DescriptiveSearchManager<E, C> extends SearchManager<E, C> {
+public interface DescriptiveSearchManager<E, C, F extends SearchFilter> extends SearchManager<E, C, F> {
 	/**
 	 * Returns descriptor of entity.
 	 *

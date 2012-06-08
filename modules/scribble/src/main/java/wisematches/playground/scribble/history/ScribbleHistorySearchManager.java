@@ -7,7 +7,7 @@ import wisematches.playground.search.descriptive.AbstractDescriptiveSearchManage
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleHistorySearchManager extends AbstractDescriptiveSearchManager<ScribbleHistoryEntity, GameResolution> {
+public class ScribbleHistorySearchManager extends AbstractDescriptiveSearchManager<ScribbleHistoryEntity, GameResolution, SearchFilter> {
 	public ScribbleHistorySearchManager() {
 		super(ScribbleHistoryEntity.class, true);
 	}

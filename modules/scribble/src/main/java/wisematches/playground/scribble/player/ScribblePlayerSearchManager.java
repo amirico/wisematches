@@ -6,7 +6,7 @@ import wisematches.playground.search.descriptive.AbstractDescriptiveSearchManage
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManager<PlayerEntityBean, PlayerSearchArea> {
+public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManager<PlayerEntityBean, PlayerSearchArea, SearchFilter> {
 	public ScribblePlayerSearchManager() {
 		super(PlayerEntityBean.class);
 	}
