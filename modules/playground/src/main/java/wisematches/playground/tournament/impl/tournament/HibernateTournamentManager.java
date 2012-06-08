@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.impl;
+package wisematches.playground.tournament.impl.tournament;
 
 import org.hibernate.SessionFactory;
 import wisematches.database.Orders;

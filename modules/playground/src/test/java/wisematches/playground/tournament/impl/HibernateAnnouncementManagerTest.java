@@ -18,6 +18,8 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.RatingManager;
 import wisematches.playground.tournament.*;
+import wisematches.playground.tournament.impl.announcement.HibernateAnnouncementManager;
+import wisematches.playground.tournament.impl.announcement.HibernateAnnouncementSubscription;
 
 import java.text.ParseException;
 import java.util.ArrayList;

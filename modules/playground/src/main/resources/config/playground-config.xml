@@ -45,7 +45,7 @@
     </bean>
 
     <bean id="tournamentSubscriptionManager"
-          class="wisematches.playground.tournament.impl.HibernateAnnouncementManager">
+          class="wisematches.playground.tournament.impl.announcement.HibernateAnnouncementManager">
         <property name="ratingManager" ref="ratingManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="cronExpression" value="* * * ? * 2#1"/>

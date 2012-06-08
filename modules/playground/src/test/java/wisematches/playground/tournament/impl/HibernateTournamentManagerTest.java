@@ -7,6 +7,7 @@ import wisematches.playground.tournament.TournamentGroupId;
 import wisematches.playground.tournament.TournamentRoundId;
 import wisematches.playground.tournament.TournamentSection;
 import wisematches.playground.tournament.TournamentSectionId;
+import wisematches.playground.tournament.impl.tournament.HibernateTournamentManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.impl;
+package wisematches.playground.tournament.impl.announcement;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
