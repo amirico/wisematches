@@ -3,6 +3,7 @@ package wisematches.playground.tournament.impl;
 import org.junit.Test;
 import wisematches.personality.Language;
 import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.impl.announcement.HibernateAnnouncement;
 
 import java.util.Date;
 
