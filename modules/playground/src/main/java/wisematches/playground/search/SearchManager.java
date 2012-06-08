@@ -19,7 +19,7 @@ import java.util.List;
  * @param <C> the context type that is supported by search manager.
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface SearchManager<E, C> {
+public interface SearchManager<E, C, F extends SearchFilter> {
 	/**
 	 * Returns total items count for specified personality and
 	 *
@@ -37,7 +37,7 @@ public interface SearchManager<E, C> {
 	 * @param filter  the search filter
 	 * @return number of items available for search according to specified {@code criteria}
 	 */
-	int getFilteredCount(Personality person, C context, SearchFilter filter);
+	int getFilteredCount(Personality person, C context, F filter);
 
 	/**
 	 * Searches and returns list of all entities for specified person in specified context and according
@@ -53,5 +53,5 @@ public interface SearchManager<E, C> {
 	 * @param range   the range of returned entities.
 	 * @return list of entities or empty list if no entities are found.
 	 */
-	List<E> searchEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range);
+	List<E> searchEntities(Personality person, C context, F filter, Orders orders, Range range);
 }

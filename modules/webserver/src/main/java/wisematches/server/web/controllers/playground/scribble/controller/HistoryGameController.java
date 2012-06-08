@@ -15,6 +15,7 @@ import wisematches.personality.player.PlayerManager;
 import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.history.ScribbleHistoryEntity;
 import wisematches.playground.scribble.history.ScribbleHistorySearchManager;
+import wisematches.playground.search.SearchFilter;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.AbstractSearchController;
@@ -29,7 +30,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/scribble/history")
-public class HistoryGameController extends AbstractSearchController<ScribbleHistoryEntity, GameResolution> {
+public class HistoryGameController extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
 	private PlayerManager playerManager;
 	private GameMessageSource messageSource;
 	private PlayerStateManager playerStateManager;

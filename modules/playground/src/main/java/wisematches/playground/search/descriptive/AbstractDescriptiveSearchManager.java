@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractDescriptiveSearchManager<T, C> implements DescriptiveSearchManager<T, C> {
+public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFilter> implements DescriptiveSearchManager<T, C, F> {
 	private SessionFactory sessionFactory;
 
 	private final boolean sql;
@@ -43,7 +43,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 	}
 
 	@Override
-	public int getFilteredCount(final Personality person, final C context, final SearchFilter filter) {
+	public int getFilteredCount(final Personality person, final C context, final F filter) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -74,7 +74,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> searchEntities(final Personality person, final C context, final SearchFilter filter, final Orders orders, final Range range) {
+	public List<T> searchEntities(final Personality person, final C context, final F filter, final Orders orders, final Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
