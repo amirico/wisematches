@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface Tournament {
+public interface Tournament extends TournamentEntity {
     /**
      * Returns number of the tournament.
      *
@@ -24,14 +24,14 @@ public interface Tournament {
      *
      * @return the start date
      */
-    Date getStartDate();
+    Date getStartedDate();
 
     /**
      * Returns finish date of the tournament. If date is null when tournament is not finished or not started yet.
      *
      * @return the finish date or {@code null} if the tournament isn't finished.
      */
-    Date getFinishDate();
+    Date getFinishedDate();
 
     /**
      * The scheduled date for this tournament. Has meaning only for not initiated tournaments.
@@ -41,16 +41,9 @@ public interface Tournament {
     Date getScheduledDate();
 
     /**
-     * Indicates is the tournament started or not.
+     * Returns tournament state
      *
-     * @return {@code true} if tournament started; otherwise - {@code false}.
+     * @return the tournament state
      */
-    boolean isStarted();
-
-    /**
-     * Indicates is the tournament finished or not.
-     *
-     * @return {@code true} if tournament finished; otherwise - {@code false}.
-     */
-    boolean isFinished();
+    TournamentState getTournamentState();
 }

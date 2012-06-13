@@ -8,32 +8,32 @@ import wisematches.personality.Language;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentSubscription {
-	/**
-	 * Returns player id who sent the request
-	 *
-	 * @return the player id who sent the request
-	 */
-	long getPlayer();
+public interface TournamentSubscription extends TournamentEntity {
+    /**
+     * Returns player id who sent the request
+     *
+     * @return the player id who sent the request
+     */
+    long getPlayer();
 
-	/**
-	 * Returns number of a tournament.
-	 *
-	 * @return the number of a tournament.
-	 */
-	int getAnnouncement();
+    /**
+     * Returns number of a tournament.
+     *
+     * @return the number of a tournament.
+     */
+    int getTournament();
 
-	/**
-	 * Returns tournament's language.
-	 *
-	 * @return the tournament's language.
-	 */
-	Language getLanguage();
+    /**
+     * Returns tournament's language.
+     *
+     * @return the tournament's language.
+     */
+    Language getLanguage();
 
-	/**
-	 * Returns tournament's section.
-	 *
-	 * @return the tournament's section.
-	 */
-	TournamentCategory getTournamentCategory();
+    /**
+     * Returns tournament's section.
+     *
+     * @return the tournament's section.
+     */
+    TournamentSection getSectionType();
 }

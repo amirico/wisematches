@@ -4,19 +4,17 @@ package wisematches.playground.tournament;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface TournamentSubscriptionListener {
-    void tournamentAnnounced(Announcement closedAnnouncement, Announcement newAnnouncement);
-
     /**
      * Indicates that new player subscribed to a tournament.
      *
-     * @param request original player's request.
+     * @param subscription original player's subscription.
      */
-    void playerSubscribed(TournamentSubscription request);
+    void playerSubscribed(TournamentSubscription subscription);
 
     /**
      * Indicates that new a unsubscribed from a tournament.
      *
-     * @param request original player's request.
+     * @param subscription original player's subscription.
      */
-    void playerUnsubscribed(TournamentSubscription request);
+    void playerUnsubscribed(TournamentSubscription subscription);
 }

@@ -1,8 +1,8 @@
 package wisematches.playground.tournament.impl.tournament;
 
 import wisematches.personality.Language;
-import wisematches.playground.tournament.TournamentCategory;
 import wisematches.playground.tournament.TournamentRound;
+import wisematches.playground.tournament.TournamentSection;
 
 import java.util.Date;
 
@@ -33,7 +33,7 @@ public class HibernateTournamentRound implements TournamentRound {
     }
 
     @Override
-    public TournamentCategory getTournamentSection() {
+    public TournamentSection getTournamentSection() {
         throw new UnsupportedOperationException("Not implemented"); //To change body of implemented methods use File | Settings | File Templates.
     }
 
