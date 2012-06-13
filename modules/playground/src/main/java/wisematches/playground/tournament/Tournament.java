@@ -11,39 +11,46 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface Tournament {
-	/**
-	 * Returns number of the tournament.
-	 *
-	 * @return the number of the tournament.
-	 */
-	int getNumber();
+    /**
+     * Returns number of the tournament.
+     *
+     * @return the number of the tournament.
+     */
+    int getNumber();
 
-	/**
-	 * Returns start date of the tournament. If the date in the future when the tournament
-	 * was announced but not started yet.
-	 *
-	 * @return the start date
-	 */
-	Date getStartDate();
+    /**
+     * Returns start date of the tournament. If the date in the future when the tournament
+     * was announced but not started yet.
+     *
+     * @return the start date
+     */
+    Date getStartDate();
 
-	/**
-	 * Returns finish date of the tournament. If date is null when tournament is not finished or not started yet.
-	 *
-	 * @return the finish date or {@code null} if the tournament isn't finished.
-	 */
-	Date getFinishDate();
+    /**
+     * Returns finish date of the tournament. If date is null when tournament is not finished or not started yet.
+     *
+     * @return the finish date or {@code null} if the tournament isn't finished.
+     */
+    Date getFinishDate();
 
-	/**
-	 * Indicates is the tournament started or not.
-	 *
-	 * @return {@code true} if tournament started; otherwise - {@code false}.
-	 */
-	boolean isStarted();
+    /**
+     * The scheduled date for this tournament. Has meaning only for not initiated tournaments.
+     *
+     * @return the tournament scheduled date.
+     */
+    Date getScheduledDate();
 
-	/**
-	 * Indicates is the tournament finished or not.
-	 *
-	 * @return {@code true} if tournament finished; otherwise - {@code false}.
-	 */
-	boolean isFinished();
+    /**
+     * Indicates is the tournament started or not.
+     *
+     * @return {@code true} if tournament started; otherwise - {@code false}.
+     */
+    boolean isStarted();
+
+    /**
+     * Indicates is the tournament finished or not.
+     *
+     * @return {@code true} if tournament finished; otherwise - {@code false}.
+     */
+    boolean isFinished();
 }

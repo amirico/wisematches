@@ -32,12 +32,12 @@ public final class TournamentRoundId extends TournamentEntityId {
 		return new TournamentRoundId(sectionId, round);
 	}
 
-	public static TournamentRoundId valueOf(int tournament, Language language, TournamentSection section, int round) {
-		return valueOf(TournamentSectionId.valueOf(tournament, language, section), round);
+	public static TournamentRoundId valueOf(int tournament, Language language, TournamentCategory category, int round) {
+		return valueOf(TournamentSectionId.valueOf(tournament, language, category), round);
 	}
 
-	public static TournamentRoundId valueOf(Tournament tournament, Language language, TournamentSection section, int round) {
-		return valueOf(TournamentSectionId.valueOf(tournament, language, section), round);
+	public static TournamentRoundId valueOf(Tournament tournament, Language language, TournamentCategory category, int round) {
+		return valueOf(TournamentSectionId.valueOf(tournament, language, category), round);
 	}
 
 	@Override

@@ -7,36 +7,36 @@ import wisematches.personality.Language;
  */
 public final class TournamentSectionId extends TournamentEntityId {
 	private final Language language;
-	private final TournamentSection section;
+	private final TournamentCategory category;
 
 	private static final long serialVersionUID = -6682183322507770407L;
 
-	private TournamentSectionId(int tournament, Language language, TournamentSection section) {
+	private TournamentSectionId(int tournament, Language language, TournamentCategory category) {
 		super(tournament);
 		this.language = language;
-		this.section = section;
+		this.category = category;
 	}
 
 	public Language getLanguage() {
 		return language;
 	}
 
-	public TournamentSection getSection() {
-		return section;
+	public TournamentCategory getTournamentCategory() {
+		return category;
 	}
 
-	public static TournamentSectionId valueOf(int tournament, Language language, TournamentSection section) {
+	public static TournamentSectionId valueOf(int tournament, Language language, TournamentCategory category) {
 		if (language == null) {
 			throw new IllegalArgumentException("Language can't be null");
 		}
-		if (section == null) {
+		if (category == null) {
 			throw new IllegalArgumentException("Section can't be null");
 		}
-		return new TournamentSectionId(tournament, language, section);
+		return new TournamentSectionId(tournament, language, category);
 	}
 
-	public static TournamentSectionId valueOf(Tournament tournament, Language language, TournamentSection section) {
-		return valueOf(tournament.getNumber(), language, section);
+	public static TournamentSectionId valueOf(Tournament tournament, Language language, TournamentCategory category) {
+		return valueOf(tournament.getNumber(), language, category);
 	}
 
 	@Override
@@ -45,14 +45,14 @@ public final class TournamentSectionId extends TournamentEntityId {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		TournamentSectionId sectionId = (TournamentSectionId) o;
-		return tournament == sectionId.tournament && language == sectionId.language && section == sectionId.section;
+		return tournament == sectionId.tournament && language == sectionId.language && category == sectionId.category;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = tournament;
 		result = 31 * result + language.hashCode();
-		result = 31 * result + section.hashCode();
+		result = 31 * result + category.hashCode();
 		return result;
 	}
 
@@ -62,7 +62,7 @@ public final class TournamentSectionId extends TournamentEntityId {
 		sb.append("TournamentSectionId");
 		sb.append("{tournament=").append(tournament);
 		sb.append(", language=").append(language);
-		sb.append(", section=").append(section);
+		sb.append(", section=").append(category);
 		sb.append('}');
 		return sb.toString();
 	}

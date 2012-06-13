@@ -10,5 +10,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface SearchableBean {
-	String uniformityProperty() default "";
+    String uniformityProperty() default "";
 }

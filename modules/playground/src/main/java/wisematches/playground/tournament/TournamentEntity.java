@@ -5,6 +5,6 @@ import wisematches.playground.search.descriptive.SearchableBean;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@SearchableBean()
-public interface TournamentEntity<C extends TournamentEntityId> {
+@SearchableBean
+public interface TournamentEntity {
 }

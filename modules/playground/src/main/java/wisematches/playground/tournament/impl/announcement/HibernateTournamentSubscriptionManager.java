@@ -34,7 +34,7 @@ import java.util.TimeZone;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateAnnouncementManager extends AbstractAnnouncementManager implements BreakingDayListener {
+public class HibernateTournamentSubscriptionManager extends AbstractTournamentSubscriptionManager implements BreakingDayListener {
 	private CronExpression cronExpression;
 	private TimeZone timeZone = TimeZone.getTimeZone("GMT");
 
@@ -44,7 +44,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 
 	private HibernateAnnouncement announcement = null;
 
-	public HibernateAnnouncementManager() {
+	public HibernateTournamentSubscriptionManager() {
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public AnnouncementSubscription subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongAnnouncementException, WrongSectionException {
+	public TournamentSubscription subscribe(int announcement, Player player, Language language, TournamentCategory category) throws WrongAnnouncementException, WrongSectionException {
 		lock.lock();
 		try {
 			checkAnnouncementInfo(announcement);
@@ -85,25 +85,25 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 			if (language == null) {
 				throw new NullPointerException("Player can't be null");
 			}
-			if (section == null) {
+			if (tournamentCategory == null) {
 				throw new NullPointerException("Player can't be null");
 			}
 
 			final short rating = ratingManager.getRating(player);
-			if (!section.isRatingAllowed(rating)) {
-				throw new WrongSectionException(rating, section.getTopRating());
+			if (!tournamentCategory.isRatingAllowed(rating)) {
+				throw new WrongSectionException(rating, category.getTopRating());
 			}
 
 			final Session session = sessionFactory.getCurrentSession();
-			HibernateAnnouncementSubscription request = (HibernateAnnouncementSubscription) getTournamentRequest(announcement, player, language);
+			HibernateTournamentSubscription request = (HibernateTournamentSubscription) getTournamentRequest(announcement, player, language);
 			if (request == null) {
-				request = new HibernateAnnouncementSubscription(announcement, player.getId(), language, section);
-				this.announcement.changeBoughtTickets(language, section, 1);
+				request = new HibernateTournamentSubscription(announcement, player.getId(), language, category);
+				this.announcement.changeBoughtTickets(language, category, 1);
 				session.save(request);
 			} else {
-				this.announcement.changeBoughtTickets(language, section, 1);
-				this.announcement.changeBoughtTickets(language, request.getSection(), -1);
-				request.setTournamentSection(section);
+				this.announcement.changeBoughtTickets(language, category, 1);
+				this.announcement.changeBoughtTickets(language, request.getTournamentCategory(), -1);
+				request.setTournamentSection(tournamentCategory);
 				session.update(request);
 			}
 			firePlayerSubscribed(request);
@@ -115,7 +115,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public AnnouncementSubscription unsubscribe(int announcement, Player player, Language language) throws WrongAnnouncementException {
+	public TournamentSubscription unsubscribe(int announcement, Player player, Language language) throws WrongAnnouncementException {
 		lock.lock();
 		try {
 			checkAnnouncementInfo(announcement);
@@ -126,9 +126,9 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 				throw new NullPointerException("Player can't be null");
 			}
 			Session session = sessionFactory.getCurrentSession();
-			HibernateAnnouncementSubscription request = (HibernateAnnouncementSubscription) getTournamentRequest(announcement, player, language);
+			HibernateTournamentSubscription request = (HibernateTournamentSubscription) getTournamentRequest(announcement, player, language);
 			if (request != null) {
-				this.announcement.changeBoughtTickets(language, request.getSection(), -1);
+				this.announcement.changeBoughtTickets(language, request.getTournamentCategory(), -1);
 				session.delete(request);
 				firePlayerUnsubscribed(request);
 			}
@@ -140,7 +140,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AnnouncementSubscription getTournamentRequest(int announcement, Player player, Language language) throws WrongAnnouncementException {
+	public TournamentSubscription getTournamentRequest(int announcement, Player player, Language language) throws WrongAnnouncementException {
 		lock.lock();
 		try {
 			checkAnnouncementInfo(announcement);
@@ -150,8 +150,8 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 			if (language == null) {
 				throw new NullPointerException("Player can't be null");
 			}
-			final HibernateAnnouncementSubscription.PK PK = new HibernateAnnouncementSubscription.PK(announcement, player, language);
-			return (AnnouncementSubscription) sessionFactory.getCurrentSession().get(HibernateAnnouncementSubscription.class, PK);
+			final HibernateTournamentSubscription.PK PK = new HibernateTournamentSubscription.PK(announcement, player, language);
+			return (TournamentSubscription) sessionFactory.getCurrentSession().get(HibernateTournamentSubscription.class, PK);
 		} finally {
 			lock.unlock();
 		}
@@ -160,7 +160,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Collection<AnnouncementSubscription> getTournamentRequests(int announcement, Player player) throws WrongAnnouncementException {
+	public Collection<TournamentSubscription> getTournamentRequests(int announcement, Player player) throws WrongAnnouncementException {
 		lock.lock();
 		try {
 			checkAnnouncementInfo(announcement);
@@ -168,7 +168,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 				throw new NullPointerException("Player can't be null");
 			}
 			final Session session = sessionFactory.getCurrentSession();
-			final Criteria criteria = session.createCriteria(HibernateAnnouncementSubscription.class)
+			final Criteria criteria = session.createCriteria(HibernateTournamentSubscription.class)
 					.add(Restrictions.eq("pk.announcement", announcement))
 					.add(Restrictions.eq("pk.player", player.getId()));
 			return criteria.list();
@@ -202,7 +202,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AnnouncementSubscription> searchEntities(Personality person, TournamentSectionId context, SearchFilter filter, Orders orders, Range range) {
+	public List<TournamentSubscription> searchEntities(Personality person, TournamentSectionId context, SearchFilter filter, Orders orders, Range range) {
 		lock.lock();
 		try {
 			if (context == null) {
@@ -288,7 +288,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 		}
 
 		if (res != null) {
-			final Criteria values = session.createCriteria(HibernateAnnouncementSubscription.class, "request")
+			final Criteria values = session.createCriteria(HibernateTournamentSubscription.class, "request")
 					.add(Restrictions.eq("pk.announcement", res.getNumber()))
 					.setProjection(Projections.projectionList()
 							.add(Projections.groupProperty("pk.language"))
@@ -299,7 +299,7 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 			for (Object o : list) {
 				final Object[] row = (Object[]) o;
 				final Language l = (Language) row[0];
-				final TournamentSection s = (TournamentSection) row[1];
+				final TournamentCategory s = (TournamentCategory) row[1];
 				final Number c = (Number) row[2];
 				res.setBoughtTickets(l, s, c.intValue());
 			}
@@ -315,10 +315,10 @@ public class HibernateAnnouncementManager extends AbstractAnnouncementManager im
 
 	private Criteria createSearchCriteria(Personality person, TournamentSectionId context) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Criteria criteria = session.createCriteria(HibernateAnnouncementSubscription.class)
+		final Criteria criteria = session.createCriteria(HibernateTournamentSubscription.class)
 				.add(Restrictions.eq("pk.announcement", context.getTournament()))
 				.add(Restrictions.eq("pk.language", context.getLanguage()))
-				.add(Restrictions.eq("section", context.getSection()));
+				.add(Restrictions.eq("section", context.getTournamentCategory()));
 		if (person != null) {
 			criteria.add(Restrictions.eq("pk.player", person.getId()));
 		}

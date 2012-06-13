@@ -2,7 +2,7 @@ package wisematches.playground.tournament.impl.announcement;
 
 import wisematches.personality.Language;
 import wisematches.playground.tournament.Announcement;
-import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.TournamentCategory;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class HibernateAnnouncement implements Announcement {
 	private boolean closed = false;
 
 	@Transient
-	private final int[][] values = new int[Language.values().length][TournamentSection.values().length];
+	private final int[][] values = new int[Language.values().length][TournamentCategory.values().length];
 
 	@Deprecated
 	private HibernateAnnouncement() {
@@ -56,16 +56,16 @@ public class HibernateAnnouncement implements Announcement {
 	}
 
 	@Override
-	public int getBoughtTickets(Language language, TournamentSection section) {
-		return values[language.ordinal()][section.ordinal()];
+	public int getBoughtTickets(Language language, TournamentCategory category) {
+		return values[language.ordinal()][tournamentCategory.ordinal()];
 	}
 
-	void setBoughtTickets(Language language, TournamentSection section, int count) {
-		values[language.ordinal()][section.ordinal()] = count;
+	void setBoughtTickets(Language language, TournamentCategory category, int count) {
+		values[language.ordinal()][tournamentCategory.ordinal()] = count;
 	}
 
-	void changeBoughtTickets(Language language, TournamentSection section, int delta) {
-		values[language.ordinal()][section.ordinal()] += delta;
+	void changeBoughtTickets(Language language, TournamentCategory category, int delta) {
+		values[language.ordinal()][tournamentCategory.ordinal()] += delta;
 	}
 
 	void setClosed(boolean closed) {
