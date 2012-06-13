@@ -1,5 +1,7 @@
 package wisematches.playground.tournament;
 
+import wisematches.personality.Language;
+import wisematches.personality.player.Player;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.SearchManager;
 
@@ -11,10 +13,15 @@ import wisematches.playground.search.SearchManager;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentManager extends SearchManager<TournamentEntity<? extends TournamentEntityId>, TournamentEntityId, SearchFilter> {
-    void addTournamentListener(TournamentListener l);
+public interface TournamentManager extends SearchManager<TournamentEntity, TournamentEntityCtx<TournamentEntity>, SearchFilter> {
+    void addTournamentStateListener(TournamentStateListener l);
 
-    void removeTournamentListener(TournamentListener l);
+    void removeTournamentStateListener(TournamentStateListener l);
+
+    void addTournamentSubscriptionListener(TournamentSubscriptionListener l);
+
+    void removeTournamentSubscriptionListener(TournamentSubscriptionListener l);
+
 
     /**
      * Returns tournament with specified number or {@code null} if there is no tournament.
@@ -30,7 +37,7 @@ public interface TournamentManager extends SearchManager<TournamentEntity<? exte
      * @param roundId the tournament round id
      * @return the tournament round by specified id or {@code null} if there is no one.
      */
-    TournamentRound getTournamentRound(TournamentRoundId roundId);
+    TournamentRound getTournamentRound(int tournament, Language language, TournamentSection section, int round);
 
     /**
      * Returns tournament group by specified group id or {@code null} if there is no group.
@@ -38,5 +45,34 @@ public interface TournamentManager extends SearchManager<TournamentEntity<? exte
      * @param groupId the group id.
      * @return the tournament group by specified group id or {@code null} if there is no group.
      */
-    TournamentGroup getTournamentGroup(TournamentGroupId groupId);
+    TournamentGroup getTournamentGroup(int tournament, Language language, TournamentSection section, int round, int group);
+
+
+    TournamentSubscription subscribe(int tournament, Player player, Language language, TournamentSection category) throws WrongTournamentException, WrongSectionException;
+
+    /**
+     * Unsubscribes specified player from the tournament.
+     * <p/>
+     * If player is not subscribed nothing will happen.
+     *
+     * @param announcement the number of the announcement. The number is used for user actions synchronization with
+     *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
+     * @param player       the player who would like take part in the tournament.
+     * @param language     the language of the tournament.
+     * @return original request or {@code null} if player wasn't subscribed.
+     * @throws WrongTournamentException if specified announcement doesn't equals to specified.
+     */
+    TournamentSubscription unsubscribe(int tournament, Player player, Language language) throws WrongTournamentException;
+
+    /**
+     * Returns current request for the player.
+     *
+     * @param announcement the number of the announcement. The number is used for user actions synchronization with
+     *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
+     * @param player       the player who's request should be returned.
+     * @param language     the language of the tournament.
+     * @return the player's request or {@code null} if plyaer is not subscribed to the tournament.
+     * @throws WrongTournamentException if specified announcement doesn't equals to specified.
+     */
+    TournamentSubscription getSubscription(int tournament, Player player, Language language) throws WrongTournamentException;
 }

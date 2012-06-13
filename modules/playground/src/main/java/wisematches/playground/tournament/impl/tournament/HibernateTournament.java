@@ -1,7 +1,7 @@
 package wisematches.playground.tournament.impl.tournament;
 
-import wisematches.playground.tournament.Announcement;
 import wisematches.playground.tournament.Tournament;
+import wisematches.playground.tournament.TournamentState;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,20 +16,28 @@ public class HibernateTournament implements Tournament {
     @Column(name = "id")
     private int number;
 
-    @Column(name = "startDate")
+    @Column(name = "scheduledDate")
     @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private Date scheduledDate;
 
-    @Column(name = "finishDate")
+    @Column(name = "startedDate")
     @Temporal(TemporalType.DATE)
-    private Date finishDate;
+    private Date startedDate;
+
+    @Column(name = "finishedDate")
+    @Temporal(TemporalType.DATE)
+    private Date finishedDate;
 
     @Deprecated
     HibernateTournament() {
     }
 
-    public HibernateTournament(Announcement announcement) {
-        this.number = announcement.getNumber();
+    public HibernateTournament(int number, Date scheduledDate) {
+        if (scheduledDate == null) {
+            throw new IllegalArgumentException("Scheduled date can't be null");
+        }
+        this.number = number;
+        this.scheduledDate = scheduledDate;
     }
 
     @Override
@@ -38,22 +46,52 @@ public class HibernateTournament implements Tournament {
     }
 
     @Override
-    public Date getStartDate() {
-        return startDate;
+    public Date getStartedDate() {
+        return startedDate;
     }
 
     @Override
-    public Date getFinishDate() {
-        return finishDate;
+    public Date getFinishedDate() {
+        return finishedDate;
     }
 
     @Override
-    public boolean isStarted() {
-        return startDate != null;
+    public Date getScheduledDate() {
+        return scheduledDate;
     }
 
     @Override
-    public boolean isFinished() {
-        return finishDate != null;
+    public TournamentState getTournamentState() {
+        if (finishedDate != null) {
+            return TournamentState.FINISHED;
+        } else if (startedDate != null) {
+            return TournamentState.STARTED;
+        } else {
+            return TournamentState.SCHEDULED;
+        }
+    }
+
+    /**
+     * Marks the tournament as started and set started date.
+     *
+     * @param date date when tournament was started.
+     */
+    protected void startTournament(Date date) {
+        if (getTournamentState() != TournamentState.SCHEDULED) {
+            throw new IllegalArgumentException("Tournament can't be started because wasn't scheduled");
+        }
+        this.startedDate = date;
+    }
+
+    /**
+     * Marks the tournament as finished and set finished date.
+     *
+     * @param date date when tournament was finished.
+     */
+    protected void finishTournament(Date date) {
+        if (getTournamentState() != TournamentState.STARTED) {
+            throw new IllegalStateException("Tournament can't be finished because wasn't started");
+        }
+        this.finishedDate = date;
     }
 }

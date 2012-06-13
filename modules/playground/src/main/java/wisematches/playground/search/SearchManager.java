@@ -20,38 +20,38 @@ import java.util.List;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface SearchManager<E, C, F extends SearchFilter> {
-	/**
-	 * Returns total items count for specified personality and
-	 *
-	 * @param person  the person who searches entities.
-	 * @param context the context for search.
-	 * @return number of items available for search.
-	 */
-	int getTotalCount(Personality person, C context);
+    /**
+     * Returns total items count for specified personality and
+     *
+     * @param person  the person who searches entities.
+     * @param context the context for search.
+     * @return number of items available for search.
+     */
+    int getTotalCount(Personality person, C context);
 
-	/**
-	 * Returns count of filtered items by specified {@code criteria}
-	 *
-	 * @param person  the person who searches entities.
-	 * @param context the context for search.
-	 * @param filter  the search filter
-	 * @return number of items available for search according to specified {@code criteria}
-	 */
-	int getFilteredCount(Personality person, C context, F filter);
+    /**
+     * Returns count of filtered items by specified {@code criteria}
+     *
+     * @param person  the person who searches entities.
+     * @param context the context for search.
+     * @param filter  the search filter
+     * @return number of items available for search according to specified {@code criteria}
+     */
+    int getFilteredCount(Personality person, C context, F filter);
 
-	/**
-	 * Searches and returns list of all entities for specified person in specified context and according
-	 * to specified criteria.
-	 * <p/>
-	 * The result will be sorted according to specified orders and will be limited according to specified
-	 * range.
-	 *
-	 * @param person  the person who searches entities.
-	 * @param context the context for search.
-	 * @param filter  the search filter
-	 * @param orders  orders of result
-	 * @param range   the range of returned entities.
-	 * @return list of entities or empty list if no entities are found.
-	 */
-	List<E> searchEntities(Personality person, C context, F filter, Orders orders, Range range);
+    /**
+     * Searches and returns list of all entities for specified person in specified context and according
+     * to specified criteria.
+     * <p/>
+     * The result will be sorted according to specified orders and will be limited according to specified
+     * range.
+     *
+     * @param person  the person who searches entities.
+     * @param context the context for search.
+     * @param filter  the search filter
+     * @param orders  orders of result
+     * @param range   the range of returned entities.
+     * @return list of entities or empty list if no entities are found.
+     */
+    List<? extends E> searchEntities(Personality person, C context, F filter, Orders orders, Range range);
 }

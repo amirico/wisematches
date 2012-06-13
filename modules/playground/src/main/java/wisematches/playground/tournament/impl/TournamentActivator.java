@@ -49,7 +49,7 @@ public class TournamentActivator implements InitializingBean {
                 final Session session = sessionFactory.getCurrentSession();
                 // TODO: select players from announcement
                 for (Language language : Language.values()) {
-                    for (TournamentCategory category : TournamentCategory.values()) {
+                    for (TournamentSection category : TournamentSection.values()) {
                         // TODO: remove processed players
                         final Query query = session.createSQLQuery("" +
                                 "select distinct r.player " +
@@ -119,11 +119,11 @@ public class TournamentActivator implements InitializingBean {
         }
 
         @Override
-        public void playerSubscribed(TournamentSubscription request) {
+        public void playerSubscribed(TournamentSubscription subscription) {
         }
 
         @Override
-        public void playerUnsubscribed(TournamentSubscription request) {
+        public void playerUnsubscribed(TournamentSubscription subscription) {
         }
     }
 }

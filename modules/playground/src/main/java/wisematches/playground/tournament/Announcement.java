@@ -15,5 +15,5 @@ public interface Announcement {
 
     int getTotalTickets(Language language);
 
-    int getBoughtTickets(Language language, TournamentCategory category);
+    int getBoughtTickets(Language language, TournamentSection category);
 }

@@ -5,7 +5,7 @@ package wisematches.playground.tournament;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentGroup extends TournamentEntity<TournamentRoundId> {
+public interface TournamentGroup extends TournamentEntity {
     /**
      * Returns tournament for the group.
      *

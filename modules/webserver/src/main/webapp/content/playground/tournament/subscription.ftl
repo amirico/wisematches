@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="sections" type="wisematches.playground.tournament.TournamentCategory[]" -->
+<#-- @ftlvariable name="sections" type="wisematches.playground.tournament.TournamentSection[]" -->
 <#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="playerRating" type="java.lang.Short" -->
 <#-- @ftlvariable name="subscription" type="wisematches.playground.tournament.TournamentSubscription" -->
@@ -53,7 +53,7 @@
                 <td>
             <span>
                 <#if subscription??>
-                    <@message code="tournament.section.${subscription.tournamentCategory.name()?lower_case}.label"/>
+                    <@message code="tournament.section.${subscription.sectionType.name()?lower_case}.label"/>
                     (<@message code="language.${subscription.language.name()?lower_case}"/>)
                 <#else>
                     <@message code="tournament.section.none.description"/>
