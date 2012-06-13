@@ -8,7 +8,7 @@ import wisematches.personality.Language;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface AnnouncementSubscription {
+public interface TournamentSubscription {
 	/**
 	 * Returns player id who sent the request
 	 *
@@ -35,5 +35,5 @@ public interface AnnouncementSubscription {
 	 *
 	 * @return the tournament's section.
 	 */
-	TournamentSection getSection();
+	TournamentCategory getTournamentCategory();
 }

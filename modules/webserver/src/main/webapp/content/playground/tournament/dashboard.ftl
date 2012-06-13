@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="requests" type="wisematches.playground.tournament.AnnouncementSubscription[]"-->
+<#-- @ftlvariable name="requests" type="wisematches.playground.tournament.TournamentSubscription[]"-->
 <#-- @ftlvariable name="announcement" type="wisematches.playground.tournament.Announcement" -->
 <#include "/core.ftl">
 
@@ -68,7 +68,7 @@
         <#else>
             <#assign request=requests[0]/>
         You are already <a href="/playground/tournament/subscription?a=${request.announcement}">subscribed</a>
-        to '${request.section}' section on '${request.language}' language.
+        to '${request.tournamentCategory}' section on '${request.language}' language.
         </#if>
     </@wm.dtFooter>
 </@wm.playground>

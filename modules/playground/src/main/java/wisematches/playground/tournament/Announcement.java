@@ -6,13 +6,14 @@ import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
+ * @deprecated migrate to Tournament.
  */
 public interface Announcement {
-	int getNumber();
+    int getNumber();
 
-	Date getScheduledDate();
+    Date getScheduledDate();
 
-	int getTotalTickets(Language language);
+    int getTotalTickets(Language language);
 
-	int getBoughtTickets(Language language, TournamentSection section);
+    int getBoughtTickets(Language language, TournamentCategory category);
 }

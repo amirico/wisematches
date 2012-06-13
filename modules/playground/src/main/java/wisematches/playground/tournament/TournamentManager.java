@@ -11,32 +11,32 @@ import wisematches.playground.search.SearchManager;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentManager<E extends TournamentEntity<C>, C extends TournamentEntityId> extends SearchManager<E, C, SearchFilter> {
-	void addTournamentListener(TournamentListener l);
+public interface TournamentManager extends SearchManager<TournamentEntity<? extends TournamentEntityId>, TournamentEntityId, SearchFilter> {
+    void addTournamentListener(TournamentListener l);
 
-	void removeTournamentListener(TournamentListener l);
+    void removeTournamentListener(TournamentListener l);
 
-	/**
-	 * Returns tournament with specified number or {@code null} if there is no tournament.
-	 *
-	 * @param number tournament number
-	 * @return the tournament with specified number or {@code null} if there is no tournament.
-	 */
-	Tournament getTournament(int number);
+    /**
+     * Returns tournament with specified number or {@code null} if there is no tournament.
+     *
+     * @param number tournament number
+     * @return the tournament with specified number or {@code null} if there is no tournament.
+     */
+    Tournament getTournament(int number);
 
-	/**
-	 * Returns tournament round by specified id or {@code null} if there is no one.
-	 *
-	 * @param roundId the tournament round id
-	 * @return the tournament round by specified id or {@code null} if there is no one.
-	 */
-	TournamentRound getTournamentRound(TournamentRoundId roundId);
+    /**
+     * Returns tournament round by specified id or {@code null} if there is no one.
+     *
+     * @param roundId the tournament round id
+     * @return the tournament round by specified id or {@code null} if there is no one.
+     */
+    TournamentRound getTournamentRound(TournamentRoundId roundId);
 
-	/**
-	 * Returns tournament group by specified group id or {@code null} if there is no group.
-	 *
-	 * @param groupId the group id.
-	 * @return the tournament group by specified group id or {@code null} if there is no group.
-	 */
-	TournamentGroup getTournamentGroup(TournamentGroupId groupId);
+    /**
+     * Returns tournament group by specified group id or {@code null} if there is no group.
+     *
+     * @param groupId the group id.
+     * @return the tournament group by specified group id or {@code null} if there is no group.
+     */
+    TournamentGroup getTournamentGroup(TournamentGroupId groupId);
 }

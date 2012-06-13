@@ -8,14 +8,14 @@ import wisematches.playground.search.SearchManager;
 import java.util.Collection;
 
 /**
- * {@code AnnouncementManager} provides information about upcoming tournament and ability for subscription.
+ * {@code TournamentSubscriptionManager} provides information about upcoming tournament and ability for subscription.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface AnnouncementManager extends SearchManager<AnnouncementSubscription, TournamentSectionId, SearchFilter> {
-	void addAnnouncementListener(AnnouncementListener l);
+public interface TournamentSubscriptionManager extends SearchManager<TournamentSubscription, TournamentSectionId, SearchFilter> {
+	void addAnnouncementListener(TournamentSubscriptionListener l);
 
-	void removeAnnouncementListener(AnnouncementListener l);
+	void removeAnnouncementListener(TournamentSubscriptionListener l);
 
 	/**
 	 * Returns announced tournament.
@@ -35,18 +35,18 @@ public interface AnnouncementManager extends SearchManager<AnnouncementSubscript
 	/**
 	 * Subscribes specified player to announced tournament with specified parameters.
 	 * <p/>
-	 * If player already subscribed when he's section will be changed.
+	 * If player already subscribed when he's category will be changed.
 	 *
 	 * @param announcement the number of the announcement. The number is used for user actions synchronization with
 	 *                     current state of manager. If they don't equals {@code BadAnnouncementException} will be thrown.
 	 * @param player       the player who would like take part in the tournament.
 	 * @param language     the language of the tournament.
-	 * @param section      the section of the tournament.
+	 * @param category      the category of the tournament.
 	 * @return created tournament request.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
-	 * @throws WrongSectionException      if player can't be subscribed to specified section because has higher rating.
+	 * @throws WrongSectionException      if player can't be subscribed to specified category because has higher rating.
 	 */
-	AnnouncementSubscription subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongAnnouncementException, WrongSectionException;
+	TournamentSubscription subscribe(int announcement, Player player, Language language, TournamentCategory category) throws WrongAnnouncementException, WrongSectionException;
 
 	/**
 	 * Unsubscribes specified player from the tournament.
@@ -60,7 +60,7 @@ public interface AnnouncementManager extends SearchManager<AnnouncementSubscript
 	 * @return original request or {@code null} if player wasn't subscribed.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */
-	AnnouncementSubscription unsubscribe(int announcement, Player player, Language language) throws WrongAnnouncementException;
+	TournamentSubscription unsubscribe(int announcement, Player player, Language language) throws WrongAnnouncementException;
 
 	/**
 	 * Returns current request for the player.
@@ -72,7 +72,7 @@ public interface AnnouncementManager extends SearchManager<AnnouncementSubscript
 	 * @return the player's request or {@code null} if plyaer is not subscribed to the tournament.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */
-	AnnouncementSubscription getTournamentRequest(int announcement, Player player, Language language) throws WrongAnnouncementException;
+	TournamentSubscription getTournamentRequest(int announcement, Player player, Language language) throws WrongAnnouncementException;
 
 	/**
 	 * Returns all requests for the player. If there are no requests empty collection will be returned.
@@ -83,5 +83,5 @@ public interface AnnouncementManager extends SearchManager<AnnouncementSubscript
 	 * @return collection of all active requests.
 	 * @throws WrongAnnouncementException if specified announcement doesn't equals to specified.
 	 */
-	Collection<AnnouncementSubscription> getTournamentRequests(int announcement, Player player) throws WrongAnnouncementException;
+	Collection<TournamentSubscription> getTournamentRequests(int announcement, Player player) throws WrongAnnouncementException;
 }

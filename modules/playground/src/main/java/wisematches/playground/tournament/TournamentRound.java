@@ -36,7 +36,7 @@ public interface TournamentRound extends TournamentEntity<TournamentSectionId> {
 	 *
 	 * @return the section of the round.
 	 */
-	TournamentSection getTournamentSection();
+	TournamentCategory getTournamentSection();
 
 	/**
 	 * Returns date when round was started.

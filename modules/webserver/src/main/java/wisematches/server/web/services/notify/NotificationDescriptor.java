@@ -31,7 +31,7 @@ public class NotificationDescriptor {
 	}
 
 	/**
-	 * Returns section for this descriptor. Section is part of {@code code} til last dot.
+	 * Returns section for this descriptor. TournamentCategory is part of {@code code} til last dot.
 	 *
 	 * @return the section for this descriptor
 	 */

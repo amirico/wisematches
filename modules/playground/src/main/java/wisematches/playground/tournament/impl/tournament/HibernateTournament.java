@@ -1,35 +1,59 @@
 package wisematches.playground.tournament.impl.tournament;
 
+import wisematches.playground.tournament.Announcement;
 import wisematches.playground.tournament.Tournament;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Entity
+@Table(name = "tournament")
 public class HibernateTournament implements Tournament {
-	@Override
-	public int getNumber() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
+    @Id
+    @Column(name = "id")
+    private int number;
 
-	@Override
-	public Date getStartDate() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
+    @Column(name = "startDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
 
-	@Override
-	public Date getFinishDate() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
+    @Column(name = "finishDate")
+    @Temporal(TemporalType.DATE)
+    private Date finishDate;
 
-	@Override
-	public boolean isStarted() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
+    @Deprecated
+    HibernateTournament() {
+    }
 
-	@Override
-	public boolean isFinished() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
+    public HibernateTournament(Announcement announcement) {
+        this.number = announcement.getNumber();
+    }
+
+    @Override
+    public int getNumber() {
+        return number;
+    }
+
+    @Override
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    @Override
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    @Override
+    public boolean isStarted() {
+        return startDate != null;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finishDate != null;
+    }
 }

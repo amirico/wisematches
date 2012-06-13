@@ -2,8 +2,8 @@ package wisematches.playground.tournament.impl.announcement;
 
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
-import wisematches.playground.tournament.AnnouncementSubscription;
-import wisematches.playground.tournament.TournamentSection;
+import wisematches.playground.tournament.TournamentSubscription;
+import wisematches.playground.tournament.TournamentCategory;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,27 +13,27 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "tournament_request")
-public class HibernateAnnouncementSubscription implements AnnouncementSubscription {
+public class HibernateTournamentSubscription implements TournamentSubscription {
 	@EmbeddedId
 	private PK pk;
 
 	@Column(name = "section")
 	@Enumerated(EnumType.ORDINAL)
-	private TournamentSection section;
+	private TournamentCategory category;
 
 	@Deprecated
-	private HibernateAnnouncementSubscription() {
+	private HibernateTournamentSubscription() {
 	}
 
-	HibernateAnnouncementSubscription(int tournament, long player, Language language, TournamentSection section) {
+	HibernateTournamentSubscription(int tournament, long player, Language language, TournamentCategory category) {
 		if (language == null) {
 			throw new NullPointerException("Language cant be null");
 		}
-		if (section == null) {
+		if (tournamentCategory == null) {
 			throw new NullPointerException("Section cant be null");
 		}
 		this.pk = new PK(tournament, player, language);
-		this.section = section;
+		this.tournamentCategory = category;
 	}
 
 	@Override
@@ -52,15 +52,15 @@ public class HibernateAnnouncementSubscription implements AnnouncementSubscripti
 	}
 
 	@Override
-	public TournamentSection getSection() {
-		return section;
+	public TournamentCategory getTournamentCategory() {
+		return category;
 	}
 
-	void setTournamentSection(TournamentSection section) {
-		if (section == null) {
+	void setTournamentSection(TournamentCategory category) {
+		if (tournamentCategory == null) {
 			throw new NullPointerException("Section cant be null");
 		}
-		this.section = section;
+		this.tournamentCategory = category;
 	}
 
 	PK getPk() {
@@ -70,16 +70,16 @@ public class HibernateAnnouncementSubscription implements AnnouncementSubscripti
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof HibernateAnnouncementSubscription)) return false;
+		if (!(o instanceof HibernateTournamentSubscription)) return false;
 
-		HibernateAnnouncementSubscription that = (HibernateAnnouncementSubscription) o;
-		return pk.equals(that.pk) && section == that.section;
+		HibernateTournamentSubscription that = (HibernateTournamentSubscription) o;
+		return pk.equals(that.pk) && category == that.tournamentCategory;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = pk.hashCode();
-		result = 31 * result + section.hashCode();
+		result = 31 * result + category.hashCode();
 		return result;
 	}
 
@@ -88,7 +88,7 @@ public class HibernateAnnouncementSubscription implements AnnouncementSubscripti
 		final StringBuilder sb = new StringBuilder();
 		sb.append("HibernateAnnouncementRequest");
 		sb.append("{pk=").append(pk);
-		sb.append(", section=").append(section);
+		sb.append(", section=").append(tournamentCategory);
 		sb.append('}');
 		return sb.toString();
 	}
