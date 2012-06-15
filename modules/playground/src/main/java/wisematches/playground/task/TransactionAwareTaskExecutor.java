@@ -1,4 +1,4 @@
-package wisematches.database.concurrent;
+package wisematches.playground.task;
 
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;

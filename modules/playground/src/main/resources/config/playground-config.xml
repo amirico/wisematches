@@ -44,8 +44,18 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="announcementManager"
-          class="wisematches.playground.tournament.impl.announcement.HibernateTournamentSubscriptionManager">
+    <bean id="tournamentManager"
+          class="wisematches.playground.tournament.impl.HibernateTournamentManager">
+        <property name="cronExpression" value="* * * ? * 2#1"/>
+
+        <property name="ratingManager" ref="ratingManager"/>
+
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <!--    <bean id="announcementManager"
+          class="wisematches.playground.tournament.impl.HibernateTournamentSubscriptionManager">
         <property name="ratingManager" ref="ratingManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="cronExpression" value="* * * ? * 2#1"/>
@@ -56,7 +66,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="transactionManager" ref="transactionManager"/>
         <property name="tournamentSubscriptionManager" ref="announcementManager"/>
-    </bean>
+    </bean>-->
 
     <!--
     <bean id="tournamentManager" class="wisematches.playground.tournament.r1.impl.hibernate.HibernateTournamentManager">

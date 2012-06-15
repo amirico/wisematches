@@ -44,6 +44,20 @@
         </property>
     </bean>
 
+    <bean id="tournamentsCountRestriction"
+          class="wisematches.playground.restriction.RestrictionDescription">
+        <property name="name" value="tournaments.count"/>
+        <property name="restrictions">
+            <map value-type="java.lang.Integer">
+                <entry key="GUEST" value="0"/>
+                <entry key="BASIC" value="1"/>
+                <entry key="SILVER" value="5"/>
+                <entry key="GOLD" value="30"/>
+                <entry key="PLATINUM" value="50"/>
+            </map>
+        </property>
+    </bean>
+
     <bean id="messagesCountRestriction"
           class="wisematches.playground.restriction.RestrictionDescription">
         <property name="name" value="messages.count"/>
@@ -93,6 +107,7 @@
                 <ref bean="activeGamesRestriction"/>
                 <ref bean="scribbleMemoryRestriction"/>
                 <ref bean="scribbleOpponentsRestriction"/>
+                <ref bean="tournamentsCountRestriction"/>
                 <ref bean="messagesCountRestriction"/>
                 <ref bean="messagesHistPrivateRestriction"/>
                 <ref bean="messagesHistNoticeRestriction"/>

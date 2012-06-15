@@ -17,7 +17,7 @@
         </property>
     </bean>
 
-    <bean id="notificationTaskExecutor" class="wisematches.database.concurrent.TransactionAwareTaskExecutor">
+    <bean id="notificationTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
         <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
                 <property name="poolSize" value="1"/>

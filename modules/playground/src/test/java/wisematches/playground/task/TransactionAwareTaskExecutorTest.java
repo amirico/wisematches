@@ -1,4 +1,4 @@
-package wisematches.database.concurrent;
+package wisematches.playground.task;
 
 import org.junit.Test;
 import org.springframework.core.task.SyncTaskExecutor;
