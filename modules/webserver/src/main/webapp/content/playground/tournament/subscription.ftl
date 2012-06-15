@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="playerRating" type="java.lang.Short" -->
 <#-- @ftlvariable name="subscription" type="wisematches.playground.tournament.TournamentSubscription" -->
-<#-- @ftlvariable name="announcement" type="wisematches.playground.tournament.Announcement" -->
+<#-- @ftlvariable name="announcement" type="wisematches.playground.tournament.TournamentAnnouncement" -->
 <#include "/core.ftl">
 
 <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
@@ -53,7 +53,7 @@
                 <td>
             <span>
                 <#if subscription??>
-                    <@message code="tournament.section.${subscription.sectionType.name()?lower_case}.label"/>
+                    <@message code="tournament.section.${subscription.section.name()?lower_case}.label"/>
                     (<@message code="language.${subscription.language.name()?lower_case}"/>)
                 <#else>
                     <@message code="tournament.section.none.description"/>

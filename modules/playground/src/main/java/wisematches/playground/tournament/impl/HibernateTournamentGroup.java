@@ -1,4 +1,4 @@
-package wisematches.playground.tournament.impl.tournament;
+package wisematches.playground.tournament.impl;
 
 import wisematches.playground.tournament.TournamentGroup;
 

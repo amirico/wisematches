@@ -2,22 +2,18 @@ package wisematches.playground.tournament.impl.tournament;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import wisematches.personality.Language;
-import wisematches.playground.tournament.TournamentGroupCtx;
-import wisematches.playground.tournament.TournamentSection;
-
-import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Ignore
 public class HibernateTournamentManagerTest {
-    public HibernateTournamentManagerTest() {
-    }
+	public HibernateTournamentManagerTest() {
+	}
 
-    @Test
-    public void testSearchManager() {
+	@Test
+	public void testSearchManager() {
+/*
         final HibernateTournamentManager m = new HibernateTournamentManager();
 
         TournamentSectionId context = TournamentSectionId.valueOf(0, Language.RU, TournamentSection.GRANDMASTER);
@@ -35,5 +31,6 @@ public class HibernateTournamentManagerTest {
 //        final List<TournamentEntity<TournamentEntityId>> tournamentEntities = m.searchEntities(null, TournamentSectionId.valueOf(1, Language.EN, TournamentSection.ADVANCED), null, null, null);
 
 //		List<TournamentRound> list = m.searchEntities(null, context, null, null, null);
-    }
+*/
+	}
 }
