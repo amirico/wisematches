@@ -11,9 +11,11 @@ import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.RatingManager;
 import wisematches.playground.search.SearchFilter;
+import wisematches.playground.task.AssuredTaskExecutor;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tournament.*;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +33,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	private RatingManager ratingManager;
 
 	private TournamentAnnouncementImpl tournamentAnnouncement;
+	private AssuredTaskExecutor<Serializable, Serializable> assuredTaskExecutor;
 
 	private final Lock tournamentLock = new ReentrantLock();
 	private final Lock subscriptionLock = new ReentrantLock();
@@ -81,8 +84,6 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void afterPropertiesSet() throws Exception {
-		// TODO: init new transaction here???
-
 		subscriptionLock.lock();
 		try {
 			tournamentAnnouncement = loadAnnouncement();
@@ -252,9 +253,9 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 
 	protected abstract TournamentSubscription loadSubscription(int tournament, Player player, Language language);
 
-	protected abstract TournamentSubscription saveSubscription(int tournament, Player player, Language language, TournamentSection section);
-
 	protected abstract TournamentSubscription deleteSubscription(int tournament, Player player, Language language);
+
+	protected abstract TournamentSubscription saveSubscription(int tournament, Player player, Language language, TournamentSection section);
 
 
 	private void fireTournamentStateChanged(Tournament tournament, TournamentState state) {
@@ -354,5 +355,9 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 
 	public void setRatingManager(RatingManager ratingManager) {
 		this.ratingManager = ratingManager;
+	}
+
+	public void setAssuredTaskExecutor(AssuredTaskExecutor<Serializable, Serializable> assuredTaskExecutor) {
+		this.assuredTaskExecutor = assuredTaskExecutor;
 	}
 }

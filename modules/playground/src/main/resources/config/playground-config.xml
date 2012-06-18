@@ -44,50 +44,36 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
     <bean id="tournamentManager"
           class="wisematches.playground.tournament.impl.HibernateTournamentManager">
+        <!-- every first monday -->
         <property name="cronExpression" value="* * * ? * 2#1"/>
 
         <property name="ratingManager" ref="ratingManager"/>
 
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="transactionManager" ref="transactionManager"/>
+        <property name="assuredTaskExecutor">
+            <bean class="wisematches.playground.task.assured.FileAssuredTaskExecutor">
+                <property name="fileStorage" value=""/>
+                <property name="executor" ref="tournamentTaskExecutor"/>
+            </bean>
+        </property>
     </bean>
 
-    <!--    <bean id="announcementManager"
-          class="wisematches.playground.tournament.impl.HibernateTournamentSubscriptionManager">
-        <property name="ratingManager" ref="ratingManager"/>
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="cronExpression" value="* * * ? * 2#1"/>
-        <property name="transactionManager" ref="transactionManager"/>
-    </bean>
 
-    <bean id="tournamentActivator" class="wisematches.playground.tournament.impl.TournamentActivator">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="tournamentSubscriptionManager" ref="announcementManager"/>
-    </bean>-->
-
-    <!--
-    <bean id="tournamentManager" class="wisematches.playground.tournament.r1.impl.hibernate.HibernateTournamentManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
+    <bean id="tournamentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     </bean>
-
-    <bean id="tournamentTicketManager"
-          class="wisematches.playground.tournament.r1.impl.hibernate.HibernateTournamentTicketManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="transactionTemplate" ref="transactionRequiresNew"/>
-        <property name="ratingManager" ref="ratingManager"/>
-    </bean>
-
-    <bean id="tournamentActivator"
-          class="wisematches.playground.tournament.r1.impl.TournamentActivator"
-          init-method="startTournament">
-        <property name="cronExpression" value="* * * ? * 2#1"/>
-        <property name="ticketManager" ref="tournamentTicketManager"/>
-        <property name="tournamentManager" ref="tournamentManager"/>
-    </bean>
--->
 
     <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="cronExpression" value="0 0 2 * * ?"/>
@@ -101,25 +87,11 @@
         </property>
     </bean>
 
-    <!--
-    <bean id="tournamentActivationTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="cronExpression" value="0 30 2 * * ?"/>
-        &lt;!&ndash; run every morning at 2:30 AM &ndash;&gt;
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-                <property name="targetObject" ref="tournamentActivator"/>
-                <property name="targetMethod" value="startTournament"/>
-                <property name="concurrent" value="false"/>
-            </bean>
-        </property>
-    </bean>
--->
-
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
+                <ref bean="tournamentTrigger"/>
                 <ref bean="messagesCleanerTrigger"/>
-                <!--<ref bean="tournamentActivationTrigger"/>-->
             </list>
         </property>
     </bean>
