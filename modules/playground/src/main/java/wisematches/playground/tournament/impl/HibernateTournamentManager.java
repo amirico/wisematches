@@ -5,7 +5,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.transaction.PlatformTransactionManager;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.playground.tournament.Tournament;
@@ -20,7 +19,6 @@ import java.util.List;
  */
 public class HibernateTournamentManager extends AbstractTournamentManager {
 	private SessionFactory sessionFactory;
-	private PlatformTransactionManager transactionManager;
 
 	public HibernateTournamentManager() {
 	}
@@ -81,11 +79,8 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 		return subscription;
 	}
 
+
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-	}
-
-	public void setTransactionManager(PlatformTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
 	}
 }
