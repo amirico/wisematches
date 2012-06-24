@@ -29,7 +29,7 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	private HibernateTournamentGroup() {
 	}
 
-	HibernateTournamentGroup(int tournament, int round, int number) {
+	HibernateTournamentGroup(int tournament, int round, long[] players) {
 		pk = new PK(tournament, round, number);
 	}
 
@@ -67,8 +67,10 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	static final class PK implements Serializable {
 		@Column(name = "tournament")
 		private int tournament;
+
 		@Column(name = "round")
 		private int round;
+
 		@Column(name = "number")
 		private int number;
 
