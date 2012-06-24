@@ -1,5 +1,7 @@
 package wisematches.playground.tournament.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.annotation.Propagation;
@@ -9,9 +11,10 @@ import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
-import wisematches.playground.RatingManager;
+import wisematches.playground.*;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.task.AssuredTaskExecutor;
+import wisematches.playground.task.AssuredTaskProcessor;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tournament.*;
 
@@ -30,17 +33,24 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class AbstractTournamentManager implements TournamentManager, BreakingDayListener, InitializingBean {
 	private CronExpression cronExpression;
 	private TimeZone timeZone = TimeZone.getTimeZone("GMT");
+
+	private BoardManager boardManager;
 	private RatingManager ratingManager;
 
 	private TournamentAnnouncementImpl tournamentAnnouncement;
-	private AssuredTaskExecutor<Serializable, Serializable> assuredTaskExecutor;
+	private AssuredTaskExecutor<String, Serializable> assuredTaskExecutor;
 
 	private final Lock tournamentLock = new ReentrantLock();
 	private final Lock subscriptionLock = new ReentrantLock();
 
+	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
+	private final TheAssuredTaskProcessor assuredTaskProcessor = new TheAssuredTaskProcessor();
+
 	private final Collection<TournamentStateListener> stateListeners = new CopyOnWriteArraySet<TournamentStateListener>();
 	private final Collection<TournamentProgressListener> progressListeners = new CopyOnWriteArraySet<TournamentProgressListener>();
 	private final Collection<TournamentSubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TournamentSubscriptionListener>();
+
+	private static final Log log = LogFactory.getLog("wisematches.server.tournament");
 
 	protected AbstractTournamentManager() {
 	}
@@ -91,6 +101,8 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 				tournamentAnnouncement = createAnnouncement(getNextTournamentDate());
 				fireTournamentStateChanged(tournamentAnnouncement, TournamentState.SCHEDULED);
 			}
+
+			assuredTaskExecutor.registerProcessor("tournament", assuredTaskProcessor);
 		} finally {
 			subscriptionLock.unlock();
 		}
@@ -168,12 +180,11 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 		}
 	}
 
-
 	@Override
 	public Tournament getTournament(int number) {
 		tournamentLock.lock();
 		try {
-			throw new UnsupportedOperationException("TODO: Not implemented");
+			return loadTournament(number);
 		} finally {
 			tournamentLock.unlock();
 		}
@@ -183,7 +194,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	public TournamentRound getTournamentRound(int tournament, Language language, TournamentSection section, int round) {
 		tournamentLock.lock();
 		try {
-			throw new UnsupportedOperationException("TODO: Not implemented");
+			return loadTournamentRound(tournament, language, section, round);
 		} finally {
 			tournamentLock.unlock();
 		}
@@ -193,7 +204,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	public TournamentGroup getTournamentGroup(int tournament, Language language, TournamentSection section, int round, int group) {
 		tournamentLock.lock();
 		try {
-			throw new UnsupportedOperationException("TODO: Not implemented");
+			return loadTournamentGroup(tournament, language, section, round);
 		} finally {
 			tournamentLock.unlock();
 		}
@@ -229,21 +240,32 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 		}
 	}
 
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void breakingDayTime(Date midnight) {
+	private void initiateTournament(int number) {
 		tournamentLock.lock();
 		subscriptionLock.lock();
 		try {
-			// TODO: start new tournament here
-			if (cronExpression.isSatisfiedBy(midnight)) { // but it's time for new one
+			log.info("Initiate new tournament");
 
-			} else {
-
+			if (tournamentAnnouncement.getNumber() == number) {
 			}
+
+
+			TournamentInitializer.createTournamentGroups(loadSubscriptions(number, false));
 		} finally {
 			subscriptionLock.unlock();
 			tournamentLock.unlock();
+		}
+	}
+
+	@Override
+	public void breakingDayTime(Date midnight) {
+		if (cronExpression.isSatisfiedBy(midnight)) {
+			subscriptionLock.lock();
+			try {
+				assuredTaskExecutor.execute("tournament", "initiateTournament", tournamentAnnouncement.getNumber());
+			} finally {
+				subscriptionLock.unlock();
+			}
 		}
 	}
 
@@ -251,11 +273,21 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 
 	protected abstract TournamentAnnouncementImpl createAnnouncement(Date scheduledDate);
 
+	protected abstract Collection<TournamentSubscription> loadSubscriptions(int tournament, boolean withProcessed);
+
+
 	protected abstract TournamentSubscription loadSubscription(int tournament, Player player, Language language);
 
 	protected abstract TournamentSubscription deleteSubscription(int tournament, Player player, Language language);
 
 	protected abstract TournamentSubscription saveSubscription(int tournament, Player player, Language language, TournamentSection section);
+
+
+	protected abstract Tournament loadTournament(int number);
+
+	protected abstract TournamentRound loadTournamentRound(int tournament, Language language, TournamentSection section, int round);
+
+	protected abstract TournamentGroup loadTournamentGroup(int tournament, Language language, TournamentSection section, int round);
 
 
 	private void fireTournamentStateChanged(Tournament tournament, TournamentState state) {
@@ -353,11 +385,53 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 		}
 	}
 
+	public void setBoardManager(BoardManager boardManager) {
+		if (this.boardManager != null) {
+			this.boardManager.removeBoardStateListener(boardStateListener);
+		}
+
+		this.boardManager = boardManager;
+
+		if (this.boardManager != null) {
+			this.boardManager.addBoardStateListener(boardStateListener);
+		}
+	}
+
 	public void setRatingManager(RatingManager ratingManager) {
 		this.ratingManager = ratingManager;
 	}
 
-	public void setAssuredTaskExecutor(AssuredTaskExecutor<Serializable, Serializable> assuredTaskExecutor) {
+	public void setAssuredTaskExecutor(AssuredTaskExecutor<String, Serializable> assuredTaskExecutor) {
 		this.assuredTaskExecutor = assuredTaskExecutor;
+	}
+
+	private final class TheBoardStateListener implements BoardStateListener {
+		private TheBoardStateListener() {
+		}
+
+		@Override
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		}
+
+		@Override
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		}
+
+		@Override
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+			assuredTaskExecutor.execute("tournament", "gameFinished", board.getBoardId());
+		}
+	}
+
+	private final class TheAssuredTaskProcessor implements AssuredTaskProcessor<String, Serializable> {
+		private TheAssuredTaskProcessor() {
+		}
+
+		@Override
+		public void processAssuredTask(String taskId, Serializable taskContext) {
+			if ("initiateTournament".equals(taskId)) {
+				initiateTournament((Integer) taskContext);
+			}
+		}
 	}
 }

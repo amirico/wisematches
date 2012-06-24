@@ -7,10 +7,9 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
-import wisematches.playground.tournament.Tournament;
-import wisematches.playground.tournament.TournamentSection;
-import wisematches.playground.tournament.TournamentSubscription;
+import wisematches.playground.tournament.*;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +57,11 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 	}
 
 	@Override
+	protected Collection<TournamentSubscription> loadSubscriptions(int tournament, boolean withProcessed) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
 	protected TournamentSubscription loadSubscription(int tournament, Player player, Language language) {
 		final HibernateTournamentSubscription.PK PK = new HibernateTournamentSubscription.PK(tournament, player, language);
 		return (TournamentSubscription) sessionFactory.getCurrentSession().get(HibernateTournamentSubscription.class, PK);
@@ -68,6 +72,21 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 		HibernateTournamentSubscription subscription = new HibernateTournamentSubscription(tournament, player.getId(), language, section);
 		sessionFactory.getCurrentSession().save(subscription);
 		return subscription;
+	}
+
+	@Override
+	protected Tournament loadTournament(int number) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected TournamentRound loadTournamentRound(int tournament, Language language, TournamentSection section, int round) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected TournamentGroup loadTournamentGroup(int tournament, Language language, TournamentSection section, int round) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
