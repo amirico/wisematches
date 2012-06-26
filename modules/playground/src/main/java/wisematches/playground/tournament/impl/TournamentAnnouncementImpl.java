@@ -12,22 +12,35 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class TournamentAnnouncementImpl implements TournamentAnnouncement {
-	private Tournament tournament;
+	private int number;
+	private Date scheduledDate;
 
 	private final int[][] values = new int[Language.values().length][TournamentSection.values().length];
 
 	public TournamentAnnouncementImpl(Tournament tournament) {
-		this.tournament = tournament;
+		this.number = tournament.getNumber();
+		this.scheduledDate = tournament.getScheduledDate();
+	}
+
+	public TournamentAnnouncementImpl(TournamentAnnouncement announcement) {
+		this.number = announcement.getNumber();
+		this.scheduledDate = announcement.getScheduledDate();
+
+		for (Language language : Language.values()) {
+			for (TournamentSection section : TournamentSection.values()) {
+				setBoughtTickets(language, section, announcement.getBoughtTickets(language, section));
+			}
+		}
 	}
 
 	@Override
 	public int getNumber() {
-		return tournament.getNumber();
+		return number;
 	}
 
 	@Override
 	public Date getScheduledDate() {
-		return tournament.getScheduledDate();
+		return scheduledDate;
 	}
 
 	@Override

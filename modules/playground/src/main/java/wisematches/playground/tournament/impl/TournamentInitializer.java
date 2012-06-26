@@ -56,7 +56,7 @@ final class TournamentInitializer {
 
 		final Collection<TournamentGroup> res = new ArrayList<TournamentGroup>();
 		for (Map.Entry<TournamentSection, Collection<Long>> entry : groups.entrySet()) {
-			TournamentGroup group = new HibernateTournamentGroup(tournament, round, );
+//			TournamentGroup group = new HibernateTournamentGroup(tournament, round, );
 		}
 		return res;
 	}

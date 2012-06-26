@@ -13,6 +13,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.fail;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -56,35 +57,20 @@ public class FileAssuredTaskExecutorTest {
 			replay(tp1);
 
 			final AssuredTaskProcessor tp2 = createStrictMock(AssuredTaskProcessor.class);
-			tp2.processAssuredTask("mock2", "c2");
-			expectLastCall().andAnswer(new IAnswer<Object>() {
-				@Override
-				public Object answer() throws Throwable {
-					lock.lock();
-					try {
-						condition.await();
-					} catch (InterruptedException ex) {
-						throw new IllegalStateException("ex");
-					} finally {
-						lock.unlock();
-					}
-					return null;
-				}
-			});
-			tp2.processAssuredTask("mock2", "c2");
 			replay(tp2);
 
-			taskExecutor.registerProcessor("mock1", tp1);
-			taskExecutor.registerProcessor("mock2", tp2);
+			taskExecutor.registerProcessor(tp1);
+			try {
+				taskExecutor.registerProcessor(tp2);
+				fail("Exception must be here");
+			} catch (IllegalStateException ignore) {
+			}
 
-			taskExecutor.execute("mock1", "mock1", "c1");
-			taskExecutor.execute("mock2", "mock2", "c2");
-
+			taskExecutor.execute("mock1", "c1");
 			Thread.sleep(200);
 
 			taskExecutor.destroy();
 			executor.shutdownNow();
-
 			Thread.sleep(200);
 
 			final ThreadPoolExecutor executor2 = new ThreadPoolExecutor(2, 2, 1000000, TimeUnit.DAYS, new ArrayBlockingQueue<Runnable>(100));
@@ -93,8 +79,7 @@ public class FileAssuredTaskExecutorTest {
 			taskExecutor2.setFileStorage(wm);
 			taskExecutor2.afterPropertiesSet();
 
-			taskExecutor2.registerProcessor("mock1", tp1);
-			taskExecutor2.registerProcessor("mock2", tp2);
+			taskExecutor2.registerProcessor(tp1);
 
 			Thread.sleep(200);
 

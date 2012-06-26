@@ -30,7 +30,7 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	}
 
 	HibernateTournamentGroup(int tournament, int round, long[] players) {
-		pk = new PK(tournament, round, number);
+		pk = new PK(tournament, round, 1);
 	}
 
 	@Override
