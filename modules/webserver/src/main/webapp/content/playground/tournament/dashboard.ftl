@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="requests" type="wisematches.playground.tournament.TournamentSubscription[]"-->
-<#-- @ftlvariable name="announcement" type="wisematches.playground.tournament.TournamentAnnouncement" -->
+<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.TournamentAnnouncement" -->
 <#include "/core.ftl">
 
 <style type="text/css">
@@ -28,8 +28,8 @@
 
     <@wm.dtToolbar>
     <div style="float: left;">
-        <a href="/playground/tournament/subscription?a=${announcement.number}">
-            Subscribe to ${announcement.number}st WiseMatches Tournament
+        <a href="/playground/tournament/subscription?a=${tournament.number}">
+            Subscribe to ${tournament.number}st WiseMatches Tournament
         </a>
     </div>
     <div>
@@ -60,10 +60,10 @@
     </@wm.dtContent>
 
     <@wm.dtFooter>
-    The ${announcement.number}th WiseMatches
-    Tournament is going to be started on ${gameMessageSource.formatDate(announcement.scheduledDate, locale)}
+    The ${tournament.number}th WiseMatches
+    Tournament is going to be started on ${gameMessageSource.formatDate(tournament.scheduledDate, locale)}
         <#if !requests?? || requests?size == 0>
-        You are <a href="/playground/tournament/subscription?a=${announcement.number}">not subscribed</a> to the
+        You are <a href="/playground/tournament/subscription?a=${tournament.number}">not subscribed</a> to the
         tournament.
         <#else>
             <#assign request=requests[0]/>

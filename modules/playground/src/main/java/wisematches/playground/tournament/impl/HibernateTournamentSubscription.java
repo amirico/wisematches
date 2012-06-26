@@ -13,13 +13,15 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "tournament_subscription")
-public class HibernateTournamentSubscription implements TournamentSubscription {
+public class HibernateTournamentSubscription implements TournamentSubscription, Serializable {
 	@EmbeddedId
 	private PK pk;
 
 	@Column(name = "section")
 	@Enumerated(EnumType.ORDINAL)
 	private TournamentSection section;
+
+	private static final long serialVersionUID = -4513139952040944066L;
 
 	@Deprecated
 	private HibernateTournamentSubscription() {
@@ -43,7 +45,7 @@ public class HibernateTournamentSubscription implements TournamentSubscription {
 
 	@Override
 	public int getTournament() {
-		return pk.getAnnouncement();
+		return pk.getTournament();
 	}
 
 	@Override
@@ -95,8 +97,8 @@ public class HibernateTournamentSubscription implements TournamentSubscription {
 
 	@Embeddable
 	static final class PK implements Serializable {
-		@Column(name = "announcement")
-		private int announcement;
+		@Column(name = "tournament")
+		private int tournament;
 
 		@Column(name = "player")
 		private long player;
@@ -108,18 +110,18 @@ public class HibernateTournamentSubscription implements TournamentSubscription {
 		private PK() {
 		}
 
-		public PK(int announcement, Player player, Language language) {
-			this(announcement, player.getId(), language);
+		public PK(int tournament, Player player, Language language) {
+			this(tournament, player.getId(), language);
 		}
 
-		public PK(int announcement, long player, Language language) {
-			this.announcement = announcement;
+		public PK(int tournament, long player, Language language) {
+			this.tournament = tournament;
 			this.player = player;
 			this.language = language;
 		}
 
-		public int getAnnouncement() {
-			return announcement;
+		public int getTournament() {
+			return tournament;
 		}
 
 		public long getPlayer() {
@@ -136,12 +138,12 @@ public class HibernateTournamentSubscription implements TournamentSubscription {
 			if (o == null || getClass() != o.getClass()) return false;
 
 			PK PK = (PK) o;
-			return announcement == PK.announcement && player == PK.player && language == PK.language;
+			return tournament == PK.tournament && player == PK.player && language == PK.language;
 		}
 
 		@Override
 		public int hashCode() {
-			int result = announcement;
+			int result = tournament;
 			result = 31 * result + (int) (player ^ (player >>> 32));
 			result = 31 * result + language.hashCode();
 			return result;
@@ -151,7 +153,7 @@ public class HibernateTournamentSubscription implements TournamentSubscription {
 		public String toString() {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("PK");
-			sb.append("{announcement=").append(announcement);
+			sb.append("{tournament=").append(tournament);
 			sb.append(", player=").append(player);
 			sb.append(", language=").append(language);
 			sb.append('}');

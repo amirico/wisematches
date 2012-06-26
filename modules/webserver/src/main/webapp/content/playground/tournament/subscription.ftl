@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="playerRating" type="java.lang.Short" -->
 <#-- @ftlvariable name="subscription" type="wisematches.playground.tournament.TournamentSubscription" -->
-<#-- @ftlvariable name="announcement" type="wisematches.playground.tournament.TournamentAnnouncement" -->
+<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.TournamentAnnouncement" -->
 <#include "/core.ftl">
 
 <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
@@ -10,7 +10,7 @@
 <@wm.playground id="tournament">
     <@wm.dtHeader align="right">
     <div style="float: left;">
-        <@message code="game.menu.tournaments.label"/> > <@message code="tournament.announcement.label"/>
+        <@message code="game.menu.tournaments.label"/> > <@message code="tournament.tournament.label"/>
     </div>
     <div>
         <a href="/info/tournament"><@message code="tournament.rules.label"/></a>
@@ -20,7 +20,7 @@
     <@wm.dtToolbar align="left">
     <div class="info-header">
         <div class="info-label">
-            <@wm.tournament number=announcement.number short=false/>
+            <@wm.tournament number=tournament.number short=false/>
         </div>
     </div>
     </@wm.dtToolbar>
@@ -30,16 +30,16 @@
         <table class="tournament-subscribe">
             <tr>
                 <td>
-                    <label class="static"><@message code="tournament.announcement.start.label"/>:</label>
+                    <label class="static"><@message code="tournament.tournament.start.label"/>:</label>
                 </td>
                 <td>
-                    <span>${gameMessageSource.formatDate(announcement.scheduledDate, locale)}</span>
+                    <span>${gameMessageSource.formatDate(tournament.scheduledDate, locale)}</span>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <label class="static"><@message code="tournament.announcement.rating.label"/>:</label>
+                    <label class="static"><@message code="tournament.tournament.rating.label"/>:</label>
                 </td>
                 <td>
                     <span>${playerRating}</span>
@@ -48,7 +48,7 @@
 
             <tr>
                 <td>
-                    <label class="static"><@message code="tournament.announcement.subscription.label"/>:</label>
+                    <label class="static"><@message code="tournament.tournament.subscription.label"/>:</label>
                 </td>
                 <td>
             <span>
@@ -68,7 +68,7 @@
         <table class="tournament-subscribe" width="100%">
             <tr>
                 <td valign="top">
-                    <label for="language"><@message code="tournament.announcement.language.label"/>:</label>
+                    <label for="language"><@message code="tournament.tournament.language.label"/>:</label>
                 </td>
                 <td>
                     <#assign language=languages[0]/>
@@ -83,13 +83,13 @@
                         </select>
                     </@wm.field>
 
-                    <div class="sample"><@message code="tournament.announcement.language.description"/></div>
+                    <div class="sample"><@message code="tournament.tournament.language.description"/></div>
                 </td>
             </tr>
             <tr>
                 <td valign="top">
                 <#--@declare id="tournamentCategory"-->
-                    <label for="section"><@message code="tournament.announcement.section.label"/>:</label>
+                    <label for="section"><@message code="tournament.tournament.section.label"/>:</label>
                 </td>
                 <td width="100%">
                     <table class="tournament-sections">
@@ -121,7 +121,7 @@
                                     </td>
                                     <td>
                                         <div id="sectionFullness${name}">
-                                            (${announcement.getBoughtTickets(language, s)})
+                                            (${tournament.getBoughtTickets(language, s)})
                                         </div>
                                     </td>
                                 </tr>
@@ -149,12 +149,12 @@
     </@wm.dtContent>
 
     <@wm.dtStatusbar align="left">
-        <input type="hidden" name="announcement" value="${announcement.number}">
+        <input type="hidden" name="tournament" value="${tournament.number}">
         <button onclick="tournament.subscribe(); return false;"><@message code="tournament.subscribe.label"/></button>
     </@wm.dtStatusbar>
 </form>
 
-    <@wm.dtFooter><@message code="tournament.announcement.description"/></@wm.dtFooter>
+    <@wm.dtFooter><@message code="tournament.tournament.description"/></@wm.dtFooter>
 </@wm.playground>
 
 <script type="text/javascript">
@@ -162,7 +162,7 @@
     <#list languages as l>
         '${l.code()?lower_case}':{
         <#list sections as s>
-        ${s.name()}: ${announcement.getBoughtTickets(l, s)}
+        ${s.name()}: ${tournament.getBoughtTickets(l, s)}
             <#if s_has_next>,</#if>
         </#list>
     }<#if l_has_next>,</#if>

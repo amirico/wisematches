@@ -10,7 +10,10 @@ import wisematches.playground.task.AssuredTaskProcessor;
 import java.io.*;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,11 +24,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializable> implements AssuredTaskExecutor<T, C>, InitializingBean, DisposableBean {
 	private Executor executor;
 	private FileChannel assuredStorage;
+	private AssuredTaskProcessor<T, C> taskProcessor;
 
 	private final Lock lock = new ReentrantLock();
 
 	private final List<AssuredTask> tasksQueue = new LinkedList<AssuredTask>();
-	private final Map<String, AssuredTaskProcessor<T, C>> processorMap = new HashMap<String, AssuredTaskProcessor<T, C>>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.core.task");
 
@@ -39,10 +42,8 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 			tasksQueue.clear();
 			tasksQueue.addAll(loadTasks());
 
-			log.debug("Load tasks from disk: " + tasksQueue.size());
-			for (String s : processorMap.keySet()) {
-				activateTasks(s);
-			}
+			log.debug("Loaded tasks from disk: " + tasksQueue.size());
+			activateTasks();
 		} finally {
 			lock.unlock();
 		}
@@ -52,11 +53,8 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 	public void destroy() throws Exception {
 		lock.lock();
 		try {
-			log.debug("Destroy tasks: " + tasksQueue.size());
-
-			for (String s : processorMap.keySet()) {
-				deactivateTasks(s);
-			}
+			log.debug("Destroy task executor. Tasks in queue: " + tasksQueue.size());
+			deactivateTasks();
 			persistTasks();
 			tasksQueue.clear();
 		} finally {
@@ -65,39 +63,38 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 	}
 
 	@Override
-	public void registerProcessor(String name, AssuredTaskProcessor<T, C> processor) {
+	public void registerProcessor(AssuredTaskProcessor<T, C> processor) {
 		lock.lock();
 		try {
-			final AssuredTaskProcessor<T, C> v = processorMap.get(name);
-			if (v != null) {
-				throw new IllegalArgumentException("Processor with that name already registered: " + name + " [" + v + "]");
+			if (this.taskProcessor != null) {
+				throw new IllegalStateException("Processor already registered");
 			}
-			log.debug("Register processor: " + name + "[" + processor + "]");
-			processorMap.put(name, processor);
-			activateTasks(name);
+			log.debug("Register taskProcessor: " + processor);
+			this.taskProcessor = processor;
+			activateTasks();
 		} finally {
 			lock.unlock();
 		}
 	}
 
 	@Override
-	public void unregisterProcessor(String name, AssuredTaskProcessor<T, C> processor) {
+	public void unregisterProcessor(AssuredTaskProcessor<T, C> processor) {
 		lock.lock();
 		try {
-			log.debug("Unregister processor: " + name + "[" + processor + "]");
-			deactivateTasks(name);
-			processorMap.remove(name);
+			log.debug("Unregister taskProcessor: " + processor);
+			deactivateTasks();
+			this.taskProcessor = null;
 		} finally {
 			lock.unlock();
 		}
 	}
 
 	@Override
-	public void execute(String processor, T taskId, C taskContext) {
+	public void execute(T taskId, C taskContext) {
 		final AssuredTask e;
 		lock.lock();
 		try {
-			e = new AssuredTask(processor, taskId, taskContext);
+			e = new AssuredTask(taskId, taskContext);
 			e.setAssuredTaskExecutor(this);
 			saveTask(e);
 		} finally {
@@ -111,20 +108,18 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 		try {
 			log.debug("Execute task: " + task);
 
-			final AssuredTaskProcessor<T, C> taskProcessor;
 			lock.lock();
 			try {
 				if (task.isCancelled()) {
 					log.debug("Task " + task + " is cancelled.");
 					return;
 				}
-				taskProcessor = processorMap.get(task.processor);
 			} finally {
 				lock.unlock();
 			}
 
 			if (taskProcessor != null) {
-				log.debug("Process task in processor: " + task.processor + "[" + taskProcessor + "]");
+				log.debug("Process task: " + task.taskId);
 				taskProcessor.processAssuredTask((T) task.taskId, (C) task.taskContext);
 
 				lock.lock();
@@ -164,22 +159,18 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 	}
 
 	@SuppressWarnings("unchecked")
-	private void activateTasks(String name) {
-		log.debug("Activate tasks for processor: " + name);
+	private void activateTasks() {
+		log.debug("Activate tasks");
 		for (AssuredTask assuredTask : tasksQueue) {
-			if (assuredTask.processor.equals(name)) {
-				assuredTask.cancel(false);
-				executor.execute(assuredTask);
-			}
+			assuredTask.cancel(false);
+			executor.execute(assuredTask);
 		}
 	}
 
-	private void deactivateTasks(String name) {
-		log.debug("Deactivate tasks for processor: " + name);
+	private void deactivateTasks() {
+		log.debug("Deactivate tasks");
 		for (AssuredTask assuredTask : tasksQueue) {
-			if (assuredTask.processor.equals(name)) {
-				assuredTask.cancel(true);
-			}
+			assuredTask.cancel(true);
 		}
 	}
 
@@ -229,15 +220,13 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 	}
 
 	private static final class AssuredTask implements Runnable, Serializable {
-		private final String processor;
 		private final Serializable taskId;
 		private final Serializable taskContext;
 
 		private transient boolean cancelled;
 		private transient FileAssuredTaskExecutor assuredTaskExecutor;
 
-		private AssuredTask(String processor, Serializable taskId, Serializable taskContext) {
-			this.processor = processor;
+		private AssuredTask(Serializable taskId, Serializable taskContext) {
 			this.taskId = taskId;
 			this.taskContext = taskContext;
 		}
@@ -263,8 +252,7 @@ public class FileAssuredTaskExecutor<T extends Serializable, C extends Serializa
 		public String toString() {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("AssuredTask");
-			sb.append("{processor='").append(processor).append('\'');
-			sb.append(", taskId=").append(taskId);
+			sb.append("{taskId=").append(taskId);
 			sb.append(", taskContext=").append(taskContext);
 			sb.append('}');
 			return sb.toString();

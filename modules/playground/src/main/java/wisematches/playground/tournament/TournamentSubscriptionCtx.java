@@ -6,25 +6,27 @@ import wisematches.personality.Language;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class TournamentSubscriptionCtx implements TournamentEntityCtx<TournamentSubscription> {
-    private final int tournament;
-    private final Language language;
-    private final TournamentSection section;
+	private final int tournament;
+	private final Language language;
+	private final TournamentSection section;
 
-    public TournamentSubscriptionCtx(int tournament, Language language, TournamentSection section) {
-        this.tournament = tournament;
-        this.language = language;
-        this.section = section;
-    }
+	private static final long serialVersionUID = -8323226614956980765L;
 
-    public int getTournament() {
-        return tournament;
-    }
+	public TournamentSubscriptionCtx(int tournament, Language language, TournamentSection section) {
+		this.tournament = tournament;
+		this.language = language;
+		this.section = section;
+	}
 
-    public Language getLanguage() {
-        return language;
-    }
+	public int getTournament() {
+		return tournament;
+	}
 
-    public TournamentSection getSection() {
-        return section;
-    }
+	public Language getLanguage() {
+		return language;
+	}
+
+	public TournamentSection getSection() {
+		return section;
+	}
 }
