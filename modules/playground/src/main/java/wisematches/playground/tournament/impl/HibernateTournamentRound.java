@@ -35,12 +35,12 @@ public class HibernateTournamentRound implements TournamentRound {
 	}
 
 	@Override
-	public Date getStartDate() {
+	public Date getStartedDate() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public Date getFinishDate() {
+	public Date getFinishedDate() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 

@@ -14,7 +14,11 @@ public class TournamentGroupCtx implements TournamentEntityCtx<TournamentGroup> 
 
 	private static final long serialVersionUID = -5812555809951477121L;
 
-	public TournamentGroupCtx(int tournament, Language language, TournamentSection section, int round, int group) {
+	public TournamentGroupCtx(TournamentGroup group) {
+		this(group.getTournament(), group.getRound(), group.getGroup(), group.getLanguage(), group.getSection());
+	}
+
+	public TournamentGroupCtx(int tournament, int round, int group, Language language, TournamentSection section) {
 		this.tournament = tournament;
 		this.language = language;
 		this.section = section;
@@ -26,19 +30,19 @@ public class TournamentGroupCtx implements TournamentEntityCtx<TournamentGroup> 
 		return tournament;
 	}
 
-	public Language getLanguage() {
-		return language;
-	}
-
-	public TournamentSection getSection() {
-		return section;
-	}
-
 	public int getRound() {
 		return round;
 	}
 
 	public int getGroup() {
 		return group;
+	}
+
+	public Language getLanguage() {
+		return language;
+	}
+
+	public TournamentSection getSection() {
+		return section;
 	}
 }
