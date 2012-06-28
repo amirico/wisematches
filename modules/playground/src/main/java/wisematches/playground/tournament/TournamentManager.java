@@ -5,6 +5,8 @@ import wisematches.personality.player.Player;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.search.SearchManager;
 
+import java.util.Collection;
+
 /**
  * {@code TournamentManager} provides access to active tournaments/round and group.
  * <p/>
@@ -74,6 +76,16 @@ public interface TournamentManager extends SearchManager<TournamentEntity, Tourn
 	 * @throws WrongTournamentException if specified announcement doesn't equals to specified.
 	 */
 	TournamentSubscription getSubscription(int tournament, Player player, Language language) throws WrongTournamentException;
+
+	/**
+	 * Returns collection of all subscriptions for specified player.
+	 *
+	 * @param tournament the tournament to be checked
+	 * @param player     the player who's subscriptions should be returned.
+	 * @return collection of all active subscriptions
+	 * @throws WrongTournamentException if specified announcement doesn't equals to specified.
+	 */
+	Collection<TournamentSubscription> getSubscriptions(int tournament, Player player) throws WrongTournamentException;
 
 
 	/**

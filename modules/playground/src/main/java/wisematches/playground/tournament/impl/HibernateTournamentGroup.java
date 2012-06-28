@@ -1,9 +1,12 @@
 package wisematches.playground.tournament.impl;
 
+import wisematches.personality.Language;
 import wisematches.playground.tournament.TournamentGroup;
+import wisematches.playground.tournament.TournamentSection;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -39,12 +42,32 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	}
 
 	@Override
+	public Language getLanguage() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	public TournamentSection getSection() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	public Date getStartedDate() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	public Date getFinishedDate() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
 	public int getRound() {
 		return pk.round;
 	}
 
 	@Override
-	public int getNumber() {
+	public int getGroup() {
 		return pk.number;
 	}
 
@@ -54,8 +77,13 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	}
 
 	@Override
-	public int[] getPoints() {
-		return null;
+	public short[] getPoints() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	public boolean isFinished() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override

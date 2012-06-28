@@ -5,8 +5,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import wisematches.database.Orders;
+import wisematches.database.Range;
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
+import wisematches.playground.search.SearchFilter;
 import wisematches.playground.tournament.*;
 
 import java.util.Collection;
@@ -50,14 +54,37 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 	}
 
 	@Override
-	protected TournamentAnnouncementImpl createAnnouncement(Date scheduledDate) {
-		final HibernateTournament tournament = new HibernateTournament(scheduledDate);
-		sessionFactory.getCurrentSession().save(tournament);
-		return new TournamentAnnouncementImpl(tournament);
+	protected Collection<TournamentSubscription> loadSubscriptions(int tournament, Player player) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	protected Collection<TournamentSubscription> loadSubscriptions(int tournament, boolean withProcessed) {
+	protected Tournament scheduleTournament(Date date) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected Tournament startTournament(int number, Date date) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected Tournament finishTournament(int number, Date date) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected Collection<TournamentGroup> loadFinishedUnprocessedGroups() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected int getFilteredCountImpl(Personality person, TournamentEntityCtx<TournamentEntity> context, SearchFilter filter) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	protected List<TournamentEntity> searchEntitiesImpl(Personality person, TournamentEntityCtx<TournamentEntity> context, SearchFilter filter, Orders orders, Range range) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
