@@ -1,10 +1,6 @@
 package wisematches.playground.tournament.impl.fsm;
 
-import wisematches.personality.Personality;
-import wisematches.playground.tournament.Tournament;
-import wisematches.playground.tournament.TournamentGroup;
-import wisematches.playground.tournament.TournamentGroupCtx;
-import wisematches.playground.tournament.TournamentSubscription;
+import wisematches.playground.tournament.*;
 
 import java.util.Collection;
 
@@ -12,23 +8,16 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface TSMDataProcessor {
-	Tournament startTournament(int number);
+	TournamentGroup searchGroup(long boardId);
 
-	Tournament finishTournament(int number);
+	TournamentGroup startGame(TournamentGroup.Id group, long[] games);
+
+	TournamentGroup finishGame(TournamentGroup.Id group, long game, short[] points);
 
 
-	TournamentGroup getGameGroup(long boardId);
+	<T extends TournamentEntity> T startEntity(TournamentEntityId<T> entity, Object parameters);
 
-	TournamentGroup getGameGroup(TournamentGroupCtx group);
-
-	TournamentGroup startGroup(TournamentGroupCtx group, Personality[] players);
-
-	TournamentGroup startGroupGame(TournamentGroupCtx group, long[] games);
-
-	TournamentGroup finishGroupGame(TournamentGroupCtx group, long game, short[] points);
-
-	TournamentGroup finishGroup(TournamentGroupCtx group);
-
+	<T extends TournamentEntity> T finishEntity(TournamentEntityId<T> entity, Object parameters);
 
 	/**
 	 * Returns collection of all tournaments which should be started right now.
@@ -44,5 +33,24 @@ public interface TSMDataProcessor {
 	 */
 	Collection<TournamentGroup> getReadyGroups();
 
+	/**
+	 * Returns collection of rounds which should be started.
+	 *
+	 * @return the collection of tournament rounds.
+	 */
+	Collection<TournamentRound> getReadyRounds();
+
+	/**
+	 * Returns list of unprocessed players for specified tournament and round.
+	 * <p/>
+	 * The method returns list of players which should be included in next round but
+	 * wasn't processed and games were not created yet. If round is zero - it's first
+	 * round and subscribed players should be returned.
+	 *
+	 * @param tournament the tournament id.
+	 * @param round      the round id starting with zero
+	 * @return the collection of all unprocessed players who should take part in next round.
+	 */
 	Collection<TournamentSubscription> getUnprocessedPlayers(int tournament, int round);
+
 }

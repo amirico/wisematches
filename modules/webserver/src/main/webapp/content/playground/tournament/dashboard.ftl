@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="requests" type="wisematches.playground.tournament.TournamentSubscription[]"-->
-<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.TournamentAnnouncement" -->
+<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.Announcement" -->
 <#include "/core.ftl">
 
 <style type="text/css">

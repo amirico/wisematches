@@ -8,5 +8,7 @@ import java.io.Serializable;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @SearchableBean
-public interface TournamentEntity extends Serializable {
+public abstract class TournamentEntity implements Serializable {
+	protected TournamentEntity() {
+	}
 }

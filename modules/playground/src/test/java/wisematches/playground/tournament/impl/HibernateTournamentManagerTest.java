@@ -80,7 +80,7 @@ public class HibernateTournamentManagerTest {
         }
 
         // prepare data for testing
-        final TournamentAnnouncement announcement = tournamentSubscriptionManager.getTournamentAnnouncement();
+        final TournamentAnnouncement announcement = tournamentSubscriptionManager.getAnnouncement();
         for (final Player player : players) {
             final TournamentSubscription request = tournamentSubscriptionManager.getTournamentRequest(announcement.getNumber(), player, Language.RU);
             if (request != null) {
@@ -139,7 +139,7 @@ public class HibernateTournamentManagerTest {
 
     @Test
     public void testRequestsSearchManager() {
-        final TournamentAnnouncement announcement = tournamentSubscriptionManager.getTournamentAnnouncement();
+        final TournamentAnnouncement announcement = tournamentSubscriptionManager.getAnnouncement();
 
         final TournamentSectionId sid = TournamentSectionId.valueOf(announcement.getNumber(), Language.RU, TournamentSection.EXPERT);
 

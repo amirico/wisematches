@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="playerRating" type="java.lang.Short" -->
 <#-- @ftlvariable name="subscription" type="wisematches.playground.tournament.TournamentSubscription" -->
-<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.TournamentAnnouncement" -->
+<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.Announcement" -->
 <#include "/core.ftl">
 
 <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>

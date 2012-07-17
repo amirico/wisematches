@@ -9,49 +9,49 @@ enum TSMActivity {
 	INITIATE_TOURNAMENT() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processInitiateTournament((InitializingTournament) context);
+//			manager.processInitiateTournament((TSMInitializingTournament) context);
 		}
 	},
 
 	INITIATE_ROUND() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processInitiateRound((InitializingRound) context);
+//			manager.processInitiateRound((TSMInitializingRound) context);
 		}
 	},
 
 	INITIATE_GROUP() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processInitiateGroup((InitializingGroup) context);
+//			manager.processInitiateGroup((TSMInitializingGroup) context);
 		}
 	},
 
 	FINALIZE_GAME() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processFinalizeGame((FinalizingGame) context);
+//			manager.processFinalizeGame((TSMFinalizingGame) context);
 		}
 	},
 
 	FINALIZE_GROUP() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processFinalizeGroup((FinalizingGroup) context);
+//			manager.processFinalizeGroup((TSMFinalizingGroup) context);
 		}
 	},
 
 	FINALIZE_ROUND() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processFinalizeRound((FinalizingRound) context);
+//			manager.processFinalizeRound((TSMFinalizingRound) context);
 		}
 	},
 
 	FINALIZE_TOURNAMENT() {
 		@Override
 		void executeTask(TournamentStateMachine manager, TSMActivityContext context) {
-			manager.processFinalizeTournament((FinalizingTournament) context);
+//			manager.processFinalizeTournament((TSMFinalizingTournament) context);
 		}
 	};
 

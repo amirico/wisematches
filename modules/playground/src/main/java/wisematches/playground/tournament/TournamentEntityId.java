@@ -5,5 +5,5 @@ import java.io.Serializable;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentEntityCtx<T extends TournamentEntity> extends Serializable {
+public interface TournamentEntityId<E extends TournamentEntity> extends Serializable {
 }

@@ -3,11 +3,11 @@ package wisematches.playground.tournament.impl.fsm;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class InitializingRound implements TSMActivityContext {
+public class TSMInitializingRound implements TSMActivityContext {
 	private final int tournament;
 	private final int round;
 
-	public InitializingRound(int tournament, int round) {
+	public TSMInitializingRound(int tournament, int round) {
 		this.tournament = tournament;
 		this.round = round;
 	}

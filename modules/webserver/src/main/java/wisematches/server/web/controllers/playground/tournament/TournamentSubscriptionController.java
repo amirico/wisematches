@@ -40,16 +40,12 @@ public class TournamentSubscriptionController extends WisematchesController {
 
 	@RequestMapping("")
 	public String tournamentsPage(Model model) {
-		final TournamentAnnouncement announcement = tournamentManager.getTournamentAnnouncement();
+		final Announcement announcement = tournamentManager.getAnnouncement();
 		model.addAttribute("announcement", announcement);
 
 		if (announcement != null) {
-			try {
-				final Collection<TournamentSubscription> requests = tournamentManager.getSubscriptions(announcement.getNumber(), getPrincipal());
-				model.addAttribute("requests", requests);
-			} catch (WrongTournamentException e) {
-				log.error("Player's requests can't be loaded", e);
-			}
+			final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), TournamentSubscription.createContext(announcement.getNumber(), getPrincipal().getId()), null, null, null);
+			model.addAttribute("requests", requests);
 		}
 		return "/content/playground/tournament/dashboard";
 	}
@@ -57,19 +53,15 @@ public class TournamentSubscriptionController extends WisematchesController {
 	@RequestMapping("subscription")
 	public String subscriptionPage(Model model, @ModelAttribute("form") SubscriptionForm form) throws UnknownEntityException {
 		final Player principal = getPrincipal();
-		final TournamentAnnouncement announcement = tournamentManager.getTournamentAnnouncement();
+		final Announcement announcement = tournamentManager.getAnnouncement();
 		if (announcement == null) {
 			throw new UnknownEntityException(null, "announcement");
 		}
 
 		TournamentSubscription subscription = null;
-		try {
-			final Collection<TournamentSubscription> requests = tournamentManager.getSubscriptions(announcement.getNumber(), principal);
-			if (!requests.isEmpty()) {
-				subscription = requests.iterator().next();
-			}
-		} catch (WrongTournamentException e) {
-			log.error("Player's requests can't be loaded", e);
+		final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), TournamentSubscription.createContext(announcement.getNumber(), getPrincipal().getId()), null, null, null);
+		if (!requests.isEmpty()) {
+			subscription = requests.iterator().next();
 		}
 
 		final short rating = statisticManager.getRating(principal);
@@ -101,7 +93,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("subscription.ajax")
 	public ServiceResponse subscribe(@RequestBody SubscriptionForm form, Locale locale) {
-		final TournamentAnnouncement announcement = tournamentManager.getTournamentAnnouncement();
+		final Announcement announcement = tournamentManager.getAnnouncement();
 		if (announcement == null || announcement.getNumber() != form.getAnnouncement()) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("tournament.subscription.err.unknown", locale));
 		}
@@ -126,7 +118,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 					return ServiceResponse.failure(gameMessageSource.getMessage("tournament.subscription.err.section", locale));
 				}
 
-				final Collection<TournamentSubscription> requests = tournamentManager.getSubscriptions(announcement.getNumber(), principal);
+				final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), TournamentSubscription.createContext(announcement.getNumber(), getPrincipal().getId()), null, null, null);
 				if (requests.size() != 0) {
 					for (TournamentSubscription request : requests) {
 						tournamentManager.unsubscribe(request.getTournament(), principal, request.getLanguage());

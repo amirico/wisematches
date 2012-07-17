@@ -9,34 +9,37 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentRound extends TournamentEntity {
+public abstract class TournamentRound extends TournamentEntity {
+	protected TournamentRound() {
+	}
+
 	/**
 	 * Returns number of the round.
 	 *
 	 * @return the number of the round.
 	 */
-	int getRound();
+	public abstract int getRound();
 
 	/**
 	 * Returns tournament that contains this round.
 	 *
 	 * @return the tournament that contains this round.
 	 */
-	int getTournament();
+	public abstract int getTournament();
 
 	/**
 	 * Returns language for the round.
 	 *
 	 * @return the language for the round.
 	 */
-	Language getLanguage();
+	public abstract Language getLanguage();
 
 	/**
 	 * Returns section of this round.
 	 *
 	 * @return the section of the round.
 	 */
-	TournamentSection getSectionType();
+	public abstract TournamentSection getSection();
 
 
 	/**
@@ -44,14 +47,14 @@ public interface TournamentRound extends TournamentEntity {
 	 *
 	 * @return the date when round was started.
 	 */
-	Date getStartedDate();
+	public abstract Date getStartedDate();
 
 	/**
 	 * Returns date when round was finished.
 	 *
 	 * @return the date when round was finished or {@code null} if round is in progress.
 	 */
-	Date getFinishedDate();
+	public abstract Date getFinishedDate();
 
 
 	/**
@@ -59,19 +62,76 @@ public interface TournamentRound extends TournamentEntity {
 	 *
 	 * @return the number of total games in the round.
 	 */
-	int getTotalGames();
+	public abstract int getTotalGamesCount();
 
 	/**
 	 * Returns number of finished games.
 	 *
 	 * @return the number of finished games.
 	 */
-	int getFinishedGames();
+	public abstract int getFinishedGamesCount();
 
-	/**
-	 * Returns {@code true} if round was finished or {@code false} if not.
-	 *
-	 * @return {@code true} if round was finished; otherwise {@code false}.
-	 */
-	boolean isFinished();
+
+	public static Id createId(int tournament, Language language, TournamentSection section, int round) {
+		return new Id(tournament, language, section, round);
+	}
+
+	public static Context createContext(int tournament, Language language, TournamentSection section) {
+		return new Context(tournament, language, section);
+	}
+
+
+	public static class Id implements TournamentEntityId<TournamentRound> {
+		private final int tournament;
+		private final Language language;
+		private final TournamentSection section;
+		private final int round;
+
+		public Id(int tournament, Language language, TournamentSection section, int round) {
+			this.tournament = tournament;
+			this.language = language;
+			this.section = section;
+			this.round = round;
+		}
+
+		public int getTournament() {
+			return tournament;
+		}
+
+		public Language getLanguage() {
+			return language;
+		}
+
+		public TournamentSection getSection() {
+			return section;
+		}
+
+		public int getRound() {
+			return round;
+		}
+	}
+
+	public static class Context implements TournamentEntityContext<TournamentRound> {
+		private final int tournament;
+		private final Language language;
+		private final TournamentSection section;
+
+		public Context(int tournament, Language language, TournamentSection section) {
+			this.tournament = tournament;
+			this.language = language;
+			this.section = section;
+		}
+
+		public int getTournament() {
+			return tournament;
+		}
+
+		public Language getLanguage() {
+			return language;
+		}
+
+		public TournamentSection getSection() {
+			return section;
+		}
+	}
 }
