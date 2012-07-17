@@ -13,7 +13,10 @@ import java.util.Date;
 @Entity
 @Table(name = "tournament_round")
 */
-public class HibernateTournamentRound implements TournamentRound {
+public class HibernateTournamentRound extends TournamentRound {
+	public HibernateTournamentRound() {
+	}
+
 	@Override
 	public int getRound() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
@@ -30,7 +33,7 @@ public class HibernateTournamentRound implements TournamentRound {
 	}
 
 	@Override
-	public TournamentSection getSectionType() {
+	public TournamentSection getSection() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
@@ -45,17 +48,12 @@ public class HibernateTournamentRound implements TournamentRound {
 	}
 
 	@Override
-	public int getTotalGames() {
+	public int getTotalGamesCount() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public int getFinishedGames() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
-
-	@Override
-	public boolean isFinished() {
+	public int getFinishedGamesCount() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 }

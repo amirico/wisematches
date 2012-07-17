@@ -6,19 +6,14 @@ import org.quartz.CronExpression;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.database.Orders;
-import wisematches.database.Range;
 import wisematches.personality.Language;
-import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.playground.*;
-import wisematches.playground.search.SearchFilter;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tournament.*;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
@@ -34,7 +29,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	private BoardManager boardManager;
 	private RatingManager ratingManager;
 
-	private TournamentAnnouncementImpl tournamentAnnouncement;
+	private AnnouncementImpl tournamentAnnouncement;
 //	private AssuredTaskExecutor<TSMActivity, Serializable> assuredTaskExecutor;
 
 	private final Lock tournamentLock = new ReentrantLock();
@@ -43,10 +38,9 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Collection<TournamentStateListener> stateListeners = new CopyOnWriteArraySet<TournamentStateListener>();
-	private final Collection<TournamentProgressListener> progressListeners = new CopyOnWriteArraySet<TournamentProgressListener>();
 	private final Collection<TournamentSubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TournamentSubscriptionListener>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.tournament");
+	private static final Log log = LogFactory.getLog("wisematches.server.announcement");
 
 	protected AbstractTournamentManager() {
 	}
@@ -61,18 +55,6 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	@Override
 	public void removeTournamentStateListener(TournamentStateListener l) {
 		stateListeners.remove(l);
-	}
-
-	@Override
-	public void addTournamentProgressListener(TournamentProgressListener l) {
-		if (l != null) {
-			progressListeners.add(l);
-		}
-	}
-
-	@Override
-	public void removeTournamentProgressListener(TournamentProgressListener l) {
-		progressListeners.remove(l);
 	}
 
 	@Override
@@ -92,11 +74,11 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	public void afterPropertiesSet() throws Exception {
 		subscriptionLock.lock();
 		try {
-			final TournamentAnnouncement announcement = loadAnnouncement();
+			final Announcement announcement = loadAnnouncement();
 			if (announcement != null) {
-				tournamentAnnouncement = new TournamentAnnouncementImpl(announcement);
+				tournamentAnnouncement = new AnnouncementImpl(announcement);
 			} else {
-				tournamentAnnouncement = new TournamentAnnouncementImpl(scheduleTournament(getMidnight()));
+				tournamentAnnouncement = new AnnouncementImpl(scheduleTournament(getMidnight()));
 				fireTournamentStateChanged(tournamentAnnouncement, TournamentState.SCHEDULED);
 			}
 //			assuredTaskExecutor.registerProcessor(TSMActivity.createTaskProcessor(this));
@@ -106,7 +88,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	}
 
 	@Override
-	public final TournamentAnnouncement getTournamentAnnouncement() {
+	public final Announcement getAnnouncement() {
 		subscriptionLock.lock();
 		try {
 			return tournamentAnnouncement;
@@ -117,10 +99,10 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public final TournamentSubscription subscribe(int tournament, Player player, Language language, TournamentSection section) throws WrongTournamentException, WrongSectionException {
+	public final TournamentSubscription subscribe(int announcement, Player player, Language language, TournamentSection section) throws WrongTournamentException, WrongSectionException {
 		subscriptionLock.lock();
 		try {
-			checkAnnouncement(tournament, player, language);
+			checkAnnouncement(announcement, player, language);
 			if (section == null) {
 				throw new NullPointerException("Tournament section can't be null");
 			}
@@ -130,13 +112,13 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 				throw new WrongSectionException(rating, section.getTopRating());
 			}
 
-			final TournamentSubscription unsubscription = deleteSubscription(tournament, player, language);
+			final TournamentSubscription unsubscription = deleteSubscription(announcement, player, language);
 			if (unsubscription != null) {
 				tournamentAnnouncement.changeBoughtTickets(unsubscription.getLanguage(), unsubscription.getSection(), -1);
 				firePlayerUnsubscribed(unsubscription);
 			}
 
-			final TournamentSubscription subscription = saveSubscription(tournament, player, language, section);
+			final TournamentSubscription subscription = saveSubscription(announcement, player, language, section);
 			if (subscription != null) {
 				tournamentAnnouncement.changeBoughtTickets(subscription.getLanguage(), subscription.getSection(), 1);
 				firePlayerSubscribed(subscription);
@@ -149,12 +131,12 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public final TournamentSubscription unsubscribe(int tournament, Player player, Language language) throws WrongTournamentException {
+	public final TournamentSubscription unsubscribe(int announcement, Player player, Language language) throws WrongTournamentException {
 		subscriptionLock.lock();
 		try {
-			checkAnnouncement(tournament, player, language);
+			checkAnnouncement(announcement, player, language);
 
-			final TournamentSubscription unsubscription = deleteSubscription(tournament, player, language);
+			final TournamentSubscription unsubscription = deleteSubscription(announcement, player, language);
 			if (unsubscription != null) {
 				tournamentAnnouncement.changeBoughtTickets(unsubscription.getLanguage(), unsubscription.getSection(), -1);
 				firePlayerUnsubscribed(unsubscription);
@@ -165,95 +147,10 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 		}
 	}
 
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final TournamentSubscription getSubscription(int tournament, Player player, Language language) throws WrongTournamentException {
-		subscriptionLock.lock();
-		try {
-			checkAnnouncement(tournament, player, language);
-			return loadSubscription(tournament, player, language);
-		} finally {
-			subscriptionLock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public Collection<TournamentSubscription> getSubscriptions(int tournament, Player player) throws WrongTournamentException {
-		subscriptionLock.lock();
-		try {
-			checkAnnouncement(tournament, player, Language.EN); // language mustn't be null here.
-			return loadSubscriptions(tournament, player);
-		} finally {
-			subscriptionLock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final Tournament getTournament(int number) {
-		tournamentLock.lock();
-		try {
-			return loadTournament(number);
-		} finally {
-			tournamentLock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final TournamentRound getTournamentRound(int tournament, Language language, TournamentSection section, int round) {
-		tournamentLock.lock();
-		try {
-			return loadTournamentRound(tournament, language, section, round);
-		} finally {
-			tournamentLock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final TournamentGroup getTournamentGroup(int tournament, Language language, TournamentSection section, int round, int group) {
-		tournamentLock.lock();
-		try {
-			return loadTournamentGroup(tournament, language, section, round);
-		} finally {
-			tournamentLock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final int getTotalCount(Personality person, TournamentEntityCtx<TournamentEntity> context) {
-		return getFilteredCount(person, context, null);
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final int getFilteredCount(Personality person, TournamentEntityCtx<TournamentEntity> context, SearchFilter filter) {
-		tournamentLock.lock();
-		try {
-			return getFilteredCountImpl(person, context, filter);
-		} finally {
-			tournamentLock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public final List<TournamentEntity> searchEntities(Personality person, TournamentEntityCtx<TournamentEntity> context, SearchFilter filter, Orders orders, Range range) {
-		tournamentLock.lock();
-		try {
-			return searchEntitiesImpl(person, context, filter, orders, range);
-		} finally {
-			tournamentLock.unlock();
-		}
-	}
-
 
 	@Override
 	public void breakingDayTime(Date midnight) {
-		if (cronExpression.isSatisfiedBy(midnight)) { // new tournament time
+		if (cronExpression.isSatisfiedBy(midnight)) { // new announcement time
 //			assuredTaskExecutor.execute(TSMActivity.INITIATE_TOURNAMENT, getNextTournamentDate());
 		}
 
@@ -265,7 +162,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 		}
 	}
 
-	protected abstract TournamentAnnouncement loadAnnouncement();
+	protected abstract Announcement loadAnnouncement();
 
 	protected abstract Collection<TournamentSubscription> loadSubscriptions(int tournament, Player player);
 
@@ -285,9 +182,9 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	protected abstract Tournament finishTournament(int number, Date date);
 
 
-//	protected abstract Collection<TournamentSubscription> loadSubscriptions(int tournament);
+//	protected abstract Collection<TournamentSubscription> loadSubscriptions(int announcement);
 //
-//	protected abstract Collection<TournamentSubscription> loadRoundWinners(int tournament, int round);
+//	protected abstract Collection<TournamentSubscription> loadRoundWinners(int announcement, int round);
 
 	protected abstract Collection<TournamentGroup> loadFinishedUnprocessedGroups();
 
@@ -295,30 +192,6 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	protected abstract TournamentRound loadTournamentRound(int tournament, Language language, TournamentSection section, int round);
 
 	protected abstract TournamentGroup loadTournamentGroup(int tournament, Language language, TournamentSection section, int round);
-
-
-	protected abstract int getFilteredCountImpl(Personality person, TournamentEntityCtx<TournamentEntity> context, SearchFilter filter);
-
-	protected abstract List<TournamentEntity> searchEntitiesImpl(Personality person, TournamentEntityCtx<TournamentEntity> context, SearchFilter filter, Orders orders, Range range);
-
-
-	private void fireSectionFinished(Tournament tournament, TournamentSection section) {
-		for (TournamentProgressListener progressListener : progressListeners) {
-			progressListener.tournamentSectionFinished(tournament, section);
-		}
-	}
-
-	private void fireRoundFinished(Tournament tournament, TournamentRound round) {
-		for (TournamentProgressListener progressListener : progressListeners) {
-			progressListener.tournamentRoundFinished(tournament, round);
-		}
-	}
-
-	private void fireGroupFinished(Tournament tournament, TournamentGroup group) {
-		for (TournamentProgressListener progressListener : progressListeners) {
-			progressListener.tournamentGroupFinished(tournament, group);
-		}
-	}
 
 	private void firePlayerSubscribed(TournamentSubscription subscription) {
 		for (TournamentSubscriptionListener subscriptionListener : subscriptionListeners) {
@@ -360,7 +233,7 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	}
 
 	private void checkAnnouncement(int tournament, Player player, Language language) throws WrongTournamentException {
-		final Tournament scheduledTournament = getTournamentAnnouncement();
+		final Tournament scheduledTournament = getAnnouncement();
 		if (scheduledTournament == null) {
 			throw new WrongTournamentException(tournament, 0, "No active announcements");
 		}

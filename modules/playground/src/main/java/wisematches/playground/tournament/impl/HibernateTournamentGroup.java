@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tournament_group")
-public class HibernateTournamentGroup implements TournamentGroup {
+public class HibernateTournamentGroup extends TournamentGroup {
 	@EmbeddedId
 	private PK pk;
 
@@ -62,6 +62,16 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	}
 
 	@Override
+	public int getTotalGamesCount() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
+	public int getFinishedGamesCount() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
 	public int getRound() {
 		return pk.round;
 	}
@@ -77,18 +87,18 @@ public class HibernateTournamentGroup implements TournamentGroup {
 	}
 
 	@Override
-	public short[] getPoints() {
+	public long getGame(long p1, long p2) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public boolean isFinished() {
+	public short getScores(long player) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public long[] getGames() {
-		return null;
+	public short getPoints(long p1, long p2) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Embeddable

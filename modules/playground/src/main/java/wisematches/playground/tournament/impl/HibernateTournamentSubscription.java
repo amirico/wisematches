@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "tournament_subscription")
-public class HibernateTournamentSubscription implements TournamentSubscription, Serializable {
+public class HibernateTournamentSubscription extends TournamentSubscription {
 	@EmbeddedId
 	private PK pk;
 

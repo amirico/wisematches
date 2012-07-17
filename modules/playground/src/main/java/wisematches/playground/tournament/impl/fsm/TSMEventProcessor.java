@@ -14,9 +14,17 @@ public interface TSMEventProcessor {
 	void fireTournamentFinished(Tournament tournament);
 
 
+	void fireGroupStarted(TournamentGroup group);
+
 	void fireGroupFinished(TournamentGroup group);
 
+
+	void fireRoundStarted(TournamentRound round);
+
 	void fireRoundFinished(TournamentRound round);
+
+
+	void fireSectionStarted(Tournament tournament, TournamentSection section);
 
 	void fireSectionFinished(Tournament tournament, TournamentSection section);
 }

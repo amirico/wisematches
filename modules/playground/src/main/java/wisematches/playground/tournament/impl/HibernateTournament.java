@@ -11,8 +11,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tournament")
-public class HibernateTournament implements Tournament {
-	@Id
+public class HibernateTournament extends Tournament {
+	@javax.persistence.Id
 	@Column(name = "id")
 	private int number;
 
@@ -57,17 +57,6 @@ public class HibernateTournament implements Tournament {
 	@Override
 	public Date getScheduledDate() {
 		return scheduledDate;
-	}
-
-	@Override
-	public TournamentState getTournamentState() {
-		if (finishedDate != null) {
-			return TournamentState.FINISHED;
-		} else if (startedDate != null) {
-			return TournamentState.STARTED;
-		} else {
-			return TournamentState.SCHEDULED;
-		}
 	}
 
 	/**

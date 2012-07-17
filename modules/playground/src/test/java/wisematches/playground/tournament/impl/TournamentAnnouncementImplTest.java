@@ -24,7 +24,7 @@ public class TournamentAnnouncementImplTest {
 		expect(tournament.getScheduledDate()).andReturn(new Date());
 		replay(tournament);
 
-		final TournamentAnnouncementImpl announcement = new TournamentAnnouncementImpl(tournament);
+		final AnnouncementImpl announcement = new AnnouncementImpl(tournament);
 
 		for (Language language : Language.values()) {
 			for (TournamentSection category : TournamentSection.values()) {
@@ -60,7 +60,7 @@ public class TournamentAnnouncementImplTest {
 			}
 		}
 
-		final TournamentAnnouncementImpl announcement2 = new TournamentAnnouncementImpl(announcement);
+		final AnnouncementImpl announcement2 = new AnnouncementImpl(announcement);
 		for (Language language : Language.values()) {
 			for (TournamentSection category : TournamentSection.values()) {
 				assertEquals(announcement.getBoughtTickets(language, category), announcement2.getBoughtTickets(language, category));

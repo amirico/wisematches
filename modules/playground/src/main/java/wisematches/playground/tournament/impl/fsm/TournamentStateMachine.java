@@ -2,12 +2,15 @@ package wisematches.playground.tournament.impl.fsm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.personality.Personality;
-import wisematches.playground.*;
+import wisematches.playground.BoardManager;
+import wisematches.playground.GameBoard;
+import wisematches.playground.GameSettings;
+import wisematches.playground.RatingManager;
 import wisematches.playground.task.AssuredTaskExecutor;
-import wisematches.playground.tournament.*;
+import wisematches.playground.tournament.TournamentRound;
+import wisematches.playground.tournament.impl.GameSettingsProvider;
 
-import java.util.*;
+import java.util.Collection;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,14 +22,14 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 
 	private RatingManager ratingManager;
 	private BoardManager<S, B> boardManager;
-	private TournamentGameSettingsProvider<S> gameSettingsProvider;
+	private GameSettingsProvider<S> gameSettingsProvider;
 
 	private TSMDataProcessor dataProcessor;
 	private TSMEventProcessor eventProcessor;
 	private AssuredTaskExecutor<TSMActivity, TSMActivityContext> assuredTaskExecutor;
 
 	private final Lock lock = new ReentrantLock();
-	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
+//	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.tournament.initializer");
 
@@ -61,37 +64,42 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 	public void startMoving() {
 		lock.lock();
 		try {
+			final Collection<TournamentRound> rounds = dataProcessor.getReadyRounds();
+
+/*
 			final Collection<Tournament> tournaments = dataProcessor.getReadyTournaments();
 			for (Tournament tournament : tournaments) {
-				assuredTaskExecutor.execute(TSMActivity.INITIATE_TOURNAMENT, new InitializingTournament(tournament.getNumber()));
+				assuredTaskExecutor.execute(TSMActivity.INITIATE_TOURNAMENT, new TSMInitializingTournament(tournament.getNumber()));
 			}
 
 			final Collection<TournamentGroup> groups = dataProcessor.getReadyGroups();
 			for (TournamentGroup group : groups) {
-				assuredTaskExecutor.execute(TSMActivity.FINALIZE_GROUP, new FinalizingGroup(new TournamentGroupCtx(group)));
+				assuredTaskExecutor.execute(TSMActivity.FINALIZE_GROUP, new TSMFinalizingGroup(new TournamentGroupCtx(group)));
 			}
+*/
 		} finally {
 			lock.unlock();
 		}
 	}
 
-	void processInitiateTournament(InitializingTournament ctx) {
+/*
+	void processInitiateTournament(TSMInitializingTournament ctx) {
 		lock.lock();
 		try {
 			final Tournament tournament = dataProcessor.startTournament(ctx.getNumber());
-			assuredTaskExecutor.execute(TSMActivity.INITIATE_ROUND, new InitializingRound(ctx.getNumber(), 0));
+			assuredTaskExecutor.execute(TSMActivity.INITIATE_ROUND, new TSMInitializingRound(ctx.getNumber(), 0));
 			eventProcessor.fireTournamentStarted(tournament);
 		} finally {
 			lock.unlock();
 		}
 	}
 
-	void processInitiateRound(InitializingRound ctx) {
+	void processInitiateRound(TSMInitializingRound ctx) {
 		lock.lock();
 		try {
 			final Collection<TournamentSubscription> subscriptions = dataProcessor.getUnprocessedPlayers(ctx.getTournament(), ctx.getRound());
-			final Collection<InitializingGroup> tournamentGroups = createTournamentGroups(ctx, subscriptions);
-			for (InitializingGroup tournamentGroup : tournamentGroups) {
+			final Collection<TSMInitializingGroup> tournamentGroups = splitByGroups(ctx, subscriptions);
+			for (TSMInitializingGroup tournamentGroup : tournamentGroups) {
 				assuredTaskExecutor.execute(TSMActivity.INITIATE_GROUP, tournamentGroup);
 			}
 		} finally {
@@ -99,7 +107,7 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 		}
 	}
 
-	void processInitiateGroup(InitializingGroup ctx) {
+	void processInitiateGroup(TSMInitializingGroup ctx) {
 		lock.lock();
 		try {
 			final TournamentGroupCtx context = ctx.getGroupContext();
@@ -123,17 +131,17 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 						}
 					}
 				}
-				dataProcessor.startGroupGame(context, games);
+				dataProcessor.startGame(context, games);
 			}
 		} finally {
 			lock.unlock();
 		}
 	}
 
-	void processFinalizeGame(FinalizingGame ctx) {
+	void processFinalizeGame(TSMFinalizingGame ctx) {
 		lock.lock();
 		try {
-			TournamentGroup group = dataProcessor.getGameGroup(ctx.getBoardId());
+			TournamentGroup group = dataProcessor.searchGroup(ctx.getBoardId());
 			if (group != null && !group.isFinished()) {
 				final B board = boardManager.openBoard(ctx.getBoardId());
 				final List<? extends GamePlayerHand> hands = board.getPlayersHands();
@@ -145,7 +153,7 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 				}
 
 				final TournamentGroupCtx groupCtx = new TournamentGroupCtx(group);
-				dataProcessor.finishGroupGame(groupCtx, board.getBoardId(), points).isFinished();
+				dataProcessor.finishGame(groupCtx, board.getBoardId(), points);
 			}
 		} catch (BoardLoadingException ex) {
 			log.error("Tournament game can't be finalized: " + ctx.getBoardId(), ex);
@@ -155,11 +163,12 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 		}
 	}
 
-	void processFinalizeGroup(FinalizingGroup ctx) {
+	void processFinalizeGroup(TSMFinalizingGroup ctx) {
 		lock.lock();
 		try {
-			final TournamentGroup group = dataProcessor.getGameGroup(ctx.getGroupCtx());
-			if (group != null && !group.isFinished()) {
+			final TournamentGroup group = dataProcessor.getGroup(ctx.getGroupCtx());
+			if (group != null && !group.isFinished() && group.getFinishedGamesCount() == group.getTotalGamesCount()) {
+				assuredTaskExecutor.execute(TSMActivity.FINALIZE_ROUND, new TSMFinalizingRound(new TournamentRoundCtx(group)));
 				dataProcessor.finishGroup(ctx.getGroupCtx());
 				eventProcessor.fireGroupFinished(group);
 			}
@@ -168,7 +177,21 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 		}
 	}
 
-	void processFinalizeRound(FinalizingRound ctx) {
+	void processFinalizeRound(TSMFinalizingRound ctx) {
+		lock.lock();
+		try {
+			final TournamentRoundCtx context = ctx.getRoundContext();
+			final TournamentRound round = dataProcessor.getRound(context);
+			if (!round.isFinished() && round.getFinishedGamesCount() == round.getTotalGamesCount()) {
+				assuredTaskExecutor.execute(TSMActivity.FINALIZE_TOURNAMENT, new TSMFinalizingRound(new TournamentRoundCtx(group)));
+				eventProcessor.fireRoundFinished(round);
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	void processFinalizeTournament(TSMFinalizingTournament ctx) {
 		lock.lock();
 		try {
 
@@ -177,16 +200,7 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 		}
 	}
 
-	void processFinalizeTournament(FinalizingTournament ctx) {
-		lock.lock();
-		try {
-
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	protected Collection<InitializingGroup> createTournamentGroups(InitializingRound round, Collection<TournamentSubscription> subscriptions) {
+	protected Collection<TSMInitializingGroup> splitByGroups(TSMInitializingRound round, Collection<TournamentSubscription> subscriptions) {
 		log.info("Found " + subscriptions.size() + " subscriptions");
 
 		final Map<TournamentSection, Collection<Long>> groups = new HashMap<TournamentSection, Collection<Long>>();
@@ -248,8 +262,9 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 
 		@Override
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
-			assuredTaskExecutor.execute(TSMActivity.FINALIZE_GAME, new FinalizingGame(board.getBoardId()));
+			assuredTaskExecutor.execute(TSMActivity.FINALIZE_GAME, new TSMFinalizingGame(board.getBoardId()));
 		}
 	}
+*/
 }
 
