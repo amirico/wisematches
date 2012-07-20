@@ -1,6 +1,9 @@
 package wisematches.playground.tournament.impl.fsm;
 
-import wisematches.playground.tournament.*;
+import wisematches.playground.tournament.Tournament;
+import wisematches.playground.tournament.TournamentGroup;
+import wisematches.playground.tournament.TournamentRound;
+import wisematches.playground.tournament.TournamentSubscription;
 
 import java.util.Collection;
 
@@ -15,9 +18,9 @@ public interface TSMDataProcessor {
 	TournamentGroup finishGame(TournamentGroup.Id group, long game, short[] points);
 
 
-	<T extends TournamentEntity> T startEntity(TournamentEntityId<T> entity, Object parameters);
-
-	<T extends TournamentEntity> T finishEntity(TournamentEntityId<T> entity, Object parameters);
+//	<T extends TournamentEntity> T startEntity(TournamentEntity.Id<T> entity, Object parameters);
+//
+//	<T extends TournamentEntity> T finishEntity(TournamentEntity.Id<T> entity, Object parameters);
 
 	/**
 	 * Returns collection of all tournaments which should be started right now.

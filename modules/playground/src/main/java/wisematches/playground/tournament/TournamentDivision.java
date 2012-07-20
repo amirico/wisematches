@@ -10,30 +10,26 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class TournamentDivision extends TournamentEntity {
-	protected TournamentDivision() {
-	}
-
-	/**
-	 * Returns tournament round.
-	 *
-	 * @return the tournament round.
-	 */
-	public abstract int getTournament();
+public interface TournamentDivision extends TournamentEntity<TournamentDivision, TournamentDivision.Id, TournamentDivision.Context> {
+	int getTournament();
 
 	/**
 	 * Returns division language
 	 *
 	 * @return the division language.
 	 */
-	public abstract Language getLanguage();
+	Language getLanguage();
 
 	/**
 	 * Returns division section.
 	 *
 	 * @return the division section.
 	 */
-	public abstract TournamentSection getSection();
+	TournamentSection getSection();
+
+	Date getStartedDate();
+
+	Date getFinishedDate();
 
 
 	/**
@@ -41,43 +37,10 @@ public abstract class TournamentDivision extends TournamentEntity {
 	 *
 	 * @return the active round or {@code zero} if division is finished.
 	 */
-	public abstract int getActiveRound();
+	int getActiveRound();
 
 
-	/**
-	 * Returns date when the division was started.
-	 *
-	 * @return date when the division was started.
-	 */
-	public abstract Date getStartedDate();
-
-
-	/**
-	 * Returns data when the division was finished or {@code null} if the division is active.
-	 *
-	 * @return the date when the division was finished or {@code null} if the division is active.
-	 */
-	public abstract Date getFinishedDate();
-
-
-	public static Id createId(final int tournament, final Language language, final TournamentSection section) {
-		return new Id(tournament, language, section);
-	}
-
-	public static Context createContext(int tournament) {
-		return new Context(tournament, null, null);
-	}
-
-	public static Context createContext(int tournament, Language language) {
-		return new Context(tournament, language, null);
-	}
-
-	public static Context createContext(int tournament, TournamentSection section) {
-		return new Context(tournament, null, section);
-	}
-
-
-	public static class Id implements TournamentEntityId<TournamentDivision> {
+	public final class Id implements TournamentEntity.Id<TournamentDivision, Id, Context> {
 		private final int tournament;
 		private final Language language;
 		private final TournamentSection section;
@@ -101,7 +64,7 @@ public abstract class TournamentDivision extends TournamentEntity {
 		}
 	}
 
-	public static class Context implements TournamentEntityContext<TournamentDivision> {
+	public final class Context implements TournamentEntity.Context<TournamentDivision, Id, Context> {
 		private final int tournament;
 		private final Language language;
 		private final TournamentSection section;

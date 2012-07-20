@@ -44,7 +44,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 		model.addAttribute("announcement", announcement);
 
 		if (announcement != null) {
-			final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), TournamentSubscription.createContext(announcement.getNumber(), getPrincipal().getId()), null, null, null);
+			final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), new TournamentSubscription.Context(announcement.getTournament(), getPrincipal().getId()), null, null, null);
 			model.addAttribute("requests", requests);
 		}
 		return "/content/playground/tournament/dashboard";
@@ -59,7 +59,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 		}
 
 		TournamentSubscription subscription = null;
-		final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), TournamentSubscription.createContext(announcement.getNumber(), getPrincipal().getId()), null, null, null);
+		final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), new TournamentSubscription.Context(announcement.getTournament(), getPrincipal().getId()), null, null, null);
 		if (!requests.isEmpty()) {
 			subscription = requests.iterator().next();
 		}
@@ -94,7 +94,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 	@RequestMapping("subscription.ajax")
 	public ServiceResponse subscribe(@RequestBody SubscriptionForm form, Locale locale) {
 		final Announcement announcement = tournamentManager.getAnnouncement();
-		if (announcement == null || announcement.getNumber() != form.getAnnouncement()) {
+		if (announcement == null || announcement.getTournament() != form.getAnnouncement()) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("tournament.subscription.err.unknown", locale));
 		}
 		final Language language = Language.byCode(form.getLanguage());
@@ -118,7 +118,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 					return ServiceResponse.failure(gameMessageSource.getMessage("tournament.subscription.err.section", locale));
 				}
 
-				final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), TournamentSubscription.createContext(announcement.getNumber(), getPrincipal().getId()), null, null, null);
+				final Collection<TournamentSubscription> requests = tournamentManager.searchTournamentEntities(getPrincipal(), new TournamentSubscription.Context(announcement.getTournament(), getPrincipal().getId()), null, null, null);
 				if (requests.size() != 0) {
 					for (TournamentSubscription request : requests) {
 						tournamentManager.unsubscribe(request.getTournament(), principal, request.getLanguage());

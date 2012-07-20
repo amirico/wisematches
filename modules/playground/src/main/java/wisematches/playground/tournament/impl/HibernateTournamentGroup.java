@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tournament_group")
-public class HibernateTournamentGroup extends TournamentGroup {
+public class HibernateTournamentGroup implements TournamentGroup {
 	@EmbeddedId
 	private PK pk;
 

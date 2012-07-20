@@ -1,7 +1,7 @@
 package wisematches.playground.tournament.impl;
 
 import wisematches.personality.Language;
-import wisematches.playground.tournament.TournamentRound;
+import wisematches.playground.tournament.TournamentDivision;
 import wisematches.playground.tournament.TournamentSection;
 
 import java.util.Date;
@@ -9,17 +9,8 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-/*
-@Entity
-@Table(name = "tournament_round")
-*/
-public class HibernateTournamentRound implements TournamentRound {
-	public HibernateTournamentRound() {
-	}
-
-	@Override
-	public int getRound() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
+public class HibernateTournamentDivision implements TournamentDivision {
+	public HibernateTournamentDivision() {
 	}
 
 	@Override
@@ -48,12 +39,7 @@ public class HibernateTournamentRound implements TournamentRound {
 	}
 
 	@Override
-	public int getTotalGamesCount() {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
-
-	@Override
-	public int getFinishedGamesCount() {
+	public int getActiveRound() {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 }

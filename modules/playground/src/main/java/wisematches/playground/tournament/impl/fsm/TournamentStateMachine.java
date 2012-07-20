@@ -8,7 +8,7 @@ import wisematches.playground.GameSettings;
 import wisematches.playground.RatingManager;
 import wisematches.playground.task.AssuredTaskExecutor;
 import wisematches.playground.tournament.TournamentRound;
-import wisematches.playground.tournament.impl.GameSettingsProvider;
+import wisematches.playground.tournament.impl.TournamentSettingsProvider;
 
 import java.util.Collection;
 import java.util.concurrent.locks.Lock;
@@ -22,7 +22,7 @@ public class TournamentStateMachine<S extends GameSettings, B extends GameBoard<
 
 	private RatingManager ratingManager;
 	private BoardManager<S, B> boardManager;
-	private GameSettingsProvider<S> gameSettingsProvider;
+	private TournamentSettingsProvider<S> gameSettingsProvider;
 
 	private TSMDataProcessor dataProcessor;
 	private TSMEventProcessor eventProcessor;

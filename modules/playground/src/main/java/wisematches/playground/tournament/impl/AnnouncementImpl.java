@@ -2,7 +2,6 @@ package wisematches.playground.tournament.impl;
 
 import wisematches.personality.Language;
 import wisematches.playground.tournament.Announcement;
-import wisematches.playground.tournament.Tournament;
 import wisematches.playground.tournament.TournamentSection;
 
 import java.util.Date;
@@ -10,19 +9,14 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class AnnouncementImpl extends Announcement {
-	private int number;
+public class AnnouncementImpl implements Announcement {
+	private int tournament;
 	private Date scheduledDate;
 
 	private final int[][] values = new int[Language.values().length][TournamentSection.values().length];
 
-	public AnnouncementImpl(Tournament tournament) {
-		this.number = tournament.getNumber();
-		this.scheduledDate = tournament.getScheduledDate();
-	}
-
 	public AnnouncementImpl(Announcement announcement) {
-		this.number = announcement.getNumber();
+		this.tournament = announcement.getTournament();
 		this.scheduledDate = announcement.getScheduledDate();
 
 		for (Language language : Language.values()) {
@@ -32,24 +26,15 @@ public class AnnouncementImpl extends Announcement {
 		}
 	}
 
+
 	@Override
-	public int getNumber() {
-		return number;
+	public int getTournament() {
+		return tournament;
 	}
 
 	@Override
 	public Date getScheduledDate() {
 		return scheduledDate;
-	}
-
-	@Override
-	public Date getStartedDate() {
-		return null;
-	}
-
-	@Override
-	public Date getFinishedDate() {
-		return null;
 	}
 
 	@Override

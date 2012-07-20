@@ -8,49 +8,37 @@ import wisematches.personality.Language;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class TournamentSubscription extends TournamentEntity {
-	protected TournamentSubscription() {
-	}
+public interface TournamentSubscription extends TournamentEntity<TournamentSubscription, TournamentSubscription.Id, TournamentSubscription.Context> {
+	/**
+	 * Returns number of a tournament.
+	 *
+	 * @return the number of a tournament.
+	 */
+	int getTournament();
 
 	/**
 	 * Returns player id who sent the request
 	 *
 	 * @return the player id who sent the request
 	 */
-	public abstract long getPlayer();
-
-	/**
-	 * Returns number of a tournament.
-	 *
-	 * @return the number of a tournament.
-	 */
-	public abstract int getTournament();
+	long getPlayer();
 
 	/**
 	 * Returns tournament's language.
 	 *
 	 * @return the tournament's language.
 	 */
-	public abstract Language getLanguage();
+	Language getLanguage();
 
 	/**
 	 * Returns tournament's section.
 	 *
 	 * @return the tournament's section.
 	 */
-	public abstract TournamentSection getSection();
+	TournamentSection getSection();
 
 
-	public static Id createId(int tournament, long player, Language language) {
-		return new Id(tournament, player, language);
-	}
-
-	public static Context createContext(int tournament, long player) {
-		return new Context(tournament, player);
-	}
-
-
-	public static class Id implements TournamentEntityId<TournamentSubscription> {
+	public final class Id implements TournamentEntity.Id<TournamentSubscription, Id, Context> {
 		private final int tournament;
 		private final long player;
 		private final Language language;
@@ -74,7 +62,8 @@ public abstract class TournamentSubscription extends TournamentEntity {
 		}
 	}
 
-	public static class Context implements TournamentEntityContext<TournamentSubscription> {
+
+	public final class Context implements TournamentEntity.Context<TournamentSubscription, Id, Context> {
 		private final int tournament;
 		private final long player;
 

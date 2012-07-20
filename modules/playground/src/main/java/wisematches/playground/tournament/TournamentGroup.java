@@ -9,73 +9,55 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class TournamentGroup extends TournamentEntity {
-	protected TournamentGroup() {
-	}
-
-	/**
-	 * Returns number of the group.
-	 *
-	 * @return the number of the group.
-	 */
-	public abstract int getGroup();
-
-	/**
-	 * Returns round fot the group.
-	 *
-	 * @return the round fot the group.
-	 */
-	public abstract int getRound();
-
-	/**
-	 * Returns tournament for the group.
-	 *
-	 * @return the tournament for the group.
-	 */
-	public abstract int getTournament();
+public interface TournamentGroup extends TournamentEntity<TournamentGroup, TournamentGroup.Id, TournamentGroup.Context> {
+	int getTournament();
 
 	/**
 	 * Returns language for this group.
 	 *
 	 * @return the group's language.
 	 */
-	public abstract Language getLanguage();
+	Language getLanguage();
 
 	/**
 	 * The section for this group.
 	 *
 	 * @return the group's section.
 	 */
-	public abstract TournamentSection getSection();
-
-
-	/**
-	 * Returns date when the group was started. Never {@code null}.
-	 *
-	 * @return returns date when the group was started.
-	 */
-	public abstract Date getStartedDate();
+	TournamentSection getSection();
 
 	/**
-	 * Returns date when group was finished or {@code null} is group is not finished yet.
+	 * Returns round fot the group.
 	 *
-	 * @return the date when group was finished or {@code null} if it's still active.
+	 * @return the round fot the group.
 	 */
-	public abstract Date getFinishedDate();
+	int getRound();
+
+	/**
+	 * Returns number of the group.
+	 *
+	 * @return the number of the group.
+	 */
+	int getGroup();
+
+	Date getStartedDate();
+
+	Date getFinishedDate();
+
 
 	/**
 	 * Returns number of total games in the group.
 	 *
 	 * @return the number of total games in the group.
 	 */
-	public abstract int getTotalGamesCount();
+	int getTotalGamesCount();
 
 	/**
 	 * Returns number of finished games in the group.
 	 *
 	 * @return the number of finished games in the group.
 	 */
-	public abstract int getFinishedGamesCount();
+	int getFinishedGamesCount();
 
 
 	/**
@@ -83,7 +65,7 @@ public abstract class TournamentGroup extends TournamentEntity {
 	 *
 	 * @return the array of player in the group.
 	 */
-	public abstract long[] getPlayers();
+	long[] getPlayers();
 
 	/**
 	 * Returns game id for two specified players.
@@ -95,7 +77,7 @@ public abstract class TournamentGroup extends TournamentEntity {
 	 * @return the game id or zero if players don't have common game.
 	 * @throws IllegalArgumentException if any player doesn't belong to the group.
 	 */
-	public abstract long getGame(long p1, long p2);
+	long getGame(long p1, long p2);
 
 	/**
 	 * Returns current tournament's scores for the player
@@ -104,7 +86,7 @@ public abstract class TournamentGroup extends TournamentEntity {
 	 * @return the player's scores.
 	 * @throws IllegalArgumentException if player doesn't belong to the group.
 	 */
-	public abstract short getScores(long player);
+	short getScores(long player);
 
 	/**
 	 * Returns points for finished game for specified players. The method returns points
@@ -117,19 +99,10 @@ public abstract class TournamentGroup extends TournamentEntity {
 	 * @return the game's points
 	 * @throws IllegalArgumentException if any player doesn't belong to the group.
 	 */
-	public abstract short getPoints(long p1, long p2);
+	short getPoints(long p1, long p2);
 
 
-	public static Id createId(int tournament, Language language, TournamentSection section, int round, int group) {
-		return new Id(tournament, language, section, round, group);
-	}
-
-	public static Context createContext(int tournament, Language language, TournamentSection section, int round) {
-		return new Context(tournament, language, section, round);
-	}
-
-
-	public static class Id implements TournamentEntityId<TournamentGroup> {
+	public final class Id implements TournamentEntity.Id<TournamentGroup, Id, Context> {
 		private final int tournament;
 		private final Language language;
 		private final TournamentSection section;
@@ -165,7 +138,7 @@ public abstract class TournamentGroup extends TournamentEntity {
 		}
 	}
 
-	public static class Context implements TournamentEntityContext<TournamentGroup> {
+	public final class Context implements TournamentEntity.Context<TournamentGroup, Id, Context> {
 		private final int tournament;
 		private final Language language;
 		private final TournamentSection section;

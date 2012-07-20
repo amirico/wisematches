@@ -11,14 +11,10 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tournament")
-public class HibernateTournament extends Tournament {
+public class HibernateTournament implements Tournament {
 	@javax.persistence.Id
 	@Column(name = "id")
 	private int number;
-
-	@Column(name = "scheduledDate")
-	@Temporal(TemporalType.DATE)
-	private Date scheduledDate;
 
 	@Column(name = "startedDate")
 	@Temporal(TemporalType.DATE)
@@ -28,19 +24,11 @@ public class HibernateTournament extends Tournament {
 	@Temporal(TemporalType.DATE)
 	private Date finishedDate;
 
-	@Deprecated
-	HibernateTournament() {
-	}
-
-	public HibernateTournament(Date scheduledDate) {
-		if (scheduledDate == null) {
-			throw new IllegalArgumentException("Scheduled date can't be null");
-		}
-		this.scheduledDate = scheduledDate;
+	public HibernateTournament() {
 	}
 
 	@Override
-	public int getNumber() {
+	public int getTournament() {
 		return number;
 	}
 
@@ -55,20 +43,8 @@ public class HibernateTournament extends Tournament {
 	}
 
 	@Override
-	public Date getScheduledDate() {
-		return scheduledDate;
-	}
-
-	/**
-	 * Marks the tournament as started and set started date.
-	 *
-	 * @param date date when tournament was started.
-	 */
-	protected void startTournament(Date date) {
-		if (getTournamentState() != TournamentState.SCHEDULED) {
-			throw new IllegalArgumentException("Tournament can't be started because wasn't scheduled");
-		}
-		this.startedDate = date;
+	public TournamentState getTournamentState() {
+		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	/**

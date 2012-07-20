@@ -6,6 +6,6 @@ import wisematches.playground.tournament.TournamentGroup;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameSettingsProvider<S extends GameSettings> {
+public interface TournamentSettingsProvider<S extends GameSettings> {
 	S createTournamentSettings(TournamentGroup.Id group);
 }

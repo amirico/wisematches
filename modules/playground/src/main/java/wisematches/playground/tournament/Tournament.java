@@ -10,85 +10,38 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class Tournament extends TournamentEntity {
-	protected Tournament() {
-	}
+public interface Tournament extends TournamentEntity<Tournament, Tournament.Id, Tournament.Context> {
+	int getTournament();
 
-	/**
-	 * Returns number of the tournament.
-	 *
-	 * @return the number of the tournament.
-	 */
-	public abstract int getNumber();
+	Date getStartedDate();
 
-
-	/**
-	 * The scheduled date for this tournament. Has meaning only for not initiated tournaments.
-	 *
-	 * @return the tournament scheduled date.
-	 */
-	public abstract Date getScheduledDate();
-
-
-	/**
-	 * Returns start date of the tournament. If the date in the future when the tournament
-	 * was announced but not started yet.
-	 *
-	 * @return the start date
-	 */
-	public abstract Date getStartedDate();
-
-	/**
-	 * Returns finish date of the tournament. If date is null when tournament is not finished or not started yet.
-	 *
-	 * @return the finish date or {@code null} if the tournament isn't finished.
-	 */
-	public abstract Date getFinishedDate();
+	Date getFinishedDate();
 
 	/**
 	 * Returns current tournament's state based on dates.
 	 *
 	 * @return the current tournament's state based on dates.
 	 */
-	public TournamentState getTournamentState() {
-		if (getFinishedDate() != null) {
-			return TournamentState.FINISHED;
-		}
-		if (getStartedDate() != null) {
-			return TournamentState.STARTED;
-		}
-		if (getScheduledDate() != null) {
-			return TournamentState.SCHEDULED;
-		}
-		throw new IllegalStateException("Tournament in incorrect state.");
-	}
+	TournamentState getTournamentState();
 
 
-	public static Id createId(final int tournament) {
-		return new Id(tournament);
-	}
-
-	public static Context createContext(TournamentState state) {
-		return new Context(state);
-	}
-
-
-	public static class Id implements TournamentEntityId<Tournament> {
+	public final class Id implements TournamentEntity.Id<Tournament, Id, Context> {
 		private final int tournament;
 
-		protected Id(int tournament) {
+		public Id(int tournament) {
 			this.tournament = tournament;
 		}
 
+		@Override
 		public int getTournament() {
 			return tournament;
 		}
 	}
 
-	public static class Context implements TournamentEntityContext<Tournament> {
+	public final class Context implements TournamentEntity.Context<Tournament, Id, Context> {
 		private final TournamentState tournamentState;
 
-		private Context(TournamentState tournamentState) {
+		public Context(TournamentState tournamentState) {
 			this.tournamentState = tournamentState;
 		}
 
