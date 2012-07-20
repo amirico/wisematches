@@ -78,8 +78,8 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 			if (announcement != null) {
 				tournamentAnnouncement = new AnnouncementImpl(announcement);
 			} else {
-				tournamentAnnouncement = new AnnouncementImpl(scheduleTournament(getMidnight()));
-				fireTournamentStateChanged(tournamentAnnouncement, TournamentState.SCHEDULED);
+				tournamentAnnouncement = new AnnouncementImpl(announceTournament(getMidnight()));
+//				fireTournamentStateChanged(tournamentAnnouncement, TournamentState.SCHEDULED);
 			}
 //			assuredTaskExecutor.registerProcessor(TSMActivity.createTaskProcessor(this));
 		} finally {
@@ -173,9 +173,9 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	protected abstract TournamentSubscription saveSubscription(int tournament, Player player, Language language, TournamentSection section);
 
 
-	protected abstract Tournament loadTournament(int number);
+	protected abstract Announcement announceTournament(Date date);
 
-	protected abstract Tournament scheduleTournament(Date date);
+	protected abstract Tournament loadTournament(int number);
 
 	protected abstract Tournament startTournament(int number, Date date);
 
@@ -214,9 +214,9 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 				case FINISHED:
 					stateListener.tournamentFinished(tournament);
 					break;
-				case SCHEDULED:
-					stateListener.tournamentScheduled(tournament);
-					break;
+//				case SCHEDULED:
+//					stateListener.tournamentScheduled(tournament);
+//					break;
 				default:
 					throw new IllegalArgumentException("Unsupported state: " + state);
 			}
@@ -233,13 +233,13 @@ public abstract class AbstractTournamentManager implements TournamentManager, Br
 	}
 
 	private void checkAnnouncement(int tournament, Player player, Language language) throws WrongTournamentException {
-		final Tournament scheduledTournament = getAnnouncement();
+		final Announcement scheduledTournament = getAnnouncement();
 		if (scheduledTournament == null) {
 			throw new WrongTournamentException(tournament, 0, "No active announcements");
 		}
 
-		if (scheduledTournament.getNumber() != tournament) {
-			throw new WrongTournamentException(tournament, scheduledTournament.getNumber());
+		if (scheduledTournament.getTournament() != tournament) {
+			throw new WrongTournamentException(tournament, scheduledTournament.getTournament());
 		}
 
 		if (player == null) {

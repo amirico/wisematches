@@ -5,8 +5,6 @@ import wisematches.personality.Language;
 import wisematches.playground.tournament.Tournament;
 import wisematches.playground.tournament.TournamentSection;
 
-import java.util.Date;
-
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 
@@ -20,11 +18,11 @@ public class TournamentAnnouncementImplTest {
 	@Test
 	public void testBoughtTickets() {
 		final Tournament tournament = createMock(Tournament.class);
-		expect(tournament.getNumber()).andReturn(1);
-		expect(tournament.getScheduledDate()).andReturn(new Date());
+		expect(tournament.getTournament()).andReturn(1);
+//		expect(tournament.getScheduledDate()).andReturn(new Date());
 		replay(tournament);
 
-		final AnnouncementImpl announcement = new AnnouncementImpl(tournament);
+		final AnnouncementImpl announcement = null;//new AnnouncementImpl(tournament);
 
 		for (Language language : Language.values()) {
 			for (TournamentSection category : TournamentSection.values()) {

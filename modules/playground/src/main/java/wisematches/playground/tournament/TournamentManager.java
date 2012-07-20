@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TournamentManager extends SearchManager<TournamentEntity, TournamentEntityContext, SearchFilter> {
+public interface TournamentManager extends SearchManager<TournamentEntity, TournamentEntity.Context, SearchFilter> {
 	void addTournamentStateListener(TournamentStateListener l);
 
 	void removeTournamentStateListener(TournamentStateListener l);
@@ -66,7 +66,7 @@ public interface TournamentManager extends SearchManager<TournamentEntity, Tourn
 	TournamentSubscription unsubscribe(int announcement, Player player, Language language) throws WrongTournamentException;
 
 
-	<T extends TournamentEntity> T getTournamentEntity(TournamentEntityId<T> id);
+	<T extends TournamentEntity<T, I, C>, I extends TournamentEntity.Id<T, I, C>, C extends TournamentEntity.Context<T, I, C>> T getTournamentEntity(TournamentEntity.Id<T, I, C> id);
 
-	<T extends TournamentEntity> List<T> searchTournamentEntities(Personality person, TournamentEntityContext<T> context, SearchFilter filter, Orders orders, Range range);
+	<T extends TournamentEntity<T, I, C>, I extends TournamentEntity.Id<T, I, C>, C extends TournamentEntity.Context<T, I, C>> List<T> searchTournamentEntities(Personality person, TournamentEntity.Context<T, I, C> context, SearchFilter filter, Orders orders, Range range);
 }

@@ -6,6 +6,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.personality.Language;
+import wisematches.playground.tournament.TournamentDivision;
+import wisematches.playground.tournament.TournamentManager;
+import wisematches.playground.tournament.TournamentSection;
+
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -22,6 +28,10 @@ public class HibernateTournamentManagerTest {
 
 	@Test
 	public void testSearchManager() {
+		TournamentManager manager = new HibernateTournamentManager();
+
+		final List<TournamentDivision> tournaments = manager.searchTournamentEntities(null, new TournamentDivision.Context(1, Language.EN, TournamentSection.CASUAL), null, null, null);
+
 /*
         final HibernateTournamentManager m = new HibernateTournamentManager();
 

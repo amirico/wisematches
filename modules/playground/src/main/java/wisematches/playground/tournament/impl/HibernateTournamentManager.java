@@ -33,9 +33,9 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 		criteria.add(Restrictions.isNull("startedDate")).add(Restrictions.isNull("finishedDate"));
 		final Tournament tournament = (Tournament) criteria.uniqueResult();
 		if (tournament != null) {
-			final AnnouncementImpl res = new AnnouncementImpl(tournament);
+			final AnnouncementImpl res = null; //new AnnouncementImpl(tournament);
 			final Criteria values = session.createCriteria(HibernateTournamentSubscription.class, "request")
-					.add(Restrictions.eq("pk.announcement", res.getNumber()))
+					.add(Restrictions.eq("pk.announcement", res.getTournament()))
 					.setProjection(Projections.projectionList()
 							.add(Projections.groupProperty("pk.language"))
 							.add(Projections.groupProperty("section"))
@@ -55,11 +55,6 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 
 	@Override
 	protected Collection<TournamentSubscription> loadSubscriptions(int tournament, Player player) {
-		throw new UnsupportedOperationException("TODO: Not implemented");
-	}
-
-	@Override
-	protected Tournament scheduleTournament(Date date) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
@@ -92,6 +87,11 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 	}
 
 	@Override
+	protected Announcement announceTournament(Date date) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+
+	@Override
 	protected Tournament loadTournament(int number) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
@@ -121,27 +121,27 @@ public class HibernateTournamentManager extends AbstractTournamentManager {
 	}
 
 	@Override
-	public <T extends TournamentEntity> T getTournamentEntity(TournamentEntityId<T> id) {
+	public int getTotalCount(Personality person, TournamentEntity.Context context) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public <T extends TournamentEntity> List<T> searchTournamentEntities(Personality person, TournamentEntityContext<T> context, SearchFilter filter, Orders orders, Range range) {
+	public int getFilteredCount(Personality person, TournamentEntity.Context context, SearchFilter filter) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public int getTotalCount(Personality person, TournamentEntityContext context) {
+	public List<TournamentEntity> searchEntities(Personality person, TournamentEntity.Context context, SearchFilter filter, Orders orders, Range range) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public int getFilteredCount(Personality person, TournamentEntityContext context, SearchFilter filter) {
+	public <T extends TournamentEntity<T, I, C>, I extends TournamentEntity.Id<T, I, C>, C extends TournamentEntity.Context<T, I, C>> T getTournamentEntity(TournamentEntity.Id<T, I, C> id) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 
 	@Override
-	public List<TournamentEntity> searchEntities(Personality person, TournamentEntityContext context, SearchFilter filter, Orders orders, Range range) {
+	public <T extends TournamentEntity<T, I, C>, I extends TournamentEntity.Id<T, I, C>, C extends TournamentEntity.Context<T, I, C>> List<T> searchTournamentEntities(Personality person, TournamentEntity.Context<T, I, C> context, SearchFilter filter, Orders orders, Range range) {
 		throw new UnsupportedOperationException("TODO: Not implemented");
 	}
 }

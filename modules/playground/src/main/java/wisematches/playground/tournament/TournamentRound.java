@@ -9,52 +9,34 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class TournamentRound extends TournamentEntity {
-	protected TournamentRound() {
-	}
-
-	/**
-	 * Returns number of the round.
-	 *
-	 * @return the number of the round.
-	 */
-	public abstract int getRound();
-
-	/**
-	 * Returns tournament that contains this round.
-	 *
-	 * @return the tournament that contains this round.
-	 */
-	public abstract int getTournament();
+public interface TournamentRound extends TournamentEntity<TournamentRound, TournamentRound.Id, TournamentRound.Context> {
+	int getTournament();
 
 	/**
 	 * Returns language for the round.
 	 *
 	 * @return the language for the round.
 	 */
-	public abstract Language getLanguage();
+	Language getLanguage();
 
 	/**
 	 * Returns section of this round.
 	 *
 	 * @return the section of the round.
 	 */
-	public abstract TournamentSection getSection();
-
-
-	/**
-	 * Returns date when round was started.
-	 *
-	 * @return the date when round was started.
-	 */
-	public abstract Date getStartedDate();
+	TournamentSection getSection();
 
 	/**
-	 * Returns date when round was finished.
+	 * Returns number of the round.
 	 *
-	 * @return the date when round was finished or {@code null} if round is in progress.
+	 * @return the number of the round.
 	 */
-	public abstract Date getFinishedDate();
+	int getRound();
+
+
+	Date getStartedDate();
+
+	Date getFinishedDate();
 
 
 	/**
@@ -62,26 +44,17 @@ public abstract class TournamentRound extends TournamentEntity {
 	 *
 	 * @return the number of total games in the round.
 	 */
-	public abstract int getTotalGamesCount();
+	int getTotalGamesCount();
 
 	/**
 	 * Returns number of finished games.
 	 *
 	 * @return the number of finished games.
 	 */
-	public abstract int getFinishedGamesCount();
+	int getFinishedGamesCount();
 
 
-	public static Id createId(int tournament, Language language, TournamentSection section, int round) {
-		return new Id(tournament, language, section, round);
-	}
-
-	public static Context createContext(int tournament, Language language, TournamentSection section) {
-		return new Context(tournament, language, section);
-	}
-
-
-	public static class Id implements TournamentEntityId<TournamentRound> {
+	public static class Id implements TournamentEntity.Id<TournamentRound, Id, Context> {
 		private final int tournament;
 		private final Language language;
 		private final TournamentSection section;
@@ -111,7 +84,7 @@ public abstract class TournamentRound extends TournamentEntity {
 		}
 	}
 
-	public static class Context implements TournamentEntityContext<TournamentRound> {
+	public static class Context implements TournamentEntity.Context<TournamentRound, Id, Context> {
 		private final int tournament;
 		private final Language language;
 		private final TournamentSection section;
