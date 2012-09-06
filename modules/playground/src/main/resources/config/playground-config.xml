@@ -56,7 +56,7 @@
     </bean>
 
     <bean id="tournamentManager"
-          class="wisematches.playground.tournament.impl.HibernateTournamentManager">
+          class="wisematches.playground.tourney.implOld.HibernateTournamentManager">
         <!-- every first monday -->
         <property name="cronExpression" value="* * * ? * 2#1"/>
 

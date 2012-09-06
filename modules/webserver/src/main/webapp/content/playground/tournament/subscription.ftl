@@ -1,8 +1,8 @@
-<#-- @ftlvariable name="sections" type="wisematches.playground.tournament.TournamentSection[]" -->
+<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TournamentSection[]" -->
 <#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="playerRating" type="java.lang.Short" -->
-<#-- @ftlvariable name="subscription" type="wisematches.playground.tournament.TournamentSubscription" -->
-<#-- @ftlvariable name="tournament" type="wisematches.playground.tournament.Announcement" -->
+<#-- @ftlvariable name="subscription" type="wisematches.playground.tourney.TourneySubscription" -->
+<#-- @ftlvariable name="tournament" type="wisematches.playground.tourney.Announcement" -->
 <#include "/core.ftl">
 
 <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>

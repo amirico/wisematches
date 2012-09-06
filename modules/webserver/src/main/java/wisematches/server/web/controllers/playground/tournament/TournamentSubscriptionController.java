@@ -4,22 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.personality.Language;
-import wisematches.personality.player.Player;
-import wisematches.playground.tournament.*;
+import wisematches.playground.tourney.TourneyManager;
 import wisematches.playground.tracking.PlayerStatisticManager;
-import wisematches.server.web.controllers.ServiceResponse;
-import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.tournament.form.SubscriptionForm;
-
-import java.util.Collection;
-import java.util.Locale;
 
 /**
  * NOTE: this controller and view support only one subscription and limit functionality of
@@ -30,7 +18,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/tournament")
 public class TournamentSubscriptionController extends WisematchesController {
-	private TournamentManager tournamentManager;
+	private TourneyManager tournamentManager;
 	private PlayerStatisticManager statisticManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.tournament");
@@ -38,6 +26,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 	public TournamentSubscriptionController() {
 	}
 
+/*
 	@RequestMapping("")
 	public String tournamentsPage(Model model) {
 		final Announcement announcement = tournamentManager.getAnnouncement();
@@ -138,6 +127,7 @@ public class TournamentSubscriptionController extends WisematchesController {
 	public void setTournamentManager(TournamentManager tournamentManager) {
 		this.tournamentManager = tournamentManager;
 	}
+*/
 
 	@Autowired
 	public void setStatisticManager(PlayerStatisticManager statisticManager) {
