@@ -27,7 +27,7 @@ public interface SearchManager<E, C, F extends SearchFilter> {
 	 * @param context the context for search.
 	 * @return number of items available for search.
 	 */
-	int getTotalCount(Personality person, C context);
+	<Ctx extends C> int getTotalCount(Personality person, Ctx context);
 
 	/**
 	 * Returns count of filtered items by specified {@code criteria}
@@ -37,7 +37,7 @@ public interface SearchManager<E, C, F extends SearchFilter> {
 	 * @param filter  the search filter
 	 * @return number of items available for search according to specified {@code criteria}
 	 */
-	int getFilteredCount(Personality person, C context, F filter);
+	<Ctx extends C, Fl extends F> int getFilteredCount(Personality person, Ctx context, Fl filter);
 
 	/**
 	 * Searches and returns list of all entities for specified person in specified context and according
@@ -53,5 +53,5 @@ public interface SearchManager<E, C, F extends SearchFilter> {
 	 * @param range   the range of returned entities.
 	 * @return list of entities or empty list if no entities are found.
 	 */
-	List<E> searchEntities(Personality person, C context, F filter, Orders orders, Range range);
+	<Ctx extends C, Fl extends F> List<E> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range);
 }

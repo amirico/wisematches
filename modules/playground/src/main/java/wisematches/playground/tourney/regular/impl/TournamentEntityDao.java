@@ -1,4 +1,4 @@
-package wisematches.playground.tourney.impl;
+package wisematches.playground.tourney.regular.impl;
 
 import wisematches.playground.tourney.TourneyEntity;
 

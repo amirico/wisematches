@@ -6,7 +6,10 @@ package wisematches.playground.tourney;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneySubscription<T extends TourneySubscription<T, I, C>, I extends TourneyEntity.Id<T, I>, C extends TourneyEntity.Context<T, C>> extends TourneyEntity<T, I, C> {
+public interface TourneySubscription<
+		T extends TourneySubscription<T, I, C>,
+		I extends TourneyEntity.Id<T, I>,
+		C extends TourneyEntity.Context<T, C>> extends TourneyEntity<T, I, C> {
 	/**
 	 * Returns player id who sent the request
 	 *

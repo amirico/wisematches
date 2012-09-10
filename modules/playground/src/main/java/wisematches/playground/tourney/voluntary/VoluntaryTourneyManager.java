@@ -5,5 +5,5 @@ import wisematches.playground.tourney.TourneyManager;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface VoluntaryTourneyManager extends TourneyManager<VoluntarySubscription> {
+public interface VoluntaryTourneyManager extends TourneyManager<VoluntaryTourneyEntity, VoluntaryTourneyElement, VoluntaryTourneySubscription> {
 }

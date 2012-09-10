@@ -1,19 +1,17 @@
-package wisematches.playground.tourney.regular;
-
-import wisematches.playground.tourney.TourneySubscriptionException;
+package wisematches.playground.tourney;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TourneySectionException extends TourneySubscriptionException {
+public class TourneyElementException extends TourneySubscriptionException {
 	private final int currentRating;
 	private final int expectedRating;
 
-	public TourneySectionException(int currentRating, int expectedRating) {
+	public TourneyElementException(int currentRating, int expectedRating) {
 		this(currentRating, expectedRating, null);
 	}
 
-	public TourneySectionException(int currentRating, int expectedRating, String message) {
+	public TourneyElementException(int currentRating, int expectedRating, String message) {
 		super(message);
 		this.currentRating = currentRating;
 		this.expectedRating = expectedRating;

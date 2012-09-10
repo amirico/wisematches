@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyDivision extends TourneyEntity<TourneyDivision, TourneyDivision.Id, TourneyDivision.Context> {
+public interface RegularTourneyDivision extends RegularTourneyElement<RegularTourneyDivision, RegularTourneyDivision.Id, RegularTourneyDivision.Context> {
 	/**
 	 * Returns division language
 	 *
@@ -24,7 +24,7 @@ public interface TourneyDivision extends TourneyEntity<TourneyDivision, TourneyD
 	 *
 	 * @return the division section.
 	 */
-	TournamentSection getSection();
+	RegularTourneySection getSection();
 
 	Date getStartedDate();
 
@@ -39,15 +39,15 @@ public interface TourneyDivision extends TourneyEntity<TourneyDivision, TourneyD
 	int getActiveRound();
 
 
-	public final class Id implements TourneyEntity.Id<TourneyDivision, Id> {
+	public final class Id implements TourneyEntity.Id<RegularTourneyDivision, Id> {
 	}
 
-	public final class Context implements TourneyEntity.Context<TourneyDivision, Context> {
+	public final class Context implements TourneyEntity.Context<RegularTourneyDivision, Context> {
 		private final int tournament;
 		private final Language language;
-		private final TournamentSection section;
+		private final RegularTourneySection section;
 
-		public Context(int tournament, Language language, TournamentSection section) {
+		public Context(int tournament, Language language, RegularTourneySection section) {
 			this.tournament = tournament;
 			this.language = language;
 			this.section = section;
@@ -61,7 +61,7 @@ public interface TourneyDivision extends TourneyEntity<TourneyDivision, TourneyD
 			return language;
 		}
 
-		public TournamentSection getSection() {
+		public RegularTourneySection getSection() {
 			return section;
 		}
 	}

@@ -1,4 +1,4 @@
-package wisematches.playground.tourney.impl;
+package wisematches.playground.tourney.regular.impl;
 
 import org.quartz.CronExpression;
 import wisematches.playground.timer.BreakingDayListener;

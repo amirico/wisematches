@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyGroup extends TourneyEntity<TourneyGroup, TourneyGroup.Id, TourneyGroup.Context> {
+public interface RegularTourneyGroup extends RegularTourneyElement<RegularTourneyGroup, RegularTourneyGroup.Id, RegularTourneyGroup.Context> {
 	int getTournament();
 
 	/**
@@ -25,7 +25,7 @@ public interface TourneyGroup extends TourneyEntity<TourneyGroup, TourneyGroup.I
 	 *
 	 * @return the group's section.
 	 */
-	TournamentSection getSection();
+	RegularTourneySection getSection();
 
 	/**
 	 * Returns round fot the group.
@@ -81,10 +81,11 @@ public interface TourneyGroup extends TourneyEntity<TourneyGroup, TourneyGroup.I
 	 *//*
 	long getGame(long p1, long p2);
 
-	*//**
+	*/
+
+	/**
 	 * Returns current tournament's scores for the player
 	 *
-	 * @param player the player who's scores should be returned.
 	 * @return the player's scores.
 	 * @throws IllegalArgumentException if player doesn't belong to the group.
 	 *//*
@@ -92,30 +93,18 @@ public interface TourneyGroup extends TourneyEntity<TourneyGroup, TourneyGroup.I
 
 	*/
 
-	/**
-	 * Returns points for finished game for specified players. The method returns points
-	 * for the game returned by {@link #getGame(long, long)} method.
-	 * <p/>
-	 * Please note that method can returns two different games in case of {@code p1-p2} and {@code p2-p1}
-	 *
-	 * @param p1 the first player
-	 * @param p2 the second player
-	 * @return the game's points
-	 * @throws IllegalArgumentException if any player doesn't belong to the group.
-	 *//*
-	short getPoints(long p1, long p2);*/
+//	short getPoints(long p1, long p2);
 
-	public final class Id implements TourneyEntity.Id<TourneyGroup, Id> {
-
+	public final class Id implements TourneyEntity.Id<RegularTourneyGroup, Id> {
 	}
 
-	public final class Context implements TourneyEntity.Context<TourneyGroup, Context> {
+	public final class Context implements TourneyEntity.Context<RegularTourneyGroup, Context> {
 		private final int tournament;
 		private final Language language;
-		private final TournamentSection section;
+		private final RegularTourneySection section;
 		private final int round;
 
-		private Context(int round, Language language, TournamentSection section, int tournament) {
+		public Context(int round, Language language, RegularTourneySection section, int tournament) {
 			this.round = round;
 			this.section = section;
 			this.language = language;
@@ -130,7 +119,7 @@ public interface TourneyGroup extends TourneyEntity<TourneyGroup, TourneyGroup.I
 			return language;
 		}
 
-		public TournamentSection getSection() {
+		public RegularTourneySection getSection() {
 			return section;
 		}
 

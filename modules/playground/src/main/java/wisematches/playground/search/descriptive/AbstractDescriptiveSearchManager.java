@@ -38,12 +38,12 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 	}
 
 	@Override
-	public int getTotalCount(Personality person, final C context) {
+	public <Ctx extends C> int getTotalCount(Personality person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public int getFilteredCount(final Personality person, final C context, final F filter) {
+	public <Ctx extends C, Fl extends F> int getFilteredCount(Personality person, Ctx context, Fl filter) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -74,7 +74,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> searchEntities(final Personality person, final C context, final F filter, final Orders orders, final Range range) {
+	public <Ctx extends C, Fl extends F> List<T> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
