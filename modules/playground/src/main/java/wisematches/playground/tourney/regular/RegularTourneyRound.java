@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyRound extends TourneyEntity<TourneyRound, TourneyRound.Id, TourneyRound.Context> {
+public interface RegularTourneyRound extends RegularTourneyElement<RegularTourneyRound, RegularTourneyRound.Id, RegularTourneyRound.Context> {
 	int getTournament();
 
 	/**
@@ -25,7 +25,7 @@ public interface TourneyRound extends TourneyEntity<TourneyRound, TourneyRound.I
 	 *
 	 * @return the section of the round.
 	 */
-	TournamentSection getSection();
+	RegularTourneySection getSection();
 
 	/**
 	 * Returns number of the round.
@@ -55,16 +55,16 @@ public interface TourneyRound extends TourneyEntity<TourneyRound, TourneyRound.I
 	int getFinishedGamesCount();
 
 
-	public final class Id implements TourneyEntity.Id<TourneyRound, Id> {
+	public final class Id implements TourneyEntity.Id<RegularTourneyRound, Id> {
 
 	}
 
-	public final class Context implements TourneyEntity.Context<TourneyRound, Context> {
+	public final class Context implements TourneyEntity.Context<RegularTourneyRound, Context> {
 		private final int tournament;
 		private final Language language;
-		private final TournamentSection section;
+		private final RegularTourneySection section;
 
-		public Context(int tournament, Language language, TournamentSection section) {
+		public Context(int tournament, Language language, RegularTourneySection section) {
 			this.tournament = tournament;
 			this.language = language;
 			this.section = section;
@@ -78,7 +78,7 @@ public interface TourneyRound extends TourneyEntity<TourneyRound, TourneyRound.I
 			return language;
 		}
 
-		public TournamentSection getSection() {
+		public RegularTourneySection getSection() {
 			return section;
 		}
 	}

@@ -1,8 +1,8 @@
-package wisematches.playground.tourney.impl.hibernate;
+package wisematches.playground.tourney.regular.impl.hibernate;
 
 import org.hibernate.SessionFactory;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.impl.TournamentEntityDao;
+import wisematches.playground.tourney.regular.impl.TournamentEntityDao;
 
 import java.util.Collection;
 

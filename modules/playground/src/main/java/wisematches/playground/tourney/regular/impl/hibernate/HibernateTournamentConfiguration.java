@@ -1,4 +1,4 @@
-package wisematches.playground.tourney.impl.hibernate;
+package wisematches.playground.tourney.regular.impl.hibernate;
 
 import javax.persistence.*;
 import java.util.Date;

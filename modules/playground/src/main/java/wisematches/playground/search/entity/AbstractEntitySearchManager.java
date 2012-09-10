@@ -24,12 +24,12 @@ public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> 
 	}
 
 	@Override
-	public int getTotalCount(Personality person, C context) {
+	public <Ctx extends C> int getTotalCount(Personality person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public int getFilteredCount(Personality person, C context, F filter) {
+	public <Ctx extends C, Fl extends F> int getFilteredCount(Personality person, Ctx context, Fl filter) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
@@ -40,7 +40,7 @@ public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<E> searchEntities(Personality person, C context, F filter, Orders orders, Range range) {
+	public <Ctx extends C, Fl extends F> List<E> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);

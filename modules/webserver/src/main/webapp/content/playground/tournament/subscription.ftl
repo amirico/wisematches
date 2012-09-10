@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TournamentSection[]" -->
+<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.RegularTourneySection[]" -->
 <#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="playerRating" type="java.lang.Short" -->
 <#-- @ftlvariable name="subscription" type="wisematches.playground.tourney.TourneySubscription" -->
