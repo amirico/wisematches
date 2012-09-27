@@ -5,7 +5,7 @@ package wisematches.playground.tourney.regular;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum RegularTourneySection {
+public enum TourneySection {
 	//	!!!WARNING: ORDER IS VERY IMPORTANT. DATABASE MUST BE UPDATED IF CHANGED!!!
 	CASUAL(1300),
 	INTERMEDIATE(1500),
@@ -15,7 +15,7 @@ public enum RegularTourneySection {
 
 	private final int topRating;
 
-	RegularTourneySection(int topRating) {
+	TourneySection(int topRating) {
 		this.topRating = topRating;
 	}
 
@@ -45,8 +45,8 @@ public enum RegularTourneySection {
 	 *
 	 * @return next higher section.
 	 */
-	public RegularTourneySection getHigherSection() {
-		final RegularTourneySection[] values = values();
+	public TourneySection getHigherSection() {
+		final TourneySection[] values = values();
 		final int ordinal = ordinal();
 		if (ordinal + 1 >= values.length) {
 			return null;

@@ -1,4 +1,4 @@
-package wisematches.playground.tourney;
+package wisematches.playground.tourney.regular;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

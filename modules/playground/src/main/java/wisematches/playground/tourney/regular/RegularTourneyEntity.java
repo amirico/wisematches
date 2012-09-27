@@ -9,6 +9,4 @@ public interface RegularTourneyEntity<
 		T extends RegularTourneyEntity<T, I, C>,
 		I extends TourneyEntity.Id<T, I>,
 		C extends TourneyEntity.Context<T, C>> extends TourneyEntity<T, I, C> {
-
-	int getTournament();
 }
