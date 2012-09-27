@@ -55,25 +55,29 @@
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="tournamentManager"
-          class="wisematches.playground.tourney.implOld.HibernateTournamentManager">
-        <!-- every first monday -->
-        <property name="cronExpression" value="* * * ? * 2#1"/>
+    <!--
+        <bean id="tournamentManager"
+              class="wisematches.playground.tourney.implOld.HibernateTournamentManager">
+            &lt;!&ndash; every first monday &ndash;&gt;
+            <property name="cronExpression" value="* * * ? * 2#1"/>
 
-        <property name="ratingManager" ref="ratingManager"/>
+            <property name="ratingManager" ref="ratingManager"/>
 
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="assuredTaskExecutor">
-            <bean class="wisematches.playground.task.assured.FileAssuredTaskExecutor">
-                <property name="fileStorage" value=""/>
-                <property name="executor" ref="tournamentTaskExecutor"/>
-            </bean>
-        </property>
-    </bean>
+            <property name="sessionFactory" ref="sessionFactory"/>
+            <property name="assuredTaskExecutor">
+                <bean class="wisematches.playground.task.assured.FileAssuredTaskExecutor">
+                    <property name="fileStorage" value=""/>
+                    <property name="executor" ref="tournamentTaskExecutor"/>
+                </bean>
+            </property>
+        </bean>
 
+    -->
+    <!--
 
-    <bean id="tournamentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-    </bean>
+        <bean id="tournamentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        </bean>
+    -->
 
     <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="cronExpression" value="0 0 2 * * ?"/>
@@ -90,7 +94,7 @@
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="tournamentTrigger"/>
+                <!--<ref bean="tournamentTrigger"/>-->
                 <ref bean="messagesCleanerTrigger"/>
             </list>
         </property>
