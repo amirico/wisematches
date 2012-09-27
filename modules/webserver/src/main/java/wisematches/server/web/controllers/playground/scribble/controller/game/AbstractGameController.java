@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
+import wisematches.personality.player.computer.guest.GuestPlayer;
+import wisematches.playground.GameState;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleBoardManager;
@@ -20,51 +22,57 @@ import wisematches.server.web.services.state.PlayerStateManager;
 @Controller
 @RequestMapping("/playground/scribble")
 public class AbstractGameController extends WisematchesController {
-    protected PlayerManager playerManager;
-    protected GameMessageSource messageSource;
-    protected ScribbleBoardManager boardManager;
-    protected PlayerStateManager playerStateManager;
-    protected PlayerStatisticManager playerStatisticManager;
-    protected GameProposalManager<ScribbleSettings> proposalManager;
+	protected PlayerManager playerManager;
+	protected GameMessageSource messageSource;
+	protected ScribbleBoardManager boardManager;
+	protected PlayerStateManager playerStateManager;
+	protected PlayerStatisticManager playerStatisticManager;
+	protected GameProposalManager<ScribbleSettings> proposalManager;
 
-    public AbstractGameController() {
-    }
+	public AbstractGameController() {
+	}
 
-    protected int getActiveGamesCount(Player principal) {
-        return playerStatisticManager.getPlayerStatistic(principal).getActiveGames() + proposalManager.getTotalCount(principal, ProposalRelation.INVOLVED);
-    }
+	protected int getActiveGamesCount(Player principal) {
+		int activeGames;
+		if (!GuestPlayer.isGuestPlayer(principal)) {
+			activeGames = playerStatisticManager.getPlayerStatistic(principal).getActiveGames();
+		} else {
+			activeGames = boardManager.getTotalCount(principal, GameState.ACTIVE);
+		}
+		return activeGames + proposalManager.getTotalCount(principal, ProposalRelation.INVOLVED);
+	}
 
-    protected int getFinishedGamesCount(Player principal) {
-        return playerStatisticManager.getPlayerStatistic(principal).getFinishedGames();
-    }
+	protected int getFinishedGamesCount(Player principal) {
+		return playerStatisticManager.getPlayerStatistic(principal).getFinishedGames();
+	}
 
-    @Autowired
-    public void setPlayerManager(PlayerManager playerManager) {
-        this.playerManager = playerManager;
-    }
+	@Autowired
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
+	}
 
-    @Autowired
-    public void setMessageSource(GameMessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
+	@Autowired
+	public void setMessageSource(GameMessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 
-    @Autowired
-    public void setBoardManager(ScribbleBoardManager boardManager) {
-        this.boardManager = boardManager;
-    }
+	@Autowired
+	public void setBoardManager(ScribbleBoardManager boardManager) {
+		this.boardManager = boardManager;
+	}
 
-    @Autowired
-    public void setPlayerStateManager(PlayerStateManager playerStateManager) {
-        this.playerStateManager = playerStateManager;
-    }
+	@Autowired
+	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
+		this.playerStateManager = playerStateManager;
+	}
 
-    @Autowired
-    public void setPlayerStatisticManager(PlayerStatisticManager playerStatisticManager) {
-        this.playerStatisticManager = playerStatisticManager;
-    }
+	@Autowired
+	public void setPlayerStatisticManager(PlayerStatisticManager playerStatisticManager) {
+		this.playerStatisticManager = playerStatisticManager;
+	}
 
-    @Autowired
-    public void setProposalManager(GameProposalManager<ScribbleSettings> proposalManager) {
-        this.proposalManager = proposalManager;
-    }
+	@Autowired
+	public void setProposalManager(GameProposalManager<ScribbleSettings> proposalManager) {
+		this.proposalManager = proposalManager;
+	}
 }

@@ -5,17 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wisematches.database.Orders;
-import wisematches.database.Range;
-import wisematches.personality.Language;
-import wisematches.personality.Personality;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.tourney.*;
-import wisematches.playground.tourney.regular.*;
+import wisematches.playground.tourney.TourneyEntityManager;
 import wisematches.playground.tracking.PlayerStatisticManager;
 import wisematches.server.web.controllers.WisematchesController;
-
-import java.util.List;
 
 /**
  * NOTE: this controller and view support only one subscription and limit functionality of
@@ -26,125 +18,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/playground/tournament")
 public class TournamentSubscriptionController extends WisematchesController {
-	private TourneyManager tournamentManager;
+	private TourneyEntityManager tournamentManager;
 	private PlayerStatisticManager statisticManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.tournament");
 
 	public TournamentSubscriptionController() {
-		RegularTourneyManager m = new RegularTourneyManager() {
-
-			@Override
-			public void addTourneyElementListener(TourneyElementListener<RegularTourneyElement> l) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public void removeTourneyElementListener(TourneyElementListener<RegularTourneyElement> l) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public void addTourneySubscriptionListener(TourneySubscriptionListener<RegularTourneySubscription> l) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public void removeTourneySubscriptionListener(TourneySubscriptionListener<RegularTourneySubscription> l) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public boolean subscribe(RegularTourneySubscription subscription) throws TourneySubscriptionException {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public boolean unsubscribe(RegularTourneySubscription subscription) throws TourneySubscriptionException {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public RegularTourneySubscription getSubscription(int tournament, long player) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public <T extends RegularTourneyEntity, K extends TourneyEntity.Id<? extends T, ?>> T getTournamentEntity(K id) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public <T extends RegularTourneyEntity, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTournamentEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Personality person, Ctx context) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> int getFilteredCount(Personality person, Ctx context, Fl filter) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-			@Override
-			public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> List<RegularTourneyEntity> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
-				throw new UnsupportedOperationException("TODO: Not implemented");
-			}
-
-//			@Override
-//			public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> List<RegularTourneyEntity> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
-//				throw new UnsupportedOperationException("TODO: Not implemented");
-//			}
-
-//			@Override
-//			public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> List<RegularTourneyEntity> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
-//				throw new UnsupportedOperationException("TODO: Not implemented");
-//			}
-		};
-		try {
-			m.subscribe(new RegularTourneySubscription());
-
-			m.addTourneyElementListener(new TourneyElementListener<RegularTourneyElement>() {
-				@Override
-				public void tourneyEntityStarted(RegularTourneyElement element) {
-					throw new UnsupportedOperationException("TODO: Not implemented");
-				}
-
-				@Override
-				public void tourneyEntityFinished(RegularTourneyElement element) {
-					throw new UnsupportedOperationException("TODO: Not implemented");
-				}
-
-				@Override
-				public void tourneyEntityScheduled(RegularTourneyElement element) {
-					throw new UnsupportedOperationException("TODO: Not implemented");
-				}
-			});
-
-			final RegularTourneyGroup tournamentEntity = m.getTournamentEntity(new RegularTourneyGroup.Id());
-
-			final RegularTourneyGroup group = m.getTournamentEntity(new RegularTourneyGroup.Id());
-			final RegularTourneyGroup.Context ctx = new RegularTourneyGroup.Context(1, Language.EN, RegularTourneySection.ADVANCED, 1);
-			final int totalCount = m.getTotalCount(null, ctx);
-
-			final RegularTourneySubscription entity = m.getTournamentEntity(new RegularTourneySubscription.Id());
-			final List<RegularTourneyGroup> groups = m.searchTournamentEntities(null, ctx, null, null, null);
-
-//			final List<TourneyGroup> groups = m.searchTournamentEntities(null, ctx, null, null, null);
-//			final List<RegularTourneyEntity> entities = m.searchEntities(null, ctx, null, null, null);
-//			for (RegularTourneyEntity entity : entities) {
-//				TourneyGroup g = (TourneyGroup) entity;
-//			}
-
-
-//			final RegularTourneySubscription entity = m.getTournamentEntity(new RegularTourneySubscription.Id());
-
-		} catch (TourneySubscriptionException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
 
 //		final RegularTourney tournamentEntity = m.getTournamentEntity();
 	}

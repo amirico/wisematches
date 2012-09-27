@@ -14,8 +14,8 @@ import java.util.Date;
 @Table(name = "scribble_comment")
 public class HibernateGameComment implements GameComment {
 	@Id
-	@Column(name = "id", nullable = false, updatable = false, unique = true)
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", nullable = false, updatable = false, unique = true)
 	private long id;
 
 	@Column(name = "board")
