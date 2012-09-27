@@ -15,12 +15,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileProposalManager<S extends GameSettings> extends AbstractProposalManager<S> implements Closeable {
 	private FileChannel proposalFile;
+	private final Lock lock = new ReentrantLock();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.proposal");
 
@@ -30,6 +33,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Collection<DefaultGameProposal<S>> loadGameProposals() {
+		lock.lock();
 		try {
 			if (!proposalFile.isOpen() || proposalFile.size() == 0) {
 				return Collections.emptyList();
@@ -52,6 +56,8 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 			log.error("File proposal can't be loaded", ex);
 		} catch (ClassNotFoundException ex) {
 			log.error("File proposal can't be loaded", ex);
+		} finally {
+			lock.unlock();
 		}
 		return Collections.emptyList();
 	}
@@ -67,6 +73,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	}
 
 	private void saveAllProposals() {
+		lock.lock();
 		try {
 			final List<GameProposal<S>> activeProposals = searchEntities(null, ProposalRelation.AVAILABLE, null, null, null);
 			proposalFile.position(0);
@@ -78,18 +85,30 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 			outputStream.flush();
 		} catch (IOException ex) {
 			log.error("File proposal can't be stored", ex);
+		} finally {
+			lock.unlock();
 		}
 	}
 
 	public void setProposalsResource(File proposalFile) throws IOException {
-		if (!proposalFile.exists()) {
-			proposalFile.createNewFile();
+		lock.lock();
+		try {
+			if (!proposalFile.exists()) {
+				proposalFile.createNewFile();
+			}
+			this.proposalFile = new RandomAccessFile(proposalFile, "rw").getChannel();
+		} finally {
+			lock.unlock();
 		}
-		this.proposalFile = new RandomAccessFile(proposalFile, "rw").getChannel();
 	}
 
 	@Override
 	public void close() throws IOException {
-		proposalFile.close();
+		lock.lock();
+		try {
+			proposalFile.close();
+		} finally {
+			lock.unlock();
+		}
 	}
 }
