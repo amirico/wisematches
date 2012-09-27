@@ -3,6 +3,7 @@ package wisematches.playground.tourney;
 import wisematches.playground.search.descriptive.SearchableBean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * {@code TournamentEntity} is base marker interface for any tournament entity, like division, round or group.
@@ -22,6 +23,20 @@ public interface TourneyEntity<T extends TourneyEntity<T, I, C>, I extends Tourn
 	 * @return the unique id of the entity.
 	 */
 	I getId();
+
+	/**
+	 * Returns date when the entity has been started.
+	 *
+	 * @return the date when the entity has been started.
+	 */
+	Date getStartedDate();
+
+	/**
+	 * Returns date when the entity has been finished.
+	 *
+	 * @return the date when the entity has been finished.
+	 */
+	Date getFinishedDate();
 
 	/**
 	 * The entity id

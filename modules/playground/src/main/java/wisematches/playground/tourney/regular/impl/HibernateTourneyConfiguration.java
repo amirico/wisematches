@@ -1,4 +1,4 @@
-package wisematches.playground.tourney.regular.impl.hibernate;
+package wisematches.playground.tourney.regular.impl;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -8,7 +8,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tournament_config")
-class HibernateTournamentConfiguration {
+class HibernateTourneyConfiguration {
 	@Id
 	@Column(name = "tournament")
 	private int tournament;
@@ -22,10 +22,10 @@ class HibernateTournamentConfiguration {
 	private Date lastRoundCheck;
 
 	@Deprecated
-	HibernateTournamentConfiguration() {
+	HibernateTourneyConfiguration() {
 	}
 
-	public HibernateTournamentConfiguration(int tournament) {
+	public HibernateTourneyConfiguration(int tournament) {
 		this.tournament = tournament;
 	}
 

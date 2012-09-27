@@ -6,7 +6,7 @@ import wisematches.playground.tourney.TourneyEntity;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface VoluntaryTourney extends VoluntaryTourneyElement<VoluntaryTourney, VoluntaryTourney.Id, VoluntaryTourney.Context> {
+public interface VoluntaryTourney extends VoluntaryTourneyEntity<VoluntaryTourney, VoluntaryTourney.Id, VoluntaryTourney.Context> {
 	String getTitle();
 
 	int getPlayersCount();

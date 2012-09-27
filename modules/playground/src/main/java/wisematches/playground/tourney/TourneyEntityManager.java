@@ -16,27 +16,12 @@ import java.util.List;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyManager<
-		E extends TourneyEntity,
-		L extends TourneyElement,
-		S extends TourneySubscription>
+public interface TourneyEntityManager<E extends TourneyEntity>
 		extends SearchManager<E, TourneyEntity.Context<? extends E, ?>, SearchFilter> {
 
-	void addTourneyElementListener(TourneyElementListener<L> l);
+	void addTourneyEntityListener(TourneyEntityListener<? super E> l);
 
-	void removeTourneyElementListener(TourneyElementListener<L> l);
-
-
-	void addTourneySubscriptionListener(TourneySubscriptionListener<S> l);
-
-	void removeTourneySubscriptionListener(TourneySubscriptionListener<S> l);
-
-
-	boolean subscribe(S subscription) throws TourneySubscriptionException;
-
-	boolean unsubscribe(S subscription) throws TourneySubscriptionException;
-
-	S getSubscription(int tournament, long player);
+	void removeTourneyEntityListener(TourneyEntityListener<? super E> l);
 
 
 	<T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTournamentEntity(K id);
