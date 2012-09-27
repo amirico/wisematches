@@ -163,13 +163,13 @@ public class SettingsController extends WisematchesController {
 			} catch (DuplicateAccountException ex) {
 				final Set<String> fieldNames = ex.getFieldNames();
 				if (fieldNames.contains("email")) {
-					errors.rejectValue("email", "account.register.form.email.err.busy");
+					errors.rejectValue("email", "account.register.email.err.busy");
 				}
 				if (fieldNames.contains("nickname")) {
-					errors.rejectValue("nickname", "account.register.form.username.err.incorrect");
+					errors.rejectValue("nickname", "account.register.nickname.err.busy");
 				}
 			} catch (InadmissibleUsernameException ex) {
-				errors.rejectValue("username", "account.register.form.username.err.incorrect");
+				errors.rejectValue("nickname", "account.register.nickname.err.incorrect");
 			} catch (Exception ex) {
 				log.error("Account can't be created", ex);
 				errors.reject("wisematches.error.internal");

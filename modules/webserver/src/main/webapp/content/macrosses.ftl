@@ -11,30 +11,26 @@
 <script type="text/javascript">
     wm.ui.dataTable = function (selector, opts) {
         var dataTableLanguage = {
-            "bJQueryUI":true
+            "sUrl":"",
+            "bJQueryUI":true,
+            "sInfoPostFix":"",
+            "sPaginationType":"full_numbers",
+            "sDom":'<"data-table-top"<"ui-widget-content">><"data-table-content"t><"data-table-bottom"<"ui-widget-content"rlip>>',
+            "oLanguage":{
+                "sProcessing":"<@message code="datatable.processing.label"/>",
+                "sLengthMenu":"<@message code="datatable.menu.label"/>",
+                "sZeroRecords":"<@message code="datatable.zero.records.label"/>",
+                "sInfo":"_START_ - _END_ <@message code="datatable.of.label"/> _TOTAL_",
+                "sInfoEmpty":"<@message code="datatable.info.empty.label"/>",
+                "sLoadingRecords":"<@message code="datatable.loading.records.label"/>",
+                "oPaginate":{
+                    "sFirst":"&nbsp;",
+                    "sPrevious":"&nbsp",
+                    "sNext":"&nbsp",
+                    "sLast":"&nbsp"
+                }
+            }
         };
-        <#if locale='ru'>
-            dataTableLanguage = $.extend(true, dataTableLanguage, {
-                "sDom":'<"data-table-top"<"ui-widget-content">><"data-table-content"t><"data-table-bottom"<"ui-widget-content"rlip>>',
-                "sPaginationType":"full_numbers",
-                "oLanguage":{
-                    "sProcessing":"<@message code="datatable.processing.label"/>",
-                    "sLengthMenu":"<@message code="datatable.menu.label"/>",
-                    "sZeroRecords":"<@message code="datatable.zero.records.label"/>",
-                    "sInfo":"_START_ - _END_ <@message code="datatable.of.label"/> _TOTAL_",
-                    "sInfoEmpty":"<@message code="datatable.info.empty.label"/>",
-                    "sLoadingRecords":"<@message code="datatable.loading.records.label"/>",
-                    "sInfoPostFix":"",
-                    "sUrl":"",
-                    "oPaginate":{
-                        "sFirst":"&nbsp;",
-                        "sPrevious":"&nbsp",
-                        "sNext":"&nbsp",
-                        "sLast":"&nbsp"
-                    }
-                }});
-        <#else>
-        </#if>
         return $(selector).dataTable($.extend(true, dataTableLanguage, opts));
     };
 </script>

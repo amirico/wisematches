@@ -21,6 +21,9 @@
     }
 
     $(document).ready(function () {
+        $('#form').submit(function () {
+            $('button[type=submit]', this).attr('disabled', 'disabled');
+        });
         loadTermsPage('${termsPages[0]}');
     });
 </script>
