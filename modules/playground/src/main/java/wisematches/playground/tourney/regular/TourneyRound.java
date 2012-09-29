@@ -16,9 +16,9 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 *
 	 * @return the number of the round.
 	 */
-	int getRound();
+	int getNumber();
 
-	TourneyDivision getTourneyDivision();
+	TourneyDivision getDivision();
 
 
 	/**

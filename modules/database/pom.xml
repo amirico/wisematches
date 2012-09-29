@@ -18,7 +18,7 @@
     </parent>
 
     <properties>
-        <org.hibernate.version>4.0.0.CR7</org.hibernate.version>
+        <org.hibernate.version>4.1.7.Final</org.hibernate.version>
     </properties>
 
     <dependencies>

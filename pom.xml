@@ -41,17 +41,20 @@
 
     <repositories>
         <repository>
+            <!-- http://repo.springsource.org/libs-milestone-s3 -->
             <id>org.springframework.maven.milestone</id>
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springframework.org/milestone</url>
         </repository>
         <repository>
+            <!-- http://repo.springsource.org/libs-release-s3 -->
             <id>org.springframework.maven.release</id>
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springsource.org/release</url>
         </repository>
 
         <repository>
+            <!-- http://repo.springsource.org/libs-snapshot-s3 -->
             <id>org.springframework.maven.snapshot</id>
             <name>Spring Maven Snapshot Repository</name>
             <url>http://maven.springframework.org/snapshot</url>
@@ -59,7 +62,7 @@
     </repositories>
 
     <properties>
-        <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
+        <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
         <org.springframework.security.version>3.1.2.RELEASE</org.springframework.security.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

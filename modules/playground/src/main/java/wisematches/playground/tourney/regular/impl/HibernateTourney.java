@@ -9,8 +9,8 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-@Table(name = "regular_tourney")
-public class HibernateRegularTourney extends HibernateRegularTourneyEntity implements RegularTourney {
+@Table(name = "tourney_regular")
+public class HibernateTourney extends HibernateTourneyEntity implements RegularTourney {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,10 +23,10 @@ public class HibernateRegularTourney extends HibernateRegularTourneyEntity imple
 	private Date scheduledDate;
 
 	@Deprecated
-	private HibernateRegularTourney() {
+	private HibernateTourney() {
 	}
 
-	public HibernateRegularTourney(int number, Date scheduledDate) {
+	public HibernateTourney(int number, Date scheduledDate) {
 		if (number < 0) {
 			throw new IllegalArgumentException("Incorrect tournament number: " + number);
 		}
@@ -39,6 +39,11 @@ public class HibernateRegularTourney extends HibernateRegularTourneyEntity imple
 		this.number = number;
 		this.scheduledDate = scheduledDate;
 	}
+
+	long getDbId() {
+		return id;
+	}
+
 
 	@Override
 	public int getNumber() {
@@ -57,12 +62,9 @@ public class HibernateRegularTourney extends HibernateRegularTourneyEntity imple
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("HibernateRegularTourney");
-		sb.append("{id=").append(id);
-		sb.append(", number=").append(number);
-		sb.append(", scheduledDate=").append(scheduledDate);
-		sb.append('}');
-		return sb.toString();
+		return "HibernateTourney{" +
+				"number=" + number +
+				", scheduledDate=" + scheduledDate +
+				'}';
 	}
 }

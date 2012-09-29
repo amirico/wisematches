@@ -6,14 +6,18 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-abstract class HibernateRegularTourneyEntity {
+abstract class HibernateTourneyEntity {
 	@Column(name = "started")
 	private Date startedDate;
 
 	@Column(name = "finished")
 	private Date finishedDate;
 
-	HibernateRegularTourneyEntity() {
+	@Column(name = "lastChange")
+	private Date lastChange;
+
+	HibernateTourneyEntity() {
+		lastChange = new Date();
 	}
 
 	public Date getStartedDate() {
@@ -24,14 +28,19 @@ abstract class HibernateRegularTourneyEntity {
 		return finishedDate;
 	}
 
-	void startTourney() {
+	Date getLastChange() {
+		return lastChange;
+	}
+
+	void markStarted() {
 		if (startedDate != null) {
 			throw new IllegalArgumentException("Already started of finished");
 		}
 		startedDate = new Date();
+		invalidate();
 	}
 
-	void finishTourney() {
+	void markFinished() {
 		if (startedDate == null) {
 			throw new IllegalArgumentException("Is not started yet");
 		}
@@ -39,5 +48,13 @@ abstract class HibernateRegularTourneyEntity {
 			throw new IllegalArgumentException("Already started of finished");
 		}
 		finishedDate = new Date();
+		invalidate();
+	}
+
+	/**
+	 * Indicates that state of the entity was changed.
+	 */
+	protected void invalidate() {
+		lastChange = new Date();
 	}
 }
