@@ -31,7 +31,7 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 */
 	TourneySection getSection();
 
-	RegularTourney getRegularTourney();
+	RegularTourney getTourney();
 
 
 	public final class Id implements TourneyEntity.Id<TourneyDivision, Id> {

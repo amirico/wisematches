@@ -23,23 +23,47 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 *
 	 * @return the tourney round.
 	 */
-	TourneyRound getTourneyRound();
-
-
-	/**
-	 * Returns number of total games in the group.
-	 *
-	 * @return the number of total games in the group.
-	 */
-	int getTotalGamesCount();
+	TourneyRound getRound();
 
 	/**
-	 * Returns number of finished games in the group.
+	 * Returns all games which take part in this group. The array contains first all games for first player,
+	 * when for second player and so on.
 	 *
-	 * @return the number of finished games in the group.
+	 * @return all games which take part in this group.
 	 */
-	int getFinishedGamesCount();
+	long[] getGames();
 
+	/**
+	 * All players in this group.
+	 *
+	 * @return array of all players in this group.
+	 */
+	long[] getPlayers();
+
+	/**
+	 * Returns scores for each player in this group. Index in this array is equals to player's index in {@link #getPlayers()} array.
+	 *
+	 * @return all scores for players in this group.
+	 */
+	short[] getScores();
+
+	/**
+	 * Returns scores for specified player only.
+	 *
+	 * @param player the player id
+	 * @return player's scores.
+	 */
+	short getScores(long player);
+
+	/**
+	 * Returns game id between two specified players. Order of players are not important.
+	 *
+	 * @param p1 first player
+	 * @param p2 second player.
+	 * @return the game id that is played by specified players.
+	 * @throws IllegalArgumentException if any player doesn't belong to this group.
+	 */
+	long getGameId(long p1, long p2);
 
 	@Embeddable
 	public final class Id implements TourneyEntity.Id<TourneyGroup, Id> {

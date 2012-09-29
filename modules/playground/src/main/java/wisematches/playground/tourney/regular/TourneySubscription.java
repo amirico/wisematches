@@ -6,11 +6,11 @@ import wisematches.personality.Language;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface TourneySubscription {
-	int getTourney();
-
 	long getPlayer();
+
+	int getTourney();
 
 	Language getLanguage();
 
-	TourneySection geTourneySection();
+	TourneySection geSection();
 }
