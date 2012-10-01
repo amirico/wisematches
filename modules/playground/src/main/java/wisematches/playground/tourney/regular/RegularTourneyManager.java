@@ -24,5 +24,5 @@ public interface RegularTourneyManager extends TourneyEntityManager<RegularTourn
 
 	TourneySubscriptionStatus getSubscriptionStatus();
 
-	TourneySubscription getSubscription(int tourney, long player);
+	Object getSubscription(int tournay, long player);
 }

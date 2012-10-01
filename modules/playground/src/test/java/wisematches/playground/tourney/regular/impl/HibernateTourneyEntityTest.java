@@ -36,7 +36,7 @@ public class HibernateTourneyEntityTest {
 	}
 
 	@Test
-	public void mock() {
+	public void testTourneyEntity() {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final HibernateTourney t = new HibernateTourney(2, new Date(System.currentTimeMillis() + 10000000L));
@@ -94,5 +94,17 @@ public class HibernateTourneyEntityTest {
 
 		final HibernateProcessingState s = (HibernateProcessingState) session.get(HibernateProcessingState.class, t.getDbId());
 		assertNotNull(s);
+	}
+
+	@Test
+	public void testTourneySubscription() {
+		final Session session = sessionFactory.getCurrentSession();
+
+		HibernateTourneySubscription s = new HibernateTourneySubscription(1, 2, 3, Language.EN, TourneySection.GRANDMASTER);
+		session.save(s);
+
+		final Criteria c1 = session.createCriteria(HibernateTourneySubscription.class);
+		c1.add(Restrictions.eq("id.player", 1L)).add(Restrictions.eq("id.tourney", 2));
+		assertEquals(1, c1.list().size());
 	}
 }

@@ -19,6 +19,15 @@ public class HibernateTourney extends HibernateTourneyEntity implements RegularT
 	@Column(name = "number")
 	private int number;
 
+	@Column(name = "started")
+	protected Date startedDate;
+
+	@Column(name = "finished")
+	protected Date finishedDate;
+
+	@Column(name = "lastChange")
+	protected Date lastChange;
+
 	@Column(name = "scheduled")
 	private Date scheduledDate;
 

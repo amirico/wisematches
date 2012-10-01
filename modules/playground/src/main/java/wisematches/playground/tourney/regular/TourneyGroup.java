@@ -73,6 +73,10 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 		private Id() {
 		}
 
+		public Id(int tourney, Language language, TourneySection section, int round, int group) {
+			this(new TourneyRound.Id(tourney, language, section, round), group);
+		}
+
 		public Id(TourneyRound.Id id, int group) {
 			this.id = id;
 			this.group = group;
