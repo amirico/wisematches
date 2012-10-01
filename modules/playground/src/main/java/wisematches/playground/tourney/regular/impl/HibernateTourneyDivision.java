@@ -18,8 +18,7 @@ public class HibernateTourneyDivision extends HibernateTourneyEntity implements 
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "round")
-	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "activeRound")
 	private int activeRound;
 
 	@Enumerated(EnumType.ORDINAL)

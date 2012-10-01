@@ -8,13 +8,13 @@ import java.util.Date;
  */
 abstract class HibernateTourneyEntity {
 	@Column(name = "started")
-	private Date startedDate;
+	protected Date startedDate;
 
 	@Column(name = "finished")
-	private Date finishedDate;
+	protected Date finishedDate;
 
 	@Column(name = "lastChange")
-	private Date lastChange;
+	protected Date lastChange;
 
 	HibernateTourneyEntity() {
 		lastChange = new Date();

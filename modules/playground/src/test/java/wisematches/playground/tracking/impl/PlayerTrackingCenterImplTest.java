@@ -155,7 +155,7 @@ public class PlayerTrackingCenterImplTest {
 	}
 
 	private void assertRatingChange(RatingChange r1, long pid, long bid, int oldR, int newR) {
-		assertEquals(pid, r1.getPlayerId());
+		assertEquals(pid, r1.getPlayer());
 		assertEquals(bid, r1.getBoardId());
 		assertEquals(oldR, r1.getOldRating());
 		assertEquals(newR, r1.getNewRating());

@@ -39,6 +39,10 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 		private final TourneySection section;
 		private final RegularTourney.Id tourneyId;
 
+		public Id(int tourney, Language language, TourneySection section) {
+			this(new RegularTourney.Id(tourney), language, section);
+		}
+
 		public Id(RegularTourney.Id tourneyId, Language language, TourneySection section) {
 			this.tourneyId = tourneyId;
 			this.language = language;
