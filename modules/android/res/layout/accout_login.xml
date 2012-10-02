@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:animateLayoutChanges="true"
+            android:fillViewport="true">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/backgroundDefault">
+
+        <LinearLayout android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@color/backgroundHeader"
+                      android:paddingTop="5dip"
+                      android:paddingBottom="5dip">
+
+            <ImageView android:src="@drawable/logo"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginLeft="10dip"/>
+        </LinearLayout>
+
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:padding="10dip">
+
+            <LinearLayout android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
+
+                <TextView android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/account_login_view_username"/>
+
+                <EditText android:id="@+id/accountFieldEmail"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="5dip"
+                          android:layout_marginBottom="20dip"
+                          android:singleLine="true"
+                          android:inputType="textWebEmailAddress"/>
+
+                <TextView android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/account_login_view_password"/>
+
+                <EditText android:id="@+id/accountFieldPassword"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="5dip"
+                          android:singleLine="true"
+                          android:password="true"/>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center"
+                          android:layout_marginTop="5dip">
+
+                <CheckBox android:id="@+id/accountFieldRememberMe"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:checked="true"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/account_login_view_remember"/>
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/accountErrorMessage"
+                    style="@style/errorLabel"
+                    android:visibility="visible"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""/>
+
+            <Button android:id="@+id/accountButtonCreate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/account_login_view_login"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

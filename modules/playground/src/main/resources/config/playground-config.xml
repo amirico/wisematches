@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <import resource="restriction-config.xml"/>
+
+    <bean id="eloRatingSystem" class="wisematches.playground.rating.impl.ELORatingSystem"/>
+
+    <bean id="playerTrackingCenterDao" class="wisematches.playground.tracking.impl.HibernatePlayerTrackingCenterDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="ratingManager" class="wisematches.playground.tracking.impl.RatingManagerImpl">
+        <property name="ratingSystem" ref="eloRatingSystem"/>
+        <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
+    </bean>
+
+    <bean id="lexicalDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
+    </bean>
+
+    <bean id="slanglyDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
+        <property name="createEmptyDictionary" value="true"/>
+    </bean>
+
+    <bean id="wordGamesDictionaries" class="wisematches.playground.dictionary.impl.WordGamesDictionariesImpl">
+        <property name="lexicalManager" ref="lexicalDictionary"/>
+        <property name="slanglyManager" ref="slanglyDictionary"/>
+    </bean>
+
+    <bean id="messageManager" class="wisematches.playground.message.impl.HibernateMessageManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="playerManager" ref="playerManager"/>
+        <property name="restrictionManager" ref="restrictionManager"/>
+    </bean>
+
+    <bean id="blacklistManager" class="wisematches.playground.blacklist.impl.HibernateBlacklistManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="friendsManager" class="wisematches.playground.friends.impl.HibernateFriendsManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateTourneyManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <!--
+        <bean id="tournamentManager"
+              class="wisematches.playground.tourney.implOld.HibernateTournamentManager">
+            &lt;!&ndash; every first monday &ndash;&gt;
+            <property name="cronExpression" value="* * * ? * 2#1"/>
+
+            <property name="ratingManager" ref="ratingManager"/>
+
+            <property name="sessionFactory" ref="sessionFactory"/>
+            <property name="assuredTaskExecutor">
+                <bean class="wisematches.playground.task.assured.FileAssuredTaskExecutor">
+                    <property name="fileStorage" value=""/>
+                    <property name="executor" ref="tournamentTaskExecutor"/>
+                </bean>
+            </property>
+        </bean>
+
+    -->
+    <!--
+
+        <bean id="tournamentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        </bean>
+    -->
+
+    <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 0 2 * * ?"/>
+        <!-- run every morning at 2 AM -->
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+                <property name="targetObject" ref="messageManager"/>
+                <property name="targetMethod" value="cleanup"/>
+                <property name="concurrent" value="false"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!--<ref bean="tournamentTrigger"/>-->
+                <ref bean="messagesCleanerTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

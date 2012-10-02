@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appName">WiseMatches</string>
+
+    <string name="account_login_label">Sign in with your WiseMatches Account</string>
+    <string name="account_login_view_username">Your Email</string>
+    <string name="account_login_view_password">Password</string>
+    <string name="account_login_view_remember">Stay signed in</string>
+    <string name="account_login_view_login">Sign in</string>
+    <string name="account_login_error_system">Can not sign by by system error. Please try again.</string>
+    <string name="account_login_error_response">Unexpected answer received from server.</string>
+    <string name="account_login_error_credential">Wrong username and password. Please check values and try again.
+    </string>
+
+    <string name="registerLabel">Register new WiseMatches Account</string>
+    <string name="dashboardLabel">Active Games List</string>
+    <string name="playboardLabel">Board</string>
+</resources>
