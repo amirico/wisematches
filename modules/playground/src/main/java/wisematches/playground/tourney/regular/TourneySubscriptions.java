@@ -5,12 +5,10 @@ import wisematches.personality.Language;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneySubscription {
-	long getPlayer();
-
+public interface TourneySubscriptions {
 	int getTourney();
 
-	Language getLanguage();
+	int getPlayers(Language language);
 
-	TourneySection getSection();
+	int getPlayers(Language language, TourneySection section);
 }

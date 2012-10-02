@@ -57,8 +57,21 @@ public interface RegularTourney extends RegularTourneyEntity<RegularTourney, Reg
 		}
 	}
 
+	public enum State {
+		SCHEDULED,
+		ACTIVE,
+		FINISHED
+	}
+
 	public final class Context implements TourneyEntity.Context<RegularTourney, Context> {
-		public Context() {
+		private final State state;
+
+		public Context(State state) {
+			this.state = state;
+		}
+
+		public State getState() {
+			return state;
 		}
 	}
 }
