@@ -11,7 +11,7 @@
             <td style="vertical-align: top; width: 250px">
             <#include "widget/progress.ftl"/>
         <#include "widget/history.ftl"/>
-        <#include "widget/help.ftl"/>
+        <#if !viewMode><#include "widget/help.ftl"/></#if>
             </td>
 
             <td style="vertical-align: top; padding-left: 5px; padding-right: 5px;">
@@ -24,7 +24,7 @@
             <#include "widget/players.ftl"/>
                 <#include "widget/selection.ftl"/>
                 <#include "widget/thesaurus.ftl"/>
-                <#if !viewMode><#include "widget/memory.ftl"/></#if>
+                <#if !viewMode><#include "widget/memory.ftl"/><#else><#include "widget/help.ftl"/></#if>
             </td>
         </tr>
     </table>

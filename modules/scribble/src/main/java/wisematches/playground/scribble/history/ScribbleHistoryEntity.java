@@ -3,10 +3,12 @@ package wisematches.playground.scribble.history;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.GameResolution;
-import wisematches.playground.search.descriptive.SearchableProperty;
 import wisematches.playground.search.descriptive.SearchableBean;
+import wisematches.playground.search.descriptive.SearchableProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -29,9 +31,11 @@ public class ScribbleHistoryEntity {
 	@SearchableProperty(column = "board.rated")
 	private boolean rated;
 
+	@Enumerated(EnumType.STRING)
 	@SearchableProperty(column = "UPPER(board.language)")
 	private Language language;
 
+	@Enumerated(EnumType.ORDINAL)
 	@SearchableProperty(column = "board.resolution")
 	private GameResolution resolution;
 
