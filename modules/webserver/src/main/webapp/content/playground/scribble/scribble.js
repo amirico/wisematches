@@ -580,7 +580,7 @@ wm.scribble.Thesaurus = function (board, checkWords) {
     };
 
     this.lookupWord = function () {
-        window.open('http://slovari.yandex.ru/' + input.val() + '/значение');
+        window.open('http://slovari.yandex.ru/' + input.val() + '/правописание');
         return false;
     };
 

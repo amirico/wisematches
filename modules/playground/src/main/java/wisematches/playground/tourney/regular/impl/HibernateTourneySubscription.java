@@ -24,7 +24,7 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	@Enumerated(EnumType.ORDINAL)
 	private TourneySection section;
 
-	private HibernateTourneySubscription() {
+	protected HibernateTourneySubscription() {
 	}
 
 	public HibernateTourneySubscription(long player, int tourney, int round, Language language, TourneySection section) {
@@ -49,7 +49,7 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	}
 
 	@Override
-	public TourneySection geSection() {
+	public TourneySection getSection() {
 		return section;
 	}
 

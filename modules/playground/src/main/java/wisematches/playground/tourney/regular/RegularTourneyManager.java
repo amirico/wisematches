@@ -22,7 +22,7 @@ public interface RegularTourneyManager extends TourneyEntityManager<RegularTourn
 	TourneySubscription unsubscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
 
 
-	TourneySubscriptionStatus getSubscriptionStatus();
+	TourneySubscription getSubscription(int tourney, long player);
 
-	Object getSubscription(int tournay, long player);
+	TourneySubscriptions getSubscriptionStatus(int tourney);
 }
