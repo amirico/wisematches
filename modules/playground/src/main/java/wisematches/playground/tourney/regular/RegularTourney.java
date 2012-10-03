@@ -13,7 +13,7 @@ public interface RegularTourney extends RegularTourneyEntity<RegularTourney, Reg
 	 *
 	 * @return the tourney number.
 	 */
-	int getNumber();
+	int getTourney();
 
 	/**
 	 * Returns date when the tournament should be started/was started

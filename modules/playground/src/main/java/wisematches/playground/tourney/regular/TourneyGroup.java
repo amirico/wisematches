@@ -3,8 +3,6 @@ package wisematches.playground.tourney.regular;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
-import javax.persistence.Embeddable;
-
 /**
  * The tournament group is last tournament entity that describes players and games for one group.
  *
@@ -65,7 +63,6 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 */
 	long getGameId(long p1, long p2);
 
-	@Embeddable
 	public final class Id implements TourneyEntity.Id<TourneyGroup, Id> {
 		private TourneyRound.Id id;
 		private int group;

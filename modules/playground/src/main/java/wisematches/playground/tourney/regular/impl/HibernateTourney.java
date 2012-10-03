@@ -10,34 +10,38 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tourney_regular")
-public class HibernateTourney extends HibernateTourneyEntity implements RegularTourney {
+public class HibernateTourney implements RegularTourney {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "number")
-	private int number;
-
-	@Column(name = "started")
-	protected Date startedDate;
-
-	@Column(name = "finished")
-	protected Date finishedDate;
-
-	@Column(name = "lastChange")
-	protected Date lastChange;
+	@Column(name = "tourneyNumber")
+	private int tourney;
 
 	@Column(name = "scheduled")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date scheduledDate;
+
+	@Column(name = "started")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date startedDate;
+
+	@Column(name = "finished")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date finishedDate;
+
+	@Column(name = "lastChange")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastChange;
 
 	@Deprecated
 	private HibernateTourney() {
 	}
 
-	public HibernateTourney(int number, Date scheduledDate) {
-		if (number < 0) {
-			throw new IllegalArgumentException("Incorrect tournament number: " + number);
+	public HibernateTourney(int tourney, Date scheduledDate) {
+		if (tourney < 0) {
+			throw new IllegalArgumentException("Incorrect tournament number: " + tourney);
 		}
 		if (scheduledDate == null) {
 			throw new NullPointerException("Scheduled date can't be null");
@@ -45,18 +49,28 @@ public class HibernateTourney extends HibernateTourneyEntity implements RegularT
 		if (scheduledDate.getTime() < System.currentTimeMillis()) {
 			throw new IllegalArgumentException("Scheduled date can't be in past.");
 		}
-		this.number = number;
+		this.tourney = tourney;
 		this.scheduledDate = scheduledDate;
+		this.lastChange = new Date();
 	}
 
 	long getDbId() {
 		return id;
 	}
 
+	@Override
+	public int getTourney() {
+		return tourney;
+	}
 
 	@Override
-	public int getNumber() {
-		return number;
+	public Date getStartedDate() {
+		return startedDate;
+	}
+
+	@Override
+	public Date getFinishedDate() {
+		return finishedDate;
 	}
 
 	@Override
@@ -66,14 +80,35 @@ public class HibernateTourney extends HibernateTourneyEntity implements RegularT
 
 	@Override
 	public RegularTourney.Id getId() {
-		return new RegularTourney.Id(number);
+		return new RegularTourney.Id(tourney);
+	}
+
+	void startTourney() {
+		if (startedDate != null) {
+			throw new IllegalArgumentException("Already started of finished");
+		}
+		lastChange = startedDate = new Date();
+	}
+
+	void finishTourney() {
+		if (startedDate == null) {
+			throw new IllegalArgumentException("Is not started yet");
+		}
+		if (finishedDate != null) {
+			throw new IllegalArgumentException("Already started of finished");
+		}
+		lastChange = finishedDate = new Date();
 	}
 
 	@Override
 	public String toString() {
 		return "HibernateTourney{" +
-				"number=" + number +
+				"id=" + id +
+				", tourney=" + tourney +
 				", scheduledDate=" + scheduledDate +
+				", startedDate=" + startedDate +
+				", finishedDate=" + finishedDate +
+				", lastChange=" + lastChange +
 				'}';
 	}
 }
