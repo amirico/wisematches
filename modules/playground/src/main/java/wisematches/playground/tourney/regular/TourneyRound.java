@@ -3,8 +3,6 @@ package wisematches.playground.tourney.regular;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
-import javax.persistence.Embeddable;
-
 /**
  * A tournament round belong to a tournament and
  *
@@ -16,8 +14,13 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 *
 	 * @return the number of the round.
 	 */
-	int getNumber();
+	int getRound();
 
+	/**
+	 * Returns division for this round
+	 *
+	 * @return the division for this round
+	 */
 	TourneyDivision getDivision();
 
 
@@ -35,8 +38,6 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 */
 	int getFinishedGamesCount();
 
-
-	@Embeddable
 	public final class Id implements TourneyEntity.Id<TourneyRound, Id> {
 		private TourneyDivision.Id divisionId;
 		private int round;

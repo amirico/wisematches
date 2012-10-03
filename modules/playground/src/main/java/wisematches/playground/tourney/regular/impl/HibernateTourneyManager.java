@@ -3,15 +3,11 @@ package wisematches.playground.tourney.regular.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.quartz.CronExpression;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Language;
@@ -21,10 +17,12 @@ import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.TourneyEntityListener;
 import wisematches.playground.tourney.regular.*;
+import wisematches.playground.tracking.impl.RatingManagerImpl;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,12 +33,15 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HibernateTourneyManager implements InitializingBean, RegularTourneyManager, BreakingDayListener {
 	private SessionFactory sessionFactory;
 
+	private TaskExecutor taskExecutor;
+	private CronExpression cronExpression;
+	private RatingManagerImpl ratingManager;
+
 	private final Lock lock = new ReentrantLock();
 
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<RegularTourneyListener>();
 	private final Collection<TourneySubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TourneySubscriptionListener>();
 	private final Collection<TourneyEntityListener<? super RegularTourneyEntity>> entityListeners = new CopyOnWriteArraySet<TourneyEntityListener<? super RegularTourneyEntity>>();
-	private HibernateTransactionManager transactionManager;
 
 	public HibernateTourneyManager() {
 	}
@@ -172,11 +173,11 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			if (RegularTourney.Id.class.isAssignableFrom(id.getClass())) {
 				final RegularTourney.Id id1 = RegularTourney.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourney t " +
-						"where t.number=?").setInteger(0, id1.getNumber()).uniqueResult();
+						"where t.tourney=?").setInteger(0, id1.getNumber()).uniqueResult();
 			} else if (TourneyDivision.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyDivision.Id id1 = TourneyDivision.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyDivision d " +
-						"where d.tourney.number=? and d.section = ? and d.language = ?")
+						"where d.tourney.tourney=? and d.section = ? and d.language = ?")
 						.setInteger(0, id1.getTourneyId().getNumber())
 						.setParameter(1, id1.getSection())
 						.setParameter(2, id1.getLanguage())
@@ -184,7 +185,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			} else if (TourneyRound.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyRound.Id id1 = TourneyRound.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyRound r " +
-						"where r.division.tourney.number=? and r.division.section = ? and r.division.language = ? and r.number=?")
+						"where r.division.tourney.tourney=? and r.division.section = ? and r.division.language = ? and r.round=?")
 						.setInteger(0, id1.getDivisionId().getTourneyId().getNumber())
 						.setParameter(1, id1.getDivisionId().getSection())
 						.setParameter(2, id1.getDivisionId().getLanguage())
@@ -193,7 +194,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			} else if (TourneyGroup.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyGroup.Id id1 = TourneyGroup.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyGroup g " +
-						"where g.round.division.tourney.number=? and g.round.division.section = ? and g.round.division.language = ? and g.round.number=? and g.number = ?")
+						"where g.round.division.tourney.tourney=? and g.round.division.section = ? and g.round.division.language = ? and g.round.round=? and g.group = ?")
 						.setInteger(0, id1.getRoundId().getDivisionId().getTourneyId().getNumber())
 						.setParameter(1, id1.getRoundId().getDivisionId().getSection())
 						.setParameter(2, id1.getRoundId().getDivisionId().getLanguage())
@@ -215,12 +216,12 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			if (RegularTourney.Context.class.isAssignableFrom(context.getClass())) {
 //				final RegularTourney.Context ctx = RegularTourney.Context.class.cast(context);
 //				return ((Number) session.createQuery("select count(*) from HibernateTourney t " +
-//						"where t.number=?").setInteger(0, id1.getNumber()).uniqueResult()).intValue();
+//						"where t.number=?").setInteger(0, id1.getRound()).uniqueResult()).intValue();
 //			} else if (TourneyDivision.Id.class.isAssignableFrom(id.getClass())) {
 //				final TourneyDivision.Id id1 = TourneyDivision.Id.class.cast(id);
 //				return (T) session.createQuery("from HibernateTourneyDivision d " +
 //						"where d.tourney.number=? and d.section = ? and d.language = ?")
-//						.setInteger(0, id1.getTourneyId().getNumber())
+//						.setInteger(0, id1.getTourneyId().getRound())
 //						.setParameter(1, id1.getSection())
 //						.setParameter(2, id1.getLanguage())
 //						.uniqueResult();
@@ -228,7 +229,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 //				final TourneyRound.Id id1 = TourneyRound.Id.class.cast(id);
 //				return (T) session.createQuery("from HibernateTourneyRound r " +
 //						"where r.division.tourney.number=? and r.division.section = ? and r.division.language = ? and r.number=?")
-//						.setInteger(0, id1.getDivisionId().getTourneyId().getNumber())
+//						.setInteger(0, id1.getDivisionId().getTourneyId().getRound())
 //						.setParameter(1, id1.getDivisionId().getSection())
 //						.setParameter(2, id1.getDivisionId().getLanguage())
 //						.setInteger(3, id1.getRound())
@@ -237,7 +238,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 //				final TourneyGroup.Id id1 = TourneyGroup.Id.class.cast(id);
 //				return (T) session.createQuery("from HibernateTourneyGroup g " +
 //						"where g.round.division.tourney.number=? and g.round.division.section = ? and g.round.division.language = ? and g.round.number=? and g.number = ?")
-//						.setInteger(0, id1.getRoundId().getDivisionId().getTourneyId().getNumber())
+//						.setInteger(0, id1.getRoundId().getDivisionId().getTourneyId().getRound())
 //						.setParameter(1, id1.getRoundId().getDivisionId().getSection())
 //						.setParameter(2, id1.getRoundId().getDivisionId().getLanguage())
 //						.setInteger(3, id1.getRoundId().getRound())
@@ -276,36 +277,48 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 	}
 
 	private void processTourneyEntities() {
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				initiateScheduledTourneys();
+			}
+		});
+	}
+
+	private void initiateScheduledTourneys() {
 		lock.lock();
 		try {
-			final TransactionTemplate tt = new TransactionTemplate(transactionManager, new DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
-			tt.execute(new TransactionCallbackWithoutResult() {
-				@Override
-				protected void doInTransactionWithoutResult(TransactionStatus status) {
-					initiateScheduledTourneys();
-				}
-			});
+			final Session session = sessionFactory.getCurrentSession();
+			final List list = session.createQuery("from HibernateTourney where scheduledDate=? and startedDate is null").setParameter(0, getMidnight()).list();
+			for (Object aList : list) {
+				final HibernateTourney tourney = (HibernateTourney) aList;
+				tourney.startTourney();
+				session.save(tourney);
+
+				final Query query = session.createQuery("from HibernateTourneyDivision where tourney.id=?").setParameter(0, tourney.getTourney());
+			}
 		} finally {
 			lock.unlock();
 		}
 	}
 
-	private void initiateScheduledTourneys() {
-		final Session session = sessionFactory.getCurrentSession();
-		final List list = session.createQuery("from HibernateTourney where scheduledDate=? and startedDate is not null").setParameter(0, getMidnight()).list();
-		for (Object aList : list) {
-			final HibernateTourney tourney = (HibernateTourney) aList;
-			tourney.markStarted();
-			session.save(tourney);
-		}
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void setTransactionManager(HibernateTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
+	public void setRatingManager(RatingManagerImpl ratingManager) {
+		this.ratingManager = ratingManager;
+	}
+
+	public void setCronExpression(CronExpression cronExpression) {
+		this.cronExpression = cronExpression;
+		if (this.cronExpression != null) {
+			this.cronExpression.setTimeZone(TimeZone.getTimeZone("GMT"));
+		}
 	}
 
 	private Date getMidnight() {

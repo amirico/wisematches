@@ -4,20 +4,21 @@ import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneyRound;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
 @Table(name = "tourney_regular_round")
-public class HibernateTourneyRound extends HibernateTourneyEntity implements TourneyRound {
+public class HibernateTourneyRound implements TourneyRound {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "number")
-	private int number;
+	@Column(name = "roundNumber")
+	private int round;
 
 	@Column(name = "totalGamesCount", updatable = false)
 	private int totalGamesCount;
@@ -26,16 +27,30 @@ public class HibernateTourneyRound extends HibernateTourneyEntity implements Tou
 	private int finishedGamesCount;
 
 	@OneToOne
-	@JoinColumn(name = "division")
+	@JoinColumn(name = "divisionId")
 	private HibernateTourneyDivision division;
 
+	@Column(name = "started")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date startedDate;
+
+	@Column(name = "finished")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date finishedDate;
+
+	@Column(name = "lastChange")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastChange;
+
+	@Deprecated
 	private HibernateTourneyRound() {
 	}
 
-	public HibernateTourneyRound(int number, HibernateTourneyDivision division, int totalGamesCount) {
-		this.number = number;
-		this.totalGamesCount = totalGamesCount;
+	public HibernateTourneyRound(int round, HibernateTourneyDivision division, int totalGamesCount) {
+		this.round = round;
 		this.division = division;
+		this.totalGamesCount = totalGamesCount;
+		lastChange = startedDate = new Date();
 	}
 
 
@@ -44,8 +59,8 @@ public class HibernateTourneyRound extends HibernateTourneyEntity implements Tou
 	}
 
 	@Override
-	public int getNumber() {
-		return number;
+	public int getRound() {
+		return round;
 	}
 
 	@Override
@@ -65,21 +80,41 @@ public class HibernateTourneyRound extends HibernateTourneyEntity implements Tou
 
 	@Override
 	public Id getId() {
-		return new TourneyRound.Id(division.getId(), number);
+		return new TourneyRound.Id(division.getId(), round);
+	}
+
+	@Override
+	public Date getStartedDate() {
+		return startedDate;
+	}
+
+	@Override
+	public Date getFinishedDate() {
+		return finishedDate;
 	}
 
 	void gameFinished() {
-		finishedGamesCount = finishedGamesCount + 1;
+		if (finishedDate != null) {
+			throw new IllegalStateException("Round already finished");
+		}
+		finishedGamesCount += 1;
+		lastChange = new Date();
+		if (totalGamesCount == finishedGamesCount) {
+			finishedDate = lastChange;
+		}
 	}
-
 
 	@Override
 	public String toString() {
 		return "HibernateTourneyRound{" +
-				"number=" + number +
+				"id=" + id +
+				", round=" + round +
+				", division=" + division +
 				", totalGamesCount=" + totalGamesCount +
 				", finishedGamesCount=" + finishedGamesCount +
-				", division=" + division +
+				", startedDate=" + startedDate +
+				", finishedDate=" + finishedDate +
+				", lastChange=" + lastChange +
 				'}';
 	}
 }

@@ -49,47 +49,46 @@ public class HibernateTourneyEntityTest {
 		System.out.println(session.save(d2));
 
 		final Criteria c0 = session.createCriteria(HibernateTourneyDivision.class);
-		c0.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
+		c0.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
 		assertEquals(2, c0.list().size());
 
 		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d1, 10);
-		r1.markStarted();
-		r1.markFinished();
+		assertNotNull(r1.getStartedDate());
 		session.save(r1);
 
 		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d1, 10);
-		r2.markStarted();
+		assertNotNull(r2.getStartedDate());
 		session.save(r2);
 
 		final HibernateTourneyGroup g1 = new HibernateTourneyGroup(1, r1, new long[]{1, 2});
-		g1.markStarted();
+		assertNotNull(g1.getStartedDate());
 		session.save(g1);
 
 		final HibernateTourneyGroup g2 = new HibernateTourneyGroup(2, r1, new long[]{3, 4, 5, 6});
-		g2.markStarted();
+		assertNotNull(g2.getStartedDate());
 		session.save(g2);
 
 		final HibernateProcessingState state = new HibernateProcessingState(t);
 		session.save(state);
 
 		final Criteria c1 = session.createCriteria(HibernateTourneyDivision.class);
-		c1.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
+		c1.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
 		assertEquals(2, c1.list().size());
 
 		final Criteria c2 = session.createCriteria(HibernateTourneyDivision.class);
 		c2.add(Restrictions.eq("section", TourneySection.CASUAL));
-		c2.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
+		c2.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
 		assertEquals(1, c2.list().size());
 
 		final Criteria c3 = session.createCriteria(HibernateTourneyRound.class);
 		c3.createAlias("division", "d").add(Restrictions.eq("d.language", Language.RU));
-		c3.createAlias("division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
+		c3.createAlias("division.tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
 		assertEquals(2, c3.list().size());
 
 		final Criteria c4 = session.createCriteria(HibernateTourneyGroup.class);
-		c4.createAlias("round", "r").add(Restrictions.eq("r.number", r1.getNumber()));
+		c4.createAlias("round", "r").add(Restrictions.eq("r.round", r1.getRound()));
 		c4.createAlias("round.division", "d").add(Restrictions.eq("d.language", Language.RU));
-		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
+		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
 		assertEquals(2, c4.list().size());
 
 		final HibernateProcessingState s = (HibernateProcessingState) session.get(HibernateProcessingState.class, t.getDbId());

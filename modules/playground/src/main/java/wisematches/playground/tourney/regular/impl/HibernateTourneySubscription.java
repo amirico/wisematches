@@ -55,10 +55,10 @@ public class HibernateTourneySubscription implements TourneySubscription {
 
 	@Embeddable
 	public static class Id implements Serializable {
-		@Column(name = "round")
+		@Column(name = "roundNumber")
 		private int round;
 
-		@Column(name = "tourney")
+		@Column(name = "tourneyNumber")
 		private int tourney;
 
 		@Column(name = "player")
