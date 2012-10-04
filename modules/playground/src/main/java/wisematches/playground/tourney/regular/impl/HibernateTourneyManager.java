@@ -173,11 +173,11 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			if (RegularTourney.Id.class.isAssignableFrom(id.getClass())) {
 				final RegularTourney.Id id1 = RegularTourney.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourney t " +
-						"where t.tourney=?").setInteger(0, id1.getNumber()).uniqueResult();
+						"where t.number=?").setInteger(0, id1.getNumber()).uniqueResult();
 			} else if (TourneyDivision.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyDivision.Id id1 = TourneyDivision.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyDivision d " +
-						"where d.tourney.tourney=? and d.section = ? and d.language = ?")
+						"where d.tourney.number=? and d.section = ? and d.language = ?")
 						.setInteger(0, id1.getTourneyId().getNumber())
 						.setParameter(1, id1.getSection())
 						.setParameter(2, id1.getLanguage())
@@ -185,7 +185,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			} else if (TourneyRound.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyRound.Id id1 = TourneyRound.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyRound r " +
-						"where r.division.tourney.tourney=? and r.division.section = ? and r.division.language = ? and r.round=?")
+						"where r.division.tourney.number=? and r.division.section = ? and r.division.language = ? and r.round=?")
 						.setInteger(0, id1.getDivisionId().getTourneyId().getNumber())
 						.setParameter(1, id1.getDivisionId().getSection())
 						.setParameter(2, id1.getDivisionId().getLanguage())
@@ -194,7 +194,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			} else if (TourneyGroup.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyGroup.Id id1 = TourneyGroup.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyGroup g " +
-						"where g.round.division.tourney.tourney=? and g.round.division.section = ? and g.round.division.language = ? and g.round.round=? and g.group = ?")
+						"where g.round.division.tourney.number=? and g.round.division.section = ? and g.round.division.language = ? and g.round.round=? and g.group = ?")
 						.setInteger(0, id1.getRoundId().getDivisionId().getTourneyId().getNumber())
 						.setParameter(1, id1.getRoundId().getDivisionId().getSection())
 						.setParameter(2, id1.getRoundId().getDivisionId().getLanguage())
@@ -293,9 +293,48 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			for (Object aList : list) {
 				final HibernateTourney tourney = (HibernateTourney) aList;
 				tourney.startTourney();
+
+
+				final DefaultTourneySubscriptions status = (DefaultTourneySubscriptions) getSubscriptionStatus(tourney.getNumber());
+				for (Language language : Language.values()) {
+					for (TourneySection section : TourneySection.values())
+						if (status.getPlayers(language, section) == 1) {
+							// remove from current group
+							status.setPlayers(language, section, 0);
+
+							// search next not empty section
+							TourneySection nextSection;
+							do {
+								nextSection = section.getHigherSection();
+							} while (nextSection != null && status.getPlayers(language, nextSection) != 0);
+
+							if (nextSection != null) { // and move to next group
+								status.setPlayers(language, nextSection, status.getPlayers(language, nextSection) + 1);
+
+								final Query query = session.createQuery("update from HibernateTourneySubscription set section=? where id.tourney=? and id.round=1");
+								query.setParameter(0, nextSection);
+								query.setParameter(1, tourney.getNumber());
+								query.executeUpdate();
+							} else { // or cancel subscription
+								final Query query = session.createQuery("delete from HibernateTourneySubscription where section=? and id.tourney=? and id.round=1");
+								query.setParameter(0, section);
+								query.setParameter(1, tourney.getNumber());
+								query.executeUpdate();
+							}
+						}
+				}
+
+				// save tourney
 				session.save(tourney);
 
-				final Query query = session.createQuery("from HibernateTourneyDivision where tourney.id=?").setParameter(0, tourney.getTourney());
+				// create divisions
+				for (Language language : Language.values()) {
+					for (TourneySection section : TourneySection.values()) {
+						if (status.getPlayers(language, section) != 0) {
+							session.save(new HibernateTourneyDivision(tourney, language, section));
+						}
+					}
+				}
 			}
 		} finally {
 			lock.unlock();

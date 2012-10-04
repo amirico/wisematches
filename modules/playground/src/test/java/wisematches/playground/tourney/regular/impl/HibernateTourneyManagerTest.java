@@ -112,7 +112,7 @@ public class HibernateTourneyManagerTest {
 		System.out.println(session.save(d2));
 
 		final Criteria c0 = session.createCriteria(HibernateTourneyDivision.class);
-		c0.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
+		c0.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c0.list().size());
 
 		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d1, 10);

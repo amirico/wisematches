@@ -49,7 +49,7 @@ public class HibernateTourneyEntityTest {
 		System.out.println(session.save(d2));
 
 		final Criteria c0 = session.createCriteria(HibernateTourneyDivision.class);
-		c0.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
+		c0.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c0.list().size());
 
 		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d1, 10);
@@ -72,23 +72,23 @@ public class HibernateTourneyEntityTest {
 		session.save(state);
 
 		final Criteria c1 = session.createCriteria(HibernateTourneyDivision.class);
-		c1.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
+		c1.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c1.list().size());
 
 		final Criteria c2 = session.createCriteria(HibernateTourneyDivision.class);
 		c2.add(Restrictions.eq("section", TourneySection.CASUAL));
-		c2.createAlias("tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
+		c2.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(1, c2.list().size());
 
 		final Criteria c3 = session.createCriteria(HibernateTourneyRound.class);
 		c3.createAlias("division", "d").add(Restrictions.eq("d.language", Language.RU));
-		c3.createAlias("division.tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
+		c3.createAlias("division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c3.list().size());
 
 		final Criteria c4 = session.createCriteria(HibernateTourneyGroup.class);
 		c4.createAlias("round", "r").add(Restrictions.eq("r.round", r1.getRound()));
 		c4.createAlias("round.division", "d").add(Restrictions.eq("d.language", Language.RU));
-		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.tourney", t.getTourney()));
+		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c4.list().size());
 
 		final HibernateProcessingState s = (HibernateProcessingState) session.get(HibernateProcessingState.class, t.getDbId());
