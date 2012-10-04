@@ -17,7 +17,7 @@ public class HibernateTourney implements RegularTourney {
 	private long id;
 
 	@Column(name = "tourneyNumber")
-	private int tourney;
+	private int number;
 
 	@Column(name = "scheduled")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -39,9 +39,9 @@ public class HibernateTourney implements RegularTourney {
 	private HibernateTourney() {
 	}
 
-	public HibernateTourney(int tourney, Date scheduledDate) {
-		if (tourney < 0) {
-			throw new IllegalArgumentException("Incorrect tournament number: " + tourney);
+	public HibernateTourney(int number, Date scheduledDate) {
+		if (number < 0) {
+			throw new IllegalArgumentException("Incorrect tournament number: " + number);
 		}
 		if (scheduledDate == null) {
 			throw new NullPointerException("Scheduled date can't be null");
@@ -49,7 +49,7 @@ public class HibernateTourney implements RegularTourney {
 		if (scheduledDate.getTime() < System.currentTimeMillis()) {
 			throw new IllegalArgumentException("Scheduled date can't be in past.");
 		}
-		this.tourney = tourney;
+		this.number = number;
 		this.scheduledDate = scheduledDate;
 		this.lastChange = new Date();
 	}
@@ -59,8 +59,8 @@ public class HibernateTourney implements RegularTourney {
 	}
 
 	@Override
-	public int getTourney() {
-		return tourney;
+	public int getNumber() {
+		return number;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class HibernateTourney implements RegularTourney {
 
 	@Override
 	public RegularTourney.Id getId() {
-		return new RegularTourney.Id(tourney);
+		return new RegularTourney.Id(number);
 	}
 
 	void startTourney() {
@@ -104,7 +104,7 @@ public class HibernateTourney implements RegularTourney {
 	public String toString() {
 		return "HibernateTourney{" +
 				"id=" + id +
-				", tourney=" + tourney +
+				", tourney=" + number +
 				", scheduledDate=" + scheduledDate +
 				", startedDate=" + startedDate +
 				", finishedDate=" + finishedDate +
