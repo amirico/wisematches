@@ -3,4 +3,5 @@
 /.*\.vpp~.*$
 application.ids
 application.iws
+application_o.iws
 release.properties
