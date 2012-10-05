@@ -35,8 +35,8 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:hg:file:///${basedir}</connection>
-        <developerConnection>scm:hg:file:///${basedir}</developerConnection>
+        <connection>scm:hg:https://code.google.com/p/wisematches/trunk</connection>
+        <developerConnection>scm:hg:https://code.google.com/p/wisematches/trunk</developerConnection>
     </scm>
 
     <repositories>
@@ -219,8 +219,8 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin-hg</artifactId>
-                <version>1.7</version>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8</version>
             </plugin>
         </plugins>
     </build>
