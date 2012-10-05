@@ -219,8 +219,8 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.3</version>
+                <artifactId>maven-scm-plugin-hg</artifactId>
+                <version>1.7</version>
             </plugin>
         </plugins>
     </build>
