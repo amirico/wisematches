@@ -95,6 +95,8 @@ public class HibernateTourneyManagerTest {
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
+		regularTourneyManager.removeTourneySubscriptionListener(l);
+
 		verify(l);
 	}
 
@@ -142,5 +144,28 @@ public class HibernateTourneyManagerTest {
 
 		final TourneyGroup group = regularTourneyManager.getTournamentEntity(new TourneyGroup.Id(1, Language.RU, TourneySection.ADVANCED, 1, 1));
 		assertSame(g1, group);
+	}
+
+	@Test
+	public void testInitTourney() throws InterruptedException, TourneySubscriptionException {
+		final Session session = sessionFactory.getCurrentSession();
+
+		// init new tourney
+		final RegularTourney tourney = regularTourneyManager.startRegularTourney(HibernateTourneyManager.getMidnight());
+		Thread.sleep(10);
+
+		regularTourneyManager.subscribe(tourney.getNumber(), 101, Language.RU, TourneySection.CASUAL);
+		regularTourneyManager.subscribe(tourney.getNumber(), 102, Language.RU, TourneySection.INTERMEDIATE);
+		regularTourneyManager.subscribe(tourney.getNumber(), 103, Language.RU, TourneySection.ADVANCED);
+
+		// new day!
+		regularTourneyManager.breakingDayTime(HibernateTourneyManager.getMidnight());
+
+		Thread.sleep(10000L);
+	}
+
+	@Test
+	public void testFinishTourney() {
+		//TODO: not implemented
 	}
 }
