@@ -1,5 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,6 +44,8 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<RegularTourneyListener>();
 	private final Collection<TourneySubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TourneySubscriptionListener>();
 	private final Collection<TourneyEntityListener<? super RegularTourneyEntity>> entityListeners = new CopyOnWriteArraySet<TourneyEntityListener<? super RegularTourneyEntity>>();
+
+	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
 
 	public HibernateTourneyManager() {
 	}
@@ -280,7 +284,11 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
-				initiateScheduledTourneys();
+				try {
+//					initiateScheduledTourneys();
+				} catch (Exception ex) {
+					log.error("Scheduled Tourneys can't be initialized", ex);
+				}
 			}
 		});
 	}
@@ -289,7 +297,8 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 		lock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
-			final List list = session.createQuery("from HibernateTourney where scheduledDate=? and startedDate is null").setParameter(0, getMidnight()).list();
+//			final List list = session.createQuery("from HibernateTourney where scheduledDate<=? and startedDate is null").setParameter(0, getMidnight()).list();
+			final List list = session.createQuery("from HibernateTourney").list();
 			for (Object aList : list) {
 				final HibernateTourney tourney = (HibernateTourney) aList;
 				tourney.startTourney();
@@ -341,6 +350,23 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 		}
 	}
 
+	/**
+	 * TODO: for test cases only!
+	 */
+	public RegularTourney startRegularTourney(Date scheduledDate) {
+		int number = 1;
+		final Session session = sessionFactory.getCurrentSession();
+
+		final Number n = (Number) session.createQuery("select max(number) from HibernateTourney ").uniqueResult();
+		if (n != null) {
+			number = n.intValue() + 1;
+		}
+
+		final HibernateTourney t = new HibernateTourney(number, scheduledDate);
+		session.save(t);
+		return t;
+	}
+
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
@@ -360,7 +386,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 		}
 	}
 
-	private Date getMidnight() {
+	static Date getMidnight() {
 		return new Date((System.currentTimeMillis() / 86400000L) * 86400000L);
 	}
 }

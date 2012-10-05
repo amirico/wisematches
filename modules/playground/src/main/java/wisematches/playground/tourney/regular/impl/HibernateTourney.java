@@ -46,9 +46,9 @@ public class HibernateTourney implements RegularTourney {
 		if (scheduledDate == null) {
 			throw new NullPointerException("Scheduled date can't be null");
 		}
-		if (scheduledDate.getTime() < System.currentTimeMillis()) {
-			throw new IllegalArgumentException("Scheduled date can't be in past.");
-		}
+//		if (scheduledDate.getTime() < System.currentTimeMillis()) {
+//			throw new IllegalArgumentException("Scheduled date can't be in past.");
+//		}
 		this.number = number;
 		this.scheduledDate = scheduledDate;
 		this.lastChange = new Date();
