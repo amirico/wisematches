@@ -12,6 +12,16 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "tourney_regular_subs")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "tourney.outOfSection",
+				query = "select playerId " +
+						"from scribble_statistic s, tourney_regular_subs t " +
+						"where s.playerId=t.player and t.tourneyNumber=:tourney and t.roundNumber=:round and t.language=:language and t.section=:section and s.rating>:rating",
+				resultSetMapping = "playerIds")
+})
+@SqlResultSetMappings({
+		@SqlResultSetMapping(name = "playerIds", columns = {@ColumnResult(name = "playerId")})
+})
 public class HibernateTourneySubscription implements TourneySubscription {
 	@EmbeddedId
 	private Id id;

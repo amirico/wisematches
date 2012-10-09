@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.LongType;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
@@ -19,12 +20,8 @@ import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.TourneyEntityListener;
 import wisematches.playground.tourney.regular.*;
-import wisematches.playground.tracking.impl.RatingManagerImpl;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -37,13 +34,12 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 
 	private TaskExecutor taskExecutor;
 	private CronExpression cronExpression;
-	private RatingManagerImpl ratingManager;
 
 	private final Lock lock = new ReentrantLock();
 
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<RegularTourneyListener>();
 	private final Collection<TourneySubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TourneySubscriptionListener>();
-	private final Collection<TourneyEntityListener<? super RegularTourneyEntity>> entityListeners = new CopyOnWriteArraySet<TourneyEntityListener<? super RegularTourneyEntity>>();
+	private final Collection<TourneyEntityListener> entityListeners = new CopyOnWriteArraySet<TourneyEntityListener>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
 
@@ -75,14 +71,14 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 	}
 
 	@Override
-	public void addTourneyEntityListener(TourneyEntityListener<? super RegularTourneyEntity> l) {
+	public void addTourneyEntityListener(TourneyEntityListener l) {
 		if (l != null) {
 			entityListeners.add(l);
 		}
 	}
 
 	@Override
-	public void removeTourneyEntityListener(TourneyEntityListener<? super RegularTourneyEntity> l) {
+	public void removeTourneyEntityListener(TourneyEntityListener l) {
 		entityListeners.remove(l);
 	}
 
@@ -276,7 +272,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 	}
 
 	@Override
-	public void breakingDayTime(Date date) {
+	public void breakingDayTime(Date midnight) {
 		processTourneyEntities();
 	}
 
@@ -285,7 +281,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 			@Override
 			public void run() {
 				try {
-//					initiateScheduledTourneys();
+					initiateScheduledTourneys();
 				} catch (Exception ex) {
 					log.error("Scheduled Tourneys can't be initialized", ex);
 				}
@@ -293,6 +289,7 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initiateScheduledTourneys() {
 		lock.lock();
 		try {
@@ -303,34 +300,92 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 				final HibernateTourney tourney = (HibernateTourney) aList;
 				tourney.startTourney();
 
+				for (TourneyEntityListener entityListener : entityListeners) {
+					entityListener.entityStarted(tourney);
+				}
+
+				final Map<Long, TourneySection> originalSection = new HashMap<Long, TourneySection>();
+				final Map<Long, TourneySection> resubscribedSection = new HashMap<Long, TourneySection>();
 
 				final DefaultTourneySubscriptions status = (DefaultTourneySubscriptions) getSubscriptionStatus(tourney.getNumber());
 				for (Language language : Language.values()) {
-					for (TourneySection section : TourneySection.values())
-						if (status.getPlayers(language, section) == 1) {
-							// remove from current group
-							status.setPlayers(language, section, 0);
+					for (TourneySection section : TourneySection.values()) {
+						// nothing to do if no subscription
+						if (status.getPlayers(language, section) == 0) {
+							continue;
+						}
 
-							// search next not empty section
-							TourneySection nextSection;
-							do {
-								nextSection = section.getHigherSection();
-							} while (nextSection != null && status.getPlayers(language, nextSection) != 0);
+						final Set<Long> invalidPlayers = new HashSet<Long>();
+						if (status.getPlayers(language, section) != 1) {
+							final Query namedQuery = session.getNamedQuery("tourney.outOfSection");
+							namedQuery.setParameter("round", 1);
+							namedQuery.setParameter("rating", section.getTopRating());
+							namedQuery.setParameter("section", section.ordinal());
+							namedQuery.setParameter("language", language.ordinal());
+							namedQuery.setParameter("tourney", tourney.getNumber());
 
-							if (nextSection != null) { // and move to next group
-								status.setPlayers(language, nextSection, status.getPlayers(language, nextSection) + 1);
-
-								final Query query = session.createQuery("update from HibernateTourneySubscription set section=? where id.tourney=? and id.round=1");
-								query.setParameter(0, nextSection);
-								query.setParameter(1, tourney.getNumber());
-								query.executeUpdate();
-							} else { // or cancel subscription
-								final Query query = session.createQuery("delete from HibernateTourneySubscription where section=? and id.tourney=? and id.round=1");
-								query.setParameter(0, section);
-								query.setParameter(1, tourney.getNumber());
-								query.executeUpdate();
+							// select all
+							for (Object res : namedQuery.list()) { // result is BigInteger instead of long
+								invalidPlayers.add(((Number) res).longValue());
 							}
 						}
+
+						// if only one - move to next
+						if (status.getPlayers(language, section) - invalidPlayers.size() == 1) {
+							Query query = session.createQuery("select id.player " +
+									"from HibernateTourneySubscription " +
+									"where id.tourney=:tourney and id.round=1 and language=:language and section=:section");
+							query.setParameter("section", section);
+							query.setParameter("language", language);
+							query.setParameter("tourney", tourney.getNumber());
+							invalidPlayers.addAll((Collection<Long>) query.list());
+						}
+
+						if (invalidPlayers.size() != 0) {
+							// remove from stats
+							status.setPlayers(language, section, status.getPlayers(language, section) - invalidPlayers.size());
+
+							Query query;
+							// search next not empty section
+							TourneySection nextSection = section.getHigherSection();
+							while (nextSection != null && invalidPlayers.size() < 2 && status.getPlayers(language, nextSection) == 0) {
+								nextSection = nextSection.getHigherSection();
+							}
+
+							if (nextSection != null) { // and move to next group
+								query = session.createQuery("update from HibernateTourneySubscription set section=:section " +
+										"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
+								query.setParameter("section", nextSection);
+							} else { // or cancel subscription
+								query = session.createQuery("delete from HibernateTourneySubscription " +
+										"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
+							}
+							query.setParameter("language", language);
+							query.setParameter("tourney", tourney.getNumber());
+							query.setParameterList("players", invalidPlayers, LongType.INSTANCE);
+
+							final int count = query.executeUpdate();
+							if (nextSection != null) {
+								status.setPlayers(language, nextSection, status.getPlayers(language, nextSection) + count);
+							}
+
+							for (Long pid : invalidPlayers) {
+								// only if new. Otherwise - reuse old
+								if (!originalSection.containsKey(pid)) {
+									originalSection.put(pid, section);
+								}
+								resubscribedSection.put(pid, nextSection);
+							}
+						}
+					}
+				}
+
+				for (TourneySubscriptionListener subscriptionListener : subscriptionListeners) {
+					for (Long resubscribedPlayer : originalSection.keySet()) {
+						final TourneySection oldSection = originalSection.get(resubscribedPlayer);
+						final TourneySection newSection = resubscribedSection.get(resubscribedPlayer);
+						subscriptionListener.resubscribed(resubscribedPlayer, tourney.getNumber(), oldSection, newSection);
+					}
 				}
 
 				// save tourney
@@ -340,7 +395,12 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 				for (Language language : Language.values()) {
 					for (TourneySection section : TourneySection.values()) {
 						if (status.getPlayers(language, section) != 0) {
-							session.save(new HibernateTourneyDivision(tourney, language, section));
+							final HibernateTourneyDivision division = new HibernateTourneyDivision(tourney, language, section);
+							session.save(division);
+
+							for (TourneyEntityListener entityListener : entityListeners) {
+								entityListener.entityStarted(division);
+							}
 						}
 					}
 				}
@@ -364,6 +424,10 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 
 		final HibernateTourney t = new HibernateTourney(number, scheduledDate);
 		session.save(t);
+
+		for (RegularTourneyListener tourneyListener : tourneyListeners) {
+			tourneyListener.tourneyAnnounced(t);
+		}
 		return t;
 	}
 
@@ -373,10 +437,6 @@ public class HibernateTourneyManager implements InitializingBean, RegularTourney
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-	}
-
-	public void setRatingManager(RatingManagerImpl ratingManager) {
-		this.ratingManager = ratingManager;
 	}
 
 	public void setCronExpression(CronExpression cronExpression) {

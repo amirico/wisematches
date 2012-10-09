@@ -3,8 +3,8 @@ package wisematches.playground.tourney;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyEntityListener<E extends TourneyEntity> {
-	void entityStarted(E entity);
+public interface TourneyEntityListener {
+	void entityStarted(TourneyEntity entity);
 
-	void entityFinished(E entity);
+	void entityFinished(TourneyEntity entity);
 }

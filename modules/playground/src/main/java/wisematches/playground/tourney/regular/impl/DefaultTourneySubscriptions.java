@@ -37,4 +37,20 @@ public class DefaultTourneySubscriptions implements TourneySubscriptions {
 	void setPlayers(Language language, TourneySection section, int count) {
 		values[language.ordinal()][section.ordinal()] = count;
 	}
+
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("DefaultTourneySubscriptions");
+		sb.append("{tourney=").append(tourney);
+		sb.append(",");
+		for (Language language : Language.values()) {
+			for (TourneySection section : TourneySection.values()) {
+				sb.append(", [").append(language.name()).append("][").append(section.name()).append("]=").append(values[language.ordinal()][section.ordinal()]).append("]");
+			}
+		}
+		sb.append('}');
+		return sb.toString();
+	}
 }
