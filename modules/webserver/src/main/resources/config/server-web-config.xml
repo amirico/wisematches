@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="applicationEventTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="applicationEventMulticaster" class="org.springframework.context.event.SimpleApplicationEventMulticaster">
+        <property name="taskExecutor" ref="applicationEventTaskExecutor"/>
+    </bean>
+
+    <bean id="gameMessageSource" class="wisematches.server.web.i18n.GameMessageSource">
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="playerImagesManager" class="wisematches.server.web.services.images.impl.FilePlayerImagesManager">
+        <property name="imagesFolder" value="${server.images.path}/players"/>
+    </bean>
+
+    <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.HibernatePlayerStateManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="scribbleObjectsConverter"
+          class="wisematches.server.web.controllers.playground.scribble.controller.board.ScribbleObjectsConverter">
+        <property name="gameMessageSource" ref="gameMessageSource"/>
+    </bean>
+
+    <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
+        <property name="adsResource" value="${advertisement.providers.file}"/>
+    </bean>
+
+    <bean id="thesaurusHouse" class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurusHouse">
+        <property name="thesauruses">
+            <map>
+                <entry key="ru">
+                    <list>
+                        <bean class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurus">
+                            <constructor-arg index="0" value="gramota"/>
+                            <constructor-arg index="1" value="http://pda.gramota.ru/?action=dic&amp;word={word}"/>
+                        </bean>
+                        <!--
+                        <bean class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurus">
+                            <constructor-arg index="0" value="yandex"/>
+                            <constructor-arg index="1" value="http://slovari.yandex.ru/{word}"/>
+                        </bean>
+-->
+                    </list>
+                </entry>
+                <!--
+                <entry key="en">
+                    <list>
+                        <bean class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurus">
+                            <constructor-arg index="0" value="wiki"/>
+                            <constructor-arg index="1" value="http://en.wikipedia.org/wiki/{word}"/>
+                        </bean>
+                    </list>
+                </entry>
+-->
+            </map>
+        </property>
+    </bean>
+</beans>

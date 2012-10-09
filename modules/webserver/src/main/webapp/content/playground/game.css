@@ -1,0 +1,506 @@
+#game-toolbar .ui-buttonset {
+    margin-right: 0;
+}
+
+.restriction {
+    padding: 5px;
+}
+
+.restriction>div {
+    vertical-align: top;
+    display: inline-block;
+}
+
+.restriction-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.restriction-message {
+    margin-top: -10px;
+    padding-left: 37px;
+}
+
+.restriction .restriction-icon {
+    float: left;
+    padding-right: 5px;
+}
+
+#game-header {
+    border-bottom: 1px solid #C9D7F1;
+}
+
+.player {
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.player>span, .player a, .player .nickname {
+    color: #a52a2a;
+    text-decoration: none;
+}
+
+.player.member a {
+    border: none !important;
+}
+
+.player.member>span {
+    border-bottom: 1px solid #a52a2a;
+}
+
+.player .waiting {
+    color: gray;
+}
+
+.player .online {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: url("/resources/images/player/online.png") no-repeat left top;
+}
+
+.player .nickname {
+    font-weight: bold;
+}
+
+.player .mod {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0 0 2px;
+    vertical-align: bottom;
+    display: inline-block;
+}
+
+.player .rating {
+    padding-left: 3px;
+}
+
+.player.member .mod {
+    background: url("/resources/images/player/memberships.png") no-repeat left top;
+}
+
+.player.computer .mod {
+    background: url("/resources/images/player/types.png") no-repeat left top;
+}
+
+.player .basic {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.player .guest {
+    background-position: 0 0 !important;
+}
+
+.player .robot {
+    background-position: -16px 0 !important;
+}
+
+.player .silver {
+    background-position: -16px 0 !important;
+}
+
+.player .gold {
+    background-position: -32px 0 !important;
+}
+
+.player .platinum {
+    background-position: -48px 0 !important;
+}
+
+#selectRobotPlayer {
+    white-space: nowrap;
+    position: relative;
+    padding: 0;
+    margin: 0
+}
+
+#robotsList {
+    border: 1px solid #79b7e7;
+    background: #dfeffc;
+    padding: 0;
+    margin: 0;
+    display: none;
+    position: absolute;
+    top: -35px;
+}
+
+#robotsList li {
+    display: block;
+    margin: 1px;
+    padding: 3px 10px;
+    border: 1px solid #A6C9E2;
+}
+
+#minRatingDiv, #maxRatingDiv, #selectRobotPlayer {
+    display: inline-block;
+}
+
+#dashboard th, #dashboard td, #gameboard th, #gameboard td {
+    padding: 2px 5px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.game-join-error {
+    color: gray;
+    font-style: italic;
+}
+
+.profile {
+    width: 960px;
+    position: relative;
+    margin: 0 auto;
+    border-width: 1px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-image: none;
+}
+
+.profile a {
+    color: #a52a2a !important;
+}
+
+.profile .content {
+    border-width: 0;
+    min-height: 300px;
+    margin-left: 239px;
+    background: #f5f8f9 none;
+    border-left-width: 1px;
+    padding: 18px 10px 18px 20px;
+}
+
+.profile .title {
+    border-bottom: 1px solid #c0d2d2;
+    line-height: normal;
+}
+
+.profile .player {
+    font-size: 28px;
+    font-family: Lucida, serif;
+    line-height: normal;
+}
+
+.profile .registered {
+    font-size: 10px;
+    color: gray;
+    line-height: normal;
+}
+
+.profile .info {
+    background-color: transparent;
+    left: 0;
+    position: absolute;
+    padding: 20px 20px;
+    top: 0;
+    width: 200px;
+}
+
+.profile .edit {
+    top: 20px;
+    right: 12px;
+    position: absolute;
+}
+
+.profile .photo {
+    position: relative;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.profile .undefined {
+    display: none;
+}
+
+.profile .quotation {
+    padding-top: 10px;
+    font-style: italic;
+}
+
+.profile .games-info td {
+    padding: 5px;
+    text-align: center;
+}
+
+.profile .games-info td {
+    white-space: nowrap;
+}
+
+.profile .games-info thead td {
+    font-weight: bold;
+}
+
+.profile .games-info tbody td {
+    color: #7a7a00;
+    font-weight: bold;
+    background-image: none;
+}
+
+.profile .games-info thead td span {
+    font-weight: bold;
+    border-bottom: 3px solid transparent;
+}
+
+.profile .games-info tbody td span {
+    color: gray;
+}
+
+.profile .photo .remove {
+    top: 0;
+    right: 0;
+    position: absolute;
+    cursor: pointer;
+}
+
+.profile .statistic {
+    padding: 5px;
+    margin-top: 10px;
+    background-image: none;
+}
+
+.profile .statistic .ui-layout-table>div>div {
+    padding-right: 10px;
+}
+
+#changeProfileDialog {
+    position: relative;
+    width: 100%;
+}
+
+#changeProfileDialog .qq-upload-control div {
+    display: inline-block !important;
+}
+
+#changeProfileDialog .qq-upload-button {
+    width: auto !important;
+}
+
+#changeProfileDialog .qq-upload-drop-area {
+    width: 200px;
+    height: 200px;
+    display: inline-block !important;
+    margin-left: 2px !important;
+}
+
+#changeProfileDialog .qq-upload-file {
+    display: none;
+}
+
+#changeProfileDialog .qq-upload-spinner, #changeProfileDialog .qq-upload-size, #changeProfileDialog .qq-upload-cancel {
+    margin-right: 7px;
+}
+
+#changeProfileDialog .qq-upload-spinner {
+    display: inline-block;
+    background: url("/resources/images/wait.gif");
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+}
+
+#changeProfileDialog .qq-upload-failed-text {
+    display: none;
+}
+
+#changeProfileDialog .qq-upload-fail .qq-upload-failed-text {
+    display: inline;
+}
+
+.settings-tabs a {
+    border: 0;
+}
+
+.editable .sample {
+    color: #999999;
+}
+
+.common-settings, .create-game {
+    border-spacing: 5px !important;
+}
+
+.common-settings td, .create-game td {
+    vertical-align: top !important;
+}
+
+.settings-board td {
+    vertical-align: top;
+}
+
+.tiles-set-container {
+    padding-left: 10px;
+}
+
+.tiles-set-view {
+    padding: 3px;
+    margin: 0 -4px;
+    display: inline-block;
+    background: #558be7 !important;
+}
+
+.tiles-set-nav {
+    height: 50px;
+    width: 16px;
+    display: inline-block;
+    position: relative;
+}
+
+.tiles-set-nav .ui-icon {
+    position: absolute;
+    top: 16px;
+}
+
+.profile .membership div {
+    padding: 5px;
+}
+
+#messagesWidget .datatables_wrapper, #blacklistWidget .datatables_wrapper, #friendsWidget .datatables_wrapper {
+    min-height: inherit;
+}
+
+#messages tr, #blacklist tr, #friends tr {
+    background-image: none;
+}
+
+#messages tr.odd td, #messages tr.even td, #blacklist tr.odd td, #blacklist tr.even td, #friends tr.odd td, #friends tr.even td {
+    vertical-align: top;
+    border-bottom-style: solid;
+}
+
+.message, .blacklist, .friend {
+    font-weight: normal;
+    border: none;
+}
+
+.message-text, .blacklist-text, .friend-text {
+    text-align: justify;
+}
+
+.message-date, .blacklist-date, .friend-date {
+    white-space: nowrap;
+}
+
+.message-controls, .blacklist-controls, .friend-controls {
+    float: right;
+    font-weight: bold;
+}
+
+#messages tr .message-controls a, #blacklist tr .blacklist-controls a, #friends tr .friend-controls a {
+    color: #cccccc;
+    text-decoration: underline;
+}
+
+#messages tr:hover .message-controls a, #blacklist tr:hover .blacklist-controls a, #friends tr:hover .friend-controls a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+#privateMessageDialog {
+    border-spacing: 5px;
+}
+
+#searchPlayerWidget {
+    padding: 0 0 5px;
+    overflow: hidden;
+}
+
+#searchTypes {
+    white-space: nowrap;
+}
+
+#searchResult {
+    width: 100%;
+}
+
+#searchResult tr {
+    cursor: pointer;
+}
+
+#searchResult th, #searchResult td {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+    white-space: nowrap !important;
+}
+
+.player-search-remove .player .nickname {
+    cursor: pointer;
+    text-decoration: line-through;
+}
+
+.player-search-action {
+    cursor: pointer;
+    border-width: 0;
+    padding: 0 !important;
+    vertical-align: bottom;
+    border-bottom: 1px dashed;
+    background: none !important;
+}
+
+.rating div {
+    display: inline-block;
+}
+
+.rating .change {
+    width: 38px;
+    height: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.rating.up {
+    color: #31c54e;
+}
+
+.rating.up .change {
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -38px 0 !important;
+}
+
+.rating.down {
+    color: #c54c31;
+}
+
+.rating.down .change {
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat 0 0 !important;
+}
+
+.rating.same {
+    color: #8c8c7f;
+}
+
+.rating.same .change {
+    background: url("/resources/images/scribble/board/dynamic.png") no-repeat -76px 0 !important;
+}
+
+#history td {
+    white-space: nowrap;
+}
+
+#pastGamesWidget .title, #pastGamesWidget .title span, #activeGamesWidget .title, #activeGamesWidget .title span {
+    font-size: 28px;
+    line-height: normal;
+    font-family: Lucida, serif;
+    margin-bottom: 5px;
+}
+
+.boardInfoWidget a {
+    white-space: nowrap;
+}
+
+#boardLegend table td {
+    white-space: nowrap;
+}
+
+#tournament .data-table-header div {
+    display: inline-block;
+}
+
+#tournament .info-header .info-label {
+    padding: 0 0 0 5px;
+}
+
+#tournament .data-table-content table {
+    border-spacing: 5px;
+    white-space: nowrap;
+}
+
