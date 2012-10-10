@@ -68,7 +68,7 @@ public class HibernateTourneyEntityTest {
 		assertNotNull(g2.getStartedDate());
 		session.save(g2);
 
-		final HibernateProcessingState state = new HibernateProcessingState(t);
+		final HibernateTourneyChanges state = new HibernateTourneyChanges(t);
 		session.save(state);
 
 		final Criteria c1 = session.createCriteria(HibernateTourneyDivision.class);
@@ -91,7 +91,7 @@ public class HibernateTourneyEntityTest {
 		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c4.list().size());
 
-		final HibernateProcessingState s = (HibernateProcessingState) session.get(HibernateProcessingState.class, t.getDbId());
+		final HibernateTourneyChanges s = (HibernateTourneyChanges) session.get(HibernateTourneyChanges.class, t.getDbId());
 		assertNotNull(s);
 	}
 

@@ -1,6 +1,6 @@
 package wisematches.playground.tourney.regular.impl;
 
-import wisematches.playground.tourney.regular.RegularTourney;
+import wisematches.playground.tourney.regular.Tourney;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tourney_regular")
-public class HibernateTourney implements RegularTourney {
+public class HibernateTourney implements Tourney {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,6 +64,11 @@ public class HibernateTourney implements RegularTourney {
 	}
 
 	@Override
+	public State getState() {
+		return State.getState(startedDate, finishedDate);
+	}
+
+	@Override
 	public Date getStartedDate() {
 		return startedDate;
 	}
@@ -79,8 +84,8 @@ public class HibernateTourney implements RegularTourney {
 	}
 
 	@Override
-	public RegularTourney.Id getId() {
-		return new RegularTourney.Id(number);
+	public Tourney.Id getId() {
+		return new Tourney.Id(number);
 	}
 
 	void startTourney() {

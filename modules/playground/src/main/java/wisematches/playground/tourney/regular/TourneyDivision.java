@@ -3,6 +3,8 @@ package wisematches.playground.tourney.regular;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
+import java.util.EnumSet;
+
 /**
  * {@code TournamentDivision} is main block of tournament. Each tournament division has
  * language and section.
@@ -31,19 +33,19 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 */
 	TourneySection getSection();
 
-	RegularTourney getTourney();
+	Tourney getTourney();
 
 
-	public final class Id implements TourneyEntity.Id<TourneyDivision, Id> {
+	public final class Id extends TourneyEntity.Id<TourneyDivision, Id> {
 		private final Language language;
 		private final TourneySection section;
-		private final RegularTourney.Id tourneyId;
+		private final Tourney.Id tourneyId;
 
 		public Id(int tourney, Language language, TourneySection section) {
-			this(new RegularTourney.Id(tourney), language, section);
+			this(new Tourney.Id(tourney), language, section);
 		}
 
-		public Id(RegularTourney.Id tourneyId, Language language, TourneySection section) {
+		public Id(Tourney.Id tourneyId, Language language, TourneySection section) {
 			this.tourneyId = tourneyId;
 			this.language = language;
 			this.section = section;
@@ -57,7 +59,7 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 			return section;
 		}
 
-		public RegularTourney.Id getTourneyId() {
+		public Tourney.Id getTourneyId() {
 			return tourneyId;
 		}
 
@@ -95,19 +97,44 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 		}
 	}
 
-	public final class Context implements TourneyEntity.Context<TourneyDivision, Context> {
-		private final int tournament;
+	public final class Context extends TourneyEntity.Context<TourneyDivision, Context> {
+		private final Tourney.Id tourney;
 		private final Language language;
 		private final TourneySection section;
 
-		public Context(int tournament, Language language, TourneySection section) {
-			this.tournament = tournament;
+		public Context(Tourney.Id tourney) {
+			this(tourney, null, null, null);
+		}
+
+		public Context(Tourney.Id tourney, Language language) {
+			this(tourney, language, null, null);
+		}
+
+		public Context(Tourney.Id tourney, TourneySection section) {
+			this(tourney, null, section, null);
+		}
+
+		public Context(Tourney.Id tourney, EnumSet<State> states) {
+			this(tourney, null, null, states);
+		}
+
+		public Context(Tourney.Id tourney, Language language, EnumSet<State> states) {
+			this(tourney, language, null, states);
+		}
+
+		public Context(Tourney.Id tourney, TourneySection section, EnumSet<State> states) {
+			this(tourney, null, section, states);
+		}
+
+		public Context(Tourney.Id tourney, Language language, TourneySection section, EnumSet<State> states) {
+			super(states);
+			this.tourney = tourney;
 			this.language = language;
 			this.section = section;
 		}
 
-		public int getTournament() {
-			return tournament;
+		public Tourney.Id getTourneyId() {
+			return tourney;
 		}
 
 		public Language getLanguage() {

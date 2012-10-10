@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Language;
-import wisematches.playground.tourney.regular.RegularTourney;
+import wisematches.playground.tourney.regular.Tourney;
 import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneySection;
 
@@ -63,6 +63,11 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	}
 
 	@Override
+	public State getState() {
+		return State.getState(startedDate, finishedDate);
+	}
+
+	@Override
 	public int getActiveRound() {
 		return activeRound;
 	}
@@ -78,7 +83,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	}
 
 	@Override
-	public RegularTourney getTourney() {
+	public Tourney getTourney() {
 		return tourney;
 	}
 
