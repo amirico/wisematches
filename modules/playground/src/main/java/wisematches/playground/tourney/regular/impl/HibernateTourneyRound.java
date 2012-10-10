@@ -59,6 +59,11 @@ public class HibernateTourneyRound implements TourneyRound {
 	}
 
 	@Override
+	public State getState() {
+		return State.getState(startedDate, finishedDate);
+	}
+
+	@Override
 	public int getRound() {
 		return round;
 	}

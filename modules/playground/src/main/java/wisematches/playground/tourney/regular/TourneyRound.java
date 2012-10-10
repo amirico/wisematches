@@ -3,6 +3,8 @@ package wisematches.playground.tourney.regular;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
+import java.util.EnumSet;
+
 /**
  * A tournament round belong to a tournament and
  *
@@ -23,7 +25,6 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 */
 	TourneyDivision getDivision();
 
-
 	/**
 	 * Returns number of total games in the round.
 	 *
@@ -38,7 +39,7 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 */
 	int getFinishedGamesCount();
 
-	public final class Id implements TourneyEntity.Id<TourneyRound, Id> {
+	public final class Id extends TourneyEntity.Id<TourneyRound, Id> {
 		private TourneyDivision.Id divisionId;
 		private int round;
 
@@ -89,27 +90,20 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 		}
 	}
 
-	public final class Context implements TourneyEntity.Context<TourneyRound, Context> {
-		private final int tournament;
-		private final Language language;
-		private final TourneySection section;
+	public final class Context extends TourneyEntity.Context<TourneyRound, Context> {
+		private final TourneyDivision.Id division;
 
-		public Context(int tournament, Language language, TourneySection section) {
-			this.tournament = tournament;
-			this.language = language;
-			this.section = section;
+		public Context(TourneyDivision.Id division) {
+			this.division = division;
 		}
 
-		public int getTournament() {
-			return tournament;
+		public Context(TourneyDivision.Id division, EnumSet<State> states) {
+			super(states);
+			this.division = division;
 		}
 
-		public Language getLanguage() {
-			return language;
-		}
-
-		public TourneySection getSection() {
-			return section;
+		public TourneyDivision.Id getDivisionId() {
+			return division;
 		}
 	}
 }

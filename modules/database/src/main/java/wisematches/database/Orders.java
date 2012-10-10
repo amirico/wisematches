@@ -42,6 +42,18 @@ public final class Orders implements Iterable<Order> {
 		return new Orders(orders1);
 	}
 
+	public String apply(String query) {
+		StringBuilder b = new StringBuilder(query);
+		if (orders.length != 0) {
+			b.append(" order by ");
+			for (Order order : orders) {
+				b.append(order.getPropertyName()).append(" ").append(order.isAscending() ? "asc" : "desc").append(", ");
+			}
+			b.setLength(b.length() - 2); // remove last quote
+		}
+		return b.toString();
+	}
+
 	public void apply(Criteria criteria) {
 		for (Order order : orders) {
 			criteria.addOrder(order.isAscending() ?

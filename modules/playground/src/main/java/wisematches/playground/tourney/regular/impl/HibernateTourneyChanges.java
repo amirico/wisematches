@@ -8,7 +8,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tourney_regular_config")
-public class HibernateProcessingState {
+public class HibernateTourneyChanges {
 	@Id
 	@Column(name = "id")
 	private long tourney;
@@ -30,10 +30,10 @@ public class HibernateProcessingState {
 	private Date lastTourneyCheck;
 
 	@Deprecated
-	private HibernateProcessingState() {
+	private HibernateTourneyChanges() {
 	}
 
-	HibernateProcessingState(HibernateTourney tourney) {
+	HibernateTourneyChanges(HibernateTourney tourney) {
 		this.tourney = tourney.getDbId();
 	}
 

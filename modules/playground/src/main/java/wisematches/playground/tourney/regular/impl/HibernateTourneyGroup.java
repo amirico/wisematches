@@ -123,6 +123,11 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	@Override
+	public State getState() {
+		return State.getState(startedDate, finishedDate);
+	}
+
+	@Override
 	public int getGroup() {
 		return group;
 	}

@@ -3,11 +3,12 @@ package wisematches.playground.tourney.regular;
 import wisematches.playground.tourney.TourneyEntity;
 
 import java.util.Date;
+import java.util.EnumSet;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface RegularTourney extends RegularTourneyEntity<RegularTourney, RegularTourney.Id, RegularTourney.Context> {
+public interface Tourney extends RegularTourneyEntity<Tourney, Tourney.Id, Tourney.Context> {
 	/**
 	 * Returns tourney number
 	 *
@@ -22,7 +23,7 @@ public interface RegularTourney extends RegularTourneyEntity<RegularTourney, Reg
 	 */
 	Date getScheduledDate();
 
-	public final class Id implements TourneyEntity.Id<RegularTourney, Id> {
+	public final class Id extends TourneyEntity.Id<Tourney, Id> {
 		private final int number;
 
 		public Id(int number) {
@@ -57,21 +58,12 @@ public interface RegularTourney extends RegularTourneyEntity<RegularTourney, Reg
 		}
 	}
 
-	public enum State {
-		SCHEDULED,
-		ACTIVE,
-		FINISHED
-	}
-
-	public final class Context implements TourneyEntity.Context<RegularTourney, Context> {
-		private final State state;
-
-		public Context(State state) {
-			this.state = state;
+	public final class Context extends TourneyEntity.Context<Tourney, Context> {
+		public Context() {
 		}
 
-		public State getState() {
-			return state;
+		public Context(EnumSet<State> states) {
+			super(states);
 		}
 	}
 }

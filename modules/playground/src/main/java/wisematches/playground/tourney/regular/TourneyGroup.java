@@ -3,6 +3,8 @@ package wisematches.playground.tourney.regular;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
+import java.util.EnumSet;
+
 /**
  * The tournament group is last tournament entity that describes players and games for one group.
  *
@@ -63,7 +65,7 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 */
 	long getGameId(long p1, long p2);
 
-	public final class Id implements TourneyEntity.Id<TourneyGroup, Id> {
+	public final class Id extends TourneyEntity.Id<TourneyGroup, Id> {
 		private TourneyRound.Id id;
 		private int group;
 
@@ -114,32 +116,19 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 		}
 	}
 
-	public final class Context implements TourneyEntity.Context<TourneyGroup, Context> {
-		private final int tournament;
-		private final Language language;
-		private final TourneySection section;
-		private final int round;
+	public final class Context extends TourneyEntity.Context<TourneyGroup, Context> {
+		private final TourneyRound.Id round;
 
-		public Context(int round, Language language, TourneySection section, int tournament) {
+		public Context(TourneyRound.Id round) {
 			this.round = round;
-			this.section = section;
-			this.language = language;
-			this.tournament = tournament;
 		}
 
-		public int getTournament() {
-			return tournament;
+		public Context(TourneyRound.Id round, EnumSet<State> states) {
+			super(states);
+			this.round = round;
 		}
 
-		public Language getLanguage() {
-			return language;
-		}
-
-		public TourneySection getSection() {
-			return section;
-		}
-
-		public int getRound() {
+		public TourneyRound.Id getRoundId() {
 			return round;
 		}
 	}
