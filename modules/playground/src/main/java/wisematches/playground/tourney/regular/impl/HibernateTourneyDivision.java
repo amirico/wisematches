@@ -53,7 +53,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		this.tourney = tourney;
 		this.language = language;
 		this.section = section;
-		this.activeRound = 1;
+		this.activeRound = 0;
 		lastChange = startedDate = new Date();
 	}
 

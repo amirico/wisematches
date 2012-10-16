@@ -15,6 +15,7 @@ import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
+import wisematches.playground.BoardManager;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntity;
@@ -34,6 +35,7 @@ public class HibernateRegularTourneyManager implements InitializingBean, Regular
 
 	private TaskExecutor taskExecutor;
 	private CronExpression cronExpression;
+	private BoardManager<?, ?> boardManager;
 
 	private final Lock lock = new ReentrantLock();
 
@@ -333,6 +335,45 @@ public class HibernateRegularTourneyManager implements InitializingBean, Regular
 	}
 
 	private void processTourneyEntities() {
+		// init tourneys
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					initiateScheduledTourneys();
+				} catch (Exception ex) {
+					log.error("Scheduled Tourneys can't be initialized", ex);
+				}
+			}
+		});
+
+		// TODO: process finished entities before
+
+		// init rounds
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					initiateRounds();
+				} catch (Exception ex) {
+					log.error("Scheduled Tourneys can't be initialized", ex);
+				}
+			}
+		});
+
+		// init groups
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					initiateScheduledTourneys();
+				} catch (Exception ex) {
+					log.error("Scheduled Tourneys can't be initialized", ex);
+				}
+			}
+		});
+
+		// init games
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -466,6 +507,71 @@ public class HibernateRegularTourneyManager implements InitializingBean, Regular
 		}
 	}
 
+	private void initiateRounds() {
+		lock.lock();
+		try {
+			final Session session = sessionFactory.getCurrentSession();
+
+			final Query query = session.createQuery("from HibernateTourneyDivision d where not d.id in " +
+					"(select c.id.entityId from HibernateTourneyEntityChange c where c.id.entityType = :entityType and c.lastCheck>d.lastChange)");
+			query.setParameter("entityType", HibernateTourneyEntityChange.EntityType.DIVISION);
+
+			final List list = query.list();
+			for (Object o : list) {
+				final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
+				// only if not finished
+				if (division.getFinishedDate() == null) {
+					boolean timeForNewRound = division.getActiveRound() == 0; // first round
+					if (!timeForNewRound) { // or active round is finished
+						final Query roundsCountQuery = session.createQuery("select r.finishedDate from HibernateTourneyRound r where r.division = :division and r.round = :round");
+						roundsCountQuery.setParameter("division", division);
+						roundsCountQuery.setParameter("round", division.getActiveRound());
+						timeForNewRound = (roundsCountQuery.uniqueResult() != null);
+					}
+
+					if (timeForNewRound) { // round is finished - start new round
+						final int nextRound = division.getActiveRound() + 1;
+
+						final Query subscriptionQuery = session.createQuery("select s.id.player from HibernateTourneySubscription s where s.id.round=:round and s.id.tourney=:tourney and s.language=:language and s.section = :section");
+						subscriptionQuery.setParameter("round", nextRound);
+						subscriptionQuery.setParameter("tourney", division.getTourney().getNumber());
+						subscriptionQuery.setParameter("section", division.getSection());
+						subscriptionQuery.setParameter("language", division.getLanguage());
+
+						final List subscribedPlayers = subscriptionQuery.list();
+						ArrayList<Long> players = new ArrayList<Long>(subscribedPlayers);
+						System.out.println(players);
+//						while (players.size() > 0) {
+//
+//						}
+//						HibernateTourneyRound round = new HibernateTourneyRound(nextRound, division, );
+					}
+				}
+				updateLastChange(division.getDbId(), HibernateTourneyEntityChange.EntityType.DIVISION, new Date());
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	private void initiateGroups() {
+	}
+
+	private void initiateGames() {
+	}
+
+	private void updateLastChange(long id, HibernateTourneyEntityChange.EntityType type, Date lastChange) {
+		final Session session = sessionFactory.getCurrentSession();
+		HibernateTourneyEntityChange o = (HibernateTourneyEntityChange) session.get(HibernateTourneyEntityChange.class, new HibernateTourneyEntityChange.Id(id, type));
+		if (o == null) {
+			o = new HibernateTourneyEntityChange(id, type, lastChange);
+			session.save(o);
+		} else {
+			o.setLastCheck(lastChange);
+			session.update(o);
+		}
+	}
+
 	/**
 	 * TODO: for test cases only!
 	 */
@@ -500,6 +606,10 @@ public class HibernateRegularTourneyManager implements InitializingBean, Regular
 		if (this.cronExpression != null) {
 			this.cronExpression.setTimeZone(TimeZone.getTimeZone("GMT"));
 		}
+	}
+
+	public void setBoardManager(BoardManager<?, ?> boardManager) {
+		this.boardManager = boardManager;
 	}
 
 	static Date getMidnight() {
