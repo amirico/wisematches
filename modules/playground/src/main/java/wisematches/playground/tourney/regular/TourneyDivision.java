@@ -15,7 +15,7 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	/**
 	 * Returns active round for this division starting with one.
 	 *
-	 * @return the active round or {@code zero} if division is finished.
+	 * @return the active round or {@code zero} if division is finished or not started yet.
 	 */
 	int getActiveRound();
 
@@ -33,6 +33,11 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 */
 	TourneySection getSection();
 
+	/**
+	 * Returns tourney for this division.
+	 *
+	 * @return the tourney for this division.
+	 */
 	Tourney getTourney();
 
 

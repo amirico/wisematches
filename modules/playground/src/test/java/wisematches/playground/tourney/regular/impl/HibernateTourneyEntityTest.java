@@ -68,8 +68,8 @@ public class HibernateTourneyEntityTest {
 		assertNotNull(g2.getStartedDate());
 		session.save(g2);
 
-		final HibernateTourneyChanges state = new HibernateTourneyChanges(t);
-		session.save(state);
+//		final HibernateTourneyEntityChange state = new HibernateTourneyEntityChange(t);
+//		session.save(state);
 
 		final Criteria c1 = session.createCriteria(HibernateTourneyDivision.class);
 		c1.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
@@ -91,7 +91,7 @@ public class HibernateTourneyEntityTest {
 		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c4.list().size());
 
-		final HibernateTourneyChanges s = (HibernateTourneyChanges) session.get(HibernateTourneyChanges.class, t.getDbId());
+		final HibernateTourneyEntityChange s = (HibernateTourneyEntityChange) session.get(HibernateTourneyEntityChange.class, t.getDbId());
 		assertNotNull(s);
 	}
 
