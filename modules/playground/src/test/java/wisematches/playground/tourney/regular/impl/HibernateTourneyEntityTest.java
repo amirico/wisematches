@@ -16,7 +16,7 @@ import wisematches.playground.tourney.regular.TourneySection;
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -53,23 +53,20 @@ public class HibernateTourneyEntityTest {
 		assertEquals(2, c0.list().size());
 
 		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d1);
-		assertNotNull(r1.getStartedDate());
+		assertNull(r1.getStartedDate());
 		session.save(r1);
 
 		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d1);
-		assertNotNull(r2.getStartedDate());
+		assertNull(r2.getStartedDate());
 		session.save(r2);
 
 		final HibernateTourneyGroup g1 = new HibernateTourneyGroup(1, r1, new long[]{1, 2});
-		assertNotNull(g1.getStartedDate());
+		assertNull(g1.getStartedDate());
 		session.save(g1);
 
 		final HibernateTourneyGroup g2 = new HibernateTourneyGroup(2, r1, new long[]{3, 4, 5, 6});
-		assertNotNull(g2.getStartedDate());
+		assertNull(g2.getStartedDate());
 		session.save(g2);
-
-//		final HibernateTourneyEntityChange state = new HibernateTourneyEntityChange(t);
-//		session.save(state);
 
 		final Criteria c1 = session.createCriteria(HibernateTourneyDivision.class);
 		c1.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
@@ -90,9 +87,6 @@ public class HibernateTourneyEntityTest {
 		c4.createAlias("round.division", "d").add(Restrictions.eq("d.language", Language.RU));
 		c4.createAlias("round.division.tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c4.list().size());
-
-		final HibernateTourneyEntityChange s = (HibernateTourneyEntityChange) session.get(HibernateTourneyEntityChange.class, t.getDbId());
-		assertNotNull(s);
 	}
 
 	@Test
