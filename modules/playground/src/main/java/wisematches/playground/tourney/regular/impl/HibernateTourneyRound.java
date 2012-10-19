@@ -46,13 +46,11 @@ public class HibernateTourneyRound implements TourneyRound {
 	private HibernateTourneyRound() {
 	}
 
-	public HibernateTourneyRound(int round, HibernateTourneyDivision division, int totalGamesCount) {
+	public HibernateTourneyRound(int round, HibernateTourneyDivision division) {
 		this.round = round;
 		this.division = division;
-		this.totalGamesCount = totalGamesCount;
-		lastChange = startedDate = new Date();
+		lastChange = new Date();
 	}
-
 
 	long getDbId() {
 		return id;
@@ -96,6 +94,14 @@ public class HibernateTourneyRound implements TourneyRound {
 	@Override
 	public Date getFinishedDate() {
 		return finishedDate;
+	}
+
+	void startRound(int totalGamesCount) {
+		if (startedDate != null) {
+			throw new IllegalStateException("Round already started");
+		}
+		this.totalGamesCount += totalGamesCount;
+		lastChange = startedDate = new Date();
 	}
 
 	void gameFinished() {

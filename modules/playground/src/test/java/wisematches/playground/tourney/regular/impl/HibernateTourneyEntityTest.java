@@ -52,11 +52,11 @@ public class HibernateTourneyEntityTest {
 		c0.createAlias("tourney", "t").add(Restrictions.eq("t.number", t.getNumber()));
 		assertEquals(2, c0.list().size());
 
-		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d1, 10);
+		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d1);
 		assertNotNull(r1.getStartedDate());
 		session.save(r1);
 
-		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d1, 10);
+		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d1);
 		assertNotNull(r2.getStartedDate());
 		session.save(r2);
 

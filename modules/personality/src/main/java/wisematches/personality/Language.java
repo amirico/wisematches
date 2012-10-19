@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2009, WiseMatches (by Sergey Klimenko).
- */
 package wisematches.personality;
 
 import java.util.Locale;

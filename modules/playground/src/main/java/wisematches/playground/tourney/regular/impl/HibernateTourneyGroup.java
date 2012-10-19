@@ -115,7 +115,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		if (playersCount > 3) {
 			player4 = players[3];
 		}
-		lastChange = startedDate = new Date();
+		lastChange = new Date();
 	}
 
 	long getDbId() {
@@ -196,12 +196,12 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return finishedDate;
 	}
 
-	<S extends GameSettings> void initializeGames(BoardManager<S, ?> boardManager, GameSettingsProvider<S> settingsProvider) throws BoardCreationException {
+	<S extends GameSettings> int initializeGames(BoardManager<S, ?> boardManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
 		if (totalGamesCount != 0) {
 			throw new IllegalStateException("Group already initialized");
 		}
 
-		final S gameSettings = settingsProvider.createGameSettings();
+		final S gameSettings = settingsProvider.createGameSettings(this);
 		if (playersCount == 2) {
 			game1 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
 			totalGamesCount = 1;
@@ -219,7 +219,8 @@ public class HibernateTourneyGroup implements TourneyGroup {
 			game6 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player3), Personality.person(player4))).getBoardId();
 			totalGamesCount = 6;
 		}
-		lastChange = new Date();
+		lastChange = startedDate = new Date();
+		return totalGamesCount;
 	}
 
 	void processGameFinished(GameBoard<?, ?> board) {

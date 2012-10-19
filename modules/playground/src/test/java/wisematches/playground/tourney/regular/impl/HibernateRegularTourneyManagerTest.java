@@ -2,6 +2,8 @@ package wisematches.playground.tourney.regular.impl;
 
 import org.easymock.Capture;
 import org.easymock.CaptureType;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,11 +17,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
+import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.TourneyEntityListener;
 import wisematches.playground.tourney.regular.*;
 
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -41,17 +45,46 @@ public class HibernateRegularTourneyManagerTest {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	private HibernateRegularTourneyManager tourneyManager;
+	private HibernateRegularTourneyManager<GameSettings> tourneyManager;
 
 	public HibernateRegularTourneyManagerTest() {
 	}
 
 	@Before
-	public void init() throws ParseException {
-		tourneyManager = new HibernateRegularTourneyManager();
+	public void init() throws ParseException, BoardCreationException {
+		@SuppressWarnings("unchecked")
+		final GameSettingsProvider<GameSettings, TourneyGroup> settingsProvider = createMock(GameSettingsProvider.class);
+		expect(settingsProvider.createGameSettings(isA(TourneyGroup.class))).andAnswer(new IAnswer<GameSettings>() {
+			@Override
+			public GameSettings answer() throws Throwable {
+				final TourneyGroup g = (TourneyGroup) EasyMock.getCurrentArguments()[0];
+				return new MockGameSettings("Mock tourney: " + g.getId().getRoundId().getDivisionId().getTourneyId().getNumber(), 3);
+			}
+		}).anyTimes();
+		replay(settingsProvider);
+
+		@SuppressWarnings("unchecked")
+		final BoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> boardManager = createMock(BoardManager.class);
+		expect(boardManager.createBoard(anyObject(GameSettings.class), anyObject(Collection.class))).andAnswer(new IAnswer<GameBoard<GameSettings, GamePlayerHand>>() {
+			private long c = 1;
+
+			@Override
+			public GameBoard<GameSettings, GamePlayerHand> answer() throws Throwable {
+				@SuppressWarnings("unchecked")
+				GameBoard<GameSettings, GamePlayerHand> s = createMock(GameBoard.class);
+				expect(s.getBoardId()).andReturn(c++).anyTimes();
+				replay(s);
+				return s;
+			}
+		}).anyTimes();
+		replay(boardManager);
+
+		tourneyManager = new HibernateRegularTourneyManager<GameSettings>();
 		tourneyManager.setCronExpression(new CronExpression("* * * ? * 2#1"));
 		tourneyManager.setSessionFactory(sessionFactory);
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
+		tourneyManager.setBoardManager(boardManager);
+		tourneyManager.setSettingsProvider(settingsProvider);
 	}
 
 	@Test
@@ -126,20 +159,21 @@ public class HibernateRegularTourneyManagerTest {
 		final HibernateTourneyDivision d = new HibernateTourneyDivision(t, Language.RU, TourneySection.ADVANCED);
 		session.save(d);
 
-		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d, 10);
-		assertNotNull(r1.getStartedDate());
+		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d);
+		assertNull(r1.getStartedDate());
 		session.save(r1);
 
-		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d, 10);
+		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d);
+		r2.startRound(12);
 		assertNotNull(r2.getStartedDate());
 		session.save(r2);
 
 		final HibernateTourneyGroup g1 = new HibernateTourneyGroup(1, r1, new long[]{1, 2});
-		assertNotNull(g1.getStartedDate());
+		assertNull(g1.getStartedDate());
 		session.save(g1);
 
 		final HibernateTourneyGroup g2 = new HibernateTourneyGroup(2, r1, new long[]{3, 4, 5, 6});
-		assertNotNull(g2.getStartedDate());
+		assertNull(g2.getStartedDate());
 		session.save(g2);
 
 		final Tourney tourney = tourneyManager.getTournamentEntity(new Tourney.Id(1));
@@ -207,7 +241,7 @@ public class HibernateRegularTourneyManagerTest {
 		assertEquals(1, divisions.size());
 
 		final TourneyDivision division = divisions.iterator().next();
-		assertEquals(0, division.getActiveRound()); // not initialized
+		assertEquals(1, division.getActiveRound());
 		assertEquals(tourney.getId(), division.getTourney().getId());
 		assertNull(division.getFinishedDate());
 		assertNotNull(division.getStartedDate());
@@ -232,8 +266,7 @@ public class HibernateRegularTourneyManagerTest {
 		assertEquals(2, group.getPlayers().length);
 		assertEquals(101, group.getPlayers()[0]);
 		assertEquals(102, group.getPlayers()[1]);
-		assertEquals(2, group.getGames().length);
-		assertEquals(2, group.getGames().length);
+		assertEquals(1, group.getGames().length);
 		assertEquals(2, group.getScores().length);
 		assertNull(group.getFinishedDate());
 		assertNotNull(group.getStartedDate());
