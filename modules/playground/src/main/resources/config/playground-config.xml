@@ -44,46 +44,6 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
-        <property name="taskExecutor">
-            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
-                <property name="poolSize" value="1"/>
-                <property name="threadNamePrefix" value="TournamentManager"/>
-                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
-            </bean>
-        </property>
-        <property name="transactionManager" ref="transactionManager"/>
-    </bean>
-
-    <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateRegularTourneyManager">
-        <property name="cronExpression" value="* * * ? * 2#1"/>
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="taskExecutor" ref="tournamentTaskExecutor"/>
-    </bean>
-
-    <!--
-        <bean id="tournamentManager"
-              class="wisematches.playground.tourney.implOld.HibernateTournamentManager">
-            &lt;!&ndash; every first monday &ndash;&gt;
-            <property name="cronExpression" value=""/>
-
-
-            <property name="sessionFactory" ref="sessionFactory"/>
-            <property name="assuredTaskExecutor">
-                <bean class="wisematches.playground.task.assured.FileAssuredTaskExecutor">
-                    <property name="fileStorage" value=""/>
-                    <property name="executor" ref="tournamentTaskExecutor"/>
-                </bean>
-            </property>
-        </bean>
-
-    -->
-    <!--
-
-        <bean id="tournamentTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        </bean>
-    -->
-
     <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="cronExpression" value="0 0 2 * * ?"/>
         <!-- run every morning at 2 AM -->

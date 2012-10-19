@@ -17,6 +17,10 @@
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
     </bean>
 
+    <bean id="scribbleSettingsProvider" class="wisematches.playground.scribble.tourney.ScribbleTourneySettingsProvider">
+        <property name="daysPerMove" value="3"/>
+    </bean>
+
     <bean id="scribbleStatisticValidator"
           class="wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -111,5 +115,24 @@
         <property name="clearMemoryDefault" value="true"/>
         <property name="clearByClickDefault" value="true"/>
         <property name="tilesClassDefault" value="tiles-set-classic"/>
+    </bean>
+
+    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="TournamentManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateRegularTourneyManager">
+        <property name="cronExpression" value="* * * ? * 2#1"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="taskExecutor" ref="tournamentTaskExecutor"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="settingsProvider" ref="scribbleSettingsProvider"/>
     </bean>
 </beans>
