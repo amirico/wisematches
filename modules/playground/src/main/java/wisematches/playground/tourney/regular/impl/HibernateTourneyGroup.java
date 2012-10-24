@@ -167,6 +167,9 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	int getPlayerIndex(long player) {
+		if (player == 0) {
+			throw new IllegalArgumentException("Incorrect player id");
+		}
 		if (player == player1) {
 			return 0;
 		} else if (player == player2) {
