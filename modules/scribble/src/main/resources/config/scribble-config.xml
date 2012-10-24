@@ -117,24 +117,24 @@
         <property name="tilesClassDefault" value="tiles-set-classic"/>
     </bean>
 
-    <!--    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
-            <property name="taskExecutor">
-                <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-                    <property name="maxPoolSize" value="1"/>
-                    <property name="corePoolSize" value="1"/>
-                    <property name="threadNamePrefix" value="TournamentManager"/>
-                    <property name="waitForTasksToCompleteOnShutdown" value="true"/>
-                </bean>
-            </property>
-            <property name="transactionManager" ref="transactionManager"/>
-        </bean>
+    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+                <property name="maxPoolSize" value="1"/>
+                <property name="corePoolSize" value="1"/>
+                <property name="threadNamePrefix" value="TournamentManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
 
-        <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateRegularTourneyManager">
-            <property name="sessionFactory" ref="sessionFactory"/>
-            <property name="cronExpression" value="* * * ? * 2#1"/>
+    <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateRegularTourneyManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="cronExpression" value="* * * ? * 2#1"/>
 
-            <property name="taskExecutor" ref="tournamentTaskExecutor"/>
-            <property name="boardManager" ref="scribbleBoardManager"/>
-            <property name="settingsProvider" ref="scribbleSettingsProvider"/>
-        </bean>-->
+        <property name="taskExecutor" ref="tournamentTaskExecutor"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="settingsProvider" ref="scribbleSettingsProvider"/>
+    </bean>
 </beans>

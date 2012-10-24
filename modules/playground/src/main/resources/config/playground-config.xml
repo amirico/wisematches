@@ -44,20 +44,18 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <!--
-        <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-            <property name="cronExpression" value="0 0 2 * * ?"/>
-            &lt;!&ndash; run every morning at 00:00:00.000 &ndash;&gt;
-            &lt;!&ndash;<property name="cronExpression" value="0 0 0 * * ?"/>&ndash;&gt;
-            <property name="jobDetail">
-                <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-                    <property name="name" value="breakingDayNotification"/>
-                    <property name="jobClass"
-                              value="wisematches.playground.scheduling.quartz.SpringBreakingDayExecutorJob"/>
-                </bean>
-            </property>
-        </bean>
-    -->
+    <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!--<property name="cronExpression" value="0 0/1 * * * ?"/>-->
+        <!-- run every morning at 00:00:00.000 -->
+        <property name="cronExpression" value="0 0 0 * * ?"/>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="name" value="breakingDayNotification"/>
+                <property name="jobClass"
+                          value="wisematches.playground.scheduling.quartz.SpringBreakingDayExecutorJob"/>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- run every morning at 2 AM -->
@@ -75,7 +73,7 @@
         <property name="applicationContextSchedulerContextKey" value="SpringApplicationContext"/>
         <property name="triggers">
             <list>
-                <!--<ref bean="breakingDayTrigger"/>-->
+                <ref bean="breakingDayTrigger"/>
                 <ref bean="messagesCleanerTrigger"/>
             </list>
         </property>
