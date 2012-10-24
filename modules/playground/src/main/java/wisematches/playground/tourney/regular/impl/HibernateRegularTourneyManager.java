@@ -256,7 +256,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 					"where g.round.division.tourney.number=:tourney and " +
 					"g.round.division.language=:language and g.round.division.section=:section " +
 					"and g.round.round=:round " +
-					convertStateToQuery(ctx.getStates(), "r", "and"));
+					convertStateToQuery(ctx.getStates(), "g", "and"));
 			query.setParameter("tourney", ctx.getRoundId().getDivisionId().getTourneyId().getNumber());
 			query.setParameter("language", ctx.getRoundId().getDivisionId().getLanguage());
 			query.setParameter("section", ctx.getRoundId().getDivisionId().getSection());

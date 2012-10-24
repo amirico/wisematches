@@ -77,7 +77,7 @@ public class HibernateTourneyRound implements TourneyRound {
 
 	@Override
 	public boolean isFinal() {
-		return totalGamesCount <= 6; // 6 games - one group.
+		return totalGamesCount == 1; // 1 game - last round
 	}
 
 	@Override

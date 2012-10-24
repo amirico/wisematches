@@ -113,42 +113,38 @@ class DefaultTourneyProcessor {
 			group.finalizeGame(board);
 			session.update(group);
 
-			if (group.getFinishedDate() != null) { // finished
-				final HibernateTourneyRound round = group.getRound();
-				round.gamesFinished(1);
-				session.update(round);
+			final HibernateTourneyRound round = group.getRound();
+			round.gamesFinished(1);
+			session.update(round);
 
-				if (!round.isFinal()) { //
-					for (long playerId : group.getPlayers()) {
-						if (group.isWinner(playerId)) {
-							final TourneyRound.Id roundId = round.getId();
-							final TourneyDivision.Id divisionId = roundId.getDivisionId();
-							final Tourney.Id tourneyId = divisionId.getTourneyId();
-							final int number = tourneyId.getNumber();
-							final HibernateTourneySubscription s = new HibernateTourneySubscription(playerId, number, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
-							session.save(s);
+			if (round.getFinishedDate() != null) { // finished
+				final HibernateTourneyDivision division = round.getDivision();
+				division.finishRound(round);
+				session.update(division);
+			}
 
-							for (TourneySubscriptionListener listener : subscriptionListeners) {
-								listener.subscribed(s, "won.tourney.round");
-							}
+			if (group.getFinishedDate() != null && !round.isFinal()) {
+				for (long playerId : group.getPlayers()) {
+					if (group.isWinner(playerId)) {
+						final TourneyRound.Id roundId = round.getId();
+						final TourneyDivision.Id divisionId = roundId.getDivisionId();
+						final Tourney.Id tourneyId = divisionId.getTourneyId();
+						final int number = tourneyId.getNumber();
+						final HibernateTourneySubscription s = new HibernateTourneySubscription(playerId, number, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
+						session.save(s);
+
+						for (TourneySubscriptionListener listener : subscriptionListeners) {
+							listener.subscribed(s, "won.tourney.group");
 						}
 					}
-				}
-
-				if (round.getFinishedDate() != null) { // finished
-					final HibernateTourneyDivision division = round.getDivision();
-					division.finishRound(round);
-					session.update(division);
 				}
 			}
 		}
 	}
 
 	void finalizeTourneys(Session session, Collection<RegularTourneyListener> tourneyListeners) {
-		// select all where finished divisions are the same like all divisions and tourney is not finished
-		final Query query = session.createQuery("select d.tourney from HibernateTourneyDivision d " +
-				"where d.tourney.finishedDate is null " +
-				"group by d.tourney having count(d.finishedDate)=(select count(d.finishedDate) from HibernateTourneyDivision d where d.finishedDate is not null group by d.tourney)");
+		// NOTE: works for MySQL. Others DB must be checked before
+		final Query query = session.createQuery("select d.tourney from HibernateTourneyDivision d where d.tourney.finishedDate is null group by d.tourney having count(*)=count(d.finishedDate)");
 		for (Object o : query.list()) {
 			final HibernateTourney t = (HibernateTourney) o;
 			t.finishTourney();
