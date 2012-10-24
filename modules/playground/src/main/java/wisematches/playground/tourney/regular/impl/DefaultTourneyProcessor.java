@@ -1,18 +1,295 @@
 package wisematches.playground.tourney.regular.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.type.LongType;
+import wisematches.personality.Language;
+import wisematches.playground.*;
+import wisematches.playground.tourney.regular.*;
+
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 class DefaultTourneyProcessor {
-	private DefaultTourneyProcessor() {
+	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
+
+	DefaultTourneyProcessor() {
 	}
 
-	static List<long[]> splitByGroups(Collection<Long> players) {
+	void initiateTourneys(Session session, Collection<RegularTourneyListener> tourneyListeners, Collection<TourneySubscriptionListener> subscriptionListeners) {
+		final Query query = session.createQuery("from HibernateTourney where scheduledDate<=:scheduled and startedDate is null");
+		query.setParameter("scheduled", new Date());
+
+		final List list = query.list();
+		for (Object o : list) {
+			final HibernateTourney tourney = (HibernateTourney) o;
+			log.info("Start initialisation of tourney: " + tourney.getId());
+			final int tourneyNumber = tourney.getNumber();
+			final Collection<TourneyResubscription> resubscriptions = resortSubscriptions(session, tourneyNumber, 1);
+
+			if (resubscriptions.size() != 0) {
+				log.info("Some players were resubscribed: " + resubscriptions);
+			} else {
+				log.info("No resubscriptions for this tourney");
+			}
+			final Collection<HibernateTourneyDivision> divisions = new ArrayList<HibernateTourneyDivision>();
+			final DefaultTourneySubscriptions subscriptions = getTourneySubscriptions(session, tourneyNumber, 1);
+			// create divisions
+			for (Language language : Language.values()) {
+				for (TourneySection section : TourneySection.values()) {
+					if (subscriptions.hasPlayers(language, section)) {
+						final HibernateTourneyDivision division = new HibernateTourneyDivision(tourney, language, section);
+						divisions.add(division);
+						session.save(division);
+					}
+				}
+			}
+
+			log.info("Initiated divisions: " + divisions);
+
+			tourney.startTourney();
+			session.update(tourney);
+
+			// notify players
+			for (TourneyResubscription resubscription : resubscriptions) {
+				final long player = resubscription.getPlayer();
+				final TourneySection oldSection = resubscription.getOldSection();
+				final TourneySection newSection = resubscription.getNewSection();
+				for (TourneySubscriptionListener listener : subscriptionListeners) {
+					listener.resubscribed(player, tourneyNumber, oldSection, newSection);
+				}
+			}
+
+			// notify about new tourney
+			for (RegularTourneyListener listener : tourneyListeners) {
+				listener.tourneyStarted(tourney);
+			}
+			log.info("Tourney was initialised");
+		}
+	}
+
+	<S extends GameSettings> void initiateDivisions(Session session, BoardManager<S, ?> boardManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
+		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound = 0 and d.finishedDate is null");
+		for (Object o : query.list()) {
+			final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
+			log.info("Initiating finished division: " + division.getId());
+
+			final Query roundsCountQuery = session.createQuery("select max(r.round) from HibernateTourneyRound r where r.division=:division");
+			roundsCountQuery.setParameter("division", division);
+			final Object roundsCountValue = roundsCountQuery.uniqueResult();
+			final int nextRoundNumber = roundsCountValue == null ? 1 : ((Number) roundsCountValue).intValue() + 1;
+			final Collection<Long> subscribedPlayers = getSubscribedPlayers(session, division, nextRoundNumber);
+			if (subscribedPlayers.size() <= 1) {
+				log.error("Broken subscribed players count! TODO: division must be finished. We can get winners from previous round and previous was last.");
+			}
+			log.info("Next round number: " + nextRoundNumber + ", subscribed players: " + subscribedPlayers.size());
+			final HibernateTourneyRound round = new HibernateTourneyRound(division, nextRoundNumber);
+			session.save(round);
+
+			int roundGamesCount = 0;
+			final List<long[]> longs = splitByGroups(subscribedPlayers);
+			for (int i = 0, longsSize = longs.size(); i < longsSize; i++) {
+				final HibernateTourneyGroup group = new HibernateTourneyGroup(i + 1, round, longs.get(i));
+				session.save(group);
+				roundGamesCount += group.initializeGames(boardManager, settingsProvider);
+				session.update(group);
+			}
+			round.gamesStarted(roundGamesCount);
+			session.update(round);
+
+			division.startRound(round);
+			session.update(division);
+		}
+	}
+
+
+	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<TourneySubscriptionListener> subscriptionListeners) {
+		final HibernateTourneyGroup group = getGroupByBoard(session, board);
+		if (group != null) {
+			group.finalizeGame(board);
+			session.update(group);
+
+			if (group.getFinishedDate() != null) { // finished
+				final HibernateTourneyRound round = group.getRound();
+				round.gamesFinished(1);
+				session.update(round);
+
+				if (!round.isFinal()) { //
+					for (long playerId : group.getPlayers()) {
+						if (group.isWinner(playerId)) {
+							final TourneyRound.Id roundId = round.getId();
+							final TourneyDivision.Id divisionId = roundId.getDivisionId();
+							final Tourney.Id tourneyId = divisionId.getTourneyId();
+							final int number = tourneyId.getNumber();
+							final HibernateTourneySubscription s = new HibernateTourneySubscription(playerId, number, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
+							session.save(s);
+
+							for (TourneySubscriptionListener listener : subscriptionListeners) {
+								listener.subscribed(s, "won.tourney.round");
+							}
+						}
+					}
+				}
+
+				if (round.getFinishedDate() != null) { // finished
+					final HibernateTourneyDivision division = round.getDivision();
+					division.finishRound(round);
+					session.update(division);
+				}
+			}
+		}
+	}
+
+	void finalizeTourneys(Session session, Collection<RegularTourneyListener> tourneyListeners) {
+		// select all where finished divisions are the same like all divisions and tourney is not finished
+		final Query query = session.createQuery("select d.tourney from HibernateTourneyDivision d " +
+				"where d.tourney.finishedDate is null " +
+				"group by d.tourney having count(d.finishedDate)=(select count(d.finishedDate) from HibernateTourneyDivision d where d.finishedDate is not null group by d.tourney)");
+		for (Object o : query.list()) {
+			final HibernateTourney t = (HibernateTourney) o;
+			t.finishTourney();
+
+			for (RegularTourneyListener listener : tourneyListeners) {
+				listener.tourneyFinished(t);
+			}
+		}
+	}
+
+
+	DefaultTourneySubscriptions getTourneySubscriptions(Session session, int tourney, int round) {
+		final Query query = session.createQuery("select language, section, count(id.player) from HibernateTourneySubscription where id.tourney=:tid and id.round=:rid group by language, section");
+		query.setParameter("tid", tourney);
+		query.setParameter("rid", round);
+		final DefaultTourneySubscriptions res = new DefaultTourneySubscriptions(tourney);
+		final List list = query.list();
+		for (Object o : list) {
+			Object[] cols = (Object[]) o;
+			res.setPlayers((Language) cols[0], (TourneySection) cols[1], ((Number) cols[2]).intValue());
+		}
+		return res;
+	}
+
+
+	Collection<TourneyResubscription> resortSubscriptions(Session session, int tourney, int round) {
+		final Collection<TourneyResubscription> res = new ArrayList<TourneyResubscription>();
+
+		final Map<Long, TourneySection> originalSection = new HashMap<Long, TourneySection>();
+		final Map<Long, TourneySection> resubscribedSection = new HashMap<Long, TourneySection>();
+
+		final DefaultTourneySubscriptions subscriptions = getTourneySubscriptions(session, tourney, round);
+		for (Language language : Language.values()) {
+			for (TourneySection section : TourneySection.values()) {
+				// nothing to do if no subscription
+				final int playersCount = subscriptions.getPlayers(language, section);
+				if (playersCount == 0) {
+					continue;
+				}
+
+				final Set<Long> invalidPlayers = new HashSet<Long>();
+				if (playersCount != 1) {
+					final Query namedQuery = session.getNamedQuery("tourney.outOfSection");
+					namedQuery.setParameter("round", 1);
+					namedQuery.setParameter("rating", section.getTopRating());
+					namedQuery.setParameter("section", section.ordinal());
+					namedQuery.setParameter("language", language.ordinal());
+					namedQuery.setParameter("tourney", subscriptions.getTourney());
+
+					// select all
+					for (Object ps : namedQuery.list()) { // result is BigInteger instead of long
+						invalidPlayers.add(((Number) ps).longValue());
+					}
+				}
+
+				// if only one - move to next
+				if (playersCount - invalidPlayers.size() == 1) {
+					Query query = session.createQuery("select id.player " +
+							"from HibernateTourneySubscription " +
+							"where id.tourney=:tourney and id.round=1 and language=:language and section=:section");
+					query.setParameter("section", section);
+					query.setParameter("language", language);
+					query.setParameter("tourney", subscriptions.getTourney());
+
+					for (Object o : query.list()) {
+						final Number n = (Number) o;
+						invalidPlayers.add(n.longValue());
+					}
+				}
+
+				if (invalidPlayers.size() != 0) {
+					// remove from stats
+					subscriptions.setPlayers(language, section, playersCount - invalidPlayers.size());
+
+					Query query;
+					// search next not empty section
+					TourneySection nextSection = section.getHigherSection();
+					while (nextSection != null && invalidPlayers.size() < 2 && subscriptions.getPlayers(language, nextSection) == 0) {
+						nextSection = nextSection.getHigherSection();
+					}
+
+					if (nextSection != null) { // and move to next group
+						query = session.createQuery("update from HibernateTourneySubscription set section=:section " +
+								"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
+						query.setParameter("section", nextSection);
+					} else { // or cancel subscription
+						query = session.createQuery("delete from HibernateTourneySubscription " +
+								"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
+					}
+					query.setParameter("language", language);
+					query.setParameter("tourney", subscriptions.getTourney());
+					query.setParameterList("players", invalidPlayers, LongType.INSTANCE);
+
+					final int count = query.executeUpdate();
+					if (nextSection != null) {
+						subscriptions.setPlayers(language, nextSection, subscriptions.getPlayers(language, nextSection) + count);
+					}
+
+					for (Long pid : invalidPlayers) {
+						// only if new. Otherwise - reuse old
+						if (!originalSection.containsKey(pid)) {
+							originalSection.put(pid, section);
+						}
+						resubscribedSection.put(pid, nextSection);
+					}
+				}
+			}
+		}
+
+		for (Long resubscribedPlayer : originalSection.keySet()) {
+			final TourneySection oldSection = originalSection.get(resubscribedPlayer);
+			final TourneySection newSection = resubscribedSection.get(resubscribedPlayer);
+			res.add(new TourneyResubscription(resubscribedPlayer, oldSection, newSection));
+		}
+		return res;
+	}
+
+	Collection<Long> getSubscribedPlayers(Session session, HibernateTourneyDivision division, int round) {
+		final Query subscriptionQuery = session.createQuery("select s.id.player from HibernateTourneySubscription s where s.id.round=:round and s.id.tourney=:tourney and s.language=:language and s.section = :section");
+		subscriptionQuery.setParameter("round", round);
+		subscriptionQuery.setParameter("tourney", division.getTourney().getNumber());
+		subscriptionQuery.setParameter("section", division.getSection());
+		subscriptionQuery.setParameter("language", division.getLanguage());
+
+		final List list = subscriptionQuery.list();
+		final Collection<Long> res = new ArrayList<Long>(list.size());
+		for (Object o : list) {
+			res.add(((Number) o).longValue());
+		}
+		return res;
+	}
+
+	HibernateTourneyGroup getGroupByBoard(Session session, GameBoard<?, ?> board) {
+		final Query query = session.createQuery("from HibernateTourneyGroup g where " +
+				"g.game1=:game or g.game2 = :game or g.game3 = :game or " +
+				"g.game4 = :game or g.game5 = :game or g.game6 = :game");
+		query.setParameter("game", board.getBoardId());
+		return (HibernateTourneyGroup) query.uniqueResult();
+	}
+
+	List<long[]> splitByGroups(Collection<Long> players) {
 		int elapsedCount = players.size();
 		final Iterator<Long> iterator = players.iterator();
 		final List<long[]> res = new ArrayList<long[]>();
@@ -38,7 +315,7 @@ class DefaultTourneyProcessor {
 		return res;
 	}
 
-	private static long[] takeNextPlayers(Iterator<Long> players, int count) {
+	static long[] takeNextPlayers(Iterator<Long> players, int count) {
 		final long[] res = new long[count];
 		for (int i = 0; i < res.length; i++) {
 			res[i] = players.next();

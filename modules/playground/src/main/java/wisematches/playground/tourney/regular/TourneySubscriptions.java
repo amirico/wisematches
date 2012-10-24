@@ -11,4 +11,6 @@ public interface TourneySubscriptions {
 	int getPlayers(Language language);
 
 	int getPlayers(Language language, TourneySection section);
+
+	boolean hasPlayers(Language language, TourneySection section);
 }

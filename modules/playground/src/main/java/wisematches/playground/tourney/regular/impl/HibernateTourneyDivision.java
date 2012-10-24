@@ -1,7 +1,6 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Language;
-import wisematches.playground.tourney.regular.Tourney;
 import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneySection;
 
@@ -17,7 +16,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private long internalId;
 
 	@Column(name = "activeRound")
 	private int activeRound;
@@ -41,10 +40,6 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
 
-	@Column(name = "lastChange")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastChange;
-
 	@Deprecated
 	private HibernateTourneyDivision() {
 	}
@@ -54,12 +49,11 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		this.language = language;
 		this.section = section;
 		this.activeRound = 0;
-		lastChange = startedDate = new Date();
 	}
 
 
-	long getDbId() {
-		return id;
+	long getInternalId() {
+		return internalId;
 	}
 
 	@Override
@@ -83,7 +77,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	}
 
 	@Override
-	public Tourney getTourney() {
+	public HibernateTourney getTourney() {
 		return tourney;
 	}
 
@@ -102,33 +96,36 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		return finishedDate;
 	}
 
-	void nextRoundStarted() {
+	void startRound(HibernateTourneyRound round) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Division already finished");
 		}
-		activeRound += 1;
-		lastChange = new Date();
+		if (activeRound == 0) {
+			startedDate = new Date();
+		}
+		activeRound = round.getRound();
 	}
 
-	void divisionFinished() {
+	void finishRound(HibernateTourneyRound round) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Division already finished");
 		}
 		activeRound = 0;
-		lastChange = finishedDate = new Date();
+		if (round.isFinal()) {
+			finishedDate = new Date();
+		}
 	}
 
 	@Override
 	public String toString() {
 		return "HibernateTourneyDivision{" +
-				"id=" + id +
+				"internalId=" + internalId +
 				", round=" + activeRound +
 				", tourney=" + tourney +
 				", section=" + section +
 				", language=" + language +
 				", startedDate=" + startedDate +
 				", finishedDate=" + finishedDate +
-				", lastChange=" + lastChange +
 				'}';
 	}
 }

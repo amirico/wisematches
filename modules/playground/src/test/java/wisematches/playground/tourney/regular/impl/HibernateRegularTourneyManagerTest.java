@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.TourneyEntityListener;
 import wisematches.playground.tourney.regular.*;
 
 import java.text.ParseException;
@@ -45,6 +44,8 @@ public class HibernateRegularTourneyManagerTest {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	private BoardStateListener boardStateListener;
+
 	private HibernateRegularTourneyManager<GameSettings> tourneyManager;
 
 	public HibernateRegularTourneyManagerTest() {
@@ -65,6 +66,14 @@ public class HibernateRegularTourneyManagerTest {
 
 		@SuppressWarnings("unchecked")
 		final BoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> boardManager = createMock(BoardManager.class);
+		boardManager.addBoardStateListener(isA(BoardStateListener.class));
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+			@Override
+			public Object answer() throws Throwable {
+				boardStateListener = (BoardStateListener) getCurrentArguments()[0];
+				return null;
+			}
+		});
 		expect(boardManager.createBoard(anyObject(GameSettings.class), anyObject(Collection.class))).andAnswer(new IAnswer<GameBoard<GameSettings, GamePlayerHand>>() {
 			private long c = 1;
 
@@ -97,10 +106,10 @@ public class HibernateRegularTourneyManagerTest {
 		final TourneySubscriptionListener l = createStrictMock(TourneySubscriptionListener.class);
 		tourneyManager.addTourneySubscriptionListener(l);
 
-		l.subscribed(isA(TourneySubscription.class));
-		l.subscribed(isA(TourneySubscription.class));
-		l.subscribed(isA(TourneySubscription.class));
-		l.unsubscribed(isA(TourneySubscription.class));
+		l.subscribed(isA(TourneySubscription.class), isNull(String.class));
+		l.subscribed(isA(TourneySubscription.class), isNull(String.class));
+		l.subscribed(isA(TourneySubscription.class), isNull(String.class));
+		l.unsubscribed(isA(TourneySubscription.class), isNull(String.class));
 		replay(l);
 
 		try {
@@ -159,12 +168,12 @@ public class HibernateRegularTourneyManagerTest {
 		final HibernateTourneyDivision d = new HibernateTourneyDivision(t, Language.RU, TourneySection.ADVANCED);
 		session.save(d);
 
-		final HibernateTourneyRound r1 = new HibernateTourneyRound(1, d);
+		final HibernateTourneyRound r1 = new HibernateTourneyRound(d, 1);
 		assertNull(r1.getStartedDate());
 		session.save(r1);
 
-		final HibernateTourneyRound r2 = new HibernateTourneyRound(2, d);
-		r2.startRound(12);
+		final HibernateTourneyRound r2 = new HibernateTourneyRound(d, 2);
+		r2.gamesStarted(12);
 		assertNotNull(r2.getStartedDate());
 		session.save(r2);
 
@@ -192,11 +201,12 @@ public class HibernateRegularTourneyManagerTest {
 	@Test
 	public void testInitTourney() throws InterruptedException, TourneySubscriptionException {
 		final Capture<TourneyEntity> entityCapture = new Capture<TourneyEntity>(CaptureType.ALL);
-		final Capture<Tourney> tourneyCapture = new Capture<Tourney>();
+		final Capture<Tourney> tourneyCapture = new Capture<Tourney>(CaptureType.ALL);
 		final Capture<TourneySubscription> subscriptionCapture = new Capture<TourneySubscription>(CaptureType.ALL);
 
 		final RegularTourneyListener tourneyListener = createStrictMock(RegularTourneyListener.class);
 		tourneyListener.tourneyAnnounced(capture(tourneyCapture));
+		tourneyListener.tourneyStarted(capture(tourneyCapture));
 		replay(tourneyListener);
 
 		createStats(101, 1001);
@@ -208,21 +218,15 @@ public class HibernateRegularTourneyManagerTest {
 		// init new tourney
 		final Tourney tourney = tourneyManager.startRegularTourney(HibernateRegularTourneyManager.getMidnight());
 
-		final TourneyEntityListener entityListener = createStrictMock(TourneyEntityListener.class);
-		entityListener.entityStarted(capture(entityCapture)); // tourney
-		entityListener.entityStarted(capture(entityCapture)); // division 1
-		replay(entityListener);
-
 		final TourneySubscriptionListener subscriptionListener = createMock(TourneySubscriptionListener.class);
-		subscriptionListener.subscribed(capture(subscriptionCapture));
-		subscriptionListener.subscribed(capture(subscriptionCapture));
-		subscriptionListener.subscribed(capture(subscriptionCapture));
+		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
+		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
+		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
 		subscriptionListener.resubscribed(101, tourney.getNumber(), TourneySection.CASUAL, TourneySection.ADVANCED);
 		subscriptionListener.resubscribed(102, tourney.getNumber(), TourneySection.INTERMEDIATE, TourneySection.ADVANCED);
 		subscriptionListener.resubscribed(103, tourney.getNumber(), TourneySection.EXPERT, null);
 		replay(subscriptionListener);
 
-		tourneyManager.addTourneyEntityListener(entityListener);
 		tourneyManager.addTourneySubscriptionListener(subscriptionListener);
 
 		tourneyManager.subscribe(tourney.getNumber(), 101, Language.RU, TourneySection.CASUAL);
@@ -271,11 +275,9 @@ public class HibernateRegularTourneyManagerTest {
 		assertNull(group.getFinishedDate());
 		assertNotNull(group.getStartedDate());
 
-		tourneyManager.removeTourneyEntityListener(entityListener);
 		tourneyManager.removeRegularTourneyListener(tourneyListener);
 		tourneyManager.removeTourneySubscriptionListener(subscriptionListener);
 
-		verify(entityListener);
 		verify(tourneyListener);
 		verify(subscriptionListener);
 	}

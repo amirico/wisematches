@@ -19,11 +19,6 @@ import java.util.List;
 public interface TourneyEntityManager<E extends TourneyEntity>
 		extends SearchManager<E, TourneyEntity.Context<? extends E, ?>, SearchFilter> {
 
-	void addTourneyEntityListener(TourneyEntityListener l);
-
-	void removeTourneyEntityListener(TourneyEntityListener l);
-
-
 	<T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTournamentEntity(K id);
 
 	<T extends E, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTournamentEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range);

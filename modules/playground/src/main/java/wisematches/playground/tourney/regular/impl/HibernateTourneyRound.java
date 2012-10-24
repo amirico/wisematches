@@ -1,6 +1,5 @@
 package wisematches.playground.tourney.regular.impl;
 
-import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneyRound;
 
 import javax.persistence.*;
@@ -15,7 +14,7 @@ public class HibernateTourneyRound implements TourneyRound {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private long internalId;
 
 	@Column(name = "roundNumber")
 	private int round;
@@ -38,22 +37,17 @@ public class HibernateTourneyRound implements TourneyRound {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
 
-	@Column(name = "lastChange")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastChange;
-
 	@Deprecated
 	private HibernateTourneyRound() {
 	}
 
-	public HibernateTourneyRound(int round, HibernateTourneyDivision division) {
+	public HibernateTourneyRound(HibernateTourneyDivision division, int round) {
 		this.round = round;
 		this.division = division;
-		lastChange = new Date();
 	}
 
-	long getDbId() {
-		return id;
+	long getInternalId() {
+		return internalId;
 	}
 
 	@Override
@@ -67,7 +61,7 @@ public class HibernateTourneyRound implements TourneyRound {
 	}
 
 	@Override
-	public TourneyDivision getDivision() {
+	public HibernateTourneyDivision getDivision() {
 		return division;
 	}
 
@@ -79,6 +73,11 @@ public class HibernateTourneyRound implements TourneyRound {
 	@Override
 	public int getFinishedGamesCount() {
 		return finishedGamesCount;
+	}
+
+	@Override
+	public boolean isFinal() {
+		return totalGamesCount <= 6; // 6 games - one group.
 	}
 
 	@Override
@@ -96,36 +95,34 @@ public class HibernateTourneyRound implements TourneyRound {
 		return finishedDate;
 	}
 
-	void startRound(int totalGamesCount) {
+	void gamesStarted(int gamesCount) {
 		if (startedDate != null) {
 			throw new IllegalStateException("Round already started");
 		}
-		this.totalGamesCount += totalGamesCount;
-		lastChange = startedDate = new Date();
+		this.totalGamesCount += gamesCount;
+		startedDate = new Date();
 	}
 
-	void gameFinished() {
+	void gamesFinished(int gamesCount) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Round already finished");
 		}
-		finishedGamesCount += 1;
-		lastChange = new Date();
+		finishedGamesCount += gamesCount;
 		if (totalGamesCount == finishedGamesCount) {
-			finishedDate = lastChange;
+			finishedDate = new Date();
 		}
 	}
 
 	@Override
 	public String toString() {
 		return "HibernateTourneyRound{" +
-				"id=" + id +
+				"internalId=" + internalId +
 				", round=" + round +
 				", division=" + division +
-				", totalGamesCount=" + totalGamesCount +
+				", gamesCount=" + totalGamesCount +
 				", finishedGamesCount=" + finishedGamesCount +
 				", startedDate=" + startedDate +
 				", finishedDate=" + finishedDate +
-				", lastChange=" + lastChange +
 				'}';
 	}
 }

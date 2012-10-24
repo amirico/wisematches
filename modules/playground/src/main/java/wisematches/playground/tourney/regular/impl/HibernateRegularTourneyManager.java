@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.type.LongType;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
@@ -15,13 +14,10 @@ import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
-import wisematches.playground.BoardManager;
-import wisematches.playground.GameSettings;
-import wisematches.playground.GameSettingsProvider;
+import wisematches.playground.*;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.TourneyEntityListener;
 import wisematches.playground.tourney.regular.*;
 
 import java.util.*;
@@ -40,12 +36,13 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
 	private BoardManager<S, ?> boardManager;
 	private GameSettingsProvider<S, TourneyGroup> settingsProvider;
+	private DefaultTourneyProcessor tourneyProcessor = new DefaultTourneyProcessor();
+	private final BoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Lock lock = new ReentrantLock();
 
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<RegularTourneyListener>();
 	private final Collection<TourneySubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TourneySubscriptionListener>();
-	private final Collection<TourneyEntityListener> entityListeners = new CopyOnWriteArraySet<TourneyEntityListener>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
 
@@ -77,18 +74,6 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	}
 
 	@Override
-	public void addTourneyEntityListener(TourneyEntityListener l) {
-		if (l != null) {
-			entityListeners.add(l);
-		}
-	}
-
-	@Override
-	public void removeTourneyEntityListener(TourneyEntityListener l) {
-		entityListeners.remove(l);
-	}
-
-	@Override
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = false)
 	public TourneySubscription subscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException {
 		lock.lock();
@@ -110,7 +95,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 			sessionFactory.getCurrentSession().save(s);
 
 			for (TourneySubscriptionListener subscriptionListener : subscriptionListeners) {
-				subscriptionListener.subscribed(s);
+				subscriptionListener.subscribed(s, null);
 			}
 			return s;
 		} finally {
@@ -128,7 +113,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 				sessionFactory.getCurrentSession().delete(subscription);
 
 				for (TourneySubscriptionListener subscriptionListener : subscriptionListeners) {
-					subscriptionListener.unsubscribed(subscription);
+					subscriptionListener.unsubscribed(subscription, null);
 				}
 			}
 			return subscription;
@@ -142,16 +127,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	public TourneySubscriptions getSubscriptionStatus(int tourney) {
 		lock.lock();
 		try {
-			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("select language, section, count(id.player) from HibernateTourneySubscription where id.tourney=:tid and id.round=1 group by language, section");
-			query.setParameter("tid", tourney);
-			final DefaultTourneySubscriptions res = new DefaultTourneySubscriptions(tourney);
-			final List list = query.list();
-			for (Object o : list) {
-				Object[] cols = (Object[]) o;
-				res.setPlayers((Language) cols[0], (TourneySection) cols[1], ((Number) cols[2]).intValue());
-			}
-			return res;
+			return tourneyProcessor.getTourneySubscriptions(sessionFactory.getCurrentSession(), tourney, 1);
 		} finally {
 			lock.unlock();
 		}
@@ -219,7 +195,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Personality person, Ctx context) {
 		lock.lock();
 		try {
-			final Query query = createEntityQuery(context, null, true);
+			final Query query = createEntityQuery(context, true);
 			return ((Number) query.uniqueResult()).intValue();
 		} finally {
 			lock.unlock();
@@ -231,7 +207,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	public <T extends RegularTourneyEntity, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTournamentEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range) {
 		lock.lock();
 		try {
-			final Query query1 = createEntityQuery(context, orders, false);
+			final Query query1 = createEntityQuery(context, false);
 			if (range != null) {
 				range.apply(query1);
 			}
@@ -241,7 +217,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 		}
 	}
 
-	private Query createEntityQuery(TourneyEntity.Context<?, ?> context, Orders orders, boolean count) {
+	private Query createEntityQuery(TourneyEntity.Context<?, ?> context, boolean count) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		Query query = null;
@@ -301,12 +277,12 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		processTourneyEntities();
+		initiateTourneyEntities();
 	}
 
 	@Override
 	public void breakingDayTime(Date midnight) {
-		processTourneyEntities();
+		initiateTourneyEntities();
 	}
 
 	private String convertStateToQuery(EnumSet<TourneyEntity.State> states, String name, String prefix) {
@@ -338,227 +314,70 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 		return res.toString();
 	}
 
-	private void processTourneyEntities() {
-		// init tourneys
+	private void initiateTourneyEntities() {
+		// initiate scheduled tourneys
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
+				lock.lock();
 				try {
-					initiateScheduledTourneys();
+					tourneyProcessor.initiateTourneys(sessionFactory.getCurrentSession(), tourneyListeners, subscriptionListeners);
 				} catch (Exception ex) {
-					log.error("Scheduled Tourneys can't be initialized", ex);
+					log.error("Scheduled tourneys can't be initiated by internal error", ex);
+					throw new TourneyProcessingException("Scheduled tourneys can't be initiated by internal error", ex);
+				} finally {
+					lock.unlock();
 				}
 			}
 		});
 
-		// TODO: process finished entities before
-
-		// init rounds
+		// initiate scheduled divisions
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
+				lock.lock();
 				try {
-					initiateRounds();
+					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), boardManager, settingsProvider);
 				} catch (Exception ex) {
-					log.error("Scheduled Tourneys can't be initialized", ex);
+					log.error("Divisions can't be initiated by internal error", ex);
+					throw new TourneyProcessingException("Divisions can't be initiated by internal error", ex);
+				} finally {
+					lock.unlock();
 				}
 			}
 		});
 	}
 
-	@SuppressWarnings("unchecked")
-	private void initiateScheduledTourneys() {
-		lock.lock();
-		try {
-			final Session session = sessionFactory.getCurrentSession();
-			// TODO: code commented
-//			final List list = session.createQuery("from HibernateTourney where scheduledDate<=? and startedDate is null").setParameter(0, getMidnight()).list();
-			final List list = session.createQuery("from HibernateTourney").list();
-			for (Object aList : list) {
-				final HibernateTourney tourney = (HibernateTourney) aList;
-				tourney.startTourney();
-
-				for (TourneyEntityListener entityListener : entityListeners) {
-					entityListener.entityStarted(tourney);
-				}
-
-				final Map<Long, TourneySection> originalSection = new HashMap<Long, TourneySection>();
-				final Map<Long, TourneySection> resubscribedSection = new HashMap<Long, TourneySection>();
-
-				final DefaultTourneySubscriptions status = (DefaultTourneySubscriptions) getSubscriptionStatus(tourney.getNumber());
-				for (Language language : Language.values()) {
-					for (TourneySection section : TourneySection.values()) {
-						// nothing to do if no subscription
-						if (status.getPlayers(language, section) == 0) {
-							continue;
-						}
-
-						final Set<Long> invalidPlayers = new HashSet<Long>();
-						if (status.getPlayers(language, section) != 1) {
-							final Query namedQuery = session.getNamedQuery("tourney.outOfSection");
-							namedQuery.setParameter("round", 1);
-							namedQuery.setParameter("rating", section.getTopRating());
-							namedQuery.setParameter("section", section.ordinal());
-							namedQuery.setParameter("language", language.ordinal());
-							namedQuery.setParameter("tourney", tourney.getNumber());
-
-							// select all
-							for (Object res : namedQuery.list()) { // result is BigInteger instead of long
-								invalidPlayers.add(((Number) res).longValue());
-							}
-						}
-
-						// if only one - move to next
-						if (status.getPlayers(language, section) - invalidPlayers.size() == 1) {
-							Query query = session.createQuery("select id.player " +
-									"from HibernateTourneySubscription " +
-									"where id.tourney=:tourney and id.round=1 and language=:language and section=:section");
-							query.setParameter("section", section);
-							query.setParameter("language", language);
-							query.setParameter("tourney", tourney.getNumber());
-							invalidPlayers.addAll((Collection<Long>) query.list());
-						}
-
-						if (invalidPlayers.size() != 0) {
-							// remove from stats
-							status.setPlayers(language, section, status.getPlayers(language, section) - invalidPlayers.size());
-
-							Query query;
-							// search next not empty section
-							TourneySection nextSection = section.getHigherSection();
-							while (nextSection != null && invalidPlayers.size() < 2 && status.getPlayers(language, nextSection) == 0) {
-								nextSection = nextSection.getHigherSection();
-							}
-
-							if (nextSection != null) { // and move to next group
-								query = session.createQuery("update from HibernateTourneySubscription set section=:section " +
-										"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
-								query.setParameter("section", nextSection);
-							} else { // or cancel subscription
-								query = session.createQuery("delete from HibernateTourneySubscription " +
-										"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
-							}
-							query.setParameter("language", language);
-							query.setParameter("tourney", tourney.getNumber());
-							query.setParameterList("players", invalidPlayers, LongType.INSTANCE);
-
-							final int count = query.executeUpdate();
-							if (nextSection != null) {
-								status.setPlayers(language, nextSection, status.getPlayers(language, nextSection) + count);
-							}
-
-							for (Long pid : invalidPlayers) {
-								// only if new. Otherwise - reuse old
-								if (!originalSection.containsKey(pid)) {
-									originalSection.put(pid, section);
-								}
-								resubscribedSection.put(pid, nextSection);
-							}
-						}
-					}
-				}
-
-				for (TourneySubscriptionListener subscriptionListener : subscriptionListeners) {
-					for (Long resubscribedPlayer : originalSection.keySet()) {
-						final TourneySection oldSection = originalSection.get(resubscribedPlayer);
-						final TourneySection newSection = resubscribedSection.get(resubscribedPlayer);
-						subscriptionListener.resubscribed(resubscribedPlayer, tourney.getNumber(), oldSection, newSection);
-					}
-				}
-
-				// save tourney
-				session.save(tourney);
-
-				// create divisions
-				for (Language language : Language.values()) {
-					for (TourneySection section : TourneySection.values()) {
-						if (status.getPlayers(language, section) != 0) {
-							final HibernateTourneyDivision division = new HibernateTourneyDivision(tourney, language, section);
-							session.save(division);
-
-							for (TourneyEntityListener entityListener : entityListeners) {
-								entityListener.entityStarted(division);
-							}
-						}
-					}
+	private void finalizeTourneyEntities(final GameBoard<?, ?> board) {
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				lock.lock();
+				try {
+					tourneyProcessor.finalizeDivisions(sessionFactory.getCurrentSession(), board, subscriptionListeners);
+				} catch (Exception ex) {
+					log.error("Board can't be finalized by internal error: " + board.getBoardId(), ex);
+					throw new TourneyProcessingException("Board can't be finalized by internal error", ex);
+				} finally {
+					lock.unlock();
 				}
 			}
-		} finally {
-			lock.unlock();
-		}
-	}
+		});
 
-	private void initiateRounds() {
-		lock.lock();
-		try {
-			final Session session = sessionFactory.getCurrentSession();
-
-			final Query query = session.createQuery("from HibernateTourneyDivision d where not d.id in " +
-					"(select c.id.entityId from HibernateTourneyEntityChange c where c.id.entityType = :entityType and c.lastCheck>d.lastChange)");
-			query.setParameter("entityType", HibernateTourneyEntityChange.EntityType.DIVISION);
-
-			final List list = query.list();
-			for (Object o : list) {
-				final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
-
-				// only if not finished
-				if (division.getFinishedDate() == null) {
-					boolean timeForNewRound = division.getActiveRound() == 0; // first round
-					if (!timeForNewRound) { // or active round is finished
-						final Query roundsCountQuery = session.createQuery("select r.finishedDate from HibernateTourneyRound r where r.division = :division and r.round = :round");
-						roundsCountQuery.setParameter("division", division);
-						roundsCountQuery.setParameter("round", division.getActiveRound());
-						timeForNewRound = (roundsCountQuery.uniqueResult() != null);
-					}
-
-					if (timeForNewRound) { // round is finished - start new round
-						final int nextRound = division.getActiveRound() + 1;
-
-						final Query subscriptionQuery = session.createQuery("select s.id.player from HibernateTourneySubscription s where s.id.round=:round and s.id.tourney=:tourney and s.language=:language and s.section = :section");
-						subscriptionQuery.setParameter("round", nextRound);
-						subscriptionQuery.setParameter("tourney", division.getTourney().getNumber());
-						subscriptionQuery.setParameter("section", division.getSection());
-						subscriptionQuery.setParameter("language", division.getLanguage());
-
-						int gamesCount = 0;
-
-						@SuppressWarnings("unchecked")
-						final List<Long> subscribedPlayers = subscriptionQuery.list();
-						final HibernateTourneyRound round = new HibernateTourneyRound(nextRound, division);
-						session.save(round);
-
-						final List<long[]> longs = DefaultTourneyProcessor.splitByGroups(subscribedPlayers);
-						for (int i = 0, longsSize = longs.size(); i < longsSize; i++) {
-							final HibernateTourneyGroup group = new HibernateTourneyGroup(i + 1, round, longs.get(i));
-							session.save(group);
-							gamesCount += group.initializeGames(boardManager, settingsProvider);
-						}
-						round.startRound(gamesCount);
-						division.nextRoundStarted();
-
-						session.update(round);
-						session.update(division);
-					}
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				lock.lock();
+				try {
+					tourneyProcessor.finalizeTourneys(sessionFactory.getCurrentSession(), tourneyListeners);
+				} catch (Exception ex) {
+					log.error("Tourneys can't be finalized by internal error", ex);
+					throw new TourneyProcessingException("Tourneys can't be finalized by internal error", ex);
+				} finally {
+					lock.unlock();
 				}
-				updateLastChange(division.getDbId(), HibernateTourneyEntityChange.EntityType.DIVISION, new Date());
 			}
-		} catch (Exception ex) {
-			log.error("Tourney entities can't be created", ex);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	private void updateLastChange(long id, HibernateTourneyEntityChange.EntityType type, Date lastChange) {
-		final Session session = sessionFactory.getCurrentSession();
-		HibernateTourneyEntityChange o = (HibernateTourneyEntityChange) session.get(HibernateTourneyEntityChange.class, new HibernateTourneyEntityChange.Id(id, type));
-		if (o == null) {
-			o = new HibernateTourneyEntityChange(id, type, lastChange);
-			session.save(o);
-		} else {
-			o.setLastCheck(lastChange);
-			session.update(o);
-		}
+		});
 	}
 
 	/**
@@ -598,7 +417,15 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	}
 
 	public void setBoardManager(BoardManager<S, ?> boardManager) {
+		if (this.boardManager != null) {
+			this.boardManager.removeBoardStateListener(boardStateListener);
+		}
+
 		this.boardManager = boardManager;
+
+		if (this.boardManager != null) {
+			this.boardManager.addBoardStateListener(boardStateListener);
+		}
 	}
 
 	public void setSettingsProvider(GameSettingsProvider<S, TourneyGroup> settingsProvider) {
@@ -607,5 +434,23 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
 	static Date getMidnight() {
 		return new Date((System.currentTimeMillis() / 86400000L) * 86400000L);
+	}
+
+	private class TheBoardStateListener implements BoardStateListener {
+		private TheBoardStateListener() {
+		}
+
+		@Override
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		}
+
+		@Override
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		}
+
+		@Override
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+			finalizeTourneyEntities(board);
+		}
 	}
 }

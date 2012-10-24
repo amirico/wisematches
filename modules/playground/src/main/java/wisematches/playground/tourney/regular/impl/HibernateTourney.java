@@ -14,7 +14,7 @@ public class HibernateTourney implements Tourney {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private long internalId;
 
 	@Column(name = "tourneyNumber")
 	private int number;
@@ -30,10 +30,6 @@ public class HibernateTourney implements Tourney {
 	@Column(name = "finished")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
-
-	@Column(name = "lastChange")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastChange;
 
 	@Deprecated
 	private HibernateTourney() {
@@ -51,11 +47,10 @@ public class HibernateTourney implements Tourney {
 //		}
 		this.number = number;
 		this.scheduledDate = scheduledDate;
-		this.lastChange = new Date();
 	}
 
-	long getDbId() {
-		return id;
+	long getInternalId() {
+		return internalId;
 	}
 
 	@Override
@@ -92,7 +87,7 @@ public class HibernateTourney implements Tourney {
 		if (startedDate != null) {
 			throw new IllegalArgumentException("Already started of finished");
 		}
-		lastChange = startedDate = new Date();
+		startedDate = new Date();
 	}
 
 	void finishTourney() {
@@ -102,18 +97,17 @@ public class HibernateTourney implements Tourney {
 		if (finishedDate != null) {
 			throw new IllegalArgumentException("Already started of finished");
 		}
-		lastChange = finishedDate = new Date();
+		finishedDate = new Date();
 	}
 
 	@Override
 	public String toString() {
 		return "HibernateTourney{" +
-				"id=" + id +
+				"internalId=" + internalId +
 				", tourney=" + number +
 				", scheduledDate=" + scheduledDate +
 				", startedDate=" + startedDate +
 				", finishedDate=" + finishedDate +
-				", lastChange=" + lastChange +
 				'}';
 	}
 }
