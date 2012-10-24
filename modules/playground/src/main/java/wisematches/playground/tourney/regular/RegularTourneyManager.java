@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular;
 
 import wisematches.personality.Language;
-import wisematches.playground.timer.BreakingDayListener;
+import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntityManager;
 
 /**

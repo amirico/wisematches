@@ -15,8 +15,8 @@ import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
+import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.search.SearchFilter;
-import wisematches.playground.timer.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 
@@ -315,6 +315,14 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	}
 
 	private void initiateTourneyEntities() {
+		// initiate new tourneys
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				startRegularTourney();
+			}
+		});
+
 		// initiate scheduled tourneys
 		taskExecutor.execute(new Runnable() {
 			@Override
@@ -380,17 +388,23 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 		});
 	}
 
-	/**
-	 * TODO: for test cases only!
-	 */
-	public Tourney startRegularTourney(Date scheduledDate) {
-		int number = 1;
+	protected Tourney startRegularTourney() {
 		final Session session = sessionFactory.getCurrentSession();
 
+		final Date scheduledDate = cronExpression.getNextValidTimeAfter(new Date());
+		final Query query = session.createQuery("select 1 from HibernateTourney t where t.scheduledDate = :scheduledDate");
+		query.setParameter("scheduledDate", scheduledDate);
+		if (query.uniqueResult() != null) {
+			return null;
+		}
+
+		int number = 1;
 		final Number n = (Number) session.createQuery("select max(number) from HibernateTourney ").uniqueResult();
 		if (n != null) {
 			number = n.intValue() + 1;
 		}
+
+		log.info("It's time for new tourney: number - " + number + ", scheduled date - " + scheduledDate);
 
 		final HibernateTourney t = new HibernateTourney(number, scheduledDate);
 		session.save(t);
@@ -430,10 +444,6 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
 	public void setSettingsProvider(GameSettingsProvider<S, TourneyGroup> settingsProvider) {
 		this.settingsProvider = settingsProvider;
-	}
-
-	static Date getMidnight() {
-		return new Date((System.currentTimeMillis() / 86400000L) * 86400000L);
 	}
 
 	private class TheBoardStateListener implements BoardStateListener {
