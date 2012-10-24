@@ -5,4 +5,8 @@ package wisematches.playground.tourney.regular;
  */
 public interface RegularTourneyListener {
 	void tourneyAnnounced(Tourney regularTourney);
+
+	void tourneyStarted(Tourney tourney);
+
+	void tourneyFinished(Tourney tourney);
 }

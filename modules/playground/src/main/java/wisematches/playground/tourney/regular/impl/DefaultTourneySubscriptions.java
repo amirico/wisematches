@@ -34,6 +34,11 @@ public class DefaultTourneySubscriptions implements TourneySubscriptions {
 		return values[language.ordinal()][section.ordinal()];
 	}
 
+	@Override
+	public boolean hasPlayers(Language language, TourneySection section) {
+		return getPlayers(language, section) != 0;
+	}
+
 	void setPlayers(Language language, TourneySection section, int count) {
 		values[language.ordinal()][section.ordinal()] = count;
 	}

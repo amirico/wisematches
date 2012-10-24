@@ -26,7 +26,7 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	TourneyDivision getDivision();
 
 	/**
-	 * Returns number of total games in the round.
+	 * Returns nusmber of total games in the round.
 	 *
 	 * @return the number of total games in the round.
 	 */
@@ -38,6 +38,13 @@ public interface TourneyRound extends RegularTourneyEntity<TourneyRound, Tourney
 	 * @return the number of finished games.
 	 */
 	int getFinishedGamesCount();
+
+	/**
+	 * Indicates that this round is final.
+	 *
+	 * @return {@code true} if this round is final; {@code false} - otherwise.
+	 */
+	boolean isFinal();
 
 	public final class Id extends TourneyEntity.Id<TourneyRound, Id> {
 		private TourneyDivision.Id divisionId;

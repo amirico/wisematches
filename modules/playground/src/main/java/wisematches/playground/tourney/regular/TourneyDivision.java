@@ -13,11 +13,11 @@ import java.util.EnumSet;
  */
 public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, TourneyDivision.Id, TourneyDivision.Context> {
 	/**
-	 * Returns active round for this division starting with one.
+	 * Returns tourney for this division.
 	 *
-	 * @return the active round or {@code zero} if division is finished or not started yet.
+	 * @return the tourney for this division.
 	 */
-	int getActiveRound();
+	Tourney getTourney();
 
 	/**
 	 * Returns division language
@@ -34,11 +34,11 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	TourneySection getSection();
 
 	/**
-	 * Returns tourney for this division.
+	 * Returns active round for this division starting with one.
 	 *
-	 * @return the tourney for this division.
+	 * @return the active round or {@code zero} if there is no active rounds or division is finished.
 	 */
-	Tourney getTourney();
+	int getActiveRound();
 
 
 	public final class Id extends TourneyEntity.Id<TourneyDivision, Id> {

@@ -3,7 +3,6 @@ package wisematches.playground.tourney.regular.impl;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.tourney.regular.TourneyGroup;
-import wisematches.playground.tourney.regular.TourneyRound;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -20,7 +19,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	@Column(name = "id")
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private long internalId;
 
 	@Column(name = "groupNumber")
 	private int group;
@@ -36,10 +35,6 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	@Column(name = "finished")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
-
-	@Column(name = "lastChange")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastChange;
 
 	@Column(name = "player1")
 	private long player1;
@@ -115,11 +110,10 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		if (playersCount > 3) {
 			player4 = players[3];
 		}
-		lastChange = new Date();
 	}
 
-	long getDbId() {
-		return id;
+	long getInternalId() {
+		return internalId;
 	}
 
 	@Override
@@ -133,7 +127,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	@Override
-	public TourneyRound getRound() {
+	public HibernateTourneyRound getRound() {
 		return round;
 	}
 
@@ -160,6 +154,11 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	@Override
 	public long getGameId(long p1, long p2) {
 		return getGames()[getGameIndex(getPlayerIndex(p1), getPlayerIndex(p2))];
+	}
+
+	@Override
+	public boolean isWinner(long player) {
+		return finishedDate != null && getScores(player) == getMaxScore();
 	}
 
 	@Override
@@ -196,6 +195,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return finishedDate;
 	}
 
+
 	<S extends GameSettings> int initializeGames(BoardManager<S, ?> boardManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
 		if (totalGamesCount != 0) {
 			throw new IllegalStateException("Group already initialized");
@@ -219,11 +219,11 @@ public class HibernateTourneyGroup implements TourneyGroup {
 			game6 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player3), Personality.person(player4))).getBoardId();
 			totalGamesCount = 6;
 		}
-		lastChange = startedDate = new Date();
+		startedDate = new Date();
 		return totalGamesCount;
 	}
 
-	void processGameFinished(GameBoard<?, ?> board) {
+	void finalizeGame(GameBoard<?, ?> board) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Group already finished");
 		}
@@ -245,10 +245,8 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		}
 		finishedGamesCount += 1;
 
-		lastChange = new Date();
-
 		if (finishedGamesCount == totalGamesCount) {
-			finishedDate = lastChange;
+			finishedDate = new Date();
 		}
 	}
 
@@ -265,11 +263,27 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		}
 	}
 
+	private short getMaxScore() {
+		short max = 0;
+		if (scores1 > max) {
+			max = scores1;
+		}
+		if (scores2 > max) {
+			max = scores2;
+		}
+		if (scores3 > max) {
+			max = scores3;
+		}
+		if (scores4 > max) {
+			max = scores4;
+		}
+		return max;
+	}
 
 	@Override
 	public String toString() {
 		return "HibernateTourneyGroup{" +
-				"id=" + id +
+				"internalId=" + internalId +
 				", group=" + group +
 				", round=" + round +
 				", playersCount=" + playersCount +
@@ -289,7 +303,6 @@ public class HibernateTourneyGroup implements TourneyGroup {
 				", game6=" + game6 +
 				", startedDate=" + startedDate +
 				", finishedDate=" + finishedDate +
-				", lastChange=" + lastChange +
 				'}';
 	}
 }
