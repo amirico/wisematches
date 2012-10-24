@@ -1,4 +1,4 @@
-package wisematches.playground.timer;
+package wisematches.playground.scheduling;
 
 import java.util.Date;
 
@@ -6,5 +6,5 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface BreakingDayListener {
-	void breakingDayTime(Date date);
+	void breakingDayTime(Date midnight);
 }

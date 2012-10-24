@@ -49,7 +49,7 @@ public class HibernateRegularTourneyManagerTest {
 	}
 
 	@Before
-	public void init() throws ParseException, BoardCreationException {
+	public void init() throws ParseException, BoardCreationException, InterruptedException {
 		@SuppressWarnings("unchecked")
 		final GameSettingsProvider<GameSettings, TourneyGroup> settingsProvider = createMock(GameSettingsProvider.class);
 		expect(settingsProvider.createGameSettings(isA(TourneyGroup.class))).andAnswer(new IAnswer<GameSettings>() {
@@ -86,11 +86,17 @@ public class HibernateRegularTourneyManagerTest {
 		replay(boardManager);
 
 		tourneyManager = new HibernateRegularTourneyManager<GameSettings>();
-		tourneyManager.setCronExpression(new CronExpression("* * * ? * 2#1"));
+		tourneyManager.setCronExpression(new CronExpression("0/5 * * * * ?")); // each 5 seconds
 		tourneyManager.setSessionFactory(sessionFactory);
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
 		tourneyManager.setBoardManager(boardManager);
 		tourneyManager.setSettingsProvider(settingsProvider);
+	}
+
+	@Test
+	public void test_startTourney() {
+		assertNotNull(tourneyManager.startRegularTourney());
+		assertNull(tourneyManager.startRegularTourney());
 	}
 
 	@Test
@@ -202,6 +208,7 @@ public class HibernateRegularTourneyManagerTest {
 
 		final RegularTourneyListener tourneyListener = createStrictMock(RegularTourneyListener.class);
 		tourneyListener.tourneyAnnounced(capture(tourneyCapture));
+		tourneyListener.tourneyAnnounced(capture(tourneyCapture)); //' second time created by breakingDayTime
 		tourneyListener.tourneyStarted(capture(tourneyCapture));
 		replay(tourneyListener);
 
@@ -212,7 +219,8 @@ public class HibernateRegularTourneyManagerTest {
 		tourneyManager.addRegularTourneyListener(tourneyListener);
 
 		// init new tourney
-		final Tourney tourney = tourneyManager.startRegularTourney(HibernateRegularTourneyManager.getMidnight());
+		final Tourney tourney = tourneyManager.startRegularTourney();
+		Thread.sleep(5000);
 
 		final TourneySubscriptionListener subscriptionListener = createMock(TourneySubscriptionListener.class);
 		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
@@ -230,7 +238,7 @@ public class HibernateRegularTourneyManagerTest {
 		tourneyManager.subscribe(tourney.getNumber(), 103, Language.RU, TourneySection.EXPERT);
 
 		// new day!
-		tourneyManager.breakingDayTime(HibernateRegularTourneyManager.getMidnight());
+		tourneyManager.breakingDayTime(null);
 
 		assertTrue(1 <= tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE))));
 		final List<Tourney> tourneys = tourneyManager.searchTournamentEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
@@ -279,7 +287,7 @@ public class HibernateRegularTourneyManagerTest {
 	}
 
 	@Test
-	public void testFinishTourney() throws TourneySubscriptionException {
+	public void testFinishTourney() throws TourneySubscriptionException, InterruptedException {
 		final Capture<Tourney> tourneyCapture = new Capture<Tourney>(CaptureType.ALL);
 		final Capture<TourneySubscription> subscriptionCapture = new Capture<TourneySubscription>(CaptureType.ALL);
 
@@ -288,7 +296,8 @@ public class HibernateRegularTourneyManagerTest {
 		}
 
 		// init new tourney
-		final Tourney tourney = tourneyManager.startRegularTourney(HibernateRegularTourneyManager.getMidnight());
+		final Tourney tourney = tourneyManager.startRegularTourney();
+		Thread.sleep(5000);
 
 		for (int i = 0; i < 2; i++) {
 			tourneyManager.subscribe(tourney.getNumber(), 101 + i, Language.RU, TourneySection.CASUAL);
@@ -296,8 +305,9 @@ public class HibernateRegularTourneyManagerTest {
 		for (int i = 0; i < 5; i++) {
 			tourneyManager.subscribe(tourney.getNumber(), 103 + i, Language.RU, TourneySection.EXPERT);
 		}
+
 		// new day!
-		tourneyManager.breakingDayTime(HibernateRegularTourneyManager.getMidnight());
+		tourneyManager.breakingDayTime(null);
 
 		final RegularTourneyListener tourneyListener = createStrictMock(RegularTourneyListener.class);
 		tourneyListener.tourneyFinished(capture(tourneyCapture));
@@ -396,7 +406,7 @@ public class HibernateRegularTourneyManagerTest {
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(new Tourney.Id(tourney.getNumber()), EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.ACTIVE))));
 
-		tourneyManager.breakingDayTime(HibernateRegularTourneyManager.getMidnight());
+		tourneyManager.breakingDayTime(null);
 
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
