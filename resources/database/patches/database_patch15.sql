@@ -2,22 +2,25 @@ SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS =0;
 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS =0;
 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE ='TRADITIONAL';
 
+ALTER TABLE `wisematches`.`scribble_statistic` CHANGE COLUMN `updateTime` `updateTime` TIMESTAMP NULL DEFAULT
+CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
 CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular` (
 `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-` NUMBER ` INT(11) NOT NULL,
+`tourneyNumber` INT(11) NOT NULL,
 `started` DATETIME NULL DEFAULT NULL ,
 `finished` DATETIME NULL DEFAULT NULL,
 `scheduled` DATETIME NOT NULL,
 `lastChange` TIMESTAMP NULL DEFAULT NULL,
 PRIMARY KEY (`id`) ,
-UNIQUE INDEX `UNIQUE_ENTITY` (` NUMBER ` ASC) )
+UNIQUE INDEX `UNIQUE_ENTITY` (`tourneyNumber` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_division` (
 `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-`tourney` BIGINT(20) NOT NULL,
+`tourneyId` BIGINT(20) NOT NULL,
 ` LANGUAGE ` INT(11) NOT NULL,
 ` SECTION ` INT(11) NOT NULL,
 `started` DATETIME NULL DEFAULT NULL ,
@@ -25,31 +28,33 @@ CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_division` (
 `activeRound` INT(11) NOT NULL,
 `lastChange` TIMESTAMP NULL DEFAULT NULL ,
 PRIMARY KEY (`id`) ,
-UNIQUE INDEX `UNIQUE_ENTITY` (`tourney` ASC, ` LANGUAGE ` ASC, ` SECTION ` ASC) )
+UNIQUE INDEX `UNIQUE_ENTITY` (`tourneyId` ASC, ` LANGUAGE ` ASC, ` SECTION ` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_round` (
 `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-` NUMBER ` INT(11) NOT NULL,
-`division` BIGINT(20) NOT NULL,
+`divisionId` BIGINT(20) NOT NULL,
+`roundNumber` INT(11) NOT NULL,
 `totalGamesCount` INT(11) NOT NULL,
 `finishedGamesCount` INT(11) NULL DEFAULT NULL,
 `started` DATETIME NULL DEFAULT NULL,
 `finished` DATETIME NULL DEFAULT NULL,
 `lastChange` TIMESTAMP NULL DEFAULT NULL,
 PRIMARY KEY (`id`) ,
-UNIQUE INDEX `UNIQUE_ENTITY` (` NUMBER ` ASC, `division` ASC) )
+UNIQUE INDEX `UNIQUE_ENTITY` (`roundNumber` ASC, `divisionId` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_group` (
 `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-` NUMBER ` INT(11) NOT NULL,
-`round` BIGINT(20) NOT NULL,
+`roundId` BIGINT(20) NOT NULL,
+`groupNumber` INT(11) NOT NULL,
 `playersCount` TINYINT(4) NULL DEFAULT NULL,
+`totalGamesCount` TINYINT(4) NULL DEFAULT NULL,
+`finishedGamesCount` TINYINT(4) NULL DEFAULT NULL,
 `player1` BIGINT(20) NULL DEFAULT NULL,
 `player2` BIGINT(20) NULL DEFAULT NULL,
 `player3` BIGINT(20) NULL DEFAULT NULL,
@@ -68,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_group` (
 `finished` DATETIME NULL DEFAULT NULL,
 `lastChange` TIMESTAMP NULL DEFAULT NULL,
 PRIMARY KEY (`id`) ,
-UNIQUE INDEX `UNIQUE_ENTITY` (` NUMBER ` ASC, `round` ASC) )
+UNIQUE INDEX `UNIQUE_ENTITY` (`groupNumber` ASC, `roundId` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
@@ -84,35 +89,16 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
-CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_round_copy1` (
-`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-` NUMBER ` INT(11) NOT NULL,
-`division` BIGINT(20) NOT NULL,
-`totalGamesCount` INT(11) NOT NULL,
-`finishedGamesCount` INT(11) NULL DEFAULT NULL,
-`started` DATETIME NULL DEFAULT NULL,
-`finished` DATETIME NULL DEFAULT NULL,
-PRIMARY KEY (`id`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
 CREATE TABLE IF NOT EXISTS `wisematches`.`tourney_regular_subs` (
 `player` BIGINT(20) NOT NULL,
-`tourney` INT(11) NOT NULL,
-`round` INT(11) NOT NULL,
+`tourneyNumber` INT(11) NOT NULL,
+`roundNumber` INT(11) NOT NULL,
 ` LANGUAGE ` INT(11) NULL DEFAULT NULL,
 ` SECTION ` INT(11) NULL DEFAULT NULL,
-PRIMARY KEY (`player`, `tourney`, `round`) )
+PRIMARY KEY (`player`, `tourneyNumber`, `roundNumber`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
-
-DROP TABLE IF EXISTS `wisematches`.`tournament_request`;
-
-DROP TABLE IF EXISTS `wisematches`.`tournament_announce`;
-
-DROP TABLE IF EXISTS `wisematches`.`tournament`;
 
 
 SET SQL_MODE = @OLD_SQL_MODE;
