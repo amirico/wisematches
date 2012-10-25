@@ -157,7 +157,10 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
+<<<<<<< local
   <component name="DataSourceManagerImpl" compressed="false" hash="1317656586" />
+=======
+>>>>>>> other
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
