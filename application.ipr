@@ -131,13 +131,12 @@
       <entry name="?*.tld" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true">
+      <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
       <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <processorPath useClasspath="true" />
-        <module name="application" />
         <module name="database" />
         <module name="personality" />
         <module name="playground" />
@@ -157,10 +156,6 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-<<<<<<< local
-  <component name="DataSourceManagerImpl" compressed="false" hash="1317656586" />
-=======
->>>>>>> other
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
