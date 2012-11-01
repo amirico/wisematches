@@ -70,6 +70,10 @@
                             </div>
 
                             <div style="padding-left: 30px; display: inline-block;">
+                                <a href="/playground/tourney"><@message code="game.menu.tourneys.label"/></a>
+                            </div>
+
+                            <div style="padding-left: 30px; display: inline-block;">
                                 <a href="/playground/players"><@message code="game.menu.players.label"/></a>
                             </div>
                         <#--

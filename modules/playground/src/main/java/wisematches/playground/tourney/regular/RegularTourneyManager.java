@@ -8,22 +8,22 @@ import wisematches.playground.tourney.TourneyEntityManager;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface RegularTourneyManager extends TourneyEntityManager<RegularTourneyEntity>, BreakingDayListener {
-	void addRegularTourneyListener(RegularTourneyListener l);
+    void addRegularTourneyListener(RegularTourneyListener l);
 
-	void removeRegularTourneyListener(RegularTourneyListener l);
-
-
-	void addTourneySubscriptionListener(TourneySubscriptionListener l);
-
-	void removeTourneySubscriptionListener(TourneySubscriptionListener l);
+    void removeRegularTourneyListener(RegularTourneyListener l);
 
 
-	TourneySubscription subscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
+    void addTourneySubscriptionListener(TourneySubscriptionListener l);
 
-	TourneySubscription unsubscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
+    void removeTourneySubscriptionListener(TourneySubscriptionListener l);
 
 
-	TourneySubscription getSubscription(int tourney, long player);
+    TourneySubscription subscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
 
-	TourneySubscriptions getSubscriptionStatus(int tourney);
+    TourneySubscription unsubscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
+
+
+    TourneySubscription getSubscription(int tourney, long player);
+
+    TourneySubscriptions getSubscriptions(int tourney);
 }

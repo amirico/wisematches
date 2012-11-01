@@ -98,20 +98,20 @@ wm.game.Join = function (language) {
 wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
     var attachPlayerSearchActions = function (a) {
         $(a).hover(
-                function () {
-                    $(this).addClass("player-search-remove");
-                },
-                function () {
-                    $(this).removeClass("player-search-remove");
-                }).click(function () {
-                    $(this).fadeOut('fast', function () {
-                        $(this).remove();
-                        if (opponentsCount == maxOpponents) {
-                            $("#opponentsControl").fadeIn('slow');
-                        }
-                        opponentsCount--;
-                    });
+            function () {
+                $(this).addClass("player-search-remove");
+            },
+            function () {
+                $(this).removeClass("player-search-remove");
+            }).click(function () {
+                $(this).fadeOut('fast', function () {
+                    $(this).remove();
+                    if (opponentsCount == maxOpponents) {
+                        $("#opponentsControl").fadeIn('slow');
+                    }
+                    opponentsCount--;
                 });
+            });
     };
 
     this.selectOpponent = function () {
@@ -168,17 +168,17 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
             serializeObject.opponents = [serializeObject.opponents];
         }
         $.post("create.ajax", $.toJSON(serializeObject),
-                function (response) {
-                    if (response.success) {
-                        if (response.data == null || response.data.board == undefined) {
-                            wm.util.url.redirect('/playground/scribble/active');
-                        } else {
-                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
-                        }
+            function (response) {
+                if (response.success) {
+                    if (response.data == null || response.data.board == undefined) {
+                        wm.util.url.redirect('/playground/scribble/active');
                     } else {
-                        wm.ui.unlock($gameWidget, response.summary, true);
+                        wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
                     }
-                }, 'json');
+                } else {
+                    wm.ui.unlock($gameWidget, response.summary, true);
+                }
+            }, 'json');
     };
 };
 
@@ -318,8 +318,8 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.Tournament = function (fullness, language) {
-    var languageBox = $("#tournament #language");
+wm.game.Tourney = function (fullness, language) {
+    var languageBox = $("#tourney #language");
     languageBox.change(function () {
         var f = fullness[languageBox.val()];
         $.each(f, function (n, v) {
@@ -332,13 +332,13 @@ wm.game.Tournament = function (fullness, language) {
 
         wm.ui.lock(tournamentWidget, language['waiting']);
         $.post("subscription.ajax", $.toJSON($("#form").serializeObject()),
-                function (response) {
-                    if (response.success) {
-                        wm.util.url.redirect('/playground/tournament');
-                    } else {
-                        wm.ui.unlock(tournamentWidget, response.summary, true);
-                    }
-                }, 'json');
+            function (response) {
+                if (response.success) {
+                    wm.util.url.redirect('/playground/tourney');
+                } else {
+                    wm.ui.unlock(tournamentWidget, response.summary, true);
+                }
+            }, 'json');
     };
 };
 
@@ -381,16 +381,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-            function () {
-                if ($(this).attr('disabled') == undefined) {
-                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-                }
-            },
-            function () {
-                if ($(this).attr('disabled') == undefined) {
-                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-                }
-            });
+        function () {
+            if ($(this).attr('disabled') == undefined) {
+                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+            }
+        },
+        function () {
+            if ($(this).attr('disabled') == undefined) {
+                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+            }
+        });
 
     prevSet.click(function () {
         if (selected > 0) {

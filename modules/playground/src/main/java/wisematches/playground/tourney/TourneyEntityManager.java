@@ -9,17 +9,15 @@ import wisematches.playground.search.SearchManager;
 import java.util.List;
 
 /**
- * {@code TournamentManager} provides access to active tournaments/round and group.
- * <p/>
- * You can access announcement and rounds directly via the manager but groups are available only through
- * the {@code TournamentSearchManager} because there are a lot of groups and games in one announcement.
+ * {@code TourneyEntityManager} is base interface for tourneys and allows access to tourney entities, like
+ * rounds, groups and sections.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface TourneyEntityManager<E extends TourneyEntity>
-		extends SearchManager<E, TourneyEntity.Context<? extends E, ?>, SearchFilter> {
+        extends SearchManager<E, TourneyEntity.Context<? extends E, ?>, SearchFilter> {
 
-	<T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTournamentEntity(K id);
+    <T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTourneyEntity(K id);
 
-	<T extends E, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTournamentEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range);
+    <T extends E, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTourneyEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range);
 }

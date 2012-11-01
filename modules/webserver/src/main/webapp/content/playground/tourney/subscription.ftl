@@ -169,7 +169,7 @@
     </#list>
     }
 
-    var tournament = new wm.game.Tournament(fullness, {
+    var tournament = new wm.game.Tourney(fullness, {
         waiting:"<@message code="tournament.subscribing.label"/>"
     });
 </script>
