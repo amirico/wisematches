@@ -9,7 +9,6 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.playground.GameBoard;
 import wisematches.playground.criteria.CriterionViolation;
-import wisematches.playground.tourney.regular.TourneySection;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -251,13 +250,6 @@ public class GameMessageSource {
 
     public String getNumeralEnding(int value, Locale locale) {
         return Language.byLocale(locale).getNumeralEnding(value);
-    }
-
-    public String formatTourneySection(TourneySection section, Locale locale, boolean shortView) {
-        if (section == TourneySection.GRANDMASTER) {
-            return getMessage("tourney.rating.any." + (shortView ? "label" : "description"), locale);
-        }
-        return getMessage("tourney.rating.limit." + (shortView ? "label" : "description"), locale, section.getTopRating());
     }
 
     public void setMessageSource(MessageSource messageSource) {

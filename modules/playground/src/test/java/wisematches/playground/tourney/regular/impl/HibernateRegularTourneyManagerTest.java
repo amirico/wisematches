@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
@@ -104,7 +105,8 @@ public class HibernateRegularTourneyManagerTest {
     public void test_subscription() throws TourneySubscriptionException {
         final Session session = sessionFactory.getCurrentSession();
 
-        session.save(new HibernateTourney(10000, new Date(System.currentTimeMillis() + 10000000L)));
+        final HibernateTourney tourney = new HibernateTourney(10000, new Date(System.currentTimeMillis() + 10000000L));
+        session.save(tourney);
 
 
         final TourneySubscriptionListener l = createStrictMock(TourneySubscriptionListener.class);
@@ -117,42 +119,42 @@ public class HibernateRegularTourneyManagerTest {
         replay(l);
 
         try {
-            tourneyManager.subscribe(0, 101, Language.RU, TourneySection.ADVANCED);
+            tourneyManager.subscribe(null, Personality.person(101), Language.RU, TourneySection.ADVANCED);
             fail("Exception must be here");
         } catch (TourneySubscriptionException ignore) {
         }
 
-        tourneyManager.subscribe(10000, 101, Language.RU, TourneySection.ADVANCED);
+        tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.ADVANCED);
         try {
-            tourneyManager.subscribe(10000, 101, Language.RU, TourneySection.ADVANCED);
+            tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.ADVANCED);
             fail("Exception must be here");
         } catch (TourneySubscriptionException ignore) {
         }
 
-        tourneyManager.subscribe(10000, 102, Language.RU, TourneySection.ADVANCED);
-        tourneyManager.subscribe(10000, 103, Language.RU, TourneySection.GRANDMASTER);
+        tourneyManager.subscribe(tourney, Personality.person(102), Language.RU, TourneySection.ADVANCED);
+        tourneyManager.subscribe(tourney, Personality.person(103), Language.RU, TourneySection.GRANDMASTER);
 
-        TourneySubscriptions subscriptions = tourneyManager.getSubscriptions(10000);
+        TourneySubscriptions subscriptions = tourneyManager.getSubscriptions(tourney);
         assertEquals(0, subscriptions.getPlayers(Language.EN));
         assertEquals(0, subscriptions.getPlayers(Language.EN, TourneySection.ADVANCED));
         assertEquals(3, subscriptions.getPlayers(Language.RU));
         assertEquals(2, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
         assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-        final TourneySubscription subscription = tourneyManager.getSubscription(10000, 101);
+        final TourneySubscription subscription = tourneyManager.getSubscription(tourney, Personality.person(101));
         assertEquals(10000, subscription.getTourney());
         assertEquals(101, subscription.getPlayer());
         assertEquals(Language.RU, subscription.getLanguage());
         assertEquals(TourneySection.ADVANCED, subscription.getSection());
 
-        tourneyManager.unsubscribe(10000, 102, Language.RU, TourneySection.GRANDMASTER);
-        subscriptions = tourneyManager.getSubscriptions(10000);
+        tourneyManager.unsubscribe(tourney, Personality.person(102), Language.RU, TourneySection.GRANDMASTER);
+        subscriptions = tourneyManager.getSubscriptions(tourney);
         assertEquals(3, subscriptions.getPlayers(Language.RU));
         assertEquals(2, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
         assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-        tourneyManager.unsubscribe(10000, 102, Language.RU, TourneySection.ADVANCED);
-        subscriptions = tourneyManager.getSubscriptions(10000);
+        tourneyManager.unsubscribe(tourney, Personality.person(102), Language.RU, TourneySection.ADVANCED);
+        subscriptions = tourneyManager.getSubscriptions(tourney);
         assertEquals(2, subscriptions.getPlayers(Language.RU));
         assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
         assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
@@ -234,9 +236,9 @@ public class HibernateRegularTourneyManagerTest {
 
         tourneyManager.addTourneySubscriptionListener(subscriptionListener);
 
-        tourneyManager.subscribe(tourney.getNumber(), 101, Language.RU, TourneySection.CASUAL);
-        tourneyManager.subscribe(tourney.getNumber(), 102, Language.RU, TourneySection.INTERMEDIATE);
-        tourneyManager.subscribe(tourney.getNumber(), 103, Language.RU, TourneySection.EXPERT);
+        tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.CASUAL);
+        tourneyManager.subscribe(tourney, Personality.person(102), Language.RU, TourneySection.INTERMEDIATE);
+        tourneyManager.subscribe(tourney, Personality.person(103), Language.RU, TourneySection.EXPERT);
 
         // new day!
         tourneyManager.breakingDayTime(null);
@@ -301,10 +303,10 @@ public class HibernateRegularTourneyManagerTest {
         Thread.sleep(5000);
 
         for (int i = 0; i < 2; i++) {
-            tourneyManager.subscribe(tourney.getNumber(), 101 + i, Language.RU, TourneySection.CASUAL);
+            tourneyManager.subscribe(tourney, Personality.person(101 + i), Language.RU, TourneySection.CASUAL);
         }
         for (int i = 0; i < 5; i++) {
-            tourneyManager.subscribe(tourney.getNumber(), 103 + i, Language.RU, TourneySection.EXPERT);
+            tourneyManager.subscribe(tourney, Personality.person(103 + i), Language.RU, TourneySection.EXPERT);
         }
 
         // new day!
