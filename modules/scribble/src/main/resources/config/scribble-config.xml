@@ -131,7 +131,7 @@
 
     <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateRegularTourneyManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="cronExpression" value="* * * ? * 2#1"/>
+        <property name="cronExpression" value="0 0 0 ? * 2#1"/>
 
         <property name="taskExecutor" ref="tournamentTaskExecutor"/>
         <property name="boardManager" ref="scribbleBoardManager"/>

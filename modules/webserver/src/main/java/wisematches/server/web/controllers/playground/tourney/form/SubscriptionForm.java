@@ -4,19 +4,10 @@ package wisematches.server.web.controllers.playground.tourney.form;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class SubscriptionForm {
-    private int announcement;
     private String section;
     private String language;
 
     public SubscriptionForm() {
-    }
-
-    public int getAnnouncement() {
-        return announcement;
-    }
-
-    public void setAnnouncement(int announcement) {
-        this.announcement = announcement;
     }
 
     public String getSection() {
@@ -37,12 +28,9 @@ public class SubscriptionForm {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("SubscriptionForm");
-        sb.append("{announcement=").append(announcement);
-        sb.append(", section='").append(section).append('\'');
-        sb.append(", language='").append(language).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "SubscriptionForm{" +
+                "section='" + section + '\'' +
+                ", language='" + language + '\'' +
+                '}';
     }
 }

@@ -12,11 +12,19 @@ public enum TourneySection {
     ADVANCED(1700),
     EXPERT(2000),
     GRANDMASTER(Integer.MAX_VALUE);
-
     private final int topRating;
 
     TourneySection(int topRating) {
         this.topRating = topRating;
+    }
+
+    /**
+     * Returns {@code true} if this section allows join players with any ratings.
+     *
+     * @return {@code true} if any rating is allowed for this section.
+     */
+    public boolean isAnyRating() {
+        return topRating == Integer.MAX_VALUE;
     }
 
     /**

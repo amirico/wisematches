@@ -46,7 +46,7 @@
 
     <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- run every morning at 00:00:00.000 -->
-        <property name="cronExpression" value="0 0/1 * * * ?"/>
+        <property name="cronExpression" value="0 0 0 * * ?"/>
         <property name="jobDetail">
             <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
                 <property name="name" value="breakingDayNotification"/>

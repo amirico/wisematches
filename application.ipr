@@ -204,6 +204,9 @@
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
         <inspection_tool class="ClassWithoutConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="FtlDeprecatedBuiltInsInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+        <inspection_tool class="FtlReferencesInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+        <inspection_tool class="FtlTypesInspection" enabled="true" level="ERROR" enabled_by_default="true" />
         <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="myValues">
             <value>

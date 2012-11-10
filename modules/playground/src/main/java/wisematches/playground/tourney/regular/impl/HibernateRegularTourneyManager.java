@@ -75,10 +75,14 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY, readOnly = false)
-    public TourneySubscription subscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException {
+    public TourneySubscription subscribe(Tourney tourney, Personality player, Language language, TourneySection section) throws TourneySubscriptionException {
         lock.lock();
         try {
-            final Tourney t = getTourneyEntity(new Tourney.Id(tourney));
+            if (tourney == null) {
+                throw new TourneySubscriptionException("Tourney can't be null: " + tourney);
+            }
+
+            final Tourney t = getTourneyEntity(new Tourney.Id(tourney.getNumber()));
             if (t == null) {
                 throw new TourneySubscriptionException("Unknown tourney: " + tourney);
             }
@@ -91,7 +95,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
                 throw new TourneySubscriptionException("Already subscribed");
             }
 
-            final HibernateTourneySubscription s = new HibernateTourneySubscription(player, tourney, 1, language, section);
+            final HibernateTourneySubscription s = new HibernateTourneySubscription(player.getId(), tourney.getNumber(), 1, language, section);
             sessionFactory.getCurrentSession().save(s);
 
             for (TourneySubscriptionListener subscriptionListener : subscriptionListeners) {
@@ -105,7 +109,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY, readOnly = false)
-    public TourneySubscription unsubscribe(int tourney, long player, Language language, TourneySection section) {
+    public TourneySubscription unsubscribe(Tourney tourney, Personality player, Language language, TourneySection section) {
         lock.lock();
         try {
             final TourneySubscription subscription = getSubscription(tourney, player);
@@ -124,10 +128,10 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public TourneySubscriptions getSubscriptions(int tourney) {
+    public TourneySubscriptions getSubscriptions(Tourney tourney) {
         lock.lock();
         try {
-            return tourneyProcessor.getTourneySubscriptions(sessionFactory.getCurrentSession(), tourney, 1);
+            return tourneyProcessor.getTourneySubscriptions(sessionFactory.getCurrentSession(), tourney.getNumber(), 1);
         } finally {
             lock.unlock();
         }
@@ -135,11 +139,11 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public TourneySubscription getSubscription(int tourney, long player) {
+    public TourneySubscription getSubscription(Tourney tourney, Personality player) {
         lock.lock();
         try {
             return (TourneySubscription) sessionFactory.getCurrentSession().get(HibernateTourneySubscription.class,
-                    new HibernateTourneySubscription.Id(player, tourney, 1));
+                    new HibernateTourneySubscription.Id(player.getId(), tourney.getNumber(), 1));
         } finally {
             lock.unlock();
         }

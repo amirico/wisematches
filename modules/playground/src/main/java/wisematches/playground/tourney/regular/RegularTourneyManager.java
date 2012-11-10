@@ -1,6 +1,7 @@
 package wisematches.playground.tourney.regular;
 
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.tourney.TourneyEntityManager;
 
@@ -18,12 +19,12 @@ public interface RegularTourneyManager extends TourneyEntityManager<RegularTourn
     void removeTourneySubscriptionListener(TourneySubscriptionListener l);
 
 
-    TourneySubscription subscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
+    TourneySubscription subscribe(Tourney tourney, Personality player, Language language, TourneySection section) throws TourneySubscriptionException;
 
-    TourneySubscription unsubscribe(int tourney, long player, Language language, TourneySection section) throws TourneySubscriptionException;
+    TourneySubscription unsubscribe(Tourney tourney, Personality player, Language language, TourneySection section) throws TourneySubscriptionException;
 
 
-    TourneySubscription getSubscription(int tourney, long player);
+    TourneySubscription getSubscription(Tourney tourney, Personality player);
 
-    TourneySubscriptions getSubscriptions(int tourney);
+    TourneySubscriptions getSubscriptions(Tourney tourney);
 }
