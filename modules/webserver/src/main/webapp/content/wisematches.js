@@ -5,14 +5,14 @@
 if (wm == null) var wm = {};
 
 STATE = {
-    DEFAULT:{
-        class:'ui-state-highlight'
+    DEFAULT: {
+        class: 'ui-state-highlight'
     },
-    INFO:{
-        class:'ui-state-active'
+    INFO: {
+        class: 'ui-state-active'
     },
-    ERROR:{
-        class:'ui-state-error'
+    ERROR: {
+        class: 'ui-state-error'
     }
 };
 
@@ -118,28 +118,28 @@ wm.ui = new function () {
     $.blockUI.defaults.message = null;
 
     $.blockUI.defaults.css = {
-        padding:0,
-        margin:0,
-        width:'30%',
-        top:'40%',
-        left:'35%',
-        textAlign:'center',
-        'border-width':'3px'
+        padding: 0,
+        margin: 0,
+        width: '30%',
+        top: '40%',
+        left: '35%',
+        textAlign: 'center',
+        'border-width': '3px'
     };
 
     $.blockUI.defaults.overlayCSS = {
-        opacity:0.2,
-        cursor:'wait',
-        '-moz-border-radius':'5px',
-        '-webkit-border-radius':'5px',
-        'border-radius':'5px',
-        backgroundColor:'#DFEFFC'
+        opacity: 0.2,
+        cursor: 'wait',
+        '-moz-border-radius': '5px',
+        '-webkit-border-radius': '5px',
+        'border-radius': '5px',
+        backgroundColor: '#DFEFFC'
     };
 
     $.ajaxSetup({
-        type:'post',
-        dataType:'json',
-        contentType:'application/json'
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json'
     });
 
     var alertTemplate = function (title, message) {
@@ -164,14 +164,14 @@ wm.ui = new function () {
         }
 
         var opts = {
-            classes:[ severity.class, "ui-corner-all shadow"],
-            template:statusTemplate,
-            autoHide:!stick,
-            autoHideDelay:10000
+            classes: [ severity.class, "ui-corner-all shadow"],
+            template: statusTemplate,
+            autoHide: !stick,
+            autoHideDelay: 10000
         };
         if (stick) {
-            opts = $.extend(opts, {onClick:function () {
-            }, onHover:function () {
+            opts = $.extend(opts, {onClick: function () {
+            }, onHover: function () {
             }});
         }
         $("#status-widget-pane").freeow(null, message, opts);
@@ -188,9 +188,9 @@ wm.ui = new function () {
 
     this.lock = function (element, message) {
         if (element != null && element != undefined) {
-            element.block({message:null});
+            element.block({message: null});
         } else {
-            $.blockUI({message:null});
+            $.blockUI({message: null});
         }
         showStatus(message, STATE.DEFAULT, true);
     };
@@ -216,9 +216,9 @@ wm.ui = new function () {
 
     this.message = function (element, message, error) {
         var v = {
-            message:messageTemplate(null, message),
-            blockMsgClass:'ui-corner-all shadow' + (error ? ' ui-state-error' : ' ui-state-default'),
-            draggable:false
+            message: messageTemplate(null, message),
+            blockMsgClass: 'ui-corner-all shadow' + (error ? ' ui-state-error' : ' ui-state-default'),
+            draggable: false
         };
 
         if (element != undefined && element != null) {
@@ -240,22 +240,22 @@ wm.ui = new function () {
 
     this.confirm = function (title, msg, approvedAction) {
         $('<div></div>').html(msg).dialog({
-            title:title,
-            draggable:false,
-            modal:true,
-            resizable:false,
-            width:400,
-            buttons:[
+            title: title,
+            draggable: false,
+            modal: true,
+            resizable: false,
+            width: 400,
+            buttons: [
                 {
-                    text:wm.i18n.value('button.ok', 'Ok'),
-                    click:function () {
+                    text: wm.i18n.value('button.ok', 'Ok'),
+                    click: function () {
                         $(this).dialog("close");
                         approvedAction(true);
                     }
                 },
                 {
-                    text:wm.i18n.value('button.cancel', 'Cancel'),
-                    click:function () {
+                    text: wm.i18n.value('button.cancel', 'Cancel'),
+                    click: function () {
                         $(this).dialog("close");
                         approvedAction(false);
                     }
@@ -267,10 +267,10 @@ wm.ui = new function () {
 
     this.notification = function (title, message, type, error) {
         $("#alerts-widget-pane").freeow(title, message, {
-            classes:[ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "shadow", type],
-            showStyle:{opacity:.95},
-            template:alertTemplate,
-            autoHideDelay:10000
+            classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "shadow", type],
+            showStyle: {opacity: .95},
+            template: alertTemplate,
+            autoHideDelay: 10000
         });
 
         if (!activeWindows) {
@@ -326,11 +326,11 @@ wm.ui = new function () {
             var height = $header.outerHeight(true);
             var scrollY = $window.scrollTop();
             if (height - scrollY >= 0) {
-                $status.css({top:height - scrollY});
-                $alerts.css({top:height - scrollY});
+                $status.css({top: height - scrollY});
+                $alerts.css({top: height - scrollY});
             } else if ($status.offset().top != 0) {
-                $status.css({top:0});
-                $alerts.css({top:0});
+                $status.css({top: 0});
+                $alerts.css({top: 0});
             }
         };
         $window.scroll(windowScroll).resize(windowScroll);
@@ -410,13 +410,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-            "<div class='ui-editor-label'></div>" +
-            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-            "<div class='ui-editor-error'></div>" +
-            "<button class='ui-editor-save'>Save</button> " +
-            "<button class='ui-editor-cancel'>Cancel</button>" +
-            "</div></div>" +
-            "</div></div></div>");
+                "<div class='ui-editor-label'></div>" +
+                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+                "<div class='ui-editor-error'></div>" +
+                "<button class='ui-editor-save'>Save</button> " +
+                "<button class='ui-editor-cancel'>Cancel</button>" +
+                "</div></div>" +
+                "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -429,8 +429,8 @@ wm.ui.editor = new function () {
             cancelButton.attr('disabled', 'disabled');
 
             setViewInfo(activeElement, {
-                value:activeEditor.getValue(),
-                view:activeEditor.getDisplayValue()
+                value: activeEditor.getValue(),
+                view: activeEditor.getDisplayValue()
             });
 
             var values = {};
@@ -452,8 +452,8 @@ wm.ui.editor = new function () {
 
         var revertEditing = function () {
             setViewInfo(activeElement, {
-                value:previousValue.value,
-                view:previousValue.view
+                value: previousValue.value,
+                view: previousValue.view
             });
             $.unblockUI();
             return false;
@@ -483,9 +483,9 @@ wm.ui.editor = new function () {
 
         var getViewInfo = function (view) {
             return {
-                label:$(view).children(".ui-editor-label").text(),
-                view:$(view).children(".ui-editor-view").html(),
-                value:$(view).children("input").val()
+                label: $(view).children(".ui-editor-label").text(),
+                view: $(view).children(".ui-editor-view").html(),
+                value: $(view).children("input").val()
             };
         };
 
@@ -515,19 +515,19 @@ wm.ui.editor = new function () {
             var offset = $(view).offset();
 
             $.blockUI({
-                message:editorDialog,
-                centerX:false,
-                centerY:false,
-                fadeIn:false,
-                fadeOut:false,
-                blockMsgClass:'shadow',
-                css:{
-                    width:'auto',
-                    left:offset.left + 5,
-                    top:offset.top + 5
+                message: editorDialog,
+                centerX: false,
+                centerY: false,
+                fadeIn: false,
+                fadeOut: false,
+                blockMsgClass: 'shadow',
+                css: {
+                    width: 'auto',
+                    left: offset.left + 5,
+                    top: offset.top + 5
                 },
-                draggable:false,
-                onUnblock:closeEditor
+                draggable: false,
+                onUnblock: closeEditor
             });
         };
 
@@ -546,7 +546,7 @@ wm.ui.editor = new function () {
 
 $(document).ready(function () {
     jQuery.fn.extend({
-        serializeObject:function () {
+        serializeObject: function () {
             var arrayData, objectData;
             arrayData = this.serializeArray();
             objectData = {};
@@ -575,7 +575,7 @@ $(document).ready(function () {
         }
     });
 
-    $("[title]").cluetip({ showTitle:false});
+    $("[title]").cluetip({ showTitle: false});
 
     var notifications = $(".notification");
     if (notifications.size() > 0) {
@@ -584,36 +584,36 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-hover');
-            }
-        },
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-default');
-            }
-        });
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-hover');
+                }
+            },
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-default');
+                }
+            });
 
     var activeQuickInfo = undefined;
-    $(".quickInfo a").cluetip({
-        width:340,
-        showTitle:false,
-        ajaxCache:true,
-        activation:'click',
-        closePosition:'bottom',
-        closeText:wm.i18n.value('button.close'),
-        arrows:false,
-        sticky:true,
-        ajaxProcess:function (E) {
+    $(".quickInfo.ajax a").cluetip({
+        width: 340,
+        showTitle: false,
+        ajaxCache: true,
+        activation: 'click',
+        closePosition: 'bottom',
+        closeText: wm.i18n.value('button.close'),
+        arrows: false,
+        sticky: true,
+        ajaxProcess: function (E) {
             return E.summary;
         },
-        ajaxSettings:{
-            type:'post',
-            dataType:'json',
-            contentType:'application/json'
+        ajaxSettings: {
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json'
         },
-        onActivate:function (e) {
+        onActivate: function (e) {
             var element = $(this);
             if (activeQuickInfo != undefined) {
                 activeQuickInfo.parent().attr('class', 'quickInfo ui-state-default');
@@ -622,11 +622,37 @@ $(document).ready(function () {
             element.parent().attr('class', 'quickInfo ui-state-active');
             return true;
         },
-        onHide:function (ct, ci) {
+        onHide: function (ct, ci) {
             $(this).parent().attr('class', 'quickInfo ui-state-default');
             activeQuickInfo = undefined;
         }
     });
 
-    $(".data-table-toolbar a").button();
+    $(".quickInfo.local a").cluetip({
+        width: 340,
+        local: true,
+        showTitle: false,
+        ajaxCache: true,
+//        activation: 'click',
+        arrows: false,
+        sticky: false,
+        ajaxSettings: {
+            dataType: 'html'
+        },
+        onActivate: function (e) {
+            var element = $(this);
+            if (activeQuickInfo != undefined) {
+                activeQuickInfo.parent().attr('class', 'quickInfo ui-state-default');
+            }
+            activeQuickInfo = element;
+            element.parent().attr('class', 'quickInfo ui-state-active');
+            return true;
+        },
+        onHide: function (ct, ci) {
+            $(this).parent().attr('class', 'quickInfo ui-state-default');
+            activeQuickInfo = undefined;
+        }
+    });
+
+    $("#gameToolbar").find(".data-table-toolbar a").button();
 });

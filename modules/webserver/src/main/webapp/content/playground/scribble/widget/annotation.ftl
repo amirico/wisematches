@@ -4,7 +4,7 @@
 
 <div class="annotation ui-widget">
     <div class="header ui-widget-header ui-corner-all shadow">
-        <div class="quickInfo">
+        <div class="quickInfo ajax">
             <a class="ui-icon ui-icon-info" href="#" onclick="return false"
                rel="/info/tip.ajax?s=board.annotations"></a>
         </div>
@@ -56,11 +56,11 @@
 
 <script type="text/javascript">
     var comments = new wm.scribble.Comments(board, scribbleController, {
-        "ago":"<@message code='game.comment.ago'/>",
-        "of":"<@message code='separator.of'/>",
-        "empty":"<@message code='game.comment.err.empty'/>",
-        "saved":"<@message code='game.comment.saved'/>",
-        "saving":"<@message code='game.comment.saving'/>",
-        "loading":"<@message code='game.comment.loading'/>"
+        "ago": "<@message code='game.comment.ago'/>",
+        "of": "<@message code='separator.of'/>",
+        "empty": "<@message code='game.comment.err.empty'/>",
+        "saved": "<@message code='game.comment.saved'/>",
+        "saving": "<@message code='game.comment.saving'/>",
+        "loading": "<@message code='game.comment.loading'/>"
     });
 </script>

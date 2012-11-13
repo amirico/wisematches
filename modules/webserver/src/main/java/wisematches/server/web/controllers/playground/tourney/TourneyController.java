@@ -21,10 +21,7 @@ import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.tourney.form.SubscriptionForm;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * NOTE: this controller and view support only one subscription and limit functionality of
@@ -35,158 +32,108 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/tourney")
 public class TourneyController extends WisematchesController {
-    private static final Log log = LogFactory.getLog("wisematches.server.web.tourney");
-    private RegularTourneyManager tourneyManager;
-    private PlayerStatisticManager statisticManager;
+	private static final Log log = LogFactory.getLog("wisematches.server.web.tourney");
+	private RegularTourneyManager tourneyManager;
+	private PlayerStatisticManager statisticManager;
 
-    public TourneyController() {
-    }
+	public TourneyController() {
+	}
 
-    @RequestMapping("")
-    public String activeTourneys(Model model) {
-        final Personality personality = getPersonality();
+	@RequestMapping("")
+	public String activeTourneys(Model model) {
+		final Personality personality = getPersonality();
 
-        final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED)), null, null, null);
-        // TODO: not implemented. List of all groups for specified player must be loaded only.
-        final List<TourneyGroup> participated = new ArrayList<TourneyGroup>();//tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(TourneyEntity.State.ACTIVE)), null, null, null);
+		final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED)), null, null, null);
+		// TODO: not implemented. List of all groups for specified player must be loaded only.
+		final List<TourneyGroup> participated = new ArrayList<TourneyGroup>();//tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(TourneyEntity.State.ACTIVE)), null, null, null);
 
-        model.addAttribute("sections", TourneySection.values());
-        model.addAttribute("statistics", statisticManager.getPlayerStatistic(personality));
+		model.addAttribute("languages", Language.values());
+		model.addAttribute("sections", TourneySection.values());
+		model.addAttribute("statistics", statisticManager.getPlayerStatistic(personality));
 
-        if (announces.size() > 1) {
-            log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
-        }
+		if (announces.size() > 1) {
+			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
+		}
 
-        Tourney announce = null;
-        if (announces.size() == 1) {
-            announce = announces.get(0);
-        }
-        model.addAttribute("announce", announce);
-        model.addAttribute("participated", participated);
+		Tourney announce = null;
+		if (announces.size() == 1) {
+			announce = announces.get(0);
+		}
+		model.addAttribute("announce", announce);
+		model.addAttribute("participated", participated);
 
-        if (announce != null) {
-            model.addAttribute("subscription", tourneyManager.getSubscription(announce, personality));
-            model.addAttribute("subscriptions", tourneyManager.getSubscriptions(announce));
-        }
-        return "/content/playground/tourney/dashboard";
-    }
+		if (announce != null) {
+			model.addAttribute("subscription", tourneyManager.getSubscription(announce, personality));
+			model.addAttribute("subscriptions", tourneyManager.getSubscriptions(announce));
+		}
+		return "/content/playground/tourney/dashboard";
+	}
 
-    @ResponseBody
-    @RequestMapping("changeSubscription.ajax")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
-        final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
-        if (tourney == null) {
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.unknown", locale));
-        }
-        final Language language = Language.byCode(form.getLanguage());
-        if (language == null) {
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.language", locale));
-        }
-        TourneySection section = null;
-        try {
-            final String sectionName = form.getSection();
-            if (sectionName != null) {
-                section = TourneySection.valueOf(sectionName.toUpperCase());
-            }
-        } catch (IllegalArgumentException ex) {
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
-        }
+	@ResponseBody
+	@RequestMapping("changeSubscription.ajax")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
+		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
+		if (tourney == null) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.unknown", locale));
+		}
 
-        final Player principal = getPrincipal();
-        try {
-            final TourneySubscription subscription = tourneyManager.getSubscription(tourney, principal);
-            if (subscription != null) {
-                tourneyManager.unsubscribe(tourney, principal, subscription.getLanguage(), subscription.getSection());
-            }
-            if (section != null) { // subscribe
-                tourneyManager.subscribe(tourney, principal, language, section);
-            }
-        } catch (TourneySubscriptionException ex) {
-            log.error("Subscription can't be changed: " + form, ex);
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.internal", locale));
-        }
-        return ServiceResponse.success();//createSubscriptionResponse(tourney);
-    }
+		Language language = null;
+		if (form.getLanguage() != null) {
+			language = Language.byCode(form.getLanguage());
+			if (language == null) {
+				return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.language", locale));
+			}
+		}
 
-/*
-    private ServiceResponse createSubscriptionResponse(Tourney tourney) {
-        final Map<String, Object> a = new HashMap<String, Object>();
-        a.put("subscription", tourneyManager.getSubscription(tourney.getNumber(), getPrincipal().getId()));
-        a.put("subscriptions", convertSubscriptions(tourneyManager.getSubscriptions(tourney.getNumber())));
-        return ServiceResponse.success(String.valueOf(tourney.getNumber()), a);
-    }
+		TourneySection section = null;
+		try {
+			final String sectionName = form.getSection();
+			if (sectionName != null) {
+				section = TourneySection.valueOf(sectionName.toUpperCase());
+			}
+		} catch (IllegalArgumentException ex) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
+		}
 
-    private Map<Language, Map<TourneySection, Integer>> convertSubscriptions(TourneySubscriptions subscriptions) {
-        final Map<Language, Map<TourneySection, Integer>> r = new HashMap<Language, Map<TourneySection, Integer>>();
-        for (Language language1 : Language.values()) {
-            Map<TourneySection, Integer> tourneySectionIntegerMap = r.get(language1);
-            if (tourneySectionIntegerMap == null) {
-                tourneySectionIntegerMap = new HashMap<TourneySection, Integer>();
-                r.put(language1, tourneySectionIntegerMap);
-            }
-            for (TourneySection section1 : TourneySection.values()) {
-                tourneySectionIntegerMap.put(section1, subscriptions.getPlayers(language1, section1));
-            }
-        }
-        return r;
-    }
-*/
+		final Player principal = getPrincipal();
+		try {
+			final TourneySubscription subscription = tourneyManager.getSubscription(tourney, principal);
+			if (subscription != null) {
+				tourneyManager.unsubscribe(tourney, principal, subscription.getLanguage(), subscription.getSection());
+			}
+			if (section != null && language != null) { // subscribe
+				tourneyManager.subscribe(tourney, principal, language, section);
+			}
+		} catch (TourneySubscriptionException ex) {
+			log.error("Subscription can't be changed: " + form, ex);
+			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.internal", locale));
+		}
 
-/*
-    @RequestMapping("subscription")
-    public String subscriptionPage(Model model, @ModelAttribute("form") SubscriptionForm form) throws UnknownEntityException {
-        final Player principal = getPrincipal();
-        final Announcement announcement = tourneyManager.getAnnouncement();
-        if (announcement == null) {
-            throw new UnknownEntityException(null, "announcement");
-        }
+		final TourneySubscriptions subscriptions = tourneyManager.getSubscriptions(tourney);
+		final Map<String, Map<String, Integer>> res = new HashMap<String, Map<String, Integer>>();
+		for (Language l : Language.values()) {
+			Map<String, Integer> stringIntegerMap = new HashMap<String, Integer>();
+			res.put(l.name(), stringIntegerMap);
+			for (TourneySection s : TourneySection.values()) {
+				stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));
+			}
+		}
+		return ServiceResponse.success("", "subscriptions", res);
+	}
 
-        TournamentSubscription subscription = null;
-        final Collection<TournamentSubscription> requests = tourneyManager.searchTourneyEntities(getPrincipal(), new TournamentSubscription.Context(announcement.getTournament(), getPrincipal().getId()), null, null, null);
-        if (!requests.isEmpty()) {
-            subscription = requests.iterator().next();
-        }
+	@Autowired
+	public void setTourneyManager(RegularTourneyManager tourneyManager) {
+		this.tourneyManager = tourneyManager;
+	}
 
-        final short rating = statisticManager.getRating(principal);
-        if (form.getLanguage() == null) {
-            if (subscription == null) {
-                form.setLanguage(principal.getLanguage().name());
-            } else {
-                form.setLanguage(subscription.getLanguage().name());
-            }
-        }
+	@Autowired
+	public void setStatisticManager(PlayerStatisticManager statisticManager) {
+		this.statisticManager = statisticManager;
+	}
 
-        if (form.getSection() == null) {
-            if (subscription == null) {
-                form.setSection("none");
-            } else {
-                form.setSection(subscription.getSection().name());
-            }
-        }
-
-        model.addAttribute("playerRating", rating);
-        model.addAttribute("sections", TournamentSection.values());
-        model.addAttribute("languages", Language.values());
-        model.addAttribute("subscription", subscription);
-        model.addAttribute("announcement", announcement);
-        return "/content/playground/tourney/subscription";
-    }
-
-*/
-
-    @Autowired
-    public void setTourneyManager(RegularTourneyManager tourneyManager) {
-        this.tourneyManager = tourneyManager;
-    }
-
-    @Autowired
-    public void setStatisticManager(PlayerStatisticManager statisticManager) {
-        this.statisticManager = statisticManager;
-    }
-
-    @Override
-    public String getHeaderTitle() {
-        return "title.tourney";
-    }
+	@Override
+	public String getHeaderTitle() {
+		return "title.tourney";
+	}
 }

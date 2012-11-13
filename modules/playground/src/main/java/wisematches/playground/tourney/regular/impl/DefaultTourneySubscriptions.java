@@ -21,6 +21,17 @@ public class DefaultTourneySubscriptions implements TourneySubscriptions {
 	}
 
 	@Override
+	public int getPlayers() {
+		int res = 0;
+		for (int[] value : values) {
+			for (int i : value) {
+				res += i;
+			}
+		}
+		return res;
+	}
+
+	@Override
 	public int getPlayers(Language language) {
 		int res = 0;
 		for (int count : values[language.ordinal()]) {
