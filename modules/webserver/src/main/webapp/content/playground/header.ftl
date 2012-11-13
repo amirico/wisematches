@@ -45,7 +45,7 @@
                 </tr>
                 <tr>
                     <td valign="bottom">
-                        <div id="game-toolbar" class="" align="left">
+                        <div id="gameToolbar" class="" align="left">
                             <div style="display: inline-block;">
                                 <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
                                 <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
@@ -94,5 +94,5 @@
 <#include "guest.ftl"/>
 
 <script type="text/javascript">
-    $("#game-toolbar div").buttonset();
+    $("#gameToolbar ").find("div").buttonset();
 </script>

@@ -19,35 +19,35 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/info")
 public class InformationController extends AbstractInfoController {
-    private GameMessageSource messageSource;
+	private GameMessageSource messageSource;
 
-    public InformationController() {
-        super("classpath:/i18n/info/");
-    }
+	public InformationController() {
+		super("classpath:/i18n/info/");
+	}
 
-    @RequestMapping("/{pageName}")
-    public String infoPages(@PathVariable String pageName,
-                            @RequestParam(value = "plain", required = false) String plain,
-                            Model model, Locale locale) {
-        if (!processInfoPage(pageName, "features".equals(pageName), model, locale)) {
-            return null;
-        }
+	@RequestMapping("/{pageName}")
+	public String infoPages(@PathVariable String pageName,
+							@RequestParam(value = "plain", required = false) String plain,
+							Model model, Locale locale) throws InformationUnavailableException {
+		if (!processInfoPage(pageName, "features".equals(pageName), model, locale)) {
+			throw new InformationUnavailableException(pageName, plain);
+		}
 
-        if (plain != null) {
-            return "/content/info/resources";
-        } else {
-            return "/content/info/help";
-        }
-    }
+		if (plain != null) {
+			return "/content/info/resources";
+		} else {
+			return "/content/info/help";
+		}
+	}
 
-    @ResponseBody
-    @RequestMapping("/tip.ajax")
-    public ServiceResponse loadTip(@RequestParam("s") String section, Locale locale) {
-        return ServiceResponse.success(messageSource.getMessage("game.tip." + section, locale));
-    }
+	@ResponseBody
+	@RequestMapping("/tip.ajax")
+	public ServiceResponse loadTip(@RequestParam("s") String section, Locale locale) {
+		return ServiceResponse.success(messageSource.getMessage("game.tip." + section, locale));
+	}
 
-    @Autowired
-    public void setMessageSource(GameMessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
+	@Autowired
+	public void setMessageSource(GameMessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 }

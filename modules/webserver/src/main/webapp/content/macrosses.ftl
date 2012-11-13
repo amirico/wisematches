@@ -162,7 +162,7 @@ ${number}${gameMessageSource.getNumeralEnding(number, locale)}
      <#if style?has_content>style="${style}"</#if>>
     <div class="ui-widget-header ui-corner-all shadow">
         <#if help?has_content>
-            <div class="quickInfo">
+            <div class="quickInfo ajax">
                 <a class="ui-icon ui-icon-info" href="#" onclick="return false" rel="/info/tip.ajax?s=${help}"></a>
             </div>
         </#if>

@@ -1,4 +1,4 @@
-#game-toolbar .ui-buttonset {
+#gameToolbar .ui-buttonset {
     margin-right: 0;
 }
 
@@ -491,16 +491,57 @@
     white-space: nowrap;
 }
 
-#tournament .data-table-header div {
-    display: inline-block;
-}
-
-#tournament .info-header .info-label {
-    padding: 0 0 0 5px;
-}
-
-#tournament .data-table-content table {
-    border-spacing: 5px;
+#subscriptionView .description {
+    margin: 0;
+    padding: 0;
+    border: none;
     white-space: nowrap;
+    background: transparent;
 }
 
+#subscriptionView .actions button {
+    width: 100%;
+    color: #c46100;
+    font-weight: bold
+}
+
+#subscriptionView .description div {
+    display: block;
+}
+
+#subscriptionView .description .number {
+    font-size: 160%;
+}
+
+#subscriptionView .data-table-content {
+    border-style: solid !important;
+}
+
+#subscriptionDetails .subscription-details {
+    text-align: center;
+}
+
+#subscriptionDetails .subscription-details-total {
+    border-top: 1px solid gray;
+}
+
+#subscriptionDialog #subscriptionSection {
+    border-spacing: 0;
+}
+
+#subscriptionView label, #subscriptionDetails label {
+    font-weight: bold;
+}
+
+#subscriptionView .section, #subscriptionDialog .section {
+    font-size: 100% !important;
+    font-weight: normal !important;
+}
+
+#subscriptionView table, #subscriptionDialog table, #subscriptionDetails table {
+    border-spacing: 5px;
+}
+
+#subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td {
+    vertical-align: top;
+}

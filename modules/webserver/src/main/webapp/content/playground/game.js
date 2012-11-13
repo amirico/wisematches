@@ -1,19 +1,20 @@
 if (wm == null) wm = {};
 if (wm.game == null) wm.game = {};
 if (wm.game.settings == null) wm.game.settings = {};
+if (wm.game.tourney == null) wm.game.tourney = {};
 
 wm.game.help = new function () {
     this.showHelp = function (section, ctx) {
         $('<div><div class="loading-image" style="height: 300px"></div></div>').load(section + '?plain=true').dialog({
-            title:ctx != undefined ? $(ctx).text() : '',
-            width:650,
-            height:450,
-            modal:true,
-            resizable:true,
-            buttons:[
+            title: ctx != undefined ? $(ctx).text() : '',
+            width: 650,
+            height: 450,
+            modal: true,
+            resizable: true,
+            buttons: [
                 {
-                    text:wm.i18n.value('button.close', 'Close'),
-                    click:function () {
+                    text: wm.i18n.value('button.close', 'Close'),
+                    click: function () {
                         $(this).dialog("close");
                     }
                 }
@@ -26,27 +27,27 @@ wm.game.help = new function () {
 wm.game.Active = function (language) {
     var widget = $("#activeGamesWidget");
     wm.ui.dataTable('#dashboard', {
-        "bStateSave":true,
-        "bFilter":false,
-        "bSortClasses":false,
-        "aaSorting":[
+        "bStateSave": true,
+        "bFilter": false,
+        "bSortClasses": false,
+        "aaSorting": [
             [3, 'asc']
         ],
-        "aoColumns":[
+        "aoColumns": [
             null,
             null,
             null,
             null,
-            { "bSortable":false },
-            { "bSortable":false }
+            { "bSortable": false },
+            { "bSortable": false }
         ],
-        "oLanguage":language
+        "oLanguage": language
     });
 
     this.cancelProposal = function (id) {
         wm.ui.lock(widget, language['cancelling']);
         $.ajax('decline.ajax?p=' + id, {
-            success:function (result) {
+            success: function (result) {
                 if (result.success) {
                     $("#proposal" + id).fadeOut();
                     wm.ui.unlock(widget, language['cancelled']);
@@ -61,11 +62,11 @@ wm.game.Active = function (language) {
 wm.game.Join = function (language) {
     var widget = $("#waitingGamesWidget");
     wm.ui.dataTable('#gameboard', {
-        "bStateSave":true,
-        "bFilter":false,
-        "bSort":false,
-        "bSortClasses":false,
-        "oLanguage":language
+        "bStateSave": true,
+        "bFilter": false,
+        "bSort": false,
+        "bSortClasses": false,
+        "oLanguage": language
     });
 
     this.accept = function (id) {
@@ -98,20 +99,20 @@ wm.game.Join = function (language) {
 wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
     var attachPlayerSearchActions = function (a) {
         $(a).hover(
-            function () {
-                $(this).addClass("player-search-remove");
-            },
-            function () {
-                $(this).removeClass("player-search-remove");
-            }).click(function () {
-                $(this).fadeOut('fast', function () {
-                    $(this).remove();
-                    if (opponentsCount == maxOpponents) {
-                        $("#opponentsControl").fadeIn('slow');
-                    }
-                    opponentsCount--;
+                function () {
+                    $(this).addClass("player-search-remove");
+                },
+                function () {
+                    $(this).removeClass("player-search-remove");
+                }).click(function () {
+                    $(this).fadeOut('fast', function () {
+                        $(this).remove();
+                        if (opponentsCount == maxOpponents) {
+                            $("#opponentsControl").fadeIn('slow');
+                        }
+                        opponentsCount--;
+                    });
                 });
-            });
     };
 
     this.selectOpponent = function () {
@@ -168,17 +169,17 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
             serializeObject.opponents = [serializeObject.opponents];
         }
         $.post("create.ajax", $.toJSON(serializeObject),
-            function (response) {
-                if (response.success) {
-                    if (response.data == null || response.data.board == undefined) {
-                        wm.util.url.redirect('/playground/scribble/active');
+                function (response) {
+                    if (response.success) {
+                        if (response.data == null || response.data.board == undefined) {
+                            wm.util.url.redirect('/playground/scribble/active');
+                        } else {
+                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        }
                     } else {
-                        wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        wm.ui.unlock($gameWidget, response.summary, true);
                     }
-                } else {
-                    wm.ui.unlock($gameWidget, response.summary, true);
-                }
-            }, 'json');
+                }, 'json');
     };
 };
 
@@ -219,25 +220,25 @@ wm.game.History = function (pid, columns, language) {
     });
 
     wm.ui.dataTable('#history', {
-        "bStateSave":false,
-        "bFilter":false,
-        "bSortClasses":false,
-        "aaSorting":[
+        "bStateSave": false,
+        "bFilter": false,
+        "bSortClasses": false,
+        "aaSorting": [
             [0, 'desc']
         ],
-        "iDisplayStart":0,
-        "aoColumns":columns,
-        "bProcessing":true,
-        "bServerSide":true,
-        "sAjaxSource":"/playground/scribble/history/load.ajax?p=" + pid,
-        "fnServerData":function (sSource, aoData, fnCallback) {
+        "iDisplayStart": 0,
+        "aoColumns": columns,
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "/playground/scribble/history/load.ajax?p=" + pid,
+        "fnServerData": function (sSource, aoData, fnCallback) {
             var data = {};
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
             }
             $.post(sSource, $.toJSON(data), fnCallback);
         },
-        "oLanguage":language
+        "oLanguage": language
     });
 };
 
@@ -256,16 +257,16 @@ wm.game.Search = function (columns, scriplet, language) {
     });
 
     var resultTable = wm.ui.dataTable('#searchResult', {
-        "bSortClasses":false,
-        "aoColumns":columns,
-        "bProcessing":true,
-        "bServerSide":true,
-        "aaSorting":[
+        "bSortClasses": false,
+        "aoColumns": columns,
+        "bProcessing": true,
+        "bServerSide": true,
+        "aaSorting": [
             [ 1, "desc" ],
             [ 2, "desc" ]
         ],
-        "sAjaxSource":"/playground/players/load.ajax",
-        "fnServerData":function (sSource, aoData, fnCallback) {
+        "sAjaxSource": "/playground/players/load.ajax",
+        "fnServerData": function (sSource, aoData, fnCallback) {
             var data = {};
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
@@ -296,13 +297,13 @@ wm.game.Search = function (columns, scriplet, language) {
         callback = c;
         reloadContent();
         $("#searchPlayerWidget").dialog({
-            title:language['title'],
-            modal:true,
-            width:800,
-            buttons:[
+            title: language['title'],
+            modal: true,
+            width: 800,
+            buttons: [
                 {
-                    text:wm.i18n.value('button.close', 'Close'),
-                    click:function () {
+                    text: wm.i18n.value('button.close', 'Close'),
+                    click: function () {
                         $(this).dialog("close");
                     }
                 }
@@ -318,28 +319,142 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.Tourney = function (fullness, language) {
-    var languageBox = $("#tourney #language");
-    languageBox.change(function () {
-        var f = fullness[languageBox.val()];
-        $.each(f, function (n, v) {
-            $("#sectionFullness" + n).html("(" + v + ")");
+wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, language) {
+    var subscriptionView = $("#subscriptionView");
+    var subscriptionForm = $("#subscriptionForm");
+    var subscriptionDialog = $("#subscriptionDialog");
+    var subscriptionDetails = $("#subscriptionDetails");
+
+    var subscribe = function (comp, language, section, callback) {
+        var data = $.toJSON({language: language, section: section});
+        wm.ui.lock(comp, language["register.subscribing"]);
+        $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, data,
+                function (response) {
+                    if (response.success) {
+                        subscriptions = response.data.subscriptions;
+                        wm.ui.unlock(comp, language["register.subscribed"]);
+                    } else {
+                        wm.ui.unlock(comp, response.summary, true);
+                    }
+                    updateAnnounceView(true, language, section);
+                    callback(response.success);
+                }, 'json');
+    };
+
+    var unsubscribe = function (comp, callback) {
+        wm.ui.lock(comp, language["register.unsubscribing"]);
+        $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, $.toJSON({}),
+                function (response) {
+                    if (response.success) {
+                        subscriptions = response.data.subscriptions;
+                        wm.ui.unlock(comp, language["register.unsubscribed"]);
+                    } else {
+                        wm.ui.unlock(comp, response.summary, true);
+                    }
+                    updateAnnounceView(false, null, null);
+                    callback(response.success);
+                }, 'json');
+    };
+
+    var updateAnnounceView = function (sub, language, section) {
+        subscribed = sub;
+
+        var announceAction = subscriptionView.find('button .ui-button-text');
+        var announceSection = subscriptionView.find("#announceSection");
+        var announceLanguage = subscriptionView.find("#announceLanguage");
+
+        if (subscribed) {
+            subscriptionView.find(".tourney-state").removeClass("ui-state-disabled");
+
+            announceAction.text(language["register.refuse"]);
+            announceSection.text(getSelectedValue('section', false));
+            announceLanguage.text(getSelectedValue('language', false));
+        } else {
+            subscriptionView.find(".tourney-state").addClass("ui-state-disabled");
+            announceAction.text(language["register.accept"]);
+            announceSection.text(language["register.unspecified"]);
+            announceLanguage.text(language["register.unspecified"]);
+        }
+
+        var tsum = 0;
+        $.each(subscriptions, function (l, ss) {
+            var sum = 0;
+            $.each(ss, function (s, v) {
+                sum += v;
+                subscriptionView.find(".subscriptionDetails" + l + s).text(v);
+            });
+            subscriptionView.find(".subscriptionDetails" + l).text(sum);
+            tsum += sum;
+        });
+    };
+
+    var getSelectedValue = function (input, value) {
+        var el;
+        if (input == 'language') {
+            el = subscriptionForm.find("select[name=language] option:selected");
+        } else if (input == 'section') {
+            el = subscriptionForm.find("input[name=section]:checked");
+        }
+
+        if (value) {
+            return el.val();
+        } else {
+            if (input == 'section') {
+                el = $(subscriptionForm.find("#subscriptionSectionLabel" + el.val() + " span").get(0));
+            }
+            return el.text();
+        }
+    };
+
+    var showSubscriptionDialog = function () {
+        subscriptionDialog.dialog({
+            id: "jQueryDialog",
+            title: language["register.title"],
+            width: 550,
+            minHeight: 350,
+            modal: true,
+            resizable: false,
+            buttons: [
+                {
+                    class: "tourney-unsubscribed",
+                    text: language["register.button"],
+                    click: function () {
+                        subscribe(subscriptionDialog.closest(".ui-dialog"),
+                                getSelectedValue('language', true),
+                                getSelectedValue('section', true),
+                                function () {
+                                    subscriptionDialog.dialog("close");
+                                });
+                    }
+                },
+                {
+                    text: wm.i18n.value('button.cancel', 'Cancel'),
+                    click: function () {
+                        subscriptionDialog.dialog("close");
+                    }
+
+                }
+            ]
+        });
+    };
+
+    subscriptionForm.find("#subscriptionLanguage").change(function () {
+        var language = getSelectedValue('language', true);
+        var find = subscriptionForm.find("#subscriptionSection .players");
+        $.each(find, function (i, v) {
+            v = $(v);
+            v.text(subscriptions[language][v.attr('id').substring(26)]);
         });
     });
 
-    this.subscribe = function () {
-        var tournamentWidget = $("#tournamentWidget");
-
-        wm.ui.lock(tournamentWidget, language['waiting']);
-        $.post("subscription.ajax", $.toJSON($("#form").serializeObject()),
-            function (response) {
-                if (response.success) {
-                    wm.util.url.redirect('/playground/tourney');
-                } else {
-                    wm.ui.unlock(tournamentWidget, response.summary, true);
-                }
-            }, 'json');
-    };
+    subscriptionView.find('button').button().click(function () {
+        if (subscribed) {
+            unsubscribe(subscriptionView, function () {
+            });
+        } else {
+            showSubscriptionDialog();
+        }
+    });
 };
 
 wm.game.settings.Board = function () {
@@ -381,16 +496,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-            }
-        },
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-            }
-        });
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+                }
+            },
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+                }
+            });
 
     prevSet.click(function () {
         if (selected > 0) {

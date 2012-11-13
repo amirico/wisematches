@@ -8,6 +8,8 @@ import wisematches.personality.Language;
 public interface TourneySubscriptions {
 	int getTourney();
 
+	int getPlayers();
+
 	int getPlayers(Language language);
 
 	int getPlayers(Language language, TourneySection section);
