@@ -6,15 +6,15 @@ if (wm.game.tourney == null) wm.game.tourney = {};
 wm.game.help = new function () {
     this.showHelp = function (section, ctx) {
         $('<div><div class="loading-image" style="height: 300px"></div></div>').load(section + '?plain=true').dialog({
-            title: ctx != undefined ? $(ctx).text() : '',
-            width: 650,
-            height: 450,
-            modal: true,
-            resizable: true,
-            buttons: [
+            title:ctx != undefined ? $(ctx).text() : '',
+            width:650,
+            height:450,
+            modal:true,
+            resizable:true,
+            buttons:[
                 {
-                    text: wm.i18n.value('button.close', 'Close'),
-                    click: function () {
+                    text:wm.i18n.value('button.close', 'Close'),
+                    click:function () {
                         $(this).dialog("close");
                     }
                 }
@@ -27,27 +27,27 @@ wm.game.help = new function () {
 wm.game.Active = function (language) {
     var widget = $("#activeGamesWidget");
     wm.ui.dataTable('#dashboard', {
-        "bStateSave": true,
-        "bFilter": false,
-        "bSortClasses": false,
-        "aaSorting": [
+        "bStateSave":true,
+        "bFilter":false,
+        "bSortClasses":false,
+        "aaSorting":[
             [3, 'asc']
         ],
-        "aoColumns": [
+        "aoColumns":[
             null,
             null,
             null,
             null,
-            { "bSortable": false },
-            { "bSortable": false }
+            { "bSortable":false },
+            { "bSortable":false }
         ],
-        "oLanguage": language
+        "oLanguage":language
     });
 
     this.cancelProposal = function (id) {
         wm.ui.lock(widget, language['cancelling']);
         $.ajax('decline.ajax?p=' + id, {
-            success: function (result) {
+            success:function (result) {
                 if (result.success) {
                     $("#proposal" + id).fadeOut();
                     wm.ui.unlock(widget, language['cancelled']);
@@ -62,11 +62,11 @@ wm.game.Active = function (language) {
 wm.game.Join = function (language) {
     var widget = $("#waitingGamesWidget");
     wm.ui.dataTable('#gameboard', {
-        "bStateSave": true,
-        "bFilter": false,
-        "bSort": false,
-        "bSortClasses": false,
-        "oLanguage": language
+        "bStateSave":true,
+        "bFilter":false,
+        "bSort":false,
+        "bSortClasses":false,
+        "oLanguage":language
     });
 
     this.accept = function (id) {
@@ -220,25 +220,25 @@ wm.game.History = function (pid, columns, language) {
     });
 
     wm.ui.dataTable('#history', {
-        "bStateSave": false,
-        "bFilter": false,
-        "bSortClasses": false,
-        "aaSorting": [
+        "bStateSave":false,
+        "bFilter":false,
+        "bSortClasses":false,
+        "aaSorting":[
             [0, 'desc']
         ],
-        "iDisplayStart": 0,
-        "aoColumns": columns,
-        "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": "/playground/scribble/history/load.ajax?p=" + pid,
-        "fnServerData": function (sSource, aoData, fnCallback) {
+        "iDisplayStart":0,
+        "aoColumns":columns,
+        "bProcessing":true,
+        "bServerSide":true,
+        "sAjaxSource":"/playground/scribble/history/load.ajax?p=" + pid,
+        "fnServerData":function (sSource, aoData, fnCallback) {
             var data = {};
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
             }
             $.post(sSource, $.toJSON(data), fnCallback);
         },
-        "oLanguage": language
+        "oLanguage":language
     });
 };
 
@@ -257,16 +257,16 @@ wm.game.Search = function (columns, scriplet, language) {
     });
 
     var resultTable = wm.ui.dataTable('#searchResult', {
-        "bSortClasses": false,
-        "aoColumns": columns,
-        "bProcessing": true,
-        "bServerSide": true,
-        "aaSorting": [
+        "bSortClasses":false,
+        "aoColumns":columns,
+        "bProcessing":true,
+        "bServerSide":true,
+        "aaSorting":[
             [ 1, "desc" ],
             [ 2, "desc" ]
         ],
-        "sAjaxSource": "/playground/players/load.ajax",
-        "fnServerData": function (sSource, aoData, fnCallback) {
+        "sAjaxSource":"/playground/players/load.ajax",
+        "fnServerData":function (sSource, aoData, fnCallback) {
             var data = {};
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
@@ -297,13 +297,13 @@ wm.game.Search = function (columns, scriplet, language) {
         callback = c;
         reloadContent();
         $("#searchPlayerWidget").dialog({
-            title: language['title'],
-            modal: true,
-            width: 800,
-            buttons: [
+            title:language['title'],
+            modal:true,
+            width:800,
+            buttons:[
                 {
-                    text: wm.i18n.value('button.close', 'Close'),
-                    click: function () {
+                    text:wm.i18n.value('button.close', 'Close'),
+                    click:function () {
                         $(this).dialog("close");
                     }
                 }
@@ -325,8 +325,8 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
     var subscriptionDialog = $("#subscriptionDialog");
     var subscriptionDetails = $("#subscriptionDetails");
 
-    var subscribe = function (comp, language, section, callback) {
-        var data = $.toJSON({language: language, section: section});
+    var subscribe = function (comp, lang, section, callback) {
+        var data = $.toJSON({language:lang, section:section});
         wm.ui.lock(comp, language["register.subscribing"]);
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, data,
                 function (response) {
@@ -336,7 +336,7 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                     } else {
                         wm.ui.unlock(comp, response.summary, true);
                     }
-                    updateAnnounceView(true, language, section);
+                    updateAnnounceView(true);
                     callback(response.success);
                 }, 'json');
     };
@@ -351,12 +351,12 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                     } else {
                         wm.ui.unlock(comp, response.summary, true);
                     }
-                    updateAnnounceView(false, null, null);
+                    updateAnnounceView(false);
                     callback(response.success);
                 }, 'json');
     };
 
-    var updateAnnounceView = function (sub, language, section) {
+    var updateAnnounceView = function (sub) {
         subscribed = sub;
 
         var announceAction = subscriptionView.find('button .ui-button-text');
@@ -408,17 +408,17 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
 
     var showSubscriptionDialog = function () {
         subscriptionDialog.dialog({
-            id: "jQueryDialog",
-            title: language["register.title"],
-            width: 550,
-            minHeight: 350,
-            modal: true,
-            resizable: false,
-            buttons: [
+            id:"jQueryDialog",
+            title:language["register.title"],
+            width:550,
+            minHeight:350,
+            modal:true,
+            resizable:false,
+            buttons:[
                 {
-                    class: "tourney-unsubscribed",
-                    text: language["register.button"],
-                    click: function () {
+                    class:"tourney-unsubscribed",
+                    text:language["register.button"],
+                    click:function () {
                         subscribe(subscriptionDialog.closest(".ui-dialog"),
                                 getSelectedValue('language', true),
                                 getSelectedValue('section', true),
@@ -428,8 +428,8 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                     }
                 },
                 {
-                    text: wm.i18n.value('button.cancel', 'Cancel'),
-                    click: function () {
+                    text:wm.i18n.value('button.cancel', 'Cancel'),
+                    click:function () {
                         subscriptionDialog.dialog("close");
                     }
 
