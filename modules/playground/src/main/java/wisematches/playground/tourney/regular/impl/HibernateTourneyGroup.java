@@ -88,7 +88,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	private byte finishedGamesCount;
 
 	@Deprecated
-	private HibernateTourneyGroup() {
+	public HibernateTourneyGroup() {
 	}
 
 	public HibernateTourneyGroup(int group, HibernateTourneyRound round, long[] players) {

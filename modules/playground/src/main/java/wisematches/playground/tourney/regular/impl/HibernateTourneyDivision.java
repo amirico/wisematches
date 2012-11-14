@@ -41,7 +41,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	private Date finishedDate;
 
 	@Deprecated
-	private HibernateTourneyDivision() {
+	public HibernateTourneyDivision() {
 	}
 
 	public HibernateTourneyDivision(HibernateTourney tourney, Language language, TourneySection section) {
