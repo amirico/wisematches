@@ -16,6 +16,9 @@
                 <li <@markSelected "rules"/>>
                     <a href="/info/rules"><@messageCap code="info.rules.scribble.label"/></a>
                 </li>
+                <li <@markSelected "tourney"/>>
+                    <a href="/info/tourney"><@messageCap code="info.rules.tourney.label"/></a>
+                </li>
                 <li <@markSelected "rating"/>>
                     <a href="/info/rating"><@messageCap code="info.rules.rating.label"/></a>
                 </li>

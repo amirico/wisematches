@@ -3,6 +3,8 @@
 <#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
 <#include "/core.ftl">
 
+<#assign hasNewFeatues=true/>
+
 <table id="header" class="ui-widget-content shadow" style="background: none; border-width: 0;border-bottom-width: 1px;">
     <tr>
         <td width="178px" height="72px">
@@ -28,11 +30,11 @@
                         <div style="width: 24px; display: inline-block; vertical-align: bottom; padding-bottom: 2px">
                             <g:plusone size="small" annotation="none" href="http://www.wisematches.net"></g:plusone>
                         </div>
-                    <#--
-                                            |
-                                            <a href="/info/features"
-                                               style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
-                    -->
+                    <#if hasNewFeatues>
+                        |
+                        <a href="/info/features"
+                           style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
+                    </#if>
                         |
                     <#if principal.membership != 'GUEST'><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>
