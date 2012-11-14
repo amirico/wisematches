@@ -71,12 +71,12 @@
         $("#friendsWidget button").button();
 
         wm.ui.dataTable('#friends', {
-            "bSortClasses":false,
-            "aoColumns":[
-                { "bSortable":false },
-                { "bSortable":true },
-                { "bSortable":true },
-                { "bSortable":false }
+            "bSortClasses": false,
+            "aoColumns": [
+                { "bSortable": false },
+                { "bSortable": true },
+                { "bSortable": true },
+                { "bSortable": false }
             ]
         });
 
@@ -90,16 +90,18 @@
             $(".friend-checkbox input:checked").each(function (index, el) {
                 selected.push($(el).val());
             });
-            wm.friends.remove(selected);
+            if (selected.length != 0) {
+                wm.friends.remove(selected);
+            }
             return false;
         };
 
         this.remove = function (persons) {
             wm.ui.lock(widget, "<@message code="friends.status.removing"/>");
             $.ajax('remove.ajax', {
-                type:'post',
-                contentType:'application/x-www-form-urlencoded',
-                data:{'persons[]':persons}
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: {'persons[]': persons}
             })
                     .success(function (response) {
                         if (response.success) {

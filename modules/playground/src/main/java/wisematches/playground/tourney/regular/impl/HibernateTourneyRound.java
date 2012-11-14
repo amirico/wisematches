@@ -16,10 +16,10 @@ public class HibernateTourneyRound implements TourneyRound {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long internalId;
 
-	@Column(name = "roundNumber")
+	@Column(name = "roundNumber", updatable = false)
 	private int round;
 
-	@Column(name = "totalGamesCount", updatable = false)
+	@Column(name = "totalGamesCount", updatable = true)
 	private int totalGamesCount;
 
 	@Column(name = "finishedGamesCount", updatable = true)
@@ -38,7 +38,7 @@ public class HibernateTourneyRound implements TourneyRound {
 	private Date finishedDate;
 
 	@Deprecated
-	private HibernateTourneyRound() {
+	public HibernateTourneyRound() {
 	}
 
 	public HibernateTourneyRound(HibernateTourneyDivision division, int round) {

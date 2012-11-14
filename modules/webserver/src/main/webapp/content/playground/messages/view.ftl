@@ -88,13 +88,13 @@
         $("#messagesWidget button").button();
 
         wm.ui.dataTable('#messages', {
-            "bSortClasses":false,
-            "aaSorting":[
+            "bSortClasses": false,
+            "aaSorting": [
             ],
-            "aoColumns":[
-                { "bSortable":false },
-                { "bSortable":false },
-                { "bSortable":false }
+            "aoColumns": [
+                { "bSortable": false },
+                { "bSortable": false },
+                { "bSortable": false }
             ]
         });
 
@@ -120,16 +120,18 @@
             $(".message-checkbox input:checked").each(function (index, el) {
                 selected.push($(el).val());
             });
-            wm.messages.remove(selected);
+            if (selected.length != 0) {
+                wm.messages.remove(selected);
+            }
             return false;
         };
 
         this.remove = function (msgs) {
             wm.ui.lock(widget, "<@message code="messages.status.remove.sending"/>");
             $.ajax('remove.ajax', {
-                type:'post',
-                contentType:'application/x-www-form-urlencoded',
-                data:{'messages[]':msgs}
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: {'messages[]': msgs}
             })
                     .success(function (response) {
                         if (response.success) {

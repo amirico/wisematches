@@ -52,6 +52,9 @@ class DefaultTourneyProcessor {
 			log.info("Initiated divisions: " + divisions);
 
 			tourney.startTourney();
+			if (subscriptions.getPlayers() == 0) { // no subscription - finish the tourney right now
+				tourney.finishTourney();
+			}
 			session.update(tourney);
 
 			// notify players
@@ -105,7 +108,6 @@ class DefaultTourneyProcessor {
 			session.update(division);
 		}
 	}
-
 
 	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<TourneySubscriptionListener> subscriptionListeners) {
 		final HibernateTourneyGroup group = getGroupByBoard(session, board);

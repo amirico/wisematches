@@ -67,12 +67,12 @@
         $("#blacklistWidget button").button();
 
         wm.ui.dataTable('#blacklist', {
-            "bSortClasses":false,
-            "aoColumns":[
-                { "bSortable":false },
-                { "bSortable":true },
-                { "bSortable":true },
-                { "bSortable":false }
+            "bSortClasses": false,
+            "aoColumns": [
+                { "bSortable": false },
+                { "bSortable": true },
+                { "bSortable": true },
+                { "bSortable": false }
             ]
         });
 
@@ -84,9 +84,9 @@
         this.remove = function (ids) {
             wm.ui.lock(widget, "<@message code="blacklist.status.removing"/>");
             $.ajax('remove.ajax', {
-                type:'post',
-                contentType:'application/x-www-form-urlencoded',
-                data:{'persons[]':ids}
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: {'persons[]': ids}
             })
                     .success(function (response) {
                         if (response.success) {
@@ -107,7 +107,9 @@
             $(".blacklist-checkbox input:checked").each(function (index, el) {
                 selected.push($(el).val());
             });
-            wm.blacklist.remove(selected);
+            if (selected.length != 0) {
+                wm.blacklist.remove(selected);
+            }
             return false;
         };
     };
