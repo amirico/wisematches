@@ -7,12 +7,12 @@
 
     <groupId>wisematches.application</groupId>
     <artifactId>webserver</artifactId>
-    <version>3.00</version>
+    <version>3.01-SNAPSHOT</version>
 
     <parent>
         <groupId>wisematches</groupId>
         <artifactId>application</artifactId>
-        <version>3.00</version>
+        <version>3.01-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
 
@@ -57,25 +57,25 @@
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>database</artifactId>
-            <version>3.00</version>
+            <version>3.01-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>personality</artifactId>
-            <version>3.00</version>
+            <version>3.01-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>playground</artifactId>
-            <version>3.00</version>
+            <version>3.01-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>scribble</artifactId>
-            <version>3.00</version>
+            <version>3.01-SNAPSHOT</version>
         </dependency>
 
         <dependency>
