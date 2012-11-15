@@ -3,7 +3,7 @@
 <#-- @ftlvariable name="statistics" type="wisematches.playground.tracking.Statistics" -->
 
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="participated" type="wisematches.playground.tourney.regular.Tourney[]" -->
+<#-- @ftlvariable name="participated" type="wisematches.playground.tourney.regular.TourneyGroup[]" -->
 
 <#-- @ftlvariable name="subscription" type="wisematches.playground.tourney.regular.TourneySubscription" -->
 <#-- @ftlvariable name="subscriptions" type="wisematches.playground.tourney.regular.TourneySubscriptions" -->
@@ -54,21 +54,28 @@
             <table width="100%" class="display">
                 <thead>
                 <tr>
-                    <th width="100%">Tournament Name</th>
-                    <th nowrap="nowrap">Start Date</th>
-                    <th nowrap="nowrap">Section</th>
-                    <th nowrap="nowrap">Active Round</th>
+                    <th width="100%">Турнир</th>
+                    <th nowrap="nowrap">Начало Игр</th>
+                    <th nowrap="nowrap">Номер Раунда</th>
+                    <th nowrap="nowrap">Номер Группы</th>
+                    <th nowrap="nowrap">Игры</th>
                 </tr>
                 </thead>
                 <tbody>
-                    <#list participated as tourney>
+                    <#list participated as g>
+                        <#assign tn=g.id.roundId.divisionId.tourneyId.number/>
                     <tr>
-                        <td><a href="/playground/tourney/view?t=">${tourney.number} WiseMatches Tourney
-                            {${tourney.id}</a>
+                        <td>
+                        ${tn}${gameMessageSource.getNumeralEnding(tn, locale)} <@message code="tourney.label"/>
                         </td>
-                        <td nowrap="nowrap">${gameMessageSource.formatDate(tourney.scheduledDate, locale)}</td>
-                        <td nowrap="nowrap"></td>
-                        <td nowrap="nowrap">Waiting Subscription</td>
+                        <td>${gameMessageSource.formatDate(g.startedDate, locale)}</td>
+                        <td>${g.id.getRoundId().round}</td>
+                        <td>${g.id.group}</td>
+                        <td>
+                            <#list g.games as game>
+                            ${game},
+                            </#list>
+                        </td>
                     </tr>
                     </#list>
                 </tbody>
@@ -276,6 +283,7 @@
     wm.ui.dataTable('#tourney #participated table', {
         "bSortClasses": false,
         "aoColumns": [
+            { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },

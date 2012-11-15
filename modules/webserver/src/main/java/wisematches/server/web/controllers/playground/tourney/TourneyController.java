@@ -44,8 +44,7 @@ public class TourneyController extends WisematchesController {
 		final Personality personality = getPersonality();
 
 		final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED)), null, null, null);
-		// TODO: not implemented. List of all groups for specified player must be loaded only.
-		final List<TourneyGroup> participated = new ArrayList<TourneyGroup>();//tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(TourneyEntity.State.ACTIVE)), null, null, null);
+		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(personality, EnumSet.of(TourneyEntity.State.ACTIVE)), null, null, null);
 
 		model.addAttribute("languages", Language.values());
 		model.addAttribute("sections", TourneySection.values());
