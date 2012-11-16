@@ -7,18 +7,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
-import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.PlayerStatisticManager;
 import wisematches.server.web.controllers.ServiceResponse;
+import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
+import wisematches.server.web.controllers.playground.tourney.form.EntityIdForm;
 import wisematches.server.web.controllers.playground.tourney.form.SubscriptionForm;
 
 import java.util.*;
@@ -40,11 +38,16 @@ public class TourneyController extends WisematchesController {
 	}
 
 	@RequestMapping("")
-	public String activeTourneys(Model model) {
+	public String tourneysRoot(Model model) {
+		return showDashboard(model);
+	}
+
+	@RequestMapping("dashboard")
+	public String showDashboard(Model model) {
 		final Personality personality = getPersonality();
 
-		final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED)), null, null, null);
-		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(personality, EnumSet.of(TourneyEntity.State.ACTIVE)), null, null, null);
+		final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
+		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(personality, EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
 
 		model.addAttribute("languages", Language.values());
 		model.addAttribute("sections", TourneySection.values());
@@ -66,6 +69,66 @@ public class TourneyController extends WisematchesController {
 			model.addAttribute("subscriptions", tourneyManager.getSubscriptions(announce));
 		}
 		return "/content/playground/tourney/dashboard";
+	}
+
+	@RequestMapping("active")
+	public String showActive(Model model) {
+
+		return "/content/playground/tourney/active";
+	}
+
+	@RequestMapping("finished")
+	public String showFinished(Model model) {
+
+		return "/content/playground/tourney/finished";
+	}
+
+	@RequestMapping("subscriptions")
+	public String showSubscriptions(Model model) {
+
+		return "/content/playground/tourney/subscriptions";
+	}
+
+	@RequestMapping("view")
+	public String showEntityView(Model model, final @ModelAttribute EntityIdForm form) throws UnknownEntityException {
+		if (form.isShit()) {
+			throw new UnknownEntityException(form.getT(), "tourney");
+		}
+
+		final Tourney.Id tourneyId;
+		try {
+			tourneyId = new Tourney.Id(Integer.valueOf(form.getT()));
+		} catch (NumberFormatException ex) {
+			throw new UnknownEntityException(form.getT(), "tourney");
+		}
+
+		final Tourney tourney = tourneyManager.getTourneyEntity(tourneyId);
+		if (tourney == null) {
+			throw new UnknownEntityException(form.getT(), "tourney");
+		}
+		model.addAttribute("tourney", tourney); // add tourney object
+
+		final Personality personality = getPersonality();
+		if (form.isTourney()) {
+			final TourneyRound.Context ctx = new TourneyRound.Context(tourneyId, null);
+			final Map<TourneyDivision, List<TourneyRound>> divisionsTree = new HashMap<TourneyDivision, List<TourneyRound>>();
+			final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(personality, ctx, null, null, null);
+
+			for (TourneyRound round : rounds) {
+				final TourneyDivision division = round.getDivision();
+
+				List<TourneyRound> tourneyRounds = divisionsTree.get(division);
+				if (tourneyRounds == null) {
+					tourneyRounds = new ArrayList<TourneyRound>();
+					divisionsTree.put(division, tourneyRounds);
+				}
+				tourneyRounds.add(round);
+			}
+			model.addAttribute("divisionsTree", divisionsTree);
+
+			return "/content/playground/tourney/view/tourney";
+		}
+		return null;
 	}
 
 	@ResponseBody

@@ -9,28 +9,11 @@
 <#-- @ftlvariable name="subscriptions" type="wisematches.playground.tourney.regular.TourneySubscriptions" -->
 
 <#include "/core.ftl">
-
-<#macro sectionName section>
-    <@message code="tourney.section.${section.name()?lower_case}.label"/>
-</#macro>
-
-<#macro sectionInfo section short=true>
-    <#if section.anyRating>
-        <#if short>
-            <@message code="tourney.rating.any.label"/>
-        <#else>
-            <@message code="tourney.rating.any.description"/>
-        </#if>
-    <#else>
-        <#if short>
-            <@message code="tourney.rating.limit.label" args=[section.topRating]/>
-        <#else>
-            <@message code="tourney.rating.limit.description" args=[section.topRating]/>
-        </#if>
-    </#if>
-</#macro>
+<#include "scriplet.ftl">
 
 <@wm.jstable/>
+
+<#assign pid=principal.id/>
 
 <@wm.playground id="tourney">
 <table width="100%">
@@ -42,38 +25,81 @@
         </@wm.dtHeader>
 
         <@wm.dtToolbar>
-        <#--
-                    <div>
-                        <a href="/playground/tourney/active">All active Tournaments</a>
-                        <a href="/playground/tourney/history">All finished Tournaments</a>
-                    </div>
-        -->
+            <div>
+                <a href="/playground/tourney/active"><@message code="tourney.list.active.label"/></a>
+                <a href="/playground/tourney/finished"><@message code="tourney.list.finished.label"/></a>
+            </div>
         </@wm.dtToolbar>
 
         <@wm.dtContent>
             <table width="100%" class="display">
                 <thead>
                 <tr>
-                    <th width="100%">Турнир</th>
-                    <th nowrap="nowrap">Начало Игр</th>
-                    <th nowrap="nowrap">Номер Раунда</th>
-                    <th nowrap="nowrap">Номер Группы</th>
-                    <th nowrap="nowrap">Игры</th>
+                    <th width="100%"><@message code="tourney.tourney.label"/></th>
+                    <th><@message code="tourney.language.label"/></th>
+                    <th><@message code="tourney.level.label"/></th>
+                    <th><@message code="tourney.round.label"/></th>
+                    <th><@message code="tourney.group.label"/></th>
+                    <th><@message code="tourney.opponent.label"/></th>
+                    <th><@message code="tourney.game.label"/></th>
+                    <th><@message code="tourney.success.label"/></th>
                 </tr>
                 </thead>
                 <tbody>
                     <#list participated as g>
-                        <#assign tn=g.id.roundId.divisionId.tourneyId.number/>
+                        <#assign groupId=g.id/>
                     <tr>
                         <td>
-                        ${tn}${gameMessageSource.getNumeralEnding(tn, locale)} <@message code="tourney.label"/>
+                            <@tourneyName tourneyId=groupId.roundId.divisionId.tourneyId link=true/>
                         </td>
-                        <td>${gameMessageSource.formatDate(g.startedDate, locale)}</td>
-                        <td>${g.id.getRoundId().round}</td>
-                        <td>${g.id.group}</td>
                         <td>
-                            <#list g.games as game>
-                            ${game},
+                            <@languageName language=groupId.roundId.divisionId.language/>
+                        </td>
+                        <td>
+                            <@sectionName section=groupId.roundId.divisionId.section/>
+                        </td>
+                        <td>
+                            <@roundName roundId=g.id.roundId link=true/>
+                            <#--</div>-->
+                            <#--<div class="sample">-->
+                                <#--(начался ${gameMessageSource.formatDate(g.round.startedDate, locale)})-->
+                            <#--</div>-->
+                        </td>
+                        <td>
+                            <@groupName groupId=g.id link=true/>
+                            <#--</div>-->
+                            <#--<div class="sample">-->
+                                <#--(началась ${gameMessageSource.formatDate(g.startedDate, locale)})-->
+                            <#--</div>-->
+                        </td>
+
+                        <td align="center">
+                            <#list g.players as p>
+                                <#if p != pid>
+                                    <div>
+                                        <@wm.player player=playerManager.getPlayer(p)/>
+                                    </div>
+                                </#if>
+                            </#list>
+                        </td>
+                        <td align="center">
+                            <#list g.players as p>
+                                <#if p != pid>
+                                    <div>
+                                        <#assign gid=g.getGameId(pid, p)/>
+                                        <a href="/playground/scribble/board?b=${gid?string}">Игра
+                                            #${gid?string}</a>
+                                    </div>
+                                </#if>
+                            </#list>
+                        </td>
+                        <td align="center">
+                            <#list g.players as p>
+                                <#if p != pid>
+                                    <div>
+                                    ${g.getScores(p) - g.getScores(pid)}
+                                    </div>
+                                </#if>
                             </#list>
                         </td>
                     </tr>
@@ -102,8 +128,7 @@
             <@wm.dtToolbar align="center">
                 <div class="description ui-state-active">
                     <div class="number">
-                    ${announce.getNumber()}${gameMessageSource.getNumeralEnding(announce.getNumber(), locale)}
-                        <@message code="tourney.label"/>
+                        <@tourneyName tourneyId=announce.id link=false/>
                     </div>
                 </div>
                 <div style="text-align: right; width: 100%">
@@ -138,7 +163,7 @@
                             <div class="opponents ui-layout-table" style="border-spacing: 0">
                                 <#list languages?reverse as l>
                                     <div>
-                                        <div style="font-weight: normal"><@message code="language.${l?lower_case}"/></div>
+                                        <div style="font-weight: normal"><@languageName language=l/></div>
                                         <div style="padding-left: 5px; padding-right: 5px;">-</div>
                                         <div class="subscriptionDetails${l}">${subscriptions.getPlayers(l)?string}</div>
                                     </div>
@@ -174,7 +199,7 @@
                             <div class="${subscriptionStateClass}">
                                         <span id="announceLanguage" class="language">
                                             <#if subscription??>
-                                                <@message code="language.${subscription.language?lower_case}"/>
+                                               <@languageName language=subscription.language/>
                                             <#else>
                                                 <@message code="tourney.section.unspecified"/>
                                             </#if>
@@ -225,7 +250,7 @@
                                 <select id="subscriptionLanguage" name="language" style="width: 170px;">
                                     <#list languages as l>
                                         <option value="${l}" <#if l=subscribedLanguage>selected="selected"</#if>>
-                                            <@message code="language.${l?lower_case}"/>
+                                            <@languageName language=l/>
                                         </option>
                                     </#list>
                                 </select>
@@ -287,6 +312,9 @@
             { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },
+            { "bSortable": true },
+            { "bSortable": false },
+            { "bSortable": false },
             { "bSortable": false }
         ]
     });

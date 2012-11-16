@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-2.13-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-3.01-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="webserver/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -14,7 +14,7 @@
             <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="database-2.13-SNAPSHOT.jar">
+            <element id="archive" name="database-3.01-SNAPSHOT.jar">
               <element id="module-output" name="database" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
@@ -53,13 +53,13 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.2.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="archive" name="personality-2.13-SNAPSHOT.jar">
+            <element id="archive" name="personality-3.01-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
             </element>
-            <element id="archive" name="playground-2.13-SNAPSHOT.jar">
+            <element id="archive" name="playground-3.01-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
-            <element id="archive" name="scribble-2.13-SNAPSHOT.jar">
+            <element id="archive" name="scribble-3.01-SNAPSHOT.jar">
               <element id="module-output" name="scribble" />
             </element>
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" />
@@ -78,7 +78,7 @@
     </artifact>
     <artifact type="war" name="webserver:war">
       <output-path>$PROJECT_DIR$/modules/webserver/target</output-path>
-      <root id="archive" name="webserver-2.13-SNAPSHOT.war">
+      <root id="archive" name="webserver-3.01-SNAPSHOT.war">
         <element id="artifact" artifact-name="webserver:war exploded" />
       </root>
     </artifact>
@@ -137,7 +137,6 @@
       <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <processorPath useClasspath="true" />
-        <module name="application" />
         <module name="database" />
         <module name="personality" />
         <module name="playground" />
@@ -266,28 +265,6 @@
     <splitter-proportions>
       <SplitterProportionsDataImpl />
     </splitter-proportions>
-  </component>
-  <component name="NullableNotNullManager">
-    <option name="myDefaultNullable" value="org.jetbrains.annotations.Nullable" />
-    <option name="myDefaultNotNull" value="org.jetbrains.annotations.NotNull" />
-    <option name="myNullables">
-      <value>
-        <list size="3">
-          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
-          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
-          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
-        </list>
-      </value>
-    </option>
-    <option name="myNotNulls">
-      <value>
-        <list size="3">
-          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
-          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
-          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
-        </list>
-      </value>
-    </option>
   </component>
   <component name="Palette2">
     <group name="Swing">

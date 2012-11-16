@@ -10,9 +10,9 @@
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
         <sourceRoots>
+          <root url="file://$MODULE_DIR$/target/generated-sources/annotations" />
           <root url="file://$MODULE_DIR$/src/main/java" />
           <root url="file://$MODULE_DIR$/src/main/resources" />
-          <root url="file://$MODULE_DIR$/target/generated-sources/annotations" />
         </sourceRoots>
       </configuration>
     </facet>
@@ -22,12 +22,24 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/test-annotations" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target/activation" />
+      <excludeFolder url="file://$MODULE_DIR$/target/cglib" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/database" />
+      <excludeFolder url="file://$MODULE_DIR$/target/hibernate" />
+      <excludeFolder url="file://$MODULE_DIR$/target/hibernate-entitymanager" />
+      <excludeFolder url="file://$MODULE_DIR$/target/javax" />
+      <excludeFolder url="file://$MODULE_DIR$/target/log4j" />
+      <excludeFolder url="file://$MODULE_DIR$/target/org" />
+      <excludeFolder url="file://$MODULE_DIR$/target/quartz-scheduler" />
+      <excludeFolder url="file://$MODULE_DIR$/target/spec" />
+      <excludeFolder url="file://$MODULE_DIR$/target/spring-test" />
+      <excludeFolder url="file://$MODULE_DIR$/target/springframework" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/webserver-2.13-SNAPSHOT" />
     </content>
