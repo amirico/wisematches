@@ -244,25 +244,39 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 				query.setParameter("section", ctx.getSection());
 			}
 		} else if (TourneyRound.Context.class.isAssignableFrom(context.getClass())) {
-			final TourneyRound.Context ctx = TourneyRound.Context.class.cast(context);
-			query = session.createQuery((count ? "select count(*) " : "") +
-					"from HibernateTourneyRound r " +
-					"where r.division.tourney.number=:tourney and " +
-					"r.division.language=:language and r.division.section=:section " +
-					convertStateToQuery(ctx.getStates(), "r", "and"));
-			query.setParameter("tourney", ctx.getDivisionId().getTourneyId().getNumber());
-			query.setParameter("language", ctx.getDivisionId().getLanguage());
-			query.setParameter("section", ctx.getDivisionId().getSection());
+			return createRoundQuery(session, TourneyRound.Context.class.cast(context), count);
 		} else if (TourneyGroup.Context.class.isAssignableFrom(context.getClass())) {
 			return createGroupQuery(session, TourneyGroup.Context.class.cast(context), count);
 		}
 		return query;
 	}
 
+	private Query createRoundQuery(Session session, TourneyRound.Context context, boolean count) {
+		if (context.getDivisionId() != null) {
+			Query query = session.createQuery((count ? "select count(*) " : "") +
+					"from HibernateTourneyRound r " +
+					"where r.division.tourney.number=:tourney and " +
+					"r.division.language=:language and r.division.section=:section " +
+					convertStateToQuery(context.getStates(), "r", "and"));
+			query.setParameter("tourney", context.getDivisionId().getTourneyId().getNumber());
+			query.setParameter("language", context.getDivisionId().getLanguage());
+			query.setParameter("section", context.getDivisionId().getSection());
+			return query;
+		} else if (context.getTourneyId() != null) {
+			Query query = session.createQuery((count ? "select count(*) " : "") +
+					"from HibernateTourneyRound r " +
+					"where r.division.tourney.number=:tourney " +
+					convertStateToQuery(context.getStates(), "r", "and"));
+			query.setParameter("tourney", context.getTourneyId().getNumber());
+			return query;
+		} else {
+			throw new IllegalArgumentException("Invalid group context: " + context);
+		}
+	}
+
 	private Query createGroupQuery(Session session, TourneyGroup.Context context, boolean count) {
-		Query query;
 		if (context.getRoundId() != null) {
-			query = session.createQuery((count ? "select count(*) " : "") +
+			Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyGroup g " +
 					"where g.round.division.tourney.number=:tourney and " +
 					"g.round.division.language=:language and g.round.division.section=:section " +
@@ -272,16 +286,17 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 			query.setParameter("language", context.getRoundId().getDivisionId().getLanguage());
 			query.setParameter("section", context.getRoundId().getDivisionId().getSection());
 			query.setInteger("round", context.getRoundId().getRound());
+			return query;
 		} else if (context.getPersonality() != null) {
-			query = session.createQuery((count ? "select count(*) " : "") +
+			Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyGroup g " +
 					"where (g.player1=:pid or g.player2=:pid or g.player3=:pid or g.player4=:pid) " +
 					convertStateToQuery(context.getStates(), "g", "and"));
 			query.setLong("pid", context.getPersonality().getId());
+			return query;
 		} else {
 			throw new IllegalArgumentException("Invalid group context: " + context);
 		}
-		return query;
 	}
 
 	@Override

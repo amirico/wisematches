@@ -260,8 +260,8 @@ public class HibernateRegularTourneyManagerTest {
 		assertNull(division.getFinishedDate());
 		assertNotNull(division.getStartedDate());
 
-		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyRound.Context(division.getId())));
-		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, new TourneyRound.Context(division.getId()), null, null, null);
+		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyRound.Context(division.getId(), null)));
+		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, new TourneyRound.Context(division.getId(), null), null, null, null);
 		assertEquals(1, rounds.size());
 
 		final TourneyRound round = rounds.iterator().next();
