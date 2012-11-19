@@ -131,8 +131,8 @@ public class HibernateMessageManager implements MessageManager {
 		final Session session = sessionFactory.getCurrentSession();
 		final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
 				"FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
-				"WHERE m.recipient=? and (a.last_messages_check is null or m.created>a.last_messages_check)");
-		sqlQuery.setLong(0, person.getId());
+				"WHERE m.recipient=:pid and (a.last_messages_check is null or m.created>a.last_messages_check)");
+		sqlQuery.setLong("pid", person.getId());
 		return ((Number) sqlQuery.uniqueResult()).intValue();
 	}
 

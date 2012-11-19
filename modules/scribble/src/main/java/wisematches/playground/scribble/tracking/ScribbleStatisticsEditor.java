@@ -24,13 +24,13 @@ import javax.persistence.*;
 @NamedQueries({
 		@NamedQuery(name = "player.rating",
 				query = "SELECT r.rating " +
-						"FROM wisematches.playground.scribble.tracking.ScribbleStatisticsEditor r where r.playerId=?",
+						"FROM wisematches.playground.scribble.tracking.ScribbleStatisticsEditor r where r.playerId=:pid",
 				hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
 		),
 		@NamedQuery(name = "player.position",
 				query = "SELECT count( a.id ), a.id " +
 						"FROM wisematches.playground.scribble.tracking.ScribbleStatisticsEditor a, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor b " +
-						"WHERE a.id = ? AND (b.rating > a.rating OR (b.rating = a.rating AND b.id <= a.id)) GROUP BY a.id",
+						"WHERE a.id = :pid AND (b.rating > a.rating OR (b.rating = a.rating AND b.id <= a.id)) GROUP BY a.id",
 				hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}
 		)
 })
