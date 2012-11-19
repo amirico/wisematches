@@ -474,8 +474,10 @@
     </option>
   </component>
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneySubscription.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/manager/MySQLNotificationManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database_data.sql" dialect="MySQL" />
   </component>

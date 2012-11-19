@@ -40,7 +40,7 @@ public class HibernatePlayerTrackingCenterDao implements PlayerTrackingCenterDao
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public short getRating(final Personality person) {
 		final Session session = sessionFactory.getCurrentSession();
-		return ((Number) session.getNamedQuery("player.rating").setLong(0, person.getId()).uniqueResult()).shortValue();
+		return ((Number) session.getNamedQuery("player.rating").setLong("pid", person.getId()).uniqueResult()).shortValue();
 	}
 
 	@Override
@@ -48,10 +48,10 @@ public class HibernatePlayerTrackingCenterDao implements PlayerTrackingCenterDao
 	public RatingCurve getRatingChangesCurve(final Personality player, final int resolution, final Date startDate, final Date endDate) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query namedQuery = session.getNamedQuery("rating.curve");
-		namedQuery.setParameter("pid", player.getId());
+		namedQuery.setLong("pid", player.getId());
 		namedQuery.setParameter("resolution", resolution);
-		namedQuery.setParameter("start", startDate);
-		namedQuery.setParameter("end", endDate);
+		namedQuery.setDate("start", startDate);
+		namedQuery.setDate("end", endDate);
 		return new RatingCurve(resolution, startDate, endDate, namedQuery.list());
 	}
 
