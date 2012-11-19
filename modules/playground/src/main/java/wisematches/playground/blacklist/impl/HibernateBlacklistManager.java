@@ -93,9 +93,9 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 		@SuppressWarnings("unchecked")
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select count(*) from wisematches.playground.blacklist.BlacklistRecord where person=? and whom=?");
-		query.setParameter(0, person.getId());
-		query.setParameter(1, whom.getId());
+		final Query query = session.createQuery("select count(*) from wisematches.playground.blacklist.BlacklistRecord where person=:pid and whom=:whom");
+		query.setParameter("pid", person.getId());
+		query.setParameter("whom", whom.getId());
 		return ((Long) query.uniqueResult()) == 1;
 	}
 
@@ -115,8 +115,8 @@ public class HibernateBlacklistManager implements BlacklistManager {
 			throw new NullPointerException("Person can't be null");
 		}
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("from wisematches.playground.blacklist.BlacklistRecord where person=?");
-		query.setParameter(0, person.getId());
+		final Query query = session.createQuery("from wisematches.playground.blacklist.BlacklistRecord where person=:pid");
+		query.setParameter("pid", person.getId());
 		return query.list();
 	}
 

@@ -458,9 +458,9 @@ public class HibernateRegularTourneyManagerTest {
 
 	private void createStats(long pid, int rating) {
 		final Session session = sessionFactory.getCurrentSession();
-		final SQLQuery sqlQuery = session.createSQLQuery("insert into scribble_statistic(playerId, rating) VALUES(?, ?)");
-		sqlQuery.setParameter(0, pid);
-		sqlQuery.setParameter(1, rating);
+		final SQLQuery sqlQuery = session.createSQLQuery("insert into scribble_statistic(playerId, rating) VALUES(:pid, :rating)");
+		sqlQuery.setLong("pid", pid);
+		sqlQuery.setLong("rating", rating);
 		sqlQuery.executeUpdate();
 	}
 

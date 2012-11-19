@@ -126,7 +126,7 @@ public class TourneyController extends WisematchesController {
 			}
 			model.addAttribute("divisionsTree", divisionsTree);
 
-			return "/content/playground/tourney/view/tourney";
+			return "/content/playground/tourney/divisions";
 		}
 		return null;
 	}

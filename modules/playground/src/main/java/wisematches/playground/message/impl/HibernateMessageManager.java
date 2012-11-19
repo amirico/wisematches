@@ -144,13 +144,13 @@ public class HibernateMessageManager implements MessageManager {
 		if (direction == MessageDirection.SENT) {
 			query = session.createQuery("select count(*) " +
 					"from wisematches.playground.message.impl.HibernateMessage " +
-					"where sender = ? and creationDate>= CURDATE()");
+					"where sender = :pid and creationDate>= CURDATE()");
 		} else {
 			query = session.createQuery("select count(*) " +
 					"from wisematches.playground.message.impl.HibernateMessage " +
-					"where recipient = ? and creationDate>= CURDATE()");
+					"where recipient = :pid and creationDate>= CURDATE()");
 		}
-		query.setParameter(0, person.getId());
+		query.setParameter("pid", person.getId());
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
@@ -166,14 +166,14 @@ public class HibernateMessageManager implements MessageManager {
 		final Query query;
 		if (direction == MessageDirection.SENT) {
 			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
-					"sender = ? and state in (0, ?) order by creationDate desc");
-			query.setParameter(0, person.getId());
-			query.setParameter(1, MessageDirection.RECEIVED.mask());
+					"sender = :pid and state in (0, :state) order by creationDate desc");
+			query.setParameter("pid", person.getId());
+			query.setParameter("state", MessageDirection.RECEIVED.mask());
 		} else {
 			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
-					"recipient = ? and state in (0,?) order by creationDate desc");
-			query.setParameter(0, person.getId());
-			query.setParameter(1, MessageDirection.SENT.mask());
+					"recipient = :pid and state in (0,:state) order by creationDate desc");
+			query.setParameter("pid", person.getId());
+			query.setParameter("state", MessageDirection.SENT.mask());
 		}
 		return query.list();
 	}

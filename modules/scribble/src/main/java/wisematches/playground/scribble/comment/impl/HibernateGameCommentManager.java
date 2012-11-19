@@ -52,8 +52,8 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	@Override
 	public int getCommentsCount(GameBoard board, Personality personality) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select count(*) from wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=?");
-		query.setParameter(0, board.getBoardId());
+		final Query query = session.createQuery("select count(*) from wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=:board");
+		query.setLong("board", board.getBoardId());
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
