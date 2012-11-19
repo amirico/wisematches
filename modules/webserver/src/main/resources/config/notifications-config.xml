@@ -118,6 +118,8 @@
                       c:template="playground.challenge.expiring"/>
 
                 <bean parent="notification" c:code="playground.message.received" c:enabled="true"/>
+
+                <bean parent="notification" c:code="playground.tourney.announced" c:enabled="true"/>
             </list>
         </property>
     </bean>
