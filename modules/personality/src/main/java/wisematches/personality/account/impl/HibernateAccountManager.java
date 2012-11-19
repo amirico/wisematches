@@ -25,7 +25,7 @@ public class HibernateAccountManager implements AccountManager {
 	private static final String CHECK_ACCOUNT_AVAILABILITY = "" +
 			"select account.nickname, account.email " +
 			"from wisematches.personality.account.impl.HibernateAccountImpl as account " +
-			"where account.nickname = ? or account.email = ?";
+			"where account.nickname = :nick or account.email = :email";
 
 	private final Lock lock = new ReentrantLock();
 
@@ -63,8 +63,8 @@ public class HibernateAccountManager implements AccountManager {
 		lock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl user where user.email=?");
-			query.setParameter(0, email);
+			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl user where user.email=:email");
+			query.setParameter("email", email);
 			final List l = query.list();
 			if (l.size() != 1) {
 				return null;
@@ -81,8 +81,8 @@ public class HibernateAccountManager implements AccountManager {
 		lock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl as user where user.nickname=?");
-			query.setParameter(0, username);
+			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl as user where user.nickname=:nick");
+			query.setParameter("nick", username);
 			final List l = query.list();
 			if (l.size() != 1) {
 				return null;
@@ -168,8 +168,8 @@ public class HibernateAccountManager implements AccountManager {
 		try {
 			final Session session = sessionFactory.getCurrentSession();
 			final Query query = session.createQuery(CHECK_ACCOUNT_AVAILABILITY);
-			query.setParameter(0, username);
-			query.setParameter(1, email);
+			query.setParameter("nick", username);
+			query.setParameter("email", email);
 
 			final long[] res = new long[2];
 			final List list = query.list();

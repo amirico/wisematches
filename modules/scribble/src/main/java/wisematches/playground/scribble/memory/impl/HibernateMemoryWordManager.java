@@ -58,10 +58,10 @@ public class HibernateMemoryWordManager implements MemoryWordManager {
 
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ? and memory.wordId.number = ?");
-		query.setParameter(0, board.getBoardId());
-		query.setParameter(1, hand.getPlayerId());
-		query.setParameter(2, word.hashCode());
+				"where memory.wordId.boardId = :board and memory.wordId.playerId = :pid and memory.wordId.number = :word");
+		query.setLong("board", board.getBoardId());
+		query.setLong("pid", hand.getPlayerId());
+		query.setInteger("word", word.hashCode());
 		query.executeUpdate();
 	}
 
@@ -76,9 +76,9 @@ public class HibernateMemoryWordManager implements MemoryWordManager {
 
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?");
-		query.setParameter(0, board.getBoardId());
-		query.setParameter(1, hand.getPlayerId());
+				"where memory.wordId.boardId = :board and memory.wordId.playerId = :pid");
+		query.setLong("board", board.getBoardId());
+		query.setLong("pid", hand.getPlayerId());
 		query.executeUpdate();
 	}
 
@@ -94,7 +94,7 @@ public class HibernateMemoryWordManager implements MemoryWordManager {
 
 		final Session session = sessionFactory.getCurrentSession();
 		session.createQuery("delete from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ?").setParameter(0, board.getBoardId()).executeUpdate();
+				"where memory.wordId.boardId = :board").setLong("board", board.getBoardId()).executeUpdate();
 	}
 
 	@Override
@@ -103,9 +103,9 @@ public class HibernateMemoryWordManager implements MemoryWordManager {
 
 		final Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select count(*) from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?");
-		query.setParameter(0, board.getBoardId());
-		query.setParameter(1, hand.getPlayerId());
+				"where memory.wordId.boardId = :board and memory.wordId.playerId = :pid");
+		query.setLong("board", board.getBoardId());
+		query.setLong("pid", hand.getPlayerId());
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
@@ -116,9 +116,9 @@ public class HibernateMemoryWordManager implements MemoryWordManager {
 
 		final Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select memory.word from wisematches.playground.scribble.memory.impl.MemoryWord memory " +
-				"where memory.wordId.boardId = ? and memory.wordId.playerId = ?");
-		query.setParameter(0, board.getBoardId());
-		query.setParameter(1, hand.getPlayerId());
+				"where memory.wordId.boardId = :board and memory.wordId.playerId = :pid");
+		query.setLong("board", board.getBoardId());
+		query.setLong("pid", hand.getPlayerId());
 		final List list = query.list();
 		if (list.size() == 0) {
 			return Collections.emptyList();
