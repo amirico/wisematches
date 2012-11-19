@@ -505,10 +505,6 @@
     font-weight: bold
 }
 
-#subscriptionView .description div {
-    display: block;
-}
-
 #subscriptionView .description .number {
     font-size: 160%;
 }
@@ -538,11 +534,15 @@
     font-weight: normal !important;
 }
 
-#subscriptionView table, #subscriptionDialog table, #subscriptionDetails table {
+#subscriptionView .data-table-toolbar div, #subscriptions .data-table-toolbar div {
+    display: block;
+}
+
+#subscriptionView table, #subscriptionDialog table, #subscriptionDetails table, #subscriptions table {
     border-spacing: 5px;
 }
 
-#subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td, #participated table td {
+#subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td, #participated table td, #subscriptions table td {
     white-space: nowrap;
     vertical-align: top;
 }

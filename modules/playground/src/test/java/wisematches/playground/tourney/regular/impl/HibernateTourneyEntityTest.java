@@ -93,7 +93,7 @@ public class HibernateTourneyEntityTest {
 	public void testTourneySubscription() {
 		final Session session = sessionFactory.getCurrentSession();
 
-		HibernateTourneySubscription s = new HibernateTourneySubscription(1, 2, 3, Language.EN, TourneySection.GRANDMASTER);
+		HibernateTourneySubscription s = new HibernateTourneySubscription(2, 1, 3, Language.EN, TourneySection.GRANDMASTER);
 		session.save(s);
 
 		final Criteria c1 = session.createCriteria(HibernateTourneySubscription.class);

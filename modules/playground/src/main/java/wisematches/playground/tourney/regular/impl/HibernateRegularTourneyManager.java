@@ -95,7 +95,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 				throw new TourneySubscriptionException("Already subscribed");
 			}
 
-			final HibernateTourneySubscription s = new HibernateTourneySubscription(player.getId(), tourney.getNumber(), 1, language, section);
+			final HibernateTourneySubscription s = new HibernateTourneySubscription(tourney.getNumber(), player.getId(), 1, language, section);
 			sessionFactory.getCurrentSession().save(s);
 
 			for (TourneySubscriptionListener subscriptionListener : subscriptionListeners) {
@@ -143,7 +143,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 		lock.lock();
 		try {
 			return (TourneySubscription) sessionFactory.getCurrentSession().get(HibernateTourneySubscription.class,
-					new HibernateTourneySubscription.Id(player.getId(), tourney.getNumber(), 1));
+					new HibernateTourneySubscription.Id(tourney.getNumber(), player.getId(), 1));
 		} finally {
 			lock.unlock();
 		}
@@ -225,14 +225,20 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
 	private Query createEntityQuery(TourneyEntity.Context<?, ?> context, boolean count) {
 		final Session session = sessionFactory.getCurrentSession();
+		final Class<? extends TourneyEntity.Context> contextType = context.getClass();
 
-		Query query = null;
-		if (Tourney.Context.class.isAssignableFrom(context.getClass())) {
+		if (TourneySubscription.Context.class.isAssignableFrom(contextType)) {
+			return createSubscriptionQuery(session, TourneySubscription.Context.class.cast(context), count);
+		}
+
+		if (Tourney.Context.class.isAssignableFrom(contextType)) {
 			final Tourney.Context ctx = Tourney.Context.class.cast(context);
-			query = session.createQuery((count ? "select count(*) " : "") + "from HibernateTourney t " + convertStateToQuery(ctx.getStates(), "t", "where"));
-		} else if (TourneyDivision.Context.class.isAssignableFrom(context.getClass())) {
+			return session.createQuery((count ? "select count(*) " : "") + "from HibernateTourney t " + convertStateToQuery(ctx.getStates(), "t", "where"));
+		}
+
+		if (TourneyDivision.Context.class.isAssignableFrom(contextType)) {
 			final TourneyDivision.Context ctx = TourneyDivision.Context.class.cast(context);
-			query = session.createQuery((count ? "select count(*) " : "") +
+			final Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyDivision d " +
 					"where d.tourney.number=:tourney " +
 					(ctx.getLanguage() != null ? " and d.language=:language " : "") +
@@ -245,10 +251,39 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 			if (ctx.getSection() != null) {
 				query.setParameter("section", ctx.getSection());
 			}
-		} else if (TourneyRound.Context.class.isAssignableFrom(context.getClass())) {
+			return query;
+		}
+
+		if (TourneyRound.Context.class.isAssignableFrom(contextType)) {
 			return createRoundQuery(session, TourneyRound.Context.class.cast(context), count);
-		} else if (TourneyGroup.Context.class.isAssignableFrom(context.getClass())) {
+		}
+
+		if (TourneyGroup.Context.class.isAssignableFrom(contextType)) {
 			return createGroupQuery(session, TourneyGroup.Context.class.cast(context), count);
+		}
+		throw new IllegalArgumentException("Unsupported context type: " + contextType);
+	}
+
+	private Query createSubscriptionQuery(Session session, TourneySubscription.Context ctx, boolean count) {
+		String q = (count ? "select count(*) " : "") + "from HibernateTourneySubscription s where ";
+		if (ctx.getTourney() != 0) {
+			q += "s.id.tourney=:tourney ";
+		}
+
+		if (ctx.getLanguage() != null) {
+			if (ctx.getTourney() != 0) {
+				q += " and ";
+			}
+			q += "s.language=:language";
+		}
+
+		final Query query = session.createQuery(q);
+		final Set<String> pars = new HashSet<String>(Arrays.asList(query.getNamedParameters()));
+		if (pars.contains("tourney")) {
+			query.setLong("tourney", ctx.getTourney());
+		}
+		if (pars.contains("language")) {
+			query.setParameter("language", ctx.getLanguage());
 		}
 		return query;
 	}
