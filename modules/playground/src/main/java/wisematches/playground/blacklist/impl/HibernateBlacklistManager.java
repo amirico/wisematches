@@ -94,8 +94,8 @@ public class HibernateBlacklistManager implements BlacklistManager {
 		@SuppressWarnings("unchecked")
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("select count(*) from wisematches.playground.blacklist.BlacklistRecord where person=:pid and whom=:whom");
-		query.setParameter("pid", person.getId());
-		query.setParameter("whom", whom.getId());
+		query.setLong("pid", person.getId());
+		query.setLong("whom", whom.getId());
 		return ((Long) query.uniqueResult()) == 1;
 	}
 
@@ -116,7 +116,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 		}
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("from wisematches.playground.blacklist.BlacklistRecord where person=:pid");
-		query.setParameter("pid", person.getId());
+		query.setLong("pid", person.getId());
 		return query.list();
 	}
 

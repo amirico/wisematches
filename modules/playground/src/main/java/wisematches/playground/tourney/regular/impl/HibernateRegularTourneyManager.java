@@ -159,33 +159,35 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 			if (Tourney.Id.class.isAssignableFrom(id.getClass())) {
 				final Tourney.Id id1 = Tourney.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourney t " +
-						"where t.number=?").setInteger(0, id1.getNumber()).uniqueResult();
+						"where t.number=:tourney").setInteger("tourney", id1.getNumber()).uniqueResult();
 			} else if (TourneyDivision.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyDivision.Id id1 = TourneyDivision.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyDivision d " +
-						"where d.tourney.number=? and d.section = ? and d.language = ?")
-						.setInteger(0, id1.getTourneyId().getNumber())
-						.setParameter(1, id1.getSection())
-						.setParameter(2, id1.getLanguage())
+						"where d.tourney.number=:tourney and d.section = :section and d.language = :language")
+						.setInteger("tourney", id1.getTourneyId().getNumber())
+						.setParameter("section", id1.getSection())
+						.setParameter("language", id1.getLanguage())
 						.uniqueResult();
 			} else if (TourneyRound.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyRound.Id id1 = TourneyRound.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyRound r " +
-						"where r.division.tourney.number=? and r.division.section = ? and r.division.language = ? and r.round=?")
-						.setInteger(0, id1.getDivisionId().getTourneyId().getNumber())
-						.setParameter(1, id1.getDivisionId().getSection())
-						.setParameter(2, id1.getDivisionId().getLanguage())
-						.setInteger(3, id1.getRound())
+						"where r.division.tourney.number=:tourney and r.division.section = :section " +
+						"and r.division.language = :language and r.round=:round")
+						.setInteger("tourney", id1.getDivisionId().getTourneyId().getNumber())
+						.setParameter("section", id1.getDivisionId().getSection())
+						.setParameter("language", id1.getDivisionId().getLanguage())
+						.setInteger("round", id1.getRound())
 						.uniqueResult();
 			} else if (TourneyGroup.Id.class.isAssignableFrom(id.getClass())) {
 				final TourneyGroup.Id id1 = TourneyGroup.Id.class.cast(id);
 				return (T) session.createQuery("from HibernateTourneyGroup g " +
-						"where g.round.division.tourney.number=? and g.round.division.section = ? and g.round.division.language = ? and g.round.round=? and g.group = ?")
-						.setInteger(0, id1.getRoundId().getDivisionId().getTourneyId().getNumber())
-						.setParameter(1, id1.getRoundId().getDivisionId().getSection())
-						.setParameter(2, id1.getRoundId().getDivisionId().getLanguage())
-						.setInteger(3, id1.getRoundId().getRound())
-						.setInteger(4, id1.getGroup())
+						"where g.round.division.tourney.number=:tourney and g.round.division.section = :section " +
+						"and g.round.division.language = :language and g.round.round=:round and g.group = :group")
+						.setInteger("tourney", id1.getRoundId().getDivisionId().getTourneyId().getNumber())
+						.setParameter("section", id1.getRoundId().getDivisionId().getSection())
+						.setParameter("language", id1.getRoundId().getDivisionId().getLanguage())
+						.setInteger("round", id1.getRoundId().getRound())
+						.setInteger("group", id1.getGroup())
 						.uniqueResult();
 			}
 			throw new IllegalArgumentException("Unsupported entity type: " + id);
@@ -236,7 +238,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 					(ctx.getLanguage() != null ? " and d.language=:language " : "") +
 					(ctx.getSection() != null ? " and d.section=:section " : "") +
 					convertStateToQuery(ctx.getStates(), "d", "and"));
-			query.setParameter("tourney", ctx.getTourneyId().getNumber());
+			query.setInteger("tourney", ctx.getTourneyId().getNumber());
 			if (ctx.getLanguage() != null) {
 				query.setParameter("language", ctx.getLanguage());
 			}

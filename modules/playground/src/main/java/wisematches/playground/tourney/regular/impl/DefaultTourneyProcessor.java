@@ -160,8 +160,8 @@ class DefaultTourneyProcessor {
 
 	DefaultTourneySubscriptions getTourneySubscriptions(Session session, int tourney, int round) {
 		final Query query = session.createQuery("select language, section, count(id.player) from HibernateTourneySubscription where id.tourney=:tid and id.round=:rid group by language, section");
-		query.setParameter("tid", tourney);
-		query.setParameter("rid", round);
+		query.setInteger("tid", tourney);
+		query.setInteger("rid", round);
 		final DefaultTourneySubscriptions res = new DefaultTourneySubscriptions(tourney);
 		final List list = query.list();
 		for (Object o : list) {
@@ -209,7 +209,7 @@ class DefaultTourneyProcessor {
 							"where id.tourney=:tourney and id.round=1 and language=:language and section=:section");
 					query.setParameter("section", section);
 					query.setParameter("language", language);
-					query.setParameter("tourney", subscriptions.getTourney());
+					query.setInteger("tourney", subscriptions.getTourney());
 
 					for (Object o : query.list()) {
 						final Number n = (Number) o;
@@ -237,7 +237,7 @@ class DefaultTourneyProcessor {
 								"where id.tourney=:tourney and id.round=1 and language=:language and id.player in (:players)");
 					}
 					query.setParameter("language", language);
-					query.setParameter("tourney", subscriptions.getTourney());
+					query.setInteger("tourney", subscriptions.getTourney());
 					query.setParameterList("players", invalidPlayers, LongType.INSTANCE);
 
 					final int count = query.executeUpdate();
@@ -266,8 +266,8 @@ class DefaultTourneyProcessor {
 
 	Collection<Long> getSubscribedPlayers(Session session, HibernateTourneyDivision division, int round) {
 		final Query subscriptionQuery = session.createQuery("select s.id.player from HibernateTourneySubscription s where s.id.round=:round and s.id.tourney=:tourney and s.language=:language and s.section = :section");
-		subscriptionQuery.setParameter("round", round);
-		subscriptionQuery.setParameter("tourney", division.getTourney().getNumber());
+		subscriptionQuery.setInteger("round", round);
+		subscriptionQuery.setInteger("tourney", division.getTourney().getNumber());
 		subscriptionQuery.setParameter("section", division.getSection());
 		subscriptionQuery.setParameter("language", division.getLanguage());
 
@@ -283,7 +283,7 @@ class DefaultTourneyProcessor {
 		final Query query = session.createQuery("from HibernateTourneyGroup g where " +
 				"g.game1=:game or g.game2 = :game or g.game3 = :game or " +
 				"g.game4 = :game or g.game5 = :game or g.game6 = :game");
-		query.setParameter("game", board.getBoardId());
+		query.setLong("game", board.getBoardId());
 		return (HibernateTourneyGroup) query.uniqueResult();
 	}
 

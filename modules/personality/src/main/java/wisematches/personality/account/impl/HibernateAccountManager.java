@@ -64,7 +64,7 @@ public class HibernateAccountManager implements AccountManager {
 		try {
 			final Session session = sessionFactory.getCurrentSession();
 			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl user where user.email=:email");
-			query.setParameter("email", email);
+			query.setString("email", email);
 			final List l = query.list();
 			if (l.size() != 1) {
 				return null;
@@ -82,7 +82,7 @@ public class HibernateAccountManager implements AccountManager {
 		try {
 			final Session session = sessionFactory.getCurrentSession();
 			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl as user where user.nickname=:nick");
-			query.setParameter("nick", username);
+			query.setString("nick", username);
 			final List l = query.list();
 			if (l.size() != 1) {
 				return null;
@@ -168,8 +168,8 @@ public class HibernateAccountManager implements AccountManager {
 		try {
 			final Session session = sessionFactory.getCurrentSession();
 			final Query query = session.createQuery(CHECK_ACCOUNT_AVAILABILITY);
-			query.setParameter("nick", username);
-			query.setParameter("email", email);
+			query.setString("nick", username);
+			query.setString("email", email);
 
 			final long[] res = new long[2];
 			final List list = query.list();
