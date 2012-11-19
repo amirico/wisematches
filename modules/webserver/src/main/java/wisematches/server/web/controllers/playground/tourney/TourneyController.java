@@ -46,28 +46,12 @@ public class TourneyController extends WisematchesController {
 	public String showDashboard(Model model) {
 		final Personality personality = getPersonality();
 
-		final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
+
 		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(personality, EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
-
-		model.addAttribute("languages", Language.values());
-		model.addAttribute("sections", TourneySection.values());
-		model.addAttribute("statistics", statisticManager.getPlayerStatistic(personality));
-
-		if (announces.size() > 1) {
-			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
-		}
-
-		Tourney announce = null;
-		if (announces.size() == 1) {
-			announce = announces.get(0);
-		}
-		model.addAttribute("announce", announce);
 		model.addAttribute("participated", participated);
 
-		if (announce != null) {
-			model.addAttribute("subscription", tourneyManager.getSubscription(announce, personality));
-			model.addAttribute("subscriptions", tourneyManager.getSubscriptions(announce));
-		}
+		setupAnnounce(model);
+
 		return "/content/playground/tourney/dashboard";
 	}
 
@@ -84,7 +68,26 @@ public class TourneyController extends WisematchesController {
 	}
 
 	@RequestMapping("subscriptions")
-	public String showSubscriptions(Model model) {
+	public String showSubscriptions(@RequestParam(value = "t", required = false) int t,
+									@RequestParam(value = "l", required = false) String l,
+									Model model) throws UnknownEntityException {
+		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(t));
+		if (tourney == null) {
+			throw new UnknownEntityException(t, "tourney");
+		}
+
+		final Language language = Language.byCode(l);
+		if (language == null) {
+			throw new UnknownEntityException(l, "language");
+		}
+		final TourneySubscription.Context context = new TourneySubscription.Context(t, language);
+
+		final List<TourneySubscription> tourneySubscriptions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+		model.addAttribute("tourney", tourney);
+		model.addAttribute("tourneyLanguage", language);
+		model.addAttribute("tourneySubscriptions", tourneySubscriptions);
+
+		setupAnnounce(model);
 
 		return "/content/playground/tourney/subscriptions";
 	}
@@ -182,6 +185,27 @@ public class TourneyController extends WisematchesController {
 			}
 		}
 		return ServiceResponse.success("", "subscriptions", res);
+	}
+
+	private void setupAnnounce(Model model) {
+		final Personality personality = getPersonality();
+
+		final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
+		Tourney announce = null;
+		if (announces.size() > 1) {
+			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
+		} else if (announces.size() == 1) {
+			announce = announces.get(0);
+		}
+		if (announce != null) {
+			model.addAttribute("announce", announce);
+			model.addAttribute("sections", TourneySection.values());
+			model.addAttribute("languages", Language.values());
+			model.addAttribute("statistics", statisticManager.getPlayerStatistic(personality));
+
+			model.addAttribute("subscription", tourneyManager.getSubscription(announce, personality));
+			model.addAttribute("subscriptions", tourneyManager.getSubscriptions(announce));
+		}
 	}
 
 	@Autowired

@@ -6,6 +6,7 @@ import wisematches.playground.tourney.regular.TourneySubscription;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -37,8 +38,8 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	protected HibernateTourneySubscription() {
 	}
 
-	public HibernateTourneySubscription(long player, int tourney, int round, Language language, TourneySection section) {
-		this.id = new Id(player, tourney, round);
+	public HibernateTourneySubscription(int tourney, long player, int round, Language language, TourneySection section) {
+		this.id = new Id(tourney, player, round);
 		this.language = language;
 		this.section = section;
 	}
@@ -54,6 +55,11 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	}
 
 	@Override
+	public long getRound() {
+		return id.round;
+	}
+
+	@Override
 	public Language getLanguage() {
 		return language;
 	}
@@ -61,6 +67,26 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	@Override
 	public TourneySection getSection() {
 		return section;
+	}
+
+	@Override
+	public TourneySubscription.Id getId() {
+		return new TourneySubscription.Id(id.tourney, id.player, id.round);
+	}
+
+	@Override
+	public State getState() {
+		return State.SCHEDULED;
+	}
+
+	@Override
+	public Date getStartedDate() {
+		return null;
+	}
+
+	@Override
+	public Date getFinishedDate() {
+		return null;
 	}
 
 	@Embeddable
@@ -77,7 +103,7 @@ public class HibernateTourneySubscription implements TourneySubscription {
 		public Id() {
 		}
 
-		public Id(long player, int tourney, int round) {
+		public Id(int tourney, long player, int round) {
 			this.tourney = tourney;
 			this.round = round;
 			this.player = player;

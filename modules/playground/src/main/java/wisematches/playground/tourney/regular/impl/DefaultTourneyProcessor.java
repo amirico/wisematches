@@ -132,7 +132,7 @@ class DefaultTourneyProcessor {
 						final TourneyDivision.Id divisionId = roundId.getDivisionId();
 						final Tourney.Id tourneyId = divisionId.getTourneyId();
 						final int number = tourneyId.getNumber();
-						final HibernateTourneySubscription s = new HibernateTourneySubscription(playerId, number, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
+						final HibernateTourneySubscription s = new HibernateTourneySubscription(number, playerId, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
 						session.save(s);
 
 						for (TourneySubscriptionListener listener : subscriptionListeners) {

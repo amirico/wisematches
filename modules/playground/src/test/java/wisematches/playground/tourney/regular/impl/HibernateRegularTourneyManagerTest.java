@@ -119,17 +119,25 @@ public class HibernateRegularTourneyManagerTest {
 		l.unsubscribed(isA(TourneySubscription.class), isNull(String.class));
 		replay(l);
 
+		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+
 		try {
 			tourneyManager.subscribe(null, Personality.person(101), Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
 		} catch (TourneySubscriptionException ignore) {
+			assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
 		}
 
 		tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.ADVANCED);
+		assertEquals(1, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.EN)));
+		assertEquals(1, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.RU)));
+
 		try {
 			tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
 		} catch (TourneySubscriptionException ignore) {
+			assertEquals(1, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
 		}
 
 		tourneyManager.subscribe(tourney, Personality.person(102), Language.RU, TourneySection.ADVANCED);
@@ -148,6 +156,10 @@ public class HibernateRegularTourneyManagerTest {
 		assertEquals(Language.RU, subscription.getLanguage());
 		assertEquals(TourneySection.ADVANCED, subscription.getSection());
 
+		assertEquals(3, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.EN)));
+		assertEquals(3, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.RU)));
+
 		tourneyManager.unsubscribe(tourney, Personality.person(102), Language.RU, TourneySection.GRANDMASTER);
 		subscriptions = tourneyManager.getSubscriptions(tourney);
 		assertEquals(3, subscriptions.getPlayers(Language.RU));
@@ -159,6 +171,10 @@ public class HibernateRegularTourneyManagerTest {
 		assertEquals(2, subscriptions.getPlayers(Language.RU));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
+
+		assertEquals(2, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.EN)));
+		assertEquals(2, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.RU)));
 
 		tourneyManager.removeTourneySubscriptionListener(l);
 
