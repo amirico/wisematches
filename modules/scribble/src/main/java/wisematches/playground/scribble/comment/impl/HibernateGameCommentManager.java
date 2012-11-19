@@ -141,8 +141,8 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	@Override
 	public void clearComments(final GameBoard board) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("delete wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=?");
-		query.setLong(0, board.getBoardId());
+		final Query query = session.createQuery("delete wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=:board");
+		query.setLong("board", board.getBoardId());
 		query.executeUpdate();
 	}
 

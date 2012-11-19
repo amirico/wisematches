@@ -80,16 +80,16 @@ public class HibernateAccountLockManager implements AccountLockManager {
 		final Query query = session.createQuery("" +
 				"select lock.unlockDate " +
 				"from wisematches.personality.account.impl.HibernateAccountLockInfo lock " +
-				"where lock.playerId = ?");
-		query.setLong(0, player.getId());
+				"where lock.playerId = :pid");
+		query.setLong("pid", player.getId());
 		final Date unlockDate = (Date) query.uniqueResult();
 
 		if (unlockDate != null) {
 			final boolean res = System.currentTimeMillis() < unlockDate.getTime();
 			if (!res) {
 				final Query q = session.createQuery("delete from wisematches.personality.account.impl.HibernateAccountLockInfo " +
-						"lock where lock.playerId = ?");
-				q.setLong(0, player.getId());
+						"lock where lock.playerId = :pid");
+				q.setLong("pid", player.getId());
 				q.executeUpdate();
 
 				for (AccountLockListener accountLockListener : accountLockListeners) {
@@ -168,8 +168,8 @@ public class HibernateAccountLockManager implements AccountLockManager {
 	public void unlockNickname(final String nickname) {
 		final Session session = sessionFactory.getCurrentSession();
 		Query q = session.createQuery(
-				"delete from wisematches.personality.account.impl.HibernateAccountNicknameLockInfo where username = ?");
-		q.setString(0, nickname);
+				"delete from wisematches.personality.account.impl.HibernateAccountNicknameLockInfo where username = :user");
+		q.setString("user", nickname);
 		final int removedCount = q.executeUpdate();
 		if (removedCount != 0) {
 			for (AccountNicknameLockListener listenerAccountNickname : listenerAccountNicknames) {

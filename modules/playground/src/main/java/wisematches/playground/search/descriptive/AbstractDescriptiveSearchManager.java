@@ -68,7 +68,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 
 		final Query query1 = sql ? session.createSQLQuery(query.toString()) : session.createQuery(query.toString());
 		query1.setCacheable(true);
-		query1.setParameter("pid", person.getId());
+		query1.setLong("pid", person.getId());
 		return ((Number) query1.uniqueResult()).intValue();
 	}
 

@@ -19,17 +19,17 @@
         </layout>
     </appender>
 
-<!--
+    <!--
 
-    <logger name="wisematches">
-        <level value="DEBUG"/>
-        &lt;!&ndash;<appender-ref ref="FileAppender"/>&ndash;&gt;
-        <appender-ref ref="ConsoleAppender"/>
-    </logger>
--->
+        <logger name="wisematches">
+            <level value="DEBUG"/>
+            &lt;!&ndash;<appender-ref ref="FileAppender"/>&ndash;&gt;
+            <appender-ref ref="ConsoleAppender"/>
+        </logger>
+    -->
 
     <root>
-        <level value="DEBUG"/>
+        <level value="WARN"/>
         <appender-ref ref="ConsoleAppender"/>
     </root>
 </log4j:configuration>

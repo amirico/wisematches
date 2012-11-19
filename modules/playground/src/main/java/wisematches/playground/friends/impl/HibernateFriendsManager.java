@@ -68,7 +68,7 @@ public class HibernateFriendsManager implements FriendsManager {
 	public Collection<Long> getFriendsIds(Personality person) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("select friend from wisematches.playground.friends.impl.HibernateFriendRelation where person=:pid");
-		query.setParameter("pid", person.getId());
+		query.setLong("pid", person.getId());
 		return query.list();
 	}
 
@@ -77,7 +77,7 @@ public class HibernateFriendsManager implements FriendsManager {
 	public Collection<FriendRelation> getFriendsList(Personality person) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("from wisematches.playground.friends.impl.HibernateFriendRelation where person=:pid");
-		query.setParameter("pid", person.getId());
+		query.setLong("pid", person.getId());
 		return query.list();
 	}
 
