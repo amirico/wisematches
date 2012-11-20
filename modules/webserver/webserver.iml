@@ -16,8 +16,20 @@
         </sourceRoots>
       </configuration>
     </facet>
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset1" name="XML Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-servlet.xml</file>
+          <file>file://$MODULE_DIR$/src/test/resources/config/server-web-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/server-web-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-security.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/notifications-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/application-settings.xml</file>
+        </fileset>
+      </configuration>
+    </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -27,22 +39,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
-      <excludeFolder url="file://$MODULE_DIR$/target/activation" />
-      <excludeFolder url="file://$MODULE_DIR$/target/cglib" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/database" />
-      <excludeFolder url="file://$MODULE_DIR$/target/hibernate" />
-      <excludeFolder url="file://$MODULE_DIR$/target/hibernate-entitymanager" />
-      <excludeFolder url="file://$MODULE_DIR$/target/javax" />
-      <excludeFolder url="file://$MODULE_DIR$/target/log4j" />
-      <excludeFolder url="file://$MODULE_DIR$/target/org" />
-      <excludeFolder url="file://$MODULE_DIR$/target/quartz-scheduler" />
-      <excludeFolder url="file://$MODULE_DIR$/target/spec" />
-      <excludeFolder url="file://$MODULE_DIR$/target/spring-test" />
-      <excludeFolder url="file://$MODULE_DIR$/target/springframework" />
+      <excludeFolder url="file://$MODULE_DIR$/target/libs" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/webserver-2.13-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/webserver-3.01-SNAPSHOT" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
