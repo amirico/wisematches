@@ -155,6 +155,7 @@
                         <value>playground.challenge.terminated</value>
                         <value>playground.challenge.expiration.day</value>
                         <value>playground.challenge.expiration.days</value>
+                        <value>playground.tourney.announced</value>
                     </set>
                 </property>
             </bean>
@@ -165,10 +166,13 @@
 
     <bean id="notificationPublisherCenter"
           class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
-        <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="playerManager" ref="playerManager"/>
         <property name="messageManager" ref="messageManager"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
         <property name="proposalManager" ref="scribbleProposalManager"/>
+        <property name="propertiesManager" ref="reliablePropertiesManager"/>
+        <property name="regularTourneyManager" ref="regularTourneyManager"/>
         <property name="notificationDistributor" ref="notificationDistributor"/>
         <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
         <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>

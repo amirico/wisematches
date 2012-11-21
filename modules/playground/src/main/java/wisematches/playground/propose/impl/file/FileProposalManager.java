@@ -50,11 +50,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 				res.add((DefaultGameProposal<S>) inputStream.readObject());
 			}
 			return res;
-		} catch (EOFException ex) {
-			log.error("File proposal can't be loaded", ex);
-		} catch (IOException ex) {
-			log.error("File proposal can't be loaded", ex);
-		} catch (ClassNotFoundException ex) {
+		} catch (IOException | ClassNotFoundException ex) {
 			log.error("File proposal can't be loaded", ex);
 		} finally {
 			lock.unlock();

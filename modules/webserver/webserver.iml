@@ -25,6 +25,15 @@
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-security.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/notifications-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/application-settings.xml</file>
+          <file>jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.2.RELEASE/spring-jdbc-3.1.2.RELEASE.jar!/org/springframework/jdbc/support/sql-error-codes.xml</file>
+          <file>file://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.2.RELEASE/spring-jdbc-3.1.2.RELEASE.jar</file>
+          <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-config.xml</file>
+          <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/../playground/src/main/resources/config/playground-config.xml</file>
+          <file>file://$MODULE_DIR$/../playground/src/main/resources/config/restriction-config.xml</file>
+          <file>file://$MODULE_DIR$/../personality/src/main/resources/config/accounts-config.xml</file>
+          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/../database/src/main/resources/config/database-junit-config.xml</file>
         </fileset>
       </configuration>
     </facet>
