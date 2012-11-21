@@ -11,6 +11,10 @@
         <property name="properties" ref="applicationProperties"/>
     </bean>
 
+    <bean id="reliablePropertiesManager"
+          class="wisematches.server.web.services.props.impl.FileReliablePropertiesManager">
+    </bean>
+
     <bean id="commonFreemarkerConfigurer"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value=""/>

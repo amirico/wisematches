@@ -68,6 +68,26 @@ public class Range {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Range range = (Range) o;
+
+		if (firstResult != range.firstResult) return false;
+		if (maxResults != range.maxResults) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = firstResult;
+		result = 31 * result + maxResults;
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Range");

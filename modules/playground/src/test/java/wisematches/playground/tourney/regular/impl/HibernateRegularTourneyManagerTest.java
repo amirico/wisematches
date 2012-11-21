@@ -16,9 +16,12 @@ import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
+import wisematches.playground.search.SearchFilter;
+import wisematches.playground.search.SearchManager;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 
@@ -470,6 +473,17 @@ public class HibernateRegularTourneyManagerTest {
 		assertEquals(finishedTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED))));
 
 		verify(board1, board2, board3, board4, board5, board6, tourneyListener, subscriptionListener);
+	}
+
+	@Test
+	public void testUregisteredSearch() throws TourneySubscriptionException, InterruptedException, ParseException {
+		final SearchManager<Long, Tourney.Id, SearchFilter> unregisteredPlayersSearch = tourneyManager.getUnregisteredPlayersSearch();
+
+		final Tourney.Id context = new Tourney.Id(1);
+		System.out.println(unregisteredPlayersSearch.getTotalCount(null, context));
+
+		final List<Long> longs = unregisteredPlayersSearch.searchEntities(null, context, null, null, Range.limit(10));
+		assertEquals(10, longs.size());
 	}
 
 	private void createStats(long pid, int rating) {

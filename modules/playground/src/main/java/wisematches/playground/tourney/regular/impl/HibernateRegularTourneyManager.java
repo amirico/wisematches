@@ -17,6 +17,7 @@ import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.search.SearchFilter;
+import wisematches.playground.search.SearchManager;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 
@@ -40,6 +41,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 	private final BoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Lock lock = new ReentrantLock();
+	private final HibernateUnregisteredSearchManager unregisteredSearchManager = new HibernateUnregisteredSearchManager();
 
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<RegularTourneyListener>();
 	private final Collection<TourneySubscriptionListener> subscriptionListeners = new CopyOnWriteArraySet<TourneySubscriptionListener>();
@@ -221,6 +223,11 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public SearchManager<Long, Tourney.Id, SearchFilter> getUnregisteredPlayersSearch() {
+		return unregisteredSearchManager;
 	}
 
 	private Query createEntityQuery(TourneyEntity.Context<?, ?> context, boolean count) {
@@ -492,6 +499,7 @@ public class HibernateRegularTourneyManager<S extends GameSettings> implements I
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+		unregisteredSearchManager.setSessionFactory(sessionFactory);
 	}
 
 	public void setCronExpression(CronExpression cronExpression) {

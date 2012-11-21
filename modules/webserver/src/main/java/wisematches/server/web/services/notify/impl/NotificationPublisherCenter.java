@@ -2,6 +2,9 @@ package wisematches.server.web.services.notify.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.task.TaskExecutor;
+import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -13,26 +16,40 @@ import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageListener;
 import wisematches.playground.message.MessageManager;
 import wisematches.playground.propose.*;
+import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
-import wisematches.server.web.services.notify.NotificationSender;
+import wisematches.playground.search.SearchFilter;
+import wisematches.playground.search.SearchManager;
+import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.regular.RegularTourneyManager;
+import wisematches.playground.tourney.regular.Tourney;
 import wisematches.server.web.services.notify.NotificationDistributor;
+import wisematches.server.web.services.notify.NotificationSender;
+import wisematches.server.web.services.props.ReliablePropertiesManager;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class NotificationPublisherCenter {
-	private MessageManager manager;
+public class NotificationPublisherCenter implements BreakingDayListener, InitializingBean {
+	private TaskExecutor taskExecutor;
 	private BoardManager boardManager;
 	private PlayerManager playerManager;
+	private MessageManager messageManager;
 	private GameProposalManager proposalManager;
+	private RegularTourneyManager regularTourneyManager;
+	private ReliablePropertiesManager propertiesManager;
 	private ScribbleExpirationManager scribbleExpirationManager;
 	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
 	private NotificationDistributor notificationDistributor;
+
+	private final Lock announcementProcessorLock = new ReentrantLock();
 
 	private final TheNotificationListener notificationListener = new TheNotificationListener();
 	private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
@@ -64,20 +81,30 @@ public class NotificationPublisherCenter {
 		notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
 	}
 
-	public void setMessageManager(MessageManager manager) {
-		if (this.manager != null) {
-			this.manager.removeMessageListener(notificationListener);
-		}
-
-		this.manager = manager;
-
-		if (this.manager != null) {
-			this.manager.addMessageListener(notificationListener);
-		}
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		taskExecutor.execute(new TheTourneyAnnouncementProcessor(true));
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
+	@Override
+	public void breakingDayTime(Date midnight) {
+		taskExecutor.execute(new TheTourneyAnnouncementProcessor(false));
+	}
+
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
+
+	public void setMessageManager(MessageManager manager) {
+		if (this.messageManager != null) {
+			this.messageManager.removeMessageListener(notificationListener);
+		}
+
+		this.messageManager = manager;
+
+		if (this.messageManager != null) {
+			this.messageManager.addMessageListener(notificationListener);
+		}
 	}
 
 	public void setBoardManager(BoardManager boardManager) {
@@ -88,6 +115,10 @@ public class NotificationPublisherCenter {
 		if (this.boardManager != null) {
 			this.boardManager.addBoardStateListener(notificationListener);
 		}
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setProposalManager(GameProposalManager proposalManager) {
@@ -102,6 +133,14 @@ public class NotificationPublisherCenter {
 		}
 	}
 
+	public void setPropertiesManager(ReliablePropertiesManager propertiesManager) {
+		this.propertiesManager = propertiesManager;
+	}
+
+	public void setRegularTourneyManager(RegularTourneyManager regularTourneyManager) {
+		this.regularTourneyManager = regularTourneyManager;
+	}
+
 	public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
 		if (this.scribbleExpirationManager != null) {
 			this.scribbleExpirationManager.removeExpirationListener(gameExpirationListener);
@@ -112,6 +151,10 @@ public class NotificationPublisherCenter {
 		if (this.scribbleExpirationManager != null) {
 			this.scribbleExpirationManager.addExpirationListener(gameExpirationListener);
 		}
+	}
+
+	public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
+		this.notificationDistributor = notificationDistributor;
 	}
 
 	public void setProposalExpirationManager(ProposalExpirationManager<ScribbleSettings> proposalExpirationManager) {
@@ -126,8 +169,69 @@ public class NotificationPublisherCenter {
 		}
 	}
 
-	public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
-		this.notificationDistributor = notificationDistributor;
+	protected class TheTourneyAnnouncementProcessor implements Runnable {
+		private final boolean resume;
+
+		private static final int BATCH_SIZE = 1000;
+
+		private TheTourneyAnnouncementProcessor(boolean resume) {
+			this.resume = resume;
+		}
+
+		@Override
+		public void run() {
+			announcementProcessorLock.lock();
+			try {
+				final int processingPlayer = propertiesManager.getInt("tourney.notify.processing", "player", 0);
+				final int processingTourney = propertiesManager.getInt("tourney.notify.processing", "tourney", 0);
+
+				if (processingPlayer != 0) { // finish previous work
+					final Tourney tourney = regularTourneyManager.getTourneyEntity(new Tourney.Id(processingTourney));
+					log.info("Restart notifications for tourney: " + processingTourney + " from position " + processingPlayer);
+					int res = notifyUpCommingTourney(tourney, processingPlayer);
+					log.info("Tourney notifications were sent to " + res + " players");
+				}
+
+				if (!resume) {
+					final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
+					final List<Tourney> tourneys = regularTourneyManager.searchTourneyEntities(null, context, null, null, null);
+					for (Tourney tourney : tourneys) {
+						if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
+							log.info("Start notifications for tourney: " + tourney.getNumber());
+							int res = notifyUpCommingTourney(tourney, 0);
+							log.info("Tourney notifications were sent to " + res + " players");
+						}
+					}
+				}
+			} catch (Throwable ex) {
+				log.error("Tourney notifications can't be send", ex);
+			} finally {
+				announcementProcessorLock.unlock();
+			}
+		}
+
+		private int notifyUpCommingTourney(Tourney tourney, int pos) {
+			propertiesManager.setInt("tourney.notify.processing", "player", pos);
+			propertiesManager.setInt("tourney.notify.processing", "tourney", tourney.getNumber());
+			List<Long> pids;
+			do {
+				final SearchManager<Long, Tourney.Id, SearchFilter> playersSearch = regularTourneyManager.getUnregisteredPlayersSearch();
+				pids = playersSearch.searchEntities(null, tourney.getId(), null, null, Range.limit(pos, BATCH_SIZE));
+				for (Number pid : pids) {
+					processNotification(pid.longValue(), "playground.tourney.announced", tourney);
+					propertiesManager.setInt("tourney.notify.processing", "player", pos++);
+				}
+			} while (pids.size() == BATCH_SIZE); // if less - it was last part
+
+			// clear
+			propertiesManager.setInt("tourney.notify.processing", "player", 0);
+			return pos;
+		}
+
+		protected boolean isInSevenDays(Date tourney) {
+			final long diff = tourney.getTime() - System.currentTimeMillis();
+			return diff >= 6 * 24 * 60 * 60 * 1000 && diff <= 7 * 24 * 60 * 60 * 1000;
+		}
 	}
 
 	private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {
