@@ -71,11 +71,8 @@
 
     <bean id="scribbleRobotBrain" class="wisematches.playground.scribble.robot.ScribbleRobotBrain"/>
 
-    <bean id="scribbleRobotActivity" class="wisematches.playground.robot.RobotActivityCenter">
-        <property name="robotBrain" ref="scribbleRobotBrain"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
-        <property name="transactionTemplate" ref="transactionRequiresNew"/>
-        <property name="movesExecutor">
+    <bean id="scribbleRobotTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+        <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
                 <property name="maxPoolSize" value="5"/>
                 <property name="corePoolSize" value="1"/>
@@ -85,6 +82,13 @@
                 <property name="waitForTasksToCompleteOnShutdown" value="false"/>
             </bean>
         </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="scribbleRobotActivity" class="wisematches.playground.robot.RobotActivityCenter">
+        <property name="robotBrain" ref="scribbleRobotBrain"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="taskExecutor" ref="scribbleRobotTaskExecutor"/>
     </bean>
 
     <bean id="scribbleCommentManager"

@@ -3,9 +3,7 @@ package wisematches.playground.robot;
 import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.transaction.TransactionException;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.core.task.SyncTaskExecutor;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.*;
@@ -13,7 +11,6 @@ import wisematches.playground.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.concurrent.Executor;
 
 import static org.easymock.EasyMock.*;
 
@@ -25,14 +22,7 @@ public class RobotActivityCenterTest {
 	private BoardManager boardManager;
 	private RobotActivityCenter activityManager;
 
-	private Capture<BoardStateListener> listener = new Capture<BoardStateListener>();
-
-	private final TransactionTemplate template = new TransactionTemplate() {
-		@Override
-		public <T> T execute(TransactionCallback<T> action) throws TransactionException {
-			return action.doInTransaction(null);
-		}
-	};
+	private Capture<BoardStateListener> listener = new Capture<>();
 
 	public RobotActivityCenterTest() {
 	}
@@ -47,7 +37,7 @@ public class RobotActivityCenterTest {
 
 		activityManager.setRobotBrain(robotBrain);
 		activityManager.setBoardManager(boardManager);
-		activityManager.setTransactionTemplate(template);
+		activityManager.setTaskExecutor(new SyncTaskExecutor());
 	}
 
 	@Test
@@ -61,9 +51,7 @@ public class RobotActivityCenterTest {
 		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
-		activityManager.setTransactionTemplate(template);
-
-		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(gameBoard);
+		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(gameBoard, 1);
 		task.run();
 
 		verify(robotBrain);
@@ -78,6 +66,10 @@ public class RobotActivityCenterTest {
 
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
 		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
+		expect(gameBoard.getBoardId()).andReturn(1L);
+		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p2.getId()));
+		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
+		expect(gameBoard.getBoardId()).andReturn(1L);
 		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(p2.getId()));
 		replay(gameBoard);
 
@@ -87,15 +79,9 @@ public class RobotActivityCenterTest {
 		expect(boardManager.searchEntities(p3, GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
 		replay(boardManager);
 
-		// Where is two robots and two tasks must be executed.
-		final Executor executor = createStrictMock(Executor.class);
-		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
-		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
-		replay(executor);
+		activityManager.afterPropertiesSet();
 
-		activityManager.setMovesExecutor(executor);
-
-		verify(gameBoard, boardManager, executor);
+		verify(gameBoard, boardManager);
 	}
 
 	@Test
@@ -109,32 +95,28 @@ public class RobotActivityCenterTest {
 		expect(boardManager.searchEntities(RobotPlayer.valueOf(RobotType.EXPERT), GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
 		replay(boardManager);
 
-		final Executor executor = createStrictMock(Executor.class);
-		replay(executor);
+		activityManager.afterPropertiesSet();
 
-		activityManager.setMovesExecutor(executor);
-		verify(boardManager, executor);
+		reset(boardManager);
 
 		//Test room game started
-		reset(boardManager, executor);
-
 		final GameBoard board = createStrictMock(GameBoard.class);
 		expect(board.getPlayerTurn()).andReturn(null);
-
-		replay(board, boardManager, executor);
+		replay(board, boardManager);
 
 		listener.getValue().gameStarted(board);
-		verify(board, boardManager, executor);
+		verify(board, boardManager);
 
 		// Test move transferred
-		reset(board, executor);
+		reset(board);
 		expect(board.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
-		executor.execute(isA(RobotActivityCenter.MakeTurnTask.class));
-		replay(executor, board);
+		expect(board.getBoardId()).andReturn(1L);
+		expect(board.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
+		replay(board);
 
 		listener.getValue().gameMoveDone(board, new GameMove(new PassTurnMove(13L), 0, 0, new Date()), null);
 
-		verify(board, executor);
+		verify(board);
 	}
 
 	private GamePlayerHand createPlayerHand(long id) {
