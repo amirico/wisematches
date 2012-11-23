@@ -45,6 +45,7 @@ import wisematches.playground.tourney.regular.RegularTourneyManager;
 import wisematches.playground.tourney.regular.Tourney;
 import wisematches.server.web.services.notify.*;
 import wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor;
+import wisematches.server.web.services.props.impl.MemoryPropertiesManager;
 
 import java.util.*;
 
@@ -457,6 +458,7 @@ public class NotificationPublisherCenterTest {
 		expect(tourneyManager.getRegistrationSearchManager()).andReturn(searchManager);
 		replay(tourneyManager);
 
+		publisherCenter.setPropertiesManager(new MemoryPropertiesManager());
 		publisherCenter.breakingDayTime(null);
 		assertEquals(2, publishedNotifications.getValues().size());
 
