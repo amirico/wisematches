@@ -153,8 +153,6 @@
                         <value>playground.challenge.rejected</value>
                         <value>playground.challenge.repudiated</value>
                         <value>playground.challenge.terminated</value>
-                        <value>playground.challenge.expiration.day</value>
-                        <value>playground.challenge.expiration.days</value>
                         <value>playground.tourney.announced</value>
                     </set>
                 </property>
