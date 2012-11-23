@@ -28,10 +28,10 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	private final Lock lock = new ReentrantLock();
 	private final ThePlayerStateListener stateListener = new ThePlayerStateListener();
 
-	private final Set<String> redundantNotifications = new HashSet<String>();
-	private final Set<String> mandatoryNotifications = new HashSet<String>();
-	private final Map<Personality, Collection<Notification>> waitingNotifications = new HashMap<Personality, Collection<Notification>>();
-	private final Collection<NotificationDistributorListener> listeners = new CopyOnWriteArraySet<NotificationDistributorListener>();
+	private final Set<String> redundantNotifications = new HashSet<>();
+	private final Set<String> mandatoryNotifications = new HashSet<>();
+	private final Map<Personality, Collection<Notification>> waitingNotifications = new HashMap<>();
+	private final Collection<NotificationDistributorListener> listeners = new CopyOnWriteArraySet<>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.notify.distributor");
 
@@ -127,7 +127,7 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	private void postponeNotification(final Notification notification) {
 		Collection<Notification> notifications = waitingNotifications.get(notification.getRecipient());
 		if (notifications == null) {
-			notifications = new ArrayList<Notification>();
+			notifications = new ArrayList<>();
 			waitingNotifications.put(notification.getRecipient(), notifications);
 		}
 		notifications.add(notification);
@@ -206,21 +206,17 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	}
 
 	public void setMandatoryNotifications(Set<String> mandatoryNotifications) {
-		if (this.mandatoryNotifications != null) {
-			this.mandatoryNotifications.clear();
-		}
+		this.mandatoryNotifications.clear();
 
-		if (this.mandatoryNotifications != null && mandatoryNotifications != null) {
+		if (mandatoryNotifications != null) {
 			this.mandatoryNotifications.addAll(mandatoryNotifications);
 		}
 	}
 
 	public void setRedundantNotifications(Set<String> redundantNotifications) {
-		if (this.redundantNotifications != null) {
-			this.redundantNotifications.clear();
-		}
+		this.redundantNotifications.clear();
 
-		if (this.redundantNotifications != null && redundantNotifications != null) {
+		if (redundantNotifications != null) {
 			this.redundantNotifications.addAll(redundantNotifications);
 		}
 	}

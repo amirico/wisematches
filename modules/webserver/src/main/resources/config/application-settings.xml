@@ -12,7 +12,8 @@
     </bean>
 
     <bean id="reliablePropertiesManager"
-          class="wisematches.server.web.services.props.impl.FileReliablePropertiesManager">
+          class="wisematches.server.web.services.props.impl.FilePropertiesManager">
+        <property name="propertiesFile" value="${server.properties.file}"/>
     </bean>
 
     <bean id="commonFreemarkerConfigurer"

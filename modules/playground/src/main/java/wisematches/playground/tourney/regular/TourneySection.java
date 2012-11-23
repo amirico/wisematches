@@ -42,7 +42,7 @@ public enum TourneySection {
 	 * Player can play in a section if it's rating less that top rating of the section.
 	 *
 	 * @param rating the rating to be checked
-	 * @return {@code true} if player can be subscribed to the section; {@code false} - otherwise.
+	 * @return {@code true} if player can be registered to the section; {@code false} - otherwise.
 	 */
 	public boolean isRatingAllowed(short rating) {
 		return rating < topRating;

@@ -20,9 +20,8 @@ import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
 import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.regular.RegistrationSearchManager;
 import wisematches.playground.tourney.regular.RegularTourneyManager;
 import wisematches.playground.tourney.regular.Tourney;
 import wisematches.server.web.services.notify.NotificationDistributor;
@@ -42,7 +41,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 	private PlayerManager playerManager;
 	private MessageManager messageManager;
 	private GameProposalManager proposalManager;
-	private RegularTourneyManager regularTourneyManager;
+	private RegularTourneyManager tourneyManager;
 	private ReliablePropertiesManager propertiesManager;
 	private ScribbleExpirationManager scribbleExpirationManager;
 	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
@@ -137,8 +136,8 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		this.propertiesManager = propertiesManager;
 	}
 
-	public void setRegularTourneyManager(RegularTourneyManager regularTourneyManager) {
-		this.regularTourneyManager = regularTourneyManager;
+	public void setTourneyManager(RegularTourneyManager tourneyManager) {
+		this.tourneyManager = tourneyManager;
 	}
 
 	public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
@@ -186,21 +185,19 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 				final int processingTourney = propertiesManager.getInt("tourney.notify.processing", "tourney", 0);
 
 				if (processingPlayer != 0) { // finish previous work
-					final Tourney tourney = regularTourneyManager.getTourneyEntity(new Tourney.Id(processingTourney));
+					final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(processingTourney));
 					log.info("Restart notifications for tourney: " + processingTourney + " from position " + processingPlayer);
 					int res = notifyUpCommingTourney(tourney, processingPlayer);
 					log.info("Tourney notifications were sent to " + res + " players");
 				}
 
-				if (!resume) {
-					final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
-					final List<Tourney> tourneys = regularTourneyManager.searchTourneyEntities(null, context, null, null, null);
-					for (Tourney tourney : tourneys) {
-						if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
-							log.info("Start notifications for tourney: " + tourney.getNumber());
-							int res = notifyUpCommingTourney(tourney, 0);
-							log.info("Tourney notifications were sent to " + res + " players");
-						}
+				final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
+				final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+				for (Tourney tourney : tourneys) {
+					if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
+						log.info("Start notifications for tourney: " + tourney.getNumber());
+						int res = notifyUpCommingTourney(tourney, 0);
+						log.info("Tourney notifications were sent to " + res + " players");
 					}
 				}
 			} catch (Throwable ex) {
@@ -213,15 +210,15 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		private int notifyUpCommingTourney(Tourney tourney, int pos) {
 			propertiesManager.setInt("tourney.notify.processing", "player", pos);
 			propertiesManager.setInt("tourney.notify.processing", "tourney", tourney.getNumber());
-			List<Long> pids;
+			long[] pids;
 			do {
-				final SearchManager<Long, Tourney.Id, SearchFilter> playersSearch = regularTourneyManager.getUnregisteredPlayersSearch();
-				pids = playersSearch.searchEntities(null, tourney.getId(), null, null, Range.limit(pos, BATCH_SIZE));
+				final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
+				pids = searchManager.searchUnregisteredPlayers(tourney, Range.limit(pos, BATCH_SIZE));
 				for (Number pid : pids) {
 					processNotification(pid.longValue(), "playground.tourney.announced", tourney);
 					propertiesManager.setInt("tourney.notify.processing", "player", pos++);
 				}
-			} while (pids.size() == BATCH_SIZE); // if less - it was last part
+			} while (pids.length == BATCH_SIZE); // if less - it was last part
 
 			// clear
 			propertiesManager.setInt("tourney.notify.processing", "player", 0);

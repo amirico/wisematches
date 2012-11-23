@@ -1,9 +1,9 @@
+<#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
 
 <#-- @ftlvariable name="tourney" type="wisematches.playground.tourney.regular.Tourney" -->
 <#-- @ftlvariable name="tourneyLanguage" type="wisematches.personality.Language" -->
-<#-- @ftlvariable name="tourneySubscriptions" type="wisematches.playground.tourney.regular.TourneySubscription[]" -->
-<#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
+<#-- @ftlvariable name="tourneySubscriptions" type="wisematches.playground.tourney.regular.RegistrationRecord[]" -->
 
 <#include "/core.ftl">
 <#include "scriplet.ftl">

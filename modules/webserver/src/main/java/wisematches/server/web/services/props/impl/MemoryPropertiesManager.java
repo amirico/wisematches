@@ -4,19 +4,16 @@ import wisematches.server.web.services.props.ReliablePropertiesManager;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class FileReliablePropertiesManager implements ReliablePropertiesManager {
-	private final Lock lock = new ReentrantLock();
-	private Map<String, Serializable> cache = new HashMap<>();
+public class MemoryPropertiesManager implements ReliablePropertiesManager {
+	private final Map<String, Serializable> cache = new ConcurrentHashMap<>();
 
-	public FileReliablePropertiesManager() {
+	public MemoryPropertiesManager() {
 	}
 
 	@Override

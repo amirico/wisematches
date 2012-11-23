@@ -80,9 +80,10 @@ public class TourneyController extends WisematchesController {
 		if (language == null) {
 			throw new UnknownEntityException(l, "language");
 		}
-		final TourneySubscription.Context context = new TourneySubscription.Context(t, language);
+		final RegistrationRecord.Context context = new RegistrationRecord.Context(t, language);
 
-		final List<TourneySubscription> tourneySubscriptions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+		final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
+		final List<RegistrationRecord> tourneySubscriptions = searchManager.searchEntities(null, context, null, null, null);
 		model.addAttribute("tourney", tourney);
 		model.addAttribute("tourneyLanguage", language);
 		model.addAttribute("tourneySubscriptions", tourneySubscriptions);
@@ -163,19 +164,19 @@ public class TourneyController extends WisematchesController {
 
 		final Player principal = getPrincipal();
 		try {
-			final TourneySubscription subscription = tourneyManager.getSubscription(tourney, principal);
+			final RegistrationRecord subscription = tourneyManager.getRegistration(principal, tourney);
 			if (subscription != null) {
-				tourneyManager.unsubscribe(tourney, principal, subscription.getLanguage(), subscription.getSection());
+				tourneyManager.unregister(principal, tourney, subscription.getLanguage(), subscription.getSection());
 			}
-			if (section != null && language != null) { // subscribe
-				tourneyManager.subscribe(tourney, principal, language, section);
+			if (section != null && language != null) { // register
+				tourneyManager.register(principal, tourney, language, section);
 			}
-		} catch (TourneySubscriptionException ex) {
+		} catch (RegistrationException ex) {
 			log.error("Subscription can't be changed: " + form, ex);
 			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.internal", locale));
 		}
 
-		final TourneySubscriptions subscriptions = tourneyManager.getSubscriptions(tourney);
+		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		final Map<String, Map<String, Integer>> res = new HashMap<String, Map<String, Integer>>();
 		for (Language l : Language.values()) {
 			Map<String, Integer> stringIntegerMap = new HashMap<String, Integer>();
@@ -194,6 +195,7 @@ public class TourneyController extends WisematchesController {
 		Tourney announce = null;
 		if (announces.size() > 1) {
 			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
+			announce = announces.get(0);
 		} else if (announces.size() == 1) {
 			announce = announces.get(0);
 		}
@@ -203,8 +205,8 @@ public class TourneyController extends WisematchesController {
 			model.addAttribute("languages", Language.values());
 			model.addAttribute("statistics", statisticManager.getPlayerStatistic(personality));
 
-			model.addAttribute("subscription", tourneyManager.getSubscription(announce, personality));
-			model.addAttribute("subscriptions", tourneyManager.getSubscriptions(announce));
+			model.addAttribute("subscription", tourneyManager.getRegistration(personality, announce));
+			model.addAttribute("subscriptions", tourneyManager.getRegistrationsSummary(announce));
 		}
 	}
 

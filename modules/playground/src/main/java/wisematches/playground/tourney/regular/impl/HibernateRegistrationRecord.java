@@ -1,29 +1,18 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Language;
+import wisematches.playground.tourney.regular.RegistrationRecord;
 import wisematches.playground.tourney.regular.TourneySection;
-import wisematches.playground.tourney.regular.TourneySubscription;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
 @Table(name = "tourney_regular_subs")
-@NamedNativeQueries({
-		@NamedNativeQuery(name = "tourney.outOfSection",
-				query = "select playerId " +
-						"from scribble_statistic s, tourney_regular_subs t " +
-						"where s.playerId=t.player and t.tourneyNumber=:tourney and t.roundNumber=:round and t.language=:language and t.section=:section and s.rating>:rating",
-				resultSetMapping = "playerIds")
-})
-@SqlResultSetMappings({
-		@SqlResultSetMapping(name = "playerIds", columns = {@ColumnResult(name = "playerId")})
-})
-public class HibernateTourneySubscription implements TourneySubscription {
+public class HibernateRegistrationRecord implements RegistrationRecord {
 	@EmbeddedId
 	private Id id;
 
@@ -35,10 +24,10 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	@Enumerated(EnumType.ORDINAL)
 	private TourneySection section;
 
-	protected HibernateTourneySubscription() {
+	protected HibernateRegistrationRecord() {
 	}
 
-	public HibernateTourneySubscription(int tourney, long player, int round, Language language, TourneySection section) {
+	public HibernateRegistrationRecord(int tourney, long player, int round, Language language, TourneySection section) {
 		this.id = new Id(tourney, player, round);
 		this.language = language;
 		this.section = section;
@@ -67,26 +56,6 @@ public class HibernateTourneySubscription implements TourneySubscription {
 	@Override
 	public TourneySection getSection() {
 		return section;
-	}
-
-	@Override
-	public TourneySubscription.Id getId() {
-		return new TourneySubscription.Id(id.tourney, id.player, id.round);
-	}
-
-	@Override
-	public State getState() {
-		return State.SCHEDULED;
-	}
-
-	@Override
-	public Date getStartedDate() {
-		return null;
-	}
-
-	@Override
-	public Date getFinishedDate() {
-		return null;
 	}
 
 	@Embeddable
