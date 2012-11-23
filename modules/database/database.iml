@@ -3,7 +3,10 @@
   <component name="FacetManager">
     <facet type="hibernate" name="Hibernate">
       <configuration>
-        <datasource-map />
+        <datasource-map>
+          <unit-entry name="config:hibernate.cfg.xml" value="773a9883-017c-4c0a-8607-11bb613ec123" />
+          <unit-entry name="sessionFactory" value="773a9883-017c-4c0a-8607-11bb613ec123" />
+        </datasource-map>
         <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/test/java/config/hibernate.cfg.xml" />
       </configuration>
     </facet>

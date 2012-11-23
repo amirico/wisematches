@@ -20,8 +20,6 @@ import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 
@@ -42,15 +40,15 @@ import static org.easymock.EasyMock.*;
 		"classpath:/config/playground-config.xml"
 })
 @SuppressWarnings("unchecked")
-public class HibernateRegularTourneyManagerTest {
+public class HibernateTourneyManagerTest {
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	private BoardStateListener boardStateListener;
 
-	private HibernateRegularTourneyManager<GameSettings> tourneyManager;
+	private HibernateTourneyManager<GameSettings> tourneyManager;
 
-	public HibernateRegularTourneyManagerTest() {
+	public HibernateTourneyManagerTest() {
 	}
 
 	@Before
@@ -90,7 +88,7 @@ public class HibernateRegularTourneyManagerTest {
 		}).anyTimes();
 		replay(boardManager);
 
-		tourneyManager = new HibernateRegularTourneyManager<GameSettings>();
+		tourneyManager = new HibernateTourneyManager<GameSettings>();
 		tourneyManager.setSessionFactory(sessionFactory);
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
 		tourneyManager.setBoardManager(boardManager);
@@ -106,78 +104,79 @@ public class HibernateRegularTourneyManagerTest {
 	}
 
 	@Test
-	public void test_subscription() throws TourneySubscriptionException {
+	public void test_subscription() throws RegistrationException {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final HibernateTourney tourney = new HibernateTourney(10000, new Date(System.currentTimeMillis() + 10000000L));
 		session.save(tourney);
 
 
-		final TourneySubscriptionListener l = createStrictMock(TourneySubscriptionListener.class);
+		final RegistrationListener l = createStrictMock(RegistrationListener.class);
 		tourneyManager.addTourneySubscriptionListener(l);
 
-		l.subscribed(isA(TourneySubscription.class), isNull(String.class));
-		l.subscribed(isA(TourneySubscription.class), isNull(String.class));
-		l.subscribed(isA(TourneySubscription.class), isNull(String.class));
-		l.unsubscribed(isA(TourneySubscription.class), isNull(String.class));
+		l.registered(isA(RegistrationRecord.class), isNull(String.class));
+		l.registered(isA(RegistrationRecord.class), isNull(String.class));
+		l.registered(isA(RegistrationRecord.class), isNull(String.class));
+		l.unregistered(isA(RegistrationRecord.class), isNull(String.class));
 		replay(l);
 
-		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+		final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
 
 		try {
-			tourneyManager.subscribe(null, Personality.person(101), Language.RU, TourneySection.ADVANCED);
+			tourneyManager.register(Personality.person(101), null, Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
-		} catch (TourneySubscriptionException ignore) {
-			assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+		} catch (RegistrationException ignore) {
+			assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
 		}
 
-		tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.ADVANCED);
-		assertEquals(1, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
-		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.EN)));
-		assertEquals(1, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.RU)));
+		tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.ADVANCED);
+		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN)));
+		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU)));
 
 		try {
-			tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.ADVANCED);
+			tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
-		} catch (TourneySubscriptionException ignore) {
-			assertEquals(1, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
+		} catch (RegistrationException ignore) {
+			assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
 		}
 
-		tourneyManager.subscribe(tourney, Personality.person(102), Language.RU, TourneySection.ADVANCED);
-		tourneyManager.subscribe(tourney, Personality.person(103), Language.RU, TourneySection.GRANDMASTER);
+		tourneyManager.register(Personality.person(102), tourney, Language.RU, TourneySection.ADVANCED);
+		tourneyManager.register(Personality.person(103), tourney, Language.RU, TourneySection.GRANDMASTER);
 
-		TourneySubscriptions subscriptions = tourneyManager.getSubscriptions(tourney);
+		RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		assertEquals(0, subscriptions.getPlayers(Language.EN));
 		assertEquals(0, subscriptions.getPlayers(Language.EN, TourneySection.ADVANCED));
 		assertEquals(3, subscriptions.getPlayers(Language.RU));
 		assertEquals(2, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-		final TourneySubscription subscription = tourneyManager.getSubscription(tourney, Personality.person(101));
+		final RegistrationRecord subscription = tourneyManager.getRegistration(Personality.person(101), tourney);
 		assertEquals(10000, subscription.getTourney());
 		assertEquals(101, subscription.getPlayer());
 		assertEquals(Language.RU, subscription.getLanguage());
 		assertEquals(TourneySection.ADVANCED, subscription.getSection());
 
-		assertEquals(3, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
-		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.EN)));
-		assertEquals(3, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.RU)));
+		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN)));
+		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU)));
 
-		tourneyManager.unsubscribe(tourney, Personality.person(102), Language.RU, TourneySection.GRANDMASTER);
-		subscriptions = tourneyManager.getSubscriptions(tourney);
+		tourneyManager.unregister(Personality.person(102), tourney, Language.RU, TourneySection.GRANDMASTER);
+		subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		assertEquals(3, subscriptions.getPlayers(Language.RU));
 		assertEquals(2, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-		tourneyManager.unsubscribe(tourney, Personality.person(102), Language.RU, TourneySection.ADVANCED);
-		subscriptions = tourneyManager.getSubscriptions(tourney);
+		tourneyManager.unregister(Personality.person(102), tourney, Language.RU, TourneySection.ADVANCED);
+		subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		assertEquals(2, subscriptions.getPlayers(Language.RU));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-		assertEquals(2, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000)));
-		assertEquals(0, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.EN)));
-		assertEquals(2, tourneyManager.getTotalCount(null, new TourneySubscription.Context(10000, Language.RU)));
+		assertEquals(2, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN)));
+		assertEquals(2, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU)));
 
 		tourneyManager.removeTourneySubscriptionListener(l);
 
@@ -225,9 +224,9 @@ public class HibernateRegularTourneyManagerTest {
 	}
 
 	@Test
-	public void testInitTourney() throws InterruptedException, TourneySubscriptionException, ParseException {
+	public void testInitTourney() throws InterruptedException, RegistrationException, ParseException {
 		final Capture<Tourney> tourneyCapture = new Capture<Tourney>(CaptureType.ALL);
-		final Capture<TourneySubscription> subscriptionCapture = new Capture<TourneySubscription>(CaptureType.ALL);
+		final Capture<RegistrationRecord> subscriptionCapture = new Capture<RegistrationRecord>(CaptureType.ALL);
 
 		final RegularTourneyListener tourneyListener = createStrictMock(RegularTourneyListener.class);
 		tourneyListener.tourneyAnnounced(capture(tourneyCapture));
@@ -247,20 +246,20 @@ public class HibernateRegularTourneyManagerTest {
 		tourneyManager.setCronExpression(new CronExpression("0 0 0 */1 * ?"));
 		Thread.sleep(1000);
 
-		final TourneySubscriptionListener subscriptionListener = createMock(TourneySubscriptionListener.class);
-		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
-		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
-		subscriptionListener.subscribed(capture(subscriptionCapture), isNull(String.class));
-		subscriptionListener.resubscribed(101, tourney.getNumber(), TourneySection.CASUAL, TourneySection.ADVANCED);
-		subscriptionListener.resubscribed(102, tourney.getNumber(), TourneySection.INTERMEDIATE, TourneySection.ADVANCED);
-		subscriptionListener.resubscribed(103, tourney.getNumber(), TourneySection.EXPERT, null);
+		final RegistrationListener subscriptionListener = createMock(RegistrationListener.class);
+		subscriptionListener.registered(capture(subscriptionCapture), isNull(String.class));
+		subscriptionListener.registered(capture(subscriptionCapture), isNull(String.class));
+		subscriptionListener.registered(capture(subscriptionCapture), isNull(String.class));
+		subscriptionListener.sectionChanged(101, tourney.getNumber(), TourneySection.CASUAL, TourneySection.ADVANCED);
+		subscriptionListener.sectionChanged(102, tourney.getNumber(), TourneySection.INTERMEDIATE, TourneySection.ADVANCED);
+		subscriptionListener.sectionChanged(103, tourney.getNumber(), TourneySection.EXPERT, null);
 		replay(subscriptionListener);
 
 		tourneyManager.addTourneySubscriptionListener(subscriptionListener);
 
-		tourneyManager.subscribe(tourney, Personality.person(101), Language.RU, TourneySection.CASUAL);
-		tourneyManager.subscribe(tourney, Personality.person(102), Language.RU, TourneySection.INTERMEDIATE);
-		tourneyManager.subscribe(tourney, Personality.person(103), Language.RU, TourneySection.EXPERT);
+		tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.CASUAL);
+		tourneyManager.register(Personality.person(102), tourney, Language.RU, TourneySection.INTERMEDIATE);
+		tourneyManager.register(Personality.person(103), tourney, Language.RU, TourneySection.EXPERT);
 
 		// new day!
 		tourneyManager.breakingDayTime(null);
@@ -312,12 +311,12 @@ public class HibernateRegularTourneyManagerTest {
 	}
 
 	@Test
-	public void testFinishTourney() throws TourneySubscriptionException, InterruptedException, ParseException {
+	public void testFinishTourney() throws RegistrationException, InterruptedException, ParseException {
 		final int activeTourneys = tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.ACTIVE)));
 		final int finishedTourneys = tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED)));
 
 		final Capture<Tourney> tourneyCapture = new Capture<Tourney>(CaptureType.ALL);
-		final Capture<TourneySubscription> subscriptionCapture = new Capture<TourneySubscription>(CaptureType.ALL);
+		final Capture<RegistrationRecord> subscriptionCapture = new Capture<RegistrationRecord>(CaptureType.ALL);
 
 		for (int i = 0; i < 7; i++) {
 			createStats(101 + i, 1001);
@@ -330,10 +329,10 @@ public class HibernateRegularTourneyManagerTest {
 		Thread.sleep(1000);
 
 		for (int i = 0; i < 2; i++) {
-			tourneyManager.subscribe(tourney, Personality.person(101 + i), Language.RU, TourneySection.CASUAL);
+			tourneyManager.register(Personality.person(101 + i), tourney, Language.RU, TourneySection.CASUAL);
 		}
 		for (int i = 0; i < 5; i++) {
-			tourneyManager.subscribe(tourney, Personality.person(103 + i), Language.RU, TourneySection.EXPERT);
+			tourneyManager.register(Personality.person(103 + i), tourney, Language.RU, TourneySection.EXPERT);
 		}
 
 		// new day!
@@ -348,8 +347,8 @@ public class HibernateRegularTourneyManagerTest {
 		replay(tourneyListener);
 		tourneyManager.addRegularTourneyListener(tourneyListener);
 
-		final TourneySubscriptionListener subscriptionListener = createMock(TourneySubscriptionListener.class);
-		subscriptionListener.subscribed(capture(subscriptionCapture), eq("won.tourney.group"));
+		final RegistrationListener subscriptionListener = createMock(RegistrationListener.class);
+		subscriptionListener.registered(capture(subscriptionCapture), eq("won.tourney.group"));
 		expectLastCall().times(2);
 		replay(subscriptionListener);
 		tourneyManager.addTourneySubscriptionListener(subscriptionListener);
@@ -476,14 +475,16 @@ public class HibernateRegularTourneyManagerTest {
 	}
 
 	@Test
-	public void testUregisteredSearch() throws TourneySubscriptionException, InterruptedException, ParseException {
-		final SearchManager<Long, Tourney.Id, SearchFilter> unregisteredPlayersSearch = tourneyManager.getUnregisteredPlayersSearch();
+	public void testRegistrationSearchManager() throws RegistrationException, InterruptedException, ParseException {
+		final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
 
-		final Tourney.Id context = new Tourney.Id(1);
-		System.out.println(unregisteredPlayersSearch.getTotalCount(null, context));
+		tourneyManager.setCronExpression(new CronExpression("0/1 * * * * ?"));
+		final Tourney tourney = tourneyManager.startRegularTourney();
+		tourneyManager.setCronExpression(new CronExpression("0 0 0 */1 * ?"));
+		Thread.sleep(1000);
 
-		final List<Long> longs = unregisteredPlayersSearch.searchEntities(null, context, null, null, Range.limit(10));
-		assertEquals(10, longs.size());
+		final long[] longs = searchManager.searchUnregisteredPlayers(tourney, Range.limit(10));
+		assertEquals(10, longs.length);
 	}
 
 	private void createStats(long pid, int rating) {

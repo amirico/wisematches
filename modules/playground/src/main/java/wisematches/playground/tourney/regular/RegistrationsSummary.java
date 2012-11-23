@@ -5,7 +5,7 @@ import wisematches.personality.Language;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneySubscriptions {
+public interface RegistrationsSummary {
 	int getTourney();
 
 	int getPlayers();

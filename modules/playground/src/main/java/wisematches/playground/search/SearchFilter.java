@@ -6,4 +6,8 @@ package wisematches.playground.search;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface SearchFilter {
+	final class NoFilter implements SearchFilter {
+		private NoFilter() {
+		}
+	}
 }

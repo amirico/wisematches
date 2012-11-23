@@ -93,10 +93,10 @@ public class HibernateTourneyEntityTest {
 	public void testTourneySubscription() {
 		final Session session = sessionFactory.getCurrentSession();
 
-		HibernateTourneySubscription s = new HibernateTourneySubscription(2, 1, 3, Language.EN, TourneySection.GRANDMASTER);
+		HibernateRegistrationRecord s = new HibernateRegistrationRecord(2, 1, 3, Language.EN, TourneySection.GRANDMASTER);
 		session.save(s);
 
-		final Criteria c1 = session.createCriteria(HibernateTourneySubscription.class);
+		final Criteria c1 = session.createCriteria(HibernateRegistrationRecord.class);
 		c1.add(Restrictions.eq("id.player", 1L)).add(Restrictions.eq("id.tourney", 2));
 		assertEquals(1, c1.list().size());
 	}

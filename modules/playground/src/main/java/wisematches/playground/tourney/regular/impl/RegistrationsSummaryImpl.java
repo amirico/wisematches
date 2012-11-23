@@ -1,17 +1,17 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Language;
+import wisematches.playground.tourney.regular.RegistrationsSummary;
 import wisematches.playground.tourney.regular.TourneySection;
-import wisematches.playground.tourney.regular.TourneySubscriptions;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DefaultTourneySubscriptions implements TourneySubscriptions {
+class RegistrationsSummaryImpl implements RegistrationsSummary {
 	private final int tourney;
 	private final int[][] values = new int[Language.values().length][TourneySection.values().length];
 
-	public DefaultTourneySubscriptions(int tourney) {
+	public RegistrationsSummaryImpl(int tourney) {
 		this.tourney = tourney;
 	}
 

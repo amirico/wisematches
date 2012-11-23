@@ -3,8 +3,8 @@
 <#-- @ftlvariable name="statistics" type="wisematches.playground.tracking.Statistics" -->
 
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="subscription" type="wisematches.playground.tourney.regular.TourneySubscription" -->
-<#-- @ftlvariable name="subscriptions" type="wisematches.playground.tourney.regular.TourneySubscriptions" -->
+<#-- @ftlvariable name="subscription" type="wisematches.playground.tourney.regular.RegistrationRecord" -->
+<#-- @ftlvariable name="subscriptions" type="wisematches.playground.tourney.regular.RegistrationsSummary" -->
 
 <#include "/core.ftl">
 <#include "scriplet.ftl">

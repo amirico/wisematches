@@ -102,7 +102,9 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	public void close() throws IOException {
 		lock.lock();
 		try {
-			proposalFile.close();
+			if (proposalFile != null) {
+				proposalFile.close();
+			}
 		} finally {
 			lock.unlock();
 		}

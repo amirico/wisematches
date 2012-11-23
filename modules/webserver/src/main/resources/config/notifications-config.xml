@@ -172,7 +172,7 @@
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
         <property name="proposalManager" ref="scribbleProposalManager"/>
         <property name="propertiesManager" ref="reliablePropertiesManager"/>
-        <property name="regularTourneyManager" ref="regularTourneyManager"/>
+        <property name="tourneyManager" ref="regularTourneyManager"/>
         <property name="notificationDistributor" ref="notificationDistributor"/>
         <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
         <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>

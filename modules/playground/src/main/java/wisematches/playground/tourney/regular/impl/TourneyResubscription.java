@@ -5,7 +5,7 @@ import wisematches.playground.tourney.regular.TourneySection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TourneyResubscription {
+class TourneyResubscription {
 	private final long player;
 	private final TourneySection oldSection;
 	private final TourneySection newSection;

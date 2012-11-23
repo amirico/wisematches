@@ -37,7 +37,7 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
 
 		final String subject = messageSource.getMessage("notify.subject." + notification.getCode(), null, locale);
 
-		final Map<String, Object> variables = new HashMap<String, Object>();
+		final Map<String, Object> variables = new HashMap<>();
 		// info
 		variables.put("code", notification.getCode());
 		variables.put("template", notification.getTemplate());
@@ -52,9 +52,7 @@ public class FreeMarkerNotificationTransformer implements NotificationTransforme
 			final Template ft = freeMarkerConfig.getTemplate(layoutTemplate, locale, "UTF-8");
 			final String message = FreeMarkerTemplateUtils.processTemplateIntoString(ft, variables);
 			return new NotificationMessage(notification.getCode(), subject, message, notification.getRecipient(), notification.getSender());
-		} catch (IOException ex) {
-			throw new TransformationException(ex);
-		} catch (TemplateException ex) {
+		} catch (IOException | TemplateException ex) {
 			throw new TransformationException(ex);
 		}
 	}

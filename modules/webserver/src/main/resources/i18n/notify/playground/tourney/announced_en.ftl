@@ -1,11 +1,11 @@
-<#-- @ftlvariable name="context.tourney" type="wisematches.playground.tourney.regular.Tourney" -->
+<#-- @ftlvariable name="context" type="wisematches.playground.tourney.regular.Tourney" -->
 <#import "../../utils.ftl" as util>
 
 <p>
-    Next ${context.tourney.number?string}${gameMessageSource.getNumeralEnding(context.tourney.number, locale)}
+    Next ${context.number?string}${gameMessageSource.getNumeralEnding(context.number, locale)}
     WiseMatches tourney is going to be
-    started in ${gameMessageSource.formatRemainedTime(context.tourney.scheduledDate, locale)}
-    (${gameMessageSource.formatDate(context.tourney.scheduledDate, locale)}).
+    started in ${gameMessageSource.formatRemainedTime(context.scheduledDate, locale)}
+    (${gameMessageSource.formatDate(context.scheduledDate, locale)}).
 </p>
 
 <p>

@@ -37,9 +37,9 @@ import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
 import wisematches.playground.task.TransactionAwareTaskExecutor;
 import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.regular.RegistrationSearchManager;
 import wisematches.playground.tourney.regular.RegularTourneyEntity;
 import wisematches.playground.tourney.regular.RegularTourneyManager;
 import wisematches.playground.tourney.regular.Tourney;
@@ -424,7 +424,7 @@ public class NotificationPublisherCenterTest {
 		final List<RegularTourneyEntity> value = Collections.emptyList();
 		expect(tourneyManager.searchTourneyEntities(isNull(Personality.class), isA(TourneyEntity.Context.class), isNull(SearchFilter.class), isNull(Orders.class), isNull(Range.class))).andReturn(value);
 		replay(tourneyManager);
-		publisherCenter.setRegularTourneyManager(tourneyManager);
+		publisherCenter.setTourneyManager(tourneyManager);
 
 		publisherCenter.breakingDayTime(null);
 		assertEquals(0, publishedNotifications.getValues().size());
@@ -448,13 +448,13 @@ public class NotificationPublisherCenterTest {
 		replay(t3);
 
 		@SuppressWarnings("unchecked")
-		final SearchManager<Long, Tourney.Id, SearchFilter> searchManager = createMock(SearchManager.class);
-		expect(searchManager.searchEntities(null, new Tourney.Id(2), null, null, Range.limit(0, 1000))).andReturn(Arrays.<Long>asList(1001L, 1002L));
+		final RegistrationSearchManager searchManager = createMock(RegistrationSearchManager.class);
+		expect(searchManager.searchUnregisteredPlayers(t2, Range.limit(0, 1000))).andReturn(new long[]{1001L, 1002L});
 		replay(searchManager);
 
 		reset(tourneyManager);
 		expect(tourneyManager.searchTourneyEntities(isNull(Personality.class), isA(RegularTourneyEntity.Context.class), isNull(SearchFilter.class), isNull(Orders.class), isNull(Range.class))).andReturn(Arrays.<RegularTourneyEntity>asList(t1, t2, t3));
-		expect(tourneyManager.getUnregisteredPlayersSearch()).andReturn(searchManager);
+		expect(tourneyManager.getRegistrationSearchManager()).andReturn(searchManager);
 		replay(tourneyManager);
 
 		publisherCenter.breakingDayTime(null);
