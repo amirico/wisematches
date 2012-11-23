@@ -7,12 +7,12 @@
 
     <groupId>wisematches.application</groupId>
     <artifactId>webserver</artifactId>
-    <version>3.01-SNAPSHOT</version>
+    <version>3.02-SNAPSHOT</version>
 
     <parent>
         <groupId>wisematches</groupId>
         <artifactId>application</artifactId>
-        <version>3.01-SNAPSHOT</version>
+        <version>3.02-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
 

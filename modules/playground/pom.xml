@@ -6,12 +6,12 @@
 
     <groupId>wisematches</groupId>
     <artifactId>playground</artifactId>
-    <version>3.01-SNAPSHOT</version>
+    <version>3.02-SNAPSHOT</version>
 
     <parent>
         <artifactId>application</artifactId>
         <groupId>wisematches</groupId>
-        <version>3.01-SNAPSHOT</version>
+        <version>3.02-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
