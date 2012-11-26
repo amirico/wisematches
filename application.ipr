@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-3.01-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-3.02-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="webserver/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -14,7 +14,7 @@
             <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="database-3.01-SNAPSHOT.jar">
+            <element id="archive" name="database-3.02-SNAPSHOT.jar">
               <element id="module-output" name="database" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
@@ -53,13 +53,13 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.2.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="archive" name="personality-3.01-SNAPSHOT.jar">
+            <element id="archive" name="personality-3.02-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
             </element>
-            <element id="archive" name="playground-3.01-SNAPSHOT.jar">
+            <element id="archive" name="playground-3.02-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
-            <element id="archive" name="scribble-3.01-SNAPSHOT.jar">
+            <element id="archive" name="scribble-3.02-SNAPSHOT.jar">
               <element id="module-output" name="scribble" />
             </element>
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" />
@@ -78,7 +78,7 @@
     </artifact>
     <artifact type="war" name="webserver:war">
       <output-path>$PROJECT_DIR$/modules/webserver/target</output-path>
-      <root id="archive" name="webserver-3.01-SNAPSHOT.war">
+      <root id="archive" name="webserver-3.02-SNAPSHOT.war">
         <element id="artifact" artifact-name="webserver:war exploded" />
       </root>
     </artifact>
@@ -119,11 +119,11 @@
       <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/scribble/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/database/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/scribble/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
@@ -1175,6 +1175,19 @@
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/2.12-SNAPSHOT/database-2.12-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: wisematches:database:3.01-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/3.01-SNAPSHOT/database-3.01-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/database/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/3.01-SNAPSHOT/database-3.01-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/database/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/3.01-SNAPSHOT/database-3.01-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: wisematches:personality:2.12-SNAPSHOT">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/2.12-SNAPSHOT/personality-2.12-SNAPSHOT.jar!/" />
@@ -1186,6 +1199,19 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/modules/personality/pom-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/2.12-SNAPSHOT/personality-2.12-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:personality:3.01-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/3.01-SNAPSHOT/personality-3.01-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/personality/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/3.01-SNAPSHOT/personality-3.01-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/personality/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/3.01-SNAPSHOT/personality-3.01-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: wisematches:playground:2.12-SNAPSHOT">
@@ -1201,6 +1227,19 @@
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/2.12-SNAPSHOT/playground-2.12-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: wisematches:playground:3.01-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/3.01-SNAPSHOT/playground-3.01-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/playground/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/3.01-SNAPSHOT/playground-3.01-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/playground/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/3.01-SNAPSHOT/playground-3.01-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: wisematches:scribble:2.12-SNAPSHOT">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/2.12-SNAPSHOT/scribble-2.12-SNAPSHOT.jar!/" />
@@ -1212,6 +1251,19 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/modules/scribble/pom-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/2.12-SNAPSHOT/scribble-2.12-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:scribble:3.01-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/3.01-SNAPSHOT/scribble-3.01-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/scribble/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/3.01-SNAPSHOT/scribble-3.01-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/scribble/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/3.01-SNAPSHOT/scribble-3.01-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

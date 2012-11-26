@@ -16,8 +16,8 @@ import java.util.Collection;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class RobotActivityCenter implements InitializingBean {
-	private RobotBrain<GameBoard> robotBrain;
 	private BoardManager boardManager;
+	private RobotBrain<GameBoard> robotBrain;
 
 	private TaskExecutor taskExecutor;
 
@@ -28,27 +28,23 @@ public class RobotActivityCenter implements InitializingBean {
 	public RobotActivityCenter() {
 	}
 
-	private void initializeGames() {
+	@Override
+	public void afterPropertiesSet() {
 		boardManager.addBoardStateListener(boardStateListener);
 
 		final Collection<RobotPlayer> robotPlayers = RobotPlayer.getRobotPlayers();
-		for (RobotPlayer player : robotPlayers) {
-			@SuppressWarnings("unchecked")
-			final Collection<GameBoard> activeBoards = boardManager.searchEntities(player, GameState.ACTIVE, null, null, null);
-			for (GameBoard activeBoard : activeBoards) {
-				processRobotMove(activeBoard, 1);
-			}
+		for (final RobotPlayer player : robotPlayers) {
+			taskExecutor.execute(new Runnable() {
+				@Override
+				@SuppressWarnings("unchecked")
+				public void run() {
+					final Collection<GameBoard> activeBoards = boardManager.searchEntities(player, GameState.ACTIVE, null, null, null);
+					for (GameBoard activeBoard : activeBoards) {
+						processRobotMove(activeBoard, 1);
+					}
+				}
+			});
 		}
-	}
-
-	@Override
-	public void afterPropertiesSet() {
-		taskExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				initializeGames();
-			}
-		});
 	}
 
 	/**
@@ -62,14 +58,14 @@ public class RobotActivityCenter implements InitializingBean {
 		if (hand != null) {
 			final RobotPlayer robot = RobotPlayer.getComputerPlayer(hand.getPlayerId(), RobotPlayer.class);
 			if (robot != null) {
-				log.info("Initialize robot activity [attempt=" + attempt + "] for board: " + gameBoard.getBoardId() + robot.getRobotType());
-				taskExecutor.execute(new MakeTurnTask(gameBoard, attempt));
+				final long boardId = gameBoard.getBoardId();
+				log.info("Initialize robot activity [attempt=" + attempt + "] for board: " + boardId + " [" + robot.getRobotType() + "]");
+				taskExecutor.execute(new MakeTurnTask(boardId, attempt));
 				return true;
 			}
 		}
 		return false;
 	}
-
 
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
@@ -85,35 +81,35 @@ public class RobotActivityCenter implements InitializingBean {
 
 	final class MakeTurnTask implements Runnable {
 		private final int attempt;
-		private final GameBoard gameBoard;
+		private final long boardId;
 
-		MakeTurnTask(GameBoard gameBoard, int attempt) {
-			this.gameBoard = gameBoard;
+		MakeTurnTask(long boardId, int attempt) {
+			this.boardId = boardId;
 			this.attempt = attempt;
 		}
 
 		public void run() {
-			final GamePlayerHand hand = gameBoard.getPlayerTurn();
-			if (hand != null) {
-				final RobotPlayer robot = RobotPlayer.getComputerPlayer(hand.getPlayerId(), RobotPlayer.class);
-				if (robot != null) {
-					final RobotType robotType = robot.getRobotType();
-					taskExecutor.execute(new Runnable() {
-						@Override
-						public void run() {
+			try {
+				final GameBoard gameBoard = boardManager.openBoard(boardId);
+				final GamePlayerHand hand = gameBoard.getPlayerTurn();
+				if (hand != null) {
+					final RobotPlayer robot = RobotPlayer.getComputerPlayer(hand.getPlayerId(), RobotPlayer.class);
+					if (robot != null) {
+						final RobotType robotType = robot.getRobotType();
+						try {
+							robotBrain.putInAction(gameBoard, robotType);
+						} catch (Throwable th) {
+							log.error("Robot can't make a turn [attempt=" + attempt + "] for board " + boardId, th);
 							try {
-								robotBrain.putInAction(gameBoard, robotType);
-							} catch (Throwable th) {
-								log.error("Robot can't make a turn [attempt=" + attempt + "]", th);
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException ignore) {
-								}
-								processRobotMove(gameBoard, attempt + 1);
+								Thread.sleep(1000);
+							} catch (InterruptedException ignore) {
 							}
+							processRobotMove(gameBoard, attempt + 1);
 						}
-					});
+					}
 				}
+			} catch (BoardLoadingException ex) {
+				log.error("Board for robot's move can't be loaded: " + boardId, ex);
 			}
 		}
 	}

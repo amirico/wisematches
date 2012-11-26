@@ -48,13 +48,16 @@ public class RobotActivityCenterTest {
 		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(player.getId()));
 		replay(gameBoard);
 
+		expect(boardManager.openBoard(1L)).andReturn(gameBoard);
+		replay(boardManager);
+
 		robotBrain.putInAction(gameBoard, RobotType.TRAINEE);
 		replay(robotBrain);
 
-		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(gameBoard, 1);
+		final RobotActivityCenter.MakeTurnTask task = activityManager.new MakeTurnTask(1L, 1);
 		task.run();
 
-		verify(robotBrain);
+		verify(robotBrain, boardManager);
 	}
 
 	@Test
@@ -75,7 +78,9 @@ public class RobotActivityCenterTest {
 
 		boardManager.addBoardStateListener(capture(listener));
 		expect(boardManager.searchEntities(p1, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(gameBoard));
+		expect(boardManager.openBoard(1L)).andReturn(gameBoard);
 		expect(boardManager.searchEntities(p2, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(gameBoard));
+		expect(boardManager.openBoard(1L)).andReturn(gameBoard);
 		expect(boardManager.searchEntities(p3, GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
 		replay(boardManager);
 
@@ -114,9 +119,13 @@ public class RobotActivityCenterTest {
 		expect(board.getPlayerTurn()).andReturn(createPlayerHand(p1.getId()));
 		replay(board);
 
+		reset(boardManager);
+		expect(boardManager.openBoard(1L)).andReturn(board);
+		replay(boardManager);
+
 		listener.getValue().gameMoveDone(board, new GameMove(new PassTurnMove(13L), 0, 0, new Date()), null);
 
-		verify(board);
+		verify(board, boardManager);
 	}
 
 	private GamePlayerHand createPlayerHand(long id) {
