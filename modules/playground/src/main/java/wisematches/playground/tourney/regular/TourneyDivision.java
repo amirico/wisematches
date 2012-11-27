@@ -3,6 +3,7 @@ package wisematches.playground.tourney.regular;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
+import java.util.Collection;
 import java.util.EnumSet;
 
 /**
@@ -40,6 +41,19 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 */
 	int getActiveRound();
 
+	/**
+	 * Returns collection of all winners for this division.
+	 * <p/>
+	 * Please note that you mustn't use this method to check is division finished or not. It's better
+	 * to check is division finished or not before call this method.
+	 * <p/>
+	 * Please note it's possible that for one place more than one winner. You can filter
+	 * winners by place using {@link WinnerPlace#filter(java.util.Collection)} method.
+	 *
+	 * @return the collection of winners.
+	 * @see WinnerPlace
+	 */
+	Collection<TourneyWinner> getTourneyWinners();
 
 	public final class Id extends TourneyEntity.Id<TourneyDivision, Id> {
 		private final Language language;

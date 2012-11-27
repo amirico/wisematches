@@ -3,8 +3,10 @@ package wisematches.playground.tourney.regular.impl;
 import wisematches.personality.Language;
 import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneySection;
+import wisematches.playground.tourney.regular.TourneyWinner;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -39,6 +41,10 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@Column(name = "finished")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
+
+	@ElementCollection(targetClass = HibernateTourneyWinner.class)
+	@CollectionTable(name = "tourney_regular_winner", joinColumns = @JoinColumn(name = "division"))
+	private Collection<TourneyWinner> tourneyWinners;
 
 	@Deprecated
 	public HibernateTourneyDivision() {
@@ -96,6 +102,11 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		return finishedDate;
 	}
 
+	@Override
+	public Collection<TourneyWinner> getTourneyWinners() {
+		return tourneyWinners;
+	}
+
 	void startRound(HibernateTourneyRound round) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Division already finished");
@@ -111,7 +122,15 @@ public class HibernateTourneyDivision implements TourneyDivision {
 			throw new IllegalStateException("Division already finished");
 		}
 		activeRound = 0;
+
 		if (round.isFinal()) {
+			// TODO: Winners list must be passed
+//			tourneyWinners = new ArrayList<>();
+//			tourneyWinners.add(new HibernateTourneyWinner(1001, WinnerPlace.FIRST));
+//			tourneyWinners.add(new HibernateTourneyWinner(1002, WinnerPlace.FIRST));
+//			tourneyWinners.add(new HibernateTourneyWinner(1003, WinnerPlace.FIRST));
+//			tourneyWinners.add(new HibernateTourneyWinner(1005, WinnerPlace.SECOND));
+
 			finishedDate = new Date();
 		}
 	}
