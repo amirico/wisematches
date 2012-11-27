@@ -88,7 +88,7 @@ public class HibernateTourneyManagerTest {
 		}).anyTimes();
 		replay(boardManager);
 
-		tourneyManager = new HibernateTourneyManager<GameSettings>();
+		tourneyManager = new HibernateTourneyManager<>();
 		tourneyManager.setSessionFactory(sessionFactory);
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
 		tourneyManager.setBoardManager(boardManager);
@@ -225,8 +225,8 @@ public class HibernateTourneyManagerTest {
 
 	@Test
 	public void testInitTourney() throws InterruptedException, RegistrationException, ParseException {
-		final Capture<Tourney> tourneyCapture = new Capture<Tourney>(CaptureType.ALL);
-		final Capture<RegistrationRecord> subscriptionCapture = new Capture<RegistrationRecord>(CaptureType.ALL);
+		final Capture<Tourney> tourneyCapture = new Capture<>(CaptureType.ALL);
+		final Capture<RegistrationRecord> subscriptionCapture = new Capture<>(CaptureType.ALL);
 
 		final RegularTourneyListener tourneyListener = createStrictMock(RegularTourneyListener.class);
 		tourneyListener.tourneyAnnounced(capture(tourneyCapture));
@@ -268,8 +268,8 @@ public class HibernateTourneyManagerTest {
 		final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
 		assertTrue(tourneys.size() >= 1);
 
-		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(tourney.getId())));
-		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, new TourneyDivision.Context(tourney.getId()), null, null, null);
+		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(tourney.getId(), null)));
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, new TourneyDivision.Context(tourney.getId(), null), null, null, null);
 		assertEquals(1, divisions.size());
 
 		final TourneyDivision division = divisions.iterator().next();
@@ -315,8 +315,8 @@ public class HibernateTourneyManagerTest {
 		final int activeTourneys = tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.ACTIVE)));
 		final int finishedTourneys = tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED)));
 
-		final Capture<Tourney> tourneyCapture = new Capture<Tourney>(CaptureType.ALL);
-		final Capture<RegistrationRecord> subscriptionCapture = new Capture<RegistrationRecord>(CaptureType.ALL);
+		final Capture<Tourney> tourneyCapture = new Capture<>(CaptureType.ALL);
+		final Capture<RegistrationRecord> subscriptionCapture = new Capture<>(CaptureType.ALL);
 
 		for (int i = 0; i < 7; i++) {
 			createStats(101 + i, 1001);

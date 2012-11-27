@@ -1,7 +1,6 @@
 package wisematches.playground.tourney.regular;
 
 import wisematches.personality.Language;
-import wisematches.personality.Personality;
 import wisematches.playground.tourney.TourneyEntity;
 
 import java.util.EnumSet;
@@ -120,15 +119,10 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	}
 
 	public final class Context extends TourneyEntity.Context<TourneyGroup, Context> {
-		private Personality personality;
 		private TourneyRound.Id roundId;
 
-		public Context(Personality personality, EnumSet<State> states) {
+		public Context(EnumSet<State> states) {
 			super(states);
-			if (personality == null) {
-				throw new NullPointerException("Personality id can't be null");
-			}
-			this.personality = personality;
 		}
 
 		public Context(TourneyRound.Id roundId, EnumSet<State> states) {
@@ -139,10 +133,6 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 			this.roundId = roundId;
 		}
 
-		public Personality getPersonality() {
-			return personality;
-		}
-
 		public TourneyRound.Id getRoundId() {
 			return roundId;
 		}
@@ -151,7 +141,6 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 		public String toString() {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("Context");
-			sb.append("{personality=").append(personality);
 			sb.append(", roundId=").append(roundId);
 			sb.append('}');
 			return sb.toString();

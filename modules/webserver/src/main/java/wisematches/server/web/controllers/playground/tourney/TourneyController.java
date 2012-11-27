@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
+import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.PlayerStatisticManager;
 import wisematches.server.web.controllers.ServiceResponse;
@@ -46,8 +47,7 @@ public class TourneyController extends WisematchesController {
 	public String showDashboard(Model model) {
 		final Personality personality = getPersonality();
 
-
-		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(personality, EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
+		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
 		model.addAttribute("participated", participated);
 
 		setupAnnounce(model);
@@ -57,7 +57,12 @@ public class TourneyController extends WisematchesController {
 
 	@RequestMapping("active")
 	public String showActive(Model model) {
+		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
 
+		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
+
+		setupAnnounce(model);
 		return "/content/playground/tourney/active";
 	}
 

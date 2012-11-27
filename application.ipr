@@ -119,10 +119,10 @@
       <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/database/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/scribble/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/database/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
@@ -488,6 +488,7 @@
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateQueryHelper.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateRegistrationRecord.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneyProcessor.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/manager/MySQLNotificationManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />
@@ -1160,110 +1161,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.1.2.RELEASE/spring-webmvc-3.1.2.RELEASE-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:database:2.12-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/2.12-SNAPSHOT/database-2.12-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/database/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/2.12-SNAPSHOT/database-2.12-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/database/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/2.12-SNAPSHOT/database-2.12-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:database:3.01-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/3.01-SNAPSHOT/database-3.01-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/database/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/3.01-SNAPSHOT/database-3.01-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/database/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/database/3.01-SNAPSHOT/database-3.01-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:personality:2.12-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/2.12-SNAPSHOT/personality-2.12-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/personality/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/2.12-SNAPSHOT/personality-2.12-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/personality/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/2.12-SNAPSHOT/personality-2.12-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:personality:3.01-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/3.01-SNAPSHOT/personality-3.01-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/personality/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/3.01-SNAPSHOT/personality-3.01-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/personality/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/personality/3.01-SNAPSHOT/personality-3.01-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:playground:2.12-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/2.12-SNAPSHOT/playground-2.12-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/playground/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/2.12-SNAPSHOT/playground-2.12-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/playground/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/2.12-SNAPSHOT/playground-2.12-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:playground:3.01-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/3.01-SNAPSHOT/playground-3.01-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/playground/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/3.01-SNAPSHOT/playground-3.01-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/playground/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/3.01-SNAPSHOT/playground-3.01-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:scribble:2.12-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/2.12-SNAPSHOT/scribble-2.12-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/2.12-SNAPSHOT/scribble-2.12-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/2.12-SNAPSHOT/scribble-2.12-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:scribble:3.01-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/3.01-SNAPSHOT/scribble-3.01-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/3.01-SNAPSHOT/scribble-3.01-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/scribble/3.01-SNAPSHOT/scribble-3.01-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

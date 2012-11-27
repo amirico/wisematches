@@ -1,5 +1,4 @@
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-
 <#-- @ftlvariable name="participated" type="wisematches.playground.tourney.regular.TourneyGroup[]" -->
 
 <#include "/core.ftl">
