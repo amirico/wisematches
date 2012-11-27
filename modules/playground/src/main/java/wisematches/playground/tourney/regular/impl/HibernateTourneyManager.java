@@ -181,7 +181,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Personality person, Ctx context) {
 		lock.lock();
 		try {
-			final Query query = createEntityQuery(context, true);
+			final Query query = createEntityQuery(person, context, true);
 			return ((Number) query.uniqueResult()).intValue();
 		} finally {
 			lock.unlock();
@@ -193,7 +193,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	public <T extends RegularTourneyEntity, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTourneyEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range) {
 		lock.lock();
 		try {
-			final Query query1 = createEntityQuery(context, false);
+			final Query query1 = createEntityQuery(person, context, false);
 			if (range != null) {
 				range.apply(query1);
 			}
@@ -208,24 +208,24 @@ public class HibernateTourneyManager<S extends GameSettings>
 		return registrationSearchManager;
 	}
 
-	private Query createEntityQuery(TourneyEntity.Context<?, ?> context, boolean count) {
+	private Query createEntityQuery(Personality personality, TourneyEntity.Context<?, ?> context, boolean count) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Class<? extends TourneyEntity.Context> contextType = context.getClass();
 
 		if (Tourney.Context.class.isAssignableFrom(contextType)) {
-			return HibernateQueryHelper.searchTourneis(session, Tourney.Context.class.cast(context), count);
+			return HibernateQueryHelper.searchTourneis(session, personality, Tourney.Context.class.cast(context), count);
 		}
 
 		if (TourneyDivision.Context.class.isAssignableFrom(contextType)) {
-			return HibernateQueryHelper.searchDivisions(session, TourneyDivision.Context.class.cast(context), count);
+			return HibernateQueryHelper.searchDivisions(session, personality, TourneyDivision.Context.class.cast(context), count);
 		}
 
 		if (TourneyRound.Context.class.isAssignableFrom(contextType)) {
-			return HibernateQueryHelper.searchRounds(session, TourneyRound.Context.class.cast(context), count);
+			return HibernateQueryHelper.searchRounds(session, personality, TourneyRound.Context.class.cast(context), count);
 		}
 
 		if (TourneyGroup.Context.class.isAssignableFrom(contextType)) {
-			return HibernateQueryHelper.searchGroups(session, TourneyGroup.Context.class.cast(context), count);
+			return HibernateQueryHelper.searchGroups(session, personality, TourneyGroup.Context.class.cast(context), count);
 		}
 		throw new IllegalArgumentException("Unsupported context type: " + contextType);
 	}

@@ -3,6 +3,7 @@ package wisematches.playground.tourney.regular.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import wisematches.personality.Language;
+import wisematches.personality.Personality;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 
@@ -72,11 +73,11 @@ class HibernateQueryHelper {
 				.uniqueResult();
 	}
 
-	static Query searchTourneis(Session session, Tourney.Context context, boolean count) {
+	static Query searchTourneis(Session session, Personality personality, Tourney.Context context, boolean count) {
 		return session.createQuery((count ? "select count(*) " : "") + "from HibernateTourney t " + convertStateToQuery(context.getStates(), "t", "where"));
 	}
 
-	static Query searchRounds(Session session, TourneyRound.Context context, boolean count) {
+	static Query searchRounds(Session session, Personality personality, TourneyRound.Context context, boolean count) {
 		if (context.getDivisionId() != null) {
 			Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyRound r " +
@@ -99,7 +100,7 @@ class HibernateQueryHelper {
 		}
 	}
 
-	static Query searchGroups(Session session, TourneyGroup.Context context, boolean count) {
+	static Query searchGroups(Session session, Personality personality, TourneyGroup.Context context, boolean count) {
 		if (context.getRoundId() != null) {
 			Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyGroup g " +
@@ -112,26 +113,32 @@ class HibernateQueryHelper {
 			query.setParameter("section", context.getRoundId().getDivisionId().getSection());
 			query.setInteger("round", context.getRoundId().getRound());
 			return query;
-		} else if (context.getPersonality() != null) {
+		} else if (personality != null) {
 			Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyGroup g " +
 					"where (g.player1=:pid or g.player2=:pid or g.player3=:pid or g.player4=:pid) " +
 					convertStateToQuery(context.getStates(), "g", "and"));
-			query.setLong("pid", context.getPersonality().getId());
+			query.setLong("pid", personality.getId());
 			return query;
 		} else {
-			throw new IllegalArgumentException("Invalid group context: " + context);
+			return session.createQuery((count ? "select count(*) " : "") +
+					"from HibernateTourneyGroup g " +
+					convertStateToQuery(context.getStates(), "g", "where"));
 		}
 	}
 
-	static Query searchDivisions(Session session, TourneyDivision.Context context, boolean count) {
+	static Query searchDivisions(Session session, Personality personality, TourneyDivision.Context context, boolean count) {
+
 		final Query query = session.createQuery((count ? "select count(*) " : "") +
-				"from HibernateTourneyDivision d " +
-				"where d.tourney.number=:tourney " +
+				"from HibernateTourneyDivision d where " +
+				(context.getTourneyId() != null ? "d.tourney.number=:tourney" : " 1=1 ") +
 				(context.getLanguage() != null ? " and d.language=:language " : "") +
 				(context.getSection() != null ? " and d.section=:section " : "") +
 				convertStateToQuery(context.getStates(), "d", "and"));
-		query.setInteger("tourney", context.getTourneyId().getNumber());
+
+		if (context.getTourneyId() != null) {
+			query.setInteger("tourney", context.getTourneyId().getNumber());
+		}
 		if (context.getLanguage() != null) {
 			query.setParameter("language", context.getLanguage());
 		}

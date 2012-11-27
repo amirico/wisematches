@@ -538,11 +538,11 @@
     display: block;
 }
 
-#subscriptionView table, #subscriptionDialog table, #subscriptionDetails table, #subscriptions table {
+#tourneyWidget .dataTable, #subscriptionView table, #subscriptionDialog table, #subscriptionDetails table, #subscriptions table {
     border-spacing: 5px;
 }
 
-#subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td, #participated table td, #subscriptions table td {
+#tourneyWidget .dataTable td, #subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td {
     white-space: nowrap;
     vertical-align: top;
 }
