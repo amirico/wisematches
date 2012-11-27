@@ -131,7 +131,7 @@ class HibernateQueryHelper {
 
 		final Query query = session.createQuery((count ? "select count(*) " : "") +
 				"from HibernateTourneyDivision d where " +
-				(context.getTourneyId() != null ? "d.tourney.number=:tourney" : " 1=1 ") +
+				(context.getTourneyId() != null ? "d.tourney.number=:tourney " : " 1=1 ") +
 				(context.getLanguage() != null ? " and d.language=:language " : "") +
 				(context.getSection() != null ? " and d.section=:section " : "") +
 				convertStateToQuery(context.getStates(), "d", "and"));

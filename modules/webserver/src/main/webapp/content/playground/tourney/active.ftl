@@ -8,8 +8,6 @@
 
 <@wm.jstable/>
 
-<#assign pid=principal.id/>
-
 <#macro divisionsInfo tourney language>
     <#list divisionsTree.getDivisions(tourney) as d>
         <#if d.language = language>

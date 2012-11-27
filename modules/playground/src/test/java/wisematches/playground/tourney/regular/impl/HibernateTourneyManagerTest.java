@@ -471,6 +471,9 @@ public class HibernateTourneyManagerTest {
 		assertEquals(2, tourneyManager.getTotalCount(null, new TourneyDivision.Context(new Tourney.Id(tourney.getNumber()), EnumSet.of(TourneyEntity.State.FINISHED))));
 		assertEquals(finishedTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED))));
 
+		final TourneyDivision tourneyEntity = tourneyManager.getTourneyEntity(casualDivision);
+		assertNotNull(tourneyEntity);
+
 		verify(board1, board2, board3, board4, board5, board6, tourneyListener, subscriptionListener);
 	}
 
