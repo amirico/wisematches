@@ -1,4 +1,4 @@
-package wisematches.playground.task;
+package wisematches.playground.task.executor;
 
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -7,28 +7,31 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+import wisematches.playground.task.TransactionalTaskExecutor;
 
-/**
- * Wrapper under {@code TaskExecutor} spring interface that process any work inside Hibernate
- * transaction with {@code PROPAGATION_REQUIRES_NEW} propagation.
- *
- * @author Sergey Klimenko (smklimenko@gmail.com)
- */
-public class TransactionAwareTaskExecutor implements TaskExecutor {
+public class TransactionAwareTaskExecutor implements TransactionalTaskExecutor {
 	private TaskExecutor taskExecutor;
-	private PlatformTransactionManager transactionManager;
-
 	private TransactionTemplate transactionTemplate;
+
+	private static final DefaultTransactionDefinition TRANSACTION_DEFINITION = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 
 	public TransactionAwareTaskExecutor() {
 	}
 
 	@Override
 	public void execute(final Runnable task) {
+		if (transactionTemplate == null) {
+			throw new IllegalStateException("TransactionManager is not set");
+		}
+
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
-				getTransactionTemplate().execute(new TransactionCallbackWithoutResult() {
+				if (transactionTemplate == null) {
+					throw new IllegalStateException("TransactionManager is not set");
+				}
+
+				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 					@Override
 					protected void doInTransactionWithoutResult(TransactionStatus status) {
 						task.run();
@@ -38,11 +41,9 @@ public class TransactionAwareTaskExecutor implements TaskExecutor {
 		});
 	}
 
-	private TransactionTemplate getTransactionTemplate() {
-		if (transactionTemplate == null) {
-			transactionTemplate = new TransactionTemplate(transactionManager, new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
-		}
-		return transactionTemplate;
+	@Override
+	public void executeStraight(Runnable task) {
+		taskExecutor.execute(task);
 	}
 
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
@@ -50,6 +51,10 @@ public class TransactionAwareTaskExecutor implements TaskExecutor {
 	}
 
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
+		if (transactionManager != null) {
+			transactionTemplate = new TransactionTemplate(transactionManager, TRANSACTION_DEFINITION);
+		} else {
+			transactionTemplate = null;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package wisematches.playground.task;
+package wisematches.playground.task.executor;
 
 import org.junit.Test;
 import org.springframework.core.task.SyncTaskExecutor;

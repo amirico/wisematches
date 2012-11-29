@@ -1,12 +1,14 @@
 package wisematches.playground.robot;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.task.SyncTaskExecutor;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.*;
+import wisematches.playground.task.TransactionalTaskExecutor;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,9 +37,28 @@ public class RobotActivityCenterTest {
 		robotBrain = createStrictMock(RobotBrain.class);
 		boardManager = createStrictMock(BoardManager.class);
 
+		TransactionalTaskExecutor taskExecutor = createMock(TransactionalTaskExecutor.class);
+		taskExecutor.execute(EasyMock.<Runnable>anyObject());
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+			@Override
+			public Object answer() throws Throwable {
+				((Runnable) getCurrentArguments()[0]).run();
+				return null;
+			}
+		}).anyTimes();
+		taskExecutor.executeStraight(EasyMock.<Runnable>anyObject());
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+			@Override
+			public Object answer() throws Throwable {
+				((Runnable) getCurrentArguments()[0]).run();
+				return null;
+			}
+		}).anyTimes();
+		replay(taskExecutor);
+
 		activityManager.setRobotBrain(robotBrain);
 		activityManager.setBoardManager(boardManager);
-		activityManager.setTaskExecutor(new SyncTaskExecutor());
+		activityManager.setTaskExecutor(taskExecutor);
 	}
 
 	@Test

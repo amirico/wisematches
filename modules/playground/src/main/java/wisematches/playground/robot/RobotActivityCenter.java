@@ -3,10 +3,12 @@ package wisematches.playground.robot;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.*;
+import wisematches.playground.task.TransactionalTaskExecutor;
 
 import java.util.Collection;
 
@@ -19,7 +21,7 @@ public class RobotActivityCenter implements InitializingBean {
 	private BoardManager boardManager;
 	private RobotBrain<GameBoard> robotBrain;
 
-	private TaskExecutor taskExecutor;
+	private TransactionalTaskExecutor taskExecutor;
 
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
@@ -47,27 +49,37 @@ public class RobotActivityCenter implements InitializingBean {
 		}
 	}
 
-	/**
-	 * Checks that robot's has a turn on specified board and make a turn.
-	 *
-	 * @param gameBoard the bame board to check and make a turn.
-	 * @return {@code true} if move was maden; {@code false} - otherwise.
-	 */
-	private boolean processRobotMove(GameBoard gameBoard, int attempt) {
+	private boolean processRobotMove(final GameBoard gameBoard, final int attempt) {
 		final GamePlayerHand hand = gameBoard.getPlayerTurn();
 		if (hand != null) {
 			final RobotPlayer robot = RobotPlayer.getComputerPlayer(hand.getPlayerId(), RobotPlayer.class);
 			if (robot != null) {
 				final long boardId = gameBoard.getBoardId();
 				log.info("Initialize robot activity [attempt=" + attempt + "] for board: " + boardId + " [" + robot.getRobotType() + "]");
-				taskExecutor.execute(new MakeTurnTask(boardId, attempt));
+
+				try {
+					if (TransactionSynchronizationManager.isSynchronizationActive()) {
+						TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+							@Override
+							public void afterCompletion(int status) {
+								taskExecutor.execute(new MakeTurnTask(boardId, attempt));
+							}
+						});
+					} else {
+						taskExecutor.execute(new MakeTurnTask(boardId, attempt));
+					}
+				} catch (Throwable th) {
+					log.error("", th);
+					taskExecutor.execute(new MakeTurnTask(boardId, attempt));
+				}
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void setTaskExecutor(TaskExecutor taskExecutor) {
+
+	public void setTaskExecutor(TransactionalTaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
 
@@ -90,6 +102,7 @@ public class RobotActivityCenter implements InitializingBean {
 
 		public void run() {
 			try {
+				log.info("Start robot action for board " + boardId);
 				final GameBoard gameBoard = boardManager.openBoard(boardId);
 				final GamePlayerHand hand = gameBoard.getPlayerTurn();
 				if (hand != null) {
@@ -98,6 +111,7 @@ public class RobotActivityCenter implements InitializingBean {
 						final RobotType robotType = robot.getRobotType();
 						try {
 							robotBrain.putInAction(gameBoard, robotType);
+							log.info("Robot made a turn for board " + boardId);
 						} catch (Throwable th) {
 							log.error("Robot can't make a turn [attempt=" + attempt + "] for board " + boardId, th);
 							try {
@@ -106,7 +120,11 @@ public class RobotActivityCenter implements InitializingBean {
 							}
 							processRobotMove(gameBoard, attempt + 1);
 						}
+					} else {
+						log.info("It's not robot turn for board " + boardId);
 					}
+				} else {
+					log.info("Game is finished for board " + boardId);
 				}
 			} catch (BoardLoadingException ex) {
 				log.error("Board for robot's move can't be loaded: " + boardId, ex);
