@@ -19,7 +19,7 @@
 </#if>
 
 <@wm.dtHeader align="left">
-    <@message code="tourney.announce.label"/>
+    <@message code="tourney.tourney.label"/> > <@message code="tourney.announce.label"/>
 </@wm.dtHeader>
 
 <@wm.dtToolbar align="center">

@@ -16,7 +16,7 @@
         <td width="100%" valign="top">
             <div id="subscriptions">
                 <@wm.dtHeader align="left">
-                    <@message code="tourney.subscriptions.label"/>
+                    <@message code="tourney.tourney.label"/> > <@message code="tourney.subscribe.label"/>
                 </@wm.dtHeader>
 
                 <@wm.dtToolbar align="left">

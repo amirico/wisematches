@@ -4,12 +4,8 @@ import java.util.*;
 
 /**
  * Wraps collection of {@code TourneyGroup}s to tree view.
- * <p/>
- * It's very hard wrapper that reads all tourney objects from database. It's not recommened to use this wrapper. Please
- * check {@link TourneyTreeId} class instead.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see TourneyTreeId
  */
 public class TourneyTree {
 	private final Map<Tourney, List<TourneyDivision>> divisionMap;
