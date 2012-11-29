@@ -37,7 +37,7 @@ import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.search.SearchFilter;
-import wisematches.playground.task.TransactionAwareTaskExecutor;
+import wisematches.playground.task.executor.TransactionAwareTaskExecutor;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.RegistrationSearchManager;
 import wisematches.playground.tourney.regular.RegularTourneyEntity;
@@ -88,7 +88,7 @@ public class NotificationPublisherCenterTest {
 	private final Account p1 = createMockPlayer(1001, Language.RU);
 	private final Account p2 = createMockPlayer(1002, Language.EN);
 
-	private final Capture<Notification> publishedNotifications = new Capture<Notification>(CaptureType.ALL);
+	private final Capture<Notification> publishedNotifications = new Capture<>(CaptureType.ALL);
 
 	public NotificationPublisherCenterTest() {
 	}
@@ -163,7 +163,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testGameStarted() throws GameMoveException {
-		final Capture<BoardStateListener> listenerCapture = new Capture<BoardStateListener>();
+		final Capture<BoardStateListener> listenerCapture = new Capture<>();
 
 		final BoardManager boardManager = createStrictMock(BoardManager.class);
 		boardManager.addBoardStateListener(capture(listenerCapture));
@@ -184,7 +184,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testGameMoveDone() throws GameMoveException {
-		final Capture<BoardStateListener> listenerCapture = new Capture<BoardStateListener>();
+		final Capture<BoardStateListener> listenerCapture = new Capture<>();
 
 		final BoardManager boardManager = createStrictMock(BoardManager.class);
 		boardManager.addBoardStateListener(capture(listenerCapture));
@@ -233,7 +233,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testGameFinished() throws GameMoveException {
-		final Capture<BoardStateListener> listenerCapture = new Capture<BoardStateListener>();
+		final Capture<BoardStateListener> listenerCapture = new Capture<>();
 
 		final BoardManager boardManager = createStrictMock(BoardManager.class);
 		boardManager.addBoardStateListener(capture(listenerCapture));
@@ -269,7 +269,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testScribbleExpiring() throws BoardLoadingException {
-		final Capture<ExpirationListener<Long, ScribbleExpirationType>> listenerCapture = new Capture<ExpirationListener<Long, ScribbleExpirationType>>();
+		final Capture<ExpirationListener<Long, ScribbleExpirationType>> listenerCapture = new Capture<>();
 
 		final BoardManager boardManager = createStrictMock(BoardManager.class);
 		boardManager.addBoardStateListener(isA(BoardStateListener.class));
@@ -301,7 +301,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testProposalInitiated() {
-		final Capture<GameProposalListener> listenerCapture = new Capture<GameProposalListener>();
+		final Capture<GameProposalListener> listenerCapture = new Capture<>();
 
 		final GameProposalManager proposalManager = createStrictMock(GameProposalManager.class);
 		proposalManager.addGameProposalListener(capture(listenerCapture));
@@ -328,7 +328,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testProposalFinalized() {
-		final Capture<GameProposalListener> listenerCapture = new Capture<GameProposalListener>();
+		final Capture<GameProposalListener> listenerCapture = new Capture<>();
 
 		final GameProposalManager proposalManager = createStrictMock(GameProposalManager.class);
 		proposalManager.addGameProposalListener(capture(listenerCapture));
@@ -365,7 +365,7 @@ public class NotificationPublisherCenterTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testProposalExpiration() {
-		final Capture<ExpirationListener<Long, ProposalExpirationType>> listenerCapture = new Capture<ExpirationListener<Long, ProposalExpirationType>>();
+		final Capture<ExpirationListener<Long, ProposalExpirationType>> listenerCapture = new Capture<>();
 
 		final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
 		final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
@@ -398,7 +398,7 @@ public class NotificationPublisherCenterTest {
 
 	@Test
 	public void testMessage() {
-		final Capture<MessageListener> listenerCapture = new Capture<MessageListener>();
+		final Capture<MessageListener> listenerCapture = new Capture<>();
 
 		final MessageManager messageManager = createStrictMock(MessageManager.class);
 		messageManager.addMessageListener(capture(listenerCapture));

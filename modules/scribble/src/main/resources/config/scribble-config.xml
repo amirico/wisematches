@@ -71,7 +71,7 @@
 
     <bean id="scribbleRobotBrain" class="wisematches.playground.scribble.robot.ScribbleRobotBrain"/>
 
-    <bean id="scribbleRobotTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+    <bean id="scribbleRobotTaskExecutor" class="wisematches.playground.task.executor.TransactionAwareTaskExecutor">
         <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
                 <property name="maxPoolSize" value="5"/>
@@ -121,7 +121,7 @@
         <property name="tilesClassDefault" value="tiles-set-classic"/>
     </bean>
 
-    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.TransactionAwareTaskExecutor">
+    <bean id="tournamentTaskExecutor" class="wisematches.playground.task.executor.TransactionAwareTaskExecutor">
         <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
                 <property name="maxPoolSize" value="1"/>
