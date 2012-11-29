@@ -542,6 +542,11 @@
     border-spacing: 5px;
 }
 
+#tourneyWidget .dataTable th {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
 #tourneyWidget .dataTable td, #subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td {
     white-space: nowrap;
     vertical-align: top;

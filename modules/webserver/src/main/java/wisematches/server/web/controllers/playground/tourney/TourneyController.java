@@ -63,11 +63,19 @@ public class TourneyController extends WisematchesController {
 		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
 		setupAnnounce(model);
+
 		return "/content/playground/tourney/active";
 	}
 
 	@RequestMapping("finished")
 	public String showFinished(Model model) {
+		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+
+		model.addAttribute("winnerPlaces", WinnerPlace.values());
+		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
+
+		setupAnnounce(model);
 
 		return "/content/playground/tourney/finished";
 	}
@@ -120,7 +128,7 @@ public class TourneyController extends WisematchesController {
 		final Personality personality = getPersonality();
 		if (form.isTourney()) {
 			final TourneyRound.Context ctx = new TourneyRound.Context(tourneyId, null);
-			final Map<TourneyDivision, List<TourneyRound>> divisionsTree = new HashMap<TourneyDivision, List<TourneyRound>>();
+			final Map<TourneyDivision, List<TourneyRound>> divisionsTree = new HashMap<>();
 			final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(personality, ctx, null, null, null);
 
 			for (TourneyRound round : rounds) {
@@ -128,7 +136,7 @@ public class TourneyController extends WisematchesController {
 
 				List<TourneyRound> tourneyRounds = divisionsTree.get(division);
 				if (tourneyRounds == null) {
-					tourneyRounds = new ArrayList<TourneyRound>();
+					tourneyRounds = new ArrayList<>();
 					divisionsTree.put(division, tourneyRounds);
 				}
 				tourneyRounds.add(round);
@@ -182,9 +190,9 @@ public class TourneyController extends WisematchesController {
 		}
 
 		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
-		final Map<String, Map<String, Integer>> res = new HashMap<String, Map<String, Integer>>();
+		final Map<String, Map<String, Integer>> res = new HashMap<>();
 		for (Language l : Language.values()) {
-			Map<String, Integer> stringIntegerMap = new HashMap<String, Integer>();
+			Map<String, Integer> stringIntegerMap = new HashMap<>();
 			res.put(l.name(), stringIntegerMap);
 			for (TourneySection s : TourneySection.values()) {
 				stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));

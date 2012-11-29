@@ -14,13 +14,13 @@
         <td width="100%" valign="top">
             <div id="participated">
                 <@wm.dtHeader align="left">
-                    <@message code="tourney.participated.label"/>
+                    <@message code="tourney.tourney.label"/> > <@message code="tourney.participated.label"/>
                 </@wm.dtHeader>
 
                 <@wm.dtToolbar>
                     <div>
-                        <a href="/playground/tourney/active"><@message code="tourney.list.active.label"/></a>
-                        <a href="/playground/tourney/finished"><@message code="tourney.list.finished.label"/></a>
+                        <a href="/playground/tourney/active"><@message code="tourney.all.active.label"/></a>
+                        <a href="/playground/tourney/finished"><@message code="tourney.all.finished.label"/></a>
                     </div>
                 </@wm.dtToolbar>
 

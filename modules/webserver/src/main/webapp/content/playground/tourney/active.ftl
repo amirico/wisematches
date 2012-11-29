@@ -25,12 +25,12 @@
     <td width="100%" valign="top">
         <div id="activeTourneys">
             <@wm.dtHeader align="left">
-                <@message code="tourney.active.label"/>
+                <@message code="tourney.tourney.label"/> > <@message code="tourney.all.active.label"/>
             </@wm.dtHeader>
 
             <@wm.dtToolbar>
                 <div>
-                    <a href="/playground/tourney/finished"><@message code="tourney.list.finished.label"/></a>
+                    <a href="/playground/tourney/finished"><@message code="tourney.all.finished.label"/></a>
                 </div>
             </@wm.dtToolbar>
 
