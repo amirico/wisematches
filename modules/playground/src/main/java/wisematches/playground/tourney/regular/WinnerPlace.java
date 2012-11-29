@@ -7,9 +7,24 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum WinnerPlace {
-	FIRST,
-	SECOND,
-	THIRD;
+	FIRST() {
+		@Override
+		public WinnerPlace nextPlace() {
+			return SECOND;
+		}
+	},
+	SECOND() {
+		@Override
+		public WinnerPlace nextPlace() {
+			return THIRD;
+		}
+	},
+	THIRD() {
+		@Override
+		public WinnerPlace nextPlace() {
+			return null;
+		}
+	};
 
 	private WinnerPlace() {
 	}
@@ -26,4 +41,6 @@ public enum WinnerPlace {
 		}
 		return res;
 	}
+
+	public abstract WinnerPlace nextPlace();
 }

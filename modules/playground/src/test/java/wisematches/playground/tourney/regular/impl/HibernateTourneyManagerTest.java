@@ -472,7 +472,18 @@ public class HibernateTourneyManagerTest {
 		assertEquals(finishedTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED))));
 
 		final TourneyDivision tourneyEntity = tourneyManager.getTourneyEntity(casualDivision);
-		assertNotNull(tourneyEntity);
+		final Collection<TourneyWinner> winners = tourneyEntity.getTourneyWinners();
+		assertNotNull(winners.size());
+
+		assertEquals(2, winners.size());
+		final Iterator<TourneyWinner> iterator = winners.iterator();
+		final TourneyWinner first = iterator.next();
+		assertEquals(101L, first.getPlayer());
+		assertEquals(WinnerPlace.FIRST, first.getPlace());
+
+		final TourneyWinner second = iterator.next();
+		assertEquals(102L, second.getPlayer());
+		assertEquals(WinnerPlace.SECOND, second.getPlace());
 
 		verify(board1, board2, board3, board4, board5, board6, tourneyListener, subscriptionListener);
 	}
