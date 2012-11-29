@@ -24,7 +24,7 @@ public class HibernateTourneyWinner implements TourneyWinner {
 	public HibernateTourneyWinner() {
 	}
 
-	HibernateTourneyWinner(long player, WinnerPlace place) {
+	public HibernateTourneyWinner(long player, WinnerPlace place) {
 		this.player = player;
 		this.place = place;
 	}

@@ -6,8 +6,10 @@ import wisematches.playground.tourney.regular.TourneySection;
 import wisematches.playground.tourney.regular.TourneyWinner;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -117,22 +119,30 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		activeRound = round.getRound();
 	}
 
-	void finishRound(HibernateTourneyRound round) {
-		if (finishedDate != null) {
+	boolean finishRound(HibernateTourneyRound round) {
+		if (activeRound == 0) {
 			throw new IllegalStateException("Division already finished");
 		}
+
 		activeRound = 0;
 
 		if (round.isFinal()) {
-			// TODO: Winners list must be passed
-//			tourneyWinners = new ArrayList<>();
-//			tourneyWinners.add(new HibernateTourneyWinner(1001, WinnerPlace.FIRST));
-//			tourneyWinners.add(new HibernateTourneyWinner(1002, WinnerPlace.FIRST));
-//			tourneyWinners.add(new HibernateTourneyWinner(1003, WinnerPlace.FIRST));
-//			tourneyWinners.add(new HibernateTourneyWinner(1005, WinnerPlace.SECOND));
-
 			finishedDate = new Date();
+			return true;
 		}
+		return false;
+	}
+
+	void finishDivision(List<HibernateTourneyWinner> winners) {
+		if (finishedDate == null) {
+			throw new IllegalStateException("Division is not finished");
+		}
+
+		if (tourneyWinners != null) {
+			throw new IllegalStateException("Winners already set. Change is not possible.");
+		}
+		tourneyWinners = new ArrayList<>();
+		tourneyWinners.addAll(winners);
 	}
 
 	@Override

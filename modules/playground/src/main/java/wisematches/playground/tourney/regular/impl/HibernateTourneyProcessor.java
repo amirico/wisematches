@@ -8,6 +8,7 @@ import org.hibernate.type.LongType;
 import wisematches.personality.Language;
 import wisematches.playground.*;
 import wisematches.playground.tourney.regular.*;
+import wisematches.playground.tourney.regular.impl.referee.FinalGroupResultReferee;
 
 import java.util.*;
 
@@ -15,6 +16,8 @@ import java.util.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 class HibernateTourneyProcessor {
+	private TourneyReferee tourneyReferee = new FinalGroupResultReferee();
+
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
 
 	HibernateTourneyProcessor() {
@@ -119,12 +122,15 @@ class HibernateTourneyProcessor {
 			round.gamesFinished(1);
 			session.update(round);
 
+			final HibernateTourneyDivision division = round.getDivision();
 			if (round.getFinishedDate() != null) { // finished
-				final HibernateTourneyDivision division = round.getDivision();
-				division.finishRound(round);
+				if (division.finishRound(round)) {
+					division.finishDivision(tourneyReferee.getWinnersList(group, round, division));
+				}
 				session.update(division);
 			}
 
+			// if group finished and not final round
 			if (group.getFinishedDate() != null && !round.isFinal()) {
 				for (long playerId : group.getPlayers()) {
 					if (group.isWinner(playerId)) {
