@@ -1,6 +1,4 @@
-<#-- @ftlvariable name="restricted" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="gamesCount" type="java.lang.Integer" -->
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
 <#-- @ftlvariable name="robotPlayers" type="java.util.Collection<wisematches.server.player.computer.robot.RobotPlayer>" -->
 <#include "/core.ftl">
@@ -240,21 +238,15 @@
     <input name="rotten" type="hidden" value="true"/>
     </@wm.dtContent>
 
-    <@wm.dtStatusbar align="left">
-        <#if !restricted>
+    <@wm.restrictionObserved>
+        <@wm.dtStatusbar align="left">
         <button onclick="create.submitForm(); return false;"><@message code="game.create.submit"/></button>
-        <#else>
-        &nbsp;
-        </#if>
-    </@wm.dtStatusbar>
+        </@wm.dtStatusbar>
+    </@wm.restrictionObserved>
 </form>
 
     <@wm.dtFooter>
-        <#if restricted>
-        <div class="ui-state-error-text">
-            <@message code="game.create.forbidden" args=[gamesCount]/>
-        </div>
-        </#if>
+        <@wm.restrictionMessage code="game.create.forbidden"/>
     </@wm.dtFooter>
 </div>
 
@@ -263,6 +255,6 @@
 
 <script type="text/javascript">
     var create = new wm.game.Create(${maxOpponents}, ${opponentsCount}, playerSearch, {
-        waiting:"<@message code="game.create.waiting.label"/>"
+        waiting: "<@message code="game.create.waiting.label"/>"
     });
 </script>

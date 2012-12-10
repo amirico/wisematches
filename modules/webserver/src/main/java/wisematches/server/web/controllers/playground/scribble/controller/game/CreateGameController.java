@@ -19,6 +19,7 @@ import wisematches.playground.BoardLoadingException;
 import wisematches.playground.criteria.ComparableOperator;
 import wisematches.playground.criteria.PlayerCriterion;
 import wisematches.playground.criteria.PlayerRestrictions;
+import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayerHand;
@@ -78,9 +79,8 @@ public class CreateGameController extends AbstractGameController {
 
 		final Player principal = getPrincipal();
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-		model.addAttribute("gamesCount", restrictionManager.getRestriction(principal, "games.active"));
-		model.addAttribute("restricted", restrictionManager.isRestricted(principal, "games.active", getActiveGamesCount(principal)));
-		model.addAttribute("maxOpponents", restrictionManager.getRestriction(principal, "scribble.opponents"));
+		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "games.active", getActiveGamesCount(principal)));
+		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", principal.getMembership()));
 
 		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
 		model.addAttribute("searchAreas", SEARCH_AREAS);
@@ -123,7 +123,7 @@ public class CreateGameController extends AbstractGameController {
 
 		final Player principal = getPrincipal();
 		final int activeGamesCount = getActiveGamesCount(principal);
-		if (restrictionManager.isRestricted(principal, "games.active", activeGamesCount)) {
+		if (restrictionManager.validateRestriction(principal, "games.active", activeGamesCount) != null) {
 			return ServiceResponse.failure(messageSource.getMessage("game.create.forbidden", locale, activeGamesCount));
 		}
 
@@ -145,10 +145,10 @@ public class CreateGameController extends AbstractGameController {
 		}
 
 		boolean robot = false;
-		final List<Player> players = new ArrayList<Player>();
-		final Comparable restriction = restrictionManager.getRestriction(principal, "scribble.opponents");
-		if (opponents.length > (Integer) restriction) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.count", locale, restriction));
+		final List<Player> players = new ArrayList<>();
+		final Restriction restriction = restrictionManager.validateRestriction(principal, "scribble.opponents", opponents.length - 1);
+		if (restriction != null) {
+			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.count", locale, restriction.getThreshold()));
 		} else {
 			if (opponents.length == 0) {
 				return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.min", locale));
@@ -192,7 +192,7 @@ public class CreateGameController extends AbstractGameController {
 				proposalManager.initiate(s, getPrincipal(), players, form.getChallengeMessage());
 			}
 		} else if (players.size() == 0) { // waiting
-			final List<PlayerCriterion> res = new ArrayList<PlayerCriterion>();
+			final List<PlayerCriterion> res = new ArrayList<>();
 			if (form.getMinRating() > 0) {
 				res.add(PlayerRestrictions.rating("player.rating.min", form.getMinRating(), ComparableOperator.GE));
 			}
@@ -244,7 +244,7 @@ public class CreateGameController extends AbstractGameController {
 		form.setTitle(messageSource.getMessage("game.challenge.player.label", locale, getPrincipal().getNickname()));
 		form.setChallengeMessage("");
 		form.setCreateTab(CreateScribbleTab.CHALLENGE);
-		final List<Long> ids = new ArrayList<Long>();
+		final List<Long> ids = new ArrayList<>();
 		if (parameter != null) {
 			final String[] split = parameter.split("\\|");
 			for (String id : split) {

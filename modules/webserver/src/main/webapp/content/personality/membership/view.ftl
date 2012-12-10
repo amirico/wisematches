@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="memberships" type="java.util.Collection<wisematches.personality.Membership>" -->
-<#-- @ftlvariable name="restrictionDescriptions" type="java.util.Collection<wisematches.playground.restriction.RestrictionDescription>" -->
+<#-- @ftlvariable name="memberships" type="wisematches.personality.Membership[]" -->
+<#-- @ftlvariable name="restrictionManager" type="wisematches.playground.restriction.RestrictionManager" -->
 <#include "/core.ftl">
 
 <div class="profile">
@@ -46,11 +46,11 @@
                 </#list>
                 </div>
 
-            <#list restrictionDescriptions as d>
+            <#list restrictionManager.restrictionNames as name>
                 <div>
-                    <div><@message code="membership.description.${d.name?lower_case}"/></div>
+                    <div><@message code="membership.description.${name?lower_case}"/></div>
                     <#list memberships as m>
-                        <div class="center">${d.getRestriction(m)}</div>
+                        <div class="center">${restrictionManager.getRestrictionThreshold(name, m)}</div>
                     </#list>
                 </div>
             </#list>

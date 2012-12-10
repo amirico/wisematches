@@ -2,103 +2,114 @@ package wisematches.playground.restriction.impl;
 
 import wisematches.personality.Membership;
 import wisematches.personality.player.Player;
-import wisematches.playground.restriction.RestrictionDescription;
-import wisematches.playground.restriction.RestrictionException;
+import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class RestrictionManagerImpl implements RestrictionManager {
-    private final Map<Key, Comparable> restrictions = new HashMap<Key, Comparable>();
-    private final Collection<RestrictionDescription> descriptions = new ArrayList<RestrictionDescription>();
+	private final Map<Key, Comparable> restrictions = new HashMap<>();
+	private final Map<String, RestrictionDescription> descriptions = new HashMap<>();
 
-    public RestrictionManagerImpl() {
-    }
+	public RestrictionManagerImpl() {
+	}
 
-    @Override
-    public Collection<RestrictionDescription> getRestrictionDescriptions() {
-        return Collections.unmodifiableCollection(descriptions);
-    }
+	@Override
+	public boolean containsRestriction(String name) {
+		return descriptions.containsKey(name);
+	}
 
-    @Override
-    public Comparable getRestriction(Player player, String name) {
-        return restrictions.get(new Key(name, player));
-    }
+	@Override
+	public Collection<String> getRestrictionNames() {
+		return Collections.unmodifiableCollection(descriptions.keySet());
+	}
 
-    @Override
-    public boolean hasRestriction(Player player, String name) {
-        return restrictions.containsKey(new Key(name, player));
-    }
+	@Override
+	public Comparable getRestrictionThreshold(String name, Membership membership) {
+		checkParameters(name, membership);
+		return restrictions.get(new Key(name, membership));
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void checkRestriction(Player player, String name, Comparable value) throws RestrictionException {
-        final Key key = new Key(name, player);
-        if (!restrictions.containsKey(key)) {
-            return;
-        }
-        final Comparable comparable = restrictions.get(key);
-        if (comparable.compareTo(value) <= 0) {
-            throw new RestrictionException(name, comparable, value);
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Restriction validateRestriction(Player player, String name, Comparable value) {
+		if (player == null) {
+			throw new NullPointerException("Player can't be null");
+		}
+		if (value == null) {
+			throw new NullPointerException("Value can't be null");
+		}
+		checkParameters(name, player.getMembership());
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean isRestricted(Player player, String name, Comparable value) {
-        final Key key = new Key(name, player);
-        if (!restrictions.containsKey(key)) {
-            return false;
-        }
-        final Comparable comparable = restrictions.get(key);
-        return comparable.compareTo(value) <= 0;
-    }
+		final Comparable comparable = restrictions.get(new Key(name, player));
+		if (comparable.compareTo(value) <= 0) {
+			return new Restriction(name, comparable, value);
+		}
+		return null;
+	}
 
-    public void setRestrictions(Collection<RestrictionDescription> restrictions) {
-        this.restrictions.clear();
-        this.descriptions.clear();
+	private void checkParameters(String name, Membership membership) {
+		if (name == null) {
+			throw new NullPointerException("Name can't be null");
+		}
+		if (membership == null) {
+			throw new NullPointerException("Membership can't be null");
+		}
+		if (!descriptions.containsKey(name)) {
+			throw new IllegalArgumentException("Unknown restriction: " + name);
+		}
+	}
 
-        if (restrictions != null) {
-            this.descriptions.addAll(restrictions);
+	public void setRestrictions(Collection<RestrictionDescription> restrictions) {
+		this.restrictions.clear();
+		this.descriptions.clear();
 
-            for (RestrictionDescription restriction : restrictions) {
-                for (Map.Entry<Membership, Comparable> entry : restriction.getRestrictions().entrySet()) {
-                    this.restrictions.put(new Key(restriction.getName(), entry.getKey()), entry.getValue());
-                }
-            }
-        }
-    }
+		if (restrictions != null) {
+			for (RestrictionDescription restriction : restrictions) {
+				if (this.descriptions.put(restriction.getName(), restriction) != null) {
+					throw new IllegalArgumentException("Duplicate definition for restriction: " + restriction.getName());
+				}
 
-    private static final class Key {
-        private final String name;
-        private final Membership membership;
+				for (Map.Entry<Membership, Comparable> entry : restriction.getRestrictions().entrySet()) {
+					this.restrictions.put(new Key(restriction.getName(), entry.getKey()), entry.getValue());
+				}
+			}
+		}
+	}
 
-        private Key(String name, Player player) {
-            this(name, player.getMembership());
-        }
+	private static final class Key {
+		private final String name;
+		private final Membership membership;
 
-        private Key(String name, Membership membership) {
-            this.name = name;
-            this.membership = membership;
-        }
+		private Key(String name, Player player) {
+			this(name, player.getMembership());
+		}
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+		private Key(String name, Membership membership) {
+			this.name = name;
+			this.membership = membership;
+		}
 
-            Key key = (Key) o;
-            return membership == key.membership && name.equals(key.name);
-        }
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
 
-        @Override
-        public int hashCode() {
-            int result = name.hashCode();
-            result = 31 * result + membership.hashCode();
-            return result;
-        }
-    }
+			Key key = (Key) o;
+			return membership == key.membership && name.equals(key.name);
+		}
+
+		@Override
+		public int hashCode() {
+			int result = name.hashCode();
+			result = 31 * result + membership.hashCode();
+			return result;
+		}
+	}
 }

@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="activeGamesRestriction" class="wisematches.playground.restriction.RestrictionDescription">
+    <bean id="activeGamesRestriction" class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="games.active"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -17,7 +17,7 @@
     </bean>
 
     <bean id="scribbleMemoryRestriction"
-          class="wisematches.playground.restriction.RestrictionDescription">
+          class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="scribble.memory"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -31,7 +31,7 @@
     </bean>
 
     <bean id="scribbleOpponentsRestriction"
-          class="wisematches.playground.restriction.RestrictionDescription">
+          class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="scribble.opponents"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -45,7 +45,7 @@
     </bean>
 
     <bean id="tournamentsCountRestriction"
-          class="wisematches.playground.restriction.RestrictionDescription">
+          class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="tourneys.count"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -59,7 +59,7 @@
     </bean>
 
     <bean id="messagesCountRestriction"
-          class="wisematches.playground.restriction.RestrictionDescription">
+          class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="messages.count"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -73,7 +73,7 @@
     </bean>
 
     <bean id="messagesHistPrivateRestriction"
-          class="wisematches.playground.restriction.RestrictionDescription">
+          class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="messages.hist.private"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">
@@ -87,7 +87,7 @@
     </bean>
 
     <bean id="messagesHistNoticeRestriction"
-          class="wisematches.playground.restriction.RestrictionDescription">
+          class="wisematches.playground.restriction.impl.RestrictionDescription">
         <property name="name" value="messages.hist.notice"/>
         <property name="restrictions">
             <map value-type="java.lang.Integer">

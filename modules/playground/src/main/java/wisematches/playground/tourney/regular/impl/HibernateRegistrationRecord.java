@@ -27,6 +27,10 @@ public class HibernateRegistrationRecord implements RegistrationRecord {
 	protected HibernateRegistrationRecord() {
 	}
 
+	public HibernateRegistrationRecord(int tourney, long player, Language language, TourneySection section) {
+		this(tourney, player, 1, language, section);
+	}
+
 	public HibernateRegistrationRecord(int tourney, long player, int round, Language language, TourneySection section) {
 		this.id = new Id(tourney, player, round);
 		this.language = language;

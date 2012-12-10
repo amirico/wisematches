@@ -9,38 +9,38 @@ import wisematches.personality.Membership;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.web.controllers.AbstractInfoController;
 
-import java.util.Arrays;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/account/membership")
 public class MembershipController extends AbstractInfoController {
-    private RestrictionManager restrictionManager;
+	private RestrictionManager restrictionManager;
+	private static final Membership[] SORTED_MEMBERSHIPS = new Membership[]{
+			Membership.GUEST, Membership.BASIC, Membership.SILVER, Membership.GOLD, Membership.PLATINUM};
 
-    public MembershipController() {
-    }
+	public MembershipController() {
+	}
 
-    @RequestMapping("")
-    public String viewMembership(Model model) {
-        return viewMembershipPages(model);
-    }
+	@RequestMapping("")
+	public String viewMembership(Model model) {
+		return viewMembershipPages(model);
+	}
 
-    @RequestMapping("view")
-    public String viewMembershipPages(Model model) {
-        model.addAttribute("memberships", Arrays.asList(Membership.GUEST, Membership.BASIC, Membership.SILVER, Membership.GOLD, Membership.PLATINUM));
-        model.addAttribute("restrictionDescriptions", restrictionManager.getRestrictionDescriptions());
-        return "/content/personality/membership/view";
-    }
+	@RequestMapping("view")
+	public String viewMembershipPages(Model model) {
+		model.addAttribute("memberships", SORTED_MEMBERSHIPS);
+		model.addAttribute("restrictionManager", restrictionManager);
+		return "/content/personality/membership/view";
+	}
 
-    @ModelAttribute("headerTitle")
-    public String getMembershipTitle() {
-        return "title.membership";
-    }
+	@ModelAttribute("headerTitle")
+	public String getMembershipTitle() {
+		return "title.membership";
+	}
 
-    @Autowired
-    public void setRestrictionManager(RestrictionManager restrictionManager) {
-        this.restrictionManager = restrictionManager;
-    }
+	@Autowired
+	public void setRestrictionManager(RestrictionManager restrictionManager) {
+		this.restrictionManager = restrictionManager;
+	}
 }

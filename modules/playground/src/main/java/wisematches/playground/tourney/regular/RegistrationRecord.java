@@ -17,20 +17,30 @@ public interface RegistrationRecord {
 	TourneySection getSection();
 
 	final class Context {
-		private int tourney;
-		private Language language;
+		private final int round;
+		private final int tourney;
+		private final Language language;
 
-		public Context(int tourney) {
-			this.tourney = tourney;
+		public Context(int round) {
+			this(-1, null, round);
 		}
 
-		public Context(Language language) {
+		public Context(int tourney, int round) {
+			this(tourney, null, round);
+		}
+
+		public Context(Language language, int round) {
+			this(-1, language, round);
+		}
+
+		public Context(int tourney, Language language, int round) {
+			this.round = round;
+			this.tourney = tourney;
 			this.language = language;
 		}
 
-		public Context(int tourney, Language language) {
-			this.tourney = tourney;
-			this.language = language;
+		public int getRound() {
+			return round;
 		}
 
 		public int getTourney() {
