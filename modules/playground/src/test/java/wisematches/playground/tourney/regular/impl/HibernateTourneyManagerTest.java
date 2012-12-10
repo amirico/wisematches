@@ -121,25 +121,25 @@ public class HibernateTourneyManagerTest {
 		replay(l);
 
 		final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
-		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 
 		try {
 			tourneyManager.register(Personality.person(101), null, Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
 		} catch (RegistrationException ignore) {
-			assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
+			assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 		}
 
 		tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.ADVANCED);
-		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
-		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN)));
-		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU)));
+		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN, 1)));
+		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU, 1)));
 
 		try {
 			tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
 		} catch (RegistrationException ignore) {
-			assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
+			assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 		}
 
 		tourneyManager.register(Personality.person(102), tourney, Language.RU, TourneySection.ADVANCED);
@@ -158,9 +158,9 @@ public class HibernateTourneyManagerTest {
 		assertEquals(Language.RU, subscription.getLanguage());
 		assertEquals(TourneySection.ADVANCED, subscription.getSection());
 
-		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
-		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN)));
-		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU)));
+		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN, 1)));
+		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU, 1)));
 
 		tourneyManager.unregister(Personality.person(102), tourney, Language.RU, TourneySection.GRANDMASTER);
 		subscriptions = tourneyManager.getRegistrationsSummary(tourney);
@@ -174,9 +174,9 @@ public class HibernateTourneyManagerTest {
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-		assertEquals(2, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000)));
-		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN)));
-		assertEquals(2, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU)));
+		assertEquals(2, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
+		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN, 1)));
+		assertEquals(2, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU, 1)));
 
 		tourneyManager.removeTourneySubscriptionListener(l);
 
@@ -264,9 +264,13 @@ public class HibernateTourneyManagerTest {
 		// new day!
 		tourneyManager.breakingDayTime(null);
 
+		assertEquals(0, tourneyManager.getTotalCount(Personality.person(103), new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // excluded from tourney
 		assertTrue(1 <= tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE))));
+		assertTrue(1 <= tourneyManager.getTotalCount(Personality.person(101), new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
+		assertTrue(1 <= tourneyManager.getTotalCount(Personality.person(102), new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
 		final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
 		assertTrue(tourneys.size() >= 1);
+
 
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(tourney.getId(), null)));
 		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, new TourneyDivision.Context(tourney.getId(), null), null, null, null);

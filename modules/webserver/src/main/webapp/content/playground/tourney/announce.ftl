@@ -35,7 +35,7 @@
     </div>
 </@wm.dtToolbar>
 
-<@wm.dtContent wrap=true class="subscription">
+<@wm.dtContent wrap=true>
     <table>
         <tr>
             <td>
@@ -115,35 +115,42 @@
     </table>
 </@wm.dtContent>
 
+<@wm.restrictionObserved>
+    <@wm.dtStatusbar align="left">
+        <button>
+            <#if subscription??>
+                        <@message code="tourney.subscribe.refuse"/>
+                    <#else>
+                <@message code="tourney.subscribe.accept"/>
+            </#if>
+        </button>
+    </@wm.dtStatusbar>
+</@wm.restrictionObserved>
+
 <@wm.dtFooter class="actions">
-    <button>
-        <#if subscription??>
-                    <@message code="tourney.subscribe.refuse"/>
-                <#else>
-            <@message code="tourney.subscribe.accept"/>
-        </#if>
-    </button>
+    <@wm.restrictionMessage code="tourney.subscribe.forbidden"/>
 </@wm.dtFooter>
 </div>
 
+<@wm.restrictionObserved>
 <div id="subscriptionDialog" class="ui-helper-hidden">
     <form id="subscriptionForm" name="changeSubscriptionForm">
         <div>
-        <@message code="tourney.subscribe.desciption"/>
+            <@message code="tourney.subscribe.desciption"/>
         </div>
         <div>
-        <#if subscription??>
-            <#assign subscribedSection=subscription.section/>
-            <#assign subscribedLanguage=subscription.language/>
-        <#else>
-            <#list sections as s>
-                <#if s.isRatingAllowed(statistics.rating)>
-                    <#assign subscribedSection=s/>
-                    <#break>
-                </#if>
-            </#list>
-            <#assign subscribedLanguage=language/>
-        </#if>
+            <#if subscription??>
+                <#assign subscribedSection=subscription.section/>
+                <#assign subscribedLanguage=subscription.language/>
+            <#else>
+                <#list sections as s>
+                    <#if s.isRatingAllowed(statistics.rating)>
+                        <#assign subscribedSection=s/>
+                        <#break>
+                    </#if>
+                </#list>
+                <#assign subscribedLanguage=language/>
+            </#if>
 
             <table>
                 <tr>
@@ -153,11 +160,11 @@
                     </td>
                     <td width="100%">
                         <select id="subscriptionLanguage" name="language" style="width: 170px;">
-                        <#list languages as l>
-                            <option value="${l}" <#if l=subscribedLanguage>selected="selected"</#if>>
-                                <@languageName language=l/>
-                            </option>
-                        </#list>
+                            <#list languages as l>
+                                <option value="${l}" <#if l=subscribedLanguage>selected="selected"</#if>>
+                                    <@languageName language=l/>
+                                </option>
+                            </#list>
                         </select>
                     </td>
                 </tr>
@@ -167,31 +174,31 @@
                     </td>
                     <td>
                         <table id="subscriptionSection">
-                        <#list sections?reverse as s>
-                            <#assign disabled=!s.isRatingAllowed(statistics.rating)/>
-                            <tr>
-                                <td style="vertical-align: middle">
-                                    <input type="radio" id="subscriptionSection${s.name()}"
-                                           name="section" value="${s.name()}"
-                                           <#if s=subscribedSection>checked="checked"</#if>
-                                           <#if disabled>disabled="disabled"</#if>/>
-                                </td>
-                                <td <#if disabled>class="ui-state-disabled"</#if>>
-                                    <label id="subscriptionSectionLabel${s.name()}"
-                                           for="subscriptionSection${s.name()}">
-                                        -
+                            <#list sections?reverse as s>
+                                <#assign disabled=!s.isRatingAllowed(statistics.rating)/>
+                                <tr>
+                                    <td style="vertical-align: middle">
+                                        <input type="radio" id="subscriptionSection${s.name()}"
+                                               name="section" value="${s.name()}"
+                                               <#if s=subscribedSection>checked="checked"</#if>
+                                               <#if disabled>disabled="disabled"</#if>/>
+                                    </td>
+                                    <td <#if disabled>class="ui-state-disabled"</#if>>
+                                        <label id="subscriptionSectionLabel${s.name()}"
+                                               for="subscriptionSection${s.name()}">
+                                            -
                                                     <span class="section">
                                                         <@sectionName section=s/>
                                                     </span>
-                                        <span class="sample">(<@sectionInfo section=s short=false/>)</span>
-                                    </label>
-                                </td>
-                                <td <#if disabled>class="ui-state-disabled"</#if>>
-                                    (<span id="subscriptionSectionPlayers${s.name()}"
-                                           class="players">${subscriptions.getPlayers(subscribedLanguage, s)}</span>)
-                                </td>
-                            </tr>
-                        </#list>
+                                            <span class="sample">(<@sectionInfo section=s short=false/>)</span>
+                                        </label>
+                                    </td>
+                                    <td <#if disabled>class="ui-state-disabled"</#if>>
+                                        (<span id="subscriptionSectionPlayers${s.name()}"
+                                               class="players">${subscriptions.getPlayers(subscribedLanguage, s)}</span>)
+                                    </td>
+                                </tr>
+                            </#list>
                         </table>
                     </td>
                 </tr>
@@ -226,3 +233,4 @@
             }
     );
 </script>
+</@wm.restrictionObserved>

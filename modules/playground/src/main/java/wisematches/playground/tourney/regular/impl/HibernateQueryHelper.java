@@ -73,8 +73,17 @@ class HibernateQueryHelper {
 				.uniqueResult();
 	}
 
-	static Query searchTourneis(Session session, Personality personality, Tourney.Context context, boolean count) {
-		return session.createQuery((count ? "select count(*) " : "") + "from HibernateTourney t " + convertStateToQuery(context.getStates(), "t", "where"));
+	static Query searchTourneys(Session session, Personality personality, Tourney.Context context, boolean count) {
+		if (personality == null) {
+			return session.createQuery((count ? "select count(*) " : "") + "from HibernateTourney t " + convertStateToQuery(context.getStates(), "t", "where"));
+		} else {
+			Query query = session.createQuery((count ? "select count(g.round.division.tourney) " : "select g.round.division.tourney ") +
+					"from HibernateTourneyGroup g " +
+					"where (g.player1=:pid or g.player2=:pid or g.player3=:pid or g.player4=:pid) " +
+					convertStateToQuery(context.getStates(), "g", "and"));
+			query.setLong("pid", personality.getId());
+			return query;
+		}
 	}
 
 	static Query searchRounds(Session session, Personality personality, TourneyRound.Context context, boolean count) {
@@ -151,9 +160,14 @@ class HibernateQueryHelper {
 	static Query searchRegistrationRecords(Session session, RegistrationRecord.Context context, boolean count) {
 		final Language language = context.getLanguage();
 		final Query query = session.createQuery((count ? "select count(*) " : "") +
-				"from HibernateRegistrationRecord as a where a.id.tourney=:tourney " +
+				"from HibernateRegistrationRecord as a where a.id.round=:round " +
+				(context.getTourney() != -1 ? " and a.id.tourney=:tourney " : "") +
 				(language != null ? " and a.language=:language" : ""));
-		query.setInteger("tourney", context.getTourney());
+		query.setInteger("round", context.getRound());
+
+		if (context.getTourney() != -1) {
+			query.setInteger("tourney", context.getTourney());
+		}
 		if (language != null) {
 			query.setParameter("language", language);
 		}

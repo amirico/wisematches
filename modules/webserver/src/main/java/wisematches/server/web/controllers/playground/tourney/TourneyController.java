@@ -33,223 +33,229 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/tourney")
 public class TourneyController extends WisematchesController {
-    private RestrictionManager restrictionManager;
-    private RegularTourneyManager tourneyManager;
-    private PlayerStatisticManager statisticManager;
+	private RegularTourneyManager tourneyManager;
+	private RestrictionManager restrictionManager;
+	private PlayerStatisticManager statisticManager;
 
-    private static final Log log = LogFactory.getLog("wisematches.server.web.tourney");
+	private static final Log log = LogFactory.getLog("wisematches.server.web.tourney");
 
-    public TourneyController() {
-    }
+	public TourneyController() {
+	}
 
-    @RequestMapping("")
-    public String tourneysRoot(Model model) {
-        return showDashboard(model);
-    }
+	@RequestMapping("")
+	public String tourneysRoot(Model model) {
+		return showDashboard(model);
+	}
 
-    @RequestMapping("dashboard")
-    public String showDashboard(Model model) {
-        final Personality personality = getPersonality();
+	@RequestMapping("dashboard")
+	public String showDashboard(Model model) {
+		final Personality personality = getPersonality();
 
-        final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
-        model.addAttribute("participated", participated);
+		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
+		model.addAttribute("participated", participated);
 
-        setupAnnounce(model);
+		setupAnnounce(model);
 
-        return "/content/playground/tourney/dashboard";
-    }
+		return "/content/playground/tourney/dashboard";
+	}
 
-    @RequestMapping("active")
-    public String showActive(Model model) {
-        final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
-        final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+	@RequestMapping("active")
+	public String showActive(Model model) {
+		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
 
-        model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
+		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
-        setupAnnounce(model);
+		setupAnnounce(model);
 
-        return "/content/playground/tourney/active";
-    }
+		return "/content/playground/tourney/active";
+	}
 
-    @RequestMapping("finished")
-    public String showFinished(Model model) {
-        final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
-        final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+	@RequestMapping("finished")
+	public String showFinished(Model model) {
+		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
 
-        model.addAttribute("winnerPlaces", WinnerPlace.values());
-        model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
+		model.addAttribute("winnerPlaces", WinnerPlace.values());
+		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
-        setupAnnounce(model);
+		setupAnnounce(model);
 
-        return "/content/playground/tourney/finished";
-    }
+		return "/content/playground/tourney/finished";
+	}
 
-    @RequestMapping("subscriptions")
-    public String showSubscriptions(@RequestParam(value = "t", required = false) int t,
-                                    @RequestParam(value = "l", required = false) String l,
-                                    Model model) throws UnknownEntityException {
-        final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(t));
-        if (tourney == null) {
-            throw new UnknownEntityException(t, "tourney");
-        }
+	@RequestMapping("subscriptions")
+	public String showSubscriptions(@RequestParam(value = "t", required = false) int t,
+									@RequestParam(value = "l", required = false) String l,
+									Model model) throws UnknownEntityException {
+		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(t));
+		if (tourney == null) {
+			throw new UnknownEntityException(t, "tourney");
+		}
 
-        final Language language = Language.byCode(l);
-        if (language == null) {
-            throw new UnknownEntityException(l, "language");
-        }
-        final RegistrationRecord.Context context = new RegistrationRecord.Context(t, language);
+		final Language language = Language.byCode(l);
+		if (language == null) {
+			throw new UnknownEntityException(l, "language");
+		}
+		final RegistrationRecord.Context context = new RegistrationRecord.Context(t, language, 1);
 
-        final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
-        final List<RegistrationRecord> tourneySubscriptions = searchManager.searchEntities(null, context, null, null, null);
-        model.addAttribute("tourney", tourney);
-        model.addAttribute("tourneyLanguage", language);
-        model.addAttribute("tourneySubscriptions", tourneySubscriptions);
+		final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
+		final List<RegistrationRecord> tourneySubscriptions = searchManager.searchEntities(null, context, null, null, null);
+		model.addAttribute("tourney", tourney);
+		model.addAttribute("tourneyLanguage", language);
+		model.addAttribute("tourneySubscriptions", tourneySubscriptions);
 
-        setupAnnounce(model);
+		setupAnnounce(model);
 
-        return "/content/playground/tourney/subscriptions";
-    }
+		return "/content/playground/tourney/subscriptions";
+	}
 
-    @RequestMapping("view")
-    public String showEntityView(Model model, final @ModelAttribute EntityIdForm form) throws UnknownEntityException {
-        if (form.isShit()) {
-            throw new UnknownEntityException(form.getT(), "tourney");
-        }
+	@RequestMapping("view")
+	public String showEntityView(Model model, final @ModelAttribute EntityIdForm form) throws UnknownEntityException {
+		if (form.isShit()) {
+			throw new UnknownEntityException(form.getT(), "tourney");
+		}
 
-        final Tourney.Id tourneyId;
-        try {
-            tourneyId = new Tourney.Id(Integer.valueOf(form.getT()));
-        } catch (NumberFormatException ex) {
-            throw new UnknownEntityException(form.getT(), "tourney");
-        }
+		final Tourney.Id tourneyId;
+		try {
+			tourneyId = new Tourney.Id(Integer.valueOf(form.getT()));
+		} catch (NumberFormatException ex) {
+			throw new UnknownEntityException(form.getT(), "tourney");
+		}
 
-        final Tourney tourney = tourneyManager.getTourneyEntity(tourneyId);
-        if (tourney == null) {
-            throw new UnknownEntityException(form.getT(), "tourney");
-        }
-        model.addAttribute("tourney", tourney); // add tourney object
+		final Tourney tourney = tourneyManager.getTourneyEntity(tourneyId);
+		if (tourney == null) {
+			throw new UnknownEntityException(form.getT(), "tourney");
+		}
+		model.addAttribute("tourney", tourney); // add tourney object
 
-        final Personality personality = getPersonality();
-        if (form.isTourney()) {
-            final TourneyRound.Context ctx = new TourneyRound.Context(tourneyId, null);
-            final Map<TourneyDivision, List<TourneyRound>> divisionsTree = new HashMap<>();
-            final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(personality, ctx, null, null, null);
+		final Personality personality = getPersonality();
+		if (form.isTourney()) {
+			final TourneyRound.Context ctx = new TourneyRound.Context(tourneyId, null);
+			final Map<TourneyDivision, List<TourneyRound>> divisionsTree = new HashMap<>();
+			final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(personality, ctx, null, null, null);
 
-            for (TourneyRound round : rounds) {
-                final TourneyDivision division = round.getDivision();
+			for (TourneyRound round : rounds) {
+				final TourneyDivision division = round.getDivision();
 
-                List<TourneyRound> tourneyRounds = divisionsTree.get(division);
-                if (tourneyRounds == null) {
-                    tourneyRounds = new ArrayList<>();
-                    divisionsTree.put(division, tourneyRounds);
-                }
-                tourneyRounds.add(round);
-            }
-            model.addAttribute("divisionsTree", divisionsTree);
+				List<TourneyRound> tourneyRounds = divisionsTree.get(division);
+				if (tourneyRounds == null) {
+					tourneyRounds = new ArrayList<>();
+					divisionsTree.put(division, tourneyRounds);
+				}
+				tourneyRounds.add(round);
+			}
+			model.addAttribute("divisionsTree", divisionsTree);
 
-            return "/content/playground/tourney/divisions";
-        }
-        return null;
-    }
+			return "/content/playground/tourney/divisions";
+		}
+		return null;
+	}
 
-    @ResponseBody
-    @RequestMapping("changeSubscription.ajax")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
-        final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
-        if (tourney == null) {
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.unknown", locale));
-        }
+	@ResponseBody
+	@RequestMapping("changeSubscription.ajax")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
+		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
+		if (tourney == null) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.unknown", locale));
+		}
 
-        Language language = null;
-        if (form.getLanguage() != null) {
-            language = Language.byCode(form.getLanguage());
-            if (language == null) {
-                return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.language", locale));
-            }
-        }
+		Language language = null;
+		if (form.getLanguage() != null) {
+			language = Language.byCode(form.getLanguage());
+			if (language == null) {
+				return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.language", locale));
+			}
+		}
 
-        TourneySection section = null;
-        try {
-            final String sectionName = form.getSection();
-            if (sectionName != null) {
-                section = TourneySection.valueOf(sectionName.toUpperCase());
-            }
-        } catch (IllegalArgumentException ex) {
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
-        }
+		TourneySection section = null;
+		try {
+			final String sectionName = form.getSection();
+			if (sectionName != null) {
+				section = TourneySection.valueOf(sectionName.toUpperCase());
+			}
+		} catch (IllegalArgumentException ex) {
+			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
+		}
 
-        final Player principal = getPrincipal();
-        try {
-            final RegistrationRecord subscription = tourneyManager.getRegistration(principal, tourney);
-            if (subscription != null) {
-                tourneyManager.unregister(principal, tourney, subscription.getLanguage(), subscription.getSection());
-            }
-            if (section != null && language != null) { // register
-                tourneyManager.register(principal, tourney, language, section);
-            }
-        } catch (RegistrationException ex) {
-            log.error("Subscription can't be changed: " + form, ex);
-            return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.internal", locale));
-        }
+		final Player principal = getPrincipal();
+		try {
+			final RegistrationRecord subscription = tourneyManager.getRegistration(principal, tourney);
+			if (subscription != null) {
+				tourneyManager.unregister(principal, tourney, subscription.getLanguage(), subscription.getSection());
+			}
+			if (section != null && language != null) { // register
+				tourneyManager.register(principal, tourney, language, section);
+			}
+		} catch (RegistrationException ex) {
+			log.error("Subscription can't be changed: " + form, ex);
+			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.internal", locale));
+		}
 
-        final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
-        final Map<String, Map<String, Integer>> res = new HashMap<>();
-        for (Language l : Language.values()) {
-            Map<String, Integer> stringIntegerMap = new HashMap<>();
-            res.put(l.name(), stringIntegerMap);
-            for (TourneySection s : TourneySection.values()) {
-                stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));
-            }
-        }
-        return ServiceResponse.success("", "subscriptions", res);
-    }
+		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
+		final Map<String, Map<String, Integer>> res = new HashMap<>();
+		for (Language l : Language.values()) {
+			Map<String, Integer> stringIntegerMap = new HashMap<>();
+			res.put(l.name(), stringIntegerMap);
+			for (TourneySection s : TourneySection.values()) {
+				stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));
+			}
+		}
+		return ServiceResponse.success("", "subscriptions", res);
+	}
 
-    private void setupAnnounce(Model model) {
-        final Player personality = getPrincipal();
+	private void setupAnnounce(Model model) {
+		final Player personality = getPrincipal();
 
-        final List<Tourney> announces = tourneyManager.searchTourneyEntities(personality, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
-        Tourney announce = null;
-        if (announces.size() > 1) {
-            log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
-            announce = announces.get(0);
-        } else if (announces.size() == 1) {
-            announce = announces.get(0);
-        }
-        if (announce != null) {
-            model.addAttribute("announce", announce);
-            model.addAttribute("sections", TourneySection.values());
-            model.addAttribute("languages", Language.values());
+		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
+		Tourney announce = null;
+		if (announces.size() > 1) {
+			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
+			announce = announces.get(0);
+		} else if (announces.size() == 1) {
+			announce = announces.get(0);
+		}
+		if (announce != null) {
+			model.addAttribute("announce", announce);
+			model.addAttribute("sections", TourneySection.values());
+			model.addAttribute("languages", Language.values());
 
-            final Statistics statistic = statisticManager.getPlayerStatistic(personality);
-            model.addAttribute("statistics", statistic);
+			final Statistics statistic = statisticManager.getPlayerStatistic(personality);
+			model.addAttribute("statistics", statistic);
 
-//            model.addAttribute("restricted", restrictionManager.isRestricted(personality, "tourneys.count", getActiveGamesCount(principal)));
-//            model.addAttribute("tourneysCount", restrictionManager.getRestriction(personality, "tourneys.count"));
+			model.addAttribute("restriction",
+					restrictionManager.validateRestriction(personality, "tourneys.count", getActiveTourneysCount(personality)));
 
+			model.addAttribute("subscription", tourneyManager.getRegistration(personality, announce));
+			model.addAttribute("subscriptions", tourneyManager.getRegistrationsSummary(announce));
+		}
+	}
 
-            model.addAttribute("subscription", tourneyManager.getRegistration(personality, announce));
-            model.addAttribute("subscriptions", tourneyManager.getRegistrationsSummary(announce));
-        }
-    }
+	private int getActiveTourneysCount(Player personality) {
+		int totalCount = 0;
+		totalCount += tourneyManager.getTotalCount(personality, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)));
+		totalCount += tourneyManager.getRegistrationSearchManager().getTotalCount(personality, new RegistrationRecord.Context(1));
+		return totalCount;
+	}
 
-    @Autowired
-    public void setTourneyManager(RegularTourneyManager tourneyManager) {
-        this.tourneyManager = tourneyManager;
-    }
+	@Autowired
+	public void setTourneyManager(RegularTourneyManager tourneyManager) {
+		this.tourneyManager = tourneyManager;
+	}
 
-    @Autowired
-    public void setStatisticManager(PlayerStatisticManager statisticManager) {
-        this.statisticManager = statisticManager;
-    }
+	@Autowired
+	public void setStatisticManager(PlayerStatisticManager statisticManager) {
+		this.statisticManager = statisticManager;
+	}
 
-    @Autowired
-    public void setRestrictionManager(RestrictionManager restrictionManager) {
-        this.restrictionManager = restrictionManager;
-    }
+	@Autowired
+	public void setRestrictionManager(RestrictionManager restrictionManager) {
+		this.restrictionManager = restrictionManager;
+	}
 
-    @Override
-    public String getHeaderTitle() {
-        return "title.tourney";
-    }
+	@Override
+	public String getHeaderTitle() {
+		return "title.tourney";
+	}
 }

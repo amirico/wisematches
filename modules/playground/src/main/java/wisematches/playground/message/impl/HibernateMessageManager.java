@@ -17,7 +17,6 @@ import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageDirection;
 import wisematches.playground.message.MessageListener;
 import wisematches.playground.message.MessageManager;
-import wisematches.playground.restriction.RestrictionDescription;
 import wisematches.playground.restriction.RestrictionManager;
 
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class HibernateMessageManager implements MessageManager {
 
 	private final Lock removesLock = new ReentrantLock();
 
-	private final Collection<MessageListener> listeners = new CopyOnWriteArraySet<MessageListener>();
+	private final Collection<MessageListener> listeners = new CopyOnWriteArraySet<>();
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.message");
 
 	public HibernateMessageManager() {
@@ -216,27 +215,17 @@ public class HibernateMessageManager implements MessageManager {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void cleanup() {
-		RestrictionDescription msgHist = null;
-		RestrictionDescription noticeHist = null;
-		final Collection<RestrictionDescription> descriptions = restrictionManager.getRestrictionDescriptions();
-		for (RestrictionDescription description : descriptions) {
-			if ("messages.hist.private".equals(description.getName())) {
-				msgHist = description;
-			} else if ("messages.hist.notice".equals(description.getName())) {
-				noticeHist = description;
-			}
-		}
-
-		Membership[] values = Membership.values();
 		final StringBuilder b = new StringBuilder();
 		b.append("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient where ");
 		b.append("(");
 		b.append("(state = 3 and created < DATE_SUB(curdate(), INTERVAL 1 DAY))");
-		if (msgHist != null) {
+
+		final Membership[] values = Membership.values();
+		if (restrictionManager.containsRestriction("messages.hist.private")) {
 			b.append(" or ");
 			b.append("(m.notification and ");
 			for (Membership value : values) {
-				Comparable restriction = msgHist.getRestriction(value);
+				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.private", value);
 				if (restriction != null) {
 					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
 				}
@@ -244,13 +233,12 @@ public class HibernateMessageManager implements MessageManager {
 			b.setLength(b.length() - 4);
 			b.append(")");
 		}
-		if (noticeHist != null) {
-			if (msgHist != null) {
-				b.append(" or ");
-			}
+
+		if (restrictionManager.containsRestriction("messages.hist.notice")) {
+			b.append(" or ");
 			b.append("(not m.notification and ");
 			for (Membership value : values) {
-				Comparable restriction = noticeHist.getRestriction(value);
+				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.notice", value);
 				if (restriction != null) {
 					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
 				}

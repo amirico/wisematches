@@ -1,6 +1,5 @@
 package wisematches.playground.message.impl;
 
-import org.easymock.IExpectationSetters;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,7 +14,7 @@ import wisematches.personality.Personality;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageDirection;
 import wisematches.playground.message.MessageManager;
-import wisematches.playground.restriction.RestrictionDescription;
+import wisematches.playground.restriction.impl.RestrictionDescription;
 import wisematches.playground.restriction.impl.RestrictionManagerImpl;
 
 import java.util.Arrays;
@@ -159,7 +158,7 @@ public class HibernateMessageManagerTest {
 		expect(sessionFactory.getCurrentSession()).andReturn(session);
 		replay(sessionFactory);
 /*
-        expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
+		expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
                 "((m.notification and " +
                 "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
                 "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +

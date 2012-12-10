@@ -6,24 +6,29 @@
             var dlg = $("#privateMessageDialog");
             dlg.html('<div class="loading-image" style="height: 350px"></div>');
             dlg.load("/playground/messages/create?dialog=true&pid=" + id + "&reply=" + reply, function () {
-                $("#sendPrivateMessage").button("enable");
+                var restriction = dlg.find(".restriction");
+                if (restriction.length != 0) {
+                    $("#sendPrivateMessage").hide();
+                } else {
+                    $("#sendPrivateMessage").show().button("enable");
+                }
             });
             dlg.dialog({
-                title:"<@message code="messages.send.label"/>",
-                width:550,
-                minHeight:350,
-                modal:true,
-                resizable:false,
-                buttons:[
+                title: "<@message code="messages.send.label"/>",
+                width: 550,
+                minHeight: 350,
+                modal: true,
+                resizable: false,
+                buttons: [
                     {
-                        id:"sendPrivateMessage",
-                        text:"<@message code="messages.send.label"/>",
-                        disabled:true,
-                        click:function () {
+                        id: "sendPrivateMessage",
+                        text: "<@message code="messages.send.label"/>",
+                        disabled: true,
+                        click: function () {
                             var widget = dlg.closest(".ui-dialog");
                             wm.ui.lock(widget, "<@message code="messages.status.sending"/>");
-                            var msg = $("#privateMessageDialog textarea").val();
-                            $.post('/playground/messages/send.ajax', $.toJSON({pid:id, reply:reply, message:msg}), function (result) {
+                            var msg = $("#privateMessageDialog").find("textarea").val();
+                            $.post('/playground/messages/send.ajax', $.toJSON({pid: id, reply: reply, message: msg}), function (result) {
                                 if (result.success) {
                                     wm.ui.unlock(widget, "<@message code="messages.status.sent"/>");
                                     dlg.dialog("close");
@@ -34,8 +39,8 @@
                         }
                     },
                     {
-                        text:"<@message code="button.cancel"/>",
-                        click:function () {
+                        text: "<@message code="button.cancel"/>",
+                        click: function () {
                             dlg.dialog("close");
                         }
 

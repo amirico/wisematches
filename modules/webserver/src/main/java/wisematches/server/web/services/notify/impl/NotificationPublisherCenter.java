@@ -82,12 +82,12 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		taskExecutor.execute(new TheTourneyAnnouncementProcessor(true));
+		taskExecutor.execute(new TheTourneyAnnouncementProcessor());
 	}
 
 	@Override
 	public void breakingDayTime(Date midnight) {
-		taskExecutor.execute(new TheTourneyAnnouncementProcessor(false));
+		taskExecutor.execute(new TheTourneyAnnouncementProcessor());
 	}
 
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
@@ -169,12 +169,9 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 	}
 
 	protected class TheTourneyAnnouncementProcessor implements Runnable {
-		private final boolean resume;
-
 		private static final int BATCH_SIZE = 1000;
 
-		private TheTourneyAnnouncementProcessor(boolean resume) {
-			this.resume = resume;
+		private TheTourneyAnnouncementProcessor() {
 		}
 
 		@Override
@@ -242,7 +239,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 				if (board != null) {
 					final GamePlayerHand hand = board.getPlayerTurn();
 					if (hand != null) {
-						Map<String, Object> c = new HashMap<String, Object>();
+						Map<String, Object> c = new HashMap<>();
 						c.put("board", board);
 						c.put("expirationType", type);
 						processNotification(Personality.person(hand.getPlayerId()), type.getCode(), c);
@@ -263,10 +260,10 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 			if (proposal == null || proposal.isReady()) {
 				return;
 			}
-			final List<Personality> waiting = new ArrayList<Personality>(proposal.getPlayers());
+			final List<Personality> waiting = new ArrayList<>(proposal.getPlayers());
 			waiting.removeAll(proposal.getJoinedPlayers());
 			if (!waiting.isEmpty()) {
-				Map<String, Object> c = new HashMap<String, Object>();
+				Map<String, Object> c = new HashMap<>();
 				c.put("proposal", proposal);
 				c.put("expirationType", type);
 				for (Personality personality : waiting) {
@@ -297,7 +294,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 
 		@Override
 		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution resolution, Personality player) {
-			Map<String, Object> c = new HashMap<String, Object>();
+			Map<String, Object> c = new HashMap<>();
 			c.put("proposal", proposal);
 			c.put("player", player);
 			c.put("resolution", resolution);
@@ -328,7 +325,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 			final GamePlayerHand playerTurn = board.getPlayerTurn();
 			if (playerTurn != null) {
-				final Map<String, Object> map = new HashMap<String, Object>();
+				final Map<String, Object> map = new HashMap<>();
 				map.put("board", board);
 				map.put("changes", board.getGameChanges(playerTurn.getPlayerId()));
 				processNotification(Personality.person(playerTurn.getPlayerId()), "playground.game.turn", map);
@@ -338,7 +335,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		@Override
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
 			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-			final Map<String, Object> map = new HashMap<String, Object>();
+			final Map<String, Object> map = new HashMap<>();
 			map.put("board", board);
 			map.put("winners", winners);
 			map.put("resolution", resolution);

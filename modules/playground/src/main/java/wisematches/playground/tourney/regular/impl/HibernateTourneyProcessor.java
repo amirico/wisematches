@@ -28,11 +28,14 @@ class HibernateTourneyProcessor {
 		query.setParameter("scheduled", new Date());
 
 		final List list = query.list();
+		if (list.size() > 0) {
+			log.info("Initialize tourneys: " + list.size());
+		}
 		for (Object o : list) {
 			final HibernateTourney tourney = (HibernateTourney) o;
 			log.info("Start initialisation of tourney: " + tourney.getId());
 			final int tourneyNumber = tourney.getNumber();
-			final Collection<TourneyResubscription> resubscriptions = resortSubscriptions(session, tourneyNumber, 1);
+			final Collection<TourneyResubscription> resubscriptions = resortRegistrations(session, tourneyNumber, 1);
 
 			if (resubscriptions.size() != 0) {
 				log.info("Some players were sectionChanged: " + resubscriptions);
@@ -88,7 +91,7 @@ class HibernateTourneyProcessor {
 			roundsCountQuery.setParameter("division", division);
 			final Object roundsCountValue = roundsCountQuery.uniqueResult();
 			final int nextRoundNumber = roundsCountValue == null ? 1 : ((Number) roundsCountValue).intValue() + 1;
-			final Collection<Long> subscribedPlayers = getSubscribedPlayers(session, division, nextRoundNumber);
+			final Collection<Long> subscribedPlayers = getRegisteredPlayers(session, division, nextRoundNumber);
 			if (subscribedPlayers.size() <= 1) {
 				log.error("Broken registered players count! TODO: division must be finished. We can get winners from previous round and previous was last.");
 			}
@@ -115,6 +118,7 @@ class HibernateTourneyProcessor {
 	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<RegistrationListener> subscriptionListeners) {
 		final HibernateTourneyGroup group = getGroupByBoard(session, board);
 		if (group != null) {
+			log.info("Finalize tourney group: " + group);
 			group.finalizeGame(board);
 			session.update(group);
 
@@ -124,7 +128,9 @@ class HibernateTourneyProcessor {
 
 			final HibernateTourneyDivision division = round.getDivision();
 			if (round.getFinishedDate() != null) { // finished
+				log.info("Finalize tourney round: " + round);
 				if (division.finishRound(round)) {
+					log.info("Finalize tourney division: " + division);
 					division.finishDivision(tourneyReferee.getWinnersList(group, round, division));
 				}
 				session.update(division);
@@ -138,8 +144,11 @@ class HibernateTourneyProcessor {
 						final TourneyDivision.Id divisionId = roundId.getDivisionId();
 						final Tourney.Id tourneyId = divisionId.getTourneyId();
 						final int number = tourneyId.getNumber();
+
 						final HibernateRegistrationRecord s = new HibernateRegistrationRecord(number, playerId, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
 						session.save(s);
+
+						log.info("Subscribe player to next round: " + s);
 
 						for (RegistrationListener listener : subscriptionListeners) {
 							listener.registered(s, "won.tourney.group");
@@ -157,14 +166,28 @@ class HibernateTourneyProcessor {
 			final HibernateTourney t = (HibernateTourney) o;
 			t.finishTourney();
 
+			log.info("Finalize tourney: " + t);
+
 			for (RegularTourneyListener listener : tourneyListeners) {
 				listener.tourneyFinished(t);
 			}
 		}
 	}
 
+	public void clearRegistrations(Session session) {
+		final Query query = session.createSQLQuery("" +
+				"DELETE s.* " +
+				"FROM " +
+				"tourney_regular_subs s left join " +
+				"tourney_regular_division d on s.roundNumber<=d.activeRound and s.language=d.language and s.section=d.section left join " +
+				"tourney_regular t on t.id=d.tourneyId and s.tourneyNumber=t.tourneyNumber " +
+				"where d.started is not null and d.finished is null");
 
-	Collection<TourneyResubscription> resortSubscriptions(Session session, int tourney, int round) {
+		final int i = query.executeUpdate();
+		log.info("Clear not required registrations: " + i);
+	}
+
+	Collection<TourneyResubscription> resortRegistrations(Session session, int tourney, int round) {
 		final Collection<TourneyResubscription> res = new ArrayList<>();
 
 		final Map<Long, TourneySection> originalSection = new HashMap<>();
@@ -260,7 +283,7 @@ class HibernateTourneyProcessor {
 		return res;
 	}
 
-	Collection<Long> getSubscribedPlayers(Session session, HibernateTourneyDivision division, int round) {
+	Collection<Long> getRegisteredPlayers(Session session, HibernateTourneyDivision division, int round) {
 		final Query subscriptionQuery = session.createQuery("" +
 				"select s.id.player " +
 				"from HibernateRegistrationRecord s " +

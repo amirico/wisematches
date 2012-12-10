@@ -100,7 +100,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 				throw new RegistrationException("Already registered");
 			}
 
-			final HibernateRegistrationRecord s = new HibernateRegistrationRecord(tourney.getNumber(), player.getId(), 1, language, section);
+			final HibernateRegistrationRecord s = new HibernateRegistrationRecord(tourney.getNumber(), player.getId(), language, section);
 			sessionFactory.getCurrentSession().save(s);
 
 			for (RegistrationListener subscriptionListener : subscriptionListeners) {
@@ -213,7 +213,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 		final Class<? extends TourneyEntity.Context> contextType = context.getClass();
 
 		if (Tourney.Context.class.isAssignableFrom(contextType)) {
-			return HibernateQueryHelper.searchTourneis(session, personality, Tourney.Context.class.cast(context), count);
+			return HibernateQueryHelper.searchTourneys(session, personality, Tourney.Context.class.cast(context), count);
 		}
 
 		if (TourneyDivision.Context.class.isAssignableFrom(contextType)) {
@@ -285,6 +285,22 @@ public class HibernateTourneyManager<S extends GameSettings>
 				} catch (Exception ex) {
 					log.error("Divisions can't be initiated by internal error", ex);
 					throw new TourneyProcessingException("Divisions can't be initiated by internal error", ex);
+				} finally {
+					lock.unlock();
+				}
+			}
+		});
+
+		// clear all subscriptions
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				lock.lock();
+				try {
+					tourneyProcessor.clearRegistrations(sessionFactory.getCurrentSession());
+				} catch (Exception ex) {
+					log.error("Subscriptions can't be cleaned", ex);
+					throw new TourneyProcessingException("Subscriptions can't be cleaned", ex);
 				} finally {
 					lock.unlock();
 				}

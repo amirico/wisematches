@@ -509,10 +509,6 @@
     font-size: 160%;
 }
 
-#subscriptionView .data-table-content {
-    border-style: solid !important;
-}
-
 #subscriptionDetails .subscription-details {
     text-align: center;
 }

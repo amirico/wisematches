@@ -1,3 +1,5 @@
+<#-- @ftlvariable name="restriction" type="wisematches.playground.restriction.Restriction" -->
+
 <#include "/core.ftl">
 
 <#macro jstable>
@@ -48,7 +50,8 @@
 
 <#macro dtContent class="" wrap=false>
     <#if wrap>
-    <div class="data-table-content ui-widget-content ${class}"></#if><#nested/><#if wrap></div></#if>
+    <div class="data-table-content ${class}">
+    <div class="ui-widget-content"></#if><#nested/><#if wrap></div></div></#if>
 </#macro>
 
 <#macro dtStatusbar class="" align="right">
@@ -113,19 +116,16 @@
 <div class="help-tooltip ui-icon ui-icon-info" title="<#nested>"></div>
 </#macro>
 
-<#macro tournament number short=false>
-${number}${gameMessageSource.getNumeralEnding(number, locale)}
-    <#if short><@message code="tournament.short.label"/><#else><@message code="tournament.long.label"/></#if>
+<#macro restrictionObserved nbsp=false>
+    <#if !restriction??><#nested><#elseif nbsp>&nbsp;</#if>
 </#macro>
 
-<#macro restriction style="" showIcon=true showLabel=true>
-<div class="restriction ui-state-error ui-corner-all shadow" <#if style?has_content>style="${style}"</#if>>
-    <#if showIcon>
-        <div class="restriction-icon wm-icon-forbidden"></div></#if>
-    <#if showLabel>
-        <div class="restriction-name"><@message code="restriction.label"/></div></#if>
-    <div class="restriction-message"><#nested></div>
-</div>
+<#macro restrictionMessage code style="">
+    <#if restriction??>
+    <div class="restriction ui-state-error-text" <#if style?has_content>style="${style}"</#if>>
+        <@message code="${code}" args=[restriction.threshold, restriction.violation]/>
+    </div>
+    </#if>
 </#macro>
 
 <#macro field path id="" class="">

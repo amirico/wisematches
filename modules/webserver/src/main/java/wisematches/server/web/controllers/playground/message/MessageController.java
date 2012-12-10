@@ -16,7 +16,7 @@ import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageDirection;
 import wisematches.playground.message.MessageManager;
-import wisematches.playground.restriction.RestrictionException;
+import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
@@ -65,10 +65,8 @@ public class MessageController extends WisematchesController {
 
 		model.addAttribute("plain", dialog);
 
-		model.addAttribute("messagesCount", restrictionManager.getRestriction(principal, "messages.count"));
-		model.addAttribute("restricted",
-				restrictionManager.isRestricted(principal, "messages.count",
-						messageManager.getTodayMessagesCount(principal, MessageDirection.SENT)));
+		final int todayMessagesCount = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
+		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "messages.count", todayMessagesCount));
 
 		long playerId = form.getPid();
 		if (form.isReply()) {
@@ -104,12 +102,10 @@ public class MessageController extends WisematchesController {
 	public ServiceResponse sendMessage(@RequestBody MessageForm form, Locale locale) {
 		final Player principal = getPrincipal();
 
-		final Comparable restriction = restrictionManager.getRestriction(principal, "messages.count");
-		try {
-			restrictionManager.checkRestriction(principal, "messages.count",
-					messageManager.getTodayMessagesCount(principal, MessageDirection.SENT));
-		} catch (RestrictionException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("messages.create.forbidden", locale, restriction, "/account/membership"));
+		final int sent = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
+		final Restriction restriction = restrictionManager.validateRestriction(principal, "messages.count", sent);
+		if (restriction != null) {
+			return ServiceResponse.failure(messageSource.getMessage("messages.create.forbidden", locale, restriction.getThreshold()));
 		}
 
 		Message message = null;

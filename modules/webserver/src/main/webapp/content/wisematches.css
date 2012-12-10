@@ -617,6 +617,11 @@ a.ui-icon {
     height: 18px;
 }
 
+.data-table-content>.ui-widget-content {
+    border-left: none;
+    border-right: none;
+}
+
 .addthis_toolbox, .addthis_toolbox a, #at20mc a {
     border: none;
     text-align: center
