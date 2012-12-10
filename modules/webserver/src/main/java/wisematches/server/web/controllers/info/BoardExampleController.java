@@ -29,106 +29,106 @@ import java.util.*;
 @Controller
 @RequestMapping("/info")
 public class BoardExampleController extends WisematchesController {
-    private TilesBankingHouse tilesBankingHouse;
-    private DictionaryManager dictionaryManager;
-    private BoardSettingsManager boardSettingsManager;
+	private TilesBankingHouse tilesBankingHouse;
+	private DictionaryManager dictionaryManager;
+	private BoardSettingsManager boardSettingsManager;
 
-    private final Map<Language, BoardWrapper> boardsCache = new HashMap<Language, BoardWrapper>();
+	private final Map<Language, BoardWrapper> boardsCache = new HashMap<>();
 
-    public BoardExampleController() {
-    }
+	public BoardExampleController() {
+	}
 
-    @RequestMapping("/move")
-    public String showHowToMove(final @RequestParam(value = "plain", required = false) String plain, final Model model, final Locale locale) throws Exception {
-        final Language language = Language.byLocale(locale);
+	@RequestMapping("/move")
+	public String showHowToMove(final @RequestParam(value = "plain", required = false) String plain, final Model model, final Locale locale) throws Exception {
+		final Language language = Language.byLocale(locale);
 
-        BoardWrapper board = boardsCache.get(language);
-        if (board == null) {
-            board = createNewBoard(language);
-            boardsCache.put(language, board);
-        }
+		BoardWrapper boardWrapper = boardsCache.get(language);
+		if (boardWrapper == null || !boardWrapper.getBoard().isGameActive()) {
+			boardWrapper = createNewBoard(language);
+			boardsCache.put(language, boardWrapper);
+		}
 
-        model.addAttribute("infoId", "move");
-        model.addAttribute("viewMode", false);
+		model.addAttribute("infoId", "move");
+		model.addAttribute("viewMode", false);
 
-        model.addAttribute("board", board.getBoard());
-        model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPersonality()));
+		model.addAttribute("board", boardWrapper.getBoard());
+		model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPersonality()));
 
-        model.addAttribute("player", RobotPlayer.getComputerPlayer(board.getBoard().getPlayerTurn().getPlayerId()));
-        model.addAttribute("memoryWords", selectMemoryWords(board.getAvailableMoves()));
+		model.addAttribute("player", RobotPlayer.getComputerPlayer(boardWrapper.getBoard().getPlayerTurn().getPlayerId()));
+		model.addAttribute("memoryWords", selectMemoryWords(boardWrapper.getAvailableMoves()));
 
-        if (plain != null) {
-            return "/content/info/move";
-        } else {
-            model.addAttribute("resourceTemplate", "/content/info/move.ftl");
-            return "/content/info/help";
-        }
-    }
+		if (plain != null) {
+			return "/content/info/move";
+		} else {
+			model.addAttribute("resourceTemplate", "/content/info/move.ftl");
+			return "/content/info/help";
+		}
+	}
 
-    private BoardWrapper createNewBoard(Language language) throws DictionaryNotFoundException {
-        final List<Player> players = Arrays.<Player>asList(RobotPlayer.DULL, RobotPlayer.EXPERT);
-        final Dictionary dictionary = dictionaryManager.getDictionary(language.locale());
-        final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
+	private BoardWrapper createNewBoard(Language language) throws DictionaryNotFoundException {
+		final List<Player> players = Arrays.<Player>asList(RobotPlayer.DULL, RobotPlayer.EXPERT);
+		final Dictionary dictionary = dictionaryManager.getDictionary(language.locale());
+		final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
 
-        final ScribbleSettings settings = new ScribbleSettings("Example Scribble Board", language, 7, false, false);
-        final ScribbleBoard board = new ScribbleBoard(settings, players, tilesBank, dictionary);
+		final ScribbleSettings settings = new ScribbleSettings("Example Scribble Board", language, 7, false, false);
+		final ScribbleBoard board = new ScribbleBoard(settings, players, tilesBank, dictionary);
 
-        final ScribbleRobotBrain robotBrain = new ScribbleRobotBrain();
-        for (int i = 0; i < 3; i++) {
-            RobotPlayer rp = RobotPlayer.getComputerPlayer(board.getPlayerTurn().getPlayerId());
-            robotBrain.putInAction(board, rp.getRobotType());
-        }
+		final ScribbleRobotBrain robotBrain = new ScribbleRobotBrain();
+		for (int i = 0; i < 3; i++) {
+			RobotPlayer rp = RobotPlayer.getComputerPlayer(board.getPlayerTurn().getPlayerId());
+			robotBrain.putInAction(board, rp.getRobotType());
+		}
 
-        final List<Word> allMoves = robotBrain.getAvailableMoves(board, board.getPlayerTurn());
-        final SortedSet<Word> uniqueMoves = new TreeSet<Word>(new Comparator<Word>() {
-            @Override
-            public int compare(Word o1, Word o2) {
-                return o1.getText().compareTo(o2.getText());
-            }
-        });
-        uniqueMoves.addAll(allMoves);
-        return new BoardWrapper(board, uniqueMoves);
-    }
+		final List<Word> allMoves = robotBrain.getAvailableMoves(board, board.getPlayerTurn());
+		final SortedSet<Word> uniqueMoves = new TreeSet<>(new Comparator<Word>() {
+			@Override
+			public int compare(Word o1, Word o2) {
+				return o1.getText().compareTo(o2.getText());
+			}
+		});
+		uniqueMoves.addAll(allMoves);
+		return new BoardWrapper(board, uniqueMoves);
+	}
 
-    private Collection<Word> selectMemoryWords(List<Word> words) {
-        if (words.size() > 3) {
-            return Arrays.asList(words.get(0), words.get(words.size() / 2), words.get(words.size() - 1));
-        } else {
-            return words;
-        }
-    }
+	private Collection<Word> selectMemoryWords(List<Word> words) {
+		if (words.size() > 3) {
+			return Arrays.asList(words.get(0), words.get(words.size() / 2), words.get(words.size() - 1));
+		} else {
+			return words;
+		}
+	}
 
-    @Autowired
-    public void setTilesBankingHouse(TilesBankingHouse tilesBankingHouse) {
-        this.tilesBankingHouse = tilesBankingHouse;
-    }
+	@Autowired
+	public void setTilesBankingHouse(TilesBankingHouse tilesBankingHouse) {
+		this.tilesBankingHouse = tilesBankingHouse;
+	}
 
-    @Autowired
-    public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
-        this.dictionaryManager = dictionaryManager;
-    }
+	@Autowired
+	public void setDictionaryManager(@Qualifier("wordGamesDictionaries") DictionaryManager dictionaryManager) {
+		this.dictionaryManager = dictionaryManager;
+	}
 
-    @Autowired
-    public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
-        this.boardSettingsManager = boardSettingsManager;
-    }
+	@Autowired
+	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
+		this.boardSettingsManager = boardSettingsManager;
+	}
 
-    private static final class BoardWrapper {
-        private final ScribbleBoard board;
-        private final List<Word> availableMoves;
+	private static final class BoardWrapper {
+		private final ScribbleBoard board;
+		private final List<Word> availableMoves;
 
-        private BoardWrapper(ScribbleBoard board, Collection<Word> moves) {
-            this.board = board;
-            availableMoves = new ArrayList<Word>(moves);
-            Collections.shuffle(availableMoves);
-        }
+		private BoardWrapper(ScribbleBoard board, Collection<Word> moves) {
+			this.board = board;
+			availableMoves = new ArrayList<>(moves);
+			Collections.shuffle(availableMoves);
+		}
 
-        public ScribbleBoard getBoard() {
-            return board;
-        }
+		public ScribbleBoard getBoard() {
+			return board;
+		}
 
-        public List<Word> getAvailableMoves() {
-            return availableMoves;
-        }
-    }
+		public List<Word> getAvailableMoves() {
+			return availableMoves;
+		}
+	}
 }
