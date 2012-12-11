@@ -79,7 +79,7 @@ class HibernateQueryHelper {
 		} else {
 			Query query = session.createQuery((count ? "select count(g.round.division.tourney) " : "select g.round.division.tourney ") +
 					"from HibernateTourneyGroup g " +
-					"where (g.player1=:pid or g.player2=:pid or g.player3=:pid or g.player4=:pid) " +
+					"where (g.player0=:pid or g.player1=:pid or g.player2=:pid or g.player3=:pid) " +
 					convertStateToQuery(context.getStates(), "g", "and"));
 			query.setLong("pid", personality.getId());
 			return query;
@@ -125,7 +125,7 @@ class HibernateQueryHelper {
 		} else if (personality != null) {
 			Query query = session.createQuery((count ? "select count(*) " : "") +
 					"from HibernateTourneyGroup g " +
-					"where (g.player1=:pid or g.player2=:pid or g.player3=:pid or g.player4=:pid) " +
+					"where (g.player0=:pid or g.player1=:pid or g.player2=:pid or g.player3=:pid) " +
 					convertStateToQuery(context.getStates(), "g", "and"));
 			query.setLong("pid", personality.getId());
 			return query;

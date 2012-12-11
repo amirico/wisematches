@@ -138,14 +138,15 @@ class HibernateTourneyProcessor {
 
 			// if group finished and not final round
 			if (group.getFinishedDate() != null && !round.isFinal()) {
-				for (long playerId : group.getPlayers()) {
-					if (group.isWinner(playerId)) {
+				final List<HibernateTourneyWinner> winnersList = tourneyReferee.getWinnersList(group, round, division);
+				for (HibernateTourneyWinner winner : winnersList) {
+					if (winner.getPlace() == PlayerPlace.FIRST) { // move only winners to next round
 						final TourneyRound.Id roundId = round.getId();
 						final TourneyDivision.Id divisionId = roundId.getDivisionId();
 						final Tourney.Id tourneyId = divisionId.getTourneyId();
 						final int number = tourneyId.getNumber();
 
-						final HibernateRegistrationRecord s = new HibernateRegistrationRecord(number, playerId, round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
+						final HibernateRegistrationRecord s = new HibernateRegistrationRecord(number, winner.getPlayer(), round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
 						session.save(s);
 
 						log.info("Subscribe player to next round: " + s);
@@ -304,8 +305,8 @@ class HibernateTourneyProcessor {
 
 	HibernateTourneyGroup getGroupByBoard(Session session, GameBoard<?, ?> board) {
 		final Query query = session.createQuery("from HibernateTourneyGroup g where " +
-				"g.game1=:game or g.game2 = :game or g.game3 = :game or " +
-				"g.game4 = :game or g.game5 = :game or g.game6 = :game");
+				"g.game0=:game or g.game1 = :game or g.game2 = :game or " +
+				"g.game3 = :game or g.game4 = :game or g.game5 = :game");
 		query.setLong("game", board.getBoardId());
 		return (HibernateTourneyGroup) query.uniqueResult();
 	}

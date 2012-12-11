@@ -25,13 +25,6 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 */
 	TourneyRound getRound();
 
-	/**
-	 * Returns all games which take part in this group. The array contains first all games for first player,
-	 * when for second player and so on.
-	 *
-	 * @return all games which take part in this group.
-	 */
-	long[] getGames();
 
 	/**
 	 * All players in this group.
@@ -40,32 +33,35 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 */
 	long[] getPlayers();
 
-	/**
-	 * Returns scores for each player in this group. Index in this array is equals to player's index in {@link #getPlayers()} array.
-	 *
-	 * @return all scores for players in this group.
-	 */
-	short[] getScores();
 
 	/**
-	 * Returns scores for specified player only.
+	 * Returns game id between two specified players. Order of players is not important.
 	 *
-	 * @param player the player id
-	 * @return player's scores.
-	 */
-	short getScores(long player);
-
-	/**
-	 * Returns game id between two specified players. Order of players are not important.
-	 *
-	 * @param p1 first player
-	 * @param p2 second player.
+	 * @param player   first player
+	 * @param opponent second player.
 	 * @return the game id that is played by specified players.
 	 * @throws IllegalArgumentException if any player doesn't belong to this group.
 	 */
-	long getGameId(long p1, long p2);
+	long getGameId(long player, long opponent);
 
-	boolean isWinner(long player);
+	/**
+	 * Returns total player scores
+	 *
+	 * @param player the player who's scores must be returned.
+	 * @return scores object.
+	 */
+	int getPlayerScores(long player);
+
+	/**
+	 * Returns game result between two specified players. Order of players is important.
+	 *
+	 * @param player   player who's success will be returned.
+	 * @param opponent opponent.
+	 * @return the game result that is played by specified players or {@code null} if game is not finished.
+	 * @throws IllegalArgumentException if any player doesn't belong to this group.
+	 */
+	PlayerSuccess getPlayerSuccess(long player, long opponent);
+
 
 	public final class Id extends TourneyEntity.Id<TourneyGroup, Id> {
 		private TourneyRound.Id id;

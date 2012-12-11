@@ -1,9 +1,9 @@
 package wisematches.playground.tourney.regular.impl.referee;
 
 import org.junit.Test;
+import wisematches.playground.tourney.regular.PlayerPlace;
 import wisematches.playground.tourney.regular.TourneyGroup;
 import wisematches.playground.tourney.regular.TourneyWinner;
-import wisematches.playground.tourney.regular.WinnerPlace;
 import wisematches.playground.tourney.regular.impl.HibernateTourneyWinner;
 
 import java.util.List;
@@ -22,27 +22,26 @@ public class FinalGroupResultRefereeTest {
 	public void testGetWinnersList() throws Exception {
 		final FinalGroupResultReferee resultReferees = new FinalGroupResultReferee();
 
-		final TourneyGroup group = createMock(TourneyGroup.class);
-		expect(group.getScores()).andReturn(new short[]{2, 1, 2, 0});
-		expect(group.getPlayers()).andReturn(new long[]{101L, 103L, 102L, 104L}).times(WinnerPlace.values().length);
-		expect(group.getScores(101L)).andReturn((short) 2).times(WinnerPlace.values().length);
-		expect(group.getScores(102L)).andReturn((short) 2).times(WinnerPlace.values().length);
-		expect(group.getScores(103L)).andReturn((short) 1).times(WinnerPlace.values().length);
-		expect(group.getScores(104L)).andReturn((short) 0).times(WinnerPlace.values().length);
+		final TourneyGroup group = createStrictMock(TourneyGroup.class);
+		expect(group.getPlayers()).andReturn(new long[]{101L, 103L, 102L, 104L});
+		expect(group.getPlayerScores(101L)).andReturn(2);
+		expect(group.getPlayerScores(103L)).andReturn(1);
+		expect(group.getPlayerScores(102L)).andReturn(2);
+		expect(group.getPlayerScores(104L)).andReturn(0);
 		replay(group);
 
 		final List<HibernateTourneyWinner> winnersList = resultReferees.getWinnersList(group, null, null);
 		assertEquals(4, winnersList.size());
 
-		assertWinner(101L, WinnerPlace.FIRST, winnersList.get(0));
-		assertWinner(102L, WinnerPlace.FIRST, winnersList.get(1));
-		assertWinner(103L, WinnerPlace.SECOND, winnersList.get(2));
-		assertWinner(104L, WinnerPlace.THIRD, winnersList.get(3));
+		assertWinner(101L, PlayerPlace.FIRST, winnersList.get(0));
+		assertWinner(102L, PlayerPlace.FIRST, winnersList.get(1));
+		assertWinner(103L, PlayerPlace.SECOND, winnersList.get(2));
+		assertWinner(104L, PlayerPlace.THIRD, winnersList.get(3));
 
 		verify(group);
 	}
 
-	private void assertWinner(final long player, final WinnerPlace place, final TourneyWinner winner) {
+	private void assertWinner(final long player, final PlayerPlace place, final TourneyWinner winner) {
 		assertEquals(player, winner.getPlayer());
 		assertEquals(place, winner.getPlace());
 	}

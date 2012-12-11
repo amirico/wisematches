@@ -48,10 +48,10 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 * to check is division finished or not before call this method.
 	 * <p/>
 	 * Please note it's possible that for one place more than one winner. You can filter
-	 * winners by place using {@link WinnerPlace#filter(java.util.Collection)} method.
+	 * winners by place using {@link PlayerPlace#filter(java.util.Collection)} method.
 	 *
 	 * @return the collection of winners.
-	 * @see WinnerPlace
+	 * @see PlayerPlace
 	 */
 	Collection<TourneyWinner> getTourneyWinners();
 

@@ -1,5 +1,9 @@
 package wisematches.server.web.controllers.playground.tourney.form;
 
+import wisematches.personality.Language;
+import wisematches.playground.tourney.regular.*;
+import wisematches.server.web.controllers.UnknownEntityException;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -58,19 +62,53 @@ public class EntityIdForm {
 	}
 
 	public boolean isGroup() {
-		return g != null;
+		return t != null && s != null && l != null && r == null && g != null;
 	}
 
 	public boolean isRound() {
-		return r != null && !isGroup();
+		return t != null && s != null && l != null && r != null && g == null;
 	}
 
 	public boolean isDivision() {
-		return s != null && l != null && !isRound();
+		return t != null && s != null && l != null && r == null && g == null;
 	}
 
 	public boolean isTourney() {
-		return t != null && !isDivision();
+		return t != null && s == null && l == null && r == null && g == null;
+	}
+
+	public Tourney.Id getTourneyId() throws UnknownEntityException {
+		try {
+			return new Tourney.Id(Integer.parseInt(t));
+		} catch (Exception ex) {
+			throw new UnknownEntityException(this, "tourney");
+		}
+	}
+
+	public TourneyDivision.Id getDivisionId() throws UnknownEntityException {
+		try {
+			final Language language = Language.values()[Integer.parseInt(l)];
+			final TourneySection section = TourneySection.values()[Integer.parseInt(s)];
+			return new TourneyDivision.Id(getTourneyId(), language, section);
+		} catch (Exception ex) {
+			throw new UnknownEntityException(this, "tourney");
+		}
+	}
+
+	public TourneyRound.Id getRoundId() throws UnknownEntityException {
+		try {
+			return new TourneyRound.Id(getDivisionId(), Integer.parseInt(r));
+		} catch (Exception ex) {
+			throw new UnknownEntityException(this, "tourney");
+		}
+	}
+
+	public TourneyGroup.Id getGroupId() throws UnknownEntityException {
+		try {
+			return new TourneyGroup.Id(getRoundId(), Integer.parseInt(g));
+		} catch (Exception ex) {
+			throw new UnknownEntityException(this, "tourney");
+		}
 	}
 
 	@Override

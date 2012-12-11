@@ -1,11 +1,10 @@
 <#-- @ftlvariable name="tourney" type="wisematches.playground.tourney.regular.Tourney" -->
 <#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TourneySection[]" -->
-<#-- @ftlvariable name="languages" type="wisematches.personality.Language[]" -->
-<#-- @ftlvariable name="winnerPlaces" type="wisematches.playground.tourney.regular.WinnerPlace[]" -->
+<#-- @ftlvariable name="winnerPlaces" type="wisematches.playground.tourney.regular.PlayerPlace[]" -->
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">
-<#include "scriplet.ftl">
+<#include "../scriplet.ftl">
 
 <@wm.playground id="tourneyWidget">
 <div id="divisions">
