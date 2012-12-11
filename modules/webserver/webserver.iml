@@ -61,6 +61,7 @@
       <excludeFolder url="file://$MODULE_DIR$/target/spec" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/webserver-3.02-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/webserver-3.03-SNAPSHOT" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

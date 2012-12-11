@@ -41,7 +41,7 @@
                     <tr>
                         <#list winnerPlaces as p>
                             <th>
-                                <@message code="tourney.place.${p.ordinal()}.label"/>
+                                <@message code="tourney.place.${p.place}.label"/>
                             </th>
                         </#list>
                     </tr>

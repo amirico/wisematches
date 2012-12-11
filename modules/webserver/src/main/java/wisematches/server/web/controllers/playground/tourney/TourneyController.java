@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
+import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
@@ -127,25 +128,16 @@ public class TourneyController extends WisematchesController {
 		if (tourney == null) {
 			throw new UnknownEntityException(form.getT(), "tourney");
 		}
-		model.addAttribute("tourney", tourney); // add tourney object
+		model.addAttribute("tourney", tourney);
+		model.addAttribute("sections", TourneySection.values());
+		model.addAttribute("languages", Language.values());
+		model.addAttribute("winnerPlaces", WinnerPlace.values());
 
-		final Personality personality = getPersonality();
 		if (form.isTourney()) {
 			final TourneyRound.Context ctx = new TourneyRound.Context(tourneyId, null);
-			final Map<TourneyDivision, List<TourneyRound>> divisionsTree = new HashMap<>();
-			final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(personality, ctx, null, null, null);
 
-			for (TourneyRound round : rounds) {
-				final TourneyDivision division = round.getDivision();
-
-				List<TourneyRound> tourneyRounds = divisionsTree.get(division);
-				if (tourneyRounds == null) {
-					tourneyRounds = new ArrayList<>();
-					divisionsTree.put(division, tourneyRounds);
-				}
-				tourneyRounds.add(round);
-			}
-			model.addAttribute("divisionsTree", divisionsTree);
+			final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null, null);
+			model.addAttribute("divisionsTree", new TourneyTree(rounds.toArray(new TourneyRound[rounds.size()])));
 
 			return "/content/playground/tourney/divisions";
 		}
@@ -181,11 +173,20 @@ public class TourneyController extends WisematchesController {
 
 		final Player principal = getPrincipal();
 		try {
+			final boolean doRegistration = section != null && language != null;
+			if (doRegistration) {
+				final Restriction restriction = restrictionManager.validateRestriction(principal, "tourneys.count", getActiveTourneysCount(principal));
+				if (restriction != null) {
+					return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscribe.forbidden", locale, restriction.getThreshold()));
+				}
+			}
+
 			final RegistrationRecord subscription = tourneyManager.getRegistration(principal, tourney);
 			if (subscription != null) {
 				tourneyManager.unregister(principal, tourney, subscription.getLanguage(), subscription.getSection());
 			}
-			if (section != null && language != null) { // register
+
+			if (doRegistration) { // register
 				tourneyManager.register(principal, tourney, language, section);
 			}
 		} catch (RegistrationException ex) {
@@ -196,9 +197,9 @@ public class TourneyController extends WisematchesController {
 		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		final Map<String, Map<String, Integer>> res = new HashMap<>();
 		for (Language l : Language.values()) {
-			Map<String, Integer> stringIntegerMap = new HashMap<>();
+			final Map<String, Integer> stringIntegerMap = new HashMap<>();
 			res.put(l.name(), stringIntegerMap);
-			for (TourneySection s : TourneySection.values()) {
+			for (final TourneySection s : TourneySection.values()) {
 				stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));
 			}
 		}
@@ -225,7 +226,7 @@ public class TourneyController extends WisematchesController {
 			model.addAttribute("statistics", statistic);
 
 			model.addAttribute("restriction",
-					restrictionManager.validateRestriction(personality, "tourneys.count", getActiveTourneysCount(personality)));
+					restrictionManager.validateRestriction(personality, "tourneys.count", getActiveTourneysCount(personality) + 1));
 
 			model.addAttribute("subscription", tourneyManager.getRegistration(personality, announce));
 			model.addAttribute("subscriptions", tourneyManager.getRegistrationsSummary(announce));

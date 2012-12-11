@@ -12,6 +12,7 @@ public enum TourneySection {
 	ADVANCED(1700),
 	EXPERT(2000),
 	GRANDMASTER(Integer.MAX_VALUE);
+
 	private final int topRating;
 
 	TourneySection(int topRating) {
