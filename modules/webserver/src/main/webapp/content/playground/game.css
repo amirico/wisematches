@@ -491,22 +491,10 @@
     white-space: nowrap;
 }
 
-#subscriptionView .description {
-    margin: 0;
-    padding: 0;
-    border: none;
-    white-space: nowrap;
-    background: transparent;
-}
-
 #subscriptionView .actions button {
     width: 100%;
     color: #c46100;
     font-weight: bold
-}
-
-#subscriptionView .description .number {
-    font-size: 160%;
 }
 
 #subscriptionDetails .subscription-details {
@@ -534,6 +522,15 @@
     display: block;
 }
 
+#tourneyWidget .tourney-name {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 160%;
+    white-space: nowrap;
+    background: transparent;
+}
+
 #tourneyWidget .dataTable, #subscriptionView table, #subscriptionDialog table, #subscriptionDetails table, #subscriptions table {
     border-spacing: 5px;
 }
@@ -546,4 +543,26 @@
 #tourneyWidget .dataTable td, #subscriptionView table td, #subscriptionDialog table td, #subscriptionDetails table td {
     white-space: nowrap;
     vertical-align: top;
+}
+
+#tourneyWidget .division {
+    padding-bottom: 10px;
+}
+
+#tourneyWidget .division-name {
+    border-bottom: 1px solid #daecf2;
+}
+
+#tourneyWidget .division-rounds>a {
+    color: #a52a2a;
+    font-weight: bold;
+}
+
+#tourneyWidget .division-rounds, #tourneyWidget .division-winners {
+    padding-left: 20px;
+}
+
+#tourneyWidget .division-winners dl {
+    margin: 0;
+    padding: 0;
 }

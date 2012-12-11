@@ -1,5 +1,7 @@
 package wisematches.playground.tourney.regular;
 
+import wisematches.personality.Language;
+
 import java.util.*;
 
 /**
@@ -93,6 +95,15 @@ public class TourneyTree {
 
 	public List<TourneyDivision> getDivisions(Tourney tourney) {
 		return divisionMap.get(tourney);
+	}
+
+	public TourneyDivision getDivision(Tourney tourney, Language language, TourneySection section) {
+		for (TourneyDivision division : divisionMap.get(tourney)) {
+			if (division.getLanguage() == language && division.getSection() == section) {
+				return division;
+			}
+		}
+		return null;
 	}
 
 	public List<TourneyRound> getRounds(TourneyDivision division) {

@@ -6,12 +6,12 @@ ${tourneyId.number?string}${gameMessageSource.getNumeralEnding(tourneyId.number,
     <#if link></a></#if>
 </#macro>
 
-<#macro roundName roundId link=false>
+<#macro roundName roundId link=false final=false>
     <#assign divisionId=roundId.divisionId/>
     <#assign tourneyId=divisionId.tourneyId/>
     <#if link><a
             href="/playground/tourney/view?t=${tourneyId.number}&l=${divisionId.language.ordinal()}&s=${divisionId.section.ordinal()}&r=${roundId.round?string}"></#if>
-    <@message code="tourney.round.label"/> ${roundId.round?string}
+    <#if final><@message code="tourney.round.final.label"/><#else><@message code="tourney.round.label"/> ${roundId.round?string}</#if>
     <#if link></a></#if>
 </#macro>
 

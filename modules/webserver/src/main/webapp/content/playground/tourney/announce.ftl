@@ -23,10 +23,8 @@
 </@wm.dtHeader>
 
 <@wm.dtToolbar align="center">
-    <div class="description ui-state-active">
-        <div class="number">
-            <@tourneyName tourneyId=announce.id link=false/>
-        </div>
+    <div class="tourney-name ui-state-active">
+        <@tourneyName tourneyId=announce.id link=false/>
     </div>
     <div style="text-align: right; width: 100%">
         <a href="/info/tourney" style="white-space: nowrap;">

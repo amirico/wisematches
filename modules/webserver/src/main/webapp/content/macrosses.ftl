@@ -3,7 +3,6 @@
 <#include "/core.ftl">
 
 <#macro jstable>
-<link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
 <script type="text/javascript" src="/jquery/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/jquery/css/ColReorder.css"/>
 <script type="text/javascript" src="/jquery/js/ColReorder.min.js"></script>

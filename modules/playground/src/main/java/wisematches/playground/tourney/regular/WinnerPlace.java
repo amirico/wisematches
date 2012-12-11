@@ -42,5 +42,9 @@ public enum WinnerPlace {
 		return res;
 	}
 
+	public int getPlace() {
+		return ordinal() + 1;
+	}
+
 	public abstract WinnerPlace nextPlace();
 }
