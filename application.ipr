@@ -166,7 +166,7 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" hash="3051836824" />
+  <component name="DataSourceManagerImpl" compressed="false" hash="2638958147" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -498,6 +498,7 @@
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateQueryHelper.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneyProcessor.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/manager/MySQLNotificationManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />

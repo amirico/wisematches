@@ -2,13 +2,13 @@ package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Personality;
 import wisematches.playground.*;
+import wisematches.playground.tourney.regular.PlayerSuccess;
 import wisematches.playground.tourney.regular.TourneyGroup;
 
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -37,46 +37,60 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	private Date finishedDate;
 
 	@Column(name = "player1")
-	private long player1;
+	private long player0;
 
 	@Column(name = "player2")
-	private long player2;
+	private long player1;
 
 	@Column(name = "player3")
-	private long player3;
+	private long player2;
 
 	@Column(name = "player4")
-	private long player4;
-
-	@Column(name = "scores1")
-	private short scores1;
-
-	@Column(name = "scores2")
-	private short scores2;
-
-	@Column(name = "scores3")
-	private short scores3;
-
-	@Column(name = "scores4")
-	private short scores4;
+	private long player3;
 
 	@Column(name = "game1")
-	private long game1;
+	private long game0;
 
 	@Column(name = "game2")
-	private long game2;
+	private long game1;
 
 	@Column(name = "game3")
-	private long game3;
+	private long game2;
 
 	@Column(name = "game4")
-	private long game4;
+	private long game3;
 
 	@Column(name = "game5")
-	private long game5;
+	private long game4;
 
 	@Column(name = "game6")
-	private long game6;
+	private long game5;
+
+
+	@Column(name = "result1")
+	@Enumerated(EnumType.ORDINAL)
+	private PlayerSuccess result0;
+
+	@Column(name = "result2")
+	@Enumerated(EnumType.ORDINAL)
+	private PlayerSuccess result1;
+
+	@Column(name = "result3")
+	@Enumerated(EnumType.ORDINAL)
+	private PlayerSuccess result2;
+
+	@Column(name = "result4")
+	@Enumerated(EnumType.ORDINAL)
+	private PlayerSuccess result3;
+
+	@Column(name = "result5")
+	@Enumerated(EnumType.ORDINAL)
+	private PlayerSuccess result4;
+
+	@Column(name = "result6")
+	@Enumerated(EnumType.ORDINAL)
+	private PlayerSuccess result5;
+
 
 	@Column(name = "playersCount")
 	private byte playersCount;
@@ -86,6 +100,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 
 	@Column(name = "finishedGamesCount")
 	private byte finishedGamesCount;
+
 
 	@Deprecated
 	public HibernateTourneyGroup() {
@@ -102,18 +117,14 @@ public class HibernateTourneyGroup implements TourneyGroup {
 			throw new IllegalArgumentException("More that four players in group can't be");
 		}
 
-		player1 = players[0];
-		player2 = players[1];
+		player0 = players[0];
+		player1 = players[1];
 		if (playersCount > 2) {
-			player3 = players[2];
+			player2 = players[2];
 		}
 		if (playersCount > 3) {
-			player4 = players[3];
+			player3 = players[3];
 		}
-	}
-
-	long getInternalId() {
-		return internalId;
 	}
 
 	@Override
@@ -132,60 +143,65 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	@Override
-	public long[] getGames() {
-		return Arrays.copyOf(new long[]{game1, game2, game3, game4, game5, game6}, totalGamesCount);
-	}
-
-	@Override
 	public long[] getPlayers() {
-		return Arrays.copyOf(new long[]{player1, player2, player3, player4}, playersCount);
+		return Arrays.copyOf(new long[]{player0, player1, player2, player3}, playersCount);
 	}
 
 	@Override
-	public short[] getScores() {
-		return Arrays.copyOf(new short[]{scores1, scores2, scores3, scores4}, playersCount);
+	public int getPlayerScores(long player) {
+		int res = 0;
+		final long[] players = getPlayers();
+		for (long p : players) {
+			final PlayerSuccess success = getPlayerSuccess(player, p);
+			if (success != null) {
+				res += success.getPoints();
+			}
+		}
+		return res;
 	}
 
-	@Override
-	public short getScores(long player) {
-		return getScores()[getPlayerIndex(player)];
-	}
-
+	//	@Override
+//	public GameResult getResult(long game, long player) {
+//		final GameResult result = getResultByIndex(getGameIndex(game));
+//		if (result == null) {
+//			return null;
+//		}
+//
+//		final long slave = getGameSlave(game);
+//		final long master = getGameMaster(game);
+//		if (master == player) {
+//			return result;
+//		} else if (slave == player) {
+//			result.getOpposite();
+//		}
+//		throw new IllegalArgumentException("Player not in the game");
+//	}
+//
 	@Override
 	public long getGameId(long p1, long p2) {
-		return getGames()[getGameIndex(getPlayerIndex(p1), getPlayerIndex(p2))];
+		return getGameByIndex(getGameIndex(getPlayerIndex(p1), getPlayerIndex(p2)));
 	}
 
 	@Override
-	public boolean isWinner(long player) {
-		return finishedDate != null && getScores(player) == getMaxScore();
+	public PlayerSuccess getPlayerSuccess(long p1, long p2) {
+		if (p1 == p2) {
+			return null;
+		}
+		final int playerIndex1 = getPlayerIndex(p1);
+		final int playerIndex2 = getPlayerIndex(p2);
+
+		final int gameIndex = getGameIndex(playerIndex1, playerIndex2);
+
+		PlayerSuccess res = getResultByIndex(gameIndex);
+		if (res == null) {
+			return null;
+		}
+		return playerIndex1 < playerIndex2 ? res : res.getOpposite(); // less index - master
 	}
 
 	@Override
 	public Id getId() {
 		return new Id(round.getId(), group);
-	}
-
-	int getPlayerIndex(long player) {
-		if (player == 0) {
-			throw new IllegalArgumentException("Incorrect player id");
-		}
-		if (player == player1) {
-			return 0;
-		} else if (player == player2) {
-			return 1;
-		} else if (player == player3) {
-			return 2;
-		} else if (player == player4) {
-			return 3;
-		}
-		throw new IllegalArgumentException("Incorrect player id");
-	}
-
-	int getGameIndex(int playerIndex1, int playerIndex2) {
-		final int i1 = Math.min(playerIndex1, playerIndex2);
-		final int i2 = Math.max(playerIndex1, playerIndex2);
-		return (i1 == 0 ? i2 - 1 : i1 + i2);
 	}
 
 	@Override
@@ -198,7 +214,6 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return finishedDate;
 	}
 
-
 	<S extends GameSettings> int initializeGames(BoardManager<S, ?> boardManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
 		if (totalGamesCount != 0) {
 			throw new IllegalStateException("Group already initialized");
@@ -206,20 +221,20 @@ public class HibernateTourneyGroup implements TourneyGroup {
 
 		final S gameSettings = settingsProvider.createGameSettings(this);
 		if (playersCount == 2) {
-			game1 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
+			game0 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player0), Personality.person(player1))).getBoardId();
 			totalGamesCount = 1;
 		} else if (playersCount == 3) {
-			game1 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
-			game2 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player3))).getBoardId();
-			game3 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player2), Personality.person(player3))).getBoardId();
+			game0 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player0), Personality.person(player1))).getBoardId();
+			game1 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player0), Personality.person(player2))).getBoardId();
+			game2 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
 			totalGamesCount = 3;
 		} else if (playersCount == 4) {
-			game1 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
-			game2 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player3))).getBoardId();
-			game3 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player4))).getBoardId();
-			game4 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player2), Personality.person(player3))).getBoardId();
-			game5 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player2), Personality.person(player4))).getBoardId();
-			game6 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player3), Personality.person(player4))).getBoardId();
+			game0 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player0), Personality.person(player1))).getBoardId();
+			game1 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player0), Personality.person(player2))).getBoardId();
+			game2 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player0), Personality.person(player3))).getBoardId();
+			game3 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
+			game4 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player1), Personality.person(player3))).getBoardId();
+			game5 = boardManager.createBoard(gameSettings, Arrays.asList(Personality.person(player2), Personality.person(player3))).getBoardId();
 			totalGamesCount = 6;
 		}
 		startedDate = new Date();
@@ -232,19 +247,16 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		}
 
 		final Collection<? extends GamePlayerHand> wonPlayers = board.getWonPlayers();
+		final long boardId = board.getBoardId();
 		if (wonPlayers == null) {
-			throw new IllegalStateException("Game is not finished: " + board.getBoardId());
+			throw new IllegalStateException("Game is not finished: " + boardId);
 		}
 
 		if (wonPlayers.size() == 0) {
-			final List<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-			for (GamePlayerHand hand : playersHands) {
-				addScores(hand.getPlayerId(), (short) 1);
-			}
+			setGameResult(boardId, PlayerSuccess.DRAW);
 		} else {
-			for (GamePlayerHand hand : wonPlayers) {
-				addScores(hand.getPlayerId(), (short) 2);
-			}
+			final GamePlayerHand winner = wonPlayers.iterator().next();
+			setGameResult(boardId, winner.getPlayerId() == getGameMaster(boardId) ? PlayerSuccess.WON : PlayerSuccess.LOST);
 		}
 		finishedGamesCount += 1;
 
@@ -253,59 +265,159 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		}
 	}
 
-	private void addScores(long player, short scores) {
-		final int playerIndex = getPlayerIndex(player);
-		if (playerIndex == 0) {
-			scores1 += scores;
-		} else if (playerIndex == 1) {
-			scores2 += scores;
-		} else if (playerIndex == 2) {
-			scores3 += scores;
-		} else if (playerIndex == 3) {
-			scores4 += scores;
+	private void setGameResult(long boardId, PlayerSuccess result) {
+		switch (getGameIndex(boardId)) {
+			case 0:
+				result0 = result;
+				break;
+			case 1:
+				result1 = result;
+				break;
+			case 2:
+				result2 = result;
+				break;
+			case 3:
+				result3 = result;
+				break;
+			case 4:
+				result4 = result;
+				break;
+			case 5:
+				result5 = result;
+				break;
 		}
 	}
 
-	private short getMaxScore() {
-		short max = 0;
-		if (scores1 > max) {
-			max = scores1;
+	int getPlayerIndex(long player) {
+		if (player == 0) {
+			throw new IllegalArgumentException("Incorrect player id");
 		}
-		if (scores2 > max) {
-			max = scores2;
+		if (player == player0) {
+			return 0;
+		} else if (player == player1) {
+			return 1;
+		} else if (player == player2) {
+			return 2;
+		} else if (player == player3) {
+			return 3;
 		}
-		if (scores3 > max) {
-			max = scores3;
+		throw new IllegalArgumentException("Incorrect player id");
+	}
+
+	int getGameIndex(long boardId) {
+		if (game0 == boardId) {
+			return 0;
+		} else if (game1 == boardId) {
+			return 1;
+		} else if (game2 == boardId) {
+			return 2;
+		} else if (game3 == boardId) {
+			return 3;
+		} else if (game4 == boardId) {
+			return 4;
+		} else if (game5 == boardId) {
+			return 5;
 		}
-		if (scores4 > max) {
-			max = scores4;
+		throw new IllegalArgumentException("Incorrect board id: " + boardId);
+	}
+
+	int getGameIndex(int playerIndex1, int playerIndex2) {
+		final int i1 = Math.min(playerIndex1, playerIndex2);
+		final int i2 = Math.max(playerIndex1, playerIndex2);
+
+		if (totalGamesCount == 3) {
+			return (i1 == 0 ? i2 - 1 : i1 + i2 - 1);
+		} else {
+			return (i1 == 0 ? i2 - 1 : i1 + i2);
 		}
-		return max;
+	}
+
+	long getGameByIndex(int gameIndex) {
+		switch (gameIndex) {
+			case 0:
+				return game0;
+			case 1:
+				return game1;
+			case 2:
+				return game2;
+			case 3:
+				return game3;
+			case 4:
+				return game4;
+			case 5:
+				return game5;
+		}
+		throw new IndexOutOfBoundsException("Incorrect game index");
+	}
+
+	long getGameMaster(long game) {
+		final int index = getGameIndex(game);
+		if (totalGamesCount == 1) {
+			return player0;
+		} else if (totalGamesCount == 3) {
+			if (index == 2) {
+				return player1;
+			}
+			return player0;
+		} else if (totalGamesCount == 6) {
+			if (index == 5) {
+				return player2;
+			}
+			if (index < 3) {
+				return player0;
+			}
+			return player1;
+		}
+		throw new IllegalStateException("Incorrect total games count");
+	}
+
+	PlayerSuccess getResultByIndex(int gameIndex) {
+		switch (gameIndex) {
+			case 0:
+				return result0;
+			case 1:
+				return result1;
+			case 2:
+				return result2;
+			case 3:
+				return result3;
+			case 4:
+				return result4;
+			case 5:
+				return result5;
+		}
+		throw new IndexOutOfBoundsException("Incorrect game index");
 	}
 
 	@Override
 	public String toString() {
-		return "HibernateTourneyGroup{" +
-				"internalId=" + internalId +
-				", group=" + group +
-				", round=" + round +
-				", playersCount=" + playersCount +
-				", player1=" + player1 +
-				", player2=" + player2 +
-				", player3=" + player3 +
-				", player4=" + player4 +
-				", scores1=" + scores1 +
-				", scores2=" + scores2 +
-				", scores3=" + scores3 +
-				", scores4=" + scores4 +
-				", game1=" + game1 +
-				", game2=" + game2 +
-				", game3=" + game3 +
-				", game4=" + game4 +
-				", game5=" + game5 +
-				", game6=" + game6 +
-				", startedDate=" + startedDate +
-				", finishedDate=" + finishedDate +
-				'}';
+		final StringBuilder sb = new StringBuilder();
+		sb.append("HibernateTourneyGroup");
+		sb.append("{internalId=").append(internalId);
+		sb.append(", group=").append(group);
+		sb.append(", round=").append(round);
+		sb.append(", startedDate=").append(startedDate);
+		sb.append(", finishedDate=").append(finishedDate);
+		sb.append(", player1=").append(player0);
+		sb.append(", player2=").append(player1);
+		sb.append(", player3=").append(player2);
+		sb.append(", player4=").append(player3);
+		sb.append(", game1=").append(game0);
+		sb.append(", game2=").append(game1);
+		sb.append(", game3=").append(game2);
+		sb.append(", game4=").append(game3);
+		sb.append(", game5=").append(game4);
+		sb.append(", game6=").append(game5);
+		sb.append(", result1=").append(result0);
+		sb.append(", result2=").append(result1);
+		sb.append(", result3=").append(result2);
+		sb.append(", result4=").append(result3);
+		sb.append(", result5=").append(result4);
+		sb.append(", result6=").append(result5);
+		sb.append(", playersCount=").append(playersCount);
+		sb.append(", totalGamesCount=").append(totalGamesCount);
+		sb.append(", finishedGamesCount=").append(finishedGamesCount);
+		sb.append('}');
+		return sb.toString();
 	}
 }

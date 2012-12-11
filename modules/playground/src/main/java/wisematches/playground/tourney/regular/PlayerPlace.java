@@ -6,27 +6,27 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum WinnerPlace {
+public enum PlayerPlace {
 	FIRST() {
 		@Override
-		public WinnerPlace nextPlace() {
+		public PlayerPlace nextPlace() {
 			return SECOND;
 		}
 	},
 	SECOND() {
 		@Override
-		public WinnerPlace nextPlace() {
+		public PlayerPlace nextPlace() {
 			return THIRD;
 		}
 	},
 	THIRD() {
 		@Override
-		public WinnerPlace nextPlace() {
+		public PlayerPlace nextPlace() {
 			return null;
 		}
 	};
 
-	private WinnerPlace() {
+	private PlayerPlace() {
 	}
 
 	public Collection<TourneyWinner> filter(Collection<TourneyWinner> winners) {
@@ -46,5 +46,5 @@ public enum WinnerPlace {
 		return ordinal() + 1;
 	}
 
-	public abstract WinnerPlace nextPlace();
+	public abstract PlayerPlace nextPlace();
 }

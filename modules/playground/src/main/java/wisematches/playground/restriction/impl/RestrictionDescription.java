@@ -2,7 +2,6 @@ package wisematches.playground.restriction.impl;
 
 import wisematches.personality.Membership;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -13,10 +12,6 @@ public final class RestrictionDescription {
 	private Map<Membership, Comparable> restrictions;
 
 	public RestrictionDescription() {
-	}
-
-	public RestrictionDescription(String name, Membership membership, Comparable restriction) {
-		this(name, Collections.singletonMap(membership, restriction));
 	}
 
 	public RestrictionDescription(String name, Map<Membership, Comparable> restrictions) {

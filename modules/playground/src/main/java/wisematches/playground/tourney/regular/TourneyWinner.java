@@ -16,5 +16,5 @@ public interface TourneyWinner {
 	 *
 	 * @return the player's place
 	 */
-	WinnerPlace getPlace();
+	PlayerPlace getPlace();
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
@@ -77,7 +78,7 @@ public class TourneyController extends WisematchesController {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
 		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
 
-		model.addAttribute("winnerPlaces", WinnerPlace.values());
+		model.addAttribute("winnerPlaces", PlayerPlace.values());
 		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
 		setupAnnounce(model);
@@ -117,31 +118,41 @@ public class TourneyController extends WisematchesController {
 			throw new UnknownEntityException(form.getT(), "tourney");
 		}
 
-		final Tourney.Id tourneyId;
-		try {
-			tourneyId = new Tourney.Id(Integer.valueOf(form.getT()));
-		} catch (NumberFormatException ex) {
-			throw new UnknownEntityException(form.getT(), "tourney");
-		}
-
+		final Tourney.Id tourneyId = form.getTourneyId();
 		final Tourney tourney = tourneyManager.getTourneyEntity(tourneyId);
 		if (tourney == null) {
 			throw new UnknownEntityException(form.getT(), "tourney");
 		}
 		model.addAttribute("tourney", tourney);
-		model.addAttribute("sections", TourneySection.values());
-		model.addAttribute("languages", Language.values());
-		model.addAttribute("winnerPlaces", WinnerPlace.values());
 
 		if (form.isTourney()) {
-			final TourneyRound.Context ctx = new TourneyRound.Context(tourneyId, null);
-
-			final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null, null);
-			model.addAttribute("divisionsTree", new TourneyTree(rounds.toArray(new TourneyRound[rounds.size()])));
-
-			return "/content/playground/tourney/divisions";
+			return showTourneyView(tourney, model);
+		} else if (form.isRound()) {
+			return showRoundView(model, form);
 		}
-		return null;
+		throw new UnknownEntityException(form, "tourney");
+	}
+
+	private String showTourneyView(Tourney tourney, Model model) {
+		model.addAttribute("sections", TourneySection.values());
+		model.addAttribute("winnerPlaces", PlayerPlace.values());
+
+		final TourneyRound.Context ctx = new TourneyRound.Context(tourney.getId(), null);
+		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null, null);
+		model.addAttribute("divisionsTree", new TourneyTree(rounds.toArray(new TourneyRound[rounds.size()])));
+
+		return "/content/playground/tourney/view/tourney";
+	}
+
+	private String showRoundView(Model model, EntityIdForm form) throws UnknownEntityException {
+		final TourneyRound.Id roundId = form.getRoundId();
+		final TourneyGroup.Context ctx = new TourneyGroup.Context(roundId, null);
+
+		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, ctx, null, null, Range.limit(0, 10));
+		model.addAttribute("round", tourneyManager.getTourneyEntity(roundId));
+		model.addAttribute("groups", groups);
+
+		return "/content/playground/tourney/view/round";
 	}
 
 	@ResponseBody
