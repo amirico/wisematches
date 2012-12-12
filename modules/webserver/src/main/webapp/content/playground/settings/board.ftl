@@ -6,7 +6,7 @@
        width="100%">
     <tr>
         <td style="padding-top: 4px; width: 10px;">
-        <@wm.fieldInput fieldType='checkbox' path="settings.cleanMemory"/>
+        <@wm.ui.input fieldType='checkbox' path="settings.cleanMemory"/>
         </td>
         <td>
         <#--@declare id="cleanMemory"-->
@@ -18,7 +18,7 @@
 
     <tr>
         <td style="padding-top: 4px; width: 10px;">
-        <@wm.fieldInput fieldType='checkbox' path="settings.checkWords"/>
+        <@wm.ui.input fieldType='checkbox' path="settings.checkWords"/>
         </td>
         <td>
         <#--@declare id="checkWords"-->
@@ -30,7 +30,7 @@
 
     <tr>
         <td style="padding-top: 4px; width: 10px;">
-        <@wm.fieldInput fieldType='checkbox' path="settings.clearByClick"/>
+        <@wm.ui.input fieldType='checkbox' path="settings.clearByClick"/>
         </td>
         <td>
         <#--@declare id="clearByClick"-->
@@ -42,7 +42,7 @@
 
     <tr>
         <td style="padding-top: 4px; width: 10px;">
-        <@wm.fieldInput fieldType='checkbox' path="settings.showCaptions"/>
+        <@wm.ui.input fieldType='checkbox' path="settings.showCaptions"/>
         </td>
         <td>
         <#--@declare id="showCaptions"-->
@@ -57,13 +57,13 @@
         <#--@declare id="tilesClass"-->
             <label for="tilesClass"><@message code="game.settings.board.tiles.label"/>:</label>
 
-        <@wm.fieldInput fieldType='hidden' path="settings.tilesClass">
+        <@wm.ui.input fieldType='hidden' path="settings.tilesClass">
             <div class="tiles-set-container" style="padding-left: 10px">
                 <div class="tiles-set-nav tiles-set-prev ui-state-default">
                     <div class="ui-icon ui-icon-arrow-1-w"></div>
                 </div>
 
-                <div class="tiles-set-view ui-state-default ${spring.stringStatusValue!"tiles-set-classic"}"
+                <div class="tiles-set-view ui-state-default ${wm.ui.statusValue!"tiles-set-classic"}"
                      style="width: 242px; height: 44px; position: relative;">
 
                     <#list 0..10 as i>
@@ -77,7 +77,7 @@
                     <div class="ui-icon ui-icon-arrow-1-e"></div>
                 </div>
             </div>
-        </@wm.fieldInput>
+        </@wm.ui.input>
         </td>
     </tr>
 </table>

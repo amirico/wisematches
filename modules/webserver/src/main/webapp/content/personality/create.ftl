@@ -52,7 +52,7 @@
                                 <label for="email"><@message code="account.register.email.label"/>:</label>
                             </td>
                             <td>
-                            <@wm.fieldInput path="registration.email"/>
+                            <@wm.ui.input path="registration.email"/>
                                 <span class="sample"><@message code="account.register.email.description"/></span>
                             </td>
                         </tr>
@@ -63,7 +63,7 @@
                                 <label for="nickname"><@message code="account.register.nickname.label"/>:</label>
                             </td>
                             <td>
-                            <@wm.fieldInput path="registration.nickname"/>
+                            <@wm.ui.input path="registration.nickname"/>
                                 <span class="sample"><@message code="account.register.nickname.description"/></span>
                             </td>
                         </tr>
@@ -85,7 +85,7 @@
                                 <label for="password"><@message code="account.register.pwd.label"/>:</label>
                             </td>
                             <td>
-                            <@wm.fieldInput path="registration.password" fieldType="password"/>
+                            <@wm.ui.input path="registration.password" fieldType="password"/>
                             </td>
                         </tr>
                         <tr>
@@ -94,17 +94,17 @@
                                 <label for="confirm"><@message code="account.register.pwd-cfr.label"/>:</label>
                             </td>
                             <td>
-                            <@wm.fieldInput path="registration.confirm" fieldType="password"/>
+                            <@wm.ui.input path="registration.confirm" fieldType="password"/>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                            <@wm.field path="registration.rememberMe">
+                            <@wm.ui.field path="registration.rememberMe">
                                 <input type="checkbox" id="rememberMe" name="rememberMe"
-                                       <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
+                                       <#if wm.ui.statusValue=="true">checked="checked"</#if>/>
                                 <label for="rememberMe"><@message code="account.login.remember.label"/></label>
-                            </@wm.field>
+                            </@wm.ui.field>
                             </td>
                         </tr>
 
@@ -125,7 +125,7 @@
                                 <label for="language"><@message code="account.register.language.label"/>:</label>
                             </td>
                             <td>
-                            <@wm.field path="registration.language">
+                            <@wm.ui.field path="registration.language">
                                 <select id="language" name="language" style="width: 170px;">
                                     <#list ["en", "ru"] as l>
                                         <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
@@ -133,7 +133,7 @@
                                         </option>
                                     </#list>
                                 </select>
-                            </@wm.field>
+                            </@wm.ui.field>
                                 <input type="hidden" id="timezone" name="timezone" value="0">
                                 <script type="text/javascript">
                                     document.getElementById('timezone').value = new Date().getTimezoneOffset();
@@ -148,7 +148,7 @@
                                 <label for="captcha"><@message code="captcha.label"/>:</label>
                             </td>
                             <td>
-                            <@wm.captcha path="registration.captcha"/>
+                            <@wm.ui.captcha path="registration.captcha"/>
                                 <#--<span class="sample"><@message code="captcha.description"/></span>-->
                             </td>
                         </tr>

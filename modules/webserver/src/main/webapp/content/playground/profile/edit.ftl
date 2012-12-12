@@ -19,19 +19,19 @@
         <#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>
 
             <div class="title">
-            <@wm.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player"/>
+            <@wm.ui.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player"/>
             </div>
 
             <div class="ui-layout-table">
-            <@wm.editor id="comments" code="profile.edit.comments" value=profileForm.comments/>
+            <@wm.ui.editor id="comments" code="profile.edit.comments" value=profileForm.comments/>
 
-<@wm.editor id="gender" code="profile.edit.gender" value=profileForm.gender view=genderName/>
+<@wm.ui.editor id="gender" code="profile.edit.gender" value=profileForm.gender view=genderName/>
 
-<@wm.editor id="birthday" code="profile.edit.birthday" value=profileForm.birthday view=birthdayName/>
+<@wm.ui.editor id="birthday" code="profile.edit.birthday" value=profileForm.birthday view=birthdayName/>
 
-<@wm.editor id="countryCode" code="profile.edit.country" value=profileForm.countryCode view=profileForm.country/>
+<@wm.ui.editor id="countryCode" code="profile.edit.country" value=profileForm.countryCode view=profileForm.country/>
 
-<@wm.editor id="primaryLanguage" code="profile.edit.language" value=profileForm.primaryLanguage view=languageName/>
+<@wm.ui.editor id="primaryLanguage" code="profile.edit.language" value=profileForm.primaryLanguage view=languageName/>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
     <table width="100%">
         <tr>
             <td valign="top" align="left">
-                <div class="info-header"><b><@message code="profile.edit.photo.label"/></b></div>
+                <div class="info-header"><strong><@message code="profile.edit.photo.label"/></strong></div>
 
                 <div class="info-description"><@message code="profile.edit.photo.description"/></div>
 
@@ -110,27 +110,27 @@
         };
 
         var uploader = new qq.FileUploader({
-            element:dialogElement[0],
-            action:'image/preview',
-            fileTemplate:'<div>' +
+            element: dialogElement[0],
+            action: '/playground/profile/image/preview',
+            fileTemplate: '<div>' +
                     '<span class="qq-upload-file"></span>' +
                     '<span class="qq-upload-spinner"></span>' +
                     '<span class="qq-upload-size"></span>' +
                     '<a class="qq-upload-cancel" href="#"><@message code="button.cancel"/></a>' +
                     '</div>',
-            sizeLimit:512000,
-            allowedExtensions:['jpg', 'jpeg', 'png', 'gif'],
-            messages:{
-                typeError:"<@message code="profile.edit.error.photo.type"/>",
-                sizeError:"<@message code="profile.edit.error.photo.size"/>",
-                emptyError:"<@message code="profile.edit.error.photo.empty"/>",
-                onLeave:"<@message code="profile.edit.error.photo.leave"/>"
+            sizeLimit: 512000,
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+            messages: {
+                typeError: "<@message code="profile.edit.error.photo.type"/>",
+                sizeError: "<@message code="profile.edit.error.photo.size"/>",
+                emptyError: "<@message code="profile.edit.error.photo.empty"/>",
+                onLeave: "<@message code="profile.edit.error.photo.leave"/>"
             },
-            onSubmit:function (id, fileName) {
+            onSubmit: function (id, fileName) {
                 chooseButton.hide();
                 errorMessage.hide();
             },
-            onComplete:function (id, fileName, responseJSON) {
+            onComplete: function (id, fileName, responseJSON) {
                 chooseButton.show();
                 dialogElement.find(".qq-upload-list span").empty();
                 $(dialogElement.parent().find("button")[1]).button("enable");
@@ -141,16 +141,16 @@
                     this.showMessage(responseJSON.summary);
                 }
             },
-            onCancel:function (id, fileName) {
+            onCancel: function (id, fileName) {
                 dialogElement.find(".qq-upload-list").hide();
                 chooseButton.show();
             },
-            showMessage:showErrorMessage
+            showMessage: showErrorMessage
         });
 
         this.removeProfilePhoto = function () {
-            $.ajax('image/remove', {
-                success:function (data, textStatus, jqXHR) {
+            $.ajax('/playground/profile/image/remove', {
+                success: function (data, textStatus, jqXHR) {
                     if (data.success) {
                         updateProfileImage();
                     } else {
@@ -165,24 +165,24 @@
             updatePreviewImage();
 
             dialogElement.dialog({
-                title:"<@message code="profile.edit.photo.title"/>",
-                modal:true,
-                minWidth:550,
-                height:'auto',
-                resizable:false,
-                buttons:[
+                title: "<@message code="profile.edit.photo.title"/>",
+                modal: true,
+                minWidth: 550,
+                height: 'auto',
+                resizable: false,
+                buttons: [
                     {
-                        text:"<@message code="button.cancel"/>",
-                        click:function () {
+                        text: "<@message code="button.cancel"/>",
+                        click: function () {
                             $(this).dialog("close");
                         }
                     },
                     {
-                        text:"<@message code="profile.edit.photo.set"/>",
-                        disabled:true,
-                        click:function () {
-                            $.ajax('image/set', {
-                                success:function (data, textStatus, jqXHR) {
+                        text: "<@message code="profile.edit.photo.set"/>",
+                        disabled: true,
+                        click: function () {
+                            $.ajax('/playground/profile/image/set', {
+                                success: function (data, textStatus, jqXHR) {
                                     if (data.success) {
                                         updateProfileImage();
                                         dialogElement.dialog("close");
@@ -204,13 +204,13 @@
                         wm.ui.lock(null, "<@message code="profile.edit.saving"/>");
 
                         $.ajax({
-                            url:'save',
-                            cache:false,
-                            data:$.toJSON(data),
-                            error:function (jqXHR, textStatus, errorThrown) {
+                            url: '/playground/profile/save',
+                            cache: false,
+                            data: $.toJSON(data),
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 callback(textStatus);
                             },
-                            success:function (data, textStatus, jqXHR) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (!data.success) {
                                     wm.ui.unlock(null, "<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
                                     callback(data.summary);
@@ -222,43 +222,43 @@
                         });
                     },
                     {
-                        realName:{
-                            type:'text'
+                        realName: {
+                            type: 'text'
                         },
-                        comments:{
-                            type:'text'
+                        comments: {
+                            type: 'text'
                         },
-                        gender:{
-                            type:'select',
-                            values:{
-                                male:'<@message code="gender.male"/>',
-                                female:'<@message code="gender.female"/>',
-                                other:'<@message code="gender.other"/>'
+                        gender: {
+                            type: 'select',
+                            values: {
+                                male: '<@message code="gender.male"/>',
+                                female: '<@message code="gender.female"/>',
+                                other: '<@message code="gender.other"/>'
                             }
                         },
-                        birthday:{
-                            type:'date',
-                            opts:{
-                                changeMonth:true,
-                                changeYear:true,
-                                dateFormat:'dd-mm-yy',
-                                displayFormat:'MM d, yy',
-                                yearRange:'1900:2011'
+                        birthday: {
+                            type: 'date',
+                            opts: {
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'dd-mm-yy',
+                                displayFormat: 'MM d, yy',
+                                yearRange: '1900:2011'
 
                             }
                         },
-                        primaryLanguage:{
-                            type:'select',
-                            values:{
-                                en:'<@message code="language.en"/>',
-                                ru:'<@message code="language.ru"/>'
+                        primaryLanguage: {
+                            type: 'select',
+                            values: {
+                                en: '<@message code="language.en"/>',
+                                ru: '<@message code="language.ru"/>'
                             }
                         },
-                        countryCode:{
-                            type:'select',
-                            values:{
+                        countryCode: {
+                            type: 'select',
+                            values: {
                             <#list countries as country>
-                                '${country.code}':"${country.name}"<#if country_has_next>,</#if>
+                                '${country.code}': "${country.name}"<#if country_has_next>,</#if>
                             </#list>
                             }
                         }

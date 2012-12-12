@@ -21,7 +21,7 @@
             <img id="header-image" src="/resources/images/logo.png" width="178" height="72"/>
         </td>
         <td style="width: 100%">
-        <@wm.topRoundPanel id="header-panel">
+        <@wm.ui.panel.roundTop id="header-panel">
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
@@ -53,7 +53,7 @@
                     </td>
                 </tr>
             </table>
-        </@wm.topRoundPanel>
+        </@wm.ui.panel.roundTop>
         </td>
     </tr>
 </table>

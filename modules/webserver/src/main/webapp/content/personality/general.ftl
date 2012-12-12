@@ -11,8 +11,8 @@
 
         <td width="270" style="vertical-align: top;">
             <div id="login-navigation">
-            <@wm.roundPanel>
-                <@wm.roundPanel>
+            <@wm.ui.panel.round>
+                <@wm.ui.panel.round>
                     <div id="login-panel">
                         <div id="login-title"><@message code="account.login.title"/></div>
                         <div id="login-type"><@message code="account.header"/></div>
@@ -27,12 +27,12 @@
                                     </td>
                                     <td>
                                         <#if showPredefinedUsername>
-                                            <@spring.bind "login.j_username"/>
-                                            <span style="font-weight: bold;">${spring.stringStatusValue}</span>
+                                            <@wm.ui.bind "login.j_username"/>
+                                            <span style="font-weight: bold;">${wm.ui.statusValue}</span>
                                             <input type="hidden" id="j_username" name="j_username"
-                                                   value="${spring.stringStatusValue}"/>
+                                                   value="${wm.ui.statusValue}"/>
                                         <#else>
-                                            <@wm.fieldInput path="login.j_username" size="0"/>
+                                            <@wm.ui.input path="login.j_username" size="0"/>
                                         </#if>
                                     </td>
                                 </tr>
@@ -43,17 +43,17 @@
                                                for="j_password"><@message code="account.login.password.label"/>:</label>
                                     </td>
                                     <td>
-                                        <@wm.fieldInput path="login.j_password" fieldType="password" size="0"/>
+                                        <@wm.ui.input path="login.j_password" fieldType="password" size="0"/>
                                     </td>
                                 </tr>
                                 <#if showRememberMe>
                                     <tr>
                                         <td align="right" valign="middle"
                                             style="text-align: right; vertical-align: middle;">
-                                            <@wm.field path="login.rememberMe">
+                                            <@wm.ui.field path="login.rememberMe">
                                                 <input type="checkbox" id="rememberMe" name="rememberMe" value="true"
-                                                       <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
-                                            </@wm.field>
+                                                       <#if wm.ui.statusValue=="true">checked="checked"</#if>/>
+                                            </@wm.ui.field>
                                         </td>
                                         <td align="left" valign="middle"
                                             style="text-align: left; vertical-align: middle;">
@@ -90,11 +90,11 @@
                             </table>
                         </form>
                     </div>
-                </@wm.roundPanel>
-            </@wm.roundPanel>
+                </@wm.ui.panel.round>
+            </@wm.ui.panel.round>
             <#if showRegistration>
                 <div style="height:10px;"></div>
-                <@wm.roundPanel>
+                <@wm.ui.panel.round>
                     <div id="register-panel">
                         <div id="register-link">
                             <button id="createAnAccount" class="account-button"
@@ -114,7 +114,7 @@
                             <a href="/info/features"><@message code="info.features.label"/></a>
                         </div>
                     </div>
-                </@wm.roundPanel>
+                </@wm.ui.panel.round>
             </#if>
             </div>
         </td>

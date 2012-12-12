@@ -118,7 +118,7 @@
                         <#else>
                         ${statistics.lowestLostOpponentRating}
                             <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                            <#if llp?has_content>( <@wm.player player=llp showType=false/>)</#if>
+                            <#if llp?has_content>( <@wm.player.name player=llp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                         <#else>
                         ${statistics.highestWonOpponentRating}
                             <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
-                            <#if hwp?has_content>( <@wm.player player=hwp showType=false/>
+                            <#if hwp?has_content>( <@wm.player.name player=hwp showType=false/>
                                 )</#if>
                         </#if>
                         </div>
@@ -319,7 +319,7 @@
 <script type="text/javascript">
     $(".profile button").button();
 
-    google.load('visualization', '1', {packages:['corechart']});
+    google.load('visualization', '1', {packages: ['corechart']});
 
     function drawRatingGraph() {
         // Create and populate the data table.
@@ -338,22 +338,22 @@
 
         new google.visualization.LineChart(document.getElementById('ratingChart')).
                 draw(data, {
-                    backgroundColor:'transparent',
-                    interpolateNulls:true,
-                    legend:'none',
-                    width:300,
-                    height:150,
-                    chartArea:{
-                        top:10,
-                        left:50,
-                        width:280,
-                        height:120
+                    backgroundColor: 'transparent',
+                    interpolateNulls: true,
+                    legend: 'none',
+                    width: 300,
+                    height: 150,
+                    chartArea: {
+                        top: 10,
+                        left: 50,
+                        width: 280,
+                        height: 120
                     },
-                    hAxis:{
-                        showTextEvery:resolution * 2
+                    hAxis: {
+                        showTextEvery: resolution * 2
                     },
-                    vAxis:{
-                        format:'#',
+                    vAxis: {
+                        format: '#',
                         minValue: ${ratingChart.minRating?string("0")},
                         maxValue: ${ratingChart.maxRating?string("0")}
                     }}
@@ -372,18 +372,18 @@
 
         new google.visualization.BarChart(document.getElementById('gamesChart')).
                 draw(data, {
-                    axisTitlesPosition:'in',
-                    colors:['#008000', 'AA0033', '#FF9900'],
-                    backgroundColor:'transparent',
-                    legend:'none',
-                    isStacked:true,
-                    width:300,
-                    height:75,
-                    chartArea:{
-                        top:0,
-                        left:0,
-                        width:280,
-                        height:40
+                    axisTitlesPosition: 'in',
+                    colors: ['#008000', 'AA0033', '#FF9900'],
+                    backgroundColor: 'transparent',
+                    legend: 'none',
+                    isStacked: true,
+                    width: 300,
+                    height: 75,
+                    chartArea: {
+                        top: 0,
+                        left: 0,
+                        width: 280,
+                        height: 40
                     }
                 });
 
@@ -398,17 +398,17 @@
 
         new google.visualization.BarChart(document.getElementById('timeoutsChart')).
                 draw(data2, {
-                    colors:['lightgrey', 'darkgrey', '#00cc66'],
-                    backgroundColor:'transparent',
-                    legend:'none',
-                    isStacked:true,
-                    width:300,
-                    height:75,
-                    chartArea:{
-                        top:0,
-                        left:0,
-                        width:280,
-                        height:40
+                    colors: ['lightgrey', 'darkgrey', '#00cc66'],
+                    backgroundColor: 'transparent',
+                    legend: 'none',
+                    isStacked: true,
+                    width: 300,
+                    height: 75,
+                    chartArea: {
+                        top: 0,
+                        left: 0,
+                        width: 280,
+                        height: 40
                     }
                 })
     }

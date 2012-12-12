@@ -24,7 +24,7 @@
                         </td>
 
                         <td style="vertical-align: top;">
-                        <@wm.widget class="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"  help="board.playboard"/>
+                        <@wm.ui.widget class="scribbleBoard" style="width: 100%" title="<center>${board.gameSettings.title} #${board.boardId}</center>"  help="board.playboard"/>
                     <#include "/content/playground/scribble/widget/controls.ftl"/>
                         <#if playerHand?has_content><#include "/content/playground/scribble/widget/annotation.ftl"/></#if>
                         </td>

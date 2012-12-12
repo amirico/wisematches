@@ -18,7 +18,7 @@
             <div class="loading-image" style="width: 150px">&nbsp;</div>
         </div>
         <div class="label">
-            <b><@message code="game.comment.label"/></b>
+            <strong><@message code="game.comment.label"/></strong>
             <span class="new ui-helper-hidden ui-state-hover">(<span
                     class="value">7</span> <@message code="game.comment.new"/>)</span>
         </div>

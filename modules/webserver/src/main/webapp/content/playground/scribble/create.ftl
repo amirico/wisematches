@@ -1,31 +1,31 @@
 <#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
-<#-- @ftlvariable name="robotPlayers" type="java.util.Collection<wisematches.server.player.computer.robot.RobotPlayer>" -->
+<#-- @ftlvariable name="robotPlayers" type="wisematches.personality.player.computer.robot.RobotPlayer[]" -->
 <#include "/core.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
-<@wm.playground id="createGameWidget">
+<@wm.ui.playground id="createGameWidget">
 <div id="createGame">
-    <@wm.dtHeader>
+    <@wm.ui.table.header>
         <@message code="game.menu.games.label"/> > <@message code="game.create.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar>
+    <@wm.ui.table.toolbar>
     <div>
         <a href="/playground/scribble/join" style=""><@message code="game.join.label"/></a>
     </div>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
 <form id="form" class="form" action="/playground/scribble/create" method="post">
-    <@wm.dtContent wrap=true>
+    <@wm.ui.table.content wrap=true>
     <table class="create-game" width="100%">
     <tr>
         <td>
         <#--@declare id="title"-->
             <label for="title"><@message code="game.title.label"/>:</label>
         </td>
-        <td width="100%"><@wm.fieldInput path="create.title" value="game.create.title.default"/></td>
+        <td width="100%"><@wm.ui.input path="create.title" value="game.create.title.default"/></td>
     </tr>
 
     <tr>
@@ -33,15 +33,15 @@
             <label for="boardLanguage"><@message code="game.language.label"/>:</label>
         </td>
         <td>
-            <@wm.field path="create.boardLanguage">
+            <@wm.ui.field path="create.boardLanguage">
                 <select id="boardLanguage" name="boardLanguage" style="width: 170px;">
                     <#list ["en", "ru"] as l>
-                        <option value="${l}" <#if (l==wm.statusValue)>selected="selected"</#if>>
+                        <option value="${l}" <#if (l==wm.ui.statusValue)>selected="selected"</#if>>
                             <@message code="language.${l}"/>
                         </option>
                     </#list>
                 </select>
-            </@wm.field>
+            </@wm.ui.field>
         </td>
     </tr>
 
@@ -52,14 +52,14 @@
             </label>
         </td>
         <td>
-            <@wm.field path="create.daysPerMove">
+            <@wm.ui.field path="create.daysPerMove">
                 <select id="daysPerMove" name="daysPerMove" style="width: 170px;">
                     <#list [2,3,4,5,7,10,14] as l>
                         <option value="${l}"
-                                <#if (l==(wm.statusValue)?number)>selected="selected"</#if>>${gameMessageSource.formatTimeMinutes(l*24*60, locale)}</option>
+                                <#if (l==(wm.ui.statusValue)?number)>selected="selected"</#if>>${gameMessageSource.formatTimeMinutes(l*24*60, locale)}</option>
                     </#list>
                 </select>
-            </@wm.field>
+            </@wm.ui.field>
             <span class="sample"><@message code="game.create.time.description"/></span>
         </td>
     </tr>
@@ -70,16 +70,17 @@
         </td>
         <td>
             <div id="radio">
-                <@wm.field path="create.createTab">
-                    <#assign createTab=wm.statusValue?lower_case/>
-                    <#if playRobotsOnly><#assign availableTypes=["robot"]/><#else><#assign availableTypes=["robot", "wait", "challenge"]/></#if>
+                <@wm.ui.field path="create.createTab">
+                    <#assign createTab=wm.ui.statusValue?lower_case/>
+                    <#assign availableTypes=["robot", "wait", "challenge"]/>
+                    <#if playRobotsOnly><#assign availableTypes=["robot"]/></#if>
                     <#list availableTypes as t>
                         <input id="createTab${t?cap_first}" type="radio"
                                name="createTab" value="${t?upper_case}"
                                <#if createTab==t>checked="checked"</#if>/>
                         <label for="createTab${t?cap_first}"><@message code="game.create.opponent.${t}"/></label>
                     </#list>
-                </@wm.field>
+                </@wm.ui.field>
             </div>
         </td>
     </tr>
@@ -89,15 +90,15 @@
         <td>
             <div id="robotForm" class="create-form <#if createTab!="robot">ui-helper-hidden</#if>">
                 <table width="100%" style="border-spacing: 5px">
-                    <@wm.field path="create.robotType">
+                    <@wm.ui.field path="create.robotType">
                         <#list robotPlayers as robot>
                             <#assign t=robot.robotType/>
                             <tr>
                                 <td nowrap="nowrap">
                                     <input id="robotType${t}" name="robotType" type="radio" value="${t}"
-                                           <#if wm.statusValue==t?upper_case>checked="checked"</#if>/>
+                                           <#if wm.ui.statusValue==t?upper_case>checked="checked"</#if>/>
                                     <label for="robotType${t}">
-                                        <@wm.player player=robot showType=false/> (${robot.rating})
+                                        <@wm.player.name player=robot showType=false/> (${robot.rating})
                                     </label>
                                 </td>
                                 <td width="100%">
@@ -105,7 +106,7 @@
                                 </td>
                             </tr>
                         </#list>
-                    </@wm.field>
+                    </@wm.ui.field>
                 </table>
             </div>
 
@@ -113,17 +114,17 @@
                 <table cellpadding="0" cellspacing="0">
                     <tr>
                         <td style="padding-right: 10px">
-                            <@wm.field path="create.opponentsCount">
+                            <@wm.ui.field path="create.opponentsCount">
                                 <#list 1..maxOpponents as c>
                                     <div style="padding: 5px;white-space: nowrap;">
                                         <input type="radio"
                                                id="opponentsCount${c}" name="opponentsCount" value="${c}"
-                                               <#if c?string==wm.statusValue>checked="checked"</#if>>
+                                               <#if c?string==wm.ui.statusValue>checked="checked"</#if>>
                                         <label for="opponentsCount${c}"
                                                style="color: #a52a2a;"><@message code="game.create.opponents.${c}"/></label>
                                     </div>
                                 </#list>
-                            </@wm.field>
+                            </@wm.ui.field>
                         </td>
                         <td>
                             <table cellpadding="2" cellspacing="0">
@@ -132,27 +133,27 @@
                                         <label><@message code="game.create.limits.rating.label"/>:</label>
                                     </td>
                                     <td>
-                                        <@wm.field path="create.minRating" id="minRatingDiv">
+                                        <@wm.ui.field path="create.minRating" id="minRatingDiv">
                                             <@message code="game.create.limits.rating.min"/>
                                             <select name="minRating">
                                                 <option value="0"
-                                                        <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
+                                                        <#if "0"==wm.ui.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
                                                 <#list ['900','950','1000','1050','1100','1150','1200','1250'] as r>
                                                     <option value="${r}">${r}</option>
                                                 </#list>
                                             </select>
-                                        </@wm.field>
-                                        <@wm.field path="create.maxRating" id="maxRatingDiv">
+                                        </@wm.ui.field>
+                                        <@wm.ui.field path="create.maxRating" id="maxRatingDiv">
                                             , <@message code="game.create.limits.rating.max"/>
                                             <select name="maxRating">
                                                 <#list ['1350','1400','1450','1500','1550','1600','1650','1700','1750','1800'] as r>
                                                     <option value="${r}"
-                                                            <#if r==wm.statusValue>selected="selected"</#if>>${r}</option>
+                                                            <#if r==wm.ui.statusValue>selected="selected"</#if>>${r}</option>
                                                 </#list>
                                                 <option value="0"
-                                                        <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
+                                                        <#if "0"==wm.ui.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
                                             </select>
-                                        </@wm.field>
+                                        </@wm.ui.field>
                                     </td>
                                 </tr>
                                 <tr>
@@ -160,16 +161,16 @@
                                         <label><@message code="game.create.limits.games.finished"/>:</label>
                                     </td>
                                     <td>
-                                        <@wm.field id="completedDiv" path="create.completed">
+                                        <@wm.ui.field id="completedDiv" path="create.completed">
                                             <select name="completed">
                                                 <option value="0"
-                                                        <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
+                                                        <#if "0"==wm.ui.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
                                                 <#list [1, 5, 10, 20, 50, 100] as g>
                                                     <option value="${g}">${g}
                                                             <@message code="game.create.limits.game"/>${gameMessageSource.getWordEnding(g, locale)}</option>
                                                 </#list>
                                             </select>
-                                        </@wm.field>
+                                        </@wm.ui.field>
 
                                         <div class="sample"><@message code="game.create.limits.games.finished.description"/></div>
                                     </td>
@@ -177,15 +178,15 @@
                                 <tr>
                                     <td><label><@message code="game.create.limits.games.timeouts"/>:</label></td>
                                     <td>
-                                        <@wm.field id="timeoutsDiv" path="create.timeouts">
+                                        <@wm.ui.field id="timeoutsDiv" path="create.timeouts">
                                             <select name="timeouts">
                                                 <option value="0"
-                                                        <#if "0"==wm.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
+                                                        <#if "0"==wm.ui.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
                                                 <#list [50, 25, 10, 5, 3] as g>
                                                     <option value="${g}">< ${g} %</option>
                                                 </#list>
                                             </select>
-                                        </@wm.field>
+                                        </@wm.ui.field>
                                         <div class="sample"><@message code="game.create.limits.games.timeouts.description"/></div>
                                     </td>
                                 </tr>
@@ -199,18 +200,18 @@
                  class="create-form  <#if createTab!="challenge">ui-helper-hidden</#if>">
                 <div style="display: inline-block; min-width: 200px">
                     <#assign opponentsCount=0/>
-                    <@wm.field id="opponentsList" path="create.opponents">
-                        <#list wm.statusValue?split(",") as p>
+                    <@wm.ui.field id="opponentsList" path="create.opponents">
+                        <#list wm.ui.statusValue?split(",") as p>
                             <#if p?has_content>
                                 <#assign opponentsCount=opponentsCount+1/>
                                 <div>
                                     <#assign player=playerManager.getPlayer(p?number)!""/>
-                                    <@wm.player player=player hideLink=true showState=false/>
+                                    <@wm.player.name player=player hideLink=true showState=false/>
                                     <input type="hidden" name="opponent${p_index+1}" value="${player.id}"/>
                                 </div>
                             </#if>
                         </#list>
-                    </@wm.field>
+                    </@wm.ui.field>
 
                     <div id="opponentsControl"
                          <#if (opponentsCount>=maxOpponents)>class="ui-helper-hidden"</#if>>
@@ -224,10 +225,10 @@
                         <@message code="game.create.opponent.add.description"/>:
                     </div>
                     <div>
-                        <@wm.field id="challengeMessage" path="create.challengeMessage">
+                        <@wm.ui.field id="challengeMessage" path="create.challengeMessage">
                             <textarea name="challengeMessage"
-                                      style="width: 300px; height: 100px">${wm.statusValue}</textarea>
-                        </@wm.field>
+                                      style="width: 300px; height: 100px">${wm.ui.statusValue}</textarea>
+                        </@wm.ui.field>
                     </div>
                 </div>
             </div>
@@ -236,22 +237,22 @@
     </table>
 
     <input name="rotten" type="hidden" value="true"/>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.restrictionObserved>
-        <@wm.dtStatusbar align="left">
+    <@wm.security.observed>
+        <@wm.ui.table.statusbar align="left">
         <button onclick="create.submitForm(); return false;"><@message code="game.create.submit"/></button>
-        </@wm.dtStatusbar>
-    </@wm.restrictionObserved>
+        </@wm.ui.table.statusbar>
+    </@wm.security.observed>
 </form>
 
-    <@wm.dtFooter>
-        <@wm.restrictionMessage code="game.create.forbidden"/>
-    </@wm.dtFooter>
+    <@wm.ui.table.footer>
+        <@wm.security.info code="game.create.forbidden"/>
+    </@wm.ui.table.footer>
 </div>
 
     <#include "/content/playground/players/scriplet.ftl">
-</@wm.playground>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     var create = new wm.game.Create(${maxOpponents}, ${opponentsCount}, playerSearch, {

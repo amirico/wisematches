@@ -4,7 +4,7 @@
 <#-- @ftlvariable name="thesaurusHouse" type="wisematches.server.web.services.thesaurus.ThesaurusHouse" -->
 <#include "/core.ftl">
 
-<@wm.widget class="thesaurusWidget" title="game.thesaurus.label" help="board.thesaurus">
+<@wm.ui.widget class="thesaurusWidget" title="game.thesaurus.label" help="board.thesaurus">
 <table width="100%">
     <tr>
         <td width="100%"><input class="word-value" style="width: 100%"></td>
@@ -25,7 +25,7 @@
         </td>
     </tr>
 </table>
-</@wm.widget>
+</@wm.ui.widget>
 
 <script type="text/javascript">
     var thesaurus = new wm.scribble.Thesaurus(board, ${boardSettings.checkWords?string});

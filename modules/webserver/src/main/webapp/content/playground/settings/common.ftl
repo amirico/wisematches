@@ -9,7 +9,7 @@
             <label for="language"><@message code="account.register.language.label"/>:</label>
         </td>
         <td>
-        <@wm.field path="settings.language">
+        <@wm.ui.field path="settings.language">
             <select id="language" name="language" style="width: 170px;">
                 <#list ["en", "ru"] as l>
                     <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
@@ -17,7 +17,7 @@
                     </option>
                 </#list>
             </select>
-        </@wm.field>
+        </@wm.ui.field>
             <span class="sample"><@message code="account.register.language.description"/></span>
         </td>
     </tr>
@@ -27,15 +27,15 @@
             <label for="timezone"><@message code="account.register.timezone.label"/>:</label>
         </td>
         <td>
-        <@wm.field path="settings.timezone">
+        <@wm.ui.field path="settings.timezone">
             <select id="timezone" name="timezone" style="width: 400px;">
                 <#list timeZones as tz>
-                    <option value="${tz.id}" <#if (wm.statusValue==tz.id)>selected="selected"</#if>>
+                    <option value="${tz.id}" <#if (wm.ui.statusValue==tz.id)>selected="selected"</#if>>
                         (<@message code="account.register.timezone.gmt"/> ${tz.offsetName}) ${tz.id}
                     </option>
                 </#list>
             </select>
-        </@wm.field>
+        </@wm.ui.field>
             <div class="sample"><@message code="account.register.timezone.description"/></div>
         </td>
     </tr>
@@ -49,7 +49,7 @@
                                       onclick="wm.setting.changeEmail(this);"><@message code="account.modify.change.email"/></a></#if>
 
             <div id="emailPane" <#if !settings.changeEmail>class="ui-helper-hidden"</#if>>
-            <@wm.fieldInput path="settings.email"/>
+            <@wm.ui.input path="settings.email"/>
                 <span class="sample"><@message code="account.register.email.description"/></span>
                 <input id="changeEmail" name="changeEmail" type="hidden" value="${settings.changeEmail?string}">
             </div>
@@ -67,9 +67,9 @@
 
             <div id="passwordPane" <#if !settings.changePassword>class="ui-helper-hidden"</#if>>
                 <span><@message code="account.register.pwd.label"/>:</span>
-            <@wm.fieldInput path="settings.password" fieldType="password"/>
+            <@wm.ui.input path="settings.password" fieldType="password"/>
                 <span><@message code="account.register.pwd-cfr.label"/>:<span>
-                <@wm.fieldInput path="settings.confirm" fieldType="password"/>
+                <@wm.ui.input path="settings.confirm" fieldType="password"/>
                     <input id="changePassword" name="changePassword" type="hidden"
                            value="${settings.changePassword?string}">
             </div>

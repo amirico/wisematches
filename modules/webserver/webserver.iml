@@ -54,14 +54,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/database" />
-      <excludeFolder url="file://$MODULE_DIR$/target/org" />
-      <excludeFolder url="file://$MODULE_DIR$/target/spec" />
+      <excludeFolder url="file://$MODULE_DIR$/target/libs" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/webserver-3.02-SNAPSHOT" />
-      <excludeFolder url="file://$MODULE_DIR$/target/webserver-3.03-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/webserver-3.05-SNAPSHOT" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

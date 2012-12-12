@@ -2,37 +2,37 @@
 <#-- @ftlvariable name="originalTemplateName" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<html xmlns="http://www.w3.org/1999/xhtml>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title><@message code=headerTitle!"title.default"/></title>
 
-    <meta http-equiv=" Content-Type" content="text/html; charset=UTF-8"/>
-<meta http-equiv="Content-Language" content="${locale}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Language" content="${locale}"/>
 
-<link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
-<script type="text/javascript" src="/jquery/js/jquery.min.js"></script>
-<script type="text/javascript" src="/jquery/js/json.min.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery.hoverIntent.min.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery.freeow.min.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery.form.js"></script>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/redmond/jquery-ui.custom.css"/>
+    <script type="text/javascript" src="/jquery/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/json.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.hoverIntent.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.blockUI.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.freeow.min.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
+    <script type="text/javascript" src="/jquery/js/jquery.form.js"></script>
 
-<link rel="stylesheet" type="text/css" href="/jquery/css/jquery.cluetip.css"/>
-<script type="text/javascript" src="/jquery/js/jquery.cluetip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.cluetip.css"/>
+    <script type="text/javascript" src="/jquery/js/jquery.cluetip.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
-<script type="text/javascript" src="/content/wisematches.js"></script>
+    <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
+    <script type="text/javascript" src="/content/wisematches.js"></script>
 
-<link rel="stylesheet" type="text/css" href="/content/personality/account.css"/>
-<script type="text/javascript" src="/content/personality/account.js"></script>
+    <link rel="stylesheet" type="text/css" href="/content/personality/account.css"/>
+    <script type="text/javascript" src="/content/personality/account.js"></script>
 
 <#if principal??>
-<link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
-<script type="text/javascript" src="/content/playground/game.js"></script>
+    <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
+    <script type="text/javascript" src="/content/playground/game.js"></script>
 
-<link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
 </#if>
 <#include 'templates/localization.ftl'/>
 <#include "templates/analytics.ftl">

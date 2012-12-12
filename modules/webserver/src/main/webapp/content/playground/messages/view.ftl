@@ -1,16 +1,16 @@
 <#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.Message>" -->
 <#include "/core.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 <#include "/content/playground/messages/scriplet.ftl">
 <#include "/content/playground/blacklist/scriplet.ftl">
 
-<@wm.playground id="messagesWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="messagesWidget">
+    <@wm.ui.table.header>
         <@message code="game.menu.messages.label"/> > <@message code="messages.received"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar>
+    <@wm.ui.table.toolbar>
     <div style="float: left;">
         <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
             <@message code="messages.delete.selected"/>
@@ -20,9 +20,9 @@
         <a href="/playground/messages/sent"><@message code="messages.sent"/></a>
         <a href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
     </div>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent>
+    <@wm.ui.table.content>
     <table id="messages" width="100%" class="display">
         <thead>
         <tr>
@@ -42,7 +42,7 @@
                 </td>
                 <td>
                     <#if m.sender != 0>
-                        <div class="message-from"><@wm.player player=playerManager.getPlayer(m.sender)/></div>
+                        <div class="message-from"><@wm.player.name player=playerManager.getPlayer(m.sender)/></div>
                     </#if>
                     <div class="message-date">
                     ${gameMessageSource.formatDate(m.creationDate, locale)} ${gameMessageSource.formatTime(m.creationDate, locale)}
@@ -76,10 +76,10 @@
             </#list>
         </tbody>
     </table>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
-</@wm.playground>
+    <@wm.ui.table.footer/>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     wm.messages = $.extend({}, wm.messages, new function () {

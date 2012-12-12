@@ -31,16 +31,16 @@
         this.execute = function (widget, type, params, data, callback) {
             if (widget == 'memory') {
                 if (type == 'load') {
-                    callback({success:true, data:{
-                        words:[
+                    callback({success: true, data: {
+                        words: [
                         <#list memoryWords as w>
                             {
-                                text:'${w.text}',
-                                direction:'${w.direction.name()}',
-                                position:{row:${w.position.row}, column:${w.position.column}},
-                                tiles:[
+                                text: '${w.text}',
+                                direction: '${w.direction.name()}',
+                                position: {row:${w.position.row}, column:${w.position.column}},
+                                tiles: [
                                     <#list w.tiles as t>
-                                        {number: ${t.number}, letter:'${t.letter?upper_case}', cost: ${t.cost}}<#if t_has_next>,</#if>
+                                        {number: ${t.number}, letter: '${t.letter?upper_case}', cost: ${t.cost}}<#if t_has_next>,</#if>
                                     </#list>
                                 ]
                             }<#if w_has_next>,</#if>
@@ -48,10 +48,10 @@
                         ]}
                     });
                 } else {
-                    callback({success:true});
+                    callback({success: true});
                 }
             } else {
-                callback({success:false, summary:"This is just example board. You can not do any real actions."});
+                callback({success: false, summary: "This is just example board. You can not do any real actions."});
             }
         }
     };
@@ -76,7 +76,7 @@
         </tr>
         <tr>
             <td width="430px">
-            <@wm.widget class="scribbleBoard" title="game.board.example" help="board.playboard"/>
+            <@wm.ui.widget class="scribbleBoard" title="game.board.example" help="board.playboard"/>
             </td>
             <td><@message code="game.tip.board.playboard"/></td>
         </tr>

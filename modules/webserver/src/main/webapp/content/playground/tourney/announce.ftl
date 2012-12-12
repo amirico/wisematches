@@ -18,11 +18,11 @@
     <#assign subscriptionStateClass="tourney-state ui-state-disabled"/>
 </#if>
 
-<@wm.dtHeader align="left">
+<@wm.ui.table.header align="left">
     <@message code="tourney.tourney.label"/> > <@message code="tourney.announce.label"/>
-</@wm.dtHeader>
+</@wm.ui.table.header>
 
-<@wm.dtToolbar align="center">
+<@wm.ui.table.toolbar align="center">
     <div class="tourney-name ui-state-active">
         <@tourneyName tourneyId=announce.id link=false/>
     </div>
@@ -31,9 +31,9 @@
             <@message code="tourney.rules.label"/>
         </a>
     </div>
-</@wm.dtToolbar>
+</@wm.ui.table.toolbar>
 
-<@wm.dtContent wrap=true>
+<@wm.ui.table.content wrap=true>
     <table>
         <tr>
             <td>
@@ -111,26 +111,26 @@
             </td>
         </tr>
     </table>
-</@wm.dtContent>
+</@wm.ui.table.content>
 
-<@wm.restrictionObserved>
-    <@wm.dtStatusbar align="left">
-        <button>
+<@wm.security.observed>
+    <@wm.ui.table.statusbar align="left">
+        <button style="width: 100%">
             <#if subscription??>
                         <@message code="tourney.subscribe.refuse"/>
                     <#else>
                 <@message code="tourney.subscribe.accept"/>
             </#if>
         </button>
-    </@wm.dtStatusbar>
-</@wm.restrictionObserved>
+    </@wm.ui.table.statusbar>
+</@wm.security.observed>
 
-<@wm.dtFooter class="actions">
-    <@wm.restrictionMessage code="tourney.subscribe.forbidden"/>
-</@wm.dtFooter>
+<@wm.ui.table.footer class="actions">
+    <@wm.security.info code="tourney.subscribe.forbidden"/>
+</@wm.ui.table.footer>
 </div>
 
-<@wm.restrictionObserved>
+<@wm.security.observed>
 <div id="subscriptionDialog" class="ui-helper-hidden">
     <form id="subscriptionForm" name="changeSubscriptionForm">
         <div>
@@ -231,4 +231,4 @@
             }
     );
 </script>
-</@wm.restrictionObserved>
+</@wm.security.observed>

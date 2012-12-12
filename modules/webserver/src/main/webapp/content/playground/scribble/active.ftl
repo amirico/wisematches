@@ -15,26 +15,26 @@
     </#if>
 </#macro>
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
-<@wm.playground id="activeGamesWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="activeGamesWidget">
+    <@wm.ui.table.header>
         <#if player != principal>
-            <@message code="game.player"/> <@wm.player player=player showState=true showType=true/>
+            <@message code="game.player"/> <@wm.player.name player=player showState=true showType=true/>
         <#else><@message code="game.menu.games.label"/>
         </#if>
     > <@message code="game.dashboard.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar>
+    <@wm.ui.table.toolbar>
         <#if player == principal>
         <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
         <#else>
         <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
         </#if>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent>
+    <@wm.ui.table.content>
     <table id="dashboard" width="100%" class="display">
         <thead>
         <tr>
@@ -60,7 +60,7 @@
                 </td>
                 <td>
                     <#list board.playersHands as hand>
-                        <div><@wm.player player=playerManager.getPlayer(hand.getPlayerId())/></div>
+                        <div><@wm.player.name player=playerManager.getPlayer(hand.getPlayerId())/></div>
                     </#list>
                 </td>
                 <td class="center">
@@ -93,7 +93,7 @@
                     <#list proposal.players as p>
                     <div>
                         <#if p??>
-                            <@wm.player player=playerManager.getPlayer(p)/>
+                            <@wm.player.name player=playerManager.getPlayer(p)/>
                         <#else>
                             <span class="player"><span
                                     class="waiting"><@message code="game.status.waiting"/></span></span>
@@ -111,17 +111,17 @@
             </#list>
         </tbody>
     </table>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
-</@wm.playground>
+    <@wm.ui.table.footer/>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     var activeGames = new wm.game.Active({
-        cancelled:"<@message code="game.proposal.cancelled"/>",
-        cancelling:"<@message code="game.proposal.cancelling"/>"
+        cancelled: "<@message code="game.proposal.cancelled"/>",
+        cancelling: "<@message code="game.proposal.cancelling"/>"
     <#if player == principal>
-        , "sEmptyTable":"<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
+        , "sEmptyTable": "<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
     </#if>
     });
 </script>

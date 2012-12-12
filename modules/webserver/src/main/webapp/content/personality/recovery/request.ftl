@@ -12,7 +12,7 @@
             <div>
             <#--@declare id="email"-->
                 <label class="label" for="email"><@message code="account.register.email.label"/>:</label>
-            <@wm.fieldInput path="recovery.email"/>
+            <@wm.ui.input path="recovery.email"/>
                 <span class="sample"><@message code="account.recovery.email.description"/></span>
             </div>
             <div>
