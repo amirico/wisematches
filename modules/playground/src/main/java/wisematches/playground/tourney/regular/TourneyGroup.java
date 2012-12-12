@@ -33,16 +33,12 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 */
 	long[] getPlayers();
 
-
 	/**
-	 * Returns game id between two specified players. Order of players is not important.
+	 * Returns total players count in this group.
 	 *
-	 * @param player   first player
-	 * @param opponent second player.
-	 * @return the game id that is played by specified players.
-	 * @throws IllegalArgumentException if any player doesn't belong to this group.
+	 * @return the total players count in this group.
 	 */
-	long getGameId(long player, long opponent);
+	int getPlayersCount();
 
 	/**
 	 * Returns total player scores
@@ -61,6 +57,31 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 * @throws IllegalArgumentException if any player doesn't belong to this group.
 	 */
 	PlayerSuccess getPlayerSuccess(long player, long opponent);
+
+
+	/**
+	 * Returns count of games in this group.
+	 *
+	 * @return the count of games in this group.
+	 */
+	int getTotalGamesCount();
+
+	/**
+	 * Returns count of finished games in this group.
+	 *
+	 * @return the count of finished games in this group.
+	 */
+	int getFinishedGamesCount();
+
+	/**
+	 * Returns game id between two specified players. Order of players is not important.
+	 *
+	 * @param player   first player
+	 * @param opponent second player.
+	 * @return the game id that is played by specified players.
+	 * @throws IllegalArgumentException if any player doesn't belong to this group.
+	 */
+	long getGameId(long player, long opponent);
 
 
 	public final class Id extends TourneyEntity.Id<TourneyGroup, Id> {

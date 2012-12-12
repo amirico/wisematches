@@ -48,10 +48,17 @@
                     </div>
                     <div class="division-rounds">
                         <#list divisionsTree.getRounds(division) as r>
-                            <@roundName r.id, true, r.final/><#if r_has_next>, </#if>
+                            <@roundName r.id, true, r.final/><#if r_has_next>, <#else></#if>
                         </#list>
                         <#if division.finishedDate??>
-                            <span class="sample"> - <@message code="tourney.finished.label"/> ${gameMessageSource.formatDate(division.finishedDate, locale)}</span>
+                            <span class="sample">
+                                — <@messageLower code="tourney.finished.label"/> ${gameMessageSource.formatDate(division.finishedDate, locale)}
+                                </span>
+                        <#else>
+                            <#assign activeRound=divisionsTree.getRound(division, division.activeRound)/>
+                        <#-- TODO: Issue 242 -->
+                            (<@message code="tourney.completed.label"/>:
+                        ${((activeRound.finishedGamesCount / activeRound.totalGamesCount)*100)?round}%)
                         </#if>
                     </div>
                     <#if division.finishedDate??>

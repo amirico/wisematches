@@ -545,24 +545,47 @@
     vertical-align: top;
 }
 
-#tourneyWidget .division {
+.division {
     padding-bottom: 10px;
 }
 
-#tourneyWidget .division-name {
+.division-name {
     border-bottom: 1px solid #daecf2;
 }
 
-#tourneyWidget .division-rounds>a {
+.division-rounds>a {
     color: #a52a2a;
     font-weight: bold;
 }
 
-#tourneyWidget .division-rounds, #tourneyWidget .division-winners {
+.division-rounds, #tourneyWidget .division-winners {
     padding-left: 20px;
 }
 
-#tourneyWidget .division-winners dl {
+.division-winners dl {
     margin: 0;
     padding: 0;
+}
+
+.group {
+    padding-left: 30px;
+}
+
+.group-content {
+    padding-left: 15px;
+    padding-bottom: 20px;
+}
+
+.group-content table {
+    border-collapse: collapse;
+}
+
+.group-content table tr td {
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.group-content table tr td:first-child {
+    text-align: left;
 }
