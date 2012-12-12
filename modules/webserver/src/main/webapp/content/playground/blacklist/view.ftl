@@ -1,20 +1,20 @@
 <#-- @ftlvariable name="blacklist" type="java.util.Collection<wisematches.playground.blacklist.BlacklistRecord>" -->
 <#include "/core.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
-<@wm.playground id="blacklistWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="blacklistWidget">
+    <@wm.ui.table.header>
         <@message code="game.menu.blacklist.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar align="left">
+    <@wm.ui.table.toolbar align="left">
     <button type="submit" style="margin-left: 0" onclick="wm.blacklist.removeSelected();">
         <@message code="blacklist.trustworthy.selected"/>
     </button>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent>
+    <@wm.ui.table.content>
     <table id="blacklist" width="100%" class="display">
         <thead>
         <tr>
@@ -34,7 +34,7 @@
                     <input type="checkbox" name="persons" value="${r.whom}">
                 </td>
                 <td>
-                    <div class="blacklist-from"><@wm.player player=playerManager.getPlayer(r.whom)/></div>
+                    <div class="blacklist-from"><@wm.player.name player=playerManager.getPlayer(r.whom)/></div>
                 </td>
                 <td>
                     <div class="blacklist-date">
@@ -56,15 +56,15 @@
             </#list>
         </tbody>
     </table>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
-</@wm.playground>
+    <@wm.ui.table.footer/>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     wm.blacklist = new function () {
         var widget = $("#blacklistWidget");
-        $("#blacklistWidget button").button();
+        $("#blacklis").find("button").button();
 
         wm.ui.dataTable('#blacklist', {
             "bSortClasses": false,
@@ -103,7 +103,7 @@
         };
 
         this.removeSelected = function () {
-            var selected = new Array();
+            var selected = [];
             $(".blacklist-checkbox input:checked").each(function (index, el) {
                 selected.push($(el).val());
             });

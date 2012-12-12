@@ -1,7 +1,7 @@
 <#include "/core.ftl">
 <#include "/content/templates/addthis.ftl"/>
 
-<@wm.bottomRoundPanel class="footer">
+<@wm.ui.panel.roundBottom class="footer">
 <span class="copyrights" style="padding-right: 10px"><@message "copyrights.label"/></span>
 <a href="/info/terms"><@message "info.policies.terms.label"/></a>
 &nbsp;-&nbsp;
@@ -11,4 +11,4 @@
 <div style="display: inline-block; vertical-align: bottom; padding-left: 10px">
     <@addthis counter=true/>
 </div>
-</@wm.bottomRoundPanel>
+</@wm.ui.panel.roundBottom>

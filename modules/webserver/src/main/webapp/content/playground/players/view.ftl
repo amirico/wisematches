@@ -1,10 +1,10 @@
 <#include "/core.ftl">
 
-<@wm.playground id="playersWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="playersWidget">
+    <@wm.ui.table.header>
         <@message code="search.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
     <#assign scriplet=false/>
     <#include "scriplet.ftl"/>
-</@wm.playground>
+</@wm.ui.playground>

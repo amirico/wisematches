@@ -27,7 +27,7 @@
     <@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
 </#macro>
 
-<@wm.widget class="gameInfo" title="game.state.label" help="board.progress">
+<@wm.ui.widget class="gameInfo" title="game.state.label" help="board.progress">
 
 <table width="100%" border="0">
     <@element showSeparator=false>
@@ -131,13 +131,13 @@
             <td colspan="2">
                 <div class="game-state-scratch">
                     <span><@message code="game.state.scratch.label"/></span>
-                    <@wm.info><@message code="game.state.scratch.description"/></@wm.info>
+                    <@wm.ui.info><@message code="game.state.scratch.description"/></@wm.ui.info>
                 </div>
             </td>
         </@element>
     </#if>
 </table>
-</@wm.widget>
+</@wm.ui.widget>
 
 <#if principal?? && board.getPlayerHand(principal.id)??>
 <script type="text/javascript">

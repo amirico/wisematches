@@ -1,21 +1,21 @@
 <#-- @ftlvariable name="friends" type="java.util.Collection<wisematches.playground.friends.FriendRelation>" -->
 <#include "/core.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 <#include "/content/playground/messages/scriplet.ftl">
 
-<@wm.playground id="friendsWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="friendsWidget">
+    <@wm.ui.table.header>
         <@message code="game.menu.friends.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar align="left">
+    <@wm.ui.table.toolbar align="left">
     <button type="submit" style="margin-left: 0" onclick="wm.friends.removeSelected();">
         <@message code="messages.delete.selected"/>
     </button>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent>
+    <@wm.ui.table.content>
     <table id="friends" width="100%" class="display">
         <thead>
         <tr>
@@ -35,7 +35,7 @@
                     <input type="checkbox" name="removeList" value="${f.friend}">
                 </td>
                 <td nowrap="nowrap">
-                    <div class="friend-name"><@wm.player player=playerManager.getPlayer(f.friend)/></div>
+                    <div class="friend-name"><@wm.player.name player=playerManager.getPlayer(f.friend)/></div>
                 </td>
                 <td nowrap="nowrap">
                     <div class="friends-registered">
@@ -60,15 +60,15 @@
             </#list>
         </tbody>
     </table>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
-</@wm.playground>
+    <@wm.ui.table.footer/>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     wm.friends = $.extend({}, wm.friends, new function () {
         var widget = $("#friendsWidget");
-        $("#friendsWidget button").button();
+        widget.find("button").button();
 
         wm.ui.dataTable('#friends', {
             "bSortClasses": false,
@@ -86,7 +86,7 @@
         };
 
         this.removeSelected = function () {
-            var selected = new Array();
+            var selected = [];
             $(".friend-checkbox input:checked").each(function (index, el) {
                 selected.push($(el).val());
             });

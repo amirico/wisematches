@@ -4,25 +4,25 @@
 
 <#include "/core.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
-<@wm.playground id="pastGamesWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="pastGamesWidget">
+    <@wm.ui.table.header>
         <#if player != principal>
-            <@message code="game.player"/> <@wm.player player=player showState=true showType=true/>
+            <@message code="game.player"/> <@wm.player.name player=player showState=true showType=true/>
         <#else><@message code="game.menu.games.label"/></#if>
     > <@message code="game.past.history.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar>
+    <@wm.ui.table.toolbar>
         <#if player == principal>
         <a href="/playground/scribble/active"><@message code="game.dashboard.label"/></a>
         <#else>
         <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
         </#if>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent>
+    <@wm.ui.table.content>
     <table id="history" width="100%" class="display">
         <thead>
         <tr>
@@ -34,22 +34,22 @@
         <tbody>
         </tbody>
     </table>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
-</@wm.playground>
+    <@wm.ui.table.footer/>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     var history = new wm.game.History(${player.id},
             [<#list searchColumns as c>
                 <#assign d=searchEntityDescriptor.getProperty(c)!""/>
                 {
-                    "sName":'${c}',
-                    "mDataProp":'${c}',
+                    "sName": '${c}',
+                    "mDataProp": '${c}',
                 "bSortable": <#if d?has_content>${d.sortable()?string}<#else>false</#if>
                 }<#if c_has_next>,</#if></#list>],
             {
-                "sEmptyTable":"<@message code="game.past.history.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
+                "sEmptyTable": "<@message code="game.past.history.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
             }
     );
 </script>

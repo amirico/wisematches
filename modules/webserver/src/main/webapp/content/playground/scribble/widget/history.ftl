@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<@wm.widget class="movesHistory" title="game.history.label" help="board.history">
+<@wm.ui.widget class="movesHistory" title="game.history.label" help="board.history">
 <table width="100%" class="display">
     <thead>
     <tr>
@@ -33,12 +33,12 @@
         </#list>
     </tbody>
 </table>
-</@wm.widget>
+</@wm.ui.widget>
 
 <script type="text/javascript">
     var movesHistory = new wm.scribble.History(board, {
-        "passed":"<@message code="game.history.passed.label"/>",
-        "exchange":"<@message code="game.history.exchange.label"/>",
-        "sEmptyTable":"<@message code='game.history.empty'/>"
+        "passed": "<@message code="game.history.passed.label"/>",
+        "exchange": "<@message code="game.history.exchange.label"/>",
+        "sEmptyTable": "<@message code='game.history.empty'/>"
     });
 </script>

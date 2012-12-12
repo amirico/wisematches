@@ -157,7 +157,7 @@ public class SettingsController extends WisematchesController {
 				if (accountSecurityService != null) {
 					accountSecurityService.authenticatePlayer(a, form.isChangePassword() ? form.getPassword() : null);
 				}
-				return "redirect:/account/modify/done";
+				return "redirect:/account/modify";
 			} catch (UnknownAccountException e) {
 				throw new UnknownEntityException(null, "account");
 			} catch (DuplicateAccountException ex) {

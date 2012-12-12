@@ -28,13 +28,13 @@
     <#if s.points=0>#AA0033<#elseif s.points=1>#FF9900<#else>#008000</#if>
 </#macro>
 
-<@wm.playground id="tourneyWidget">
+<@wm.ui.playground id="tourneyWidget">
 <div id="divisions">
-    <@wm.dtHeader align="left">
+    <@wm.ui.table.header align="left">
         <@message code="tourney.tourney.label"/> > <@tourneyName tourney, false/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar align="left">
+    <@wm.ui.table.toolbar align="left">
         <div>
             <div class="tourney-name ui-state-active" style="display: block">
                 <@tourneyName tourney, false/>
@@ -49,9 +49,9 @@
                 <#if round.finishedDate??>— ${gameMessageSource.formatDate(round.finishedDate, locale)}</#if>)
             </div>
         </div>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent wrap=true>
+    <@wm.ui.table.content wrap=true>
         <div class="pages" style="padding-bottom: 10px">
             <@pages groupsCount, currentPage/>
         </div>
@@ -76,7 +76,7 @@
                         <#list g.players as p>
                             <tr>
                                 <td class="ui-state-default" style="padding-right: 40px">
-                                ${p_index+1}. <@wm.player playerManager.getPlayer(p)/>
+                                ${p_index+1}. <@wm.player.name playerManager.getPlayer(p)/>
                                 </td>
                                 <#assign games=0/>
                                 <#list g.players as o>
@@ -112,8 +112,8 @@
         <div class="pages" style="padding-top: 10px">
             <@pages groupsCount, currentPage/>
         </div>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
+    <@wm.ui.table.footer/>
 </div>
-</@wm.playground>
+</@wm.ui.playground>

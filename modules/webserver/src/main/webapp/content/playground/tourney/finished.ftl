@@ -7,24 +7,24 @@
 <#include "/core.ftl">
 <#include "scriplet.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
-<@wm.playground id="tourneyWidget">
+<@wm.ui.playground id="tourneyWidget">
 <table id="tourney" width="100%">
     <tr>
     <td width="100%" valign="top">
         <div id="finishedTourneys">
-            <@wm.dtHeader align="left">
+            <@wm.ui.table.header align="left">
                 <@message code="tourney.tourney.label"/> > <@message code="tourney.all.finished.label"/>
-            </@wm.dtHeader>
+            </@wm.ui.table.header>
 
-            <@wm.dtToolbar>
+            <@wm.ui.table.toolbar>
                 <div>
                     <a href="/playground/tourney/active"><@message code="tourney.all.active.label"/></a>
                 </div>
-            </@wm.dtToolbar>
+            </@wm.ui.table.toolbar>
 
-            <@wm.dtContent>
+            <@wm.ui.table.content>
                 <table width="100%" class="display">
                     <thead>
                     <tr>
@@ -73,7 +73,7 @@
                                     <td>
                                         <#list p.filter(d.tourneyWinners) as w>
                                             <div>
-                                                <@wm.player player=playerManager.getPlayer(w.player)/>
+                                                <@wm.player.name player=playerManager.getPlayer(w.player)/>
                                             </div>
                                         </#list>
                                     </td>
@@ -85,9 +85,9 @@
                         </#list>
                     </tbody>
                 </table>
-            </@wm.dtContent>
+            </@wm.ui.table.content>
 
-            <@wm.dtFooter/>
+            <@wm.ui.table.footer/>
         </div>
         <#if announce??>
             <td valign="top">
@@ -96,7 +96,7 @@
         </#if>
     </tr>
 </table>
-</@wm.playground>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     wm.ui.dataTable('#tourneyWidget #finishedTourneys table', {

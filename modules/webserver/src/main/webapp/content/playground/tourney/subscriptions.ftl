@@ -8,27 +8,27 @@
 <#include "/core.ftl">
 <#include "scriplet.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
-<@wm.playground id="tourneyWidget">
+<@wm.ui.playground id="tourneyWidget">
 <table id="tourney" width="100%">
     <tr>
         <td width="100%" valign="top">
             <div id="subscriptions">
-                <@wm.dtHeader align="left">
+                <@wm.ui.table.header align="left">
                     <@message code="tourney.tourney.label"/> > <@message code="tourney.subscribe.label"/>
-                </@wm.dtHeader>
+                </@wm.ui.table.header>
 
-                <@wm.dtToolbar align="left">
+                <@wm.ui.table.toolbar align="left">
                     <div class="ui-state-hover" style="border: none; background: none; font-size: large">
                         <@message code="tourney.subscribes.tourney"/> <@tourneyName tourneyId=tourney.id link=false/>
                     </div>
                     <div>
                         <@message code="tourney.subscribes.players"/>: <@languageName language=tourneyLanguage/>
                     </div>
-                </@wm.dtToolbar>
+                </@wm.ui.table.toolbar>
 
-                <@wm.dtContent>
+                <@wm.ui.table.content>
                     <table width="100%" class="display">
                         <thead>
                         <tr>
@@ -41,7 +41,7 @@
                         <tbody>
                             <#list tourneySubscriptions as s>
                             <tr>
-                                <td><@wm.player player=playerManager.getPlayer(s.player)/></td>
+                                <td><@wm.player.name player=playerManager.getPlayer(s.player)/></td>
                                 <td><@sectionName section=s.section/></td>
                                 <td><@message code="tourney.round.label"/> ${s.round?string}</td>
                                 <td>&nbsp;</td>
@@ -49,9 +49,9 @@
                             </#list>
                         </tbody>
                     </table>
-                </@wm.dtContent>
+                </@wm.ui.table.content>
 
-                <@wm.dtFooter/>
+                <@wm.ui.table.footer/>
             </div>
         </td>
         <#if announce??>
@@ -61,7 +61,7 @@
         </#if>
     </tr>
 </table>
-</@wm.playground>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     wm.ui.dataTable('#tourney #subscriptions table', {

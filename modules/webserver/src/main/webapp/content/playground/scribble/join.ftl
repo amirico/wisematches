@@ -2,21 +2,21 @@
 
 <#include "/core.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
 <div id="join-game">
-<@wm.playground id="waitingGamesWidget">
-    <@wm.dtHeader>
+<@wm.ui.playground id="waitingGamesWidget">
+    <@wm.ui.table.header>
         <@message code="game.menu.games.label"/> > <@message code="game.join.label"/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar>
+    <@wm.ui.table.toolbar>
         <div>
             <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
         </div>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent>
+    <@wm.ui.table.content>
         <table id="gameboard" width="100%" class="display">
             <thead>
             <tr>
@@ -38,7 +38,7 @@
                         <#list view.proposal.players as p>
                         <div>
                             <#if p??>
-                                <@wm.player player=playerManager.getPlayer(p)/>
+                                <@wm.player.name player=playerManager.getPlayer(p)/>
                             <#else>
                                 <span class="player"><span
                                         class="waiting"><@message code="game.status.waiting"/></span></span>
@@ -68,22 +68,22 @@
                 </#list>
             </tbody>
         </table>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter>
+    <@wm.ui.table.footer>
         <#if waitingGames.globalViolation??>
             <div class="ui-state-error-text">
             ${gameMessageSource.formatViolation(waitingGames.globalViolation, locale, false)}
             </div>
         </#if>
-    </@wm.dtFooter>
-</@wm.playground>
+    </@wm.ui.table.footer>
+</@wm.ui.playground>
 
     <script type="text/javascript">
         var join = new wm.game.Join({
-            "accepting":"<@message code="game.join.accepting"/>",
-            "declining":"<@message code="game.join.declining"/>",
-            "sEmptyTable":"<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
+            "accepting": "<@message code="game.join.accepting"/>",
+            "declining": "<@message code="game.join.declining"/>",
+            "sEmptyTable": "<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
         });
     </script>
 </div>

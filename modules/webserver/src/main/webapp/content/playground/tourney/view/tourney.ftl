@@ -6,13 +6,13 @@
 <#include "/core.ftl">
 <#include "../scriplet.ftl">
 
-<@wm.playground id="tourneyWidget">
+<@wm.ui.playground id="tourneyWidget">
 <div id="divisions">
-    <@wm.dtHeader align="left">
+    <@wm.ui.table.header align="left">
         <@message code="tourney.tourney.label"/> > <@tourneyName tourneyId=tourney link=false/>
-    </@wm.dtHeader>
+    </@wm.ui.table.header>
 
-    <@wm.dtToolbar align="left">
+    <@wm.ui.table.toolbar align="left">
         <table width="100%">
             <tr>
                 <td class="tourney-name ui-state-active" style="width: 100%">
@@ -35,9 +35,9 @@
                 </td>
             </tr>
         </table>
-    </@wm.dtToolbar>
+    </@wm.ui.table.toolbar>
 
-    <@wm.dtContent wrap=true>
+    <@wm.ui.table.content wrap=true>
         <#list sections as s>
             <#assign division=divisionsTree.getDivision(tourney, language, s)!""/>
             <#if division?has_content>
@@ -71,7 +71,7 @@
                                         <dd>
                                             <@message code="tourney.place.${p.place}.label"/>:
                                             <#list players as p>
-                                                <@wm.player player=playerManager.getPlayer(p.player)/>
+                                                <@wm.player.name player=playerManager.getPlayer(p.player)/>
                                                 <#if p_has_next>, </#if>
                                             </#list>
                                         </dd>
@@ -83,8 +83,8 @@
                 </div>
             </#if>
         </#list>
-    </@wm.dtContent>
+    </@wm.ui.table.content>
 
-    <@wm.dtFooter/>
+    <@wm.ui.table.footer/>
 </div>
-</@wm.playground>
+</@wm.ui.playground>

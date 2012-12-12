@@ -34,7 +34,7 @@
                         <label for="token"><@message code="account.recovery.check.token.label"/>:</label>
                     </td>
                     <td>
-                    <@wm.fieldInput path="recovery.token"/>
+                    <@wm.ui.input path="recovery.token"/>
                     </td>
                 </tr>
 
@@ -55,7 +55,7 @@
                         <label for="password"><@message code="account.register.pwd.label"/>:</label>
                     </td>
                     <td>
-                    <@wm.fieldInput path="recovery.password" fieldType="password"/>
+                    <@wm.ui.input path="recovery.password" fieldType="password"/>
                     </td>
                 </tr>
                 <tr>
@@ -64,17 +64,17 @@
                         <label for="confirm"><@message code="account.register.pwd-cfr.label"/>:</label>
                     </td>
                     <td>
-                    <@wm.fieldInput path="recovery.confirm" fieldType="password"/>
+                    <@wm.ui.input path="recovery.confirm" fieldType="password"/>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
-                    <@wm.field path="recovery.rememberMe">
+                    <@wm.ui.field path="recovery.rememberMe">
                         <input type="checkbox" id="rememberMe" name="rememberMe"
-                               <#if spring.stringStatusValue=="true">checked="checked"</#if>/>
+                               <#if wm.ui.statusValue=="true">checked="checked"</#if>/>
                         <label for="rememberMe"><@message code="account.login.remember.label"/></label>
-                    </@wm.field>
+                    </@wm.ui.field>
                     </td>
                 </tr>
 
@@ -94,7 +94,7 @@
                     </td>
                     <td>
                         <div>
-                        <@wm.captcha path="recovery.captcha"/>
+                        <@wm.ui.captcha path="recovery.captcha"/>
                             <span class="sample"><@message code="captcha.description"/></span>
                         </div>
                     </td>

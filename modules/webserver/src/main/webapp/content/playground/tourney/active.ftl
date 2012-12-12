@@ -6,7 +6,7 @@
 <#include "/core.ftl">
 <#include "scriplet.ftl">
 
-<@wm.jstable/>
+<@wm.ui.table.dtinit/>
 
 <#macro divisionsInfo tourney language>
     <#list divisionsTree.getDivisions(tourney) as d>
@@ -19,22 +19,22 @@
     </#list>
 </#macro>
 
-<@wm.playground id="tourneyWidget">
+<@wm.ui.playground id="tourneyWidget">
 <table id="tourney" width="100%">
     <tr>
     <td width="100%" valign="top">
         <div id="activeTourneys">
-            <@wm.dtHeader align="left">
+            <@wm.ui.table.header align="left">
                 <@message code="tourney.tourney.label"/> > <@message code="tourney.all.active.label"/>
-            </@wm.dtHeader>
+            </@wm.ui.table.header>
 
-            <@wm.dtToolbar>
+            <@wm.ui.table.toolbar>
                 <div>
                     <a href="/playground/tourney/finished"><@message code="tourney.all.finished.label"/></a>
                 </div>
-            </@wm.dtToolbar>
+            </@wm.ui.table.toolbar>
 
-            <@wm.dtContent>
+            <@wm.ui.table.content>
                 <table width="100%" class="display">
                     <thead>
                     <tr>
@@ -70,9 +70,9 @@
                         </#list>
                     </tbody>
                 </table>
-            </@wm.dtContent>
+            </@wm.ui.table.content>
 
-            <@wm.dtFooter/>
+            <@wm.ui.table.footer/>
         </div>
         <#if announce??>
             <td valign="top">
@@ -81,7 +81,7 @@
         </#if>
     </tr>
 </table>
-</@wm.playground>
+</@wm.ui.playground>
 
 <script type="text/javascript">
     wm.ui.dataTable('#tourneyWidget #activeTourneys table', {

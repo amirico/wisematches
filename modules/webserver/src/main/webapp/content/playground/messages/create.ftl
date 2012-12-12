@@ -11,12 +11,12 @@
         </div>
         <div style="width: 100%; padding-right: 40px">
 
-        <@wm.field path="form.pid">
-            <#if recipient??><@wm.player player=recipient/></#if>
+        <@wm.ui.field path="form.pid">
+            <#if recipient??><@wm.player.name player=recipient/></#if>
             <#if recipient??>
                 <input type="hidden" name="msgRecipient" id="msgRecipient" value="${recipient.id}">
             </#if>
-        </@wm.field>
+        </@wm.ui.field>
         </div>
     </div>
     <div>
@@ -24,10 +24,10 @@
         <@message code="messages.text.label"/>:
         </div>
         <div style="padding-right: 40px">
-        <@wm.field path="form.message">
+        <@wm.ui.field path="form.message">
             <textarea name="message"
-                      style="width: 100%;" rows="10">${spring.stringStatusValue}</textarea>
-        </@wm.field>
+                      style="width: 100%;" rows="10">${wm.ui.statusValue}</textarea>
+        </@wm.ui.field>
         </div>
     </div>
 <#--
@@ -35,7 +35,7 @@
     <div>
         <div></div>
         <div style="font-style: italic;">
-            This is reply to the message of <@wm.player player=playerManager.getPlayer(original.sender)/> received
+            This is reply to the message of <@wm.player.name player=playerManager.getPlayer(original.sender)/> received
         ${gameMessageSource.formatDate(original.created, locale)} ${gameMessageSource.formatTime(original.created, locale)}
         </div>
     </div>
@@ -43,4 +43,4 @@
 -->
 </div>
 
-<@wm.restrictionMessage code="messages.create.forbidden"/>
+<@wm.security.info code="messages.create.forbidden"/>
