@@ -62,7 +62,7 @@ public class EntityIdForm {
 	}
 
 	public boolean isGroup() {
-		return t != null && s != null && l != null && r == null && g != null;
+		return t != null && s != null && l != null && r != null && g != null;
 	}
 
 	public boolean isRound() {

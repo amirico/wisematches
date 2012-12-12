@@ -2,24 +2,26 @@
 <#-- @ftlvariable name="round" type="wisematches.playground.tourney.regular.TourneyRound" -->
 <#-- @ftlvariable name="groups" type="wisematches.playground.tourney.regular.TourneyGroup[]" -->
 
-<#-- @ftlvariable name="currentPage" type="int" -->
 <#-- @ftlvariable name="groupsCount" type="int" -->
+<#-- @ftlvariable name="currentPage" type="int" -->
 
 <#include "/core.ftl">
 <#include "../scriplet.ftl">
 
 <#macro pages count current>
-[
-    <#list 0..(count-1)/30 as p>
-        <#assign first=p*30+1/>
-        <#assign last=p*30+30/>
-        <#if (last>count)><#assign last=count/></#if>
-        <#if p != current><a
-                href="/playground/tourney/view?t=${tourney.number}&l=${round.division.language.ordinal()}&s=${round.division.section.ordinal()}&r=${round.round}&p=${p}"></#if>
-    ${first}..${last}<#if p != current></a></#if>
-        <#if p_has_next>|</#if>
-    </#list>
-]
+    <#if (count>30)>
+    [
+        <#list 0..(count-1)/30 as p>
+            <#assign first=p*30+1/>
+            <#assign last=p*30+30/>
+            <#if (last>count)><#assign last=count/></#if>
+            <#if p != current><a
+                    href="/playground/tourney/view?t=${tourney.number}&l=${round.division.language.ordinal()}&s=${round.division.section.ordinal()}&r=${round.round}&p=${p}"></#if>
+        ${first}..${last}<#if p != current></a></#if>
+            <#if p_has_next>|</#if>
+        </#list>
+    ]
+    </#if>
 </#macro>
 
 <#macro successColor s>
