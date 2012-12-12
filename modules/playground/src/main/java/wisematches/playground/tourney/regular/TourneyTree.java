@@ -113,6 +113,13 @@ public class TourneyTree {
 		return roundMap.get(division);
 	}
 
+	public TourneyRound getRound(TourneyDivision division, int round) {
+		if (round == 0) {
+			return null;
+		}
+		return roundMap.get(division).get(round - 1);
+	}
+
 	public List<TourneyGroup> getGroups(TourneyRound round) {
 		if (groupMap == null) {
 			throw new IllegalStateException("Rounds list is not provided");

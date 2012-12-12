@@ -148,6 +148,21 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	@Override
+	public int getPlayersCount() {
+		return playersCount;
+	}
+
+	@Override
+	public int getTotalGamesCount() {
+		return totalGamesCount;
+	}
+
+	@Override
+	public int getFinishedGamesCount() {
+		return finishedGamesCount;
+	}
+
+	@Override
 	public int getPlayerScores(long player) {
 		int res = 0;
 		final long[] players = getPlayers();
@@ -160,23 +175,6 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return res;
 	}
 
-	//	@Override
-//	public GameResult getResult(long game, long player) {
-//		final GameResult result = getResultByIndex(getGameIndex(game));
-//		if (result == null) {
-//			return null;
-//		}
-//
-//		final long slave = getGameSlave(game);
-//		final long master = getGameMaster(game);
-//		if (master == player) {
-//			return result;
-//		} else if (slave == player) {
-//			result.getOpposite();
-//		}
-//		throw new IllegalArgumentException("Player not in the game");
-//	}
-//
 	@Override
 	public long getGameId(long p1, long p2) {
 		return getGameByIndex(getGameIndex(getPlayerIndex(p1), getPlayerIndex(p2)));

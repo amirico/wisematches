@@ -82,7 +82,7 @@
                                     <#list g.players as p>
                                         <#if p != pid>
                                             <div>
-                                            ${g.getScores(p) - g.getScores(pid)}
+                                            ${g.getPlayerScores(p) - g.getPlayerScores(pid)}
                                             </div>
                                         </#if>
                                     </#list>

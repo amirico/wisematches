@@ -113,7 +113,9 @@ public class TourneyController extends WisematchesController {
 	}
 
 	@RequestMapping("view")
-	public String showEntityView(Model model, final @ModelAttribute EntityIdForm form) throws UnknownEntityException {
+	public String showEntityView(final Model model,
+								 final @ModelAttribute EntityIdForm form,
+								 @RequestParam(value = "p", required = false, defaultValue = "0") int page) throws UnknownEntityException {
 		if (form.isShit()) {
 			throw new UnknownEntityException(form.getT(), "tourney");
 		}
@@ -128,7 +130,7 @@ public class TourneyController extends WisematchesController {
 		if (form.isTourney()) {
 			return showTourneyView(tourney, model);
 		} else if (form.isRound()) {
-			return showRoundView(model, form);
+			return showRoundView(model, form, page);
 		}
 		throw new UnknownEntityException(form, "tourney");
 	}
@@ -144,13 +146,18 @@ public class TourneyController extends WisematchesController {
 		return "/content/playground/tourney/view/tourney";
 	}
 
-	private String showRoundView(Model model, EntityIdForm form) throws UnknownEntityException {
+	private String showRoundView(Model model, EntityIdForm form, int page) throws UnknownEntityException {
 		final TourneyRound.Id roundId = form.getRoundId();
 		final TourneyGroup.Context ctx = new TourneyGroup.Context(roundId, null);
 
-		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, ctx, null, null, Range.limit(0, 10));
+		final int totalCount = tourneyManager.getTotalCount(null, ctx);
+		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, ctx, null, null, Range.limit(page * 30, 30));
+
 		model.addAttribute("round", tourneyManager.getTourneyEntity(roundId));
 		model.addAttribute("groups", groups);
+
+		model.addAttribute("currentPage", page);
+		model.addAttribute("groupsCount", totalCount);
 
 		return "/content/playground/tourney/view/round";
 	}
