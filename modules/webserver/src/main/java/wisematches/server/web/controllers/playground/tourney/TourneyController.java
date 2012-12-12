@@ -131,6 +131,8 @@ public class TourneyController extends WisematchesController {
 			return showTourneyView(tourney, model);
 		} else if (form.isRound()) {
 			return showRoundView(model, form, page);
+		} else if (form.isGroup()) {
+			return showGroupView(model, form);
 		}
 		throw new UnknownEntityException(form, "tourney");
 	}
@@ -158,6 +160,22 @@ public class TourneyController extends WisematchesController {
 
 		model.addAttribute("currentPage", page);
 		model.addAttribute("groupsCount", totalCount);
+
+		return "/content/playground/tourney/view/round";
+	}
+
+	private String showGroupView(Model model, EntityIdForm form) throws UnknownEntityException {
+		final TourneyGroup.Id groupId = form.getGroupId();
+		final TourneyGroup group = tourneyManager.getTourneyEntity(groupId);
+		if (group == null) {
+			throw new UnknownEntityException(form, "tourney");
+		}
+
+		model.addAttribute("round", group.getRound());
+		model.addAttribute("groups", new TourneyGroup[]{group});
+
+		model.addAttribute("currentPage", 0);
+		model.addAttribute("groupsCount", 1);
 
 		return "/content/playground/tourney/view/round";
 	}
