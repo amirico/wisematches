@@ -140,10 +140,10 @@ public class ScribbleExpirationManagerTest {
 		final GameBoard gameBoard = createStrictMock(GameBoard.class);
 		expect(gameBoard.getBoardId()).andReturn(12L);
 		expect(gameBoard.getLastMoveTime()).andReturn(new Date(time - 100)); // one mig ago
-		expect(gameBoard.getGameSettings()).andReturn(gs);
+		expect(gameBoard.getSettings()).andReturn(gs);
 		expect(gameBoard.getBoardId()).andReturn(12L);
 		expect(gameBoard.getLastMoveTime()).andReturn(new Date(time - MILLIS_IN_DAY * 3 + 200)); // one mig ago
-		expect(gameBoard.getGameSettings()).andReturn(gs);
+		expect(gameBoard.getSettings()).andReturn(gs);
 		expect(gameBoard.getBoardId()).andReturn(12L);
 		replay(gameBoard);
 

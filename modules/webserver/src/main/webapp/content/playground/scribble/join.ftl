@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 <#list waitingGames.proposalViews as view>
-                    <#assign settings=view.proposal.gameSettings/>
+                    <#assign settings=view.proposal.settings/>
                 <tr>
                     <td>${settings.title}</td>
                     <td><@message code="language.${settings.language}"/></td>

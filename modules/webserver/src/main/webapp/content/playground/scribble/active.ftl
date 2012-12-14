@@ -7,8 +7,9 @@
 <#macro gameStatus board>
     <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
-        <span class="player"><a
-                href="/playground/scribble/board?b=${board.getBoardId()}"><strong><@message code="game.status.move_you"/></strong></a></span>
+        <span class="player">
+            <@wm.board.href board.boardId><strong><@message code="game.status.move_you"/></strong></@wm.board.href>
+        </span>
         <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
@@ -49,10 +50,8 @@
         <tbody>
             <#list activeBoards as board>
             <tr id="board${board.boardId}">
-                <#assign settings=board.gameSettings/>
-                <td>
-                    <a href="/playground/scribble/board?b=${board.boardId}">${settings.title}</a>
-                </td>
+                <#assign settings=board.settings/>
+                <td><@wm.board.name board, true, false/></td>
                 <td><@message code="language.${settings.language}"/></td>
                 <td><@gameStatus board=board/></td>
                 <td class="center">
@@ -73,8 +72,8 @@
 
             <#list activeProposals as proposal>
             <tr id="proposal${proposal.id}">
-                <td>${proposal.gameSettings.title}</td>
-                <td><@message code="language.${proposal.gameSettings.language}"/></td>
+                <td>${proposal.settings.title}</td>
+                <td><@message code="language.${proposal.settings.language}"/></td>
                 <td>
                             <span class="player"><span
                                     class="waiting"><@message code="game.status.waiting"/></span></span>
@@ -87,7 +86,7 @@
                     </div>
                 </td>
                 <td class="center">
-                ${gameMessageSource.formatTimeMinutes(proposal.gameSettings.daysPerMove *24 * 60, locale)}
+                ${gameMessageSource.formatTimeMinutes(proposal.settings.daysPerMove *24 * 60, locale)}
                 </td>
                 <td>
                     <#list proposal.players as p>

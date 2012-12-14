@@ -27,8 +27,8 @@
     var scribbleGame = {
         id: ${board.boardId},
         readOnly: ${viewMode?string},
-        language: '${board.gameSettings.language}',
-        daysPerMove: ${board.gameSettings.daysPerMove},
+        language: '${board.settings.language}',
+        daysPerMove: ${board.settings.daysPerMove},
         startedMillis: ${gameMessageSource.getTimeMillis(board.startedTime)},
         startedMessage: '${gameMessageSource.formatDate(board.startedTime, locale)}',
 

@@ -14,6 +14,7 @@ import java.io.Serializable;
 public abstract class GameSettings implements Serializable {
 	@Column(name = "title", updatable = false)
 	private String title;
+
 	@Column(name = "daysPerMove", updatable = false)
 	private int daysPerMove = 3;
 
@@ -48,7 +49,7 @@ public abstract class GameSettings implements Serializable {
 	/**
 	 * Creates new game settings with specified parameters.
 	 *
-	 * @param title	   the title of the game.
+	 * @param title       the title of the game.
 	 * @param daysPerMove turn timeout in second. If game doesn't have timeout zero value must be specified.
 	 * @throws IllegalArgumentException if players count less than two or <code>turnTimeout</code> is less than 0
 	 */

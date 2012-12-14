@@ -10,10 +10,10 @@ package wisematches.playground;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface GameSettingsProvider<S extends GameSettings, R> {
-    /**
-     * Creates new games settings based on specified parameters
-     *
-     * @return new game settings
-     */
-    S createGameSettings(R request);
+	/**
+	 * Creates new games settings based on specified parameters
+	 *
+	 * @return new game settings
+	 */
+	S createGameSettings(R request);
 }

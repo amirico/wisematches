@@ -10,11 +10,11 @@
 </p>
 <br>
 <p>
-    If you accept the proposal new game "${context.proposal.gameSettings.title!""}"
-    with ${gameMessageSource.formatTimeMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} time limit.
+    If you accept the proposal new game "${context.proposal.settings.title!""}"
+    with ${gameMessageSource.formatTimeMinutes(context.proposal.settings.daysPerMove*24*60, locale)} time limit.
 </p>
 <p>
-    The ${gameMessageSource.getMessage("language.${context.proposal.gameSettings.language}", locale)} language
+    The ${gameMessageSource.getMessage("language.${context.proposal.settings.language}", locale)} language
     will be used for the game. If you don't know the language we suggest not accept the challenge.
 </p>
 <br>

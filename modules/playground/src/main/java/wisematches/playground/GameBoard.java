@@ -20,7 +20,14 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 *
 	 * @return the settings of this game.
 	 */
-	S getGameSettings();
+	S getSettings();
+
+	/**
+	 * Returns related relationship object for this game. Can be null if there is no relationships.
+	 *
+	 * @return the relationship object for this game.
+	 */
+	GameRelationship getRelationship();
 
 	/**
 	 * Returns time when game was started.

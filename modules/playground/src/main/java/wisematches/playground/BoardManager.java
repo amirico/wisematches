@@ -26,10 +26,21 @@ public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>>
 	/**
 	 * Creates new game board with specified settings.
 	 *
-	 * @param gameSettings the settings for new game
+	 * @param settings the settings for new game
+	 * @param players  the list of players.
+	 * @return the created game.
+	 * @throws BoardCreationException if board can't be created by some reasons.
+	 */
+	B createBoard(S settings, Collection<? extends Personality> players) throws BoardCreationException;
+
+	/**
+	 * Creates new game board with specified settings and relationship.
+	 *
+	 * @param settings     the settings for new game
+	 * @param relationship the relation ship associated with this game.
 	 * @param players      the list of players.
 	 * @return the created game.
 	 * @throws BoardCreationException if board can't be created by some reasons.
 	 */
-	B createBoard(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
+	B createBoard(S settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException;
 }

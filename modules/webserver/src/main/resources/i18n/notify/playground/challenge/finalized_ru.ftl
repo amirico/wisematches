@@ -3,7 +3,7 @@
 <#-- @ftlvariable name="context.player" type="wisematches.personality.Personality" -->
 <#import "../../utils.ftl" as util>
 
-<#macro proposal>#${context.proposal.id} "${context.proposal.gameSettings.title!""}"</#macro>
+<#macro proposal>#${context.proposal.id} "${context.proposal.settings.title!""}"</#macro>
 
 <#switch context.resolution>
     <#case "REPUDIATED">
@@ -14,7 +14,8 @@
     <p>Если вы не знакомы с этим игроком мы не рекомендуем вам отправлять еще одно предложение.</p>
         <#break>
     <#case "TERMINATED">
-    <p>Предложение <@proposal/> не было принято <#if context.player??><@util.player player=context.player/><#else>одним из игроков</#if> и было отменено.</p>
+    <p>Предложение <@proposal/> не было принято <#if context.player??><@util.player player=context.player/><#else>одним
+        из игроков</#if> и было отменено.</p>
     <p>Мы не рекомендуем вам отправлять еще одно предложение данному игроку.</p>
         <#break>
     <#default>

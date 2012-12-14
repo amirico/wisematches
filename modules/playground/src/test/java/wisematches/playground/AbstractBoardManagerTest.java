@@ -38,7 +38,7 @@ public class AbstractBoardManagerTest {
 		expect(board2.getBoardId()).andReturn(2L).anyTimes();
 		replay(board2);
 
-		AbstractBoardManager.BoardsMap<GameBoard> board = new AbstractBoardManager.BoardsMap<GameBoard>(log);
+		AbstractBoardManager.BoardsMap<GameBoard> board = new AbstractBoardManager.BoardsMap<>(log);
 		assertEquals(0, board.size());
 
 		board.addBoard(board1);
@@ -73,7 +73,7 @@ public class AbstractBoardManagerTest {
 
 	@Test
 	public void testCreateBoard() throws BoardCreationException {
-		final GameSettings gameSettings = new MockGameSettings("test", 3);
+		final GameSettings settings = new MockGameSettings("test", 3);
 
 		final Collection<Personality> players = Arrays.<Personality>asList(Personality.person(1), Personality.person(2));
 
@@ -83,13 +83,13 @@ public class AbstractBoardManagerTest {
 		replay(board);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
-		expect(dao.createBoard(gameSettings, players)).andReturn(board);
+		expect(dao.createBoard(settings, players)).andReturn(board);
 		dao.saveBoard(board);
 		replay(dao);
 
 		final MockBoardManager mock = new MockBoardManager(dao);
 
-		final GameBoard<?, ?> newBoard = mock.createBoard(gameSettings, players);
+		final GameBoard<?, ?> newBoard = mock.createBoard(settings, players);
 		assertSame(board, newBoard);
 
 		verify(board);
@@ -220,7 +220,7 @@ public class AbstractBoardManagerTest {
 	private interface GameBoardDao {
 		AbstractGameBoard loadBoard(long gameId) throws BoardLoadingException;
 
-		AbstractGameBoard createBoard(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
+		AbstractGameBoard createBoard(GameSettings settings, Collection<? extends Personality> players) throws BoardCreationException;
 
 		void saveBoard(AbstractGameBoard board);
 
@@ -249,8 +249,8 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected AbstractGameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
-			return gameBoardDao.createBoard(gameSettings, players);
+		protected AbstractGameBoard<GameSettings, GamePlayerHand> createBoardImpl(GameSettings settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException {
+			return gameBoardDao.createBoard(settings, players);
 		}
 
 		@Override

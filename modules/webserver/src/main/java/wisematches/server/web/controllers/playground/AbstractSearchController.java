@@ -42,12 +42,11 @@ public abstract class AbstractSearchController<T, C, F extends SearchFilter> ext
 
 	protected Map<String, Object> loadData(Personality personality, final Map<String, Object> request, final C context, final Locale locale) {
 		final int gamesCount = entitySearchManager.getTotalCount(personality, context);
-		final int displayGamesCount = gamesCount;
 
-		final Map<String, Object> res = new HashMap<String, Object>();
+		final Map<String, Object> res = new HashMap<>();
 		res.put("sEcho", request.get("sEcho"));
 		res.put("iTotalRecords", gamesCount);
-		res.put("iTotalDisplayRecords", displayGamesCount);
+		res.put("iTotalDisplayRecords", gamesCount);
 
 		if (gamesCount == 0) {
 			res.put("aaData", EMPTY_DATA);
@@ -68,7 +67,7 @@ public abstract class AbstractSearchController<T, C, F extends SearchFilter> ext
 			final List<T> response = entitySearchManager.searchEntities(personality, context, null, Orders.all(orders), limit);
 			final Object[] data = new Object[response.size()];
 			for (T entity : response) {
-				final Map<String, Object> a = new HashMap<String, Object>();
+				final Map<String, Object> a = new HashMap<>();
 				data[index++] = a;
 				convertEntity(entity, personality, a, locale);
 			}

@@ -2,6 +2,7 @@ package wisematches.playground.scribble.history;
 
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
+import wisematches.playground.GameRelationship;
 import wisematches.playground.GameResolution;
 import wisematches.playground.search.descriptive.SearchableBean;
 import wisematches.playground.search.descriptive.SearchableProperty;
@@ -21,6 +22,15 @@ public class ScribbleHistoryEntity {
 	@Id
 	@SearchableProperty(column = "board.boardId")
 	private long boardId;
+
+	@SearchableProperty(column = "board.title")
+	private String title;
+
+	@SearchableProperty(column = "board.relationshipId")
+	private Long relationshipId;
+
+	@SearchableProperty(column = "board.relationshipCode")
+	private Integer relationshipCode;
 
 	@SearchableProperty(column = "board.startedDate")
 	private Date startedDate;
@@ -69,6 +79,14 @@ public class ScribbleHistoryEntity {
 
 	public void setBoardId(long boardId) {
 		this.boardId = boardId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Date getStartedDate() {
@@ -202,11 +220,35 @@ public class ScribbleHistoryEntity {
 		return id != 0 && id != p.getId();
 	}
 
+	public GameRelationship getRelationship() {
+		if (relationshipCode != null && relationshipId != null) {
+			return new GameRelationship(relationshipCode, relationshipId);
+		}
+		return null;
+	}
+
+	public int getRelationshipCode() {
+		return relationshipCode;
+	}
+
+	public void setRelationshipCode(int relationshipCode) {
+		this.relationshipCode = relationshipCode;
+	}
+
+	public long getRelationshipId() {
+		return relationshipId;
+	}
+
+	public void setRelationshipId(long relationshipId) {
+		this.relationshipId = relationshipId;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ScribbleGameHistory");
 		sb.append("{boardId=").append(boardId);
+		sb.append(", title=").append(title);
 		sb.append(", startedDate=").append(startedDate);
 		sb.append(", finishedDate=").append(finishedDate);
 		sb.append(", rated=").append(rated);

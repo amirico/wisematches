@@ -21,7 +21,7 @@ public class AbstractGameBoardTest {
 	private GamePlayerHand h3;
 
 	private MockGameBoard board;
-	private GameSettings gameSettings;
+	private GameSettings settings;
 	private BoardStateListener stateListener;
 
 	public AbstractGameBoardTest() {
@@ -31,9 +31,9 @@ public class AbstractGameBoardTest {
 	public void setUp() throws Exception {
 		stateListener = createNiceMock(BoardStateListener.class);
 
-		gameSettings = new MockGameSettings("Mock", 3);
+		settings = new MockGameSettings("Mock", 3);
 
-		board = new MockGameBoard(gameSettings,
+		board = new MockGameBoard(settings,
 				Arrays.<Personality>asList(Personality.person(1), Personality.person(2), Personality.person(3)));
 		board.setStateListener(stateListener);
 		h1 = board.getPlayerHand(1);
@@ -53,7 +53,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, null);
+			new MockGameBoard(settings, null);
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;
@@ -61,7 +61,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, Arrays.<Personality>asList(Personality.person(1)));
+			new MockGameBoard(settings, Arrays.<Personality>asList(Personality.person(1)));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;
@@ -69,7 +69,7 @@ public class AbstractGameBoardTest {
 
 		//players is null
 		try {
-			new MockGameBoard(gameSettings, Arrays.<Personality>asList(Personality.person(1), null));
+			new MockGameBoard(settings, Arrays.<Personality>asList(Personality.person(1), null));
 			fail("Exception must be here");
 		} catch (IllegalArgumentException ex) {
 			;
@@ -79,7 +79,7 @@ public class AbstractGameBoardTest {
 	@Test
 	public void test_defaultValues() {
 		assertNotNull(board.getPlayerTurn());
-		assertSame(gameSettings, board.getGameSettings());
+		assertSame(settings, board.getSettings());
 		assertNull(board.getGameResolution());
 		assertTrue(board.isGameActive());
 		assertEquals(0, board.getGameMoves().size());

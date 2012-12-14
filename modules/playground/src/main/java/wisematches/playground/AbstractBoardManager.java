@@ -32,7 +32,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	private final Lock openBoardLock = new ReentrantLock();
 
 	private final BoardStateListener gameBoardListener = new TheBoardListener();
-	private final Collection<BoardStateListener> boardStateListeners = new CopyOnWriteArraySet<BoardStateListener>();
+	private final Collection<BoardStateListener> boardStateListeners = new CopyOnWriteArraySet<>();
 
 	/**
 	 * Creates new room manager for specified room.
@@ -41,7 +41,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	 */
 	protected AbstractBoardManager(Log log) {
 		this.log = log;
-		boardsMap = new BoardsMap<B>(log);
+		boardsMap = new BoardsMap<>(log);
 	}
 
 	@Override
@@ -57,11 +57,16 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	}
 
 	@Override
-	public B createBoard(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
+	public B createBoard(S settings, Collection<? extends Personality> players) throws BoardCreationException {
+		return createBoard(settings, null, players);
+	}
+
+	@Override
+	public B createBoard(S settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException {
 		if (log.isDebugEnabled()) {
-			log.debug("Creating new board: settings - " + gameSettings + ", players - " + players);
+			log.debug("Creating new board: settings - " + settings + ", players - " + players);
 		}
-		final B board = createBoardImpl(gameSettings, players);
+		final B board = createBoardImpl(settings, relationship, players);
 
 		openBoardLock.lock();
 		try {
@@ -129,7 +134,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 			log.debug("get active boards for player: " + person);
 		}
 		final Collection<Long> longs = loadPlayerBoards(person, context, filter, orders, range);
-		final List<B> res = new ArrayList<B>(longs.size());
+		final List<B> res = new ArrayList<>(longs.size());
 		for (Long boardId : longs) {
 			try {
 				final B b = openBoard(boardId);
@@ -146,12 +151,12 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	/**
 	 * Creates new board with specified settings.
 	 *
-	 * @param gameSettings the game settings.
-	 * @param players      the list of board players.
-	 * @return the created game board.
+	 * @param settings     the game settings.
+	 * @param relationship game relationship.
+	 * @param players      the list of board players.  @return the created game board.
 	 * @throws BoardCreationException if board can't be created by some reasones.
 	 */
-	protected abstract B createBoardImpl(S gameSettings, Collection<? extends Personality> players) throws BoardCreationException;
+	protected abstract B createBoardImpl(S settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException;
 
 	/**
 	 * Loads game board frome storage by specified game id.
@@ -214,8 +219,8 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 	 * @param <B>
 	 */
 	static class BoardsMap<B extends GameBoard> {
-		private final ReferenceQueue<B> boardsQueue = new ReferenceQueue<B>();
-		private final Map<Long, BoardWeakReference<B>> boardsReferences = new HashMap<Long, BoardWeakReference<B>>();
+		private final ReferenceQueue<B> boardsQueue = new ReferenceQueue<>();
+		private final Map<Long, BoardWeakReference<B>> boardsReferences = new HashMap<>();
 
 		private final Log log;
 
@@ -230,7 +235,7 @@ public abstract class AbstractBoardManager<S extends GameSettings, B extends Abs
 		 * @throws IllegalArgumentException if board id is zero.
 		 */
 		void addBoard(B board) {
-			final BoardWeakReference<B> value = new BoardWeakReference<B>(board, boardsQueue);
+			final BoardWeakReference<B> value = new BoardWeakReference<>(board, boardsQueue);
 			final long id = value.getBoardId();
 			if (id == 0) {
 				throw new IllegalArgumentException("Board id can't be zero");
