@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * shoud specify {@code Entity} annotation.
  * <p/>
  * This implementation persists the following fields: boardId, players, passesCount,
- * lastMoveTile, gamesState and gameSettings. This implementation does not persist moves and any listeners.
+ * lastMoveTile, gamesState and settings. This implementation does not persist moves and any listeners.
  * Each subclass must do it by itself.
  *
  * @param <S> the type of game settings.
@@ -39,7 +39,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * This is transient field for Hibernate.
 	 */
 	@Transient
-	protected final List<GameMove> moves = new ArrayList<GameMove>(0);
+	protected final List<GameMove> moves = new ArrayList<>(0);
 
 	@Column(name = "startedDate")
 	private Date startedDate;
@@ -88,7 +88,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * Settings of this game
 	 */
 	@Embedded
-	private S gameSettings;
+	private S settings;
+
+	@Embedded
+	private GameRelationship relationship;
 
 	@Transient
 	protected final Lock lock = new ReentrantLock();
@@ -109,13 +112,13 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	/**
 	 * Creates new board with specified settings. Game created with this constructor is rated.
 	 *
-	 * @param gameSettings the game settings.
-	 * @param players      the collection of all players.
+	 * @param settings the game settings.
+	 * @param players  the collection of all players.
 	 * @throws NullPointerException if setting is {@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractGameBoard(S gameSettings, Collection<? extends Personality> players) {
-		if (gameSettings == null) {
+	protected AbstractGameBoard(S settings, GameRelationship relationship, Collection<? extends Personality> players) {
+		if (settings == null) {
 			throw new IllegalArgumentException("Settings can't be null");
 		}
 		if (players == null) {
@@ -125,12 +128,13 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			throw new IllegalArgumentException("Game can't have less than 2 players");
 		}
 
-		this.gameSettings = gameSettings;
-		this.rated = gameSettings.isRatedGame();
+		this.settings = settings;
+		this.relationship = relationship;
+		this.rated = settings.isRatedGame();
 
 		startedDate = lastMoveTime = new Date();
 
-		final List<P> hands = new ArrayList<P>(players.size());
+		final List<P> hands = new ArrayList<>(players.size());
 		for (Personality player : players) {
 			if (player == null) {
 				throw new IllegalArgumentException("Players list can't contain null players");
@@ -139,12 +143,22 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		}
 		playerHands = hands;
 		playersCount = (byte) hands.size();
-		currentPlayerIndex = selectFirstPlayer(gameSettings, hands);
+		currentPlayerIndex = selectFirstPlayer(settings, hands);
 	}
 
 	@Override
 	public long getBoardId() {
 		return boardId;
+	}
+
+	@Override
+	public S getSettings() {
+		return settings;
+	}
+
+	@Override
+	public GameRelationship getRelationship() {
+		return relationship;
 	}
 
 	@Override
@@ -230,7 +244,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			if (isGameActive()) {
 				return null;
 			}
-			final List<P> won = new ArrayList<P>(playerHands.size());
+			final List<P> won = new ArrayList<>(playerHands.size());
 
 			int points = Integer.MIN_VALUE;
 			for (P player : playerHands) {
@@ -305,7 +319,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 				return Collections.emptyList();
 			}
 
-			final List<GameMove> res = new ArrayList<GameMove>();
+			final List<GameMove> res = new ArrayList<>();
 			res.add(previous);
 			while (iterator.hasPrevious()) {
 				previous = iterator.previous();
@@ -352,7 +366,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 		if (gameResolution == null) {
 			return null;
 		}
-		List<GameRatingChange> changes = new ArrayList<GameRatingChange>(playerHands.size());
+		List<GameRatingChange> changes = new ArrayList<>(playerHands.size());
 		for (P hand : playerHands) {
 			changes.add(getRatingChange(hand));
 		}
@@ -365,11 +379,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 			return null;
 		}
 		return new GameRatingChange(hand);
-	}
-
-	@Override
-	public S getGameSettings() {
-		return gameSettings;
 	}
 
 	@Override
@@ -446,7 +455,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * @return the game is expired.
 	 */
 	protected boolean isGameExpired() {
-		return System.currentTimeMillis() - getLastMoveTime().getTime() > gameSettings.getDaysPerMove() * 86400000;
+		return System.currentTimeMillis() - getLastMoveTime().getTime() > settings.getDaysPerMove() * 86400000;
 	}
 
 	/**
@@ -478,11 +487,11 @@ public abstract class AbstractGameBoard<S extends GameSettings, P extends GamePl
 	 * <p/>
 	 * Implementation of this method selects random player from all players in specified list.
 	 *
-	 * @param gameSettings the game settings.
-	 * @param players      the list of all players to select first.
+	 * @param settings the game settings.
+	 * @param players  the list of all players to select first.
 	 * @return the player who should be first.
 	 */
-	protected byte selectFirstPlayer(S gameSettings, List<P> players) {
+	protected byte selectFirstPlayer(S settings, List<P> players) {
 		return (byte) FIRST_PLAYER_RANDOM.nextInt(players.size());
 	}
 

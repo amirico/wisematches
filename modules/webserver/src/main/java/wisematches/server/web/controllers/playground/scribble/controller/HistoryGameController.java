@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.personality.Personality;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
+import wisematches.playground.GameRelationship;
 import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.history.ScribbleHistoryEntity;
 import wisematches.playground.scribble.history.ScribbleHistorySearchManager;
@@ -38,7 +39,7 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
 	public HistoryGameController() {
-		super(new String[]{"finishedDate", "newRating", "ratingChange", "players", "resolution", "movesCount"});
+		super(new String[]{"title", "startedDate", "finishedDate", "players", "movesCount", "resolution", "newRating", "ratingChange"});
 	}
 
 	@RequestMapping("")
@@ -76,7 +77,13 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 
 	@Override
 	protected void convertEntity(ScribbleHistoryEntity entity, Personality personality, Map<String, Object> map, Locale locale) {
+		final GameRelationship relationship = entity.getRelationship();
+
+		map.put("title", gameMessageSource.getBoardTitle(entity.getTitle(), relationship, locale));
+		map.put("boardId", entity.getBoardId());
+		map.put("relationship", relationship);
 		map.put("newRating", entity.getNewRating());
+		map.put("startedDate", messageSource.formatDate(entity.getStartedDate(), locale));
 		map.put("finishedDate", messageSource.formatDate(entity.getFinishedDate(), locale));
 		map.put("ratingChange", entity.getRatingChange());
 		final long[] playerIds = entity.getPlayers(personality);
@@ -85,7 +92,6 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 			players[i] = ServicePlayer.get(playerManager.getPlayer(playerIds[i]), messageSource, playerStateManager, locale);
 		}
 		map.put("players", players);
-		map.put("boardId", entity.getBoardId());
 		map.put("resolution", messageSource.getMessage("game.resolution." + entity.getResolution().name().toLowerCase(), locale));
 		map.put("movesCount", entity.getMovesCount());
 	}

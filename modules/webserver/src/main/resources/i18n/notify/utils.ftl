@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="serverHostName" type="java.lang.String" -->
 <#-- @ftlvariable name="ratingManager" type="wisematches.playground.RatingManager" -->
-<#macro board board><@link href="playground/scribble/board?b=${board.boardId}">#${board.boardId} (${board.gameSettings.title})</@link></#macro>
+<#macro board board><@link href="playground/scribble/board?b=${board.boardId}">#${board.boardId} (${gameMessageSource.getBoardTitle(board, locale)})</@link></#macro>
 
 <#macro player player showRating=false>
     <#assign person=player>

@@ -84,7 +84,7 @@ public class WaitingGameController extends AbstractGameController {
 			if (gameProposal == null) {
 				return ServiceResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
 			} else if (gameProposal.isReady()) {
-				final ScribbleBoard board = boardManager.createBoard(gameProposal.getGameSettings(), gameProposal.getPlayers());
+				final ScribbleBoard board = boardManager.createBoard(gameProposal.getSettings(), gameProposal.getPlayers());
 				return ServiceResponse.success(null, "board", board.getBoardId());
 			}
 			return ServiceResponse.SUCCESS;

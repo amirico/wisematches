@@ -273,8 +273,8 @@ public class CreateGameController extends AbstractGameController {
 			if (board != null) {
 				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
 				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
-				form.setBoardLanguage(board.getGameSettings().getLanguage());
-				form.setDaysPerMove(board.getGameSettings().getDaysPerMove());
+				form.setBoardLanguage(board.getSettings().getLanguage());
+				form.setDaysPerMove(board.getSettings().getDaysPerMove());
 
 				int index = 0;
 				final List<ScribblePlayerHand> playersHands = board.getPlayersHands();

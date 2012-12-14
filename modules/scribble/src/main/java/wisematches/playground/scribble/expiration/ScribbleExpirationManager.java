@@ -44,7 +44,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 							.add(Restrictions.isNull("gameResolution"))
 							.setProjection(Projections.projectionList()
 									.add(Projections.property("boardId"))
-									.add(Projections.property("gameSettings.daysPerMove").as("daysPerMove"))
+									.add(Projections.property("settings.daysPerMove").as("daysPerMove"))
 									.add(Projections.property("lastMoveTime")));
 
 					final List list = criteria.list();
@@ -111,7 +111,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 
 		@Override
 		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
-			scheduleTermination(board.getBoardId(), new Date(board.getLastMoveTime().getTime() + board.getGameSettings().getDaysPerMove() * MILLIS_IN_DAY));
+			scheduleTermination(board.getBoardId(), new Date(board.getLastMoveTime().getTime() + board.getSettings().getDaysPerMove() * MILLIS_IN_DAY));
 		}
 
 		@Override

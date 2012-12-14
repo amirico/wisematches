@@ -71,9 +71,8 @@
                                     <#list g.players as p>
                                         <#if p != pid>
                                             <div>
-                                                <#assign gid=g.getGameId(pid, p)/>
-                                                <a href="/playground/scribble/board?b=${gid?string}">Игра
-                                                    #${gid?string}</a>
+                                                <#assign gid=g.getGameId(pid, p)?string/>
+                                                <@wm.board.href gid>#${gid?string}</@wm.board.href>
                                             </div>
                                         </#if>
                                     </#list>

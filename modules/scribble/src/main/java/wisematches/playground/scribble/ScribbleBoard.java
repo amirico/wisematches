@@ -6,8 +6,8 @@ import org.hibernate.annotations.Type;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
-import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.LettersDistribution;
+import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.score.ScoreEngine;
 import wisematches.playground.scribble.score.engines.ScribbleScoreEngine;
 
@@ -126,8 +126,12 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	ScribbleBoard() {
 	}
 
-	public ScribbleBoard(ScribbleSettings gameSettings, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
-		super(gameSettings, players);
+	public ScribbleBoard(ScribbleSettings settings, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
+		this(settings, null, players, tilesBank, dictionary);
+	}
+
+	public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
+		super(settings, relationship, players);
 		if (log.isDebugEnabled()) {
 			log.debug("Game started: " + getBoardId());
 		}

@@ -20,8 +20,8 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private Date lastMoveTime = new Date();
 	private MockGameMoveScore scoreCalculation = new MockGameMoveScore();
 
-	MockGameBoard(GameSettings gameSettings, Collection<Personality> players) {
-		super(gameSettings, players);
+	MockGameBoard(GameSettings settings, Collection<Personality> players) {
+		super(settings, null, players);
 	}
 
 	protected GamePlayerHand createPlayerHand(Personality player) {

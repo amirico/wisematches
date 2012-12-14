@@ -2,7 +2,7 @@
 <#import "../../utils.ftl" as util>
 
 <p>
-    Вы получили вызов #${context.proposal.id} "${context.proposal.gameSettings.title!""}" от игрока
+    Вы получили вызов #${context.proposal.id} "${context.proposal.settings.title!""}" от игрока
     <strong><@util.player player=context.proposal.initiator/></strong>
 <#if context.proposal.commentary?has_content>
 <blockquote>${context.proposal.commentary}</blockquote>
@@ -10,14 +10,14 @@
 </p>
 <br>
 <p>
-    Если вы примете данное предложение новая игра "${context.proposal.gameSettings.title!""}"
+    Если вы примете данное предложение новая игра "${context.proposal.settings.title!""}"
     будет создана с ограничением
-    в ${gameMessageSource.formatTimeMinutes(context.proposal.gameSettings.daysPerMove*24*60, locale)} на
+    в ${gameMessageSource.formatTimeMinutes(context.proposal.settings.daysPerMove*24*60, locale)} на
     каждый ход.
 </p>
 <p>
     В игре будет
-    использован ${gameMessageSource.getMessage("language.${context.proposal.gameSettings.language}", locale)}
+    использован ${gameMessageSource.getMessage("language.${context.proposal.settings.language}", locale)}
     язык. Если не знаете этот язык мы не советуем вам принимать принимать это предложение.
 </p>
 <br>

@@ -111,7 +111,7 @@
 
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>
-        <td><@message code="language."+board.gameSettings.language/></td>
+        <td><@message code="language."+board.settings.language/></td>
     </@element>
 
     <@element>
@@ -123,10 +123,10 @@
 
     <@element passiveVisible=false>
         <td nowrap="nowrap"><strong><@message code="game.state.time"/>:</strong></td>
-        <td>${board.gameSettings.daysPerMove} ${gameMessageSource.formatDays(board.gameSettings.daysPerMove, locale)} <@message code="game.state.move"/></td>
+        <td>${board.settings.daysPerMove} ${gameMessageSource.formatDays(board.settings.daysPerMove, locale)} <@message code="game.state.move"/></td>
     </@element>
 
-    <#if board.gameSettings.scratch>
+    <#if board.settings.scratch>
         <@element>
             <td colspan="2">
                 <div class="game-state-scratch">

@@ -69,7 +69,7 @@ public class ScribbleBoardManagerTest {
 		final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).createTilesBankInfo());
 
 		final ScribbleBoard board = createStrictMock(ScribbleBoard.class);
-		expect(board.getGameSettings()).andReturn(settings);
+		expect(board.getSettings()).andReturn(settings);
 		expect(board.getPlayersHands()).andReturn(Arrays.<ScribblePlayerHand>asList(null, null, null));
 		board.initGameAfterLoading(tilesBank, dictionary);
 		replay(board);
@@ -114,7 +114,7 @@ public class ScribbleBoardManagerTest {
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
 
 		final ScribbleBoard board1 = scribbleRoomManager.createBoardImpl(settings,
-				Arrays.asList(Personality.person(1), Personality.person(2)));
+				null, Arrays.asList(Personality.person(1), Personality.person(2)));
 		assertNotNull(board1);
 
 		verify(dictionaryManager);

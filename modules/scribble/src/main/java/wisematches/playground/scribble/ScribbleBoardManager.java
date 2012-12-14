@@ -40,14 +40,14 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 	}
 
 	@Override
-	protected ScribbleBoard createBoardImpl(ScribbleSettings gameSettings, Collection<? extends Personality> players) throws BoardCreationException {
-		final Language language = Language.byCode(gameSettings.getLanguage());
+	protected ScribbleBoard createBoardImpl(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException {
+		final Language language = Language.byCode(settings.getLanguage());
 
 		try {
 			final Dictionary dictionary = dictionaryManager.getDictionary(language.locale());
 			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
 
-			return new ScribbleBoard(gameSettings, players, tilesBank, dictionary);
+			return new ScribbleBoard(settings, relationship, players, tilesBank, dictionary);
 		} catch (DictionaryNotFoundException e) {
 			throw new BoardCreationException("", e);
 		}
@@ -64,7 +64,7 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
 				return null;
 			}
 			session.evict(board);
-			language = Language.byCode(board.getGameSettings().getLanguage());
+			language = Language.byCode(board.getSettings().getLanguage());
 			final Dictionary dictionary = dictionaryManager.getDictionary(language.locale());
 			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, board.getPlayersHands().size(), true);
 			board.initGameAfterLoading(tilesBank, dictionary);

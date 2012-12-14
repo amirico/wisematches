@@ -74,7 +74,7 @@ public class HibernateTourneyManagerTest {
 				return null;
 			}
 		});
-		expect(boardManager.createBoard(anyObject(GameSettings.class), anyObject(Collection.class))).andAnswer(new IAnswer<GameBoard<GameSettings, GamePlayerHand>>() {
+		expect(boardManager.createBoard(anyObject(GameSettings.class), isA(GameRelationship.class), anyObject(Collection.class))).andAnswer(new IAnswer<GameBoard<GameSettings, GamePlayerHand>>() {
 			private long c = 1;
 
 			@Override

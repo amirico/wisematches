@@ -10,7 +10,7 @@
             <td align="left" valign="top" width="100%">
                 <div><b><@message code="game.guest.warn.label"/></b></div>
                 <div>
-                <@message code="game.guest.warn.description"/>
+                    <@message code="game.guest.warn.description"/>
                     <a href="#"
                        onclick="$(this).hide().parent().find('ul').slideDown(); return false;"><@message code="info.readmore.label"/></a>
                     <ul class="ui-helper-hidden">
@@ -21,6 +21,7 @@
                         <li><@message code="game.guest.warn.5"/></li>
                         <li><@message code="game.guest.warn.6"/></li>
                         <li><@message code="game.guest.warn.7"/></li>
+                        <li><@message code="game.guest.warn.8"/></li>
                     </ul>
                 </div>
             </td>
