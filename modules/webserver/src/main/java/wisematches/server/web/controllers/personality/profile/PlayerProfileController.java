@@ -116,7 +116,8 @@ public class PlayerProfileController extends WisematchesController {
 	}
 
 	@RequestMapping("edit")
-	public String editProfile(Model model, Locale locale) {
+	public String editProfile(@RequestParam(value = "social", required = false, defaultValue = "false")
+							  boolean social, Model model, Locale locale) {
 		final Player principal = getPrincipal();
 		final PlayerProfile profile = profileManager.getPlayerProfile(principal);
 

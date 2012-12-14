@@ -10,7 +10,9 @@
         <tr>
             <td style="vertical-align: top; width: 250px">
             <#include "widget/progress.ftl"/>
-            <#include "widget/share.ftl"/>
+            <#if boardSettings.enableShare>
+                <#include "widget/share.ftl"/>
+            </#if>
         <#include "widget/history.ftl"/>
         <#if !viewMode><#include "widget/help.ftl"/></#if>
             </td>

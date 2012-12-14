@@ -52,6 +52,19 @@
         </td>
     </tr>
 
+
+    <tr>
+        <td style="padding-top: 4px; width: 10px;">
+        <@wm.ui.input fieldType='checkbox' path="settings.enableShare"/>
+        </td>
+        <td>
+        <#--@declare id="enableShare"-->
+            <label for="enableShare"><@message code="game.settings.board.share.label"/></label>
+
+            <div class="sample"><@message code="game.settings.board.share.description"/></div>
+        </td>
+    </tr>
+
     <tr>
         <td colspan="2">
         <#--@declare id="tilesClass"-->

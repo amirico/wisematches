@@ -48,7 +48,7 @@ public class ScribbleBoardController extends WisematchesController {
 	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
-	public static final BoardSettings BOARD_SETTINGS = new BoardSettings(false, false, true, true, "tiles-set-classic");
+	public static final BoardSettings BOARD_SETTINGS = new BoardSettings(false, false, true, true, true, "tiles-set-classic");
 
 	public ScribbleBoardController() {
 	}

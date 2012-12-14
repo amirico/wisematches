@@ -26,7 +26,10 @@ public class SettingsForm extends BoardSettingsForm {
 	private String confirm;
 
 	private boolean changeEmail = false;
+
 	private boolean changePassword = false;
+
+	private String openedTab = "commonTab";
 
 	public SettingsForm() {
 	}
@@ -87,4 +90,11 @@ public class SettingsForm extends BoardSettingsForm {
 		this.changePassword = changePassword;
 	}
 
+	public String getOpenedTab() {
+		return openedTab;
+	}
+
+	public void setOpenedTab(String openedTab) {
+		this.openedTab = openedTab;
+	}
 }

@@ -20,17 +20,21 @@ public class BoardSettings implements Cloneable {
 	@Column(name = "showCaptions")
 	private boolean showCaptions = true;
 
+	@Column(name = "enableShare")
+	private boolean enableShare = true;
+
 	@Column(name = "tilesClass")
 	private String tilesClass;
 
 	public BoardSettings() {
 	}
 
-	public BoardSettings(boolean cleanMemory, boolean checkWords, boolean clearByClick, boolean showCaptions, String tilesClass) {
+	public BoardSettings(boolean cleanMemory, boolean checkWords, boolean clearByClick, boolean showCaptions, boolean enableShare, String tilesClass) {
 		this.cleanMemory = cleanMemory;
 		this.checkWords = checkWords;
 		this.clearByClick = clearByClick;
 		this.showCaptions = showCaptions;
+		this.enableShare = enableShare;
 		this.tilesClass = tilesClass;
 	}
 
@@ -74,6 +78,14 @@ public class BoardSettings implements Cloneable {
 		this.showCaptions = showCaptions;
 	}
 
+	public boolean isEnableShare() {
+		return enableShare;
+	}
+
+	public void setEnableShare(boolean enableShare) {
+		this.enableShare = enableShare;
+	}
+
 	@Override
 	public BoardSettings clone() {
 		try {
@@ -85,11 +97,15 @@ public class BoardSettings implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "BoardSettings{" +
-				", cleanMemory=" + cleanMemory +
-				", checkWords=" + checkWords +
-				", tilesClass='" + tilesClass + '\'' +
-				", showCaptions='" + showCaptions + '\'' +
-				'}';
+		final StringBuilder sb = new StringBuilder();
+		sb.append("BoardSettings");
+		sb.append("{cleanMemory=").append(cleanMemory);
+		sb.append(", checkWords=").append(checkWords);
+		sb.append(", clearByClick=").append(clearByClick);
+		sb.append(", showCaptions=").append(showCaptions);
+		sb.append(", enableShare=").append(enableShare);
+		sb.append(", tilesClass='").append(tilesClass).append('\'');
+		sb.append('}');
+		return sb.toString();
 	}
 }
