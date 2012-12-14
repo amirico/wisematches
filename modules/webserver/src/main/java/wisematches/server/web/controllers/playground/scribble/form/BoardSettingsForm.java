@@ -9,6 +9,7 @@ public class BoardSettingsForm {
 	private boolean cleanMemory;
 	private boolean clearByClick;
 	private boolean showCaptions;
+	private boolean enableShare;
 
 	public BoardSettingsForm() {
 	}
@@ -51,5 +52,13 @@ public class BoardSettingsForm {
 
 	public void setShowCaptions(boolean showCaptions) {
 		this.showCaptions = showCaptions;
+	}
+
+	public boolean isEnableShare() {
+		return enableShare;
+	}
+
+	public void setEnableShare(boolean enableShare) {
+		this.enableShare = enableShare;
 	}
 }

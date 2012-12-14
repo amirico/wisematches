@@ -1,7 +1,5 @@
 package wisematches.server.web.controllers.playground.scribble.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,8 +23,6 @@ import wisematches.server.web.controllers.playground.scribble.form.BoardSettings
 public class ScribbleSettingsController extends WisematchesController {
 	private BoardSettingsManager boardSettingsManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
-
 	public ScribbleSettingsController() {
 	}
 
@@ -41,6 +37,7 @@ public class ScribbleSettingsController extends WisematchesController {
 		form.setCleanMemory(settings.isCleanMemory());
 		form.setClearByClick(settings.isClearByClick());
 		form.setShowCaptions(settings.isShowCaptions());
+		form.setEnableShare(settings.isEnableShare());
 
 		model.addAttribute("plain", Boolean.TRUE);
 
@@ -52,7 +49,7 @@ public class ScribbleSettingsController extends WisematchesController {
 	@RequestMapping("save")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
-		final BoardSettings settings = new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.isShowCaptions(), form.getTilesClass());
+		final BoardSettings settings = new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.isShowCaptions(), form.isEnableShare(), form.getTilesClass());
 		boardSettingsManager.setScribbleSettings(getPersonality(), settings);
 		return ServiceResponse.success(null, "settings", form);
 	}

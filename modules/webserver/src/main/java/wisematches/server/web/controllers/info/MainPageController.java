@@ -3,7 +3,6 @@ package wisematches.server.web.controllers.info;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.server.security.WMAuthorities;
-import wisematches.server.web.controllers.personality.account.AuthenticationController;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -24,7 +23,7 @@ public class MainPageController {
 
 	@RequestMapping("/playground/welcome")
 	public String welcomePage() {
-		return "forward:/playground/profile/edit";
+		return "forward:/playground/profile/edit?social=true";
 	}
 
 	@RequestMapping("index")

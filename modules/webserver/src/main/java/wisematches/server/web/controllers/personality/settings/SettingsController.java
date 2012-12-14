@@ -66,6 +66,7 @@ public class SettingsController extends WisematchesController {
 		form.setCleanMemory(settings.isCleanMemory());
 		form.setClearByClick(settings.isClearByClick());
 		form.setShowCaptions(settings.isShowCaptions());
+		form.setEnableShare(settings.isEnableShare());
 		return "/content/playground/settings/template";
 	}
 
@@ -95,7 +96,8 @@ public class SettingsController extends WisematchesController {
 		notificationManager.setNotificationSettings(personality, settings);
 
 		boardSettingsManager.setScribbleSettings(personality,
-				new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.isShowCaptions(), form.getTilesClass()));
+				new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(),
+						form.isShowCaptions(), form.isEnableShare(), form.getTilesClass()));
 
 		Language language = account.getLanguage();
 		if (form.getLanguage() != null) {
@@ -157,7 +159,7 @@ public class SettingsController extends WisematchesController {
 				if (accountSecurityService != null) {
 					accountSecurityService.authenticatePlayer(a, form.isChangePassword() ? form.getPassword() : null);
 				}
-				return "redirect:/account/modify";
+				return "redirect:/account/modify#" + form.getOpenedTab();
 			} catch (UnknownAccountException e) {
 				throw new UnknownEntityException(null, "account");
 			} catch (DuplicateAccountException ex) {

@@ -20,12 +20,13 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 
 	private boolean checkWordsDefault = true;
 	private boolean clearMemoryDefault = true;
+	private boolean enableShareDefault = true;
 	private boolean showCaptionsDefault = true;
 	private boolean clearByClickDefault = true;
 
 	private String tilesClassDefault = "tilesSetClassic";
 	private final Lock lock = new ReentrantLock();
-	private final Map<Personality, HibernateBoardSettings> cache = new WeakHashMap<Personality, HibernateBoardSettings>();
+	private final Map<Personality, HibernateBoardSettings> cache = new WeakHashMap<>();
 
 	public HibernateBoardSettingsManager() {
 	}
@@ -34,7 +35,7 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BoardSettings getScribbleSettings(Personality personality) {
 		if (personality == null) {
-			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, showCaptionsDefault, tilesClassDefault);
+			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, showCaptionsDefault, enableShareDefault, tilesClassDefault);
 		}
 
 		lock.lock();
@@ -67,7 +68,7 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 		if (settings == null) {
 			settings = new HibernateBoardSettings(personality.getId(),
 					clearMemoryDefault, checkWordsDefault,
-					clearByClickDefault, showCaptionsDefault, tilesClassDefault);
+					clearByClickDefault, showCaptionsDefault, enableShareDefault, tilesClassDefault);
 			cache.put(personality, settings);
 		}
 		return settings;
@@ -123,5 +124,13 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 
 	public void setShowCaptionsDefault(boolean showCaptionsDefault) {
 		this.showCaptionsDefault = showCaptionsDefault;
+	}
+
+	public boolean isEnableShareDefault() {
+		return enableShareDefault;
+	}
+
+	public void setEnableShareDefault(boolean enableShareDefault) {
+		this.enableShareDefault = enableShareDefault;
 	}
 }

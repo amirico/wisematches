@@ -20,6 +20,9 @@
             </div>
 
             <div class="ui-tabs-panel">
+            <@wm.ui.field path="settings.openedTab">
+                <input type="hidden" id="openedTab" name="openedTab"/>
+            </@wm.ui.field>
                 <button name="save" type="submit" value="submit"><@message code="account.modify.save"/></button>
             </div>
         </div>
@@ -27,6 +30,11 @@
 </form>
 
 <script type="text/javascript">
-    $("#settings").tabs();
+    $("#openedTab").val(location.hash.substring(1));
+
+    $("#settings").tabs().bind("tabsselect", function (event, ui) {
+        location.hash = ui.tab.hash;
+        $("#openedTab").val(ui.tab.hash.substring(1));
+    });
 </script>
 
