@@ -121,6 +121,18 @@
     <table>
         <tr>
             <td class="info-header" colspan="2">
+                <span class="info-label" style="font-size: 18px"><@message code="game.share.label"/></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="280px"><#include "/content/playground/scribble/widget/share.ftl"/></td>
+            <td><@message code="game.tip.board.share"/></td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td class="info-header" colspan="2">
                 <span class="info-label" style="font-size: 18px"><@message code="game.selection.label"/></span>
             </td>
         </tr>
