@@ -4,19 +4,18 @@
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">
-<#include "../scriplet.ftl">
 
 <@wm.ui.playground id="tourneyWidget">
 <div id="divisions">
     <@wm.ui.table.header align="left">
-        <@message code="tourney.tourney.label"/> > <@tourneyName tourneyId=tourney link=false/>
+        <@message code="tourney.tourney.label"/> > <@wm.tourney.tourney tourney, false/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
         <table width="100%">
             <tr>
                 <td class="tourney-name ui-state-active" style="width: 100%">
-                    <@tourneyName tourneyId=tourney link=false/>
+                    <@wm.tourney.tourney tourney, false/>
                 </td>
                 <td rowspan="2" class="sample" style="text-align: right; vertical-align: bottom; white-space: nowrap">
                     <@message code="tourney.limitation.language.label"/>
@@ -43,12 +42,12 @@
             <#if division?has_content>
                 <div class="division">
                     <div class="division-name">
-                        <strong><@sectionName section=s/> <@message code="tourney.level.label"/></strong>: <span
-                            class="sample">(<@sectionInfo section=s short=false/>)</span>
+                        <strong><@wm.tourney.section s/> <@message code="tourney.level.label"/></strong>: <span
+                            class="sample">(<@wm.tourney.rating s, false/>)</span>
                     </div>
                     <div class="division-rounds">
                         <#list divisionsTree.getRounds(division) as r>
-                            <@roundName r.id, true, r.final/><#if r_has_next>, <#else></#if>
+                            <@wm.tourney.round r.id, true, r.final/><#if r_has_next>, <#else></#if>
                         </#list>
                         <#if division.finishedDate??>
                             <span class="sample">

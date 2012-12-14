@@ -5,7 +5,6 @@
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">
-<#include "scriplet.ftl">
 
 <@wm.ui.table.dtinit/>
 
@@ -52,7 +51,7 @@
                             <#list divisions as d>
                             <tr>
                                 <td>
-                                    <@tourneyName tourneyId=tourney.id link=true/>
+                                    <@wm.tourney.tourney tourney.id, true/>
 
                                     <span class="sample">
                                         (<@message code="tourney.started.label"/>:
@@ -63,10 +62,10 @@
                                 </td>
 
                                 <td>
-                                    <@languageName language=d.language/>
+                                    <@wm.tourney.language d.language/>
                                 </td>
                                 <td>
-                                    <@sectionName section=d.section/>
+                                    <@wm.tourney.section d.section/>
                                 </td>
 
                                 <#list winnerPlaces as p>

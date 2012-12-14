@@ -2,7 +2,6 @@
 <#-- @ftlvariable name="participated" type="wisematches.playground.tourney.regular.TourneyGroup[]" -->
 
 <#include "/core.ftl">
-<#include "scriplet.ftl">
 
 <@wm.ui.table.dtinit/>
 
@@ -43,19 +42,19 @@
                                 <#assign groupId=g.id/>
                             <tr>
                                 <td>
-                                    <@tourneyName tourneyId=groupId.roundId.divisionId.tourneyId link=true/>
+                                    <@wm.tourney.tourney groupId.roundId.divisionId.tourneyId, true/>
                                 </td>
                                 <td>
-                                    <@languageName language=groupId.roundId.divisionId.language/>
+                                    <@wm.tourney.language groupId.roundId.divisionId.language/>
                                 </td>
                                 <td>
-                                    <@sectionName section=groupId.roundId.divisionId.section/>
+                                    <@wm.tourney.section groupId.roundId.divisionId.section/>
                                 </td>
                                 <td>
-                                    <@roundName roundId=g.id.roundId link=true/>
+                                    <@wm.tourney.round g.id.roundId, true/>
                                 </td>
                                 <td>
-                                    <@groupName groupId=g.id link=true/>
+                                    <@wm.tourney.group g.id , true/>
                                 </td>
 
                                 <td align="center">

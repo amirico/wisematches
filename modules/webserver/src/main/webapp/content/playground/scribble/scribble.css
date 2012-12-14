@@ -558,7 +558,7 @@ ul.bonuses .bonus-cell {
     padding: 2px 1px;
 }
 
-.annotation, .boardInfoWidget, .movesHistory, .memoryWordsWidget, .moveInfo, .thesaurusWidget {
+.annotation, .shareWidget, .boardInfoWidget, .movesHistory, .memoryWordsWidget, .moveInfo, .thesaurusWidget {
     margin-top: 10px;
 }
 

@@ -6,7 +6,6 @@
 <#-- @ftlvariable name="currentPage" type="int" -->
 
 <#include "/core.ftl">
-<#include "../scriplet.ftl">
 
 <#macro pages count current>
     <#if (count>30)>
@@ -31,18 +30,18 @@
 <@wm.ui.playground id="tourneyWidget">
 <div id="divisions">
     <@wm.ui.table.header align="left">
-        <@message code="tourney.tourney.label"/> > <@tourneyName tourney, false/>
+        <@message code="tourney.tourney.label"/> > <@wm.tourney.tourney tourney.id, false/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
         <div>
             <div class="tourney-name ui-state-active" style="display: block">
-                <@tourneyName tourney, false/>
+                <@wm.tourney.tourney tourney.id, false/>
             </div>
             <div>
                 <@message code="language.${round.division.language.name()?lower_case}"/>,
-                <@sectionName round.division.section/> <@message code="tourney.level.label"/>,
-                <@roundName round.id, true/>
+                <@wm.tourney.section round.division.section/> <@message code="tourney.level.label"/>,
+                <@wm.tourney.round round.id, true/>
             </div>
             <div class="sample" style="padding-left: 10px">
                 (${gameMessageSource.formatDate(round.startedDate, locale)}
