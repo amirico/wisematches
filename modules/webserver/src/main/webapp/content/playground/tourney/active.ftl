@@ -4,7 +4,6 @@
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">
-<#include "scriplet.ftl">
 
 <@wm.ui.table.dtinit/>
 
@@ -12,8 +11,8 @@
     <#list divisionsTree.getDivisions(tourney) as d>
         <#if d.language = language>
         <div>
-            <@sectionName section=d.section/>,
-            <@roundName roundId={"round":d.activeRound, "divisionId":d.id} link=true/>
+            <@wm.tourney.section d.section/>,
+            <@wm.tourney.round {"round":d.activeRound, "divisionId":d.id}, true/>
         </div>
         </#if>
     </#list>
@@ -49,14 +48,14 @@
                     </tr>
                     <tr>
                         <#list languages?reverse as l>
-                            <th><@languageName language=l/></th>
+                            <th><@wm.tourney.language l/></th>
                         </#list>
                     </tr>
                     </thead>
                     <tbody>
                         <#list divisionsTree.tourneys as tourney>
                         <td>
-                            <@tourneyName tourneyId=tourney.id link=true/>
+                            <@wm.tourney.tourney tourney.id, true/>
                         </td>
                         <td>
                         ${gameMessageSource.formatDate(tourney.startedDate, locale)}

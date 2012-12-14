@@ -2,7 +2,6 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 
 <#include "/core.ftl">
-<#include "/content/templates/addthis.ftl"/>
 
 <#macro row activeVisible=true passiveVisible=true>
     <#if !passiveVisible && !board.gameActive> <#-- nothing to do if not active and -->
@@ -87,28 +86,6 @@
         </td>
     </@element>
 
-    <#if principal??>
-        <@element>
-            <td valign="top"><strong><@message code="game.state.share.label"/>:</strong></td>
-            <td style="padding-top: 4px">
-                <#if board.getPlayerHand(principal.id)??>
-                    <div class="shareToolbox" style="position: relative;">
-                        <@addthis title="share.board.my.label" description="share.board.my.description" args=[principal.nickname]/>
-                        <div class="shareHandElement ui-helper-hidden ui-state-active"
-                             style="position: absolute; top: 18px; left: 0; padding: 2px">
-                            <input type="checkbox" id="shareHandInput" name="shareHandInput"
-                                   style="vertical-align: text-bottom;">
-                            <label for="shareHandInput"
-                                   style="padding-left: 3px"><@message code="share.board.tiles.label"/></label>
-                        </div>
-                    </div>
-                <#else>
-                    <@addthis title="share.board.other.label" description="share.board.other.description" args=[principal.nickname]/>
-                </#if>
-            </td>
-        </@element>
-    </#if>
-
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>
         <td><@message code="language."+board.settings.language/></td>
@@ -120,6 +97,13 @@
             <div class="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
         </td>
     </@element>
+
+    <#if board.relationship??>
+        <@element>
+            <td nowrap="nowrap"><strong><@message code="game.state.relationship"/>:</strong></td>
+            <td><@wm.board.relationship board, true/></td>
+        </@element>
+    </#if>
 
     <@element passiveVisible=false>
         <td nowrap="nowrap"><strong><@message code="game.state.time"/>:</strong></td>
@@ -138,45 +122,6 @@
     </#if>
 </table>
 </@wm.ui.widget>
-
-<#if principal?? && board.getPlayerHand(principal.id)??>
-<script type="text/javascript">
-    wm.scribble.share = function (board) {
-        var firstInitiated = false;
-        var shareTilesInput = $(".shareToolbox input");
-
-        var updateShareURL = function () {
-            var url;
-            if (shareTilesInput.is(':checked')) {
-                var s = "";
-                $.each(board.getHandTiles(), function (i, t) {
-                    s += t.letter;
-                });
-                url = wm.util.url.extend(null, 't', s, true);
-            } else {
-                url = wm.util.url.remove(null, 't');
-            }
-            addthis.update('share', 'url', url);
-        };
-
-        addthis.addEventListener('addthis.ready', function () {
-            if (!firstInitiated) {
-                $(".shareToolbox").hover(function () {
-                    updateShareURL();
-                    $(".shareToolbox .shareHandElement").show("blind", {}, 'fast');
-                }, function () {
-                    $(".shareToolbox .shareHandElement").hide("blind");
-                });
-                $(shareTilesInput).change(function () {
-                    updateShareURL();
-                });
-                updateShareURL();
-                firstInitiated = true;
-            }
-        });
-    }(board);
-</script>
-</#if>
 
 <#if board.gameActive>
 <script type="text/javascript">

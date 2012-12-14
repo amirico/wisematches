@@ -6,7 +6,6 @@
 <#-- @ftlvariable name="tourneySubscriptions" type="wisematches.playground.tourney.regular.RegistrationRecord[]" -->
 
 <#include "/core.ftl">
-<#include "scriplet.ftl">
 
 <@wm.ui.table.dtinit/>
 
@@ -21,10 +20,10 @@
 
                 <@wm.ui.table.toolbar align="left">
                     <div class="ui-state-hover" style="border: none; background: none; font-size: large">
-                        <@message code="tourney.subscribes.tourney"/> <@tourneyName tourneyId=tourney.id link=false/>
+                        <@message code="tourney.subscribes.tourney"/> <@wm.tourney.tourney tourney.id, false/>
                     </div>
                     <div>
-                        <@message code="tourney.subscribes.players"/>: <@languageName language=tourneyLanguage/>
+                        <@message code="tourney.subscribes.players"/>: <@wm.tourney.language tourneyLanguage/>
                     </div>
                 </@wm.ui.table.toolbar>
 
@@ -42,7 +41,7 @@
                             <#list tourneySubscriptions as s>
                             <tr>
                                 <td><@wm.player.name player=playerManager.getPlayer(s.player)/></td>
-                                <td><@sectionName section=s.section/></td>
+                                <td><@wm.tourney.section s.section/></td>
                                 <td><@message code="tourney.round.label"/> ${s.round?string}</td>
                                 <td>&nbsp;</td>
                             </tr>

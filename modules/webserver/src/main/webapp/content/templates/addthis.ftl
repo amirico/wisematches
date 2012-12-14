@@ -15,18 +15,18 @@
     </div>
     <script type="text/javascript">
         var addthis_config = {
-            "data_track_addressbar":true,
-            "ui_language":"${locale.language?lower_case}"
+            "data_track_addressbar": true,
+            "ui_language": "${locale.language?lower_case}"
         };
 
         var addthis_share = {
-                <#if href?? && href?has_content>"url":"${href}",</#if>
-                <#if title?? && title?has_content>"title":"<@message code=title args=args/>",</#if>
-            "description":"<@message code=description args=args/>"
+                <#if href?? && href?has_content>"url": "${href}",</#if>
+                <#if title?? && title?has_content>"title": "<@message code=title args=args/>",</#if>
+            "description": "<@message code=description args=args/>"
         };
 
     </script>
     <script type="text/javascript"
-            src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=${addThisCode}"></script>
+            src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=${addThisCode}"></script>
     </#if>
 </#macro>

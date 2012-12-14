@@ -7,7 +7,6 @@
 <#-- @ftlvariable name="subscriptions" type="wisematches.playground.tourney.regular.RegistrationsSummary" -->
 
 <#include "/core.ftl">
-<#include "scriplet.ftl">
 
 <#assign pid=principal.id/>
 
@@ -24,7 +23,7 @@
 
 <@wm.ui.table.toolbar align="center">
     <div class="tourney-name ui-state-active">
-        <@tourneyName tourneyId=announce.id link=false/>
+        <@wm.tourney.tourney announce.id, false/>
     </div>
     <div style="text-align: right; width: 100%">
         <a href="/info/tourney" style="white-space: nowrap;">
@@ -60,7 +59,7 @@
                         <div>
                             <div style="font-weight: normal">
                                 <a href="/playground/tourney/subscriptions?t=${announce.number}&l=${l.code()}">
-                                    <@languageName language=l/>
+                                    <@wm.tourney.language l/>
                                 </a>
                             </div>
                             <div style="padding-left: 5px; padding-right: 5px;">-</div>
@@ -84,7 +83,7 @@
                 <div class="${subscriptionStateClass}">
                                 <span id="announceSection" class="section">
                                     <#if subscription??>
-                                        <@sectionName section=subscription.section/>
+                                        <@wm.tourney.section subscription.section/>
                                     <#else>
                                         <@message code="tourney.section.unspecified"/>
                                     </#if>
@@ -102,7 +101,7 @@
                 <div class="${subscriptionStateClass}">
                                     <span id="announceLanguage" class="language">
                                         <#if subscription??>
-                                           <@languageName language=subscription.language/>
+                                           <@wm.tourney.language subscription.language/>
                                         <#else>
                                             <@message code="tourney.section.unspecified"/>
                                         </#if>
@@ -160,7 +159,7 @@
                         <select id="subscriptionLanguage" name="language" style="width: 170px;">
                             <#list languages as l>
                                 <option value="${l}" <#if l=subscribedLanguage>selected="selected"</#if>>
-                                    <@languageName language=l/>
+                                    <@wm.tourney.language l/>
                                 </option>
                             </#list>
                         </select>
@@ -186,9 +185,9 @@
                                                for="subscriptionSection${s.name()}">
                                             -
                                                     <span class="section">
-                                                        <@sectionName section=s/>
+                                                        <@wm.tourney.section s/>
                                                     </span>
-                                            <span class="sample">(<@sectionInfo section=s short=false/>)</span>
+                                            <span class="sample">(<@wm.tourney.rating s, false/>)</span>
                                         </label>
                                     </td>
                                     <td <#if disabled>class="ui-state-disabled"</#if>>

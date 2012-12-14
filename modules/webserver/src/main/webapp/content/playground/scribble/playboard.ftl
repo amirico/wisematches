@@ -10,6 +10,7 @@
         <tr>
             <td style="vertical-align: top; width: 250px">
             <#include "widget/progress.ftl"/>
+            <#include "widget/share.ftl"/>
         <#include "widget/history.ftl"/>
         <#if !viewMode><#include "widget/help.ftl"/></#if>
             </td>
