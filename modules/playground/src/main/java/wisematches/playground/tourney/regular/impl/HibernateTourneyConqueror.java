@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
-import wisematches.playground.tourney.regular.PlayerPlace;
-import wisematches.playground.tourney.regular.TourneyWinner;
+import wisematches.playground.tourney.TourneyConqueror;
+import wisematches.playground.tourney.TourneyMedal;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -12,19 +12,19 @@ import javax.persistence.Enumerated;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Embeddable
-public class HibernateTourneyWinner implements TourneyWinner {
+public class HibernateTourneyConqueror implements TourneyConqueror {
 	@Column(name = "player", updatable = false)
 	private long player;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "place", updatable = false)
-	private PlayerPlace place;
+	private TourneyMedal place;
 
 	@Deprecated
-	public HibernateTourneyWinner() {
+	public HibernateTourneyConqueror() {
 	}
 
-	public HibernateTourneyWinner(long player, PlayerPlace place) {
+	public HibernateTourneyConqueror(long player, TourneyMedal place) {
 		this.player = player;
 		this.place = place;
 	}
@@ -35,7 +35,7 @@ public class HibernateTourneyWinner implements TourneyWinner {
 	}
 
 	@Override
-	public PlayerPlace getPlace() {
+	public TourneyMedal getPlace() {
 		return place;
 	}
 }

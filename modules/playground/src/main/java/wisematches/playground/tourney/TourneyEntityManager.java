@@ -15,9 +15,17 @@ import java.util.List;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface TourneyEntityManager<E extends TourneyEntity>
-        extends SearchManager<E, TourneyEntity.Context<? extends E, ?>, SearchFilter> {
+		extends SearchManager<E, TourneyEntity.Context<? extends E, ?>, SearchFilter> {
 
-    <T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTourneyEntity(K id);
+	/**
+	 * Returns tourney career for specified personality.
+	 *
+	 * @param person the person who's career must be returned
+	 * @return the person's career
+	 */
+	TourneyCareer getTourneyCareer(Personality person);
 
-    <T extends E, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTourneyEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range);
+	<T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTourneyEntity(K id);
+
+	<T extends E, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTourneyEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range);
 }

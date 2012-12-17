@@ -1,6 +1,7 @@
 package wisematches.playground.tourney.regular;
 
 import wisematches.personality.Language;
+import wisematches.playground.tourney.TourneyConqueror;
 import wisematches.playground.tourney.TourneyEntity;
 
 import java.util.Collection;
@@ -48,12 +49,12 @@ public interface TourneyDivision extends RegularTourneyEntity<TourneyDivision, T
 	 * to check is division finished or not before call this method.
 	 * <p/>
 	 * Please note it's possible that for one place more than one winner. You can filter
-	 * winners by place using {@link PlayerPlace#filter(java.util.Collection)} method.
+	 * winners by place using {@link wisematches.playground.tourney.TourneyMedal#filter(java.util.Collection)} method.
 	 *
 	 * @return the collection of winners.
-	 * @see PlayerPlace
+	 * @see wisematches.playground.tourney.TourneyMedal
 	 */
-	Collection<TourneyWinner> getTourneyWinners();
+	Collection<TourneyConqueror> getTourneyWinners();
 
 	public final class Id extends TourneyEntity.Id<TourneyDivision, Id> {
 		private final Language language;

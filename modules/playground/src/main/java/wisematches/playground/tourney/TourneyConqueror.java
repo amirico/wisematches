@@ -1,9 +1,9 @@
-package wisematches.playground.tourney.regular;
+package wisematches.playground.tourney;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyWinner {
+public interface TourneyConqueror {
 	/**
 	 * Returns player id.
 	 *
@@ -16,5 +16,5 @@ public interface TourneyWinner {
 	 *
 	 * @return the player's place
 	 */
-	PlayerPlace getPlace();
+	TourneyMedal getPlace();
 }

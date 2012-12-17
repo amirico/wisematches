@@ -2,9 +2,9 @@
 
 <#include "/core.ftl">
 
-<div class="shareWidget ui-helper-hidden">
 <#include "/content/templates/addthis.ftl"/>
 
+<div class="shareWidget ui-helper-hidden">
     <div class="shareToolbox ui-widget-content ui-corner-all shadow" align="left" style="position: relative">
     <#if board.getPlayerHand(principal.id)??>
         <@addthis title="share.board.my.label" description="share.board.my.description" args=[principal.nickname] counter=false/>

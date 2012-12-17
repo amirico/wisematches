@@ -2,7 +2,7 @@ package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Personality;
 import wisematches.playground.*;
-import wisematches.playground.tourney.regular.PlayerSuccess;
+import wisematches.playground.tourney.TourneyGameResolution;
 import wisematches.playground.tourney.regular.TourneyGroup;
 import wisematches.playground.tourney.regular.TourneyRelationship;
 
@@ -70,27 +70,27 @@ public class HibernateTourneyGroup implements TourneyGroup {
 
 	@Column(name = "result1")
 	@Enumerated(EnumType.ORDINAL)
-	private PlayerSuccess result0;
+	private TourneyGameResolution result0;
 
 	@Column(name = "result2")
 	@Enumerated(EnumType.ORDINAL)
-	private PlayerSuccess result1;
+	private TourneyGameResolution result1;
 
 	@Column(name = "result3")
 	@Enumerated(EnumType.ORDINAL)
-	private PlayerSuccess result2;
+	private TourneyGameResolution result2;
 
 	@Column(name = "result4")
 	@Enumerated(EnumType.ORDINAL)
-	private PlayerSuccess result3;
+	private TourneyGameResolution result3;
 
 	@Column(name = "result5")
 	@Enumerated(EnumType.ORDINAL)
-	private PlayerSuccess result4;
+	private TourneyGameResolution result4;
 
 	@Column(name = "result6")
 	@Enumerated(EnumType.ORDINAL)
-	private PlayerSuccess result5;
+	private TourneyGameResolution result5;
 
 
 	@Column(name = "playersCount")
@@ -168,7 +168,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		int res = 0;
 		final long[] players = getPlayers();
 		for (long p : players) {
-			final PlayerSuccess success = getPlayerSuccess(player, p);
+			final TourneyGameResolution success = getPlayerSuccess(player, p);
 			if (success != null) {
 				res += success.getPoints();
 			}
@@ -182,7 +182,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	}
 
 	@Override
-	public PlayerSuccess getPlayerSuccess(long p1, long p2) {
+	public TourneyGameResolution getPlayerSuccess(long p1, long p2) {
 		if (p1 == p2) {
 			return null;
 		}
@@ -191,7 +191,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 
 		final int gameIndex = getGameIndex(playerIndex1, playerIndex2);
 
-		PlayerSuccess res = getResultByIndex(gameIndex);
+		TourneyGameResolution res = getResultByIndex(gameIndex);
 		if (res == null) {
 			return null;
 		}
@@ -253,10 +253,10 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		}
 
 		if (wonPlayers.size() == 0) {
-			setGameResult(boardId, PlayerSuccess.DRAW);
+			setGameResult(boardId, TourneyGameResolution.DRAW);
 		} else {
 			final GamePlayerHand winner = wonPlayers.iterator().next();
-			setGameResult(boardId, winner.getPlayerId() == getGameMaster(boardId) ? PlayerSuccess.WON : PlayerSuccess.LOST);
+			setGameResult(boardId, winner.getPlayerId() == getGameMaster(boardId) ? TourneyGameResolution.WON : TourneyGameResolution.LOST);
 		}
 		finishedGamesCount += 1;
 
@@ -265,7 +265,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		}
 	}
 
-	private void setGameResult(long boardId, PlayerSuccess result) {
+	private void setGameResult(long boardId, TourneyGameResolution result) {
 		switch (getGameIndex(boardId)) {
 			case 0:
 				result0 = result;
@@ -371,7 +371,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		throw new IllegalStateException("Incorrect total games count");
 	}
 
-	PlayerSuccess getResultByIndex(int gameIndex) {
+	TourneyGameResolution getResultByIndex(int gameIndex) {
 		switch (gameIndex) {
 			case 0:
 				return result0;

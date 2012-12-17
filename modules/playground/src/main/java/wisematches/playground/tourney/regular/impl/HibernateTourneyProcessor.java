@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.type.LongType;
 import wisematches.personality.Language;
 import wisematches.playground.*;
+import wisematches.playground.tourney.TourneyMedal;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tourney.regular.impl.referee.FinalGroupResultReferee;
 
@@ -138,9 +139,9 @@ class HibernateTourneyProcessor {
 
 			// if group finished and not final round
 			if (group.getFinishedDate() != null && !round.isFinal()) {
-				final List<HibernateTourneyWinner> winnersList = tourneyReferee.getWinnersList(group, round, division);
-				for (HibernateTourneyWinner winner : winnersList) {
-					if (winner.getPlace() == PlayerPlace.FIRST) { // move only winners to next round
+				final List<HibernateTourneyConqueror> winnersList = tourneyReferee.getWinnersList(group, round, division);
+				for (HibernateTourneyConqueror winner : winnersList) {
+					if (winner.getPlace() == TourneyMedal.GOLD) { // move only winners to next round
 						final TourneyRound.Id roundId = round.getId();
 						final TourneyDivision.Id divisionId = roundId.getDivisionId();
 						final Tourney.Id tourneyId = divisionId.getTourneyId();

@@ -163,10 +163,13 @@
     color: #a52a2a !important;
 }
 
+.profile td {
+    text-align: left;
+    vertical-align: top;
+}
+
 .profile .content {
     border-width: 0;
-    min-height: 300px;
-    margin-left: 239px;
     background: #f5f8f9 none;
     border-left-width: 1px;
     padding: 18px 10px 18px 20px;
@@ -189,13 +192,42 @@
     line-height: normal;
 }
 
-.profile .info {
-    background-color: transparent;
-    left: 0;
-    position: absolute;
+.profile .personality {
     padding: 20px 20px;
-    top: 0;
-    width: 200px;
+}
+
+.profile .award {
+    display: inline-block;
+}
+
+.profile .award p {
+    margin: 0;
+    padding: 0;
+    color: black;
+    text-align: right;
+    font-weight: bold;
+}
+
+.profile .award-full {
+    padding: 5px;
+}
+
+.profile .award-full p {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+
+}
+
+.profile .award-full div {
+    text-align: left;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.profile .awards {
+    margin-left: 10px;
+    padding-right: 2px;
 }
 
 .profile .edit {
@@ -205,7 +237,6 @@
 }
 
 .profile .photo {
-    position: relative;
     text-align: center;
     padding-bottom: 10px;
 }

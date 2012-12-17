@@ -6,8 +6,6 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
-<#include "/content/templates/addthis.ftl"/>
-
 <#include "/content/playground/messages/scriplet.ftl">
 <#include "/content/playground/blacklist/scriplet.ftl">
 <#include "/content/playground/friends/scriplet.ftl">
@@ -18,9 +16,14 @@
 <link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<div style="width: 100%">
-<div class="profile shadow ui-state-default">
-<div class="content shadow ui-state-default">
+<table class="profile shadow ui-state-default">
+<tr>
+<td class="info" width="200px">
+<#include "scriplet/info.ftl">
+    <#include "scriplet/awards.ftl">
+</td>
+
+<td class="content shadow ui-state-default">
 <div class="title">
     <div class="player">
     <#if (profile.realName?? && profile.realName?has_content)>
@@ -176,8 +179,8 @@
                         <div><@message code="profile.last"/>:</div>
                         <div>
                         <#if statistics.lastMoveTime??>
-                                ${gameMessageSource.formatDate(statistics.lastMoveTime, locale)}
-                                <#else>
+                                        ${gameMessageSource.formatDate(statistics.lastMoveTime, locale)}
+                                        <#else>
                             <@message code="profile.undefined"/>
                         </#if>
                         </div>
@@ -186,8 +189,8 @@
                         <div><@message code="profile.avg.time"/>:</div>
                         <div>
                         <#if statistics.averageMoveTime != 0>
-                            ${gameMessageSource.formatTimeMinutes(statistics.averageMoveTime/1000/60?round, locale)}
-                            <#else>
+                                    ${gameMessageSource.formatTimeMinutes(statistics.averageMoveTime/1000/60?round, locale)}
+                                    <#else>
                             <@message code="profile.undefined"/>
                         </#if>
                         </div>
@@ -283,38 +286,9 @@
 </div>
 </#if>
 </div>
-
-</div>
-
-<div class="info">
-    <div class="photo">
-        <img class="shadow" style="width: 200px; height: 200px;" src="/playground/profile/image/view?pid=${player.id}"
-             alt="Photo">
-    </div>
-    <div>
-        <strong>${player.nickname}</strong>
-    <#if principal?? && principal.id == player.id>
-        <@addthis title="share.profile.my.label" description="share.profile.my.description" args=[principal.nickname]/>
-    <#elseif principal??>
-        <@addthis title="share.profile.other.label" description="share.profile.other.description" args=[principal.nickname]/>
-    </#if>
-    </div>
-    <div style="padding-top: 4px">
-    <#if profile.gender??>
-        <@message code="gender." + profile.gender.name()?lower_case/>,
-    </#if>
-    <#if profile.birthday??>${gameMessageSource.getAge(profile.birthday)} <@message code="profile.edit.years"/>,</#if>
-    </div>
-<#if country??>
-    <div>${country.name},</div>
-</#if>
-    <div>${player.timeZone.displayName}</div>
-<#if profile.comments?? && profile.comments?has_content>
-    <div class="quotation">&laquo; ${profile.comments} &raquo;</div>
-</#if>
-</div>
-</div>
-</div>
+</td>
+</tr>
+</table>
 
 <script type="text/javascript">
     $(".profile button").button();
