@@ -20,7 +20,10 @@ import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
+import wisematches.playground.tourney.TourneyCareer;
+import wisematches.playground.tourney.TourneyConqueror;
 import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.TourneyMedal;
 import wisematches.playground.tourney.regular.*;
 
 import java.text.ParseException;
@@ -480,18 +483,28 @@ public class HibernateTourneyManagerTest {
 		assertEquals(finishedTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED))));
 
 		final TourneyDivision tourneyEntity = tourneyManager.getTourneyEntity(casualDivision);
-		final Collection<TourneyWinner> winners = tourneyEntity.getTourneyWinners();
+		final Collection<TourneyConqueror> winners = tourneyEntity.getTourneyWinners();
 		assertNotNull(winners.size());
 
 		assertEquals(2, winners.size());
-		final Iterator<TourneyWinner> iterator = winners.iterator();
-		final TourneyWinner first = iterator.next();
+		final Iterator<TourneyConqueror> iterator = winners.iterator();
+		final TourneyConqueror first = iterator.next();
 		assertEquals(101L, first.getPlayer());
-		assertEquals(PlayerPlace.FIRST, first.getPlace());
+		assertEquals(TourneyMedal.GOLD, first.getPlace());
 
-		final TourneyWinner second = iterator.next();
+		final TourneyConqueror second = iterator.next();
 		assertEquals(102L, second.getPlayer());
-		assertEquals(PlayerPlace.SECOND, second.getPlace());
+		assertEquals(TourneyMedal.SILVER, second.getPlace());
+
+		final TourneyCareer tc1 = tourneyManager.getTourneyCareer(Personality.person(101L));
+		assertEquals(1, tc1.getMedalsCount(TourneyMedal.GOLD));
+		assertEquals(0, tc1.getMedalsCount(TourneyMedal.SILVER));
+		assertEquals(0, tc1.getMedalsCount(TourneyMedal.BRONZE));
+
+		final TourneyCareer tc2 = tourneyManager.getTourneyCareer(Personality.person(102L));
+		assertEquals(0, tc2.getMedalsCount(TourneyMedal.GOLD));
+		assertEquals(1, tc2.getMedalsCount(TourneyMedal.SILVER));
+		assertEquals(0, tc2.getMedalsCount(TourneyMedal.BRONZE));
 
 		verify(board1, board2, board3, board4, board5, board6, tourneyListener, subscriptionListener);
 	}
@@ -507,6 +520,15 @@ public class HibernateTourneyManagerTest {
 
 		final long[] longs = searchManager.searchUnregisteredPlayers(tourney, Range.limit(10));
 		assertEquals(10, longs.length);
+	}
+
+	@Test
+	public void testTourneyCareer() {
+		final TourneyCareer tc1 = tourneyManager.getTourneyCareer(Personality.person(10));
+		assertNotNull(tc1);
+
+		final TourneyCareer tc2 = tourneyManager.getTourneyCareer(Personality.person(1027));
+		assertNotNull(tc2);
 	}
 
 	private void createStats(long pid, int rating) {

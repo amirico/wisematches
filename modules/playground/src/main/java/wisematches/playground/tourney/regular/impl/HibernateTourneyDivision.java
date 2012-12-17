@@ -1,9 +1,9 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Language;
+import wisematches.playground.tourney.TourneyConqueror;
 import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneySection;
-import wisematches.playground.tourney.regular.TourneyWinner;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -44,9 +44,9 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
 
-	@ElementCollection(targetClass = HibernateTourneyWinner.class)
+	@ElementCollection(targetClass = HibernateTourneyConqueror.class)
 	@CollectionTable(name = "tourney_regular_winner", joinColumns = @JoinColumn(name = "division"))
-	private Collection<TourneyWinner> tourneyWinners;
+	private Collection<TourneyConqueror> tourneyWinners;
 
 	@Deprecated
 	public HibernateTourneyDivision() {
@@ -105,7 +105,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 	}
 
 	@Override
-	public Collection<TourneyWinner> getTourneyWinners() {
+	public Collection<TourneyConqueror> getTourneyWinners() {
 		return tourneyWinners;
 	}
 
@@ -133,7 +133,7 @@ public class HibernateTourneyDivision implements TourneyDivision {
 		return false;
 	}
 
-	void finishDivision(List<HibernateTourneyWinner> winners) {
+	void finishDivision(List<HibernateTourneyConqueror> winners) {
 		if (finishedDate == null) {
 			throw new IllegalStateException("Division is not finished");
 		}

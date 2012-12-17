@@ -15,6 +15,7 @@ import wisematches.personality.player.Player;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.TourneyMedal;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.PlayerStatisticManager;
 import wisematches.playground.tracking.Statistics;
@@ -78,7 +79,7 @@ public class TourneyController extends WisematchesController {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
 		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
 
-		model.addAttribute("winnerPlaces", PlayerPlace.values());
+		model.addAttribute("winnerPlaces", TourneyMedal.values());
 		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
 		setupAnnounce(model);
@@ -139,7 +140,7 @@ public class TourneyController extends WisematchesController {
 
 	private String showTourneyView(Tourney tourney, Model model) {
 		model.addAttribute("sections", TourneySection.values());
-		model.addAttribute("winnerPlaces", PlayerPlace.values());
+		model.addAttribute("winnerPlaces", TourneyMedal.values());
 
 		final TourneyRound.Context ctx = new TourneyRound.Context(tourney.getId(), null);
 		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null, null);

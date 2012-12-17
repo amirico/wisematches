@@ -21,6 +21,12 @@ public interface RegularTourneyManager extends TourneyEntityManager<RegularTourn
 
 	void removeTourneySubscriptionListener(RegistrationListener l);
 
+	/**
+	 * Returns awards search manager.
+	 *
+	 * @return the awards search manager.
+	 */
+	AwardsSearchManager getAwardsSearchManager();
 
 	/**
 	 * Returns search manager that allows search players who is not registered to a tourney.

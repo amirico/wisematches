@@ -15,7 +15,12 @@ import wisematches.personality.profile.PlayerProfileEditor;
 import wisematches.personality.profile.PlayerProfileManager;
 import wisematches.personality.profile.countries.CountriesManager;
 import wisematches.personality.profile.countries.Country;
+import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
+import wisematches.playground.tourney.TourneyCareer;
+import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.regular.RegularTourneyManager;
+import wisematches.playground.tourney.regular.TourneyAward;
 import wisematches.playground.tracking.PlayerStatisticManager;
 import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.Statistics;
@@ -31,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -45,6 +51,7 @@ public class PlayerProfileController extends WisematchesController {
 	private PlayerProfileManager profileManager;
 	private PlayerStatisticManager statisticManager;
 	private BoardSettingsManager boardSettingsManager;
+	private RegularTourneyManager regularTourneyManager;
 
 	private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new ThreadLocal<Calendar>() {
 		@Override
@@ -59,6 +66,8 @@ public class PlayerProfileController extends WisematchesController {
 			return new SimpleDateFormat("dd-MM-yyyy");
 		}
 	};
+
+	private static final TourneyMedal[] tourneyMedals = TourneyMedal.values();
 
 	public PlayerProfileController() {
 	}
@@ -93,7 +102,11 @@ public class PlayerProfileController extends WisematchesController {
 
 			final PlayerProfile profile = profileManager.getPlayerProfile(player);
 			final Statistics statistics = statisticManager.getPlayerStatistic(player);
+			final TourneyCareer tourneyCareer = regularTourneyManager.getTourneyCareer(player);
 			final RatingCurve ratingCurve = statisticManager.getRatingCurve(player, 10, start, end);
+			final BoardSettings boardSettings = boardSettingsManager.getScribbleSettings(getPersonality());
+
+			final RatingChart ratingChart = new RatingChart(ratingCurve, middle);
 
 			if (profile.getCountryCode() != null) {
 				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
@@ -102,14 +115,40 @@ public class PlayerProfileController extends WisematchesController {
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
 			model.addAttribute("statistics", statistics);
-			model.addAttribute("ratingChart", new RatingChart(ratingCurve, middle));
-			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPersonality()));
+			model.addAttribute("ratingChart", ratingChart);
+			model.addAttribute("tourneyMedals", tourneyMedals);
+			model.addAttribute("tourneyCareer", tourneyCareer);
+			model.addAttribute("boardSettings", boardSettings);
 
 			if (getPersonality() != null) {
 				return "/content/playground/profile/view";
 			} else {
 				return "/content/playground/gateway/profile";
 			}
+		} catch (NumberFormatException ex) {
+			throw new UnknownEntityException(profileId, "profile");
+		}
+	}
+
+	@RequestMapping("awards")
+	public String viewAwards(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
+		try {
+			Player player = playerManager.getPlayer(Long.parseLong(profileId));
+			if (player == null) {
+				throw new UnknownEntityException(profileId, "profile");
+			}
+
+			final PlayerProfile profile = profileManager.getPlayerProfile(player);
+			if (profile.getCountryCode() != null) {
+				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
+			}
+
+			final List<TourneyAward> awards = regularTourneyManager.getAwardsSearchManager().searchEntities(player, null, null, null, null);
+
+			model.addAttribute("player", player);
+			model.addAttribute("profile", profile);
+			model.addAttribute("tourneyAwards", awards);
+			return "/content/playground/profile/awards";
 		} catch (NumberFormatException ex) {
 			throw new UnknownEntityException(profileId, "profile");
 		}
@@ -231,6 +270,11 @@ public class PlayerProfileController extends WisematchesController {
 	@Autowired
 	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
 		this.boardSettingsManager = boardSettingsManager;
+	}
+
+	@Autowired
+	public void setRegularTourneyManager(RegularTourneyManager regularTourneyManager) {
+		this.regularTourneyManager = regularTourneyManager;
 	}
 
 	@ModelAttribute("headerTitle")

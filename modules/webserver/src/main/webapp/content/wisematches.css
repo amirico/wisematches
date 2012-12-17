@@ -630,3 +630,10 @@ a.ui-icon {
 .blockUI.blockOverlay, .ui-widget-overlay {
     background: url('/resources/images/thumbnail.png') repeat left top;
 }
+
+.grayscale {
+    opacity: 0.2;
+    /*filter: gray;*/
+    /*filter: url('/resources/filters.svg#grayscale');*/
+    /*-webkit-filter: grayscale(1);*/
+}

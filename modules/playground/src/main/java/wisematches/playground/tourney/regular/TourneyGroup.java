@@ -2,6 +2,7 @@ package wisematches.playground.tourney.regular;
 
 import wisematches.personality.Language;
 import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.TourneyGameResolution;
 
 import java.util.EnumSet;
 
@@ -56,7 +57,7 @@ public interface TourneyGroup extends RegularTourneyEntity<TourneyGroup, Tourney
 	 * @return the game result that is played by specified players or {@code null} if game is not finished.
 	 * @throws IllegalArgumentException if any player doesn't belong to this group.
 	 */
-	PlayerSuccess getPlayerSuccess(long player, long opponent);
+	TourneyGameResolution getPlayerSuccess(long player, long opponent);
 
 
 	/**

@@ -1,9 +1,9 @@
-package wisematches.playground.tourney.regular;
+package wisematches.playground.tourney;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerSuccess {
+public enum TourneyGameResolution {
 	LOST() {
 		@Override
 		public int getPoints() {
@@ -11,7 +11,7 @@ public enum PlayerSuccess {
 		}
 
 		@Override
-		public PlayerSuccess getOpposite() {
+		public TourneyGameResolution getOpposite() {
 			return WON;
 		}
 	},
@@ -22,7 +22,7 @@ public enum PlayerSuccess {
 		}
 
 		@Override
-		public PlayerSuccess getOpposite() {
+		public TourneyGameResolution getOpposite() {
 			return DRAW;
 		}
 	},
@@ -33,12 +33,12 @@ public enum PlayerSuccess {
 		}
 
 		@Override
-		public PlayerSuccess getOpposite() {
+		public TourneyGameResolution getOpposite() {
 			return LOST;
 		}
 	};
 
 	public abstract int getPoints();
 
-	public abstract PlayerSuccess getOpposite();
+	public abstract TourneyGameResolution getOpposite();
 }

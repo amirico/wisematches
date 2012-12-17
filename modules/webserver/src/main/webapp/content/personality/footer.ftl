@@ -1,4 +1,5 @@
 <#include "/core.ftl">
+
 <#include "/content/templates/addthis.ftl"/>
 
 <@wm.ui.panel.roundBottom class="footer">
