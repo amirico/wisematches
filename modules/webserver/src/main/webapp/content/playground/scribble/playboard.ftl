@@ -5,7 +5,7 @@
 
 <#include "scriplet.ftl"/>
 
-<#if viewMode> <!-- mock controller for view mode -->
+<#if !principal??>
 <script type="text/javascript">
     var scribbleController = new function () {
         this.execute = function (widget, type, params, data, callback) {
@@ -25,11 +25,8 @@
                     <tr>
                         <td style="vertical-align: top; width: 250px">
                         <#include "widget/progress.ftl"/>
-            <#if boardSettings.enableShare>
-                            <#include "widget/share.ftl"/>
-                        </#if>
-        <#include "widget/history.ftl"/>
-        <#if !viewMode><#include "widget/help.ftl"/></#if>
+                            <#if !viewMode><#if boardSettings.enableShare><#include "widget/share.ftl"/></#if></#if>
+                            <#include "widget/history.ftl"/>
                         </td>
 
                         <td style="vertical-align: top; padding-left: 5px; padding-right: 5px;">
@@ -41,13 +38,14 @@
 
                         <td style="vertical-align: top; width: 280px">
                         <#include "widget/players.ftl"/>
-                <#include "widget/selection.ftl"/>
-                <#include "widget/thesaurus.ftl"/>
-                <#if !viewMode>
+                            <#if viewMode><#if boardSettings.enableShare><#include "widget/share.ftl"/></#if></#if>
+                        <#if !viewMode>
+                            <#include "widget/selection.ftl"/>
+                            <#include "widget/thesaurus.ftl"/>
                             <#include "widget/memory.ftl"/>
-                        <#elseif principal??>
-                            <#include "widget/help.ftl"/>
+                        <#else>
                         </#if>
+                            <#if principal??><#include "widget/help.ftl"/></#if>
                         </td>
                     </tr>
                 </table>

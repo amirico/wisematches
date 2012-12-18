@@ -87,7 +87,7 @@ wm.scribble.AjaxController = function () {
 wm.scribble.Comments = function (board, controller, language) {
     var loadedComments = 0;
     var unreadComments = 0;
-    var comments = new Array();
+    var comments = [];
 
     var widget = board.getPlayboardElement('.annotation');
     var view = widget.find('.items');
@@ -162,8 +162,8 @@ wm.scribble.Comments = function (board, controller, language) {
             return false;
         }
 
-        var read = new Array();
-        var visible = new Array();
+        var read = [];
+        var visible = [];
         for (var i = loadedComments; i < loadedComments + count; i++) {
             visible.push(comments[i].id);
             read['c' + comments[i].id] = comments[i].read;
@@ -222,12 +222,12 @@ wm.scribble.Comments = function (board, controller, language) {
 
     var registerItemControls = function (item) {
         item.hoverIntent({
-            interval:300,
-            over:function () {
+            interval: 300,
+            over: function () {
                 $(this).find(".info").slideDown('fast');
                 $(this).toggleClass("collapsed");
             },
-            out:function () {
+            out: function () {
                 $(this).find(".info").slideUp('fast');
                 $(this).toggleClass("collapsed");
             }
@@ -278,10 +278,10 @@ wm.scribble.Comments = function (board, controller, language) {
             return false;
         }
         wm.ui.lock(widget, language['saving']);
-        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), $.toJSON({text:val}), function (result) {
+        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), $.toJSON({text: val}), function (result) {
             if (result.success) {
                 loadedComments += 1;
-                comments.unshift({id:result.data.id, read:true});
+                comments.unshift({id: result.data.id, read: true});
                 showComment(result.data, true, true);
                 clearEditor();
                 updateStatus();
@@ -307,7 +307,7 @@ wm.scribble.Comments = function (board, controller, language) {
             var d = response.data.comments;
             if (d != undefined && d.length > 0) {
                 $.each(d.reverse(), function (i, a) {
-                    comments.unshift({id:a.id, read:false});
+                    comments.unshift({id: a.id, read: false});
                     showComment(a, false, true);
                 });
                 loadedComments += d.length;
@@ -342,7 +342,7 @@ wm.scribble.Comments = function (board, controller, language) {
 
 wm.scribble.Memory = function (board, controller, clearMemory, language) {
     var nextWordId = 0;
-    var memoryWords = new Array();
+    var memoryWords = [];
     var memoryWordsCount = 0;
 
     var memoryWordWidget = board.getPlayboardElement('.memoryWordsWidget');
@@ -479,23 +479,23 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
 
 
     var memoryTable = wm.ui.dataTable(memoryWordTable, {
-        "bFilter":false,
-        "bSort":true,
-        "bSortClasses":true,
-        "sDom":'t',
-        "aaSorting":[
+        "bFilter": false,
+        "bSort": true,
+        "bSortClasses": true,
+        "sDom": 't',
+        "aaSorting": [
             [1, 'desc']
         ],
-        "aoColumns":[
+        "aoColumns": [
             null,
-            { "sClass":"center"},
-            { "bSortable":false }
+            { "sClass": "center"},
+            { "bSortable": false }
         ],
-        "oLanguage":language
+        "oLanguage": language
     });
 
-    addWordButton.button({disabled:true, icons:{primary:'icon-memory-add'}}).click(this.remember);
-    clearWordButton.button({disabled:true, icons:{primary:'icon-memory-clear'}}).click(this.clear);
+    addWordButton.button({disabled: true, icons: {primary: 'icon-memory-add'}}).click(this.remember);
+    clearWordButton.button({disabled: true, icons: {primary: 'icon-memory-clear'}}).click(this.clear);
 
     board.bind('wordSelection',
             function (event, word) {
@@ -530,7 +530,7 @@ wm.scribble.Selection = function (board) {
                     selectedTilesElement.empty();
                 }
                 if (selected) {
-                    wm.scribble.tile.createTileWidget(tile).offset({left:((length - 1) * 22), top:0}).appendTo(selectedTilesElement);
+                    wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo(selectedTilesElement);
                 } else {
                     var updateOffset = false;
                     $.each(tiles, function (i, tileWidget) {
@@ -553,7 +553,7 @@ wm.scribble.Selection = function (board) {
                     wordCostElement.empty().text(board.getScoreEngine().getWordPoints(word).formula);
                     wordInfoElement.empty();
                     $.each(word.tiles, function (i, t) {
-                        wm.scribble.tile.createTileWidget(t).offset({left:(i * 22), top:0}).appendTo(wordInfoElement);
+                        wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(wordInfoElement);
                     });
                 } else {
                     wordInfoElement.text(selectedWordInfo);
@@ -611,7 +611,7 @@ wm.scribble.Thesaurus = function (board, checkWords) {
             return;
         }
         status.removeClass('icon-empty').addClass('icon-wait');
-        $.post('/playground/scribble/board/check.ajax', $.toJSON({word:text, lang:board.getLanguage()}),
+        $.post('/playground/scribble/board/check.ajax', $.toJSON({word: text, lang: board.getLanguage()}),
                 function (response) {
                     if (isAutoChecker()) {
                         return;
@@ -666,8 +666,8 @@ wm.scribble.Thesaurus = function (board, checkWords) {
         }
     });
 
-    lookupButton.button({disabled:true});
-    checkButton.button({disabled:true, icons:{primary:'icon-word-check'}});
+    lookupButton.button({disabled: true});
+    checkButton.button({disabled: true, icons: {primary: 'icon-word-check'}});
 };
 
 wm.scribble.BankInfo = function (board, language) {
@@ -683,7 +683,7 @@ wm.scribble.BankInfo = function (board, language) {
             var col = (i - row * colsCount);
             rows = Math.max(rows, row + 1);
             cols = Math.max(cols, col + 1);
-            var t = wm.scribble.tile.createTileWidget({number:bti.count, letter:bti.letter, cost:bti.cost}).offset({top:row * 22, left:col * 22});
+            var t = wm.scribble.tile.createTileWidget({number: bti.count, letter: bti.letter, cost: bti.cost}).offset({top: row * 22, left: col * 22});
             t.hover(
                     function () {
                         showTileInfo(bti);
@@ -699,15 +699,15 @@ wm.scribble.BankInfo = function (board, language) {
         tilesPanel.width(cols * 22).height(rows * 22);
 
         bankDialog = board.getPlayboardElement(".tiles-bank").dialog({
-            title:language['title'],
-            width:500,
-            height:'auto',
-            resizable:false,
-            autoOpen:false,
-            buttons:[
+            title: language['title'],
+            width: 500,
+            height: 'auto',
+            resizable: false,
+            autoOpen: false,
+            buttons: [
                 {
-                    text:wm.i18n.value('button.cancel', 'Cancel'),
-                    click:function () {
+                    text: wm.i18n.value('button.cancel', 'Cancel'),
+                    click: function () {
                         $(this).dialog("close");
                     }
                 }
@@ -718,14 +718,14 @@ wm.scribble.BankInfo = function (board, language) {
     var showTileInfo = function (tile) {
         var activeBoardTiles = getBoardTiles(tile);
 
-        $(".tiles-bank .tileView").empty().append(wm.scribble.tile.createTileWidget({number:0, letter:tile.letter, cost:tile.cost}).offset({left:0, top:0}));
+        $(".tiles-bank .tileView").empty().append(wm.scribble.tile.createTileWidget({number: 0, letter: tile.letter, cost: tile.cost}).offset({left: 0, top: 0}));
         $(".tiles-bank .tileCost").text(tile.cost);
         $(".tiles-bank .totalCount").text(tile.count);
         $(".tiles-bank .boardCount").text(activeBoardTiles.length);
     };
 
     var getBoardTiles = function (tile) {
-        var res = new Array();
+        var res = [];
         for (var i = 0; i < 15; i++) {
             for (var j = 0; j < 15; j++) {
                 var bt = board.getBoardTile(i, j);
@@ -769,20 +769,20 @@ wm.scribble.History = function (board, language) {
     };
 
     var movesHistoryTable = wm.ui.dataTable('.movesHistory table', {
-        "bSort":true,
-        "bSortClasses":false,
-        "aaSorting":[
+        "bSort": true,
+        "bSortClasses": false,
+        "aaSorting": [
             [0, 'desc']
         ],
-        "bAutoWidth":false,
-        "bPaginate":false,
-        "bInfo":false,
-        "bFilter":false,
-        "sScrollY":235,
-        "sScrollX":"100%",
-        "bStateSave":true,
-        "sDom":'t',
-        "oLanguage":language
+        "bAutoWidth": false,
+        "bPaginate": false,
+        "bInfo": false,
+        "bFilter": false,
+        "sScrollY": 235,
+        "sScrollX": "100%",
+        "bStateSave": true,
+        "sDom": 't',
+        "oLanguage": language
     });
 
 
@@ -810,12 +810,12 @@ wm.scribble.Controls = function (board, language) {
     var passTurnButton = board.getPlayboardElement(".passTurnButton");
     var resignGameButton = board.getPlayboardElement(".resignGameButton");
 
-    markTurnButton.button({disabled:true, icons:{primary:'icon-controls-make'}});
-    clearSelectionButton.button({disabled:true, icons:{primary:'icon-controls-clear'}});
-    selectTileButton.button({disabled:false, icons:{primary:'icon-controls-highlight'}});
-    exchangeTilesButton.button({disabled:true, icons:{primary:'icon-controls-exchange'}});
-    passTurnButton.button({disabled:true, icons:{primary:'icon-controls-pass'}});
-    resignGameButton.button({disabled:true, icons:{primary:'icon-controls-resign'}});
+    markTurnButton.button({disabled: true, icons: {primary: 'icon-controls-make'}});
+    clearSelectionButton.button({disabled: true, icons: {primary: 'icon-controls-clear'}});
+    selectTileButton.button({disabled: false, icons: {primary: 'icon-controls-highlight'}});
+    exchangeTilesButton.button({disabled: true, icons: {primary: 'icon-controls-exchange'}});
+    passTurnButton.button({disabled: true, icons: {primary: 'icon-controls-pass'}});
+    resignGameButton.button({disabled: true, icons: {primary: 'icon-controls-resign'}});
 
     var onTileSelected = function () {
         if (wm.scribble.tile.isTileSelected(this)) {
@@ -869,9 +869,9 @@ wm.scribble.Controls = function (board, language) {
             }
         } else if (type === 'finished') {
             toolbarElement.hide();
-            toolbarElement.find('button').button({disabled:true});
+            toolbarElement.find('button').button({disabled: true});
             var msg;
-            var opts = {autoHide:false};
+            var opts = {autoHide: false};
             if (state.resolution == 'RESIGNED') {
                 msg = language['finishedInterrupted'] + " <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
             } else {
@@ -915,21 +915,21 @@ wm.scribble.Controls = function (board, language) {
         board.clearSelection();
         var tilesPanel = $($('.exchangeTilesPanel div').get(1));
         $.each(board.getHandTiles(), function (i, tile) {
-            wm.scribble.tile.createTileWidget(tile).offset({top:0, left:i * 22}).click(onTileSelected).appendTo(tilesPanel);
+            wm.scribble.tile.createTileWidget(tile).offset({top: 0, left: i * 22}).click(onTileSelected).appendTo(tilesPanel);
         });
 
         $('.exchangeTilesPanel').dialog({
-                    title:language['exchange'],
-                    draggable:false,
-                    modal:true,
-                    resizable:false,
-                    width:400,
-                    buttons:[
+                    title: language['exchange'],
+                    draggable: false,
+                    modal: true,
+                    resizable: false,
+                    width: 400,
+                    buttons: [
                         {
-                            text:language['exchange'],
-                            click:function () {
+                            text: language['exchange'],
+                            click: function () {
                                 $(this).dialog("close");
-                                var tiles = new Array();
+                                var tiles = [];
                                 $.each(tilesPanel.children(), function (i, tw) {
                                     if (wm.scribble.tile.isTileSelected(tw)) {
                                         tiles.push($(tw).data('tile'));
@@ -939,8 +939,8 @@ wm.scribble.Controls = function (board, language) {
                             }
                         },
                         {
-                            text:language['cancel'],
-                            click:function () {
+                            text: language['cancel'],
+                            click: function () {
                                 $(this).dialog("close");
                             }
                         }
@@ -1052,27 +1052,27 @@ wm.scribble.Settings = function (board, language) {
         var dlg = $('<div><div class="loading-image" style="height: 200px"></div></div>');
         dlg.load('/playground/scribble/settings/load');
         dlg.dialog({
-            title:language['title'],
-            width:550,
-            minHeight:'auto',
-            modal:true,
-            resizable:false,
-            buttons:[
+            title: language['title'],
+            width: 550,
+            minHeight: 'auto',
+            modal: true,
+            resizable: false,
+            buttons: [
                 {
-                    text:language['apply'],
-                    click:function () {
+                    text: language['apply'],
+                    click: function () {
                         $("#boardSettingsForm").ajaxSubmit({
-                            dataType:'json',
-                            contentType:'application/x-www-form-urlencoded',
-                            success:function (data) {
+                            dataType: 'json',
+                            contentType: 'application/x-www-form-urlencoded',
+                            success: function (data) {
                                 window.location.reload();
                             }
                         });
                     }
                 },
                 {
-                    text:wm.i18n.value('button.cancel', 'Cancel'),
-                    click:function () {
+                    text: wm.i18n.value('button.cancel', 'Cancel'),
+                    click: function () {
                         dlg.dialog("close");
                     }
 
@@ -1150,7 +1150,7 @@ wm.scribble.ScoreEngine = function (gameBonuses, board) {
         points = pointsRaw * pointsMult;
         formula += '=' + points;
 
-        return {points:points, formula:formula};
+        return {points: points, formula: formula};
     };
 };
 
@@ -1194,7 +1194,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
         var updatePosition = function (cell) {
             var offset = cell.container.offset();
-            element.offset({left:offset.left + cell.x * 22, top:offset.top + cell.y * 22});
+            element.offset({left: offset.left + cell.x * 22, top: offset.top + cell.y * 22});
         };
 
         this.start = function (tileWidget, cell) {
@@ -1208,7 +1208,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
         this.stop = function () {
             element.hide();
-            element.offset({top:0, left:0});
+            element.offset({top: 0, left: 0});
             previousCell = null;
         };
 
@@ -1225,7 +1225,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
             } else {
                 if (previousCell != null) {
                     element.hide();
-                    element.offset({top:0, left:0});
+                    element.offset({top: 0, left: 0});
                 }
             }
             previousCell = cell;
@@ -1255,12 +1255,12 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
                 var bonus = scoreEngine.getCellBonus(i, j);
                 if (bonus != undefined) {
                     var text = wm.i18n.value(bonus, bonus.toUpperCase());
-                    $("<div></div>").addClass('cell bonus-cell').addClass('bonus-cell-' + bonus).text(text).offset({left:j * 22, top:i * 22}).appendTo(bonuses);
+                    $("<div></div>").addClass('cell bonus-cell').addClass('bonus-cell-' + bonus).text(text).offset({left: j * 22, top: i * 22}).appendTo(bonuses);
                 }
             }
         }
         if (scoreEngine.getCellBonus(7, 7) == undefined) {
-            $("<div></div>").addClass('cell').addClass('bonus-cell-center').offset({left:7 * 22, top:7 * 22}).appendTo(bonuses);
+            $("<div></div>").addClass('cell').addClass('bonus-cell-center').offset({left: 7 * 22, top: 7 * 22}).appendTo(bonuses);
         }
 
         $.each(moves, function (i, move) {
@@ -1294,9 +1294,9 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         }
         draggingTile = $(this);
         var offset = draggingTile.offset();
-        var relatedCell = getRelatedCell(ev, {left:0, top:0});
-        draggingTile.data('mouseOffset', {left:ev.pageX - offset.left, top:ev.pageY - offset.top});
-        draggingTile.data('originalState', {offset:offset, cell:relatedCell, zIndex:draggingTile.css('zIndex')});
+        var relatedCell = getRelatedCell(ev, {left: 0, top: 0});
+        draggingTile.data('mouseOffset', {left: ev.pageX - offset.left, top: ev.pageY - offset.top});
+        draggingTile.data('originalState', {offset: offset, cell: relatedCell, zIndex: draggingTile.css('zIndex')});
         draggingTile.css('zIndex', 333);
         highlighting.start(draggingTile, relatedCell);
         ev.preventDefault();
@@ -1308,8 +1308,8 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         }
         if (draggingTile != null && draggingTile != undefined) {
             var tileOffset = draggingTile.data('mouseOffset');
-            var relatedCell = getRelatedCell(ev, {left:tileOffset.left - 5, top:tileOffset.top - 5});
-            draggingTile.offset({left:ev.pageX - tileOffset.left, top:ev.pageY - tileOffset.top});
+            var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
+            draggingTile.offset({left: ev.pageX - tileOffset.left, top: ev.pageY - tileOffset.top});
             highlighting.highlight(relatedCell);
         }
         ev.preventDefault();
@@ -1325,7 +1325,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
         var tileOffset = draggingTile.data('mouseOffset');
         var originalState = draggingTile.data('originalState');
-        var relatedCell = getRelatedCell(ev, {left:tileOffset.left - 5, top:tileOffset.top - 5});
+        var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
         if (relatedCell == null ||
                 (relatedCell.container == board && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
                 (relatedCell.container == hand && handTiles[relatedCell.x] != undefined)) {
@@ -1389,7 +1389,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         if (!enabled || !settings.clearByClick) {
             return;
         }
-        var relatedCell = getRelatedCell(ev, {left:0, top:0});
+        var relatedCell = getRelatedCell(ev, {left: 0, top: 0});
         if (relatedCell == null) {
             return;
         }
@@ -1408,14 +1408,14 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         var x = (((ev.pageX - bo.left - tileOffset.left) / 22) | 0);
         var y = (((ev.pageY - bo.top - tileOffset.top) / 22) | 0);
         if (x >= 0 && x <= 14 && y >= 0 && y <= 14) {
-            return {x:x, y:y, container:board};
+            return {x: x, y: y, container: board};
         }
 
         var ho = hand.offset();
         x = (((ev.pageX - ho.left - tileOffset.left) / 22) | 0);
         y = (((ev.pageY - ho.top - tileOffset.top) / 22) | 0);
         if (x >= 0 && x <= 6 && y == 0) {
-            return {x:x, y:y, container:hand};
+            return {x: x, y: y, container: hand};
         }
         return null;
     };
@@ -1447,7 +1447,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         $.each(handTiles, function (i, handTile) {
             if (handTile == null || handTile == undefined) {
                 handTiles[i] = wm.scribble.tile.createTileWidget(tile).
-                        offset({top:0, left:i * 22}).mousedown(onTileDown).appendTo(hand);
+                        offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
                 return false;
             }
         });
@@ -1504,7 +1504,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
                 if (boardTiles[tile.column][tile.row] == null || boardTiles[tile.column][tile.row] == undefined) {
                     var w = wm.scribble.tile.createTileWidget(tile).
-                            offset({top:tile.row * 22, left:tile.column * 22}).click(onTileSelected);
+                            offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
                     wm.scribble.tile.pinTile(w.get(0));
                     boardTiles[tile.column][tile.row] = w.appendTo(board);
                 }
@@ -1674,12 +1674,12 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         if (wildcardSelectionDialog == null) {
             var tileLetter = tile.letter;
             wildcardSelectionDialog = $('#' + wildcardHandlerElement).dialog({
-                autoOpen:false,
-                draggable:false,
-                modal:true,
-                resizable:false,
-                width:400,
-                close:function (event, ui) {
+                autoOpen: false,
+                draggable: false,
+                modal: true,
+                resizable: false,
+                width: 400,
+                close: function (event, ui) {
                     wildcardSelectionDialog.replacer(tileLetter);
                 }
             });
@@ -1688,7 +1688,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
             $.each(bank.tilesInfo, function (i, bti) {
                 var row = Math.floor(i / 15);
                 var col = (i - row * 15);
-                var t = wm.scribble.tile.createTileWidget({number:0, letter:bti.letter, cost:0}).offset({top:row * 22, left:col * 22});
+                var t = wm.scribble.tile.createTileWidget({number: 0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
                 t.hover(
                         function () {
                             wm.scribble.tile.selectTile(this);
@@ -1816,10 +1816,10 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
                 word += v.letter
             });
             return {
-                tiles:tiles,
-                direction:direction,
-                position:{ row:tiles[0].row, column:tiles[0].column},
-                text:word
+                tiles: tiles,
+                direction: direction,
+                position: { row: tiles[0].row, column: tiles[0].column},
+                text: word
             }
         }
     };
