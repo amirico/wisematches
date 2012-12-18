@@ -8,8 +8,5 @@
 &nbsp;-&nbsp;
 <a href="/info/policy"><@message "info.policies.policy.label"/></a>
 &nbsp;-&nbsp;
-<a href="/info/help"><@message "info.problems.label"/></a>
-<div style="display: inline-block; vertical-align: bottom; padding-left: 10px">
-    <@addthis counter=true/>
-</div>
+<a href="/info/help"><@message "info.help.label"/></a>
 </@wm.ui.panel.roundBottom>

@@ -120,11 +120,7 @@ public class PlayerProfileController extends WisematchesController {
 			model.addAttribute("tourneyCareer", tourneyCareer);
 			model.addAttribute("boardSettings", boardSettings);
 
-			if (getPersonality() != null) {
-				return "/content/playground/profile/view";
-			} else {
-				return "/content/playground/gateway/profile";
-			}
+			return "/content/playground/profile/view";
 		} catch (NumberFormatException ex) {
 			throw new UnknownEntityException(profileId, "profile");
 		}

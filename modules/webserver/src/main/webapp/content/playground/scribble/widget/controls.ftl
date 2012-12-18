@@ -1,5 +1,5 @@
+<#-- @ftlvariable name="viewMode" type="boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
-<#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 
 <#include "/core.ftl">
@@ -83,25 +83,25 @@
 </div>
 
 <script type="text/javascript">
-    var bankInfo = new wm.scribble.BankInfo(board, {'title':'<@message code="game.state.bankinfo.label"/>'});
+    var bankInfo = new wm.scribble.BankInfo(board, {'title': '<@message code="game.state.bankinfo.label"/>'});
 
     var boardControls = new wm.scribble.Controls(board, {
-        "acceptedLabel":"<@message code="game.move.accepted.label"/>",
-        "acceptedDescription":"<@message code="game.move.accepted.description"/>",
-        "updatedLabel":"<@message code="game.move.updated.label"/>",
-        "updatedYour":"<@message code="game.move.updated.you"/>",
-        "updatedOther":"<@message code="game.move.updated.other"/>",
-        "finishedLabel":"<@message code="game.move.finished.label"/>",
-        "finishedInterrupted":"<@message code="game.move.finished.interrupted"/>",
-        "finishedDrew":"<@message code="game.move.finished.drew"/>",
-        "finishedWon":"<@message code="game.move.finished.won"/>",
-        "clickToClose":"<@message code="game.move.clickToClose"/>",
-        "passLabel":"<@message code="game.move.pass.label"/>",
-        "passDescription":"<@message code="game.move.pass.description"/>",
-        "resignLabel":"<@message code="game.move.resign.label"/>",
-        "resignDescription":"<@message code="game.move.resign.description"/>",
-        "exchange":"<@message code="game.play.exchange.label"/>",
-        "cancel":"<@message code="button.cancel"/>",
-        "updatingBoard":"<@message code="game.move.updating"/>"
+        "acceptedLabel": "<@message code="game.move.accepted.label"/>",
+        "acceptedDescription": "<@message code="game.move.accepted.description"/>",
+        "updatedLabel": "<@message code="game.move.updated.label"/>",
+        "updatedYour": "<@message code="game.move.updated.you"/>",
+        "updatedOther": "<@message code="game.move.updated.other"/>",
+        "finishedLabel": "<@message code="game.move.finished.label"/>",
+        "finishedInterrupted": "<@message code="game.move.finished.interrupted"/>",
+        "finishedDrew": "<@message code="game.move.finished.drew"/>",
+        "finishedWon": "<@message code="game.move.finished.won"/>",
+        "clickToClose": "<@message code="game.move.clickToClose"/>",
+        "passLabel": "<@message code="game.move.pass.label"/>",
+        "passDescription": "<@message code="game.move.pass.description"/>",
+        "resignLabel": "<@message code="game.move.resign.label"/>",
+        "resignDescription": "<@message code="game.move.resign.description"/>",
+        "exchange": "<@message code="game.play.exchange.label"/>",
+        "cancel": "<@message code="button.cancel"/>",
+        "updatingBoard": "<@message code="game.move.updating"/>"
     });
 </script>

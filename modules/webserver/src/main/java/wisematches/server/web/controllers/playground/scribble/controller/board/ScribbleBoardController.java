@@ -92,12 +92,11 @@ public class ScribbleBoardController extends WisematchesController {
 			if (player == null) {
 				model.addAttribute("viewMode", Boolean.TRUE);
 				model.addAttribute("boardSettings", BOARD_SETTINGS);
-				return "/content/playground/gateway/board";
 			} else {
 				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
 				model.addAttribute("viewMode", !board.isGameActive() || board.getPlayerHand(player.getId()) == null);
-				return "/content/playground/scribble/playboard";
 			}
+			return "/content/playground/scribble/playboard";
 		} catch (BoardLoadingException ex) {
 			log.error("Board " + gameId + " can't be loaded", ex);
 			throw new UnknownEntityException(gameId, "board");
