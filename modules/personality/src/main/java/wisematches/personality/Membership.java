@@ -9,7 +9,7 @@ package wisematches.personality;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum Membership {
+public enum Membership implements Comparable<Membership> {
 	/**
 	 * Indicates that the player is a robot.
 	 */
@@ -31,6 +31,7 @@ public enum Membership {
 	 */
 	GOLD(false),
 	/**
+	 * o
 	 * Platinum player. A player with this membership has full access.
 	 */
 	PLATINUM(false);
@@ -49,4 +50,6 @@ public enum Membership {
 	public boolean isAdsVisible() {
 		return adsVisible;
 	}
+
+
 }

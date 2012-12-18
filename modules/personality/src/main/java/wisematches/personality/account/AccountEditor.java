@@ -72,15 +72,6 @@ public class AccountEditor {
 		return this;
 	}
 
-	public Membership getMembership() {
-		return membership;
-	}
-
-	public AccountEditor setMembership(Membership membership) {
-		this.membership = membership;
-		return this;
-	}
-
 	public TimeZone getTimeZone() {
 		return timeZone;
 	}
