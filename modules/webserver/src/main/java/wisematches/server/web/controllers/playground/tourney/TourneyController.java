@@ -263,7 +263,7 @@ public class TourneyController extends WisematchesController {
 			model.addAttribute("statistics", statistic);
 
 			model.addAttribute("restriction",
-					restrictionManager.validateRestriction(personality, "tourneys.count", getActiveTourneysCount(personality) + 1));
+					restrictionManager.validateRestriction(personality, "tourneys.count", getActiveTourneysCount(personality)));
 
 			model.addAttribute("subscription", tourneyManager.getRegistration(personality, announce));
 			model.addAttribute("subscriptions", tourneyManager.getRegistrationsSummary(announce));

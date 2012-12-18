@@ -44,6 +44,11 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="" class="wisematches.playground.membership.impl.HibernateMembershipManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="accountManager" ref="accountManager"/>
+    </bean>
+
     <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- run every morning at 00:00:00.000 -->
         <property name="cronExpression" value="0 0 0 * * ?"/>

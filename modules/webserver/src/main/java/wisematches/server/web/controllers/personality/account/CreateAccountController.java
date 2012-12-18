@@ -18,7 +18,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.personality.Language;
-import wisematches.personality.Membership;
 import wisematches.personality.account.*;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
@@ -47,8 +46,6 @@ public class CreateAccountController {
 	private CaptchaService captchaService;
 	private NotificationPublisher notificationPublisher;
 	private AccountSecurityService accountSecurityService;
-
-	private Membership defaultMembership = Membership.BASIC;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
 
@@ -219,7 +216,6 @@ public class CreateAccountController {
 		editor.setEmail(registration.getEmail());
 		editor.setNickname(registration.getNickname());
 		editor.setPassword(registration.getPassword());
-		editor.setMembership(defaultMembership);
 		editor.setLanguage(Language.byCode(registration.getLanguage()));
 		editor.setTimeZone(Calendar.getInstance(request.getLocale()).getTimeZone());
 
@@ -229,10 +225,6 @@ public class CreateAccountController {
 		return accountManager.createAccount(editor.createAccount());
 	}
 
-
-	public void setDefaultMembership(String defaultMembership) {
-		this.defaultMembership = Membership.valueOf(defaultMembership.toUpperCase());
-	}
 
 	@ModelAttribute("headerTitle")
 	public String getHeaderTitle() {
