@@ -1,4 +1,4 @@
-package wisematches.playground.membership;
+package wisematches.personality.membership;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

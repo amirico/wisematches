@@ -1,5 +1,7 @@
 package wisematches.playground;
 
+import wisematches.personality.Relationship;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
@@ -7,7 +9,7 @@ import javax.persistence.MappedSuperclass;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @MappedSuperclass
-public class GameRelationship {
+public class GameRelationship implements Relationship {
 	@Column(name = "relationshipCode", updatable = false)
 	private int code;
 

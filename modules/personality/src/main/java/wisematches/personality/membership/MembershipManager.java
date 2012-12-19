@@ -1,8 +1,8 @@
-package wisematches.playground.membership;
+package wisematches.personality.membership;
 
 import wisematches.personality.Membership;
 import wisematches.personality.Personality;
-import wisematches.playground.GameRelationship;
+import wisematches.personality.Relationship;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -13,5 +13,5 @@ public interface MembershipManager {
 	void removeMembershipListener(MembershipListener l);
 
 
-	MembershipActivation activateMembership(Personality person, Membership membership, int days, GameRelationship relationship);
+	MembershipActivation activateMembership(Personality person, Membership membership, int days, Relationship relationship);
 }

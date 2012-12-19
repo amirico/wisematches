@@ -1,4 +1,4 @@
-package wisematches.playground.membership.impl;
+package wisematches.personality.membership.impl;
 
 import javax.persistence.*;
 import java.util.Date;

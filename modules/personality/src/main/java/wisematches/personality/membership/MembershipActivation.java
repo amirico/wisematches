@@ -1,7 +1,7 @@
-package wisematches.playground.membership;
+package wisematches.personality.membership;
 
 import wisematches.personality.Membership;
-import wisematches.playground.GameRelationship;
+import wisematches.personality.Relationship;
 
 import java.util.Date;
 
@@ -19,5 +19,5 @@ public interface MembershipActivation {
 
 	Membership getMembership();
 
-	GameRelationship getRelationship();
+	Relationship getRelationship();
 }
