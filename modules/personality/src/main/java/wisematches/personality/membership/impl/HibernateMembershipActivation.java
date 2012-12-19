@@ -1,8 +1,8 @@
-package wisematches.playground.membership.impl;
+package wisematches.personality.membership.impl;
 
 import wisematches.personality.Membership;
-import wisematches.playground.GameRelationship;
-import wisematches.playground.membership.MembershipActivation;
+import wisematches.personality.Relationship;
+import wisematches.personality.membership.MembershipActivation;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,18 +39,18 @@ public class HibernateMembershipActivation implements MembershipActivation {
 	private long previousRecord;
 
 	@Embedded
-	private GameRelationship relationship;
+	private Relationship relationship;
 
 	private static final int ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
 
 	HibernateMembershipActivation() {
 	}
 
-	public HibernateMembershipActivation(long player, Membership membership, int totalDays, GameRelationship relationship) {
+	public HibernateMembershipActivation(long player, Membership membership, int totalDays, Relationship relationship) {
 		this(player, membership, totalDays, relationship, 0);
 	}
 
-	private HibernateMembershipActivation(long player, Membership membership, int totalDays, GameRelationship relationship, long previousRecord) {
+	private HibernateMembershipActivation(long player, Membership membership, int totalDays, Relationship relationship, long previousRecord) {
 		this.player = player;
 		this.membership = membership;
 		this.totalDays = totalDays;
@@ -89,7 +89,7 @@ public class HibernateMembershipActivation implements MembershipActivation {
 	}
 
 	@Override
-	public GameRelationship getRelationship() {
+	public Relationship getRelationship() {
 		return relationship;
 	}
 

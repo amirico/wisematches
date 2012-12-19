@@ -1,28 +1,23 @@
-package wisematches.playground.membership.impl;
+package wisematches.personality.membership.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Membership;
 import wisematches.personality.Personality;
+import wisematches.personality.Relationship;
 import wisematches.personality.account.AccountManager;
-import wisematches.playground.GameRelationship;
-import wisematches.playground.membership.MembershipActivation;
-import wisematches.playground.membership.MembershipListener;
-import wisematches.playground.membership.MembershipManager;
-import wisematches.playground.scheduling.BreakingDayListener;
+import wisematches.personality.membership.MembershipActivation;
+import wisematches.personality.membership.MembershipListener;
+import wisematches.personality.membership.MembershipManager;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateMembershipManager implements MembershipManager, BreakingDayListener {
+public class HibernateMembershipManager implements MembershipManager {
 	private SessionFactory sessionFactory;
 	private AccountManager accountManager;
 
@@ -45,6 +40,7 @@ public class HibernateMembershipManager implements MembershipManager, BreakingDa
 		listeners.remove(l);
 	}
 
+/*
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void breakingDayTime(Date midnight) {
@@ -53,10 +49,16 @@ public class HibernateMembershipManager implements MembershipManager, BreakingDa
 		// final Query query = session.createQuery("from HibernateMembershipActivation as r where r.started is not null and r.finished is null");
 
 	}
+*/
 
 	@Override
+	public MembershipActivation activateMembership(Personality person, Membership membership, int days, Relationship relationship) {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+	/*
+	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public MembershipActivation activateMembership(Personality person, Membership membership, int days, GameRelationship relationship) {
+	public MembershipActivation activateMembership(Personality person, Membership membership, int days, Relationship relationship) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final HibernateMembershipActivation activation = new HibernateMembershipActivation(person.getId(), membership, days, relationship);
@@ -75,6 +77,7 @@ public class HibernateMembershipManager implements MembershipManager, BreakingDa
 		}
 		return activation;
 	}
+*/
 
 	/*
 
