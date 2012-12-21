@@ -39,26 +39,26 @@
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
 
-    <bean id="notificationTransformer"
-          class="wisematches.server.web.services.notify.impl.transform.FreeMarkerNotificationTransformer">
+    <bean id="notificationConverter"
+          class="wisematches.server.web.services.notify.impl.delivery.converter.impl.FreeMarkerNotificationConverter">
         <property name="messageSource" ref="messageSource"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
 
     <bean id="mailNotificationTransport"
-          class="wisematches.server.web.services.notify.impl.transport.MailNotificationTransport">
+          class="wisematches.server.web.services.notify.impl.publisher.MailNotificationPublisher">
         <property name="hostName" value="${server.hostname}"/>
         <property name="mailSender" ref="springMailSender"/>
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
     <bean id="messageNotificationTransport"
-          class="wisematches.server.web.services.notify.impl.transport.MessageNotificationTransport">
+          class="wisematches.server.web.services.notify.impl.publisher.MessageNotificationPublisher">
         <property name="messageManager" ref="messageManager"/>
     </bean>
 
     <bean id="mailNotificationPublisher"
-          class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
+          class="wisematches.server.web.services.notify.publisher.impl.DefaultNotificationPublisher">
         <property name="transport" ref="mailNotificationTransport"/>
         <property name="transformer">
             <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
@@ -66,7 +66,7 @@
     </bean>
 
     <bean id="messageNotificationPublisher"
-          class="wisematches.server.web.services.notify.impl.publisher.DefaultNotificationPublisher">
+          class="wisematches.server.web.services.notify.publisher.impl.DefaultNotificationPublisher">
         <property name="transport" ref="messageNotificationTransport"/>
         <property name="transformer">
             <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
@@ -76,7 +76,7 @@
     <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
 
     <bean id="notificationManager"
-          class="wisematches.server.web.services.notify.impl.manager.MySQLNotificationManager">
+          class="wisematches.server.web.services.notify.impl.SQLNotificationManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationDistributor" ref="notificationDistributor"/>
 
@@ -125,10 +125,17 @@
     </bean>
 
     <bean id="notificationDistributor"
-          class="wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor">
+          class="wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService">
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
         <property name="playerStateManager" ref="playerStateManager"/>
         <property name="notificationManager" ref="notificationManager"/>
+        <property name="notificationConverter" ref="notificationConverter"/>
+        <property name="notificationPublishers">
+            <list>
+                <ref bean="mailNotificationTransport"/>
+                <ref bean="messageNotificationTransport"/>
+            </list>
+        </property>
 
         <property name="mandatoryNotifications">
             <set>
@@ -143,23 +150,26 @@
             </set>
         </property>
 
-        <property name="internalPublisher">
-            <bean class="wisematches.server.web.services.notify.impl.publisher.FilteringNotificationPublisher">
-                <property name="notificationPublisher" ref="messageNotificationPublisher"/>
-                <property name="allowedNotifications">
-                    <set>
-                        <value>playground.game.finished</value>
-                        <value>playground.challenge.initiated</value>
-                        <value>playground.challenge.rejected</value>
-                        <value>playground.challenge.repudiated</value>
-                        <value>playground.challenge.terminated</value>
-                        <value>playground.tourney.announced</value>
-                    </set>
+        <!--
+                <property name="internalPublisher">
+                    <bean class="wisematches.server.web.services.notify.impl.publisher.FilteringNotificationPublisher">
+                        <property name="notificationPublisher" ref="messageNotificationPublisher"/>
+                        <property name="allowedNotifications">
+                            <set>
+                                <value>playground.game.finished</value>
+                                <value>playground.challenge.initiated</value>
+                                <value>playground.challenge.rejected</value>
+                                <value>playground.challenge.repudiated</value>
+                                <value>playground.challenge.terminated</value>
+                                <value>playground.tourney.announced</value>
+                                <value>playground.tourney.won</value>
+                            </set>
+                        </property>
+                    </bean>
                 </property>
-            </bean>
-        </property>
 
-        <property name="externalPublisher" ref="mailNotificationPublisher"/>
+                <property name="externalPublisher" ref="mailNotificationPublisher"/>
+        -->
     </bean>
 
     <bean id="notificationPublisherCenter"

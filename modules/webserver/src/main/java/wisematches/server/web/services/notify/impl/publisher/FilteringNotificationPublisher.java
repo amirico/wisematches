@@ -1,25 +1,27 @@
 package wisematches.server.web.services.notify.impl.publisher;
 
-import wisematches.server.web.services.notify.Notification;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationPublisherOld;
 import wisematches.server.web.services.notify.PublicationException;
+import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
+ * @deprecated NotificationScope must be used instead.
  */
-public class FilteringNotificationPublisher implements NotificationPublisher {
-	private NotificationPublisher notificationPublisher;
+@Deprecated
+public class FilteringNotificationPublisher implements NotificationPublisherOld {
+	private NotificationPublisherOld notificationPublisher;
 	private final Set<String> allowedNotifications = new HashSet<String>();
 
 	public FilteringNotificationPublisher() {
 	}
 
 	@Override
-	public boolean publishNotification(Notification notification) throws PublicationException {
-		return allowedNotifications.contains(notification.getCode()) && notificationPublisher.publishNotification(notification);
+	public boolean publishNotification(DefaultNotificationDeliveryService.NotificationOld notification) throws PublicationException {
+		return allowedNotifications.contains(notification.getDescriptor().getCode()) && notificationPublisher.publishNotification(notification);
 	}
 
 	public void setAllowedNotifications(Set<String> allowedNotifications) {
@@ -30,7 +32,7 @@ public class FilteringNotificationPublisher implements NotificationPublisher {
 		}
 	}
 
-	public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+	public void setNotificationPublisher(NotificationPublisherOld notificationPublisher) {
 		this.notificationPublisher = notificationPublisher;
 	}
 }

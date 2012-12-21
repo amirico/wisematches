@@ -3,6 +3,8 @@ package wisematches.server.web.services.notify;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 
+import java.util.Collection;
+
 /**
  * {@code NotificationDistributor} is main notification distribution interface. It prepares
  * notification, check is it should be processed and so on and sends to all known publishers.
@@ -15,10 +17,17 @@ import wisematches.personality.player.member.MemberPlayer;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface NotificationDistributor {
-	void addNotificationDistributorListener(NotificationDistributorListener l);
+public interface NotificationDeliveryService {
+	void addNotificationDeliveryListener(NotificationDeliveryListener l);
 
-	void removeNotificationDistributorListener(NotificationDistributorListener l);
+	void removeNotificationDeliveryListener(NotificationDeliveryListener l);
+
+
+	NotificationPublisher getNotificationPublisher(String name);
+
+	Collection<NotificationPublisher> getNotificationPublishers();
+
+	Collection<NotificationPublisher> getNotificationPublishers(NotificationScope scope);
 
 
 	void raiseNotification(String code, Account recipient, NotificationSender sender, Object context);

@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="tourney" type="wisematches.playground.tourney.regular.Tourney" -->
 <#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TourneySection[]" -->
-<#-- @ftlvariable name="winnerPlaces" type="wisematches.playground.tourney.TourneyMedal[]" -->
+<#-- @ftlvariable name="winnerPlaces" type="wisematches.playground.tourney.TourneyPlace[]" -->
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">

@@ -1,17 +1,18 @@
-package wisematches.server.web.services.notify.impl.transform;
+package wisematches.server.web.services.notify.impl.delivery.converter.impl;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.hibernate.SessionFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.Notification;
-import wisematches.server.web.services.notify.NotificationMessage;
-import wisematches.server.web.services.notify.NotificationTransformer;
+import wisematches.server.web.services.notify.NotificationDescriptor;
+import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.TransformationException;
+import wisematches.server.web.services.notify.impl.delivery.converter.NotificationConverter;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,37 +22,36 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class FreeMarkerNotificationTransformer implements NotificationTransformer {
+public class FreeMarkerNotificationConverter implements NotificationConverter {
 	private String layoutTemplate;
 	private MessageSource messageSource;
-	private SessionFactory sessionFactory;
 	private Configuration freeMarkerConfig;
 
-	public FreeMarkerNotificationTransformer() {
+	public FreeMarkerNotificationConverter() {
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = true)
-	public NotificationMessage createMessage(Notification notification) throws TransformationException {
-		final Locale locale = notification.getRecipient().getLanguage().locale();
+	public Notification createMessage(NotificationDescriptor descriptor, Account recipient, NotificationSender sender, Object context) throws TransformationException {
+		final Locale locale = recipient.getLanguage().locale();
 
-		final String subject = messageSource.getMessage("notify.subject." + notification.getCode(), null, locale);
+		final String subject = messageSource.getMessage("notify.subject." + descriptor.getCode(), null, locale);
 
 		final Map<String, Object> variables = new HashMap<>();
 		// info
-		variables.put("code", notification.getCode());
-		variables.put("template", notification.getTemplate());
+		variables.put("code", descriptor.getCode());
+		variables.put("template", descriptor.getTemplate());
 		// people
-		variables.put("creator", notification.getSender());
-		variables.put("principal", notification.getRecipient());
+		variables.put("creator", sender);
+		variables.put("principal", recipient);
 		// common
 		variables.put("locale", locale);
-		variables.put("context", notification.getContext());
+		variables.put("context", context);
 
 		try {
 			final Template ft = freeMarkerConfig.getTemplate(layoutTemplate, locale, "UTF-8");
 			final String message = FreeMarkerTemplateUtils.processTemplateIntoString(ft, variables);
-			return new NotificationMessage(notification.getCode(), subject, message, notification.getRecipient(), notification.getSender());
+			return new Notification(descriptor.getCode(), subject, message, recipient, sender);
 		} catch (IOException | TemplateException ex) {
 			throw new TransformationException(ex);
 		}

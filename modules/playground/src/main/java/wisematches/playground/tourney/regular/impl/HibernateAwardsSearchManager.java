@@ -8,7 +8,7 @@ import wisematches.database.Range;
 import wisematches.personality.Personality;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.tourney.TourneyCareer;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.AwardsSearchManager;
 import wisematches.playground.tourney.regular.TourneyAward;
 
@@ -55,9 +55,9 @@ public class HibernateAwardsSearchManager implements AwardsSearchManager {
 				"from HibernateTourneyDivision as d join d.tourneyWinners as w " +
 				"where w.player=:pid");
 
-		query.setParameter("gold", TourneyMedal.GOLD);
-		query.setParameter("silver", TourneyMedal.SILVER);
-		query.setParameter("bronze", TourneyMedal.BRONZE);
+		query.setParameter("gold", TourneyPlace.FIRST);
+		query.setParameter("silver", TourneyPlace.SECOND);
+		query.setParameter("bronze", TourneyPlace.THIRD);
 		query.setLong("pid", person.getId());
 
 		final Object[] values = (Object[]) query.uniqueResult();

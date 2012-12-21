@@ -162,14 +162,14 @@ public class HibernateMessageManagerTest {
                 "((m.notification and " +
                 "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
                 "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
-                "(a.membership = 'SILVER' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
-                "(a.membership = 'GOLD' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
+                "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
+                "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 40 DAY))) or " +
                 "(not m.notification and " +
                 "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
                 "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 10 DAY)) or " +
-                "(a.membership = 'SILVER' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
-                "(a.membership = 'GOLD' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
+                "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
+                "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 20 DAY))))")).andReturn(0);
 */
 

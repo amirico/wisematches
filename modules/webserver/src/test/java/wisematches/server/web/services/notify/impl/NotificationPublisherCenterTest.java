@@ -44,7 +44,7 @@ import wisematches.playground.tourney.regular.RegularTourneyEntity;
 import wisematches.playground.tourney.regular.RegularTourneyManager;
 import wisematches.playground.tourney.regular.Tourney;
 import wisematches.server.web.services.notify.*;
-import wisematches.server.web.services.notify.impl.distributor.DefaultNotificationDistributor;
+import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
 import wisematches.server.web.services.props.impl.MemoryPropertiesManager;
 
 import java.util.*;
@@ -71,7 +71,7 @@ public class NotificationPublisherCenterTest {
 	private Configuration notificationFreemarkerConfig;
 
 	@Autowired
-	private DefaultNotificationDistributor notificationDistributor;
+	private DefaultNotificationDeliveryService notificationDistributor;
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
@@ -88,14 +88,14 @@ public class NotificationPublisherCenterTest {
 	private final Account p1 = createMockPlayer(1001, Language.RU);
 	private final Account p2 = createMockPlayer(1002, Language.EN);
 
-	private final Capture<Notification> publishedNotifications = new Capture<>(CaptureType.ALL);
+	private final Capture<DefaultNotificationDeliveryService.NotificationOld> publishedNotifications = new Capture<>(CaptureType.ALL);
 
 	public NotificationPublisherCenterTest() {
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		final NotificationDistributorListener distributorListener = createStrictMock(NotificationDistributorListener.class);
+		final NotificationDeliveryListener distributorListener = createStrictMock(NotificationDeliveryListener.class);
 
 		final PlayerManager playerManager = createMock(PlayerManager.class);
 		expect(playerManager.getPlayer(1001L)).andReturn(new MemberPlayer(p1)).anyTimes();
@@ -155,8 +155,8 @@ public class NotificationPublisherCenterTest {
 			board2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), dictionary);
 		} while (board1.getPlayerTurn().getPlayerId() == board2.getPlayerTurn().getPlayerId());
 
-		final NotificationPublisher publisher = createMock(NotificationPublisher.class);
-		expect(publisher.publishNotification(isA(Notification.class))).andReturn(true).anyTimes();
+		final NotificationPublisherOld publisher = createMock(NotificationPublisherOld.class);
+		expect(publisher.publishNotification(isA(DefaultNotificationDeliveryService.NotificationOld.class))).andReturn(true).anyTimes();
 		replay(publisher);
 		notificationDistributor.setExternalPublisher(publisher);
 	}

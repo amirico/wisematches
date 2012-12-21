@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.TourneyAward;
 
 import java.util.EnumSet;
@@ -36,9 +36,9 @@ public class HibernateAwardsSearchManagerTest {
 		manager.setSessionFactory(sessionFactory);
 
 		System.out.println(manager.getTotalCount(Personality.person(1027L), null));
-		System.out.println(manager.getTotalCount(Personality.person(1027L), new TourneyAward.Context(EnumSet.of(TourneyMedal.GOLD))));
+		System.out.println(manager.getTotalCount(Personality.person(1027L), new TourneyAward.Context(EnumSet.of(TourneyPlace.FIRST))));
 
 		System.out.println(manager.searchEntities(Personality.person(1027L), null, null, null, null));
-		System.out.println(manager.searchEntities(Personality.person(1027L), new TourneyAward.Context(EnumSet.of(TourneyMedal.GOLD)), null, null, null));
+		System.out.println(manager.searchEntities(Personality.person(1027L), new TourneyAward.Context(EnumSet.of(TourneyPlace.FIRST)), null, null, null));
 	}
 }

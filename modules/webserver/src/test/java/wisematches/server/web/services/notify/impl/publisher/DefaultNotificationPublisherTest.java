@@ -1,10 +1,15 @@
 package wisematches.server.web.services.notify.impl.publisher;
 
-import org.easymock.EasyMock;
 import org.junit.Test;
 import wisematches.personality.account.Account;
 import wisematches.personality.account.AccountEditor;
-import wisematches.server.web.services.notify.*;
+import wisematches.server.web.services.notify.Notification;
+import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationSender;
+import wisematches.server.web.services.notify.PublicationException;
+import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
+import wisematches.server.web.services.notify.impl.delivery.converter.NotificationConverter;
+import wisematches.server.web.services.notify.publisher.impl.DefaultNotificationPublisher;
 
 import static org.easymock.EasyMock.*;
 
@@ -20,14 +25,14 @@ public class DefaultNotificationPublisherTest {
 		final Object context = new Object();
 		final Account account = new AccountEditor("mock", "mock", "").createAccount();
 
-		final Notification notification = new Notification("mock", "mockt", account, NotificationSender.GAME, context);
-		final NotificationMessage msg = new NotificationMessage("mock", "mocks", "mockm", account, NotificationSender.GAME);
+		final DefaultNotificationDeliveryService.NotificationOld notification = new DefaultNotificationDeliveryService.NotificationOld("mock", "mockt", account, NotificationSender.GAME, context);
+		final Notification msg = new Notification("mock", "mocks", "mockm", account, NotificationSender.GAME);
 
-		final NotificationTransport transport = createStrictMock(NotificationTransport.class);
+		final NotificationPublisher transport = createStrictMock(NotificationPublisher.class);
 		transport.sendNotification(msg);
 		replay(transport);
 
-		final NotificationTransformer transformer = createStrictMock(NotificationTransformer.class);
+		final NotificationConverter transformer = createStrictMock(NotificationConverter.class);
 		expect(transformer.createMessage(notification)).andReturn(msg);
 		replay(transformer);
 

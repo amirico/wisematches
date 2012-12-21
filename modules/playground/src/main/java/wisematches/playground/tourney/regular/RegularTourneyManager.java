@@ -26,6 +26,7 @@ public interface RegularTourneyManager extends TourneyEntityManager<RegularTourn
 	 *
 	 * @return the awards search manager.
 	 */
+	@Deprecated
 	AwardsSearchManager getAwardsSearchManager();
 
 	/**

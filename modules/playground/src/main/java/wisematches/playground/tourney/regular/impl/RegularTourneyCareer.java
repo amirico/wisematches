@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.playground.tourney.TourneyCareer;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -18,13 +18,13 @@ public class RegularTourneyCareer implements TourneyCareer {
 	}
 
 	@Override
-	public int getMedalsCount(TourneyMedal medal) {
+	public int getMedalsCount(TourneyPlace medal) {
 		switch (medal) {
-			case GOLD:
+			case FIRST:
 				return goldMedals;
-			case SILVER:
+			case SECOND:
 				return silverMedals;
-			case BRONZE:
+			case THIRD:
 				return bronzeMedals;
 		}
 		throw new IllegalArgumentException("Medal type is unknown: " + medal);

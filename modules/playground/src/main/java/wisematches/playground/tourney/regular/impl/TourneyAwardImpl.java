@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.personality.Language;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.TourneyAward;
 import wisematches.playground.tourney.regular.TourneySection;
 
@@ -14,10 +14,10 @@ public class TourneyAwardImpl implements TourneyAward {
 	private final int tourney;
 	private final Date awardedDate;
 	private final Language language;
-	private final TourneyMedal medal;
+	private final TourneyPlace medal;
 	private final TourneySection section;
 
-	public TourneyAwardImpl(int tourney, Date awardedDate, Language language, TourneySection section, TourneyMedal medal) {
+	public TourneyAwardImpl(int tourney, Date awardedDate, Language language, TourneySection section, TourneyPlace medal) {
 		this.section = section;
 		this.awardedDate = awardedDate;
 		this.medal = medal;
@@ -45,7 +45,7 @@ public class TourneyAwardImpl implements TourneyAward {
 	}
 
 	@Override
-	public TourneyMedal getMedal() {
+	public TourneyPlace getMedal() {
 		return medal;
 	}
 

@@ -1,4 +1,4 @@
-package wisematches.server.web.services.notify.impl.manager;
+package wisematches.server.web.services.notify.impl;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.personality.Personality;
 import wisematches.server.web.services.notify.*;
+import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -16,30 +17,30 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class MySQLNotificationManager implements NotificationManager {
+public class SQLNotificationManager implements NotificationManager {
 	private SessionFactory sessionFactory;
-	private NotificationDistributor notificationDescriptor;
+	private NotificationDeliveryService notificationDescriptor;
 
 	private final List<NotificationDescriptor> descriptors = new ArrayList<NotificationDescriptor>();
 	private final Map<String, NotificationDescriptor> descriptorsMap = new HashMap<String, NotificationDescriptor>();
 	private final TheNotificationDistributorListener distributorListener = new TheNotificationDistributorListener();
-	private final Collection<NotificationManagerListener> listeners = new CopyOnWriteArraySet<NotificationManagerListener>();
+	private final Collection<NotificationSettingsListener> listeners = new CopyOnWriteArraySet<NotificationSettingsListener>();
 
 	// Disabled is value is 0
 	private static final Timestamp DISABLED = new Timestamp(0);
 
-	public MySQLNotificationManager() {
+	public SQLNotificationManager() {
 	}
 
 	@Override
-	public void addNotificationManagerListener(NotificationManagerListener l) {
+	public void addNotificationManagerListener(NotificationSettingsListener l) {
 		if (l != null) {
 			listeners.add(l);
 		}
 	}
 
 	@Override
-	public void removeNotificationManagerListener(NotificationManagerListener l) {
+	public void removeNotificationManagerListener(NotificationSettingsListener l) {
 		listeners.remove(l);
 	}
 
@@ -159,7 +160,7 @@ public class MySQLNotificationManager implements NotificationManager {
 		}
 		sqlQuery.executeUpdate();
 
-		for (NotificationManagerListener listener : listeners) {
+		for (NotificationSettingsListener listener : listeners) {
 			listener.notificationConditionChanged(personality, oldSettings, settings);
 		}
 	}
@@ -186,7 +187,7 @@ public class MySQLNotificationManager implements NotificationManager {
 		checkNotificationTable();
 	}
 
-	public void setNotificationDistributor(NotificationDistributor notificationDescriptor) {
+	public void setNotificationDistributor(NotificationDeliveryService notificationDescriptor) {
 		if (this.notificationDescriptor != null) {
 			this.notificationDescriptor.removeNotificationDistributorListener(distributorListener);
 		}
@@ -220,7 +221,7 @@ public class MySQLNotificationManager implements NotificationManager {
 		}
 	}
 
-	private void updateNotificationDate(Notification notification, Date date) {
+	private void updateNotificationDate(DefaultNotificationDeliveryService.NotificationOld notification, Date date) {
 		if (!isNotificationEnabled(notification.getRecipient(), notification.getCode())) {
 			return;
 		}
@@ -239,16 +240,16 @@ public class MySQLNotificationManager implements NotificationManager {
 		return !DISABLED.equals(v);
 	}
 
-	private class TheNotificationDistributorListener implements NotificationDistributorListener {
+	private class TheNotificationDistributorListener implements NotificationDeliveryListener {
 		private TheNotificationDistributorListener() {
 		}
 
 		@Override
-		public void notificationRejected(Notification notification, PublicationType type) {
+		public void notificationRejected(DefaultNotificationDeliveryService.NotificationOld notification, PublicationType type) {
 		}
 
 		@Override
-		public void notificationPublished(Notification notification, PublicationType type) {
+		public void notificationPublished(DefaultNotificationDeliveryService.NotificationOld notification, PublicationType type) {
 			if (type == PublicationType.EXTERNAL) {
 				updateNotificationDate(notification, new Date());
 			}

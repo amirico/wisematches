@@ -1,10 +1,10 @@
 package wisematches.playground.tourney.regular.impl.referee;
 
 import org.junit.Test;
-import wisematches.playground.tourney.TourneyConqueror;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
+import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.TourneyGroup;
-import wisematches.playground.tourney.regular.impl.HibernateTourneyConqueror;
+import wisematches.playground.tourney.regular.impl.HibernateTourneyWinner;
 
 import java.util.List;
 
@@ -30,18 +30,18 @@ public class FinalGroupResultRefereeTest {
 		expect(group.getPlayerScores(104L)).andReturn(0);
 		replay(group);
 
-		final List<HibernateTourneyConqueror> winnersList = resultReferees.getWinnersList(group, null, null);
+		final List<HibernateTourneyWinner> winnersList = resultReferees.getWinnersList(group, null, null);
 		assertEquals(4, winnersList.size());
 
-		assertWinner(101L, TourneyMedal.GOLD, winnersList.get(0));
-		assertWinner(102L, TourneyMedal.GOLD, winnersList.get(1));
-		assertWinner(103L, TourneyMedal.SILVER, winnersList.get(2));
-		assertWinner(104L, TourneyMedal.BRONZE, winnersList.get(3));
+		assertWinner(101L, TourneyPlace.FIRST, winnersList.get(0));
+		assertWinner(102L, TourneyPlace.FIRST, winnersList.get(1));
+		assertWinner(103L, TourneyPlace.SECOND, winnersList.get(2));
+		assertWinner(104L, TourneyPlace.THIRD, winnersList.get(3));
 
 		verify(group);
 	}
 
-	private void assertWinner(final long player, final TourneyMedal place, final TourneyConqueror winner) {
+	private void assertWinner(final long player, final TourneyPlace place, final TourneyWinner winner) {
 		assertEquals(player, winner.getPlayer());
 		assertEquals(place, winner.getPlace());
 	}

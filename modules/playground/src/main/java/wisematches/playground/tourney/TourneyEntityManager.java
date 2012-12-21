@@ -23,6 +23,7 @@ public interface TourneyEntityManager<E extends TourneyEntity>
 	 * @param person the person who's career must be returned
 	 * @return the person's career
 	 */
+	@Deprecated
 	TourneyCareer getTourneyCareer(Personality person);
 
 	<T extends E, K extends TourneyEntity.Id<? extends T, ?>> T getTourneyEntity(K id);

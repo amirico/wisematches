@@ -326,7 +326,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 			public void run() {
 				lock.lock();
 				try {
-					tourneyProcessor.finalizeDivisions(sessionFactory.getCurrentSession(), board, subscriptionListeners);
+					tourneyProcessor.finalizeDivisions(sessionFactory.getCurrentSession(), board, subscriptionListeners, tourneyListeners);
 				} catch (Exception ex) {
 					log.error("Board can't be finalized by internal error: " + board.getBoardId(), ex);
 					throw new TourneyProcessingException("Board can't be finalized by internal error", ex);
@@ -341,7 +341,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 			public void run() {
 				lock.lock();
 				try {
-					tourneyProcessor.finalizeTourneys(sessionFactory.getCurrentSession(), tourneyListeners);
+					tourneyProcessor.finalizeTourneys(sessionFactory.getCurrentSession());
 				} catch (Exception ex) {
 					log.error("Tourneys can't be finalized by internal error", ex);
 					throw new TourneyProcessingException("Tourneys can't be finalized by internal error", ex);

@@ -18,7 +18,7 @@ import wisematches.personality.profile.countries.Country;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.playground.tourney.TourneyCareer;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.RegularTourneyManager;
 import wisematches.playground.tourney.regular.TourneyAward;
 import wisematches.playground.tracking.PlayerStatisticManager;
@@ -67,7 +67,7 @@ public class PlayerProfileController extends WisematchesController {
 		}
 	};
 
-	private static final TourneyMedal[] tourneyMedals = TourneyMedal.values();
+	private static final TourneyPlace[] TOURNEY_PLACEs = TourneyPlace.values();
 
 	public PlayerProfileController() {
 	}
@@ -116,7 +116,7 @@ public class PlayerProfileController extends WisematchesController {
 			model.addAttribute("profile", profile);
 			model.addAttribute("statistics", statistics);
 			model.addAttribute("ratingChart", ratingChart);
-			model.addAttribute("tourneyMedals", tourneyMedals);
+			model.addAttribute("tourneyMedals", TOURNEY_PLACEs);
 			model.addAttribute("tourneyCareer", tourneyCareer);
 			model.addAttribute("boardSettings", boardSettings);
 

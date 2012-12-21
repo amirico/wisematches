@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.core.task.SyncTaskExecutor;
 import wisematches.personality.account.Account;
 import wisematches.server.web.services.notify.*;
+import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
 import wisematches.server.web.services.state.PlayerStateListener;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -28,14 +29,14 @@ public class DefaultNotificationDistributorTest {
 		final NotificationDescriptor descriptor = new NotificationDescriptor("a", true);
 		final Capture<PlayerStateListener> listenerCapture = new Capture<PlayerStateListener>();
 
-		final NotificationPublisher internal = createStrictMock(NotificationPublisher.class);
-		expect(internal.publishNotification(isA(Notification.class))).andReturn(true).times(8);
+		final NotificationPublisherOld internal = createStrictMock(NotificationPublisherOld.class);
+		expect(internal.publishNotification(isA(DefaultNotificationDeliveryService.NotificationOld.class))).andReturn(true).times(8);
 		replay(internal);
 
-		final NotificationPublisher external = createStrictMock(NotificationPublisher.class);
-		expect(external.publishNotification(isA(Notification.class))).andReturn(true); // published
-		expect(external.publishNotification(isA(Notification.class))).andReturn(true); // published
-		expect(external.publishNotification(isA(Notification.class))).andReturn(false); // rejected
+		final NotificationPublisherOld external = createStrictMock(NotificationPublisherOld.class);
+		expect(external.publishNotification(isA(DefaultNotificationDeliveryService.NotificationOld.class))).andReturn(true); // published
+		expect(external.publishNotification(isA(DefaultNotificationDeliveryService.NotificationOld.class))).andReturn(true); // published
+		expect(external.publishNotification(isA(DefaultNotificationDeliveryService.NotificationOld.class))).andReturn(false); // rejected
 		replay(external);
 
 		final NotificationManager notificationManager = createMock(NotificationManager.class);
@@ -65,15 +66,15 @@ public class DefaultNotificationDistributorTest {
 		expect(stateManager.isPlayerOnline(account)).andReturn(true);
 		replay(stateManager);
 
-		final NotificationDistributorListener listener = createMock(NotificationDistributorListener.class);
-		listener.notificationPublished(isA(Notification.class), eq(PublicationType.INTERNAL));
+		final NotificationDeliveryListener listener = createMock(NotificationDeliveryListener.class);
+		listener.notificationPublished(isA(DefaultNotificationDeliveryService.NotificationOld.class), eq(PublicationType.INTERNAL));
 		expectLastCall().times(8);
-		listener.notificationPublished(isA(Notification.class), eq(PublicationType.EXTERNAL));
-		listener.notificationPublished(isA(Notification.class), eq(PublicationType.EXTERNAL));
-		listener.notificationRejected(isA(Notification.class), eq(PublicationType.EXTERNAL));
+		listener.notificationPublished(isA(DefaultNotificationDeliveryService.NotificationOld.class), eq(PublicationType.EXTERNAL));
+		listener.notificationPublished(isA(DefaultNotificationDeliveryService.NotificationOld.class), eq(PublicationType.EXTERNAL));
+		listener.notificationRejected(isA(DefaultNotificationDeliveryService.NotificationOld.class), eq(PublicationType.EXTERNAL));
 		replay(listener);
 
-		final DefaultNotificationDistributor distributor = new DefaultNotificationDistributor();
+		final DefaultNotificationDeliveryService distributor = new DefaultNotificationDeliveryService();
 		distributor.setInternalPublisher(internal);
 		distributor.setExternalPublisher(external);
 		distributor.setTaskExecutor(new SyncTaskExecutor());
