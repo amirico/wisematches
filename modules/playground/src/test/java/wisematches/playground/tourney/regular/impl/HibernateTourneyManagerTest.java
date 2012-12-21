@@ -21,9 +21,9 @@ import wisematches.personality.Language;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyCareer;
-import wisematches.playground.tourney.TourneyConqueror;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
+import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.*;
 
 import java.text.ParseException;
@@ -350,7 +350,7 @@ public class HibernateTourneyManagerTest {
 		expectLastCall().times(0, 2);
 		tourneyListener.tourneyStarted(capture(tourneyCapture));
 		expectLastCall().times(0, 2);
-		tourneyListener.tourneyFinished(capture(tourneyCapture));
+		tourneyListener.tourneyFinished(capture(tourneyCapture), null);
 		replay(tourneyListener);
 		tourneyManager.addRegularTourneyListener(tourneyListener);
 
@@ -483,28 +483,28 @@ public class HibernateTourneyManagerTest {
 		assertEquals(finishedTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED))));
 
 		final TourneyDivision tourneyEntity = tourneyManager.getTourneyEntity(casualDivision);
-		final Collection<TourneyConqueror> winners = tourneyEntity.getTourneyWinners();
+		final Collection<TourneyWinner> winners = tourneyEntity.getTourneyWinners();
 		assertNotNull(winners.size());
 
 		assertEquals(2, winners.size());
-		final Iterator<TourneyConqueror> iterator = winners.iterator();
-		final TourneyConqueror first = iterator.next();
+		final Iterator<TourneyWinner> iterator = winners.iterator();
+		final TourneyWinner first = iterator.next();
 		assertEquals(101L, first.getPlayer());
-		assertEquals(TourneyMedal.GOLD, first.getPlace());
+		assertEquals(TourneyPlace.FIRST, first.getPlace());
 
-		final TourneyConqueror second = iterator.next();
+		final TourneyWinner second = iterator.next();
 		assertEquals(102L, second.getPlayer());
-		assertEquals(TourneyMedal.SILVER, second.getPlace());
+		assertEquals(TourneyPlace.SECOND, second.getPlace());
 
 		final TourneyCareer tc1 = tourneyManager.getTourneyCareer(Personality.person(101L));
-		assertEquals(1, tc1.getMedalsCount(TourneyMedal.GOLD));
-		assertEquals(0, tc1.getMedalsCount(TourneyMedal.SILVER));
-		assertEquals(0, tc1.getMedalsCount(TourneyMedal.BRONZE));
+		assertEquals(1, tc1.getMedalsCount(TourneyPlace.FIRST));
+		assertEquals(0, tc1.getMedalsCount(TourneyPlace.SECOND));
+		assertEquals(0, tc1.getMedalsCount(TourneyPlace.THIRD));
 
 		final TourneyCareer tc2 = tourneyManager.getTourneyCareer(Personality.person(102L));
-		assertEquals(0, tc2.getMedalsCount(TourneyMedal.GOLD));
-		assertEquals(1, tc2.getMedalsCount(TourneyMedal.SILVER));
-		assertEquals(0, tc2.getMedalsCount(TourneyMedal.BRONZE));
+		assertEquals(0, tc2.getMedalsCount(TourneyPlace.FIRST));
+		assertEquals(1, tc2.getMedalsCount(TourneyPlace.SECOND));
+		assertEquals(0, tc2.getMedalsCount(TourneyPlace.THIRD));
 
 		verify(board1, board2, board3, board4, board5, board6, tourneyListener, subscriptionListener);
 	}

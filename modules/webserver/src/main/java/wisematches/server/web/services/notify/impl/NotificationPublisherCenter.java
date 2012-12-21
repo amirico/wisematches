@@ -21,10 +21,9 @@ import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.regular.RegistrationSearchManager;
-import wisematches.playground.tourney.regular.RegularTourneyManager;
-import wisematches.playground.tourney.regular.Tourney;
-import wisematches.server.web.services.notify.NotificationDistributor;
+import wisematches.playground.tourney.TourneyWinner;
+import wisematches.playground.tourney.regular.*;
+import wisematches.server.web.services.notify.NotificationDeliveryService;
 import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.props.ReliablePropertiesManager;
 
@@ -46,7 +45,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 	private ScribbleExpirationManager scribbleExpirationManager;
 	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
-	private NotificationDistributor notificationDistributor;
+	private NotificationDeliveryService notificationDistributor;
 
 	private final Lock announcementProcessorLock = new ReentrantLock();
 
@@ -152,7 +151,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		}
 	}
 
-	public void setNotificationDistributor(NotificationDistributor notificationDistributor) {
+	public void setNotificationDistributor(NotificationDeliveryService notificationDistributor) {
 		this.notificationDistributor = notificationDistributor;
 	}
 
@@ -273,7 +272,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		}
 	}
 
-	private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener {
+	private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener, RegularTourneyListener {
 		private TheNotificationListener() {
 		}
 
@@ -348,6 +347,27 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		public void messageSent(Message message, boolean quite) {
 			if (!quite) {
 				processNotification(Personality.person(message.getRecipient()), "playground.message.received", Collections.singletonMap("message", message));
+			}
+		}
+
+		@Override
+		public void tourneyAnnounced(Tourney tourney) {
+		}
+
+		@Override
+		public void tourneyStarted(Tourney tourney) {
+		}
+
+		@Override
+		public void tourneyFinished(Tourney tourney, TourneyDivision division) {
+			final Collection<TourneyWinner> tourneyWinners = division.getTourneyWinners();
+			for (TourneyWinner tourneyWinner : tourneyWinners) {
+				final Map<String, Object> map = new HashMap<>();
+				map.put("tourney", tourney);
+				map.put("division", division);
+				map.put("place", tourneyWinner.getPlace());
+
+				processNotification(tourneyWinner.getPlayer(), "tourney.won", map);
 			}
 		}
 	}

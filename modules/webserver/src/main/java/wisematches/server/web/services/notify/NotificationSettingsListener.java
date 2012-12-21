@@ -5,6 +5,6 @@ import wisematches.personality.Personality;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface NotificationManagerListener {
+public interface NotificationSettingsListener {
 	void notificationConditionChanged(Personality personality, NotificationSettings oldConditions, NotificationSettings newConditions);
 }

@@ -7,7 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.type.LongType;
 import wisematches.personality.Language;
 import wisematches.playground.*;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tourney.regular.impl.referee.FinalGroupResultReferee;
 
@@ -116,7 +116,7 @@ class HibernateTourneyProcessor {
 		}
 	}
 
-	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<RegistrationListener> subscriptionListeners) {
+	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<RegistrationListener> subscriptionListeners, Collection<RegularTourneyListener> tourneyListeners) {
 		final HibernateTourneyGroup group = getGroupByBoard(session, board);
 		if (group != null) {
 			log.info("Finalize tourney group: " + group);
@@ -133,15 +133,19 @@ class HibernateTourneyProcessor {
 				if (division.finishRound(round)) {
 					log.info("Finalize tourney division: " + division);
 					division.finishDivision(tourneyReferee.getWinnersList(group, round, division));
+
+					for (RegularTourneyListener listener : tourneyListeners) {
+						listener.tourneyFinished(division.getTourney(), division);
+					}
 				}
 				session.update(division);
 			}
 
 			// if group finished and not final round
 			if (group.getFinishedDate() != null && !round.isFinal()) {
-				final List<HibernateTourneyConqueror> winnersList = tourneyReferee.getWinnersList(group, round, division);
-				for (HibernateTourneyConqueror winner : winnersList) {
-					if (winner.getPlace() == TourneyMedal.GOLD) { // move only winners to next round
+				final List<HibernateTourneyWinner> winnersList = tourneyReferee.getWinnersList(group, round, division);
+				for (HibernateTourneyWinner winner : winnersList) {
+					if (winner.getPlace() == TourneyPlace.FIRST) { // move only winners to next round
 						final TourneyRound.Id roundId = round.getId();
 						final TourneyDivision.Id divisionId = roundId.getDivisionId();
 						final Tourney.Id tourneyId = divisionId.getTourneyId();
@@ -161,7 +165,7 @@ class HibernateTourneyProcessor {
 		}
 	}
 
-	void finalizeTourneys(Session session, Collection<RegularTourneyListener> tourneyListeners) {
+	void finalizeTourneys(Session session) {
 		// NOTE: works for MySQL. Others DB must be checked before
 		final Query query = session.createQuery("select d.tourney from HibernateTourneyDivision d where d.tourney.finishedDate is null group by d.tourney having count(*)=count(d.finishedDate)");
 		for (Object o : query.list()) {
@@ -169,10 +173,6 @@ class HibernateTourneyProcessor {
 			t.finishTourney();
 
 			log.info("Finalize tourney: " + t);
-
-			for (RegularTourneyListener listener : tourneyListeners) {
-				listener.tourneyFinished(t);
-			}
 		}
 	}
 

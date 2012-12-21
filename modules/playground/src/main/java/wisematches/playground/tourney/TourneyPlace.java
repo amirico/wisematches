@@ -6,17 +6,17 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum TourneyMedal {
-	GOLD,
-	SILVER,
-	BRONZE;
+public enum TourneyPlace {
+	FIRST,
+	SECOND,
+	THIRD;
 
-	public Collection<TourneyConqueror> filter(Collection<TourneyConqueror> winners) {
+	public Collection<TourneyWinner> filter(Collection<TourneyWinner> winners) {
 		if (winners == null) {
 			return winners;
 		}
-		Collection<TourneyConqueror> res = new ArrayList<>(winners.size());
-		for (TourneyConqueror winner : winners) {
+		Collection<TourneyWinner> res = new ArrayList<>(winners.size());
+		for (TourneyWinner winner : winners) {
 			if (winner.getPlace() == this) {
 				res.add(winner);
 			}

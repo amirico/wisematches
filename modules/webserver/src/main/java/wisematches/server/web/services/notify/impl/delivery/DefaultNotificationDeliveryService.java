@@ -1,4 +1,4 @@
-package wisematches.server.web.services.notify.impl.distributor;
+package wisematches.server.web.services.notify.impl.delivery;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,6 +7,7 @@ import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.server.web.services.notify.*;
+import wisematches.server.web.services.notify.impl.delivery.converter.NotificationConverter;
 import wisematches.server.web.services.state.PlayerStateListener;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -18,36 +19,66 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DefaultNotificationDistributor implements NotificationDistributor {
+public class DefaultNotificationDeliveryService implements NotificationDeliveryService {
 	private TaskExecutor taskExecutor;
 	private PlayerStateManager playerStateManager;
 	private NotificationManager notificationManager;
-	private NotificationPublisher internalPublisher;
-	private NotificationPublisher externalPublisher;
+	private NotificationConverter notificationConverter;
+	private Collection<NotificationPublisher> notificationPublishers = new ArrayList<>();
 
 	private final Lock lock = new ReentrantLock();
 	private final ThePlayerStateListener stateListener = new ThePlayerStateListener();
 
 	private final Set<String> redundantNotifications = new HashSet<>();
 	private final Set<String> mandatoryNotifications = new HashSet<>();
-	private final Map<Personality, Collection<Notification>> waitingNotifications = new HashMap<>();
-	private final Collection<NotificationDistributorListener> listeners = new CopyOnWriteArraySet<>();
+	private final Map<Personality, Collection<NotificationContainer>> waitingNotifications = new HashMap<>();
+	private final Collection<NotificationDeliveryListener> listeners = new CopyOnWriteArraySet<>();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.notify.distributor");
 
-	public DefaultNotificationDistributor() {
+	public DefaultNotificationDeliveryService() {
 	}
 
 	@Override
-	public void addNotificationDistributorListener(NotificationDistributorListener l) {
+	public void addNotificationDeliveryListener(NotificationDeliveryListener l) {
 		if (l != null) {
 			listeners.add(l);
 		}
 	}
 
 	@Override
-	public void removeNotificationDistributorListener(NotificationDistributorListener l) {
+	public void removeNotificationDeliveryListener(NotificationDeliveryListener l) {
 		listeners.remove(l);
+	}
+
+	@Override
+	public NotificationPublisher getNotificationPublisher(String name) {
+		for (NotificationPublisher publisher : notificationPublishers) {
+			if (publisher.getName().equals(name)) {
+				return publisher;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Collection<NotificationPublisher> getNotificationPublishers() {
+		return Collections.unmodifiableCollection(notificationPublishers);
+	}
+
+	@Override
+	public Collection<NotificationPublisher> getNotificationPublishers(NotificationScope scope) {
+		if (scope == NotificationScope.GLOBAL) {
+			return getNotificationPublishers();
+		} else {
+			final Collection<NotificationPublisher> res = new ArrayList<>(notificationPublishers.size());
+			for (NotificationPublisher publisher : notificationPublishers) {
+				if (publisher.getNotificationScope() == scope) {
+					res.add(publisher);
+				}
+			}
+			return res;
+		}
 	}
 
 	@Override
@@ -66,7 +97,7 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 			public void run() {
 				lock.lock();
 				try {
-					processNotification(new Notification(descriptor.getCode(), descriptor.getTemplate(), recipient, sender, context));
+					processNotification(new NotificationContainer(recipient, sender, descriptor, context));
 				} finally {
 					lock.unlock();
 				}
@@ -75,17 +106,17 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	}
 
 
-	protected void processNotification(Notification notification) {
+	protected void processNotification(NotificationContainer notification) {
 		processInternalNotification(notification);
 		processExternalNotification(notification);
 	}
 
-	protected void processInternalNotification(Notification notification) {
+	protected void processInternalNotification(NotificationContainer notification) {
 		publishNotification(notification, PublicationType.INTERNAL);
 	}
 
-	protected void processExternalNotification(Notification notification) {
-		final String code = notification.getCode();
+	protected void processExternalNotification(NotificationContainer notification) {
+		final String code = notification.getDescriptor().getCode();
 		final Personality recipient = notification.getRecipient();
 		if (notificationManager.isNotificationEnabled(recipient, code)) {
 			if (playerStateManager.isPlayerOnline(recipient)) {
@@ -93,10 +124,10 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 					publishNotification(notification, PublicationType.EXTERNAL);
 				} else {
 					if (redundantNotifications.contains(code)) {
-						final Collection<Notification> notifications = waitingNotifications.get(recipient);
+						final Collection<NotificationContainer> notifications = waitingNotifications.get(recipient);
 						if (notifications != null) {
-							for (Notification n : notifications) {
-								if (code.equals(n.getCode())) {
+							for (NotificationContainer n : notifications) {
+								if (code.equals(n.getDescriptor().getCode())) {
 									return; // ignore
 								}
 							}
@@ -124,8 +155,8 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	}
 
 
-	private void postponeNotification(final Notification notification) {
-		Collection<Notification> notifications = waitingNotifications.get(notification.getRecipient());
+	private void postponeNotification(final NotificationContainer notification) {
+		Collection<NotificationContainer> notifications = waitingNotifications.get(notification.getRecipient());
 		if (notifications == null) {
 			notifications = new ArrayList<>();
 			waitingNotifications.put(notification.getRecipient(), notifications);
@@ -134,12 +165,12 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 	}
 
 	private void processUnpublishedNotifications(final Personality person) {
-		final Collection<Notification> notifications = waitingNotifications.remove(person);
+		final Collection<NotificationContainer> notifications = waitingNotifications.remove(person);
 		if (notifications != null) {
 			taskExecutor.execute(new Runnable() {
 				@Override
 				public void run() {
-					for (Notification notification : notifications) {
+					for (NotificationContainer notification : notifications) {
 						publishNotification(notification, PublicationType.EXTERNAL);
 					}
 				}
@@ -147,8 +178,10 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 		}
 	}
 
-	private void publishNotification(final Notification notification, final PublicationType type) {
+	private void publishNotification(final NotificationContainer n, final boolean internal) {
 		try {
+			final Notification notification = notificationConverter.createMessage(n.getDescriptor(), n.getRecipient(), n.getSender(), n.getContext());
+
 			boolean res;
 			if (type == PublicationType.EXTERNAL) {
 				if (externalPublisher != null) {
@@ -167,16 +200,16 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 			}
 
 			if (res) {
-				for (NotificationDistributorListener listener : listeners) {
+				for (NotificationDeliveryListener listener : listeners) {
 					listener.notificationPublished(notification, type);
 				}
 			} else {
-				for (NotificationDistributorListener listener : listeners) {
+				for (NotificationDeliveryListener listener : listeners) {
 					listener.notificationRejected(notification, type);
 				}
 			}
 		} catch (Exception e) {
-			log.error("External notification can't be sent: " + notification, e);
+			log.error("External notification can't be sent: " + n, e);
 		}
 	}
 
@@ -197,12 +230,16 @@ public class DefaultNotificationDistributor implements NotificationDistributor {
 		}
 	}
 
-	public void setInternalPublisher(NotificationPublisher internalPublisher) {
-		this.internalPublisher = internalPublisher;
+	public void setNotificationConverter(NotificationConverter notificationConverter) {
+		this.notificationConverter = notificationConverter;
 	}
 
-	public void setExternalPublisher(NotificationPublisher externalPublisher) {
-		this.externalPublisher = externalPublisher;
+	public void setNotificationPublishers(Collection<NotificationPublisher> notificationPublishers) {
+		this.notificationPublishers.clear();
+
+		if (notificationPublishers != null) {
+			this.notificationPublishers.addAll(notificationPublishers);
+		}
 	}
 
 	public void setMandatoryNotifications(Set<String> mandatoryNotifications) {

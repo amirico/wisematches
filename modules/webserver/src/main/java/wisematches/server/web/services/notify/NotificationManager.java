@@ -9,9 +9,9 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface NotificationManager {
-	void addNotificationManagerListener(NotificationManagerListener l);
+	void addNotificationManagerListener(NotificationSettingsListener l);
 
-	void removeNotificationManagerListener(NotificationManagerListener l);
+	void removeNotificationManagerListener(NotificationSettingsListener l);
 
 
 	/**
@@ -29,7 +29,6 @@ public interface NotificationManager {
 	 */
 	Collection<NotificationDescriptor> getDescriptors();
 
-
 	/**
 	 * Returns date when last notification was sent.
 	 *
@@ -37,6 +36,7 @@ public interface NotificationManager {
 	 * @param code        the notification code
 	 * @return data when notification was sent last time or {@code null} if notification wasn't sent.
 	 */
+	@Deprecated
 	Date getNotificationDate(Personality personality, String code);
 
 	/**
@@ -48,6 +48,7 @@ public interface NotificationManager {
 	 * @return {@code true} if notification is enabled for the player; {@code false} if
 	 *         notification disabled or unknown.
 	 */
+	@Deprecated
 	boolean isNotificationEnabled(Personality personality, String code);
 
 

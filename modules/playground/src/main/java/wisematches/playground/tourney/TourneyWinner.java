@@ -3,7 +3,7 @@ package wisematches.playground.tourney;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface TourneyConqueror {
+public interface TourneyWinner {
 	/**
 	 * Returns player id.
 	 *
@@ -16,5 +16,5 @@ public interface TourneyConqueror {
 	 *
 	 * @return the player's place
 	 */
-	TourneyMedal getPlace();
+	TourneyPlace getPlace();
 }

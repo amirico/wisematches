@@ -9,7 +9,7 @@ import java.util.Set;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class NotificationSettings implements Cloneable {
-	private final Map<String, Boolean> notifications = new HashMap<String, Boolean>();
+	private final Map<String, Boolean> notifications = new HashMap<>();
 
 	public NotificationSettings() {
 	}
@@ -44,7 +44,7 @@ public final class NotificationSettings implements Cloneable {
 		} catch (CloneNotSupportedException e) {
 			s = new NotificationSettings();
 		}
-		s.notifications.putAll(new HashMap<String, Boolean>(this.notifications));
+		s.notifications.putAll(new HashMap<>(this.notifications));
 		return s;
 	}
 

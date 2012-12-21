@@ -10,5 +10,5 @@ import java.util.List;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface TourneyReferee {
-	List<HibernateTourneyConqueror> getWinnersList(TourneyGroup group, TourneyRound round, TourneyDivision division);
+	List<HibernateTourneyWinner> getWinnersList(TourneyGroup group, TourneyRound round, TourneyDivision division);
 }

@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular;
 
 import wisematches.personality.Language;
-import wisematches.playground.tourney.TourneyMedal;
+import wisematches.playground.tourney.TourneyPlace;
 
 import java.util.Date;
 import java.util.EnumSet;
@@ -9,6 +9,7 @@ import java.util.EnumSet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public interface TourneyAward {
 	int getTourney();
 
@@ -16,22 +17,22 @@ public interface TourneyAward {
 
 	Language getLanguage();
 
-	TourneyMedal getMedal();
+	TourneyPlace getMedal();
 
 	TourneySection getSection();
 
 	final static class Context {
-		private final EnumSet<TourneyMedal> medals;
+		private final EnumSet<TourneyPlace> medals;
 
 		public Context() {
 			this(null);
 		}
 
-		public Context(EnumSet<TourneyMedal> medals) {
+		public Context(EnumSet<TourneyPlace> medals) {
 			this.medals = medals;
 		}
 
-		public EnumSet<TourneyMedal> getMedals() {
+		public EnumSet<TourneyPlace> getMedals() {
 			return medals;
 		}
 

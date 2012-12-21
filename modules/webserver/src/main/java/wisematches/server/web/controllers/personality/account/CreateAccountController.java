@@ -23,10 +23,10 @@ import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.services.notify.Notification;
-import wisematches.server.web.services.notify.NotificationPublisher;
+import wisematches.server.web.services.notify.NotificationPublisherOld;
 import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.PublicationException;
+import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +44,7 @@ import java.util.Set;
 public class CreateAccountController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
-	private NotificationPublisher notificationPublisher;
+	private NotificationPublisherOld notificationPublisher;
 	private AccountSecurityService accountSecurityService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
@@ -126,7 +126,7 @@ public class CreateAccountController {
 
 			status.setComplete();
 			try {
-				notificationPublisher.publishNotification(new Notification("account.created", player, NotificationSender.ACCOUNTS, null));
+				notificationPublisher.publishNotification(new DefaultNotificationDeliveryService.NotificationOld("account.created", player, NotificationSender.ACCOUNTS, null));
 			} catch (PublicationException e) {
 				log.error("Notification about new account can't be sent", e);
 			}
@@ -243,7 +243,7 @@ public class CreateAccountController {
 
 	@Autowired
 	@Qualifier("mailNotificationPublisher")
-	public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+	public void setNotificationPublisher(NotificationPublisherOld notificationPublisher) {
 		this.notificationPublisher = notificationPublisher;
 	}
 

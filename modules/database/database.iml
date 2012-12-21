@@ -5,9 +5,8 @@
       <configuration>
         <datasource-map>
           <unit-entry name="config:hibernate.cfg.xml" value="773a9883-017c-4c0a-8607-11bb613ec123" />
-          <unit-entry name="sessionFactory" value="773a9883-017c-4c0a-8607-11bb613ec123" />
+          <unit-entry name="sessionFactory" value="e0c38fe3-49da-41a4-83b9-aa5ed9ff72b5" />
         </datasource-map>
-        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/test/java/config/hibernate.cfg.xml" />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">

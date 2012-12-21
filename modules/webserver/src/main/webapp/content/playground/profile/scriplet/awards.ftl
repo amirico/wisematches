@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 <#-- @ftlvariable name="tourneyCareer" type="wisematches.playground.tourney.TourneyCareer" -->
-<#-- @ftlvariable name="tourneyMedals" type="wisematches.playground.tourney.TourneyMedal[]" -->
+<#-- @ftlvariable name="tourneyMedals" type="wisematches.playground.tourney.TourneyPlace[]" -->
 
 <#include "/core.ftl">
 
