@@ -1,8 +1,7 @@
 package wisematches.server.web.services.notify.impl.publisher;
 
-import wisematches.server.web.services.notify.NotificationPublisherOld;
-import wisematches.server.web.services.notify.PublicationException;
-import wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService;
+import wisematches.server.web.services.notify.DeliveryException;
+import wisematches.server.web.services.notify.impl.delivery.NotificationDeliveryServiceImpl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,26 +12,26 @@ import java.util.Set;
  */
 @Deprecated
 public class FilteringNotificationPublisher implements NotificationPublisherOld {
-	private NotificationPublisherOld notificationPublisher;
-	private final Set<String> allowedNotifications = new HashSet<String>();
+    private NotificationPublisherOld notificationPublisher;
+    private final Set<String> allowedNotifications = new HashSet<String>();
 
-	public FilteringNotificationPublisher() {
-	}
+    public FilteringNotificationPublisher() {
+    }
 
-	@Override
-	public boolean publishNotification(DefaultNotificationDeliveryService.NotificationOld notification) throws PublicationException {
-		return allowedNotifications.contains(notification.getDescriptor().getCode()) && notificationPublisher.publishNotification(notification);
-	}
+    @Override
+    public boolean publishNotification(NotificationDeliveryServiceImpl.NotificationOld notification) throws DeliveryException {
+        return allowedNotifications.contains(notification.getDescriptor().getCode()) && notificationPublisher.publishNotification(notification);
+    }
 
-	public void setAllowedNotifications(Set<String> allowedNotifications) {
-		this.allowedNotifications.clear();
+    public void setAllowedNotifications(Set<String> allowedNotifications) {
+        this.allowedNotifications.clear();
 
-		if (allowedNotifications != null) {
-			this.allowedNotifications.addAll(allowedNotifications);
-		}
-	}
+        if (allowedNotifications != null) {
+            this.allowedNotifications.addAll(allowedNotifications);
+        }
+    }
 
-	public void setNotificationPublisher(NotificationPublisherOld notificationPublisher) {
-		this.notificationPublisher = notificationPublisher;
-	}
+    public void setNotificationPublisher(NotificationPublisherOld notificationPublisher) {
+        this.notificationPublisher = notificationPublisher;
+    }
 }
