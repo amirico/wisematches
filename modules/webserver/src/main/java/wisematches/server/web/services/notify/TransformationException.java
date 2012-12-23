@@ -3,7 +3,7 @@ package wisematches.server.web.services.notify;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TransformationException extends PublicationException {
+public class TransformationException extends DeliveryException {
     public TransformationException(String message) {
         super(message);
     }

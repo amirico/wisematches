@@ -11,7 +11,6 @@
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
             <element id="archive" name="database-3.07-SNAPSHOT.jar">
@@ -119,11 +118,11 @@
       <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/database/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/scribble/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/database/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
@@ -166,7 +165,7 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" hash="3850236388" />
+  <component name="DataSourceManagerImpl" compressed="false" hash="2498075510" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -500,9 +499,11 @@
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneyProcessor.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/SQLNotificationManager.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/manager/SQLNotificationManager.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/settings/SQLNotificationSettingsManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database_data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/resources/database/patches/database_patch16.sql" dialect="MySQL" />
   </component>
   <component name="StarteamConfiguration">
     <option name="SERVER" value="" />

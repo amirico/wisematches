@@ -4,10 +4,10 @@ package wisematches.server.web.services.notify;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface NotificationPublisher {
-	String getName();
+    String getName();
 
-	NotificationScope getNotificationScope();
+    NotificationScope getNotificationScope();
 
 
-	void sendNotification(Notification message) throws TransmissionException;
+    void sendNotification(NotificationMessage message) throws PublicationException;
 }

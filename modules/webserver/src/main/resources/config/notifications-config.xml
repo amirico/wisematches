@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -42,44 +42,26 @@
     <bean id="notificationConverter"
           class="wisematches.server.web.services.notify.impl.delivery.converter.impl.FreeMarkerNotificationConverter">
         <property name="messageSource" ref="messageSource"/>
+        <property name="layoutTemplate" value="layout.ftl"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
 
-    <bean id="mailNotificationTransport"
+    <bean id="mailNotificationPublisher"
           class="wisematches.server.web.services.notify.impl.publisher.MailNotificationPublisher">
         <property name="hostName" value="${server.hostname}"/>
         <property name="mailSender" ref="springMailSender"/>
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
-    <bean id="messageNotificationTransport"
+    <bean id="messageNotificationPublisher"
           class="wisematches.server.web.services.notify.impl.publisher.MessageNotificationPublisher">
         <property name="messageManager" ref="messageManager"/>
     </bean>
 
-    <bean id="mailNotificationPublisher"
-          class="wisematches.server.web.services.notify.publisher.impl.DefaultNotificationPublisher">
-        <property name="transport" ref="mailNotificationTransport"/>
-        <property name="transformer">
-            <bean parent="notificationTransformer" p:layoutTemplate="layoutMail.ftl"/>
-        </property>
-    </bean>
-
-    <bean id="messageNotificationPublisher"
-          class="wisematches.server.web.services.notify.publisher.impl.DefaultNotificationPublisher">
-        <property name="transport" ref="messageNotificationTransport"/>
-        <property name="transformer">
-            <bean parent="notificationTransformer" p:layoutTemplate="layoutMessage.ftl"/>
-        </property>
-    </bean>
-
     <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
 
-    <bean id="notificationManager"
-          class="wisematches.server.web.services.notify.impl.SQLNotificationManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="notificationDistributor" ref="notificationDistributor"/>
-
+    <bean id="notificationSettingsManager"
+          class="wisematches.server.web.services.notify.impl.settings.SQLNotificationSettingsManager">
         <property name="notificationDescriptors">
             <list>
                 <bean parent="notification" c:code="playground.game.started" c:enabled="true"/>
@@ -125,15 +107,15 @@
     </bean>
 
     <bean id="notificationDistributor"
-          class="wisematches.server.web.services.notify.impl.delivery.DefaultNotificationDeliveryService">
+          class="wisematches.server.web.services.notify.impl.delivery.NotificationDeliveryServiceImpl">
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
         <property name="playerStateManager" ref="playerStateManager"/>
-        <property name="notificationManager" ref="notificationManager"/>
+        <property name="settingsManager" ref="notificationSettingsManager"/>
         <property name="notificationConverter" ref="notificationConverter"/>
         <property name="notificationPublishers">
             <list>
-                <ref bean="mailNotificationTransport"/>
-                <ref bean="messageNotificationTransport"/>
+                <ref bean="mailNotificationPublisher"/>
+                <ref bean="messageNotificationPublisher"/>
             </list>
         </property>
 
