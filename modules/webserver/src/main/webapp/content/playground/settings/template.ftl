@@ -9,13 +9,13 @@
                 <li><a href="#boardTab"><@message code="account.modify.board.label"/></a></li>
             </ul>
 
-            <div id="commonTab" class="ui-state-default">
+            <div id="commonTab" class="ui-state-default" style="background-image: none">
             <#include "common.ftl"/>
             </div>
-            <div id="notificationsTab" class="ui-state-default">
+            <div id="notificationsTab" class="ui-state-default" style="background-image: none">
             <#include "notifications.ftl"/>
             </div>
-            <div id="boardTab" class="ui-state-default">
+            <div id="boardTab" class="ui-state-default" style="background-image: none">
             <#include "board.ftl"/>
             </div>
 
