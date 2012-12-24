@@ -323,6 +323,7 @@ public class HibernateTourneyManagerTest {
 		final int finishedTourneys = tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.FINISHED)));
 
 		final Capture<Tourney> tourneyCapture = new Capture<>(CaptureType.ALL);
+		final Capture<TourneyDivision> divisionCapture = new Capture<>(CaptureType.ALL);
 		final Capture<RegistrationRecord> subscriptionCapture = new Capture<>(CaptureType.ALL);
 
 		for (int i = 0; i < 7; i++) {
@@ -350,7 +351,8 @@ public class HibernateTourneyManagerTest {
 		expectLastCall().times(0, 2);
 		tourneyListener.tourneyStarted(capture(tourneyCapture));
 		expectLastCall().times(0, 2);
-		tourneyListener.tourneyFinished(capture(tourneyCapture), null);
+		tourneyListener.tourneyFinished(capture(tourneyCapture), capture(divisionCapture));
+		expectLastCall().times(2);
 		replay(tourneyListener);
 		tourneyManager.addRegularTourneyListener(tourneyListener);
 
@@ -486,6 +488,10 @@ public class HibernateTourneyManagerTest {
 		final Collection<TourneyWinner> winners = tourneyEntity.getTourneyWinners();
 		assertNotNull(winners.size());
 
+		assertEquals(2, divisionCapture.getValues().size());
+		assertEquals(casualDivision, divisionCapture.getValues().get(0).getId());
+		assertEquals(expertDivision, divisionCapture.getValues().get(1).getId());
+
 		assertEquals(2, winners.size());
 		final Iterator<TourneyWinner> iterator = winners.iterator();
 		final TourneyWinner first = iterator.next();
@@ -533,7 +539,7 @@ public class HibernateTourneyManagerTest {
 
 	private void createStats(long pid, int rating) {
 		final Session session = sessionFactory.getCurrentSession();
-		final SQLQuery sqlQuery = session.createSQLQuery("insert into scribble_statistic(playerId, rating) VALUES(:pid, :rating)");
+		final SQLQuery sqlQuery = session.createSQLQuery("INSERT INTO scribble_statistic(playerId, rating) VALUES(:pid, :rating)");
 		sqlQuery.setLong("pid", pid);
 		sqlQuery.setLong("rating", rating);
 		sqlQuery.executeUpdate();

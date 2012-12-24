@@ -23,8 +23,9 @@ import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.*;
-import wisematches.server.web.services.notify.NotificationDeliveryService;
+import wisematches.server.web.services.notify.NotificationException;
 import wisematches.server.web.services.notify.NotificationSender;
+import wisematches.server.web.services.notify.NotificationService;
 import wisematches.server.web.services.props.ReliablePropertiesManager;
 
 import java.util.*;
@@ -34,7 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class NotificationPublisherCenter implements BreakingDayListener, InitializingBean {
+public class NotificationOriginCenter implements BreakingDayListener, InitializingBean {
 	private TaskExecutor taskExecutor;
 	private BoardManager boardManager;
 	private PlayerManager playerManager;
@@ -45,7 +46,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 	private ScribbleExpirationManager scribbleExpirationManager;
 	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
-	private NotificationDeliveryService notificationDistributor;
+	private NotificationService notificationDistributor;
 
 	private final Lock announcementProcessorLock = new ReentrantLock();
 
@@ -55,7 +56,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 
 	private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
 
-	public NotificationPublisherCenter() {
+	public NotificationOriginCenter() {
 	}
 
 	protected void processNotification(long person, String code, Object context) {
@@ -73,10 +74,14 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 	}
 
 	private void fireNotification(String code, MemberPlayer player, Object context) {
-		if (log.isInfoEnabled()) {
-			log.info("Fire notification " + code + " to person " + player);
+		try {
+			notificationDistributor.raiseNotification(code, player.getAccount(), NotificationSender.GAME, context);
+			if (log.isInfoEnabled()) {
+				log.info("Notification was raised to " + player + " [" + code + "]");
+			}
+		} catch (NotificationException ex) {
+			log.error("Notification can't be sent to player: code=" + code + ", player=" + player.getId(), ex);
 		}
-		notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
 	}
 
 	@Override
@@ -136,7 +141,15 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 	}
 
 	public void setTourneyManager(RegularTourneyManager tourneyManager) {
+		if (this.tourneyManager != null) {
+			this.tourneyManager.removeRegularTourneyListener(notificationListener);
+		}
+
 		this.tourneyManager = tourneyManager;
+
+		if (this.tourneyManager != null) {
+			this.tourneyManager.addRegularTourneyListener(notificationListener);
+		}
 	}
 
 	public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
@@ -151,7 +164,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 		}
 	}
 
-	public void setNotificationDistributor(NotificationDeliveryService notificationDistributor) {
+	public void setNotificationService(NotificationService notificationDistributor) {
 		this.notificationDistributor = notificationDistributor;
 	}
 
@@ -303,11 +316,11 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 					continue;
 				}
 				if (resolution == ProposalResolution.REJECTED) {
-					processNotification(personality, "playground.challenge.rejected", c);
+					processNotification(personality, "playground.challenge.finalized.rejected", c);
 				} else if (resolution == ProposalResolution.REPUDIATED) {
-					processNotification(personality, "playground.challenge.repudiated", c);
+					processNotification(personality, "playground.challenge.finalized.repudiated", c);
 				} else if (resolution == ProposalResolution.TERMINATED) {
-					processNotification(personality, "playground.challenge.terminated", c);
+					processNotification(personality, "playground.challenge.finalized.terminated", c);
 				}
 			}
 		}
@@ -367,7 +380,7 @@ public class NotificationPublisherCenter implements BreakingDayListener, Initial
 				map.put("division", division);
 				map.put("place", tourneyWinner.getPlace());
 
-				processNotification(tourneyWinner.getPlayer(), "tourney.won", map);
+				processNotification(tourneyWinner.getPlayer(), "playground.tourney.finished", map);
 			}
 		}
 	}

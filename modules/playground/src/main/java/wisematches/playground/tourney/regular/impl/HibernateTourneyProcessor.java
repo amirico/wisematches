@@ -94,7 +94,7 @@ class HibernateTourneyProcessor {
 			final int nextRoundNumber = roundsCountValue == null ? 1 : ((Number) roundsCountValue).intValue() + 1;
 			final Collection<Long> subscribedPlayers = getRegisteredPlayers(session, division, nextRoundNumber);
 			if (subscribedPlayers.size() <= 1) {
-				log.error("Broken registered players count! TODO: division must be finished. We can get winners from previous round and previous was last.");
+				log.error("Broken registered players count! We can get winners from previous round and previous was last.");
 			}
 			log.info("Next round number: " + nextRoundNumber + ", registered players: " + subscribedPlayers.size());
 			final HibernateTourneyRound round = new HibernateTourneyRound(division, nextRoundNumber);
