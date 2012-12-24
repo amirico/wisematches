@@ -38,11 +38,9 @@
     <bean id="notificationFreemarkerConfig"
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
-
     <bean id="notificationConverter"
-          class="wisematches.server.web.services.notify.impl.delivery.converter.impl.FreeMarkerNotificationConverter">
+          class="wisematches.server.web.services.notify.impl.converter.FreeMarkerNotificationConverter">
         <property name="messageSource" ref="messageSource"/>
-        <property name="layoutTemplate" value="layout.ftl"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
 
@@ -60,110 +58,93 @@
 
     <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
 
-    <bean id="notificationSettingsManager"
-          class="wisematches.server.web.services.notify.impl.settings.SQLNotificationSettingsManager">
+    <bean id="notificationService" class="wisematches.server.web.services.notify.impl.HibernateNotificationService">
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationConverter" ref="notificationConverter"/>
+        <property name="publishers">
+            <list>
+                <ref bean="messageNotificationPublisher"/>
+
+                <bean class="wisematches.server.web.services.notify.impl.publisher.TimelyNotificationPublisher">
+                    <property name="taskExecutor" ref="notificationTaskExecutor"/>
+                    <property name="playerStateManager" ref="playerStateManager"/>
+                    <property name="notificationPublisher">
+                        <bean class="wisematches.server.web.services.notify.impl.publisher.EssentialNotificationPublisher">
+                            <property name="sessionFactory" ref="sessionFactory"/>
+                            <property name="playerStateManager" ref="playerStateManager"/>
+                            <property name="notificationPublisher" ref="mailNotificationPublisher"/>
+                            <property name="redundantNotifications">
+                                <set>
+                                    <value>playground.game.turn</value>
+                                    <value>playground.message.received</value>
+                                </set>
+                            </property>
+                        </bean>
+                    </property>
+
+                    <property name="mandatoryNotifications">
+                        <set>
+                            <value>account.created</value>
+                            <value>account.updated</value>
+                            <value>account.recovery</value>
+                            <value>playground.game.finished</value>
+                            <value>playground.game.expiration.hour</value>
+                        </set>
+                    </property>
+                </bean>
+            </list>
+        </property>
+
         <property name="notificationDescriptors">
             <list>
-                <bean parent="notification" c:code="playground.game.started" c:enabled="true"/>
+                <bean parent="notification" c:code="playground.game.started" c:scope="EXTERNAL"/>
 
-                <bean parent="notification" c:code="playground.game.turn" c:enabled="true"/>
+                <bean parent="notification" c:code="playground.game.turn" c:scope="EXTERNAL"/>
 
-                <bean parent="notification" c:code="playground.game.finished" c:enabled="true"/>
-
-
-                <bean parent="notification" c:code="playground.game.expiration.day" c:enabled="true"
-                      c:template="playground.game.expiring"/>
-
-                <bean parent="notification" c:code="playground.game.expiration.half" c:enabled="true"
-                      c:template="playground.game.expiring"/>
-
-                <bean parent="notification" c:code="playground.game.expiration.hour" c:enabled="true"
-                      c:template="playground.game.expiring"/>
+                <bean parent="notification" c:code="playground.game.finished" c:scope="GLOBAL"/>
 
 
-                <bean parent="notification" c:code="playground.challenge.initiated" c:enabled="true"/>
+                <bean parent="notification" c:code="playground.game.expiration.day" c:scope="EXTERNAL"/>
 
-                <bean parent="notification" c:code="playground.challenge.rejected" c:enabled="false"
-                      c:template="playground.challenge.finalized"/>
+                <bean parent="notification" c:code="playground.game.expiration.half" c:scope="EXTERNAL"/>
 
-                <bean parent="notification" c:code="playground.challenge.repudiated" c:enabled="false"
-                      c:template="playground.challenge.finalized"/>
-
-                <bean parent="notification" c:code="playground.challenge.terminated" c:enabled="false"
-                      c:template="playground.challenge.finalized"/>
+                <bean parent="notification" c:code="playground.game.expiration.hour" c:scope="EXTERNAL"/>
 
 
-                <bean parent="notification" c:code="playground.challenge.expiration.day" c:enabled="true"
-                      c:template="playground.challenge.expiring"/>
+                <bean parent="notification" c:code="playground.challenge.initiated" c:scope="GLOBAL"/>
 
-                <bean parent="notification" c:code="playground.challenge.expiration.days" c:enabled="false"
-                      c:template="playground.challenge.expiring"/>
+                <bean parent="notification" c:code="playground.challenge.finalized.rejected" c:scope="INTERNAL"/>
 
-                <bean parent="notification" c:code="playground.message.received" c:enabled="true"/>
+                <bean parent="notification" c:code="playground.challenge.finalized.repudiated" c:scope="INTERNAL"/>
 
-                <bean parent="notification" c:code="playground.tourney.announced" c:enabled="true"/>
+                <bean parent="notification" c:code="playground.challenge.finalized.terminated" c:scope="INTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.challenge.expiration.day" c:scope="EXTERNAL"/>
+
+                <bean parent="notification" c:code="playground.challenge.expiration.days" c:scope="INTERNAL"/>
+
+                <bean parent="notification" c:code="playground.message.received" c:scope="EXTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.tourney.announced" c:scope="GLOBAL"/>
+
+                <bean parent="notification" c:code="playground.tourney.finished" c:scope="GLOBAL"/>
             </list>
         </property>
-    </bean>
-
-    <bean id="notificationDistributor"
-          class="wisematches.server.web.services.notify.impl.delivery.NotificationDeliveryServiceImpl">
-        <property name="taskExecutor" ref="notificationTaskExecutor"/>
-        <property name="playerStateManager" ref="playerStateManager"/>
-        <property name="settingsManager" ref="notificationSettingsManager"/>
-        <property name="notificationConverter" ref="notificationConverter"/>
-        <property name="notificationPublishers">
-            <list>
-                <ref bean="mailNotificationPublisher"/>
-                <ref bean="messageNotificationPublisher"/>
-            </list>
-        </property>
-
-        <property name="mandatoryNotifications">
-            <set>
-                <value>playground.game.finished</value>
-                <value>playground.game.expiration.hour</value>
-            </set>
-        </property>
-
-        <property name="redundantNotifications">
-            <set>
-                <value>playground.game.turn</value>
-            </set>
-        </property>
-
-        <!--
-                <property name="internalPublisher">
-                    <bean class="wisematches.server.web.services.notify.impl.publisher.FilteringNotificationPublisher">
-                        <property name="notificationPublisher" ref="messageNotificationPublisher"/>
-                        <property name="allowedNotifications">
-                            <set>
-                                <value>playground.game.finished</value>
-                                <value>playground.challenge.initiated</value>
-                                <value>playground.challenge.rejected</value>
-                                <value>playground.challenge.repudiated</value>
-                                <value>playground.challenge.terminated</value>
-                                <value>playground.tourney.announced</value>
-                                <value>playground.tourney.won</value>
-                            </set>
-                        </property>
-                    </bean>
-                </property>
-
-                <property name="externalPublisher" ref="mailNotificationPublisher"/>
-        -->
     </bean>
 
     <bean id="notificationPublisherCenter"
-          class="wisematches.server.web.services.notify.impl.NotificationPublisherCenter">
+          class="wisematches.server.web.services.notify.impl.NotificationOriginCenter">
         <property name="playerManager" ref="playerManager"/>
         <property name="messageManager" ref="messageManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
-        <property name="proposalManager" ref="scribbleProposalManager"/>
-        <property name="propertiesManager" ref="reliablePropertiesManager"/>
         <property name="tourneyManager" ref="regularTourneyManager"/>
-        <property name="notificationDistributor" ref="notificationDistributor"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
+        <property name="notificationService" ref="notificationService"/>
+        <property name="propertiesManager" ref="reliablePropertiesManager"/>
         <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
         <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
     </bean>
