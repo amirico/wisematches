@@ -7,7 +7,7 @@
 
     <groupId>wisematches</groupId>
     <artifactId>application</artifactId>
-    <version>3.07-SNAPSHOT</version>
+    <version>3.09-SNAPSHOT</version>
 
     <modules>
         <module>modules/database</module>
