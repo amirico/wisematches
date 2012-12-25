@@ -92,7 +92,11 @@
                     <#list proposal.players as p>
                     <div>
                         <#if p??>
-                            <@wm.player.name player=playerManager.getPlayer(p)/>
+                            <#if proposal.isPlayerJoined(p)>
+                                <@wm.player.name player=playerManager.getPlayer(p)/>
+                            <#else>
+                                <span class="waiting"><@wm.player.name player=playerManager.getPlayer(p)/></span>
+                            </#if>
                         <#else>
                             <span class="waiting"><span
                                     class="player"><@message code="game.status.waiting"/></span></span>
