@@ -52,7 +52,7 @@
 <#include "${originalTemplateName}"/>
 </div>
 
-<#if principal?? && principal?has_content><#else><#include "personality/footer.ftl"/></#if>
+<#if principal?? && principal?has_content><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
 
 <#include 'templates/googlePlus.ftl'/>
 

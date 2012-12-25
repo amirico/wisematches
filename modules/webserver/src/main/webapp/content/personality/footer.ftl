@@ -2,7 +2,7 @@
 
 <#include "/content/templates/addthis.ftl"/>
 
-<@wm.ui.panel.roundBottom class="footer">
+<@wm.ui.panel.roundBottom class="personatity footer">
 <span class="copyrights" style="padding-right: 10px"><@message "copyrights.label"/></span>
 <a href="/info/terms"><@message "info.policies.terms.label"/></a>
 &nbsp;-&nbsp;

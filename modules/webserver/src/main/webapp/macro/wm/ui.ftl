@@ -19,9 +19,6 @@
             </div>
         </td>
     </tr>
-    <tr>
-        <td><#include "/content/playground/footer.ftl"/></td>
-    </tr>
 </table>
 </#macro>
 

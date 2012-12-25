@@ -88,18 +88,21 @@ a.action {
     border-color: transparent !important;
 }
 
-/* Footer CSS declaration */
-.footer {
+.personatity.footer {
     margin-top: 10px;
     white-space: nowrap;
     text-align: center;
     height: auto;
 }
 
-#betaConfirmation {
-    white-space: normal;
-    margin-left: 10%;
-    margin-right: 10%;
+.playground.footer {
+    margin-top: 2em;
+    text-align: right;
+    border-top: 1px solid #C5C8D0;
+}
+
+.playground.footer>span {
+    font-size: 85%;
 }
 
 .copyrights {
