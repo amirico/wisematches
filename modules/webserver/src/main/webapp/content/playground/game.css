@@ -48,8 +48,9 @@
     border-bottom: 1px solid #a52a2a;
 }
 
-.player .waiting {
+.waiting .player, .waiting .player>span, .waiting .player a, .waiting .player .nickname {
     color: gray;
+    border-color: gray;
 }
 
 .player .online {
