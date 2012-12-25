@@ -207,7 +207,7 @@
                                 <div>
                                     <#assign player=playerManager.getPlayer(p?number)!""/>
                                     <@wm.player.name player=player hideLink=true showState=false/>
-                                    <input type="hidden" name="opponent${p_index+1}" value="${player.id}"/>
+                                    <input type="hidden" name="opponents" value="${player.id}"/>
                                 </div>
                             </#if>
                         </#list>
