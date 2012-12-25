@@ -11,9 +11,27 @@
     <button onclick="wm.util.url.redirect('/playground/profile/view?p=${profile.playerId}')"><@message code="profile.edit.done"/></button>
 </div>
 
-<div style="width: 100%">
-    <div class="profile shadow ui-state-default">
-        <div class="content shadow ui-state-default">
+
+<table class="profile shadow ui-state-default" width="960px">
+    <tr>
+        <td class="info" width="200px">
+            <div class="photo" style="position: relative;">
+                <img class="shadow" style="width: 200px; height: 200px;"
+                     src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
+
+                <div class="remove">
+                    <img title="<@message code="profile.edit.photo.remove.label"/>" src="/resources/images/close.png"
+                         onclick="wm.ui.profile.removeProfilePhoto()"/>
+                </div>
+
+                <div>
+                    <a href="#"
+                       onclick="wm.ui.profile.chooseProfilePhoto()"><@message code="profile.edit.photo.change.label"/></a>
+                </div>
+            </div>
+        </td>
+
+        <td class="content shadow ui-state-default">
         <#if profileForm.gender??><#assign genderName=springMacroRequestContext.getMessage("gender."+profileForm.gender)/></#if>
         <#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage)/></#if>
         <#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>
@@ -33,26 +51,9 @@
 
 <@wm.ui.editor id="primaryLanguage" code="profile.edit.language" value=profileForm.primaryLanguage view=languageName/>
             </div>
-        </div>
-
-        <div class="info">
-            <div class="photo">
-                <img class="shadow" style="width: 200px; height: 200px;"
-                     src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
-
-                <div class="remove">
-                    <img title="<@message code="profile.edit.photo.remove.label"/>" src="/resources/images/close.png"
-                         onclick="wm.ui.profile.removeProfilePhoto()"/>
-                </div>
-
-                <div>
-                    <a href="#"
-                       onclick="wm.ui.profile.chooseProfilePhoto()"><@message code="profile.edit.photo.change.label"/></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        </td>
+    </tr>
+</table>
 
 <div id="changeProfileDialog" class="qq-uploader ui-helper-hidden">
     <table width="100%">
