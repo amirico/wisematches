@@ -7,12 +7,12 @@
 
     <groupId>wisematches</groupId>
     <artifactId>personality</artifactId>
-    <version>3.07-SNAPSHOT</version>
+    <version>3.09-SNAPSHOT</version>
 
     <parent>
         <groupId>wisematches</groupId>
         <artifactId>application</artifactId>
-        <version>3.07-SNAPSHOT</version>
+        <version>3.09-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>database</artifactId>
-            <version>3.07-SNAPSHOT</version>
+            <version>3.09-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
