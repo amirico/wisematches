@@ -75,8 +75,8 @@
                 <td>${proposal.settings.title}</td>
                 <td><@message code="language.${proposal.settings.language}"/></td>
                 <td>
-                            <span class="player"><span
-                                    class="waiting"><@message code="game.status.waiting"/></span></span>
+                            <span class="waiting"><span
+                                    class="player"><@message code="game.status.waiting"/></span></span>
 
                     <div style="text-align: right;">
                         <a href="decline?p=${proposal.id}"
@@ -94,8 +94,8 @@
                         <#if p??>
                             <@wm.player.name player=playerManager.getPlayer(p)/>
                         <#else>
-                            <span class="player"><span
-                                    class="waiting"><@message code="game.status.waiting"/></span></span>
+                            <span class="waiting"><span
+                                    class="player"><@message code="game.status.waiting"/></span></span>
                         </div>
                         </#if>
                     </#list>
