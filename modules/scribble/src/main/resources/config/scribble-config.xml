@@ -51,7 +51,7 @@
         <property name="poolSize" value="2"/>
         <property name="threadGroupName" value="ExpirationSchedulers"/>
         <property name="threadNamePrefix" value="ExpirationScheduler"/>
-        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="false"/>
     </bean>
 
     <bean id="scribbleGameExpirationManager"

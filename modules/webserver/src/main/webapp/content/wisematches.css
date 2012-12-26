@@ -158,7 +158,15 @@ tr.even:hover td, tr.odd:hover td {
 
 .button-wait-icon {
     padding-left: 22px !important;
-    background-image: url('/resources/images/wait.gif');
+    background: url('/resources/images/wait.gif') no-repeat left center;
+}
+
+.wm-icon-add {
+    background: url('/resources/images/common/add.png') no-repeat left center !important;
+}
+
+.wm-icon-delete {
+    background: url('/resources/images/common/add.png') no-repeat left center !important;
 }
 
 .wm-icon-wait {
