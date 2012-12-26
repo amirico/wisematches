@@ -31,10 +31,7 @@ import wisematches.server.web.controllers.playground.scribble.form.CreateScribbl
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleTab;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -104,6 +101,7 @@ public class CreateGameController extends AbstractGameController {
             log.info("Create new game: " + form);
         }
 
+        final Player principal = getPrincipal();
         if (form.getTitle().length() > 150) {
             return ServiceResponse.failure(messageSource.getMessage("game.create.title.err.max", locale));
         }
@@ -167,7 +165,12 @@ public class CreateGameController extends AbstractGameController {
             }
         }
 
-        final Player principal = getPrincipal();
+        final Set<Player> check = new HashSet<>(players);
+        check.add(principal);
+        if (check.size() < players.size() + 1) {
+            return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.duplicate", locale));
+        }
+
         final int activeGamesCount = getActiveGamesCount(principal);
         if (restrictionManager.validateRestriction(principal, "games.active", activeGamesCount) != null) {
             return ServiceResponse.failure(messageSource.getMessage("game.create.forbidden", locale, activeGamesCount));
@@ -181,7 +184,7 @@ public class CreateGameController extends AbstractGameController {
         ScribbleBoard board = null;
         if (players.size() == opponents.length) { // challenge or robot
             if (robot) { // robot
-                players.add(getPrincipal());
+                players.add(principal);
                 try {
                     board = boardManager.createBoard(s, players);
                 } catch (BoardCreationException ex) {
@@ -189,7 +192,7 @@ public class CreateGameController extends AbstractGameController {
                     return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale));
                 }
             } else { // challenge
-                proposalManager.initiate(s, getPrincipal(), players, form.getChallengeMessage());
+                proposalManager.initiate(s, principal, players, form.getChallengeMessage());
             }
         } else if (players.size() == 0) { // waiting
             final List<PlayerCriterion> res = new ArrayList<>();
@@ -205,7 +208,7 @@ public class CreateGameController extends AbstractGameController {
             if (form.getCompleted() > 0) {
                 res.add(PlayerRestrictions.completed("game.completed", form.getCompleted(), ComparableOperator.GE));
             }
-            proposalManager.initiate(s, getPrincipal(), opponents.length, res.toArray(new PlayerCriterion[res.size()]));
+            proposalManager.initiate(s, principal, opponents.length, res.toArray(new PlayerCriterion[res.size()]));
         } else {
             return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.mixed", locale));
         }
