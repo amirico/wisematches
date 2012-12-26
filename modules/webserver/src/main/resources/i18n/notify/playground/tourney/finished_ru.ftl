@@ -5,21 +5,20 @@
 
 <p>
     Поздравляем, вы
-    выйграли${context.tourney.number?string}${gameMessageSource.getNumeralEnding(context.tourney.number, locale)}
+    выйграли ${context.tourney.number?string}${gameMessageSource.getNumeralEnding(context.tourney.number, locale)}
     Турнир WiseMatches.
 </p>
 
 <p>
     После всех препятствий вы
-    заняли${gameMessageSource.getMessage("tourney.place." + context.place.place + ".label", locale)}
-    место в
-    категории ${gameMessageSource.getMessage("tourney.section." + context.division.section.name()?lower_case + ".label", locale)}
-    .
+    заняли ${gameMessageSource.getMessage("tourney.place." + context.place.place + ".label", locale)}
+    в категории
+${gameMessageSource.getMessage("tourney.section." + context.division.section.name()?lower_case + ".label", locale)}.
 </p>
 
 <p>
     Обращаем ваше внимание, что соответсвующая запись была добавлена в список ваших
-    наград: <@util.link href="playground/profile/awards"/>
+    наград: <@util.link href="playground/profile/awards?p=${principal.id}"/>.
 </p>
 
 <p>
