@@ -15,8 +15,9 @@
     <#if showRating> (${ratingManager.getRating(person)?string})</#if>
 </#macro>
 
-<#macro link href target=""><#local content><#nested></#local><a href="http://${serverHostName}/${href}"
-                                                                 <#if target?has_content>target="${target}"</#if>><#if content?has_content>${content?string}<#else>
-    http://${serverHostName}/${href}</#if></a></#macro>
+<#macro link href target=""><#local content><#nested></#local><a
+        href="http://${serverHostName}/${href}"<#if target?has_content>
+        target="${target}"</#if>><#if content?has_content>${content?string}<#else>http://${serverHostName}
+    /${href}</#if></a></#macro>
 
 <#macro mailto box><a href="mailto:${box}@${serverHostName}">${box}@${serverHostName}</a></#macro>

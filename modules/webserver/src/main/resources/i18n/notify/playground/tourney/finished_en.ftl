@@ -18,7 +18,7 @@ ${gameMessageSource.getMessage("tourney.section." + context.division.section.nam
 
 <p>
     Please note that appropriate record was added to list of all your
-    awards: <@util.link href="playground/profile/awards"/>
+    awards: <@util.link href="playground/profile/awards?p=${principal.id}"/>
 </p>
 
 <p>
