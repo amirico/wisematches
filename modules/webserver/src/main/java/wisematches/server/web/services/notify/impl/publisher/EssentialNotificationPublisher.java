@@ -54,12 +54,9 @@ public class EssentialNotificationPublisher implements NotificationPublisher {
 			if (notificationDate != null && (activityDate == null || !notificationDate.before(activityDate))) {
 				return; // if redundant already sent - do nothing.
 			}
-		}
-		try {
-			notificationPublisher.publishNotification(notification);
-		} finally {
 			updateNotificationDate(target, code, notification.getTimestamp());
 		}
+		notificationPublisher.publishNotification(notification);
 	}
 
 	private Date getNotificationDate(Personality personality, String code) {
