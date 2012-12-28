@@ -5,6 +5,7 @@ import java.util.Locale;
 /**
  * A dictionary allows get word by it's chars.
  */
+@Deprecated
 public interface Dictionary {
 	/**
 	 * Returns dictionary's word by it's chars.

@@ -16,7 +16,7 @@ public enum Language {
 	EN(new Locale("en"), "a moment", new String[][]{
 			{"d", "day", "days", "days"},
 			{"h", "hour", "hours", "hours"},
-			{"m", "minute", "minutes", "minutes"}}) {
+			{"m", "minute", "minutes", "minutes"}}, 'a', 26) {
 		@Override
 		public String getNumeralEnding(int abs) {
 			switch (abs) {
@@ -46,7 +46,7 @@ public enum Language {
 	RU(new Locale("ru"), "одно мгновенье", new String[][]{
 			{"д", "день", "дня", "дней"},
 			{"ч", "час", "часа", "часов"},
-			{"м", "минута", "минуты", "минут"}}) {
+			{"м", "минута", "минуты", "минут"}}, 'а', 32) {
 
 		private final String[] NUMERALS = new String[]{"ый", "ый", "ой", "ий", "ый", "ый", "ой", "ой", "ой", "ый"};
 
@@ -71,6 +71,7 @@ public enum Language {
 
 	private final String code;
 	private final Locale locale;
+	private final char[] alphabet;
 	private final String momentAgo;
 	private final String[][] timeDeclension;
 
@@ -79,11 +80,17 @@ public enum Language {
 	 */
 	public static final Language DEFAULT = EN;
 
-	private Language(Locale locale, String momentAgo, String[][] timeDeclension) {
+	private Language(Locale locale, String momentAgo, String[][] timeDeclension, char first, int count) {
 		this.momentAgo = momentAgo;
 		this.timeDeclension = timeDeclension;
 		this.code = locale.getLanguage();
 		this.locale = locale;
+
+		int c = (int) first;
+		alphabet = new char[count];
+		for (int i = c; i < c + count; i++) {
+			alphabet[i - c] = (char) i;
+		}
 	}
 
 	/**
@@ -104,6 +111,9 @@ public enum Language {
 		return locale;
 	}
 
+	public char[] getAlphabet() {
+		return alphabet.clone();
+	}
 
 	public String getDaysCode() {
 		return timeDeclension[0][0];

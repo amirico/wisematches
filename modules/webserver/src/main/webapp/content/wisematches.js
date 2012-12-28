@@ -114,6 +114,7 @@ wm.util.url = new function () {
 
 wm.ui = new function () {
     var activeWindows = true;
+    var statusWidgetPane = $("#status-widget-pane");
 
     $.blockUI.defaults.message = null;
 
@@ -157,7 +158,7 @@ wm.ui = new function () {
     };
 
     var showStatus = function (message, severity, stick) {
-        $("#status-widget-pane").empty();
+        statusWidgetPane.empty();
 
         if (stick == undefined) {
             stick = false;
@@ -174,11 +175,11 @@ wm.ui = new function () {
             }, onHover: function () {
             }});
         }
-        $("#status-widget-pane").freeow(null, message, opts);
+        statusWidgetPane.freeow(null, message, opts);
     };
 
     var clearStatus = function () {
-        var freeow = $("#status-widget-pane").children().data("freeow");
+        var freeow = statusWidgetPane.children().data("freeow");
         if (freeow != null) {
             freeow.hide();
         } else {
