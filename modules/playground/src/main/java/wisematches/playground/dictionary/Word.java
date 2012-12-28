@@ -10,7 +10,8 @@ import java.util.Locale;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class Word implements Serializable {
+@Deprecated
+public final class Word implements Serializable, Comparable<Word> {
 	private final String text;
 	private final String description;
 	private final Locale locale;
@@ -63,5 +64,10 @@ public final class Word implements Serializable {
 
 	public String toString() {
 		return text;
+	}
+
+	@Override
+	public int compareTo(Word o) {
+		return text.compareTo(o.text);
 	}
 }

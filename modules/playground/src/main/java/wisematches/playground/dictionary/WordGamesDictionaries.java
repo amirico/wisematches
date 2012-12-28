@@ -10,6 +10,7 @@ import java.util.Locale;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public interface WordGamesDictionaries extends DictionaryManager {
 	Dictionary getDictionary(Locale locale, boolean allowSlangWords) throws DictionaryNotFoundException;
 

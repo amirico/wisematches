@@ -16,6 +16,10 @@
         <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
     </bean>
 
+    <bean id="vocabularyManager" class="wisematches.playground.vocabulary.impl.FileVocabularyManager">
+        <property name="searchFolder" value="${server.vocabulary.path}"/>
+    </bean>
+
     <bean id="lexicalDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
     </bean>
