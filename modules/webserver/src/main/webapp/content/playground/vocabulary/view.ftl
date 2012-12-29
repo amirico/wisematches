@@ -1,6 +1,4 @@
-<#-- @ftlvariable name="vocabulary" type="wisematches.playground.vocabulary.Vocabulary" -->
-<#-- @ftlvariable name="distribution" type="wisematches.server.web.controllers.playground.vocabulary.view.VocabularyDistribution" -->
-
+<#-- @ftlvariable name="vocabularies" type="wisematches.playground.vocabulary.VocabularyOld[]" -->
 <#include "/core.ftl"/>
 
 <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.jscrollpane.css" xmlns="http://www.w3.org/1999/html"/>
@@ -8,23 +6,30 @@
 <script type="text/javascript" src="/jquery/js/jquery.jscrollpane.min.js"></script>
 
 <style type="text/css">
-    .asd .ui-widget-content {
+    .asd .ui-widget-content, .asd .ui-state-hover {
         padding: 0;
     }
 
     .scroll-pane {
         width: 100%;
-        height: 200px;
+        height: 400px;
         overflow: auto;
     }
 
     .horizontal-only {
         height: auto;
-        max-height: 200px;
+        max-height: 400px;
     }
 
     #vocabulary .ui-widget-content div {
         display: block;
+    }
+
+    #scrollbar1 table td {
+        vertical-align: top;
+        padding-left: 2px;
+        padding-right: 2px;
+        border-bottom: 1px dashed #d0e5f5;
     }
 </style>
 
@@ -33,53 +38,74 @@
 <@wm.ui.playground id="vocabularyWidget">
 <div id="vocabulary">
     <@wm.ui.table.header>
-        Игровой Словарь > ${vocabulary.name}
+        Игровые Словари
     </@wm.ui.table.header>
 
-    <@wm.ui.table.toolbar align="left">
-    ${vocabulary.description}
-        <span class="sample">${gameMessageSource.formatDate(vocabulary.modificationDate, locale)}</span>
-
+    <@wm.ui.table.toolbar align="left" class="asd">
         <table width="100%">
             <tr>
-                <td align="left" valign="middle">
-                    <label for="vocabularySearch">Поиск:</label>
-                    <input id="vocabularySearch" type="text" value="" size="30"/>
+                <td align="left" valign="top" class="ui-widget-content ui-state-hover"
+                    style="border-width: 0 1px 0 0; width: 200px !important; padding: 3px; background-image: none">
+                    <div>
+                        <strong>Поиск в словарях:</strong>
+                        <input id="vocabularySearch" type="text" value="" style="width: 100%"/>
+                    </div>
                 </td>
 
-                <td align="right" valign="middle">
+                <td>
+                    <div class="words">
+                        <div>
+                            <#list vocabularies as v>
+                                <#list v.alphabet.toCharArray() as l>
+                                    <a href="#${l?upper_case}" onclick="return false;">${l?upper_case}</a>
+                                </#list>
+                            </#list>
+                        </div>
+                        <div>
+                            <#list ['Аа','Аб','Ав','Аг','Ад','Ас','Аж'] as l>
+                                <a href="#${l}" onclick="return false;">${l}</a>
+                            </#list>
+                        </div>
+                    </div>
+                </td>
+
+                <td align="right" valign="bottom">
                     <button>Добавить Новое Слово</button>
                 </td>
             </tr>
+        <#--
+                    <tr>
+                        <td colspan="2" style="padding-left: 204px">
+                            <div class="words" style="display: inline">
+                                <div style="display: inline">
+                                    <#list vocabularies as v>
+                                        <#list v.alphabet.toCharArray() as l>
+                                            <a href="#${l?upper_case}" onclick="return false;">${l?upper_case}</a>
+                                        </#list>
+                                    </#list>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+        -->
         </table>
     </@wm.ui.table.toolbar>
-
-    <@wm.ui.table.statusbar align="left">
-        <div class="words">
-            <div>
-                <#list distribution.firstLevel as l>
-                <#--<#assign cnt=distribution.getLettersCount(l)/>-->
-                <#--<#if cnt != 0>-->
-                    <a href="#${l?upper_case}" onclick="return false;">${l?upper_case}</a>
-                <#--</#if>-->
-                </#list>
-            </div>
-        </div>
-    </@wm.ui.table.statusbar>
 
     <@wm.ui.table.content wrap=true class="asd">
         <table width="100%">
             <tr>
-                <td valign="top" class="ui-widget-content" style="border-width: 0 1px 0 0; display: none;">
-                <#--<div class="words" style="padding-left: 2px; padding-right: 2px;">-->
-                        <#--<div><a href="#Аа">Aа</a></div>-->
-                        <#--<div><a href="#Аб">Aб</a></div>-->
-                        <#--<div><a href="#Ав">Aв</a></div>-->
-                        <#--<div><a href="#Аг">Aг</a></div>-->
-                        <#--<div><a href="#Ад">Aд</a></div>-->
-                    <#--</div>-->
+                <td valign="top" class="ui-widget-content ui-state-hover"
+                    style="border-width: 0 1px 0 0; width: 200px !important; padding: 3px; background-image: none">
+                    <div style="padding-top: 10px">
+                        <#list vocabularies as v>
+                            <div>
+                                <input id="${v.id}" type="checkbox" checked="checked" value="true">
+                                <label for="${v.id}">${v.name}</label>
+                            </div>
+                        </#list>
+                    </div>
                 </td>
-                <td width="100%">
+                <td>
                     <div id="scrollbar1" class="scroll-pane" style="display: inline-block">
                         <table width="100%">
                         </table>
@@ -88,6 +114,11 @@
             </tr>
         </table>
     </@wm.ui.table.content>
+
+<#--
+    <@wm.ui.table.statusbar align="left">
+    </@wm.ui.table.statusbar>
+-->
 
     <@wm.ui.table.statusbar align="left">
         <div id="wordsCount" class="sample">
@@ -103,6 +134,22 @@
 <script type="text/javascript">
     $("#vocabulary").find("button").button({icons: {primary: 'ui-icon-circle-plus'}});
 
+    function getGender(g) {
+        if (g == "MASCULINE") {
+            return "м."
+        }
+        if (g == "FEMININE") {
+            return "ж."
+        }
+        if (g == "MASCULINE") {
+            return "ср."
+        }
+        if (g == "COMPOSITE") {
+            return "м. и ж."
+        }
+        return "";
+    }
+
     function loadVocabulary(prefix) {
         var t = $("#scrollbar1").find("table");
         wm.ui.lock(scroll, "Loading vocabulary");
@@ -113,13 +160,13 @@
         if (prefix.length == 0) {
             wm.ui.unlock(scroll);
         } else {
-            $.post("/playground/vocabulary/load.ajax?l=ru&p=" + prefix, null, function (words) {
+            $.post("/playground/vocabulary/load.ajax?l=ru&v=ozhigov.dic&p=" + prefix, null, function (words) {
                 wce.text(words.length);
 
                 $.each(words, function (i, v) {
                     t.append($("<tr>" +
                             "<td><a href='asd'>" + v.text + "<a/></td>" +
-                            "<td>" + v.gender + "</td>" +
+                            "<td>" + getGender(v.gender) + "</td>" +
                             "<td>" + v.description + "</td>" +
                             "</tr>"));
                 });
@@ -138,7 +185,7 @@
         window.clearTimeout(input.data("timeout"));
         input.data("timeout", setTimeout(function () {
             loadVocabulary(value);
-        }, 500));
+        }, 800));
     });
 
     var scroll = $("#scrollbar1").jScrollPane({showArrows: true, horizontalGutter: 10, hideFocus: true});

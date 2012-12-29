@@ -1,20 +1,17 @@
 package wisematches.playground.vocabulary;
 
-import wisematches.personality.Language;
-
-import java.util.Collection;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface Vocabulary extends Iterable<Word> {
+public interface Vocabulary {
 	/**
 	 * Returns unique id for this vocabulary.
 	 *
 	 * @return unique id for this vocabulary.
 	 */
-	String getId();
+	String getCode();
 
 	/**
 	 * Returns name of this vocabulary.
@@ -22,13 +19,6 @@ public interface Vocabulary extends Iterable<Word> {
 	 * @return name of this vocabulary.
 	 */
 	String getName();
-
-	/**
-	 * Returns language for this vocabulary.
-	 *
-	 * @return language for this vocabulary.
-	 */
-	Language getLanguage();
 
 	/**
 	 * Returns description of vocabulary.
@@ -42,29 +32,14 @@ public interface Vocabulary extends Iterable<Word> {
 	 *
 	 * @return date when the vocabulary was updated last time.
 	 */
-	Date getModificationDate();
+	Date getLastModification();
 
 	/**
-	 * Returns number of words in this vocabulary.
+	 * Checks that the dictionary contains specified word.
 	 *
-	 * @return the number of words in this vocabulary.
+	 * @param word the word to be checked.
+	 * @return {@code true} if dictionary contains specified word; {@code false} - otherwise.
+	 * @throws NullPointerException if specified word is null.
 	 */
-	int getSize();
-
-	/**
-	 * Returns vocabulary word by it's name.
-	 *
-	 * @param name the word's name.
-	 * @return vocabulary word or {@code null} if it's unknown.
-	 */
-	Word getWord(String name);
-
-	/**
-	 * Searches all vocabulary words by specified prefix.
-	 *
-	 * @param prefix search prefix.
-	 * @return collection of words which are started with specified prefix. If there are no
-	 *         words empty list will be returned.
-	 */
-	Collection<Word> searchWords(String prefix);
+	boolean contains(String word);
 }
