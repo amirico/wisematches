@@ -1,32 +1,35 @@
 package wisematches.playground.dictionary;
 
-import java.util.Locale;
+import java.util.Collection;
 
 /**
- * A dictionary allows get word by it's chars.
+ * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public interface Dictionary {
-	/**
-	 * Returns dictionary's word by it's chars.
-	 *
-	 * @param chars the chars of word.
-	 * @return the word or <code>null</code> if word is unknown
-	 */
-	Word getWord(CharSequence chars);
+    void addWordEntry(WordEntry entry) throws DictionaryException;
 
-	/**
-	 * Returns locale of this dictionary
-	 *
-	 * @return the locale of this dictionary
-	 */
-	Locale getLocale();
+    void updateWordEntry(WordEntry entry) throws DictionaryException;
 
-	/**
-	 * Returns source of this dictionary. It can contains description of source (like Lingvo Universal Dictionary) or
-	 * any other information (like URL of Web dictionary)
-	 *
-	 * @return the source of this dictionary.
-	 */
-	String getSource();
+    void removeWordEntry(WordEntry entry) throws DictionaryException;
+
+
+    void addVocabularyWord(Vocabulary vocabulary, String word) throws DictionaryException;
+
+    void removeVocabularyWord(Vocabulary vocabulary, String word) throws DictionaryException;
+
+
+//    boolean containsWord(String word);
+
+    WordEntry getWordEntry(String word);
+
+    Collection<WordEntry> getWordEntries();
+
+    Collection<WordEntry> getWordEntries(String prefix);
+
+
+    Vocabulary getDefaultVocabulary();
+
+    Vocabulary getVocabulary(String code);
+
+    Collection<Vocabulary> getVocabularies();
 }

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="vocabularies" type="wisematches.playground.vocabulary.VocabularyOld[]" -->
+<#-- @ftlvariable name="vocabularies" type="wisematches.playground.dictionary.Vocabulary[]" -->
 <#include "/core.ftl"/>
 
 <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.jscrollpane.css" xmlns="http://www.w3.org/1999/html"/>
@@ -56,7 +56,7 @@
                     <div class="words">
                         <div>
                             <#list vocabularies as v>
-                                <#list v.alphabet.toCharArray() as l>
+                                <#list ['А', 'Б'] as l>
                                     <a href="#${l?upper_case}" onclick="return false;">${l?upper_case}</a>
                                 </#list>
                             </#list>
@@ -73,21 +73,6 @@
                     <button>Добавить Новое Слово</button>
                 </td>
             </tr>
-        <#--
-                    <tr>
-                        <td colspan="2" style="padding-left: 204px">
-                            <div class="words" style="display: inline">
-                                <div style="display: inline">
-                                    <#list vocabularies as v>
-                                        <#list v.alphabet.toCharArray() as l>
-                                            <a href="#${l?upper_case}" onclick="return false;">${l?upper_case}</a>
-                                        </#list>
-                                    </#list>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-        -->
         </table>
     </@wm.ui.table.toolbar>
 
@@ -99,8 +84,8 @@
                     <div style="padding-top: 10px">
                         <#list vocabularies as v>
                             <div>
-                                <input id="${v.id}" type="checkbox" checked="checked" value="true">
-                                <label for="${v.id}">${v.name}</label>
+                                <input id="${v.code}" type="checkbox" checked="checked" value="true">
+                                <label for="${v.code}">${v.name}</label>
                             </div>
                         </#list>
                     </div>
@@ -122,7 +107,7 @@
 
     <@wm.ui.table.statusbar align="left">
         <div id="wordsCount" class="sample">
-            <strong>Слов, начинающихся с '<em>лапка</em>':</strong> <span>выберите начальную букву либо введите начало слова</span>
+            <strong>Найдено слов в словарях:</strong> <span>выберите начальную букву либо введите начало слова</span>
         </div>
     </@wm.ui.table.statusbar>
 
@@ -133,22 +118,6 @@
 
 <script type="text/javascript">
     $("#vocabulary").find("button").button({icons: {primary: 'ui-icon-circle-plus'}});
-
-    function getGender(g) {
-        if (g == "MASCULINE") {
-            return "м."
-        }
-        if (g == "FEMININE") {
-            return "ж."
-        }
-        if (g == "MASCULINE") {
-            return "ср."
-        }
-        if (g == "COMPOSITE") {
-            return "м. и ж."
-        }
-        return "";
-    }
 
     function loadVocabulary(prefix) {
         var t = $("#scrollbar1").find("table");
@@ -164,10 +133,16 @@
                 wce.text(words.length);
 
                 $.each(words, function (i, v) {
+                    var def = "";
+                    $.each(v.definitions, function (j, d) {
+                        if (def != "") {
+                            def += "<br>";
+                        }
+                        def += "<span class='sample'>" + d.attributes + "</span> " + d.text;
+                    });
                     t.append($("<tr>" +
-                            "<td><a href='asd'>" + v.text + "<a/></td>" +
-                            "<td>" + getGender(v.gender) + "</td>" +
-                            "<td>" + v.description + "</td>" +
+                            "<td><a href='asd'>" + v.word + "<a/></td>" +
+                            "<td>" + def + "</td>" +
                             "</tr>"));
                 });
                 api.reinitialise();

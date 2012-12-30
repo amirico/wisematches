@@ -1,8 +1,19 @@
 package wisematches.server.web.controllers.playground.vocabulary;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import wisematches.personality.Language;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.DictionaryManager;
+import wisematches.playground.dictionary.WordEntry;
+import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
+
+import java.util.Collection;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -10,31 +21,31 @@ import wisematches.server.web.controllers.WisematchesController;
 @Controller
 @RequestMapping("/playground/vocabulary")
 public class VocabularyController extends WisematchesController {
-/*
-	private VocabularyManagerOld vocabularyManager;
+    private DictionaryManager dictionaryManager;
 
-	public VocabularyController() {
-	}
+    public VocabularyController() {
+    }
 
-	@RequestMapping("")
-	public String showReceivedMessage(Model model) throws UnknownEntityException {
-		final Language language = Language.RU;
+    @RequestMapping("")
+    public String showReceivedMessage(Model model) throws UnknownEntityException {
+        final Language language = Language.RU;
 
-		model.addAttribute("vocabularies", vocabularyManager.getVocabularies(language));
-		return "/content/playground/vocabulary/view";
-	}
 
-	@ResponseBody
-	@RequestMapping("load.ajax")
-	public Collection<Word> loadWords(@RequestParam("v") String vid,
-									  @RequestParam("p") String prefix) throws UnknownEntityException {
-		final VocabularyOld vocabulary = vocabularyManager.getVocabulary(vid);
-		return vocabulary.searchWords(prefix);
-	}
+        final Dictionary dictionary = dictionaryManager.getDictionary(language);
+        model.addAttribute("vocabularies", dictionary.getVocabularies());
+        return "/content/playground/vocabulary/view";
+    }
 
-	@Autowired
-	public void setVocabularyManager(VocabularyManagerOld vocabularyManager) {
-		this.vocabularyManager = vocabularyManager;
-	}
-*/
+    @ResponseBody
+    @RequestMapping("load.ajax")
+    public Collection<WordEntry> loadWords(@RequestParam("v") String vid,
+                                           @RequestParam("p") String prefix) throws UnknownEntityException {
+        final Dictionary dictionary = dictionaryManager.getDictionary(Language.RU);
+        return dictionary.getWordEntries(prefix);
+    }
+
+    @Autowired
+    public void setDictionaryManager(DictionaryManager dictionaryManager) {
+        this.dictionaryManager = dictionaryManager;
+    }
 }

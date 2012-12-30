@@ -11,7 +11,7 @@
         <property name="ratingManager" ref="ratingManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
-        <property name="dictionaryManager" ref="wordGamesDictionaries"/>
+        <property name="dictionaryManager" ref="dictionaryManager"/>
     </bean>
 
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">

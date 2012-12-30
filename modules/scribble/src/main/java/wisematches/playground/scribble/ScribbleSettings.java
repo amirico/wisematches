@@ -5,6 +5,8 @@ import wisematches.playground.GameSettings;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 /**
  * Scribble game has a language of letters.
@@ -13,79 +15,103 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public final class ScribbleSettings extends GameSettings {
-	@Column(name = "language", updatable = false)
-	private String language;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language", updatable = false)
+    private Language language;
 
-	private static final long serialVersionUID = -5153027839777003987L;
+    @Column(name = "vocabulary", updatable = false)
+    private String vocabulary;
 
-	/**
-	 * This is Hibernate constructor.
-	 */
-	protected ScribbleSettings() {
-	}
+    private static final long serialVersionUID = -5153027839777003987L;
 
-	/**
-	 * Creates new scribble game settings with specified parameters and board language.
-	 *
-	 * @param title	the title of the game.
-	 * @param language the code of the language.
-	 */
-	public ScribbleSettings(String title, Language language) {
-		this(title, language, DEFAULT_TIMEOUT_DAYS);
-	}
+    /**
+     * This is Hibernate constructor.
+     */
+    protected ScribbleSettings() {
+    }
 
-	/**
-	 * Creates new scribble game settings with specified parameters and board language.
-	 *
-	 * @param title	   the title of the game.
-	 * @param language	the code of the language.
-	 * @param daysPerMove days per move.
-	 */
-	public ScribbleSettings(String title, Language language, int daysPerMove) {
-		this(title, language, daysPerMove, true, false);
-	}
+    /**
+     * Creates new scribble game settings with specified parameters and board language.
+     *
+     * @param title    the title of the game.
+     * @param language the code of the language.
+     */
+    public ScribbleSettings(String title, Language language, String vocabulary) {
+        this(title, language, vocabulary, DEFAULT_TIMEOUT_DAYS);
+    }
 
-	public ScribbleSettings(String title, Language language, int daysPerMove, boolean ratedGame, boolean scratch) {
-		super(title, daysPerMove, ratedGame, scratch);
-		this.language = language.code();
-	}
+    /**
+     * Creates new scribble game settings with specified parameters and board language.
+     *
+     * @param title       the title of the game.
+     * @param language    the code of the language.
+     * @param daysPerMove days per move.
+     */
+    public ScribbleSettings(String title, Language language, String vocabulary, int daysPerMove) {
+        this(title, language, vocabulary, daysPerMove, true, false);
+    }
 
-	@Override
-	public int getMinPlayers() {
-		return 2;
-	}
+    public ScribbleSettings(String title, Language language, String vocabulary, int daysPerMove, boolean ratedGame, boolean scratch) {
+        super(title, daysPerMove, ratedGame, scratch);
+        if (language == null) {
+            throw new NullPointerException("Language can't be null");
+        }
+        if (vocabulary == null) {
+            throw new NullPointerException("Vocabulary can't be null");
+        }
+        this.language = language;
+        this.vocabulary = vocabulary;
+    }
 
-	@Override
-	public int getMaxPlayers() {
-		return 4;
-	}
+    @Override
+    public int getMinPlayers() {
+        return 2;
+    }
 
-	/**
-	 * Returns code of the language.
-	 *
-	 * @return code of the language.
-	 */
-	public String getLanguage() {
-		return language;
-	}
+    @Override
+    public int getMaxPlayers() {
+        return 4;
+    }
 
-	public static class Builder extends GameSettings.Builder {
-		private Language language;
+    /**
+     * Returns code of the language.
+     *
+     * @return code of the language.
+     */
+    public Language getLanguage() {
+        return language;
+    }
 
-		public Builder() {
-		}
+    public String getVocabulary() {
+        return vocabulary;
+    }
 
-		@Override
-		public ScribbleSettings build() {
-			return new ScribbleSettings(title, language, daysPerMove, ratedGame, scratch);
-		}
+    public static class Builder extends GameSettings.Builder {
+        private Language language;
+        private String vocabulary;
 
-		public Language getLanguage() {
-			return language;
-		}
+        public Builder() {
+        }
 
-		public void setLanguage(Language language) {
-			this.language = language;
-		}
-	}
+        @Override
+        public ScribbleSettings build() {
+            return new ScribbleSettings(title, language, vocabulary, daysPerMove, ratedGame, scratch);
+        }
+
+        public Language getLanguage() {
+            return language;
+        }
+
+        public void setLanguage(Language language) {
+            this.language = language;
+        }
+
+        public String getVocabulary() {
+            return vocabulary;
+        }
+
+        public void setVocabulary(String vocabulary) {
+            this.vocabulary = vocabulary;
+        }
+    }
 }
