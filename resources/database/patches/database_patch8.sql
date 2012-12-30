@@ -1,1 +1,0 @@
-ALTER TABLE `wisematches`.`scribble_board` ADD COLUMN `movesCount` TINYINT(4) NOT NULL  AFTER `resolution` ;

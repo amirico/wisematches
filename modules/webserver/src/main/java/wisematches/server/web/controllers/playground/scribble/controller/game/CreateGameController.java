@@ -19,6 +19,8 @@ import wisematches.playground.BoardLoadingException;
 import wisematches.playground.criteria.ComparableOperator;
 import wisematches.playground.criteria.PlayerCriterion;
 import wisematches.playground.criteria.PlayerRestrictions;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -39,6 +41,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/scribble")
 public class CreateGameController extends AbstractGameController {
+    private DictionaryManager dictionaryManager;
     private RestrictionManager restrictionManager;
     private ScribblePlayerSearchManager searchManager;
 
@@ -124,8 +127,17 @@ public class CreateGameController extends AbstractGameController {
             return ServiceResponse.failure(messageSource.getMessage("game.create.language.err.blank", locale));
         }
 
+        final String vocabulary = form.getVocabulary();
+        final Dictionary dictionary = dictionaryManager.getDictionary(language);
+        if (dictionary == null) {
+            return ServiceResponse.failure(messageSource.getMessage("game.create.dictionary.err.unknown", locale));
+        }
+        if (dictionary.getVocabulary(vocabulary) == null) {
+            return ServiceResponse.failure(messageSource.getMessage("game.create.vocabulary.err.unknown", locale));
+        }
+
         long[] opponents;
-        final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
+        final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, vocabulary, form.getDaysPerMove());
         if (form.getCreateTab() == CreateScribbleTab.ROBOT) {
             opponents = new long[]{RobotPlayer.valueOf(form.getRobotType()).getId()};
         } else if (form.getCreateTab() == CreateScribbleTab.WAIT) {
@@ -276,8 +288,9 @@ public class CreateGameController extends AbstractGameController {
             if (board != null) {
                 form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
                 form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
-                form.setBoardLanguage(board.getSettings().getLanguage());
+                form.setVocabulary(board.getSettings().getVocabulary());
                 form.setDaysPerMove(board.getSettings().getDaysPerMove());
+                form.setBoardLanguage(board.getSettings().getLanguage().code());
 
                 int index = 0;
                 final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
@@ -298,6 +311,11 @@ public class CreateGameController extends AbstractGameController {
     private void initDefaultForm(CreateScribbleForm form) {
         form.setCreateTab(CreateScribbleTab.ROBOT);
         form.setOpponentsCount(1);
+    }
+
+    @Autowired
+    public void setDictionaryManager(DictionaryManager dictionaryManager) {
+        this.dictionaryManager = dictionaryManager;
     }
 
     @Autowired

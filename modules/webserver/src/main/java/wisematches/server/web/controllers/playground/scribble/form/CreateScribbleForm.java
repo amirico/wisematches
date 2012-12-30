@@ -11,172 +11,182 @@ import javax.validation.constraints.NotNull;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class CreateScribbleForm {
-	@Length(max = 150, message = "game.create.title.err.max")
-	private String title;
+    @Length(max = 150, message = "game.create.title.err.max")
+    private String title;
 
-	@Min(value = 2, message = "game.create.time.err.min")
-	@Max(value = 14, message = "game.create.time.err.max")
-	private int daysPerMove = 3;
+    @Min(value = 2, message = "game.create.time.err.min")
+    @Max(value = 14, message = "game.create.time.err.max")
+    private int daysPerMove = 3;
 
-	private String boardLanguage;
+    private String boardLanguage;
 
-	@NotNull(message = "game.create.opponent.err.blank")
-	private CreateScribbleTab createTab = CreateScribbleTab.ROBOT;
+    private String vocabulary;
 
-	private int completed = 0;
-	private int timeouts = 0;
-	private short minRating = 0;
-	private short maxRating = 0;
+    @NotNull(message = "game.create.opponent.err.blank")
+    private CreateScribbleTab createTab = CreateScribbleTab.ROBOT;
 
-	private RobotType robotType = RobotType.TRAINEE;
+    private int completed = 0;
+    private int timeouts = 0;
+    private short minRating = 0;
+    private short maxRating = 0;
 
-	@Min(value = 1, message = "game.create.opponents.err.min")
-	@Max(value = 3, message = "game.create.opponents.err.max")
-	private int opponentsCount = 1;
+    private RobotType robotType = RobotType.TRAINEE;
 
-	private long[] opponents;
+    @Min(value = 1, message = "game.create.opponents.err.min")
+    @Max(value = 3, message = "game.create.opponents.err.max")
+    private int opponentsCount = 1;
 
-	@Length(max = 254, message = "game.create.opponent.challenge.err")
-	private String challengeMessage;
+    private long[] opponents;
 
-	private boolean commonError = false;
+    @Length(max = 254, message = "game.create.opponent.challenge.err")
+    private String challengeMessage;
 
-	private boolean rotten = false;
+    private boolean commonError = false;
 
-	public CreateScribbleForm() {
-	}
+    private boolean rotten = false;
 
-	public String getTitle() {
-		return title;
-	}
+    public CreateScribbleForm() {
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getBoardLanguage() {
-		return boardLanguage;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setBoardLanguage(String boardLanguage) {
-		this.boardLanguage = boardLanguage;
-	}
+    public String getBoardLanguage() {
+        return boardLanguage;
+    }
 
-	public int getDaysPerMove() {
-		return daysPerMove;
-	}
+    public void setBoardLanguage(String boardLanguage) {
+        this.boardLanguage = boardLanguage;
+    }
 
-	public void setDaysPerMove(int daysPerMove) {
-		this.daysPerMove = daysPerMove;
-	}
+    public int getDaysPerMove() {
+        return daysPerMove;
+    }
 
-	public CreateScribbleTab getCreateTab() {
-		return createTab;
-	}
+    public void setDaysPerMove(int daysPerMove) {
+        this.daysPerMove = daysPerMove;
+    }
 
-	public void setCreateTab(CreateScribbleTab createTab) {
-		this.createTab = createTab;
-	}
+    public CreateScribbleTab getCreateTab() {
+        return createTab;
+    }
 
-	public RobotType getRobotType() {
-		return robotType;
-	}
+    public void setCreateTab(CreateScribbleTab createTab) {
+        this.createTab = createTab;
+    }
 
-	public void setRobotType(RobotType robotType) {
-		this.robotType = robotType;
-	}
+    public RobotType getRobotType() {
+        return robotType;
+    }
 
-	public short getMinRating() {
-		return minRating;
-	}
+    public void setRobotType(RobotType robotType) {
+        this.robotType = robotType;
+    }
 
-	public void setMinRating(short minRating) {
-		this.minRating = minRating;
-	}
+    public short getMinRating() {
+        return minRating;
+    }
 
-	public short getMaxRating() {
-		return maxRating;
-	}
+    public void setMinRating(short minRating) {
+        this.minRating = minRating;
+    }
 
-	public void setMaxRating(short maxRating) {
-		this.maxRating = maxRating;
-	}
+    public short getMaxRating() {
+        return maxRating;
+    }
 
-	public int getCompleted() {
-		return completed;
-	}
+    public void setMaxRating(short maxRating) {
+        this.maxRating = maxRating;
+    }
 
-	public void setCompleted(int completed) {
-		this.completed = completed;
-	}
+    public int getCompleted() {
+        return completed;
+    }
 
-	public int getTimeouts() {
-		return timeouts;
-	}
+    public void setCompleted(int completed) {
+        this.completed = completed;
+    }
 
-	public void setTimeouts(int timeouts) {
-		this.timeouts = timeouts;
-	}
+    public int getTimeouts() {
+        return timeouts;
+    }
 
-	public int getOpponentsCount() {
-		return opponentsCount;
-	}
+    public void setTimeouts(int timeouts) {
+        this.timeouts = timeouts;
+    }
 
-	public void setOpponentsCount(int opponentsCount) {
-		this.opponentsCount = opponentsCount;
-	}
+    public int getOpponentsCount() {
+        return opponentsCount;
+    }
 
-	public long[] getOpponents() {
-		return opponents;
-	}
+    public void setOpponentsCount(int opponentsCount) {
+        this.opponentsCount = opponentsCount;
+    }
 
-	public void setOpponents(long[] opponents) {
-		this.opponents = opponents;
-	}
+    public long[] getOpponents() {
+        return opponents;
+    }
 
-	public String getChallengeMessage() {
-		return challengeMessage;
-	}
+    public void setOpponents(long[] opponents) {
+        this.opponents = opponents;
+    }
 
-	public void setChallengeMessage(String challengeMessage) {
-		this.challengeMessage = challengeMessage;
-	}
+    public String getChallengeMessage() {
+        return challengeMessage;
+    }
 
-	public boolean isRotten() {
-		return rotten;
-	}
+    public void setChallengeMessage(String challengeMessage) {
+        this.challengeMessage = challengeMessage;
+    }
 
-	public void setRotten(boolean rotten) {
-		this.rotten = rotten;
-	}
+    public boolean isRotten() {
+        return rotten;
+    }
 
-	public boolean isCommonError() {
-		return commonError;
-	}
+    public void setRotten(boolean rotten) {
+        this.rotten = rotten;
+    }
 
-	public void setCommonError(boolean commonError) {
-		this.commonError = commonError;
-	}
+    public boolean isCommonError() {
+        return commonError;
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("CreateScribbleForm");
-		sb.append("{title='").append(title).append('\'');
-		sb.append(", daysPerMove=").append(daysPerMove);
-		sb.append(", boardLanguage='").append(boardLanguage).append('\'');
-		sb.append(", createTab=").append(createTab);
-		sb.append(", minRating=").append(minRating);
-		sb.append(", maxRating=").append(maxRating);
-		sb.append(", robotType=").append(robotType);
-		sb.append(", opponentsCount=").append(opponentsCount);
-		sb.append(", opponents=").append(opponents == null ? "null" : "");
-		for (int i = 0; opponents != null && i < opponents.length; ++i)
-			sb.append(i == 0 ? "" : ", ").append(opponents[i]);
-		sb.append(", challengeMessage='").append(challengeMessage).append('\'');
-		sb.append(", commonError=").append(commonError);
-		sb.append(", rotten=").append(rotten);
-		sb.append('}');
-		return sb.toString();
-	}
+    public void setCommonError(boolean commonError) {
+        this.commonError = commonError;
+    }
+
+    public String getVocabulary() {
+        return vocabulary;
+    }
+
+    public void setVocabulary(String vocabulary) {
+        this.vocabulary = vocabulary;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("CreateScribbleForm");
+        sb.append("{title='").append(title).append('\'');
+        sb.append(", daysPerMove=").append(daysPerMove);
+        sb.append(", boardLanguage='").append(boardLanguage).append('\'');
+        sb.append(", createTab=").append(createTab);
+        sb.append(", minRating=").append(minRating);
+        sb.append(", maxRating=").append(maxRating);
+        sb.append(", robotType=").append(robotType);
+        sb.append(", opponentsCount=").append(opponentsCount);
+        sb.append(", opponents=").append(opponents == null ? "null" : "");
+        for (int i = 0; opponents != null && i < opponents.length; ++i)
+            sb.append(i == 0 ? "" : ", ").append(opponents[i]);
+        sb.append(", challengeMessage='").append(challengeMessage).append('\'');
+        sb.append(", commonError=").append(commonError);
+        sb.append(", rotten=").append(rotten);
+        sb.append('}');
+        return sb.toString();
+    }
 }

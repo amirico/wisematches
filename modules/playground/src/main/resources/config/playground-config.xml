@@ -16,22 +16,8 @@
         <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
     </bean>
 
-    <bean id="vocabularyManager" class="wisematches.playground.vocabulary.impl.FileVocabularyManager">
-        <property name="searchFolder" value="${server.vocabulary.path}"/>
-    </bean>
-
-    <bean id="lexicalDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
-        <property name="dictionariesFolder" value="${server.dictionary.path}/lexical"/>
-    </bean>
-
-    <bean id="slanglyDictionary" class="wisematches.playground.dictionary.impl.file.FileDictionaryManager">
-        <property name="dictionariesFolder" value="${server.dictionary.path}/slangly"/>
-        <property name="createEmptyDictionary" value="true"/>
-    </bean>
-
-    <bean id="wordGamesDictionaries" class="wisematches.playground.dictionary.impl.WordGamesDictionariesImpl">
-        <property name="lexicalManager" ref="lexicalDictionary"/>
-        <property name="slanglyManager" ref="slanglyDictionary"/>
+    <bean id="dictionaryManager" class="wisematches.playground.dictionary.impl.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}"/>
     </bean>
 
     <bean id="messageManager" class="wisematches.playground.message.impl.HibernateMessageManager">
