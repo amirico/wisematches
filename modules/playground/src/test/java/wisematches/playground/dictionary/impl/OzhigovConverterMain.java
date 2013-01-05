@@ -182,7 +182,7 @@ public class OzhigovConverterMain {
 		return WordEntrys;
 	}
 
-	private WordEntry createWordEntry(String name, WordEntryGender neuter, String desc) {
+	private WordEntry createWordEntry(String name, WordEntryGender NEUTER, String desc) {
 		int index = 0;
 		name = name.replaceAll("[\\.,]", "").trim();
 		final char[] chars = name.toCharArray();
@@ -197,7 +197,7 @@ public class OzhigovConverterMain {
 		if (name.length() < 2) {
 			return null;
 		}
-		return new WordEntry(name, neuter, desc);
+		return new WordEntry(name, NEUTER, desc);
 	}
 
 	private String findDesc(String WordEntry, String gender) {

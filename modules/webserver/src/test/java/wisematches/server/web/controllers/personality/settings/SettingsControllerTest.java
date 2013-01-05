@@ -8,6 +8,9 @@ import java.util.TimeZone;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class SettingsControllerTest {
+    public SettingsControllerTest() {
+    }
+
     @Test
     public void asd() {
         final String[] availableIDs = TimeZone.getAvailableIDs();

@@ -6,7 +6,8 @@ import wisematches.personality.player.computer.robot.RobotType;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.PassTurnMove;
-import wisematches.playground.dictionary.Vocabulary;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.WordEntry;
 import wisematches.playground.robot.RobotBrain;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.score.ScoreEngine;
@@ -84,7 +85,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
                     }
                     board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
                 } else {
-                    int[] tiles = selectTilesForExchange(robotHand, type, bankRemained);
+                    int[] tiles = selectTilesForExchange(robotHand, bankRemained);
                     if (log.isDebugEnabled()) {
                         log.debug("No available word. Exchange tiles: " + Arrays.toString(tiles));
                     }
@@ -110,11 +111,11 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
         if (log.isTraceEnabled()) {
             log.trace("Hand robot tiles: " + Arrays.toString(hand.getTiles()));
         }
-        return analyzeValidWords(board, hand, type, board.getVocabulary()); // expert has all moves
+        return analyzeValidWords(board, hand, type, board.getDictionary()); // expert has all moves
     }
 
     List<Word> analyzeValidWords(final TilesPlacement board, final ScribblePlayerHand hand,
-                                 final RobotType type, final Vocabulary vocabulary) {
+                                 final RobotType type, final Dictionary dictionary) {
         final List<WorkTile> tiles = new ArrayList<>();
         for (int row = 0; row < ScribbleBoard.CELLS_NUMBER; row++) {
             for (int column = 0; column < ScribbleBoard.CELLS_NUMBER; column++) {
@@ -132,7 +133,8 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
         final List<Word> words = new ArrayList<>();
         boolean lastWasIncorrect = false;
         final AnalyzingTree analyzingTree = new AnalyzingTree(board, tiles);
-        for (String word : vocabulary.getWords()) {
+        for (WordEntry entry : dictionary.getWordEntries()) {
+            final String word = entry.getWord();
             if (!isLegalWord(word, type)) {
                 continue;
             }
@@ -217,7 +219,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
         return word;
     }
 
-    int[] selectTilesForExchange(ScribblePlayerHand hand, RobotType type, int max) {
+    int[] selectTilesForExchange(ScribblePlayerHand hand, int max) {
         int n = 0;
         final int[] list = new int[max];
         for (Tile tile : hand.getTiles()) {

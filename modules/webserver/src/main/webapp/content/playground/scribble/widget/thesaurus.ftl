@@ -1,7 +1,6 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
-<#-- @ftlvariable name="thesaurusHouse" type="wisematches.server.web.services.thesaurus.ThesaurusHouse" -->
 <#include "/core.ftl">
 
 <@wm.ui.widget class="thesaurusWidget" title="game.thesaurus.label" help="board.thesaurus">

@@ -1,13 +1,27 @@
 package wisematches.personality;
 
+import java.util.SortedSet;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class Alphabet {
     private final char[] letters;
 
+    public Alphabet(String letters) {
+        this(letters.toCharArray());
+    }
+
     public Alphabet(char[] letters) {
         this.letters = letters;
+    }
+
+    public Alphabet(SortedSet<Character> letters) {
+        int index = 0;
+        this.letters = new char[letters.size()];
+        for (Character letter : letters) {
+            this.letters[index++] = letter;
+        }
     }
 
     public char[] getLetters() {

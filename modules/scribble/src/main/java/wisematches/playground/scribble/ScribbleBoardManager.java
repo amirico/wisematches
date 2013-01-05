@@ -17,7 +17,6 @@ import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryException;
 import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.dictionary.Vocabulary;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 import wisematches.playground.search.SearchFilter;
@@ -44,9 +43,9 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
     protected ScribbleBoard createBoardImpl(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException {
         final Language language = settings.getLanguage();
         try {
-            final Vocabulary vocabulary = getVocabulary(settings);
+            final Dictionary dictionary = getDictionary(language);
             final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
-            return new ScribbleBoard(settings, relationship, players, tilesBank, vocabulary);
+            return new ScribbleBoard(settings, relationship, players, tilesBank, dictionary);
         } catch (DictionaryException ex) {
             throw new BoardCreationException(ex.getMessage());
         }
@@ -64,30 +63,21 @@ public class ScribbleBoardManager extends AbstractBoardManager<ScribbleSettings,
         final ScribbleSettings settings = board.getSettings();
         final Language language = settings.getLanguage();
         try {
-            final Vocabulary vocabulary = getVocabulary(settings);
+            final Dictionary dictionary = getDictionary(language);
             final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, board.getPlayersHands().size(), true);
-            board.initGameAfterLoading(tilesBank, vocabulary);
+            board.initGameAfterLoading(tilesBank, dictionary);
         } catch (DictionaryException ex) {
             throw new BoardLoadingException(ex.getMessage());
         }
         return board;
     }
 
-    private Vocabulary getVocabulary(ScribbleSettings settings) throws DictionaryException {
-        final Language language = settings.getLanguage();
+    private Dictionary getDictionary(Language language) throws DictionaryException {
         final Dictionary dictionary = dictionaryManager.getDictionary(language);
         if (dictionary == null) {
             throw new DictionaryException("There is no dictionary for language " + language);
         }
-        if (settings.getVocabulary() == null) {
-            return dictionary.getDefaultVocabulary();
-        }
-
-        final Vocabulary vocabulary = dictionary.getVocabulary(settings.getVocabulary());
-        if (vocabulary == null) {
-            throw new DictionaryException("Unknown vocabulary with code " + settings.getVocabulary());
-        }
-        return vocabulary;
+        return dictionary;
     }
 
     @Override

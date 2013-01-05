@@ -10,7 +10,6 @@ import wisematches.personality.player.Player;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.dictionary.Vocabulary;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.Word;
@@ -67,11 +66,10 @@ public class BoardExampleController extends WisematchesController {
     private BoardWrapper createNewBoard(Language language) {
         final List<Player> players = Arrays.<Player>asList(RobotPlayer.DULL, RobotPlayer.EXPERT);
         final Dictionary dictionary = dictionaryManager.getDictionary(language);
-        final Vocabulary vocabulary = dictionary.getDefaultVocabulary();
         final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
 
-        final ScribbleSettings settings = new ScribbleSettings("Example Scribble Board", language, vocabulary.getCode(), 7, false, false);
-        final ScribbleBoard board = new ScribbleBoard(settings, players, tilesBank, vocabulary);
+        final ScribbleSettings settings = new ScribbleSettings("Example Scribble Board", language, 7, false, false);
+        final ScribbleBoard board = new ScribbleBoard(settings, players, tilesBank, dictionary);
 
         final ScribbleRobotBrain robotBrain = new ScribbleRobotBrain();
         for (int i = 0; i < 3; i++) {

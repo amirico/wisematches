@@ -16,7 +16,7 @@ public enum Language {
     EN(new Locale("en"), "a moment", new String[][]{
             {"d", "day", "days", "days"},
             {"h", "hour", "hours", "hours"},
-            {"m", "minute", "minutes", "minutes"}}, 'a', 26) {
+            {"m", "minute", "minutes", "minutes"}}, new Alphabet("abcdefghijklmnopqrstuvwxyz"), "UTF-8") {
         @Override
         public String getNumeralEnding(int abs) {
             switch (abs) {
@@ -46,7 +46,7 @@ public enum Language {
     RU(new Locale("ru"), "одно мгновенье", new String[][]{
             {"д", "день", "дня", "дней"},
             {"ч", "час", "часа", "часов"},
-            {"м", "минута", "минуты", "минут"}}, 'а', 32) {
+            {"м", "минута", "минуты", "минут"}}, new Alphabet("абвгдеёжзийклмнопрстуфхцчшщъыьэюя"), "Cp1251") {
 
         private final String[] NUMERALS = new String[]{"ый", "ый", "ой", "ий", "ый", "ый", "ой", "ой", "ой", "ый"};
 
@@ -73,6 +73,7 @@ public enum Language {
     private final Locale locale;
     private final String momentAgo;
     private final Alphabet alphabet;
+    private final String charsetName;
     private final String[][] timeDeclension;
 
     /**
@@ -80,18 +81,13 @@ public enum Language {
      */
     public static final Language DEFAULT = EN;
 
-    private Language(Locale locale, String momentAgo, String[][] timeDeclension, char first, int count) {
+    private Language(Locale locale, String momentAgo, String[][] timeDeclension, Alphabet alphabet, String charsetName) {
         this.momentAgo = momentAgo;
         this.timeDeclension = timeDeclension;
         this.code = locale.getLanguage();
         this.locale = locale;
-
-        int c = (int) first;
-        final char[] alphabet = new char[count];
-        for (int i = c; i < c + count; i++) {
-            alphabet[i - c] = (char) i;
-        }
-        this.alphabet = new Alphabet(alphabet);
+        this.alphabet = alphabet;
+        this.charsetName = charsetName;
     }
 
     /**
@@ -183,5 +179,9 @@ public enum Language {
 
     public static Language byLocale(Locale locale) {
         return byCode(locale.getLanguage());
+    }
+
+    public String getCharsetName() {
+        return charsetName;
     }
 }

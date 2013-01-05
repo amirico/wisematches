@@ -88,7 +88,7 @@
 
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>
-        <td><@message code="language."+board.settings.language/></td>
+        <td><@message code="language."+board.settings.language?lower_case/></td>
     </@element>
 
     <@element>

@@ -22,7 +22,7 @@ import wisematches.personality.account.Account;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.*;
-import wisematches.playground.dictionary.Vocabulary;
+import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.expiration.ExpirationListener;
 import wisematches.playground.message.MessageListener;
 import wisematches.playground.message.MessageManager;
@@ -125,14 +125,14 @@ public class NotificationOriginCenterTest {
         notificationService.setTaskExecutor(taskExecutor);
         notificationService.setPublishers(Arrays.asList(notificationPublisher));
 
-        final Vocabulary vocabulary = createNiceMock(Vocabulary.class);
+        final Dictionary vocabulary = createNiceMock(Dictionary.class);
         expect(vocabulary.contains(isA(String.class))).andReturn(true).anyTimes();
         replay(vocabulary);
 
-        board1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, "mock", 3), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
+        board1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
 
         do {
-            board2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, "mock", 5), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
+            board2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
         } while (board1.getPlayerTurn().getPlayerId() == board2.getPlayerTurn().getPlayerId());
     }
 
@@ -285,10 +285,10 @@ public class NotificationOriginCenterTest {
 
         publisherCenter.setProposalManager(proposalManager);
 
-        final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU, "mock"), p1, new Personality[]{p2});
-        final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU, "mock"), p1, new Personality[]{p2});
-        final DefaultGameProposal<GameSettings> gp3 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU, "mock"), p2, new Personality[]{p1});
-        final DefaultGameProposal<GameSettings> gp4 = new DefaultGameProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU, "mock"), p2, new Personality[]{p1});
+        final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
+        final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
+        final DefaultGameProposal<GameSettings> gp3 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
+        final DefaultGameProposal<GameSettings> gp4 = new DefaultGameProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
 
         listenerCapture.getValue().gameProposalInitiated(gp1);
         listenerCapture.getValue().gameProposalInitiated(gp2);
@@ -312,8 +312,8 @@ public class NotificationOriginCenterTest {
 
         publisherCenter.setProposalManager(proposalManager);
 
-        final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU, "mock"), p1, new Personality[]{p2});
-        final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU, "mock"), p2, new Personality[]{p1});
+        final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
+        final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
 
         listenerCapture.getValue().gameProposalUpdated(gp1, p1, ProposalDirective.ACCEPTED);  // no messages
         listenerCapture.getValue().gameProposalUpdated(gp2, p2, ProposalDirective.ACCEPTED);  // no messages
@@ -342,8 +342,8 @@ public class NotificationOriginCenterTest {
     public void testProposalExpiration() {
         final Capture<ExpirationListener<Long, ProposalExpirationType>> listenerCapture = new Capture<>();
 
-        final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU, "mock"), p1, new Personality[]{p2});
-        final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU, "mock"), p2, new Personality[]{p1});
+        final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
+        final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
 
         final GameProposalManager proposalManager = createStrictMock(GameProposalManager.class);
         proposalManager.addGameProposalListener(isA(GameProposalListener.class));

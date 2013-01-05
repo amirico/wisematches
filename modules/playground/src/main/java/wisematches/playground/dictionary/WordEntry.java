@@ -9,9 +9,13 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class WordEntry implements Serializable {
+public final class WordEntry implements Serializable, Comparable<WordEntry> {
     private final String word;
     private final List<WordDefinition> explanationCases;
+
+    public WordEntry(String word) {
+        this(word, null);
+    }
 
     public WordEntry(String word, Collection<WordDefinition> explanationCases) {
         if (word == null) {
@@ -38,6 +42,11 @@ public final class WordEntry implements Serializable {
             return Collections.emptyList();
         }
         return explanationCases;
+    }
+
+    @Override
+    public int compareTo(WordEntry o) {
+        return word.compareTo(o.word);
     }
 
     @Override

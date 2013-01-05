@@ -10,7 +10,7 @@
 <#if !scriplet??><#assign scriplet=true/></#if>
 <div id="searchPlayerWidget" <#if scriplet>class="ui-helper-hidden" style="padding-top: 10px" </#if>>
 <@wm.ui.table.toolbar>
-    <div id="searchTypes">
+    <div id="searchTypes" class="wm-ui-buttonset">
         <#list searchAreas as a>
             <input id="search${a.name()?lower_case?capitalize}" name="searchTypes" type="radio" value="${a.name()}"
                    <#if a=searchArea>checked="checked"</#if>/>

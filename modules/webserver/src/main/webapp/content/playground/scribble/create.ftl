@@ -37,7 +37,7 @@
                 <select id="boardLanguage" name="boardLanguage" style="width: 170px;">
                     <#list ["en", "ru"] as l>
                         <option value="${l}" <#if (l==wm.ui.statusValue)>selected="selected"</#if>>
-                            <@message code="language.${l}"/>
+                            <@message code="language.${l?lower_case}"/>
                         </option>
                     </#list>
                 </select>
@@ -69,7 +69,7 @@
             <label><@message code="game.opponents.label"/>:</label>
         </td>
         <td>
-            <div id="radio">
+            <div id="radio" class="wm-ui-buttonset">
                 <@wm.ui.field path="create.createTab">
                     <#assign createTab=wm.ui.statusValue?lower_case/>
                     <#assign availableTypes=["robot", "wait", "challenge"]/>
@@ -241,7 +241,8 @@
 
     <@wm.security.observed>
         <@wm.ui.table.statusbar align="left">
-        <button onclick="create.submitForm(); return false;"><@message code="game.create.submit"/></button>
+        <button class="wm-ui-button"
+                onclick="create.submitForm(); return false;"><@message code="game.create.submit"/></button>
         </@wm.ui.table.statusbar>
     </@wm.security.observed>
 </form>

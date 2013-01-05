@@ -43,34 +43,9 @@
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
 
-    <bean id="thesaurusHouse" class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurusHouse">
-        <property name="thesauruses">
-            <map>
-                <entry key="ru">
-                    <list>
-                        <bean class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurus">
-                            <constructor-arg index="0" value="gramota"/>
-                            <constructor-arg index="1" value="http://pda.gramota.ru/?action=dic&amp;word={word}"/>
-                        </bean>
-                        <!--
-                        <bean class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurus">
-                            <constructor-arg index="0" value="yandex"/>
-                            <constructor-arg index="1" value="http://slovari.yandex.ru/{word}"/>
-                        </bean>
--->
-                    </list>
-                </entry>
-                <!--
-                <entry key="en">
-                    <list>
-                        <bean class="wisematches.server.web.services.thesaurus.impl.DefaultThesaurus">
-                            <constructor-arg index="0" value="wiki"/>
-                            <constructor-arg index="1" value="http://en.wikipedia.org/wiki/{word}"/>
-                        </bean>
-                    </list>
-                </entry>
--->
-            </map>
-        </property>
+    <bean id="dictionaryChangeManager"
+          class="wisematches.server.web.services.dictionary.impl.HibernateDictionarySuggestionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="dictionaryManager" ref="dictionaryManager"/>
     </bean>
 </beans>

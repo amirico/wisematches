@@ -16,7 +16,7 @@ import wisematches.personality.player.Player;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.dictionary.Vocabulary;
+import wisematches.playground.dictionary.WordEntry;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
@@ -28,7 +28,6 @@ import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.scribble.form.CheckWordForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleTileForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleWordForm;
-import wisematches.server.web.services.thesaurus.ThesaurusHouse;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,7 +41,6 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends WisematchesController {
-    private ThesaurusHouse thesaurusHouse;
     private ScribbleBoardManager boardManager;
     private DictionaryManager dictionaryManager;
     private BoardSettingsManager boardSettingsManager;
@@ -66,7 +64,6 @@ public class ScribbleBoardController extends WisematchesController {
             }
 
             model.addAttribute("board", board);
-            model.addAttribute("thesaurusHouse", thesaurusHouse);
 
             // Issue 206: Share tiles
             if (tiles != null && !tiles.isEmpty()) {
@@ -185,16 +182,13 @@ public class ScribbleBoardController extends WisematchesController {
     @ResponseBody
     @RequestMapping("check")
     public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
-        final Dictionary d = dictionaryManager.getDictionary(Language.valueOf(form.getL()));
+        final Dictionary d = dictionaryManager.getDictionary(Language.byCode(form.getLang()));
         if (d == null) {
             return ServiceResponse.failure();
         }
-        final Vocabulary vocabulary = d.getVocabulary(form.getV());
-        if (vocabulary == null) {
-            return ServiceResponse.failure();
-        }
-        if (vocabulary.contains(form.getW())) {
-            return ServiceResponse.success();
+        final WordEntry wordEntry = d.getWordEntry(form.getWord());
+        if (wordEntry != null) {
+            return ServiceResponse.success("", "wordEntry", wordEntry);
         }
         return ServiceResponse.failure();
     }
@@ -208,11 +202,6 @@ public class ScribbleBoardController extends WisematchesController {
         final ScribbleBoard board = boardManager.openBoard(gameId);
         final GameMove gameMove = board.makeMove(move);
         return scribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
-    }
-
-    @Autowired
-    public void setThesaurusHouse(ThesaurusHouse thesaurusHouse) {
-        this.thesaurusHouse = thesaurusHouse;
     }
 
     @Autowired

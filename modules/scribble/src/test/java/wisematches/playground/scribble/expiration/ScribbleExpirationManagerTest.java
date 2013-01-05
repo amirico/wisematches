@@ -118,7 +118,7 @@ public class ScribbleExpirationManagerTest {
     public void testListeners() throws Exception {
         final long time = System.currentTimeMillis();
 
-        final Capture<BoardStateListener> boardStateListener = new Capture<BoardStateListener>();
+        final Capture<BoardStateListener> boardStateListener = new Capture<>();
 
         scribbleBoardManager.addBoardStateListener(capture(boardStateListener));
         replay(scribbleBoardManager);
@@ -135,7 +135,7 @@ public class ScribbleExpirationManagerTest {
         expect(session.createCriteria(ScribbleBoard.class)).andReturn(criteria);
         replay(session);
 
-        final ScribbleSettings gs = new ScribbleSettings("mock", Language.RU, "ef", 3);
+        final ScribbleSettings gs = new ScribbleSettings("mock", Language.RU, 3);
 
         final GameBoard gameBoard = createStrictMock(GameBoard.class);
         expect(gameBoard.getBoardId()).andReturn(12L);

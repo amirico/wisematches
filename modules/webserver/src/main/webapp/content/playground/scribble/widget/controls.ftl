@@ -6,7 +6,7 @@
 <#if !viewMode??><#assign viewMode=true/></#if>
 
 <div class="board-controls ui-widget-content ui-corner-all shadow" align="center">
-    <div>
+    <div style="white-space: nowrap">
     <#if !viewMode>
         <button class="makeTurnButton" onclick="boardControls.makeTurn()">
             <@message code="game.play.make"/>
@@ -20,7 +20,7 @@
         </button>
     </div>
 <#if !viewMode>
-    <div style="padding-top: 3px">
+    <div style="padding-top: 3px;white-space: nowrap">
         <button class="exchangeTilesButton" onclick="boardControls.exchangeTiles()">
             <@message code="game.play.exchange"/>
         </button>

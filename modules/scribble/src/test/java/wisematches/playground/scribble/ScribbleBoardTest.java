@@ -7,7 +7,7 @@ import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.GameMoveScore;
 import wisematches.playground.PassTurnMove;
-import wisematches.playground.dictionary.Vocabulary;
+import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 
@@ -35,7 +35,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     protected void setUp() throws Exception {
-        settings = new ScribbleSettings("test", Language.EN, "ef", 3);
+        settings = new ScribbleSettings("test", Language.EN, 3);
 
         editor.add('a', 3, 1); // 0-2
         editor.add('b', 3, 2); // 3-5
@@ -48,7 +48,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_initializeBoard() {
-        final Vocabulary dict = createDictionary();
+        final Dictionary dict = createDictionary();
         final TilesBank tilesBank = new TilesBank(new TilesBankInfoEditor(Language.EN).add('a', 103, 1).createTilesBankInfo());
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -64,7 +64,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_smallGamePlay() throws GameMoveException {
-        final Vocabulary dictionary = createDictionary("abcde", "qrdts", "skel");
+        final Dictionary dictionary = createDictionary("abcde", "qrdts", "skel");
         final TilesBank tilesBank = createTilesBank("abcd*qrt*lkelt", 19);
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -143,7 +143,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_checkState() throws GameMoveException {
-        final Vocabulary dictionary = createDictionary();
+        final Dictionary dictionary = createDictionary();
         final TilesBank tilesBank = createTilesBank("", 19);
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -152,7 +152,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_checkMove_Incorrect() throws GameMoveException {
-        final Vocabulary dictionary = createDictionary("aad");
+        final Dictionary dictionary = createDictionary("aad");
         final TilesBank tilesBank = createTilesBank("abcabcd", 19);
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -264,7 +264,7 @@ public class ScribbleBoardTest extends TestCase {
         }
 
         //not in dictionary
-        board.setVocabulary(createDictionary(new String[]{null}));
+        board.setDictionary(createDictionary(new String[]{null}));
         try {
             board.makeMove(new MakeWordMove(hand.getPlayerId(),
                     new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(0, 7))));
@@ -274,7 +274,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_checkMove_Correct() throws GameMoveException {
-        final Vocabulary dictionary = createDictionary("abcd", "def", "fefgabcd");
+        final Dictionary dictionary = createDictionary("abcd", "def", "fefgabcd");
 
         final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -325,7 +325,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_checkMove_exchange() throws GameMoveException {
-        final Vocabulary dictionary = createDictionary("abcd", "def", "fefgabcd");
+        final Dictionary dictionary = createDictionary("abcd", "def", "fefgabcd");
         final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
         final ScribbleBoard board = new ScribbleBoard(settings,
                 Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
@@ -374,7 +374,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_checkMove_pass() throws GameMoveException {
-        final Vocabulary dictionary = createDictionary("abcd", "def", "fefgabcd");
+        final Dictionary dictionary = createDictionary("abcd", "def", "fefgabcd");
         final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
         final ScribbleBoard board = new ScribbleBoard(settings,
                 Arrays.asList(Personality.person(1), Personality.person(2), Personality.person(3)), tilesBank, dictionary);
@@ -399,7 +399,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_calculateMovePoints() {
-        final Vocabulary dictionary = createDictionary();
+        final Dictionary dictionary = createDictionary();
         final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -420,7 +420,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_processMoveFinished() {
-        final Vocabulary dictionary = createDictionary();
+        final Dictionary dictionary = createDictionary();
         final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -444,7 +444,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_checkGameFinished() {
-        final Vocabulary dictionary = createDictionary();
+        final Dictionary dictionary = createDictionary();
         final TilesBank tilesBank = createTilesBank("abcdefgabcdefgabcdefg", 19);
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -471,7 +471,7 @@ public class ScribbleBoardTest extends TestCase {
     }
 
     public void test_processGameFinished_noTiles() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        final Vocabulary dictionary = createDictionary();
+        final Dictionary dictionary = createDictionary();
         final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -500,7 +500,7 @@ public class ScribbleBoardTest extends TestCase {
      * @throws Exception if test failed.
      */
     public void test_processGameFinished_haveTiles() throws Exception {
-        final Vocabulary dictionary = createDictionary();
+        final Dictionary dictionary = createDictionary();
         final TilesBank tilesBank = new TilesBank(editor.createTilesBankInfo());
 
         final ScribbleBoard board = new ScribbleBoard(settings,
@@ -527,8 +527,8 @@ public class ScribbleBoardTest extends TestCase {
         assertEquals(-26, ints[2]);  // final points for h3: winned
     }
 
-    private Vocabulary createDictionary(String... words) {
-        Vocabulary dictionary = createMock(Vocabulary.class);
+    private Dictionary createDictionary(String... words) {
+        Dictionary dictionary = createMock(Dictionary.class);
         for (String word : words) {
             if (word != null) {
                 expect(dictionary.contains(word)).andReturn(true);

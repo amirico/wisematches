@@ -53,8 +53,5 @@
 </div>
 
 <#if principal?? && principal?has_content><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
-
-<#include 'templates/googlePlus.ftl'/>
-
 </body>
-</html>
+</html>                                 .
