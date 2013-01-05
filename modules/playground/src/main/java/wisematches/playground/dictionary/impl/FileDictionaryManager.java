@@ -37,13 +37,11 @@ public class FileDictionaryManager implements DictionaryManager {
         }
         dictionaries.clear();
         for (File f : files) {
-            Language lang;
-            try {
-                lang = Language.valueOf(f.getName().toUpperCase());
-            } catch (Exception ignore) {
-                continue;
+            final String name = f.getName();
+            if (name.endsWith(".dic")) {
+                Language lang = Language.valueOf(name.substring(0, name.length() - 4).toUpperCase());
+                dictionaries.put(lang, new FileDictionary(lang, f, false));
             }
-            dictionaries.put(lang, new FileDictionary(f, lang));
         }
     }
 }

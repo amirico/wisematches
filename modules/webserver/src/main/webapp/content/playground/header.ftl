@@ -27,9 +27,6 @@
                             </span>
                             </span>
                     </#if>
-                        <div style="width: 24px; display: inline-block; vertical-align: bottom; padding-bottom: 2px">
-                            <g:plusone size="small" annotation="none" href="http://www.wisematches.net"></g:plusone>
-                        </div>
                     <#if hasNewFeatues>
                         |
                         <a href="/info/features"
@@ -48,13 +45,24 @@
                 <tr>
                     <td valign="bottom">
                         <div id="gameToolbar" class="" align="left">
-                            <div style="display: inline-block;">
+                            <div class="wm-ui-splitbutton">
                                 <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
-                                <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
-                                <a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>
+                                <ul class="ui-helper-hidden">
+                                    <li>
+                                        <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
+                                    </li>
+                                    <li>
+                                        <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
+                                    </li>
+                                    <li>
+                                        <a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>
+                                    </li>
+                                </ul>
+                            <#--<a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>-->
+                            <#--<a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>-->
                             </div>
 
-                            <div style="padding-left: 30px; display: inline-block;">
+                            <div class="wm-ui-buttonset">
                             <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
                             <#if messageManager?has_content>
                                 <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
@@ -71,20 +79,18 @@
                                 <a href="/playground/blacklist/view"><@message code="game.menu.blacklist.label"/></a>
                             </div>
 
-                            <div style="padding-left: 30px; display: inline-block;">
+
+                            <div class="wm-ui-buttonset">
+                                <a href="/playground/dictionary"><@message code="game.menu.dictionary.label"/></a>
+                            </div>
+
+                            <div class="wm-ui-buttonset">
                                 <a href="/playground/tourney"><@message code="game.menu.tourneys.label"/></a>
                             </div>
 
-                            <div style="padding-left: 30px; display: inline-block;">
+                            <div class="wm-ui-buttonset">
                                 <a href="/playground/players"><@message code="game.menu.players.label"/></a>
                             </div>
-                        <#--
-                            <div style="float: left;">
-                                <button id="tournamentsButton" onclick="wm.util.url.redirect('/playground/tournaments')">
-                                <@message code="game.menu.tournaments.label"/>
-                         `       </button>
-                            </div>
--->
                         </div>
                     </td>
                 </tr>
@@ -94,7 +100,3 @@
 </table>
 
 <#include "guest.ftl"/>
-
-<script type="text/javascript">
-    $("#gameToolbar ").find("div").buttonset();
-</script>

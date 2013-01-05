@@ -19,9 +19,6 @@ public final class ScribbleSettings extends GameSettings {
     @Column(name = "language", updatable = false)
     private Language language;
 
-    @Column(name = "vocabulary", updatable = false)
-    private String vocabulary;
-
     private static final long serialVersionUID = -5153027839777003987L;
 
     /**
@@ -36,8 +33,8 @@ public final class ScribbleSettings extends GameSettings {
      * @param title    the title of the game.
      * @param language the code of the language.
      */
-    public ScribbleSettings(String title, Language language, String vocabulary) {
-        this(title, language, vocabulary, DEFAULT_TIMEOUT_DAYS);
+    public ScribbleSettings(String title, Language language) {
+        this(title, language, DEFAULT_TIMEOUT_DAYS);
     }
 
     /**
@@ -47,20 +44,16 @@ public final class ScribbleSettings extends GameSettings {
      * @param language    the code of the language.
      * @param daysPerMove days per move.
      */
-    public ScribbleSettings(String title, Language language, String vocabulary, int daysPerMove) {
-        this(title, language, vocabulary, daysPerMove, true, false);
+    public ScribbleSettings(String title, Language language, int daysPerMove) {
+        this(title, language, daysPerMove, true, false);
     }
 
-    public ScribbleSettings(String title, Language language, String vocabulary, int daysPerMove, boolean ratedGame, boolean scratch) {
+    public ScribbleSettings(String title, Language language, int daysPerMove, boolean ratedGame, boolean scratch) {
         super(title, daysPerMove, ratedGame, scratch);
         if (language == null) {
             throw new NullPointerException("Language can't be null");
         }
-        if (vocabulary == null) {
-            throw new NullPointerException("Vocabulary can't be null");
-        }
         this.language = language;
-        this.vocabulary = vocabulary;
     }
 
     @Override
@@ -82,20 +75,15 @@ public final class ScribbleSettings extends GameSettings {
         return language;
     }
 
-    public String getVocabulary() {
-        return vocabulary;
-    }
-
     public static class Builder extends GameSettings.Builder {
         private Language language;
-        private String vocabulary;
 
         public Builder() {
         }
 
         @Override
         public ScribbleSettings build() {
-            return new ScribbleSettings(title, language, vocabulary, daysPerMove, ratedGame, scratch);
+            return new ScribbleSettings(title, language, daysPerMove, ratedGame, scratch);
         }
 
         public Language getLanguage() {
@@ -104,14 +92,6 @@ public final class ScribbleSettings extends GameSettings {
 
         public void setLanguage(Language language) {
             this.language = language;
-        }
-
-        public String getVocabulary() {
-            return vocabulary;
-        }
-
-        public void setVocabulary(String vocabulary) {
-            this.vocabulary = vocabulary;
         }
     }
 }

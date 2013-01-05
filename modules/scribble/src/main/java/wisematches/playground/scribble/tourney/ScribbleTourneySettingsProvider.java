@@ -17,7 +17,7 @@ public class ScribbleTourneySettingsProvider implements GameSettingsProvider<Scr
     @Override
     public ScribbleSettings createGameSettings(TourneyGroup request) {
         final TourneyDivision division = request.getRound().getDivision();
-        return new ScribbleSettings("Tourney " + division.getTourney().getNumber(), division.getLanguage(), "ef", daysPerMove);
+        return new ScribbleSettings("Tourney " + division.getTourney().getNumber(), division.getLanguage(), daysPerMove);
     }
 
     public int getDaysPerMove() {

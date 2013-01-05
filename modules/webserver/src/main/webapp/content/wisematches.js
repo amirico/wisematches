@@ -113,8 +113,9 @@ wm.util.url = new function () {
 };
 
 wm.ui = new function () {
+    var statusWidgetPane;
+    var alertsWidgetPane;
     var activeWindows = true;
-    var statusWidgetPane = $("#status-widget-pane");
 
     $.blockUI.defaults.message = null;
 
@@ -183,7 +184,7 @@ wm.ui = new function () {
         if (freeow != null) {
             freeow.hide();
         } else {
-            $("#status-widget-pane").empty();
+            statusWidgetPane.empty();
         }
     };
 
@@ -267,7 +268,7 @@ wm.ui = new function () {
 
 
     this.notification = function (title, message, type, error) {
-        $("#alerts-widget-pane").freeow(title, message, {
+        alertsWidgetPane.freeow(title, message, {
             classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "shadow", type],
             showStyle: {opacity: .95},
             template: alertTemplate,
@@ -286,7 +287,6 @@ wm.ui = new function () {
             });
         }
     };
-
 
     this.refreshImage = function (element) {
         var el = $(element);
@@ -318,8 +318,9 @@ wm.ui = new function () {
     };
 
     $(document).ready(function () {
-        var $status = $("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>").appendTo($("body"));
-        var $alerts = $("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>").appendTo($("body"));
+        var body = $("body");
+        statusWidgetPane = $("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>").appendTo(body);
+        alertsWidgetPane = $("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>").appendTo(body);
 
         var $window = $(window);
         var $header = $("#header");
@@ -327,11 +328,11 @@ wm.ui = new function () {
             var height = $header.outerHeight(true);
             var scrollY = $window.scrollTop();
             if (height - scrollY >= 0) {
-                $status.css({top: height - scrollY});
-                $alerts.css({top: height - scrollY});
-            } else if ($status.offset().top != 0) {
-                $status.css({top: 0});
-                $alerts.css({top: 0});
+                statusWidgetPane.css({top: height - scrollY});
+                alertsWidgetPane.css({top: height - scrollY});
+            } else if (statusWidgetPane.offset().top != 0) {
+                statusWidgetPane.css({top: 0});
+                alertsWidgetPane.css({top: 0});
             }
         };
         $window.scroll(windowScroll).resize(windowScroll);
@@ -411,13 +412,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-                "<div class='ui-editor-label'></div>" +
-                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-                "<div class='ui-editor-error'></div>" +
-                "<button class='ui-editor-save'>Save</button> " +
-                "<button class='ui-editor-cancel'>Cancel</button>" +
-                "</div></div>" +
-                "</div></div></div>");
+            "<div class='ui-editor-label'></div>" +
+            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+            "<div class='ui-editor-error'></div>" +
+            "<button class='ui-editor-save'>Save</button> " +
+            "<button class='ui-editor-cancel'>Cancel</button>" +
+            "</div></div>" +
+            "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -585,16 +586,16 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-            function () {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-hover');
-                }
-            },
-            function () {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-default');
-                }
-            });
+        function () {
+            if (!$(this).hasClass('ui-state-active')) {
+                $(this).attr('class', 'quickInfo ui-state-hover');
+            }
+        },
+        function () {
+            if (!$(this).hasClass('ui-state-active')) {
+                $(this).attr('class', 'quickInfo ui-state-default');
+            }
+        });
 
     var activeQuickInfo = undefined;
     $(".quickInfo.ajax a").cluetip({
@@ -655,5 +656,58 @@ $(document).ready(function () {
         }
     });
 
-    $("#gameToolbar").find(".data-table-toolbar a").button();
+    $(".wm-ui-button").button();
+    $(".wm-ui-buttonset").buttonset();
+
+    $(".wm-ui-splitbutton").each(function (i, sb) {
+        sb = $(sb);
+        var ch = sb.children();
+        var buttons = $("<div></div>").appendTo(sb.empty().append($(ch[1]))).append($(ch[0]));
+        $("<button>Menu</button>").appendTo(buttons).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-triangle-1-s"
+            }
+        }).click(function () {
+                var menu = $(ch[1]).menu().show().position({
+                    my: "left top",
+                    at: "left bottom",
+                    of: this
+                });
+                $(document).one("click", function () {
+                    menu.hide();
+                });
+                return false;
+            });
+        buttons.buttonset();
+    });
+
+    $("#rerun")
+        .button()
+        .click(function () {
+            alert("Running the last action");
+        })
+        .next()
+        .button({
+            text: false,
+            icons: {
+                primary: "ui-icon-triangle-1-s"
+            }
+        })
+        .click(function () {
+            var menu = $(this).parent().next().show().position({
+                my: "left top",
+                at: "left bottom",
+                of: this
+            });
+            $(document).one("click", function () {
+                menu.hide();
+            });
+            return false;
+        })
+        .parent()
+        .buttonset()
+        .next()
+        .hide()
+        .menu();
 });

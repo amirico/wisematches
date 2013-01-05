@@ -1,3 +1,12 @@
+#gameToolbar>div {
+    display: inline-block;
+    padding-left: 15px;
+}
+
+#gameToolbar>div:first-child {
+    padding-left: 0 !important;
+}
+
 #gameToolbar .ui-buttonset {
     margin-right: 0;
 }
@@ -620,4 +629,69 @@
 
 .group-content table tr td:first-child {
     text-align: left;
+}
+
+#dictionary .navigation {
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+    border-width: 0 1px 0 0;
+    width: 200px !important;
+    background-image: none;
+}
+
+#dictionary .navigation >div {
+    width: 200px !important;
+}
+
+#dictionary .active-letter {
+    color: black !important;
+    border: none !important;
+}
+
+#dictionary #alphabet div {
+    display: block;
+}
+
+#dictionary .search-panel .scroll-pane {
+    width: 100%;
+    height: 350px;
+    overflow: auto;
+}
+
+#dictionary.search-panel table td {
+    padding: 2px;
+}
+
+#dictionary .search-panel .scroll-pane table td {
+    vertical-align: top;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-bottom: 1px dashed #d0e5f5;
+}
+
+#dictionary .search-panel>.ui-widget-content, #dictionary .search-panel>.ui-state-hover {
+    padding: 0 !important;
+}
+
+.word-editor-dlg .ui-dialog-buttonset {
+    width: 100%;
+}
+
+.word-editor-dlg #wordEditorCancelBtn {
+    float: right;
+    margin-right: 0;
+}
+
+.word-editor-dlg .ui-dialog-buttonpane {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.word-editor-dlg .ui-widget-content div {
+    display: block;
+}
+
+.word-editor-dlg .word-view {
+    font-weight: bold;
 }

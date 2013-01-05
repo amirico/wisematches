@@ -1,5 +1,7 @@
 package wisematches.playground.dictionary.impl;
 
+import wisematches.personality.Language;
+import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.dictionary.WordDefinition;
 import wisematches.playground.dictionary.WordEntry;
 
@@ -13,6 +15,43 @@ import java.util.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class EffremovaConverterMain {
+/*
+    private static final Collection<String> IGNORE = Arrays.asList(
+            "сов.",
+            "несов.",
+            "прил.",
+            "нареч.",
+            "буква",
+            "местоим.",
+            "устар.",
+            "союз",
+            "суффикс",
+            "предикатив",
+            "предлог",
+            "частица",
+            "разг.",
+            "см.",
+            "мн.",
+            "межд.",
+            "префикс",
+            "Часть сложных",
+            "ж. нескл. разг.-сниж.",
+            "Начальная часть",
+            "Конечная часть",
+            "Первая часть",
+            "То же, что",
+            "Вторая часть",
+            "1.",
+            "1)",
+            "2)",
+            "3)",
+            "4)",
+            "I"
+    );
+*/
+
+    private static Set<String> ignoredAttrs = new HashSet<>();
+
     public EffremovaConverterMain() {
     }
 
@@ -37,10 +76,14 @@ public class EffremovaConverterMain {
 
             if (l.length() == 0) {
                 if (pcase != 0) {
-                    cases.add(new WordDefinition(b.toString(), awqe));
+                    final String text = normalizeDefinition(b.toString());
+                    final EnumSet<WordAttribute> attributes = normalizeAttrs(awqe);
+                    if (text != null && attributes != null && attributes.size() != 0) {
+                        cases.add(new WordDefinition(text, attributes));
+                    }
                 }
-                if (word != null && !word.contains("-") && word.length() >= 2) {
-                    entries.add(new WordEntry(word.toLowerCase(), cases));
+                if (word != null && !word.contains("-") && !word.contains(" ") && word.length() >= 2) {
+                    entries.add(new WordEntry(normalizeWord(word), cases));
                 }
                 token = 0;
                 pcase = 0;
@@ -54,7 +97,11 @@ public class EffremovaConverterMain {
                 } else if (token == 1) {
                     if (l.matches("\\d\\.(.+)")) {
                         if (pcase != 0) {
-                            cases.add(new WordDefinition(b.toString(), awqe));
+                            final String text = normalizeDefinition(b.toString());
+                            final EnumSet<WordAttribute> attributes = normalizeAttrs(awqe);
+                            if (text != null && attributes != null && attributes.size() != 0) {
+                                cases.add(new WordDefinition(text, attributes));
+                            }
                         }
                         pcase += 1;
                         b.setLength(0);
@@ -73,49 +120,15 @@ public class EffremovaConverterMain {
             l = r.readLine();
         }
 
-        Collection<String> ignore = Arrays.asList(
-                "сов.",
-                "несов.",
-                "прил.",
-                "нареч.",
-                "буква",
-                "местоим.",
-                "устар.",
-                "союз",
-                "суффикс",
-                "предикатив",
-                "предлог",
-                "частица",
-                "разг.",
-                "см.",
-                "мн.",
-                "межд.",
-                "префикс",
-                "Часть сложных",
-                "ж. нескл. разг.-сниж.",
-                "Начальная часть",
-                "Конечная часть",
-                "Первая часть",
-                "То же, что",
-                "Вторая часть",
-                "1.",
-                "1)",
-                "2)",
-                "3)",
-                "4)",
-                "I"
-        );
+        for (String ignoredAttr : ignoredAttrs) {
+            System.out.println(ignoredAttr);
+        }
 
         for (Iterator<WordEntry> iterator2 = entries.iterator(); iterator2.hasNext(); ) {
             WordEntry explanation = iterator2.next();
             for (Iterator<WordDefinition> iterator1 = explanation.getDefinitions().iterator(); iterator1.hasNext(); ) {
                 final WordDefinition aCase = iterator1.next();
-                final String gender = aCase.getAttributes();
-                boolean i = false;
-                for (Iterator<String> iterator = ignore.iterator(); iterator.hasNext() && !i; ) {
-                    i = gender.startsWith(iterator.next());
-                }
-                if (i) {
+                if (aCase.getAttributes() == null || aCase.getAttributes().isEmpty()) {
                     iterator1.remove();
                 }
             }
@@ -125,16 +138,106 @@ public class EffremovaConverterMain {
             }
         }
 
-        File out = new File("./resources/dictionaries/ru/dictionary.xml");
-        FileDictionary.saveDictionary(out, entries);
-
-        TreeSet<String> words = new TreeSet<>();
+        File out = new File("./resources/dictionaries/ru.dic");
+        FileDictionary fd = new FileDictionary(Language.RU, out, false);
         for (WordEntry entry : entries) {
-            words.add(entry.getWord());
+            if (!fd.contains(entry.getWord())) {
+                try {
+                    fd.addWordEntry(entry);
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("IGNORE: " + entry.getWord());
+                }
+            }
+        }
+        fd.flush();
+    }
+
+
+    private static EnumSet<WordAttribute> normalizeAttrs(String s) {
+        String[] split = s.split(" ");
+        Set<WordAttribute> attributes = new HashSet<>();
+        for (String ss : split) {
+            ss = ss.trim();
+            if ("и".equals(ss)) {
+                continue;
+            }
+
+            switch (ss) {
+                case "ж.":
+                    attributes.add(WordAttribute.FEMININE);
+                    break;
+                case "м.":
+                    attributes.add(WordAttribute.MASCULINE);
+                    break;
+                case "ср.":
+                    attributes.add(WordAttribute.NEUTER);
+                    break;
+                case "уст.":
+                case "устар.":
+                    attributes.add(WordAttribute.OUTDATED);
+                    break;
+                case "разг.-сниж.":
+                    attributes.add(WordAttribute.REDUCED);
+                    break;
+                case "разг.":
+                    attributes.add(WordAttribute.INFORMAL);
+                    break;
+                case "нар.-поэт.":
+                    attributes.add(WordAttribute.FOLK_POETRY);
+                    break;
+                case "нескл.":
+                    attributes.add(WordAttribute.INDECLINABLE);
+                    break;
+                case "числит.":
+                    attributes.add(WordAttribute.NUMERAL);
+                    break;
+                case "местн.":
+                    attributes.add(WordAttribute.LOCATIVE);
+                    break;
+                default:
+                    ignoredAttrs.add(s);
+                    return null;
+            }
         }
 
-        final DefaultVocabulary v = new DefaultVocabulary("ef", "Толковый словарь Ефремовой", "Словарь Ефремовой, толковый словарь русского языка", new Date(), words);
-        File out2 = new File("./resources/dictionaries/ru/vocabulary");
-        FileDictionary.saveVocabulary(out2, v);
+        final WordAttribute[] attrs = new WordAttribute[attributes.size()];
+        attributes.toArray(attrs);
+
+        if (attrs.length == 0) {
+            return null;
+        }
+        if (attrs.length == 1) {
+            return EnumSet.of(attrs[0]);
+        }
+        return EnumSet.of(attrs[0], Arrays.copyOfRange(attrs, 1, attrs.length));
     }
+
+    private static String normalizeDefinition(String s) {
+        final String[] split = s.split(System.lineSeparator());
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].trim();
+        }
+
+        for (int i = 1; i < split.length; i++) {
+            String s1 = split[i];
+            if (s1.matches("\\d\\) .*")) {
+                split[i - 1] = split[i - 1] + System.lineSeparator();
+            } else if (s1.matches("[абвгдеёжзийклмнопрст]\\) .*")) {
+                split[i - 1] = split[i - 1] + System.lineSeparator();
+            } else {
+                split[i - 1] = split[i - 1] + " ";
+            }
+        }
+
+        StringBuilder b = new StringBuilder();
+        for (String s1 : split) {
+            b.append(s1);
+        }
+        return b.toString();
+    }
+
+    private static String normalizeWord(String word) {
+        return word.toLowerCase().replaceAll("ё", "е");
+    }
+
 }

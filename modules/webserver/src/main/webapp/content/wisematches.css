@@ -617,6 +617,14 @@ a.ui-icon {
     border-bottom: none !important;
 }
 
+.wm-ui-splitbutton a {
+    border-bottom: none;
+}
+
+.wm-ui-splitbutton .ui-menu {
+    position: absolute;
+}
+
 .help-tooltip {
     cursor: help;
     vertical-align: text-bottom;

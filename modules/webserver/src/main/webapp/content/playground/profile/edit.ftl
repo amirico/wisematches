@@ -33,7 +33,7 @@
 
         <td class="content shadow ui-state-default">
         <#if profileForm.gender??><#assign genderName=springMacroRequestContext.getMessage("gender."+profileForm.gender)/></#if>
-        <#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage)/></#if>
+        <#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage?lower_case)/></#if>
         <#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>
 
             <div class="title">

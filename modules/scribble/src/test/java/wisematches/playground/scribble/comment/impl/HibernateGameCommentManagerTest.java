@@ -57,7 +57,7 @@ public class HibernateGameCommentManagerTest {
         player1 = ScribbleMockPlayer.MOCK1;
         player2 = ScribbleMockPlayer.MOCK2;
 
-        board = boardManager.createBoard(new ScribbleSettings("Mock game", Language.EN, null, 3, false, false), Arrays.<Personality>asList(player1, player2));
+        board = boardManager.createBoard(new ScribbleSettings("Mock game", Language.EN, 3, false, false), Arrays.<Personality>asList(player1, player2));
     }
 
     @Test

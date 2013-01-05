@@ -52,7 +52,7 @@
             <tr id="board${board.boardId}">
                 <#assign settings=board.settings/>
                 <td><@wm.board.name board, true, false/></td>
-                <td><@message code="language.${settings.language}"/></td>
+                <td><@message code="language.${settings.language?lower_case}"/></td>
                 <td><@gameStatus board=board/></td>
                 <td class="center">
                 ${gameMessageSource.formatRemainedTime(board, locale)}
@@ -73,7 +73,7 @@
             <#list activeProposals as proposal>
             <tr id="proposal${proposal.id}">
                 <td>${proposal.settings.title}</td>
-                <td><@message code="language.${proposal.settings.language}"/></td>
+                <td><@message code="language.${proposal.settings.language?lower_case}"/></td>
                 <td>
                             <span class="waiting"><span
                                     class="player"><@message code="game.status.waiting"/></span></span>

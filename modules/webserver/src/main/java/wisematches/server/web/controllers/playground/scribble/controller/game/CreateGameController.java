@@ -127,17 +127,13 @@ public class CreateGameController extends AbstractGameController {
             return ServiceResponse.failure(messageSource.getMessage("game.create.language.err.blank", locale));
         }
 
-        final String vocabulary = form.getVocabulary();
         final Dictionary dictionary = dictionaryManager.getDictionary(language);
         if (dictionary == null) {
             return ServiceResponse.failure(messageSource.getMessage("game.create.dictionary.err.unknown", locale));
         }
-        if (dictionary.getVocabulary(vocabulary) == null) {
-            return ServiceResponse.failure(messageSource.getMessage("game.create.vocabulary.err.unknown", locale));
-        }
 
         long[] opponents;
-        final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, vocabulary, form.getDaysPerMove());
+        final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
         if (form.getCreateTab() == CreateScribbleTab.ROBOT) {
             opponents = new long[]{RobotPlayer.valueOf(form.getRobotType()).getId()};
         } else if (form.getCreateTab() == CreateScribbleTab.WAIT) {
@@ -288,7 +284,6 @@ public class CreateGameController extends AbstractGameController {
             if (board != null) {
                 form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
                 form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
-                form.setVocabulary(board.getSettings().getVocabulary());
                 form.setDaysPerMove(board.getSettings().getDaysPerMove());
                 form.setBoardLanguage(board.getSettings().getLanguage().code());
 

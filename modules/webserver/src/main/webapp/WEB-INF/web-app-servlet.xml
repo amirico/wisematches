@@ -78,7 +78,6 @@
                 <entry key="captchaService" value-ref="captchaService"/>
                 <entry key="analyticsCode" value="${analytics.trackcode}"/>
                 <entry key="addThisCode" value="${sociality.addThisCode}"/>
-                <entry key="googlePlusEnabled" value="${sociality.googleplus}"/>
                 <entry key="advertisementManager" value-ref="advertisementManager"/>
             </map>
         </property>

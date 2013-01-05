@@ -32,7 +32,7 @@
                     <#assign settings=view.proposal.settings/>
                 <tr>
                     <td>${settings.title}</td>
-                    <td><@message code="language.${settings.language}"/></td>
+                    <td><@message code="language.${settings.language?lower_case}"/></td>
                     <td align="center">${gameMessageSource.formatTimeMinutes(settings.daysPerMove*24*60,locale)}</td>
                     <td>
                         <#list view.proposal.players as p>

@@ -1,6 +1,9 @@
 package wisematches.playground.dictionary;
 
+import wisematches.personality.Alphabet;
+
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -13,12 +16,16 @@ public interface Dictionary {
     void removeWordEntry(WordEntry entry) throws DictionaryException;
 
 
-    void addVocabularyWord(Vocabulary vocabulary, String word) throws DictionaryException;
+    Alphabet getAlphabet();
 
-    void removeVocabularyWord(Vocabulary vocabulary, String word) throws DictionaryException;
+    Alphabet getAlphabet(char ch);
 
 
-//    boolean containsWord(String word);
+    Date getLastModification();
+
+
+    boolean contains(String word);
+
 
     WordEntry getWordEntry(String word);
 
@@ -27,9 +34,5 @@ public interface Dictionary {
     Collection<WordEntry> getWordEntries(String prefix);
 
 
-    Vocabulary getDefaultVocabulary();
-
-    Vocabulary getVocabulary(String code);
-
-    Collection<Vocabulary> getVocabularies();
+    void flush() throws DictionaryException;
 }

@@ -4,34 +4,25 @@ package wisematches.server.web.controllers.playground.scribble.form;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class CheckWordForm {
-    private String l;
-    private String v;
-    private String w;
+    private String word;
+    private String lang;
 
     public CheckWordForm() {
     }
 
-    public String getL() {
-        return l;
+    public String getWord() {
+        return word;
     }
 
-    public void setL(String l) {
-        this.l = l;
+    public void setWord(String word) {
+        this.word = word;
     }
 
-    public String getV() {
-        return v;
+    public String getLang() {
+        return lang;
     }
 
-    public void setV(String v) {
-        this.v = v;
-    }
-
-    public String getW() {
-        return w;
-    }
-
-    public void setW(String w) {
-        this.w = w;
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 }

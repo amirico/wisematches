@@ -17,7 +17,7 @@
 </p>
 <p>
     В игре будет
-    использован ${gameMessageSource.getMessage("language.${context.proposal.settings.language}", locale)}
+    использован ${gameMessageSource.getMessage("language.${context.proposal.settings.language?lower_case}", locale)}
     язык. Если не знаете этот язык мы не советуем вам принимать принимать это предложение.
 </p>
 <br>

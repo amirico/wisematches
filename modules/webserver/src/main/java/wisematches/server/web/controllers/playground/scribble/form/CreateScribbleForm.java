@@ -20,8 +20,6 @@ public class CreateScribbleForm {
 
     private String boardLanguage;
 
-    private String vocabulary;
-
     @NotNull(message = "game.create.opponent.err.blank")
     private CreateScribbleTab createTab = CreateScribbleTab.ROBOT;
 
@@ -158,14 +156,6 @@ public class CreateScribbleForm {
 
     public void setCommonError(boolean commonError) {
         this.commonError = commonError;
-    }
-
-    public String getVocabulary() {
-        return vocabulary;
-    }
-
-    public void setVocabulary(String vocabulary) {
-        this.vocabulary = vocabulary;
     }
 
     @Override

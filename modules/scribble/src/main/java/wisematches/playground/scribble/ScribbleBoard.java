@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 import wisematches.personality.Personality;
 import wisematches.playground.*;
-import wisematches.playground.dictionary.Vocabulary;
+import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.LettersDistribution;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.score.ScoreEngine;
@@ -28,7 +28,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
     private TilesBank tilesBank;
 
     @Transient
-    private Vocabulary vocabulary;
+    private Dictionary dictionary;
 
     @Transient
     private Position[] positions;
@@ -127,18 +127,18 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
     ScribbleBoard() {
     }
 
-    public ScribbleBoard(ScribbleSettings settings, Collection<? extends Personality> players, TilesBank tilesBank, Vocabulary vocabulary) {
-        this(settings, null, players, tilesBank, vocabulary);
+    public ScribbleBoard(ScribbleSettings settings, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
+        this(settings, null, players, tilesBank, dictionary);
     }
 
-    public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players, TilesBank tilesBank, Vocabulary vocabulary) {
+    public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
         super(settings, relationship, players);
         if (log.isDebugEnabled()) {
             log.debug("Game started: " + getBoardId());
         }
 
         this.tilesBank = tilesBank;
-        this.vocabulary = vocabulary;
+        this.dictionary = dictionary;
         positions = new Position[tilesBank.getBankCapacity()];
 
         final List<ScribblePlayerHand> playerHands = getPlayersHands();
@@ -151,20 +151,20 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
         }
     }
 
-    void initGameAfterLoading(TilesBank tilesBank, Vocabulary vocabulary) {
-        this.vocabulary = vocabulary;
+    void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary) {
+        this.dictionary = vocabulary;
 
         this.tilesBank = tilesBank;
         positions = new Position[tilesBank.getBankCapacity()];
         restoreBoardState();
     }
 
-    void setVocabulary(Vocabulary vocabulary) {
-        this.vocabulary = vocabulary;
+    void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
-    public Vocabulary getVocabulary() {
-        return vocabulary;
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 
     /**
@@ -333,10 +333,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
      * This method also invokes <code>super</code> method to check that game is right state.
      *
      * @throws GameStateException if there is no dictionary or tiles bank.
-     * @see #setVocabulary(wisematches.playground.dictionary.Vocabulary)
+     * @see #setDictionary(wisematches.playground.dictionary.Dictionary)
      */
     protected void checkState() throws GameStateException {
-        if (vocabulary == null || tilesBank == null) {
+        if (dictionary == null || tilesBank == null) {
             throw new GameStateException("Dictionary or TilesBank isn't initialized");
         }
         super.checkState();
@@ -441,7 +441,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
         }
 
         final String w = move.getWord().getText();
-        if (!vocabulary.contains(w)) {
+        if (!dictionary.contains(w)) {
             throw new UnknownWordException(w);
         }
     }

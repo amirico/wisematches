@@ -1,14 +1,10 @@
 package wisematches.playground.dictionary.impl;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import wisematches.personality.Alphabet;
 import wisematches.personality.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.*;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -18,37 +14,58 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileDictionary implements Dictionary {
+    private final boolean autoFlush;
     private final Language language;
     private final File dictionaryFile;
-    private final File vocabulariesFolder;
+
+    private final Alphabet alphabet;
+    private final Map<Character, Alphabet> alphabets = new TreeMap<>();
 
     private final Lock lock = new ReentrantLock();
-    private final Map<String, WordEntry> entryMap = new TreeMap<>();
-    private final Map<String, DefaultVocabulary> vocabularies = new HashMap<>();
+    private final NavigableMap<String, WordEntry> entryMap = new TreeMap<>();
 
-    private static final TheParser parser = new TheParser();
+    public FileDictionary(Language language, File dictionaryFile) throws DictionaryException {
+        this(language, dictionaryFile, true);
+    }
 
-    public FileDictionary(File dictionaryFolder, Language language) throws DictionaryException {
+    public FileDictionary(Language language, File dictionaryFile, boolean autoFlush) throws DictionaryException {
         this.language = language;
-        this.dictionaryFile = new File(dictionaryFolder, "dictionary.xml");
-        this.vocabulariesFolder = new File(dictionaryFolder, "vocabulary");
+        this.dictionaryFile = dictionaryFile;
+        this.autoFlush = autoFlush;
+
+        if (!dictionaryFile.exists()) {
+            try {
+                if (!dictionaryFile.createNewFile()) {
+                    throw new DictionaryException("Dictionary file can't be created: " + dictionaryFile);
+                }
+            } catch (IOException ex) {
+                throw new DictionaryException("Dictionary file can't be created: " + dictionaryFile, ex);
+            }
+        }
+
+        final SortedMap<Character, SortedSet<Character>> chs = new TreeMap<>();
 
         final Collection<WordEntry> wordEntries = loadDictionary(dictionaryFile);
         for (WordEntry entry : wordEntries) {
-            entryMap.put(entry.getWord(), entry);
-        }
+            final String word = entry.getWord();
+            final Character c = word.charAt(0);
 
-        if (!vocabulariesFolder.isDirectory()) {
-            throw new IllegalArgumentException("vocabulary is not directory");
-        }
-
-        final File[] files = vocabulariesFolder.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                final DefaultVocabulary vocabulary = loadVocabulary(file);
-                vocabularies.put(vocabulary.getCode(), vocabulary);
+            SortedSet<Character> characters = chs.get(c);
+            if (characters == null) {
+                characters = new TreeSet<>();
+                chs.put(c, characters);
             }
+            characters.add(word.charAt(1));
+            entryMap.put(word, entry);
         }
+
+        int index = 0;
+        final char[] ab = new char[chs.size()];
+        for (Map.Entry<Character, SortedSet<Character>> entry : chs.entrySet()) {
+            ab[index++] = entry.getKey();
+            this.alphabets.put(entry.getKey(), new Alphabet(entry.getValue()));
+        }
+        this.alphabet = new Alphabet(ab);
     }
 
     @Override
@@ -66,7 +83,9 @@ public class FileDictionary implements Dictionary {
                 throw new IllegalArgumentException("Entry for word already exist: " + word);
             }
             entryMap.put(word, entry);
-            saveDictionary(dictionaryFile, entryMap.values());
+            if (autoFlush) {
+                saveDictionary(dictionaryFile, entryMap.values());
+            }
         } finally {
             lock.unlock();
         }
@@ -87,7 +106,9 @@ public class FileDictionary implements Dictionary {
                 throw new IllegalArgumentException("Entry for word doesn't exist: " + word);
             }
             entryMap.put(word, entry);
-            saveDictionary(dictionaryFile, entryMap.values());
+            if (autoFlush) {
+                saveDictionary(dictionaryFile, entryMap.values());
+            }
         } finally {
             lock.unlock();
         }
@@ -103,62 +124,37 @@ public class FileDictionary implements Dictionary {
 
         lock.lock();
         try {
-            for (DefaultVocabulary vocabulary : vocabularies.values()) {
-                if (vocabulary.contains(word)) {
-                    throw new IllegalArgumentException("Vocabulary contains word: " + word + " at " + vocabulary.getCode());
-                }
-            }
-
-
             final WordEntry wordEntry = entryMap.get(word);
             if (wordEntry == null) {
                 throw new IllegalArgumentException("Entry for word doesn't exist: " + word);
             }
             entryMap.remove(word);
-            saveDictionary(dictionaryFile, entryMap.values());
+            if (autoFlush) {
+                saveDictionary(dictionaryFile, entryMap.values());
+            }
         } finally {
             lock.unlock();
         }
     }
 
     @Override
-    public void addVocabularyWord(Vocabulary vocabulary, String word) throws DictionaryException {
-        if (vocabulary == null) {
-            throw new NullPointerException("Vocabulary can't be null");
-        }
-        validateWord(word, language);
-
-        final DefaultVocabulary fv = vocabularies.get(vocabulary.getCode());
-        if (fv == null || fv != vocabulary) {
-            throw new IllegalArgumentException("Vocabulary doesn't belong to this dictionary: " + vocabulary);
-        }
-        if (fv.addWord(word)) {
-            saveVocabulary(vocabulariesFolder, fv);
-        }
+    public Alphabet getAlphabet() {
+        return alphabet;
     }
 
     @Override
-    public void removeVocabularyWord(Vocabulary vocabulary, String word) throws DictionaryException {
-        if (vocabulary == null) {
-            throw new NullPointerException("Vocabulary can't be null");
-        }
-        if (word == null) {
-            throw new NullPointerException("Word can't be null");
-        }
-        validateWord(word, language);
+    public Alphabet getAlphabet(char ch) {
+        return alphabets.get(ch);
+    }
 
-        final DefaultVocabulary fv = vocabularies.get(vocabulary.getCode());
-        if (fv == null || fv != vocabulary) {
-            throw new IllegalArgumentException("Vocabulary doesn't belong to this dictionary: " + vocabulary);
-        }
-        if (fv.removeWord(word)) {
-            saveVocabulary(vocabulariesFolder, fv);
-        }
+    @Override
+    public boolean contains(String word) {
+        return entryMap.containsKey(word);
     }
 
     @Override
     public WordEntry getWordEntry(String word) {
-        return entryMap.get(word.toLowerCase());
+        return entryMap.get(word);
     }
 
     @Override
@@ -182,24 +178,16 @@ public class FileDictionary implements Dictionary {
     }
 
     @Override
-    public Vocabulary getDefaultVocabulary() {
-        // TODO: incorrect default vocabulary
-        return vocabularies.entrySet().iterator().next().getValue();
+    public Date getLastModification() {
+        return new Date(dictionaryFile.lastModified());
     }
 
     @Override
-    public Vocabulary getVocabulary(String code) {
-        return vocabularies.get(code);
+    public void flush() throws DictionaryException {
+        saveDictionary(dictionaryFile, entryMap.values());
     }
 
-    @Override
-    public Collection<Vocabulary> getVocabularies() {
-        Collection<Vocabulary> res = new ArrayList<>();
-        res.addAll(vocabularies.values());
-        return res;
-    }
-
-    protected static void validateWord(String word, Language language) {
+    private void validateWord(String word, Language language) {
         if (word == null) {
             throw new NullPointerException("Word can't be null");
         }
@@ -212,134 +200,69 @@ public class FileDictionary implements Dictionary {
         }
     }
 
-    protected static String normalizeWord(String word) {
-        return word.toLowerCase().replaceAll("ё", "е");
-    }
-
-    protected static DefaultVocabulary loadVocabulary(File file) throws DictionaryException {
+    private Collection<WordEntry> loadDictionary(File file) throws DictionaryException {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-            String s;
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), language.getCharsetName()));
 
-            String code = file.getName().substring(0, file.getName().indexOf("."));
-            String name = reader.readLine();
-            Date lastModified = new Date(file.lastModified());
-            StringBuilder desc = new StringBuilder();
-            s = reader.readLine();
-            while (s != null && s.length() != 0) {
-                desc.append(s);
-                desc.append(System.getProperty("line.separator"));
-                s = reader.readLine();
-            }
+            String word = null;
+            String attributes = null;
+            final StringBuilder definition = new StringBuilder();
+            final Collection<WordDefinition> definitions = new ArrayList<>();
 
-            TreeSet<String> words = new TreeSet<>();
-            s = reader.readLine();
+            final Collection<WordEntry> res = new ArrayList<>();
+            String s = reader.readLine();
             while (s != null) {
-                words.add(s.toLowerCase().replaceAll("ё", "е"));
+                if (s.length() == 0) {
+                    continue;
+                }
+                if (s.charAt(0) == '\t') {
+                    if (s.charAt(1) == '\t') {
+                        if (definition.length() != 0) {
+                            definition.append(System.lineSeparator());
+                        }
+                        definition.append(s.trim());
+                    } else {
+                        if (attributes != null) {
+                            definitions.add(new WordDefinition(definition.toString(), WordAttribute.decode(attributes)));
+                        }
+                        attributes = s.trim();
+                        definition.setLength(0);
+                    }
+                } else {
+                    if (attributes != null) {
+                        definitions.add(new WordDefinition(definition.toString(), WordAttribute.decode(attributes)));
+                    }
+                    if (word != null) {
+                        res.add(new WordEntry(word, definitions));
+                    }
+                    attributes = null;
+                    definition.setLength(0);
+                    definitions.clear();
+                    word = s;
+                }
                 s = reader.readLine();
             }
-            reader.close();
-            return new DefaultVocabulary(code, name, desc.toString(), lastModified, words);
-        } catch (Exception ex) {
-            throw new DictionaryException("");
-        }
-    }
-
-    protected static void saveVocabulary(File file, DefaultVocabulary vocabulary) throws DictionaryException {
-        try {
-            final File f = new File(file, vocabulary.getCode() + ".txt");
-            final PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"));
-            w.println(vocabulary.getName());
-            w.println(vocabulary.getDescription());
-            w.println();
-            for (String s : vocabulary.getWords()) {
-                w.println(s);
-            }
-            w.close();
-        } catch (IOException ex) {
-            throw new DictionaryException("Vocabulary can't be stored: " + file, ex);
-        }
-    }
-
-    protected static Collection<WordEntry> loadDictionary(File file) throws DictionaryException {
-        try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            saxParser.parse(file, parser);
-            saxParser.reset();
-
-            return parser.getEntries();
+            return res;
         } catch (Exception ex) {
             throw new DictionaryException("Dictionary can't be loaded: " + file, ex);
         }
     }
 
-    protected static void saveDictionary(File file, Collection<WordEntry> entries) throws DictionaryException {
+    private void saveDictionary(File file, Collection<WordEntry> entries) throws DictionaryException {
         try {
-            final PrintWriter w = new PrintWriter(new FileWriter(file));
-            w.println("<dictionary>");
+            final PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), language.getCharsetName()));
             for (WordEntry entry : entries) {
-                w.print("<w t=\"");
-                w.print(entry.getWord());
-                w.println("\">");
-
+                w.println(entry.getWord());
                 for (WordDefinition definition : entry.getDefinitions()) {
-                    w.print("<d a=\"");
-                    w.print(definition.getAttributes());
-                    w.print("\">");
-                    w.print(definition.getText());
-                    w.println("</d>");
+                    w.print("\t");
+                    w.println(WordAttribute.encode(definition.getAttributes()));
+                    w.print("\t\t");
+                    w.println(definition.getText().replaceAll(System.lineSeparator(), System.lineSeparator() + "\t\t"));
                 }
-                w.println("</w>");
             }
-            w.println("</dictionary>");
             w.close();
         } catch (IOException ex) {
             throw new DictionaryException("Dictionary can't be stored: " + file, ex);
-        }
-    }
-
-    private static final class TheParser extends DefaultHandler {
-        private String word;
-        private String attributes;
-
-        private final StringBuilder text = new StringBuilder();
-
-        private final Collection<WordEntry> entries = new ArrayList<>();
-        private final Collection<WordDefinition> definitions = new ArrayList<>();
-
-        private TheParser() {
-        }
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (qName.equalsIgnoreCase("w")) {
-                word = normalizeWord(attributes.getValue("t"));
-            } else if (qName.equalsIgnoreCase("d")) {
-                this.attributes = attributes.getValue("a");
-            }
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (qName.equalsIgnoreCase("w")) {
-                entries.add(new WordEntry(word, definitions));
-                word = null;
-                definitions.clear();
-            } else if (qName.equalsIgnoreCase("d")) {
-                definitions.add(new WordDefinition(text.toString().trim(), this.attributes));
-                attributes = null;
-            }
-            text.setLength(0);
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            text.append(ch, start, length);
-        }
-
-        public Collection<WordEntry> getEntries() {
-            return entries;
         }
     }
 }
