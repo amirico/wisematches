@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.playground.*;
-import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.dictionary.WordEntry;
+import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
@@ -25,7 +23,6 @@ import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
-import wisematches.server.web.controllers.playground.scribble.form.CheckWordForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleTileForm;
 import wisematches.server.web.controllers.playground.scribble.form.ScribbleWordForm;
 
@@ -86,6 +83,9 @@ public class ScribbleBoardController extends WisematchesController {
                     }
                 }
             }
+
+            model.addAttribute("wordAttributes", WordAttribute.values());
+            model.addAttribute("dictionaryLanguage", board.getSettings().getLanguage());
 
             if (player == null) {
                 model.addAttribute("viewMode", Boolean.TRUE);
@@ -177,20 +177,6 @@ public class ScribbleBoardController extends WisematchesController {
                 return res;
             }
         }, locale);
-    }
-
-    @ResponseBody
-    @RequestMapping("check")
-    public ServiceResponse checkWordAjax(@RequestBody CheckWordForm form) {
-        final Dictionary d = dictionaryManager.getDictionary(Language.byCode(form.getLang()));
-        if (d == null) {
-            return ServiceResponse.failure();
-        }
-        final WordEntry wordEntry = d.getWordEntry(form.getWord());
-        if (wordEntry != null) {
-            return ServiceResponse.success("", "wordEntry", wordEntry);
-        }
-        return ServiceResponse.failure();
     }
 
     private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {

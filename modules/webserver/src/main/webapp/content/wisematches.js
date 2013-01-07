@@ -194,7 +194,9 @@ wm.ui = new function () {
         } else {
             $.blockUI({message: null});
         }
-        showStatus(message, STATE.DEFAULT, true);
+        if (message != null && message != undefined) {
+            showStatus(message, STATE.DEFAULT, true);
+        }
     };
 
     this.unlock = function (element, message, error) {

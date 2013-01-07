@@ -554,8 +554,16 @@ ul.bonuses .bonus-cell {
     padding-right: 0 !important;
 }
 
+.word-value.ui-state-valid {
+    padding: 2px 1px;
+    color: #097909;
+    border: 1px solid #097909;
+    background-color: #edfae8;
+}
+
 .word-value.ui-state-error {
     padding: 2px 1px;
+    background-image: none;
 }
 
 .annotation, .shareWidget, .boardInfoWidget, .movesHistory, .memoryWordsWidget, .moveInfo, .thesaurusWidget {
