@@ -3,23 +3,16 @@
 
 <@wm.ui.table.dtinit/>
 <#include "/content/playground/messages/scriplet.ftl">
-<#include "/content/playground/blacklist/scriplet.ftl">
+<#include "/content/playground/players/blacklist/scriplet.ftl">
 
 <@wm.ui.playground id="messagesWidget">
     <@wm.ui.table.header>
         <@message code="game.menu.messages.label"/> > <@message code="messages.received"/>
     </@wm.ui.table.header>
 
-    <@wm.ui.table.toolbar>
-    <div style="float: left;">
-        <button style="margin-left: 0" onclick="wm.messages.removeSelected();">
-            <@message code="messages.delete.selected"/>
-        </button>
-    </div>
-    <div>
-        <a href="/playground/messages/sent"><@message code="messages.sent"/></a>
-        <a href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
-    </div>
+    <@wm.ui.table.toolbar align="right">
+    <a class="wm-ui-button" href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
+    <a class="wm-ui-button" href="/playground/messages/sent"><@message code="messages.sent"/></a>
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -30,7 +23,7 @@
                 <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
                        onchange="wm.messages.selectAll()">
             </th>
-            <th nowrap="nowrap"><@message code="messages.column.from"/></th>
+            <th nowrap="nowrap" style="white-space: nowrap"><@message code="messages.column.from"/></th>
             <th nowrap="nowrap" width="100%"><@message code="messages.column.message"/></th>
         </tr>
         </thead>
@@ -78,14 +71,18 @@
     </table>
     </@wm.ui.table.content>
 
+    <@wm.ui.table.statusbar align="left">
+    <button class="wm-ui-button" style="margin-left: 0" onclick="wm.messages.removeSelected();">
+        <@message code="messages.delete.selected"/>
+    </button>
+    </@wm.ui.table.statusbar>
+
     <@wm.ui.table.footer/>
 </@wm.ui.playground>
 
 <script type="text/javascript">
     wm.messages = $.extend({}, wm.messages, new function () {
         var widget = $("#messagesWidget");
-
-        $("#messagesWidget button").button();
 
         wm.ui.dataTable('#messages', {
             "bSortClasses": false,

@@ -9,16 +9,9 @@
     </@wm.ui.table.header>
 
 
-    <@wm.ui.table.toolbar>
-    <div style="float: left;">
-        <button type="submit" style="margin-left: 0" onclick="wm.messages.removeSelected();">
-            <@message code="messages.delete.selected"/>
-        </button>
-    </div>
-    <div>
-        <a href="/playground/messages/view"><@message code="messages.received"/></a>
-        <a href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
-    </div>
+    <@wm.ui.table.toolbar align="right">
+    <a class="wm-ui-button" href="/playground/blacklist/view"><@message code="messages.blacklist"/></a>
+    <a class="wm-ui-button" href="/playground/messages/view"><@message code="messages.received"/></a>
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -61,14 +54,18 @@
     </table>
     </@wm.ui.table.content>
 
+    <@wm.ui.table.statusbar align="left">
+    <button class="wm-ui-button" style="margin-left: 0" onclick="wm.messages.removeSelected();">
+        <@message code="messages.delete.selected"/>
+    </button>
+    </@wm.ui.table.statusbar>
+
     <@wm.ui.table.footer/>
 </@wm.ui.playground>
 
 <script type="text/javascript">
     wm.messages = $.extend({}, wm.messages, new function () {
         var widget = $("#messagesWidget");
-        $("#messagesWidget button").button();
-
         wm.ui.dataTable('#messages', {
             "bSortClasses": false,
             "aaSorting": [

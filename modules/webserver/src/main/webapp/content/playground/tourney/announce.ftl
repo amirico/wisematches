@@ -113,8 +113,8 @@
 </@wm.ui.table.content>
 
 <@wm.security.observed>
-    <@wm.ui.table.statusbar align="left">
-        <button style="width: 100%">
+    <@wm.ui.table.statusbar>
+        <button class="wm-ui-button" style="width: 100%">
             <#if subscription??>
                         <@message code="tourney.subscribe.refuse"/>
                     <#else>

@@ -31,7 +31,7 @@
     new wm.scribble.Players(board);
 
     <#if playerInGame>
-    $(".createChallenge button").button().click(function () {
+    $(".createChallenge button").click(function () {
         wm.util.url.redirect('/playground/scribble/create?t=board&p=' + board.getBoardId());
     });
     board.bind('gameState', function (event, type, state) {

@@ -2,7 +2,7 @@
 
 <@wm.ui.playground id="playersWidget">
     <@wm.ui.table.header>
-        <@message code="search.label"/>
+        <@message code="game.menu.players.label"/> > <@message code="search.label"/>
     </@wm.ui.table.header>
 
     <#assign scriplet=false/>

@@ -5,15 +5,15 @@
         this.add = function (pid, callback) {
             var dlg = $("#blacklistConfirmDialog");
             dlg.dialog({
-                title:"<@message code="blacklist.confirm.label"/>",
-                width:400,
-                modal:true,
-                buttons:{
-                    "<@message code="blacklist.confirm.execute"/>":function () {
+                title: "<@message code="blacklist.confirm.label"/>",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "<@message code="blacklist.confirm.execute"/>": function () {
                         var widget = dlg.closest(".ui-dialog");
                         var comment = $("#blacklistConfirmDialog textarea").val()
                         wm.ui.lock(widget, "<@message code="blacklist.status.adding"/>");
-                        $.post('/playground/blacklist/add.ajax', $.toJSON({person:pid, comment:comment}), function (result) {
+                        $.post('/playground/blacklist/add.ajax', $.toJSON({person: pid, comment: comment}), function (result) {
                             if (result.success) {
                                 wm.ui.unlock(widget, "<@message code="blacklist.status.added"/>");
                                 if (callback != undefined) {
@@ -25,7 +25,7 @@
                             }
                         });
                     },
-                    "<@message code="button.cancel"/>":function () {
+                    "<@message code="button.cancel"/>": function () {
                         dlg.dialog("close");
                     }
                 }});

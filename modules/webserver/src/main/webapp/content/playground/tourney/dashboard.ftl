@@ -17,7 +17,7 @@
                 </@wm.ui.table.header>
 
                 <@wm.ui.table.toolbar>
-                    <div>
+                    <div class="wm-ui-buttonset">
                         <a href="/playground/tourney/active"><@message code="tourney.all.active.label"/></a>
                         <a href="/playground/tourney/finished"><@message code="tourney.all.finished.label"/></a>
                     </div>

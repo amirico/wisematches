@@ -11,9 +11,18 @@
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar>
-        <div>
-            <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
-        </div>
+        <table width="100%">
+            <tr>
+                <td align="left">
+                    <div class="wm-ui-buttonset">
+                        <a href="/playground/scribble/active"><@message code="game.dashboard.label"/></a>
+                        <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
+                    </div>
+                </td>
+                <td align="right">
+                </td>
+            </tr>
+        </table>
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>

@@ -50,9 +50,6 @@
                     </tr>
                 </table>
             </div>
-        <#if principal??>
-            <div><#include "/content/playground/footer.ftl"/></div>
-        </#if>
         </td>
     </tr>
 </table>

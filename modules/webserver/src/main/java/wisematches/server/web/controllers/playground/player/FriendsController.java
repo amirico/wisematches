@@ -23,50 +23,50 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/friends")
 public class FriendsController extends WisematchesController {
-	private PlayerManager playerManager;
-	private FriendsManager friendsManager;
+    private PlayerManager playerManager;
+    private FriendsManager friendsManager;
 
-	public FriendsController() {
-	}
+    public FriendsController() {
+    }
 
-	@RequestMapping("view")
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String viewBlacklist(Model model) {
-		model.addAttribute("friends", friendsManager.getFriendsList(getPrincipal()));
-		return "/content/playground/friends/view";
-	}
+    @RequestMapping("view")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public String viewBlacklist(Model model) {
+        model.addAttribute("friends", friendsManager.getFriendsList(getPrincipal()));
+        return "/content/playground/players/friends/view";
+    }
 
 
-	@ResponseBody
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "add", method = RequestMethod.POST)
-	public ServiceResponse addFriend(@RequestBody FriendRelationForm form, Locale locale) {
-		final Player player = playerManager.getPlayer(form.getPerson());
-		if (player == null) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("friends.err.unknown", locale));
-		}
-		friendsManager.addFriend(getPersonality(), player, form.getComment());
-		return ServiceResponse.SUCCESS;
-	}
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public ServiceResponse addFriend(@RequestBody FriendRelationForm form, Locale locale) {
+        final Player player = playerManager.getPlayer(form.getPerson());
+        if (player == null) {
+            return ServiceResponse.failure(gameMessageSource.getMessage("friends.err.unknown", locale));
+        }
+        friendsManager.addFriend(getPersonality(), player, form.getComment());
+        return ServiceResponse.SUCCESS;
+    }
 
-	@ResponseBody
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "remove", method = RequestMethod.POST)
-	public ServiceResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
-		final Personality personality = getPersonality();
-		for (Long id : removeList) {
-			friendsManager.removeFriend(personality, Personality.person(id));
-		}
-		return ServiceResponse.SUCCESS;
-	}
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public ServiceResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
+        final Personality personality = getPersonality();
+        for (Long id : removeList) {
+            friendsManager.removeFriend(personality, Personality.person(id));
+        }
+        return ServiceResponse.SUCCESS;
+    }
 
-	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
-	}
+    @Autowired
+    public void setPlayerManager(PlayerManager playerManager) {
+        this.playerManager = playerManager;
+    }
 
-	@Autowired
-	public void setFriendsManager(FriendsManager friendsManager) {
-		this.friendsManager = friendsManager;
-	}
+    @Autowired
+    public void setFriendsManager(FriendsManager friendsManager) {
+        this.friendsManager = friendsManager;
+    }
 }
