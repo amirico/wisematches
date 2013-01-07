@@ -12,8 +12,8 @@
 
 <#if principal??>
     <#include "/content/playground/messages/scriplet.ftl">
-    <#include "/content/playground/blacklist/scriplet.ftl">
-    <#include "/content/playground/friends/scriplet.ftl">
+    <#include "/content/playground/players/blacklist/scriplet.ftl">
+    <#include "/content/playground/players/friends/scriplet.ftl">
 </#if>
 
 <#assign p_wins=0 p_loses=0 p_draws=0/>

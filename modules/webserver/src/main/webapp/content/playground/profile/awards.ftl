@@ -35,7 +35,8 @@
                         </div>
 
                         <div class="edit">
-                            <button onclick="wm.util.url.redirect('/playground/profile/view?p=${player.id}')">
+                            <button class="wm-ui-button"
+                                    onclick="wm.util.url.redirect('/playground/profile/view?p=${player.id}')">
                             <@message code="profile.view"/>
                             </button>
                         </div>
@@ -68,7 +69,3 @@
         </td>
     </tr>
 </table>
-
-<script type="text/javascript">
-    $(".profile button").button();
-</script>

@@ -12,9 +12,18 @@
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar>
-    <div>
-        <a href="/playground/scribble/join" style=""><@message code="game.join.label"/></a>
-    </div>
+    <table width="100%">
+        <tr>
+            <td align="left">
+                <div class="wm-ui-buttonset">
+                    <a href="/playground/scribble/active"><@message code="game.dashboard.label"/></a>
+                    <a href="/playground/scribble/join"><@message code="game.join.label"/></a>
+                </div>
+            </td>
+            <td align="right">
+            </td>
+        </tr>
+    </table>
     </@wm.ui.table.toolbar>
 
 <form id="form" class="form" action="/playground/scribble/create" method="post">
@@ -252,7 +261,7 @@
     </@wm.ui.table.footer>
 </div>
 
-    <#include "/content/playground/players/scriplet.ftl">
+    <#include "/content/playground/players/search/scriplet.ftl">
 </@wm.ui.playground>
 
 <script type="text/javascript">

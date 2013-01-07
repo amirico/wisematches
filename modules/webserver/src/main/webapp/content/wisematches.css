@@ -161,14 +161,6 @@ tr.even:hover td, tr.odd:hover td {
     background: url('/resources/images/wait.gif') no-repeat left center;
 }
 
-.wm-icon-add {
-    background: url('/resources/images/common/add.png') no-repeat left center !important;
-}
-
-.wm-icon-delete {
-    background: url('/resources/images/common/add.png') no-repeat left center !important;
-}
-
 .wm-icon-wait {
     width: 16px;
     height: 16px;
@@ -622,6 +614,7 @@ a.ui-icon {
 }
 
 .wm-ui-splitbutton .ui-menu {
+    z-index: 99999;
     position: absolute;
 }
 

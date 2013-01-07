@@ -15,11 +15,19 @@
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar>
-        <#if player == principal>
-        <a href="/playground/scribble/active"><@message code="game.dashboard.label"/></a>
-        <#else>
-        <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
-        </#if>
+    <table width="100%">
+        <tr>
+            <td align="left">
+                <div class="wm-ui-buttonset">
+                    <a href="/playground/scribble/active<#if player != principal>?p=${player.id}</#if>"><@message code="game.dashboard.label"/></a>
+                    <a href="/playground/scribble/join"><@message code="game.join.label"/></a>
+                    <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
+                </div>
+            </td>
+            <td align="right">
+            </td>
+        </tr>
+    </table>
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>

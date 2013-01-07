@@ -5,13 +5,11 @@
 
 <@wm.ui.playground id="blacklistWidget">
     <@wm.ui.table.header>
-        <@message code="game.menu.blacklist.label"/>
+        <@message code="game.menu.players.label"/> > <@message code="game.menu.blacklist.label"/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
-    <button type="submit" style="margin-left: 0" onclick="wm.blacklist.removeSelected();">
-        <@message code="blacklist.trustworthy.selected"/>
-    </button>
+    &nbsp;
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -58,14 +56,18 @@
     </table>
     </@wm.ui.table.content>
 
+    <@wm.ui.table.statusbar align="left">
+    <button class="wm-ui-button" type="submit" style="margin-left: 0" onclick="wm.blacklist.removeSelected();">
+        <@message code="blacklist.trustworthy.selected"/>
+    </button>
+    </@wm.ui.table.statusbar>
+
     <@wm.ui.table.footer/>
 </@wm.ui.playground>
 
 <script type="text/javascript">
     wm.blacklist = new function () {
         var widget = $("#blacklistWidget");
-        $("#blacklis").find("button").button();
-
         wm.ui.dataTable('#blacklist', {
             "bSortClasses": false,
             "aoColumns": [

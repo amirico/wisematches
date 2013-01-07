@@ -45,21 +45,10 @@
                 <tr>
                     <td valign="bottom">
                         <div id="gameToolbar" class="" align="left">
-                            <div class="wm-ui-splitbutton">
+                            <div class="wm-ui-buttonset">
                                 <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
-                                <ul class="ui-helper-hidden">
-                                    <li>
-                                        <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
-                                    </li>
-                                    <li>
-                                        <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
-                                    </li>
-                                    <li>
-                                        <a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>
-                                    </li>
-                                </ul>
-                            <#--<a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>-->
-                            <#--<a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>-->
+                                <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
+                                <a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>
                             </div>
 
                             <div class="wm-ui-buttonset">
@@ -75,21 +64,34 @@
                                 </#if>
                                 </a>
                             </#if>
-                                <a href="/playground/friends/view"><@message code="game.menu.friends.label"/></a>
-                                <a href="/playground/blacklist/view"><@message code="game.menu.blacklist.label"/></a>
-                            </div>
-
-
-                            <div class="wm-ui-buttonset">
-                                <a href="/playground/dictionary"><@message code="game.menu.dictionary.label"/></a>
                             </div>
 
                             <div class="wm-ui-buttonset">
                                 <a href="/playground/tourney"><@message code="game.menu.tourneys.label"/></a>
                             </div>
 
-                            <div class="wm-ui-buttonset">
+                            <div class="wm-ui-splitbutton">
+                                <a href="/playground/dictionary"><@message code="game.menu.dictionary.label"/></a>
+                                <ul class="ui-helper-hidden">
+                                    <li>
+                                        <a href="/playground/dictionary?l=ru"><@message code="language.ru"/></a>
+                                    </li>
+                                    <li>
+                                        <a href="/playground/dictionary?l=en"><@message code="language.en"/></a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="wm-ui-splitbutton">
                                 <a href="/playground/players"><@message code="game.menu.players.label"/></a>
+                                <ul class="ui-helper-hidden">
+                                    <li>
+                                        <a href="/playground/friends/view"><@message code="game.menu.friends.label"/></a>
+                                    </li>
+                                    <li>
+                                        <a href="/playground/blacklist/view"><@message code="game.menu.blacklist.label"/></a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </td>

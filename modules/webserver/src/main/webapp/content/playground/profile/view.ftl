@@ -35,7 +35,8 @@
                         </div>
                     <#if principal?? && principal.id == player.id>
                         <div class="edit">
-                            <button onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="profile.edit"/></button>
+                            <button class="wm-ui-button"
+                                    onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="profile.edit"/></button>
                         </div>
                     </#if>
 
@@ -46,7 +47,3 @@
         </td>
     </tr>
 </table>
-
-<script type="text/javascript">
-    $(".profile button").button();
-</script>

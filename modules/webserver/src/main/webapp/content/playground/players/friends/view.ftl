@@ -6,13 +6,11 @@
 
 <@wm.ui.playground id="friendsWidget">
     <@wm.ui.table.header>
-        <@message code="game.menu.friends.label"/>
+        <@message code="game.menu.players.label"/> > <@message code="game.menu.friends.label"/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
-    <button type="submit" style="margin-left: 0" onclick="wm.friends.removeSelected();">
-        <@message code="messages.delete.selected"/>
-    </button>
+    &nbsp;
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -62,14 +60,18 @@
     </table>
     </@wm.ui.table.content>
 
+    <@wm.ui.table.statusbar align="left">
+    <button class="wm-ui-button" type="submit" style="margin-left: 0" onclick="wm.friends.removeSelected();">
+        <@message code="messages.delete.selected"/>
+    </button>
+    </@wm.ui.table.statusbar>
+
     <@wm.ui.table.footer/>
 </@wm.ui.playground>
 
 <script type="text/javascript">
     wm.friends = $.extend({}, wm.friends, new function () {
         var widget = $("#friendsWidget");
-        widget.find("button").button();
-
         wm.ui.dataTable('#friends', {
             "bSortClasses": false,
             "aoColumns": [

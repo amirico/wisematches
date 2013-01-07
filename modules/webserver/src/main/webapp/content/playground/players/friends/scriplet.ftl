@@ -5,15 +5,15 @@
         this.add = function (pid, callback) {
             var dlg = $("#friendInfoDialog");
             dlg.dialog({
-                title:"<@message code="friends.confirm.label"/>",
-                width:400,
-                modal:true,
-                buttons:{
-                    "<@message code="friends.confirm.execute"/>":function () {
+                title: "<@message code="friends.confirm.label"/>",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "<@message code="friends.confirm.execute"/>": function () {
                         var widget = dlg.closest(".ui-dialog");
                         var comment = $("#friendInfoDialog textarea").val()
                         wm.ui.lock(widget, "<@message code="friends.status.adding"/>");
-                        $.post('/playground/friends/add.ajax', $.toJSON({person:pid, comment:comment}), function (result) {
+                        $.post('/playground/friends/add.ajax', $.toJSON({person: pid, comment: comment}), function (result) {
                             if (result.success) {
                                 wm.ui.unlock(widget, "<@message code="friends.status.added"/>");
                                 if (callback != undefined) {
@@ -25,7 +25,7 @@
                             }
                         });
                     },
-                    "<@message code="button.cancel"/>":function () {
+                    "<@message code="button.cancel"/>": function () {
                         dlg.dialog("close");
                     }
                 }});

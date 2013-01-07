@@ -28,11 +28,21 @@
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar>
-        <#if player == principal>
-        <a href="/playground/scribble/history"><@message code="game.past.history.label"/></a>
-        <#else>
-        <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
-        </#if>
+    <table width="100%">
+        <tr>
+            <td align="left">
+                <div class="wm-ui-buttonset">
+                    <a href="/playground/scribble/join"><@message code="game.join.label"/></a>
+                    <a href="/playground/scribble/create"><@message code="game.create.label"/></a>
+                </div>
+            </td>
+            <td align="right">
+                <div class="wm-ui-buttonset">
+                    <a href="/playground/scribble/history<#if player != principal>?p=${player.id}</#if>"><@message code="game.past.history.label"/></a>
+                </div>
+            </td>
+        </tr>
+    </table>
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>

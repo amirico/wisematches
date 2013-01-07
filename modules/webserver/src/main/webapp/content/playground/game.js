@@ -502,7 +502,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
         if (prefix.length == 0) {
             wm.ui.unlock(wordsViewPanel);
         } else {
-            $.post("/playground/dictionary/loadWordEntries.ajax?l=ru&p=" + prefix, null, function (response) {
+            $.post("/playground/dictionary/loadWordEntries.ajax?l=" + lang + "&p=" + prefix, null, function (response) {
                 if (response.success) {
                     var words = response.data.wordEntries;
                     wordsViewStatus.text(words.length);
@@ -743,7 +743,7 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
         });
     });
 
-    subscriptionView.find('button').button().click(function () {
+    subscriptionView.find('button').click(function () {
         if (subscribed) {
             unsubscribe(subscriptionView, function () {
             });
