@@ -95,7 +95,7 @@
 </div>
 </@wm.ui.playground>
 
-<#include "modify.ftl"/>
+<#include "card.ftl"/>
 
 <script type="text/javascript">
     var dictionary;

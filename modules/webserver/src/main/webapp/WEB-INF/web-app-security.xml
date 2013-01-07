@@ -157,7 +157,7 @@
         <intercept-url pattern="/playground/profile/awards" access="permitAll"/>
         <intercept-url pattern="/playground/profile/image/view" access="permitAll"/>
         <intercept-url pattern="/playground/scribble/board" access="permitAll"/>
-        <intercept-url pattern="/playground/scribble/board/check.ajax" access="permitAll"/>
+        <intercept-url pattern="/playground/dictionary/loadWordEntry.ajax" access="permitAll"/>
 
         <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
         <intercept-url pattern="/account/membership/**" access="isAuthenticated()"/>

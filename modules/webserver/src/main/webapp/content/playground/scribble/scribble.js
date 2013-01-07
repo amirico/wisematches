@@ -567,32 +567,21 @@ wm.scribble.Selection = function (board) {
         });
 };
 
-wm.scribble.Thesaurus = function (board, checkWords) {
-    var thesaurus = this;
-
+wm.scribble.Thesaurus = function (board, suggestion, checkWords) {
+    var instance = this;
     var checkTimer = undefined;
-
     var input = board.getPlayboardElement('.word-value');
-    var status = board.getPlayboardElement('.word-status');
-    var checkButton = board.getPlayboardElement('.word-check');
-    var lookupButton = board.getPlayboardElement('.word-lookup');
+    var controlButton = board.getPlayboardElement('.word-control');
+
+    var wordEntry = undefined;
+    var activeAction;
 
     const CHECK_WORD_TIMEOUT = 1000;
-
-    this.checkWord = function () {
-        validateWord(input.val());
-        return false;
-    };
-
-    this.lookupWord = function () {
-        window.open('http://slovari.yandex.ru/' + input.val() + '/правописание');
-        return false;
-    };
 
     var startAutoChecker = function () {
         stopAutoChecker();
         var val = input.val();
-        checkTimer = $(thesaurus).oneTime(CHECK_WORD_TIMEOUT, 'checkWord', function () {
+        checkTimer = $(instance).oneTime(CHECK_WORD_TIMEOUT, 'checkWord', function () {
             if (isAutoChecker()) {
                 validateWord(val);
             }
@@ -601,7 +590,7 @@ wm.scribble.Thesaurus = function (board, checkWords) {
 
     var stopAutoChecker = function () {
         if (isAutoChecker()) {
-            $(thesaurus).stopTime('checkWord');
+            $(instance).stopTime('checkWord');
             checkTimer = undefined;
         }
     };
@@ -610,42 +599,49 @@ wm.scribble.Thesaurus = function (board, checkWords) {
         return (checkTimer != undefined);
     };
 
+    var changeControlButton = function (icon) {
+        activeAction = icon;
+        controlButton.button("option", {
+            icons: { primary: icon }
+        });
+        return controlButton;
+    };
+
     var validateWord = function (text) {
         stopAutoChecker();
         if (text.length == 0) {
             return;
         }
-        status.removeClass('icon-empty').addClass('icon-wait');
-        $.post('/playground/scribble/board/check.ajax', $.toJSON({word: text, lang: board.getLanguage()}),
-            function (response) {
-                if (isAutoChecker()) {
-                    return;
-                }
-                status.removeClass('icon-wait');
-                checkButton.button('disable').removeClass("ui-state-hover");
-                if (response.success) {
-                    status.addClass('icon-word-valid');
-                } else {
-                    input.addClass('ui-state-error');
-                    status.addClass('icon-word-invalid');
-                }
-            }, 'json');
+
+        var parent = input.parent();
+        wm.ui.lock(parent);
+        suggestion.checkWordEntry(text, function (we, message) {
+            if (isAutoChecker()) {
+                return;
+            }
+
+            wordEntry = we;
+            if (wordEntry != null) {
+                input.addClass('ui-state-valid');
+                changeControlButton('ui-icon-script');
+            } else {
+                input.addClass('ui-state-error');
+                changeControlButton('ui-icon-pencil');
+            }
+            wm.ui.unlock(parent);
+        });
     };
 
     var validateInputValue = function () {
-        input.removeClass('ui-state-error');
-        status.attr('class', 'word-status ui-icon icon-empty');
+        input.removeClass('ui-state-error ui-state-valid');
+        changeControlButton('ui-icon-search');
         if (input.val().length != 0) {
-            checkButton.button('enable');
-            lookupButton.button('enable');
-
+            controlButton.button('enable');
             if (checkWords) {
                 startAutoChecker();
             }
         } else {
-            checkButton.button('disable').removeClass("ui-state-hover");
-            lookupButton.button('disable').removeClass("ui-state-hover");
-
+            controlButton.button('disable').removeClass("ui-state-hover");
             if (checkWords) {
                 stopAutoChecker();
             }
@@ -664,15 +660,24 @@ wm.scribble.Thesaurus = function (board, checkWords) {
 
     input.keyup(function (e) {
         if (e.which == 13) {
-            thesaurus.checkWord();
+            instance.checkWord();
             e.preventDefault();
         } else {
             validateInputValue();
         }
     });
 
-    lookupButton.button({disabled: true});
-    checkButton.button({disabled: true, icons: {primary: 'icon-word-check'}});
+    controlButton.button({text: false}).click(function (e) {
+        if (activeAction == 'ui-icon-search') {
+            validateWord();
+        } else if (activeAction == 'ui-icon-pencil') {
+            suggestion.addWordEntry(input.val());
+        } else if (activeAction == 'ui-icon-script') {
+            suggestion.viewWordEntry(wordEntry);
+        }
+        e.preventDefault();
+    });
+    changeControlButton('ui-icon-search');
 };
 
 wm.scribble.BankInfo = function (board, language) {

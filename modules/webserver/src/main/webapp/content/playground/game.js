@@ -329,7 +329,8 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.dict.Suggestion = function (lang, i18n) {
+wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
+    var instance = this;
     var wordEntryEditor = $("#wordEntryEditor");
     var wordEntryAction = wordEntryEditor.find("#action");
 
@@ -372,7 +373,25 @@ wm.game.dict.Suggestion = function (lang, i18n) {
         wordEntryEditor.find(".attributes-view").text("");
     };
 
-    var showWordEntry = function (wordEntry) {
+    this.addWordEntry = function (defaultValue) {
+        instance.viewWordEntry(null);
+        if (defaultValue != undefined && defaultValue != null) {
+            wordEntryEditor.find(".word-input").val(defaultValue);
+        }
+    };
+
+    this.loadWordEntry = function (word) {
+        instance.checkWordEntry(word, function (wordEntry, summary) {
+            if (wordEntry != null) {
+                instance.viewWordEntry(wordEntry);
+                wm.ui.unlock(null);
+            } else {
+                wm.ui.unlock(null, summary, true);
+            }
+        });
+    };
+
+    this.viewWordEntry = function (wordEntry) {
         var dialog = wordEntryEditor.dialog({
             title: i18n['title'],
             dialogClass: 'word-editor-dlg',
@@ -423,15 +442,17 @@ wm.game.dict.Suggestion = function (lang, i18n) {
         if (wordEntry != null) {
             wordEntryEditor.find(".word-view").text(wordEntry.word);
             wordEntryEditor.find(".word-input").val(wordEntry.word);
-            wordEntryEditor.find(".definition-view").text(wordEntry.definitions[0].text);
-            wordEntryEditor.find(".definition-input").val(wordEntry.definitions[0].text);
+            if (wordEntry.definitions != null && wordEntry.definitions != undefined && wordEntry.definitions.length != 0) {
+                wordEntryEditor.find(".definition-view").text(wordEntry.definitions[0].text);
+                wordEntryEditor.find(".definition-input").val(wordEntry.definitions[0].text);
 
-            var attrs = "";
-            $.each(wordEntry.definitions[0].attributes, function (i, v) {
-                attrs += " " + i18n[v];
-                $("#" + v).prop('checked', true);
-            });
-            wordEntryEditor.find(".attributes-view").text(attrs);
+                var attrs = "";
+                $.each(wordEntry.definitions[0].attributes, function (i, v) {
+                    attrs += " " + i18n[v];
+                    $("#" + v).prop('checked', true);
+                });
+                wordEntryEditor.find(".attributes-view").text(attrs);
+            }
         } else {
             startEditing();
             wordEntryAction.val("ADD");
@@ -440,17 +461,12 @@ wm.game.dict.Suggestion = function (lang, i18n) {
         dialog.dialog("open");
     };
 
-    this.addWordEntry = function () {
-        showWordEntry(null);
-    };
-
-    this.viewWordEntry = function (word) {
+    this.checkWordEntry = function (word, callback) {
         $.post("/playground/dictionary/loadWordEntry.ajax?l=" + lang + "&w=" + word, function (response) {
             if (response.success) {
-                showWordEntry(response.data.wordEntry);
-                wm.ui.unlock(null);
+                callback(response.data.wordEntry, null);
             } else {
-                wm.ui.unlock(null, response.summary, true);
+                callback(null, response.summary);
             }
         });
     };
@@ -490,7 +506,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
         });
         return $("" +
             "<tr>" +
-            "<td><a href='#' onclick='dictionarySuggestion.viewWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
+            "<td><a href='#' onclick='dictionarySuggestion.loadWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
             "<td>" + def + "</td>" +
             "</tr>");
     };

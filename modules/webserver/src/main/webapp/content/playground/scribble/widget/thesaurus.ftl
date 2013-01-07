@@ -3,29 +3,21 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
+<#include "/content/playground/dictionary/card.ftl"/>
+
 <@wm.ui.widget class="thesaurusWidget" title="game.thesaurus.label" help="board.thesaurus">
 <table width="100%">
     <tr>
-        <td width="100%"><input class="word-value" style="width: 100%"></td>
+        <td width="100%" valign="middle">
+            <input class="word-value" style="width: 100%;">
+        </td>
         <td nowrap="nowrap" align="center">
-            <span class="word-status ui-icon icon-empty"></span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <button class="word-check"
-                    onclick="thesaurus.checkWord(); return false;"><@message code="game.thesaurus.check"/></button>
-        </td>
-        <td>
-            <button class="word-lookup" title="<@message code="game.thesaurus.lookup"/>"
-                    onclick="thesaurus.lookupWord(); return false;">
-                <span class="ui-icon ui-icon-search"></span>
-            </button>
+            <button class="word-control" style="width: 22px; height: 22px"></button>
         </td>
     </tr>
 </table>
 </@wm.ui.widget>
 
 <script type="text/javascript">
-    var thesaurus = new wm.scribble.Thesaurus(board, ${boardSettings.checkWords?string});
+    var thesaurus = new wm.scribble.Thesaurus(board, dictionarySuggestion, ${boardSettings.checkWords?string});
 </script>
