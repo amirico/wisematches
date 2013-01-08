@@ -168,7 +168,7 @@ public class FileDictionary implements Dictionary {
     public Collection<WordEntry> getWordEntries(String prefix) {
         Collection<WordEntry> cache = null;
         if (prefix.length() >= 2) {
-            final String key = prefix.substring(0, 1);
+            final String key = prefix.substring(0, 2);
             cache = searchCachce.get(key);
             if (cache == null) {
                 cache = filterWordEntries(key, entryMap.values());
