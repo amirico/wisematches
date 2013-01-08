@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-3.09-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-4.0.0-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="webserver/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -14,7 +14,7 @@
             <element id="module-test-output" name="webserver" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="database-3.09-SNAPSHOT.jar">
+            <element id="archive" name="database-4.0.0-SNAPSHOT.jar">
               <element id="module-output" name="database" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
@@ -53,13 +53,13 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.2.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="archive" name="personality-3.09-SNAPSHOT.jar">
+            <element id="archive" name="personality-4.0.0-SNAPSHOT.jar">
               <element id="module-output" name="personality" />
             </element>
-            <element id="archive" name="playground-3.09-SNAPSHOT.jar">
+            <element id="archive" name="playground-4.0.0-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
-            <element id="archive" name="scribble-3.09-SNAPSHOT.jar">
+            <element id="archive" name="scribble-4.0.0-SNAPSHOT.jar">
               <element id="module-output" name="scribble" />
             </element>
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" />
@@ -78,7 +78,7 @@
     </artifact>
     <artifact type="war" name="webserver:war">
       <output-path>$PROJECT_DIR$/modules/webserver/target</output-path>
-      <root id="archive" name="webserver-3.09-SNAPSHOT.war">
+      <root id="archive" name="webserver-4.0.0-SNAPSHOT.war">
         <element id="artifact" artifact-name="webserver:war exploded" />
       </root>
     </artifact>

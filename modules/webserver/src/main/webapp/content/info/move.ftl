@@ -148,12 +148,12 @@
     <table>
         <tr>
             <td class="info-header" colspan="2">
-                <span class="info-label" style="font-size: 18px"><@message code="game.thesaurus.label"/></span>
+                <span class="info-label" style="font-size: 18px"><@message code="game.dictionary.label"/></span>
             </td>
         </tr>
         <tr>
-            <td width="280px"><#include "/content/playground/scribble/widget/thesaurus.ftl"/></td>
-            <td><@message code="game.tip.board.thesaurus"/></td>
+            <td width="280px"><#include "/content/playground/scribble/widget/dictionary.ftl"/></td>
+            <td><@message code="game.tip.board.dictionary"/></td>
         </tr>
     </table>
 

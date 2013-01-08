@@ -567,7 +567,7 @@ wm.scribble.Selection = function (board) {
         });
 };
 
-wm.scribble.Thesaurus = function (board, suggestion, checkWords) {
+wm.scribble.Dictionary = function (board, suggestion, checkWords) {
     var instance = this;
     var checkTimer = undefined;
     var input = board.getPlayboardElement('.word-value');

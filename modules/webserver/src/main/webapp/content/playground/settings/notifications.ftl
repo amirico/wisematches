@@ -9,7 +9,7 @@
     <tr>
         <td colspan="2">
             <h2 style="margin-bottom: 0;">
-                <@message code="account.modify.notice.section.${section}"/>
+                <@message code="account.modify.notice.${section}.section"/>
             </h2>
         </td>
     </tr>
@@ -20,7 +20,7 @@
             <tr>
                 <td colspan="2">
                     <h4 style="margin: 0;">
-                        <@message code="account.modify.notice.section.${sub}"/>
+                        <@message code="account.modify.notice.${sub}.section"/>
                     </h4>
                 </td>
             </tr>

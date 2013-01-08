@@ -41,6 +41,10 @@ import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tourney.regular.impl.HibernateTourneyWinner;
+import wisematches.server.web.services.dictionary.ChangeSuggestion;
+import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
+import wisematches.server.web.services.dictionary.DictionarySuggestionManager;
+import wisematches.server.web.services.dictionary.SuggestionType;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationScope;
 import wisematches.server.web.services.props.impl.MemoryPropertiesManager;
@@ -476,6 +480,34 @@ public class NotificationOriginCenterTest {
         publisherCenter.setTourneyManager(null);
 
         verify(tourneyManager);
+    }
+
+    @Test
+    public void testDictionaryChange() throws InterruptedException {
+        final Capture<DictionarySuggestionListener> tourneyListener = new Capture<>(CaptureType.ALL);
+
+        final DictionarySuggestionManager suggestionManager = createMock(DictionarySuggestionManager.class);
+        suggestionManager.addDictionaryChangeListener(capture(tourneyListener));
+        suggestionManager.removeDictionaryChangeListener(capture(tourneyListener));
+        replay(suggestionManager);
+
+        publisherCenter.setDictionarySuggestionManager(suggestionManager);
+
+        final ChangeSuggestion suggestion = createMock(ChangeSuggestion.class);
+        expect(suggestion.getRequester()).andReturn(1001L).times(2);
+        expect(suggestion.getWord()).andReturn("MockSuggest").times(2);
+        expect(suggestion.getSuggestionType()).andReturn(SuggestionType.ADD);
+        replay(suggestion);
+
+        tourneyListener.getValue().changeRequestApproved(suggestion);
+        tourneyListener.getValue().changeRequestRejected(suggestion);
+
+        assertEquals(2, publishedNotifications.getValues().size());
+        System.out.println(publishedNotifications);
+
+        publisherCenter.setDictionarySuggestionManager(null);
+
+        verify(suggestionManager, suggestion);
     }
 
     private Account createMockPlayer(long i, Language en) {

@@ -41,7 +41,7 @@
                             <#if viewMode><#if boardSettings.enableShare><#include "widget/share.ftl"/></#if></#if>
                         <#if !viewMode>
                             <#include "widget/selection.ftl"/>
-                            <#include "widget/thesaurus.ftl"/>
+                            <#include "widget/dictionary.ftl"/>
                             <#include "widget/memory.ftl"/>
                         <#else>
                         </#if>

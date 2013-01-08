@@ -133,6 +133,11 @@
                 <bean parent="notification" c:code="playground.tourney.announced" c:scope="GLOBAL"/>
 
                 <bean parent="notification" c:code="playground.tourney.finished" c:scope="GLOBAL"/>
+
+
+                <bean parent="notification" c:code="playground.dictionary.accepted" c:scope="INTERNAL"/>
+
+                <bean parent="notification" c:code="playground.dictionary.rejected" c:scope="INTERNAL"/>
             </list>
         </property>
     </bean>
@@ -147,6 +152,7 @@
         <property name="proposalManager" ref="scribbleProposalManager"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="propertiesManager" ref="reliablePropertiesManager"/>
+        <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
         <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
         <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
     </bean>
