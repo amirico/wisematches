@@ -6,6 +6,7 @@ package wisematches.server.web.services.dictionary;
 public interface DictionarySuggestionListener {
     void changeRequestRaised(ChangeSuggestion request);
 
+
     void changeRequestApproved(ChangeSuggestion request);
 
     void changeRequestRejected(ChangeSuggestion request);

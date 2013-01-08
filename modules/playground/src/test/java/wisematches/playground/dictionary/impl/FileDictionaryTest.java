@@ -24,13 +24,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class FileDictionaryTest {
     private FileDictionary dictionary;
+    private static final Runtime runtime = Runtime.getRuntime();
 
     public FileDictionaryTest() {
     }
 
     @Before
     public void setUp() throws DictionaryException, InterruptedException {
-        Runtime runtime = Runtime.getRuntime();
         final long memory = runtime.freeMemory();
         final long t = System.currentTimeMillis();
         dictionary = new FileDictionary(Language.RU, new File("./resources/dictionaries/ru.dic"));
@@ -103,13 +103,35 @@ public class FileDictionaryTest {
 
     @Test
     public void testSearch() throws IOException, ParserConfigurationException, SAXException, DictionaryException {
+        Collection<WordEntry> words;
         FileDictionary d = new FileDictionary(Language.RU, new File("./resources/dictionaries/ru.dic"));
+
+        long memory = runtime.freeMemory();
         long t = System.nanoTime();
-        Collection<WordEntry> words = d.getWordEntries("приб");
+        words = d.getWordEntries("п");
+        System.out.println("Search time for 'п' (ns): " + (System.nanoTime() - t));
+        System.out.println("Found words: " + words.size());
+        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+
+        t = System.nanoTime();
+        memory = runtime.freeMemory();
+        words = d.getWordEntries("пр");
+        System.out.println("Search time for 'пр' (ns): " + (System.nanoTime() - t));
+        System.out.println("Found words: " + words.size());
+        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+
+        t = System.nanoTime();
+        memory = runtime.freeMemory();
+        words = d.getWordEntries("при");
+        System.out.println("Search time for 'при' (ns): " + (System.nanoTime() - t));
+        System.out.println("Found words: " + words.size());
+        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+
+        t = System.nanoTime();
+        memory = runtime.freeMemory();
+        words = d.getWordEntries("приб");
         System.out.println("Search time for 'приб' (ns): " + (System.nanoTime() - t));
         System.out.println("Found words: " + words.size());
-        for (WordEntry word : words) {
-            System.out.println(word);
-        }
+        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
     }
 }

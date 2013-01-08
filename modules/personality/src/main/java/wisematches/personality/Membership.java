@@ -10,46 +10,56 @@ package wisematches.personality;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum Membership implements Comparable<Membership> {
-	/**
-	 * Indicates that the player is a robot.
-	 */
-	ROBOT(true),
-	/**
-	 * Indicates that the player is a guest.
-	 */
-	GUEST(true),
-	/**
-	 * This is regular player without any specific features.
-	 */
-	BASIC(true),
-	/**
-	 * Silver player. It's more well than the <i>GUEST<i> player.
-	 */
-	SILVER(false),
-	/**
-	 * Gold player. It's more well than the <i>GOLD<i> player.
-	 */
-	GOLD(false),
-	/**
-	 * o
-	 * Platinum player. A player with this membership has full access.
-	 */
-	PLATINUM(false);
+    /**
+     * Indicates that the player is a robot.
+     */
+    ROBOT(true),
+    /**
+     * Indicates that the player is a guest.
+     */
+    GUEST(true),
+    /**
+     * This is regular player without any specific features.
+     */
+    BASIC(true),
+    /**
+     * Silver player. It's more well than the <i>GUEST<i> player.
+     */
+    SILVER(false),
+    /**
+     * Gold player. It's more well than the <i>GOLD<i> player.
+     */
+    GOLD(false),
+    /**
+     * o
+     * Platinum player. A player with this membership has full access.
+     */
+    PLATINUM(false);
 
-	private final boolean adsVisible;
+    private final boolean adsVisible;
 
-	Membership(boolean adsVisible) {
-		this.adsVisible = adsVisible;
-	}
+    Membership(boolean adsVisible) {
+        this.adsVisible = adsVisible;
+    }
 
-	/**
-	 * Indicates is ads should be visible or not.
-	 *
-	 * @return {@code true} if ads should be visible for this player; {@code false} - otherwise.
-	 */
-	public boolean isAdsVisible() {
-		return adsVisible;
-	}
+    /**
+     * Indicates is ads should be visible or not.
+     *
+     * @return {@code true} if ads should be visible for this player; {@code false} - otherwise.
+     */
+    public boolean isAdsVisible() {
+        return adsVisible;
+    }
 
+    public boolean isRobot() {
+        return this == ROBOT;
+    }
 
+    public boolean isGuest() {
+        return this == GUEST;
+    }
+
+    public boolean isMember() {
+        return !isRobot() && !isGuest();
+    }
 }

@@ -225,7 +225,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
         for (int i = 0; i < ids.length; i++) {
             l[i] = ids[i];
         }
-        final Query query = session.createQuery("from HibernateChangeRequest where id in (:ids)");
+        final Query query = session.createQuery("from HibernateChangeSuggestion where id in (:ids)");
         query.setParameterList("ids", l, LongType.INSTANCE);
         return query.list();
     }

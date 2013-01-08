@@ -48,17 +48,26 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2">
+                    <span class="warn sample ui-helper-hidden">(<@message code="dict.suggest.warn"/>)</span>
+                </td>
+            </tr>
         </table>
     </form>
 </div>
 
 <script type="text/javascript">
-    <#assign readOnlySuggestion=!principal??/>
+    <#assign readOnlySuggestion=!principal?? || !principal.membership.member/>
+
     var dictionarySuggestion = new wm.game.dict.Suggestion('${dictionaryLanguage.code()}', ${readOnlySuggestion?string}, {
     <#list wordAttributes as wa>
         "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
     </#list>
-        'title': "<@message code="dict.suggest.title"/>",
+        'title.add': "<@message code="dict.suggest.title.add"/>",
+        'title.view': "<@message code="dict.suggest.title.view"/>",
+        'title.edit': "<@message code="dict.suggest.title.edit"/>",
+        'add': "<@message code="dict.suggest.add.label"/>",
         'save': "<@message code="dict.suggest.save.label"/>",
         'edit': "<@message code="dict.suggest.edit.label"/>",
         'remove': "<@message code="dict.suggest.remove.label"/>",
