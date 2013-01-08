@@ -334,6 +334,28 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
     var wordEntryEditor = $("#wordEntryEditor");
     var wordEntryAction = wordEntryEditor.find("#action");
 
+    var setAction = function (action) {
+        wordEntryAction.val(action);
+
+        var title = wordEntryEditor.dialog('option', 'title');
+        if ("UPDATE" == action) {
+            title = i18n['title.edit'];
+        } else if ("VIEW" == action) {
+            title = i18n['title.view'];
+        } else if ("ADD" == action) {
+            title = i18n['title.add'];
+        }
+        wordEntryEditor.dialog('option', 'title', title);
+    };
+
+    var getAction = function (action) {
+        return wordEntryAction.val();
+    };
+
+    var isAction = function (action) {
+        return wordEntryAction.val() == action;
+    };
+
     var sendRequest = function () {
         var v = wordEntryEditor.parent();
         wm.ui.lock(v);
@@ -349,21 +371,23 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
     };
 
     var startEditing = function () {
-        wordEntryAction.val("UPDATE");
+        setAction("UPDATE");
         wordEntryEditor.find(".view").hide();
         wordEntryEditor.find(".edit").show();
+        wordEntryEditor.find(".warn").show();
         $("#wordEditorRemoveBtn").hide();
         $("#wordEditorChangeBtn").find("span").text(i18n['save']);
     };
 
     var resetEntryEditor = function () {
-        if (wordEntryAction.val() == "ADD") {
+        if (isAction("ADD")) {
             $("#wordEditorRemoveBtn").show();
             wordEntryEditor.find(".create").toggle();
         }
-        wordEntryAction.val("VIEW");
+        setAction("VIEW");
         wordEntryEditor.find(".view").show();
         wordEntryEditor.find(".edit").hide();
+        wordEntryEditor.find(".warn").hide();
 
         wordEntryEditor.find(".word-view").text("");
         wordEntryEditor.find(".word-input").val("");
@@ -392,49 +416,53 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
     };
 
     this.viewWordEntry = function (wordEntry) {
+        var buttons = [];
+        if (!readOnly) {
+            buttons.push({
+                id: 'wordEditorChangeBtn',
+                text: i18n['edit'],
+                click: function () {
+                    if (isAction("ADD")) {
+                        sendRequest();
+                    } else if (isAction("VIEW")) {
+                        startEditing();
+                    } else {
+                        sendRequest();
+                    }
+                }
+            });
+
+            buttons.push({
+                id: 'wordEditorRemoveBtn',
+                text: i18n['remove'],
+                click: function () {
+                    wm.ui.confirm(i18n['remove.title'], i18n['remove.confirm'], function (approve) {
+                        if (approve) {
+                            setAction("REMOVE");
+                            sendRequest();
+                        }
+                    });
+                }
+            });
+        }
+
+        buttons.push({
+            id: 'wordEditorCancelBtn',
+            text: wm.i18n.value('button.cancel', 'Cancel'),
+            click: function () {
+                $(this).dialog("close");
+            }
+        });
+
         var dialog = wordEntryEditor.dialog({
-            title: i18n['title'],
+            title: i18n['title.view'],
             dialogClass: 'word-editor-dlg',
             draggable: false,
             modal: true,
             autoOpen: false,
             resizable: false,
             width: 700,
-            buttons: [
-                {
-                    id: 'wordEditorChangeBtn',
-                    text: i18n['edit'],
-                    click: function () {
-                        var val = wordEntryAction.val();
-                        if (val == "ADD") {
-                            sendRequest();
-                        } else if (val == "VIEW") {
-                            startEditing();
-                        } else {
-                            sendRequest();
-                        }
-                    }
-                },
-                {
-                    id: 'wordEditorRemoveBtn',
-                    text: i18n['remove'],
-                    click: function () {
-                        wm.ui.confirm(i18n['remove.title'], i18n['remove.confirm'], function (approve) {
-                            if (approve) {
-                                wordEntryAction.val("REMOVE");
-                                sendRequest();
-                            }
-                        });
-                    }
-                },
-                {
-                    id: 'wordEditorCancelBtn',
-                    text: wm.i18n.value('button.cancel', 'Cancel'),
-                    click: function () {
-                        $(this).dialog("close");
-                    }
-                }
-            ]
+            buttons: buttons
         });
 
         resetEntryEditor();
@@ -455,8 +483,9 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
             }
         } else {
             startEditing();
-            wordEntryAction.val("ADD");
+            setAction("ADD");
             wordEntryEditor.find(".create").toggle();
+            $("#wordEditorChangeBtn").find("span").text(i18n['add']);
         }
         dialog.dialog("open");
     };

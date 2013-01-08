@@ -24,6 +24,8 @@ public class FileDictionary implements Dictionary {
     private final Lock lock = new ReentrantLock();
     private final NavigableMap<String, WordEntry> entryMap = new TreeMap<>();
 
+    private final Map<String, Collection<WordEntry>> searchCachce = new HashMap<>();
+
     public FileDictionary(Language language, File dictionaryFile) throws DictionaryException {
         this(language, dictionaryFile, true);
     }
@@ -164,17 +166,23 @@ public class FileDictionary implements Dictionary {
 
     @Override
     public Collection<WordEntry> getWordEntries(String prefix) {
-        boolean found = false;
-        final Collection<WordEntry> res = new ArrayList<>();
-        for (WordEntry entry : entryMap.values()) {
-            if (entry.getWord().startsWith(prefix)) {
-                res.add(entry);
-                found = true;
-            } else if (found) {
-                return res;
+        Collection<WordEntry> cache = null;
+        if (prefix.length() >= 2) {
+            final String key = prefix.substring(0, 1);
+            cache = searchCachce.get(key);
+            if (cache == null) {
+                cache = filterWordEntries(key, entryMap.values());
+                searchCachce.put(key, cache);
             }
         }
-        return res;
+        if (prefix.length() == 2) {
+            return cache;
+        }
+        if (cache != null) {
+            return filterWordEntries(prefix, cache);
+        } else {
+            return filterWordEntries(prefix, entryMap.values());
+        }
     }
 
     @Override
@@ -198,6 +206,20 @@ public class FileDictionary implements Dictionary {
             throw new IllegalArgumentException("Word has illegal char that is not part " +
                     "of alphabet: " + word + " [" + language + "]");
         }
+    }
+
+    private Collection<WordEntry> filterWordEntries(String prefix, Collection<WordEntry> values) {
+        boolean found = false;
+        final Collection<WordEntry> res = new ArrayList<>();
+        for (WordEntry entry : values) {
+            if (entry.getWord().startsWith(prefix)) {
+                res.add(entry);
+                found = true;
+            } else if (found) {
+                return res;
+            }
+        }
+        return res;
     }
 
     private Collection<WordEntry> loadDictionary(File file) throws DictionaryException {

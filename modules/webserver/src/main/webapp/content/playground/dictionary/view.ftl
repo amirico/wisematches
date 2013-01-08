@@ -1,6 +1,5 @@
 <#-- @ftlvariable name="dictionary" type="wisematches.playground.dictionary.Dictionary" -->
 <#-- @ftlvariable name="dictionaryLanguage" type="wisematches.personality.Language" -->
-<#-- @ftlvariable name="waitingSuggestions" type="wisematches.server.web.services.dictionary.ChangeSuggestion[]" -->
 <#-- @ftlvariable name="wordAttributes" type="wisematches.playground.dictionary.WordAttribute[]" -->
 <#include "/core.ftl"/>
 

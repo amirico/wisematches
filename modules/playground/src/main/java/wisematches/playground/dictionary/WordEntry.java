@@ -24,7 +24,7 @@ public final class WordEntry implements Serializable, Comparable<WordEntry> {
         if (word.length() < 2) {
             throw new IllegalArgumentException("Word length can't be less that 2 letters: " + word);
         }
-        this.word = word;
+        this.word = word.intern();
         if (explanationCases != null) {
             this.explanationCases = new ArrayList<>();
             this.explanationCases.addAll(explanationCases);

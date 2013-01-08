@@ -26,6 +26,9 @@
     }
 </style>
 
+<link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
+<script type="text/javascript" src="/content/playground/game.js"></script>
+
 <script type="text/javascript">
     var scribbleController = new function () {
         this.execute = function (widget, type, params, data, callback) {

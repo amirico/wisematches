@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.database.Range;
 import wisematches.personality.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
@@ -19,6 +18,7 @@ import wisematches.playground.dictionary.WordAttribute;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
+import wisematches.server.web.controllers.playground.dictionary.form.WordApprovalForm;
 import wisematches.server.web.controllers.playground.dictionary.form.WordEntryForm;
 import wisematches.server.web.services.dictionary.*;
 
@@ -46,14 +46,14 @@ public class DictionaryController extends WisematchesController {
     }
 
     @RequestMapping("")
-    public String showDictionary(@RequestParam(value = "l", required = false) String lang, Model model) throws UnknownEntityException {
-        final Language language = getLanguage(lang);
+    public String showDictionary(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
+        final Language language = getLanguage(lang, locale);
 
         model.addAttribute("dictionaryLanguage", language);
         model.addAttribute("wordAttributes", WordAttribute.values());
 
-        final List<ChangeSuggestion> changeSuggestions = dictionarySuggestionManager.searchEntities(null, new SuggestionContext(language, EnumSet.of(SuggestionType.ADD), EnumSet.of(SuggestionState.WAITING)), null, null, Range.limit(10));
-        model.addAttribute("waitingSuggestions", changeSuggestions);
+//        final List<ChangeSuggestion> changeSuggestions = dictionarySuggestionManager.searchEntities(null, new SuggestionContext(language, EnumSet.of(SuggestionType.ADD), EnumSet.of(SuggestionState.WAITING)), null, null, Range.limit(10));
+//        model.addAttribute("waitingSuggestions", changeSuggestions);
 
         final Dictionary dictionary = dictionaryManager.getDictionary(language);
         model.addAttribute("dictionary", dictionary);
@@ -61,8 +61,16 @@ public class DictionaryController extends WisematchesController {
     }
 
     @RequestMapping("changes")
-    public String showDictionaryChanges(@RequestParam(value = "l", required = false) String lang, Model model) throws UnknownEntityException {
-        final Language language = getLanguage(lang);
+    public String showDictionaryChanges(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
+        final Language language = getLanguage(lang, locale);
+
+        final SuggestionContext ctx = new SuggestionContext(language, null, EnumSet.of(SuggestionState.WAITING));
+
+        final List<ChangeSuggestion> waitingSuggestions = dictionarySuggestionManager.searchEntities(null, ctx, null, null, null);
+        model.addAttribute("waitingSuggestions", waitingSuggestions);
+
+        // TODO: must be changed according to use role.
+        model.addAttribute("moderator", isModerator());
 
         return "/content/playground/dictionary/changes";
     }
@@ -183,14 +191,39 @@ public class DictionaryController extends WisematchesController {
         }
     }
 
-    private Language getLanguage(String lang) {
+    @ResponseBody
+    @RequestMapping("processChangeRequest.ajax")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ServiceResponse processChangeRequest(@RequestBody WordApprovalForm form, Locale locale) {
+        if (!isModerator()) {
+            return ServiceResponse.failure("You are not moderator!");
+        }
+        try {
+            if ("approve".equalsIgnoreCase(form.getType())) {
+                dictionarySuggestionManager.approveRequests(form.getIds());
+            } else if ("reject".equalsIgnoreCase(form.getType())) {
+                dictionarySuggestionManager.rejectRequests(form.getIds());
+            }
+        } catch (Exception ex) {
+            log.error("Approval request can't be processed: " + form, ex);
+            return ServiceResponse.failure(ex.getMessage());
+        }
+        return ServiceResponse.success();
+    }
+
+    private Language getLanguage(String lang, Locale locale) {
         final Language language;
-        if (lang != null) {
-            language = Language.valueOf(lang.toUpperCase());
+        if (lang == null) {
+            language = Language.byLocale(locale);
         } else {
-            language = getPrincipal().getLanguage();
+            language = Language.valueOf(lang.toUpperCase());
         }
         return language;
+    }
+
+    private boolean isModerator() {
+        final String nickname = getPrincipal().getNickname();
+        return nickname.equals("smklimenko") || nickname.equals("test");
     }
 
     @Autowired

@@ -1075,7 +1075,7 @@ wm.scribble.Settings = function (board, language) {
                             dataType: 'json',
                             contentType: 'application/x-www-form-urlencoded',
                             success: function (data) {
-                                window.location.reload();
+                                wm.util.url.reload();
                             }
                         });
                     }

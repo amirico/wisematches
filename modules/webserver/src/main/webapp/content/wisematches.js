@@ -59,6 +59,10 @@ wm.util = new function () {
 };
 
 wm.util.url = new function () {
+    this.reload = function () {
+        window.location.reload();
+    };
+
     this.redirect = function (url) {
         window.location = url;
     };
