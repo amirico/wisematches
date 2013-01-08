@@ -39,7 +39,7 @@ public class HibernateTourneyEntityTest {
     public void testTourneyEntity() {
         final Session session = sessionFactory.getCurrentSession();
 
-        final HibernateTourney t = new HibernateTourney(2, new Date(System.currentTimeMillis() + 10000000L));
+        final HibernateTourney t = new HibernateTourney(1325223, new Date(System.currentTimeMillis() + 10000000L));
         System.out.println(session.save(t));
 
         final HibernateTourneyDivision d1 = new HibernateTourneyDivision(t, Language.RU, TourneySection.CASUAL);

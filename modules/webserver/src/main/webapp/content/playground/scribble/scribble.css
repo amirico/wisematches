@@ -566,7 +566,7 @@ ul.bonuses .bonus-cell {
     background-image: none;
 }
 
-.annotation, .shareWidget, .boardInfoWidget, .movesHistory, .memoryWordsWidget, .moveInfo, .thesaurusWidget {
+.annotation, .shareWidget, .boardInfoWidget, .movesHistory, .memoryWordsWidget, .moveInfo, .dictionaryWidget {
     margin-top: 10px;
 }
 

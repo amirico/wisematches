@@ -34,7 +34,7 @@ public class HibernateNotificationService implements NotificationService, Initia
     public void afterPropertiesSet() throws Exception {
         final Session session = sessionFactory.openSession();
         checkTable(session, "notification_settings");
-        checkTable(session, "notification_timestamp");
+//        checkTable(session, "notification_timestamp");
     }
 
     @Override

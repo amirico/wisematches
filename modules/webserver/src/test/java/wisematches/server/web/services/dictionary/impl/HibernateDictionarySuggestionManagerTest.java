@@ -114,7 +114,7 @@ public class HibernateDictionarySuggestionManagerTest {
         assertEquals("poofgjnwhj", update.getWord());
         assertEquals(Language.EN, update.getLanguage());
         assertEquals(101L, update.getRequester());
-        assertEquals(EnumSet.of(WordAttribute.FEMININE), add.getAttributes());
+        assertEquals(EnumSet.of(WordAttribute.FEMININE), update.getAttributes());
         assertEquals("This is testing word 2", update.getDefinition());
         assertEquals(SuggestionState.WAITING, update.getSuggestionState());
         assertEquals(SuggestionType.UPDATE, update.getSuggestionType());
