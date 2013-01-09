@@ -19,9 +19,8 @@ import static org.junit.Assert.*;
 		"classpath:/config/database-junit-config.xml",
 		"classpath:/config/accounts-config.xml",
 		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-junit-config.xml",
-		"classpath:/config/application-settings.xml",
-		"classpath:/config/server-web-junit-config.xml"
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/services-junit-config.xml"
 })
 public class RecoveryTokenManagerTest {
 	@Autowired

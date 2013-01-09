@@ -23,115 +23,116 @@ import static org.junit.Assert.assertEquals;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileDictionaryTest {
-    private FileDictionary dictionary;
-    private static final Runtime runtime = Runtime.getRuntime();
+	private FileDictionary dictionary;
+	private static final Runtime runtime = Runtime.getRuntime();
 
-    public FileDictionaryTest() {
-    }
+	public FileDictionaryTest() {
+	}
 
-    @Before
-    public void setUp() throws DictionaryException, InterruptedException {
-        final long memory = runtime.freeMemory();
-        final long t = System.currentTimeMillis();
-        dictionary = new FileDictionary(Language.RU, new File("./resources/dictionaries/ru.dic"));
-        System.out.println("Initialization time: " + (System.currentTimeMillis() - t));
+	@Before
+	public void setUp() throws DictionaryException, InterruptedException {
+		final long memory = runtime.freeMemory();
+		final long t = System.currentTimeMillis();
 
-        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
-        System.gc();
-        Thread.sleep(500);
-        System.out.println("Taken memory after gc: " + (memory - runtime.freeMemory()));
-    }
+		dictionary = new FileDictionary(Language.RU, new File("../../resources/dictionaries/ru.dic"));
+		System.out.println("Initialization time: " + (System.currentTimeMillis() - t));
 
-    @Test
-    public void testGetWordEntry() throws IOException, ParserConfigurationException, SAXException, InterruptedException, DictionaryException {
-        long total = System.nanoTime();
+		System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+		System.gc();
+		Thread.sleep(500);
+		System.out.println("Taken memory after gc: " + (memory - runtime.freeMemory()));
+	}
 
-        System.out.println("Optimaized dictionary tesing=============");
+	@Test
+	public void testGetWordEntry() throws IOException, ParserConfigurationException, SAXException, InterruptedException, DictionaryException {
+		long total = System.nanoTime();
 
-        long t = System.nanoTime();
-        WordEntry word = dictionary.getWordEntry("атлетизм");
-        System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
-        Assert.assertNotNull(word);
+		System.out.println("Optimaized dictionary tesing=============");
 
-        t = System.nanoTime();
-        word = dictionary.getWordEntry("небытие");
-        System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
-        Assert.assertNotNull(word);
+		long t = System.nanoTime();
+		WordEntry word = dictionary.getWordEntry("атлетизм");
+		System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
+		Assert.assertNotNull(word);
 
-        t = System.nanoTime();
-        word = dictionary.getWordEntry("приоритет");
-        System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
-        Assert.assertNotNull(word);
-        t = System.nanoTime();
-        word = dictionary.getWordEntry("приоритет");
-        System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
-        Assert.assertNotNull(word);
-        t = System.nanoTime();
-        word = dictionary.getWordEntry("приоритет");
-        System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
-        Assert.assertNotNull(word);
+		t = System.nanoTime();
+		word = dictionary.getWordEntry("небытие");
+		System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
+		Assert.assertNotNull(word);
 
-        t = System.nanoTime();
-        word = dictionary.getWordEntry("ПРИОРИТЕТКА");
-        System.out.println("Search time for unknown word (ns): " + (System.nanoTime() - t));
-        Assert.assertNull(word);
-        System.out.println("Optimized dictionary testing finished by " + (System.nanoTime() - total));
-    }
+		t = System.nanoTime();
+		word = dictionary.getWordEntry("приоритет");
+		System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
+		Assert.assertNotNull(word);
+		t = System.nanoTime();
+		word = dictionary.getWordEntry("приоритет");
+		System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
+		Assert.assertNotNull(word);
+		t = System.nanoTime();
+		word = dictionary.getWordEntry("приоритет");
+		System.out.println("Search time for '" + word.getWord() + "' (ns): " + (System.nanoTime() - t));
+		Assert.assertNotNull(word);
 
-    @Test
-    public void testAddRemoveEntry() throws DictionaryException {
-        dictionary.addWordEntry(new WordEntry("апрунта", Arrays.asList(new WordDefinition("Просто апрунта", EnumSet.of(WordAttribute.FEMININE)))));
+		t = System.nanoTime();
+		word = dictionary.getWordEntry("ПРИОРИТЕТКА");
+		System.out.println("Search time for unknown word (ns): " + (System.nanoTime() - t));
+		Assert.assertNull(word);
+		System.out.println("Optimized dictionary testing finished by " + (System.nanoTime() - total));
+	}
 
-        final WordEntry entry1 = dictionary.getWordEntry("апрунта");
-        Assert.assertNotNull(entry1);
-        assertEquals("апрунта", entry1.getWord());
-        assertEquals(1, entry1.getDefinitions().size());
-        assertEquals(EnumSet.of(WordAttribute.FEMININE), entry1.getDefinitions().get(0).getAttributes());
-        assertEquals("Просто апрунта", entry1.getDefinitions().get(0).getText());
+	@Test
+	public void testAddRemoveEntry() throws DictionaryException {
+		dictionary.addWordEntry(new WordEntry("апрунта", Arrays.asList(new WordDefinition("Просто апрунта", EnumSet.of(WordAttribute.FEMININE)))));
 
-        dictionary.updateWordEntry(new WordEntry("апрунта", Arrays.asList(new WordDefinition("Не просто апрунта", EnumSet.of(WordAttribute.MASCULINE)))));
-        final WordEntry entry2 = dictionary.getWordEntry("апрунта");
-        Assert.assertNotNull(entry2);
-        assertEquals("апрунта", entry2.getWord());
-        assertEquals(1, entry2.getDefinitions().size());
-        assertEquals(EnumSet.of(WordAttribute.MASCULINE), entry2.getDefinitions().get(0).getAttributes());
-        assertEquals("Не просто апрунта", entry2.getDefinitions().get(0).getText());
+		final WordEntry entry1 = dictionary.getWordEntry("апрунта");
+		Assert.assertNotNull(entry1);
+		assertEquals("апрунта", entry1.getWord());
+		assertEquals(1, entry1.getDefinitions().size());
+		assertEquals(EnumSet.of(WordAttribute.FEMININE), entry1.getDefinitions().get(0).getAttributes());
+		assertEquals("Просто апрунта", entry1.getDefinitions().get(0).getText());
 
-        dictionary.removeWordEntry(entry2);
-        Assert.assertNull(dictionary.getWordEntry("апрунта"));
-    }
+		dictionary.updateWordEntry(new WordEntry("апрунта", Arrays.asList(new WordDefinition("Не просто апрунта", EnumSet.of(WordAttribute.MASCULINE)))));
+		final WordEntry entry2 = dictionary.getWordEntry("апрунта");
+		Assert.assertNotNull(entry2);
+		assertEquals("апрунта", entry2.getWord());
+		assertEquals(1, entry2.getDefinitions().size());
+		assertEquals(EnumSet.of(WordAttribute.MASCULINE), entry2.getDefinitions().get(0).getAttributes());
+		assertEquals("Не просто апрунта", entry2.getDefinitions().get(0).getText());
 
-    @Test
-    public void testSearch() throws IOException, ParserConfigurationException, SAXException, DictionaryException {
-        Collection<WordEntry> words;
-        FileDictionary d = new FileDictionary(Language.RU, new File("./resources/dictionaries/ru.dic"));
+		dictionary.removeWordEntry(entry2);
+		Assert.assertNull(dictionary.getWordEntry("апрунта"));
+	}
 
-        long memory = runtime.freeMemory();
-        long t = System.nanoTime();
-        words = d.getWordEntries("п");
-        System.out.println("Search time for 'п' (ns): " + (System.nanoTime() - t));
-        System.out.println("Found words: " + words.size());
-        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+	@Test
+	public void testSearch() throws IOException, ParserConfigurationException, SAXException, DictionaryException {
+		Collection<WordEntry> words;
+		FileDictionary d = new FileDictionary(Language.RU, new File("../../resources/dictionaries/ru.dic"));
 
-        t = System.nanoTime();
-        memory = runtime.freeMemory();
-        words = d.getWordEntries("пр");
-        System.out.println("Search time for 'пр' (ns): " + (System.nanoTime() - t));
-        System.out.println("Found words: " + words.size());
-        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+		long memory = runtime.freeMemory();
+		long t = System.nanoTime();
+		words = d.getWordEntries("п");
+		System.out.println("Search time for 'п' (ns): " + (System.nanoTime() - t));
+		System.out.println("Found words: " + words.size());
+		System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
 
-        t = System.nanoTime();
-        memory = runtime.freeMemory();
-        words = d.getWordEntries("при");
-        System.out.println("Search time for 'при' (ns): " + (System.nanoTime() - t));
-        System.out.println("Found words: " + words.size());
-        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+		t = System.nanoTime();
+		memory = runtime.freeMemory();
+		words = d.getWordEntries("пр");
+		System.out.println("Search time for 'пр' (ns): " + (System.nanoTime() - t));
+		System.out.println("Found words: " + words.size());
+		System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
 
-        t = System.nanoTime();
-        memory = runtime.freeMemory();
-        words = d.getWordEntries("приб");
-        System.out.println("Search time for 'приб' (ns): " + (System.nanoTime() - t));
-        System.out.println("Found words: " + words.size());
-        System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
-    }
+		t = System.nanoTime();
+		memory = runtime.freeMemory();
+		words = d.getWordEntries("при");
+		System.out.println("Search time for 'при' (ns): " + (System.nanoTime() - t));
+		System.out.println("Found words: " + words.size());
+		System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+
+		t = System.nanoTime();
+		memory = runtime.freeMemory();
+		words = d.getWordEntries("приб");
+		System.out.println("Search time for 'приб' (ns): " + (System.nanoTime() - t));
+		System.out.println("Found words: " + words.size());
+		System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
+	}
 }

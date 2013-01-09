@@ -28,7 +28,6 @@ public class GamePlayerHand {
 	/**
 	 * This is Hibernate constructor. In subclasses in must be declared as package visibile.
 	 */
-	@Deprecated
 	protected GamePlayerHand() {
 	}
 

@@ -18,8 +18,8 @@
             classpath:/config/playground-config.xml
             classpath:/config/scribble-config.xml
             classpath:/config/notifications-config.xml
-            classpath:/config/server-web-config.xml
-            classpath:/config/application-settings.xml
+            classpath:/config/services-config.xml
+            /WEB-INF/web-app-settings.xml
             /WEB-INF/web-app-security.xml
         </param-value>
     </context-param>

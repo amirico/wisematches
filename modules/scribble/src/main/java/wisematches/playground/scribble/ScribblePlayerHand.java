@@ -19,7 +19,6 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 	/**
 	 * Hibernate only constructor
 	 */
-	@Deprecated
 	ScribblePlayerHand() {
 	}
 

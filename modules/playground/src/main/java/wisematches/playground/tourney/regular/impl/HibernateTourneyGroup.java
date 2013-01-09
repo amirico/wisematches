@@ -102,8 +102,6 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	@Column(name = "finishedGamesCount")
 	private byte finishedGamesCount;
 
-
-	@Deprecated
 	public HibernateTourneyGroup() {
 	}
 

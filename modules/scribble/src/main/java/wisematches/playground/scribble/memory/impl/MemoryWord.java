@@ -41,7 +41,6 @@ class MemoryWord {
 	/**
 	 * This is Hibernate only constructor.
 	 */
-	@Deprecated
 	MemoryWord() {
 	}
 

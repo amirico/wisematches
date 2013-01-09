@@ -55,7 +55,6 @@ public class ScribbleStatisticsEditor extends StatisticsEditor implements Scribb
 	@Column(name = "allHandBonuses")
 	private int allHandTilesBonuses;
 
-	@Deprecated
 	ScribbleStatisticsEditor() {
 	}
 
