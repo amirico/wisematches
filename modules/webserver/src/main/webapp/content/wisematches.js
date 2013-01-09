@@ -418,13 +418,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-            "<div class='ui-editor-label'></div>" +
-            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-            "<div class='ui-editor-error'></div>" +
-            "<button class='ui-editor-save'>Save</button> " +
-            "<button class='ui-editor-cancel'>Cancel</button>" +
-            "</div></div>" +
-            "</div></div></div>");
+                "<div class='ui-editor-label'></div>" +
+                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+                "<div class='ui-editor-error'></div>" +
+                "<button class='ui-editor-save'>Save</button> " +
+                "<button class='ui-editor-cancel'>Cancel</button>" +
+                "</div></div>" +
+                "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -592,16 +592,16 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-hover');
-            }
-        },
-        function () {
-            if (!$(this).hasClass('ui-state-active')) {
-                $(this).attr('class', 'quickInfo ui-state-default');
-            }
-        });
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-hover');
+                }
+            },
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-default');
+                }
+            });
 
     var activeQuickInfo = undefined;
     $(".quickInfo.ajax a").cluetip({
@@ -665,26 +665,37 @@ $(document).ready(function () {
     $(".wm-ui-button").button();
     $(".wm-ui-buttonset").buttonset();
 
+    var globalSplitButtonMenu = null;
     $(".wm-ui-splitbutton").each(function (i, sb) {
         sb = $(sb);
         var ch = sb.children();
         var buttons = $("<div></div>").appendTo(sb.empty().append($(ch[1]))).append($(ch[0]));
-        $("<button>Menu</button>").appendTo(buttons).button({
+
+        $("<button>&nbsp;</button>").appendTo(buttons).button({
             text: false,
             icons: {
                 primary: "ui-icon-triangle-1-s"
             }
         }).click(function () {
-                var menu = $(ch[1]).menu().show().position({
-                    my: "left top",
-                    at: "left bottom",
-                    of: this
+                    if (globalSplitButtonMenu != null) {
+                        globalSplitButtonMenu.hide();
+                        globalSplitButtonMenu = null;
+                    }
+
+                    globalSplitButtonMenu = $(ch[1]).menu().show().position({
+                        my: "left top",
+                        at: "left bottom",
+                        of: this
+                    });
+
+                    $(document).one("click", function () {
+                        if (globalSplitButtonMenu != null) {
+                            globalSplitButtonMenu.hide();
+                            globalSplitButtonMenu = null;
+                        }
+                    });
+                    return false;
                 });
-                $(document).one("click", function () {
-                    menu.hide();
-                });
-                return false;
-            });
         buttons.buttonset();
     });
 });
