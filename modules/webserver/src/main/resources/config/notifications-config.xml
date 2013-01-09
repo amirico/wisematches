@@ -142,7 +142,15 @@
         </property>
     </bean>
 
-    <bean id="notificationPublisherCenter"
+
+    <bean id="alertsOriginCenter" class="wisematches.server.web.services.notify.impl.AlertsOriginCenter">
+        <property name="hostName" value="${server.hostname}"/>
+        <property name="mailSender" ref="springMailSender"/>
+        <property name="accountManager" ref="accountManager"/>
+        <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
+    </bean>
+
+    <bean id="notificationOriginCenter"
           class="wisematches.server.web.services.notify.impl.NotificationOriginCenter">
         <property name="playerManager" ref="playerManager"/>
         <property name="messageManager" ref="messageManager"/>
