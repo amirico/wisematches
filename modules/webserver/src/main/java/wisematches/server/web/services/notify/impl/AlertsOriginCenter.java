@@ -7,6 +7,9 @@ import org.springframework.mail.SimpleMailMessage;
 import wisematches.personality.account.Account;
 import wisematches.personality.account.AccountListener;
 import wisematches.personality.account.AccountManager;
+import wisematches.playground.abuse.AbuseReportListener;
+import wisematches.playground.abuse.AbuseReportManager;
+import wisematches.playground.message.Message;
 import wisematches.server.web.services.dictionary.ChangeSuggestion;
 import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.web.services.dictionary.DictionarySuggestionManager;
@@ -20,10 +23,12 @@ public class AlertsOriginCenter {
 	private String hostName;
 	private MailSender mailSender;
 	private AccountManager accountManager;
+	private AbuseReportManager abuseReportManager;
 	private DictionarySuggestionManager dictionarySuggestionManager;
 
 	private final TheAccountListener accountListener = new TheAccountListener();
 	private final TheDictionaryListener dictionaryListener = new TheDictionaryListener();
+	private final TheAbuseReportListener abuseReportListener = new TheAbuseReportListener();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.alerts.center");
 
@@ -33,10 +38,10 @@ public class AlertsOriginCenter {
 	protected void raiseAlarm(String system, String subj, String msg) {
 		try {
 			final SimpleMailMessage message = new SimpleMailMessage();
-			message.setTo(system + "@" + hostName);
-			message.setFrom("alert@" + hostName);
+			message.setTo("alert@" + hostName);
+			message.setFrom("no-replay@" + hostName);
 			message.setSentDate(new Date());
-			message.setSubject(subj);
+			message.setSubject("[" + system + "] " + subj);
 			message.setText(msg);
 
 			mailSender.send(message);
@@ -65,6 +70,18 @@ public class AlertsOriginCenter {
 		}
 	}
 
+	public void setAbuseReportManager(AbuseReportManager abuseReportManager) {
+		if (this.abuseReportManager != null) {
+			this.abuseReportManager.removeAbuseReportListener(abuseReportListener);
+		}
+
+		this.abuseReportManager = abuseReportManager;
+
+		if (this.abuseReportManager != null) {
+			this.abuseReportManager.addAbuseReportListener(abuseReportListener);
+		}
+	}
+
 	public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
 		if (this.dictionarySuggestionManager != null) {
 			this.dictionarySuggestionManager.removeDictionaryChangeListener(dictionaryListener);
@@ -83,7 +100,7 @@ public class AlertsOriginCenter {
 
 		@Override
 		public void accountCreated(Account account) {
-			raiseAlarm("account", "Account created: " + account.getNickname(), account.getNickname() + " (" + account.getEmail() + ")");
+			raiseAlarm("ACC", "Account created: " + account.getNickname(), account.getNickname() + " (" + account.getEmail() + ")");
 		}
 
 		@Override
@@ -95,25 +112,39 @@ public class AlertsOriginCenter {
 		}
 	}
 
+	private class TheAbuseReportListener implements AbuseReportListener {
+		private TheAbuseReportListener() {
+		}
+
+		@Override
+		public void abuseMessage(Message message) {
+			raiseAlarm("ABUSE", "Abuse report: " + message.getId(),
+					"" +
+							"From: " + message.getSender() + "\n" +
+							"To: " + message.getRecipient() + "\n" +
+							"Message: " + message.getText());
+		}
+	}
+
 	private class TheDictionaryListener implements DictionarySuggestionListener {
 		private TheDictionaryListener() {
 		}
 
 		@Override
 		public void changeRequestRaised(ChangeSuggestion request) {
-			raiseAlarm("dictionary", "Suggestion raised: " + request.getWord() + " [" + request.getSuggestionType() + "]",
+			raiseAlarm("DIC", "Suggestion raised: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
 
 		@Override
 		public void changeRequestApproved(ChangeSuggestion request) {
-			raiseAlarm("dictionary", "Suggestion approved: " + request.getWord() + " [" + request.getSuggestionType() + "]",
+			raiseAlarm("DIC", "Suggestion approved: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
 
 		@Override
 		public void changeRequestRejected(ChangeSuggestion request) {
-			raiseAlarm("dictionary", "Suggestion rejected: " + request.getWord() + " [" + request.getSuggestionType() + "]",
+			raiseAlarm("DIC", "Suggestion rejected: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
 	}
