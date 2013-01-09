@@ -146,7 +146,9 @@
     <bean id="alertsOriginCenter" class="wisematches.server.web.services.notify.impl.AlertsOriginCenter">
         <property name="hostName" value="${server.hostname}"/>
         <property name="mailSender" ref="springMailSender"/>
+
         <property name="accountManager" ref="accountManager"/>
+        <property name="abuseReportManager" ref="abuseReportManager"/>
         <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
     </bean>
 

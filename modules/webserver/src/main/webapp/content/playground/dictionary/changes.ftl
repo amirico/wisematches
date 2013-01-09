@@ -40,12 +40,24 @@
                 <th>
                 </th>
             </#if>
-            <th><@message code="blacklist.column.player"/></th>
-            <th><@message code="blacklist.column.since"/></th>
-            <th><@message code="blacklist.column.since"/></th>
-            <th><@message code="blacklist.column.since"/></th>
-            <th><@message code="blacklist.column.since"/></th>
-            <th width="100%"><@message code="blacklist.column.comment"/></th>
+            <th>
+                <@message code="dict.changes.word.label"/>
+            </th>
+            <th>
+                <@message code="dict.changes.language.label"/>
+            </th>
+            <th>
+                <@message code="dict.changes.added.label"/>
+            </th>
+            <th>
+                <@message code="dict.changes.type.label"/>
+            </th>
+            <th>
+                <@message code="dict.changes.attributes.label"/>
+            </th>
+            <th width="100%">
+                <@message code="dict.changes.definition.label"/>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -85,10 +97,10 @@
     <@wm.ui.table.statusbar align="left">
         <#if moderator>
         <button id="approveChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
-            <@message code="dict.suggest.approve.label"/>
+            <@message code="dict.changes.approve.label"/>
         </button>
         <button id="rejectChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
-            <@message code="dict.suggest.reject.label"/>
+            <@message code="dict.changes.reject.label"/>
         </button>
         <#else>
         &nbsp;

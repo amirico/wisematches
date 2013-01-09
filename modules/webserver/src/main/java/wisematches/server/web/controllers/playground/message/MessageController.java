@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.ComputerPlayer;
+import wisematches.playground.abuse.AbuseReportManager;
 import wisematches.playground.blacklist.BlacklistManager;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageDirection;
@@ -36,6 +37,7 @@ public class MessageController extends WisematchesController {
 	private MessageManager messageManager;
 	private GameMessageSource messageSource;
 	private BlacklistManager blacklistManager;
+	private AbuseReportManager abuseReportManager;
 	private RestrictionManager restrictionManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
@@ -139,12 +141,12 @@ public class MessageController extends WisematchesController {
 	}
 
 	@ResponseBody
-	@RequestMapping("abuse")
+	@RequestMapping("abuse.ajax")
 	public ServiceResponse reportAbuse(@RequestParam("m") long mid, Locale locale) {
 		final Message message = messageManager.getMessage(mid);
 		if (message != null) {
 			if (message.getRecipient() == getPrincipal().getId()) {
-				log.error("Abuse report has been received for message: " + message.getId());
+				abuseReportManager.reportAbuseMessage(message);
 				return ServiceResponse.success();
 			} else {
 				return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
@@ -195,6 +197,11 @@ public class MessageController extends WisematchesController {
 	@Autowired
 	public void setRestrictionManager(RestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
+	}
+
+	@Autowired
+	public void setAbuseReportManager(AbuseReportManager abuseReportManager) {
+		this.abuseReportManager = abuseReportManager;
 	}
 
 	@Override

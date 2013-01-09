@@ -674,6 +674,10 @@
     padding: 0 !important;
 }
 
+#dictionaryChanges td {
+    white-space: nowrap;
+}
+
 .word-editor-dlg .ui-dialog-buttonset {
     width: 100%;
 }

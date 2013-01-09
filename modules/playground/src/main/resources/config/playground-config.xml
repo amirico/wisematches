@@ -20,6 +20,9 @@
         <property name="dictionariesFolder" value="${server.dictionary.path}"/>
     </bean>
 
+    <bean id="abuseReportManager" class="wisematches.playground.abuse.impl.DummyAbuseReportManager">
+    </bean>
+
     <bean id="messageManager" class="wisematches.playground.message.impl.HibernateMessageManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="playerManager" ref="playerManager"/>
