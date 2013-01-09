@@ -1,8 +1,10 @@
 package wisematches.playground.dictionary.impl;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.util.FileCopyUtils;
 import org.xml.sax.SAXException;
 import wisematches.personality.Language;
 import wisematches.playground.dictionary.DictionaryException;
@@ -23,6 +25,7 @@ import static org.junit.Assert.assertEquals;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileDictionaryTest {
+	private File file;
 	private FileDictionary dictionary;
 	private static final Runtime runtime = Runtime.getRuntime();
 
@@ -30,17 +33,29 @@ public class FileDictionaryTest {
 	}
 
 	@Before
-	public void setUp() throws DictionaryException, InterruptedException {
+	public void setUp() throws DictionaryException, InterruptedException, IOException {
 		final long memory = runtime.freeMemory();
 		final long t = System.currentTimeMillis();
 
-		dictionary = new FileDictionary(Language.RU, new File("../../resources/dictionaries/ru.dic"));
+		file = File.createTempFile("dictionaries_ru", "dic");
+		System.out.println(file.getAbsolutePath());
+
+		final File res = new File("../../resources/dictionaries/ru.dic");
+
+		FileCopyUtils.copy(res, file);
+
+		dictionary = new FileDictionary(Language.RU, file);
 		System.out.println("Initialization time: " + (System.currentTimeMillis() - t));
 
 		System.out.println("Taken memory: " + (memory - runtime.freeMemory()));
 		System.gc();
 		Thread.sleep(500);
 		System.out.println("Taken memory after gc: " + (memory - runtime.freeMemory()));
+	}
+
+	@After
+	public void tearDown() {
+		file.delete();
 	}
 
 	@Test
