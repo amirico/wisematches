@@ -31,7 +31,6 @@ public class HibernateTourney implements Tourney {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date finishedDate;
 
-	@Deprecated
 	public HibernateTourney() {
 	}
 

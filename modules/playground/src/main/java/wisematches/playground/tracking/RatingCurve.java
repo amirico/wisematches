@@ -9,125 +9,124 @@ import java.util.List;
  */
 @Entity
 @NamedNativeQueries({
-        @NamedNativeQuery(
-                name = "rating.curve",
-                query = "SELECT FLOOR(((UNIX_TIMESTAMP(date(b.finishedDate))-UNIX_TIMESTAMP(date(:start)))/60/60/24)/:resolution) as position, " +
-                        "min(p.newRating) as ratingMin, avg(p.newRating) as ratingAvg, max(p.newRating) as ratingMax " +
-                        "FROM scribble_board b, scribble_player p " +
-                        "WHERE b.boardId=p.boardId and not b.finishedDate is null and p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:end GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +
-                        "ORDER BY position ASC",
-                resultSetMapping = "rating.curve")
+		@NamedNativeQuery(
+				name = "rating.curve",
+				query = "SELECT FLOOR(((UNIX_TIMESTAMP(DATE(b.finishedDate))-UNIX_TIMESTAMP(DATE(:start)))/60/60/24)/:resolution) AS POSITION, " +
+						"MIN(p.newRating) AS ratingMin, AVG(p.newRating) AS ratingAvg, MAX(p.newRating) AS ratingMax " +
+						"FROM scribble_board b, scribble_player p " +
+						"WHERE b.boardId=p.boardId AND NOT b.finishedDate IS NULL AND p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:END GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +
+						"ORDER BY POSITION ASC",
+				resultSetMapping = "rating.curve")
 })
 @SqlResultSetMapping(name = "rating.curve", columns = {
-        @ColumnResult(name = "position"),
-        @ColumnResult(name = "ratingAvg"),
-        @ColumnResult(name = "ratingMax"),
-        @ColumnResult(name = "ratingMin")
+		@ColumnResult(name = "position"),
+		@ColumnResult(name = "ratingAvg"),
+		@ColumnResult(name = "ratingMax"),
+		@ColumnResult(name = "ratingMin")
 })
 public class RatingCurve {
-    @Id
-    private final int resolution;
-    private final Date startDate;
-    private final Date endDate;
+	@Id
+	private final int resolution;
+	private final Date startDate;
+	private final Date endDate;
 
-    @Transient
-    private final int pointsCount;
-    @Transient
-    private final short[] points;
-    @Transient
-    private final short[] ratingsMin;
-    @Transient
-    private final short[] ratingsAvg;
-    @Transient
-    private final short[] ratingsMax;
+	@Transient
+	private final int pointsCount;
+	@Transient
+	private final short[] points;
+	@Transient
+	private final short[] ratingsMin;
+	@Transient
+	private final short[] ratingsAvg;
+	@Transient
+	private final short[] ratingsMax;
 
-    @Transient
-    private final short minRating;
+	@Transient
+	private final short minRating;
 
-    @Transient
-    private final short maxRating;
+	@Transient
+	private final short maxRating;
 
-    @Deprecated
-    RatingCurve() {
-        throw new UnsupportedOperationException("Not supported");
-    }
+	RatingCurve() {
+		throw new UnsupportedOperationException("Not supported");
+	}
 
-    public RatingCurve(int resolution, Date startDate, Date endDate, List list) {
-        this.resolution = resolution;
-        this.startDate = startDate;
-        this.endDate = endDate;
+	public RatingCurve(int resolution, Date startDate, Date endDate, List list) {
+		this.resolution = resolution;
+		this.startDate = startDate;
+		this.endDate = endDate;
 
-        this.points = new short[list.size()];
-        this.ratingsMin = new short[list.size()];
-        this.ratingsAvg = new short[list.size()];
-        this.ratingsMax = new short[list.size()];
+		this.points = new short[list.size()];
+		this.ratingsMin = new short[list.size()];
+		this.ratingsAvg = new short[list.size()];
+		this.ratingsMax = new short[list.size()];
 
-        this.pointsCount = ((int) ((endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60 / 24)) / resolution;
+		this.pointsCount = ((int) ((endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60 / 24)) / resolution;
 
-        int index = 0;
-        short min = 1200;
-        short max = 1200;
-        for (Object values : list) {
-            final Object[] row = (Object[]) values;
-            this.points[index] = ((Number) row[0]).shortValue();
-            this.ratingsMin[index] = ((Number) row[1]).shortValue();
-            this.ratingsAvg[index] = ((Number) row[2]).shortValue();
-            this.ratingsMax[index] = ((Number) row[3]).shortValue();
+		int index = 0;
+		short min = 1200;
+		short max = 1200;
+		for (Object values : list) {
+			final Object[] row = (Object[]) values;
+			this.points[index] = ((Number) row[0]).shortValue();
+			this.ratingsMin[index] = ((Number) row[1]).shortValue();
+			this.ratingsAvg[index] = ((Number) row[2]).shortValue();
+			this.ratingsMax[index] = ((Number) row[3]).shortValue();
 
-            if (max < this.ratingsMax[index]) {
-                max = this.ratingsMax[index];
-            }
-            if (min > this.ratingsMin[index]) {
-                min = this.ratingsMin[index];
-            }
-            index++;
-        }
-        minRating = min;
-        maxRating = max;
-    }
+			if (max < this.ratingsMax[index]) {
+				max = this.ratingsMax[index];
+			}
+			if (min > this.ratingsMin[index]) {
+				min = this.ratingsMin[index];
+			}
+			index++;
+		}
+		minRating = min;
+		maxRating = max;
+	}
 
-    public int getResolution() {
-        return resolution;
-    }
+	public int getResolution() {
+		return resolution;
+	}
 
-    public Date getStartDate() {
-        return startDate;
-    }
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    public Date getEndDate() {
-        return endDate;
-    }
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public int getPointsCount() {
-        return pointsCount;
-    }
+	public int getPointsCount() {
+		return pointsCount;
+	}
 
-    public short[] getRatingPoints() {
-        return points;
-    }
+	public short[] getRatingPoints() {
+		return points;
+	}
 
-    public short[] getRatingsMin() {
-        return ratingsMin;
-    }
+	public short[] getRatingsMin() {
+		return ratingsMin;
+	}
 
-    public short[] getRatingsAvg() {
-        return ratingsAvg;
-    }
+	public short[] getRatingsAvg() {
+		return ratingsAvg;
+	}
 
-    public short[] getRatingsMax() {
-        return ratingsMax;
-    }
+	public short[] getRatingsMax() {
+		return ratingsMax;
+	}
 
-    public short getMinRating() {
-        return minRating;
-    }
+	public short getMinRating() {
+		return minRating;
+	}
 
-    public short getMaxRating() {
-        return maxRating;
-    }
+	public short getMaxRating() {
+		return maxRating;
+	}
 
     /*	private final int startDate;
-            private final int endDate;
+			private final int endDate;
             private final int minRating;
             private final int maxRating;
             private final int[] dates;

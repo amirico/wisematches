@@ -9,23 +9,18 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/target/generated-sources/annotations" />
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset1" name="XML Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-servlet.xml</file>
-          <file>file://$MODULE_DIR$/src/test/resources/config/server-web-junit-config.xml</file>
-          <file>file://$MODULE_DIR$/src/main/resources/config/server-web-config.xml</file>
+          <file>file://$MODULE_DIR$/src/test/resources/config/services-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/services-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-security.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/notifications-config.xml</file>
-          <file>file://$MODULE_DIR$/src/main/resources/config/application-settings.xml</file>
-          <file>jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.2.RELEASE/spring-jdbc-3.1.2.RELEASE.jar!/org/springframework/jdbc/support/sql-error-codes.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-settings.xml</file>
+          <file>jar:/$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/3.1.2.RELEASE/spring-jdbc-3.1.2.RELEASE.jar!/org/springframework/jdbc/support/sql-error-codes.xml</file>
           <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-config.xml</file>
           <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-junit-config.xml</file>
           <file>file://$MODULE_DIR$/../playground/src/main/resources/config/playground-config.xml</file>
@@ -57,6 +52,8 @@
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/libs" />
       <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
+      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/webserver-4.0.1-SNAPSHOT" />
     </content>

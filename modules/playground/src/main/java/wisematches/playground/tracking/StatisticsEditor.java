@@ -95,7 +95,6 @@ public class StatisticsEditor implements Statistics, Serializable {
 	@Column(name = "hPoints")
 	private int highestPoints;
 
-	@Deprecated
 	protected StatisticsEditor() {
 	}
 

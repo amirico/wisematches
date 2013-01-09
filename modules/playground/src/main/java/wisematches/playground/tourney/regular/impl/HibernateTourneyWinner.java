@@ -20,7 +20,6 @@ public class HibernateTourneyWinner implements TourneyWinner {
 	@Column(name = "place", updatable = false)
 	private TourneyPlace place;
 
-	@Deprecated
 	public HibernateTourneyWinner() {
 	}
 

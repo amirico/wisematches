@@ -53,7 +53,6 @@ class HibernatePlayerProfile implements PlayerProfile {
 	/**
 	 * Hibernate constructor
 	 */
-	@Deprecated
 	HibernatePlayerProfile() {
 	}
 

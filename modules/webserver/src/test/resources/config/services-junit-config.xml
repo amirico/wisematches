@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="propertiesPlaceholderScribble"
+          class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties">
+            <props>
+                <prop key="mail.server.port">25</prop>
+                <prop key="mail.server.host">localhost</prop>
+                <prop key="server.images.path">file:${java.io.tmpdir}/wisematches/work/images</prop>
+                <prop key="server.proposals.file">file:${java.io.tmpdir}/wisematches/work/proposals.ser</prop>
+                <prop key="server.properties.file">file:${java.io.tmpdir}/wisematches/work/properties.ser</prop>
+                <prop key="server.dictionary.path">../../resources/dictionaries</prop>
+            </props>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean id="applicationProperties" class="java.util.Properties">
+    </bean>
+
+    <import resource="services-config.xml"/>
+</beans>

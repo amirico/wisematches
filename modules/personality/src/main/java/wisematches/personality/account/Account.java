@@ -21,7 +21,6 @@ import java.util.TimeZone;
  */
 @MappedSuperclass
 public abstract class Account extends Personality implements Serializable {
-	@Deprecated
 	protected Account() {
 	}
 

@@ -16,7 +16,6 @@ public class GameRelationship implements Relationship {
 	@Column(name = "relationshipId", updatable = false)
 	private long id;
 
-	@Deprecated
 	protected GameRelationship() {
 	}
 

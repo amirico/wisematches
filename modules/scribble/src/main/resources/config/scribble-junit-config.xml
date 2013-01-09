@@ -9,7 +9,7 @@
             <props>
                 <prop key="server.proposals.file">file:${java.io.tmpdir}/wisematches/work/proposals.ser</prop>
                 <prop key="server.properties.file">file:${java.io.tmpdir}/wisematches/work/properties.ser</prop>
-                <prop key="server.dictionary.path">./resources/dictionaries</prop>
+                <prop key="server.dictionary.path">../../resources/dictionaries</prop>
             </props>
         </property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
