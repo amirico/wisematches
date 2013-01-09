@@ -100,20 +100,20 @@ wm.game.Join = function (language) {
 wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
     var attachPlayerSearchActions = function (a) {
         $(a).hover(
-            function () {
-                $(this).addClass("player-search-remove");
-            },
-            function () {
-                $(this).removeClass("player-search-remove");
-            }).click(function () {
-                $(this).fadeOut('fast', function () {
-                    $(this).remove();
-                    if (opponentsCount == maxOpponents) {
-                        $("#opponentsControl").fadeIn('slow');
-                    }
-                    opponentsCount--;
+                function () {
+                    $(this).addClass("player-search-remove");
+                },
+                function () {
+                    $(this).removeClass("player-search-remove");
+                }).click(function () {
+                    $(this).fadeOut('fast', function () {
+                        $(this).remove();
+                        if (opponentsCount == maxOpponents) {
+                            $("#opponentsControl").fadeIn('slow');
+                        }
+                        opponentsCount--;
+                    });
                 });
-            });
     };
 
     this.selectOpponent = function () {
@@ -167,17 +167,17 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
             serializeObject.opponents = [serializeObject.opponents];
         }
         $.post("create.ajax", $.toJSON(serializeObject),
-            function (response) {
-                if (response.success) {
-                    if (response.data == null || response.data.board == undefined) {
-                        wm.util.url.redirect('/playground/scribble/active');
+                function (response) {
+                    if (response.success) {
+                        if (response.data == null || response.data.board == undefined) {
+                            wm.util.url.redirect('/playground/scribble/active');
+                        } else {
+                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        }
                     } else {
-                        wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        wm.ui.unlock($gameWidget, response.summary, true);
                     }
-                } else {
-                    wm.ui.unlock($gameWidget, response.summary, true);
-                }
-            }, 'json');
+                }, 'json');
     };
 };
 
@@ -519,7 +519,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
     var wordsViewPanel = dictionary.find(".scroll-pane");
     var wordsViewTable = wordsViewPanel.find("table");
     var wordsViewStatus = dictionary.find("#wordsCount span");
-    var wordsViewScrollPane = wordsViewPanel.jScrollPane({showArrows: true, horizontalGutter: 10, hideFocus: true}).data('jsp');
+    var wordsViewScrollPane = wordsViewPanel.jScrollPane({showArrows: false, horizontalGutter: 10, hideFocus: true}).data('jsp');
 
     var createViewItem = function (entry) {
         var def = "";
@@ -534,10 +534,10 @@ wm.game.dict.Dictionary = function (lang, i18n) {
             def += "<span class='sample'>" + attrs + "</span> " + d.text;
         });
         return $("" +
-            "<tr>" +
-            "<td><a href='#' onclick='dictionarySuggestion.loadWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
-            "<td>" + def + "</td>" +
-            "</tr>");
+                "<tr>" +
+                "<td><a href='#' onclick='dictionarySuggestion.loadWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
+                "<td>" + def + "</td>" +
+                "</tr>");
     };
 
     var loadWordEntries = function (prefix) {
@@ -670,31 +670,31 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
         var data = $.toJSON({language: lang, section: section});
         wm.ui.lock(comp, language["register.subscribing"]);
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, data,
-            function (response) {
-                if (response.success) {
-                    subscriptions = response.data.subscriptions;
-                    wm.ui.unlock(comp, language["register.subscribed"]);
-                } else {
-                    wm.ui.unlock(comp, response.summary, true);
-                }
-                updateAnnounceView(true);
-                callback(response.success);
-            }, 'json');
+                function (response) {
+                    if (response.success) {
+                        subscriptions = response.data.subscriptions;
+                        wm.ui.unlock(comp, language["register.subscribed"]);
+                    } else {
+                        wm.ui.unlock(comp, response.summary, true);
+                    }
+                    updateAnnounceView(true);
+                    callback(response.success);
+                }, 'json');
     };
 
     var unsubscribe = function (comp, callback) {
         wm.ui.lock(comp, language["register.unsubscribing"]);
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, $.toJSON({}),
-            function (response) {
-                if (response.success) {
-                    subscriptions = response.data.subscriptions;
-                    wm.ui.unlock(comp, language["register.unsubscribed"]);
-                } else {
-                    wm.ui.unlock(comp, response.summary, true);
-                }
-                updateAnnounceView(false);
-                callback(response.success);
-            }, 'json');
+                function (response) {
+                    if (response.success) {
+                        subscriptions = response.data.subscriptions;
+                        wm.ui.unlock(comp, language["register.unsubscribed"]);
+                    } else {
+                        wm.ui.unlock(comp, response.summary, true);
+                    }
+                    updateAnnounceView(false);
+                    callback(response.success);
+                }, 'json');
     };
 
     var updateAnnounceView = function (sub) {
@@ -761,11 +761,11 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                     text: language["register.button"],
                     click: function () {
                         subscribe(subscriptionDialog.closest(".ui-dialog"),
-                            getSelectedValue('language', true),
-                            getSelectedValue('section', true),
-                            function () {
-                                subscriptionDialog.dialog("close");
-                            });
+                                getSelectedValue('language', true),
+                                getSelectedValue('section', true),
+                                function () {
+                                    subscriptionDialog.dialog("close");
+                                });
                     }
                 },
                 {
@@ -837,16 +837,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-            }
-        },
-        function () {
-            if ($(this).attr('disabled') == undefined) {
-                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-            }
-        });
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+                }
+            },
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+                }
+            });
 
     prevSet.click(function () {
         if (selected > 0) {
