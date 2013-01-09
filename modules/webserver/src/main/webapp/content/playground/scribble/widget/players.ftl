@@ -23,7 +23,7 @@
 </div>
     <#if playerInGame>
     <div class="createChallenge <#if board.gameActive>ui-helper-hidden</#if>" style="width: 100%; padding-top: 6px">
-        <button><@message code="game.challenge.label"/></button>
+        <button class="wm-ui-button"><@message code="game.challenge.label"/></button>
     </div>
     </#if>
 </@wm.ui.widget>
