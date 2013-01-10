@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface PlayerStatisticManager {
+public interface StatisticManager {
 	void addStatisticListener(StatisticsListener l);
 
 	void removeStatisticListener(StatisticsListener l);

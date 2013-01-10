@@ -6,6 +6,7 @@
         <fileset id="fileset1" name="XML Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/resources/config/playground-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/restriction-config.xml</file>
+          <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/awards-config.xml</file>
         </fileset>
       </configuration>
     </facet>

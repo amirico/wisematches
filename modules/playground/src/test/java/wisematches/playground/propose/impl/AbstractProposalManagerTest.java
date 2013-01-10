@@ -12,7 +12,7 @@ import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.criteria.ViolatedCriteriaException;
 import wisematches.playground.propose.*;
-import wisematches.playground.tracking.PlayerStatisticManager;
+import wisematches.playground.tracking.StatisticManager;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class AbstractProposalManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		final PlayerStatisticManager psm = createMock(PlayerStatisticManager.class);
+		final StatisticManager psm = createMock(StatisticManager.class);
 		expect(psm.getPlayerStatistic(EasyMock.<Personality>anyObject())).andReturn(null).anyTimes();
 		replay(psm);
 

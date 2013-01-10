@@ -1,34 +1,18 @@
 package wisematches.playground.award;
 
-import java.util.Collection;
+import wisematches.personality.Relationship;
+
+import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class Award {
-	private final String code;
-	private final AwardType type;
-//	private final Collection<AwardCondition> conditions;
+public interface Award {
+	String getCode();
 
-	public Award(String code, AwardType type,
-				 Collection<AwardCondition> conditions) {
-		this.code = code;
-		this.type = type;
-	}
+	Date getAwardedDate();
 
-	public Award(String code, AwardType type,
-				 Collection<AwardCondition> bronze,
-				 Collection<AwardCondition> silver,
-				 Collection<AwardCondition> gold) {
-		this.code = code;
-		this.type = type;
-	}
+	AwardWeight getWeight();
 
-	public String getCode() {
-		return code;
-	}
-
-	public AwardType getType() {
-		return type;
-	}
+	Relationship getRelationship();
 }

@@ -51,8 +51,12 @@ public class RobotPlayer extends ComputerPlayer {
 		}
 	}
 
+	public static boolean isRobotPlayer(long pid) {
+		return pid >= 2 && pid <= 4;
+	}
+
 	public static boolean isRobotPlayer(Personality personality) {
-		return personality.getId() >= 2 && personality.getId() <= 4;
+		return isRobotPlayer(personality.getId());
 	}
 
 	public static Collection<RobotPlayer> getRobotPlayers() {

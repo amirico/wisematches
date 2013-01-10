@@ -1,16 +1,22 @@
 package wisematches.playground.tracking;
 
 import wisematches.personality.Personality;
+import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.playground.tourney.TourneyPlace;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @MappedSuperclass
 public class StatisticsEditor implements Statistics, Serializable {
+	private static final String[] STRINGS = new String[0];
 	@Id
 	@Column(name = "playerId")
 	private long playerId;
@@ -94,6 +100,27 @@ public class StatisticsEditor implements Statistics, Serializable {
 
 	@Column(name = "hPoints")
 	private int highestPoints;
+
+	@Column(name = "winsRD")
+	private int robotWinsDull;
+
+	@Column(name = "winsRT")
+	private int robotWinsTrainee;
+
+	@Column(name = "winsRE")
+	private int robotWinsExpert;
+
+	@Column(name = "winsTF")
+	private int tourneyWinsFirst;
+
+	@Column(name = "winsTS")
+	private int tourneyWinsSecond;
+
+	@Column(name = "winsTT")
+	private int tourneyWinsThird;
+
+	@Transient
+	private final Set<String> changedProperties = new HashSet<>();
 
 	protected StatisticsEditor() {
 	}
@@ -246,108 +273,213 @@ public class StatisticsEditor implements Statistics, Serializable {
 		return highestPoints;
 	}
 
+	@Override
+	public int getRobotWins(RobotType type) {
+		if (type == null) {
+			return robotWinsDull + robotWinsExpert + robotWinsTrainee;
+		}
+		switch (type) {
+			case DULL:
+				return robotWinsDull;
+			case TRAINEE:
+				return robotWinsTrainee;
+			case EXPERT:
+				return robotWinsExpert;
+		}
+		throw new IllegalArgumentException("Unsupported robot type: " + type);
+	}
+
+
+	@Override
+	public int getTourneyWins(TourneyPlace place) {
+		if (place == null) {
+			return tourneyWinsFirst + tourneyWinsSecond + tourneyWinsThird;
+		}
+		switch (place) {
+			case FIRST:
+				return tourneyWinsFirst;
+			case SECOND:
+				return tourneyWinsSecond;
+			case THIRD:
+				return tourneyWinsThird;
+		}
+		throw new IllegalArgumentException("Unsupported place type: " + place);
+	}
+
+
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+		changedProperties.add("updateTime");
 	}
 
 	public void setWins(int wins) {
 		this.wins = wins;
+		changedProperties.add("wins");
 	}
 
 	public void setLoses(int loses) {
 		this.loses = loses;
+		changedProperties.add("loses");
 	}
 
 	public void setDraws(int draws) {
 		this.draws = draws;
+		changedProperties.add("draws");
 	}
 
 	public void setTimeouts(int timeouts) {
 		this.timeouts = timeouts;
+		changedProperties.add("timeouts");
 	}
 
 	public void setResigned(int resigned) {
 		this.resigned = resigned;
+		changedProperties.add("resigned");
 	}
 
 	public void setStalemates(int stalemates) {
 		this.stalemates = stalemates;
+		changedProperties.add("stalemates");
 	}
 
 	public void setActiveGames(int activeGames) {
 		this.activeGames = activeGames;
+		changedProperties.add("activeGames");
 	}
 
 	public void setFinishedGames(int finishedGames) {
 		this.finishedGames = finishedGames;
+		changedProperties.add("finishedGames");
 	}
 
 	public void setAverageRating(float averageRating) {
 		this.averageRating = averageRating;
+		changedProperties.add("averageRating");
 	}
 
 	public void setHighestRating(short highestRating) {
 		this.highestRating = highestRating;
+		changedProperties.add("highestRating");
 	}
 
 	public void setLowestRating(short lowestRating) {
 		this.lowestRating = lowestRating;
+		changedProperties.add("lowestRating");
 	}
 
 	public void setAverageOpponentRating(float averageOpponentRating) {
 		this.averageOpponentRating = averageOpponentRating;
+		changedProperties.add("averageOpponentRating");
 	}
 
 	public void setHighestWonOpponentRating(short highestWonOpponentRating) {
 		this.highestWonOpponentRating = highestWonOpponentRating;
+		changedProperties.add("highestWonOpponentRating");
 	}
 
 	public void setHighestWonOpponentId(long highestWonOpponentId) {
 		this.highestWonOpponentId = highestWonOpponentId;
+		changedProperties.add("highestWonOpponentId");
 	}
 
 	public void setLowestLostOpponentRating(short lowestLostOpponentRating) {
 		this.lowestLostOpponentRating = lowestLostOpponentRating;
+		changedProperties.add("lowestLostOpponentRating");
 	}
 
 	public void setLowestLostOpponentId(long lowestLostOpponentId) {
 		this.lowestLostOpponentId = lowestLostOpponentId;
+		changedProperties.add("lowestLostOpponentId");
 	}
 
 	public void setLastMoveTime(Date lastMoveTime) {
 		this.lastMoveTime = lastMoveTime;
+		changedProperties.add("lastMoveTime");
 	}
 
 	public void setAverageMoveTime(float averageMoveTime) {
 		this.averageMoveTime = averageMoveTime;
+		changedProperties.add("averageMoveTime");
 	}
 
 	public void setAverageMovesPerGame(float averageMovesPerGame) {
 		this.averageMovesPerGame = averageMovesPerGame;
+		changedProperties.add("averageMovesPerGame");
 	}
 
 	public void setTurnsCount(int turnsCount) {
 		this.turnsCount = turnsCount;
+		changedProperties.add("turnsCount");
 	}
 
 	public void setPassesCount(int passesCount) {
 		this.passesCount = passesCount;
+		changedProperties.add("passesCount");
 	}
 
 	public void setLowestPoints(int lowestPoints) {
 		this.lowestPoints = lowestPoints;
+		changedProperties.add("lowestPoints");
 	}
 
 	public void setAveragePoints(float averagePoints) {
 		this.averagePoints = averagePoints;
+		changedProperties.add("averagePoints");
 	}
 
 	public void setHighestPoints(int highestPoints) {
 		this.highestPoints = highestPoints;
+		changedProperties.add("highestPoints");
 	}
 
 	public void setRating(short rating) {
 		this.rating = rating;
+		changedProperties.add("rating");
+	}
+
+	public void setRobotWins(RobotType type, int count) {
+		switch (type) {
+			case DULL:
+				robotWinsDull = count;
+				changedProperties.add("robotWinsDull");
+				return;
+			case TRAINEE:
+				robotWinsTrainee = count;
+				changedProperties.add("robotWinsTrainee");
+				return;
+			case EXPERT:
+				robotWinsExpert = count;
+				changedProperties.add("robotWinsExpert");
+				return;
+		}
+		throw new IllegalArgumentException("Unsupported robot type: " + type);
+	}
+
+	public void setTourneyWins(TourneyPlace place, int count) {
+		switch (place) {
+			case FIRST:
+				tourneyWinsFirst = count;
+				changedProperties.add("tourneyWinsFirst");
+				return;
+			case SECOND:
+				tourneyWinsSecond = count;
+				changedProperties.add("tourneyWinsSecond");
+				return;
+			case THIRD:
+				tourneyWinsThird = count;
+				changedProperties.add("tourneyWinsThird");
+				return;
+		}
+		throw new IllegalArgumentException("Unsupported place type: " + place);
+	}
+
+	public Set<String> takeChangedProperties() {
+		if (changedProperties.size() == 0) {
+			return Collections.emptySet();
+		}
+		Set<String> res = new HashSet<>(changedProperties);
+		changedProperties.clear();
+		return res;
 	}
 
 	@Override
