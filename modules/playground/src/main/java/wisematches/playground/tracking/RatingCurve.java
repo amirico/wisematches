@@ -14,7 +14,7 @@ import java.util.List;
 				query = "SELECT FLOOR(((UNIX_TIMESTAMP(DATE(b.finishedDate))-UNIX_TIMESTAMP(DATE(:start)))/60/60/24)/:resolution) AS POSITION, " +
 						"MIN(p.newRating) AS ratingMin, AVG(p.newRating) AS ratingAvg, MAX(p.newRating) AS ratingMax " +
 						"FROM scribble_board b, scribble_player p " +
-						"WHERE b.boardId=p.boardId AND NOT b.finishedDate IS NULL AND p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:END GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +
+						"WHERE b.boardId=p.boardId AND NOT b.finishedDate IS NULL AND p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:end GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +
 						"ORDER BY POSITION ASC",
 				resultSetMapping = "rating.curve")
 })

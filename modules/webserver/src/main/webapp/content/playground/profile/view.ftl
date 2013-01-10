@@ -16,7 +16,8 @@
             <table class="profile shadow ui-state-default">
                 <tr>
                     <td class="info" width="200px">
-                    <#include "scriplet/info.ftl"><#include "scriplet/awards.ftl">
+                    <#include "scriplet/info.ftl">
+                    <#include "scriplet/awards.ftl">
                     </td>
 
                     <td class="content shadow ui-state-default">

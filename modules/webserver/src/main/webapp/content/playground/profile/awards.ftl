@@ -1,7 +1,6 @@
 <#-- @ftlvariable name="country" type="wisematches.personality.profile.countries.Country" -->
 <#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 <#-- @ftlvariable name="profile" type="wisematches.personality.profile.PlayerProfile" -->
-<#-- @ftlvariable name="tourneyAwards" type="wisematches.playground.tourney.regular.TourneyAward[]" -->
 <#include "/core.ftl">
 
 <#if !principal??>
@@ -42,6 +41,7 @@
                         </div>
 
                         <div class="awards ui-layout-table" style="padding-top: 10px">
+                        <#--
                         <#list tourneyAwards as a>
                             <#if (a_index%2)==0>
                             <div></#if>
@@ -62,6 +62,7 @@
                             </div>
                             <#if (a_index%2)!=0></div></#if>
                         </#list>
+-->
                         </div>
                     </td>
                 </tr>

@@ -9,16 +9,12 @@ import java.util.Collection;
 public enum AwardType {
 	MEDAL(false),
 	BADGE(true),
-	RIBBON(true);
+	RIBBON(false);
 
 	private final boolean weight;
 
 	private AwardType(boolean weight) {
 		this.weight = weight;
-	}
-
-	public boolean hasWeight() {
-		return weight;
 	}
 
 	public boolean isMedal() {
@@ -33,11 +29,15 @@ public enum AwardType {
 		return this == RIBBON;
 	}
 
-	public Collection<Award> filter(Collection<Award> awards) {
-		Collection<Award> res = new ArrayList<>(awards.size());
-		for (Award award : awards) {
-			if (this == award.getType()) {
-				res.add(award);
+	public boolean hasWeight() {
+		return weight;
+	}
+
+	public Collection<AwardDescriptor> filter(Collection<AwardDescriptor> descriptors) {
+		final Collection<AwardDescriptor> res = new ArrayList<>();
+		for (AwardDescriptor re : descriptors) {
+			if (re.getType() == this) {
+				res.add(re);
 			}
 		}
 		return res;

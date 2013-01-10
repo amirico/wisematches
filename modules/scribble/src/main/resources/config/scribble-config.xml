@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <import resource="awards-config.xml"/>
+
     <bean id="tilesBankingHouse" class="wisematches.playground.scribble.bank.impl.XMLTilesBankingHouse">
         <property name="banksPath" value="classpath:/banks/*"/>
     </bean>
@@ -29,12 +31,13 @@
         <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
     </bean>
 
-    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.CacheablePlayerStatisticManager">
+    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
         <property name="playerStatisticManager">
-            <bean class="wisematches.playground.tracking.impl.PlayerStatisticManagerImpl">
+            <bean class="wisematches.playground.tracking.impl.StatisticManagerImpl">
                 <property name="ratingManager" ref="ratingManager"/>
                 <property name="accountManager" ref="accountManager"/>
                 <property name="boardManager" ref="scribbleBoardManager"/>
+                <property name="tourneyManager" ref="regularTourneyManager"/>
                 <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
                 <property name="playerTrackingCenterDao" ref="playerTrackingCenterDao"/>
             </bean>
@@ -140,5 +143,16 @@
         <property name="taskExecutor" ref="tournamentTaskExecutor"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
+    </bean>
+
+    <bean id="awardsCenter" class="wisematches.playground.award.impl.HibernateAwardsCenter">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="tourneyManager" ref="regularTourneyManager"/>
+        <property name="statisticManager" ref="scribbleTrackingCenter"/>
+    </bean>
+
+    <bean id="awardsManager" class="wisematches.playground.award.impl.HibernateAwardsManager">
+        <property name="descriptors" ref="awardDescriptors"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 </beans>

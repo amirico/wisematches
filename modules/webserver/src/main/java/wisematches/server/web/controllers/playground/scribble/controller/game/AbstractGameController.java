@@ -11,7 +11,7 @@ import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.playground.tracking.PlayerStatisticManager;
+import wisematches.playground.tracking.StatisticManager;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.state.PlayerStateManager;
@@ -26,7 +26,7 @@ public class AbstractGameController extends WisematchesController {
 	protected GameMessageSource messageSource;
 	protected ScribbleBoardManager boardManager;
 	protected PlayerStateManager playerStateManager;
-	protected PlayerStatisticManager playerStatisticManager;
+	protected StatisticManager playerStatisticManager;
 	protected GameProposalManager<ScribbleSettings> proposalManager;
 
 	public AbstractGameController() {
@@ -67,7 +67,7 @@ public class AbstractGameController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPlayerStatisticManager(PlayerStatisticManager playerStatisticManager) {
+	public void setPlayerStatisticManager(StatisticManager playerStatisticManager) {
 		this.playerStatisticManager = playerStatisticManager;
 	}
 
