@@ -9,11 +9,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
 
     <link rel="stylesheet" type="text/css"
-          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/redmond/jquery-ui.css"/>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+          href="http://code.jquery.com/ui/1.9.2/themes/redmond/jquery-ui.css"/>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
 
     <script type="text/javascript" src="/jquery/js/json.min.js"></script>
     <script type="text/javascript" src="/jquery/js/jquery.hoverIntent.min.js"></script>
