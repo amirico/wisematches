@@ -6,7 +6,7 @@
 
 <#macro awardImage code weight>
     <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/><#else><#assign a="default"/></#if>
-<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.gif" alt="">
+<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.png" alt="">
 </#macro>
 
 <#if !principal??>
@@ -36,6 +36,7 @@
                             </div>
                             <div class="registered">
                             <@message code="profile.awards.description"/>
+                                (<a href="/info/awards"><@message code="info.awards.label"/></a>)
                             </div>
                         </div>
 
@@ -46,7 +47,7 @@
                             </button>
                         </div>
 
-                        <div class="awards ui-layout-table" style="padding-top: 10px">
+                        <div class="awards ui-layout-table" style="padding-top: 10px;">
                         <#list awards as a>
                             <#if (a_index%2)==0>
                             <div></#if>

@@ -5,7 +5,7 @@
 
 <#macro awardImage code weight>
     <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/><#else><#assign a="default"/></#if>
-<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.gif"
+<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.png"
      title="<@message code="awards.${code}.label"/>">
 </#macro>
 
