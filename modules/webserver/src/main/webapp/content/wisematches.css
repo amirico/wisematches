@@ -320,7 +320,7 @@ div.space-line {
     padding-left: 10px;
 }
 
-#info-about-items li, #info-features-items li {
+#info-about-items li, #info-features-items li, #info-awards-items li {
     list-style: none;
 }
 
@@ -354,6 +354,26 @@ div.space-line {
 #info-general-items li {
     list-style: none;
     padding-left: 15px;
+}
+
+.info-awards-item {
+    padding-bottom: 20px;
+}
+
+.info-awards-description p {
+    margin: 0;
+}
+
+.info-awards-item.info-item-level1>.info-awards-label {
+    font-size: larger;
+    border-bottom: 1px solid gray;
+}
+
+.info-awards-image {
+    float: left;
+    width: 70px;
+    height: 70px;
+    padding-right: 10px;
 }
 
 .error-layout {
@@ -648,4 +668,29 @@ a.ui-icon {
     /*filter: gray;*/
     /*filter: url('/resources/filters.svg#grayscale');*/
     /*-webkit-filter: grayscale(1);*/
+}
+
+.awards {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.awards-section {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.awards-set {
+    padding: 3px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.awards-type {
+    padding: 0 !important;
+    margin: 0 !important;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    background-image: none;
 }

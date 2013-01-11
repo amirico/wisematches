@@ -9,8 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.database.Order;
+import wisematches.database.Orders;
+import wisematches.database.Range;
 import wisematches.personality.Personality;
+import wisematches.playground.award.AwardContext;
+import wisematches.playground.award.AwardWeight;
 import wisematches.playground.award.AwardsSummary;
+
+import java.util.EnumSet;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -43,7 +50,14 @@ public class HibernateAwardsManagerTest {
 
 	@Test
 	public void testSearch() {
-//		awardsManager.getTotalCount(Personality.person(1001L), null);
-//		awardsManager.getTotalCount(Personality.person(1001L), null);
+		final Personality person = Personality.person(1001L);
+
+		final AwardContext ctx1 = new AwardContext("moc", null);
+		awardsManager.getTotalCount(person, ctx1);
+		awardsManager.searchEntities(Personality.person(1001L), ctx1, null, Orders.of(Order.desc("awardedDate")), Range.limit(10));
+
+		final AwardContext ctx2 = new AwardContext("moc", EnumSet.of(AwardWeight.SILVER));
+		awardsManager.getTotalCount(person, ctx2);
+		awardsManager.searchEntities(Personality.person(1001L), ctx2, null, Orders.of(Order.desc("awardedDate")), Range.limit(10));
 	}
 }

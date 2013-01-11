@@ -3,6 +3,7 @@
 <#-- @ftlvariable name="reverseOrder" type="java.lang.Boolean" -->
 
 <#global reverse=reverseOrder/>
+<#global level=0/>
 
 <div id="info-${infoId}">
     <div id="info-${infoId}-header" class="info-header">
@@ -21,6 +22,7 @@
 </div>
 
 <#macro items>
+    <#assign level=level+1/>
     <#if .node?children??>
     <ol>
         <#assign nodes=.node?children/>
@@ -30,10 +32,11 @@
         </#list>
     </ol>
     </#if>
+    <#assign level=level-1/>
 </#macro>
 
 <#macro item>
-<div class="info-item info-${infoId}-item">
+<div class="info-item info-${infoId}-item info-item-level${level}">
     <#if .node.image[0]??>
         <div class="info-image info-${infoId}-image">
             <img src="${.node.image}"/>

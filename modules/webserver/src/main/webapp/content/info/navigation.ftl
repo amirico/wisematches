@@ -22,6 +22,9 @@
                 <li <@markSelected "rating"/>>
                     <a href="/info/rating"><@messageCap code="info.rules.rating.label"/></a>
                 </li>
+                <li <@markSelected "awards"/>>
+                    <a href="/info/awards"><@messageCap code="info.awards.label"/></a>
+                </li>
                 <li class="x-panel-body-noheader separator"></li>
             </ul>
         </li>

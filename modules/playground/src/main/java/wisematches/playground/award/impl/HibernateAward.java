@@ -1,6 +1,7 @@
 package wisematches.playground.award.impl;
 
 import wisematches.personality.Relationship;
+import wisematches.playground.GameRelationship;
 import wisematches.playground.award.Award;
 import wisematches.playground.award.AwardWeight;
 
@@ -32,7 +33,7 @@ public class HibernateAward implements Award {
 	private AwardWeight weight;
 
 	@Embedded
-	private Relationship relationship;
+	private GameRelationship relationship;
 
 	HibernateAward() {
 	}
@@ -41,11 +42,11 @@ public class HibernateAward implements Award {
 		this(player, code, awardedDate, weight, null);
 	}
 
-	public HibernateAward(long player, String code, Date awardedDate, Relationship relationship) {
+	public HibernateAward(long player, String code, Date awardedDate, GameRelationship relationship) {
 		this(player, code, awardedDate, null, relationship);
 	}
 
-	public HibernateAward(long player, String code, Date awardedDate, AwardWeight weight, Relationship relationship) {
+	public HibernateAward(long player, String code, Date awardedDate, AwardWeight weight, GameRelationship relationship) {
 		this.player = player;
 		this.code = code;
 		this.weight = weight;

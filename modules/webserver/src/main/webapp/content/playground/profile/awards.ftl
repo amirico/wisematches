@@ -1,7 +1,13 @@
 <#-- @ftlvariable name="country" type="wisematches.personality.profile.countries.Country" -->
 <#-- @ftlvariable name="player" type="wisematches.personality.player.Player" -->
 <#-- @ftlvariable name="profile" type="wisematches.personality.profile.PlayerProfile" -->
+<#-- @ftlvariable name="awards" type="wisematches.playground.award.Award[]" -->
 <#include "/core.ftl">
+
+<#macro awardImage code weight>
+    <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/><#else><#assign a="default"/></#if>
+<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.gif" alt="">
+</#macro>
 
 <#if !principal??>
 <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
@@ -41,28 +47,26 @@
                         </div>
 
                         <div class="awards ui-layout-table" style="padding-top: 10px">
-                        <#--
-                        <#list tourneyAwards as a>
+                        <#list awards as a>
                             <#if (a_index%2)==0>
                             <div></#if>
                             <div>
                                 <div class="award-full">
-                                    <img src="/resources/images/tourney/${a.medal.name()?lower_case}.png"
-                                         alt="<@message code="tourney.medal.${a.medal.name()?lower_case}.label"/>">
-
+                                    <@awardImage a.code a.weight/>
                                     <div>
                                         <p>${gameMessageSource.formatDate(a.awardedDate, locale)}</p>
 
-                                        <p><@wm.tourney.tourney a.tourney, true/></p>
-
-                                        <p><@wm.tourney.language a.language/>,
-                                            <@wm.tourney.section a.section/> <@message code="tourney.level.label"/></p>
+                                        <p><@message code="awards.${a.code}.label"/></p>
+                                        <#if a.relationship??>
+                                            <#if a.relationship.code==1>
+                                                <p><@wm.tourney.tourney a.relationship.id, true/></p>
+                                            </#if>
+                                        </#if>
                                     </div>
                                 </div>
                             </div>
                             <#if (a_index%2)!=0></div></#if>
                         </#list>
--->
                         </div>
                     </td>
                 </tr>
