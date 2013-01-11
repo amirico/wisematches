@@ -17,7 +17,6 @@ import wisematches.personality.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scheduling.BreakingDayListener;
 import wisematches.playground.search.SearchFilter;
-import wisematches.playground.tourney.TourneyCareer;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 
@@ -45,7 +44,6 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private final BoardStateListener boardStateListener = new TheBoardStateListener();
 
 	private final Lock lock = new ReentrantLock();
-	private final HibernateAwardsSearchManager awardsSearchManager = new HibernateAwardsSearchManager();
 	private final HibernateRegistrationSearchManager registrationSearchManager = new HibernateRegistrationSearchManager();
 
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<>();
@@ -157,11 +155,6 @@ public class HibernateTourneyManager<S extends GameSettings>
 	}
 
 	@Override
-	public TourneyCareer getTourneyCareer(Personality person) {
-		return awardsSearchManager.getTourneyCareer(person);
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T extends RegularTourneyEntity, K extends TourneyEntity.Id<? extends T, ?>> T getTourneyEntity(K id) {
@@ -208,11 +201,6 @@ public class HibernateTourneyManager<S extends GameSettings>
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	@Override
-	public AwardsSearchManager getAwardsSearchManager() {
-		return awardsSearchManager;
 	}
 
 	@Override
@@ -379,7 +367,6 @@ public class HibernateTourneyManager<S extends GameSettings>
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-		awardsSearchManager.setSessionFactory(sessionFactory);
 		registrationSearchManager.setSessionFactory(sessionFactory);
 	}
 

@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import wisematches.database.Order;
+import wisematches.database.Orders;
 import wisematches.personality.Language;
 import wisematches.personality.player.Player;
 import wisematches.personality.player.PlayerManager;
@@ -15,7 +17,9 @@ import wisematches.personality.profile.PlayerProfileEditor;
 import wisematches.personality.profile.PlayerProfileManager;
 import wisematches.personality.profile.countries.CountriesManager;
 import wisematches.personality.profile.countries.Country;
-import wisematches.playground.award.*;
+import wisematches.playground.award.Award;
+import wisematches.playground.award.AwardContext;
+import wisematches.playground.award.AwardsManager;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.playground.tourney.TourneyPlace;
@@ -33,8 +37,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -109,9 +113,6 @@ public class PlayerProfileController extends WisematchesController {
 				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
 			}
 
-			final AwardsSummary awardsSummary = awardsManager.getAwardsSummary(player);
-			final Collection<AwardDescriptor> awardDescriptors = awardsManager.getAwardDescriptors();
-
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
 			model.addAttribute("statistics", statistics);
@@ -119,10 +120,7 @@ public class PlayerProfileController extends WisematchesController {
 			model.addAttribute("tourneyMedals", TOURNEY_PLACEs);
 			model.addAttribute("boardSettings", boardSettings);
 
-			model.addAttribute("awardTypes", AwardType.values());
-			model.addAttribute("awardWeights", AwardWeight.values());
-			model.addAttribute("awardsSummary", awardsSummary);
-			model.addAttribute("awardDescriptors", awardDescriptors);
+			model.addAttribute("awardsSummary", awardsManager.getAwardsSummary(player));
 
 			return "/content/playground/profile/view";
 		} catch (NumberFormatException ex) {
@@ -143,11 +141,10 @@ public class PlayerProfileController extends WisematchesController {
 				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
 			}
 
-//            final List<TourneyAward> awards = regularTourneyManager.getAwardsSearchManager().searchEntities(player, null, null, null, null);
-
+			final List<Award> awards = awardsManager.searchEntities(getPersonality(), new AwardContext(null, null), null, Orders.of(Order.desc("awardedDate")), null);
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
-//            model.addAttribute("tourneyAwards", awards);
+			model.addAttribute("awards", awards);
 			return "/content/playground/profile/awards";
 		} catch (NumberFormatException ex) {
 			throw new UnknownEntityException(profileId, "profile");

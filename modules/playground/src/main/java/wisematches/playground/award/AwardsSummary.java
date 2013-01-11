@@ -1,21 +1,31 @@
 package wisematches.playground.award;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface AwardsSummary {
-	Set<String> getAwardNames();
+	/**
+	 * Returns collection of all award types in this summary.
+	 *
+	 * @return the collection of all award types in this summary.
+	 */
+	Collection<AwardType> getAwardTypes();
 
-	// ribbon
+	/**
+	 * Returns collection of all awards
+	 *
+	 * @param type the awards type to be returned
+	 * @return collection of awards by specified type. If null all awards will be returned.
+	 */
+	Collection<AwardDescriptor> getAwards(AwardType type);
+
+
 	boolean hasAwards(String code);
 
-	// badge
 	AwardWeight getHighestWeight(String code);
 
-	// medal
 	Collection<AwardWeight> getAwardWeights(String code);
 
 

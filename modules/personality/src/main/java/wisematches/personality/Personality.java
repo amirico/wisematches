@@ -31,7 +31,6 @@ public class Personality implements Serializable {
 	/**
 	 * Hibernate constructor
 	 */
-	@Deprecated
 	protected Personality() {
 	}
 

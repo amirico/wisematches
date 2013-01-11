@@ -15,7 +15,7 @@
         <td valign="top">
             <table class="profile shadow ui-state-default">
                 <tr>
-                    <td class="info" width="200px">
+                    <td class="info" width="200px" style="padding: 0; margin: 0">
                     <#include "scriplet/info.ftl">
                     <#include "scriplet/awards.ftl">
                     </td>

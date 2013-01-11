@@ -4,8 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import wisematches.personality.Personality;
-import wisematches.personality.Relationship;
 import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.playground.GameRelationship;
 import wisematches.playground.award.AwardWeight;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;
@@ -71,7 +71,7 @@ public class HibernateAwardsCenter {
 		}
 	}
 
-	private void fireAward(long pid, String code, AwardWeight weight, Relationship relationship) {
+	private void fireAward(long pid, String code, AwardWeight weight, GameRelationship relationship) {
 		final HibernateAward award = new HibernateAward(pid, code, new Date(), weight, relationship);
 		sessionFactory.getCurrentSession().save(award);
 	}

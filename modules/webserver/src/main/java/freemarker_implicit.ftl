@@ -9,3 +9,7 @@
 [#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.captcha.CaptchaService" --]
 [#-- @ftlvariable name="advertisementManager" type="wisematches.server.web.services.ads.AdvertisementManager" --]
 [#-- @ftlvariable name="gameMessageSource" type="wisematches.server.web.i18n.GameMessageSource" --]
+
+[#-- @ftlvariable name="Language" type="wisematches.personality.Language.static" --]
+[#-- @ftlvariable name="Membership" type="wisematches.personality.Membership.static" --]
+[#-- @ftlvariable name="AwardType" type="wisematches.playground.award.AwardType.static" --]
