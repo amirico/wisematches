@@ -21,111 +21,125 @@ import java.util.Set;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateAwardsCenter {
-	private SessionFactory sessionFactory;
-	private StatisticManager statisticManager;
-	private RegularTourneyManager tourneyManager;
+    private SessionFactory sessionFactory;
+    private StatisticManager statisticManager;
+    private RegularTourneyManager tourneyManager;
 
-	private final TheAwardsListener listener = new TheAwardsListener();
+    private final TheAwardsListener listener = new TheAwardsListener();
 
-	protected final Log log = LogFactory.getLog("wisematches.playground.awards.center");
+    protected final Log log = LogFactory.getLog("wisematches.playground.awards.center");
 
-	public HibernateAwardsCenter() {
-	}
+    public HibernateAwardsCenter() {
+    }
 
-	protected void processStatisticUpdated(Personality person, Set<String> changes, Statistics statistics) {
-		if (changes.contains("robotWinsDull")) {
-			if (statistics.getRobotWins(RobotType.DULL) == 10) {
-				fireAward(person.getId(), "robot", AwardWeight.SILVER, null);
-			}
-		} else if (changes.contains("robotWinsTrainee")) {
-			if (statistics.getRobotWins(RobotType.DULL) >= 10 &&
-					statistics.getRobotWins(RobotType.TRAINEE) == 5) {
-				fireAward(person.getId(), "robot", AwardWeight.BRONZE, null);
-			}
-		} else if (changes.contains("robotWinsExpert")) {
-			if (statistics.getRobotWins(RobotType.DULL) >= 10 &&
-					statistics.getRobotWins(RobotType.TRAINEE) >= 5 &&
-					statistics.getRobotWins(RobotType.EXPERT) == 1) {
-				fireAward(person.getId(), "robot", AwardWeight.BRONZE, null);
-			}
-		}
-	}
+    protected void processStatisticUpdated(Personality person, Set<String> changes, Statistics statistics) {
+        final int dullWins = statistics.getRobotWins(RobotType.DULL);
+        final int traineeWins = statistics.getRobotWins(RobotType.TRAINEE);
+        final int expertsWins = statistics.getRobotWins(RobotType.EXPERT);
+        if (changes.contains("robotWinsDull")) {
+            if (dullWins == 10) {
+                fireAward(person.getId(), "robot.conqueror", AwardWeight.BRONZE, null);
 
-	protected void processTourneyFinished(long pid, Tourney tourney, TourneyPlace place) {
-		AwardWeight weight = null;
-		switch (place) {
-			case THIRD:
-				weight = AwardWeight.BRONZE;
-				break;
-			case SECOND:
-				weight = AwardWeight.SILVER;
-				break;
-			case FIRST:
-				weight = AwardWeight.GOLD;
-				break;
-		}
-		if (weight != null) {
-			fireAward(pid, "tourney", weight, new TourneyRelationship(tourney.getNumber()));
-		} else {
-			log.error("TourneyPlace can't be converted to AwardWeight: " + place);
-		}
-	}
+                if (traineeWins >= 5) {
+                    fireAward(person.getId(), "robot.conqueror", AwardWeight.SILVER, null);
 
-	private void fireAward(long pid, String code, AwardWeight weight, GameRelationship relationship) {
-		final HibernateAward award = new HibernateAward(pid, code, new Date(), weight, relationship);
-		sessionFactory.getCurrentSession().save(award);
-	}
+                    if (expertsWins >= 1) {
+                        fireAward(person.getId(), "robot.conqueror", AwardWeight.GOLD, null);
+                    }
+                }
+            }
+        } else {
+            if (changes.contains("robotWinsTrainee")) {
+                if (dullWins >= 10 && traineeWins == 5) {
+                    fireAward(person.getId(), "robot.conqueror", AwardWeight.SILVER, null);
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+                    if (expertsWins >= 1) {
+                        fireAward(person.getId(), "robot.conqueror", AwardWeight.BRONZE, null);
+                    }
+                }
+            } else if (changes.contains("robotWinsExpert")) {
+                if (dullWins >= 10 && traineeWins >= 5 && expertsWins == 1) {
+                    fireAward(person.getId(), "robot.conqueror", AwardWeight.GOLD, null);
+                }
+            }
+        }
+    }
 
-	public void setStatisticManager(StatisticManager statisticManager) {
-		if (this.statisticManager != null) {
-			this.statisticManager.removeStatisticListener(listener);
-		}
+    protected void processTourneyFinished(long pid, Tourney tourney, TourneyPlace place) {
+        AwardWeight weight = null;
+        switch (place) {
+            case THIRD:
+                weight = AwardWeight.BRONZE;
+                break;
+            case SECOND:
+                weight = AwardWeight.SILVER;
+                break;
+            case FIRST:
+                weight = AwardWeight.GOLD;
+                break;
+        }
+        if (weight != null) {
+            fireAward(pid, "tourney.winner", weight, new TourneyRelationship(tourney.getNumber()));
+        } else {
+            log.error("TourneyPlace can't be converted to AwardWeight: " + place);
+        }
+    }
 
-		this.statisticManager = statisticManager;
+    private void fireAward(long pid, String code, AwardWeight weight, GameRelationship relationship) {
+        final HibernateAward award = new HibernateAward(pid, code, new Date(), weight, relationship);
+        sessionFactory.getCurrentSession().save(award);
+    }
 
-		if (this.statisticManager != null) {
-			this.statisticManager.addStatisticListener(listener);
-		}
-	}
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	public void setTourneyManager(RegularTourneyManager tourneyManager) {
-		if (this.tourneyManager != null) {
-			this.tourneyManager.removeRegularTourneyListener(listener);
-		}
+    public void setStatisticManager(StatisticManager statisticManager) {
+        if (this.statisticManager != null) {
+            this.statisticManager.removeStatisticListener(listener);
+        }
 
-		this.tourneyManager = tourneyManager;
+        this.statisticManager = statisticManager;
 
-		if (this.tourneyManager != null) {
-			this.tourneyManager.addRegularTourneyListener(listener);
-		}
-	}
+        if (this.statisticManager != null) {
+            this.statisticManager.addStatisticListener(listener);
+        }
+    }
 
-	private final class TheAwardsListener implements StatisticsListener, RegularTourneyListener {
-		private TheAwardsListener() {
-		}
+    public void setTourneyManager(RegularTourneyManager tourneyManager) {
+        if (this.tourneyManager != null) {
+            this.tourneyManager.removeRegularTourneyListener(listener);
+        }
 
-		@Override
-		public void tourneyAnnounced(Tourney tourney) {
-		}
+        this.tourneyManager = tourneyManager;
 
-		@Override
-		public void tourneyStarted(Tourney tourney) {
-		}
+        if (this.tourneyManager != null) {
+            this.tourneyManager.addRegularTourneyListener(listener);
+        }
+    }
 
-		@Override
-		public void playerStatisticUpdated(Personality personality, Set<String> changes, Statistics statistic) {
-			processStatisticUpdated(personality, changes, statistic);
-		}
+    private final class TheAwardsListener implements StatisticsListener, RegularTourneyListener {
+        private TheAwardsListener() {
+        }
 
-		@Override
-		public void tourneyFinished(Tourney tourney, TourneyDivision division) {
-			for (TourneyWinner winner : division.getTourneyWinners()) {
-				processTourneyFinished(winner.getPlayer(), tourney, winner.getPlace());
-			}
-		}
-	}
+        @Override
+        public void tourneyAnnounced(Tourney tourney) {
+        }
+
+        @Override
+        public void tourneyStarted(Tourney tourney) {
+        }
+
+        @Override
+        public void playerStatisticUpdated(Personality personality, Set<String> changes, Statistics statistic) {
+            processStatisticUpdated(personality, changes, statistic);
+        }
+
+        @Override
+        public void tourneyFinished(Tourney tourney, TourneyDivision division) {
+            for (TourneyWinner winner : division.getTourneyWinners()) {
+                processTourneyFinished(winner.getPlayer(), tourney, winner.getPlace());
+            }
+        }
+    }
 }
