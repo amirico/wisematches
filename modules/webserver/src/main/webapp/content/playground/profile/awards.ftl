@@ -4,11 +4,6 @@
 <#-- @ftlvariable name="awards" type="wisematches.playground.award.Award[]" -->
 <#include "/core.ftl">
 
-<#macro awardImage code weight>
-    <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/><#else><#assign a="default"/></#if>
-<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.png" alt="">
-</#macro>
-
 <#if !principal??>
 <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
 </#if>
@@ -53,9 +48,11 @@
                             <div></#if>
                             <div>
                                 <div class="award-full">
-                                    <@awardImage a.code a.weight/>
+                                    <@wm.award.image a.code a.weight/>
                                     <div>
-                                        <p>${gameMessageSource.formatDate(a.awardedDate, locale)}</p>
+                                        <p>
+                                        ${gameMessageSource.formatDate(a.awardedDate, locale)}
+                                        </p>
 
                                         <p><@message code="awards.${a.code}.label"/></p>
                                         <#if a.relationship??>
