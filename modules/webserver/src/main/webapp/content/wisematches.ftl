@@ -31,6 +31,9 @@
     <link rel="stylesheet" type="text/css" href="/content/personality/account.css"/>
     <script type="text/javascript" src="/content/personality/account.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.jscrollpane.css"/>
+    <script type="text/javascript" src="/jquery/js/jquery.jscrollpane.min.js"></script>
+
 <#if principal??>
     <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
     <script type="text/javascript" src="/content/playground/game.js"></script>
@@ -56,5 +59,12 @@
 </div>
 
 <#if principal?? && principal?has_content><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
+
+<script type="text/javascript">
+    $(".wm-ui-button").button();
+    $(".wm-ui-buttonset").buttonset();
+    $(".wm-ui-splitbutton").buttonset();
+    //    $(".dataTables_scrollBody").jScrollPane({showArrows: false}).data('jsp');
+</script>
 </body>
-</html>                                 .
+</html>
