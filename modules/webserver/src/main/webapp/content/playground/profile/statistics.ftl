@@ -263,8 +263,6 @@
 </div>
 
 <script type="text/javascript">
-    google.load('visualization', '1', {packages: ['corechart']});
-
     function drawRatingGraph() {
         // Create and populate the data table.
         var data = new google.visualization.DataTable();
@@ -357,6 +355,7 @@
                 })
     }
 
+    google.load('visualization', '1', {packages: ['corechart']});
     google.setOnLoadCallback(drawGamesChart);
     google.setOnLoadCallback(drawRatingGraph);
 </script>

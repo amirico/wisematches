@@ -3,12 +3,6 @@
 
 <#include "/core.ftl">
 
-<#macro awardImage code weight>
-    <#assign a="default"/>
-    <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/></#if>
-<img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.png"
-     title="<@message code="awards.${code}.label"/>">
-</#macro>
 
 <#assign totalCount=0/>
 <div class="awards">
@@ -26,7 +20,7 @@
                 <#list awardsSummary.getAwardWeights(d.code) as w>
                     <#assign totalCount=totalCount + 1/>
                     <div class="award medal">
-                        <@awardImage d.code w/>
+                        <@wm.award.image d.code w/>
 
                         <p>${awardsSummary.getAwardsCount(d.code, w)}</p>
                     </div>
@@ -45,7 +39,7 @@
             <#list badges as d>
                 <#assign totalCount=totalCount + 1/>
                 <div class="award badge">
-                    <@awardImage d.code awardsSummary.getHighestWeight(d.code)/>
+                    <@wm.award.image d.code awardsSummary.getHighestWeight(d.code)/>
                 </div>
             </#list>
         </div>
@@ -61,7 +55,7 @@
             <#list ribbons as d>
                 <#assign totalCount=totalCount + 1/>
                 <div class="award ribbon">
-                    <@awardImage d.code ""/>
+                    <@wm.award.image d.code ""/>
                 </div>
             </#list>
         </div>
