@@ -1,3 +1,9 @@
+/** =back-compat css file
+************************************************************
+Use this instead of jquery.cluetip.css if also using the
+back-compat js file -- jquery.compat.cluetip.js
+************************************************************/
+
 /* global */
 div.ui-cluetip {
     font-size: 1em;
@@ -14,12 +20,12 @@ div.ui-cluetip {
     overflow: hidden;
 }
 
-.cluetip-title .cluetip-close {
+#cluetip-title #cluetip-close {
     float: right;
     position: relative;
 }
 
-.cluetip-close img {
+#cluetip-close img {
     border: 0;
 }
 
@@ -27,7 +33,7 @@ div.ui-cluetip {
     width: 43px;
     height: 11px;
     position: absolute;
-    background-image: url(/resources/images/wait.gif);
+    background-image: url(images/wait.gif);
 }
 
 .cluetip-arrows {
@@ -42,7 +48,7 @@ div.ui-cluetip {
     border-width: 0;
 }
 
-.cluetip-extra {
+#cluetip-extra {
     display: none;
 }
 
@@ -50,8 +56,7 @@ div.ui-cluetip {
    =cluetipClass: 'default'
 -------------------------------------- */
 
-.cluetip-default,
-.cluetip-default .cluetip-outer {
+.cluetip-default {
     background-color: #d9d9c2;
 }
 
@@ -127,18 +132,17 @@ div.clue-bottom-default .cluetip-arrows {
     background-color: #fff;
 }
 
-.cluetip-jtip .cluetip-outer {
+.cluetip-jtip #cluetip-outer {
     border: 2px solid #ccc;
     position: relative;
-    background-color: #fff;
 }
 
-.cluetip-jtip .cluetip-inner {
+.cluetip-jtip #cluetip-inner {
     padding: 5px;
     display: inline-block;
 }
 
-.cluetip-jtip div.cluetip-close {
+.cluetip-jtip div#cluetip-close {
     text-align: right;
     margin: 0 5px 0;
     color: #900;
@@ -195,10 +199,6 @@ div.clue-bottom-jtip .cluetip-arrows {
     border: 1px solid #ccc;
 }
 
-.cluetip-rounded .cluetip-outer {
-    background-color: #fff;
-}
-
 .cluetip-rounded  .cluetip-arrows {
     border-color: #ccc;
 }
@@ -250,7 +250,7 @@ div.clue-top-rounded .cluetip-arrows {
 }
 
 /* stupid IE6 HasLayout hack */
-.cluetip-rounded .cluetip-title,
-.cluetip-rounded .cluetip-inner {
+.cluetip-rounded #cluetip-title,
+.cluetip-rounded #cluetip-inner {
     zoom: 1;
 }

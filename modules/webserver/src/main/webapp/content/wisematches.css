@@ -611,6 +611,12 @@ div.space-line {
     position: relative;
 }
 
+#cluetip-waitimage {
+    width: 16px;
+    height: 16px;
+    background-image: url(/resources/images/wait.gif);
+}
+
 .cluetip-close {
     text-align: right;
     font-weight: bold;
