@@ -8,19 +8,35 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.database.Orders;
 import wisematches.database.Range;
 import wisematches.personality.Personality;
+import wisematches.playground.GameRelationship;
 import wisematches.playground.award.*;
 import wisematches.playground.search.SearchFilter;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateAwardsManager implements AwardsManager {
+public class HibernateAwardsManager implements AwardsManager, AwardMachinery {
 	private SessionFactory sessionFactory;
 	private final Map<String, AwardDescriptor> descriptors = new HashMap<>();
+	private final Set<AwardsListener> listeners = new CopyOnWriteArraySet<>();
+	private Collection<AwardJudicialAssembly> judicialAssemblies = new ArrayList<>();
 
 	public HibernateAwardsManager() {
+	}
+
+	@Override
+	public void addAwardsListener(AwardsListener l) {
+		if (l != null) {
+			listeners.add(l);
+		}
+	}
+
+	@Override
+	public void removeAwardsListener(AwardsListener l) {
+		listeners.remove(l);
 	}
 
 	@Override
@@ -31,6 +47,20 @@ public class HibernateAwardsManager implements AwardsManager {
 	@Override
 	public Collection<AwardDescriptor> getAwardDescriptors() {
 		return descriptors.values();
+	}
+
+	@Override
+	public void grantAward(Personality person, String code, AwardWeight weight, GameRelationship relationship) {
+		final AwardDescriptor descriptor = getAwardDescriptor(code);
+		if (descriptor == null) {
+			throw new IllegalArgumentException("Unsupported award code: " + code);
+		}
+		final HibernateAward award = new HibernateAward(person.getId(), code, new Date(), weight, relationship);
+		sessionFactory.getCurrentSession().save(award);
+
+		for (AwardsListener listener : listeners) {
+			listener.playerAwarded(person, descriptor, award);
+		}
 	}
 
 	@Override
@@ -108,7 +138,7 @@ public class HibernateAwardsManager implements AwardsManager {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void setDescriptors(Collection<AwardDescriptor> descriptors) {
+	public void setAwardDescriptors(Collection<AwardDescriptor> descriptors) {
 		this.descriptors.clear();
 
 		if (descriptors != null) {
@@ -117,6 +147,22 @@ public class HibernateAwardsManager implements AwardsManager {
 				if (this.descriptors.put(code, descriptor) != null) {
 					throw new IllegalArgumentException("Descriptor with code already registered: " + code);
 				}
+			}
+		}
+	}
+
+	public void setJudicialAssemblies(Collection<AwardJudicialAssembly> judicialAssemblies) {
+		if (this.judicialAssemblies != null) {
+			for (AwardJudicialAssembly judicialAssembly : judicialAssemblies) {
+				judicialAssembly.removeAwardMachinery(this);
+			}
+		}
+
+		this.judicialAssemblies = judicialAssemblies;
+
+		if (this.judicialAssemblies != null) {
+			for (AwardJudicialAssembly judicialAssembly : judicialAssemblies) {
+				judicialAssembly.addAwardMachinery(this);
 			}
 		}
 	}

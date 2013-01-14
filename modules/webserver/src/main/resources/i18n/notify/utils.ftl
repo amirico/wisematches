@@ -1,5 +1,6 @@
 <#-- @ftlvariable name="serverHostName" type="java.lang.String" -->
 <#-- @ftlvariable name="ratingManager" type="wisematches.playground.RatingManager" -->
+<#import "/spring.ftl" as spring/>
 <#macro board board><@link href="playground/scribble/board?b=${board.boardId}">#${board.boardId} (${gameMessageSource.getBoardTitle(board, locale)})</@link></#macro>
 
 <#macro player player showRating=false>

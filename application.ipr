@@ -510,6 +510,7 @@
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database_data.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/latest_patch.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/resources/database/scripts/awards.sql" dialect="MySQL" />
   </component>
   <component name="StarteamConfiguration">
     <option name="SERVER" value="" />
