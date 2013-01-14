@@ -31,7 +31,7 @@
                 }
             },
             "fnInitComplete": function () {
-                $('.dataTables_scrollBody').jScrollPane();
+                $('.dataTables_scrollBody').jScrollPane({showArrows: false});
             }
         };
         return $2.dataTable($.extend(true, dataTableLanguage, opts));

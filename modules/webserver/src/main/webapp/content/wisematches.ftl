@@ -46,7 +46,9 @@
 <body>
 <#include 'templates/unsupportedBrowser.ftl'/>
 
+<div id="wisematchesHeader">
 <#if principal??><#include "playground/header.ftl"/><#else><#include "personality/header.ftl"/></#if>
+</div>
 
 <div id="notification-block"></div>
 
@@ -54,17 +56,18 @@
 <div id="header-separator" style="height: 20px;"></div>
 </#if>
 
-<div style="padding: 5px">
+<div id="wisematchesContent" style="padding: 5px; display: none;">
 <#include "${originalTemplateName}"/>
 </div>
 
+<div id="wisematchesFooter" style="display: none;">
 <#if principal?? && principal?has_content><#include "playground/footer.ftl"/><#else><#include "personality/footer.ftl"/></#if>
+</div>
 
 <script type="text/javascript">
-    $(".wm-ui-button").button();
-    $(".wm-ui-buttonset").buttonset();
-    $(".wm-ui-splitbutton").buttonset();
-    //    $(".dataTables_scrollBody").jScrollPane({showArrows: false}).data('jsp');
+    $("#wisematchesHeader #gameToolbar").show();
+    $("#wisematchesFooter").show();
+    $("#wisematchesContent").show();
 </script>
 </body>
 </html>

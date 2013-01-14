@@ -5,13 +5,14 @@
 
 <#assign hasNewFeatues=false/>
 
-<table id="header" class="ui-widget-content shadow" style="background: none; border-width: 0;border-bottom-width: 1px;">
+<table id="header" class="ui-widget-content shadow"
+       style="background: none; border-width: 0;border-bottom-width: 1px;">
     <tr>
         <td width="178px" height="72px">
             <img id="header-image" src="/resources/images/logo.png" width="178" height="72" alt="logo"/>
         </td>
         <td width="100%" height="72px">
-            <table style="height: 100%; width: 100%">
+            <table style="height: 100%; width: 100%;">
                 <tr>
                     <td valign="top" align="right">
                     <#if principal.membership == 'GUEST'>
@@ -44,7 +45,7 @@
                 </tr>
                 <tr>
                     <td valign="bottom">
-                        <div id="gameToolbar" class="" align="left">
+                        <div id="gameToolbar" align="left" style="display: none">
                             <div class="wm-ui-buttonset">
                                 <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
                                 <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>

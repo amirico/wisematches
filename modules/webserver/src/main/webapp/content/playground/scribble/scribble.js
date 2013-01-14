@@ -332,11 +332,11 @@ wm.scribble.Comments = function (board, controller, language) {
     };
 
     board.bind('gameState',
-        function (event, type, state) {
-            if (type === 'finished') {
-                widget.find('.create-comment').remove();
-            }
-        });
+            function (event, type, state) {
+                if (type === 'finished') {
+                    widget.find('.create-comment').remove();
+                }
+            });
 
     $(document).ready(function () {
         initWidget();
@@ -501,17 +501,17 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
     clearWordButton.button({disabled: true, icons: {primary: 'icon-memory-clear'}}).click(this.clear);
 
     board.bind('wordSelection',
-        function (event, word) {
-            addWordButton.button(word == null ? "disable" : "enable");
-        }).bind('gameState',
-        function (event, type, state) {
-            if (type === 'finished') {
-                memoryWordWidget.remove();
-            }
-        }).bind('gameMoves',
-        function (event, move) {
-            validateWords();
-        });
+            function (event, word) {
+                addWordButton.button(word == null ? "disable" : "enable");
+            }).bind('gameState',
+            function (event, type, state) {
+                if (type === 'finished') {
+                    memoryWordWidget.remove();
+                }
+            }).bind('gameMoves',
+            function (event, move) {
+                validateWords();
+            });
 
     $(document).ready(function () {
         reloadMemoryWords();
@@ -528,43 +528,43 @@ wm.scribble.Selection = function (board) {
     var selectedTilesInfo = selectedTilesElement.text();
 
     board.bind("tileSelection",
-        function (event, selected, tile) {
-            var tiles = selectedTilesElement.find('div');
-            var length = board.getSelectedTiles().length;
-            if (selected && length == 1) {
-                selectedTilesElement.empty();
-            }
-            if (selected) {
-                wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo(selectedTilesElement);
-            } else {
-                var updateOffset = false;
-                $.each(tiles, function (i, tileWidget) {
-                    var v = $(tileWidget);
-                    if (v.data('tile').number == tile.number) {
-                        updateOffset = true;
-                        v.remove();
-                    } else if (updateOffset) {
-                        v.css('left', (i - 1) * 22);
-                    }
-                });
-            }
-            if (length == 0) {
-                selectedTilesElement.text(selectedTilesInfo);
-            }
-        })
-        .bind('wordSelection',
-        function (event, word) {
-            if (word != null) {
-                wordCostElement.empty().text(board.getScoreEngine().getWordPoints(word).formula);
-                wordInfoElement.empty();
-                $.each(word.tiles, function (i, t) {
-                    wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(wordInfoElement);
-                });
-            } else {
-                wordInfoElement.text(selectedWordInfo);
-                wordCostElement.text(selectedWordCost);
-            }
-        });
+            function (event, selected, tile) {
+                var tiles = selectedTilesElement.find('div');
+                var length = board.getSelectedTiles().length;
+                if (selected && length == 1) {
+                    selectedTilesElement.empty();
+                }
+                if (selected) {
+                    wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo(selectedTilesElement);
+                } else {
+                    var updateOffset = false;
+                    $.each(tiles, function (i, tileWidget) {
+                        var v = $(tileWidget);
+                        if (v.data('tile').number == tile.number) {
+                            updateOffset = true;
+                            v.remove();
+                        } else if (updateOffset) {
+                            v.css('left', (i - 1) * 22);
+                        }
+                    });
+                }
+                if (length == 0) {
+                    selectedTilesElement.text(selectedTilesInfo);
+                }
+            })
+            .bind('wordSelection',
+            function (event, word) {
+                if (word != null) {
+                    wordCostElement.empty().text(board.getScoreEngine().getWordPoints(word).formula);
+                    wordInfoElement.empty();
+                    $.each(word.tiles, function (i, t) {
+                        wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(wordInfoElement);
+                    });
+                } else {
+                    wordInfoElement.text(selectedWordInfo);
+                    wordCostElement.text(selectedWordCost);
+                }
+            });
 };
 
 wm.scribble.Dictionary = function (board, suggestion, checkWords) {
@@ -649,14 +649,14 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
     };
 
     board.bind('wordSelection',
-        function (event, word) {
-            if (word != null) {
-                input.val(word.text);
-            } else {
-                input.val('');
-            }
-            validateInputValue();
-        });
+            function (event, word) {
+                if (word != null) {
+                    input.val(word.text);
+                } else {
+                    input.val('');
+                }
+                validateInputValue();
+            });
 
     input.keyup(function (e) {
         if (e.which == 13) {
@@ -695,16 +695,16 @@ wm.scribble.BankInfo = function (board, language) {
             cols = Math.max(cols, col + 1);
             var t = wm.scribble.tile.createTileWidget({number: bti.count, letter: bti.letter, cost: bti.cost}).offset({top: row * 22, left: col * 22});
             t.hover(
-                function () {
-                    showTileInfo(bti);
-                    wm.scribble.tile.selectTile(this);
-                },
-                function () {
-                    wm.scribble.tile.deselectTile(this);
-                }).click(
-                function () {
-                    selectActiveTile(bti);
-                }).appendTo(tilesPanel);
+                    function () {
+                        showTileInfo(bti);
+                        wm.scribble.tile.selectTile(this);
+                    },
+                    function () {
+                        wm.scribble.tile.deselectTile(this);
+                    }).click(
+                    function () {
+                        selectActiveTile(bti);
+                    }).appendTo(tilesPanel);
         });
         tilesPanel.width(cols * 22).height(rows * 22);
 
@@ -776,6 +776,11 @@ wm.scribble.History = function (board, language) {
             link = '<span class="movePassed">' + language['passed'] + '</span>';
         }
         movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
+
+        var closest = board.getPlayboardElement('.movesHistory .jspScrollable');
+        if (closest.length != 0) {
+            closest.data('jsp').reinitialise();
+        }
     };
 
     var movesHistoryTable = wm.ui.dataTable('.movesHistory table', {
@@ -929,54 +934,54 @@ wm.scribble.Controls = function (board, language) {
         });
 
         $('.exchangeTilesPanel').dialog({
-                title: language['exchange'],
-                draggable: false,
-                modal: true,
-                resizable: false,
-                width: 400,
-                buttons: [
-                    {
-                        text: language['exchange'],
-                        click: function () {
-                            $(this).dialog("close");
-                            var tiles = [];
-                            $.each(tilesPanel.children(), function (i, tw) {
-                                if (wm.scribble.tile.isTileSelected(tw)) {
-                                    tiles.push($(tw).data('tile'));
-                                }
-                            });
-                            board.exchangeTiles(tiles, showMoveResult);
+                    title: language['exchange'],
+                    draggable: false,
+                    modal: true,
+                    resizable: false,
+                    width: 400,
+                    buttons: [
+                        {
+                            text: language['exchange'],
+                            click: function () {
+                                $(this).dialog("close");
+                                var tiles = [];
+                                $.each(tilesPanel.children(), function (i, tw) {
+                                    if (wm.scribble.tile.isTileSelected(tw)) {
+                                        tiles.push($(tw).data('tile'));
+                                    }
+                                });
+                                board.exchangeTiles(tiles, showMoveResult);
+                            }
+                        },
+                        {
+                            text: language['cancel'],
+                            click: function () {
+                                $(this).dialog("close");
+                            }
                         }
-                    },
-                    {
-                        text: language['cancel'],
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            }
+                    ]
+                }
         )
     };
 
     board.bind("tileSelection",
-        function (event, selected, tile) {
-            updateSelectionState();
-        })
-        .bind('wordSelection',
-        function (event, word) {
-            updateControlsState();
-        }).bind('gameState',
-        function (event, type, state) {
-            updateGameState(type, state);
-        }).bind('boardState',
-        function (event, enabled) {
-            if (!enabled) {
-                blockBoard();
-            } else {
-                unblockBoard();
-            }
-        });
+            function (event, selected, tile) {
+                updateSelectionState();
+            })
+            .bind('wordSelection',
+            function (event, word) {
+                updateControlsState();
+            }).bind('gameState',
+            function (event, type, state) {
+                updateGameState(type, state);
+            }).bind('boardState',
+            function (event, enabled) {
+                if (!enabled) {
+                    blockBoard();
+                } else {
+                    unblockBoard();
+                }
+            });
 
     updateControlsState();
 };
@@ -1045,16 +1050,16 @@ wm.scribble.Players = function (board) {
     updateBoardState();
 
     board.bind('gameMoves',
-        function (event, move) {
-            var playerInfo = board.getPlayerInfo(move.player);
-            if (move.type == 'make') {
-                updatePlayerPoints(playerInfo.playerId, playerInfo.points);
-            }
-        })
-        .bind('gameState',
-        function (event, type, state) {
-            updateBoardState();
-        });
+            function (event, move) {
+                var playerInfo = board.getPlayerInfo(move.player);
+                if (move.type == 'make') {
+                    updatePlayerPoints(playerInfo.playerId, playerInfo.points);
+                }
+            })
+            .bind('gameState',
+            function (event, type, state) {
+                updateBoardState();
+            });
 };
 
 wm.scribble.Settings = function (board, language) {
@@ -1337,8 +1342,8 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         var originalState = draggingTile.data('originalState');
         var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
         if (relatedCell == null ||
-            (relatedCell.container == board && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
-            (relatedCell.container == hand && handTiles[relatedCell.x] != undefined)) {
+                (relatedCell.container == board && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
+                (relatedCell.container == hand && handTiles[relatedCell.x] != undefined)) {
             draggingTile.offset(originalState.offset);
         } else {
             // clear original position
@@ -1457,7 +1462,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         $.each(handTiles, function (i, handTile) {
             if (handTile == null || handTile == undefined) {
                 handTiles[i] = wm.scribble.tile.createTileWidget(tile).
-                    offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
+                        offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(hand);
                 return false;
             }
         });
@@ -1514,7 +1519,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
                 if (boardTiles[tile.column][tile.row] == null || boardTiles[tile.column][tile.row] == undefined) {
                     var w = wm.scribble.tile.createTileWidget(tile).
-                        offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
+                            offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
                     wm.scribble.tile.pinTile(w.get(0));
                     boardTiles[tile.column][tile.row] = w.appendTo(board);
                 }
@@ -1569,9 +1574,9 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
 
         if (word != null && selectedWord != null) {
             if (word.text == selectedWord.text &&
-                word.position.row == selectedWord.position.row &&
-                word.position.column == selectedWord.position.column &&
-                word.direction == selectedWord.direction) {
+                    word.position.row == selectedWord.position.row &&
+                    word.position.column == selectedWord.position.column &&
+                    word.direction == selectedWord.direction) {
                 return true;
             }
         }
@@ -1700,16 +1705,16 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
                 var col = (i - row * 15);
                 var t = wm.scribble.tile.createTileWidget({number: 0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
                 t.hover(
-                    function () {
-                        wm.scribble.tile.selectTile(this);
-                    },
-                    function () {
-                        wm.scribble.tile.deselectTile(this);
-                    }).click(
-                    function () {
-                        tileLetter = $(this).data('tile').letter;
-                        wildcardSelectionDialog.dialog("close");
-                    }).appendTo(panel);
+                        function () {
+                            wm.scribble.tile.selectTile(this);
+                        },
+                        function () {
+                            wm.scribble.tile.deselectTile(this);
+                        }).click(
+                        function () {
+                            tileLetter = $(this).data('tile').letter;
+                            wildcardSelectionDialog.dialog("close");
+                        }).appendTo(panel);
             });
         }
         wildcardSelectionDialog.replacer = replacer;
@@ -2096,13 +2101,13 @@ wm.scribble.Monitoring = function (board) {
         });
 
         $.post('/playground/scribble/changes.ajax?b=' + board.getBoardId() + params, null).success(
-            function (response) {
-                $.each(items, function (i, v) {
-                    if (v != null) {
-                        v.getCallback()(response);
-                    }
-                });
-            }
+                function (response) {
+                    $.each(items, function (i, v) {
+                        if (v != null) {
+                            v.getCallback()(response);
+                        }
+                    });
+                }
         );
     };
 
