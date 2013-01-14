@@ -91,11 +91,11 @@
         <property name="exposeRedirectModelAttributes" value="false"/>
         <property name="contentType" value="text/html;charset=UTF-8"/>
         <property name="exposeEnums">
-            <map>
-                <entry key="Language" value="wisematches.personality.Language"/>
-                <entry key="Membership" value="wisematches.personality.Membership"/>
-                <entry key="AwardType" value="wisematches.playground.award.AwardType"/>
-            </map>
+            <list>
+                <value>wisematches.personality.Language</value>
+                <value>wisematches.personality.Membership</value>
+                <value>wisematches.playground.award.AwardType</value>
+            </list>
         </property>
         <property name="viewClass" value="wisematches.server.web.view.WMFreeMarkerView"/>
     </bean>

@@ -1,6 +1,5 @@
 package wisematches.server.web.view;
 
-import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.template.*;
@@ -13,14 +12,13 @@ import wisematches.personality.Language;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMFreeMarkerView extends FreeMarkerView {
-	private Map<String, TemplateModel> exposeEnums;
+	private Collection<Class<? extends Enum>> exposeEnums;
 
 	public WMFreeMarkerView() {
 	}
@@ -31,8 +29,9 @@ public class WMFreeMarkerView extends FreeMarkerView {
 		model.put("language", Language.byLocale(template.getLocale()));
 
 		if (exposeEnums != null) {
-			for (Map.Entry<String, TemplateModel> entry : exposeEnums.entrySet()) {
-				model.put(entry.getKey(), entry.getValue());
+			for (Class<? extends Enum> exposeEnum : exposeEnums) {
+				EnumView view = EnumView.valueOf(exposeEnum);
+				model.put(exposeEnum.getSimpleName(), view);
 			}
 		}
 
@@ -58,7 +57,8 @@ public class WMFreeMarkerView extends FreeMarkerView {
 		}
 	}
 
-	public void setExposeEnums(Map<String, Class<? extends Enum>> exposeEnums) throws TemplateModelException {
+	public void setExposeEnums(Collection<Class<? extends Enum>> exposeEnums) throws TemplateModelException {
+/*
 		if (exposeEnums != null) {
 			this.exposeEnums = new HashMap<>(exposeEnums.size());
 			final TemplateHashModel enumModels = BeansWrapper.getDefaultInstance().getEnumModels();
@@ -66,5 +66,7 @@ public class WMFreeMarkerView extends FreeMarkerView {
 				this.exposeEnums.put(entry.getKey(), enumModels.get(entry.getValue().getName()));
 			}
 		}
+*/
+		this.exposeEnums = exposeEnums;
 	}
 }
