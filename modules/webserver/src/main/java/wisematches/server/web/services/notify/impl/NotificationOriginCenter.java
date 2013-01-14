@@ -11,6 +11,10 @@ import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.computer.robot.RobotPlayer;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.*;
+import wisematches.playground.award.Award;
+import wisematches.playground.award.AwardDescriptor;
+import wisematches.playground.award.AwardsListener;
+import wisematches.playground.award.AwardsManager;
 import wisematches.playground.expiration.ExpirationListener;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageListener;
@@ -21,7 +25,6 @@ import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.*;
 import wisematches.server.web.services.dictionary.ChangeSuggestion;
 import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
@@ -39,376 +42,391 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class NotificationOriginCenter implements BreakingDayListener, InitializingBean {
-    private TaskExecutor taskExecutor;
-    private BoardManager boardManager;
-    private PlayerManager playerManager;
-    private MessageManager messageManager;
-    private GameProposalManager proposalManager;
-    private RegularTourneyManager tourneyManager;
-    private ReliablePropertiesManager propertiesManager;
-    private ScribbleExpirationManager scribbleExpirationManager;
-    private DictionarySuggestionManager dictionarySuggestionManager;
-    private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
+	private TaskExecutor taskExecutor;
+	private BoardManager boardManager;
+	private PlayerManager playerManager;
+	private AwardsManager awardsManager;
+	private MessageManager messageManager;
+	private GameProposalManager proposalManager;
+	private RegularTourneyManager tourneyManager;
+	private ReliablePropertiesManager propertiesManager;
+	private ScribbleExpirationManager scribbleExpirationManager;
+	private DictionarySuggestionManager dictionarySuggestionManager;
+	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
-    private NotificationService notificationDistributor;
+	private NotificationService notificationDistributor;
 
-    private final Lock announcementProcessorLock = new ReentrantLock();
+	private final Lock announcementProcessorLock = new ReentrantLock();
 
-    private final TheDictionaryListener dictionaryListener = new TheDictionaryListener();
-    private final TheNotificationListener notificationListener = new TheNotificationListener();
-    private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
-    private final TheScribbleProposalExpirationListener proposalExpirationListener = new TheScribbleProposalExpirationListener();
+	private final TheDictionaryListener dictionaryListener = new TheDictionaryListener();
+	private final TheNotificationListener notificationListener = new TheNotificationListener();
+	private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
+	private final TheScribbleProposalExpirationListener proposalExpirationListener = new TheScribbleProposalExpirationListener();
 
-    private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
+	private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
 
-    public NotificationOriginCenter() {
-    }
+	public NotificationOriginCenter() {
+	}
 
-    protected void processNotification(long person, String code, Object context) {
-        final Player player = playerManager.getPlayer(person);
-        if (player instanceof MemberPlayer) {
-            fireNotification(code, (MemberPlayer) player, context);
-        }
-    }
+	protected void processNotification(long person, String code, Object context) {
+		final Player player = playerManager.getPlayer(person);
+		if (player instanceof MemberPlayer) {
+			fireNotification(code, (MemberPlayer) player, context);
+		}
+	}
 
-    protected void processNotification(Personality person, String code, Object context) {
-        final Player player = playerManager.getPlayer(person);
-        if (player instanceof MemberPlayer) {
-            fireNotification(code, (MemberPlayer) player, context);
-        }
-    }
+	protected void processNotification(Personality person, String code, Object context) {
+		final Player player = playerManager.getPlayer(person);
+		if (player instanceof MemberPlayer) {
+			fireNotification(code, (MemberPlayer) player, context);
+		}
+	}
 
-    private void fireNotification(String code, MemberPlayer player, Object context) {
-        try {
-            notificationDistributor.raiseNotification(code, player.getAccount(), NotificationSender.GAME, context);
-            if (log.isInfoEnabled()) {
-                log.info("Notification was raised to " + player + " [" + code + "]");
-            }
-        } catch (NotificationException ex) {
-            log.error("Notification can't be sent to player: code=" + code + ", player=" + player.getId(), ex);
-        }
-    }
+	private void fireNotification(String code, MemberPlayer player, Object context) {
+		try {
+			notificationDistributor.raiseNotification(code, player.getAccount(), NotificationSender.GAME, context);
+			if (log.isInfoEnabled()) {
+				log.info("Notification was raised to " + player + " [" + code + "]");
+			}
+		} catch (NotificationException ex) {
+			log.error("Notification can't be sent to player: code=" + code + ", player=" + player.getId(), ex);
+		}
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        taskExecutor.execute(new TheTourneyAnnouncementProcessor());
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		taskExecutor.execute(new TheTourneyAnnouncementProcessor());
+	}
 
-    @Override
-    public void breakingDayTime(Date midnight) {
-        taskExecutor.execute(new TheTourneyAnnouncementProcessor());
-    }
+	@Override
+	public void breakingDayTime(Date midnight) {
+		taskExecutor.execute(new TheTourneyAnnouncementProcessor());
+	}
 
-    public void setTaskExecutor(TaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
 
-    public void setMessageManager(MessageManager manager) {
-        if (this.messageManager != null) {
-            this.messageManager.removeMessageListener(notificationListener);
-        }
+	public void setMessageManager(MessageManager manager) {
+		if (this.messageManager != null) {
+			this.messageManager.removeMessageListener(notificationListener);
+		}
 
-        this.messageManager = manager;
+		this.messageManager = manager;
 
-        if (this.messageManager != null) {
-            this.messageManager.addMessageListener(notificationListener);
-        }
-    }
+		if (this.messageManager != null) {
+			this.messageManager.addMessageListener(notificationListener);
+		}
+	}
 
-    public void setBoardManager(BoardManager boardManager) {
-        if (this.boardManager != null) {
-            this.boardManager.removeBoardStateListener(notificationListener);
-        }
-        this.boardManager = boardManager;
-        if (this.boardManager != null) {
-            this.boardManager.addBoardStateListener(notificationListener);
-        }
-    }
+	public void setBoardManager(BoardManager boardManager) {
+		if (this.boardManager != null) {
+			this.boardManager.removeBoardStateListener(notificationListener);
+		}
+		this.boardManager = boardManager;
+		if (this.boardManager != null) {
+			this.boardManager.addBoardStateListener(notificationListener);
+		}
+	}
 
-    public void setPlayerManager(PlayerManager playerManager) {
-        this.playerManager = playerManager;
-    }
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
+	}
 
-    public void setProposalManager(GameProposalManager proposalManager) {
-        if (this.proposalManager != null) {
-            this.proposalManager.removeGameProposalListener(notificationListener);
-        }
+	public void setAwardsManager(AwardsManager awardsManager) {
+		if (this.awardsManager != null) {
+			this.awardsManager.removeAwardsListener(notificationListener);
+		}
 
-        this.proposalManager = proposalManager;
+		this.awardsManager = awardsManager;
 
-        if (this.proposalManager != null) {
-            this.proposalManager.addGameProposalListener(notificationListener);
-        }
-    }
+		if (this.awardsManager != null) {
+			this.awardsManager.addAwardsListener(notificationListener);
+		}
+	}
 
-    public void setPropertiesManager(ReliablePropertiesManager propertiesManager) {
-        this.propertiesManager = propertiesManager;
-    }
+	public void setTourneyManager(RegularTourneyManager tourneyManager) {
+		if (this.tourneyManager != null) {
+			this.tourneyManager.removeRegularTourneyListener(notificationListener);
+		}
 
-    public void setTourneyManager(RegularTourneyManager tourneyManager) {
-        if (this.tourneyManager != null) {
-            this.tourneyManager.removeRegularTourneyListener(notificationListener);
-        }
+		this.tourneyManager = tourneyManager;
 
-        this.tourneyManager = tourneyManager;
+		if (this.tourneyManager != null) {
+			this.tourneyManager.addRegularTourneyListener(notificationListener);
+		}
+	}
 
-        if (this.tourneyManager != null) {
-            this.tourneyManager.addRegularTourneyListener(notificationListener);
-        }
-    }
+	public void setProposalManager(GameProposalManager proposalManager) {
+		if (this.proposalManager != null) {
+			this.proposalManager.removeGameProposalListener(notificationListener);
+		}
 
-    public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
-        if (this.scribbleExpirationManager != null) {
-            this.scribbleExpirationManager.removeExpirationListener(gameExpirationListener);
-        }
+		this.proposalManager = proposalManager;
 
-        this.scribbleExpirationManager = expirationManager;
+		if (this.proposalManager != null) {
+			this.proposalManager.addGameProposalListener(notificationListener);
+		}
+	}
 
-        if (this.scribbleExpirationManager != null) {
-            this.scribbleExpirationManager.addExpirationListener(gameExpirationListener);
-        }
-    }
+	public void setNotificationService(NotificationService notificationDistributor) {
+		this.notificationDistributor = notificationDistributor;
+	}
 
-    public void setNotificationService(NotificationService notificationDistributor) {
-        this.notificationDistributor = notificationDistributor;
-    }
+	public void setPropertiesManager(ReliablePropertiesManager propertiesManager) {
+		this.propertiesManager = propertiesManager;
+	}
 
-    public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
-        if (this.dictionarySuggestionManager != null) {
-            this.dictionarySuggestionManager.removeDictionaryChangeListener(dictionaryListener);
-        }
+	public void setScribbleExpirationManager(ScribbleExpirationManager expirationManager) {
+		if (this.scribbleExpirationManager != null) {
+			this.scribbleExpirationManager.removeExpirationListener(gameExpirationListener);
+		}
 
-        this.dictionarySuggestionManager = dictionarySuggestionManager;
+		this.scribbleExpirationManager = expirationManager;
 
-        if (this.dictionarySuggestionManager != null) {
-            this.dictionarySuggestionManager.addDictionaryChangeListener(dictionaryListener);
-        }
-    }
+		if (this.scribbleExpirationManager != null) {
+			this.scribbleExpirationManager.addExpirationListener(gameExpirationListener);
+		}
+	}
 
-    public void setProposalExpirationManager(ProposalExpirationManager<ScribbleSettings> proposalExpirationManager) {
-        if (this.proposalExpirationManager != null) {
-            this.proposalExpirationManager.removeExpirationListener(proposalExpirationListener);
-        }
+	public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
+		if (this.dictionarySuggestionManager != null) {
+			this.dictionarySuggestionManager.removeDictionaryChangeListener(dictionaryListener);
+		}
 
-        this.proposalExpirationManager = proposalExpirationManager;
+		this.dictionarySuggestionManager = dictionarySuggestionManager;
 
-        if (this.proposalExpirationManager != null) {
-            this.proposalExpirationManager.addExpirationListener(proposalExpirationListener);
-        }
-    }
+		if (this.dictionarySuggestionManager != null) {
+			this.dictionarySuggestionManager.addDictionaryChangeListener(dictionaryListener);
+		}
+	}
 
-    protected class TheTourneyAnnouncementProcessor implements Runnable {
-        private static final int BATCH_SIZE = 1000;
+	public void setProposalExpirationManager(ProposalExpirationManager<ScribbleSettings> proposalExpirationManager) {
+		if (this.proposalExpirationManager != null) {
+			this.proposalExpirationManager.removeExpirationListener(proposalExpirationListener);
+		}
 
-        private TheTourneyAnnouncementProcessor() {
-        }
+		this.proposalExpirationManager = proposalExpirationManager;
 
-        @Override
-        public void run() {
-            announcementProcessorLock.lock();
-            try {
-                final int processingPlayer = propertiesManager.getInt("tourney.notify.processing", "player", 0);
-                final int processingTourney = propertiesManager.getInt("tourney.notify.processing", "tourney", 0);
+		if (this.proposalExpirationManager != null) {
+			this.proposalExpirationManager.addExpirationListener(proposalExpirationListener);
+		}
+	}
 
-                if (processingPlayer != 0) { // finish previous work
-                    final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(processingTourney));
-                    log.info("Restart notifications for tourney: " + processingTourney + " from position " + processingPlayer);
-                    int res = notifyUpCommingTourney(tourney, processingPlayer);
-                    log.info("Tourney notifications were sent to " + res + " players");
-                }
+	protected class TheTourneyAnnouncementProcessor implements Runnable {
+		private static final int BATCH_SIZE = 1000;
 
-                final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
-                final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, context, null, null, null);
-                for (Tourney tourney : tourneys) {
-                    if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
-                        log.info("Start notifications for tourney: " + tourney.getNumber());
-                        int res = notifyUpCommingTourney(tourney, 0);
-                        log.info("Tourney notifications were sent to " + res + " players");
-                    }
-                }
-            } catch (Throwable ex) {
-                log.error("Tourney notifications can't be send", ex);
-            } finally {
-                announcementProcessorLock.unlock();
-            }
-        }
+		private TheTourneyAnnouncementProcessor() {
+		}
 
-        private int notifyUpCommingTourney(Tourney tourney, int pos) {
-            propertiesManager.setInt("tourney.notify.processing", "player", pos);
-            propertiesManager.setInt("tourney.notify.processing", "tourney", tourney.getNumber());
-            long[] pids;
-            do {
-                final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
-                pids = searchManager.searchUnregisteredPlayers(tourney, Range.limit(pos, BATCH_SIZE));
-                for (Number pid : pids) {
-                    processNotification(pid.longValue(), "playground.tourney.announced", tourney);
-                    propertiesManager.setInt("tourney.notify.processing", "player", pos++);
-                }
-            } while (pids.length == BATCH_SIZE); // if less - it was last part
+		@Override
+		public void run() {
+			announcementProcessorLock.lock();
+			try {
+				final int processingPlayer = propertiesManager.getInt("tourney.notify.processing", "player", 0);
+				final int processingTourney = propertiesManager.getInt("tourney.notify.processing", "tourney", 0);
 
-            // clear
-            propertiesManager.setInt("tourney.notify.processing", "player", 0);
-            return pos;
-        }
+				if (processingPlayer != 0) { // finish previous work
+					final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(processingTourney));
+					log.info("Restart notifications for tourney: " + processingTourney + " from position " + processingPlayer);
+					int res = notifyUpCommingTourney(tourney, processingPlayer);
+					log.info("Tourney notifications were sent to " + res + " players");
+				}
 
-        protected boolean isInSevenDays(Date tourney) {
-            final long diff = tourney.getTime() - System.currentTimeMillis();
-            return diff >= 6 * 24 * 60 * 60 * 1000 && diff <= 7 * 24 * 60 * 60 * 1000;
-        }
-    }
+				final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
+				final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+				for (Tourney tourney : tourneys) {
+					if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
+						log.info("Start notifications for tourney: " + tourney.getNumber());
+						int res = notifyUpCommingTourney(tourney, 0);
+						log.info("Tourney notifications were sent to " + res + " players");
+					}
+				}
+			} catch (Throwable ex) {
+				log.error("Tourney notifications can't be send", ex);
+			} finally {
+				announcementProcessorLock.unlock();
+			}
+		}
 
-    private class TheDictionaryListener implements DictionarySuggestionListener {
-        private TheDictionaryListener() {
-        }
+		private int notifyUpCommingTourney(Tourney tourney, int pos) {
+			propertiesManager.setInt("tourney.notify.processing", "player", pos);
+			propertiesManager.setInt("tourney.notify.processing", "tourney", tourney.getNumber());
+			long[] pids;
+			do {
+				final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
+				pids = searchManager.searchUnregisteredPlayers(tourney, Range.limit(pos, BATCH_SIZE));
+				for (Number pid : pids) {
+					processNotification(pid.longValue(), "playground.tourney.announced", tourney);
+					propertiesManager.setInt("tourney.notify.processing", "player", pos++);
+				}
+			} while (pids.length == BATCH_SIZE); // if less - it was last part
 
-        @Override
-        public void changeRequestRaised(ChangeSuggestion request) {
-        }
+			// clear
+			propertiesManager.setInt("tourney.notify.processing", "player", 0);
+			return pos;
+		}
 
-        @Override
-        public void changeRequestApproved(ChangeSuggestion request) {
-            processNotification(request.getRequester(), "playground.dictionary.approved", request);
-        }
+		protected boolean isInSevenDays(Date tourney) {
+			final long diff = tourney.getTime() - System.currentTimeMillis();
+			return diff >= 6 * 24 * 60 * 60 * 1000 && diff <= 7 * 24 * 60 * 60 * 1000;
+		}
+	}
 
-        @Override
-        public void changeRequestRejected(ChangeSuggestion request) {
-            processNotification(request.getRequester(), "playground.dictionary.rejected", request);
-        }
-    }
+	private class TheDictionaryListener implements DictionarySuggestionListener {
+		private TheDictionaryListener() {
+		}
 
-    private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {
-        private TheScribbleGameExpirationListener() {
-        }
+		@Override
+		public void changeRequestRaised(ChangeSuggestion request) {
+		}
 
-        @Override
-        public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
-            try {
-                final GameBoard board = boardManager.openBoard(boardId);
-                if (board != null) {
-                    final GamePlayerHand hand = board.getPlayerTurn();
-                    if (hand != null) {
-                        Map<String, Object> c = new HashMap<>();
-                        c.put("board", board);
-                        c.put("expirationType", type);
-                        processNotification(Personality.person(hand.getPlayerId()), type.getCode(), c);
-                    }
-                }
-            } catch (BoardLoadingException ignored) {
-            }
-        }
-    }
+		@Override
+		public void changeRequestApproved(ChangeSuggestion request) {
+			processNotification(request.getRequester(), "playground.dictionary.approved", request);
+		}
 
-    private class TheScribbleProposalExpirationListener implements ExpirationListener<Long, ProposalExpirationType> {
-        private TheScribbleProposalExpirationListener() {
-        }
+		@Override
+		public void changeRequestRejected(ChangeSuggestion request) {
+			processNotification(request.getRequester(), "playground.dictionary.rejected", request);
+		}
+	}
 
-        @Override
-        public void expirationTriggered(Long entity, ProposalExpirationType type) {
-            final GameProposal<?> proposal = proposalManager.getProposal(entity);
-            if (proposal == null || proposal.isReady()) {
-                return;
-            }
-            final List<Personality> waiting = new ArrayList<>(proposal.getPlayers());
-            waiting.removeAll(proposal.getJoinedPlayers());
-            if (!waiting.isEmpty()) {
-                Map<String, Object> c = new HashMap<>();
-                c.put("proposal", proposal);
-                c.put("expirationType", type);
-                for (Personality personality : waiting) {
-                    processNotification(personality, type.getCode(), c);
-                }
-            }
-        }
-    }
+	private class TheScribbleGameExpirationListener implements ExpirationListener<Long, ScribbleExpirationType> {
+		private TheScribbleGameExpirationListener() {
+		}
 
-    private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener, RegularTourneyListener {
-        private TheNotificationListener() {
-        }
+		@Override
+		public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
+			try {
+				final GameBoard board = boardManager.openBoard(boardId);
+				if (board != null) {
+					final GamePlayerHand hand = board.getPlayerTurn();
+					if (hand != null) {
+						Map<String, Object> c = new HashMap<>();
+						c.put("board", board);
+						c.put("expirationType", type);
+						processNotification(Personality.person(hand.getPlayerId()), type.getCode(), c);
+					}
+				}
+			} catch (BoardLoadingException ignored) {
+			}
+		}
+	}
 
-        @Override
-        public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
-            List<Personality> players = proposal.getPlayers();
-            for (Personality player : players) {
-                if (player == null || proposal.getInitiator().equals(player) || RobotPlayer.isRobotPlayer(player)) {
-                    continue;
-                }
-                processNotification(player, "playground.challenge.initiated", Collections.singletonMap("proposal", proposal));
-            }
-        }
+	private class TheScribbleProposalExpirationListener implements ExpirationListener<Long, ProposalExpirationType> {
+		private TheScribbleProposalExpirationListener() {
+		}
 
-        @Override
-        public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Personality player, ProposalDirective directive) {
-        }
+		@Override
+		public void expirationTriggered(Long entity, ProposalExpirationType type) {
+			final GameProposal<?> proposal = proposalManager.getProposal(entity);
+			if (proposal == null || proposal.isReady()) {
+				return;
+			}
+			final List<Personality> waiting = new ArrayList<>(proposal.getPlayers());
+			waiting.removeAll(proposal.getJoinedPlayers());
+			if (!waiting.isEmpty()) {
+				Map<String, Object> c = new HashMap<>();
+				c.put("proposal", proposal);
+				c.put("expirationType", type);
+				for (Personality personality : waiting) {
+					processNotification(personality, type.getCode(), c);
+				}
+			}
+		}
+	}
 
-        @Override
-        public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution resolution, Personality player) {
-            Map<String, Object> c = new HashMap<>();
-            c.put("proposal", proposal);
-            c.put("player", player);
-            c.put("resolution", resolution);
+	private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener, RegularTourneyListener, AwardsListener {
+		private TheNotificationListener() {
+		}
 
-            for (Personality personality : proposal.getJoinedPlayers()) {
-                if (personality.equals(player)) {
-                    continue;
-                }
-                if (resolution == ProposalResolution.REJECTED) {
-                    processNotification(personality, "playground.challenge.finalized.rejected", c);
-                } else if (resolution == ProposalResolution.REPUDIATED) {
-                    processNotification(personality, "playground.challenge.finalized.repudiated", c);
-                } else if (resolution == ProposalResolution.TERMINATED) {
-                    processNotification(personality, "playground.challenge.finalized.terminated", c);
-                }
-            }
-        }
+		@Override
+		public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
+			List<Personality> players = proposal.getPlayers();
+			for (Personality player : players) {
+				if (player == null || proposal.getInitiator().equals(player) || RobotPlayer.isRobotPlayer(player)) {
+					continue;
+				}
+				processNotification(player, "playground.challenge.initiated", Collections.singletonMap("proposal", proposal));
+			}
+		}
 
-        @Override
-        public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-            final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-            for (GamePlayerHand hand : playersHands) {
-                processNotification(hand.getPlayerId(), "playground.game.started", Collections.singletonMap("board", board));
-            }
-        }
+		@Override
+		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Personality player, ProposalDirective directive) {
+		}
 
-        @Override
-        public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
-            final GamePlayerHand playerTurn = board.getPlayerTurn();
-            if (playerTurn != null) {
-                final Map<String, Object> map = new HashMap<>();
-                map.put("board", board);
-                map.put("changes", board.getGameChanges(playerTurn.getPlayerId()));
-                processNotification(Personality.person(playerTurn.getPlayerId()), "playground.game.turn", map);
-            }
-        }
+		@Override
+		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution resolution, Personality player) {
+			Map<String, Object> c = new HashMap<>();
+			c.put("proposal", proposal);
+			c.put("player", player);
+			c.put("resolution", resolution);
 
-        @Override
-        public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
-            final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
-            final Map<String, Object> map = new HashMap<>();
-            map.put("board", board);
-            map.put("winners", winners);
-            map.put("resolution", resolution);
-            for (GamePlayerHand hand : playersHands) {
-                processNotification(Personality.person(hand.getPlayerId()), "playground.game.finished", map);
-            }
-        }
+			for (Personality personality : proposal.getJoinedPlayers()) {
+				if (personality.equals(player)) {
+					continue;
+				}
+				if (resolution == ProposalResolution.REJECTED) {
+					processNotification(personality, "playground.challenge.finalized.rejected", c);
+				} else if (resolution == ProposalResolution.REPUDIATED) {
+					processNotification(personality, "playground.challenge.finalized.repudiated", c);
+				} else if (resolution == ProposalResolution.TERMINATED) {
+					processNotification(personality, "playground.challenge.finalized.terminated", c);
+				}
+			}
+		}
 
-        @Override
-        public void messageSent(Message message, boolean quite) {
-            if (!quite) {
-                processNotification(Personality.person(message.getRecipient()), "playground.message.received", Collections.singletonMap("message", message));
-            }
-        }
+		@Override
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			for (GamePlayerHand hand : playersHands) {
+				processNotification(hand.getPlayerId(), "playground.game.started", Collections.singletonMap("board", board));
+			}
+		}
 
-        @Override
-        public void tourneyAnnounced(Tourney tourney) {
-        }
+		@Override
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+			final GamePlayerHand playerTurn = board.getPlayerTurn();
+			if (playerTurn != null) {
+				final Map<String, Object> map = new HashMap<>();
+				map.put("board", board);
+				map.put("changes", board.getGameChanges(playerTurn.getPlayerId()));
+				processNotification(Personality.person(playerTurn.getPlayerId()), "playground.game.turn", map);
+			}
+		}
 
-        @Override
-        public void tourneyStarted(Tourney tourney) {
-        }
+		@Override
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			final Map<String, Object> map = new HashMap<>();
+			map.put("board", board);
+			map.put("winners", winners);
+			map.put("resolution", resolution);
+			for (GamePlayerHand hand : playersHands) {
+				processNotification(Personality.person(hand.getPlayerId()), "playground.game.finished", map);
+			}
+		}
 
-        @Override
-        public void tourneyFinished(Tourney tourney, TourneyDivision division) {
+		@Override
+		public void messageSent(Message message, boolean quite) {
+			if (!quite) {
+				processNotification(Personality.person(message.getRecipient()), "playground.message.received", Collections.singletonMap("message", message));
+			}
+		}
+
+		@Override
+		public void tourneyAnnounced(Tourney tourney) {
+		}
+
+		@Override
+		public void tourneyStarted(Tourney tourney) {
+		}
+
+		@Override
+		public void tourneyFinished(Tourney tourney, TourneyDivision division) {
+/*
+	Disabled:  Issue 284
             final Collection<TourneyWinner> tourneyWinners = division.getTourneyWinners();
             for (TourneyWinner tourneyWinner : tourneyWinners) {
                 final Map<String, Object> map = new HashMap<>();
@@ -418,6 +436,16 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
                 processNotification(tourneyWinner.getPlayer(), "playground.tourney.finished", map);
             }
-        }
-    }
+*/
+		}
+
+		@Override
+		public void playerAwarded(Personality personality, AwardDescriptor descriptor, Award award) {
+			final Map<String, Object> map = new HashMap<>();
+			map.put("award", award);
+			map.put("player", personality);
+			map.put("descriptor", descriptor);
+			processNotification(personality, "playground.award.granted", map);
+		}
+	}
 }

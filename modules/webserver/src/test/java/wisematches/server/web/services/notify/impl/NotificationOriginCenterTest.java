@@ -22,6 +22,7 @@ import wisematches.personality.account.Account;
 import wisematches.personality.player.PlayerManager;
 import wisematches.personality.player.member.MemberPlayer;
 import wisematches.playground.*;
+import wisematches.playground.award.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.expiration.ExpirationListener;
 import wisematches.playground.message.MessageListener;
@@ -37,10 +38,7 @@ import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.search.SearchFilter;
 import wisematches.playground.task.executor.TransactionAwareTaskExecutor;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.TourneyPlace;
-import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.*;
-import wisematches.playground.tourney.regular.impl.HibernateTourneyWinner;
 import wisematches.server.web.services.dictionary.ChangeSuggestion;
 import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.web.services.dictionary.DictionarySuggestionManager;
@@ -449,6 +447,7 @@ public class NotificationOriginCenterTest {
 		verify(searchManager);
 	}
 
+/*
 	@Test
 	public void testTourneyFinished() throws InterruptedException {
 		final Capture<RegularTourneyListener> tourneyListener = new Capture<>();
@@ -480,6 +479,38 @@ public class NotificationOriginCenterTest {
 		publisherCenter.setTourneyManager(null);
 
 		verify(tourneyManager);
+	}
+*/
+
+	@Test
+	public void testAwardGranted() throws Exception {
+		final Capture<AwardsListener> awardsListener = new Capture<>();
+
+		final AwardsManager awardsManager = createMock(AwardsManager.class);
+		awardsManager.addAwardsListener(capture(awardsListener));
+		awardsManager.removeAwardsListener(capture(awardsListener));
+		replay(awardsManager);
+
+		publisherCenter.setAwardsManager(awardsManager);
+
+		final AwardDescriptor ad = new AwardDescriptor("tourney.winner", AwardType.MEDAL);
+
+		final Award award = createMock(Award.class);
+		expect(award.getCode()).andReturn("tourney.winner").times(2);
+		expect(award.getAwardedDate()).andReturn(new Date()).times(2);
+		expect(award.getRelationship()).andReturn(new GameRelationship(1, 1)).times(2);
+		expect(award.getWeight()).andReturn(AwardWeight.BRONZE).times(2);
+		replay(award);
+
+		awardsListener.getValue().playerAwarded(p1, ad, award);
+		awardsListener.getValue().playerAwarded(p2, ad, award);
+
+		assertEquals(2, publishedNotifications.getValues().size());
+		System.out.println(publishedNotifications);
+
+		publisherCenter.setAwardsManager(null);
+
+		verify(awardsManager);
 	}
 
 	@Test

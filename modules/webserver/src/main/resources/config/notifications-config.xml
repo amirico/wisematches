@@ -132,12 +132,13 @@
 
                 <bean parent="notification" c:code="playground.tourney.announced" c:scope="GLOBAL"/>
 
-                <bean parent="notification" c:code="playground.tourney.finished" c:scope="GLOBAL"/>
-
 
                 <bean parent="notification" c:code="playground.dictionary.accepted" c:scope="INTERNAL"/>
 
                 <bean parent="notification" c:code="playground.dictionary.rejected" c:scope="INTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.award.granted" c:scope="INTERNAL"/>
             </list>
         </property>
     </bean>
@@ -155,6 +156,7 @@
     <bean id="notificationOriginCenter"
           class="wisematches.server.web.services.notify.impl.NotificationOriginCenter">
         <property name="playerManager" ref="playerManager"/>
+        <property name="awardsManager" ref="awardsManager"/>
         <property name="messageManager" ref="messageManager"/>
         <property name="boardManager" ref="scribbleBoardManager"/>
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
