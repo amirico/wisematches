@@ -4,16 +4,15 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMFreeMarkerViewResolver extends FreeMarkerViewResolver {
 	private boolean exposeRedirectModelAttributes = false;
-	private Map<String, Class<? extends Enum>> exposeEnums = new HashMap<>();
+	private Collection<Class<? extends Enum>> exposeEnums;
 
 	public WMFreeMarkerViewResolver() {
 	}
@@ -40,7 +39,7 @@ public class WMFreeMarkerViewResolver extends FreeMarkerViewResolver {
 		this.exposeRedirectModelAttributes = exposeRedirectModelAttributes;
 	}
 
-	public void setExposeEnums(Map<String, Class<? extends Enum>> exposeEnums) {
+	public void setExposeEnums(Collection<Class<? extends Enum>> exposeEnums) {
 		this.exposeEnums = exposeEnums;
 	}
 }

@@ -11,5 +11,5 @@
 [#-- @ftlvariable name="gameMessageSource" type="wisematches.server.web.i18n.GameMessageSource" --]
 
 [#-- @ftlvariable name="Language" type="wisematches.personality.Language.static" --]
-[#-- @ftlvariable name="Membership" type="wisematches.personality.Membership.static" --]
 [#-- @ftlvariable name="AwardType" type="wisematches.playground.award.AwardType.static" --]
+[#-- @ftlvariable name="Membership" type="wisematches.personality.Membership.static" --]

@@ -4,7 +4,8 @@
 <#include "/core.ftl">
 
 <#macro awardImage code weight>
-    <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/><#else><#assign a="default"/></#if>
+    <#assign a="default"/>
+    <#if weight?? && weight?has_content><#assign a=weight.name()?lower_case/></#if>
 <img src="/resources/images/awards/${code?replace(".", "/")?lower_case}/${a}.png"
      title="<@message code="awards.${code}.label"/>">
 </#macro>
