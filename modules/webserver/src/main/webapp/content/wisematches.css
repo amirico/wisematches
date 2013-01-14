@@ -694,3 +694,11 @@ a.ui-icon {
     text-align: center;
     background-image: none;
 }
+
+.jspScrollable {
+    outline: none;
+}
+
+.dataTables_scroll .jspVerticalBar {
+    width: 8px;
+}

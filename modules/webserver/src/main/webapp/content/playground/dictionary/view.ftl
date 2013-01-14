@@ -3,10 +3,6 @@
 <#-- @ftlvariable name="wordAttributes" type="wisematches.playground.dictionary.WordAttribute[]" -->
 <#include "/core.ftl"/>
 
-<link rel="stylesheet" type="text/css" href="/jquery/css/jquery.jscrollpane.css" xmlns="http://www.w3.org/1999/html"/>
-<script type="text/javascript" src="/jquery/js/jquery.mousewheel.js"></script>
-<script type="text/javascript" src="/jquery/js/jquery.jscrollpane.min.js"></script>
-
 <@wm.ui.playground id="dictionaryWidget">
 <div id="dictionary">
     <@wm.ui.table.header>

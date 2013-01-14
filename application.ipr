@@ -258,6 +258,10 @@
     <option name="USE_PROJECT_PROFILE" value="true" />
     <version value="1.0" />
   </component>
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/templates/advertisement.ftl" libraries="{show_ads}" />
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/wisematches.ftl" libraries="{jquery, jquery-ui}" />
+  </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />

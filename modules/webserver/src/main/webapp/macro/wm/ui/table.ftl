@@ -9,6 +9,7 @@
 
 <script type="text/javascript">
     wm.ui.dataTable = function (selector, opts) {
+        var $2 = $(selector);
         var dataTableLanguage = {
             "sUrl": "",
             "bJQueryUI": true,
@@ -28,9 +29,12 @@
                     "sNext": "&nbsp",
                     "sLast": "&nbsp"
                 }
+            },
+            "fnInitComplete": function () {
+                $('.dataTables_scrollBody').jScrollPane();
             }
         };
-        return $(selector).dataTable($.extend(true, dataTableLanguage, opts));
+        return $2.dataTable($.extend(true, dataTableLanguage, opts));
     };
 </script>
 </#macro>
