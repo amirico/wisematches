@@ -36,9 +36,11 @@
 </@wm.ui.widget>
 
 <script type="text/javascript">
-    var movesHistory = new wm.scribble.History(board, {
-        "passed": "<@message code="game.history.passed.label"/>",
-        "exchange": "<@message code="game.history.exchange.label"/>",
-        "sEmptyTable": "<@message code='game.history.empty'/>"
+    $(function () {
+        new wm.scribble.History(board, {
+            "passed": "<@message code="game.history.passed.label"/>",
+            "exchange": "<@message code="game.history.exchange.label"/>",
+            "sEmptyTable": "<@message code='game.history.empty'/>"
+        });
     });
 </script>
