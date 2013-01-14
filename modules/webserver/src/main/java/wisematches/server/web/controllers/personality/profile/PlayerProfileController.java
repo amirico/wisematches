@@ -55,6 +55,8 @@ public class PlayerProfileController extends WisematchesController {
 	private PlayerProfileManager profileManager;
 	private BoardSettingsManager boardSettingsManager;
 
+	private static final Orders AWARD_ORDERS = Orders.of(Order.desc("awardedDate"), Order.desc("weight"));
+
 	private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new ThreadLocal<Calendar>() {
 		@Override
 		protected Calendar initialValue() {
@@ -141,7 +143,7 @@ public class PlayerProfileController extends WisematchesController {
 				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
 			}
 
-			final List<Award> awards = awardsManager.searchEntities(player, new AwardContext(null, null), null, Orders.of(Order.desc("awardedDate")), null);
+			final List<Award> awards = awardsManager.searchEntities(player, new AwardContext(null, null), null, AWARD_ORDERS, null);
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
 			model.addAttribute("awards", awards);
