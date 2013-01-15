@@ -2,6 +2,7 @@
 [#-- @implicitly included --]
 [#-- @ftlvariable name="locale" type="java.util.Locale" --]
 [#-- @ftlvariable name="language" type="wisematches.personality.Language" --]
+[#-- @ftlvariable name="staticDomain" type="java.lang.String" --]
 [#-- @ftlvariable name="serverHostname" type="java.lang.String" --]
 [#-- @ftlvariable name="principal" type="wisematches.personality.player.Player" --]
 [#-- @ftlvariable name="playerManager" type="wisematches.personality.player.PlayerManager" --]

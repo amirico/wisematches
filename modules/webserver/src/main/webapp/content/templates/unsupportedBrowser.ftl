@@ -4,15 +4,15 @@
 <#if !(supportedBrowser!true)>
 <div class="unsupported-browser ui-state-error shadow">
     <div>
-    <@message code="browser.unsupported"/>
+        <@message code="browser.unsupported"/>
     </div>
     <div align="center">
         <table>
             <tr>
-                <td><img src="/resources/images/browser/chrome64.png" alt="Google Chrome"></td>
-                <td><img src="/resources/images/browser/opera64.png" alt="Opera"></td>
-                <td><img src="/resources/images/browser/firefox64.png" alt="Firefox"></td>
-                <td><img src="/resources/images/browser/safari64.png" alt="Safari"></td>
+                <td><img src="<@s "images/browser/chrome64.png"/>" alt="Google Chrome"></td>
+                <td><img src="<@s "images/browser/opera64.png"/>" alt="Opera"></td>
+                <td><img src="<@s "images/browser/firefox64.png"/>" alt="Firefox"></td>
+                <td><img src="<@s "images/browser/safari64.png"/>" alt="Safari"></td>
             </tr>
             <tr>
                 <td><a href="http://www.google.com/chrome">Google Chrome 12</a></td>

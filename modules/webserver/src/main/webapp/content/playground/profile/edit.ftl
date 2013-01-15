@@ -4,7 +4,7 @@
 <#-- @ftlvariable name="profileForm" type="wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 
-<script type="text/javascript" src="/jquery/js/fileuploader.js"></script>
+<script type="text/javascript" src="<@s "js/fileuploader.js"/>"></script>
 
 <div class="notification shadow ui-state-highlight" style="text-align: center; padding: 5px;">
 <@message code="profile.edit.description"/>
@@ -21,7 +21,8 @@
                      src="/playground/profile/image/view?pid=${player.id}" alt="Photo">
 
                 <div class="remove">
-                    <img title="<@message code="profile.edit.photo.remove.label"/>" src="/resources/images/close.png"
+                    <img title="<@message code="profile.edit.photo.remove.label"/>"
+                         src="<@s "images/close.png"/>"
                          onclick="wm.ui.profile.removeProfilePhoto()"/>
                 </div>
 
@@ -208,7 +209,7 @@
                         $.ajax({
                             url: '/playground/profile/save',
                             cache: false,
-                            data: $.toJSON(data),
+                            data: JSON.stringify(data),
                             error: function (jqXHR, textStatus, errorThrown) {
                                 callback(textStatus);
                             },

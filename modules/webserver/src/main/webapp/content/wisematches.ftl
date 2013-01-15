@@ -9,37 +9,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>
 
-    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js"></script>
 
     <link rel="stylesheet" type="text/css"
-          href="http://code.jquery.com/ui/1.9.2/themes/redmond/jquery-ui.css"/>
-    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+          href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/redmond/jquery-ui.css"/>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js"></script>
 
-    <script type="text/javascript" src="/jquery/js/json.min.js"></script>
-    <script type="text/javascript" src="/jquery/js/jquery.hoverIntent.min.js"></script>
-    <script type="text/javascript" src="/jquery/js/jquery.blockUI.js"></script>
-    <script type="text/javascript" src="/jquery/js/jquery.freeow.min.js"></script>
-    <script type="text/javascript" src="/jquery/js/jquery.timers.js"></script>
-    <script type="text/javascript" src="/jquery/js/jquery.form.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css">
+    <script type="text/javascript"
+            src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.cluetip.css"/>
-    <script type="text/javascript" src="/jquery/js/jquery.cluetip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<@s "css/jquery.cluetip-1.2.7.css"/>"/>
+    <script type="text/javascript" src="<@s "js/jquery.cluetip-1.2.7.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="/content/wisematches.css"/>
-    <script type="text/javascript" src="/content/wisematches.js"></script>
+    <link rel="stylesheet" type="text/css" href="<@s "css/jquery.jscrollpane-2.0.0.css"/>"/>
+    <script type="text/javascript" src="<@s "js/jquery.mousewheel-3.0.6.js"/>"></script>
+    <script type="text/javascript" src="<@s "js/jquery.mousewheelIntent-1.2.0.js"/>"></script>
+    <script type="text/javascript" src="<@s "js/jquery.jscrollpane-2.0.0.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="/content/personality/account.css"/>
-    <script type="text/javascript" src="/content/personality/account.js"></script>
+    <script type="text/javascript" src="<@s "js/json2-2.1.8.min.js"/>"></script>
+    <script type="text/javascript" src="<@s "js/jquery.timers-1.2.0.js"/>"></script>
+    <script type="text/javascript" src="<@s "js/jquery.blockUI-2.5.4.js"/>"></script>
+    <script type="text/javascript" src="<@s "js/jquery.freeow-1.0.2.min.js"/>"></script>
+    <script type="text/javascript" src="<@s "js/jquery.hoverIntent-0.0.6.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="/jquery/css/jquery.jscrollpane.css"/>
-    <script type="text/javascript" src="/jquery/js/jquery.jscrollpane.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<@s "css/wisematches-4.1.3.css"/>"/>
+    <script type="text/javascript" src="<@s "js/wisematches-4.1.3.js"/>"></script>
 
-<#if principal??>
-    <link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
-    <script type="text/javascript" src="/content/playground/game.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="/jquery/css/table_jui.css"/>
-</#if>
 <#include 'templates/localization.ftl'/>
 <#include "templates/analytics.ftl">
 </head>

@@ -135,7 +135,7 @@
                 ids.push($(v).val());
             });
 
-            $.post('/playground/dictionary/processChangeRequest.ajax?type=' + type, $.toJSON({type: type, ids: ids}), function (result) {
+            $.post('/playground/dictionary/processChangeRequest.ajax?type=' + type, JSON.stringify({type: type, ids: ids}), function (result) {
                 if (result.success) {
                     wm.util.url.reload();
                 } else {

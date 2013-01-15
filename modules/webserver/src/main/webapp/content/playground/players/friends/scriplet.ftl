@@ -13,7 +13,7 @@
                         var widget = dlg.closest(".ui-dialog");
                         var comment = $("#friendInfoDialog textarea").val()
                         wm.ui.lock(widget, "<@message code="friends.status.adding"/>");
-                        $.post('/playground/friends/add.ajax', $.toJSON({person: pid, comment: comment}), function (result) {
+                        $.post('/playground/friends/add.ajax', JSON.stringify({person: pid, comment: comment}), function (result) {
                             if (result.success) {
                                 wm.ui.unlock(widget, "<@message code="friends.status.added"/>");
                                 if (callback != undefined) {

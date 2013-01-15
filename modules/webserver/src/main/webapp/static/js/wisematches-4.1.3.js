@@ -1,8 +1,1425 @@
 /*
  * Copyright (c) 2010, WiseMatches (by Sergey Klimenko).
  */
-if (wm == null) wm = {};
-if (wm.scribble == null) wm.scribble = {};
+
+wm = {};
+wm.game = {};
+wm.game.dict = {};
+wm.game.tourney = {};
+wm.game.settings = {};
+wm.scribble = {};
+
+STATE = {
+    DEFAULT: {
+        class: 'ui-state-highlight'
+    },
+    INFO: {
+        class: 'ui-state-active'
+    },
+    ERROR: {
+        class: 'ui-state-error'
+    }
+};
+
+wm.i18n = new function () {
+    var values = {};
+
+    var lookup = function (key) {
+        return values[key] || null;
+    };
+
+    var getValue = function (key, defaultValue, options) {
+        var value = lookup(key);
+        if (value == null) return defaultValue;
+
+        if (options != null) {
+            for (key in options) {
+                value = value.replace("{" + key + "}", options[key]);
+            }
+        }
+        return value;
+    };
+
+    this.extend = function (hash) {
+        $.extend(values, hash);
+    };
+
+    this.value = function (key, defaultValue, options) {
+        return getValue(key, defaultValue, options);
+    };
+
+    this.locale = function () {
+        return this.value('locale');
+    }
+};
+
+wm.util = new function () {
+    this.createMatrix = function (size) {
+        var m = new Array(size);
+        for (var i = 0; i < size; i++) {
+            m[i] = new Array(size);
+        }
+        return m;
+    };
+};
+
+wm.util.url = new function () {
+    this.reload = function () {
+        window.location.reload();
+    };
+
+    this.redirect = function (url) {
+        window.location = url;
+    };
+
+    this.remove = function (sourceUrl, parameterName) {
+        if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
+        var split = sourceUrl.split("#");
+        var urlParts = split[0].split("?");
+        var newQueryString = "";
+        if (urlParts.length > 1) {
+            var parameters = urlParts[1].split("&");
+            for (var i = 0; (i < parameters.length); i++) {
+                var parameterParts = parameters[i].split("=");
+                if (parameterParts[0] != parameterName) {
+                    if (newQueryString == "")
+                        newQueryString = "?";
+                    else
+                        newQueryString += "&";
+                    newQueryString += parameterParts[0] + "=" + parameterParts[1];
+                }
+            }
+        }
+        return urlParts[0] + newQueryString + (split[1] != undefined ? "#" + split[1] : "");
+    };
+
+    this.extend = function (sourceUrl, parameterName, parameterValue, replaceDuplicates) {
+        if ((sourceUrl == null) || (sourceUrl.length == 0)) sourceUrl = document.location.href;
+
+        var split = sourceUrl.split("#");
+        var urlParts = split[0].split("?");
+        var newQueryString = "";
+        if (urlParts.length > 1) {
+            var parameters = urlParts[1].split("&");
+            for (var i = 0; (i < parameters.length); i++) {
+                var parameterParts = parameters[i].split("=");
+                if (!(replaceDuplicates && parameterParts[0] == parameterName)) {
+                    if (newQueryString == "")
+                        newQueryString = "?";
+                    else
+                        newQueryString += "&";
+                    newQueryString += parameterParts[0] + "=" + parameterParts[1];
+                }
+            }
+        }
+        if (newQueryString == "")
+            newQueryString = "?";
+        else
+            newQueryString += "&";
+        newQueryString += parameterName + "=" + parameterValue;
+        return urlParts[0] + newQueryString + (split[1] != undefined ? "#" + split[1] : "");
+    };
+};
+
+wm.ui = new function () {
+    var statusWidgetPane;
+    var alertsWidgetPane;
+    var activeWindows = true;
+
+    $.blockUI.defaults.message = null;
+
+    $.blockUI.defaults.css = {
+        padding: 0,
+        margin: 0,
+        width: '30%',
+        top: '40%',
+        left: '35%',
+        textAlign: 'center',
+        'border-width': '3px'
+    };
+
+    $.blockUI.defaults.overlayCSS = {
+        opacity: 0.2,
+        cursor: 'wait',
+        '-moz-border-radius': '5px',
+        '-webkit-border-radius': '5px',
+        'border-radius': '5px',
+        backgroundColor: '#DFEFFC'
+    };
+
+    $.ajaxSetup({
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+
+    var alertTemplate = function (title, message) {
+        var e;
+        e = ['<div>', '<div class="content">', '<h2>' + title + '</h2>', '<p>' + message + '</p>', '</div>', '<span class="icon"></span>', '<span class="close"></span>', '</div>'].join("");
+        return e;
+    };
+
+    var messageTemplate = function (title, message) {
+        return '<div style="padding: 10px 24px; padding-bottom: 10px">' + message + '</div><div class="closeButton"><a href="#"><img src="../images/close.png"></a></div>';
+    };
+
+    var statusTemplate = function (title, message) {
+        return '<div><div class="content">' + message + '</div></div>';
+    };
+
+    var showStatus = function (message, severity, stick) {
+        statusWidgetPane.empty();
+
+        if (stick == undefined) {
+            stick = false;
+        }
+
+        var opts = {
+            classes: [ severity.class, "ui-corner-all shadow"],
+            template: statusTemplate,
+            autoHide: !stick,
+            autoHideDelay: 10000
+        };
+        if (stick) {
+            opts = $.extend(opts, {onClick: function () {
+            }, onHover: function () {
+            }});
+        }
+        statusWidgetPane.freeow(null, message, opts);
+    };
+
+    var clearStatus = function () {
+        var freeow = statusWidgetPane.children().data("freeow");
+        if (freeow != null) {
+            freeow.hide();
+        } else {
+            statusWidgetPane.empty();
+        }
+    };
+
+    this.lock = function (element, message) {
+        if (element != null && element != undefined) {
+            element.block({message: null});
+        } else {
+            $.blockUI({message: null});
+        }
+        if (message != null && message != undefined) {
+            showStatus(message, STATE.DEFAULT, true);
+        }
+    };
+
+    this.unlock = function (element, message, error) {
+        if (error == null || error == undefined) {
+            error = false;
+        }
+
+        if (element != null && element != undefined) {
+            element.unblock();
+        } else {
+            $.unblockUI();
+        }
+
+        if (message == null || message == undefined) {
+            clearStatus();
+        } else {
+            showStatus(message, error ? STATE.ERROR : STATE.INFO, false);
+        }
+    };
+
+
+    this.message = function (element, message, error) {
+        var v = {
+            message: messageTemplate(null, message),
+            blockMsgClass: 'ui-corner-all shadow' + (error ? ' ui-state-error' : ' ui-state-default'),
+            draggable: false
+        };
+
+        if (element != undefined && element != null) {
+            element.block(v);
+        } else {
+            $.blockUI(v);
+        }
+
+        var processClose = function () {
+            if (element != undefined && element != null) {
+                element.unblock();
+            } else {
+                $.unblockUI();
+            }
+        };
+        $('.closeButton').click(processClose);
+        $('.blockOverlay').click(processClose);
+    };
+
+    this.confirm = function (title, msg, approvedAction) {
+        $('<div></div>').html(msg).dialog({
+            title: title,
+            draggable: false,
+            modal: true,
+            resizable: false,
+            width: 400,
+            buttons: [
+                {
+                    text: wm.i18n.value('button.ok', 'Ok'),
+                    click: function () {
+                        $(this).dialog("close");
+                        approvedAction(true);
+                    }
+                },
+                {
+                    text: wm.i18n.value('button.cancel', 'Cancel'),
+                    click: function () {
+                        $(this).dialog("close");
+                        approvedAction(false);
+                    }
+                }
+            ]
+        });
+    };
+
+
+    this.notification = function (title, message, type, error) {
+        alertsWidgetPane.freeow(title, message, {
+            classes: [ error ? "ui-state-error" : "ui-state-highlight", "ui-corner-all", "shadow", type],
+            showStyle: {opacity: .95},
+            template: alertTemplate,
+            autoHideDelay: 10000
+        });
+
+        if (!activeWindows) {
+            $(window).stopTime('attention-timer');
+            var documentTitle = document.title;
+            $(window).everyTime(500, 'attention-timer', function (i) {
+                if (i % 2 == 0) {
+                    document.title = "*** " + title + " ***";
+                } else {
+                    document.title = documentTitle;
+                }
+            });
+        }
+    };
+
+    this.refreshImage = function (element) {
+        var el = $(element);
+        if (el.attr('src').indexOf("?") < 0) {
+            el.attr('src', el.attr('src') + '?' + new Date().getTime());
+        } else {
+            el.attr('src', el.attr('src') + '&' + new Date().getTime());
+        }
+    };
+
+    this.player = function (info, hideLink) {
+        var id = (info.playerId != undefined ? info.playerId : info.id);
+        var html = '<span class="player ' + (id > 1000 ? 'member' : 'computer') + '">';
+        if (info.online) {
+            html += '<div class="online"></div> ';
+        }
+        if (!hideLink && id > 1000) {
+            html += '<a href="/playground/profile/view?p=' + id + '">';
+        }
+        html += '<span class="nickname">' + info.nickname + '</span>';
+        if (!hideLink && id > 1000) {
+            html += '</a>';
+        }
+        if (id < 1000) {
+            html += ' <span class="mod ROBOT"></span>';
+        }
+        html += '</span>';
+        return html;
+    };
+
+    $(document).ready(function () {
+        var body = $("body");
+        statusWidgetPane = $("<div id='status-widget-pane' class='freeow-widget status-widget-pane'></div>").appendTo(body);
+        alertsWidgetPane = $("<div id='alerts-widget-pane' class='freeow-widget alerts-widget-pane'></div>").appendTo(body);
+
+        var $window = $(window);
+        var $header = $("#header");
+        var windowScroll = function () {
+            var height = $header.outerHeight(true);
+            var scrollY = $window.scrollTop();
+            if (height - scrollY >= 0) {
+                statusWidgetPane.css({top: height - scrollY});
+                alertsWidgetPane.css({top: height - scrollY});
+            } else if (statusWidgetPane.offset().top != 0) {
+                statusWidgetPane.css({top: 0});
+                alertsWidgetPane.css({top: 0});
+            }
+        };
+        $window.scroll(windowScroll).resize(windowScroll);
+        windowScroll();
+
+        var activeWindowTitle = document.title;
+        $(window).bind("focus", function () {
+            activeWindows = true;
+            if (activeWindowTitle != undefined) {
+                document.title = activeWindowTitle;
+            }
+            $(window).stopTime('attention-timer');
+        });
+        $(window).bind("blur", function () {
+            activeWindows = false;
+            activeWindowTitle = document.title;
+        });
+    });
+};
+
+wm.ui.editor = new function () {
+    var TextEditor = function () {
+        var editor = $("<input>");
+
+        this.createEditor = function (currentValue) {
+            return editor.val(currentValue);
+        };
+
+        this.getValue = function () {
+            return editor.val();
+        };
+
+        this.getDisplayValue = function () {
+            return editor.val();
+        };
+    };
+
+    var DateEditor = function (ops) {
+        var editor = $("<div></div>").datepicker(ops);
+
+        this.createEditor = function (currentValue) {
+            return editor.datepicker("setDate", currentValue);
+        };
+
+        this.getValue = function () {
+            return $.datepicker.formatDate(ops.dateFormat, editor.datepicker("getDate"));
+        };
+
+        this.getDisplayValue = function () {
+            return $.datepicker.formatDate(ops.displayFormat, editor.datepicker("getDate"));
+        };
+    };
+
+    var SelectEditor = function (values) {
+        var editor = $('<select></select>');
+
+        $.each(values, function (key, value) {
+            editor.append($('<option value="' + key + '">' + value + '</option>'));
+        });
+
+        this.createEditor = function (currentValue) {
+            return editor.val(currentValue);
+        };
+
+        this.getValue = function () {
+            return editor.val();
+        };
+
+        this.getDisplayValue = function () {
+            return editor.children("option:selected").text();
+        };
+    };
+
+    this.Controller = function (view, committer, editorsInfo) {
+        var activeElement;
+        var activeEditor;
+        var previousValue;
+
+        var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
+                "<div class='ui-editor-label'></div>" +
+                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+                "<div class='ui-editor-error'></div>" +
+                "<button class='ui-editor-save'>Save</button> " +
+                "<button class='ui-editor-cancel'>Cancel</button>" +
+                "</div></div>" +
+                "</div></div></div>");
+
+        var editorLabel = $(editorDialog).find('.ui-editor-label');
+        var editorContent = $(editorDialog).find('.ui-editor-content');
+
+        var saveButton = $(editorDialog).find('.ui-editor-save');
+        var cancelButton = $(editorDialog).find('.ui-editor-cancel');
+
+        var commitEditing = function () {
+            saveButton.attr('disabled', 'disabled');
+            cancelButton.attr('disabled', 'disabled');
+
+            setViewInfo(activeElement, {
+                value: activeEditor.getValue(),
+                view: activeEditor.getDisplayValue()
+            });
+
+            var values = {};
+            $.each($(view).find('input').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            committer(activeElement.id, values, function (errorMsg) {
+                if (errorMsg != undefined) {
+                    editorDialog.addClass('ui-state-error');
+                    editorDialog.find(".ui-editor-error").html(errorMsg);
+
+                    saveButton.removeAttr('disabled');
+                    cancelButton.removeAttr('disabled');
+                } else {
+                    $.unblockUI();
+                }
+            });
+        };
+
+        var revertEditing = function () {
+            setViewInfo(activeElement, {
+                value: previousValue.value,
+                view: previousValue.view
+            });
+            $.unblockUI();
+            return false;
+        };
+
+        var createNewEditor = function (editorInfo) {
+            if (editorInfo.type == 'text') {
+                return new TextEditor();
+            } else if (editorInfo.type == 'select') {
+                return new SelectEditor(editorInfo.values);
+            } else if (editorInfo.type == 'date') {
+                return new DateEditor(editorInfo.opts || {});
+            }
+        };
+
+        var setViewInfo = function (view, info) {
+            var a = $(view).children(".ui-editor-view");
+            if (info.value == "") {
+                a.addClass('sample');
+                a.html(a.attr('label'));
+            } else {
+                a.removeClass('sample');
+                a.html(info.view);
+            }
+            $(view).children("input").val(info.value);
+        };
+
+        var getViewInfo = function (view) {
+            return {
+                label: $(view).children(".ui-editor-label").text(),
+                view: $(view).children(".ui-editor-view").html(),
+                value: $(view).children("input").val()
+            };
+        };
+
+        var closeEditor = function () {
+            saveButton.removeAttr('disabled');
+            cancelButton.removeAttr('disabled');
+
+            editorDialog.removeClass('ui-state-error');
+            editorDialog.find(".ui-editor-error").html('');
+
+            editorLabel.empty();
+            editorContent.empty();
+
+            activeEditor = null;
+            activeElement = null;
+            previousValue = null;
+        };
+
+        var openEditor = function (view, editor) {
+            activeElement = view;
+            activeEditor = editor;
+            previousValue = getViewInfo(view);
+
+            editorLabel.text(previousValue.label);
+            editorContent.append(editor.createEditor(previousValue.value));
+
+            var offset = $(view).offset();
+
+            $.blockUI({
+                message: editorDialog,
+                centerX: false,
+                centerY: false,
+                fadeIn: false,
+                fadeOut: false,
+                blockMsgClass: 'shadow',
+                css: {
+                    width: 'auto',
+                    left: offset.left + 5,
+                    top: offset.top + 5
+                },
+                draggable: false,
+                onUnblock: closeEditor
+            });
+        };
+
+        saveButton.click(commitEditing);
+        cancelButton.click(revertEditing);
+
+        $.each($(view).find('.ui-editor-item'), function (i, v) {
+            if (editorsInfo[v.id] != undefined) {
+                $(v).click(function () {
+                    openEditor(v, createNewEditor(editorsInfo[v.id]));
+                });
+            }
+        });
+    };
+};
+
+wm.game.help = new function () {
+    this.showHelp = function (section, ctx) {
+        $('<div><div class="loading-image" style="height: 300px"></div></div>').load(section + '?plain=true').dialog({
+            title: ctx != undefined ? $(ctx).text() : '',
+            width: 650,
+            height: 450,
+            modal: true,
+            resizable: true,
+            buttons: [
+                {
+                    text: wm.i18n.value('button.close', 'Close'),
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+        return false;
+    };
+};
+
+wm.game.Active = function (language) {
+    var widget = $("#activeGamesWidget");
+    wm.ui.dataTable('#dashboard', {
+        "bStateSave": true,
+        "bFilter": false,
+        "bSortClasses": false,
+        "aaSorting": [
+            [3, 'asc']
+        ],
+        "aoColumns": [
+            null,
+            null,
+            null,
+            null,
+            { "bSortable": false },
+            { "bSortable": false }
+        ],
+        "oLanguage": language
+    });
+
+    this.cancelProposal = function (id) {
+        wm.ui.lock(widget, language['cancelling']);
+        $.ajax('decline.ajax?p=' + id, {
+            success: function (result) {
+                if (result.success) {
+                    $("#proposal" + id).fadeOut();
+                    wm.ui.unlock(widget, language['cancelled']);
+                } else {
+                    wm.ui.unlock(widget, result.summary, true);
+                }
+            }
+        });
+    }
+};
+
+wm.game.Join = function (language) {
+    var widget = $("#waitingGamesWidget");
+    wm.ui.dataTable('#gameboard', {
+        "bStateSave": true,
+        "bFilter": false,
+        "bSort": false,
+        "bSortClasses": false,
+        "oLanguage": language
+    });
+
+    this.accept = function (id) {
+        wm.ui.lock(widget, language['accepting']);
+        $.post("/playground/scribble/accept.ajax?p=" + id, function (result) {
+            if (result.success) {
+                if (result.data.board == undefined) {
+                    wm.util.url.redirect('/playground/scribble/join');
+                } else {
+                    wm.util.url.redirect('/playground/scribble/board?b=' + result.data.board);
+                }
+            } else {
+                wm.ui.unlock(widget, result.summary, true);
+            }
+        });
+    };
+
+    this.decline = function (id) {
+        wm.ui.lock(widget, language['declining']);
+        $.post("/playground/scribble/decline.ajax?p=" + id, function (result) {
+            if (result.success) {
+                wm.util.url.redirect('/playground/scribble/join');
+            } else {
+                wm.ui.unlock(widget, result.summary, true);
+            }
+        });
+    };
+};
+
+wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
+    var attachPlayerSearchActions = function (a) {
+        $(a).hover(
+                function () {
+                    $(this).addClass("player-search-remove");
+                },
+                function () {
+                    $(this).removeClass("player-search-remove");
+                }).click(function () {
+                    $(this).fadeOut('fast', function () {
+                        $(this).remove();
+                        if (opponentsCount == maxOpponents) {
+                            $("#opponentsControl").fadeIn('slow');
+                        }
+                        opponentsCount--;
+                    });
+                });
+    };
+
+    this.selectOpponent = function () {
+        playerSearch.openDialog(insertPlayer);
+        return false;
+    };
+
+    var insertPlayer = function (playerInfo) {
+        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.id + '"/></div>');
+        attachPlayerSearchActions(s);
+        $("#opponentsList").append(s);
+        $("#opponentsList .ui-state-error-text").remove();
+        s.fadeIn('fast');
+        opponentsCount++;
+        if (opponentsCount == maxOpponents) {
+            $("#opponentsControl").fadeOut('slow');
+        }
+    };
+
+    $("#opponentsList div").each(function (i, a) {
+        attachPlayerSearchActions(a);
+    });
+
+    $("#createTabRobot").change(function () {
+        $(".create-form").slideUp();
+        $("#robotForm").slideDown();
+    });
+
+    $("#createTabWait").change(function () {
+        $(".create-form").slideUp();
+        $("#waitingForm").slideDown();
+    });
+
+    $("#createTabChallenge").change(function () {
+        $(".create-form").slideUp();
+        $("#challengeForm").slideDown();
+    });
+
+    $(".player-search-action").hover(function () {
+        $(this).addClass("ui-state-hover");
+    }, function () {
+        $(this).removeClass("ui-state-hover");
+    });
+
+    this.submitForm = function () {
+        var $gameWidget = $("#createGame");
+
+        wm.ui.lock($gameWidget, language['waiting']);
+        var serializeObject = $("#form").serializeObject();
+        if (serializeObject.opponents != undefined && !$.isArray(serializeObject.opponents)) {
+            serializeObject.opponents = [serializeObject.opponents];
+        }
+        $.post("create.ajax", JSON.stringify(serializeObject),
+                function (response) {
+                    if (response.success) {
+                        if (response.data == null || response.data.board == undefined) {
+                            wm.util.url.redirect('/playground/scribble/active');
+                        } else {
+                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
+                        }
+                    } else {
+                        wm.ui.unlock($gameWidget, response.summary, true);
+                    }
+                }, 'json');
+    };
+};
+
+wm.game.History = function (pid, columns, language) {
+    $.each(columns, function (i, a) {
+        if (a.sName == 'title') {
+            a.fnRender = function (oObj) {
+                var id = oObj.aData['boardId'];
+                var title = oObj.aData['title'];
+                if (id != 0) {
+                    return "<a href='/playground/scribble/board?b=" + id + "'>" + title + "</a>";
+                } else {
+                    return title;
+                }
+            };
+        } else if (a.sName == 'players') {
+            a.fnRender = function (oObj) {
+                var res = "";
+                var opponents = oObj.aData['players'];
+                for (var i in opponents) {
+                    res += wm.ui.player(opponents[i]);
+                    if (i != opponents.length - 1) {
+                        res += ', ';
+                    }
+                }
+                return res;
+            };
+        } else if (a.sName == 'ratingChange') {
+            a.fnRender = function (oObj) {
+                var rc = oObj.aData['ratingChange'];
+                var res = '';
+                res += '<div class="rating ' + (rc < 0 ? 'down' : rc == 0 ? 'same' : 'up') + '">';
+                res += '<div class="change"><sub>' + (rc < 0 ? '' : '+') + rc + '</sub></div>';
+                res += '</div>';
+                return res;
+            }
+            /*
+             } else if (a.sName == 'resolution') {
+             a.fnRender = function (oObj) {
+             var id = oObj.aData['boardId'];
+             var state = oObj.aData['resolution'];
+             if (id != 0) {
+             return "<a href='/playground/scribble/board?b=" + id + "'>" + state + "</a>";
+             } else {
+             return state;
+             }
+             }
+             */
+        }
+    });
+
+    wm.ui.dataTable('#history', {
+        "bStateSave": false,
+        "bFilter": false,
+        "bSortClasses": false,
+        "aaSorting": [
+            [0, 'desc']
+        ],
+        "iDisplayStart": 0,
+        "aoColumns": columns,
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "/playground/scribble/history/load.ajax?p=" + pid,
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            var data = {};
+            for (var i in aoData) {
+                data[aoData[i]['name']] = aoData[i]['value'];
+            }
+            $.post(sSource, JSON.stringify(data), fnCallback);
+        },
+        "oLanguage": language
+    });
+};
+
+wm.game.Search = function (columns, scriplet, language) {
+    var players;
+    var callback;
+
+    var search = this;
+
+    $.each(columns, function (i, a) {
+        if (a.sName == 'nickname') {
+            a.fnRender = function (oObj) {
+                return wm.ui.player(oObj.aData.nickname, scriplet);
+            };
+        }
+    });
+
+    var resultTable = wm.ui.dataTable('#searchResult', {
+        "bSortClasses": false,
+        "aoColumns": columns,
+        "bProcessing": true,
+        "bServerSide": true,
+        "aaSorting": [
+            [ 1, "desc" ],
+            [ 2, "desc" ]
+        ],
+        "sAjaxSource": "/playground/players/load.ajax",
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            var data = {};
+            for (var i in aoData) {
+                data[aoData[i]['name']] = aoData[i]['value'];
+            }
+            $.post(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), JSON.stringify(data), function (json) {
+                players = json.aaData;
+                fnCallback(json)
+            });
+        }
+    });
+
+    var reloadContent = function () {
+        resultTable.fnDraw();
+    };
+
+    resultTable.find("tbody").click(function (event) {
+        var p = $(event.target).closest('tr');
+        search.closeDialog();
+        var pos = resultTable.fnGetPosition(p.get(0));
+        callback(players[pos]['nickname']);
+    });
+
+    this.closeDialog = function () {
+        $("#searchPlayerWidget").dialog('close');
+    };
+
+    this.openDialog = function (c) {
+        callback = c;
+        reloadContent();
+        $("#searchPlayerWidget").dialog({
+            title: language['title'],
+            modal: true,
+            width: 800,
+            buttons: [
+                {
+                    text: wm.i18n.value('button.close', 'Close'),
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+        return false;
+    };
+
+    $("#searchTypes").buttonset().change(reloadContent);
+
+    if (!scriplet) {
+        reloadContent();
+    }
+};
+
+wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
+    var instance = this;
+    var wordEntryEditor = $("#wordEntryEditor");
+    var wordEntryAction = wordEntryEditor.find("#action");
+
+    var setAction = function (action) {
+        wordEntryAction.val(action);
+
+        var title = wordEntryEditor.dialog('option', 'title');
+        if ("UPDATE" == action) {
+            title = i18n['title.edit'];
+        } else if ("VIEW" == action) {
+            title = i18n['title.view'];
+        } else if ("ADD" == action) {
+            title = i18n['title.add'];
+        }
+        wordEntryEditor.dialog('option', 'title', title);
+    };
+
+    var getAction = function (action) {
+        return wordEntryAction.val();
+    };
+
+    var isAction = function (action) {
+        return wordEntryAction.val() == action;
+    };
+
+    var sendRequest = function () {
+        var v = wordEntryEditor.parent();
+        wm.ui.lock(v);
+        var serializeObject = wordEntryEditor.find("form").serializeObject();
+        $.post("/playground/dictionary/editWordEntry.ajax", JSON.stringify(serializeObject), function (response) {
+            if (response.success) {
+                wm.ui.unlock(v, i18n['waiting'], false);
+                wordEntryEditor.dialog("close");
+            } else {
+                wm.ui.unlock(v, response.summary, true);
+            }
+        });
+    };
+
+    var startEditing = function () {
+        setAction("UPDATE");
+        wordEntryEditor.find(".view").hide();
+        wordEntryEditor.find(".edit").show();
+        wordEntryEditor.find(".warn").show();
+        $("#wordEditorRemoveBtn").hide();
+        $("#wordEditorChangeBtn").find("span").text(i18n['save']);
+    };
+
+    var resetEntryEditor = function () {
+        if (isAction("ADD")) {
+            $("#wordEditorRemoveBtn").show();
+            wordEntryEditor.find(".create").toggle();
+        }
+        setAction("VIEW");
+        wordEntryEditor.find(".view").show();
+        wordEntryEditor.find(".edit").hide();
+        wordEntryEditor.find(".warn").hide();
+
+        wordEntryEditor.find(".word-view").text("");
+        wordEntryEditor.find(".word-input").val("");
+        wordEntryEditor.find(".definition-view").text("");
+        wordEntryEditor.find(".definition-input").val("");
+        $("input[name=attributes]").prop('checked', false);
+        wordEntryEditor.find(".attributes-view").text("");
+    };
+
+    this.addWordEntry = function (defaultValue) {
+        instance.viewWordEntry(null);
+        if (defaultValue != undefined && defaultValue != null) {
+            wordEntryEditor.find(".word-input").val(defaultValue);
+        }
+    };
+
+    this.loadWordEntry = function (word) {
+        instance.checkWordEntry(word, function (wordEntry, summary) {
+            if (wordEntry != null) {
+                instance.viewWordEntry(wordEntry);
+                wm.ui.unlock(null);
+            } else {
+                wm.ui.unlock(null, summary, true);
+            }
+        });
+    };
+
+    this.viewWordEntry = function (wordEntry) {
+        var buttons = [];
+        if (!readOnly) {
+            buttons.push({
+                id: 'wordEditorChangeBtn',
+                text: i18n['edit'],
+                click: function () {
+                    if (isAction("ADD")) {
+                        sendRequest();
+                    } else if (isAction("VIEW")) {
+                        startEditing();
+                    } else {
+                        sendRequest();
+                    }
+                }
+            });
+
+            buttons.push({
+                id: 'wordEditorRemoveBtn',
+                text: i18n['remove'],
+                click: function () {
+                    wm.ui.confirm(i18n['remove.title'], i18n['remove.confirm'], function (approve) {
+                        if (approve) {
+                            setAction("REMOVE");
+                            sendRequest();
+                        }
+                    });
+                }
+            });
+        }
+
+        buttons.push({
+            id: 'wordEditorCancelBtn',
+            text: wm.i18n.value('button.cancel', 'Cancel'),
+            click: function () {
+                $(this).dialog("close");
+            }
+        });
+
+        var dialog = wordEntryEditor.dialog({
+            title: i18n['title.view'],
+            dialogClass: 'word-editor-dlg',
+            draggable: false,
+            modal: true,
+            autoOpen: false,
+            resizable: false,
+            width: 700,
+            buttons: buttons
+        });
+
+        resetEntryEditor();
+
+        if (wordEntry != null) {
+            wordEntryEditor.find(".word-view").text(wordEntry.word);
+            wordEntryEditor.find(".word-input").val(wordEntry.word);
+            if (wordEntry.definitions != null && wordEntry.definitions != undefined && wordEntry.definitions.length != 0) {
+                wordEntryEditor.find(".definition-view").text(wordEntry.definitions[0].text);
+                wordEntryEditor.find(".definition-input").val(wordEntry.definitions[0].text);
+
+                var attrs = "";
+                $.each(wordEntry.definitions[0].attributes, function (i, v) {
+                    attrs += " " + i18n[v];
+                    $("#" + v).prop('checked', true);
+                });
+                wordEntryEditor.find(".attributes-view").text(attrs);
+            }
+        } else {
+            startEditing();
+            setAction("ADD");
+            wordEntryEditor.find(".create").toggle();
+            $("#wordEditorChangeBtn").find("span").text(i18n['add']);
+        }
+        dialog.dialog("open");
+    };
+
+    this.checkWordEntry = function (word, callback) {
+        $.post("/playground/dictionary/loadWordEntry.ajax?l=" + lang + "&w=" + word, function (response) {
+            if (response.success) {
+                callback(response.data.wordEntry, null);
+            } else {
+                callback(null, response.summary);
+            }
+        });
+    };
+};
+
+wm.game.dict.Dictionary = function (lang, i18n) {
+    var instance = this;
+    var dictionary = $("#dictionary");
+
+    var activeTopLetter;
+    var activeSubLetter;
+
+    var topAlphabet = dictionary.find("#topAlphabet");
+    var topAlphabetLinks = topAlphabet.find("a");
+
+    var subAlphabet = dictionary.find("#subAlphabet");
+    var subAlphabetLinks = subAlphabet.find("a");
+
+    var searchInput = dictionary.find("#dictionarySearch");
+
+    var wordsViewPanel = dictionary.find(".scroll-pane");
+    var wordsViewTable = wordsViewPanel.find("table");
+    var wordsViewStatus = dictionary.find("#wordsCount span");
+    var wordsViewScrollPane = wordsViewPanel.jScrollPane({showArrows: false, horizontalGutter: 10, hideFocus: true}).data('jsp');
+
+    var createViewItem = function (entry) {
+        var def = "";
+        $.each(entry.definitions, function (j, d) {
+            if (def != "") {
+                def += "<br>";
+            }
+            var attrs = "";
+            $.each(d.attributes, function (k, a) {
+                attrs += " " + i18n[a];
+            });
+            def += "<span class='sample'>" + attrs + "</span> " + d.text;
+        });
+        return $("" +
+                "<tr>" +
+                "<td><a href='#' onclick='dictionarySuggestion.loadWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
+                "<td>" + def + "</td>" +
+                "</tr>");
+    };
+
+    var loadWordEntries = function (prefix) {
+        wm.ui.lock(wordsViewPanel, i18n['status.words.loading']);
+        wordsViewStatus.text(i18n['status.words.loading']);
+
+        if (prefix.length == 0) {
+            wm.ui.unlock(wordsViewPanel);
+        } else {
+            $.post("/playground/dictionary/loadWordEntries.ajax?l=" + lang + "&p=" + prefix, null, function (response) {
+                if (response.success) {
+                    var words = response.data.wordEntries;
+                    wordsViewStatus.text(words.length);
+
+                    $.each(words, function (i, v) {
+                        wordsViewTable.append(createViewItem(v));
+                    });
+                    wordsViewScrollPane.reinitialise();
+                    wm.ui.unlock(wordsViewPanel);
+                } else {
+                    wm.ui.unlock(wordsViewPanel, response.summary, true);
+                }
+            });
+        }
+    };
+
+    var selectTopLetter = function (el) {
+        var letter = el != null ? el.attr('href').substring(1) : '';
+        if (letter != activeTopLetter) {
+            activeTopLetter = letter;
+            topAlphabet.find("a").removeClass("active-letter");
+            subAlphabet.find("div").hide();
+            dictionary.find("#subAlphabet" + letter).show();
+            if (el != null) {
+                el.addClass("active-letter");
+            }
+        }
+        return letter;
+    };
+
+    var selectSubLetter = function (el) {
+        var letter = el != null ? el.attr('href').substring(1) : '';
+        if (letter != activeSubLetter) {
+            activeSubLetter = letter;
+            subAlphabet.find("a").removeClass("active-letter");
+            if (el != null) {
+                el.addClass("active-letter");
+            }
+        }
+        return letter;
+    };
+
+    var clearTable = function () {
+        wordsViewTable.empty();
+        wordsViewStatus.text(0);
+    };
+
+    var initAlphabets = function (value) {
+        if (value.length > 0) {
+            var letter = value.charAt(0).toUpperCase();
+            selectTopLetter(topAlphabet.find('a[href$="#' + letter + '"]'));
+        } else {
+            selectSubLetter(null);
+            selectTopLetter(null);
+        }
+
+        if (value.length > 1) {
+            var subLetter = letter.toLowerCase() + value.charAt(1).toLowerCase();
+            selectSubLetter(subAlphabet.find('a[href$="#' + subLetter + '"]'));
+        } else {
+            selectSubLetter(null);
+        }
+    };
+
+    topAlphabetLinks.click(function (e) {
+        clearTable();
+
+        var a = selectTopLetter($(this)).toLowerCase();
+        searchInput.val(a);
+        window.location.hash = "#" + a;
+        e.preventDefault();
+    });
+
+    subAlphabetLinks.click(function (e) {
+        clearTable();
+        var a = selectSubLetter($(this));
+        searchInput.val(a);
+        window.location.hash = "#" + a;
+        loadWordEntries(a);
+        e.preventDefault();
+    });
+
+    searchInput.bind("input propertychange", function (evt) {
+        if (window.event && event.type == "propertychange" && event.propertyName != "value")
+            return;
+        clearTable();
+
+        var input = $(this);
+        var value = input.val();
+
+        initAlphabets(value);
+        window.location.hash = "#" + value;
+
+        if (value.length >= 2) {
+            window.clearTimeout(input.data("timeout"));
+            input.data("timeout", setTimeout(function () {
+                loadWordEntries(value);
+            }, 800));
+        }
+    });
+
+    var initByHash = function () {
+        var hash = window.location.hash.substring(1);
+        initAlphabets(hash);
+        searchInput.val(hash);
+        if (hash.length >= 2) {
+            loadWordEntries(hash);
+        }
+    };
+    initByHash();
+};
+
+wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, language) {
+    var subscriptionView = $("#subscriptionView");
+    var subscriptionForm = $("#subscriptionForm");
+    var subscriptionDialog = $("#subscriptionDialog");
+    var subscriptionDetails = $("#subscriptionDetails");
+
+    var subscribe = function (comp, lang, section, callback) {
+        var data = JSON.stringify({language: lang, section: section});
+        wm.ui.lock(comp, language["register.subscribing"]);
+        $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, data,
+                function (response) {
+                    if (response.success) {
+                        subscriptions = response.data.subscriptions;
+                        wm.ui.unlock(comp, language["register.subscribed"]);
+                    } else {
+                        wm.ui.unlock(comp, response.summary, true);
+                    }
+                    updateAnnounceView(true);
+                    callback(response.success);
+                }, 'json');
+    };
+
+    var unsubscribe = function (comp, callback) {
+        wm.ui.lock(comp, language["register.unsubscribing"]);
+        $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, JSON.stringify({}),
+                function (response) {
+                    if (response.success) {
+                        subscriptions = response.data.subscriptions;
+                        wm.ui.unlock(comp, language["register.unsubscribed"]);
+                    } else {
+                        wm.ui.unlock(comp, response.summary, true);
+                    }
+                    updateAnnounceView(false);
+                    callback(response.success);
+                }, 'json');
+    };
+
+    var updateAnnounceView = function (sub) {
+        subscribed = sub;
+
+        var announceAction = subscriptionView.find('button .ui-button-text');
+        var announceSection = subscriptionView.find("#announceSection");
+        var announceLanguage = subscriptionView.find("#announceLanguage");
+
+        if (subscribed) {
+            subscriptionView.find(".tourney-state").removeClass("ui-state-disabled");
+
+            announceAction.text(language["register.refuse"]);
+            announceSection.text(getSelectedValue('section', false));
+            announceLanguage.text(getSelectedValue('language', false));
+        } else {
+            subscriptionView.find(".tourney-state").addClass("ui-state-disabled");
+            announceAction.text(language["register.accept"]);
+            announceSection.text(language["register.unspecified"]);
+            announceLanguage.text(language["register.unspecified"]);
+        }
+
+        var tsum = 0;
+        $.each(subscriptions, function (l, ss) {
+            var sum = 0;
+            $.each(ss, function (s, v) {
+                sum += v;
+                subscriptionView.find(".subscriptionDetails" + l + s).text(v);
+            });
+            subscriptionView.find(".subscriptionDetails" + l).text(sum);
+            tsum += sum;
+        });
+    };
+
+    var getSelectedValue = function (input, value) {
+        var el;
+        if (input == 'language') {
+            el = subscriptionForm.find("select[name=language] option:selected");
+        } else if (input == 'section') {
+            el = subscriptionForm.find("input[name=section]:checked");
+        }
+
+        if (value) {
+            return el.val();
+        } else {
+            if (input == 'section') {
+                el = $(subscriptionForm.find("#subscriptionSectionLabel" + el.val() + " span").get(0));
+            }
+            return el.text();
+        }
+    };
+
+    var showSubscriptionDialog = function () {
+        subscriptionDialog.dialog({
+            id: "jQueryDialog",
+            title: language["register.title"],
+            width: 550,
+            minHeight: 350,
+            modal: true,
+            resizable: false,
+            buttons: [
+                {
+                    class: "tourney-unsubscribed",
+                    text: language["register.button"],
+                    click: function () {
+                        subscribe(subscriptionDialog.closest(".ui-dialog"),
+                                getSelectedValue('language', true),
+                                getSelectedValue('section', true),
+                                function () {
+                                    subscriptionDialog.dialog("close");
+                                });
+                    }
+                },
+                {
+                    text: wm.i18n.value('button.cancel', 'Cancel'),
+                    click: function () {
+                        subscriptionDialog.dialog("close");
+                    }
+
+                }
+            ]
+        });
+    };
+
+    subscriptionForm.find("#subscriptionLanguage").change(function () {
+        var language = getSelectedValue('language', true);
+        var find = subscriptionForm.find("#subscriptionSection .players");
+        $.each(find, function (i, v) {
+            v = $(v);
+            v.text(subscriptions[language][v.attr('id').substring(26)]);
+        });
+    });
+
+    subscriptionView.find('button').click(function () {
+        if (subscribed) {
+            unsubscribe(subscriptionView, function () {
+            });
+        } else {
+            showSubscriptionDialog();
+        }
+    });
+};
+
+wm.game.settings.Board = function () {
+    var prevSet = $(".tiles-set-prev");
+    var nextSet = $(".tiles-set-next");
+    var tileSetView = $(".tiles-set-view");
+
+    var selected = 0;
+    var tilesSet = ['tiles-set-classic', 'tiles-set-classic2'];
+
+    $.each(tilesSet, function (i, v) {
+        if (tileSetView.hasClass(v)) {
+            selected = i;
+        }
+        return false;
+    });
+
+    var checkButtons = function () {
+        if (selected == 0) {
+            prevSet.attr('disabled', 'disabled');
+        } else {
+            prevSet.removeAttr('disabled');
+        }
+
+        if (selected == tilesSet.length - 1) {
+            nextSet.attr('disabled', 'disabled');
+        } else {
+            nextSet.removeAttr('disabled');
+        }
+    };
+
+    var changeTilesView = function (value) {
+        $("#tilesClass").val(tilesSet[selected + value]);
+
+        tileSetView.removeClass(tilesSet[selected]);
+        tileSetView.addClass(tilesSet[selected + value]);
+
+        selected = selected + value;
+    };
+
+    $(".tiles-set-nav").hover(
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+                }
+            },
+            function () {
+                if ($(this).attr('disabled') == undefined) {
+                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+                }
+            });
+
+    prevSet.click(function () {
+        if (selected > 0) {
+            changeTilesView(-1);
+            checkButtons();
+            prevSet.removeClass('ui-state-hover').addClass('ui-state-default');
+        }
+        return false;
+    });
+
+    nextSet.click(function () {
+        if (selected < tilesSet.length - 1) {
+            changeTilesView(1);
+            checkButtons();
+            nextSet.removeClass('ui-state-hover').addClass('ui-state-default');
+        }
+        return false;
+    });
+    checkButtons();
+};
 
 wm.scribble.tile = new function () {
     var updateTileImage = function (tileWidget) {
@@ -58,7 +1475,7 @@ wm.scribble.tile = new function () {
 wm.scribble.AjaxController = function () {
     var encodeData = function (data) {
         if (data != null && data != undefined) {
-            return $.toJSON(data);
+            return JSON.stringify(data);
         }
         return data;
     };
@@ -279,7 +1696,7 @@ wm.scribble.Comments = function (board, controller, language) {
             return false;
         }
         wm.ui.lock(widget, language['saving']);
-        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), $.toJSON({text: val}), function (result) {
+        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), JSON.stringify({text: val}), function (result) {
             if (result.success) {
                 loadedComments += 1;
                 comments.unshift({id: result.data.id, read: true});
@@ -1003,7 +2420,7 @@ wm.scribble.Players = function (board) {
         playersInfo.find(".player-info td").removeClass("ui-state-active");
         $.each(pids, function (i, pid) {
             getPlayerInfoCells(pid, "td").addClass("ui-state-highlight");
-            getPlayerInfoCells(pid, "td.winner-icon").html("<img src='/resources/images/scribble/winner.png'>");
+            getPlayerInfoCells(pid, "td.winner-icon").html("<img src='../images/scribble/winner.png'>");
         });
     };
 
@@ -2141,3 +3558,188 @@ wm.scribble.Monitoring = function (board) {
         }
     });
 };
+
+$(document).ready(function () {
+    jQuery.fn.extend({
+        serializeObject: function () {
+            var arrayData, objectData;
+            arrayData = this.serializeArray();
+            objectData = {};
+
+            $.each(arrayData, function () {
+                var value;
+
+                if (this.value != null) {
+                    value = this.value;
+                } else {
+                    value = '';
+                }
+
+                if (objectData[this.name] != null) {
+                    if (!objectData[this.name].push) {
+                        objectData[this.name] = [objectData[this.name]];
+                    }
+
+                    objectData[this.name].push(value);
+                } else {
+                    objectData[this.name] = value;
+                }
+            });
+
+            return objectData;
+        }
+    });
+
+    $("[title]").cluetip({ showTitle: false});
+
+    var notifications = $(".notification");
+    if (notifications.size() > 0) {
+        $("#header-separator").slideUp('slow');
+        notifications.appendTo($("#notification-block")).slideDown('slow');
+    }
+
+    $(".quickInfo").addClass('ui-state-default').hover(
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-hover');
+                }
+            },
+            function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).attr('class', 'quickInfo ui-state-default');
+                }
+            });
+
+    var activeQuickInfo = undefined;
+    $(".quickInfo.ajax a").cluetip({
+        width: 340,
+        showTitle: false,
+        ajaxCache: true,
+        activation: 'click',
+        closePosition: 'bottom',
+        closeText: wm.i18n.value('button.close'),
+        arrows: false,
+        sticky: true,
+        ajaxProcess: function (E) {
+            return E.summary;
+        },
+        ajaxSettings: {
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json'
+        },
+        onActivate: function (e) {
+            var element = $(this);
+            if (activeQuickInfo != undefined) {
+                activeQuickInfo.parent().attr('class', 'quickInfo ui-state-default');
+            }
+            activeQuickInfo = element;
+            element.parent().attr('class', 'quickInfo ui-state-active');
+            return true;
+        },
+        onHide: function (ct, ci) {
+            $(this).parent().attr('class', 'quickInfo ui-state-default');
+            activeQuickInfo = undefined;
+        }
+    });
+
+    $(".quickInfo.local a").cluetip({
+        width: 340,
+        local: true,
+        showTitle: false,
+        ajaxCache: true,
+//        activation: 'click',
+        arrows: false,
+        sticky: false,
+        ajaxSettings: {
+            dataType: 'html'
+        },
+        onActivate: function (e) {
+            var element = $(this);
+            if (activeQuickInfo != undefined) {
+                activeQuickInfo.parent().attr('class', 'quickInfo ui-state-default');
+            }
+            activeQuickInfo = element;
+            element.parent().attr('class', 'quickInfo ui-state-active');
+            return true;
+        },
+        onHide: function (ct, ci) {
+            $(this).parent().attr('class', 'quickInfo ui-state-default');
+            activeQuickInfo = undefined;
+        }
+    });
+
+    $(".wm-ui-button").button();
+    $(".wm-ui-buttonset").buttonset();
+
+    var globalSplitButtonMenu = null;
+    $(".wm-ui-splitbutton").each(function (i, sb) {
+        sb = $(sb);
+        var ch = sb.children();
+        var buttons = $("<div></div>").appendTo(sb.empty().append($(ch[1]))).append($(ch[0]));
+
+        $("<button>&nbsp;</button>").appendTo(buttons).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-triangle-1-s"
+            }
+        }).click(function () {
+                    if (globalSplitButtonMenu != null) {
+                        globalSplitButtonMenu.hide();
+                        globalSplitButtonMenu = null;
+                    }
+
+                    globalSplitButtonMenu = $(ch[1]).menu().show().position({
+                        my: "left top",
+                        at: "left bottom",
+                        of: this
+                    });
+
+                    $(document).one("click", function () {
+                        if (globalSplitButtonMenu != null) {
+                            globalSplitButtonMenu.hide();
+                            globalSplitButtonMenu = null;
+                        }
+                    });
+                    return false;
+                });
+        buttons.buttonset();
+    });
+});
+
+$(document).ready(function () {
+    var timeoutID;
+
+    $("#language-combobox .ui-state-default").hover(function () {
+        $(this).addClass('ui-state-active').removeClass('ui-state-default');
+    }, function () {
+        $(this).addClass('ui-state-default').removeClass('ui-state-active');
+    });
+
+    $('.dropdown').mouseenter(function () {
+        var submenu = $('.sublinks').stop(false, true).hide();
+        window.clearTimeout(timeoutID);
+
+        submenu.css({
+            width: $(this).width() + 20 + 'px',
+            top: $(this).offset().top + $(this).height() + 7 + 'px',
+            left: $(this).offset().left + 'px'
+        });
+
+        submenu.stop().slideDown(300);
+
+        submenu.mouseleave(function () {
+            $(this).slideUp(300);
+        });
+
+        submenu.mouseenter(function () {
+            window.clearTimeout(timeoutID);
+        });
+
+    });
+    $('.dropdown').mouseleave(function () {
+        timeoutID = window.setTimeout(function () {
+            $('.sublinks').stop(false, true).slideUp(300);
+        }, 250);
+    });
+});

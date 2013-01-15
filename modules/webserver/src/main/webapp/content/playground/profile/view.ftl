@@ -2,11 +2,6 @@
 <#-- @ftlvariable name="profile" type="wisematches.personality.profile.PlayerProfile" -->
 <#include "/core.ftl">
 
-<#if !principal??>
-<link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
-</#if>
-<link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
-
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">

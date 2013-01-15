@@ -13,9 +13,6 @@
     <#if !player??><#assign player=principal></#if>
 </#if>
 
-<link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
-<script type="text/javascript" src="/content/playground/scribble/scribble.js"></script>
-
 <script type="text/javascript">
     <#if player??>
         <#assign playerHand=board.getPlayerHand(player.getId())!""/>

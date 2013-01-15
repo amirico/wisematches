@@ -28,7 +28,7 @@
                             var widget = dlg.closest(".ui-dialog");
                             wm.ui.lock(widget, "<@message code="messages.status.sending"/>");
                             var msg = $("#privateMessageDialog").find("textarea").val();
-                            $.post('/playground/messages/send.ajax', $.toJSON({pid: id, reply: reply, message: msg}), function (result) {
+                            $.post('/playground/messages/send.ajax', JSON.stringify({pid: id, reply: reply, message: msg}), function (result) {
                                 if (result.success) {
                                     wm.ui.unlock(widget, "<@message code="messages.status.sent"/>");
                                     dlg.dialog("close");
