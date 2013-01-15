@@ -13,7 +13,7 @@
                         var widget = dlg.closest(".ui-dialog");
                         var comment = $("#blacklistConfirmDialog textarea").val()
                         wm.ui.lock(widget, "<@message code="blacklist.status.adding"/>");
-                        $.post('/playground/blacklist/add.ajax', $.toJSON({person: pid, comment: comment}), function (result) {
+                        $.post('/playground/blacklist/add.ajax', JSON.stringify({person: pid, comment: comment}), function (result) {
                             if (result.success) {
                                 wm.ui.unlock(widget, "<@message code="blacklist.status.added"/>");
                                 if (callback != undefined) {

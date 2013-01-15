@@ -1,7 +1,5 @@
 <#include "/core.ftl">
 
-<link rel="stylesheet" type="text/css" href="/content/playground/scribble/scribble.css"/>
-
 <table class="settings-board ui-widget-content ui-state-default shadow ui-corner-all" style="background-image: none;"
        width="100%">
     <tr>

@@ -148,9 +148,7 @@
         <authentication-provider ref="memberAuthenticationProvider"/>
     </authentication-manager>
 
-    <http pattern="/jquery/**" security="none"/>
-
-    <http pattern="/resources/**" security="none"/>
+    <http pattern="/static/**" security="none"/>
 
     <http use-expressions="true">
         <intercept-url pattern="/playground/profile/view" access="permitAll"/>

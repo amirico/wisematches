@@ -18,7 +18,7 @@
        style="background: none; border: 0;">
     <tr>
         <td width="178px">
-            <img id="header-image" src="/resources/images/logo.png" width="178" height="72"/>
+            <img id="header-image" src="<@s "images/logo.png"/>" width="178" height="72"/>
         </td>
         <td style="width: 100%">
         <@wm.ui.panel.roundTop id="header-panel">

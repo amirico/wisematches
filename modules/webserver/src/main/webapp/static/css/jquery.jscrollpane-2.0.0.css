@@ -97,59 +97,7 @@
     height: 100%;
 }
 
-.jspDrag {
-    background: #79b7e7;
-
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.jspArrow {
-    border: none;
-
-    background: url(/jquery/css/redmond/images/ui-icons_469bdd_256x240.png) no-repeat;
-
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.jspHorizontalBar,
-.jspVerticalBar,
-.jspTrack {
-    background: transparent;
-}
-
-.jspVerticalBar>.jspActive,
-.jspArrow:hover {
-    background-image: url('/jquery/css/redmond/images/ui-icons_217bc0_256x240.png');
-}
-
-.jspVerticalBar>.jspDisabled, .jspVerticalBar>.jspDisabled:hover, .jspHorizontalBar>.jspDisabled, .jspHorizontalBar>.jspDisabled:hover {
-    background: transparent url('/jquery/css/redmond/images/ui-icons_d8e7f3_256x240.png');
-}
-
-.jspVerticalBar .jspArrow {
-    height: 15px;
-}
-
-.jspHorizontalBar .jspArrow {
-    width: 15px;
-}
-
-.jspArrowUp {
-    background-position: 0 0;
-}
-
-.jspArrowDown {
-    background-position: -64px 0 !important;
-}
-
-.jspArrowLeft {
-    background-position: -96px 0 !important;
-}
-
-.jspArrowRight {
-    background-position: -32px 0 !important;
+/* Yuk! CSS Hack for IE6 3 pixel bug :( */
+* html .jspCorner {
+    margin: 0 -3px 0 0;
 }

@@ -75,9 +75,10 @@
         <property name="templateLoaderPath" value=""/>
         <property name="freemarkerVariables">
             <map merge="true">
-                <entry key="captchaService" value-ref="captchaService"/>
-                <entry key="analyticsCode" value="${analytics.trackcode}"/>
                 <entry key="addThisCode" value="${sociality.addThisCode}"/>
+                <entry key="staticDomain" value="${server.static.domain}"/>
+                <entry key="analyticsCode" value="${analytics.trackcode}"/>
+                <entry key="captchaService" value-ref="captchaService"/>
                 <entry key="advertisementManager" value-ref="advertisementManager"/>
             </map>
         </property>

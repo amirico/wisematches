@@ -259,8 +259,9 @@
     <version value="1.0" />
   </component>
   <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/playground/welcome.ftl" libraries="{openapi}" />
     <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/templates/advertisement.ftl" libraries="{show_ads}" />
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/wisematches.ftl" libraries="{jquery, jquery-ui}" />
+    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/wisematches.ftl" libraries="{jquery, jquery-1.8.3, jquery-ui, jquery.dataTables}" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />

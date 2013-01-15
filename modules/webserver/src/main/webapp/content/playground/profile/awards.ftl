@@ -4,10 +4,6 @@
 <#-- @ftlvariable name="awards" type="wisematches.playground.award.Award[]" -->
 <#include "/core.ftl">
 
-<#if !principal??>
-<link rel="stylesheet" type="text/css" href="/content/playground/game.css"/>
-</#if>
-
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
