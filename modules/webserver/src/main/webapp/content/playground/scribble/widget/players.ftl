@@ -12,7 +12,7 @@
             <tr class="player-info-${p.id} player-info">
                 <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">&nbsp;</td>
                 <td class="nickname ui-table-middle">
-                    <@wm.player.name player=p/>
+                    <@wm.player.name p/>
                 </td>
                 <td width="20px" class="points ui-table-middle">${hand.points}</td>
                 <td width="60px" class="info ui-corner-right ui-table-right"></td>

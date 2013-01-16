@@ -1,6 +1,7 @@
 package wisematches.playground.scribble.player;
 
 import wisematches.personality.Language;
+import wisematches.personality.Membership;
 import wisematches.playground.search.descriptive.SearchableBean;
 import wisematches.playground.search.descriptive.SearchableProperty;
 
@@ -22,6 +23,10 @@ public class PlayerEntityBean {
 	@Enumerated(EnumType.STRING)
 	@SearchableProperty(column = "account.language")
 	private Language language;
+
+	@Enumerated(EnumType.STRING)
+	@SearchableProperty(column = "account.membership")
+	private Membership membership;
 
 	@SearchableProperty(column = "stats.rating")
 	private int ratingA;
@@ -82,6 +87,14 @@ public class PlayerEntityBean {
 
 	public void setLanguage(Language language) {
 		this.language = language;
+	}
+
+	public Membership getMembership() {
+		return membership;
+	}
+
+	public void setMembership(Membership membership) {
+		this.membership = membership;
 	}
 
 	public int getActiveGames() {

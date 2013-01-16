@@ -918,23 +918,86 @@ a.ui-icon {
 
 .player {
     white-space: nowrap;
+}
+
+.player div {
     display: inline-block;
 }
 
-.player>span, .player a, .player .nickname {
+.player .state {
+    width: 8px;
+    height: 8px;
+    background: url("../images/player/state.png") no-repeat left top;
+}
+
+.player .state.online {
+    background-position: 0 0 !important;
+}
+
+.player .state.offline {
+    background-position: -8px 0 !important;
+}
+
+.player a {
+    border-bottom: 1px solid #a52a2a;
+}
+
+.player .nickname {
     color: #a52a2a;
-    text-decoration: none;
+    font-weight: bold;
+}
+
+.player.waiting .nickname, .player.waiting a {
+    color: gray;
+    border-color: gray;
+}
+
+.player .membership {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0 0 2px;
+    vertical-align: bottom;
+    background: url("../images/player/membership.png") no-repeat left top;
+}
+
+.player.guest .membership {
+    background-position: 0 0 !important;
+}
+
+.player.robot .membership {
+    background-position: -16px 0 !important;
+}
+
+.player.basic .membership {
+    background-position: -32px 0 !important;
+}
+
+.player.silver .membership {
+    background-position: -48px 0 !important;
+}
+
+.player.gold .membership {
+    background-position: -64px 0 !important;
+}
+
+.player.platinum .membership {
+    background-position: -80px 0 !important;
+}
+
+/*.player {
+}
+
+.player .nickname {
+    color: #a52a2a;
+    border-bottom: 1px solid #a52a2a;
 }
 
 .player.member a {
     border: none !important;
 }
 
-.player.member>span {
-    border-bottom: 1px solid #a52a2a;
-}
-
-.waiting .player, .waiting .player>span, .waiting .player a, .waiting .player .nickname {
+.player.waiting, .player>span .waiting, .player a .waiting, .player .nickname .waiting {
     color: gray;
     border-color: gray;
 }
@@ -955,8 +1018,9 @@ a.ui-icon {
     height: 16px;
     margin: 0;
     padding: 0 0 2px;
-    vertical-align: bottom;
     display: inline-block;
+    vertical-align: bottom;
+    border: none !important;
 }
 
 .player .rating {
@@ -994,7 +1058,7 @@ a.ui-icon {
 
 .player .platinum {
     background-position: -48px 0 !important;
-}
+}*/
 
 #selectRobotPlayer {
     white-space: nowrap;
@@ -1067,7 +1131,7 @@ a.ui-icon {
     line-height: normal;
 }
 
-.profile .player {
+.profile .player-name {
     font-size: 28px;
     font-family: Lucida, serif;
     line-height: normal;
@@ -1182,6 +1246,10 @@ a.ui-icon {
     padding-right: 10px;
 }
 
+.profile .player .nickname {
+    font-weight: normal;
+}
+
 #changeProfileDialog {
     position: relative;
     width: 100%;
@@ -1267,10 +1335,6 @@ a.ui-icon {
 .tiles-set-nav .ui-icon {
     position: absolute;
     top: 16px;
-}
-
-.profile .membership div {
-    padding: 5px;
 }
 
 #messagesWidget .datatables_wrapper, #blacklistWidget .datatables_wrapper, #friendsWidget .datatables_wrapper {
@@ -2308,4 +2372,37 @@ ul.bonuses .bonus-cell {
 .dataTables_length, .dataTables_info, .dataTables_paginate {
     float: none !important;
     padding-left: 10px;
+}
+
+#membershipView .player .nickname {
+    font-weight: bold;
+}
+
+#membershipView>div, #membershipView .ui-widget-content>div {
+    padding: 5px;
+}
+
+#membershipView .levels {
+    width: 100%;
+    padding: 0 !important;
+}
+
+#membershipView .levels>div>div {
+    padding: 5px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+#membershipView .levels>div>div:first-child {
+    text-align: left;
+}
+
+#membershipView .levels .header {
+    background-image: none;
+    border-width: 0;
+}
+
+#membershipView .levels .header.subscribe {
+    border-bottom-width: 1px;
 }

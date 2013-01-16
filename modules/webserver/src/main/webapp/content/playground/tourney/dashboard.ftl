@@ -61,7 +61,7 @@
                                     <#list g.players as p>
                                         <#if p != pid>
                                             <div>
-                                                <@wm.player.name player=playerManager.getPlayer(p)/>
+                                                <@wm.player.name playerManager.getPlayer(p)/>
                                             </div>
                                         </#if>
                                     </#list>

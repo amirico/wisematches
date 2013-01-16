@@ -73,7 +73,7 @@
                                     <td>
                                         <#list p.filter(d.tourneyWinners) as w>
                                             <div>
-                                                <@wm.player.name player=playerManager.getPlayer(w.player)/>
+                                                <@wm.player.name playerManager.getPlayer(w.player)/>
                                             </div>
                                         </#list>
                                     </td>

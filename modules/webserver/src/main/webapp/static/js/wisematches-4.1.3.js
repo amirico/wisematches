@@ -310,19 +310,19 @@ wm.ui = new function () {
 
     this.player = function (info, hideLink) {
         var id = (info.playerId != undefined ? info.playerId : info.id);
-        var html = '<span class="player ' + (id > 1000 ? 'member' : 'computer') + '">';
+        var html = '<span class="player ' + info.membership.toLowerCase() + '">';
         if (info.online) {
-            html += '<div class="online"></div> ';
+            html += '<div class="state online"></div> ';
         }
-        if (!hideLink && id > 1000) {
+        if (!hideLink && id >= 1000) {
             html += '<a href="/playground/profile/view?p=' + id + '">';
         }
-        html += '<span class="nickname">' + info.nickname + '</span>';
+        html += '<div class="nickname">' + info.nickname + '</div>';
+        if (info.membership.toLowerCase() != 'basic') {
+            html += ' <div class="membership"></div>';
+        }
         if (!hideLink && id > 1000) {
             html += '</a>';
-        }
-        if (id < 1000) {
-            html += ' <span class="mod ROBOT"></span>';
         }
         html += '</span>';
         return html;

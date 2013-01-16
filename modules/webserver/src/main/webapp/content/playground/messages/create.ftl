@@ -12,7 +12,7 @@
         <div style="width: 100%; padding-right: 40px">
 
         <@wm.ui.field path="form.pid">
-            <#if recipient??><@wm.player.name player=recipient/></#if>
+            <#if recipient??><@wm.player.name recipient/></#if>
             <#if recipient??>
                 <input type="hidden" name="msgRecipient" id="msgRecipient" value="${recipient.id}">
             </#if>

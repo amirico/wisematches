@@ -35,7 +35,7 @@
                 </td>
                 <td>
                     <#if m.sender != 0>
-                        <div class="message-from"><@wm.player.name player=playerManager.getPlayer(m.sender)/></div>
+                        <div class="message-from"><@wm.player.name playerManager.getPlayer(m.sender)/></div>
                     </#if>
                     <div class="message-date">
                     ${gameMessageSource.formatDate(m.creationDate, locale)} ${gameMessageSource.formatTime(m.creationDate, locale)}
