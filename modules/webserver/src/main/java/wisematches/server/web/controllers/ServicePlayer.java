@@ -4,7 +4,6 @@ import wisematches.personality.Membership;
 import wisematches.personality.Personality;
 import wisematches.personality.account.Account;
 import wisematches.personality.player.Player;
-import wisematches.personality.player.computer.ComputerPlayer;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -17,20 +16,20 @@ public class ServicePlayer {
 	private long id;
 	private boolean online;
 	private String nickname;
-	private boolean robot;
+	private Membership membership;
 
 	private ServicePlayer() {
 	}
 
-	public ServicePlayer(long id, String nickname, boolean online, boolean robot) {
+	public ServicePlayer(long id, String nickname, boolean online, Membership membership) {
 		this.id = id;
 		this.online = online;
 		this.nickname = nickname;
-		this.robot = robot;
+		this.membership = membership;
 	}
 
-	public static ServicePlayer get(long pid, String nickname, PlayerStateManager stateManager) {
-		return new ServicePlayer(pid, nickname, stateManager.isPlayerOnline(Personality.person(pid)), false);
+	public static ServicePlayer get(long pid, String nickname, Membership membership, PlayerStateManager stateManager) {
+		return new ServicePlayer(pid, nickname, stateManager.isPlayerOnline(Personality.person(pid)), membership);
 	}
 
 	public static ServicePlayer get(Account player, PlayerStateManager stateManager) {
@@ -38,7 +37,7 @@ public class ServicePlayer {
 		p.id = player.getId();
 		p.online = stateManager.isPlayerOnline(player);
 		p.nickname = player.getNickname();
-		p.robot = false;
+		p.membership = player.getMembership();
 		return p;
 	}
 
@@ -47,7 +46,7 @@ public class ServicePlayer {
 		p.id = player.getId();
 		p.online = stateManager.isPlayerOnline(player);
 		p.nickname = source.getPlayerNick(player, locale);
-		p.robot = player.getMembership() == Membership.ROBOT || player.getMembership() == Membership.GUEST;
+		p.membership = player.getMembership();
 		return p;
 	}
 
@@ -63,7 +62,7 @@ public class ServicePlayer {
 		return nickname;
 	}
 
-	public boolean isRobot() {
-		return robot;
+	public Membership getMembership() {
+		return membership;
 	}
 }

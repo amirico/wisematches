@@ -33,7 +33,7 @@
                     <input type="checkbox" name="removeList" value="${f.friend}">
                 </td>
                 <td nowrap="nowrap">
-                    <div class="friend-name"><@wm.player.name player=playerManager.getPlayer(f.friend)/></div>
+                    <div class="friend-name"><@wm.player.name playerManager.getPlayer(f.friend)/></div>
                 </td>
                 <td nowrap="nowrap">
                     <div class="friends-registered">

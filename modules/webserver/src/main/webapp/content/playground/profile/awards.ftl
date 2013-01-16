@@ -18,7 +18,7 @@
 
                     <td class="content shadow ui-state-default">
                         <div class="title">
-                            <div class="player">
+                            <div class="player-name">
                             <#if (profile.realName?? && profile.realName?has_content)>
                                 <strong>${profile.realName}</strong>
                             <#else>

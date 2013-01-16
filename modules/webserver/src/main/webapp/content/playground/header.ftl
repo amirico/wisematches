@@ -15,19 +15,9 @@
             <table style="height: 100%; width: 100%;">
                 <tr>
                     <td valign="top" align="right">
-                    <#if principal.membership == 'GUEST'>
-                        <span class="player computer">
-                        <span class="nickname"><@message code="game.player.guest"/></span>
-                        </span>
-                    <#else>
-                        <span class="player member">
-                            <span>
-                                <a href="/playground/profile/view?p=${principal.id}">
-                                    <span class="nickname">${principal.nickname}</span>
-                                </a>
-                            </span>
-                            </span>
-                    </#if>
+                    <@wm.player.name principal/>
+                        |
+                        <a href="/account/membership"><@message code="membership.label"/></a>
                     <#if hasNewFeatues>
                         |
                         <a href="/info/features"

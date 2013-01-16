@@ -16,13 +16,23 @@
         <strong>${player.nickname}</strong>
     </div>
     <div>
+    <#assign m=player.membership/>
+        <div class="player ${m.code}">
+        <#if m.paidMember>
+            <div class="membership"></div></#if>
+            <a href="/account/membership">
+                <div class="nickname"><@message code="membership.name.${m.code}"/> <@message code="member.label"/></div>
+            </a>
+        </div>
+    </div>
+    <div style="padding-top: 4px; padding-bottom: 4px;">
     <#if principal?? && principal.id == player.id>
     <@addthis title="share.profile.my.label" description="share.profile.my.description" args=[principal.nickname]/>
 <#elseif principal??>
         <@addthis title="share.profile.other.label" description="share.profile.other.description" args=[principal.nickname]/>
     </#if>
     </div>
-    <div style="padding-top: 4px">
+    <div>
     <#if profile.gender??>
         <@message code="gender." + profile.gender.name()?lower_case/>,
     </#if>

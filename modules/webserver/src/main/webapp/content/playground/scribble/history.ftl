@@ -9,7 +9,7 @@
 <@wm.ui.playground id="pastGamesWidget">
     <@wm.ui.table.header>
         <#if player != principal>
-            <@message code="game.player"/> <@wm.player.name player=player showState=true showType=true/>
+            <@message code="game.player"/> <@wm.player.name player/>
         <#else><@message code="game.menu.games.label"/></#if>
     > <@message code="game.past.history.label"/>
     </@wm.ui.table.header>

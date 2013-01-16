@@ -47,13 +47,10 @@
                         <#list view.proposal.players as p>
                         <div>
                             <#if p??>
-                                <#if view.proposal.isPlayerJoined(p)>
-                                    <@wm.player.name player=playerManager.getPlayer(p)/>
-                                <#else>
-                                    <span class="waiting"><@wm.player.name player=playerManager.getPlayer(p)/></span>
-                                </#if>
+                                <@wm.player.name player=playerManager.getPlayer(p) waiting=!view.proposal.isPlayerJoined(p)/>
                             <#else>
-                                <span class="waiting"><span class="player"><@message code="game.status.waiting"/></span></span>
+                                <span class="player waiting"><span
+                                        class="nickname"><@message code="game.status.waiting"/></span></span>
                             </div>
                             </#if>
                         </#list>

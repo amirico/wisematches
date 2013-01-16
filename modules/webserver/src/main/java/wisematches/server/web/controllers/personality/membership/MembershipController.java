@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wisematches.personality.Membership;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.web.controllers.AbstractInfoController;
 
@@ -16,8 +15,6 @@ import wisematches.server.web.controllers.AbstractInfoController;
 @RequestMapping("/account/membership")
 public class MembershipController extends AbstractInfoController {
 	private RestrictionManager restrictionManager;
-	private static final Membership[] SORTED_MEMBERSHIPS = new Membership[]{
-			Membership.GUEST, Membership.BASIC, Membership.SILVER, Membership.GOLD, Membership.PLATINUM};
 
 	public MembershipController() {
 	}
@@ -29,7 +26,6 @@ public class MembershipController extends AbstractInfoController {
 
 	@RequestMapping("view")
 	public String viewMembershipPages(Model model) {
-		model.addAttribute("memberships", SORTED_MEMBERSHIPS);
 		model.addAttribute("restrictionManager", restrictionManager);
 		return "/content/personality/membership/view";
 	}

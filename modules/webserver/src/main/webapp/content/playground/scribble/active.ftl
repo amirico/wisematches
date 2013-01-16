@@ -7,9 +7,7 @@
 <#macro gameStatus board>
     <#if board.isGameActive()>
         <#if board.getPlayerTurn().getPlayerId() == principal.getId()>
-        <span class="player">
             <@wm.board.href board.boardId><strong><@message code="game.status.move_you"/></strong></@wm.board.href>
-        </span>
         <#else>
             <@message code="game.status.move_opp" args=["${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
@@ -21,7 +19,7 @@
 <@wm.ui.playground id="activeGamesWidget">
     <@wm.ui.table.header>
         <#if player != principal>
-            <@message code="game.player"/> <@wm.player.name player=player showState=true showType=true/>
+            <@message code="game.player"/> <@wm.player.name player/>
         <#else><@message code="game.menu.games.label"/>
         </#if>
     > <@message code="game.dashboard.label"/>
@@ -69,7 +67,7 @@
                 </td>
                 <td>
                     <#list board.playersHands as hand>
-                        <div><@wm.player.name player=playerManager.getPlayer(hand.getPlayerId())/></div>
+                        <div><@wm.player.name playerManager.getPlayer(hand.getPlayerId())/></div>
                     </#list>
                 </td>
                 <td class="center">
@@ -85,15 +83,15 @@
                 <td>${proposal.settings.title}</td>
                 <td><@message code="language.${proposal.settings.language?lower_case}"/></td>
                 <td>
-                            <span class="waiting"><span
-                                    class="player"><@message code="game.status.waiting"/></span></span>
+                    <span class="player waiting"><span
+                            class="nickname"><@message code="game.status.waiting"/></span></span>
 
-                    <div style="text-align: right;">
+                    <span style="float: right;">
                         <a href="decline?p=${proposal.id}"
                            onclick="activeGames.cancelProposal(${proposal.id}); return false;">
                             <@message code="game.proposal.cancel"/>
                         </a>
-                    </div>
+                    </span>
                 </td>
                 <td class="center">
                 ${gameMessageSource.formatTimeMinutes(proposal.settings.daysPerMove *24 * 60, locale)}
@@ -102,14 +100,10 @@
                     <#list proposal.players as p>
                     <div>
                         <#if p??>
-                            <#if proposal.isPlayerJoined(p)>
-                                <@wm.player.name player=playerManager.getPlayer(p)/>
-                            <#else>
-                                <span class="waiting"><@wm.player.name player=playerManager.getPlayer(p)/></span>
-                            </#if>
+                            <@wm.player.name player=playerManager.getPlayer(p) waiting=!proposal.isPlayerJoined(p)/>
                         <#else>
-                            <span class="waiting"><span
-                                    class="player"><@message code="game.status.waiting"/></span></span>
+                            <span class="player waiting"><span
+                                    class="nickname"><@message code="game.status.waiting"/></span></span>
                         </div>
                         </#if>
                     </#list>

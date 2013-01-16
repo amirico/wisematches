@@ -39,7 +39,7 @@
         <#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>
 
             <div class="title">
-            <@wm.ui.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player"/>
+            <@wm.ui.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player-name"/>
             </div>
 
             <div class="ui-layout-table">

@@ -33,7 +33,7 @@
                     <input type="checkbox" name="removeList" value="${m.id}">
                 </td>
                 <td>
-                    <div class="message-from"><@wm.player.name player=playerManager.getPlayer(m.recipient)/></div>
+                    <div class="message-from"><@wm.player.name playerManager.getPlayer(m.recipient)/></div>
                     <div class="message-date">
                     ${gameMessageSource.formatDate(m.creationDate, locale)} ${gameMessageSource.formatTime(m.creationDate, locale)}
                     </div>

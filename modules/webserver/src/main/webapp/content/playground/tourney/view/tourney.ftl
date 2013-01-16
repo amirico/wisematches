@@ -70,7 +70,7 @@
                                         <dd>
                                             <@message code="tourney.place.${p.place}.label"/>:
                                             <#list players as p>
-                                                <@wm.player.name player=playerManager.getPlayer(p.player)/>
+                                                <@wm.player.name playerManager.getPlayer(p.player)/>
                                                 <#if p_has_next>, </#if>
                                             </#list>
                                         </dd>
