@@ -1,6 +1,6 @@
 package wisematches.playground.tourney.regular;
 
-import wisematches.personality.Language;
+import wisematches.core.Language;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

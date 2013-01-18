@@ -1,6 +1,6 @@
 package wisematches.playground.award.impl.assembly;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.GameRelationship;
 import wisematches.playground.award.AwardWeight;
 import wisematches.playground.award.impl.AwardJudicialAssembly;

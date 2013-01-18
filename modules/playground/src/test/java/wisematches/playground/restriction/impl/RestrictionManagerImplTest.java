@@ -2,8 +2,8 @@ package wisematches.playground.restriction.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.personality.Membership;
-import wisematches.personality.player.Player;
+import wisematches.core.personality.Player;
+import wisematches.core.personality.member.Membership;
 import wisematches.playground.restriction.Restriction;
 
 import java.util.Arrays;
@@ -26,25 +26,24 @@ public class RestrictionManagerImplTest {
 	public void setUp() {
 		restrictionManager = new RestrictionManagerImpl();
 
-		Map<Membership, Comparable> r1 = new HashMap<>();
-		r1.put(Membership.BASIC, 1);
+		Map<Membership, Comparable<Integer>> r1 = new HashMap<>();
+		r1.put(Membership.DEFAULT, 1);
 		r1.put(Membership.GOLD, 10);
 
-		Map<Membership, Comparable> r2 = new HashMap<>();
-		r2.put(Membership.BASIC, 2);
+		Map<Membership, Comparable<Integer>> r2 = new HashMap<>();
+		r2.put(Membership.DEFAULT, 2);
 		r2.put(Membership.GOLD, 12);
 
-		restrictionManager.setRestrictions(Arrays.asList(
-				new RestrictionDescription("mock1", r1),
-				new RestrictionDescription("mock2", r2)
-		));
+		final RestrictionDescription<Integer> mock1 = new RestrictionDescription<>("mock1", 0, r1);
+		final RestrictionDescription<Integer> mock2 = new RestrictionDescription<>("mock2", 0, r2);
+		restrictionManager.setRestrictions(Arrays.asList(mock1, mock2));
 	}
 
 	@Test
 	public void testGetRestriction() throws Exception {
-		assertEquals(1, restrictionManager.getRestrictionThreshold("mock1", Membership.BASIC));
+		assertEquals(1, restrictionManager.getRestrictionThreshold("mock1", Membership.DEFAULT));
 		assertEquals(10, restrictionManager.getRestrictionThreshold("mock1", Membership.GOLD));
-		assertEquals(2, restrictionManager.getRestrictionThreshold("mock2", Membership.BASIC));
+		assertEquals(2, restrictionManager.getRestrictionThreshold("mock2", Membership.DEFAULT));
 		assertEquals(12, restrictionManager.getRestrictionThreshold("mock2", Membership.GOLD));
 
 		try {
@@ -63,11 +62,11 @@ public class RestrictionManagerImplTest {
 
 	@Test
 	public void testCheckRestriction() throws Exception {
-		assertNull(restrictionManager.validateRestriction(createMockPlayer(Membership.BASIC), "mock1", 0));
+		assertNull(restrictionManager.validateRestriction(createMockPlayer(Membership.DEFAULT), "mock1", 0));
 
-		assertRestriction("mock1", 1, 1, restrictionManager.validateRestriction(createMockPlayer(Membership.BASIC), "mock1", 1));
-		assertRestriction("mock1", 1, 2, restrictionManager.validateRestriction(createMockPlayer(Membership.BASIC), "mock1", 2));
-		assertRestriction("mock1", 1, 3, restrictionManager.validateRestriction(createMockPlayer(Membership.BASIC), "mock1", 3));
+		assertRestriction("mock1", 1, 1, restrictionManager.validateRestriction(createMockPlayer(Membership.DEFAULT), "mock1", 1));
+		assertRestriction("mock1", 1, 2, restrictionManager.validateRestriction(createMockPlayer(Membership.DEFAULT), "mock1", 2));
+		assertRestriction("mock1", 1, 3, restrictionManager.validateRestriction(createMockPlayer(Membership.DEFAULT), "mock1", 3));
 	}
 
 	private void assertRestriction(String name, int threshold, int violation, Restriction restriction) {

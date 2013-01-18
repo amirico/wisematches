@@ -8,8 +8,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import wisematches.core.expiration.impl.AbstractExpirationManager;
 import wisematches.playground.*;
-import wisematches.playground.expiration.impl.AbstractExpirationManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleBoardManager;
 

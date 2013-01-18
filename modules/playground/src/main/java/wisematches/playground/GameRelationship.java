@@ -1,7 +1,5 @@
 package wisematches.playground;
 
-import wisematches.personality.Relationship;
-
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 

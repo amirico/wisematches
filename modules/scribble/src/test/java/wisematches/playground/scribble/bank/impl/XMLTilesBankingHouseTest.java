@@ -2,10 +2,8 @@ package wisematches.playground.scribble.bank.impl;
 
 import junit.framework.TestCase;
 import org.springframework.core.io.ClassPathResource;
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.scribble.bank.TilesBank;
-
-import java.util.Locale;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

@@ -2,8 +2,8 @@ package wisematches.playground.scribble.robot;
 
 import org.easymock.IAnswer;
 import org.junit.Test;
-import wisematches.personality.Language;
-import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.core.Language;
+import wisematches.core.personality.proprietary.robot.RobotType;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.PlayerMove;

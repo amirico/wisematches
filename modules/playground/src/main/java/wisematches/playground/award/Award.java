@@ -1,6 +1,6 @@
 package wisematches.playground.award;
 
-import wisematches.personality.Relationship;
+import wisematches.playground.Relationship;
 
 import java.util.Date;
 

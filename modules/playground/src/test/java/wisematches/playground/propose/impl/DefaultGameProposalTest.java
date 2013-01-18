@@ -1,10 +1,10 @@
 package wisematches.playground.propose.impl;
 
 import org.junit.Test;
-import wisematches.personality.Personality;
-import wisematches.personality.player.Player;
-import wisematches.personality.player.computer.guest.GuestPlayer;
-import wisematches.personality.player.computer.robot.RobotPlayer;
+import wisematches.core.Personality;
+import wisematches.core.personality.Player;
+import wisematches.core.personality.proprietary.guest.GuestPlayer;
+import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.criteria.*;
 import wisematches.playground.tracking.Statistics;

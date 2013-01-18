@@ -1,7 +1,7 @@
 package wisematches.playground.tourney.regular;
 
-import wisematches.personality.Language;
-import wisematches.personality.Personality;
+import wisematches.core.Language;
+import wisematches.core.Personality;
 import wisematches.playground.tourney.TourneyEntityManager;
 
 /**

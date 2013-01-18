@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.settings;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -18,7 +18,7 @@ public interface BoardSettingsManager {
 	 * Updates notifications mask for specified player.
 	 *
 	 * @param personality the player who's notifications mask should be updated.
-	 * @param settings	the new settings for specified personality
+	 * @param settings    the new settings for specified personality
 	 */
 	void setScribbleSettings(Personality personality, BoardSettings settings);
 }

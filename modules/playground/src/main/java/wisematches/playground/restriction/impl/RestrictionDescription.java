@@ -1,21 +1,23 @@
 package wisematches.playground.restriction.impl;
 
-import wisematches.personality.Membership;
+import wisematches.core.personality.member.Membership;
 
 import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class RestrictionDescription {
+public final class RestrictionDescription<T> {
 	private String name;
-	private Map<Membership, Comparable> restrictions;
+	private Comparable<T> unknownMembership;
+	private Map<Membership, Comparable<T>> restrictions;
 
 	public RestrictionDescription() {
 	}
 
-	public RestrictionDescription(String name, Map<Membership, Comparable> restrictions) {
+	public RestrictionDescription(String name, Comparable<T> unknownMembership, Map<Membership, Comparable<T>> restrictions) {
 		this.name = name;
+		this.unknownMembership = unknownMembership;
 		this.restrictions = restrictions;
 	}
 
@@ -27,15 +29,23 @@ public final class RestrictionDescription {
 		this.name = name;
 	}
 
-	public Comparable getRestriction(Membership membership) {
+	public Comparable<T> getUnknownMembership() {
+		return unknownMembership;
+	}
+
+	public void setUnknownMembership(Comparable<T> unknownMembership) {
+		this.unknownMembership = unknownMembership;
+	}
+
+	public Comparable<T> getRestriction(Membership membership) {
 		return restrictions.get(membership);
 	}
 
-	public Map<Membership, Comparable> getRestrictions() {
+	public Map<Membership, Comparable<T>> getRestrictions() {
 		return restrictions;
 	}
 
-	public void setRestrictions(Map<Membership, Comparable> restrictions) {
+	public void setRestrictions(Map<Membership, Comparable<T>> restrictions) {
 		this.restrictions = restrictions;
 	}
 }

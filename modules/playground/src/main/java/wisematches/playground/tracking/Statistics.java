@@ -1,6 +1,6 @@
 package wisematches.playground.tracking;
 
-import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.core.personality.proprietary.robot.RobotType;
 import wisematches.playground.tourney.TourneyPlace;
 
 import java.util.Date;

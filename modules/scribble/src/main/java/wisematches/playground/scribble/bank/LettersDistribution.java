@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.bank;
 
-import wisematches.personality.Language;
+import wisematches.core.Language;
 
 import java.util.Collection;
 

@@ -1,6 +1,6 @@
 package wisematches.playground.tracking.impl;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;

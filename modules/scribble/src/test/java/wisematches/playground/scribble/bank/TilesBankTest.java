@@ -1,7 +1,7 @@
 package wisematches.playground.scribble.bank;
 
 import junit.framework.TestCase;
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 

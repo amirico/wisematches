@@ -1,12 +1,12 @@
 package wisematches.playground.propose;
 
-import wisematches.personality.player.Player;
+import wisematches.core.personality.Player;
+import wisematches.core.search.SearchFilter;
+import wisematches.core.search.SearchManager;
 import wisematches.playground.GameSettings;
 import wisematches.playground.criteria.CriterionViolation;
 import wisematches.playground.criteria.PlayerCriterion;
 import wisematches.playground.criteria.ViolatedCriteriaException;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
 
 import java.util.Collection;
 

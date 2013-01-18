@@ -1,6 +1,6 @@
 package wisematches.playground.propose;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.GameSettings;
 
 import java.util.Date;

@@ -3,7 +3,7 @@ package wisematches.playground.friends.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.friends.FriendRelation;
 import wisematches.playground.friends.FriendsListener;
 import wisematches.playground.friends.FriendsManager;

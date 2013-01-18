@@ -20,28 +20,28 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/config/database-junit-config.xml",
-        "classpath:/config/accounts-config.xml",
-        "classpath:/config/playground-config.xml",
-        "classpath:/config/scribble-junit-config.xml"})
+		"classpath:/config/database-junit-config.xml",
+		"classpath:/config/accounts-config.xml",
+		"classpath:/config/playground-config.xml",
+		"classpath:/config/scribble-junit-config.xml"})
 public class PlayerStatisticValidatorTest {
-    @Autowired
-    private PlayerStatisticValidator statisticValidator;
+	@Autowired
+	private PlayerStatisticValidator statisticValidator;
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
-    public PlayerStatisticValidatorTest() {
-    }
+	public PlayerStatisticValidatorTest() {
+	}
 
-    @Test
-    public void recalculateStatistics() {
-        TransactionTemplate tt = new TransactionTemplate(transactionManager, new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
-        tt.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                statisticValidator.recalculateStatistics();
-            }
-        });
-    }
+	@Test
+	public void recalculateStatistics() {
+		TransactionTemplate tt = new TransactionTemplate(transactionManager, new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+		tt.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				statisticValidator.recalculateStatistics();
+			}
+		});
+	}
 }

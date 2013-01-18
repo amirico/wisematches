@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- run every morning at 00:00:00.000 -->
+        <property name="cronExpression" value="0 0 0 * * ?"/>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="name" value="breakingDayNotification"/>
+                <property name="jobClass" value="wisematches.core.task.scheduler.BreakingDayExecutorJob"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cleaningDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- run every morning at 2 AM -->
+        <property name="cronExpression" value="0 0 2 * * ?"/>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="name" value="cleaningDayNotification"/>
+                <property name="jobClass" value="wisematches.core.task.scheduler.CleaningDayExecutorJob"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="breakingDayTrigger"/>
+                <ref bean="cleaningDayTrigger"/>
+            </list>
+        </property>
+        <property name="applicationContextSchedulerContextKey" value="SpringApplicationContext"/>
+    </bean>
+</beans>

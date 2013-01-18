@@ -1,9 +1,9 @@
 package wisematches.playground.propose;
 
 import org.springframework.beans.factory.InitializingBean;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
+import wisematches.core.expiration.impl.AbstractExpirationManager;
 import wisematches.playground.GameSettings;
-import wisematches.playground.expiration.impl.AbstractExpirationManager;
 
 import java.util.Date;
 import java.util.List;

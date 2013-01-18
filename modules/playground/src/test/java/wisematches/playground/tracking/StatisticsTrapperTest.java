@@ -1,7 +1,7 @@
 package wisematches.playground.tracking;
 
 import org.junit.Test;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.*;
 
 import java.util.Arrays;

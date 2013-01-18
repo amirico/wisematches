@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.expiration;
 
-import wisematches.playground.expiration.ExpirationType;
+import wisematches.core.expiration.ExpirationType;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
@@ -41,6 +41,4 @@ public enum ScribbleExpirationType implements ExpirationType {
 	public long getTriggerTime(long extinctionTime) {
 		return extinctionTime - remainedMillis;
 	}
-
-
 }

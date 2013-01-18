@@ -1,7 +1,7 @@
 package wisematches.playground.award.impl.assembly;
 
-import wisematches.personality.Personality;
-import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.core.Personality;
+import wisematches.core.personality.proprietary.robot.RobotType;
 import wisematches.playground.award.AwardWeight;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;

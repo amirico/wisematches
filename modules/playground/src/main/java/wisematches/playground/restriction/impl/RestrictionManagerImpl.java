@@ -1,7 +1,8 @@
 package wisematches.playground.restriction.impl;
 
-import wisematches.personality.Membership;
-import wisematches.personality.player.Player;
+import wisematches.core.personality.Player;
+import wisematches.core.personality.PlayerType;
+import wisematches.core.personality.member.MemberPlayer;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 
@@ -14,8 +15,7 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class RestrictionManagerImpl implements RestrictionManager {
-	private final Map<Key, Comparable> restrictions = new HashMap<>();
-	private final Map<String, RestrictionDescription> descriptions = new HashMap<>();
+	private final Map<String, RestrictionDescription<?>> descriptions = new HashMap<>();
 
 	public RestrictionManagerImpl() {
 	}
@@ -31,9 +31,13 @@ public class RestrictionManagerImpl implements RestrictionManager {
 	}
 
 	@Override
-	public Comparable getRestrictionThreshold(String name, Membership membership) {
-		checkParameters(name, membership);
-		return restrictions.get(new Key(name, membership));
+	public Comparable<?> getRestrictionThreshold(String name, Player player) {
+		final RestrictionDescription<?> descriptor = getDescriptor(name);
+		if (player.getPlayerType() != PlayerType.MEMBER) {
+			return descriptor.getUnknownMembership();
+		} else {
+			return descriptor.getRestriction(((MemberPlayer) player).getMembership());
+		}
 	}
 
 	@Override
@@ -45,71 +49,34 @@ public class RestrictionManagerImpl implements RestrictionManager {
 		if (value == null) {
 			throw new NullPointerException("Value can't be null");
 		}
-		checkParameters(name, player.getMembership());
 
-		final Comparable comparable = restrictions.get(new Key(name, player));
+		final Comparable comparable = getRestrictionThreshold(name, player);
 		if (comparable.compareTo(value) <= 0) {
 			return new Restriction(name, comparable, value);
 		}
 		return null;
 	}
 
-	private void checkParameters(String name, Membership membership) {
+	private RestrictionDescription<?> getDescriptor(String name) {
 		if (name == null) {
 			throw new NullPointerException("Name can't be null");
 		}
-		if (membership == null) {
-			throw new NullPointerException("Membership can't be null");
-		}
-		if (!descriptions.containsKey(name)) {
+		final RestrictionDescription<?> description = descriptions.get(name);
+		if (description == null) {
 			throw new IllegalArgumentException("Unknown restriction: " + name);
 		}
+		return description;
 	}
 
-	public void setRestrictions(Collection<RestrictionDescription> restrictions) {
-		this.restrictions.clear();
+	public <T extends Comparable<?>> void setRestrictions(Collection<RestrictionDescription<T>> restrictions) {
 		this.descriptions.clear();
 
 		if (restrictions != null) {
-			for (RestrictionDescription restriction : restrictions) {
+			for (RestrictionDescription<?> restriction : restrictions) {
 				if (this.descriptions.put(restriction.getName(), restriction) != null) {
 					throw new IllegalArgumentException("Duplicate definition for restriction: " + restriction.getName());
 				}
-
-				for (Map.Entry<Membership, Comparable> entry : restriction.getRestrictions().entrySet()) {
-					this.restrictions.put(new Key(restriction.getName(), entry.getKey()), entry.getValue());
-				}
 			}
-		}
-	}
-
-	private static final class Key {
-		private final String name;
-		private final Membership membership;
-
-		private Key(String name, Player player) {
-			this(name, player.getMembership());
-		}
-
-		private Key(String name, Membership membership) {
-			this.name = name;
-			this.membership = membership;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			Key key = (Key) o;
-			return membership == key.membership && name.equals(key.name);
-		}
-
-		@Override
-		public int hashCode() {
-			int result = name.hashCode();
-			result = 31 * result + membership.hashCode();
-			return result;
 		}
 	}
 }

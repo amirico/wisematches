@@ -1,6 +1,6 @@
 package wisematches.playground.award;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

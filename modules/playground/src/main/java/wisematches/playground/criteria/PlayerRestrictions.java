@@ -1,6 +1,6 @@
 package wisematches.playground.criteria;
 
-import wisematches.personality.player.Player;
+import wisematches.core.personality.Player;
 import wisematches.playground.tracking.Statistics;
 
 /**

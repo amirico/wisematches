@@ -1,10 +1,10 @@
 package wisematches.playground.tourney;
 
-import wisematches.database.Orders;
-import wisematches.database.Range;
-import wisematches.personality.Personality;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
+import wisematches.core.Personality;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
+import wisematches.core.search.SearchFilter;
+import wisematches.core.search.SearchManager;
 
 import java.util.List;
 
