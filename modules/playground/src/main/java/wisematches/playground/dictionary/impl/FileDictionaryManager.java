@@ -1,6 +1,6 @@
 package wisematches.playground.dictionary.impl;
 
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryException;
 import wisematches.playground.dictionary.DictionaryManager;

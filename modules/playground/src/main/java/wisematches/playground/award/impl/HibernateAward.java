@@ -1,7 +1,7 @@
 package wisematches.playground.award.impl;
 
-import wisematches.personality.Relationship;
 import wisematches.playground.GameRelationship;
+import wisematches.playground.Relationship;
 import wisematches.playground.award.Award;
 import wisematches.playground.award.AwardWeight;
 

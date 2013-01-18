@@ -1,7 +1,7 @@
 package wisematches.playground.scribble.player;
 
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.descriptive.AbstractDescriptiveSearchManager;
+import wisematches.core.search.SearchFilter;
+import wisematches.core.search.descriptive.AbstractDescriptiveSearchManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

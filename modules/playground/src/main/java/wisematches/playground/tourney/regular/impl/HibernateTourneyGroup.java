@@ -1,6 +1,6 @@
 package wisematches.playground.tourney.regular.impl;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyGameResolution;
 import wisematches.playground.tourney.regular.TourneyGroup;

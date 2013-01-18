@@ -5,10 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import wisematches.personality.player.computer.robot.RobotPlayer;
-import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.task.TransactionalExecutor;
 import wisematches.playground.*;
-import wisematches.playground.task.TransactionalTaskExecutor;
 
 import java.util.Collection;
 
@@ -21,7 +21,7 @@ public class RobotActivityCenter implements InitializingBean {
 	private BoardManager boardManager;
 	private RobotBrain<GameBoard> robotBrain;
 
-	private TransactionalTaskExecutor taskExecutor;
+	private TransactionalExecutor taskExecutor;
 
 	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
 
@@ -79,7 +79,7 @@ public class RobotActivityCenter implements InitializingBean {
 	}
 
 
-	public void setTaskExecutor(TransactionalTaskExecutor taskExecutor) {
+	public void setTaskExecutor(TransactionalExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
 

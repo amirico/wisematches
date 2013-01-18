@@ -1,7 +1,7 @@
 package wisematches.playground.tracking.impl;
 
-import wisematches.personality.Personality;
-import wisematches.personality.player.computer.ComputerPlayer;
+import wisematches.core.Personality;
+import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.GamePlayerHand;
 import wisematches.playground.GameRatingChange;
 import wisematches.playground.RatingManager;
@@ -16,7 +16,7 @@ public class RatingManagerImpl implements RatingManager {
 	private RatingSystem ratingSystem;
 	private PlayerTrackingCenterDao trackingCenterDao;
 
-	private final Map<Personality, Short> ratings = new WeakHashMap<Personality, Short>();
+	private final Map<Personality, Short> ratings = new WeakHashMap<>();
 
 	public RatingManagerImpl() {
 	}
@@ -25,7 +25,7 @@ public class RatingManagerImpl implements RatingManager {
 	public synchronized short getRating(Personality person) {
 		Short rating = ratings.get(person);
 		if (rating == null) {
-			ComputerPlayer computerPlayer = ComputerPlayer.getComputerPlayer(person.getId());
+			ProprietaryPlayer computerPlayer = ProprietaryPlayer.getComputerPlayer(person.getId());
 			if (computerPlayer != null) {
 				rating = computerPlayer.getRating();
 			} else {

@@ -37,17 +37,6 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <!-- run every morning at 00:00:00.000 -->
-        <property name="cronExpression" value="0 0 0 * * ?"/>
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-                <property name="name" value="breakingDayNotification"/>
-                <property name="jobClass"
-                          value="wisematches.playground.scheduling.quartz.SpringBreakingDayExecutorJob"/>
-            </bean>
-        </property>
-    </bean>
 
     <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- run every morning at 2 AM -->
@@ -61,13 +50,4 @@
         </property>
     </bean>
 
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey" value="SpringApplicationContext"/>
-        <property name="triggers">
-            <list>
-                <ref bean="breakingDayTrigger"/>
-                <ref bean="messagesCleanerTrigger"/>
-            </list>
-        </property>
-    </bean>
 </beans>

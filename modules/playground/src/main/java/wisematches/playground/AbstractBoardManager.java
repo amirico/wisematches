@@ -1,10 +1,10 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
-import wisematches.database.Orders;
-import wisematches.database.Range;
-import wisematches.personality.Personality;
-import wisematches.playground.search.SearchFilter;
+import wisematches.core.Personality;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
+import wisematches.core.search.SearchFilter;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;

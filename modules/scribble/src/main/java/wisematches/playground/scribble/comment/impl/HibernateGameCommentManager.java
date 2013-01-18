@@ -5,7 +5,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.ResultTransformer;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.GameBoard;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;

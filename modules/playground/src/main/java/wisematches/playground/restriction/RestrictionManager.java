@@ -1,7 +1,6 @@
 package wisematches.playground.restriction;
 
-import wisematches.personality.Membership;
-import wisematches.personality.player.Player;
+import wisematches.core.personality.Player;
 
 import java.util.Collection;
 
@@ -35,7 +34,7 @@ public interface RestrictionManager {
 	 * @throws IllegalArgumentException if specified restriction name is unknown.
 	 * @throws NullPointerException     if {@code name} or {@code membership} is {@code null}
 	 */
-	Comparable getRestrictionThreshold(String name, Membership membership);
+	Comparable getRestrictionThreshold(String name, Player player);
 
 	/**
 	 * Checks and returns restriction description for specified player.

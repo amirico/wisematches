@@ -5,17 +5,16 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-4.2.1-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-5.0.0-SNAPSHOT</output-path>
       <root id="root">
-        <element id="javaee-facet-resources" facet="webserver/web/Web" />
+        <element id="javaee-facet-resources" facet="web/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
-            <element id="module-output" name="webserver" />
-            <element id="module-test-output" name="webserver" />
+            <element id="module-output" name="web" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="database-4.2.1-SNAPSHOT.jar">
-              <element id="module-output" name="database" />
+            <element id="archive" name="core-5.0.0-SNAPSHOT.jar">
+              <element id="module-output" name="core" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
             <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
@@ -53,13 +52,10 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.2.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="archive" name="personality-4.2.1-SNAPSHOT.jar">
-              <element id="module-output" name="personality" />
-            </element>
-            <element id="archive" name="playground-4.2.1-SNAPSHOT.jar">
+            <element id="archive" name="playground-5.0.0-SNAPSHOT.jar">
               <element id="module-output" name="playground" />
             </element>
-            <element id="archive" name="scribble-4.2.1-SNAPSHOT.jar">
+            <element id="archive" name="scribble-5.0.0-SNAPSHOT.jar">
               <element id="module-output" name="scribble" />
             </element>
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" />
@@ -78,7 +74,7 @@
     </artifact>
     <artifact type="war" name="webserver:war">
       <output-path>$PROJECT_DIR$/modules/webserver/target</output-path>
-      <root id="archive" name="webserver-4.2.1-SNAPSHOT.war">
+      <root id="archive" name="webserver-5.0.0-SNAPSHOT.war">
         <element id="artifact" artifact-name="webserver:war exploded" />
       </root>
     </artifact>
@@ -119,8 +115,8 @@
       <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/database/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/webserver/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/core/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/web/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/scribble/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
@@ -147,26 +143,28 @@
       <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <processorPath useClasspath="true" />
+        <module name="core" />
         <module name="database" />
-        <module name="personality" />
         <module name="playground" />
         <module name="scribble" />
-        <module name="webserver" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="application" target="1.7" />
+      <module name="core" target="1.7" />
       <module name="database" target="1.7" />
       <module name="personality" target="1.7" />
       <module name="playground" target="1.7" />
       <module name="scribble" target="1.7" />
+      <module name="server" target="1.7" />
+      <module name="web" target="1.7" />
       <module name="webserver" target="1.7" />
     </bytecodeTargetLevel>
   </component>
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" hash="38125793" />
+  <component name="DataSourceManagerImpl" compressed="false" hash="1311506149" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -186,11 +184,11 @@
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/modules/database" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/modules/personality" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/playground" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/scribble" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/modules/webserver" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/web" charset="UTF-8" />
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
@@ -201,7 +199,7 @@
     </splitter-proportions>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/modules/webserver" />
+    <file type="web" url="file://$PROJECT_DIR$/modules/web" />
   </component>
   <component name="GlobalLibrariesConfigurable.UI">
     <splitter-proportions>
@@ -259,9 +257,9 @@
     <version value="1.0" />
   </component>
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/playground/welcome.ftl" libraries="{openapi}" />
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/templates/advertisement.ftl" libraries="{show_ads}" />
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/webapp/content/wisematches.ftl" libraries="{jquery, jquery-1.8.3, jquery-ui, jquery.dataTables}" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/webapp/content/playground/welcome.ftl" libraries="{openapi}" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/webapp/content/templates/advertisement.ftl" libraries="{show_ads}" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/webapp/content/wisematches.ftl" libraries="{jquery, jquery-1.8.3, jquery-ui, jquery.dataTables}" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -285,6 +283,11 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/modules/personality/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ModuleStructureConfigurable.UI">
@@ -479,11 +482,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/database/database.iml" filepath="$PROJECT_DIR$/modules/database/database.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/personality/personality.iml" filepath="$PROJECT_DIR$/modules/personality/personality.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/core/core.iml" filepath="$PROJECT_DIR$/modules/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/webserver/webserver.iml" filepath="$PROJECT_DIR$/modules/webserver/webserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/server/server.iml" filepath="$PROJECT_DIR$/modules/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/web/web.iml" filepath="$PROJECT_DIR$/modules/web/web.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -506,8 +509,8 @@
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tracking/RatingCurve.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/HibernateNotificationService.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/wisematches/server/web/services/notify/impl/publisher/EssentialNotificationPublisher.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/HibernateNotificationService.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/publisher/EssentialNotificationPublisher.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database_data.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/latest_patch.sql" dialect="MySQL" />
@@ -525,7 +528,7 @@
     <option name="UNLOCK_ON_CHECKIN" value="false" />
   </component>
   <component name="TemplateDataLanguageMappings">
-    <file url="file://$PROJECT_DIR$/modules/webserver/src/main/java/freemarker_implicit.ftl" dialect="JAVA" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/java/freemarker_implicit.ftl" dialect="JAVA" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />

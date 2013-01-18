@@ -4,10 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.IAnswer;
 import org.junit.Test;
-import wisematches.database.Orders;
-import wisematches.database.Range;
-import wisematches.personality.Personality;
-import wisematches.playground.search.SearchFilter;
+import wisematches.core.Personality;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
+import wisematches.core.search.SearchFilter;
 
 import java.util.Arrays;
 import java.util.Collection;

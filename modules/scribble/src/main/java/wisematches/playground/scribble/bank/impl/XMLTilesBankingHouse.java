@@ -4,7 +4,7 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.scribble.bank.LettersDistribution;
 
 import javax.xml.parsers.DocumentBuilder;

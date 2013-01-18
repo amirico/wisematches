@@ -1,8 +1,8 @@
 package wisematches.playground.tourney.regular;
 
-import wisematches.database.Range;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
+import wisematches.core.search.Range;
+import wisematches.core.search.SearchFilter;
+import wisematches.core.search.SearchManager;
 
 /**
  * {@code RegistrationSearchManager} provides ability to get information about registered/unregistered

@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 
 /**
  * This exception is throw if player can't make a turn because turn belongs to other player or player
@@ -19,7 +19,7 @@ public class UnsuitablePlayerException extends IncorrectMoveException {
 	 * perform required operation.
 	 *
 	 * @param operation the doing operation.
-	 * @param player	the player who try do this operation.
+	 * @param player    the player who try do this operation.
 	 */
 	public UnsuitablePlayerException(String operation, Personality player) {
 		super("Player " + "[" + player.getId() + "] can not perform " +
@@ -52,7 +52,7 @@ public class UnsuitablePlayerException extends IncorrectMoveException {
 	 * This constructor is used to indicates that one player try perform some operation but
 	 * another player is expected.
 	 *
-	 * @param operation	   the doing operation.
+	 * @param operation       the doing operation.
 	 * @param expectedPlayer  the player who expected.
 	 * @param specifiedPlayer the player who try to perform operation.
 	 */
@@ -69,7 +69,7 @@ public class UnsuitablePlayerException extends IncorrectMoveException {
 	 * This constructor is used to indicates that one player try perform some operation but
 	 * another player is expected.
 	 *
-	 * @param operation		 the doing operation.
+	 * @param operation         the doing operation.
 	 * @param expectedPlayerId  the player id who expected.
 	 * @param specifiedPlayerId the player id who try to perform operation.
 	 */

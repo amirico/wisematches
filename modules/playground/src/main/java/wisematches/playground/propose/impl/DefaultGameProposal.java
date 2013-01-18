@@ -1,10 +1,10 @@
 package wisematches.playground.propose.impl;
 
-import wisematches.personality.Membership;
-import wisematches.personality.Personality;
-import wisematches.personality.player.Player;
-import wisematches.personality.player.computer.ComputerPlayer;
-import wisematches.personality.player.computer.robot.RobotPlayer;
+import wisematches.core.Personality;
+import wisematches.core.personality.Player;
+import wisematches.core.personality.PlayerType;
+import wisematches.core.personality.proprietary.ProprietaryPlayer;
+import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.criteria.CriterionViolation;
 import wisematches.playground.criteria.PlayerCriterion;
@@ -109,8 +109,8 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 		// Join robots
 		for (Personality opponent : opponents) {
 			if (opponent != null) {
-				final ComputerPlayer cp = RobotPlayer.getComputerPlayer(opponent.getId());
-				if (cp != null && cp.getMembership() == Membership.ROBOT) {
+				final ProprietaryPlayer cp = RobotPlayer.getComputerPlayer(opponent.getId());
+				if (cp != null && cp.getPlayerType() == PlayerType.ROBOT) {
 					attachImpl(cp);
 				}
 			}

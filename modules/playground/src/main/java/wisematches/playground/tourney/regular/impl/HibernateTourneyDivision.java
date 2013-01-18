@@ -1,6 +1,6 @@
 package wisematches.playground.tourney.regular.impl;
 
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.TourneyDivision;
 import wisematches.playground.tourney.regular.TourneySection;

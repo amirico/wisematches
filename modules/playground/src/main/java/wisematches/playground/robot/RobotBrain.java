@@ -1,6 +1,6 @@
 package wisematches.playground.robot;
 
-import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.core.personality.proprietary.robot.RobotType;
 import wisematches.playground.GameBoard;
 
 /**

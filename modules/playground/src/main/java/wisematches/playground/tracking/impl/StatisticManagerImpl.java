@@ -1,11 +1,11 @@
 package wisematches.playground.tracking.impl;
 
 import org.apache.log4j.Logger;
-import wisematches.personality.Personality;
-import wisematches.personality.account.Account;
-import wisematches.personality.account.AccountListener;
-import wisematches.personality.account.AccountManager;
-import wisematches.personality.player.computer.ComputerPlayer;
+import wisematches.core.Personality;
+import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.member.account.AccountListener;
+import wisematches.core.personality.member.account.AccountManager;
+import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.RegularTourneyListener;
@@ -214,7 +214,7 @@ public class StatisticManagerImpl implements StatisticManager {
 	}
 
 	protected boolean isPlayerIgnored(final GamePlayerHand hand) {
-		return ComputerPlayer.getComputerPlayer(hand.getPlayerId()) != null;
+		return ProprietaryPlayer.getComputerPlayer(hand.getPlayerId()) != null;
 	}
 
 	protected void fireStatisticUpdated(Personality player, StatisticsEditor statistic) {

@@ -5,10 +5,10 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.personality.player.computer.robot.RobotPlayer;
-import wisematches.personality.player.computer.robot.RobotType;
+import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.task.TransactionalExecutor;
 import wisematches.playground.*;
-import wisematches.playground.task.TransactionalTaskExecutor;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class RobotActivityCenterTest {
 		robotBrain = createStrictMock(RobotBrain.class);
 		boardManager = createStrictMock(BoardManager.class);
 
-		TransactionalTaskExecutor taskExecutor = createMock(TransactionalTaskExecutor.class);
+		TransactionalExecutor taskExecutor = createMock(TransactionalExecutor.class);
 		taskExecutor.execute(EasyMock.<Runnable>anyObject());
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			@Override

@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.LongType;
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;

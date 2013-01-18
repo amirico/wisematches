@@ -1,22 +1,12 @@
 package wisematches.playground.propose.impl.memory;
 
-import org.easymock.Capture;
-import org.junit.Before;
 import org.junit.Test;
-import wisematches.personality.Personality;
-import wisematches.personality.player.Player;
-import wisematches.personality.player.computer.guest.GuestPlayer;
-import wisematches.personality.player.computer.robot.RobotPlayer;
+import wisematches.core.Personality;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.propose.ProposalResolution;
-import wisematches.playground.propose.GameProposal;
-import wisematches.playground.propose.GameProposalListener;
 import wisematches.playground.propose.impl.DefaultGameProposal;
-import wisematches.playground.propose.impl.memory.MemoryProposalManager;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

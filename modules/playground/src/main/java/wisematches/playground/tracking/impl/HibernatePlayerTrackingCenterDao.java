@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.StatisticsEditor;
 

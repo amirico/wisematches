@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>GameServer</name>
+    <packaging>pom</packaging>
+
+    <groupId>wisematches</groupId>
+    <artifactId>server</artifactId>
+    <version>5.0.0-SNAPSHOT</version>
+
+    <parent>
+        <artifactId>application</artifactId>
+        <groupId>wisematches</groupId>
+        <version>5.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>wisematches</groupId>
+            <artifactId>core</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>wisematches</groupId>
+            <artifactId>playground</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>wisematches</groupId>
+            <artifactId>scribble</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

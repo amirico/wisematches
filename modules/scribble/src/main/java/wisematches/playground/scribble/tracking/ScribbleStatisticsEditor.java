@@ -3,7 +3,7 @@ package wisematches.playground.scribble.tracking;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.tracking.StatisticsEditor;
 

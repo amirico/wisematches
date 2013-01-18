@@ -1,11 +1,11 @@
 package wisematches.playground.scribble.history;
 
-import wisematches.personality.Language;
-import wisematches.personality.Personality;
+import wisematches.core.Language;
+import wisematches.core.Personality;
+import wisematches.core.search.descriptive.SearchableBean;
+import wisematches.core.search.descriptive.SearchableProperty;
 import wisematches.playground.GameRelationship;
 import wisematches.playground.GameResolution;
-import wisematches.playground.search.descriptive.SearchableBean;
-import wisematches.playground.search.descriptive.SearchableProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

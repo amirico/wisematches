@@ -1,7 +1,7 @@
 package wisematches.playground.dictionary.impl;
 
 import org.junit.Test;
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryException;
 

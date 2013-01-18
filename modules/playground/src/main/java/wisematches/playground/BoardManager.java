@@ -1,8 +1,8 @@
 package wisematches.playground;
 
-import wisematches.personality.Personality;
-import wisematches.playground.search.SearchFilter;
-import wisematches.playground.search.SearchManager;
+import wisematches.core.Personality;
+import wisematches.core.search.SearchFilter;
+import wisematches.core.search.SearchManager;
 
 import java.util.Collection;
 

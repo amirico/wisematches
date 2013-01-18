@@ -1,6 +1,6 @@
 package wisematches.playground.tourney.regular;
 
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.tourney.TourneyEntity;
 
 import java.util.EnumSet;

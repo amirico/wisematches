@@ -1,6 +1,6 @@
 package wisematches.playground.message.impl;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.message.Message;
 
 import javax.persistence.*;
@@ -49,7 +49,7 @@ public class HibernateMessage implements Message {
 	 * Creates new notification message. This message is sent by administrator and notifies about changes, new and so one.
 	 *
 	 * @param recipient the recipient who will received the message.
-	 * @param text	  the message
+	 * @param text      the message
 	 */
 	public HibernateMessage(Personality recipient, String text) {
 		this(recipient, text, true, null, null);

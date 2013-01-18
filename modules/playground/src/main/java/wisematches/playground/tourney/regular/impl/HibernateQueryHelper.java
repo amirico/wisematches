@@ -2,8 +2,8 @@ package wisematches.playground.tourney.regular.impl;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import wisematches.personality.Language;
-import wisematches.personality.Personality;
+import wisematches.core.Language;
+import wisematches.core.Personality;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 

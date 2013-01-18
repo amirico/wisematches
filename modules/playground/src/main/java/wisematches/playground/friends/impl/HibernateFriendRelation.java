@@ -1,6 +1,6 @@
 package wisematches.playground.friends.impl;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.friends.FriendRelation;
 
 import javax.persistence.*;

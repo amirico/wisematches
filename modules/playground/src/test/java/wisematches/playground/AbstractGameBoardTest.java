@@ -4,7 +4,7 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 
 import java.util.*;
 

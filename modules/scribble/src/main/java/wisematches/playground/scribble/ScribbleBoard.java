@@ -3,7 +3,7 @@ package wisematches.playground.scribble;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.LettersDistribution;

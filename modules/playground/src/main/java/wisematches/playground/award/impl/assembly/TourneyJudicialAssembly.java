@@ -2,7 +2,7 @@ package wisematches.playground.award.impl.assembly;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.award.AwardWeight;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;

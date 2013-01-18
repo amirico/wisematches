@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.server.host}"/>
+        <property name="port" value="${mail.server.port}"/>
+        <property name="username" value="${mail.server.username}"/>
+        <property name="password" value="${mail.server.password}"/>
+
+        <property name="javaMailProperties" ref="applicationProperties"/>
+    </bean>
+
+    <bean id="notificationTaskExecutor" class="wisematches.core.task.executor.TransactionAwareExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="notificationFreemarkerConfigurer" parent="commonFreemarkerConfigurer" scope="prototype">
+        <property name="preferFileSystemAccess" value="false"/>
+        <property name="templateLoaderPath" value="classpath:/i18n/notify"/>
+        <property name="freemarkerVariables">
+            <map merge="true">
+                <entry key="serverHostName" value="${server.hostname}"/>
+                <entry key="ratingManager" value-ref="ratingManager"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="notificationFreemarkerConfig"
+          factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
+
+    <bean id="notificationConverter"
+          class="wisematches.server.web.services.notify.impl.converter.FreeMarkerNotificationConverter">
+        <property name="messageSource" ref="messageSource"/>
+        <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
+    </bean>
+
+    <bean id="mailNotificationPublisher"
+          class="wisematches.server.web.services.notify.impl.publisher.MailNotificationPublisher">
+        <property name="hostName" value="${server.hostname}"/>
+        <property name="mailSender" ref="springMailSender"/>
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="messageNotificationPublisher"
+          class="wisematches.server.web.services.notify.impl.publisher.MessageNotificationPublisher">
+        <property name="messageManager" ref="messageManager"/>
+    </bean>
+
+    <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
+
+    <bean id="notificationService" class="wisematches.server.web.services.notify.impl.HibernateNotificationService">
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationConverter" ref="notificationConverter"/>
+        <property name="publishers">
+            <list>
+                <ref bean="messageNotificationPublisher"/>
+
+                <bean class="wisematches.server.web.services.notify.impl.publisher.TimelyNotificationPublisher">
+                    <property name="taskExecutor" ref="notificationTaskExecutor"/>
+                    <property name="playerStateManager" ref="playerStateManager"/>
+                    <property name="notificationPublisher">
+                        <bean class="wisematches.server.web.services.notify.impl.publisher.EssentialNotificationPublisher">
+                            <property name="sessionFactory" ref="sessionFactory"/>
+                            <property name="playerStateManager" ref="playerStateManager"/>
+                            <property name="notificationPublisher" ref="mailNotificationPublisher"/>
+                            <property name="redundantNotifications">
+                                <set>
+                                    <value>playground.game.turn</value>
+                                    <value>playground.game.started</value>
+                                    <value>playground.message.received</value>
+                                    <value>playground.challenge.initiated</value>
+                                </set>
+                            </property>
+                        </bean>
+                    </property>
+
+                    <property name="mandatoryNotifications">
+                        <set>
+                            <value>account.created</value>
+                            <value>account.updated</value>
+                            <value>account.recovery</value>
+                            <value>playground.game.finished</value>
+                            <value>playground.game.expiration.hour</value>
+                        </set>
+                    </property>
+                </bean>
+            </list>
+        </property>
+
+        <property name="notificationDescriptors">
+            <list>
+                <bean parent="notification" c:code="playground.game.started" c:scope="EXTERNAL"/>
+
+                <bean parent="notification" c:code="playground.game.turn" c:scope="EXTERNAL"/>
+
+                <bean parent="notification" c:code="playground.game.finished" c:scope="GLOBAL"/>
+
+
+                <bean parent="notification" c:code="playground.game.expiration.day" c:scope="EXTERNAL"/>
+
+                <bean parent="notification" c:code="playground.game.expiration.half" c:scope="EXTERNAL"/>
+
+                <bean parent="notification" c:code="playground.game.expiration.hour" c:scope="EXTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.challenge.initiated" c:scope="GLOBAL"/>
+
+                <bean parent="notification" c:code="playground.challenge.finalized.rejected" c:scope="INTERNAL"/>
+
+                <bean parent="notification" c:code="playground.challenge.finalized.repudiated" c:scope="INTERNAL"/>
+
+                <bean parent="notification" c:code="playground.challenge.finalized.terminated" c:scope="INTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.challenge.expiration.day" c:scope="EXTERNAL"/>
+
+                <bean parent="notification" c:code="playground.challenge.expiration.days" c:scope="INTERNAL"/>
+
+                <bean parent="notification" c:code="playground.message.received" c:scope="EXTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.tourney.announced" c:scope="GLOBAL"/>
+
+
+                <bean parent="notification" c:code="playground.dictionary.accepted" c:scope="INTERNAL"/>
+
+                <bean parent="notification" c:code="playground.dictionary.rejected" c:scope="INTERNAL"/>
+
+
+                <bean parent="notification" c:code="playground.award.granted" c:scope="INTERNAL"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="alertsOriginCenter" class="wisematches.server.web.services.notify.impl.AlertsOriginCenter">
+        <property name="hostName" value="${server.hostname}"/>
+        <property name="mailSender" ref="springMailSender"/>
+
+        <property name="accountManager" ref="accountManager"/>
+        <property name="abuseReportManager" ref="abuseReportManager"/>
+        <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
+    </bean>
+
+    <bean id="notificationOriginCenter"
+          class="wisematches.server.web.services.notify.impl.NotificationOriginCenter">
+        <property name="playerManager" ref="playerManager"/>
+        <property name="awardsManager" ref="awardsManager"/>
+        <property name="messageManager" ref="messageManager"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="taskExecutor" ref="notificationTaskExecutor"/>
+        <property name="tourneyManager" ref="regularTourneyManager"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
+        <property name="notificationService" ref="notificationService"/>
+        <property name="propertiesManager" ref="reliablePropertiesManager"/>
+        <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
+        <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
+        <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
+    </bean>
+</beans>

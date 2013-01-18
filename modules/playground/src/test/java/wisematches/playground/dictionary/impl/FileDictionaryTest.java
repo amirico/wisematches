@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.FileCopyUtils;
 import org.xml.sax.SAXException;
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.dictionary.DictionaryException;
 import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.dictionary.WordDefinition;

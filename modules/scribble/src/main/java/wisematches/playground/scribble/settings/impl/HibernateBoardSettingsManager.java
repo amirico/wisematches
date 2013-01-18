@@ -3,7 +3,7 @@ package wisematches.playground.scribble.settings.impl;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 

@@ -6,7 +6,7 @@ package wisematches.client.android;
 public enum Membership {
 	ROBOT,
 	GUEST,
-	BASIC,
+	DEFAULT,
 	SILVER,
 	GOLD,
 	PLATINUM

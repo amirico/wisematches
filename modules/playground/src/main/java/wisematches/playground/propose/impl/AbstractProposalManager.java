@@ -1,16 +1,16 @@
 package wisematches.playground.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
-import wisematches.database.Orders;
-import wisematches.database.Range;
-import wisematches.personality.Personality;
-import wisematches.personality.player.Player;
+import wisematches.core.Personality;
+import wisematches.core.personality.Player;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
+import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameSettings;
 import wisematches.playground.criteria.CriterionViolation;
 import wisematches.playground.criteria.PlayerCriterion;
 import wisematches.playground.criteria.ViolatedCriteriaException;
 import wisematches.playground.propose.*;
-import wisematches.playground.search.SearchFilter;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.*;

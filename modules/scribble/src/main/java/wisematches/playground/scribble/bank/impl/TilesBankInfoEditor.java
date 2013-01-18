@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.bank.impl;
 
-import wisematches.personality.Language;
+import wisematches.core.Language;
 import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
 

@@ -5,12 +5,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.database.Orders;
-import wisematches.database.Range;
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
+import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameRelationship;
 import wisematches.playground.award.*;
-import wisematches.playground.search.SearchFilter;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;

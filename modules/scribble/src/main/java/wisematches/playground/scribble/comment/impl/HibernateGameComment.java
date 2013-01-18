@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.comment.impl;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 import wisematches.playground.GameBoard;
 import wisematches.playground.scribble.comment.GameComment;
 

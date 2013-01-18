@@ -1,6 +1,6 @@
 package wisematches.playground.message;
 
-import wisematches.personality.Personality;
+import wisematches.core.Personality;
 
 import java.util.Collection;
 
