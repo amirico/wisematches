@@ -3,11 +3,8 @@ package wisematches.core;
 import java.util.SortedSet;
 
 /**
- * TODO: must have link to language or private constructor.
- *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public final class Alphabet {
 	private final char[] letters;
 

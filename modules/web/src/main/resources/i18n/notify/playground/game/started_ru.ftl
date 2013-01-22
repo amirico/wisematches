@@ -11,10 +11,10 @@
 
 <p>
     К игре
-<#if board.playersHands?size == 2>присоединился один игрок:
-<#else>присоединилось ${board.playersHands?size-1?string} игроков:
+<#if board.players?size == 2>присоединился один игрок:
+<#else>присоединилось ${board.players?size-1?string} игроков:
 </#if>
-<#list board.playersHands as hand>
+<#list board.players as hand>
     <#if hand.playerId != principal.id>
         <@util.player player=hand.playerId showRating=true/><#if hand_has_next>,</#if>
     </#if>

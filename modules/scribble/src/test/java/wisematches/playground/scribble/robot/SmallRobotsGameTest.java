@@ -19,7 +19,7 @@ import wisematches.core.Personality;
 import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSettings;
 
 import java.util.Arrays;
@@ -49,7 +49,7 @@ public class SmallRobotsGameTest {
 	private SessionFactory sessionFactory;
 
 	@Autowired
-	private ScribbleBoardManager scribbleBoardManager;
+	private ScribblePlayManager scribbleBoardManager;
 
 	private final Lock gameFinishedLock = new ReentrantLock();
 	private final Condition gameFinishedCondition = gameFinishedLock.newCondition();
@@ -84,7 +84,7 @@ public class SmallRobotsGameTest {
 		final ScribbleBoard board = scribbleBoardManager.createBoard(
 				new ScribbleSettings("This is robots game", Language.RU, 3, false, true),
 				Arrays.<Personality>asList(r1, r2, r3));
-		scribbleBoardManager.addBoardStateListener(new BoardStateListener() {
+		scribbleBoardManager.addGamePlayListener(new GamePlayListener() {
 			@Override
 			public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 			}
@@ -100,10 +100,10 @@ public class SmallRobotsGameTest {
 				}
 			}
 		});
-		assertTrue("Game is not in progress state", board.isGameActive());
+		assertTrue("Game is not in progress state", board.isActive());
 
 		gameFinishedLock.lock();
-		while (board.isGameActive()) {
+		while (board.isActive()) {
 			gameFinishedCondition.await();
 		}
 		gameFinishedLock.unlock();
@@ -111,9 +111,9 @@ public class SmallRobotsGameTest {
 		log.info("Game was finished at " + (System.currentTimeMillis() - currentTime) + "ms");
 
 		assertTrue("Board is not saved", board.getBoardId() > 0);
-		assertFalse("Board is not finished", board.isGameActive());
+		assertFalse("Board is not finished", board.isActive());
 		assertTrue("Board has no one move", board.getGameMoves().size() > 0);
-		if (board.getGameResolution() == GameResolution.STALEMATE) {
+		if (board.getResolution() == GameResolution.STALEMATE) {
 			assertNull("Board has a player who has a turn", board.getPlayerTurn());
 		} else {
 			assertNotNull("Board has a player who has a turn", board.getPlayerTurn());

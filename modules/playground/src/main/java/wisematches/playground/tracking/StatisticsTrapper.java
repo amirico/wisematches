@@ -48,7 +48,7 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		editor.setAverageMoveTime(average(editor.getAverageMoveTime(), moveTime, turnsCount));
 
 		final PlayerMove playerMove = move.getPlayerMove();
-		if (playerMove instanceof PassTurnMove) {
+		if (playerMove instanceof PassTurn) {
 			editor.setPassesCount(editor.getPassesCount() + 1);
 		}
 	}
@@ -69,8 +69,8 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 		editor.setAverageMovesPerGame(average(editor.getAverageMovesPerGame(), movesCount, gamesCount));
 
 		final GamePlayerHand playerTurn = board.getPlayerTurn();
-		final GameResolution resolution = board.getGameResolution();
-		if (resolution == GameResolution.TIMEOUT && playerTurn.getPlayerId() == editor.getPlayerId()) {
+		final GameResolution resolution = board.getResolution();
+		if (resolution == GameResolution.INTERRUPTED && playerTurn.getPlayerId() == editor.getPlayerId()) {
 			editor.setTimeouts(editor.getTimeouts() + 1);
 		} else if (resolution == GameResolution.RESIGNED && playerTurn.getPlayerId() == editor.getPlayerId()) {
 			editor.setResigned(editor.getResigned() + 1);
@@ -78,11 +78,11 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 			editor.setStalemates(editor.getStalemates() + 1);
 		}
 
-		if (!board.isRatedGame()) {
+		if (!board.isRated()) {
 			return;
 		}
 
-		final List<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+		final List<? extends GamePlayerHand> playersHands = board.getPlayers();
 		final Collection<? extends GamePlayerHand> wonPlayers = board.getWonPlayers();
 		if (wonPlayers.isEmpty()) { // draw
 			editor.setDraws(editor.getDraws() + 1);
@@ -101,8 +101,8 @@ public abstract class StatisticsTrapper<T extends StatisticsEditor> {
 				final Set<RobotType> types = new HashSet<>(3);
 				for (GamePlayerHand hand : playersHands) {
 					final long pid = hand.getPlayerId();
-					if (RobotPlayer.isRobotPlayer(pid)) {
-						final RobotPlayer robot = RobotPlayer.getComputerPlayer(pid, RobotPlayer.class);
+					final RobotPlayer robot = RobotPlayer.byId(pid);
+					if (robot != null) {
 						types.add(robot.getRobotType());
 					}
 				}

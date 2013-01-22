@@ -66,12 +66,12 @@
                 ${gameMessageSource.formatRemainedTime(board, locale)}
                 </td>
                 <td>
-                    <#list board.playersHands as hand>
+                    <#list board.players as hand>
                         <div><@wm.player.name playerManager.getPlayer(hand.getPlayerId())/></div>
                     </#list>
                 </td>
                 <td class="center">
-                    <#list board.playersHands as hand>
+                    <#list board.players as hand>
                         <div>${hand.points}</div>
                     </#list>
                 </td>
@@ -87,7 +87,7 @@
                             class="nickname"><@message code="game.status.waiting"/></span></span>
 
                     <span style="float: right;">
-                        <a href="decline?p=${proposal.id}"
+                        <a href="decline?h=${proposal.id}"
                            onclick="activeGames.cancelProposal(${proposal.id}); return false;">
                             <@message code="game.proposal.cancel"/>
                         </a>

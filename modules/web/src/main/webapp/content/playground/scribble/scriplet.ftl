@@ -30,28 +30,28 @@
         startedMessage: '${gameMessageSource.formatDate(board.startedTime, locale)}',
 
         state: {
-            active: ${board.gameActive?string},
+            active: ${board.active?string},
             spentTimeMillis: ${(gameMessageSource.getSpentMinutes(board)*1000*60)},
             spentTimeMessage: '${gameMessageSource.formatSpentTime(board, locale)}',
         playerTurn:<#if board.playerTurn??>${board.playerTurn.playerId}<#else>null</#if>,
-        <#if board.gameActive>
+        <#if board.active>
             remainedTimeMillis: ${(gameMessageSource.getRemainedMinutes(board)*1000*60)},
             remainedTimeMessage: '${gameMessageSource.formatRemainedTime(board, locale)}'
         </#if>
-        <#if !board.gameActive>
+        <#if !board.active>
             winners: [<#list board.wonPlayers as winner>${winner.playerId}<#if winner_has_next>,</#if></#list>],
-            resolution: '${board.gameResolution}',
+            resolution: '${board.resolution}',
             finishTimeMillis: ${gameMessageSource.getTimeMillis(board.finishedTime)},
             finishTimeMessage: '${gameMessageSource.formatDate(board.finishedTime, locale)}'
         </#if>},
 
         players: [
-        <#list board.playersHands as hand>
+        <#list board.players as hand>
             <#assign p = playerManager.getPlayer(hand.playerId)/>
             {playerId: ${hand.playerId}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points}}<#if hand_has_next>,</#if>
         </#list>],
 
-    <#if !board.gameActive>
+    <#if !board.active>
         ratings: [
             <#list board.ratingChanges as rating>
                 {playerId: ${rating.playerId}, oldRating: ${rating.oldRating}, newRating: ${rating.newRating}, ratingDelta: ${rating.ratingDelta}, points: ${rating.points}}<#if rating_has_next>,</#if>

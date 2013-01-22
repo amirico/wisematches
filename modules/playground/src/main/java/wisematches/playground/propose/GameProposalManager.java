@@ -4,9 +4,9 @@ import wisematches.core.personality.Player;
 import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 import wisematches.playground.GameSettings;
-import wisematches.playground.criteria.CriterionViolation;
-import wisematches.playground.criteria.PlayerCriterion;
-import wisematches.playground.criteria.ViolatedCriteriaException;
+import wisematches.playground.propose.criteria.CriterionViolation;
+import wisematches.playground.propose.criteria.PlayerCriterion;
+import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 
 import java.util.Collection;
 

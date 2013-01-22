@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
 import wisematches.playground.GameMove;
-import wisematches.playground.GameState;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
 import wisematches.playground.scribble.ScribbleMoveScore;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsEditor;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper;
+import wisematches.playground.search.GameState;
 import wisematches.playground.tracking.impl.PlayerTrackingCenterDao;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class PlayerStatisticValidator {
 	private SessionFactory sessionFactory;
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 	private PlayerTrackingCenterDao trackingCenterDao;
 	private ScribbleStatisticsTrapper statisticsTrapper;
 
@@ -38,7 +38,7 @@ public class PlayerStatisticValidator {
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void recalculateStatistics() {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select account.id from wisematches.personality.account.impl.HibernateAccountImpl as account");
+		final Query query = session.createQuery("select account.id from wisematches.core.personality.member.account.impl.HibernateAccountImpl as account");
 		final List list = query.list();
 		for (Object o : list) {
 			Long pid = (Long) o;
@@ -54,7 +54,6 @@ public class PlayerStatisticValidator {
 
 		scribbleBoards.addAll(boardManager.searchEntities(player, GameState.ACTIVE, null, null, null));
 		scribbleBoards.addAll(boardManager.searchEntities(player, GameState.FINISHED, null, null, null));
-		scribbleBoards.addAll(boardManager.searchEntities(player, GameState.INTERRUPTED, null, null, null));
 
 		Collections.sort(scribbleBoards, new Comparator<ScribbleBoard>() {
 			@Override
@@ -74,7 +73,7 @@ public class PlayerStatisticValidator {
 				}
 			}
 
-			if (!board.isGameActive()) {
+			if (!board.isActive()) {
 				statisticsTrapper.trapGameFinished(board, editor);
 			}
 		}
@@ -87,7 +86,7 @@ public class PlayerStatisticValidator {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
 

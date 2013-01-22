@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @MappedSuperclass
-public class GameRelationship implements Relationship {
+public class GameRelationship {
 	@Column(name = "relationshipCode", updatable = false)
 	private int code;
 

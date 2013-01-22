@@ -38,8 +38,11 @@ public class HibernatePlayerTrackingCenterDao implements PlayerTrackingCenterDao
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	@Deprecated
 	public short getRating(final Personality person) {
 		final Session session = sessionFactory.getCurrentSession();
+
+		// TODO: incorrect. Statistic class must be passed here as well.
 		return ((Number) session.getNamedQuery("player.rating").setLong("pid", person.getId()).uniqueResult()).shortValue();
 	}
 

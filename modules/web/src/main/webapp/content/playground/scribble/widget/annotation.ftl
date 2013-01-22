@@ -9,7 +9,7 @@
                rel="/info/tip.ajax?s=board.annotations"></a>
         </div>
         <div class="controls">
-        <#if board.gameActive>
+        <#if board.active>
             <div class="ui-helper-hidden create-comment">
                 <a class="action" href="#"
                    onclick="comments.create(); return false;"><@message code="game.comment.add"/></a>

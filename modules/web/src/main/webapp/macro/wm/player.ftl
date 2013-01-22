@@ -11,7 +11,7 @@
 <#macro state p>
 <div class="state <#if playerStateManager.isPlayerOnline(p)>online<#else>offline</#if>"></div></#macro>
 
-<#macro link p><a href="/playground/profile/view?p=${p.id}"><#nested/></a></#macro>
+<#macro link p><a href="/playground/profile/view?h=${p.id}"><#nested/></a></#macro>
 
 <#macro nick p>
 <div class="nickname">${gameMessageSource.getPlayerNick(p, locale)}</div></#macro>

@@ -9,7 +9,7 @@
         <property name="banksPath" value="classpath:/banks/*"/>
     </bean>
 
-    <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribbleBoardManager">
+    <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribblePlayManager">
         <property name="ratingManager" ref="ratingManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
@@ -26,7 +26,7 @@
     <bean id="scribbleStatisticValidator"
           class="wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
         <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
     </bean>
@@ -36,7 +36,7 @@
             <bean class="wisematches.playground.tracking.impl.StatisticManagerImpl">
                 <property name="ratingManager" ref="ratingManager"/>
                 <property name="accountManager" ref="accountManager"/>
-                <property name="boardManager" ref="scribbleBoardManager"/>
+                <property name="gamePlayManager" ref="scribbleBoardManager"/>
                 <property name="tourneyManager" ref="regularTourneyManager"/>
                 <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
                 <property name="playerTrackingCenterDao" ref="playerTrackingCenterDao"/>
@@ -60,7 +60,7 @@
     <bean id="scribbleGameExpirationManager"
           class="wisematches.playground.scribble.expiration.ScribbleExpirationManager" destroy-method="destroy">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="taskScheduler" ref="expirationTaskScheduler"/>
         <property name="transactionTemplate" ref="transactionRequiresNew"/>
     </bean>
@@ -88,9 +88,9 @@
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="scribbleRobotActivity" class="wisematches.playground.robot.RobotActivityCenter">
+    <bean id="scribbleRobotActivity" class="wisematches.playground.RobotActivityCenter">
         <property name="robotBrain" ref="scribbleRobotBrain"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="taskExecutor" ref="scribbleRobotTaskExecutor"/>
     </bean>
 
@@ -141,7 +141,7 @@
         <property name="cronExpression" value="0 0 0 ? * 2#1"/>
 
         <property name="taskExecutor" ref="tournamentTaskExecutor"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
     </bean>
 

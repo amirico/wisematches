@@ -3,9 +3,7 @@ package wisematches.playground.tracking.impl;
 import wisematches.core.Personality;
 import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.GamePlayerHand;
-import wisematches.playground.GameRatingChange;
-import wisematches.playground.RatingManager;
-import wisematches.playground.rating.RatingSystem;
+import wisematches.playground.RatingSystem;
 
 import java.util.*;
 
@@ -16,24 +14,30 @@ public class RatingManagerImpl implements RatingManager {
 	private RatingSystem ratingSystem;
 	private PlayerTrackingCenterDao trackingCenterDao;
 
-	private final Map<Personality, Short> ratings = new WeakHashMap<>();
+	private short defaultRating;
+	private final Map<Personality, Short> proprietaryRatings = new HashMap<>();
+
+	private final Map<Personality, Short> ratingsCache = new WeakHashMap<>();
 
 	public RatingManagerImpl() {
 	}
 
 	@Override
 	public synchronized short getRating(Personality person) {
-		Short rating = ratings.get(person);
+		Short rating = ratingsCache.get(person);
 		if (rating == null) {
-			ProprietaryPlayer computerPlayer = ProprietaryPlayer.getComputerPlayer(person.getId());
-			if (computerPlayer != null) {
-				rating = computerPlayer.getRating();
-			} else {
+			rating = proprietaryRatings.get(person);
+			if (rating == null) {
 				rating = trackingCenterDao.getRating(person);
 			}
-			ratings.put(person, rating);
+			ratingsCache.put(person, rating);
 		}
 		return rating;
+	}
+
+	@Override
+	public short getProprietaryRating(ProprietaryPlayer person) {
+		return proprietaryRatings.get(person);
 	}
 
 	@Override
@@ -58,11 +62,25 @@ public class RatingManagerImpl implements RatingManager {
 		return res;
 	}
 
-	public void setTrackingCenterDao(PlayerTrackingCenterDao trackingCenterDao) {
-		this.trackingCenterDao = trackingCenterDao;
+	public void setDefaultRating(short defaultRating) {
+		this.defaultRating = defaultRating;
+	}
+
+	public void setProprietaryRatings(Map<Long, Short> proprietaryRatings) {
+		this.proprietaryRatings.clear();
+
+		if (proprietaryRatings != null) {
+			for (Map.Entry<Long, Short> entry : proprietaryRatings.entrySet()) {
+				this.proprietaryRatings.put(Personality.person(entry.getKey()), entry.getValue());
+			}
+		}
 	}
 
 	public void setRatingSystem(RatingSystem ratingSystem) {
 		this.ratingSystem = ratingSystem;
+	}
+
+	public void setTrackingCenterDao(PlayerTrackingCenterDao trackingCenterDao) {
+		this.trackingCenterDao = trackingCenterDao;
 	}
 }

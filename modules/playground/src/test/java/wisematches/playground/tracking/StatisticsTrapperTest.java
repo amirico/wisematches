@@ -2,7 +2,10 @@ package wisematches.playground.tracking;
 
 import org.junit.Test;
 import wisematches.core.Personality;
-import wisematches.playground.*;
+import wisematches.playground.GameBoard;
+import wisematches.playground.GameMove;
+import wisematches.playground.GamePlayerHand;
+import wisematches.playground.GameResolution;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,19 +57,19 @@ public class StatisticsTrapperTest {
 
 		final PlayerMove move1 = new MakeTurnMove(13L);
 		final PlayerMove move2 = new MakeTurnMove(14L);
-		final PlayerMove move3 = new PassTurnMove(13L);
+		final PlayerMove move3 = new PassTurn(13L);
 
 		final GameBoard board = createMock(GameBoard.class);
 		expect(board.getGameMoves()).andReturn(Arrays.asList(
 				new GameMove(move1, 10, 1, new Date()),
 				new GameMove(move2, 20, 2, new Date()),
 				new GameMove(move3, 6, 3, new Date())));
-		expect(board.isRatedGame()).andReturn(true);
-		expect(board.getPlayersHands()).andReturn(hands);
+		expect(board.isRated()).andReturn(true);
+		expect(board.getPlayers()).andReturn(hands);
 		expect(board.getPlayerHand(13L)).andReturn(hands.get(0));
 		expect(board.getRatingChange(hands.get(0))).andReturn(rc1);
 		expect(board.getRatingChanges()).andReturn(Arrays.asList(rc1, rc2, rc3));
-		expect(board.getGameResolution()).andReturn(GameResolution.RESIGNED);
+		expect(board.getResolution()).andReturn(GameResolution.RESIGNED);
 		expect(board.getPlayerTurn()).andReturn(new GamePlayerHand(editor.getPlayerId(), (short) 1));
 		expect(board.getWonPlayers()).andReturn(Collections.emptyList());
 		replay(board);
@@ -89,12 +92,12 @@ public class StatisticsTrapperTest {
 				new GameMove(move1, 10, 1, new Date()),
 				new GameMove(move2, 20, 2, new Date()),
 				new GameMove(move3, 6, 3, new Date())));
-		expect(board.isRatedGame()).andReturn(true);
-		expect(board.getPlayersHands()).andReturn(hands);
+		expect(board.isRated()).andReturn(true);
+		expect(board.getPlayers()).andReturn(hands);
 		expect(board.getPlayerHand(13L)).andReturn(hands.get(0));
 		expect(board.getRatingChange(hands.get(0))).andReturn(rc1);
 		expect(board.getRatingChanges()).andReturn(Arrays.asList(rc1, rc2, rc3));
-		expect(board.getGameResolution()).andReturn(GameResolution.TIMEOUT);
+		expect(board.getResolution()).andReturn(GameResolution.INTERRUPTED);
 		expect(board.getPlayerTurn()).andReturn(new GamePlayerHand(editor.getPlayerId(), (short) 1));
 		expect(board.getWonPlayers()).andReturn(Arrays.asList(new GamePlayerHand(14L, (short) 1)));
 		replay(board);
@@ -117,12 +120,12 @@ public class StatisticsTrapperTest {
 				new GameMove(move1, 10, 1, new Date()),
 				new GameMove(move2, 20, 2, new Date()),
 				new GameMove(move3, 6, 3, new Date())));
-		expect(board.isRatedGame()).andReturn(true);
-		expect(board.getPlayersHands()).andReturn(hands);
+		expect(board.isRated()).andReturn(true);
+		expect(board.getPlayers()).andReturn(hands);
 		expect(board.getPlayerHand(13L)).andReturn(hands.get(0));
 		expect(board.getRatingChange(hands.get(0))).andReturn(rc1);
 		expect(board.getRatingChanges()).andReturn(Arrays.asList(rc1, rc2, rc3));
-		expect(board.getGameResolution()).andReturn(GameResolution.STALEMATE);
+		expect(board.getResolution()).andReturn(GameResolution.STALEMATE);
 		expect(board.getPlayerTurn()).andReturn(new GamePlayerHand(editor.getPlayerId(), (short) 1));
 		expect(board.getWonPlayers()).andReturn(Arrays.asList(new GamePlayerHand(13L, (short) 1)));
 		replay(board);
@@ -144,8 +147,8 @@ public class StatisticsTrapperTest {
 				new GameMove(move1, 10, 1, new Date()),
 				new GameMove(move2, 20, 2, new Date()),
 				new GameMove(move3, 6, 3, new Date())));
-		expect(board.isRatedGame()).andReturn(false);
-		expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
+		expect(board.isRated()).andReturn(false);
+		expect(board.getResolution()).andReturn(GameResolution.FINISHED);
 		expect(board.getPlayerTurn()).andReturn(new GamePlayerHand(editor.getPlayerId(), (short) 1));
 		replay(board);
 		statisticsTrapper.trapGameFinished(board, editor);
@@ -201,7 +204,7 @@ public class StatisticsTrapperTest {
 
 		final PlayerMove move1 = new MakeTurnMove(13L);
 		final PlayerMove move2 = new MakeTurnMove(13L);
-		final PlayerMove move3 = new PassTurnMove(13L);
+		final PlayerMove move3 = new PassTurn(13L);
 
 		final GameMove m1 = new GameMove(move1, 10, 1, new Date(moveTime));
 		final GameMove m2 = new GameMove(move2, 20, 1, new Date(moveTime + 3000));
@@ -260,14 +263,14 @@ public class StatisticsTrapperTest {
 			final GameRatingChange change3 = new GameRatingChange(15L, (short) 300, (short) 1800, (short) 1812);
 
 			reset(board);
-			expect(board.isRatedGame()).andReturn(true);
-			expect(board.getPlayersHands()).andReturn(gamePlayerHands);
+			expect(board.isRated()).andReturn(true);
+			expect(board.getPlayers()).andReturn(gamePlayerHands);
 			expect(board.getPlayerHand(14L)).andReturn(gamePlayerHands.get(1));
 			expect(board.getRatingChange(gamePlayerHands.get(1))).andReturn(change2);
 			expect(board.getRatingChanges()).andReturn(Arrays.asList(change1, change2, change3));
 			expect(board.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
 			expect(board.getWonPlayers()).andReturn(Collections.emptyList());
-			expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
+			expect(board.getResolution()).andReturn(GameResolution.FINISHED);
 			expect(board.getPlayerTurn()).andReturn(null);
 			replay(board);
 
@@ -289,14 +292,14 @@ public class StatisticsTrapperTest {
 			final GameRatingChange change3 = new GameRatingChange(15L, (short) 100, (short) 1800, (short) 1782);
 
 			reset(board);
-			expect(board.isRatedGame()).andReturn(true);
-			expect(board.getPlayersHands()).andReturn(gamePlayerHands);
+			expect(board.isRated()).andReturn(true);
+			expect(board.getPlayers()).andReturn(gamePlayerHands);
 			expect(board.getPlayerHand(14L)).andReturn(gamePlayerHands.get(1));
 			expect(board.getRatingChange(gamePlayerHands.get(1))).andReturn(change2);
 			expect(board.getRatingChanges()).andReturn(Arrays.asList(change1, change2, change3));
 			expect(board.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
 			expect(board.getWonPlayers()).andReturn(Collections.emptyList());
-			expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
+			expect(board.getResolution()).andReturn(GameResolution.FINISHED);
 			expect(board.getPlayerTurn()).andReturn(null);
 			replay(board);
 
@@ -318,14 +321,14 @@ public class StatisticsTrapperTest {
 			final GameRatingChange change3 = new GameRatingChange(15L, (short) 200, (short) 1800, (short) 1782);
 
 			reset(board);
-			expect(board.isRatedGame()).andReturn(true);
-			expect(board.getPlayersHands()).andReturn(gamePlayerHands);
+			expect(board.isRated()).andReturn(true);
+			expect(board.getPlayers()).andReturn(gamePlayerHands);
 			expect(board.getPlayerHand(14L)).andReturn(gamePlayerHands.get(1));
 			expect(board.getRatingChange(gamePlayerHands.get(1))).andReturn(change2);
 			expect(board.getRatingChanges()).andReturn(Arrays.asList(change1, change2, change3));
 			expect(board.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
 			expect(board.getWonPlayers()).andReturn(Collections.emptyList());
-			expect(board.getGameResolution()).andReturn(GameResolution.FINISHED);
+			expect(board.getResolution()).andReturn(GameResolution.FINISHED);
 			expect(board.getPlayerTurn()).andReturn(null);
 			replay(board);
 

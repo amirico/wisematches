@@ -139,51 +139,51 @@ public class NotificationOriginCenterTest {
 
 	@Test
 	public void testGameStarted() throws GameMoveException {
-		final Capture<BoardStateListener> listenerCapture = new Capture<>();
+		final Capture<GamePlayListener> listenerCapture = new Capture<>();
 
-		final BoardManager boardManager = createStrictMock(BoardManager.class);
-		boardManager.addBoardStateListener(capture(listenerCapture));
-		boardManager.removeBoardStateListener(capture(listenerCapture));
-		replay(boardManager);
+		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
+		gamePlayManager.addGamePlayListener(capture(listenerCapture));
+		gamePlayManager.removeGamePlayListener(capture(listenerCapture));
+		replay(gamePlayManager);
 
-		publisherCenter.setBoardManager(boardManager);
+		publisherCenter.setGamePlayManager(gamePlayManager);
 
-		final BoardStateListener boardStateListener = listenerCapture.getValue();
-		boardStateListener.gameStarted(board1);
-		boardStateListener.gameStarted(board2);
+		final GamePlayListener gamePlayListener = listenerCapture.getValue();
+		gamePlayListener.gameStarted(board1);
+		gamePlayListener.gameStarted(board2);
 		assertEquals(4, publishedNotifications.getValues().size());
 
-		publisherCenter.setBoardManager(null);
+		publisherCenter.setGamePlayManager(null);
 
-		verify(boardManager);
+		verify(gamePlayManager);
 	}
 
 	@Test
 	public void testGameMoveDone() throws GameMoveException {
-		final Capture<BoardStateListener> listenerCapture = new Capture<>();
+		final Capture<GamePlayListener> listenerCapture = new Capture<>();
 
-		final BoardManager boardManager = createStrictMock(BoardManager.class);
-		boardManager.addBoardStateListener(capture(listenerCapture));
-		boardManager.removeBoardStateListener(capture(listenerCapture));
-		replay(boardManager);
+		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
+		gamePlayManager.addGamePlayListener(capture(listenerCapture));
+		gamePlayManager.removeGamePlayListener(capture(listenerCapture));
+		replay(gamePlayManager);
 
-		publisherCenter.setBoardManager(boardManager);
+		publisherCenter.setGamePlayManager(gamePlayManager);
 
-		final BoardStateListener boardStateListener = listenerCapture.getValue();
+		final GamePlayListener gamePlayListener = listenerCapture.getValue();
 
 		// Pass turn
-		board1.makeMove(new PassTurnMove(board1.getPlayerTurn().getPlayerId()));
-		board2.makeMove(new PassTurnMove(board2.getPlayerTurn().getPlayerId()));
-		boardStateListener.gameMoveDone(board1, null, null);
-		boardStateListener.gameMoveDone(board2, null, null);
+		board1.makeMove(new PassTurn(board1.getPlayerTurn().getPlayerId()));
+		board2.makeMove(new PassTurn(board2.getPlayerTurn().getPlayerId()));
+		gamePlayListener.gameMoveDone(board1, null, null);
+		gamePlayListener.gameMoveDone(board2, null, null);
 		assertEquals(2, publishedNotifications.getValues().size());
 		publishedNotifications.reset();
 
 		final wisematches.playground.scribble.Word word = new wisematches.playground.scribble.Word(new Position(7, 7), Direction.HORIZONTAL, board1.getPlayerHand(p1.getId()).getTiles());
-		board1.makeMove(new MakeWordMove(board1.getPlayerTurn().getPlayerId(), word));
-		board2.makeMove(new MakeWordMove(board2.getPlayerTurn().getPlayerId(), word));
-		boardStateListener.gameMoveDone(board1, null, null);
-		boardStateListener.gameMoveDone(board2, null, null);
+		board1.makeMove(new MakeTurn(board1.getPlayerTurn().getPlayerId(), word));
+		board2.makeMove(new MakeTurn(board2.getPlayerTurn().getPlayerId(), word));
+		gamePlayListener.gameMoveDone(board1, null, null);
+		gamePlayListener.gameMoveDone(board2, null, null);
 		assertEquals(2, publishedNotifications.getValues().size());
 		publishedNotifications.reset();
 
@@ -195,70 +195,70 @@ public class NotificationOriginCenterTest {
 		for (int i = 0; i < tiles2.length; i++) {
 			tiles2[i] = board2.getPlayerTurn().getTiles()[i].getNumber();
 		}
-		board1.makeMove(new ExchangeTilesMove(board1.getPlayerTurn().getPlayerId(), tiles1));
-		board2.makeMove(new ExchangeTilesMove(board2.getPlayerTurn().getPlayerId(), tiles2));
-		boardStateListener.gameMoveDone(board1, null, null);
-		boardStateListener.gameMoveDone(board2, null, null);
+		board1.makeMove(new ExchangeMove(board1.getPlayerTurn().getPlayerId(), tiles1));
+		board2.makeMove(new ExchangeMove(board2.getPlayerTurn().getPlayerId(), tiles2));
+		gamePlayListener.gameMoveDone(board1, null, null);
+		gamePlayListener.gameMoveDone(board2, null, null);
 		assertEquals(2, publishedNotifications.getValues().size());
 		publishedNotifications.reset();
 
-		publisherCenter.setBoardManager(null);
+		publisherCenter.setGamePlayManager(null);
 
-		verify(boardManager);
+		verify(gamePlayManager);
 	}
 
 	@Test
 	public void testGameFinished() throws GameMoveException {
-		final Capture<BoardStateListener> listenerCapture = new Capture<>();
+		final Capture<GamePlayListener> listenerCapture = new Capture<>();
 
-		final BoardManager boardManager = createStrictMock(BoardManager.class);
-		boardManager.addBoardStateListener(capture(listenerCapture));
-		boardManager.removeBoardStateListener(capture(listenerCapture));
-		replay(boardManager);
+		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
+		gamePlayManager.addGamePlayListener(capture(listenerCapture));
+		gamePlayManager.removeGamePlayListener(capture(listenerCapture));
+		replay(gamePlayManager);
 
-		publisherCenter.setBoardManager(boardManager);
-		board1.makeMove(new PassTurnMove(board1.getPlayerTurn().getPlayerId()));
-		board2.makeMove(new PassTurnMove(board2.getPlayerTurn().getPlayerId()));
+		publisherCenter.setGamePlayManager(gamePlayManager);
+		board1.makeMove(new PassTurn(board1.getPlayerTurn().getPlayerId()));
+		board2.makeMove(new PassTurn(board2.getPlayerTurn().getPlayerId()));
 		final wisematches.playground.scribble.Word word = new wisematches.playground.scribble.Word(new Position(7, 7), Direction.HORIZONTAL, board1.getPlayerHand(p1.getId()).getTiles());
-		board1.makeMove(new MakeWordMove(board1.getPlayerTurn().getPlayerId(), word));
-		board2.makeMove(new MakeWordMove(board2.getPlayerTurn().getPlayerId(), word));
-		board1.makeMove(new PassTurnMove(board1.getPlayerTurn().getPlayerId()));
-		board2.makeMove(new PassTurnMove(board2.getPlayerTurn().getPlayerId()));
+		board1.makeMove(new MakeTurn(board1.getPlayerTurn().getPlayerId(), word));
+		board2.makeMove(new MakeTurn(board2.getPlayerTurn().getPlayerId(), word));
+		board1.makeMove(new PassTurn(board1.getPlayerTurn().getPlayerId()));
+		board2.makeMove(new PassTurn(board2.getPlayerTurn().getPlayerId()));
 		board1.resign(board1.getPlayerTurn());
 		board2.resign(board2.getPlayerTurn());
 
-		final BoardStateListener boardStateListener = listenerCapture.getValue();
-		boardStateListener.gameFinished(board1, GameResolution.FINISHED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board1, GameResolution.STALEMATE, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board1, GameResolution.RESIGNED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board1, GameResolution.TIMEOUT, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board2, GameResolution.FINISHED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board2, GameResolution.STALEMATE, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board2, GameResolution.RESIGNED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		boardStateListener.gameFinished(board2, GameResolution.TIMEOUT, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		final GamePlayListener gamePlayListener = listenerCapture.getValue();
+		gamePlayListener.gameFinished(board1, GameResolution.FINISHED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board1, GameResolution.STALEMATE, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board1, GameResolution.RESIGNED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board1, GameResolution.INTERRUPTED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board2, GameResolution.FINISHED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board2, GameResolution.STALEMATE, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board2, GameResolution.RESIGNED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		gamePlayListener.gameFinished(board2, GameResolution.INTERRUPTED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
 		assertEquals(16, publishedNotifications.getValues().size());
 
-		publisherCenter.setBoardManager(null);
+		publisherCenter.setGamePlayManager(null);
 
-		verify(boardManager);
+		verify(gamePlayManager);
 	}
 
 	@Test
 	public void testScribbleExpiring() throws BoardLoadingException {
 		final Capture<ExpirationListener<Long, ScribbleExpirationType>> listenerCapture = new Capture<>();
 
-		final BoardManager boardManager = createStrictMock(BoardManager.class);
-		boardManager.addBoardStateListener(isA(BoardStateListener.class));
-		expect(boardManager.openBoard(1L)).andReturn(board1).times(3);
-		expect(boardManager.openBoard(2L)).andReturn(board2).times(3);
-		boardManager.removeBoardStateListener(isA(BoardStateListener.class));
-		replay(boardManager);
+		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
+		gamePlayManager.addGamePlayListener(isA(GamePlayListener.class));
+		expect(gamePlayManager.getBoard(1L)).andReturn(board1).times(3);
+		expect(gamePlayManager.getBoard(2L)).andReturn(board2).times(3);
+		gamePlayManager.removeGamePlayListener(isA(GamePlayListener.class));
+		replay(gamePlayManager);
 
 		final ScribbleExpirationManager expirationManager = createStrictMock(ScribbleExpirationManager.class);
 		expirationManager.addExpirationListener(capture(listenerCapture));
 		replay(expirationManager);
 
-		publisherCenter.setBoardManager(boardManager);
+		publisherCenter.setGamePlayManager(gamePlayManager);
 		publisherCenter.setScribbleExpirationManager(expirationManager);
 
 		listenerCapture.getValue().expirationTriggered(1L, ScribbleExpirationType.ONE_DAY);
@@ -270,9 +270,9 @@ public class NotificationOriginCenterTest {
 
 		assertEquals(6, publishedNotifications.getValues().size());
 
-		publisherCenter.setBoardManager(null);
+		publisherCenter.setGamePlayManager(null);
 
-		verify(boardManager);
+		verify(gamePlayManager);
 	}
 
 	@Test

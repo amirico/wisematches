@@ -5,10 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import wisematches.core.personality.proprietary.robot.RobotType;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
-import wisematches.playground.PassTurnMove;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.WordEntry;
-import wisematches.playground.robot.RobotBrain;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.score.ScoreEngine;
 
@@ -32,7 +30,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 	}
 
 	public void putInAction(ScribbleBoard board, RobotType type) {
-		if (!board.isGameActive()) {
+		if (!board.isActive()) {
 			return;
 		}
 
@@ -51,7 +49,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 				log.info("Dictionary is not iterable. Turn passed.");
 			}
 			try {
-				board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
+				board.makeMove(new PassTurn(robotHand.getPlayerId()));
 			} catch (GameMoveException e) {
 				log.error("Turn can't be passed", e);
 			}
@@ -69,13 +67,13 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 		try {
 			if (word != null) {
 				try {
-					final GameMove move = board.makeMove(new MakeWordMove(robotHand.getPlayerId(), word));
+					final GameMove move = board.makeMove(new MakeTurn(robotHand.getPlayerId(), word));
 					if (log.isDebugEnabled()) {
 						log.debug("Robot made a word and took " + move.getPoints() + " points");
 					}
 				} catch (GameMoveException ex) {
 					log.error("Move can't be done", ex);
-					board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
+					board.makeMove(new PassTurn(robotHand.getPlayerId()));
 				}
 			} else {
 				int bankRemained = Math.min(7, board.getBankRemained());
@@ -83,13 +81,13 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 					if (log.isDebugEnabled()) {
 						log.debug("No available word. Turn passed.");
 					}
-					board.makeMove(new PassTurnMove(robotHand.getPlayerId()));
+					board.makeMove(new PassTurn(robotHand.getPlayerId()));
 				} else {
 					int[] tiles = selectTilesForExchange(robotHand, bankRemained);
 					if (log.isDebugEnabled()) {
 						log.debug("No available word. Exchange tiles: " + Arrays.toString(tiles));
 					}
-					board.makeMove(new ExchangeTilesMove(robotHand.getPlayerId(), tiles));
+					board.makeMove(new ExchangeMove(robotHand.getPlayerId(), tiles));
 				}
 			}
 		} catch (GameMoveException ex) {

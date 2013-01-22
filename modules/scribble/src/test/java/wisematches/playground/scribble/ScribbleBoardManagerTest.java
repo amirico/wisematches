@@ -11,12 +11,12 @@ import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.GameState;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
+import wisematches.playground.search.GameState;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class ScribbleBoardManagerTest {
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
-	private ScribbleBoardManager scribbleRoomManager;
+	private ScribblePlayManager scribbleRoomManager;
 
 	public ScribbleBoardManagerTest() {
 	}
@@ -51,7 +51,7 @@ public class ScribbleBoardManagerTest {
 		dictionaryManager = createStrictMock(DictionaryManager.class);
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
 
-		scribbleRoomManager = new ScribbleBoardManager();
+		scribbleRoomManager = new ScribblePlayManager();
 		scribbleRoomManager.setSessionFactory(sessionFactory);
 		scribbleRoomManager.setDictionaryManager(dictionaryManager);
 		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
@@ -66,7 +66,7 @@ public class ScribbleBoardManagerTest {
 
 		final ScribbleBoard board = createStrictMock(ScribbleBoard.class);
 		expect(board.getSettings()).andReturn(settings);
-		expect(board.getPlayersHands()).andReturn(Arrays.<ScribblePlayerHand>asList(null, null, null));
+		expect(board.getPlayers()).andReturn(Arrays.<ScribblePlayerHand>asList(null, null, null));
 		board.initGameAfterLoading(tilesBank, dictionary);
 		replay(board);
 

@@ -1,6 +1,6 @@
 package wisematches.server.web.controllers.playground.scribble.view;
 
-import wisematches.playground.criteria.CriterionViolation;
+import wisematches.playground.propose.criteria.CriterionViolation;
 
 import java.util.Collection;
 

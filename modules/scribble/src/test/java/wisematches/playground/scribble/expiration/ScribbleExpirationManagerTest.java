@@ -16,7 +16,7 @@ import wisematches.core.Language;
 import wisematches.core.expiration.ExpirationListener;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSettings;
 
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import static org.easymock.EasyMock.*;
  */
 public class ScribbleExpirationManagerTest {
 	private Session session;
-	private ScribbleBoardManager scribbleBoardManager;
+	private ScribblePlayManager scribbleBoardManager;
 	private ScribbleExpirationManager expirationManager;
 
 	private static final int MILLIS_IN_DAY = 86400000;//24 * 60 * 60 * 1000;
@@ -42,7 +42,7 @@ public class ScribbleExpirationManagerTest {
 	public void setUp() {
 		session = createMock(Session.class);
 
-		scribbleBoardManager = createMock(ScribbleBoardManager.class);
+		scribbleBoardManager = createMock(ScribblePlayManager.class);
 
 		final TransactionTemplate transactionTemplate = new TransactionTemplate() {
 			@Override
@@ -68,17 +68,17 @@ public class ScribbleExpirationManagerTest {
 	@SuppressWarnings("unchecked")
 	public void testTerminatorInitialization() throws Exception {
 		final ScribbleBoard gameBoard = createStrictMock(ScribbleBoard.class);
-		expect(gameBoard.isGameActive()).andReturn(false);
+		expect(gameBoard.isActive()).andReturn(false);
 		gameBoard.terminate();
 		replay(gameBoard);
 
 		final ScribbleBoard gameBoard2 = createStrictMock(ScribbleBoard.class);
-		expect(gameBoard2.isGameActive()).andReturn(true);
+		expect(gameBoard2.isActive()).andReturn(true);
 		replay(gameBoard2);
 
-		scribbleBoardManager.addBoardStateListener(isA(BoardStateListener.class));
-		expect(scribbleBoardManager.openBoard(15L)).andReturn(gameBoard);
-		expect(scribbleBoardManager.openBoard(16L)).andReturn(gameBoard2);
+		scribbleBoardManager.addGamePlayListener(isA(GamePlayListener.class));
+		expect(scribbleBoardManager.getBoard(15L)).andReturn(gameBoard);
+		expect(scribbleBoardManager.getBoard(16L)).andReturn(gameBoard2);
 		replay(scribbleBoardManager);
 
 		final ExpirationListener<Long, ScribbleExpirationType> l = createMock(ExpirationListener.class);
@@ -118,9 +118,9 @@ public class ScribbleExpirationManagerTest {
 	public void testListeners() throws Exception {
 		final long time = System.currentTimeMillis();
 
-		final Capture<BoardStateListener> boardStateListener = new Capture<>();
+		final Capture<GamePlayListener> boardStateListener = new Capture<>();
 
-		scribbleBoardManager.addBoardStateListener(capture(boardStateListener));
+		scribbleBoardManager.addGamePlayListener(capture(boardStateListener));
 		replay(scribbleBoardManager);
 
 		final ExpirationListener<Long, ScribbleExpirationType> l = createMock(ExpirationListener.class);

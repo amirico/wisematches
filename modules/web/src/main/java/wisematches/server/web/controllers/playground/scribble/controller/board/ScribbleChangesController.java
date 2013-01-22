@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.personality.Player;
 import wisematches.playground.GameMove;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
@@ -28,7 +28,7 @@ import java.util.concurrent.Callable;
 @RequestMapping("/playground/scribble")
 public class ScribbleChangesController extends WisematchesController {
 	private GameCommentManager commentManager;
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
@@ -47,7 +47,7 @@ public class ScribbleChangesController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final ScribbleBoard board = boardManager.openBoard(gameId);
+				final ScribbleBoard board = boardManager.getBoard(gameId);
 
 				final Map<String, Object> res = new HashMap<String, Object>();
 				res.put("state", scribbleObjectsConverter.convertGameState(board, locale));
@@ -90,8 +90,8 @@ public class ScribbleChangesController extends WisematchesController {
 					}
 				}
 
-				if (!board.isGameActive()) {
-					res.put("players", board.getPlayersHands());
+				if (!board.isActive()) {
+					res.put("players", board.getPlayers());
 				}
 				return res;
 			}
@@ -99,7 +99,7 @@ public class ScribbleChangesController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
 

@@ -7,7 +7,7 @@
 <#if context.proposal.commentary?has_content>
 <blockquote>${context.proposal.commentary}</blockquote>
 </#if>
-</p>
+</h>
 <br>
 <p>
     If you accept the proposal new game "${context.proposal.settings.title!""}"

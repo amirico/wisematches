@@ -433,6 +433,7 @@
         <w>forecasted</w>
         <w>freemarker</w>
         <w>gameboard</w>
+        <w>gameplay</w>
         <w>gameplaying</w>
         <w>interpolator</w>
         <w>iterable</w>
@@ -503,12 +504,12 @@
     </option>
   </component>
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateQueryHelper.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneyProcessor.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tracking/RatingCurve.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/server/src/main/java/wisematches/server/services/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/HibernateNotificationService.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/publisher/EssentialNotificationPublisher.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />

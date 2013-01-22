@@ -6,7 +6,7 @@ package wisematches.playground;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class BoardCreationException extends BoardManagementException {
+public class BoardCreationException extends BoardException {
 	public BoardCreationException(String message) {
 		super(message);
 	}

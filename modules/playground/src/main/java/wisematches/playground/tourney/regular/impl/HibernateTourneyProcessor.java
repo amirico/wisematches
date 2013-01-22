@@ -82,7 +82,7 @@ class HibernateTourneyProcessor {
 		}
 	}
 
-	<S extends GameSettings> void initiateDivisions(Session session, BoardManager<S, ?> boardManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
+	<S extends GameSettings> void initiateDivisions(Session session, GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
 		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound = 0 and d.finishedDate is null");
 		for (Object o : query.list()) {
 			final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
@@ -105,7 +105,7 @@ class HibernateTourneyProcessor {
 			for (int i = 0, longsSize = longs.size(); i < longsSize; i++) {
 				final HibernateTourneyGroup group = new HibernateTourneyGroup(i + 1, round, longs.get(i));
 				session.save(group);
-				roundGamesCount += group.initializeGames(boardManager, settingsProvider);
+				roundGamesCount += group.initializeGames(gamePlayManager, settingsProvider);
 				session.update(group);
 			}
 			round.gamesStarted(roundGamesCount);

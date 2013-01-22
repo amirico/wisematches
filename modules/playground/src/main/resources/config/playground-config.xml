@@ -5,49 +5,27 @@
 
     <import resource="restriction-config.xml"/>
 
-    <bean id="eloRatingSystem" class="wisematches.playground.rating.impl.ELORatingSystem"/>
-
     <bean id="playerTrackingCenterDao" class="wisematches.playground.tracking.impl.HibernatePlayerTrackingCenterDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="ratingManager" class="wisematches.playground.tracking.impl.RatingManagerImpl">
-        <property name="ratingSystem" ref="eloRatingSystem"/>
+        <property name="ratingSystem">
+            <bean class="wisematches.playground.rating.ELORatingSystem"/>
+        </property>
+        <property name="defaultRating" value="1200"/>
+        <property name="proprietaryRatings">
+            <map>
+                <entry key="1" value="1200"/>
+                <entry key="2" value="800"/>
+                <entry key="3" value="1200"/>
+                <entry key="4" value="1600"/>
+            </map>
+        </property>
         <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
     </bean>
 
     <bean id="dictionaryManager" class="wisematches.playground.dictionary.impl.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}"/>
     </bean>
-
-    <bean id="abuseReportManager" class="wisematches.playground.abuse.impl.DummyAbuseReportManager">
-    </bean>
-
-    <bean id="messageManager" class="wisematches.playground.message.impl.HibernateMessageManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="playerManager" ref="playerManager"/>
-        <property name="restrictionManager" ref="restrictionManager"/>
-    </bean>
-
-    <bean id="blacklistManager" class="wisematches.playground.blacklist.impl.HibernateBlacklistManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="friendsManager" class="wisematches.playground.friends.impl.HibernateFriendsManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-
-    <bean id="messagesCleanerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <!-- run every morning at 2 AM -->
-        <property name="cronExpression" value="0 0 2 * * ?"/>
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-                <property name="targetObject" ref="messageManager"/>
-                <property name="targetMethod" value="cleanup"/>
-                <property name="concurrent" value="false"/>
-            </bean>
-        </property>
-    </bean>
-
 </beans>

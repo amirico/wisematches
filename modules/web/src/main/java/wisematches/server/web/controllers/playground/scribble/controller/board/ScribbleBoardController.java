@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.personality.Player;
-import wisematches.playground.*;
+import wisematches.playground.BoardLoadingException;
+import wisematches.playground.GameMove;
+import wisematches.playground.UnsuitablePlayerException;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.scribble.*;
@@ -38,7 +40,7 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends WisematchesController {
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 	private DictionaryManager dictionaryManager;
 	private BoardSettingsManager boardSettingsManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
@@ -55,7 +57,7 @@ public class ScribbleBoardController extends WisematchesController {
 								Model model) throws UnknownEntityException {
 		try {
 			final Player player = getPrincipal();
-			final ScribbleBoard board = boardManager.openBoard(gameId);
+			final ScribbleBoard board = boardManager.getBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
 			}
@@ -92,7 +94,7 @@ public class ScribbleBoardController extends WisematchesController {
 				model.addAttribute("boardSettings", BOARD_SETTINGS);
 			} else {
 				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
-				model.addAttribute("viewMode", !board.isGameActive() || board.getPlayerHand(player.getId()) == null);
+				model.addAttribute("viewMode", !board.isActive() || board.getPlayerHand(player.getId()) == null);
 			}
 			return "/content/playground/scribble/playboard";
 		} catch (BoardLoadingException ex) {
@@ -113,7 +115,7 @@ public class ScribbleBoardController extends WisematchesController {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				final Player currentPlayer = getPrincipal();
-				return processGameMove(gameId, new MakeWordMove(currentPlayer.getId(), word.createWord()), locale);
+				return processGameMove(gameId, new MakeTurn(currentPlayer.getId(), word.createWord()), locale);
 			}
 		}, locale);
 	}
@@ -129,7 +131,7 @@ public class ScribbleBoardController extends WisematchesController {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				final Player currentPlayer = getPrincipal();
-				return processGameMove(gameId, new PassTurnMove(currentPlayer.getId()), locale);
+				return processGameMove(gameId, new PassTurn(currentPlayer.getId()), locale);
 			}
 		}, locale);
 	}
@@ -150,7 +152,7 @@ public class ScribbleBoardController extends WisematchesController {
 					t[i] = tiles[i].getNumber();
 				}
 				final Player currentPlayer = getPrincipal();
-				return processGameMove(gameId, new ExchangeTilesMove(currentPlayer.getId(), t), locale);
+				return processGameMove(gameId, new ExchangeMove(currentPlayer.getId(), t), locale);
 			}
 		}, locale);
 	}
@@ -166,13 +168,13 @@ public class ScribbleBoardController extends WisematchesController {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				Player currentPlayer = getPrincipal();
-				final ScribbleBoard board = boardManager.openBoard(gameId);
+				final ScribbleBoard board = boardManager.getBoard(gameId);
 				board.resign(board.getPlayerHand(currentPlayer.getId()));
 
 				final Map<String, Object> res = new HashMap<>();
 				res.put("state", scribbleObjectsConverter.convertGameState(board, locale));
-				if (!board.isGameActive()) {
-					res.put("players", board.getPlayersHands());
+				if (!board.isActive()) {
+					res.put("players", board.getPlayers());
 				}
 				return res;
 			}
@@ -185,13 +187,13 @@ public class ScribbleBoardController extends WisematchesController {
 			throw new UnsuitablePlayerException("make turn", currentPlayer);
 		}
 
-		final ScribbleBoard board = boardManager.openBoard(gameId);
+		final ScribbleBoard board = boardManager.getBoard(gameId);
 		final GameMove gameMove = board.makeMove(move);
 		return scribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager scribbleBoardManager) {
+	public void setBoardManager(ScribblePlayManager scribbleBoardManager) {
 		this.boardManager = scribbleBoardManager;
 	}
 

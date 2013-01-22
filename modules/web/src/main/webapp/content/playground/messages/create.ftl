@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="original" type="wisematches.playground.message.impl.HibernateMessage" -->
+<#-- @ftlvariable name="original" type="wisematches.server.services.message.impl.HibernateMessage" -->
 <#-- @ftlvariable name="recipient" type="wisematches.core.personality.Player" -->
 <#include "/core.ftl">
 

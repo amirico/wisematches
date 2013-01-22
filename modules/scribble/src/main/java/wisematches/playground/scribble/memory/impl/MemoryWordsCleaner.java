@@ -3,7 +3,7 @@ package wisematches.playground.scribble.memory.impl;
 import org.apache.log4j.Logger;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.memory.MemoryWordManager;
 
 import java.util.Collection;
@@ -13,9 +13,9 @@ import java.util.Collection;
  */
 public class MemoryWordsCleaner {
 	private MemoryWordManager memoryWordManager;
-	private ScribbleBoardManager scribbleBoardManager;
+	private ScribblePlayManager scribbleBoardManager;
 
-	private final TheBoardStateListener boardStateListener = new TheBoardStateListener();
+	private final TheGamePlayListener boardStateListener = new TheGamePlayListener();
 
 	private static final Logger log = Logger.getLogger("wisematches.server.scribble.memory");
 
@@ -27,20 +27,20 @@ public class MemoryWordsCleaner {
 	}
 
 
-	public void setScribbleBoardManager(ScribbleBoardManager scribbleBoardManager) {
+	public void setScribbleBoardManager(ScribblePlayManager scribbleBoardManager) {
 		if (this.scribbleBoardManager != null) {
-			this.scribbleBoardManager.removeBoardStateListener(boardStateListener);
+			this.scribbleBoardManager.removeGamePlayListener(boardStateListener);
 		}
 
 		this.scribbleBoardManager = scribbleBoardManager;
 
 		if (this.scribbleBoardManager != null) {
-			this.scribbleBoardManager.addBoardStateListener(boardStateListener);
+			this.scribbleBoardManager.addGamePlayListener(boardStateListener);
 		}
 	}
 
-	private class TheBoardStateListener implements BoardStateListener {
-		private TheBoardStateListener() {
+	private class TheGamePlayListener implements GamePlayListener {
+		private TheGamePlayListener() {
 		}
 
 		@Override

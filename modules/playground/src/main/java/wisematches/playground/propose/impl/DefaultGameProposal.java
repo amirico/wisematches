@@ -2,15 +2,13 @@ package wisematches.playground.propose.impl;
 
 import wisematches.core.Personality;
 import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerType;
-import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
-import wisematches.playground.criteria.CriterionViolation;
-import wisematches.playground.criteria.PlayerCriterion;
-import wisematches.playground.criteria.ViolatedCriteriaException;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalType;
+import wisematches.playground.propose.criteria.CriterionViolation;
+import wisematches.playground.propose.criteria.PlayerCriterion;
+import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.Statistics;
 
 import java.io.IOException;
@@ -90,7 +88,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 
 			if (opponent == null) {
 				waits++;
-			} else if (RobotPlayer.isRobotPlayer(opponent)) {
+			} else if (RobotPlayer.getRobotPlayer(opponent) != null) {
 				robots++;
 			} else {
 				challenges++;
@@ -109,8 +107,8 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 		// Join robots
 		for (Personality opponent : opponents) {
 			if (opponent != null) {
-				final ProprietaryPlayer cp = RobotPlayer.getComputerPlayer(opponent.getId());
-				if (cp != null && cp.getPlayerType() == PlayerType.ROBOT) {
+				final RobotPlayer cp = RobotPlayer.getRobotPlayer(opponent);
+				if (cp != null) {
 					attachImpl(cp);
 				}
 			}

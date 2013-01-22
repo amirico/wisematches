@@ -21,7 +21,7 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private MockGameMoveScore scoreCalculation = new MockGameMoveScore();
 
 	MockGameBoard(GameSettings settings, Collection<Personality> players) {
-		super(settings, null, players);
+		super(settings, players, null);
 	}
 
 	protected GamePlayerHand createPlayerHand(Personality player) {
@@ -80,7 +80,7 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 
 				field.setByte(this, (byte) 0);
 //				iterator = (PlayersIterator<GamePlayerHand>) field.get(this);
-//				iterator.setPlayerTurn(iterator.getPlayerHands().get(0));
+//				iterator.setPlayerTurn(iterator.getPlayers().get(0));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

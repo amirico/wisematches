@@ -16,7 +16,7 @@ import wisematches.playground.BoardLoadingException;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.memory.MemoryWordManager;
@@ -35,7 +35,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/playground/scribble/memory")
 public class ScribbleMemoryController extends WisematchesController {
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 	private GameMessageSource gameMessageSource;
 	private MemoryWordManager memoryWordManager;
 	private RestrictionManager restrictionManager;
@@ -78,7 +78,7 @@ public class ScribbleMemoryController extends WisematchesController {
 			if (personality == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.personality", locale));
 			}
-			final ScribbleBoard board = boardManager.openBoard(boardId);
+			final ScribbleBoard board = boardManager.getBoard(boardId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.board.unknown", locale));
 			}
@@ -104,7 +104,7 @@ public class ScribbleMemoryController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
 

@@ -9,7 +9,7 @@ import java.util.List;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 class MockExpirationManager extends AbstractExpirationManager<Long, MockExpirationType> {
-	private List<Long> terminated = new ArrayList<Long>();
+	private List<Long> terminated = new ArrayList<>();
 
 	protected MockExpirationManager() {
 		super(MockExpirationType.class);

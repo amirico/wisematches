@@ -7,10 +7,10 @@ import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameSettings;
-import wisematches.playground.criteria.CriterionViolation;
-import wisematches.playground.criteria.PlayerCriterion;
-import wisematches.playground.criteria.ViolatedCriteriaException;
 import wisematches.playground.propose.*;
+import wisematches.playground.propose.criteria.CriterionViolation;
+import wisematches.playground.propose.criteria.PlayerCriterion;
+import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.*;
@@ -181,7 +181,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			}
 			return null;
 		}
-		return proposal.checkViolation(player, statisticManager.getPlayerStatistic(player));
+		return proposal.checkViolation(player, statisticManager.getStatistic(player));
 	}
 
 

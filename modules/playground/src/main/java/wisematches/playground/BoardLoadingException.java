@@ -6,7 +6,7 @@ package wisematches.playground;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class BoardLoadingException extends BoardManagementException {
+public class BoardLoadingException extends BoardException {
 	public BoardLoadingException(String message) {
 		super(message);
 	}

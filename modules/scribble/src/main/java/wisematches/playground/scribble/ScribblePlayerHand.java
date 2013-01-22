@@ -1,6 +1,7 @@
 package wisematches.playground.scribble;
 
-import wisematches.playground.GamePlayerHand;
+import wisematches.core.personality.Player;
+import wisematches.playground.AbstractPlayerHand;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
@@ -10,7 +11,7 @@ import java.util.Arrays;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Embeddable
-public final class ScribblePlayerHand extends GamePlayerHand {
+public final class ScribblePlayerHand extends AbstractPlayerHand {
 	@Transient
 	private Tile[] tiles = EMPTY_TILES;
 
@@ -22,12 +23,12 @@ public final class ScribblePlayerHand extends GamePlayerHand {
 	ScribblePlayerHand() {
 	}
 
-	public ScribblePlayerHand(long playerId) {
-		this(playerId, null);
+	public ScribblePlayerHand(Player player) {
+		this(player, null);
 	}
 
-	public ScribblePlayerHand(long playerId, Tile[] tiles) {
-		super(playerId);
+	public ScribblePlayerHand(Player player, Tile[] tiles) {
+		super(player);
 		if (tiles != null) {
 			this.tiles = tiles.clone();
 		}

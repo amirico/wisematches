@@ -1,102 +1,14 @@
 package wisematches.playground;
 
-import java.util.Collection;
-import java.util.Date;
+import wisematches.core.personality.Player;
+
 import java.util.List;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
-	/**
-	 * Returns id of this board.
-	 *
-	 * @return the id of this board.
-	 */
-	long getBoardId();
-
-	/**
-	 * Returns settings of this game.
-	 *
-	 * @return the settings of this game.
-	 */
-	S getSettings();
-
-	/**
-	 * Returns related relationship object for this game. Can be null if there is no relationships.
-	 *
-	 * @return the relationship object for this game.
-	 */
-	GameRelationship getRelationship();
-
-	/**
-	 * Returns time when game was started.
-	 *
-	 * @return return time when game was started or {@code null} if game was not started yet.
-	 */
-	Date getStartedTime();
-
-	/**
-	 * Returns time when game was finished.
-	 *
-	 * @return return time when game was finished or {@code null} if game is not finished yet.
-	 */
-	Date getFinishedTime();
-
-	/**
-	 * Return time of last move in milliseconds.
-	 *
-	 * @return the time of last move in milliseconds.
-	 */
-	Date getLastMoveTime();
-
-	/**
-	 * Indicates should this game be rated after finished.
-	 * <p/>
-	 * Any game can be created as no rated or this flag can be enabled if game was terminated and should not be rated.
-	 *
-	 * @return {@code true} is game should be rated; {@code false} - otherwise.
-	 */
-	boolean isRatedGame();
-
-	/**
-	 * Returns {@code true} if game is active and {@code false} if it's finished or expired.
-	 *
-	 * @return {@code true} if game is active; {@code false} - otherwise.
-	 */
-	boolean isGameActive();
-
-	/**
-	 * Returns the game resolution after finish or {@code null} if game is active.
-	 *
-	 * @return the game resolution if game has been finished or {@code null} if it still active.
-	 */
-	GameResolution getGameResolution();
-
-	/**
-	 * Returns player that has a turn or player who made last turn. For finished stalemate games this method returns
-	 * {@code null}.
-	 *
-	 * @return the player that has a turn or player who made last turn. For finished stalemate games this method returns
-	 *         {@code null}.
-	 */
-	P getPlayerTurn();
-
-	/**
-	 * Returns player that will have turn next if game won't be finished.
-	 * <p/>
-	 * If game was finished correct method returns {@code null}
-	 *
-	 * @return player who will have next turn if game won't be finished.
-	 */
-	P getNextPlayerTurn();
-
-	/**
-	 * Returns game moves count.
-	 *
-	 * @return the game moves count.
-	 */
-	int getGameMovesCount();
+public interface GameBoard<S extends GameSettings, H extends GamePlayerHand> extends BoardDescription<S, H> {
+	int getMovesCount();
 
 	/**
 	 * Returns unmodifiable collection of done moves.
@@ -106,67 +18,6 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	List<GameMove> getGameMoves();
 
 	/**
-	 * Returns collection of moves which were done after last move of specified player.
-	 * <p/>
-	 * If there are no new moves or no one move empty collection will be returned.
-	 *
-	 * @param playerId the player last change should be returned for whom
-	 * @return collection of moves which were done after last move of specified player.
-	 */
-	List<GameMove> getGameChanges(long playerId);
-
-	/**
-	 * Makes move for active player and returns points for this turn.
-	 *
-	 * @param move the move.
-	 * @return points the appropriate game move object
-	 * @throws GameMoveException if move can't be done
-	 */
-	GameMove makeMove(PlayerMove move) throws GameMoveException;
-
-	/**
-	 * Returns player's hand by player's id.
-	 *
-	 * @param playerId the player id who hand should be returned.
-	 * @return the player's hand.
-	 */
-
-	P getPlayerHand(long playerId);
-
-	/**
-	 * Returns unmodifiable collection of all players in this game.
-	 *
-	 * @return the list of all players on this board.
-	 */
-	List<P> getPlayersHands();
-
-	/**
-	 * Returns rating change for specified player hand for that game.
-	 *
-	 * @param player the player who's rating should be changed.
-	 * @return rating change for specified player or null if game is not finished.
-	 */
-	GameRatingChange getRatingChange(GamePlayerHand player);
-
-	/**
-	 * Returns list of all rating changes for the game. Please note that not all changes are reflected in
-	 * player's statistic.
-	 *
-	 * @return list of all changes or null if game is not finished.
-	 */
-	Collection<GameRatingChange> getRatingChanges();
-
-	/**
-	 * Returns list of winners for this game, empty list if no winners (draw) or {@code null} if game still active.
-	 * <p/>
-	 * Draw means that all players have the same points. If all players have the same points except at least one, who
-	 * has less points, all other players will be marked as winners.
-	 *
-	 * @return the list of winners, empty list if no winners (draw) or {@code null} if game is not finished.
-	 */
-	Collection<P> getWonPlayers();
-
-	/**
 	 * Closes this game. State changed to interrupted.
 	 *
 	 * @param player the player who closed the game
@@ -174,15 +25,5 @@ public interface GameBoard<S extends GameSettings, P extends GamePlayerHand> {
 	 * @throws GameFinishedException     if game already finished.
 	 * @see GameResolution#RESIGNED
 	 */
-	void resign(P player) throws GameMoveException;
-
-	/**
-	 * Terminates this game. This method is used to terminate game by timeout.
-	 *
-	 * @throws UnsuitablePlayerException if specified player doesn't belong to this game.
-	 * @throws GameFinishedException     if game already finished.
-	 * @throws IllegalStateException     if timeout is not expired by this method was called.
-	 * @see GameResolution#TIMEOUT
-	 */
-	void terminate() throws GameMoveException;
+	void resign(Player player) throws BoardUpdatingException;
 }

@@ -5,16 +5,12 @@ package wisematches.playground;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class GameMoveException extends Exception {
+public class GameMoveException extends BoardUpdatingException {
 	public GameMoveException(String message) {
 		super(message);
 	}
 
 	public GameMoveException(String message, Throwable cause) {
 		super(message, cause);
-	}
-
-	public GameMoveException(Throwable cause) {
-		super(cause);
 	}
 }

@@ -54,6 +54,6 @@ public class ScribbleHistorySearchManagerTest {
 		historySearchManager.searchEntities(player, GameResolution.FINISHED, null, null, null);
 		historySearchManager.searchEntities(player, GameResolution.RESIGNED, null, null, null);
 		historySearchManager.searchEntities(player, GameResolution.STALEMATE, null, null, null);
-		historySearchManager.searchEntities(player, GameResolution.TIMEOUT, null, null, null);
+		historySearchManager.searchEntities(player, GameResolution.INTERRUPTED, null, null, null);
 	}
 }

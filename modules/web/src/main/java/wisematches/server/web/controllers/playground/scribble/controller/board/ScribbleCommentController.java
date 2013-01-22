@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
 import wisematches.server.web.controllers.ServiceResponse;
@@ -27,7 +27,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/scribble/comment")
 public class ScribbleCommentController extends WisematchesController {
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 	private GameMessageSource gameMessageSource;
 	private GameCommentManager commentManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
@@ -40,7 +40,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse loadComments(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.openBoard(gameId);
+			board = boardManager.getBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -60,7 +60,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse getComments(@RequestParam("b") final long gameId, @RequestBody final long[] ids, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.openBoard(gameId);
+			board = boardManager.getBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -92,14 +92,14 @@ public class ScribbleCommentController extends WisematchesController {
 
 		final ScribbleBoard board;
 		try {
-			board = boardManager.openBoard(gameId);
+			board = boardManager.getBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 		}
-		if (!board.isGameActive()) {
+		if (!board.isActive()) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.finished", locale));
 		}
 		final GameComment comment = commentManager.addComment(board, getPrincipal(), form.getText());
@@ -112,7 +112,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse removeComment(@RequestParam("b") final long gameId, @RequestParam("c") final long commentId, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.openBoard(gameId);
+			board = boardManager.getBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -132,7 +132,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse markComment(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.openBoard(gameId);
+			board = boardManager.getBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -144,7 +144,7 @@ public class ScribbleCommentController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
 

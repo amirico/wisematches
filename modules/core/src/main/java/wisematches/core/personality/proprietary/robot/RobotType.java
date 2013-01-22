@@ -5,7 +5,6 @@ package wisematches.core.personality.proprietary.robot;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public enum RobotType {
 	/**
 	 * Very simple robot.

@@ -9,7 +9,7 @@ import wisematches.core.personality.Player;
 import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.GameBoard;
 import wisematches.playground.GameRelationship;
-import wisematches.playground.criteria.CriterionViolation;
+import wisematches.playground.propose.criteria.CriterionViolation;
 import wisematches.playground.tourney.regular.TourneyRelationship;
 
 import java.text.DateFormat;

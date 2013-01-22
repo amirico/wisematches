@@ -7,7 +7,7 @@
 <div>
     <table cellpadding="5" width="100%" border="1">
         <tbody>
-            <#list board.playersHands as hand>
+            <#list board.players as hand>
                 <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
             <tr class="player-info-${p.id} player-info">
                 <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">&nbsp;</td>
@@ -22,7 +22,7 @@
     </table>
 </div>
     <#if playerInGame>
-    <div class="createChallenge <#if board.gameActive>ui-helper-hidden</#if>" style="width: 100%; padding-top: 6px">
+    <div class="createChallenge <#if board.active>ui-helper-hidden</#if>" style="width: 100%; padding-top: 6px">
         <button class="wm-ui-button"><@message code="game.challenge.label"/></button>
     </div>
     </#if>

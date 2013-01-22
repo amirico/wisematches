@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="context.message" type="wisematches.playground.message.impl.HibernateMessage" -->
+<#-- @ftlvariable name="context.message" type="wisematches.server.services.message.impl.HibernateMessage" -->
 <#import "../../utils.ftl" as notify>
 
 <#if context.message.notification>

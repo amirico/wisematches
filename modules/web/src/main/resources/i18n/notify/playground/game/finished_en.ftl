@@ -36,7 +36,7 @@
 </#switch>
 </p>
 
-<#if board.ratedGame>
+<#if board.rated>
 <p>
     Ratings of all players player (except robots) were changed:
 <table>
@@ -55,7 +55,7 @@
         </tr>
     </#list>
 </table>
-</p>
+</h>
 <p>
     You can read more about rating calculation here: <@util.link href="info/rating"/>.
 </p>

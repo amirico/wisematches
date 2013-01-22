@@ -79,7 +79,7 @@ public class HibernateAccountLockManager implements AccountLockManager {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("" +
 				"select lock.unlockDate " +
-				"from wisematches.personality.account.impl.HibernateAccountLockInfo lock " +
+				"from HibernateAccountLockInfo lock " +
 				"where lock.playerId = :pid");
 		query.setLong("pid", player.getId());
 		final Date unlockDate = (Date) query.uniqueResult();
@@ -87,7 +87,7 @@ public class HibernateAccountLockManager implements AccountLockManager {
 		if (unlockDate != null) {
 			final boolean res = System.currentTimeMillis() < unlockDate.getTime();
 			if (!res) {
-				final Query q = session.createQuery("delete from wisematches.personality.account.impl.HibernateAccountLockInfo " +
+				final Query q = session.createQuery("delete from HibernateAccountLockInfo " +
 						"lock where lock.playerId = :pid");
 				q.setLong("pid", player.getId());
 				q.executeUpdate();
@@ -168,7 +168,7 @@ public class HibernateAccountLockManager implements AccountLockManager {
 	public void unlockNickname(final String nickname) {
 		final Session session = sessionFactory.getCurrentSession();
 		Query q = session.createQuery(
-				"delete from wisematches.personality.account.impl.HibernateAccountNicknameLockInfo where username = :user");
+				"delete from HibernateAccountNicknameLockInfo where username = :user");
 		q.setString("user", nickname);
 		final int removedCount = q.executeUpdate();
 		if (removedCount != 0) {
