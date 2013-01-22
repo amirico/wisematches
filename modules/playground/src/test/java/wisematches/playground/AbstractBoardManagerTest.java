@@ -8,6 +8,7 @@ import wisematches.core.Personality;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
+import wisematches.playground.search.GameState;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,7 +24,7 @@ import static org.junit.Assert.*;
 public class AbstractBoardManagerTest {
 	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
 
-	private BoardStateListener boardStateListener;
+	private GamePlayListener gamePlayListener;
 
 	public AbstractBoardManagerTest() {
 	}
@@ -38,7 +39,7 @@ public class AbstractBoardManagerTest {
 		expect(board2.getBoardId()).andReturn(2L).anyTimes();
 		replay(board2);
 
-		AbstractBoardManager.BoardsMap<GameBoard> board = new AbstractBoardManager.BoardsMap<>(log);
+		AbstractGamePlayManager.BoardsMap<GameBoard> board = new AbstractGamePlayManager.BoardsMap<>(log);
 		assertEquals(0, board.size());
 
 		board.addBoard(board1);
@@ -87,7 +88,7 @@ public class AbstractBoardManagerTest {
 		dao.saveBoard(board);
 		replay(dao);
 
-		final MockBoardManager mock = new MockBoardManager(dao);
+		final MockGamePlayManager mock = new MockGamePlayManager(dao);
 
 		final GameBoard<?, ?> newBoard = mock.createBoard(settings, players);
 		assertSame(board, newBoard);
@@ -107,9 +108,9 @@ public class AbstractBoardManagerTest {
 		expect(dao.loadBoard(1L)).andReturn(board);
 		replay(dao);
 
-		final MockBoardManager mock = new MockBoardManager(dao);
+		final MockGamePlayManager mock = new MockGamePlayManager(dao);
 
-		final GameBoard<?, ?> newBoard = mock.openBoard(1L);
+		final GameBoard<?, ?> newBoard = mock.getBoard(1L);
 		assertSame(board, newBoard);
 
 		verify(board);
@@ -119,7 +120,7 @@ public class AbstractBoardManagerTest {
 		reset(board);
 		replay(board);
 
-		final GameBoard<?, ?> newBoard2 = mock.openBoard(1L);
+		final GameBoard<?, ?> newBoard2 = mock.getBoard(1L);
 		assertSame(board, newBoard2);
 		assertSame(newBoard, newBoard2);
 
@@ -146,7 +147,7 @@ public class AbstractBoardManagerTest {
 		expect(dao.loadBoard(2L)).andReturn(board2);
 		replay(dao);
 
-		final MockBoardManager mock = new MockBoardManager(dao);
+		final MockGamePlayManager mock = new MockGamePlayManager(dao);
 
 		final Collection<AbstractGameBoard<GameSettings, GamePlayerHand>> waitingBoards = mock.searchEntities(player, GameState.ACTIVE, null, null, null);
 		assertEquals(2, waitingBoards.size());
@@ -173,10 +174,10 @@ public class AbstractBoardManagerTest {
 		final AbstractGameBoard<GameSettings, GamePlayerHand> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
-		expect(board.getPlayersHands()).andReturn(Arrays.asList(h1, h2));
-		expect(board.isRatedGame()).andReturn(true);
-		expect(board.getPlayersHands()).andReturn(Arrays.asList(h1, h2));
-		expect(board.isRatedGame()).andReturn(true);
+		expect(board.getPlayers()).andReturn(Arrays.asList(h1, h2));
+		expect(board.isRated()).andReturn(true);
+		expect(board.getPlayers()).andReturn(Arrays.asList(h1, h2));
+		expect(board.isRated()).andReturn(true);
 		replay(board);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
@@ -185,33 +186,33 @@ public class AbstractBoardManagerTest {
 		expectLastCall().times(2);
 		replay(dao);
 
-		final GameMove move = new GameMove(new PassTurnMove(13L), 0, 0, new Date());
+		final GameMove move = new GameMove(new PassTurn(13L), 0, 0, new Date());
 
-		final BoardStateListener boardListener = createStrictMock(BoardStateListener.class);
+		final GamePlayListener boardListener = createStrictMock(GamePlayListener.class);
 		boardListener.gameMoveDone(board, move, null);
 		boardListener.gameFinished(board, GameResolution.FINISHED, null);
-		boardListener.gameFinished(board, GameResolution.TIMEOUT, null);
+		boardListener.gameFinished(board, GameResolution.INTERRUPTED, null);
 		replay(boardListener);
 
-		final MockBoardManager mock = new MockBoardManager(dao);
-		mock.addBoardStateListener(boardListener);
+		final MockGamePlayManager mock = new MockGamePlayManager(dao);
+		mock.addGamePlayListener(boardListener);
 		mock.setRatingManager(ratingManager);
 
-		mock.openBoard(1L);
+		mock.getBoard(1L);
 
 		boardListener.gameMoveDone(board, move, null);
 
-		boardStateListener.gameFinished(board, GameResolution.FINISHED, null);
-		boardStateListener.gameFinished(board, GameResolution.TIMEOUT, null);
+		gamePlayListener.gameFinished(board, GameResolution.FINISHED, null);
+		gamePlayListener.gameFinished(board, GameResolution.INTERRUPTED, null);
 
 		verify(board, dao, boardListener, ratingManager);
 	}
 
 	private void expectListeners(AbstractGameBoard<?, ?> board) {
-		board.setStateListener(isA(BoardStateListener.class));
+		board.setGamePlayListener(isA(GamePlayListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
-				boardStateListener = (BoardStateListener) getCurrentArguments()[0];
+				gamePlayListener = (GamePlayListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
@@ -230,10 +231,10 @@ public class AbstractBoardManagerTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static class MockBoardManager extends AbstractBoardManager<GameSettings, AbstractGameBoard<GameSettings, GamePlayerHand>> {
+	private static class MockGamePlayManager extends AbstractGamePlayManager<GameSettings, AbstractGameBoard<GameSettings, GamePlayerHand>> {
 		private final GameBoardDao gameBoardDao;
 
-		private MockBoardManager(GameBoardDao gameBoardDao) {
+		private MockGamePlayManager(GameBoardDao gameBoardDao) {
 			super(log);
 			this.gameBoardDao = gameBoardDao;
 		}

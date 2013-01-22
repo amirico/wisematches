@@ -105,7 +105,7 @@ public class PlayerProfileController extends WisematchesController {
 			final Date start = c.getTime();
 
 			final PlayerProfile profile = profileManager.getPlayerProfile(player);
-			final Statistics statistics = statisticManager.getPlayerStatistic(player);
+			final Statistics statistics = statisticManager.getStatistic(player);
 			final RatingCurve ratingCurve = statisticManager.getRatingCurve(player, 10, start, end);
 			final BoardSettings boardSettings = boardSettingsManager.getScribbleSettings(getPersonality());
 

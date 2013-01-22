@@ -42,7 +42,7 @@ public class BoardExampleController extends WisematchesController {
 		final Language language = Language.byLocale(locale);
 
 		BoardWrapper boardWrapper = boardsCache.get(language);
-		if (boardWrapper == null || !boardWrapper.getBoard().isGameActive()) {
+		if (boardWrapper == null || !boardWrapper.getBoard().isActive()) {
 			boardWrapper = createNewBoard(language);
 			boardsCache.put(language, boardWrapper);
 		}

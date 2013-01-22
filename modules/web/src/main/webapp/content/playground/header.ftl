@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="pageName" type="java.lang.String" -->
-<#-- @ftlvariable name="messageManager" type="wisematches.playground.message.MessageManager" -->
+<#-- @ftlvariable name="messageManager" type="wisematches.server.services.message.MessageManager" -->
 <#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
 <#include "/core.ftl">
 

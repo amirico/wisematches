@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.robot.ScribbleRobotBrain;
 import wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator;
 import wisematches.playground.tourney.regular.impl.TourneyAdministrationAccess;
@@ -20,7 +20,7 @@ import wisematches.playground.tourney.regular.impl.TourneyAdministrationAccess;
 @Controller
 @RequestMapping("/admin")
 public class AdministrationController {
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 	private TourneyAdministrationAccess administrationAccess;
 
 	private PlayerStatisticValidator scribbleStatisticValidator;
@@ -46,7 +46,7 @@ public class AdministrationController {
 		ScribbleBoard board = null;
 		try {
 			if (id != null && !id.isEmpty()) {
-				board = boardManager.openBoard(Long.parseLong(id));
+				board = boardManager.getBoard(Long.parseLong(id));
 			}
 		} catch (BoardLoadingException ignore) {
 		}
@@ -66,7 +66,7 @@ public class AdministrationController {
 		ScribbleBoard board = null;
 		try {
 			if (id != null && !id.isEmpty()) {
-				board = boardManager.openBoard(Long.parseLong(id));
+				board = boardManager.getBoard(Long.parseLong(id));
 			}
 		} catch (BoardLoadingException ignore) {
 		}
@@ -77,7 +77,7 @@ public class AdministrationController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
 

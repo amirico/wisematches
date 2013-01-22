@@ -1,0 +1,13 @@
+<bean id="messageManager" class="wisematches.server.services.message.impl.HibernateMessageManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="playerManager" ref="playerManager"/>
+    <property name="restrictionManager" ref="restrictionManager"/>
+</bean>
+
+<bean id="blacklistManager" class="wisematches.server.services.blacklist.impl.HibernateBlacklistManager">
+<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<bean id="friendsManager" class="wisematches.server.services.friends.impl.HibernateFriendsManager">
+<property name="sessionFactory" ref="sessionFactory"/>
+</bean>

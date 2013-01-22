@@ -46,7 +46,7 @@ public class HibernateTourneyManagerTest {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	private BoardStateListener boardStateListener;
+	private GamePlayListener gamePlayListener;
 
 	private HibernateTourneyManager<GameSettings> tourneyManager;
 
@@ -67,16 +67,16 @@ public class HibernateTourneyManagerTest {
 		replay(settingsProvider);
 
 		@SuppressWarnings("unchecked")
-		final BoardManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> boardManager = createMock(BoardManager.class);
-		boardManager.addBoardStateListener(isA(BoardStateListener.class));
+		final GamePlayManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> gamePlayManager = createMock(GamePlayManager.class);
+		gamePlayManager.addGamePlayListener(isA(GamePlayListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			@Override
 			public Object answer() throws Throwable {
-				boardStateListener = (BoardStateListener) getCurrentArguments()[0];
+				gamePlayListener = (GamePlayListener) getCurrentArguments()[0];
 				return null;
 			}
 		});
-		expect(boardManager.createBoard(anyObject(GameSettings.class), isA(GameRelationship.class), anyObject(Collection.class))).andAnswer(new IAnswer<GameBoard<GameSettings, GamePlayerHand>>() {
+		expect(gamePlayManager.createBoard(anyObject(GameSettings.class), anyObject(Collection.class), isA(GameRelationship.class))).andAnswer(new IAnswer<GameBoard<GameSettings, GamePlayerHand>>() {
 			private long c = 1;
 
 			@Override
@@ -88,12 +88,12 @@ public class HibernateTourneyManagerTest {
 				return s;
 			}
 		}).anyTimes();
-		replay(boardManager);
+		replay(gamePlayManager);
 
 		tourneyManager = new HibernateTourneyManager<>();
 		tourneyManager.setSessionFactory(sessionFactory);
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
-		tourneyManager.setBoardManager(boardManager);
+		tourneyManager.setGamePlayManager(gamePlayManager);
 		tourneyManager.setSettingsProvider(settingsProvider);
 	}
 
@@ -385,7 +385,7 @@ public class HibernateTourneyManagerTest {
 		expect(board1.getWonPlayers()).andReturn(Arrays.asList(createMockHand(101, 100)));
 		replay(board1);
 
-		boardStateListener.gameFinished(board1, null, null);
+		gamePlayListener.gameFinished(board1, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(2, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound2, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -401,7 +401,7 @@ public class HibernateTourneyManagerTest {
 		expect(board2.getBoardId()).andReturn(group0.getGameId(103, 104)).anyTimes();
 		expect(board2.getWonPlayers()).andReturn(Arrays.asList(createMockHand(103, 100)));
 		replay(board2);
-		boardStateListener.gameFinished(board2, null, null);
+		gamePlayListener.gameFinished(board2, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(2, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound2, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -414,7 +414,7 @@ public class HibernateTourneyManagerTest {
 		expect(board3.getBoardId()).andReturn(group0.getGameId(103, 105)).anyTimes();
 		expect(board3.getWonPlayers()).andReturn(Arrays.asList(createMockHand(103, 100)));
 		replay(board3);
-		boardStateListener.gameFinished(board3, null, null);
+		gamePlayListener.gameFinished(board3, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(2, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound2, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -427,7 +427,7 @@ public class HibernateTourneyManagerTest {
 		expect(board4.getBoardId()).andReturn(group0.getGameId(104, 105)).anyTimes();
 		expect(board4.getWonPlayers()).andReturn(Arrays.asList(createMockHand(104, 100)));
 		replay(board4);
-		boardStateListener.gameFinished(board4, null, null);
+		gamePlayListener.gameFinished(board4, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound2, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -441,7 +441,7 @@ public class HibernateTourneyManagerTest {
 		expect(board5.getBoardId()).andReturn(group1.getGameId(106, 107)).anyTimes();
 		expect(board5.getWonPlayers()).andReturn(Arrays.asList(createMockHand(106, 100)));
 		replay(board5);
-		boardStateListener.gameFinished(board5, null, null);
+		gamePlayListener.gameFinished(board5, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound2, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -466,7 +466,7 @@ public class HibernateTourneyManagerTest {
 		expect(board6.getBoardId()).andReturn(group3.getGameId(103, 106)).anyTimes();
 		expect(board6.getWonPlayers()).andReturn(Arrays.asList(createMockHand(103, 100), createMockHand(106, 100)));
 		replay(board6);
-		boardStateListener.gameFinished(board6, null, null);
+		gamePlayListener.gameFinished(board6, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(expertRound2, EnumSet.of(TourneyEntity.State.ACTIVE))));

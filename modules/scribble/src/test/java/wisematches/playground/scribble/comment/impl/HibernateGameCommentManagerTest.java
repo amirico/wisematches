@@ -15,7 +15,7 @@ import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
@@ -47,7 +47,7 @@ public class HibernateGameCommentManagerTest {
 	private GameCommentManager commentManager;
 
 	@Autowired
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 
 	public HibernateGameCommentManagerTest() {
 	}

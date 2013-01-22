@@ -11,7 +11,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import wisematches.core.expiration.impl.AbstractExpirationManager;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -22,9 +22,9 @@ import java.util.List;
  */
 public class ScribbleExpirationManager extends AbstractExpirationManager<Long, ScribbleExpirationType> implements InitializingBean {
 	private SessionFactory sessionFactory;
-	private ScribbleBoardManager boardManager;
+	private ScribblePlayManager boardManager;
 
-	private final TheBoardStateListener stateListener = new TheBoardStateListener();
+	private final TheGamePlayListener stateListener = new TheGamePlayListener();
 
 	private static final int MILLIS_IN_DAY = 86400000;//24 * 60 * 60 * 1000;
 
@@ -64,9 +64,9 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 	@Override
 	protected boolean executeTermination(Long boardId) {
 		try {
-			final GameBoard board = boardManager.openBoard(boardId);
+			final GameBoard board = boardManager.getBoard(boardId);
 			if (board != null) {
-				if (!board.isGameActive()) {
+				if (!board.isActive()) {
 					log.info("Terminate game: " + boardId);
 					board.terminate();
 					return true;
@@ -88,20 +88,20 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		if (this.boardManager != null) {
-			this.boardManager.removeBoardStateListener(stateListener);
+			this.boardManager.removeGamePlayListener(stateListener);
 		}
 
 		this.boardManager = boardManager;
 
 		if (this.boardManager != null) {
-			this.boardManager.addBoardStateListener(stateListener);
+			this.boardManager.addGamePlayListener(stateListener);
 		}
 	}
 
-	private class TheBoardStateListener implements BoardStateListener {
-		private TheBoardStateListener() {
+	private class TheGamePlayListener implements GamePlayListener {
+		private TheGamePlayListener() {
 		}
 
 		@Override

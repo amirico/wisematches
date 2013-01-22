@@ -21,10 +21,10 @@ public class HibernateAccountManager implements AccountManager {
 	private SessionFactory sessionFactory;
 	private AccountLockManager accountLockManager;
 
-	private final Collection<AccountListener> accountListeners = new CopyOnWriteArraySet<AccountListener>();
+	private final Collection<AccountListener> accountListeners = new CopyOnWriteArraySet<>();
 	private static final String CHECK_ACCOUNT_AVAILABILITY = "" +
 			"select account.nickname, account.email " +
-			"from wisematches.personality.account.impl.HibernateAccountImpl as account " +
+			"from HibernateAccountImpl as account " +
 			"where account.nickname like :nick or account.email like :email";
 
 	private final Lock lock = new ReentrantLock();
@@ -63,7 +63,7 @@ public class HibernateAccountManager implements AccountManager {
 		lock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl user where user.email=:email");
+			final Query query = session.createQuery("from HibernateAccountImpl user where user.email=:email");
 			query.setString("email", email);
 			final List l = query.list();
 			if (l.size() != 1) {
@@ -81,7 +81,7 @@ public class HibernateAccountManager implements AccountManager {
 		lock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("from wisematches.personality.account.impl.HibernateAccountImpl as user where user.nickname=:nick");
+			final Query query = session.createQuery("from HibernateAccountImpl as user where user.nickname=:nick");
 			query.setString("nick", username);
 			final List l = query.list();
 			if (l.size() != 1) {

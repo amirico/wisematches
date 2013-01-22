@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 import wisematches.core.Personality;
+import wisematches.core.personality.Player;
+import wisematches.core.personality.PlayerManager;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.LettersDistribution;
@@ -36,6 +38,23 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Transient
 	private final ScoreEngine scoreEngine = new ScribbleScoreEngine();
 
+	@Column(name = "passesCount")
+	private int passesCount;
+
+	/**
+	 * Arrays of tiles in player's hands. This field must be stored into {@code TINYBLOB} SQL type because
+	 * required {@literal 7 * 4 = 42} bytes.
+	 * <p/>
+	 * Here 7 - number of tiles in each hand, 4 - maximum number of players.
+	 * <p/>
+	 * In this array bytes from 0 to 6 contains all tiles for player with index 0, bytes from 7 to 13 - tiles
+	 * for player with index 1 and so on. If player player has less when 7 tiles according byte
+	 * must contains {@code Byte.MAX_VALUE}.
+	 * <p/>
+	 * This buffer contains tile number incremented by 1. Zero value means no tile.
+	 */
+	private final byte[] handTiles = new byte[42];
+
 	/**
 	 * Arrays encoded tiles on board.
 	 * <p/>
@@ -58,20 +77,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * </pre>
 	 */
 	private final byte[] boardTiles = new byte[255];
-
-	/**
-	 * Arrays of tiles in player's hands. This field must be stored into {@code TINYBLOB} SQL type because
-	 * required {@literal 7 * 4 = 42} bytes.
-	 * <p/>
-	 * Here 7 - number of tiles in each hand, 4 - maximum number of players.
-	 * <p/>
-	 * In this array bytes from 0 to 6 contains all tiles for player with index 0, bytes from 7 to 13 - tiles
-	 * for player with index 1 and so on. If player player has less when 7 tiles according byte
-	 * must contains {@code Byte.MAX_VALUE}.
-	 * <p/>
-	 * This buffer contains tile number incremented by 1. Zero value means no tile.
-	 */
-	private final byte[] handTiles = new byte[42];
 
 	/**
 	 * Arrays of tiles redifinitions. This field must be stored into {@code TINYBLOB} SQL type because
@@ -115,6 +120,8 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	public static final int LETTERS_IN_HAND = 7;
 	public static final int CENTER_CELL = (CELLS_NUMBER - 1) / 2;
 
+	private static final int MAX_PASSED_TURNS = 2;
+
 	private static final int[] EMPTY_TILES_IDS = new int[0];
 
 	private static final Log log = LogFactory.getLog("wisematches.games.scribble");
@@ -131,7 +138,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 	public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
-		super(settings, relationship, players);
+		super(settings, players, relationship);
 		if (log.isDebugEnabled()) {
 			log.debug("Game started: " + getBoardId());
 		}
@@ -140,7 +147,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		this.dictionary = dictionary;
 		positions = new Position[tilesBank.getBankCapacity()];
 
-		final List<ScribblePlayerHand> playerHands = getPlayersHands();
+		final List<ScribblePlayerHand> playerHands = getPlayers();
 		for (ScribblePlayerHand hand : playerHands) {
 			hand.addTiles(tilesBank.requestTiles(LETTERS_IN_HAND));
 			if (log.isDebugEnabled()) {
@@ -150,9 +157,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 	}
 
-	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary) {
-		this.dictionary = vocabulary;
+	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PlayerManager playerManager) {
+		initializePlayers(playerManager);
 
+		this.dictionary = vocabulary;
 		this.tilesBank = tilesBank;
 		positions = new Position[tilesBank.getBankCapacity()];
 		restoreBoardState();
@@ -173,8 +181,9 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * @return the created player hand.
 	 * @see ScribblePlayerHand
 	 */
-	protected ScribblePlayerHand createPlayerHand(Personality player) {
-		return new ScribblePlayerHand(player.getId());
+	@Override
+	protected ScribblePlayerHand createPlayerHand(Player player, byte index) {
+		return new ScribblePlayerHand(player, index);
 	}
 
 	private void restoreBoardState() {
@@ -192,7 +201,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	private void restorePlayerHands() {
 		// Process player hands
 		int playerIndex = 0;
-		final List<ScribblePlayerHand> playersHands = getPlayersHands();
+		final List<ScribblePlayerHand> playersHands = getPlayers();
 		for (ScribblePlayerHand playersHand : playersHands) {
 			for (int i = 0; i < LETTERS_IN_HAND; i++) {
 				final int index = playerIndex * LETTERS_IN_HAND + i;
@@ -237,11 +246,11 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			int row = byte3 & 0xF;
 			int column = (byte3 >> 4) & 0xF;
 
-			final long playerId = getPlayerByCode(code).getPlayerId();
 			final int points = boardMoves.getShort();
-			final long time = boardMoves.getLong();
+			final Date time = new Date(boardMoves.getLong());
+			final Player player = getPlayerByCode(code).getPlayer();
 
-			final PlayerMove playerMove;
+			final GameMove move;
 			if (type == 0) {
 				final Position position = new Position(row, column);
 				final Direction direct = (direction == 0 ? Direction.VERTICAL : Direction.HORIZONTAL);
@@ -258,37 +267,35 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 						row++;
 					}
 				}
-				playerMove = new MakeWordMove(playerId, new Word(position, direct, tiles));
+				move = new MakeTurn(player, points, moves.size(), time, new Word(position, direct, tiles));
 			} else if (type == 1) {
-				playerMove = new PassTurnMove(playerId);
+				move = new PassTurn(player, points, moves.size(), time);
 			} else if (type == 2) {
-				playerMove = new ExchangeTilesMove(playerId, EMPTY_TILES_IDS);
+				move = new ExchangeMove(player, points, moves.size(), time, EMPTY_TILES_IDS);
 			} else {
 				throw new IllegalStateException("Board state can't be restored. Unknown move type: " + type);
 			}
-			moves.add(new GameMove(playerMove, points, moves.size(), new Date(time)));
+			moves.add(move);
 		}
 	}
 
-	private void registerMoveInBusyCells(GameMove gameMove) {
-		final PlayerMove move = gameMove.getPlayerMove();
-
+	private void registerMoveInBusyCells(GameMove move) {
 		int moveType;
-		if (move instanceof MakeWordMove) {
+		if (move instanceof MakeTurn) {
 			moveType = 0; // maden
-		} else if (move instanceof PassTurnMove) {
+		} else if (move instanceof PassTurn) {
 			moveType = 1; // passed
 		} else {
 			moveType = 2; // exchanged
 		}
 
 		int moveInfo = 1; //indicates that it's move
-		moveInfo |= getPlayerCode(getPlayerHand(move.getPlayerId())) << 1;
+		moveInfo |= getPlayerCode(move.getPlayer()) << 1;
 		moveInfo |= moveType << 4;
 		boardMoves.put((byte) moveInfo);
 
-		if (move instanceof MakeWordMove) {
-			final MakeWordMove wordMove = (MakeWordMove) move;
+		if (move instanceof MakeTurn) {
+			final MakeTurn wordMove = (MakeTurn) move;
 			final Word word = wordMove.getWord();
 			final Position position = word.getPosition();
 
@@ -342,11 +349,11 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 	protected void checkMove(PlayerMove move) throws IncorrectMoveException {
-		if (move instanceof MakeWordMove) {
-			checkMakeWordMove((MakeWordMove) move);
-		} else if (move instanceof ExchangeTilesMove) {
-			checkExchangeTilesMove((ExchangeTilesMove) move);
-		} else if (move instanceof PassTurnMove) {
+		if (move instanceof MakeTurn) {
+			checkMakeWordMove((MakeTurn) move);
+		} else if (move instanceof ExchangeMove) {
+			checkExchangeTilesMove((ExchangeMove) move);
+		} else if (move instanceof PassTurn) {
 			; //always valid
 		} else {
 			throw new IncorrectMoveException("Unsupported move type");
@@ -355,8 +362,8 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	@Override
 	protected ScribbleMoveScore calculateMoveScores(PlayerMove move) {
-		if (move instanceof MakeWordMove) {
-			final MakeWordMove makeWordMove = (MakeWordMove) move;
+		if (move instanceof MakeTurn) {
+			final MakeTurn makeWordMove = (MakeTurn) move;
 			return scoreEngine.calculateWordScore(makeWordMove.getWord(), this);
 		}
 		return null;
@@ -369,11 +376,11 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 
 		final PlayerMove playerMove = gameMove.getPlayerMove();
-		if (playerMove instanceof MakeWordMove) {
-			processMakeWordMoveFinished(player, (MakeWordMove) playerMove);
-		} else if (playerMove instanceof ExchangeTilesMove) {
-			processExchangeTilesMove(player, (ExchangeTilesMove) playerMove);
-		} else if (playerMove instanceof PassTurnMove) {
+		if (playerMove instanceof MakeTurn) {
+			processMakeWordMoveFinished(player, (MakeTurn) playerMove);
+		} else if (playerMove instanceof ExchangeMove) {
+			processExchangeTilesMove(player, (ExchangeMove) playerMove);
+		} else if (playerMove instanceof PassTurn) {
 			;
 		} else {
 			throw new IllegalArgumentException("Unsupported move type: " + playerMove);
@@ -381,7 +388,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		registerMoveInBusyCells(gameMove);
 	}
 
-	private void checkMakeWordMove(MakeWordMove move) throws IncorrectMoveException {
+	private void checkMakeWordMove(MakeTurn move) throws IncorrectMoveException {
 		final Word word = move.getWord();
 
 		final Position position = word.getPosition();
@@ -445,7 +452,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 	}
 
-	private void processMakeWordMoveFinished(ScribblePlayerHand player, MakeWordMove move) {
+	private void processMakeWordMoveFinished(ScribblePlayerHand player, MakeTurn move) {
 		final Tile[] moveTiles = move.getWord().getTiles();
 		final Tile[] handTiles = player.getTiles();
 
@@ -482,7 +489,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 
-	private void checkExchangeTilesMove(ExchangeTilesMove move) throws IncorrectMoveException {
+	private void checkExchangeTilesMove(ExchangeMove move) throws IncorrectMoveException {
 		final int[] ints = move.getTilesIds();
 		if (ints.length == 0) {
 			throw new IncorrectExchangeException("No tiles for exchange", IncorrectExchangeException.Type.EMPTY_TILES);
@@ -509,7 +516,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 	}
 
-	private void processExchangeTilesMove(ScribblePlayerHand player, ExchangeTilesMove move) {
+	private void processExchangeTilesMove(ScribblePlayerHand player, ExchangeMove move) {
 		final int[] ints = move.getTilesIds();
 
 		if (log.isDebugEnabled()) {
@@ -562,7 +569,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	protected boolean checkGameFinished() {
 		if (tilesBank.isEmpty()) {
-			final List<ScribblePlayerHand> playerHands = getPlayersHands();
+			final List<ScribblePlayerHand> playerHands = getPlayers();
 			for (ScribblePlayerHand hand : playerHands) {
 				if (hand.getTiles().length == 0) {
 					return true;
@@ -573,7 +580,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 	protected short[] processGameFinished() {
-		final List<ScribblePlayerHand> hands = getPlayersHands();
+		final List<ScribblePlayerHand> hands = getPlayers();
 		final short[] res = new short[hands.size()];
 
 		int index = 0;
@@ -598,6 +605,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 		return res;
 	}
+
 
 	public boolean isBoardTile(int tileNumber) {
 		return positions[tileNumber] != null;
@@ -639,6 +647,14 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 */
 	public ScoreEngine getScoreEngine() {
 		return scoreEngine;
+	}
+
+	public void makeTurn(Player player, Word word) {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	public void exchangeTiles(Player player, int[] tilesIds) {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	/* ========= Hibernate helper methods ================== */
@@ -699,4 +715,15 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		this.boardMoves.put(boardMoves);
 		this.boardMoves.rewind();
 	}
+
+/**
+ * Checks that game was passed.
+ *
+ * @return <code>true</code> if game was passed; <code>otherwise</code>
+ *//*
+
+	protected boolean isGameStalemate() {
+		return passesCount / hands.size() >= MAX_PASSED_TURNS;
+	}
+*/
 }

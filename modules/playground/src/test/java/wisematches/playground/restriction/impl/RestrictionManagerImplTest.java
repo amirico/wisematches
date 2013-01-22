@@ -2,7 +2,7 @@ package wisematches.playground.restriction.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.core.personality.Player;
+import wisematches.core.personality.member.MemberPlayer;
 import wisematches.core.personality.member.Membership;
 import wisematches.playground.restriction.Restriction;
 
@@ -41,13 +41,13 @@ public class RestrictionManagerImplTest {
 
 	@Test
 	public void testGetRestriction() throws Exception {
-		assertEquals(1, restrictionManager.getRestrictionThreshold("mock1", Membership.DEFAULT));
-		assertEquals(10, restrictionManager.getRestrictionThreshold("mock1", Membership.GOLD));
-		assertEquals(2, restrictionManager.getRestrictionThreshold("mock2", Membership.DEFAULT));
-		assertEquals(12, restrictionManager.getRestrictionThreshold("mock2", Membership.GOLD));
+		assertEquals(1, restrictionManager.getRestrictionThreshold("mock1", createMockPlayer(Membership.DEFAULT)));
+		assertEquals(10, restrictionManager.getRestrictionThreshold("mock1", createMockPlayer(Membership.GOLD)));
+		assertEquals(2, restrictionManager.getRestrictionThreshold("mock2", createMockPlayer(Membership.DEFAULT)));
+		assertEquals(12, restrictionManager.getRestrictionThreshold("mock2", createMockPlayer(Membership.GOLD)));
 
 		try {
-			restrictionManager.getRestrictionThreshold("mock3", Membership.GOLD);
+			restrictionManager.getRestrictionThreshold("mock3", createMockPlayer(Membership.GOLD));
 			fail();
 		} catch (IllegalArgumentException ignore) {
 		}
@@ -75,8 +75,8 @@ public class RestrictionManagerImplTest {
 		assertEquals(violation, restriction.getViolation());
 	}
 
-	private Player createMockPlayer(Membership n) {
-		Player p = createMock(Player.class);
+	private MemberPlayer createMockPlayer(Membership n) {
+		MemberPlayer p = createMock(MemberPlayer.class);
 		expect(p.getMembership()).andReturn(n).anyTimes();
 		replay(p);
 		return p;

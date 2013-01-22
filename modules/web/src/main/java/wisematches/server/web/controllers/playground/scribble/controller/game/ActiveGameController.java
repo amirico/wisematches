@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.personality.Player;
-import wisematches.playground.GameState;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.playground.search.GameState;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.scribble.form.PlayerInfoForm;
@@ -94,7 +94,7 @@ public class ActiveGameController extends AbstractGameController {
 			final ScribbleSettings settings = board.getSettings();
 			final long playerTurn = board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : 0;
 
-			final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
+			final List<ScribblePlayerHand> playersHands = board.getPlayers();
 			final PlayerInfoForm[] players = new PlayerInfoForm[playersHands.size()];
 			for (int i = 0, playersHandsSize = playersHands.size(); i < playersHandsSize; i++) {
 				final ScribblePlayerHand hand = playersHands.get(i);

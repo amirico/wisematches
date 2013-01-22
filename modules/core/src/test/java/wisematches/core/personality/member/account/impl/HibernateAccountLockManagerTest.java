@@ -16,6 +16,9 @@ import wisematches.core.personality.member.account.*;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
@@ -23,7 +26,7 @@ import java.util.UUID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml"
+		"classpath:/config/personality-config.xml"
 })
 public class HibernateAccountLockManagerTest {
 	@Autowired
@@ -56,8 +59,8 @@ public class HibernateAccountLockManagerTest {
 
 	@BeforeTransaction
 	public void onSetUp() throws Exception {
-		accountLockListener = EasyMock.createStrictMock(AccountLockListener.class);
-		listenerAccountNickname = EasyMock.createStrictMock(AccountNicknameLockListener.class);
+		accountLockListener = createStrictMock(AccountLockListener.class);
+		listenerAccountNickname = createStrictMock(AccountNicknameLockListener.class);
 
 		accountLockManager.addAccountLockListener(accountLockListener);
 		accountLockManager.addAccountNicknameLockListener(listenerAccountNickname);
@@ -73,41 +76,41 @@ public class HibernateAccountLockManagerTest {
 	public void testLockUnlockAccount() {
 		final Date unlockDate = new Date(new Date().getTime() + 10000);
 
-		EasyMock.reset(accountLockListener);
+		reset(accountLockListener);
 		accountLockListener.accountLocked(player, "You are locked", "Fuck off", unlockDate);
-		EasyMock.replay(accountLockListener);
+		replay(accountLockListener);
 
-		Assert.assertFalse(accountLockManager.isAccountLocked(player));
+		assertFalse(accountLockManager.isAccountLocked(player));
 		accountLockManager.lockAccount(player, "You are locked", "Fuck off", unlockDate);
-		Assert.assertTrue(accountLockManager.isAccountLocked(player));
-		EasyMock.verify(accountLockListener);
+		assertTrue(accountLockManager.isAccountLocked(player));
+		verify(accountLockListener);
 
-		EasyMock.reset(accountLockListener);
+		reset(accountLockListener);
 		accountLockListener.accountUnlocked(player);
-		EasyMock.replay(accountLockListener);
+		replay(accountLockListener);
 
 		accountLockManager.unlockAccount(player);
-		Assert.assertFalse(accountLockManager.isAccountLocked(player));
-		EasyMock.verify(accountLockListener);
+		assertFalse(accountLockManager.isAccountLocked(player));
+		verify(accountLockListener);
 	}
 
 	@Test
 	public void testIsAccountLocked() throws InterruptedException {
 		final Date unlockDate = new Date(System.currentTimeMillis() + 1000);
 
-		Assert.assertFalse(accountLockManager.isAccountLocked(new AccountEditor("asd", "qwe", "zc").createAccount()));
+		assertFalse(accountLockManager.isAccountLocked(new AccountEditor("asd", "qwe", "zc").createAccount()));
 
-		EasyMock.reset(accountLockListener);
+		reset(accountLockListener);
 		accountLockListener.accountLocked(player, "t", "t", unlockDate);
 		accountLockListener.accountUnlocked(player);
-		EasyMock.replay(accountLockListener);
+		replay(accountLockListener);
 
 		accountLockManager.lockAccount(player, "t", "t", unlockDate);
-		Assert.assertTrue(accountLockManager.isAccountLocked(player));
+		assertTrue(accountLockManager.isAccountLocked(player));
 
 		//Now wait while lock timeout expired
 		Thread.sleep(1200);
-		Assert.assertFalse(accountLockManager.isAccountLocked(player));
+		assertFalse(accountLockManager.isAccountLocked(player));
 	}
 
 	@Test
@@ -115,24 +118,24 @@ public class HibernateAccountLockManagerTest {
 		final Date lockDate = new Date((System.currentTimeMillis() / 1000) * 1000);
 		final Date unlockDate = new Date(lockDate.getTime() + 1000);
 
-		EasyMock.reset(accountLockListener);
+		reset(accountLockListener);
 		accountLockListener.accountLocked(player, "t1", "t2", unlockDate);
 		accountLockListener.accountUnlocked(player);
-		EasyMock.replay(accountLockListener);
+		replay(accountLockListener);
 
 		accountLockManager.lockAccount(player, "t1", "t2", unlockDate);
 
-		Assert.assertNull(accountLockManager.getAccountLockInfo(new AccountEditor("asd", "qwe", "zc").createAccount()));
+		assertNull(accountLockManager.getAccountLockInfo(new AccountEditor("asd", "qwe", "zc").createAccount()));
 		final AccountLockInfo lockInfo = accountLockManager.getAccountLockInfo(player);
-		Assert.assertEquals(player, lockInfo.getAccount());
-		Assert.assertEquals("t1", lockInfo.getPublicReason());
-		Assert.assertEquals("t2", lockInfo.getPrivateReason());
-		Assert.assertTrue(Math.abs(lockDate.getTime() - lockInfo.getLockDate().getTime()) < 2000);
-		Assert.assertEquals(unlockDate, lockInfo.getUnlockDate());
+		assertEquals(player, lockInfo.getAccount());
+		assertEquals("t1", lockInfo.getPublicReason());
+		assertEquals("t2", lockInfo.getPrivateReason());
+		assertTrue(Math.abs(lockDate.getTime() - lockInfo.getLockDate().getTime()) < 2000);
+		assertEquals(unlockDate, lockInfo.getUnlockDate());
 
 		//Now wait while lock timeout expired
 		Thread.sleep(1200);
-		Assert.assertNull(accountLockManager.getAccountLockInfo(player));
+		assertNull(accountLockManager.getAccountLockInfo(player));
 	}
 
 	@Test
@@ -140,27 +143,27 @@ public class HibernateAccountLockManagerTest {
 		listenerAccountNickname.usernameLocked("test", "test reason");
 		listenerAccountNickname.usernameLocked("test", "test reason2");
 		listenerAccountNickname.usernameUnlocked("test");
-		EasyMock.replay(listenerAccountNickname);
+		replay(listenerAccountNickname);
 
 		accountLockManager.addAccountNicknameLockListener(listenerAccountNickname);
 
-		Assert.assertNull(accountLockManager.isNicknameLocked("test"));
+		assertNull(accountLockManager.isNicknameLocked("test"));
 
 		accountLockManager.lockNickname("test", "test reason");
-		Assert.assertEquals("test reason", accountLockManager.isNicknameLocked("test"));
+		assertEquals("test reason", accountLockManager.isNicknameLocked("test"));
 
 		accountLockManager.lockNickname("test", "test reason2");
-		Assert.assertEquals("test reason2", accountLockManager.isNicknameLocked("test"));
+		assertEquals("test reason2", accountLockManager.isNicknameLocked("test"));
 
 		accountLockManager.unlockNickname("test2");
-		Assert.assertEquals("test reason2", accountLockManager.isNicknameLocked("test"));
+		assertEquals("test reason2", accountLockManager.isNicknameLocked("test"));
 
 		accountLockManager.unlockNickname("test");
-		Assert.assertNotNull(accountLockManager.isNicknameLocked("test"));
+		assertNotNull(accountLockManager.isNicknameLocked("test"));
 
 		accountLockManager.unlockNickname("test");
-		Assert.assertNotNull(accountLockManager.isNicknameLocked("test"));
+		assertNotNull(accountLockManager.isNicknameLocked("test"));
 
-		EasyMock.verify(listenerAccountNickname);
+		verify(listenerAccountNickname);
 	}
 }

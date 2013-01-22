@@ -1,6 +1,7 @@
 package wisematches.playground.rating.impl;
 
 import org.junit.Test;
+import wisematches.playground.rating.ELORatingSystem;
 
 import static org.junit.Assert.assertEquals;
 

@@ -98,19 +98,19 @@ public class ScribbleObjectsConverter {
 		res.put("state", convertGameState(board, locale));
 		res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));
 		res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
-		if (!board.isGameActive()) {
-			res.put("players", board.getPlayersHands());
+		if (!board.isActive()) {
+			res.put("players", board.getPlayers());
 		}
 		return res;
 	}
 
 	Map<String, Object> convertGameState(final ScribbleBoard board, Locale locale) {
 		final Map<String, Object> state = new HashMap<String, Object>();
-		state.put("active", board.isGameActive());
+		state.put("active", board.isActive());
 		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
 		state.put("spentTimeMillis", gameMessageSource.getSpentMinutes(board) * 1000 * 60);
 		state.put("spentTimeMessage", gameMessageSource.formatSpentTime(board, locale));
-		if (!board.isGameActive()) {
+		if (!board.isActive()) {
 			final List<ScribblePlayerHand> wonPlayers = board.getWonPlayers();
 			int index = 0;
 			final long[] res = new long[wonPlayers.size()];
@@ -119,7 +119,7 @@ public class ScribbleObjectsConverter {
 			}
 			state.put("winners", res);
 			state.put("ratings", board.getRatingChanges());
-			state.put("resolution", board.getGameResolution());
+			state.put("resolution", board.getResolution());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
 		} else {
@@ -138,14 +138,14 @@ public class ScribbleObjectsConverter {
 		moveInfo.put("player", playerMove.getPlayerId());
 		moveInfo.put("timeMillis", move.getMoveTime().getTime());
 		moveInfo.put("timeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
-		if (playerMove instanceof PassTurnMove) {
+		if (playerMove instanceof PassTurn) {
 			moveInfo.put("type", "pass");
-		} else if (playerMove instanceof MakeWordMove) {
+		} else if (playerMove instanceof MakeTurn) {
 			moveInfo.put("type", "make");
-			moveInfo.put("word", ((MakeWordMove) playerMove).getWord());
-		} else if (playerMove instanceof ExchangeTilesMove) {
+			moveInfo.put("word", ((MakeTurn) playerMove).getWord());
+		} else if (playerMove instanceof ExchangeMove) {
 			moveInfo.put("type", "exchange");
-			moveInfo.put("tilesCount", ((ExchangeTilesMove) playerMove).getTilesIds().length);
+			moveInfo.put("tilesCount", ((ExchangeMove) playerMove).getTilesIds().length);
 		}
 		return moveInfo;
 	}

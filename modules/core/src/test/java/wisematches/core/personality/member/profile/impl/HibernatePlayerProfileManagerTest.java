@@ -1,6 +1,7 @@
 package wisematches.core.personality.member.profile.impl;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import wisematches.core.personality.member.profile.*;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.junit.Assert.*;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -21,7 +24,7 @@ import java.util.UUID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml"
+		"classpath:/config/personality-config.xml"
 })
 public class HibernatePlayerProfileManagerTest {
 	@Autowired
@@ -35,7 +38,7 @@ public class HibernatePlayerProfileManagerTest {
 
 	@Test
 	public void test() throws InadmissibleUsernameException, DuplicateAccountException, UnknownAccountException {
-		final Capture<PlayerProfile> profileCapture = new Capture<PlayerProfile>();
+		final Capture<PlayerProfile> profileCapture = new Capture<>();
 
 		final PlayerProfileListener listener = EasyMock.createStrictMock(PlayerProfileListener.class);
 		listener.playerProfileChanged(EasyMock.capture(profileCapture));
@@ -45,13 +48,13 @@ public class HibernatePlayerProfileManagerTest {
 
 		final Account account = accountManager.createAccount(createMockAccount());
 		final PlayerProfile profile = profileManager.getPlayerProfile(account);
-		Assert.assertNotNull(profile);
-		Assert.assertEquals(account.getId(), profile.getPlayerId());
-		Assert.assertNull(profile.getRealName());
-		Assert.assertNull(profile.getCountryCode());
-		Assert.assertNull(profile.getBirthday());
-		Assert.assertNull(profile.getGender());
-		Assert.assertNull(profile.getPrimaryLanguage());
+		assertNotNull(profile);
+		assertEquals(account.getId(), profile.getPlayerId());
+		assertNull(profile.getRealName());
+		assertNull(profile.getCountryCode());
+		assertNull(profile.getBirthday());
+		assertNull(profile.getGender());
+		assertNull(profile.getPrimaryLanguage());
 
 		final Date birthday = new Date();
 
@@ -64,15 +67,15 @@ public class HibernatePlayerProfileManagerTest {
 		profileManager.updateProfile(editor.createProfile());
 
 		final PlayerProfile profileUpdated = profileManager.getPlayerProfile(account);
-		Assert.assertEquals(account.getId(), profile.getPlayerId());
-		Assert.assertEquals("Mock Real Name", profileUpdated.getRealName());
-		Assert.assertEquals("ru", profileUpdated.getCountryCode());
-		Assert.assertEquals(birthday, profileUpdated.getBirthday());
-		Assert.assertEquals(Gender.FEMALE, profileUpdated.getGender());
-		Assert.assertEquals(Language.RU, profileUpdated.getPrimaryLanguage());
+		assertEquals(account.getId(), profile.getPlayerId());
+		assertEquals("Mock Real Name", profileUpdated.getRealName());
+		assertEquals("ru", profileUpdated.getCountryCode());
+		assertEquals(birthday, profileUpdated.getBirthday());
+		assertEquals(Gender.FEMALE, profileUpdated.getGender());
+		assertEquals(Language.RU, profileUpdated.getPrimaryLanguage());
 
 		accountManager.removeAccount(account);
-		Assert.assertNull(profileManager.getPlayerProfile(account));
+		assertNull(profileManager.getPlayerProfile(account));
 
 		EasyMock.verify(listener);
 	}

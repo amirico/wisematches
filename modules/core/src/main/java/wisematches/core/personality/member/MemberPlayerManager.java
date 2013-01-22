@@ -1,6 +1,5 @@
 package wisematches.core.personality.member;
 
-import wisematches.core.Personality;
 import wisematches.core.personality.PlayerManager;
 import wisematches.core.personality.member.account.Account;
 import wisematches.core.personality.member.account.AccountManager;
@@ -38,11 +37,6 @@ public class MemberPlayerManager implements PlayerManager {
 			}
 		}
 		return player;
-	}
-
-	@Override
-	public MemberPlayer getPlayer(Personality personality) {
-		return getPlayer(personality.getId());
 	}
 
 	public void setAccountManager(AccountManager accountManager) {

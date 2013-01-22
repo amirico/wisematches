@@ -6,7 +6,6 @@ import wisematches.core.Personality;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.GameMoveScore;
-import wisematches.playground.PassTurnMove;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
@@ -60,7 +59,7 @@ public class ScribbleBoardTest extends TestCase {
 		assertEquals(LETTERS_IN_HAND, h1.getTiles().length);
 		assertEquals(LETTERS_IN_HAND, h2.getTiles().length);
 		assertEquals(LETTERS_IN_HAND, h3.getTiles().length);
-		assertNull(board.getGameResolution());
+		assertNull(board.getResolution());
 	}
 
 	public void test_smallGamePlay() throws GameMoveException {
@@ -89,7 +88,7 @@ public class ScribbleBoardTest extends TestCase {
 				getTile(tilesBank, 'z', 1)
 		});
 
-		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(4, 7), Direction.VERTICAL,
+		board.makeMove(new MakeTurn(hand.getPlayerId(), new Word(new Position(4, 7), Direction.VERTICAL,
 				getTile(tilesBank, 'a', 0),
 				getTile(tilesBank, 'b', 0),
 				getTile(tilesBank, 'c', 0),
@@ -110,7 +109,7 @@ public class ScribbleBoardTest extends TestCase {
 				getTile(tilesBank, 'z', 3)
 		});
 
-		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 5), Direction.HORIZONTAL,
+		board.makeMove(new MakeTurn(hand.getPlayerId(), new Word(new Position(7, 5), Direction.HORIZONTAL,
 				getTile(tilesBank, 'q', 0),
 				getTile(tilesBank, 'r', 0),
 				getTile(tilesBank, 'd', 0),
@@ -130,7 +129,7 @@ public class ScribbleBoardTest extends TestCase {
 				getTile(tilesBank, 'z', 6),
 				getTile(tilesBank, 'z', 7)
 		});
-		board.makeMove(new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 9), Direction.VERTICAL,
+		board.makeMove(new MakeTurn(hand.getPlayerId(), new Word(new Position(7, 9), Direction.VERTICAL,
 				getTile(tilesBank, '*', 1).redefine('s'),
 				getTile(tilesBank, 'k', 0),
 				getTile(tilesBank, 'e', 0),
@@ -163,7 +162,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		//=============== first move not in center 1
 		ScribblePlayerHand hand = board.getPlayerTurn();
-		MakeWordMove move = new MakeWordMove(hand.getPlayerId(),
+		MakeTurn move = new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(0, 0), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2)));
 		try {
 			board.checkMove(move);
@@ -174,7 +173,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		//=============== first move not in center 2
 		hand = board.getPlayerTurn();
-		move = new MakeWordMove(hand.getPlayerId(),
+		move = new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(5, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2)));
 		try {
 			board.checkMove(move);
@@ -185,7 +184,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		//=============== first move not in center 3
 		hand = board.getPlayerTurn();
-		move = new MakeWordMove(hand.getPlayerId(),
+		move = new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(7, 5), Direction.VERTICAL, tilesBank.getTiles(0, 1, 2)));
 		try {
 			board.checkMove(move);
@@ -196,14 +195,14 @@ public class ScribbleBoardTest extends TestCase {
 
 		//=============== not any on the board
 		hand.setTiles(tilesBank.getTiles(0, 1, 2));
-		board.makeMove(new MakeWordMove(hand.getPlayerId(),
+		board.makeMove(new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2))));
 		assertEquals(1, board.getGameMoves().size());
 
 		hand = board.getPlayerTurn();
 		hand.setTiles(tilesBank.getTiles(3, 4, 5));
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(8, 7), Direction.HORIZONTAL, tilesBank.getTiles(3, 4, 5))));
 			fail("Exception must be: no one letter from board is taken");
 		} catch (IncorrectTilesException ex) {
@@ -212,7 +211,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		//place tile that already on board
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(0, 1, 2))));
 			fail("Exception must be: tiles already on board");
 		} catch (IncorrectTilesException ex) {
@@ -221,7 +220,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		//place tile into busy cell
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(3, 4, 5))));
 			fail("Exception must be: plate tile in busy cell");
 		} catch (IncorrectTilesException ex) {
@@ -230,7 +229,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		// no one from hand
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2))));
 			fail("Exception must be: no one from hand is taken");
 		} catch (IncorrectTilesException ex) {
@@ -239,7 +238,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		// not required in hand
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(9, 7), Direction.VERTICAL, tilesBank.getTiles(5, 6))));
 			fail("Exception must be: not required in hand");
 		} catch (IncorrectTilesException ex) {
@@ -248,7 +247,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		// incorrect word place
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(5, 0))));
 			fail("Exception must be: incorrect word place");
 		} catch (GameMoveException ignore) {
@@ -257,7 +256,7 @@ public class ScribbleBoardTest extends TestCase {
 		// incorrect word place2
 		hand.setTiles(tilesBank.getTiles(7, 8, 9, 10, 11, 12));
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(7, 9), Direction.HORIZONTAL, tilesBank.getTiles(2, 7, 8, 9, 10, 11, 12))));
 			fail("Exception must be: incorrect word place");
 		} catch (IncorrectPositionException ignore) {
@@ -266,7 +265,7 @@ public class ScribbleBoardTest extends TestCase {
 		//not in dictionary
 		board.setDictionary(createDictionary(new String[]{null}));
 		try {
-			board.makeMove(new MakeWordMove(hand.getPlayerId(),
+			board.makeMove(new MakeTurn(hand.getPlayerId(),
 					new Word(new Position(7, 7), Direction.VERTICAL, tilesBank.getTiles(0, 7))));
 			fail("Exception must be: no in dictionary");
 		} catch (UnknownWordException ignore) {
@@ -290,7 +289,7 @@ public class ScribbleBoardTest extends TestCase {
 
 		ScribblePlayerHand hand = board.getPlayerTurn();
 		final Tile[] moveTiles1 = Arrays.copyOf(hand.getTiles(), 4);
-		board.makeMove(new MakeWordMove(hand.getPlayerId(),
+		board.makeMove(new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(7, 7), Direction.HORIZONTAL, moveTiles1))  //abcd
 		);
 		assertEquals(1, board.getGameMoves().size());
@@ -302,7 +301,7 @@ public class ScribbleBoardTest extends TestCase {
 		final Tile[] moveTiles2 = new Tile[3];
 		moveTiles2[0] = moveTiles1[3]; //last 'd' letter
 		System.arraycopy(hand.getTiles(), 4, moveTiles2, 1, 2);
-		board.makeMove(new MakeWordMove(hand.getPlayerId(),
+		board.makeMove(new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(7, 10), Direction.HORIZONTAL, moveTiles2)) //def
 		);
 		assertEquals(2, board.getGameMoves().size());
@@ -315,7 +314,7 @@ public class ScribbleBoardTest extends TestCase {
 		moveTiles3[0] = moveTiles2[2];// last 'f' letter
 		System.arraycopy(hand.getTiles(), 4, moveTiles3, 1, 3);
 		System.arraycopy(hand.getTiles(), 0, moveTiles3, 4, 4);
-		board.makeMove(new MakeWordMove(hand.getPlayerId(),
+		board.makeMove(new MakeTurn(hand.getPlayerId(),
 				new Word(new Position(7, 12), Direction.VERTICAL, moveTiles3)) //fefgabcd
 		);
 		assertEquals(3, board.getGameMoves().size());
@@ -350,13 +349,13 @@ public class ScribbleBoardTest extends TestCase {
 
 		final ScribblePlayerHand hand = board.getPlayerTurn();
 		final Tile[] tiles = hand.getTiles().clone();
-		board.makeMove(new ExchangeTilesMove(hand.getPlayerId(), new int[]{
+		board.makeMove(new ExchangeMove(hand.getPlayerId(), new int[]{
 				tiles[0].getNumber(), tiles[1].getNumber(), tiles[2].getNumber()
 		}));
 
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(1, board.getGameMoves().size());
-		assertEquals(ExchangeTilesMove.class, board.getGameMoves().get(0).getPlayerMove().getClass());
+		assertEquals(ExchangeMove.class, board.getGameMoves().get(0).getPlayerMove().getClass());
 		assertEquals(13, tilesBank.getTilesLimit());
 
 		//Check that tiles was rolled back to bank
@@ -388,11 +387,11 @@ public class ScribbleBoardTest extends TestCase {
 		h3.setTiles(tilesBank.getTiles(2, 5, 8, 11, 14, 17, 20));  //abcdefg
 
 		final ScribblePlayerHand hand = board.getPlayerTurn();
-		board.makeMove(new PassTurnMove(hand.getPlayerId()));
+		board.makeMove(new PassTurn(hand.getPlayerId()));
 
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(1, board.getGameMoves().size());
-		assertEquals(PassTurnMove.class, board.getGameMoves().get(0).getPlayerMove().getClass());
+		assertEquals(PassTurn.class, board.getGameMoves().get(0).getPlayerMove().getClass());
 		assertEquals(13, tilesBank.getTilesLimit());
 
 		assertNotSame(hand, board.getPlayerTurn());
@@ -414,7 +413,7 @@ public class ScribbleBoardTest extends TestCase {
 		h2.setTiles(tilesBank.getTiles(14, 15, 16, 17, 18, 19, 20));
 		ScribblePlayerHand hand = board.getPlayerTurn();
 
-		final MakeWordMove wordMove = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
+		final MakeTurn wordMove = new MakeTurn(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
 		final GameMoveScore points = board.calculateMoveScores(wordMove);
 		assertEquals(4, points.getPoints());
 	}
@@ -435,7 +434,7 @@ public class ScribbleBoardTest extends TestCase {
 		h2.setTiles(tilesBank.getTiles(14, 15, 16, 17, 18, 19, 20));
 		ScribblePlayerHand hand = board.getPlayerTurn();
 
-		final MakeWordMove wordMove = new MakeWordMove(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
+		final MakeTurn wordMove = new MakeTurn(hand.getPlayerId(), new Word(new Position(7, 7), Direction.HORIZONTAL, tilesBank.getTiles(0, 1, 2, 3)));
 		board.processMoveFinished(hand, new GameMove(wordMove, 0, 0, new Date()));
 		assertTrue(board.isBoardTile(0));
 		assertTrue(board.isBoardTile(1));

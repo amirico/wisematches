@@ -15,7 +15,7 @@
             <#assign last=p*30+30/>
             <#if (last>count)><#assign last=count/></#if>
             <#if p != current><a
-                    href="/playground/tourney/view?t=${tourney.number}&l=${round.division.language.ordinal()}&s=${round.division.section.ordinal()}&r=${round.round}&p=${p}"></#if>
+                    href="/playground/tourney/view?t=${tourney.number}&l=${round.division.language.ordinal()}&s=${round.division.section.ordinal()}&r=${round.round}&h=${p}"></#if>
         ${first}..${last}<#if p != current></a></#if>
             <#if p_has_next>|</#if>
         </#list>

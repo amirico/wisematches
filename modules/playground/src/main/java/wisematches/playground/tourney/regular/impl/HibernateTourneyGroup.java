@@ -211,7 +211,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return finishedDate;
 	}
 
-	<S extends GameSettings> int initializeGames(BoardManager<S, ?> boardManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
+	<S extends GameSettings> int initializeGames(GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
 		if (totalGamesCount != 0) {
 			throw new IllegalStateException("Group already initialized");
 		}
@@ -219,20 +219,20 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		final S settings = settingsProvider.createGameSettings(this);
 		final TourneyRelationship relationship = new TourneyRelationship(getRound().getDivision().getTourney().getNumber());
 		if (playersCount == 2) {
-			game0 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player0), Personality.person(player1))).getBoardId();
+			game0 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player1)), relationship).getBoardId();
 			totalGamesCount = 1;
 		} else if (playersCount == 3) {
-			game0 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player0), Personality.person(player1))).getBoardId();
-			game1 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player0), Personality.person(player2))).getBoardId();
-			game2 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
+			game0 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player1)), relationship).getBoardId();
+			game1 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player2)), relationship).getBoardId();
+			game2 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player1), Personality.person(player2)), relationship).getBoardId();
 			totalGamesCount = 3;
 		} else if (playersCount == 4) {
-			game0 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player0), Personality.person(player1))).getBoardId();
-			game1 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player0), Personality.person(player2))).getBoardId();
-			game2 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player0), Personality.person(player3))).getBoardId();
-			game3 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player1), Personality.person(player2))).getBoardId();
-			game4 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player1), Personality.person(player3))).getBoardId();
-			game5 = boardManager.createBoard(settings, relationship, Arrays.asList(Personality.person(player2), Personality.person(player3))).getBoardId();
+			game0 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player1)), relationship).getBoardId();
+			game1 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player2)), relationship).getBoardId();
+			game2 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player3)), relationship).getBoardId();
+			game3 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player1), Personality.person(player2)), relationship).getBoardId();
+			game4 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player1), Personality.person(player3)), relationship).getBoardId();
+			game5 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player2), Personality.person(player3)), relationship).getBoardId();
 			totalGamesCount = 6;
 		}
 		startedDate = new Date();

@@ -49,7 +49,7 @@ public class CacheableStatisticManager implements StatisticManager {
 		try {
 			Statistics statistics = cache.get(personality);
 			if (statistics == null) {
-				statistics = playerStatisticManager.getPlayerStatistic(personality);
+				statistics = playerStatisticManager.getStatistic(personality);
 				cache.put(personality, statistics);
 			}
 			return statistics;

@@ -11,11 +11,11 @@
 
 <p>
     There
-<#if board.playersHands?size == 2>is one player
-<#else>are ${board.playersHands?size-1?string} players
+<#if board.players?size == 2>is one player
+<#else>are ${board.players?size-1?string} players
 </#if>
     joined to the game:
-<#list board.playersHands as hand>
+<#list board.players as hand>
     <#if hand.playerId != principal.id>
         <@util.player player=hand.playerId showRating=true/><#if hand_has_next>,</#if>
     </#if>

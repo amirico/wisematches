@@ -32,7 +32,7 @@
     </li>
 </#list>
 </ul>
-</p>
+</h>
 
 <p>
     Please note that more than one game has been updated but only one email has been sent.

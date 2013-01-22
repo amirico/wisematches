@@ -259,7 +259,7 @@ public class TourneyController extends WisematchesController {
 			model.addAttribute("sections", TourneySection.values());
 			model.addAttribute("languages", Language.values());
 
-			final Statistics statistic = statisticManager.getPlayerStatistic(personality);
+			final Statistics statistic = statisticManager.getStatistic(personality);
 			model.addAttribute("statistics", statistic);
 
 			model.addAttribute("restriction",

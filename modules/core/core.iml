@@ -11,10 +11,11 @@
     </facet>
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset1" name="XML Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/resources/config/database-junit-config.xml</file>
-          <file>file://$MODULE_DIR$/src/main/resources/config/database-config.xml</file>
+        <fileset id="fileset2" name="Core Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/eod-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/database-junit-config.xml</file>
         </fileset>
       </configuration>
     </facet>

@@ -15,11 +15,11 @@ import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.core.personality.proprietary.robot.RobotType;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.criteria.ComparableOperator;
-import wisematches.playground.criteria.PlayerCriterion;
-import wisematches.playground.criteria.PlayerRestrictions;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
+import wisematches.playground.propose.criteria.ComparableOperator;
+import wisematches.playground.propose.criteria.PlayerCriterion;
+import wisematches.playground.propose.criteria.PlayerRestrictions;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -279,7 +279,7 @@ public class CreateGameController extends AbstractGameController {
 
 	private void initBoardCloneForm(CreateScribbleForm form, String parameter, Locale locale) {
 		try {
-			final ScribbleBoard board = boardManager.openBoard(Long.valueOf(parameter));
+			final ScribbleBoard board = boardManager.getBoard(Long.valueOf(parameter));
 			if (board != null) {
 				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
 				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
@@ -287,7 +287,7 @@ public class CreateGameController extends AbstractGameController {
 				form.setBoardLanguage(board.getSettings().getLanguage().code());
 
 				int index = 0;
-				final List<ScribblePlayerHand> playersHands = board.getPlayersHands();
+				final List<ScribblePlayerHand> playersHands = board.getPlayers();
 				final long[] players = new long[playersHands.size() - 1];
 				for (ScribblePlayerHand playersHand : playersHands) {
 					if (playersHand.getPlayerId() == getPersonality().getId()) {

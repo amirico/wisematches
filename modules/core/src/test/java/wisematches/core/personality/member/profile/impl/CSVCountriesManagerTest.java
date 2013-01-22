@@ -1,10 +1,10 @@
 package wisematches.core.personality.member.profile.impl;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import wisematches.core.Language;
-import wisematches.personality.membership.Country;
-import wisematches.personality.membership.impl.CSVParsingException;
+import wisematches.core.personality.member.profile.Country;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ public class CSVCountriesManagerTest {
 	}
 
 	@Test
-	public void testParse() throws IOException, CSVParsingException {
+	public void testParse() throws IOException {
 		final CSVCountriesManager manager = new CSVCountriesManager();
-		manager.setCsvCountriesFile(new ClassPathResource("/../../../core/src/main/resources/i18n/countries.csv"));
+		manager.setCsvCountriesFile(new ClassPathResource("/i18n/countries.csv"));
 
 		assertEquals(2, manager.getLanguages().size());
 		Assert.assertTrue(manager.getLanguages().contains(Language.EN));
@@ -36,7 +36,7 @@ public class CSVCountriesManagerTest {
 
 		final Collection<Language> localeCollection = manager.getLanguages();
 		for (Language locale : localeCollection) {
-			final List<Country> countries = new ArrayList<Country>(manager.getCountries(locale));
+			final List<Country> countries = new ArrayList<>(manager.getCountries(locale));
 			Collections.sort(countries);
 			assertEquals("Countries list for locale '" + locale + "' is unsorted.",
 					countries, manager.getCountries(locale));

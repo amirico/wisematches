@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.core.personality.Player;
 import wisematches.core.personality.PlayerManager;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
-import wisematches.playground.GameState;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.playground.search.GameState;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
@@ -24,7 +24,7 @@ import wisematches.server.web.services.state.PlayerStateManager;
 public class AbstractGameController extends WisematchesController {
 	protected PlayerManager playerManager;
 	protected GameMessageSource messageSource;
-	protected ScribbleBoardManager boardManager;
+	protected ScribblePlayManager boardManager;
 	protected PlayerStateManager playerStateManager;
 	protected StatisticManager playerStatisticManager;
 	protected GameProposalManager<ScribbleSettings> proposalManager;
@@ -35,7 +35,7 @@ public class AbstractGameController extends WisematchesController {
 	protected int getActiveGamesCount(Player principal) {
 		int activeGames;
 		if (!GuestPlayer.isGuestPlayer(principal)) {
-			activeGames = playerStatisticManager.getPlayerStatistic(principal).getActiveGames();
+			activeGames = playerStatisticManager.getStatistic(principal).getActiveGames();
 		} else {
 			activeGames = boardManager.getTotalCount(principal, GameState.ACTIVE);
 		}
@@ -43,7 +43,7 @@ public class AbstractGameController extends WisematchesController {
 	}
 
 	protected int getFinishedGamesCount(Player principal) {
-		return playerStatisticManager.getPlayerStatistic(principal).getFinishedGames();
+		return playerStatisticManager.getStatistic(principal).getFinishedGames();
 	}
 
 	@Autowired
@@ -57,7 +57,7 @@ public class AbstractGameController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribbleBoardManager boardManager) {
+	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
 

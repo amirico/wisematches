@@ -10,8 +10,8 @@ import wisematches.core.personality.proprietary.guest.GuestPlayer;
 import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.criteria.ViolatedCriteriaException;
 import wisematches.playground.propose.*;
+import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class AbstractProposalManagerTest {
 	@Before
 	public void setUp() throws Exception {
 		final StatisticManager psm = createMock(StatisticManager.class);
-		expect(psm.getPlayerStatistic(EasyMock.<Personality>anyObject())).andReturn(null).anyTimes();
+		expect(psm.getStatistic(EasyMock.<Personality>anyObject())).andReturn(null).anyTimes();
 		replay(psm);
 
 		proposalManager = new AbstractProposalManager<GameSettings>() {

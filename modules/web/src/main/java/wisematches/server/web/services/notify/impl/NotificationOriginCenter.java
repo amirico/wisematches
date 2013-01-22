@@ -43,7 +43,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class NotificationOriginCenter implements BreakingDayListener, InitializingBean {
 	private TaskExecutor taskExecutor;
-	private BoardManager boardManager;
+	private GamePlayManager gamePlayManager;
 	private PlayerManager playerManager;
 	private AwardsManager awardsManager;
 	private MessageManager messageManager;
@@ -119,13 +119,13 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	public void setBoardManager(BoardManager boardManager) {
-		if (this.boardManager != null) {
-			this.boardManager.removeBoardStateListener(notificationListener);
+	public void setGamePlayManager(GamePlayManager gamePlayManager) {
+		if (this.gamePlayManager != null) {
+			this.gamePlayManager.removeGamePlayListener(notificationListener);
 		}
-		this.boardManager = boardManager;
-		if (this.boardManager != null) {
-			this.boardManager.addBoardStateListener(notificationListener);
+		this.gamePlayManager = gamePlayManager;
+		if (this.gamePlayManager != null) {
+			this.gamePlayManager.addGamePlayListener(notificationListener);
 		}
 	}
 
@@ -299,7 +299,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		@Override
 		public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
 			try {
-				final GameBoard board = boardManager.openBoard(boardId);
+				final GameBoard board = gamePlayManager.getBoard(boardId);
 				if (board != null) {
 					final GamePlayerHand hand = board.getPlayerTurn();
 					if (hand != null) {
@@ -337,7 +337,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	private class TheNotificationListener implements BoardStateListener, MessageListener, GameProposalListener, RegularTourneyListener, AwardsListener {
+	private class TheNotificationListener implements GamePlayListener, MessageListener, GameProposalListener, RegularTourneyListener, AwardsListener {
 		private TheNotificationListener() {
 		}
 
@@ -379,7 +379,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 		@Override
 		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			final Collection<? extends GamePlayerHand> playersHands = board.getPlayers();
 			for (GamePlayerHand hand : playersHands) {
 				processNotification(hand.getPlayerId(), "playground.game.started", Collections.singletonMap("board", board));
 			}
@@ -398,7 +398,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 		@Override
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
-			final Collection<? extends GamePlayerHand> playersHands = board.getPlayersHands();
+			final Collection<? extends GamePlayerHand> playersHands = board.getPlayers();
 			final Map<String, Object> map = new HashMap<>();
 			map.put("board", board);
 			map.put("winners", winners);

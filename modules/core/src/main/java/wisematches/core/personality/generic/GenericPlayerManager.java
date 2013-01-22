@@ -1,6 +1,5 @@
 package wisematches.core.personality.generic;
 
-import wisematches.core.Personality;
 import wisematches.core.personality.Player;
 import wisematches.core.personality.PlayerManager;
 
@@ -26,18 +25,6 @@ public class GenericPlayerManager implements PlayerManager {
 		}
 		return null;
 	}
-
-	@Override
-	public Player getPlayer(Personality personality) {
-		for (PlayerManager playerManager : playerManagers) {
-			final Player player = playerManager.getPlayer(personality);
-			if (player != null) {
-				return player;
-			}
-		}
-		return null;
-	}
-
 
 	public void setPlayerManagers(Collection<PlayerManager> playerManagers) {
 		this.playerManagers.clear();

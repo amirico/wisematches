@@ -64,7 +64,7 @@
 
 <#if totalCount != 0>
     <div style="text-align: right">
-        <a href="/playground/profile/awards?p=${player.id?string}"><@message code="profile.awards.label"/></a>
+        <a href="/playground/profile/awards?h=${player.id?string}"><@message code="profile.awards.label"/></a>
     </div>
 </#if>
 </div>

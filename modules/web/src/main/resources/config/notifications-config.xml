@@ -158,7 +158,7 @@
         <property name="playerManager" ref="playerManager"/>
         <property name="awardsManager" ref="awardsManager"/>
         <property name="messageManager" ref="messageManager"/>
-        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
         <property name="tourneyManager" ref="regularTourneyManager"/>
         <property name="proposalManager" ref="scribbleProposalManager"/>

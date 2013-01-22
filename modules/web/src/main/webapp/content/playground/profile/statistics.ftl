@@ -247,11 +247,11 @@
 
 <#if principal??>
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
-    <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
+    <a href="/playground/scribble/active?h=${player.id}"><@message code="game.dashboard.label"/></a>
     |
-    <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
+    <a href="/playground/scribble/history?h=${player.id}"><@message code="game.past.history.label"/></a>
     |
-    <a href="/playground/scribble/create?t=challenge&p=${player.id}"><@message code="game.challenge.label"/></a>
+    <a href="/playground/scribble/create?t=challenge&h=${player.id}"><@message code="game.challenge.label"/></a>
     <br>
     <@privateMessage pid=player.id><@message code="messages.send.label"/></@privateMessage>
     |

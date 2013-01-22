@@ -4,11 +4,11 @@
 <#include "/core.ftl">
 
 <#macro row activeVisible=true passiveVisible=true>
-    <#if !passiveVisible && !board.gameActive> <#-- nothing to do if not active and -->
+    <#if !passiveVisible && !board.active> <#-- nothing to do if not active and -->
         <#return>
     </#if>
 
-<tr class="<#if !activeVisible || !passiveVisible>state-change-marker</#if><#if board.gameActive && !activeVisible> ui-helper-hidden</#if>">
+<tr class="<#if !activeVisible || !passiveVisible>state-change-marker</#if><#if board.active && !activeVisible> ui-helper-hidden</#if>">
     <#nested>
 </tr>
 </#macro>
@@ -68,12 +68,12 @@
             <div class="gameResolution">
                 <div class="ui-progressbar game-progress">
                     <div class="ui-progressbar-value ui-corner-all game-progress-finished game-progress-caption sample">
-                        <#if board.gameResolution??><@message code="game.resolution.${board.gameResolution.name()?lower_case}"/></#if>
+                        <#if board.resolution??><@message code="game.resolution.${board.resolution.name()?lower_case}"/></#if>
                     </div>
                 </div>
                 <div class="sample game-resolution-player">
-                    <#if board.gameResolution??>
-                <#switch board.gameResolution>
+                    <#if board.resolution??>
+                <#switch board.resolution>
                         <#case 'FINISHED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
                         <#case 'STALEMATE'><@message code="game.resolution.timeout"/><#break>
                         <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
@@ -123,7 +123,7 @@
 </table>
 </@wm.ui.widget>
 
-<#if board.gameActive>
+<#if board.active>
 <script type="text/javascript">
     wm.scribble.state = function (board) {
         var status = this;

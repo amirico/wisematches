@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import wisematches.core.Personality;
 import wisematches.core.personality.Player;
 import wisematches.core.personality.PlayerManager;
-import wisematches.playground.blacklist.BlacklistManager;
+import wisematches.server.services.blacklist.BlacklistManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.player.form.BlacklistRecordForm;

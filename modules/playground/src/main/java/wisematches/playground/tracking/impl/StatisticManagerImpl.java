@@ -2,6 +2,7 @@ package wisematches.playground.tracking.impl;
 
 import org.apache.log4j.Logger;
 import wisematches.core.Personality;
+import wisematches.core.personality.PlayerManager;
 import wisematches.core.personality.member.account.Account;
 import wisematches.core.personality.member.account.AccountListener;
 import wisematches.core.personality.member.account.AccountManager;
@@ -25,17 +26,18 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class StatisticManagerImpl implements StatisticManager {
-	private BoardManager boardManager;
+	private GamePlayManager gamePlayManager;
 	private AccountManager accountManager;
 	private RegularTourneyManager tourneyManager;
 
 	private RatingManager ratingManager;
+	private PlayerManager playerManager;
 	private StatisticsTrapper statisticsTrapper;
 	private PlayerTrackingCenterDao playerTrackingCenterDao;
 
 	private final Lock statisticLock = new ReentrantLock();
 	private final AccountListener accountListener = new TheAccountListener();
-	private final BoardStateListener boardStateListener = new TheBoardStateListener();
+	private final GamePlayListener gamePlayListener = new TheGamePlayListener();
 	private final RegularTourneyListener tourneyListener = new TheRegularTourneyListener();
 
 	private final Set<StatisticsListener> statisticsListeners = new CopyOnWriteArraySet<>();
@@ -81,15 +83,19 @@ public class StatisticManagerImpl implements StatisticManager {
 	}
 
 
-	public void setBoardManager(BoardManager boardManager) {
-		if (this.boardManager != null) {
-			this.boardManager.removeBoardStateListener(boardStateListener);
+	public void setGamePlayManager(GamePlayManager gamePlayManager) {
+		if (this.gamePlayManager != null) {
+			this.gamePlayManager.removeGamePlayListener(gamePlayListener);
 		}
-		this.boardManager = boardManager;
+		this.gamePlayManager = gamePlayManager;
 
-		if (this.boardManager != null) {
-			this.boardManager.addBoardStateListener(boardStateListener);
+		if (this.gamePlayManager != null) {
+			this.gamePlayManager.addGamePlayListener(gamePlayListener);
 		}
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setRatingManager(RatingManager ratingManager) {
@@ -130,7 +136,7 @@ public class StatisticManagerImpl implements StatisticManager {
 
 	@SuppressWarnings("unchecked")
 	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-		final Collection<? extends GamePlayerHand> hands = board.getPlayersHands();
+		final Collection<? extends GamePlayerHand> hands = board.getPlayers();
 		for (GamePlayerHand hand : hands) {
 			if (isPlayerIgnored(hand)) {
 				continue;
@@ -153,7 +159,7 @@ public class StatisticManagerImpl implements StatisticManager {
 
 	@SuppressWarnings("unchecked")
 	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
-		final GamePlayerHand hand = board.getPlayerHand(move.getPlayerMove().getPlayerId());
+		final GamePlayerHand hand = board.getPlayerHand(move.getPlayer());
 		if (isPlayerIgnored(hand)) {
 			return;
 		}
@@ -174,7 +180,7 @@ public class StatisticManagerImpl implements StatisticManager {
 
 	@SuppressWarnings("unchecked")
 	protected void processGameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-		final Collection<? extends GamePlayerHand> hands = board.getPlayersHands();
+		final Collection<? extends GamePlayerHand> hands = board.getPlayers();
 		for (GamePlayerHand hand : hands) {
 			if (isPlayerIgnored(hand)) {
 				continue;
@@ -214,7 +220,7 @@ public class StatisticManagerImpl implements StatisticManager {
 	}
 
 	protected boolean isPlayerIgnored(final GamePlayerHand hand) {
-		return ProprietaryPlayer.getComputerPlayer(hand.getPlayerId()) != null;
+		return playerManager.getPlayer(hand.getPlayerId()) instanceof ProprietaryPlayer;
 	}
 
 	protected void fireStatisticUpdated(Personality player, StatisticsEditor statistic) {
@@ -248,8 +254,8 @@ public class StatisticManagerImpl implements StatisticManager {
 		}
 	}
 
-	private class TheBoardStateListener implements BoardStateListener {
-		private TheBoardStateListener() {
+	private class TheGamePlayListener implements GamePlayListener {
+		private TheGamePlayListener() {
 		}
 
 		@Override

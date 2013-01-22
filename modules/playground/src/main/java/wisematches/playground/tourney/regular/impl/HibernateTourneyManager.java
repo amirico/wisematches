@@ -38,10 +38,10 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private TaskExecutor taskExecutor;
 	private CronExpression cronExpression;
 
-	private BoardManager<S, ?> boardManager;
+	private GamePlayManager<S, ?> gamePlayManager;
 	private GameSettingsProvider<S, TourneyGroup> settingsProvider;
 	private HibernateTourneyProcessor tourneyProcessor = new HibernateTourneyProcessor();
-	private final BoardStateListener boardStateListener = new TheBoardStateListener();
+	private final GamePlayListener gamePlayListener = new TheGamePlayListener();
 
 	private final Lock lock = new ReentrantLock();
 	private final HibernateRegistrationSearchManager registrationSearchManager = new HibernateRegistrationSearchManager();
@@ -281,7 +281,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 			public void run() {
 				lock.lock();
 				try {
-					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), boardManager, settingsProvider);
+					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), gamePlayManager, settingsProvider);
 				} catch (Exception ex) {
 					log.error("Divisions can't be initiated by internal error", ex);
 					throw new TourneyProcessingException("Divisions can't be initiated by internal error", ex);
@@ -377,15 +377,15 @@ public class HibernateTourneyManager<S extends GameSettings>
 		}
 	}
 
-	public void setBoardManager(BoardManager<S, ?> boardManager) {
-		if (this.boardManager != null) {
-			this.boardManager.removeBoardStateListener(boardStateListener);
+	public void setGamePlayManager(GamePlayManager<S, ?> gamePlayManager) {
+		if (this.gamePlayManager != null) {
+			this.gamePlayManager.removeGamePlayListener(gamePlayListener);
 		}
 
-		this.boardManager = boardManager;
+		this.gamePlayManager = gamePlayManager;
 
-		if (this.boardManager != null) {
-			this.boardManager.addBoardStateListener(boardStateListener);
+		if (this.gamePlayManager != null) {
+			this.gamePlayManager.addGamePlayListener(gamePlayListener);
 		}
 	}
 
@@ -393,8 +393,8 @@ public class HibernateTourneyManager<S extends GameSettings>
 		this.settingsProvider = settingsProvider;
 	}
 
-	private class TheBoardStateListener implements BoardStateListener {
-		private TheBoardStateListener() {
+	private class TheGamePlayListener implements GamePlayListener {
+		private TheGamePlayListener() {
 		}
 
 		@Override

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.playground.message.impl.HibernateMessage>" -->
+<#-- @ftlvariable name="messages" type="java.util.Collection<wisematches.server.services.message.impl.HibernateMessage>" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>

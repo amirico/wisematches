@@ -1,6 +1,5 @@
 package wisematches.core.personality.proprietary;
 
-import wisematches.core.Personality;
 import wisematches.core.personality.PlayerManager;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
 import wisematches.core.personality.proprietary.robot.RobotPlayer;
@@ -22,13 +21,5 @@ public class ProprietaryPlayerManager implements PlayerManager {
 			return ProprietaryPlayer.computerPlayerMap.get(pid);
 		}
 		return null;
-	}
-
-	@Override
-	public ProprietaryPlayer getPlayer(Personality personality) {
-		if (personality instanceof ProprietaryPlayer) {
-			return (ProprietaryPlayer) personality;
-		}
-		return getPlayer(personality.getId());
 	}
 }

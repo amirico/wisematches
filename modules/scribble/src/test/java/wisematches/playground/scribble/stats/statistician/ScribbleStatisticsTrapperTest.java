@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import wisematches.core.Personality;
 import wisematches.playground.GameMove;
-import wisematches.playground.PlayerMove;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.score.ScoreBonus;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsEditor;
@@ -36,9 +35,9 @@ public class ScribbleStatisticsTrapperTest {
 
 		final ScribbleStatisticsEditor editor = new ScribbleStatisticsEditor(Personality.person(13L));
 
-		final PlayerMove move1 = new MakeWordMove(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4)));
-		final PlayerMove move2 = new MakeWordMove(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4), new Tile(1, 'C', 1), new Tile(1, 'D', 1)));
-		final PlayerMove move3 = new ExchangeTilesMove(13, new int[0]);
+		final PlayerMove move1 = new MakeTurn(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4)));
+		final PlayerMove move2 = new MakeTurn(13L, new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4), new Tile(1, 'C', 1), new Tile(1, 'D', 1)));
+		final PlayerMove move3 = new ExchangeMove(13, new int[0]);
 
 		final GameMove m1 = new GameMove(move1, 20, 1, new Date(moveTime));
 		final GameMove m2 = new GameMove(move2, 10, 1, new Date(moveTime + 3000));

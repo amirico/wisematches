@@ -13,13 +13,13 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 
 	@Override
 	protected String getEntitiesList(PlayerSearchArea area, SearchFilter filter) {
-		String r = "wisematches.personality.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor stats";
+		String r = "wisematches.core.personality.member.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.ScribbleStatisticsEditor stats";
 
 		switch (area) {
 			case PLAYERS:
 				return r;
 			case FRIENDS:
-				return r + ", wisematches.playground.friends.impl.HibernateFriendRelation r";
+				return r + ", wisematches.server.services.friends.impl.HibernateFriendRelation r";
 			case FORMERLY:
 				return r + ", wisematches.playground.scribble.ScribbleBoard board left join board.playerHands l left join board.playerHands r";
 			default:

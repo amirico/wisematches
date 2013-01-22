@@ -21,6 +21,7 @@ import java.io.Serializable;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  * @see #person(long)
  */
+@Deprecated
 @MappedSuperclass
 public class Personality implements Serializable {
 	@Id
@@ -84,6 +85,7 @@ public class Personality implements Serializable {
 	 * @param id the personality id.
 	 * @return the personality object only with id attribute.
 	 */
+	@Deprecated
 	public static Personality person(long id) {
 		return new Personality(id);
 	}

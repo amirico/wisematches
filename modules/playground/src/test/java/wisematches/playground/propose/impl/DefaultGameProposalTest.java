@@ -6,7 +6,7 @@ import wisematches.core.personality.Player;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
 import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.criteria.*;
+import wisematches.playground.propose.criteria.*;
 import wisematches.playground.tracking.Statistics;
 
 import java.util.Arrays;

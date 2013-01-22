@@ -2,10 +2,10 @@ package wisematches.playground.scribble.memory.impl;
 
 import org.easymock.Capture;
 import org.junit.Test;
-import wisematches.playground.BoardStateListener;
+import wisematches.playground.GamePlayListener;
 import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleBoardManager;
+import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.memory.MemoryWordManager;
 
 import static org.easymock.EasyMock.*;
@@ -26,10 +26,10 @@ public class MemoryWordsCleanerTest {
 		wordManager.clearMemoryWords(board);
 		replay(wordManager);
 
-		final Capture<BoardStateListener> capture = new Capture<BoardStateListener>();
+		final Capture<GamePlayListener> capture = new Capture<GamePlayListener>();
 
-		final ScribbleBoardManager manager = createMock(ScribbleBoardManager.class);
-		manager.addBoardStateListener(capture(capture));
+		final ScribblePlayManager manager = createMock(ScribblePlayManager.class);
+		manager.addGamePlayListener(capture(capture));
 		replay(manager);
 
 		MemoryWordsCleaner cleaner = new MemoryWordsCleaner();

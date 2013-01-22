@@ -2,8 +2,8 @@ package wisematches.playground.scribble.tracking;
 
 import wisematches.core.Personality;
 import wisematches.playground.*;
-import wisematches.playground.scribble.ExchangeTilesMove;
-import wisematches.playground.scribble.MakeWordMove;
+import wisematches.playground.scribble.ExchangeMove;
+import wisematches.playground.scribble.MakeTurn;
 import wisematches.playground.scribble.ScribbleMoveScore;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.tracking.StatisticsTrapper;
@@ -26,8 +26,8 @@ public class ScribbleStatisticsTrapper extends StatisticsTrapper<ScribbleStatist
 		super.trapGameMoveDone(board, move, moveScore, editor);
 
 		final PlayerMove playerMove = move.getPlayerMove();
-		if (playerMove instanceof MakeWordMove) {
-			final MakeWordMove wordMove = (MakeWordMove) playerMove;
+		if (playerMove instanceof MakeTurn) {
+			final MakeTurn wordMove = (MakeTurn) playerMove;
 			editor.setWordsCount(editor.getWordsCount() + 1);
 
 			final Word word = wordMove.getWord();
@@ -48,7 +48,7 @@ public class ScribbleStatisticsTrapper extends StatisticsTrapper<ScribbleStatist
 					editor.setAllHandTilesBonuses(editor.getAllHandTilesBonuses() + 1);
 				}
 			}
-		} else if (playerMove instanceof ExchangeTilesMove) {
+		} else if (playerMove instanceof ExchangeMove) {
 			editor.setExchangesCount(editor.getExchangesCount() + 1);
 		}
 	}

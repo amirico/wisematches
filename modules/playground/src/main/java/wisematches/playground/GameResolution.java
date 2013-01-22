@@ -13,11 +13,12 @@ public enum GameResolution {
 	/**
 	 * Game has been finished because players can't make new words.
 	 */
+	@Deprecated
 	STALEMATE,
 	/**
 	 * Game time has expired and game has been finished by terminator.
 	 */
-	TIMEOUT,
+	INTERRUPTED,
 	/**
 	 * One of players has resigned the game.
 	 */
