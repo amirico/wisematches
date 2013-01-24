@@ -32,13 +32,13 @@ public class CSVCountriesManagerTest {
 
 		assertEquals(244, manager.getCountries(Language.EN).size());
 		assertEquals(244, manager.getCountries(Language.RU).size());
-		assertEquals(244, manager.getCountries(null).size());  // English locale
+		assertEquals(244, manager.getCountries(null).size());  // English getLocale
 
 		final Collection<Language> localeCollection = manager.getLanguages();
 		for (Language locale : localeCollection) {
 			final List<Country> countries = new ArrayList<>(manager.getCountries(locale));
 			Collections.sort(countries);
-			assertEquals("Countries list for locale '" + locale + "' is unsorted.",
+			assertEquals("Countries list for getLocale '" + locale + "' is unsorted.",
 					countries, manager.getCountries(locale));
 		}
 
