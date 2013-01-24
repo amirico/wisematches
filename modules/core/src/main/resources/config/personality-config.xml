@@ -3,42 +3,38 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="lockAccountManager" class="wisematches.core.personality.member.account.impl.HibernateAccountLockManager">
+    <bean id="lockAccountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountLockManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="accountManager" class="wisematches.core.personality.member.account.impl.HibernateAccountManager">
+    <bean id="accountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="accountLockManager" ref="lockAccountManager"/>
     </bean>
 
-    <bean id="membershipManager" class="wisematches.core.personality.member.membership.impl.HibernateMembershipManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="countriesManager" class="wisematches.core.personality.member.profile.impl.CSVCountriesManager">
-        <property name="csvCountriesFile" value="classpath:/i18n/countries.csv"/>
-    </bean>
-
-    <bean id="profileManager" class="wisematches.core.personality.member.profile.impl.HibernatePlayerProfileManager">
+    <bean id="membershipManager" class="wisematches.core.personality.player.membership.impl.HibernateMembershipManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="accountManager" ref="accountManager"/>
     </bean>
 
-    <bean id="memberPlayerManager" class="wisematches.core.personality.member.MemberPlayerManager">
+    <bean id="countriesManager" class="wisematches.core.personality.player.profile.impl.CSVCountriesManager">
+        <property name="csvCountriesFile" value="classpath:/i18n/countries.csv"/>
+    </bean>
+
+    <bean id="profileManager" class="wisematches.core.personality.player.profile.impl.HibernatePlayerProfileManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="accountManager" ref="accountManager"/>
+    </bean>
+
+    <bean id="memberPlayerManager" class="wisematches.core.personality.player.MemberPlayerManager">
         <property name="accountManager" ref="accountManager"/>
         <property name="membershipManager" ref="membershipManager"/>
     </bean>
 
-    <bean id="proprietaryPlayerManager" class="wisematches.core.personality.proprietary.ProprietaryPlayerManager"/>
+    <bean id="guestPlayerManager" class="wisematches.core.personality.player.GuestPlayerManager"/>
 
-    <bean id="playerManager" class="wisematches.core.personality.generic.GenericPlayerManager">
-        <property name="playerManagers">
-            <list>
-                <!-- Order is important. ProprietaryPlayerManager must be first !-->
-                <ref bean="proprietaryPlayerManager"/>
-                <ref bean="memberPlayerManager"/>
-            </list>
-        </property>
+    <bean id="playerManager" class="wisematches.core.personality.player.GenericPlayerManager">
+        <property name="guestPlayerManager" ref="guestPlayerManager"/>
+        <property name="memberPlayerManager" ref="memberPlayerManager"/>
     </bean>
 </beans>

@@ -2,7 +2,7 @@ package wisematches.server.web.services.notify.impl.publisher;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 import wisematches.playground.message.MessageManager;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationSender;

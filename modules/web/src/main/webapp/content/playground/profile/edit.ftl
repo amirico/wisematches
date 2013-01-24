@@ -1,6 +1,6 @@
-<#-- @ftlvariable name="player" type="wisematches.core.personality.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="countries" type="java.util.Collection<wisematches.personality.membership.Country>" -->
-<#-- @ftlvariable name="profile" type="wisematches.core.personality.member.profile.PlayerProfile" -->
+<#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
 <#-- @ftlvariable name="profileForm" type="wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 

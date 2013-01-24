@@ -1,8 +1,8 @@
 package wisematches.playground.tracking;
 
 import wisematches.core.Personality;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
-import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.personality.machinery.RobotPlayer;
+import wisematches.core.personality.machinery.RobotType;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyPlace;
 

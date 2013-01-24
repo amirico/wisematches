@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 
 import java.util.List;
 
@@ -25,5 +25,5 @@ public interface GameBoard<S extends GameSettings, H extends GamePlayerHand> ext
 	 * @throws GameFinishedException     if game already finished.
 	 * @see GameResolution#RESIGNED
 	 */
-	void resign(Player player) throws BoardUpdatingException;
+	void resign(Personality player) throws BoardUpdatingException;
 }

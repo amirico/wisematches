@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
 import wisematches.core.search.Range;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
@@ -208,7 +207,7 @@ public class TourneyController extends WisematchesController {
 			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
 		}
 
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 		try {
 			final boolean doRegistration = section != null && language != null;
 			if (doRegistration) {
@@ -244,7 +243,7 @@ public class TourneyController extends WisematchesController {
 	}
 
 	private void setupAnnounce(Model model) {
-		final Player personality = getPrincipal();
+		final Personality personality = getPrincipal();
 
 		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
 		Tourney announce = null;
@@ -270,7 +269,7 @@ public class TourneyController extends WisematchesController {
 		}
 	}
 
-	private int getActiveTourneysCount(Player personality) {
+	private int getActiveTourneysCount(Personality personality) {
 		int totalCount = 0;
 		totalCount += tourneyManager.getTotalCount(personality, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)));
 		totalCount += tourneyManager.getRegistrationSearchManager().getTotalCount(personality, new RegistrationRecord.Context(1));

@@ -1,6 +1,6 @@
 package wisematches.playground.propose.criteria;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.tracking.Statistics;
 
 /**
@@ -44,7 +44,7 @@ public enum ComparableOperator {
 	PlayerCriterion createCriterion(final String code, final Comparable value, final PlayerProperty property) {
 		return new PlayerCriterion() {
 			@Override
-			public CriterionViolation checkViolation(Player player, Statistics statistics) {
+			public CriterionViolation checkViolation(Personality player, Statistics statistics) {
 				final Comparable comparable = property.getProperty(player, statistics);
 				if (!test(comparable, value)) {
 					return new CriterionViolation(code, comparable, value, this);

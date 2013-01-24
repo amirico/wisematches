@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.personality.player.MemberPlayerManager;
 import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameRelationship;
 import wisematches.playground.GameResolution;
@@ -32,7 +31,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/playground/scribble/history")
 public class HistoryGameController extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private GameMessageSource messageSource;
 	private PlayerStateManager playerStateManager;
 
@@ -44,7 +43,7 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 
 	@RequestMapping("")
 	public String showHistoryGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
-		final Player principal;
+		final Personality principal;
 		if (pid == null) {
 			principal = getPrincipal();
 		} else {
@@ -97,7 +96,7 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 	}
 
 	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

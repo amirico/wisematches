@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
-import wisematches.core.personality.member.Membership;
+import wisematches.core.Membership;
 import wisematches.playground.restriction.impl.RestrictionDescription;
 import wisematches.playground.restriction.impl.RestrictionManagerImpl;
 import wisematches.server.services.message.Message;
@@ -125,13 +125,13 @@ public class HibernateMessageManagerTest {
 	@SuppressWarnings("unchecked")
 	public void testCleanup() {
 		final Map<Membership, Comparable<Integer>> a1 = new HashMap<>();
-		a1.put(Membership.DEFAULT, 20);
+		a1.put(Membership.BASIC, 20);
 		a1.put(Membership.SILVER, 40);
 		a1.put(Membership.GOLD, 40);
 		a1.put(Membership.PLATINUM, 40);
 
 		final Map<Membership, Comparable<Integer>> a2 = new HashMap<>();
-		a2.put(Membership.DEFAULT, 10);
+		a2.put(Membership.BASIC, 10);
 		a2.put(Membership.SILVER, 20);
 		a2.put(Membership.GOLD, 20);
 		a2.put(Membership.PLATINUM, 20);
@@ -156,13 +156,13 @@ public class HibernateMessageManagerTest {
 		expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
                 "((m.notification and " +
                 "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
-                "(a.membership = 'DEFAULT' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
+                "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
                 "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 40 DAY)) or " +
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 40 DAY))) or " +
                 "(not m.notification and " +
                 "(a.membership = 'GUEST' and created < DATE_SUB(curdate(), INTERVAL 0 DAY)) or " +
-                "(a.membership = 'DEFAULT' and created < DATE_SUB(curdate(), INTERVAL 10 DAY)) or " +
+                "(a.membership = 'BASIC' and created < DATE_SUB(curdate(), INTERVAL 10 DAY)) or " +
                 "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 20 DAY))))")).andReturn(0);

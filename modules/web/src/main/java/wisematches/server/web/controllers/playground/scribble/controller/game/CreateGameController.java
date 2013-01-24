@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Language;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.personality.proprietary.ProprietaryPlayer;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
-import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.personality.machinery.RobotType;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.dictionary.Dictionary;
@@ -76,7 +76,7 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "games.active", getActiveGamesCount(principal)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", principal.getMembership()));
@@ -103,7 +103,7 @@ public class CreateGameController extends AbstractGameController {
 			log.info("Create new game: " + form);
 		}
 
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 		if (form.getTitle().length() > 150) {
 			return ServiceResponse.failure(messageSource.getMessage("game.create.title.err.max", locale));
 		}
@@ -144,7 +144,7 @@ public class CreateGameController extends AbstractGameController {
 		}
 
 		boolean robot = false;
-		final List<Player> players = new ArrayList<>();
+		final List<Personality> players = new ArrayList<>();
 		if (opponents == null || opponents.length == 0) {
 			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.min", locale));
 		} else if (opponents.length > 3) {
@@ -162,7 +162,7 @@ public class CreateGameController extends AbstractGameController {
 				} else if (ProprietaryPlayer.isComputerPlayer(opponent)) {
 					return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
 				} else if (opponent != 0) {
-					Player p = playerManager.getPlayer(opponent);
+					Personality p = playerManager.getPlayer(opponent);
 					if (p == null) {
 						return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
 					} else {
@@ -172,7 +172,7 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
-		final Set<Player> check = new HashSet<>(players);
+		final Set<Personality> check = new HashSet<>(players);
 		check.add(principal);
 		if (check.size() < players.size() + 1) {
 			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.duplicate", locale));
@@ -259,7 +259,7 @@ public class CreateGameController extends AbstractGameController {
 			final String[] split = parameter.split("\\|");
 			for (String id : split) {
 				try {
-					Player player = playerManager.getPlayer(Long.valueOf(id));
+					Personality player = playerManager.getPlayer(Long.valueOf(id));
 					if (player != null) {
 						ids.add(player.getId());
 					}
@@ -279,7 +279,7 @@ public class CreateGameController extends AbstractGameController {
 
 	private void initBoardCloneForm(CreateScribbleForm form, String parameter, Locale locale) {
 		try {
-			final ScribbleBoard board = boardManager.getBoard(Long.valueOf(parameter));
+			final ScribbleBoard board = boardManager.openBoard(Long.valueOf(parameter));
 			if (board != null) {
 				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
 				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));

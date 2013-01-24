@@ -40,7 +40,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse loadComments(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.getBoard(gameId);
+			board = boardManager.openBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -60,7 +60,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse getComments(@RequestParam("b") final long gameId, @RequestBody final long[] ids, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.getBoard(gameId);
+			board = boardManager.openBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -92,7 +92,7 @@ public class ScribbleCommentController extends WisematchesController {
 
 		final ScribbleBoard board;
 		try {
-			board = boardManager.getBoard(gameId);
+			board = boardManager.openBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -112,7 +112,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse removeComment(@RequestParam("b") final long gameId, @RequestParam("c") final long commentId, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.getBoard(gameId);
+			board = boardManager.openBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}
@@ -132,7 +132,7 @@ public class ScribbleCommentController extends WisematchesController {
 	public ServiceResponse markComment(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {
-			board = boardManager.getBoard(gameId);
+			board = boardManager.openBoard(gameId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 			}

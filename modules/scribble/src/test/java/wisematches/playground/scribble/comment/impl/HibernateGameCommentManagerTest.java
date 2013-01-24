@@ -10,8 +10,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -39,8 +38,8 @@ import static junit.framework.Assert.*;
 		"classpath:/config/scribble-junit-config.xml"
 })
 public class HibernateGameCommentManagerTest {
-	private Player player1;
-	private Player player2;
+	private Personality player1;
+	private Personality player2;
 	private ScribbleBoard board;
 
 	@Autowired

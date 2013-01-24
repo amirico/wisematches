@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
@@ -78,7 +77,7 @@ public class ScribbleMemoryController extends WisematchesController {
 			if (personality == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.personality", locale));
 			}
-			final ScribbleBoard board = boardManager.getBoard(boardId);
+			final ScribbleBoard board = boardManager.openBoard(boardId);
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.board.unknown", locale));
 			}
@@ -87,7 +86,7 @@ public class ScribbleMemoryController extends WisematchesController {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.hand.unknown", locale));
 			}
 			if (action == MemoryAction.ADD) {
-				final Player principal = ScribbleMemoryController.this.getPrincipal();
+				final Personality principal = ScribbleMemoryController.this.getPrincipal();
 				final int memoryWordsCount = memoryWordManager.getMemoryWordsCount(board, hand);
 				final Restriction restriction = restrictionManager.validateRestriction(principal, "scribble.memory", memoryWordsCount);
 				if (restriction != null) {

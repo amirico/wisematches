@@ -1,7 +1,7 @@
 package wisematches.server.web.services.notify;
 
 import wisematches.core.Personality;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 
 import java.util.Set;
 

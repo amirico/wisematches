@@ -10,9 +10,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.member.Membership;
+import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.Membership;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
@@ -29,7 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateMessageManager implements MessageManager {
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private SessionFactory sessionFactory;
 
 	private RestrictionManager restrictionManager;
@@ -94,7 +93,7 @@ public class HibernateMessageManager implements MessageManager {
 			throw new NullPointerException("Message can't be null");
 		}
 
-		final Player recipient = playerManager.getPlayer(message.getSender());
+		final Personality recipient = playerManager.getPlayer(message.getSender());
 		if (recipient == null) {
 			throw new IllegalStateException("Recipient is unknown");
 		}
@@ -262,7 +261,7 @@ public class HibernateMessageManager implements MessageManager {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

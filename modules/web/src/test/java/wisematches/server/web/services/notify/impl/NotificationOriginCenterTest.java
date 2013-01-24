@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.expiration.ExpirationListener;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.member.MemberPlayer;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.personality.player.MemberPlayer;
+import wisematches.core.personality.player.account.Account;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -94,7 +94,7 @@ public class NotificationOriginCenterTest {
 
 	@Before
 	public void setUp() throws Exception {
-		final PlayerManager playerManager = createMock(PlayerManager.class);
+		final MemberPlayerManager playerManager = createMock(MemberPlayerManager.class);
 		expect(playerManager.getPlayer(1001L)).andReturn(new MemberPlayer(p1)).anyTimes();
 		expect(playerManager.getPlayer(1002L)).andReturn(new MemberPlayer(p2)).anyTimes();
 		expect(playerManager.getPlayer(p1)).andReturn(new MemberPlayer(p1)).anyTimes();
@@ -249,8 +249,8 @@ public class NotificationOriginCenterTest {
 
 		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
 		gamePlayManager.addGamePlayListener(isA(GamePlayListener.class));
-		expect(gamePlayManager.getBoard(1L)).andReturn(board1).times(3);
-		expect(gamePlayManager.getBoard(2L)).andReturn(board2).times(3);
+		expect(gamePlayManager.openBoard(1L)).andReturn(board1).times(3);
+		expect(gamePlayManager.openBoard(2L)).andReturn(board2).times(3);
 		gamePlayManager.removeGamePlayListener(isA(GamePlayListener.class));
 		replay(gamePlayManager);
 

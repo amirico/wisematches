@@ -17,7 +17,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.core.Language;
-import wisematches.core.personality.member.account.*;
+import wisematches.core.personality.player.account.*;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;

@@ -1,7 +1,7 @@
 package wisematches.playground;
 
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.Personality;
+import wisematches.core.personality.player.MemberPlayerManager;
 
 import javax.persistence.*;
 import java.util.*;
@@ -45,7 +45,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	private List<H> hands;
 
 	@Transient
-	private List<Player> players;
+	private List<Personality> players;
 
 	@Column(name = "playersCount")
 	private int playersCount;
@@ -94,7 +94,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @throws NullPointerException if setting is {@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractGameBoard(S settings, Collection<Player> players, GameRelationship relationship) {
+	protected AbstractGameBoard(S settings, Collection<Personality> players, GameRelationship relationship) {
 		if (settings == null) {
 			throw new IllegalArgumentException("Settings can't be null");
 		}
@@ -114,7 +114,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 
 		this.hands = new ArrayList<>(playersCount);
 		this.players = new ArrayList<>(playersCount);
-		for (Player player : players) {
+		for (Personality player : players) {
 			if (player == null) {
 				throw new IllegalArgumentException("Players list can't contain null players");
 			}
@@ -124,10 +124,10 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		currentPlayerIndex = selectFirstPlayer(players);
 	}
 
-	protected void initializePlayers(PlayerManager playerManager) {
+	protected void initializePlayers(MemberPlayerManager playerManager) {
 		players = new ArrayList<>(hands.size()); // create new list. It's transient and not stored
 		for (H h : hands) {
-			final Player player = playerManager.getPlayer(h.getPlayerId());
+			final Personality player = playerManager.getPlayer(h.getPlayerId());
 			if (player == null) {
 				throw new IllegalStateException("Player can't be loaded: " + h.getPlayerId());
 			}
@@ -201,17 +201,17 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 	@Override
-	public Player getPlayerTurn() {
+	public Personality getPlayerTurn() {
 		return players.get(currentPlayerIndex);
 	}
 
 	@Override
-	public List<Player> getPlayers() {
+	public List<Personality> getPlayers() {
 		return players;
 	}
 
 	@Override
-	public H getPlayerHand(Player player) {
+	public H getPlayerHand(Personality player) {
 		final int i = players.indexOf(player);
 		if (i < 0) {
 			return null;
@@ -230,7 +230,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 	@Override
-	public void resign(Player player) throws BoardUpdatingException {
+	public void resign(Personality player) throws BoardUpdatingException {
 		lock.lock();
 		try {
 			closeImpl(player, false);
@@ -253,7 +253,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @param players the list of all players to select first.
 	 * @return the player who should be first.
 	 */
-	protected byte selectFirstPlayer(Collection<Player> players) {
+	protected byte selectFirstPlayer(Collection<Personality> players) {
 		return (byte) FIRST_PLAYER_RANDOM.nextInt(players.size());
 	}
 
@@ -279,7 +279,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 			try {
 				checkState();
 			} catch (GameExpiredException ex) { //terminate if expired
-				final Player player = getPlayerTurn();
+				final Personality player = getPlayerTurn();
 				if (player != null) {
 					closeImpl(player, true);
 				}
@@ -295,7 +295,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		try {
 			checkState();
 
-			final Player player = move.getPlayer();
+			final Personality player = move.getPlayer();
 			if (!player.equals(getPlayerTurn())) {
 				throw new UnsuitablePlayerException("make turn", getPlayerTurn(), player);
 			}
@@ -346,12 +346,12 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		return System.currentTimeMillis() - getLastMoveTime().getTime() > settings.getDaysPerMove() * 86400000;
 	}
 
-	private Collection<Player> getWonPlayers() {
+	private Collection<Personality> getWonPlayers() {
 		if (isActive()) {
 			return null;
 		}
 
-		final Collection<Player> res = new ArrayList<>();
+		final Collection<Personality> res = new ArrayList<>();
 		for (int i = 0; i < hands.size(); i++) {
 			H hand = hands.get(i);
 			if (hand.isWinner()) {
@@ -374,7 +374,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		}
 	}
 
-	private void closeImpl(Player player, boolean byTimeout) throws GameMoveException {
+	private void closeImpl(Personality player, boolean byTimeout) throws GameMoveException {
 		if (gameResolution != null) {
 			return;
 		}
@@ -400,7 +400,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @param player the player for who hand must be crated.
 	 * @return the player's hand.
 	 */
-	protected abstract H createPlayerHand(Player player);
+	protected abstract H createPlayerHand(Personality player);
 
 	/**
 	 * Indicates that game was finished with specified status.

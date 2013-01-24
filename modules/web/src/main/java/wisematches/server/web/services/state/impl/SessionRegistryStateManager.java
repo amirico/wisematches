@@ -3,7 +3,6 @@ package wisematches.server.web.services.state.impl;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
 import wisematches.server.security.impl.WMPlayerDetails;
 import wisematches.server.web.services.state.PlayerStateListener;
 import wisematches.server.web.services.state.PlayerStateManager;
@@ -81,7 +80,7 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 		super.removeSessionInformation(sessionId);
 
 		if (info != null && info.getPrincipal() instanceof WMPlayerDetails) {
-			final Player player = player(info);
+			final Personality player = player(info);
 			// notify listeners only about last session
 			if (getAllSessions(player, true).isEmpty()) {
 				processPlayerOffline(player(info));
@@ -89,11 +88,11 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 		}
 	}
 
-	private Player player(SessionInformation info) {
+	private Personality player(SessionInformation info) {
 		return ((WMPlayerDetails) info.getPrincipal()).getPlayer();
 	}
 
-	protected void processPlayerOnline(Player player) {
+	protected void processPlayerOnline(Personality player) {
 		// notify listeners only about first session
 		if (getAllSessions(player, true).size() == 1) {
 			for (PlayerStateListener listener : listeners) {
@@ -102,13 +101,13 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 		}
 	}
 
-	protected void processPlayerAlive(Player player) {
+	protected void processPlayerAlive(Personality player) {
 		for (PlayerStateListener listener : listeners) {
 			listener.playerAlive(player);
 		}
 	}
 
-	protected void processPlayerOffline(Player player) {
+	protected void processPlayerOffline(Personality player) {
 		for (PlayerStateListener listener : listeners) {
 			listener.playerOffline(player);
 		}

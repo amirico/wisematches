@@ -13,9 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.member.account.*;
+import wisematches.core.Personality;
+import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.personality.player.account.*;
 import wisematches.server.security.AccountSecurityService;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 
 	private String administratorPassword;
 
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private AccountManager accountManager;
 	private AccountLockManager accountLockManager;
 	private AuthenticationManager authenticationManager;
@@ -53,7 +53,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 		if (p == null) {
 			throw new UsernameNotFoundException("Account with email " + username + " not found in the system");
 		}
-		Player player = playerManager.getPlayer(p);
+		Personality player = playerManager.getPlayer(p);
 		if (player == null) {
 			throw new UsernameNotFoundException("Player for account " + p + " can't be created");
 		}
@@ -127,7 +127,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 		}
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

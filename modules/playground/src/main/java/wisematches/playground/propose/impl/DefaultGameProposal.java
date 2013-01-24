@@ -1,8 +1,7 @@
 package wisematches.playground.propose.impl;
 
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalType;
@@ -181,7 +180,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 		return getPlayersCount() == getJoinedPlayersCount();
 	}
 
-	void attach(Player player) throws ViolatedCriteriaException {
+	void attach(Personality player) throws ViolatedCriteriaException {
 		CriterionViolation criterionViolation = checkPlayer(player);
 		if (criterionViolation != null) {
 			throw new ViolatedCriteriaException(criterionViolation);
@@ -189,7 +188,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 		attachImpl(player);
 	}
 
-	void detach(Player player) throws ViolatedCriteriaException {
+	void detach(Personality player) throws ViolatedCriteriaException {
 		if (initiator.equals(player)) {
 			throw new IllegalArgumentException("Initiator can't detach from a game");
 		}
@@ -203,7 +202,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 	 * @return {@code "player.joined"} if player already joined or {@code player.unexpected} if there is no free
 	 *         place and the player not in the waiting list.
 	 */
-	protected final CriterionViolation checkPlayer(Player player) {
+	protected final CriterionViolation checkPlayer(Personality player) {
 		if (player == null) {
 			throw new NullPointerException("Player can't be joined");
 		}
@@ -223,7 +222,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 		return null;
 	}
 
-	protected final Collection<CriterionViolation> checkViolation(Player player, Statistics statistics) {
+	protected final Collection<CriterionViolation> checkViolation(Personality player, Statistics statistics) {
 		Collection<CriterionViolation> res = null;
 
 		CriterionViolation c = checkPlayer(player);
@@ -247,7 +246,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 	}
 
 
-	private void attachImpl(Player player) {
+	private void attachImpl(Personality player) {
 		int index = playersWrapper.indexOf(player);
 		if (index == -1) {
 			final int playersSize = players.length;
@@ -267,7 +266,7 @@ public class DefaultGameProposal<S extends GameSettings> implements GameProposal
 		}
 	}
 
-	private void detachImpl(Player player) {
+	private void detachImpl(Personality player) {
 		int index = playersWrapper.indexOf(player);
 		if (index == -1) {
 			return;

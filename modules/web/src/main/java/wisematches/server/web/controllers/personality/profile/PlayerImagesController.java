@@ -11,7 +11,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
@@ -102,7 +102,7 @@ public class PlayerImagesController extends WisematchesController {
 	@RequestMapping("preview")
 	private ServiceResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
 		try {
-			final Player principal = getPrincipal();
+			final Personality principal = getPrincipal();
 			final ServletInputStream inputStream = request.getInputStream();
 			if (request.getContentLength() > 512000) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.size2", locale, 512000));
@@ -140,7 +140,7 @@ public class PlayerImagesController extends WisematchesController {
 	@RequestMapping("set")
 	private ServiceResponse setPlayerImage(HttpSession httpSession, Locale locale) {
 		try {
-			final Player principal = getPrincipal();
+			final Personality principal = getPrincipal();
 			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 			if (f == null) {
 				return ServiceResponse.failure("No preview image");
@@ -158,7 +158,7 @@ public class PlayerImagesController extends WisematchesController {
 		}
 	}
 
-	private String createPreviewFileName(Player principal, PlayerImageType type) {
+	private String createPreviewFileName(Personality principal, PlayerImageType type) {
 		return "player_image_" + principal.getId() + "_" + type.toString();
 	}
 

@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Language;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.member.profile.Gender;
-import wisematches.core.personality.member.profile.PlayerProfile;
-import wisematches.core.personality.member.profile.PlayerProfileEditor;
-import wisematches.core.personality.member.profile.PlayerProfileManager;
+import wisematches.core.Personality;
+import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.personality.player.profile.Gender;
+import wisematches.core.personality.player.profile.PlayerProfile;
+import wisematches.core.personality.player.profile.PlayerProfileEditor;
+import wisematches.core.personality.player.profile.PlayerProfileManager;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.personality.membership.CountriesManager;
@@ -47,7 +47,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/profile")
 public class PlayerProfileController extends WisematchesController {
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private AwardsManager awardsManager;
 	private GameMessageSource messageSource;
 	private CountriesManager countriesManager;
@@ -79,7 +79,7 @@ public class PlayerProfileController extends WisematchesController {
 	@RequestMapping("view")
 	public String viewProfile(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
-			Player player;
+			Personality player;
 			try {
 				player = playerManager.getPlayer(Long.parseLong(profileId));
 			} catch (NumberFormatException ignore) {
@@ -133,7 +133,7 @@ public class PlayerProfileController extends WisematchesController {
 	@RequestMapping("awards")
 	public String viewAwards(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
-			Player player = playerManager.getPlayer(Long.parseLong(profileId));
+			Personality player = playerManager.getPlayer(Long.parseLong(profileId));
 			if (player == null) {
 				throw new UnknownEntityException(profileId, "profile");
 			}
@@ -155,7 +155,7 @@ public class PlayerProfileController extends WisematchesController {
 
 	@RequestMapping("edit")
 	public String editProfile(Model model, Locale locale) {
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 		final PlayerProfile profile = profileManager.getPlayerProfile(principal);
 
 		final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
@@ -241,7 +241,7 @@ public class PlayerProfileController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

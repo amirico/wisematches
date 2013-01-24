@@ -1,7 +1,7 @@
 package wisematches.playground.scribble.player;
 
 import wisematches.core.Language;
-import wisematches.core.personality.member.Membership;
+import wisematches.core.Membership;
 import wisematches.core.search.descriptive.SearchableBean;
 import wisematches.core.search.descriptive.SearchableProperty;
 

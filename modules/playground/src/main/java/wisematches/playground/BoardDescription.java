@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 
 import java.util.Date;
 import java.util.List;
@@ -70,14 +70,14 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 * @return the player that has a turn or player who made last turn. For finished stalemate games this method returns
 	 *         {@code null}.
 	 */
-	Player getPlayerTurn();
+	Personality getPlayerTurn();
 
 	/**
 	 * Returns unmodifiable collection of all players in this game.
 	 *
 	 * @return the list of all players on this board.
 	 */
-	List<Player> getPlayers();
+	List<Personality> getPlayers();
 
 
 	/**
@@ -86,7 +86,7 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 * @param player the player who's hand should be returned.
 	 * @return the player's hand.
 	 */
-	H getPlayerHand(Player player);
+	H getPlayerHand(Personality player);
 
 
 	/**

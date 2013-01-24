@@ -1,7 +1,7 @@
 package wisematches.playground.tracking;
 
 import wisematches.core.Personality;
-import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.personality.machinery.RobotType;
 import wisematches.playground.tourney.TourneyPlace;
 
 import javax.persistence.*;

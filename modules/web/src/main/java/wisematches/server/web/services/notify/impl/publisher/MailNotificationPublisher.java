@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.core.Language;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationScope;
 import wisematches.server.web.services.notify.NotificationSender;

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.personality.member.account.*;
+import wisematches.core.personality.player.account.*;
 
 import static org.junit.Assert.*;
 

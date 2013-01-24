@@ -1,6 +1,5 @@
 package wisematches.core;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -13,44 +12,46 @@ import java.io.Serializable;
  * <p/>
  * {@code Personality} is the Hibernate entity and {@code id} field is always mapped to {@code id} column and must
  * be unique, can't be null and updated.
- * <p/>
- * It's possible to create very simple light version of {@code Personality} using {@link #person(long)} method. This
- * method creates {@code Personality} only with id and without any attributes that can be used in {@code Map}s.
- * For example, if only check is required.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see #person(long)
  */
-@Deprecated
-@MappedSuperclass
-public class Personality implements Serializable {
-	@Id
-	@Column(name = "id", nullable = false, updatable = false, unique = true)
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
-
-	/**
-	 * Hibernate constructor
-	 */
-	protected Personality() {
-	}
+public abstract class Personality implements Serializable {
+	private final Long id;
 
 	/**
 	 * Creates new personality with specified id.
 	 *
 	 * @param id the id for this personality.
 	 */
-	protected Personality(long id) {
+	Personality(Long id) {
 		this.id = id;
 	}
+
+	/**
+	 * Returns type of this player.
+	 *
+	 * @return the type of this player.
+	 */
+	public abstract Type getType();
 
 	/**
 	 * Returns personality id.
 	 *
 	 * @return the id of the personality.
 	 */
-	public final long getId() {
+	public final Long getId() {
 		return id;
+	}
+
+	/**
+	 * Returns hash code of the personality calculated by formula:
+	 * {@code (int) (id ^ (id >>> 32))}
+	 *
+	 * @return the hash code
+	 */
+	@Override
+	public final int hashCode() {
+		return (int) (id ^ (id >>> 32));
 	}
 
 	/**
@@ -68,46 +69,6 @@ public class Personality implements Serializable {
 		return id == that.id;
 	}
 
-	/**
-	 * Returns hash code of the personality calculated by formula:
-	 * {@code (int) (id ^ (id >>> 32))}
-	 *
-	 * @return the hash code
-	 */
-	@Override
-	public final int hashCode() {
-		return (int) (id ^ (id >>> 32));
-	}
-
-	/**
-	 * Creates lightweight object of {@code Personality} with only id.
-	 *
-	 * @param id the personality id.
-	 * @return the personality object only with id attribute.
-	 */
-	@Deprecated
-	public static Personality person(long id) {
-		return new Personality(id);
-	}
-
-	/**
-	 * Unties specified personality object from original context. This is useful if the {@code person} object
-	 * is complex object, like {@code Account} or {@code Player} and you want store it in collections or maps because
-	 * reference will be locked.
-	 *
-	 * @param person the original personality
-	 * @return player {@code Personality} object actually, instance of {@code Personality} class but not any subclass.
-	 */
-	public static Personality untie(Personality person) {
-		if (person == null) {
-			return null;
-		}
-		if (person.getClass() == Personality.class) {
-			return person;
-		}
-		return person(person.getId());
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -115,5 +76,21 @@ public class Personality implements Serializable {
 		sb.append("{id=").append(id);
 		sb.append('}');
 		return sb.toString();
+	}
+
+	/**
+	 * @author Sergey Klimenko (smklimenko@gmail.com)
+	 */
+	public static enum Type {
+		PLAYER,
+		MACHINERY;
+
+		public boolean isPlayer() {
+			return this == PLAYER;
+		}
+
+		public boolean isMachinery() {
+			return this == MACHINERY;
+		}
 	}
 }

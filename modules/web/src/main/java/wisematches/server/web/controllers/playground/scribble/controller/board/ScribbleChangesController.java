@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.GameMove;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
@@ -47,7 +47,7 @@ public class ScribbleChangesController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final ScribbleBoard board = boardManager.getBoard(gameId);
+				final ScribbleBoard board = boardManager.openBoard(gameId);
 
 				final Map<String, Object> res = new HashMap<String, Object>();
 				res.put("state", scribbleObjectsConverter.convertGameState(board, locale));
@@ -61,7 +61,7 @@ public class ScribbleChangesController extends WisematchesController {
 					}
 					res.put("moves", moves);
 
-					final Player currentPlayer = getPrincipal(); // update hand only if new moves found
+					final Personality currentPlayer = getPrincipal(); // update hand only if new moves found
 					if (currentPlayer != null) {
 						ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer.getId());
 						if (playerHand != null) {

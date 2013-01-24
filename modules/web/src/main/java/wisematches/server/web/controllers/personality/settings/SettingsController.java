@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.member.account.*;
+import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.security.AccountSecurityService;
@@ -48,7 +47,7 @@ public class SettingsController extends WisematchesController {
 
 	@RequestMapping(value = "")
 	public String modifyAccountPage(Model model, @ModelAttribute("settings") SettingsForm form) {
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 		if (principal.getTimeZone() != null) {
 			form.setTimezone(principal.getTimeZone().getID());
 		}

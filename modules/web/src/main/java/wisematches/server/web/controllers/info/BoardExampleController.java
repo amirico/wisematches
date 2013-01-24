@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Language;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.Personality;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
@@ -68,7 +68,7 @@ public class BoardExampleController extends WisematchesController {
 	}
 
 	private BoardWrapper createNewBoard(Language language) {
-		final List<Player> players = Arrays.<Player>asList(RobotPlayer.DULL, RobotPlayer.EXPERT);
+		final List<Personality> players = Arrays.<Personality>asList(RobotPlayer.DULL, RobotPlayer.EXPERT);
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
 

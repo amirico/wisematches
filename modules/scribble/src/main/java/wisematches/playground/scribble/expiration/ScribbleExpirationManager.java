@@ -64,7 +64,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 	@Override
 	protected boolean executeTermination(Long boardId) {
 		try {
-			final GameBoard board = boardManager.getBoard(boardId);
+			final GameBoard board = boardManager.openBoard(boardId);
 			if (board != null) {
 				if (!board.isActive()) {
 					log.info("Terminate game: " + boardId);

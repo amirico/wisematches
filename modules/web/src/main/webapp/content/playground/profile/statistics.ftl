@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="player" type="wisematches.core.personality.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="statistics" type="wisematches.playground.scribble.tracking.ScribbleStatistics" -->
 <#-- @ftlvariable name="ratingChart" type="wisematches.server.web.utils.RatingChart" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->

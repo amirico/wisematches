@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;

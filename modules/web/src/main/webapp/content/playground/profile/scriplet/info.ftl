@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="player" type="wisematches.core.personality.Player" -->
-<#-- @ftlvariable name="profile" type="wisematches.core.personality.member.profile.PlayerProfile" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
 <#-- @ftlvariable name="country" type="wisematches.personality.membership.Country" -->
 
 <#include "/core.ftl">

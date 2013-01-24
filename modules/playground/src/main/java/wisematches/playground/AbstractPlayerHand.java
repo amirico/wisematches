@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -27,11 +27,11 @@ public class AbstractPlayerHand implements GamePlayerHand {
 	protected AbstractPlayerHand() {
 	}
 
-	protected AbstractPlayerHand(Player player) {
+	protected AbstractPlayerHand(Personality player) {
 		this(player, (short) 0);
 	}
 
-	protected AbstractPlayerHand(Player player, short points) {
+	protected AbstractPlayerHand(Personality player, short points) {
 		this.playerId = player.getId();
 		this.points = points;
 	}

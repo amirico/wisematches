@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.GameMove;
 import wisematches.playground.UnsuitablePlayerException;
@@ -56,8 +56,8 @@ public class ScribbleBoardController extends WisematchesController {
 								@RequestParam(value = "t", required = false) String tiles,
 								Model model) throws UnknownEntityException {
 		try {
-			final Player player = getPrincipal();
-			final ScribbleBoard board = boardManager.getBoard(gameId);
+			final Personality player = getPrincipal();
+			final ScribbleBoard board = boardManager.openBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
 			}
@@ -114,7 +114,7 @@ public class ScribbleBoardController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player currentPlayer = getPrincipal();
+				final Personality currentPlayer = getPrincipal();
 				return processGameMove(gameId, new MakeTurn(currentPlayer.getId(), word.createWord()), locale);
 			}
 		}, locale);
@@ -130,7 +130,7 @@ public class ScribbleBoardController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player currentPlayer = getPrincipal();
+				final Personality currentPlayer = getPrincipal();
 				return processGameMove(gameId, new PassTurn(currentPlayer.getId()), locale);
 			}
 		}, locale);
@@ -151,7 +151,7 @@ public class ScribbleBoardController extends WisematchesController {
 				for (int i = 0; i < tiles.length; i++) {
 					t[i] = tiles[i].getNumber();
 				}
-				final Player currentPlayer = getPrincipal();
+				final Personality currentPlayer = getPrincipal();
 				return processGameMove(gameId, new ExchangeMove(currentPlayer.getId(), t), locale);
 			}
 		}, locale);
@@ -167,8 +167,8 @@ public class ScribbleBoardController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				Player currentPlayer = getPrincipal();
-				final ScribbleBoard board = boardManager.getBoard(gameId);
+				Personality currentPlayer = getPrincipal();
+				final ScribbleBoard board = boardManager.openBoard(gameId);
 				board.resign(board.getPlayerHand(currentPlayer.getId()));
 
 				final Map<String, Object> res = new HashMap<>();
@@ -182,12 +182,12 @@ public class ScribbleBoardController extends WisematchesController {
 	}
 
 	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
-		final Player currentPlayer = getPrincipal();
+		final Personality currentPlayer = getPrincipal();
 		if (move.getPlayerId() != currentPlayer.getId()) {
 			throw new UnsuitablePlayerException("make turn", currentPlayer);
 		}
 
-		final ScribbleBoard board = boardManager.getBoard(gameId);
+		final ScribbleBoard board = boardManager.openBoard(gameId);
 		final GameMove gameMove = board.makeMove(move);
 		return scribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
 	}

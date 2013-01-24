@@ -3,8 +3,8 @@ package wisematches.server.web.controllers.playground.scribble.controller.game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.Personality;
+import wisematches.core.personality.player.MemberPlayerManager;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
@@ -22,7 +22,7 @@ import wisematches.server.web.services.state.PlayerStateManager;
 @Controller
 @RequestMapping("/playground/scribble")
 public class AbstractGameController extends WisematchesController {
-	protected PlayerManager playerManager;
+	protected MemberPlayerManager playerManager;
 	protected GameMessageSource messageSource;
 	protected ScribblePlayManager boardManager;
 	protected PlayerStateManager playerStateManager;
@@ -32,7 +32,7 @@ public class AbstractGameController extends WisematchesController {
 	public AbstractGameController() {
 	}
 
-	protected int getActiveGamesCount(Player principal) {
+	protected int getActiveGamesCount(Personality principal) {
 		int activeGames;
 		if (!GuestPlayer.isGuestPlayer(principal)) {
 			activeGames = playerStatisticManager.getStatistic(principal).getActiveGames();
@@ -42,12 +42,12 @@ public class AbstractGameController extends WisematchesController {
 		return activeGames + proposalManager.getTotalCount(principal, ProposalRelation.INVOLVED);
 	}
 
-	protected int getFinishedGamesCount(Player principal) {
+	protected int getFinishedGamesCount(Personality principal) {
 		return playerStatisticManager.getStatistic(principal).getFinishedGames();
 	}
 
 	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

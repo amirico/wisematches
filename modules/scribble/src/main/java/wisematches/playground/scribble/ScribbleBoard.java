@@ -4,8 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.personality.player.MemberPlayerManager;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.LettersDistribution;
@@ -157,7 +156,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 	}
 
-	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PlayerManager playerManager) {
+	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, MemberPlayerManager playerManager) {
 		initializePlayers(playerManager);
 
 		this.dictionary = vocabulary;
@@ -182,7 +181,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * @see ScribblePlayerHand
 	 */
 	@Override
-	protected ScribblePlayerHand createPlayerHand(Player player, byte index) {
+	protected ScribblePlayerHand createPlayerHand(Personality player, byte index) {
 		return new ScribblePlayerHand(player, index);
 	}
 
@@ -248,7 +247,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 			final int points = boardMoves.getShort();
 			final Date time = new Date(boardMoves.getLong());
-			final Player player = getPlayerByCode(code).getPlayer();
+			final Personality player = getPlayerByCode(code).getPlayer();
 
 			final GameMove move;
 			if (type == 0) {
@@ -649,11 +648,11 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		return scoreEngine;
 	}
 
-	public void makeTurn(Player player, Word word) {
+	public void makeTurn(Personality player, Word word) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
-	public void exchangeTiles(Player player, int[] tilesIds) {
+	public void exchangeTiles(Personality player, int[] tilesIds) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

@@ -46,7 +46,7 @@ public class AdministrationController {
 		ScribbleBoard board = null;
 		try {
 			if (id != null && !id.isEmpty()) {
-				board = boardManager.getBoard(Long.parseLong(id));
+				board = boardManager.openBoard(Long.parseLong(id));
 			}
 		} catch (BoardLoadingException ignore) {
 		}
@@ -66,7 +66,7 @@ public class AdministrationController {
 		ScribbleBoard board = null;
 		try {
 			if (id != null && !id.isEmpty()) {
-				board = boardManager.getBoard(Long.parseLong(id));
+				board = boardManager.openBoard(Long.parseLong(id));
 			}
 		} catch (BoardLoadingException ignore) {
 		}
