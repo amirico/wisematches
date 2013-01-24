@@ -3,94 +3,33 @@ package wisematches.core;
 import java.util.Locale;
 
 /**
- * TODO: split to two clasess. Extract interface for additional method. Mustn't be main
- * <p/>
  * This is enumeration of all supported languages in this site.
  * <p/>
  * Language is very similar to {@code Locale} but it's singletone ans easy to use.
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-@Deprecated
 public enum Language {
-	/**
-	 * English language.
-	 */
-	EN(new Locale("en"), "a moment", new String[][]{
-			{"d", "day", "days", "days"},
-			{"h", "hour", "hours", "hours"},
-			{"m", "minute", "minutes", "minutes"}}, new Alphabet("abcdefghijklmnopqrstuvwxyz"), "UTF-8") {
-		@Override
-		public String getNumeralEnding(int abs) {
-			switch (abs) {
-				case 1:
-					return "st";
-				case 2:
-					return "nd";
-				case 3:
-					return "rd";
-				default:
-					return "th";
-			}
-		}
-
-		@Override
-		public String getWordEnding(int abs) {
-			if (abs < 1) {
-				return "";
-			}
-			return "s";
-		}
-	},
-
-	/**
-	 * Russian language.
-	 */
-	RU(new Locale("ru"), "одно мгновенье", new String[][]{
-			{"д", "день", "дня", "дней"},
-			{"ч", "час", "часа", "часов"},
-			{"м", "минута", "минуты", "минут"}}, new Alphabet("абвгдеёжзийклмнопрстуфхцчшщъыьэюя"), "Cp1251") {
-
-		private final String[] NUMERALS = new String[]{"ый", "ый", "ой", "ий", "ый", "ый", "ой", "ой", "ой", "ый"};
-
-		@Override
-		public String getNumeralEnding(int abs) {
-			if (abs >= 9 && abs <= 20) {
-				return "ый";
-			}
-			return NUMERALS[abs % 10];
-		}
-
-		@Override
-		public String getWordEnding(int abs) {
-			if (abs == 1) {
-				return "а";
-			} else if (abs < 5) {
-				return "ы";
-			}
-			return "";
-		}
-	};
+	EN("UTF-8", new Locale("en"), new Alphabet("abcdefghijklmnopqrstuvwxyz"), Localization.ENGLISH),
+	RU("Cp1251", new Locale("ru"), new Alphabet("абвгдеёжзийклмнопрстуфхцчшщъыьэюя"), Localization.RUSSIAN);
 
 	private final String code;
 	private final Locale locale;
-	private final String momentAgo;
 	private final Alphabet alphabet;
-	private final String charsetName;
-	private final String[][] timeDeclension;
+	private final String nativeCharset;
+	private final Localization localization;
 
 	/**
 	 * Default language which should be used if another is not specified.
 	 */
 	public static final Language DEFAULT = EN;
 
-	private Language(Locale locale, String momentAgo, String[][] timeDeclension, Alphabet alphabet, String charsetName) {
-		this.momentAgo = momentAgo;
-		this.timeDeclension = timeDeclension;
+	private Language(String nativeCharset, Locale locale, Alphabet alphabet, Localization localization) {
 		this.code = locale.getLanguage();
 		this.locale = locale;
 		this.alphabet = alphabet;
-		this.charsetName = charsetName;
+		this.nativeCharset = nativeCharset;
+		this.localization = localization;
 	}
 
 	/**
@@ -98,73 +37,46 @@ public enum Language {
 	 *
 	 * @return the code of this language.
 	 */
-	public String code() {
+	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Returns locale for this language.
+	 * Returns getLocale for this language.
 	 *
-	 * @return the locale for this language.
+	 * @return the getLocale for this language.
 	 */
-	public Locale locale() {
+	public Locale getLocale() {
 		return locale;
 	}
 
+	/**
+	 * Returns lowercase alphabet for this language.
+	 *
+	 * @return the lowercase alphabet for this language.
+	 */
 	public Alphabet getAlphabet() {
 		return alphabet;
 	}
 
+	/**
+	 * Returns native charset encoding for this language.
+	 *
+	 * @return the native charset encoding for this language.
+	 */
+	public String getNativeCharset() {
+		return nativeCharset;
+	}
+
+	/**
+	 * Returns localization interface for this language.
+	 *
+	 * @return the localization interface for this language.
+	 */
 	public Localization getLocalization() {
-		throw new UnsupportedOperationException("Not implemented");
+		return localization;
 	}
 
-	public String getDaysCode() {
-		return timeDeclension[0][0];
-	}
-
-	public String getHoursCode() {
-		return timeDeclension[1][0];
-	}
-
-	public String getMinutesCode() {
-		return timeDeclension[2][0];
-	}
-
-
-	public String getMomentAgoLabel() {
-		return momentAgo;
-	}
-
-	public String getDaysLabel(int value) {
-		return timeDeclension[0][timeDeclensionIndex(value)];
-	}
-
-	public String getHoursLabel(int value) {
-		return timeDeclension[1][timeDeclensionIndex(value)];
-	}
-
-	public String getMinutesLabel(int value) {
-		return timeDeclension[2][timeDeclensionIndex(value)];
-	}
-
-	public abstract String getWordEnding(int quantity);
-
-	public abstract String getNumeralEnding(int value);
-
-
-	private static int timeDeclensionIndex(int value) {
-		int v = value % 100;
-		if (v > 20) {
-			v %= 10;
-		}
-		if (v == 1) {
-			return 1;
-		} else if (v > 1 && v < 5) {
-			return 2;
-		}
-		return 3;
-	}
 
 	/**
 	 * Returns language by specified code.
@@ -186,9 +98,5 @@ public enum Language {
 
 	public static Language byLocale(Locale locale) {
 		return byCode(locale.getLanguage());
-	}
-
-	public String getCharsetName() {
-		return charsetName;
 	}
 }

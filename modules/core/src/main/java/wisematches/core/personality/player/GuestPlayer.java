@@ -27,7 +27,7 @@ public final class GuestPlayer extends Player {
 
 	@Override
 	public String getNickname() {
-		return "guest." + language.code();
+		return "guest." + language.getCode();
 	}
 
 	@Override
