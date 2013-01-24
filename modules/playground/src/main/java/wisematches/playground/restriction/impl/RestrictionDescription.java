@@ -1,6 +1,6 @@
 package wisematches.playground.restriction.impl;
 
-import wisematches.core.personality.member.Membership;
+import wisematches.core.Membership;
 
 import java.util.Map;
 

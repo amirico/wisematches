@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="original" type="wisematches.server.services.message.impl.HibernateMessage" -->
-<#-- @ftlvariable name="recipient" type="wisematches.core.personality.Player" -->
+<#-- @ftlvariable name="recipient" type="wisematches.core.Personality" -->
 <#include "/core.ftl">
 
 <div><@message code="messages.description"/></div>

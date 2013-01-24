@@ -77,8 +77,8 @@ public class ScribbleExpirationManagerTest {
 		replay(gameBoard2);
 
 		scribbleBoardManager.addGamePlayListener(isA(GamePlayListener.class));
-		expect(scribbleBoardManager.getBoard(15L)).andReturn(gameBoard);
-		expect(scribbleBoardManager.getBoard(16L)).andReturn(gameBoard2);
+		expect(scribbleBoardManager.openBoard(15L)).andReturn(gameBoard);
+		expect(scribbleBoardManager.openBoard(16L)).andReturn(gameBoard2);
 		replay(scribbleBoardManager);
 
 		final ExpirationListener<Long, ScribbleExpirationType> l = createMock(ExpirationListener.class);

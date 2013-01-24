@@ -2,7 +2,7 @@ package wisematches.playground.scribble.robot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.personality.machinery.RobotType;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.dictionary.Dictionary;

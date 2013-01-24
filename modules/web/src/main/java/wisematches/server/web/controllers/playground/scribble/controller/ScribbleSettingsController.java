@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.controllers.ServiceResponse;
@@ -29,7 +29,7 @@ public class ScribbleSettingsController extends WisematchesController {
 	@RequestMapping("load")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String loadBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 
 		final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
 		form.setTilesClass(settings.getTilesClass());

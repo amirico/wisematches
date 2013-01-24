@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -38,7 +38,7 @@ public class ActiveGameController extends AbstractGameController {
 	@RequestMapping("active")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
-		final Player principal;
+		final Personality principal;
 		if (pid == null) {
 			principal = getPrincipal();
 		} else {
@@ -75,7 +75,7 @@ public class ActiveGameController extends AbstractGameController {
 	@RequestMapping(value = "active.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ServiceResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
-		final Player principal;
+		final Personality principal;
 		if (pid == null) {
 			principal = getPrincipal();
 		} else {
@@ -98,7 +98,7 @@ public class ActiveGameController extends AbstractGameController {
 			final PlayerInfoForm[] players = new PlayerInfoForm[playersHands.size()];
 			for (int i = 0, playersHandsSize = playersHands.size(); i < playersHandsSize; i++) {
 				final ScribblePlayerHand hand = playersHands.get(i);
-				final Player player = playerManager.getPlayer(hand.getPlayerId());
+				final Personality player = playerManager.getPlayer(hand.getPlayerId());
 				players[i] = new PlayerInfoForm(player.getId(),
 						player.getNickname(),
 						player.getMembership().name(),

@@ -5,7 +5,7 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.task.TransactionalExecutor;
 import wisematches.playground.search.GameState;
 
@@ -71,7 +71,7 @@ public class RobotActivityCenterTest {
 		expect(gameBoard.getPlayerTurn()).andReturn(createPlayerHand(player.getId()));
 		replay(gameBoard);
 
-		expect(gamePlayManager.getBoard(1L)).andReturn(gameBoard);
+		expect(gamePlayManager.openBoard(1L)).andReturn(gameBoard);
 		replay(gamePlayManager);
 
 		reset(robotBrain);
@@ -112,9 +112,9 @@ public class RobotActivityCenterTest {
 
 		gamePlayManager.addGamePlayListener(capture(listener));
 		expect(gamePlayManager.searchEntities(p1, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(gameBoard));
-		expect(gamePlayManager.getBoard(1L)).andReturn(gameBoard);
+		expect(gamePlayManager.openBoard(1L)).andReturn(gameBoard);
 		expect(gamePlayManager.searchEntities(p2, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(gameBoard));
-		expect(gamePlayManager.getBoard(1L)).andReturn(gameBoard);
+		expect(gamePlayManager.openBoard(1L)).andReturn(gameBoard);
 		expect(gamePlayManager.searchEntities(p3, GameState.ACTIVE, null, null, null)).andReturn(Collections.emptyList());
 		replay(gamePlayManager);
 
@@ -160,7 +160,7 @@ public class RobotActivityCenterTest {
 		replay(board);
 
 		reset(gamePlayManager);
-		expect(gamePlayManager.getBoard(1L)).andReturn(board);
+		expect(gamePlayManager.openBoard(1L)).andReturn(board);
 		replay(gamePlayManager);
 
 		listener.getValue().gameMoveDone(board, new GameMove(new PassTurn(13L), 0, 0, new Date()), null);

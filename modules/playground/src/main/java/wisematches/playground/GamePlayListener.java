@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 
 import java.util.Collection;
 
@@ -31,5 +31,5 @@ public interface GamePlayListener {
 	 * @param resolution the game finalization resolution
 	 * @param winners    the winners list or empty list if no winners (draw).
 	 */
-	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Player> winners);
+	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners);
 }

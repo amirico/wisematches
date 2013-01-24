@@ -1,6 +1,6 @@
 package wisematches.server.web.services.recovery;
 
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 
 import javax.persistence.*;
 import java.util.Date;

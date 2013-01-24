@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.core.Personality;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 import wisematches.core.task.TransactionalExecutor;
 import wisematches.server.web.services.notify.*;
 

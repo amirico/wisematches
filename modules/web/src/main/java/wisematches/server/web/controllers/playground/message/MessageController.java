@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.Personality;
+import wisematches.core.personality.player.MemberPlayerManager;
 import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.message.Message;
 import wisematches.playground.message.MessageDirection;
@@ -33,7 +33,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/messages")
 public class MessageController extends WisematchesController {
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private MessageManager messageManager;
 	private GameMessageSource messageSource;
 	private BlacklistManager blacklistManager;
@@ -48,7 +48,7 @@ public class MessageController extends WisematchesController {
 	@RequestMapping("view")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String showReceivedMessage(Model model) {
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 		model.addAttribute("messages", messageManager.getMessages(principal, MessageDirection.RECEIVED));
 		return "/content/playground/messages/view";
 	}
@@ -63,7 +63,7 @@ public class MessageController extends WisematchesController {
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public String createMessageDialog(@RequestParam(value = "dialog", required = false) boolean dialog, Model model,
 									  @ModelAttribute("form") MessageForm form, BindingResult result) {
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 
 		model.addAttribute("plain", dialog);
 
@@ -87,7 +87,7 @@ public class MessageController extends WisematchesController {
 			}
 		}
 
-		final Player player = playerManager.getPlayer(playerId);
+		final Personality player = playerManager.getPlayer(playerId);
 		if (blacklistManager.isBlacklisted(player, principal)) {
 			result.rejectValue("pid", "messages.err.ignored");
 		} else if (player == null || ProprietaryPlayer.isComputerPlayer(player)) {
@@ -102,7 +102,7 @@ public class MessageController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "send", method = RequestMethod.POST)
 	public ServiceResponse sendMessage(@RequestBody MessageForm form, Locale locale) {
-		final Player principal = getPrincipal();
+		final Personality principal = getPrincipal();
 
 		final int sent = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
 		final Restriction restriction = restrictionManager.validateRestriction(principal, "messages.count", sent);
@@ -125,7 +125,7 @@ public class MessageController extends WisematchesController {
 			}
 		}
 
-		final Player player = playerManager.getPlayer(playerId);
+		final Personality player = playerManager.getPlayer(playerId);
 		if (blacklistManager.isBlacklisted(player, getPersonality())) {
 			return ServiceResponse.failure(messageSource.getMessage("messages.err.ignored", locale));
 		} else if (player == null || ProprietaryPlayer.isComputerPlayer(player)) {
@@ -175,7 +175,7 @@ public class MessageController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

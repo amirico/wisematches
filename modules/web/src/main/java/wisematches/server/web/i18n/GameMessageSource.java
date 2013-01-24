@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Years;
 import org.springframework.context.MessageSource;
 import wisematches.core.Language;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.GameBoard;
 import wisematches.playground.GameRelationship;
@@ -103,7 +103,7 @@ public class GameMessageSource {
 		return sb.toString();
 	}
 
-	public String getPlayerNick(Player p, Locale locale) {
+	public String getPlayerNick(Personality p, Locale locale) {
 		if (p instanceof ProprietaryPlayer) {
 			return getRobotNick((ProprietaryPlayer) p, locale);
 		}

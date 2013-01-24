@@ -4,9 +4,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerType;
-import wisematches.core.personality.member.Membership;
+import wisematches.core.Personality;
+import wisematches.core.Membership;
 
 import java.util.*;
 
@@ -30,7 +29,7 @@ public enum WMAuthorities implements GrantedAuthority {
 	private static final Map<Membership, Set<GrantedAuthority>> authoritiesCache = new HashMap<>();
 
 	static {
-		authoritiesCache.put(Membership.DEFAULT, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER)));
+		authoritiesCache.put(Membership.BASIC, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER)));
 		authoritiesCache.put(Membership.GOLD, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, GOLD)));
 		authoritiesCache.put(Membership.SILVER, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, SILVER)));
 		authoritiesCache.put(Membership.PLATINUM, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, PLATINUM)));
@@ -62,8 +61,8 @@ public enum WMAuthorities implements GrantedAuthority {
 		return false;
 	}
 
-	public static Collection<GrantedAuthority> forPlayer(Player player) {
-		final PlayerType playerType = player.getPlayerType();
+	public static Collection<GrantedAuthority> forPlayer(Personality player) {
+		final Personality.Type playerType = player.getPlayerType();
 		if (playerType.isGuest()) {
 			return GUEST_AUTHORITIES;
 		}

@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="restrictionManager" type="wisematches.playground.restriction.RestrictionManager" -->
 <#include "/core.ftl">
 
-<#assign memberships=[Membership.DEFAULT, Membership.SILVER, Membership.GOLD, Membership.PLATINUM]/>
+<#assign memberships=[Membership.BASIC, Membership.SILVER, Membership.GOLD, Membership.PLATINUM]/>
 
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>

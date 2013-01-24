@@ -2,10 +2,10 @@ package wisematches.playground.tracking.impl;
 
 import org.apache.log4j.Logger;
 import wisematches.core.Personality;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.member.account.Account;
-import wisematches.core.personality.member.account.AccountListener;
-import wisematches.core.personality.member.account.AccountManager;
+import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.personality.player.account.Account;
+import wisematches.core.personality.player.account.AccountListener;
+import wisematches.core.personality.player.account.AccountManager;
 import wisematches.core.personality.proprietary.ProprietaryPlayer;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyWinner;
@@ -31,7 +31,7 @@ public class StatisticManagerImpl implements StatisticManager {
 	private RegularTourneyManager tourneyManager;
 
 	private RatingManager ratingManager;
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private StatisticsTrapper statisticsTrapper;
 	private PlayerTrackingCenterDao playerTrackingCenterDao;
 
@@ -94,7 +94,7 @@ public class StatisticManagerImpl implements StatisticManager {
 		}
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

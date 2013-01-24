@@ -1,10 +1,9 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerType;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
-import wisematches.core.personality.proprietary.robot.RobotType;
+import wisematches.core.Personality;
+import wisematches.core.personality.machinery.RobotPlayer;
+import wisematches.core.personality.machinery.RobotType;
 import wisematches.core.task.TransactionalExecutor;
 import wisematches.playground.tracking.StatisticManager;
 
@@ -63,17 +62,17 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 	@Override
-	public B createBoard(S settings, Collection<Player> players) throws BoardCreationException {
+	public B createBoard(S settings, Collection<Personality> players) throws BoardCreationException {
 		return createBoard(settings, players, null);
 	}
 
 	@Override
-	public B createBoard(S settings, Collection<Player> players, GameRelationship relationship) throws BoardCreationException {
+	public B createBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
 		if (log.isDebugEnabled()) {
 			log.debug("Creating new board: settings - " + settings + ", players - " + players);
 		}
 
-		for (Player player : players) {
+		for (Personality player : players) {
 			if (player == null) {
 				throw new BoardCreationException("Player can't be null");
 			}
@@ -104,7 +103,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 	@Override
-	public B getBoard(long boardId) throws BoardLoadingException {
+	public B openBoard(long boardId) throws BoardLoadingException {
 		B board = boardsCache.getBoard(boardId);
 		if (board != null) {
 			if (log.isDebugEnabled()) {
@@ -158,7 +157,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	/**
 	 * Loads game board frome storage by specified game id.
 	 * <p/>
-	 * This method is used from {@link #getBoard(long)}. You MUST NOT use this method directly because in
+	 * This method is used from {@link #openBoard(long)}. You MUST NOT use this method directly because in
 	 * this case board will not be stored in boards map and will not be tracked for changes.
 	 *
 	 * @param gameId the id of game that must be loaded.
@@ -175,18 +174,18 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	 * @param relationship game relationship.
 	 * @throws BoardCreationException if board can't be created by some reasones.
 	 */
-	protected abstract B createBoardImpl(S settings, Collection<Player> players, GameRelationship relationship) throws BoardCreationException;
+	protected abstract B createBoardImpl(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException;
 
 	protected abstract void processRobotMove(B board, RobotPlayer player);
 
 	private void recalculatePlayerRatings(GameBoard<?, ? extends AbstractPlayerHand> board) {
-		final List<Player> players = board.getPlayers();
+		final List<Personality> players = board.getPlayers();
 
 		final AbstractPlayerHand[] hands = new AbstractPlayerHand[players.size()];
 		final short[] points = new short[players.size()];
 		final short[] oldRatings = new short[players.size()];
 		for (int i = 0; i < players.size(); i++) {
-			final Player player = players.get(i);
+			final Personality player = players.get(i);
 			final AbstractPlayerHand hand = board.getPlayerHand(player);
 
 			hands[i] = hand;
@@ -321,7 +320,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Player> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
 			recalculatePlayerRatings((GameBoard<?, ? extends AbstractPlayerHand>) board);
 			saveBoardImpl((B) board);
 
@@ -332,8 +331,8 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 		@SuppressWarnings("unchecked")
 		private void processRobotMove(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-			final Player player = board.getPlayerTurn();
-			if (player != null && player.getPlayerType() == PlayerType.ROBOT) {
+			final Personality player = board.getPlayerTurn();
+			if (player != null && player.getPlayerType() == Personality.Type.ROBOT) {
 				AbstractGamePlayManager.this.processRobotMove((B) board, (RobotPlayer) player);
 			}
 		}

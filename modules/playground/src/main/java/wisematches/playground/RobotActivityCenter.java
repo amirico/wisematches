@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.task.TransactionalExecutor;
 
 import java.util.Collection;
@@ -97,7 +97,7 @@ public class RobotActivityCenter implements InitializingBean {
 		public void run() {
 			try {
 				log.info("Start robot action for board " + boardId);
-				final GameBoard gameBoard = gamePlayManager.getBoard(boardId);
+				final GameBoard gameBoard = gamePlayManager.openBoard(boardId);
 				if (robotBrain.isRobotTurn(gameBoard)) {
 					try {
 						final PlayerMove playerMove = robotBrain.performRobotMove(gameBoard);

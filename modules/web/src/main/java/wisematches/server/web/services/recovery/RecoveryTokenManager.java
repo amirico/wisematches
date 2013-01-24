@@ -2,7 +2,7 @@ package wisematches.server.web.services.recovery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>

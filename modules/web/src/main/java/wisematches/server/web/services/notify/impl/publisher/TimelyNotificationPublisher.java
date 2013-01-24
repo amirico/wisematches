@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.task.TaskExecutor;
 import wisematches.core.Personality;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationException;
 import wisematches.server.web.services.notify.NotificationScope;

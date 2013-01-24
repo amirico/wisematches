@@ -3,7 +3,7 @@ package wisematches.playground.propose.impl.file;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.GameProposal;

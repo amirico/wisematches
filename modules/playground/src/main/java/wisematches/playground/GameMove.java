@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 
 import java.util.Date;
 
@@ -15,19 +15,19 @@ import java.util.Date;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public abstract class GameMove {
-	private final Player player;
+	private final Personality player;
 	private final int points;
 	private final int moveNumber;
 	private final Date moveTime;
 
-	protected GameMove(Player player, int points, int moveNumber, Date moveTime) {
+	protected GameMove(Personality player, int points, int moveNumber, Date moveTime) {
 		this.player = player;
 		this.points = points;
 		this.moveNumber = moveNumber;
 		this.moveTime = moveTime;
 	}
 
-	public Player getPlayer() {
+	public Personality getPlayer() {
 		return player;
 	}
 

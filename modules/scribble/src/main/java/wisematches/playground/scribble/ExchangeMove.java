@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.GameMove;
 
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.Date;
 public final class ExchangeMove extends GameMove {
 	private final int[] tilesIds;
 
-	public ExchangeMove(Player player, int points, int moveNumber, Date moveTime, int[] tilesIds) {
+	public ExchangeMove(Personality player, int points, int moveNumber, Date moveTime, int[] tilesIds) {
 		super(player, points, moveNumber, moveTime);
 		this.tilesIds = tilesIds;
 	}

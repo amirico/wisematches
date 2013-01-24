@@ -2,7 +2,7 @@ package wisematches.server.web.controllers.playground.scribble.controller.board;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.comment.GameComment;
@@ -93,7 +93,7 @@ public class ScribbleObjectsConverter {
 		return translateSystemException(e, locale);
 	}
 
-	Map<String, Object> convertGameMove(Locale locale, Player currentPlayer, ScribbleBoard board, GameMove gameMove) {
+	Map<String, Object> convertGameMove(Locale locale, Personality currentPlayer, ScribbleBoard board, GameMove gameMove) {
 		final Map<String, Object> res = new HashMap<String, Object>();
 		res.put("state", convertGameState(board, locale));
 		res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));

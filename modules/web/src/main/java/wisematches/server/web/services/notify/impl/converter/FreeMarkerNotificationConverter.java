@@ -5,7 +5,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import wisematches.core.personality.member.account.Account;
+import wisematches.core.personality.player.account.Account;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationSender;
 import wisematches.server.web.services.notify.TransformationException;

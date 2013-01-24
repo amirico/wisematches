@@ -6,10 +6,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
 import wisematches.core.Personality;
 import wisematches.core.expiration.ExpirationListener;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.member.MemberPlayer;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
+import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.personality.machinery.RobotPlayer;
+import wisematches.core.personality.player.MemberPlayer;
 import wisematches.core.search.Range;
 import wisematches.core.task.BreakingDayListener;
 import wisematches.playground.*;
@@ -44,7 +43,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class NotificationOriginCenter implements BreakingDayListener, InitializingBean {
 	private TaskExecutor taskExecutor;
 	private GamePlayManager gamePlayManager;
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private AwardsManager awardsManager;
 	private MessageManager messageManager;
 	private GameProposalManager proposalManager;
@@ -69,14 +68,14 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 	}
 
 	protected void processNotification(long person, String code, Object context) {
-		final Player player = playerManager.getPlayer(person);
+		final Personality player = playerManager.getPlayer(person);
 		if (player instanceof MemberPlayer) {
 			fireNotification(code, (MemberPlayer) player, context);
 		}
 	}
 
 	protected void processNotification(Personality person, String code, Object context) {
-		final Player player = playerManager.getPlayer(person);
+		final Personality player = playerManager.getPlayer(person);
 		if (player instanceof MemberPlayer) {
 			fireNotification(code, (MemberPlayer) player, context);
 		}
@@ -129,7 +128,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 
@@ -299,7 +298,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		@Override
 		public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
 			try {
-				final GameBoard board = gamePlayManager.getBoard(boardId);
+				final GameBoard board = gamePlayManager.openBoard(boardId);
 				if (board != null) {
 					final GamePlayerHand hand = board.getPlayerTurn();
 					if (hand != null) {

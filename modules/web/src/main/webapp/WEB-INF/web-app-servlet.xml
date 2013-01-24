@@ -94,7 +94,7 @@
         <property name="exposeEnums">
             <list>
                 <value>wisematches.core.Language</value>
-                <value>wisematches.core.personality.member.Membership</value>
+                <value>wisematches.core.Membership</value>
                 <value>wisematches.playground.award.AwardType</value>
             </list>
         </property>

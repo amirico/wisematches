@@ -110,7 +110,7 @@ public class AbstractBoardManagerTest {
 
 		final MockGamePlayManager mock = new MockGamePlayManager(dao);
 
-		final GameBoard<?, ?> newBoard = mock.getBoard(1L);
+		final GameBoard<?, ?> newBoard = mock.openBoard(1L);
 		assertSame(board, newBoard);
 
 		verify(board);
@@ -120,7 +120,7 @@ public class AbstractBoardManagerTest {
 		reset(board);
 		replay(board);
 
-		final GameBoard<?, ?> newBoard2 = mock.getBoard(1L);
+		final GameBoard<?, ?> newBoard2 = mock.openBoard(1L);
 		assertSame(board, newBoard2);
 		assertSame(newBoard, newBoard2);
 
@@ -198,7 +198,7 @@ public class AbstractBoardManagerTest {
 		mock.addGamePlayListener(boardListener);
 		mock.setRatingManager(ratingManager);
 
-		mock.getBoard(1L);
+		mock.openBoard(1L);
 
 		boardListener.gameMoveDone(board, move, null);
 

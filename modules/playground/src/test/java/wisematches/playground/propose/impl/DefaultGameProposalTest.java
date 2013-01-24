@@ -2,9 +2,8 @@ package wisematches.playground.propose.impl;
 
 import org.junit.Test;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.criteria.*;
 import wisematches.playground.tracking.Statistics;
@@ -18,10 +17,10 @@ import static org.junit.Assert.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultGameProposalTest {
-	public static final Player PERSON1 = RobotPlayer.DULL;
-	public static final Player PERSON2 = RobotPlayer.TRAINEE;
-	public static final Player PERSON3 = RobotPlayer.EXPERT;
-	public static final Player PERSON4 = GuestPlayer.GUEST;
+	public static final Personality PERSON1 = RobotPlayer.DULL;
+	public static final Personality PERSON2 = RobotPlayer.TRAINEE;
+	public static final Personality PERSON3 = RobotPlayer.EXPERT;
+	public static final Personality PERSON4 = GuestPlayer.GUEST;
 
 	public DefaultGameProposalTest() {
 	}

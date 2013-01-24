@@ -2,7 +2,6 @@ package wisematches.playground.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -64,18 +63,18 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiate(S settings, Player initiator, Collection<Player> opponents, String commentary) {
+	public GameProposal<S> initiate(S settings, Personality initiator, Collection<Personality> opponents, String commentary) {
 		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), commentary, settings, initiator, opponents.toArray(new Personality[opponents.size()])));
 	}
 
 	@Override
-	public GameProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria) {
+	public GameProposal<S> initiate(S settings, Personality initiator, int opponentsCount, PlayerCriterion... criteria) {
 		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), settings, initiator, new Personality[opponentsCount], criteria));
 	}
 
 
 	@Override
-	public GameProposal<S> accept(long proposalId, Player player) throws ViolatedCriteriaException {
+	public GameProposal<S> accept(long proposalId, Personality player) throws ViolatedCriteriaException {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
@@ -104,7 +103,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> reject(long proposalId, Player player) throws ViolatedCriteriaException {
+	public GameProposal<S> reject(long proposalId, Personality player) throws ViolatedCriteriaException {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
@@ -170,7 +169,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public Collection<CriterionViolation> validate(long proposalId, Player player) {
+	public Collection<CriterionViolation> validate(long proposalId, Personality player) {
 		final DefaultGameProposal<S> proposal = proposals.get(proposalId);
 		if (proposal == null) {
 			return null;

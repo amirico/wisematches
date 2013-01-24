@@ -1,9 +1,9 @@
 package wisematches.server.web.services.state.impl;
 
 import org.junit.Test;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.server.security.impl.WMPlayerDetails;
 import wisematches.server.web.services.state.PlayerStateListener;
 
@@ -20,8 +20,8 @@ public class SessionRegistryStateManagerTest {
 
 	@Test
 	public void test() {
-		final Player player1 = GuestPlayer.GUEST;
-		final Player player2 = RobotPlayer.DULL;
+		final Personality player1 = GuestPlayer.GUEST;
+		final Personality player2 = RobotPlayer.DULL;
 
 		final PlayerStateListener listener = createStrictMock(PlayerStateListener.class);
 

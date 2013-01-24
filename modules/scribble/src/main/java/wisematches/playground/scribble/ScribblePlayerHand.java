@@ -1,6 +1,6 @@
 package wisematches.playground.scribble;
 
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
 import wisematches.playground.AbstractPlayerHand;
 
 import javax.persistence.Embeddable;
@@ -23,11 +23,11 @@ public final class ScribblePlayerHand extends AbstractPlayerHand {
 	ScribblePlayerHand() {
 	}
 
-	public ScribblePlayerHand(Player player) {
+	public ScribblePlayerHand(Personality player) {
 		this(player, null);
 	}
 
-	public ScribblePlayerHand(Player player, Tile[] tiles) {
+	public ScribblePlayerHand(Personality player, Tile[] tiles) {
 		super(player);
 		if (tiles != null) {
 			this.tiles = tiles.clone();

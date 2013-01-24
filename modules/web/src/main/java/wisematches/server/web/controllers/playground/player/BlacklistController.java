@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.personality.player.MemberPlayerManager;
 import wisematches.server.services.blacklist.BlacklistManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
@@ -24,7 +23,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/blacklist")
 public class BlacklistController extends WisematchesController {
-	private PlayerManager playerManager;
+	private MemberPlayerManager playerManager;
 	private BlacklistManager blacklistManager;
 	private GameMessageSource gameMessageSource;
 
@@ -41,7 +40,7 @@ public class BlacklistController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public ServiceResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
-		final Player player = playerManager.getPlayer(form.getPerson());
+		final Personality player = playerManager.getPlayer(form.getPerson());
 		if (player == null) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("blacklist.err.unknown", locale));
 		}
@@ -61,7 +60,7 @@ public class BlacklistController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(MemberPlayerManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

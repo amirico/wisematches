@@ -1,8 +1,7 @@
 package wisematches.playground.restriction.impl;
 
-import wisematches.core.personality.Player;
-import wisematches.core.personality.PlayerType;
-import wisematches.core.personality.member.MemberPlayer;
+import wisematches.core.Personality;
+import wisematches.core.personality.player.MemberPlayer;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 
@@ -31,9 +30,9 @@ public class RestrictionManagerImpl implements RestrictionManager {
 	}
 
 	@Override
-	public Comparable<?> getRestrictionThreshold(String name, Player player) {
+	public Comparable<?> getRestrictionThreshold(String name, Personality player) {
 		final RestrictionDescription<?> descriptor = getDescriptor(name);
-		if (player.getPlayerType() != PlayerType.MEMBER) {
+		if (player.getPlayerType() != Personality.Type.MEMBER) {
 			return descriptor.getUnknownMembership();
 		} else {
 			return descriptor.getRestriction(((MemberPlayer) player).getMembership());
@@ -42,7 +41,7 @@ public class RestrictionManagerImpl implements RestrictionManager {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Restriction validateRestriction(Player player, String name, Comparable value) {
+	public Restriction validateRestriction(Personality player, String name, Comparable value) {
 		if (player == null) {
 			throw new NullPointerException("Player can't be null");
 		}

@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
-import wisematches.core.personality.Player;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -22,13 +21,13 @@ public class HibernatePlayerStateManager extends SessionRegistryStateManager {
 	}
 
 	@Override
-	protected void processPlayerOnline(Player player) {
+	protected void processPlayerOnline(Personality player) {
 		super.processPlayerOnline(player);
 		lastActivityMap.put(player, new Date());
 	}
 
 	@Override
-	protected void processPlayerAlive(Player player) {
+	protected void processPlayerAlive(Personality player) {
 		super.processPlayerAlive(player);
 		lastActivityMap.put(player, new Date());
 	}
@@ -49,7 +48,7 @@ public class HibernatePlayerStateManager extends SessionRegistryStateManager {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	protected void processPlayerOffline(Player player) {
+	protected void processPlayerOffline(Personality player) {
 		super.processPlayerOffline(player);
 		final Date remove = lastActivityMap.remove(player);
 		if (remove != null) {

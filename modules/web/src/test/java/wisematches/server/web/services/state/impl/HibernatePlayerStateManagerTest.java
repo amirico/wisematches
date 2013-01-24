@@ -8,9 +8,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.personality.Player;
+import wisematches.core.Personality;
+import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.personality.proprietary.guest.GuestPlayer;
-import wisematches.core.personality.proprietary.robot.RobotPlayer;
 import wisematches.server.security.impl.WMPlayerDetails;
 import wisematches.server.web.services.state.PlayerStateListener;
 
@@ -39,8 +39,8 @@ public class HibernatePlayerStateManagerTest {
 
 	@Test
 	public void test() throws InterruptedException {
-		final Player player1 = GuestPlayer.GUEST;
-		final Player player2 = RobotPlayer.DULL;
+		final Personality player1 = GuestPlayer.GUEST;
+		final Personality player2 = RobotPlayer.DULL;
 
 		final PlayerStateListener listener = createStrictMock(PlayerStateListener.class);
 

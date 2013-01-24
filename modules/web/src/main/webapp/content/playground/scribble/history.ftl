@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="searchColumns" type="java.lang.String[]" -->
 <#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.core.search.descriptive.SearchableDescriptor" -->
-<#-- @ftlvariable name="player" type="wisematches.core.personality.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 
 <#include "/core.ftl">
 
