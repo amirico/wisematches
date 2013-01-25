@@ -53,7 +53,7 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	public int getCommentsCount(GameBoard board, Personality personality) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("select count(*) from wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=:board");
-		query.setLong("board", board.getBoardId());
+		query.setParameter("board", board.getBoardId());
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
@@ -62,7 +62,7 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	public List<GameComment> getComments(final GameBoard board, final Personality personality, final long... ids) {
 		final Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=:board" + (ids != null && ids.length != 0 ? " and c.id in (:ids) order by c.creationDate desc, c.id desc" : ""));
-		query.setLong("board", board.getBoardId());
+		query.setParameter("board", board.getBoardId());
 		if (ids != null && ids.length != 0) {
 			Object[] o = new Object[ids.length];
 			for (int i = 0; i < ids.length; i++) {
@@ -82,8 +82,8 @@ public class HibernateGameCommentManager implements GameCommentManager {
 						"on c.board=p.boardId and p.playerId=:person " +
 						"where c.board=:board " +
 						"order by c.created desc, c.id desc");
-		sqlQuery.setLong("board", board.getBoardId());
-		sqlQuery.setLong("person", personality.getId());
+		sqlQuery.setParameter("board", board.getBoardId());
+		sqlQuery.setParameter("person", personality.getId());
 		sqlQuery.setResultTransformer(new ResultTransformer() {
 			@Override
 			public Object transformTuple(Object[] tuple, String[] aliases) {
@@ -106,8 +106,8 @@ public class HibernateGameCommentManager implements GameCommentManager {
 						"on c.board=p.boardId and p.playerId=:person " +
 						"set c.`read`=c.`read`|(1 << p.playerIndex) " +
 						"where c.board=:board" + (ids != null && ids.length != 0 ? " and c.id in (:ids)" : ""));
-		sqlQuery.setLong("board", board.getBoardId());
-		sqlQuery.setLong("person", personality.getId());
+		sqlQuery.setParameter("board", board.getBoardId());
+		sqlQuery.setParameter("person", personality.getId());
 		if (ids != null && ids.length != 0) {
 			final Object[] a = new Object[ids.length];
 			for (int i = 0; i < ids.length; i++) {
@@ -126,8 +126,8 @@ public class HibernateGameCommentManager implements GameCommentManager {
 						"on c.board=p.boardId and p.playerId=:person " +
 						"set c.`read`=c.`read`&~(1 << p.playerIndex) " +
 						"where c.board=:board" + (ids != null && ids.length != 0 ? " and c.id in (:ids)" : ""));
-		sqlQuery.setLong("board", board.getBoardId());
-		sqlQuery.setLong("person", personality.getId());
+		sqlQuery.setParameter("board", board.getBoardId());
+		sqlQuery.setParameter("person", personality.getId());
 		if (ids != null && ids.length != 0) {
 			final Object[] a = new Object[ids.length];
 			for (int i = 0; i < ids.length; i++) {
@@ -142,7 +142,7 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	public void clearComments(final GameBoard board) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("delete wisematches.playground.scribble.comment.impl.HibernateGameComment as c where c.board=:board");
-		query.setLong("board", board.getBoardId());
+		query.setParameter("board", board.getBoardId());
 		query.executeUpdate();
 	}
 

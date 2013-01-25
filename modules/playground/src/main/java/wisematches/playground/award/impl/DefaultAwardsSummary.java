@@ -22,7 +22,8 @@ public class DefaultAwardsSummary implements AwardsSummary {
 
 	DefaultAwardsSummary(List<Object[]> list, Map<String, AwardDescriptor> descriptorMap) {
 		for (Object[] objects : list) {
-			final AwardDescriptor desc = descriptorMap.get((String) objects[0]);
+			final String object = (String) objects[0];
+			final AwardDescriptor desc = descriptorMap.get(object);
 			final AwardWeight weight = (AwardWeight) objects[1];
 			final Integer count = ((Number) objects[2]).intValue();
 

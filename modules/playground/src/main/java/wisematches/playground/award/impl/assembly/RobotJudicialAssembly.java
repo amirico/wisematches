@@ -1,6 +1,6 @@
 package wisematches.playground.award.impl.assembly;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.personality.machinery.RobotType;
 import wisematches.playground.award.AwardWeight;
 import wisematches.playground.tracking.StatisticManager;
@@ -19,7 +19,7 @@ public class RobotJudicialAssembly extends AbstractJudicialAssembly {
 	public RobotJudicialAssembly() {
 	}
 
-	protected void processStatisticUpdated(Personality person, Set<String> changes, Statistics statistics) {
+	protected void processStatisticUpdated(Player person, Set<String> changes, Statistics statistics) {
 		final int dullWins = statistics.getRobotWins(RobotType.DULL);
 		final int traineeWins = statistics.getRobotWins(RobotType.TRAINEE);
 		final int expertsWins = statistics.getRobotWins(RobotType.EXPERT);
@@ -67,8 +67,8 @@ public class RobotJudicialAssembly extends AbstractJudicialAssembly {
 		}
 
 		@Override
-		public void playerStatisticUpdated(Personality personality, Set<String> changes, Statistics statistic) {
-			processStatisticUpdated(personality, changes, statistic);
+		public void playerStatisticUpdated(Player player, Statistics statistic, Set<String> changes) {
+			processStatisticUpdated(player, changes, statistic);
 		}
 	}
 }

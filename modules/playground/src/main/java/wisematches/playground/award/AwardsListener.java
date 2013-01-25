@@ -1,10 +1,10 @@
 package wisematches.playground.award;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface AwardsListener {
-	void playerAwarded(Personality personality, AwardDescriptor descriptor, Award award);
+	void playerAwarded(Player player, AwardDescriptor descriptor, Award award);
 }

@@ -8,6 +8,10 @@ import wisematches.core.Player;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerManager {
+	void addPlayerListener(PlayerListener listener);
+
+	void removePlayerListener(PlayerListener listener);
+
 	/**
 	 * Returns player by it's id.
 	 *

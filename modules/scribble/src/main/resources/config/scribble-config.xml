@@ -16,7 +16,7 @@
         <property name="dictionaryManager" ref="dictionaryManager"/>
     </bean>
 
-    <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper">
+    <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.impl.ScribbleStatisticsTrapper">
     </bean>
 
     <bean id="scribbleSettingsProvider" class="wisematches.playground.scribble.tourney.ScribbleTourneySettingsProvider">
@@ -28,18 +28,18 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
-        <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
+        <property name="trackingCenterDao" ref="trackingCenterDao"/>
     </bean>
 
     <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
         <property name="playerStatisticManager">
-            <bean class="wisematches.playground.tracking.impl.StatisticManagerImpl">
+            <bean class="wisematches.playground.tracking.impl.AbstractStatisticManager">
                 <property name="ratingManager" ref="ratingManager"/>
                 <property name="accountManager" ref="accountManager"/>
                 <property name="gamePlayManager" ref="scribbleBoardManager"/>
                 <property name="tourneyManager" ref="regularTourneyManager"/>
                 <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
-                <property name="playerTrackingCenterDao" ref="playerTrackingCenterDao"/>
+                <property name="trackingCenterDao" ref="trackingCenterDao"/>
             </bean>
         </property>
     </bean>

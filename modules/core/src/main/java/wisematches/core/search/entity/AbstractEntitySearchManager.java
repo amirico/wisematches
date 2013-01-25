@@ -4,7 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -24,12 +24,12 @@ public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> 
 	}
 
 	@Override
-	public <Ctx extends C> int getTotalCount(Personality person, Ctx context) {
+	public <Ctx extends C> int getTotalCount(Player person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public <Ctx extends C, Fl extends F> int getFilteredCount(Personality person, Ctx context, Fl filter) {
+	public <Ctx extends C, Fl extends F> int getFilteredCount(Player person, Ctx context, Fl filter) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
@@ -40,7 +40,7 @@ public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends C, Fl extends F> List<E> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends C, Fl extends F> List<E> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);

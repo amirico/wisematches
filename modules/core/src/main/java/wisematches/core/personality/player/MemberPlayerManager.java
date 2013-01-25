@@ -14,7 +14,7 @@ import java.util.WeakHashMap;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class MemberPlayerManager implements PlayerManager {
+public final class MemberPlayerManager extends AbstractPlayerManager implements PlayerManager {
 	private AccountManager accountManager;
 	private MembershipManager membershipManager;
 
@@ -26,14 +26,11 @@ public final class MemberPlayerManager implements PlayerManager {
 
 	@Override
 	public MemberPlayer getPlayer(Long pid) {
-		final Long id = pid;
-		MemberPlayer player = playerMap.get(id);
+		MemberPlayer player = playerMap.get(pid);
 		if (player == null) {
 			final Account account = accountManager.getAccount(pid);
 			if (account != null) {
-				final MembershipCard card = membershipManager.getPlayerMembership(account);
-				player = new MemberPlayer(account, card);
-				playerMap.put(id, player);
+				playerMap.put(pid, createMemberPlayer(account));
 			}
 		}
 		return player;
@@ -63,17 +60,28 @@ public final class MemberPlayerManager implements PlayerManager {
 		}
 	}
 
+	private MemberPlayer createMemberPlayer(Account account) {
+		final MembershipCard card = membershipManager.getPlayerMembership(account);
+		return new MemberPlayer(account, card);
+	}
+
 	private final class TheMemberPlayerListener implements AccountListener, MembershipListener {
 		private TheMemberPlayerListener() {
 		}
 
 		@Override
 		public void accountCreated(Account account) {
+			firePlayerRegistered(createMemberPlayer(account));
 		}
 
 		@Override
 		public void accountRemove(Account account) {
-			playerMap.remove(account.getId());
+			final MemberPlayer remove = playerMap.remove(account.getId());
+			if (remove != null) {
+				firePlayerRegistered(remove);
+			} else {
+				firePlayerRegistered(createMemberPlayer(account));
+			}
 		}
 
 		@Override

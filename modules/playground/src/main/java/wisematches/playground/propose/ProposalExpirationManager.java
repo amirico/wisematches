@@ -1,7 +1,7 @@
 package wisematches.playground.propose;
 
 import org.springframework.beans.factory.InitializingBean;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.expiration.impl.AbstractExpirationManager;
 import wisematches.playground.GameSettings;
 
@@ -84,11 +84,11 @@ public class ProposalExpirationManager<S extends GameSettings> extends AbstractE
 		}
 
 		@Override
-		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Personality player, ProposalDirective directive) {
+		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Player player, ProposalDirective directive) {
 		}
 
 		@Override
-		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution reason, Personality player) {
+		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, Player player, ProposalResolution reason) {
 			cancelTermination(proposal.getId());
 		}
 	}

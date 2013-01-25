@@ -1,7 +1,7 @@
 package wisematches.playground.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -63,18 +63,18 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiate(S settings, Personality initiator, Collection<Personality> opponents, String commentary) {
-		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), commentary, settings, initiator, opponents.toArray(new Personality[opponents.size()])));
+	public GameProposal<S> initiate(S settings, Player initiator, Collection<Player> opponents, String commentary) {
+		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), commentary, settings, initiator, opponents.toArray(new Player[opponents.size()])));
 	}
 
 	@Override
-	public GameProposal<S> initiate(S settings, Personality initiator, int opponentsCount, PlayerCriterion... criteria) {
-		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), settings, initiator, new Personality[opponentsCount], criteria));
+	public GameProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria) {
+		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), settings, initiator, new Player[opponentsCount], criteria));
 	}
 
 
 	@Override
-	public GameProposal<S> accept(long proposalId, Personality player) throws ViolatedCriteriaException {
+	public GameProposal<S> accept(long proposalId, Player player) throws ViolatedCriteriaException {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
@@ -103,7 +103,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> reject(long proposalId, Personality player) throws ViolatedCriteriaException {
+	public GameProposal<S> reject(long proposalId, Player player) throws ViolatedCriteriaException {
 		lock.lock();
 		try {
 			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
@@ -143,10 +143,10 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			proposals.remove(proposalId);
 			removeGameProposal(proposal);
 
-			final List<Personality> players = new ArrayList<>(proposal.getPlayers());
+			final List<Player> players = new ArrayList<>(proposal.getPlayers());
 			players.removeAll(proposal.getJoinedPlayers());
 
-			Personality terminated = null;
+			Player terminated = null;
 			if (players.size() != 0) {
 				terminated = players.get(0);
 			}
@@ -169,7 +169,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public Collection<CriterionViolation> validate(long proposalId, Personality player) {
+	public Collection<CriterionViolation> validate(long proposalId, Player player) {
 		final DefaultGameProposal<S> proposal = proposals.get(proposalId);
 		if (proposal == null) {
 			return null;
@@ -185,12 +185,12 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 
 
 	@Override
-	public <Ctx extends ProposalRelation> int getTotalCount(Personality person, Ctx context) {
+	public <Ctx extends ProposalRelation> int getTotalCount(Player person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public <Ctx extends ProposalRelation, Fl extends SearchFilter> int getFilteredCount(Personality person, Ctx context, Fl filter) {
+	public <Ctx extends ProposalRelation, Fl extends SearchFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
 		lock.lock();
 		try {
 			int res = 0;
@@ -212,7 +212,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public <Ctx extends ProposalRelation, Fl extends SearchFilter> List<GameProposal<S>> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends ProposalRelation, Fl extends SearchFilter> List<GameProposal<S>> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
 		lock.lock();
 		try {
 			if (context == ProposalRelation.AVAILABLE) {
@@ -263,15 +263,15 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 		}
 	}
 
-	protected void fireGameProposalUpdated(GameProposal<S> proposal, Personality player, ProposalDirective directive) {
+	protected void fireGameProposalUpdated(GameProposal<S> proposal, Player player, ProposalDirective directive) {
 		for (GameProposalListener proposalListener : proposalListeners) {
 			proposalListener.gameProposalUpdated(proposal, player, directive);
 		}
 	}
 
-	protected void fireGameProposalFinalized(GameProposal<S> proposal, Personality player, ProposalResolution reason) {
+	protected void fireGameProposalFinalized(GameProposal<S> proposal, Player player, ProposalResolution reason) {
 		for (GameProposalListener proposalListener : proposalListeners) {
-			proposalListener.gameProposalFinalized(proposal, reason, player);
+			proposalListener.gameProposalFinalized(proposal, player, reason);
 		}
 	}
 }

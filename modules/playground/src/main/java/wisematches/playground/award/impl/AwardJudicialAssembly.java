@@ -4,7 +4,7 @@ package wisematches.playground.award.impl;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface AwardJudicialAssembly {
-	void addAwardMachinery(AwardMachinery machinery);
+	void addAwardMachinery(AwardExecutiveCommittee committee);
 
-	void removeAwardMachinery(AwardMachinery machinery);
+	void removeAwardMachinery(AwardExecutiveCommittee committee);
 }

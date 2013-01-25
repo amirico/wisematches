@@ -1,10 +1,10 @@
 package wisematches.playground.award.impl.assembly;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.GameRelationship;
 import wisematches.playground.award.AwardWeight;
+import wisematches.playground.award.impl.AwardExecutiveCommittee;
 import wisematches.playground.award.impl.AwardJudicialAssembly;
-import wisematches.playground.award.impl.AwardMachinery;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -12,26 +12,26 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractJudicialAssembly implements AwardJudicialAssembly, AwardMachinery {
-	private final Collection<AwardMachinery> machinates = new CopyOnWriteArrayList<>();
+public abstract class AbstractJudicialAssembly implements AwardJudicialAssembly, AwardExecutiveCommittee {
+	private final Collection<AwardExecutiveCommittee> machinates = new CopyOnWriteArrayList<>();
 
 	protected AbstractJudicialAssembly() {
 	}
 
 	@Override
-	public void addAwardMachinery(AwardMachinery machinery) {
-		machinates.add(machinery);
+	public void addAwardMachinery(AwardExecutiveCommittee committee) {
+		machinates.add(committee);
 	}
 
 	@Override
-	public void removeAwardMachinery(AwardMachinery machinery) {
-		machinates.remove(machinery);
+	public void removeAwardMachinery(AwardExecutiveCommittee committee) {
+		machinates.remove(committee);
 	}
 
 	@Override
-	public void grantAward(Personality person, String code, AwardWeight weight, GameRelationship relationship) {
-		for (AwardMachinery machinery : machinates) {
-			machinery.grantAward(person, code, weight, relationship);
+	public void grantAward(Player player, String code, AwardWeight weight, GameRelationship relationship) {
+		for (AwardExecutiveCommittee machinery : machinates) {
+			machinery.grantAward(player, code, weight, relationship);
 		}
 	}
 }

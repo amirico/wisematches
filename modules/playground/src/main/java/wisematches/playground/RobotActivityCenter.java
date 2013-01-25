@@ -1,14 +1,6 @@
 package wisematches.playground;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.core.task.TransactionalExecutor;
-
-import java.util.Collection;
 
 /**
  * This manager listen all games and when turn is transferred to robot it start process for perfomed that move.
@@ -17,7 +9,11 @@ import java.util.Collection;
  */
 @Deprecated
 public class RobotActivityCenter implements InitializingBean {
-	private GamePlayManager gamePlayManager;
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		throw new UnsupportedOperationException("TODO: Not implemented");
+	}
+/*	private GamePlayManager gamePlayManager;
 	private RobotBrain<GameBoard> robotBrain;
 
 	private TransactionalExecutor taskExecutor;
@@ -136,5 +132,5 @@ public class RobotActivityCenter implements InitializingBean {
 		@Override
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
 		}
-	}
+	}*/
 }

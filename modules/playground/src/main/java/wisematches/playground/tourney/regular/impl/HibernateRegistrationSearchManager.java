@@ -3,7 +3,7 @@ package wisematches.playground.tourney.regular.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -23,12 +23,12 @@ class HibernateRegistrationSearchManager implements RegistrationSearchManager {
 	}
 
 	@Override
-	public <Ctx extends RegistrationRecord.Context> int getTotalCount(Personality person, Ctx context) {
+	public <Ctx extends RegistrationRecord.Context> int getTotalCount(Player person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public <Ctx extends RegistrationRecord.Context, Fl extends SearchFilter.NoFilter> int getFilteredCount(Personality person, Ctx context, Fl filter) {
+	public <Ctx extends RegistrationRecord.Context, Fl extends SearchFilter.NoFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = HibernateQueryHelper.searchRegistrationRecords(session, context, true);
 		return ((Number) query.uniqueResult()).intValue();
@@ -36,7 +36,7 @@ class HibernateRegistrationSearchManager implements RegistrationSearchManager {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends RegistrationRecord.Context, Fl extends SearchFilter.NoFilter> List<RegistrationRecord> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends RegistrationRecord.Context, Fl extends SearchFilter.NoFilter> List<RegistrationRecord> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = HibernateQueryHelper.searchRegistrationRecords(session, context, false);
 		if (range != null) {

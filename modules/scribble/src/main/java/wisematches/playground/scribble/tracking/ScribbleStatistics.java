@@ -7,20 +7,20 @@ import wisematches.playground.tracking.Statistics;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface ScribbleStatistics extends Statistics {
-    int getWordsCount();
+	int getWordsCount();
 
-    int getExchangesCount();
 
-    /**
-     * Returns number of 'all hand tiles' bonuses.
-     *
-     * @return number of 'all hand tiles' bonuses.
-     */
-    int getAllHandTilesBonuses();
+	int getPassesCount();
 
-    float getAverageWordLength();
+	int getExchangesCount();
 
-    Word getLastLongestWord();
 
-    Word getLastValuableWord();
+	Word getLastLongestWord();
+
+	Word getLastValuableWord();
+
+
+	int getAllHandTilesBonuses();
+
+	float getAverageWordLength();
 }

@@ -11,8 +11,6 @@ import wisematches.playground.GameMove;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleMoveScore;
 import wisematches.playground.scribble.ScribblePlayManager;
-import wisematches.playground.scribble.tracking.ScribbleStatisticsEditor;
-import wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper;
 import wisematches.playground.search.GameState;
 import wisematches.playground.tracking.impl.PlayerTrackingCenterDao;
 
@@ -74,7 +72,7 @@ public class PlayerStatisticValidator {
 			}
 
 			if (!board.isActive()) {
-				statisticsTrapper.trapGameFinished(board, editor);
+				statisticsTrapper.trapGameFinished(board, , editor, );
 			}
 		}
 		trackingCenterDao.savePlayerStatistic(editor);

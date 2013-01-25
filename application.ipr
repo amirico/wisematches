@@ -145,6 +145,8 @@
         <processorPath useClasspath="true" />
         <module name="core" />
         <module name="database" />
+        <module name="playground" />
+        <module name="scribble" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -482,6 +484,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/core/core.iml" filepath="$PROJECT_DIR$/modules/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -503,6 +507,7 @@
     <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tracking/RatingCurve.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/tracking/impl/ScribbleStatisticsEditor.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/server/src/main/java/wisematches/server/services/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/HibernateNotificationService.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/publisher/EssentialNotificationPublisher.java" dialect="MySQL" />

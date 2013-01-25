@@ -29,7 +29,7 @@ public class HibernateTourneyWinner implements TourneyWinner {
 	}
 
 	@Override
-	public long getPlayer() {
+	public Long getPlayer() {
 		return player;
 	}
 

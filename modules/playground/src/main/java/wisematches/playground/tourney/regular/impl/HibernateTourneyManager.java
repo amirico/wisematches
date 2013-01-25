@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -32,7 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateTourneyManager<S extends GameSettings>
-		implements RegularTourneyManager, InitializingBean, BreakingDayListener, TourneyAdministrationAccess {
+		implements RegularTourneyManager, InitializingBean, BreakingDayListener {
 	private SessionFactory sessionFactory;
 
 	private TaskExecutor taskExecutor;
@@ -178,7 +179,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Personality person, Ctx context) {
+	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Player person, Ctx context) {
 		lock.lock();
 		try {
 			final Query query = createEntityQuery(person, context, true);
@@ -231,12 +232,12 @@ public class HibernateTourneyManager<S extends GameSettings>
 	}
 
 	@Override
-	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> int getFilteredCount(Personality person, Ctx context, Fl filter) {
+	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
 		return getTotalCount(person, context);
 	}
 
 	@Override
-	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> List<RegularTourneyEntity> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> List<RegularTourneyEntity> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
 		return searchTourneyEntities(person, context, filter, orders, range);
 	}
 
@@ -308,7 +309,6 @@ public class HibernateTourneyManager<S extends GameSettings>
 		});
 	}
 
-	@Override
 	public void finalizeTourneyEntities(final GameBoard<?, ?> board) {
 		taskExecutor.execute(new Runnable() {
 			@Override
@@ -406,7 +406,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
 			finalizeTourneyEntities(board);
 		}
 	}

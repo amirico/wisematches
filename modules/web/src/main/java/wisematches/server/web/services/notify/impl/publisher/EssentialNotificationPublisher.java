@@ -62,7 +62,7 @@ public class EssentialNotificationPublisher implements NotificationPublisher {
 	private Date getNotificationDate(Personality personality, String code) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query sqlQuery = session.createSQLQuery("SELECT `" + code + "` FROM notification_timestamp WHERE pid=:pid");
-		sqlQuery.setLong("pid", personality.getId());
+		sqlQuery.setParameter("pid", personality.getId());
 		return (Date) sqlQuery.uniqueResult();
 	}
 
@@ -71,7 +71,7 @@ public class EssentialNotificationPublisher implements NotificationPublisher {
 		final String query = "INSERT INTO notification_timestamp (`pid`, `" + code + "`) VALUES (:pid, :time) " +
 				"ON DUPLICATE KEY UPDATE `" + code + "`=:time";
 		final Query sqlQuery = session.createSQLQuery(query);
-		sqlQuery.setLong("pid", personality.getId());
+		sqlQuery.setParameter("pid", personality.getId());
 		sqlQuery.setTimestamp("time", new Timestamp(timestamp));
 		sqlQuery.executeUpdate();
 	}

@@ -1,6 +1,8 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.core.personality.PlayerManager;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyGameResolution;
 import wisematches.playground.tourney.regular.TourneyGroup;
@@ -211,28 +213,33 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return finishedDate;
 	}
 
-	<S extends GameSettings> int initializeGames(GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider) throws BoardCreationException {
+	<S extends GameSettings> int initializeGames(GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PlayerManager playerManager) throws BoardCreationException {
 		if (totalGamesCount != 0) {
 			throw new IllegalStateException("Group already initialized");
 		}
 
 		final S settings = settingsProvider.createGameSettings(this);
 		final TourneyRelationship relationship = new TourneyRelationship(getRound().getDivision().getTourney().getNumber());
+		final Player p0 = playerManager.getPlayer(player0);
+		final Player p1 = playerManager.getPlayer(player1);
 		if (playersCount == 2) {
-			game0 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player1)), relationship).getBoardId();
+			game0 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p1), relationship).getBoardId();
 			totalGamesCount = 1;
 		} else if (playersCount == 3) {
-			game0 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player1)), relationship).getBoardId();
-			game1 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player2)), relationship).getBoardId();
-			game2 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player1), Personality.person(player2)), relationship).getBoardId();
+			final Player p2 = playerManager.getPlayer(player2);
+			game0 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p1), relationship).getBoardId();
+			game1 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p2), relationship).getBoardId();
+			game2 = gamePlayManager.createBoard(settings, Arrays.asList(p1, p2), relationship).getBoardId();
 			totalGamesCount = 3;
 		} else if (playersCount == 4) {
-			game0 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player1)), relationship).getBoardId();
-			game1 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player2)), relationship).getBoardId();
-			game2 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player0), Personality.person(player3)), relationship).getBoardId();
-			game3 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player1), Personality.person(player2)), relationship).getBoardId();
-			game4 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player1), Personality.person(player3)), relationship).getBoardId();
-			game5 = gamePlayManager.createBoard(settings, Arrays.asList(Personality.person(player2), Personality.person(player3)), relationship).getBoardId();
+			final Player p2 = playerManager.getPlayer(player2);
+			final Player p3 = playerManager.getPlayer(player3);
+			game0 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p1), relationship).getBoardId();
+			game1 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p2), relationship).getBoardId();
+			game2 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p3), relationship).getBoardId();
+			game3 = gamePlayManager.createBoard(settings, Arrays.asList(p1, p2), relationship).getBoardId();
+			game4 = gamePlayManager.createBoard(settings, Arrays.asList(p1, p3), relationship).getBoardId();
+			game5 = gamePlayManager.createBoard(settings, Arrays.asList(p2, p3), relationship).getBoardId();
 			totalGamesCount = 6;
 		}
 		startedDate = new Date();
@@ -244,7 +251,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 			throw new IllegalStateException("Group already finished");
 		}
 
-		final Collection<? extends GamePlayerHand> wonPlayers = board.getWonPlayers();
+		final Collection<Personality> wonPlayers = board.getWonPlayers();
 		final long boardId = board.getBoardId();
 		if (wonPlayers == null) {
 			throw new IllegalStateException("Game is not finished: " + boardId);
@@ -253,8 +260,8 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		if (wonPlayers.size() == 0) {
 			setGameResult(boardId, TourneyGameResolution.DRAW);
 		} else {
-			final GamePlayerHand winner = wonPlayers.iterator().next();
-			setGameResult(boardId, winner.getPlayerId() == getGameMaster(boardId) ? TourneyGameResolution.WON : TourneyGameResolution.LOST);
+			final Personality winner = wonPlayers.iterator().next();
+			setGameResult(boardId, winner.getId() == getGameMaster(boardId) ? TourneyGameResolution.WON : TourneyGameResolution.LOST);
 		}
 		finishedGamesCount += 1;
 

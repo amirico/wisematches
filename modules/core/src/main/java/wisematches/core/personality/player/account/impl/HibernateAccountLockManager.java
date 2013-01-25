@@ -81,7 +81,7 @@ public class HibernateAccountLockManager implements AccountLockManager {
 				"select lock.unlockDate " +
 				"from HibernateAccountLockInfo lock " +
 				"where lock.playerId = :pid");
-		query.setLong("pid", player.getId());
+		query.setParameter("pid", player.getId());
 		final Date unlockDate = (Date) query.uniqueResult();
 
 		if (unlockDate != null) {
@@ -89,7 +89,7 @@ public class HibernateAccountLockManager implements AccountLockManager {
 			if (!res) {
 				final Query q = session.createQuery("delete from HibernateAccountLockInfo " +
 						"lock where lock.playerId = :pid");
-				q.setLong("pid", player.getId());
+				q.setParameter("pid", player.getId());
 				q.executeUpdate();
 
 				for (AccountLockListener accountLockListener : accountLockListeners) {

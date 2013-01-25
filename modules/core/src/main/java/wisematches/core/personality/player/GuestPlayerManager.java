@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class GuestPlayerManager implements PlayerManager {
+public final class GuestPlayerManager extends AbstractPlayerManager implements PlayerManager {
 	private final Map<Long, GuestPlayer> playerMap = new HashMap<>();
 
 	public GuestPlayerManager() {
