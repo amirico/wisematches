@@ -1,6 +1,6 @@
 package wisematches.playground.tracking;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Set;
 
@@ -16,9 +16,9 @@ public interface StatisticsListener {
 	 * This method does not use {@code Player} object because {@code StatisticManager} operates only
 	 * with {@code Personality} and it's not optimal to load {@code Player} object.
 	 *
-	 * @param personality the id of player who's statistic was updated.
-	 * @param changes     set of changed properties.
-	 * @param statistic   the statistic that contains updated data.
+	 * @param player    the player who's statistic was updated.
+	 * @param statistic the statistic that contains updated data.
+	 * @param changes   set of changed properties.
 	 */
-	void playerStatisticUpdated(Personality personality, Set<String> changes, Statistics statistic);
+	void playerStatisticUpdated(Player player, Statistics statistic, Set<String> changes);
 }

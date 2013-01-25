@@ -5,7 +5,7 @@
 
     <import resource="restriction-config.xml"/>
 
-    <bean id="playerTrackingCenterDao" class="wisematches.playground.tracking.impl.HibernatePlayerTrackingCenterDao">
+    <bean id="playerTrackingCenterDao" class="wisematches.playground.tracking.impl.HibernatePlayerTrackingDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

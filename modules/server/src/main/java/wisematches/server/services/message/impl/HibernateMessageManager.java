@@ -130,7 +130,7 @@ public class HibernateMessageManager implements MessageManager {
 		final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
 				"FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
 				"WHERE m.recipient=:pid and (a.last_messages_check is null or m.created>a.last_messages_check)");
-		sqlQuery.setLong("pid", person.getId());
+		sqlQuery.setParameter("pid", person.getId());
 		return ((Number) sqlQuery.uniqueResult()).intValue();
 	}
 
@@ -148,7 +148,7 @@ public class HibernateMessageManager implements MessageManager {
 					"from wisematches.playground.message.impl.HibernateMessage " +
 					"where recipient = :pid and creationDate>= CURDATE()");
 		}
-		query.setLong("pid", person.getId());
+		query.setParameter("pid", person.getId());
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
@@ -165,12 +165,12 @@ public class HibernateMessageManager implements MessageManager {
 		if (direction == MessageDirection.SENT) {
 			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
 					"sender = :pid and state in (0, :state) order by creationDate desc");
-			query.setLong("pid", person.getId());
+			query.setParameter("pid", person.getId());
 			query.setInteger("state", MessageDirection.RECEIVED.mask());
 		} else {
 			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
 					"recipient = :pid and state in (0,:state) order by creationDate desc");
-			query.setLong("pid", person.getId());
+			query.setParameter("pid", person.getId());
 			query.setInteger("state", MessageDirection.SENT.mask());
 		}
 		return query.list();

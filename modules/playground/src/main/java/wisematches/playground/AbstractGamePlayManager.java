@@ -1,7 +1,9 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
+import wisematches.core.Machinery;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.personality.machinery.RobotType;
 import wisematches.core.task.TransactionalExecutor;
@@ -62,44 +64,21 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 	@Override
-	public B createBoard(S settings, Collection<Personality> players) throws BoardCreationException {
-		return createBoard(settings, players, null);
+	public Set<RobotType> getSupportedRobots() {
+		return robotTypes;
 	}
 
 	@Override
-	public B createBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
+	public B createBoard(S settings, Player player, RobotType robotType) throws BoardCreationException {
+		return createGameBoard(settings, Arrays.asList(player, robotType.getRobotPlayer()), null);
+	}
+
+	@Override
+	public B createBoard(S settings, Collection<Player> players, GameRelationship relationship) throws BoardCreationException {
 		if (log.isDebugEnabled()) {
 			log.debug("Creating new board: settings - " + settings + ", players - " + players);
 		}
-
-		for (Personality player : players) {
-			if (player == null) {
-				throw new BoardCreationException("Player can't be null");
-			}
-
-			if (player instanceof RobotPlayer) {
-				RobotPlayer robotPlayer = (RobotPlayer) player;
-				if (!robotTypes.contains(robotPlayer.getRobotType())) {
-					throw new BoardCreationException("Unsupported robot type: " + robotPlayer.getRobotType());
-				}
-			}
-		}
-
-		final B board = createBoardImpl(settings, players, relationship);
-
-		openBoardLock.lock();
-		try {
-			saveBoardImpl(board);
-			board.setGamePlayListener(gameBoardListener);
-			boardsCache.addBoard(board);
-
-			for (GamePlayListener listener : listeners) {
-				listener.gameStarted(board);
-			}
-		} finally {
-			openBoardLock.unlock();
-		}
-		return board;
+		return createGameBoard(settings, new ArrayList<Personality>(players), relationship);
 	}
 
 	@Override
@@ -137,7 +116,6 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		}
 	}
 
-
 	public void setRatingSystem(RatingSystem ratingSystem) {
 		this.ratingSystem = ratingSystem;
 	}
@@ -146,6 +124,23 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		this.statisticManager = statisticManager;
 	}
 
+	private B createGameBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
+		final B board = createBoardImpl(settings, players, relationship);
+
+		openBoardLock.lock();
+		try {
+			saveBoardImpl(board);
+			board.setGamePlayListener(gameBoardListener);
+			boardsCache.addBoard(board);
+
+			for (GamePlayListener listener : listeners) {
+				listener.gameStarted(board);
+			}
+		} finally {
+			openBoardLock.unlock();
+		}
+		return board;
+	}
 
 	/**
 	 * Saves specified board to the storage.
@@ -190,7 +185,12 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 			hands[i] = hand;
 			points[i] = hand.getPoints();
-			oldRatings[i] = statisticManager.getRating(player);
+
+			if (player instanceof Machinery) {
+				oldRatings[i] = ((Machinery) player).getRating();
+			} else {
+				oldRatings[i] = statisticManager.getRating((Player) player);
+			}
 		}
 
 		final short[] newRatings = ratingSystem.calculateRatings(oldRatings, points);
@@ -332,7 +332,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		@SuppressWarnings("unchecked")
 		private void processRobotMove(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 			final Personality player = board.getPlayerTurn();
-			if (player != null && player.getPlayerType() == Personality.Type.ROBOT) {
+			if (player instanceof RobotPlayer) {
 				AbstractGamePlayManager.this.processRobotMove((B) board, (RobotPlayer) player);
 			}
 		}

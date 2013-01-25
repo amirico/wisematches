@@ -47,7 +47,7 @@ public class FilePropertiesManagerTest {
 		filePropertiesManager.setDouble("mock.group", "p3", 12.3d);
 		filePropertiesManager.setFloat("mock.group", "p4", 13.2f);
 		filePropertiesManager.setInt("mock.group", "p5", 10);
-		filePropertiesManager.setLong("mock.group", "p6", 20L);
+		filePropertiesManager.setParameter("mock.group", "p6", 20L);
 		filePropertiesManager.setString("mock.group", "p7", "mock");
 
 		assertEquals(true, filePropertiesManager.getBoolean("mock.group", "p1", false));

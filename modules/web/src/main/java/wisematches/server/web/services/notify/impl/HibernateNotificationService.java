@@ -60,7 +60,7 @@ public class HibernateNotificationService implements NotificationService, Initia
 		final Session session = sessionFactory.getCurrentSession();
 		final Query sqlQuery = session.createSQLQuery("SELECT `" + code + "` FROM notification_settings WHERE pid=:pid");
 		sqlQuery.setCacheable(true);
-		sqlQuery.setLong("pid", personality.getId());
+		sqlQuery.setParameter("pid", personality.getId());
 
 		final List list = sqlQuery.list();
 		if (list.isEmpty()) {
@@ -75,9 +75,9 @@ public class HibernateNotificationService implements NotificationService, Initia
 	public NotificationScope setNotificationScope(String code, Personality personality, NotificationScope scope) {
 		final String query = "INSERT INTO notification_settings (`pid`, `" + code + "`) VALUES (:pid, :scope) ON DUPLICATE KEY UPDATE `" + code + "`=:scope";
 		final Session session = sessionFactory.getCurrentSession();
-		final Query sqlQuery = session.createSQLQuery(query).setLong("pid", personality.getId());
+		final Query sqlQuery = session.createSQLQuery(query).setParameter("pid", personality.getId());
 		sqlQuery.setCacheable(true);
-		sqlQuery.setLong("pid", personality.getId());
+		sqlQuery.setParameter("pid", personality.getId());
 		sqlQuery.setParameter("scope", scope == null ? null : scope.ordinal());
 		sqlQuery.executeUpdate();
 		return null;

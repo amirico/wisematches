@@ -6,8 +6,8 @@ import wisematches.core.Personality;
 import wisematches.playground.GameMove;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.score.ScoreBonus;
-import wisematches.playground.scribble.tracking.ScribbleStatisticsEditor;
-import wisematches.playground.scribble.tracking.ScribbleStatisticsTrapper;
+import wisematches.playground.scribble.tracking.impl.ScribbleStatisticsEditor;
+import wisematches.playground.scribble.tracking.impl.ScribbleStatisticsTrapper;
 
 import java.util.Arrays;
 import java.util.Date;

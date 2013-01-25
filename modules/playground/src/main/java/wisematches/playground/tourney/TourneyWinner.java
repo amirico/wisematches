@@ -5,11 +5,11 @@ package wisematches.playground.tourney;
  */
 public interface TourneyWinner {
 	/**
-	 * Returns player id.
+	 * Returns player.
 	 *
-	 * @return the player id.
+	 * @return the player.
 	 */
-	long getPlayer();
+	Long getPlayer();
 
 	/**
 	 * Returns player's place

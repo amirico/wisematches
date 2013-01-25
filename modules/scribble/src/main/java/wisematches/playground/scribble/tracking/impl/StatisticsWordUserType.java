@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.tracking;
+package wisematches.playground.scribble.tracking.impl;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;

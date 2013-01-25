@@ -1,6 +1,6 @@
 package wisematches.playground.tracking.impl;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
@@ -14,11 +14,11 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class CacheableStatisticManager implements StatisticManager {
-	private StatisticManager playerStatisticManager;
+public class CacheableStatisticManager<S extends Statistics> implements StatisticManager<S> {
+	private StatisticManager<S> playerStatisticManager;
 
 	private final Lock lock = new ReentrantLock();
-	private final Map<Personality, Statistics> cache = new WeakHashMap<>();
+	private final Map<Player, S> cache = new WeakHashMap<>();
 
 	private final TheStatisticsListener statisticsListener = new TheStatisticsListener();
 	private final Collection<StatisticsListener> listeners = new CopyOnWriteArraySet<>();
@@ -39,18 +39,18 @@ public class CacheableStatisticManager implements StatisticManager {
 	}
 
 	@Override
-	public short getRating(Personality person) {
-		return playerStatisticManager.getRating(person);
+	public short getRating(Player player) {
+		return playerStatisticManager.getRating(player);
 	}
 
 	@Override
-	public Statistics getPlayerStatistic(Personality personality) {
+	public S getStatistic(Player player) {
 		lock.lock();
 		try {
-			Statistics statistics = cache.get(personality);
+			S statistics = cache.get(player);
 			if (statistics == null) {
-				statistics = playerStatisticManager.getStatistic(personality);
-				cache.put(personality, statistics);
+				statistics = playerStatisticManager.getStatistic(player);
+				cache.put(player, statistics);
 			}
 			return statistics;
 		} finally {
@@ -59,11 +59,11 @@ public class CacheableStatisticManager implements StatisticManager {
 	}
 
 	@Override
-	public RatingCurve getRatingCurve(Personality player, int resolution, Date startDate, Date endDate) {
+	public RatingCurve getRatingCurve(Player player, int resolution, Date startDate, Date endDate) {
 		return playerStatisticManager.getRatingCurve(player, resolution, startDate, endDate);
 	}
 
-	public void setPlayerStatisticManager(StatisticManager playerStatisticManager) {
+	public void setPlayerStatisticManager(StatisticManager<S> playerStatisticManager) {
 		if (this.playerStatisticManager != null) {
 			this.playerStatisticManager.removeStatisticListener(statisticsListener);
 		}
@@ -80,18 +80,19 @@ public class CacheableStatisticManager implements StatisticManager {
 		}
 
 		@Override
-		public void playerStatisticUpdated(Personality personality, Set<String> changes, Statistics statistic) {
+		@SuppressWarnings("unchecked")
+		public void playerStatisticUpdated(Player player, Statistics statistic, Set<String> changes) {
 			lock.lock();
 			try {
-				if (cache.containsKey(personality)) {
-					cache.put(personality, statistic);
+				if (cache.containsKey(player)) {
+					cache.put(player, (S) statistic);
 				}
 			} finally {
 				lock.unlock();
 			}
 
 			for (StatisticsListener listener : listeners) {
-				listener.playerStatisticUpdated(personality, changes, statistic);
+				listener.playerStatisticUpdated(player, statistic, changes);
 			}
 		}
 	}

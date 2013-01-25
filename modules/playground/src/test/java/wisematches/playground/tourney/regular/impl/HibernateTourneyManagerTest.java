@@ -520,8 +520,8 @@ public class HibernateTourneyManagerTest {
 	private void createStats(long pid, int rating) {
 		final Session session = sessionFactory.getCurrentSession();
 		final SQLQuery sqlQuery = session.createSQLQuery("INSERT INTO scribble_statistic(playerId, rating) VALUES(:pid, :rating)");
-		sqlQuery.setLong("pid", pid);
-		sqlQuery.setLong("rating", rating);
+		sqlQuery.setParameter("pid", pid);
+		sqlQuery.setParameter("rating", rating);
 		sqlQuery.executeUpdate();
 	}
 

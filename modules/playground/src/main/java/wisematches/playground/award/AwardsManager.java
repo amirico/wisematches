@@ -1,6 +1,6 @@
 package wisematches.playground.award;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 
@@ -15,10 +15,10 @@ public interface AwardsManager extends SearchManager<Award, AwardContext, Search
 	void removeAwardsListener(AwardsListener l);
 
 
+	AwardsSummary getAwardsSummary(Player player);
+
+
 	AwardDescriptor getAwardDescriptor(String code);
 
 	Collection<AwardDescriptor> getAwardDescriptors();
-
-
-	AwardsSummary getAwardsSummary(Personality personality);
 }

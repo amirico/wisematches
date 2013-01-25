@@ -4,14 +4,26 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset1" name="Playground Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/resources/config/playground-config.xml</file>
-          <file>file://$MODULE_DIR$/src/test/resources/config/playground-junit-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/restriction-config.xml</file>
+          <file>file://$MODULE_DIR$/src/test/resources/config/playground-junit-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/playground-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-junit-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/eod-config.xml</file>
-          <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
         </fileset>
+      </configuration>
+    </facet>
+    <facet type="hibernate" name="Hibernate">
+      <configuration>
+        <datasource-map />
+      </configuration>
+    </facet>
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping />
       </configuration>
     </facet>
   </component>

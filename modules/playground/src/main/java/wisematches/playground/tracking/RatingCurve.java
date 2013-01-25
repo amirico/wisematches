@@ -1,51 +1,24 @@
 package wisematches.playground.tracking;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Entity
-@NamedNativeQueries({
-		@NamedNativeQuery(
-				name = "rating.curve",
-				query = "SELECT FLOOR(((UNIX_TIMESTAMP(DATE(b.finishedDate))-UNIX_TIMESTAMP(DATE(:start)))/60/60/24)/:resolution) AS POSITION, " +
-						"MIN(p.newRating) AS ratingMin, AVG(p.newRating) AS ratingAvg, MAX(p.newRating) AS ratingMax " +
-						"FROM scribble_board b, scribble_player p " +
-						"WHERE b.boardId=p.boardId AND NOT b.finishedDate IS NULL AND p.playerId=:pid AND b.finishedDate>:start AND b.finishedDate<=:end GROUP BY YEAR(b.finishedDate), ROUND(DAYOFYEAR(b.finishedDate)/:resolution) " +
-						"ORDER BY POSITION ASC",
-				resultSetMapping = "rating.curve")
-})
-@SqlResultSetMapping(name = "rating.curve", columns = {
-		@ColumnResult(name = "position"),
-		@ColumnResult(name = "ratingAvg"),
-		@ColumnResult(name = "ratingMax"),
-		@ColumnResult(name = "ratingMin")
-})
 public class RatingCurve {
-	@Id
 	private final int resolution;
 	private final Date startDate;
 	private final Date endDate;
 
-	@Transient
 	private final int pointsCount;
-	@Transient
-	private final short[] points;
-	@Transient
-	private final short[] ratingsMin;
-	@Transient
-	private final short[] ratingsAvg;
-	@Transient
-	private final short[] ratingsMax;
-
-	@Transient
 	private final short minRating;
-
-	@Transient
 	private final short maxRating;
+
+	private final short[] points;
+	private final short[] ratingsMin;
+	private final short[] ratingsAvg;
+	private final short[] ratingsMax;
 
 	RatingCurve() {
 		throw new UnsupportedOperationException("Not supported");
@@ -124,88 +97,4 @@ public class RatingCurve {
 	public short getMaxRating() {
 		return maxRating;
 	}
-
-    /*	private final int startDate;
-			private final int endDate;
-            private final int minRating;
-            private final int maxRating;
-            private final int[] dates;
-            private final int[] ratingsMin;
-            private final int[] ratingsMax;
-            private final int[] ratingsAvg;
-            private final int[] monthIndexes = new int[12];
-
-            public RatingCurve() {
-                startDate = 0;
-                endDate = period.getDaysNumber();
-
-                int index = 0;
-                int min = 1200;
-                int max = 1200;
-                dates = new int[batches.size()];
-                ratingsAvg = new int[batches.size()];
-                ratingsMax = new int[batches.size()];
-                ratingsMin = new int[batches.size()];
-                Arrays.fill(ratingsAvg, -1);
-                Arrays.fill(ratingsMax, -1);
-                Arrays.fill(ratingsMin, -1);
-                for (RatingBatch playerBatch : batches) {
-                    if (max < playerBatch.getRatingMax()) {
-                        max = playerBatch.getRatingMax();
-                    }
-                    if (min > playerBatch.getRatingMin()) {
-                        min = playerBatch.getRatingMin();
-                    }
-                    dates[index] = playerBatch.getPosition();
-                    ratingsAvg[index] = playerBatch.getRatingAvg();
-                    ratingsMax[index] = playerBatch.getRatingMax();
-                    ratingsMin[index] = playerBatch.getRatingMin();
-                    index++;
-                }
-
-                minRating = (int) Math.ceil((min / 100) * 100 - 100);
-                maxRating = (int) Math.floor((max / 100) * 100 + 100);
-
-                final int middle = calendar.get(Calendar.MONTH) + 1;
-                for (int i = 1; i <= 12; i++) {
-                    int pos = i > middle ? i - 12 : i;
-                    monthIndexes[11 - middle + pos] = i;
-                }
-            }
-
-            public int getStartedDate() {
-                return startDate;
-            }
-
-            public int getEndDate() {
-                return endDate;
-            }
-
-            public int[] getDates() {
-                return dates;
-            }
-
-            public int getMaxRating() {
-                return maxRating;
-            }
-
-            public int getMinRating() {
-                return minRating;
-            }
-
-            public int[] getRatingsMin() {
-                return ratingsMin;
-            }
-
-            public int[] getRatingsMax() {
-                return ratingsMax;
-            }
-
-            public int[] getRatingsAvg() {
-                return ratingsAvg;
-            }
-
-            public int[] getMonthIndexes() {
-                return monthIndexes;
-            }*/
 }

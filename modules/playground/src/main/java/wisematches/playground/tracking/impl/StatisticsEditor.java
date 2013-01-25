@@ -1,8 +1,9 @@
-package wisematches.playground.tracking;
+package wisematches.playground.tracking.impl;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.personality.machinery.RobotType;
 import wisematches.playground.tourney.TourneyPlace;
+import wisematches.playground.tracking.Statistics;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,7 +17,6 @@ import java.util.Set;
  */
 @MappedSuperclass
 public class StatisticsEditor implements Statistics, Serializable {
-	private static final String[] STRINGS = new String[0];
 	@Id
 	@Column(name = "playerId")
 	private long playerId;
@@ -89,9 +89,6 @@ public class StatisticsEditor implements Statistics, Serializable {
 	@Column(name = "turns")
 	private int turnsCount;
 
-	@Column(name = "passes")
-	private int passesCount;
-
 	@Column(name = "lPoints")
 	private int lowestPoints;
 
@@ -125,14 +122,9 @@ public class StatisticsEditor implements Statistics, Serializable {
 	protected StatisticsEditor() {
 	}
 
-	public StatisticsEditor(Personality personality) {
-		this.playerId = personality.getId();
+	protected StatisticsEditor(Player player) {
+		this.playerId = player.getId();
 		this.updateTime = new Date();
-	}
-
-	@Override
-	public long getPlayerId() {
-		return playerId;
 	}
 
 	@Override
@@ -254,11 +246,6 @@ public class StatisticsEditor implements Statistics, Serializable {
 	}
 
 	@Override
-	public int getPassesCount() {
-		return passesCount;
-	}
-
-	@Override
 	public int getLowestPoints() {
 		return lowestPoints;
 	}
@@ -306,150 +293,139 @@ public class StatisticsEditor implements Statistics, Serializable {
 		throw new IllegalArgumentException("Unsupported place type: " + place);
 	}
 
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-		changedProperties.add("updateTime");
-	}
-
 	public void setWins(int wins) {
 		this.wins = wins;
-		changedProperties.add("wins");
+		propertyChanged("wins");
 	}
 
 	public void setLoses(int loses) {
 		this.loses = loses;
-		changedProperties.add("loses");
+		propertyChanged("loses");
 	}
 
 	public void setDraws(int draws) {
 		this.draws = draws;
-		changedProperties.add("draws");
+		propertyChanged("draws");
 	}
 
 	public void setTimeouts(int timeouts) {
 		this.timeouts = timeouts;
-		changedProperties.add("timeouts");
+		propertyChanged("timeouts");
 	}
 
 	public void setResigned(int resigned) {
 		this.resigned = resigned;
-		changedProperties.add("resigned");
+		propertyChanged("resigned");
 	}
 
 	public void setStalemates(int stalemates) {
 		this.stalemates = stalemates;
-		changedProperties.add("stalemates");
+		propertyChanged("stalemates");
 	}
 
 	public void setActiveGames(int activeGames) {
 		this.activeGames = activeGames;
-		changedProperties.add("activeGames");
+		propertyChanged("activeGames");
 	}
 
 	public void setFinishedGames(int finishedGames) {
 		this.finishedGames = finishedGames;
-		changedProperties.add("finishedGames");
+		propertyChanged("finishedGames");
 	}
 
 	public void setAverageRating(float averageRating) {
 		this.averageRating = averageRating;
-		changedProperties.add("averageRating");
+		propertyChanged("averageRating");
 	}
 
 	public void setHighestRating(short highestRating) {
 		this.highestRating = highestRating;
-		changedProperties.add("highestRating");
+		propertyChanged("highestRating");
 	}
 
 	public void setLowestRating(short lowestRating) {
 		this.lowestRating = lowestRating;
-		changedProperties.add("lowestRating");
+		propertyChanged("lowestRating");
 	}
 
 	public void setAverageOpponentRating(float averageOpponentRating) {
 		this.averageOpponentRating = averageOpponentRating;
-		changedProperties.add("averageOpponentRating");
+		propertyChanged("averageOpponentRating");
 	}
 
 	public void setHighestWonOpponentRating(short highestWonOpponentRating) {
 		this.highestWonOpponentRating = highestWonOpponentRating;
-		changedProperties.add("highestWonOpponentRating");
+		propertyChanged("highestWonOpponentRating");
 	}
 
 	public void setHighestWonOpponentId(long highestWonOpponentId) {
 		this.highestWonOpponentId = highestWonOpponentId;
-		changedProperties.add("highestWonOpponentId");
+		propertyChanged("highestWonOpponentId");
 	}
 
 	public void setLowestLostOpponentRating(short lowestLostOpponentRating) {
 		this.lowestLostOpponentRating = lowestLostOpponentRating;
-		changedProperties.add("lowestLostOpponentRating");
+		propertyChanged("lowestLostOpponentRating");
 	}
 
 	public void setLowestLostOpponentId(long lowestLostOpponentId) {
 		this.lowestLostOpponentId = lowestLostOpponentId;
-		changedProperties.add("lowestLostOpponentId");
+		propertyChanged("lowestLostOpponentId");
 	}
 
 	public void setLastMoveTime(Date lastMoveTime) {
 		this.lastMoveTime = lastMoveTime;
-		changedProperties.add("lastMoveTime");
+		propertyChanged("lastMoveTime");
 	}
 
 	public void setAverageMoveTime(float averageMoveTime) {
 		this.averageMoveTime = averageMoveTime;
-		changedProperties.add("averageMoveTime");
+		propertyChanged("averageMoveTime");
 	}
 
 	public void setAverageMovesPerGame(float averageMovesPerGame) {
 		this.averageMovesPerGame = averageMovesPerGame;
-		changedProperties.add("averageMovesPerGame");
+		propertyChanged("averageMovesPerGame");
 	}
 
 	public void setTurnsCount(int turnsCount) {
 		this.turnsCount = turnsCount;
-		changedProperties.add("turnsCount");
-	}
-
-	public void setPassesCount(int passesCount) {
-		this.passesCount = passesCount;
-		changedProperties.add("passesCount");
+		propertyChanged("turnsCount");
 	}
 
 	public void setLowestPoints(int lowestPoints) {
 		this.lowestPoints = lowestPoints;
-		changedProperties.add("lowestPoints");
+		propertyChanged("lowestPoints");
 	}
 
 	public void setAveragePoints(float averagePoints) {
 		this.averagePoints = averagePoints;
-		changedProperties.add("averagePoints");
+		propertyChanged("averagePoints");
 	}
 
 	public void setHighestPoints(int highestPoints) {
 		this.highestPoints = highestPoints;
-		changedProperties.add("highestPoints");
+		propertyChanged("highestPoints");
 	}
 
 	public void setRating(short rating) {
 		this.rating = rating;
-		changedProperties.add("rating");
+		propertyChanged("rating");
 	}
 
 	public void setRobotWins(RobotType type, int count) {
 		switch (type) {
 			case DULL:
 				robotWinsDull = count;
-				changedProperties.add("robotWinsDull");
+				propertyChanged("robotWinsDull");
 				return;
 			case TRAINEE:
 				robotWinsTrainee = count;
-				changedProperties.add("robotWinsTrainee");
+				propertyChanged("robotWinsTrainee");
 				return;
 			case EXPERT:
 				robotWinsExpert = count;
-				changedProperties.add("robotWinsExpert");
+				propertyChanged("robotWinsExpert");
 				return;
 		}
 		throw new IllegalArgumentException("Unsupported robot type: " + type);
@@ -459,15 +435,15 @@ public class StatisticsEditor implements Statistics, Serializable {
 		switch (place) {
 			case FIRST:
 				tourneyWinsFirst = count;
-				changedProperties.add("tourneyWinsFirst");
+				propertyChanged("tourneyWinsFirst");
 				return;
 			case SECOND:
 				tourneyWinsSecond = count;
-				changedProperties.add("tourneyWinsSecond");
+				propertyChanged("tourneyWinsSecond");
 				return;
 			case THIRD:
 				tourneyWinsThird = count;
-				changedProperties.add("tourneyWinsThird");
+				propertyChanged("tourneyWinsThird");
 				return;
 		}
 		throw new IllegalArgumentException("Unsupported place type: " + place);
@@ -480,6 +456,11 @@ public class StatisticsEditor implements Statistics, Serializable {
 		Set<String> res = new HashSet<>(changedProperties);
 		changedProperties.clear();
 		return res;
+	}
+
+	protected final void propertyChanged(String name) {
+		changedProperties.add(name);
+		this.updateTime = new Date();
 	}
 
 	@Override
@@ -508,7 +489,6 @@ public class StatisticsEditor implements Statistics, Serializable {
 				", averageMoveTime=" + averageMoveTime +
 				", averageMovesPerGame=" + averageMovesPerGame +
 				", turnsCount=" + turnsCount +
-				", passesCount=" + passesCount +
 				", lowestPoints=" + lowestPoints +
 				", averagePoints=" + averagePoints +
 				", highestPoints=" + highestPoints +

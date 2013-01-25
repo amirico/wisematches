@@ -12,11 +12,12 @@ import java.util.Date;
  */
 public interface Statistics {
 	/**
-	 * Returns id of a player who that statistic belongs to.
+	 * Returns current player's rating
 	 *
-	 * @return the player id
+	 * @return current player's rating
 	 */
-	long getPlayerId();
+	short getRating();
+
 
 	/**
 	 * Returns date when the statistic was updated last time
@@ -24,13 +25,6 @@ public interface Statistics {
 	 * @return date when the statistic was updated last time
 	 */
 	Date getUpdateTime();
-
-	/**
-	 * Returns current player's rating
-	 *
-	 * @return current player's rating
-	 */
-	short getRating();
 
 
 	/**
@@ -108,19 +102,20 @@ public interface Statistics {
 
 	float getAverageRating();
 
-	short getHighestRating();
-
 	short getLowestRating();
+
+	short getHighestRating();
 
 	float getAverageOpponentRating();
 
-	short getHighestWonOpponentRating();
 
 	long getHighestWonOpponentId();
 
-	short getLowestLostOpponentRating();
+	short getHighestWonOpponentRating();
 
 	long getLowestLostOpponentId();
+
+	short getLowestLostOpponentRating();
 
 
 	Date getLastMoveTime();
@@ -129,15 +124,14 @@ public interface Statistics {
 
 	float getAverageMovesPerGame();
 
-	int getTurnsCount();
 
-	int getPassesCount();
+	int getTurnsCount();
 
 	int getLowestPoints();
 
-	float getAveragePoints();
-
 	int getHighestPoints();
+
+	float getAveragePoints();
 
 
 	/**

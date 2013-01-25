@@ -15,4 +15,6 @@ public abstract class Machinery extends Personality {
 	public final Type getType() {
 		return Type.MACHINERY;
 	}
+
+	public abstract short getRating();
 }

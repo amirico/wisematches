@@ -6,6 +6,8 @@ import wisematches.playground.GameBoard;
 import wisematches.playground.GameMove;
 import wisematches.playground.GamePlayerHand;
 import wisematches.playground.GameResolution;
+import wisematches.playground.tracking.impl.StatisticsEditor;
+import wisematches.playground.tracking.impl.StatisticsTrapper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,7 +76,7 @@ public class StatisticsTrapperTest {
 		expect(board.getWonPlayers()).andReturn(Collections.emptyList());
 		replay(board);
 
-		statisticsTrapper.trapGameFinished(board, editor);
+		statisticsTrapper.trapGameFinished(board, , editor, );
 		assertEquals(3, editor.getActiveGames());
 		assertEquals(1, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame(), 0.00000001);
@@ -102,7 +104,7 @@ public class StatisticsTrapperTest {
 		expect(board.getWonPlayers()).andReturn(Arrays.asList(new GamePlayerHand(14L, (short) 1)));
 		replay(board);
 
-		statisticsTrapper.trapGameFinished(board, editor);
+		statisticsTrapper.trapGameFinished(board, , editor, );
 		assertEquals(2, editor.getActiveGames());
 		assertEquals(2, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame(), 0.00000001);
@@ -129,7 +131,7 @@ public class StatisticsTrapperTest {
 		expect(board.getPlayerTurn()).andReturn(new GamePlayerHand(editor.getPlayerId(), (short) 1));
 		expect(board.getWonPlayers()).andReturn(Arrays.asList(new GamePlayerHand(13L, (short) 1)));
 		replay(board);
-		statisticsTrapper.trapGameFinished(board, editor);
+		statisticsTrapper.trapGameFinished(board, , editor, );
 		assertEquals(1, editor.getActiveGames());
 		assertEquals(3, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame(), 0.00000001);
@@ -151,7 +153,7 @@ public class StatisticsTrapperTest {
 		expect(board.getResolution()).andReturn(GameResolution.FINISHED);
 		expect(board.getPlayerTurn()).andReturn(new GamePlayerHand(editor.getPlayerId(), (short) 1));
 		replay(board);
-		statisticsTrapper.trapGameFinished(board, editor);
+		statisticsTrapper.trapGameFinished(board, , editor, );
 		assertEquals(0, editor.getActiveGames());
 		assertEquals(4, editor.getFinishedGames());
 		assertEquals(2, editor.getAverageMovesPerGame(), 0.00000001);
@@ -274,7 +276,7 @@ public class StatisticsTrapperTest {
 			expect(board.getPlayerTurn()).andReturn(null);
 			replay(board);
 
-			statisticsTrapper.trapGameFinished(board, editor);
+			statisticsTrapper.trapGameFinished(board, , editor, );
 			assertEquals(1403, editor.getAverageRating(), 0.00000001);
 			assertEquals((1000 + 1800) / 2, editor.getAverageOpponentRating(), 0.00000001);
 			assertEquals(1403, editor.getHighestRating());
@@ -303,7 +305,7 @@ public class StatisticsTrapperTest {
 			expect(board.getPlayerTurn()).andReturn(null);
 			replay(board);
 
-			statisticsTrapper.trapGameFinished(board, editor);
+			statisticsTrapper.trapGameFinished(board, , editor, );
 			assertEquals((1403 + 1425) / 2, editor.getAverageRating(), 0.00000001);
 			assertEquals(((1000 + 1800) / 2 + (1000 + 1800) / 2) / 2, editor.getAverageOpponentRating(), 0.00000001);
 			assertEquals(1425, editor.getHighestRating());
@@ -332,7 +334,7 @@ public class StatisticsTrapperTest {
 			expect(board.getPlayerTurn()).andReturn(null);
 			replay(board);
 
-			statisticsTrapper.trapGameFinished(board, editor);
+			statisticsTrapper.trapGameFinished(board, , editor, );
 			assertEquals((1403 + 1425 + 1392) / 3f, editor.getAverageRating(), 0.00000001);
 			assertEquals(((1000 + 1800) / 2 + (1000 + 1800) / 2 + (1000 + 1800) / 2) / 3f, editor.getAverageOpponentRating(), 0.00000001);
 			assertEquals(1425, editor.getHighestRating());

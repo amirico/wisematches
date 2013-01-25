@@ -1,16 +1,24 @@
 package wisematches.playground.tracking;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface StatisticManager {
+public interface StatisticManager<S extends Statistics> {
 	void addStatisticListener(StatisticsListener l);
 
 	void removeStatisticListener(StatisticsListener l);
+
+	/**
+	 * Returns statistic for specified player.
+	 *
+	 * @param player the player id.
+	 * @return the player statistic.
+	 */
+	S getStatistic(Player player);
 
 	/**
 	 * Returns current player's rating.
@@ -19,15 +27,7 @@ public interface StatisticManager {
 	 * @return the player's rating.
 	 * @throws IllegalArgumentException if specified player out of this manager.
 	 */
-	short getRating(Personality player);
-
-	/**
-	 * Returns statistic for specified player.
-	 *
-	 * @param player the player id.
-	 * @return the player statistic.
-	 */
-	Statistics getStatistic(Personality player);
+	short getRating(Player player);
 
 	/**
 	 * Returns rating curve container that contains information about all rating changes for specified player
@@ -42,5 +42,5 @@ public interface StatisticManager {
 	 * @throws IllegalArgumentException if resolution if zero or negative.
 	 * @throws NullPointerException     if {@code player} is null
 	 */
-	RatingCurve getRatingCurve(Personality player, int resolution, Date startDate, Date endDate);
+	RatingCurve getRatingCurve(Player player, int resolution, Date startDate, Date endDate);
 }

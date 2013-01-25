@@ -76,7 +76,7 @@ public class HibernateMembershipManager implements MembershipManager, CleaningDa
 		}
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("from HibernateMembershipCard where player=:pid");
-		query.setLong("pid", person.getId());
+		query.setParameter("pid", person.getId());
 		return (MembershipCard) query.uniqueResult();
 	}
 

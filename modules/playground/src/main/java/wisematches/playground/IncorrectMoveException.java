@@ -13,8 +13,4 @@ public class IncorrectMoveException extends GameMoveException {
 	public IncorrectMoveException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
-	public IncorrectMoveException(Throwable cause) {
-		super(cause);
-	}
 }

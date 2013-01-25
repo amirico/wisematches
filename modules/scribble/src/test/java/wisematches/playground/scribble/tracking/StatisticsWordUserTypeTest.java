@@ -5,6 +5,7 @@ import wisematches.playground.scribble.Direction;
 import wisematches.playground.scribble.Position;
 import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.Word;
+import wisematches.playground.scribble.tracking.impl.StatisticsWordUserType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

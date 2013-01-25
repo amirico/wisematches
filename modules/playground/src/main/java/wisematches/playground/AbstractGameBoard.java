@@ -273,23 +273,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 
-	protected final void terminate() throws GameMoveException {
-		lock.lock();
-		try {
-			try {
-				checkState();
-			} catch (GameExpiredException ex) { //terminate if expired
-				final Personality player = getPlayerTurn();
-				if (player != null) {
-					closeImpl(player, true);
-				}
-			} catch (GameFinishedException ignore) {
-			}
-		} finally {
-			lock.unlock();
-		}
-	}
-
 	protected final void processGameMove(GameMove move, GameMoveScore moveScore, boolean finished) throws GameMoveException {
 		lock.lock();
 		try {
@@ -327,6 +310,24 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 
+	protected final void terminate() throws GameMoveException {
+		lock.lock();
+		try {
+			try {
+				checkState();
+			} catch (GameExpiredException ex) { //terminate if expired
+				final Personality player = getPlayerTurn();
+				if (player != null) {
+					closeImpl(player, true);
+				}
+			} catch (GameFinishedException ignore) {
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
+
 	private int getNextPlayerIndex() {
 		if (currentPlayerIndex == -1) {
 			return -1;
@@ -346,7 +347,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		return System.currentTimeMillis() - getLastMoveTime().getTime() > settings.getDaysPerMove() * 86400000;
 	}
 
-	private Collection<Personality> getWonPlayers() {
+	@Override
+	public Collection<Personality> getWonPlayers() {
 		if (isActive()) {
 			return null;
 		}

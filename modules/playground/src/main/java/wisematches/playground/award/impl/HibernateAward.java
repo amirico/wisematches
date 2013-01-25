@@ -69,7 +69,7 @@ public class HibernateAward implements Award {
 	}
 
 	@Override
-	public Relationship getRelationship() {
+	public GameRelationship getRelationship() {
 		return relationship;
 	}
 

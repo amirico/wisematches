@@ -2,6 +2,7 @@ package wisematches.playground;
 
 import wisematches.core.Personality;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -102,4 +103,12 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 * @return the relationship object for this game.
 	 */
 	GameRelationship getRelationship();
+
+
+	/**
+	 * Returns collection of won players or {@code null} if game is not finished.
+	 *
+	 * @return the collection of won players or {@code null} if game is not finished.
+	 */
+	Collection<Personality> getWonPlayers();
 }

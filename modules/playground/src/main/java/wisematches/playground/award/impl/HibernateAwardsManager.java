@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -18,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class HibernateAwardsManager implements AwardsManager, AwardMachinery {
+public class HibernateAwardsManager implements AwardsManager, AwardExecutiveCommittee {
 	private SessionFactory sessionFactory;
 	private final Map<String, AwardDescriptor> descriptors = new HashMap<>();
 	private final Set<AwardsListener> listeners = new CopyOnWriteArraySet<>();
@@ -50,38 +51,38 @@ public class HibernateAwardsManager implements AwardsManager, AwardMachinery {
 	}
 
 	@Override
-	public void grantAward(Personality person, String code, AwardWeight weight, GameRelationship relationship) {
+	public void grantAward(Player player, String code, AwardWeight weight, GameRelationship relationship) {
 		final AwardDescriptor descriptor = getAwardDescriptor(code);
 		if (descriptor == null) {
 			throw new IllegalArgumentException("Unsupported award code: " + code);
 		}
-		final HibernateAward award = new HibernateAward(person.getId(), code, new Date(), weight, relationship);
+		final HibernateAward award = new HibernateAward(player.getId(), code, new Date(), weight, relationship);
 		sessionFactory.getCurrentSession().save(award);
 
 		for (AwardsListener listener : listeners) {
-			listener.playerAwarded(person, descriptor, award);
+			listener.playerAwarded(player, descriptor, award);
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public AwardsSummary getAwardsSummary(Personality personality) {
+	public AwardsSummary getAwardsSummary(Player player) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("select code, weight, count(*) from HibernateAward  where player=:pid group by code, weight");
-		query.setLong("pid", personality.getId());
+		query.setParameter("pid", player.getId());
 		return new DefaultAwardsSummary(query.list(), descriptors);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends AwardContext> int getTotalCount(Personality person, Ctx context) {
+	public <Ctx extends AwardContext> int getTotalCount(Player person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends AwardContext, Fl extends SearchFilter.NoFilter> int getFilteredCount(Personality person, Ctx context, Fl filter) {
+	public <Ctx extends AwardContext, Fl extends SearchFilter.NoFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
 		final Query query = createQuery(true, person, context, null);
 		return ((Number) query.uniqueResult()).intValue();
 	}
@@ -89,7 +90,7 @@ public class HibernateAwardsManager implements AwardsManager, AwardMachinery {
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends AwardContext, Fl extends SearchFilter.NoFilter> List<Award> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends AwardContext, Fl extends SearchFilter.NoFilter> List<Award> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
 		final Query query = createQuery(false, person, context, orders);
 		if (range != null) {
 			range.apply(query);
@@ -124,7 +125,7 @@ public class HibernateAwardsManager implements AwardsManager, AwardMachinery {
 			orders.apply(b);
 		}
 		final Query query = session.createQuery(b.toString());
-		query.setLong("pid", person.getId());
+		query.setParameter("pid", person.getId());
 		if (code != null) {
 			query.setString("code", code);
 		}

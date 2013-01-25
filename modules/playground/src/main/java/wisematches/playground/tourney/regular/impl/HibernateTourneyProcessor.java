@@ -180,10 +180,10 @@ class HibernateTourneyProcessor {
 		final Query query = session.createSQLQuery("" +
 				"DELETE s.* " +
 				"FROM " +
-				"tourney_regular_subs s left join " +
-				"tourney_regular_division d on s.roundNumber<=d.activeRound and s.language=d.language and s.section=d.section left join " +
-				"tourney_regular t on t.id=d.tourneyId and s.tourneyNumber=t.tourneyNumber " +
-				"where d.started is not null and d.finished is null");
+				"tourney_regular_subs s LEFT JOIN " +
+				"tourney_regular_division d ON s.roundNumber<=d.activeRound AND s.language=d.language AND s.section=d.section LEFT JOIN " +
+				"tourney_regular t ON t.id=d.tourneyId AND s.tourneyNumber=t.tourneyNumber " +
+				"WHERE d.started IS NOT null AND d.finished IS null");
 
 		final int i = query.executeUpdate();
 		log.info("Clear not required registrations: " + i);
@@ -206,11 +206,11 @@ class HibernateTourneyProcessor {
 
 				final Set<Long> invalidPlayers = new HashSet<>();
 				if (playersCount != 1) {
-					final Query namedQuery = session.createSQLQuery("select playerId " +
-							"from scribble_statistic s, tourney_regular_subs t " +
-							"where s.playerId=t.player and t.tourneyNumber=:tourney " +
-							"and t.roundNumber=:round and t.language=:language " +
-							"and t.section=:section and s.rating>:rating");
+					final Query namedQuery = session.createSQLQuery("SELECT playerId " +
+							"FROM scribble_statistic s, tourney_regular_subs t " +
+							"WHERE s.playerId=t.player AND t.tourneyNumber=:tourney " +
+							"AND t.roundNumber=:round AND t.language=:language " +
+							"AND t.section=:section AND s.rating>:rating");
 					namedQuery.setParameter("round", 1);
 					namedQuery.setParameter("rating", section.getTopRating());
 					namedQuery.setParameter("section", section.ordinal());
@@ -308,7 +308,7 @@ class HibernateTourneyProcessor {
 		final Query query = session.createQuery("from HibernateTourneyGroup g where " +
 				"g.game0=:game or g.game1 = :game or g.game2 = :game or " +
 				"g.game3 = :game or g.game4 = :game or g.game5 = :game");
-		query.setLong("game", board.getBoardId());
+		query.setParameter("game", board.getBoardId());
 		return (HibernateTourneyGroup) query.uniqueResult();
 	}
 

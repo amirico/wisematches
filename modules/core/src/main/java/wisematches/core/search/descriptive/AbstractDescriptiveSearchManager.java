@@ -5,7 +5,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.AliasToBeanResultTransformer;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
@@ -38,12 +38,12 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 	}
 
 	@Override
-	public <Ctx extends C> int getTotalCount(Personality person, Ctx context) {
+	public <Ctx extends C> int getTotalCount(Player person, Ctx context) {
 		return getFilteredCount(person, context, null);
 	}
 
 	@Override
-	public <Ctx extends C, Fl extends F> int getFilteredCount(Personality person, Ctx context, Fl filter) {
+	public <Ctx extends C, Fl extends F> int getFilteredCount(Player person, Ctx context, Fl filter) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -68,13 +68,13 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 
 		final Query query1 = sql ? session.createSQLQuery(query.toString()) : session.createQuery(query.toString());
 		query1.setCacheable(true);
-		query1.setLong("pid", person.getId());
+		query1.setParameter("pid", person.getId());
 		return ((Number) query1.uniqueResult()).intValue();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends C, Fl extends F> List<T> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends C, Fl extends F> List<T> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");

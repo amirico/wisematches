@@ -1,6 +1,6 @@
 package wisematches.playground.propose;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 
 import java.util.Date;
@@ -54,7 +54,7 @@ public interface GameProposal<S extends GameSettings> {
 	 *
 	 * @return the proposal's initiator.
 	 */
-	Personality getInitiator();
+	Player getInitiator();
 
 
 	/**
@@ -76,7 +76,7 @@ public interface GameProposal<S extends GameSettings> {
 	 * @return unmodifiable list with all players in the proposal or null if players are not joined yet.
 	 * @see #getJoinedPlayers()
 	 */
-	List<Personality> getPlayers();
+	List<Player> getPlayers();
 
 
 	/**
@@ -91,7 +91,7 @@ public interface GameProposal<S extends GameSettings> {
 	 *
 	 * @return the unmodifiable collection of all joined players.
 	 */
-	List<Personality> getJoinedPlayers();
+	List<Player> getJoinedPlayers();
 
 
 	/**
@@ -100,7 +100,7 @@ public interface GameProposal<S extends GameSettings> {
 	 * @param player the player to be checked.
 	 * @return {@code true} if player is joined; {@code false} - otherwise.
 	 */
-	boolean isPlayerJoined(Personality player);
+	boolean isPlayerJoined(Player player);
 
 	/**
 	 * Checks is specified player waiting but not joined yet. The method always return {@code false} for
@@ -109,7 +109,7 @@ public interface GameProposal<S extends GameSettings> {
 	 * @param player the player to be checked
 	 * @return {@code true} if player is waited but not joined; {@code false} - otherwise.
 	 */
-	boolean isPlayerWaiting(Personality player);
+	boolean isPlayerWaiting(Player player);
 
 	/**
 	 * Returns {@code true} if proposal is ready.

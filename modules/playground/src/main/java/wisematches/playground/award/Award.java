@@ -1,5 +1,7 @@
 package wisematches.playground.award;
 
+import wisematches.playground.GameRelationship;
+
 import java.util.Date;
 
 /**
@@ -12,5 +14,5 @@ public interface Award {
 
 	AwardWeight getWeight();
 
-	Relationship getRelationship();
+	GameRelationship getRelationship();
 }
