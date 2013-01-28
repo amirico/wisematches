@@ -42,7 +42,7 @@ public class FinalGroupResultRefereeTest {
 	}
 
 	private void assertWinner(final long player, final TourneyPlace place, final TourneyWinner winner) {
-		assertEquals(player, winner.getPlayer());
+		assertEquals(player, winner.getPlayer().longValue());
 		assertEquals(place, winner.getPlace());
 	}
 }

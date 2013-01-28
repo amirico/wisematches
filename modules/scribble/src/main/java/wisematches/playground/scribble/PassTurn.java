@@ -11,7 +11,7 @@ import java.util.Date;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public final class PassTurn extends GameMove {
-	public PassTurn(Personality player, int points, int moveNumber, Date moveTime) {
+	protected PassTurn(Personality player, int points, int moveNumber, Date moveTime) {
 		super(player, points, moveNumber, moveTime);
 	}
 }

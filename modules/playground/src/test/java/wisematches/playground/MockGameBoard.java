@@ -5,13 +5,12 @@ import wisematches.core.Personality;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @SuppressWarnings("unchecked")
-class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
+class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> {
 	private boolean allowNextMove = true;
 	private boolean gameFinished = false;
 	private boolean gamePassed = false;
@@ -20,34 +19,22 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	private Date lastMoveTime = new Date();
 	private MockGameMoveScore scoreCalculation = new MockGameMoveScore();
 
+	private int moveNumber = 0;
+
 	MockGameBoard(GameSettings settings, Collection<Personality> players) {
 		super(settings, players, null);
 	}
 
-	protected GamePlayerHand createPlayerHand(Personality player) {
-		return new GamePlayerHand(player.getId());
+	@Override
+	protected AbstractPlayerHand createPlayerHand(Personality player) {
+		return new AbstractPlayerHand(player);
 	}
 
 	protected boolean checkGameFinished() {
 		return gameFinished;
 	}
 
-	protected void checkMove(PlayerMove move) throws IncorrectMoveException {
-		if (!allowNextMove) {
-			throw new IncorrectMoveException("Move not allowed");
-		}
-	}
-
 	@Override
-	protected GameMoveScore calculateMoveScores(PlayerMove move) {
-		return scoreCalculation;
-	}
-
-	@Override
-	protected void processMoveFinished(GamePlayerHand player, GameMove gameMove) {
-		moveFinished = true;
-	}
-
 	protected short[] processGameFinished() {
 		short[] a = finishScore;
 		finishScore = null;
@@ -55,7 +42,7 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 	}
 
 	protected boolean isGameStalemate() {
-		return gamePassed || super.isGameStalemate();
+		return gamePassed;
 	}
 
 	public boolean isAllowNextMove() {
@@ -77,7 +64,6 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 			try {
 				field = getClass().getSuperclass().getDeclaredField("currentPlayerIndex");
 				field.setAccessible(true);
-
 				field.setByte(this, (byte) 0);
 //				iterator = (PlayersIterator<GamePlayerHand>) field.get(this);
 //				iterator.setPlayerTurn(iterator.getPlayers().get(0));
@@ -129,13 +115,9 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, GamePlayerHand> {
 		return lastMoveTime;
 	}
 
-	@Override
-	public GameRatingChange getRatingChange(GamePlayerHand player) {
-		return null;
-	}
-
-	@Override
-	public List<GameRatingChange> getRatingChanges() {
-		return null;
+	GameMove makeMove(Personality player) throws GameMoveException {
+		GameMove move = new MockMove(player, scoreCalculation.getPoints(), moveNumber++, new Date());
+		processGameMove(move, scoreCalculation, gameFinished);
+		return move;
 	}
 }

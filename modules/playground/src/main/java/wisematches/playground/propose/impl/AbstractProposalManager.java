@@ -7,8 +7,6 @@ import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.*;
-import wisematches.playground.propose.criteria.CriterionViolation;
-import wisematches.playground.propose.criteria.PlayerCriterion;
 import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.StatisticManager;
 
@@ -28,7 +26,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	private final Lock lock = new ReentrantLock();
 	private final AtomicLong proposalIds = new AtomicLong();
 
-	private final Map<Long, DefaultGameProposal<S>> proposals = new ConcurrentHashMap<>();
+	private final Map<Long, AbstractGameProposal<S>> proposals = new ConcurrentHashMap<>();
 	private final Collection<GameProposalListener> proposalListeners = new CopyOnWriteArraySet<>();
 
 	protected AbstractProposalManager() {
@@ -39,8 +37,8 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 		lock.lock();
 		try {
 			long max = 0;
-			final Collection<DefaultGameProposal<S>> gameProposals = loadGameProposals();
-			for (DefaultGameProposal<S> proposal : gameProposals) {
+			final Collection<AbstractGameProposal<S>> gameProposals = loadGameProposals();
+			for (AbstractGameProposal<S> proposal : gameProposals) {
 				max = Math.max(max, proposal.getId());
 				proposals.put(proposal.getId(), proposal);
 			}
@@ -63,21 +61,22 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> initiate(S settings, Player initiator, Collection<Player> opponents, String commentary) {
-		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), commentary, settings, initiator, opponents.toArray(new Player[opponents.size()])));
+	public PrivateProposal<S> initiate(S settings, String commentary, Player initiator, Collection<Player> opponents) {
+		final long id = proposalIds.incrementAndGet();
+		return registerProposal(new DefaultPrivateProposal<>(id, commentary, settings, initiator, opponents));
 	}
 
 	@Override
-	public GameProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria) {
-		return registerProposal(new DefaultGameProposal<>(proposalIds.incrementAndGet(), settings, initiator, new Player[opponentsCount], criteria));
+	public PublicProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria) {
+		final long id = proposalIds.incrementAndGet();
+		return registerProposal(new DefaultPublicProposal<>(id, settings, initiator, opponentsCount, Arrays.asList(criteria)));
 	}
-
 
 	@Override
 	public GameProposal<S> accept(long proposalId, Player player) throws ViolatedCriteriaException {
 		lock.lock();
 		try {
-			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
+			final AbstractGameProposal<S> proposal = proposals.get(proposalId);
 			if (proposal == null) {
 				return null;
 			}
@@ -106,7 +105,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	public GameProposal<S> reject(long proposalId, Player player) throws ViolatedCriteriaException {
 		lock.lock();
 		try {
-			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
+			final AbstractGameProposal<S> proposal = proposals.get(proposalId);
 			if (proposal == null || !proposal.getPlayers().contains(player)) {
 				return null;
 			}
@@ -116,7 +115,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				removeGameProposal(proposal);
 				fireGameProposalFinalized(proposal, player, ProposalResolution.REPUDIATED);
 			} else {
-				if (proposal.getProposalType() == ProposalType.CHALLENGE) {
+				if (proposal.getProposalType() == ProposalType.PRIVATE) {
 					proposals.remove(proposalId);
 					removeGameProposal(proposal);
 					fireGameProposalFinalized(proposal, player, ProposalResolution.REJECTED);
@@ -136,7 +135,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	public GameProposal<S> terminate(long proposalId) {
 		lock.lock();
 		try {
-			final DefaultGameProposal<S> proposal = proposals.get(proposalId);
+			final AbstractGameProposal<S> proposal = proposals.get(proposalId);
 			if (proposal == null) {
 				return null;
 			}
@@ -151,6 +150,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				terminated = players.get(0);
 			}
 			fireGameProposalFinalized(proposal, terminated, ProposalResolution.TERMINATED);
+
 			return proposal;
 		} finally {
 			lock.unlock();
@@ -170,17 +170,20 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 
 	@Override
 	public Collection<CriterionViolation> validate(long proposalId, Player player) {
-		final DefaultGameProposal<S> proposal = proposals.get(proposalId);
+		final AbstractGameProposal<S> proposal = proposals.get(proposalId);
 		if (proposal == null) {
 			return null;
 		}
-		if (proposal.getProposalType() == ProposalType.CHALLENGE) {
-			if (!proposal.isPlayerWaiting(player)) {
+		if (proposal.getProposalType() == ProposalType.PRIVATE) {
+			if (!proposal.validatePlayer(player)) {
 				return Collections.singleton(new CriterionViolation("player.unexpected", player, ""));
 			}
 			return null;
 		}
-		return proposal.checkViolation(player, statisticManager.getStatistic(player));
+		if (proposal instanceof PublicProposal) {
+			return ((PublicProposal) proposal).validate(player, statisticManager.getStatistic(player));
+		}
+		return null;
 	}
 
 
@@ -197,8 +200,8 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			if (context == ProposalRelation.AVAILABLE) {
 				res = proposals.size();
 			} else if (context == ProposalRelation.INVOLVED) {
-				for (DefaultGameProposal<S> proposal : proposals.values()) {
-					if (proposal.isPlayerJoined(person)) {
+				for (AbstractGameProposal<S> proposal : proposals.values()) {
+					if (proposal.containsPlayer(person)) {
 						res++;
 					}
 				}
@@ -219,8 +222,8 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				return new ArrayList<GameProposal<S>>(proposals.values());
 			} else if (context == ProposalRelation.INVOLVED) {
 				final List<GameProposal<S>> res = new ArrayList<>();
-				for (DefaultGameProposal<S> proposal : proposals.values()) {
-					if (proposal.isPlayerJoined(person)) {
+				for (AbstractGameProposal<S> proposal : proposals.values()) {
+					if (proposal.containsPlayer(person)) {
 						res.add(proposal);
 					}
 				}
@@ -234,7 +237,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 
-	private DefaultGameProposal<S> registerProposal(DefaultGameProposal<S> proposal) {
+	private <T extends AbstractGameProposal<S>> T registerProposal(T proposal) {
 		lock.lock();
 		try {
 			proposals.put(proposal.getId(), proposal);
@@ -246,11 +249,11 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 		}
 	}
 
-	protected abstract Collection<DefaultGameProposal<S>> loadGameProposals();
+	protected abstract Collection<AbstractGameProposal<S>> loadGameProposals();
 
-	protected abstract void storeGameProposal(DefaultGameProposal<S> proposal);
+	protected abstract void storeGameProposal(AbstractGameProposal<S> proposal);
 
-	protected abstract void removeGameProposal(DefaultGameProposal<S> proposal);
+	protected abstract void removeGameProposal(AbstractGameProposal<S> proposal);
 
 
 	public void setPlayerStatisticManager(StatisticManager statisticManager) {

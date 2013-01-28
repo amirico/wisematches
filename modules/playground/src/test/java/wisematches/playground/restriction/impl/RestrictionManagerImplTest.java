@@ -2,15 +2,15 @@ package wisematches.playground.restriction.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.core.personality.player.MemberPlayer;
 import wisematches.core.Membership;
+import wisematches.core.Player;
+import wisematches.playground.MockPlayer;
 import wisematches.playground.restriction.Restriction;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 /**
@@ -34,8 +34,8 @@ public class RestrictionManagerImplTest {
 		r2.put(Membership.BASIC, 2);
 		r2.put(Membership.GOLD, 12);
 
-		final RestrictionDescription<Integer> mock1 = new RestrictionDescription<>("mock1", 0, r1);
-		final RestrictionDescription<Integer> mock2 = new RestrictionDescription<>("mock2", 0, r2);
+		final RestrictionDescription<Integer> mock1 = new RestrictionDescription<>("mock1", r1);
+		final RestrictionDescription<Integer> mock2 = new RestrictionDescription<>("mock2", r2);
 		restrictionManager.setRestrictions(Arrays.asList(mock1, mock2));
 	}
 
@@ -75,10 +75,7 @@ public class RestrictionManagerImplTest {
 		assertEquals(violation, restriction.getViolation());
 	}
 
-	private MemberPlayer createMockPlayer(Membership n) {
-		MemberPlayer p = createMock(MemberPlayer.class);
-		expect(p.getMembership()).andReturn(n).anyTimes();
-		replay(p);
-		return p;
+	private Player createMockPlayer(Membership n) {
+		return new MockPlayer(1, n);
 	}
 }

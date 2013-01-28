@@ -224,7 +224,7 @@ public class FileDictionary implements Dictionary {
 
 	private Collection<WordEntry> loadDictionary(File file) throws DictionaryException {
 		try {
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), language.getCharsetName()));
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), language.getNativeCharset()));
 
 			String word = null;
 			String attributes = null;
@@ -272,7 +272,7 @@ public class FileDictionary implements Dictionary {
 
 	private void saveDictionary(File file, Collection<WordEntry> entries) throws DictionaryException {
 		try {
-			final PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), language.getCharsetName()));
+			final PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), language.getNativeCharset()));
 			for (WordEntry entry : entries) {
 				w.println(entry.getWord());
 				for (WordDefinition definition : entry.getDefinitions()) {

@@ -1,5 +1,7 @@
 package wisematches.playground.propose.criteria;
 
+import wisematches.playground.propose.CriterionViolation;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

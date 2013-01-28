@@ -2,7 +2,8 @@ package wisematches.playground.award.impl.assembly;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.core.personality.PlayerManager;
 import wisematches.playground.award.AwardWeight;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;
@@ -12,6 +13,7 @@ import wisematches.playground.tourney.regular.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
+	private PlayerManager playerManager;
 	private RegularTourneyManager tourneyManager;
 	private final TheAwardsListener listener = new TheAwardsListener();
 
@@ -34,10 +36,15 @@ public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
 				break;
 		}
 		if (weight != null) {
-			grantAward(Personality.person(pid), "tourney.winner", weight, new TourneyRelationship(tourney.getNumber()));
+			final Player player = playerManager.getPlayer(pid);
+			grantAward(player, "tourney.winner", weight, new TourneyRelationship(tourney.getNumber()));
 		} else {
 			log.error("TourneyPlace can't be converted to AwardWeight: " + place);
 		}
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setTourneyManager(RegularTourneyManager tourneyManager) {

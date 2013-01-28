@@ -12,7 +12,7 @@
     <modules>
         <module>modules/core</module>
         <module>modules/playground</module>
-        <module>modules/scribble</module>
+        <!--<module>modules/scribble</module>-->
         <!--<module>modules/server</module>-->
         <!--<module>modules/web</module>-->
     </modules>

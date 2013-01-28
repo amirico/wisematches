@@ -1,27 +1,17 @@
 package wisematches.playground;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.easymock.IAnswer;
 import org.junit.Test;
-import wisematches.core.Personality;
-import wisematches.core.search.Orders;
-import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
-import wisematches.playground.search.GameState;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @SuppressWarnings("unchecked")
 public class AbstractBoardManagerTest {
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Commented");
+	}
+/*
 	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
 
 	private GamePlayListener gamePlayListener;
@@ -264,4 +254,5 @@ public class AbstractBoardManagerTest {
 			return gameBoardDao.loadPlayerBoards(player, state, filter, orders, range);
 		}
 	}
+*/
 }

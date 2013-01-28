@@ -21,9 +21,6 @@ public final class MemberPlayer extends Player {
 
 	public MemberPlayer(Account account, MembershipCard membershipCard) {
 		super(account.getId());
-		if (membershipCard == null) {
-			throw new NullPointerException("Membership can't be null");
-		}
 		this.account = account;
 		this.membershipCard = membershipCard;
 	}

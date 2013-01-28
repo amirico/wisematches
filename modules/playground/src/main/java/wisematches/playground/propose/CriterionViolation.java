@@ -1,4 +1,4 @@
-package wisematches.playground.propose.criteria;
+package wisematches.playground.propose;
 
 import java.io.Serializable;
 

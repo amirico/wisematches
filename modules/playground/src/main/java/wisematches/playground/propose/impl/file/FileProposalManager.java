@@ -5,8 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
+import wisematches.playground.propose.impl.AbstractGameProposal;
 import wisematches.playground.propose.impl.AbstractProposalManager;
-import wisematches.playground.propose.impl.DefaultGameProposal;
 
 import java.io.*;
 import java.nio.channels.Channels;
@@ -32,7 +32,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Collection<DefaultGameProposal<S>> loadGameProposals() {
+	protected Collection<AbstractGameProposal<S>> loadGameProposals() {
 		lock.lock();
 		try {
 			if (!proposalFile.isOpen() || proposalFile.size() == 0) {
@@ -45,9 +45,9 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 				return Collections.emptyList();
 			}
 
-			final Collection<DefaultGameProposal<S>> res = new ArrayList<DefaultGameProposal<S>>(count);
+			final Collection<AbstractGameProposal<S>> res = new ArrayList<>(count);
 			while (count-- != 0) {
-				res.add((DefaultGameProposal<S>) inputStream.readObject());
+				res.add((AbstractGameProposal<S>) inputStream.readObject());
 			}
 			return res;
 		} catch (IOException | ClassNotFoundException ex) {
@@ -59,12 +59,12 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	}
 
 	@Override
-	protected void storeGameProposal(DefaultGameProposal<S> proposal) {
+	protected void storeGameProposal(AbstractGameProposal<S> proposal) {
 		saveAllProposals();
 	}
 
 	@Override
-	protected void removeGameProposal(DefaultGameProposal<S> proposal) {
+	protected void removeGameProposal(AbstractGameProposal<S> proposal) {
 		saveAllProposals();
 	}
 

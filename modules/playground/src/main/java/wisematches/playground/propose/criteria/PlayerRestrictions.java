@@ -1,6 +1,8 @@
 package wisematches.playground.propose.criteria;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.playground.propose.CriterionViolation;
+import wisematches.playground.propose.PlayerCriterion;
 import wisematches.playground.tracking.Statistics;
 
 /**
@@ -38,7 +40,7 @@ public final class PlayerRestrictions {
 	public static PlayerCriterion or(final PlayerCriterion lpc, final PlayerCriterion rpc, final PlayerCriterion... others) {
 		return new PlayerCriterion() {
 			@Override
-			public CriterionViolation checkViolation(Personality player, Statistics statistics) {
+			public CriterionViolation checkViolation(Player player, Statistics statistics) {
 				final CriterionViolation lv = lpc.checkViolation(player, statistics);
 				if (lv == null) {
 					return null;
@@ -65,7 +67,7 @@ public final class PlayerRestrictions {
 	public static PlayerCriterion and(final PlayerCriterion lpc, final PlayerCriterion rpc, final PlayerCriterion... others) {
 		return new PlayerCriterion() {
 			@Override
-			public CriterionViolation checkViolation(Personality player, Statistics statistics) {
+			public CriterionViolation checkViolation(Player player, Statistics statistics) {
 				final CriterionViolation lv = lpc.checkViolation(player, statistics);
 				if (lv != null) {
 					return lv;

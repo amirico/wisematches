@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Player;
+import wisematches.core.personality.PlayerManager;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -39,6 +40,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private TaskExecutor taskExecutor;
 	private CronExpression cronExpression;
 
+	private PlayerManager playerManager;
 	private GamePlayManager<S, ?> gamePlayManager;
 	private GameSettingsProvider<S, TourneyGroup> settingsProvider;
 	private HibernateTourneyProcessor tourneyProcessor = new HibernateTourneyProcessor();
@@ -282,7 +284,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 			public void run() {
 				lock.lock();
 				try {
-					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), gamePlayManager, settingsProvider);
+					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), gamePlayManager, settingsProvider, playerManager);
 				} catch (Exception ex) {
 					log.error("Divisions can't be initiated by internal error", ex);
 					throw new TourneyProcessingException("Divisions can't be initiated by internal error", ex);
@@ -375,6 +377,10 @@ public class HibernateTourneyManager<S extends GameSettings>
 		if (this.cronExpression != null) {
 			this.cronExpression.setTimeZone(TimeZone.getTimeZone("GMT"));
 		}
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setGamePlayManager(GamePlayManager<S, ?> gamePlayManager) {

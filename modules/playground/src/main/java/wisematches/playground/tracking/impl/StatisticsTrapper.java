@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class StatisticsTrapper<E extends StatisticsEditor> {
+public class StatisticsTrapper<E extends StatisticsEditor> {
 	protected StatisticsTrapper() {
 	}
 
@@ -28,7 +28,7 @@ public abstract class StatisticsTrapper<E extends StatisticsEditor> {
 		int movesCount = 0;
 		final List<GameMove> list = board.getGameMoves();
 		for (GameMove gameMove : list) {
-			if (gameMove.getPlayer().getId().equals(player.getId())) {
+			if (gameMove.getPlayer().equals(player)) {
 				movesCount++;
 			}
 		}

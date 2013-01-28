@@ -11,7 +11,7 @@ import java.util.Date;
 public final class ExchangeMove extends GameMove {
 	private final int[] tilesIds;
 
-	public ExchangeMove(Personality player, int points, int moveNumber, Date moveTime, int[] tilesIds) {
+	protected ExchangeMove(Personality player, int points, int moveNumber, Date moveTime, int[] tilesIds) {
 		super(player, points, moveNumber, moveTime);
 		this.tilesIds = tilesIds;
 	}

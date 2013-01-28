@@ -4,11 +4,10 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.core.personality.proprietary.guest.GuestPlayer;
+import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
+import wisematches.playground.MockPlayer;
 import wisematches.playground.propose.*;
 import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.StatisticManager;
@@ -16,6 +15,7 @@ import wisematches.playground.tracking.StatisticManager;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -24,10 +24,10 @@ import static org.junit.Assert.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class AbstractProposalManagerTest {
-	private static final Personality PERSON1 = RobotPlayer.DULL;
-	private static final Personality PERSON2 = RobotPlayer.TRAINEE;
-	private static final Personality PERSON3 = RobotPlayer.EXPERT;
-	private static final Personality PERSON4 = GuestPlayer.GUEST;
+	private static final Player PERSON1 = new MockPlayer(901);
+	private static final Player PERSON2 = new MockPlayer(902);
+	private static final Player PERSON3 = new MockPlayer(903);
+	private static final Player PERSON4 = new MockPlayer(904);
 
 	private static final GameSettings SETTINGS = new MockGameSettings("Mock", 3);
 
@@ -39,21 +39,21 @@ public class AbstractProposalManagerTest {
 	@Before
 	public void setUp() throws Exception {
 		final StatisticManager psm = createMock(StatisticManager.class);
-		expect(psm.getStatistic(EasyMock.<Personality>anyObject())).andReturn(null).anyTimes();
+		expect(psm.getStatistic(EasyMock.<Player>anyObject())).andReturn(null).anyTimes();
 		replay(psm);
 
 		proposalManager = new AbstractProposalManager<GameSettings>() {
 			@Override
-			protected Collection<DefaultGameProposal<GameSettings>> loadGameProposals() {
+			protected Collection<AbstractGameProposal<GameSettings>> loadGameProposals() {
 				return Collections.emptyList();
 			}
 
 			@Override
-			protected void storeGameProposal(DefaultGameProposal<GameSettings> gameProposal) {
+			protected void storeGameProposal(AbstractGameProposal<GameSettings> gameProposal) {
 			}
 
 			@Override
-			protected void removeGameProposal(DefaultGameProposal<GameSettings> gameProposal) {
+			protected void removeGameProposal(AbstractGameProposal<GameSettings> gameProposal) {
 			}
 		};
 		proposalManager.setPlayerStatisticManager(psm);
@@ -92,7 +92,7 @@ public class AbstractProposalManagerTest {
 
 	@Test
 	public void testInitiateGameProposal() throws ViolatedCriteriaException {
-		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
+		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
 		listener.gameProposalInitiated(capture(proposalCapture));
@@ -103,11 +103,11 @@ public class AbstractProposalManagerTest {
 
 		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, 3);
 		// We don't have to check all exception. See DefaultWaitingGameProposalTest file to get more.
-		assertTrue(gameProposal1 instanceof DefaultGameProposal);
+		assertTrue(gameProposal1 instanceof AbstractGameProposal);
 		assertSame(gameProposal1, proposalCapture.getValue());
 
 		final GameProposal gameProposal2 = proposalManager.initiate(SETTINGS, PERSON1, 3);
-		assertTrue(gameProposal2 instanceof DefaultGameProposal);
+		assertTrue(gameProposal2 instanceof AbstractGameProposal);
 		assertSame(gameProposal2, proposalCapture.getValue());
 
 		assertTrue(gameProposal1.getId() != gameProposal2.getId());
@@ -120,7 +120,7 @@ public class AbstractProposalManagerTest {
 
 	@Test
 	public void testAcceptRejectAny() throws ViolatedCriteriaException {
-		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
+		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
 		listener.gameProposalUpdated(capture(proposalCapture), same(PERSON2), same(ProposalDirective.ACCEPTED));
@@ -133,13 +133,11 @@ public class AbstractProposalManagerTest {
 		assertNull(proposalManager.accept(0, PERSON2));
 
 		proposalManager.accept(gameProposal1.getId(), PERSON2);
-		assertEquals(4, gameProposal1.getPlayers().size());
-		assertEquals(2, gameProposal1.getJoinedPlayers().size());
+		assertPlayers(4, 2, gameProposal1);
 		assertSame(gameProposal1, proposalCapture.getValue());
 
 		proposalManager.reject(gameProposal1.getId(), PERSON2);
-		assertEquals(4, gameProposal1.getPlayers().size());
-		assertEquals(1, gameProposal1.getJoinedPlayers().size());
+		assertPlayers(4, 1, gameProposal1);
 		assertSame(gameProposal1, proposalCapture.getValue());
 
 		verify(listener);
@@ -147,13 +145,13 @@ public class AbstractProposalManagerTest {
 
 	@Test
 	public void testRejectWaited() throws ViolatedCriteriaException {
-		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
+		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
 		listener.gameProposalFinalized(capture(proposalCapture), same(PERSON4), same(ProposalResolution.REJECTED));
 		replay(listener);
 
-		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, Arrays.asList(PERSON4), "asd");
+		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, "asd", PERSON1, Arrays.asList(PERSON4));
 		proposalManager.addGameProposalListener(listener);
 
 		try {
@@ -164,8 +162,7 @@ public class AbstractProposalManagerTest {
 		}
 
 		proposalManager.reject(gameProposal1.getId(), PERSON4);
-		assertEquals(2, gameProposal1.getPlayers().size());
-		assertEquals(1, gameProposal1.getJoinedPlayers().size());
+		assertPlayers(2, 1, gameProposal1);
 		assertSame(gameProposal1, proposalCapture.getValue());
 
 		verify(listener);
@@ -173,18 +170,17 @@ public class AbstractProposalManagerTest {
 
 	@Test
 	public void testRejectInitiator() throws ViolatedCriteriaException {
-		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
+		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
 		listener.gameProposalFinalized(capture(proposalCapture), same(PERSON1), same(ProposalResolution.REPUDIATED));
 		replay(listener);
 
-		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, Arrays.asList(PERSON4), "asd");
+		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, "asd", PERSON1, Arrays.asList(PERSON4));
 		proposalManager.addGameProposalListener(listener);
 
 		proposalManager.reject(gameProposal1.getId(), PERSON1);
-		assertEquals(2, gameProposal1.getPlayers().size());
-		assertEquals(1, gameProposal1.getJoinedPlayers().size());
+		assertPlayers(2, 1, gameProposal1);
 		assertSame(gameProposal1, proposalCapture.getValue());
 
 		verify(listener);
@@ -192,13 +188,13 @@ public class AbstractProposalManagerTest {
 
 	@Test
 	public void testTerminate() throws ViolatedCriteriaException {
-		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<GameProposal<GameSettings>>();
+		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
 		listener.gameProposalFinalized(capture(proposalCapture), eq(PERSON4), same(ProposalResolution.TERMINATED));
 		replay(listener);
 
-		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, PERSON1, Arrays.asList(PERSON4), "asd");
+		final GameProposal gameProposal1 = proposalManager.initiate(SETTINGS, "asd", PERSON1, Arrays.asList(PERSON4));
 		proposalManager.addGameProposalListener(listener);
 
 		proposalManager.terminate(gameProposal1.getId());
@@ -235,5 +231,23 @@ public class AbstractProposalManagerTest {
 		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(PERSON4, ProposalRelation.AVAILABLE, null, null, null).toArray());
 		assertEquals(1, proposalManager.getTotalCount(PERSON4, ProposalRelation.INVOLVED));
 		assertArrayEquals(new GameProposal[]{proposal3}, proposalManager.searchEntities(PERSON4, ProposalRelation.INVOLVED, null, null, null).toArray());
+	}
+
+	private void assertPlayers(int total, int joined, GameProposal<?> proposal) {
+		final List<Player> players = proposal.getPlayers();
+		assertEquals(total, players.size());
+		int k = 0;
+		for (Player player : players) {
+			if (proposal instanceof PublicProposal) {
+				if (player != null) {
+					k++;
+				}
+			} else if (proposal instanceof PrivateProposal) {
+				if (((PrivateProposal) proposal).isPlayerJoined(player)) {
+					k++;
+				}
+			}
+		}
+		assertEquals(joined, k);
 	}
 }
