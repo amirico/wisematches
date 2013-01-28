@@ -5,26 +5,6 @@
 
     <import resource="restriction-config.xml"/>
 
-    <bean id="playerTrackingCenterDao" class="wisematches.playground.tracking.impl.HibernatePlayerTrackingDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="ratingManager" class="wisematches.playground.tracking.impl.RatingManagerImpl">
-        <property name="ratingSystem">
-            <bean class="wisematches.playground.rating.ELORatingSystem"/>
-        </property>
-        <property name="defaultRating" value="1200"/>
-        <property name="proprietaryRatings">
-            <map>
-                <entry key="1" value="1200"/>
-                <entry key="2" value="800"/>
-                <entry key="3" value="1200"/>
-                <entry key="4" value="1600"/>
-            </map>
-        </property>
-        <property name="trackingCenterDao" ref="playerTrackingCenterDao"/>
-    </bean>
-
     <bean id="dictionaryManager" class="wisematches.playground.dictionary.impl.FileDictionaryManager">
         <property name="dictionariesFolder" value="${server.dictionary.path}"/>
     </bean>

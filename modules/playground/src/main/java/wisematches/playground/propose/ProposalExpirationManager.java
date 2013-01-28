@@ -67,9 +67,9 @@ public class ProposalExpirationManager<S extends GameSettings> extends AbstractE
 	}
 
 	private void scheduleProposalTermination(GameProposal<? extends GameSettings> proposal) {
-		if (proposal.getProposalType() == ProposalType.CHALLENGE && challengeExpirationMillis > 0) {
+		if (proposal.getProposalType() == ProposalType.PRIVATE && challengeExpirationMillis > 0) {
 			scheduleTermination(proposal.getId(), new Date(proposal.getCreationDate().getTime() + challengeExpirationMillis));
-		} else if (proposal.getProposalType() == ProposalType.INTENTION && intentionExpirationMillis > 0) {
+		} else if (proposal.getProposalType() == ProposalType.PUBLIC && intentionExpirationMillis > 0) {
 			scheduleTermination(proposal.getId(), new Date(proposal.getCreationDate().getTime() + intentionExpirationMillis));
 		}
 	}

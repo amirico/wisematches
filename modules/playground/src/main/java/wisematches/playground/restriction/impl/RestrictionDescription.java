@@ -9,15 +9,13 @@ import java.util.Map;
  */
 public final class RestrictionDescription<T> {
 	private String name;
-	private Comparable<T> unknownMembership;
 	private Map<Membership, Comparable<T>> restrictions;
 
 	public RestrictionDescription() {
 	}
 
-	public RestrictionDescription(String name, Comparable<T> unknownMembership, Map<Membership, Comparable<T>> restrictions) {
+	public RestrictionDescription(String name, Map<Membership, Comparable<T>> restrictions) {
 		this.name = name;
-		this.unknownMembership = unknownMembership;
 		this.restrictions = restrictions;
 	}
 
@@ -27,14 +25,6 @@ public final class RestrictionDescription<T> {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Comparable<T> getUnknownMembership() {
-		return unknownMembership;
-	}
-
-	public void setUnknownMembership(Comparable<T> unknownMembership) {
-		this.unknownMembership = unknownMembership;
 	}
 
 	public Comparable<T> getRestriction(Membership membership) {

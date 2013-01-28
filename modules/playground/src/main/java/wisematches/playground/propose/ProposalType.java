@@ -6,13 +6,13 @@ package wisematches.playground.propose;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum ProposalType {
-    /**
-     * Public proposal when any player that meets some {@code PlayerCriterion} can join the proposal.
-     */
-    INTENTION,
+	/**
+	 * Public proposal when any player that meets some {@code PlayerCriterion} can join the proposal.
+	 */
+	PUBLIC,
 
-    /**
-     * Private proposal and only pre-defined player can join the proposal.
-     */
-    CHALLENGE
+	/**
+	 * Private proposal and only pre-defined player can join the proposal.
+	 */
+	PRIVATE
 }

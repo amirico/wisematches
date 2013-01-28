@@ -33,21 +33,6 @@ public interface GameProposal<S extends GameSettings> {
 	 */
 	Date getCreationDate();
 
-	/**
-	 * Returns associated with the proposal comment
-	 *
-	 * @return the associated with the proposal comment
-	 */
-	String getCommentary();
-
-
-	/**
-	 * Returns type of the proposal. Depends on the type a proposal can have differ behaviour.
-	 *
-	 * @return the type of the proposal.
-	 */
-	ProposalType getProposalType();
-
 
 	/**
 	 * Returns a player who has initiated the proposal.
@@ -56,60 +41,38 @@ public interface GameProposal<S extends GameSettings> {
 	 */
 	Player getInitiator();
 
-
 	/**
-	 * Returns total players number for the proposal.
-	 * <p/>
-	 * If number of joined players should be returned than {@link #getJoinedPlayersCount()} method should be used.
+	 * Returns list of all joined or waiting players.
 	 *
-	 * @return the total number of players.
-	 */
-	int getPlayersCount();
-
-	/**
-	 * Returns list of all (joined and not) players. If it's {@code CHALLENGE} proposal when the method returns
-	 * list of joined and waiting players. If it's {@code INTENTION} proposal when the method returns
-	 * list of joined and {@code null} values for not joined players.
-	 * <p/>
-	 * If only joined players list should be returned please use the {@link #getJoinedPlayers()} method.
-	 *
-	 * @return unmodifiable list with all players in the proposal or null if players are not joined yet.
-	 * @see #getJoinedPlayers()
+	 * @return the list of all joined or waiting players.
 	 */
 	List<Player> getPlayers();
 
-
 	/**
-	 * Returns number of already joined players
+	 * Returns list of all joined players.
 	 *
-	 * @return the number of already joined players.
-	 */
-	int getJoinedPlayersCount();
-
-	/**
-	 * Returns unmodifiable collection of all joined players.
-	 *
-	 * @return the unmodifiable collection of all joined players.
+	 * @return the list of all joined players.
 	 */
 	List<Player> getJoinedPlayers();
 
 
 	/**
-	 * Checks is specified player joined to the game
+	 * Checks that specified player can join to this proposal.
 	 *
 	 * @param player the player to be checked.
-	 * @return {@code true} if player is joined; {@code false} - otherwise.
+	 * @return {@code true} if player can join to the game; {@code false} - otherwise.
 	 */
-	boolean isPlayerJoined(Player player);
+	boolean validatePlayer(Player player);
+
 
 	/**
-	 * Checks is specified player waiting but not joined yet. The method always return {@code false} for
-	 * {@code INTENTION} proposal type.
+	 * Checks if the proposal contains specified player, or not.
 	 *
-	 * @param player the player to be checked
-	 * @return {@code true} if player is waited but not joined; {@code false} - otherwise.
+	 * @param player the player to be checked.
+	 * @return {@code true} if the proposal contains specified player; {@code false} - otherwise.
 	 */
-	boolean isPlayerWaiting(Player player);
+	boolean containsPlayer(Player player);
+
 
 	/**
 	 * Returns {@code true} if proposal is ready.
@@ -117,4 +80,12 @@ public interface GameProposal<S extends GameSettings> {
 	 * @return {@code true} if proposal is ready; {@code false} - otherwise.
 	 */
 	public boolean isReady();
+
+
+	/**
+	 * Returns type of the proposal. Depends on the type a proposal can have differ behaviour.
+	 *
+	 * @return the type of the proposal.
+	 */
+	ProposalType getProposalType();
 }

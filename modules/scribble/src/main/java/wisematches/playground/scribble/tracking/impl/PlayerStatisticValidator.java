@@ -1,28 +1,10 @@
 package wisematches.playground.scribble.tracking.impl;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.playground.GameMove;
-import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribbleMoveScore;
-import wisematches.playground.scribble.ScribblePlayManager;
-import wisematches.playground.search.GameState;
-import wisematches.playground.tracking.impl.PlayerTrackingCenterDao;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class PlayerStatisticValidator {
+/*
 	private SessionFactory sessionFactory;
 	private ScribblePlayManager boardManager;
 	private PlayerTrackingCenterDao trackingCenterDao;
@@ -95,4 +77,5 @@ public class PlayerStatisticValidator {
 	public void setStatisticsTrapper(ScribbleStatisticsTrapper statisticsTrapper) {
 		this.statisticsTrapper = statisticsTrapper;
 	}
+*/
 }

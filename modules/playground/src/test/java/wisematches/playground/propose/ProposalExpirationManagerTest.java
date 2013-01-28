@@ -42,19 +42,19 @@ public class ProposalExpirationManagerTest {
 
 		final GameProposal<MockGameSettings> proposal1 = createMock(GameProposal.class);
 		expect(proposal1.getId()).andReturn(1L).anyTimes();
-		expect(proposal1.getProposalType()).andReturn(ProposalType.CHALLENGE);
+		expect(proposal1.getProposalType()).andReturn(ProposalType.PRIVATE);
 		expect(proposal1.getCreationDate()).andReturn(new Date(time - 4 * MILLIS_IN_DAY + 200));
 		replay(proposal1);
 
 		final GameProposal<MockGameSettings> proposal2 = createMock(GameProposal.class);
 		expect(proposal2.getId()).andReturn(2L).anyTimes();
-		expect(proposal2.getProposalType()).andReturn(ProposalType.CHALLENGE);
+		expect(proposal2.getProposalType()).andReturn(ProposalType.PRIVATE);
 		expect(proposal2.getCreationDate()).andReturn(new Date(time - 6 * MILLIS_IN_DAY + 200));
 		replay(proposal2);
 
 		final GameProposal<MockGameSettings> proposal3 = createMock(GameProposal.class);
 		expect(proposal3.getId()).andReturn(3L).anyTimes();
-		expect(proposal3.getProposalType()).andReturn(ProposalType.CHALLENGE);
+		expect(proposal3.getProposalType()).andReturn(ProposalType.PRIVATE);
 		expect(proposal3.getCreationDate()).andReturn(new Date(time - 7 * MILLIS_IN_DAY + 200)); // expired
 		replay(proposal3);
 
@@ -96,7 +96,7 @@ public class ProposalExpirationManagerTest {
 
 		final GameProposal<MockGameSettings> proposal1 = createMock(GameProposal.class);
 		expect(proposal1.getId()).andReturn(1L).anyTimes();
-		expect(proposal1.getProposalType()).andReturn(ProposalType.INTENTION).anyTimes();
+		expect(proposal1.getProposalType()).andReturn(ProposalType.PUBLIC).anyTimes();
 		expect(proposal1.getCreationDate()).andReturn(new Date(time - 4 * MILLIS_IN_DAY + 100));
 		replay(proposal1);
 

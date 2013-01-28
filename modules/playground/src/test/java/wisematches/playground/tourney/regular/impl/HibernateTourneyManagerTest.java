@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.core.personality.PlayerManager;
 import wisematches.core.search.Range;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyEntity;
@@ -38,7 +40,7 @@ import static org.easymock.EasyMock.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
+		"classpath:/config/personality-config.xml",
 		"classpath:/config/playground-junit-config.xml"
 })
 @SuppressWarnings("unchecked")
@@ -50,11 +52,29 @@ public class HibernateTourneyManagerTest {
 
 	private HibernateTourneyManager<GameSettings> tourneyManager;
 
+	private final Player player1 = new MockPlayer(101);
+	private final Player player2 = new MockPlayer(102);
+	private final Player player3 = new MockPlayer(103);
+	private final Player player4 = new MockPlayer(104);
+	private final Player player5 = new MockPlayer(105);
+	private final Player player6 = new MockPlayer(106);
+	private final Player player7 = new MockPlayer(107);
+
 	public HibernateTourneyManagerTest() {
 	}
 
 	@Before
 	public void init() throws ParseException, BoardCreationException, InterruptedException {
+		final PlayerManager playerManager = createMock(PlayerManager.class);
+		expect(playerManager.getPlayer(101L)).andReturn(player1).anyTimes();
+		expect(playerManager.getPlayer(102L)).andReturn(player2).anyTimes();
+		expect(playerManager.getPlayer(103L)).andReturn(player3).anyTimes();
+		expect(playerManager.getPlayer(104L)).andReturn(player4).anyTimes();
+		expect(playerManager.getPlayer(105L)).andReturn(player5).anyTimes();
+		expect(playerManager.getPlayer(106L)).andReturn(player6).anyTimes();
+		expect(playerManager.getPlayer(107L)).andReturn(player7).anyTimes();
+		replay(playerManager);
+
 		@SuppressWarnings("unchecked")
 		final GameSettingsProvider<GameSettings, TourneyGroup> settingsProvider = createMock(GameSettingsProvider.class);
 		expect(settingsProvider.createGameSettings(isA(TourneyGroup.class))).andAnswer(new IAnswer<GameSettings>() {
@@ -95,6 +115,7 @@ public class HibernateTourneyManagerTest {
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
 		tourneyManager.setGamePlayManager(gamePlayManager);
 		tourneyManager.setSettingsProvider(settingsProvider);
+		tourneyManager.setPlayerManager(playerManager);
 	}
 
 	@Test
@@ -126,26 +147,26 @@ public class HibernateTourneyManagerTest {
 		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 
 		try {
-			tourneyManager.register(Personality.person(101), null, Language.RU, TourneySection.ADVANCED);
+			tourneyManager.register(player1, null, Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
 		} catch (RegistrationException ignore) {
 			assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 		}
 
-		tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.ADVANCED);
+		tourneyManager.register(player1, tourney, Language.RU, TourneySection.ADVANCED);
 		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN, 1)));
 		assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU, 1)));
 
 		try {
-			tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.ADVANCED);
+			tourneyManager.register(player1, tourney, Language.RU, TourneySection.ADVANCED);
 			fail("Exception must be here");
 		} catch (RegistrationException ignore) {
 			assertEquals(1, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, 1)));
 		}
 
-		tourneyManager.register(Personality.person(102), tourney, Language.RU, TourneySection.ADVANCED);
-		tourneyManager.register(Personality.person(103), tourney, Language.RU, TourneySection.GRANDMASTER);
+		tourneyManager.register(player2, tourney, Language.RU, TourneySection.ADVANCED);
+		tourneyManager.register(player3, tourney, Language.RU, TourneySection.GRANDMASTER);
 
 		RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		assertEquals(0, subscriptions.getPlayers(Language.EN));
@@ -154,7 +175,7 @@ public class HibernateTourneyManagerTest {
 		assertEquals(2, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-		final RegistrationRecord subscription = tourneyManager.getRegistration(Personality.person(101), tourney);
+		final RegistrationRecord subscription = tourneyManager.getRegistration(player1, tourney);
 		assertEquals(10000, subscription.getTourney());
 		assertEquals(101, subscription.getPlayer());
 		assertEquals(Language.RU, subscription.getLanguage());
@@ -164,13 +185,13 @@ public class HibernateTourneyManagerTest {
 		assertEquals(0, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.EN, 1)));
 		assertEquals(3, searchManager.getTotalCount(null, new RegistrationRecord.Context(10000, Language.RU, 1)));
 
-		tourneyManager.unregister(Personality.person(102), tourney, Language.RU, TourneySection.GRANDMASTER);
+		tourneyManager.unregister(player2, tourney, Language.RU, TourneySection.GRANDMASTER);
 		subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		assertEquals(3, subscriptions.getPlayers(Language.RU));
 		assertEquals(2, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.GRANDMASTER));
 
-		tourneyManager.unregister(Personality.person(102), tourney, Language.RU, TourneySection.ADVANCED);
+		tourneyManager.unregister(player2, tourney, Language.RU, TourneySection.ADVANCED);
 		subscriptions = tourneyManager.getRegistrationsSummary(tourney);
 		assertEquals(2, subscriptions.getPlayers(Language.RU));
 		assertEquals(1, subscriptions.getPlayers(Language.RU, TourneySection.ADVANCED));
@@ -259,17 +280,17 @@ public class HibernateTourneyManagerTest {
 
 		tourneyManager.addTourneySubscriptionListener(subscriptionListener);
 
-		tourneyManager.register(Personality.person(101), tourney, Language.RU, TourneySection.CASUAL);
-		tourneyManager.register(Personality.person(102), tourney, Language.RU, TourneySection.INTERMEDIATE);
-		tourneyManager.register(Personality.person(103), tourney, Language.RU, TourneySection.EXPERT);
+		tourneyManager.register(player1, tourney, Language.RU, TourneySection.CASUAL);
+		tourneyManager.register(player2, tourney, Language.RU, TourneySection.INTERMEDIATE);
+		tourneyManager.register(player3, tourney, Language.RU, TourneySection.EXPERT);
 
 		// new day!
 		tourneyManager.breakingDayTime(null);
 
-		assertEquals(0, tourneyManager.getTotalCount(Personality.person(103), new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // excluded from tourney
+		assertEquals(0, tourneyManager.getTotalCount(player3, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // excluded from tourney
 		assertTrue(1 <= tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE))));
-		assertTrue(1 <= tourneyManager.getTotalCount(Personality.person(101), new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
-		assertTrue(1 <= tourneyManager.getTotalCount(Personality.person(102), new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
+		assertTrue(1 <= tourneyManager.getTotalCount(player1, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
+		assertTrue(1 <= tourneyManager.getTotalCount(player2, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
 		final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
 		assertTrue(tourneys.size() >= 1);
 
@@ -336,10 +357,10 @@ public class HibernateTourneyManagerTest {
 		Thread.sleep(1000);
 
 		for (int i = 0; i < 2; i++) {
-			tourneyManager.register(Personality.person(101 + i), tourney, Language.RU, TourneySection.CASUAL);
+			tourneyManager.register(new MockPlayer(101 + i), tourney, Language.RU, TourneySection.CASUAL);
 		}
 		for (int i = 0; i < 5; i++) {
-			tourneyManager.register(Personality.person(103 + i), tourney, Language.RU, TourneySection.EXPERT);
+			tourneyManager.register(new MockPlayer(103 + i), tourney, Language.RU, TourneySection.EXPERT);
 		}
 
 		// new day!
@@ -382,7 +403,7 @@ public class HibernateTourneyManagerTest {
 
 		final GameBoard<GameSettings, GamePlayerHand> board1 = createMock(GameBoard.class);
 		expect(board1.getBoardId()).andReturn(casualGroup.getGameId(101, 102)).anyTimes();
-		expect(board1.getWonPlayers()).andReturn(Arrays.asList(createMockHand(101, 100)));
+		expect(board1.getWonPlayers()).andReturn(Arrays.<Personality>asList(player1));
 		replay(board1);
 
 		gamePlayListener.gameFinished(board1, null, null);
@@ -399,7 +420,7 @@ public class HibernateTourneyManagerTest {
 
 		final GameBoard<GameSettings, GamePlayerHand> board2 = createMock(GameBoard.class);
 		expect(board2.getBoardId()).andReturn(group0.getGameId(103, 104)).anyTimes();
-		expect(board2.getWonPlayers()).andReturn(Arrays.asList(createMockHand(103, 100)));
+		expect(board2.getWonPlayers()).andReturn(Arrays.<Personality>asList(player3));
 		replay(board2);
 		gamePlayListener.gameFinished(board2, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -412,7 +433,7 @@ public class HibernateTourneyManagerTest {
 
 		final GameBoard<GameSettings, GamePlayerHand> board3 = createMock(GameBoard.class);
 		expect(board3.getBoardId()).andReturn(group0.getGameId(103, 105)).anyTimes();
-		expect(board3.getWonPlayers()).andReturn(Arrays.asList(createMockHand(103, 100)));
+		expect(board3.getWonPlayers()).andReturn(Arrays.<Personality>asList(player3));
 		replay(board3);
 		gamePlayListener.gameFinished(board3, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -425,7 +446,7 @@ public class HibernateTourneyManagerTest {
 
 		final GameBoard<GameSettings, GamePlayerHand> board4 = createMock(GameBoard.class);
 		expect(board4.getBoardId()).andReturn(group0.getGameId(104, 105)).anyTimes();
-		expect(board4.getWonPlayers()).andReturn(Arrays.asList(createMockHand(104, 100)));
+		expect(board4.getWonPlayers()).andReturn(Arrays.<Personality>asList(player4));
 		replay(board4);
 		gamePlayListener.gameFinished(board4, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -439,7 +460,7 @@ public class HibernateTourneyManagerTest {
 		final GameBoard<GameSettings, GamePlayerHand> board5 = createMock(GameBoard.class);
 		final TourneyGroup group1 = tourneyExpertGroups1.get(1);
 		expect(board5.getBoardId()).andReturn(group1.getGameId(106, 107)).anyTimes();
-		expect(board5.getWonPlayers()).andReturn(Arrays.asList(createMockHand(106, 100)));
+		expect(board5.getWonPlayers()).andReturn(Arrays.<Personality>asList(player6));
 		replay(board5);
 		gamePlayListener.gameFinished(board5, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -464,7 +485,7 @@ public class HibernateTourneyManagerTest {
 		final GameBoard<GameSettings, GamePlayerHand> board6 = createMock(GameBoard.class);
 		final TourneyGroup group3 = tourneyExpertGroups2.get(0);
 		expect(board6.getBoardId()).andReturn(group3.getGameId(103, 106)).anyTimes();
-		expect(board6.getWonPlayers()).andReturn(Arrays.asList(createMockHand(103, 100), createMockHand(106, 100)));
+		expect(board6.getWonPlayers()).andReturn(Arrays.<Personality>asList(player3, player6));
 		replay(board6);
 		gamePlayListener.gameFinished(board6, null, null);
 		assertEquals(0, tourneyManager.getTotalCount(null, new TourneyGroup.Context(casualRound1, EnumSet.of(TourneyEntity.State.ACTIVE))));
@@ -494,11 +515,11 @@ public class HibernateTourneyManagerTest {
 		assertEquals(2, winners.size());
 		final Iterator<TourneyWinner> iterator = winners.iterator();
 		final TourneyWinner first = iterator.next();
-		assertEquals(101L, first.getPlayer());
+		assertEquals(101L, first.getPlayer().longValue());
 		assertEquals(TourneyPlace.FIRST, first.getPlace());
 
 		final TourneyWinner second = iterator.next();
-		assertEquals(102L, second.getPlayer());
+		assertEquals(102L, second.getPlayer().longValue());
 		assertEquals(TourneyPlace.SECOND, second.getPlace());
 
 		verify(board1, board2, board3, board4, board5, board6, tourneyListener, subscriptionListener);
@@ -525,11 +546,4 @@ public class HibernateTourneyManagerTest {
 		sqlQuery.executeUpdate();
 	}
 
-	private GamePlayerHand createMockHand(long pid, int points) {
-		GamePlayerHand s = EasyMock.createMock(GamePlayerHand.class);
-		expect(s.getPlayerId()).andReturn(pid).anyTimes();
-		expect(s.getPoints()).andReturn((short) points).anyTimes();
-		replay(s);
-		return s;
-	}
 }

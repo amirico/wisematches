@@ -1,6 +1,6 @@
-package wisematches.playground.propose.criteria;
+package wisematches.playground.propose;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.tracking.Statistics;
 
 import java.io.Serializable;
@@ -11,5 +11,5 @@ import java.io.Serializable;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerCriterion extends Serializable {
-	CriterionViolation checkViolation(Personality player, Statistics statistics);
+	CriterionViolation checkViolation(Player player, Statistics statistics);
 }

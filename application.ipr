@@ -146,7 +146,6 @@
         <module name="core" />
         <module name="database" />
         <module name="playground" />
-        <module name="scribble" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -199,6 +198,7 @@
     </splitter-proportions>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="android" url="file://$PROJECT_DIR$/clients/android/AndroidManifest.xml" />
     <file type="web" url="file://$PROJECT_DIR$/modules/web" />
   </component>
   <component name="GlobalLibrariesConfigurable.UI">
@@ -485,7 +485,6 @@
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/core/core.iml" filepath="$PROJECT_DIR$/modules/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
     </modules>
   </component>
   <component name="ProjectResources">

@@ -4,8 +4,6 @@ import wisematches.core.Player;
 import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 import wisematches.playground.GameSettings;
-import wisematches.playground.propose.criteria.CriterionViolation;
-import wisematches.playground.propose.criteria.PlayerCriterion;
 import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 
 import java.util.Collection;
@@ -24,19 +22,6 @@ public interface GameProposalManager<S extends GameSettings> extends SearchManag
 
 
 	/**
-	 * Initiates new challenge if it's possible.
-	 *
-	 * @param settings   the game settings
-	 * @param initiator  the proposal initiator.
-	 * @param opponents  the other opponents   @return created game proposal.
-	 * @param commentary the comment for the challenge
-	 * @return the initiated challenge
-	 * @throws NullPointerException     if any parameter except {@code commentary} is null.
-	 * @throws IllegalArgumentException if {@code opponents} collection impossible opponents number.
-	 */
-	GameProposal<S> initiate(S settings, Player initiator, Collection<Player> opponents, String commentary);
-
-	/**
 	 * Initiates new waiting proposal.
 	 *
 	 * @param settings       the original game settings
@@ -48,7 +33,20 @@ public interface GameProposalManager<S extends GameSettings> extends SearchManag
 	 *                                  is less than two or if {@code players} collection size more than
 	 *                                  {@code playersCount} or contains null.
 	 */
-	GameProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria);
+	PublicProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria);
+
+	/**
+	 * Initiates new challenge if it's possible.
+	 *
+	 * @param settings   the game settings
+	 * @param commentary the comment for the challenge
+	 * @param initiator  the proposal initiator.
+	 * @param opponents  the other opponents   @return created game proposal.
+	 * @return the initiated challenge
+	 * @throws NullPointerException     if any parameter except {@code commentary} is null.
+	 * @throws IllegalArgumentException if {@code opponents} collection impossible opponents number.
+	 */
+	PrivateProposal<S> initiate(S settings, String commentary, Player initiator, Collection<Player> opponents);
 
 
 	/**

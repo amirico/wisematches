@@ -124,6 +124,7 @@
         <property name="tilesClassDefault" value="tiles-set-classic"/>
     </bean>
 
+    <!-- Move to server -->
     <bean id="tournamentTaskExecutor" class="wisematches.core.task.executor.TransactionAwareExecutor">
         <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -136,15 +137,18 @@
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
+    <!-- Move to server -->
     <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateTourneyManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="cronExpression" value="0 0 0 ? * 2#1"/>
 
+        <property name="playerManager" ref="playerManager"/>
         <property name="taskExecutor" ref="tournamentTaskExecutor"/>
         <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
     </bean>
 
+    <!-- Move to server -->
     <bean id="awardsManager" class="wisematches.playground.award.impl.HibernateAwardsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="awardDescriptors" ref="awardDescriptors"/>
@@ -154,6 +158,7 @@
                     <property name="statisticManager" ref="scribbleTrackingCenter"/>
                 </bean>
                 <bean class="wisematches.playground.award.impl.assembly.TourneyJudicialAssembly">
+                    <property name="playerManager" ref="playerManager"/>
                     <property name="tourneyManager" ref="regularTourneyManager"/>
                 </bean>
             </list>

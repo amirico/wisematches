@@ -37,22 +37,22 @@ public class AbstractPlayerHand implements GamePlayerHand {
 	}
 
 	@Override
-	public short getPoints() {
+	public final short getPoints() {
 		return points;
 	}
 
 	@Override
-	public short getOldRating() {
+	public final short getOldRating() {
 		return oldRating;
 	}
 
 	@Override
-	public short getNewRating() {
+	public final short getNewRating() {
 		return newRating;
 	}
 
 	@Override
-	public boolean isWinner() {
+	public final boolean isWinner() {
 		return newRating > oldRating;
 	}
 
