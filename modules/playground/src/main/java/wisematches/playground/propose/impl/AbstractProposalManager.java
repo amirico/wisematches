@@ -181,7 +181,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			return null;
 		}
 		if (proposal instanceof PublicProposal) {
-			return ((PublicProposal) proposal).validate(player, statisticManager.getStatistic(player));
+			return ((PublicProposal) proposal).checkViolations(player, statisticManager.getStatistic(player));
 		}
 		return null;
 	}

@@ -69,7 +69,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	private GameRelationship relationship;
 
 	@Transient
-	private GamePlayListener gamePlayListener;
+	private BoardListener gamePlayListener;
 
 	@Transient
 	protected final Lock lock = new ReentrantLock();
@@ -243,7 +243,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 
-	void setGamePlayListener(GamePlayListener gamePlayListener) {
+	void setGamePlayListener(BoardListener gamePlayListener) {
 		this.gamePlayListener = gamePlayListener;
 	}
 
@@ -373,9 +373,30 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		currentPlayerIndex = -1;
 		rated = rated && moves.size() < playersCount * 2;
 
+		int cnt = 0;
+		int maxPoints = 0; // select max points
 		final short[] ints = processGameFinished();
 		for (int i = 0; i < ints.length; i++) {
-			hands.get(i).increasePoints(ints[i]);
+			final H h = hands.get(i);
+			h.increasePoints(ints[i]);
+
+			final short p = h.getPoints();
+			if (p > maxPoints) {
+				cnt = 0;
+				maxPoints = p;
+			}
+
+			if (p == maxPoints) {
+				cnt++;
+			}
+		}
+
+		if (cnt != hands.size()) {
+			for (H hand : hands) {
+				if (hand.getPoints() == maxPoints) {
+					hand.markAsWinner();
+				}
+			}
 		}
 	}
 

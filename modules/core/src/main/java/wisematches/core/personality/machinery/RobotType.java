@@ -41,7 +41,7 @@ public enum RobotType {
 	}
 
 
-	public RobotPlayer getRobotPlayer() {
+	public RobotPlayer getPlayer() {
 		return player;
 	}
 }

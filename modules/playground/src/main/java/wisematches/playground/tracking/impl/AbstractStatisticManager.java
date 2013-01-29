@@ -40,7 +40,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	private final Map<Personality, Short> ratingsCache = new WeakHashMap<>();
 
 	private final PlayerListener playerListener = new ThePlayerListener();
-	private final GamePlayListener gamePlayListener = new TheGamePlayListener();
+	private final BoardListener gamePlayListener = new TheBoardListener();
 	private final RegularTourneyListener tourneyListener = new TheRegularTourneyListener();
 
 
@@ -239,8 +239,8 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		}
 	}
 
-	private class TheGamePlayListener implements GamePlayListener {
-		private TheGamePlayListener() {
+	private class TheBoardListener implements BoardListener {
+		private TheBoardListener() {
 		}
 
 		@Override

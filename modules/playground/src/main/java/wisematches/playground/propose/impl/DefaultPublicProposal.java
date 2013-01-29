@@ -109,7 +109,7 @@ public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameP
 	}
 
 	@Override
-	public Collection<CriterionViolation> validate(Player player, Statistics statistics) {
+	public Collection<CriterionViolation> checkViolations(Player player, Statistics statistics) {
 		if (criterion == null || criterion.isEmpty()) {
 			return null;
 		}

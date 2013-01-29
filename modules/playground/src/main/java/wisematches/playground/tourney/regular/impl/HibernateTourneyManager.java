@@ -44,7 +44,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private GamePlayManager<S, ?> gamePlayManager;
 	private GameSettingsProvider<S, TourneyGroup> settingsProvider;
 	private HibernateTourneyProcessor tourneyProcessor = new HibernateTourneyProcessor();
-	private final GamePlayListener gamePlayListener = new TheGamePlayListener();
+	private final BoardListener gamePlayListener = new TheBoardListener();
 
 	private final Lock lock = new ReentrantLock();
 	private final HibernateRegistrationSearchManager registrationSearchManager = new HibernateRegistrationSearchManager();
@@ -399,8 +399,8 @@ public class HibernateTourneyManager<S extends GameSettings>
 		this.settingsProvider = settingsProvider;
 	}
 
-	private class TheGamePlayListener implements GamePlayListener {
-		private TheGamePlayListener() {
+	private class TheBoardListener implements BoardListener {
+		private TheBoardListener() {
 		}
 
 		@Override

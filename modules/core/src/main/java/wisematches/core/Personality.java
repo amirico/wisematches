@@ -18,13 +18,19 @@ import java.io.Serializable;
 public abstract class Personality implements Serializable {
 	private final Long id;
 
+	private final int hashCode;
+
 	/**
 	 * Creates new personality with specified id.
 	 *
 	 * @param id the id for this personality.
 	 */
 	Personality(Long id) {
+		if (id == null) {
+			throw new NullPointerException("ID can't be null");
+		}
 		this.id = id;
+		hashCode = (int) (id ^ (id >>> 32));
 	}
 
 	/**
@@ -51,7 +57,7 @@ public abstract class Personality implements Serializable {
 	 */
 	@Override
 	public final int hashCode() {
-		return (int) (id ^ (id >>> 32));
+		return hashCode;
 	}
 
 	/**
@@ -66,15 +72,13 @@ public abstract class Personality implements Serializable {
 		if (this == o) return true;
 		if (!(o instanceof Personality)) return false;
 		final Personality that = (Personality) o;
-		return id == that.id;
+		return id.equals(that.id);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Personality");
-		sb.append("{id=").append(id);
-		sb.append('}');
+		sb.append(getClass().getSimpleName()).append("{id=").append(id).append('}');
 		return sb.toString();
 	}
 

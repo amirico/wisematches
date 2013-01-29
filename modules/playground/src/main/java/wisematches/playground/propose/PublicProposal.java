@@ -18,11 +18,11 @@ public interface PublicProposal<S extends GameSettings> extends GameProposal<S> 
 	Collection<PlayerCriterion> getPlayerCriterion();
 
 	/**
-	 * Validates that specified player with specified statistics can join to this proposla.
+	 * Validates that specified player with specified statistics can join to this proposals.
 	 *
 	 * @param player     the player to be checked
 	 * @param statistics the statistic for validation.
 	 * @return collection of broken criterion if there are any or empty or null collection if no one.
 	 */
-	Collection<CriterionViolation> validate(Player player, Statistics statistics);
+	Collection<CriterionViolation> checkViolations(Player player, Statistics statistics);
 }

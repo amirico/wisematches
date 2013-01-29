@@ -48,7 +48,7 @@ public class HibernateTourneyManagerTest {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	private GamePlayListener gamePlayListener;
+	private BoardListener gamePlayListener;
 
 	private HibernateTourneyManager<GameSettings> tourneyManager;
 
@@ -88,11 +88,11 @@ public class HibernateTourneyManagerTest {
 
 		@SuppressWarnings("unchecked")
 		final GamePlayManager<GameSettings, GameBoard<GameSettings, GamePlayerHand>> gamePlayManager = createMock(GamePlayManager.class);
-		gamePlayManager.addGamePlayListener(isA(GamePlayListener.class));
+		gamePlayManager.addGamePlayListener(isA(BoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			@Override
 			public Object answer() throws Throwable {
-				gamePlayListener = (GamePlayListener) getCurrentArguments()[0];
+				gamePlayListener = (BoardListener) getCurrentArguments()[0];
 				return null;
 			}
 		});

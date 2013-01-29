@@ -13,7 +13,6 @@ import java.util.Date;
 class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> {
 	private boolean allowNextMove = true;
 	private boolean gameFinished = false;
-	private boolean gamePassed = false;
 	private boolean moveFinished;
 	private short[] finishScore;
 	private Date lastMoveTime = new Date();
@@ -39,10 +38,6 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> 
 		short[] a = finishScore;
 		finishScore = null;
 		return a;
-	}
-
-	protected boolean isGameStalemate() {
-		return gamePassed;
 	}
 
 	public boolean isAllowNextMove() {
@@ -72,14 +67,6 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> 
 			}
 		}
 		this.gameFinished = gameFinished;
-	}
-
-	public boolean isGamePassed() {
-		return gamePassed;
-	}
-
-	public void setGamePassed(boolean gamePassed) {
-		this.gamePassed = gamePassed;
 	}
 
 	public int getPoints() {

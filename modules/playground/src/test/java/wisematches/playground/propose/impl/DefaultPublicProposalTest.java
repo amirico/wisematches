@@ -89,12 +89,12 @@ public class DefaultPublicProposalTest {
 				)
 		);
 
-		final CriterionViolation v1 = mock.validate(PERSON1, statistics).iterator().next();
+		final CriterionViolation v1 = mock.checkViolations(PERSON1, statistics).iterator().next();
 		assertEquals("player.rating", v1.getCode());
 		assertEquals((short) 900, v1.getExpected());
 		assertEquals((short) 800, v1.getReceived());
 
-		assertNull(mock.validate(PERSON1, statistics));
+		assertNull(mock.checkViolations(PERSON1, statistics));
 
 		verify(statistics);
 	}

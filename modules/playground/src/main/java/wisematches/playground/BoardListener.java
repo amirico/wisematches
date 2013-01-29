@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GamePlayListener {
+public interface BoardListener {
 	/**
 	 * Indicates that game has been started.
 	 *
