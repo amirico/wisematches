@@ -15,6 +15,13 @@ public interface GamePlayerHand {
 	short getPoints();
 
 	/**
+	 * Indicates that this player is game winner.
+	 *
+	 * @return {@code true} if player is winner; {@code false} - otherwise.
+	 */
+	boolean isWinner();
+
+	/**
 	 * Returns old player's rating.
 	 *
 	 * @return the old player's rating.
@@ -27,11 +34,4 @@ public interface GamePlayerHand {
 	 * @return new player's rating after the game.
 	 */
 	short getNewRating();
-
-	/**
-	 * Indicates that this player is game winner.
-	 *
-	 * @return {@code true} if player is winner; {@code false} - otherwise.
-	 */
-	boolean isWinner();
 }

@@ -9,26 +9,13 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, ?>> {
-	void addGamePlayListener(GamePlayListener l);
-
-	void removeGamePlayListener(GamePlayListener l);
-
+public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, ?>> extends BoardManager<S, B> {
 	/**
 	 * Returns set of supported robots by this player.
 	 *
 	 * @return the unmodifiable set of supported robots by this player.
 	 */
 	Set<RobotType> getSupportedRobots();
-
-	/**
-	 * Returns game by it's id.
-	 *
-	 * @param boardId the game id
-	 * @return the game by specified id or <code>null</code> if game is unknown.
-	 * @throws BoardLoadingException if board can't be loaded by some reasons.
-	 */
-	B openBoard(long boardId) throws BoardLoadingException;
 
 	/**
 	 * Creates new board with machinery opponent.

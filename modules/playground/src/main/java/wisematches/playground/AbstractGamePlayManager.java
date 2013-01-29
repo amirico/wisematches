@@ -1,12 +1,14 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.core.Machinery;
 import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.personality.machinery.RobotPlayer;
 import wisematches.core.personality.machinery.RobotType;
-import wisematches.core.task.TransactionalExecutor;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.lang.ref.Reference;
@@ -26,40 +28,45 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public abstract class AbstractGamePlayManager<S extends GameSettings, B extends AbstractGameBoard<S, ?>> implements GamePlayManager<S, B> {
+public abstract class AbstractGamePlayManager<S extends GameSettings, B extends AbstractGameBoard<S, ?>>
+		implements GamePlayManager<S, B> {
 	private RatingSystem ratingSystem;
-	private Set<RobotType> robotTypes;
 
+	private TaskExecutor taskExecutor;
 	private StatisticManager statisticManager;
-	private TransactionalExecutor taskExecutor;
 
 	private final Log log;
 	private final Lock openBoardLock = new ReentrantLock();
 
 	private final BoardsMap<B> boardsCache;
+	private final Set<RobotType> robotTypes = new HashSet<>();
 
-	private final GamePlayListener gameBoardListener = new TheGamePlayListener();
-	private final Collection<GamePlayListener> listeners = new CopyOnWriteArraySet<>();
+	private final BoardListener gameBoardListener = new TheBoardListener();
+	private final Collection<BoardListener> listeners = new CopyOnWriteArraySet<>();
 
 	/**
 	 * Creates new room manager for specified room.
 	 *
 	 * @param log logger for this room.
 	 */
-	protected AbstractGamePlayManager(Log log) {
+	protected AbstractGamePlayManager(Log log, Set<RobotType> robotTypes) {
 		this.log = log;
 		boardsCache = new BoardsMap<>(log);
+
+		if (robotTypes != null) {
+			this.robotTypes.addAll(robotTypes);
+		}
 	}
 
 	@Override
-	public void addGamePlayListener(GamePlayListener l) {
+	public void addGamePlayListener(BoardListener l) {
 		if (l != null) {
 			listeners.add(l);
 		}
 	}
 
 	@Override
-	public void removeGamePlayListener(GamePlayListener l) {
+	public void removeGamePlayListener(BoardListener l) {
 		listeners.remove(l);
 	}
 
@@ -70,7 +77,12 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 	@Override
 	public B createBoard(S settings, Player player, RobotType robotType) throws BoardCreationException {
-		return createGameBoard(settings, Arrays.asList(player, robotType.getRobotPlayer()), null);
+		if (!robotTypes.contains(robotType)) {
+			throw new BoardCreationException("Unsupported robot type: " + robotType);
+		}
+		final B gameBoard = createGameBoard(settings, Arrays.asList(player, robotType.getPlayer()), null);
+		processRobotMove(gameBoard, 1);
+		return gameBoard;
 	}
 
 	@Override
@@ -116,31 +128,6 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		}
 	}
 
-	public void setRatingSystem(RatingSystem ratingSystem) {
-		this.ratingSystem = ratingSystem;
-	}
-
-	public void setStatisticManager(StatisticManager statisticManager) {
-		this.statisticManager = statisticManager;
-	}
-
-	private B createGameBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
-		final B board = createBoardImpl(settings, players, relationship);
-
-		openBoardLock.lock();
-		try {
-			saveBoardImpl(board);
-			board.setGamePlayListener(gameBoardListener);
-			boardsCache.addBoard(board);
-
-			for (GamePlayListener listener : listeners) {
-				listener.gameStarted(board);
-			}
-		} finally {
-			openBoardLock.unlock();
-		}
-		return board;
-	}
 
 	/**
 	 * Saves specified board to the storage.
@@ -171,7 +158,40 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	 */
 	protected abstract B createBoardImpl(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException;
 
+
+	/**
+	 * Returns collection of all robot games where it's robot's turn.
+	 *
+	 * @return the collection of all robot games where it's robot's turn.
+	 */
+	protected abstract Collection<Long> loadActiveRobotGames();
+
+	/**
+	 * Processes robot's move for specified board.
+	 *
+	 * @param board  the board there robot must make a move.
+	 * @param player the robot player.
+	 */
 	protected abstract void processRobotMove(B board, RobotPlayer player);
+
+
+	private B createGameBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
+		final B board = createBoardImpl(settings, players, relationship);
+
+		openBoardLock.lock();
+		try {
+			saveBoardImpl(board);
+			board.setGamePlayListener(gameBoardListener);
+			boardsCache.addBoard(board);
+
+			for (BoardListener listener : listeners) {
+				listener.gameStarted(board);
+			}
+		} finally {
+			openBoardLock.unlock();
+		}
+		return board;
+	}
 
 	private void recalculatePlayerRatings(GameBoard<?, ? extends AbstractPlayerHand> board) {
 		final List<Personality> players = board.getPlayers();
@@ -193,13 +213,88 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 			}
 		}
 
-		final short[] newRatings = ratingSystem.calculateRatings(oldRatings, points);
+		short[] newRatings = oldRatings;
+		if (board.isRated()) {
+			newRatings = ratingSystem.calculateRatings(oldRatings, points);
+		}
+
 		for (int i = 0; i < hands.length; i++) {
-			hands[i].finalize(oldRatings[i], newRatings[i]);
+			hands[i].updateRating(oldRatings[i], newRatings[i]);
 		}
 	}
 
-    /* ======================== Inner classes definition ================ */
+	private void processRobotMove(final GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, final int attempt) {
+		final Personality player = board.getPlayerTurn();
+		if (player instanceof RobotPlayer) {
+			final long boardId = board.getBoardId();
+			log.info("Initialize robot activity [attempt=" + attempt + "] for board: " + boardId);
+
+			try {
+				if (TransactionSynchronizationManager.isSynchronizationActive()) {
+					TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+						@Override
+						public void afterCompletion(int status) {
+							taskExecutor.execute(new MakeRobotTurnTask(boardId, attempt));
+						}
+					});
+				} else {
+					taskExecutor.execute(new MakeRobotTurnTask(boardId, attempt));
+				}
+			} catch (Throwable th) {
+				log.error("", th);
+				taskExecutor.execute(new MakeRobotTurnTask(boardId, attempt));
+			}
+		}
+	}
+
+
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
+
+	public void setRatingSystem(RatingSystem ratingSystem) {
+		this.ratingSystem = ratingSystem;
+	}
+
+	public void setStatisticManager(StatisticManager statisticManager) {
+		this.statisticManager = statisticManager;
+	}
+
+	/* ======================== Inner classes definition ================ */
+	class MakeRobotTurnTask implements Runnable {
+		private final int attempt;
+		private final long boardId;
+
+		MakeRobotTurnTask(long boardId, int attempt) {
+			this.boardId = boardId;
+			this.attempt = attempt;
+		}
+
+		public void run() {
+			try {
+				log.info("Start robot action for board " + boardId);
+				final B board = openBoard(boardId);
+				final Personality playerTurn = board.getPlayerTurn();
+				if (playerTurn instanceof RobotPlayer) {
+					try {
+						AbstractGamePlayManager.this.processRobotMove(board, (RobotPlayer) playerTurn);
+						log.info("Robot made a turn for board " + boardId + ": " + playerTurn);
+					} catch (Throwable th) {
+						log.error("Robot can't make a turn [attempt=" + attempt + "] for board " + boardId, th);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException ignore) {
+						}
+						processRobotMove(board, attempt + 1);
+					}
+				} else {
+					log.info("It's not robot turn for board " + boardId);
+				}
+			} catch (BoardLoadingException ex) {
+				log.error("Board for robot's move can't be loaded: " + boardId, ex);
+			}
+		}
+	}
 
 	/**
 	 * Weak boards map. It contains weak references to boards and automatical cleared when board doesn't required
@@ -297,13 +392,13 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		}
 	}
 
-	private class TheGamePlayListener implements GamePlayListener {
-		TheGamePlayListener() {
+	private class TheBoardListener implements BoardListener {
+		TheBoardListener() {
 		}
 
 		@Override
 		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-			processRobotMove(board);
+			processRobotMove(board, 1);
 		}
 
 		@Override
@@ -311,11 +406,11 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 			saveBoardImpl((B) board);
 
-			for (GamePlayListener statesListener : listeners) {
+			for (BoardListener statesListener : listeners) {
 				statesListener.gameMoveDone(board, move, moveScore);
 			}
 
-			processRobotMove(board);
+			processRobotMove(board, 1);
 		}
 
 		@Override
@@ -324,16 +419,8 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 			recalculatePlayerRatings((GameBoard<?, ? extends AbstractPlayerHand>) board);
 			saveBoardImpl((B) board);
 
-			for (GamePlayListener statesListener : listeners) {
+			for (BoardListener statesListener : listeners) {
 				statesListener.gameFinished(board, resolution, winners);
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		private void processRobotMove(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-			final Personality player = board.getPlayerTurn();
-			if (player instanceof RobotPlayer) {
-				AbstractGamePlayManager.this.processRobotMove((B) board, (RobotPlayer) player);
 			}
 		}
 	}

@@ -18,6 +18,9 @@ public class AbstractPlayerHand implements GamePlayerHand {
 	@Column(name = "points")
 	private short points;
 
+	@Column(name = "winner")
+	private boolean winner;
+
 	@Column(name = "oldRating")
 	private short oldRating;
 
@@ -34,6 +37,13 @@ public class AbstractPlayerHand implements GamePlayerHand {
 	protected AbstractPlayerHand(Personality player, short points) {
 		this.playerId = player.getId();
 		this.points = points;
+	}
+
+	protected AbstractPlayerHand(Personality player, short points, short oldRating, short newRating) {
+		this.playerId = player.getId();
+		this.points = points;
+		this.oldRating = oldRating;
+		this.newRating = newRating;
 	}
 
 	@Override
@@ -53,7 +63,7 @@ public class AbstractPlayerHand implements GamePlayerHand {
 
 	@Override
 	public final boolean isWinner() {
-		return newRating > oldRating;
+		return winner;
 	}
 
 	long getPlayerId() {
@@ -65,7 +75,11 @@ public class AbstractPlayerHand implements GamePlayerHand {
 		return points;
 	}
 
-	void finalize(short oldRating, short newRating) {
+	void markAsWinner() {
+		this.winner = true;
+	}
+
+	void updateRating(short oldRating, short newRating) {
 		this.oldRating = oldRating;
 		this.newRating = newRating;
 	}
