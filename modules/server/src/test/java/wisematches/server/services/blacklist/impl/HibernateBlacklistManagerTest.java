@@ -2,9 +2,21 @@ package wisematches.server.services.blacklist.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.core.Language;
+import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.core.personality.player.Guest;
+import wisematches.server.services.blacklist.BlacklistManager;
+import wisematches.server.services.blacklist.BlacklistRecord;
+import wisematches.server.services.blacklist.BlacklistedException;
+
+import java.util.Collection;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -13,15 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
+		"classpath:/config/personality-config.xml",
+		"classpath:/config/scribble-config.xml",
 		"classpath:/config/playground-junit-config.xml"
 })
 public class HibernateBlacklistManagerTest {
-	@Test
-	public void commented() {
-		throw new UnsupportedOperationException("commented");
-	}
-/*
 	@Autowired
 	private BlacklistManager blacklistManager;
 
@@ -30,8 +38,8 @@ public class HibernateBlacklistManagerTest {
 
 	@Test
 	public void test() throws BlacklistedException {
-		final Personality p1 = Personality.person(1);
-		final Personality p2 = Personality.person(2);
+		final Player p1 = Guest.byLanguage(Language.RU);
+		final Player p2 = Guest.byLanguage(Language.EN);
 
 		blacklistManager.checkBlacklist(p1, p2);
 		assertFalse(blacklistManager.isBlacklisted(p1, p2));
@@ -67,9 +75,8 @@ public class HibernateBlacklistManagerTest {
 	}
 
 	private void assertRecord(BlacklistRecord record, Personality player, Personality whom, String c) {
-		assertEquals(player.getId(), record.getPerson());
-		assertEquals(whom.getId(), record.getWhom());
+		assertEquals(player.getId().longValue(), record.getPerson());
+		assertEquals(whom.getId().longValue(), record.getWhom());
 		assertEquals(c, record.getMessage());
 	}
-*/
 }
