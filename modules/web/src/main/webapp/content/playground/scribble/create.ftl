@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
-<#-- @ftlvariable name="robotPlayers" type="wisematches.core.personality.machinery.RobotPlayer[]" -->
+<#-- @ftlvariable name="robotPlayers" type="wisematches.core.Robot[]" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>

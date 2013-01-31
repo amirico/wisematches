@@ -1,10 +1,12 @@
 package wisematches.playground.scribble.robot;
 
+import org.easymock.Capture;
 import org.easymock.IAnswer;
 import org.junit.Test;
 import wisematches.core.Language;
-import wisematches.core.personality.machinery.RobotType;
-import wisematches.playground.GameMove;
+import wisematches.core.Personality;
+import wisematches.core.Robot;
+import wisematches.core.RobotType;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryException;
@@ -57,10 +59,10 @@ public class ScribbleRobotBrainTest {
 		final ScribbleMoveScore c4 = new ScribbleMoveScore((short) 5, false, ScoreBonus.Type.values(), "asd");
 
 		final ScoreEngine scoreEngine = createStrictMock(ScoreEngine.class);
-		expect(scoreEngine.calculateWordScore(w1, tilesPlacement)).andReturn(c1);
-		expect(scoreEngine.calculateWordScore(w2, tilesPlacement)).andReturn(c2);
-		expect(scoreEngine.calculateWordScore(w3, tilesPlacement)).andReturn(c3);
-		expect(scoreEngine.calculateWordScore(w4, tilesPlacement)).andReturn(c4);
+		expect(scoreEngine.calculateWordScore(tilesPlacement, w1)).andReturn(c1);
+		expect(scoreEngine.calculateWordScore(tilesPlacement, w2)).andReturn(c2);
+		expect(scoreEngine.calculateWordScore(tilesPlacement, w3)).andReturn(c3);
+		expect(scoreEngine.calculateWordScore(tilesPlacement, w4)).andReturn(c4);
 		replay(scoreEngine);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
@@ -83,13 +85,13 @@ public class ScribbleRobotBrainTest {
 
 		final TilesPlacement board = new MockTilesPlacement(workTiles);
 
-		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, new Tile[]{
+		final Tile[] tiles = new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(7, 'b', 1),
 				new Tile(8, 'c', 1),
 				new Tile(9, 'd', 1),
 				new Tile(10, '*', 0),
-		});
+		};
 
 		//
 		final Collection<WordEntry> words = Arrays.asList(
@@ -101,7 +103,7 @@ public class ScribbleRobotBrainTest {
 		replay(dictionary);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
-		final List<Word> list = brain.analyzeValidWords(board, hand, RobotType.DULL, dictionary);
+		final List<Word> list = brain.analyzeValidWords(dictionary, board, tiles, RobotType.DULL);
 		assertEquals(10, list.size()); //two 'ahed' and six 'load' can be placed.
 	}
 
@@ -125,16 +127,20 @@ public class ScribbleRobotBrainTest {
 		expect(dictionary.getWordEntries()).andReturn(words);
 		replay(dictionary);
 
-		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, new Tile[]{
+		final Robot player = RobotType.DULL.getPlayer();
+		final ScribblePlayerHand hand = new ScribblePlayerHand(player, new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(9, 'd', 1),
 				new Tile(10, 'e', 1),
 		});
 
+		final Capture<Word> wordCapture = new Capture<>();
+
 		final ScribbleBoard scribbleBoard = createStrictMock(ScribbleBoard.class);
 		expect(scribbleBoard.isActive()).andReturn(true);
 		expect(scribbleBoard.getBoardId()).andReturn(1L);
-		expect(scribbleBoard.getPlayerTurn()).andReturn(hand);
+		expect(scribbleBoard.getPlayerTurn()).andReturn(player);
+		expect(scribbleBoard.getPlayerHand(player)).andReturn(hand);
 		expect(scribbleBoard.getDictionary()).andReturn(dictionary);
 		expect(scribbleBoard.getBoardTile(anyInt(), anyInt())).andAnswer(new IAnswer<Tile>() {
 			public Tile answer() throws Throwable {
@@ -142,13 +148,20 @@ public class ScribbleRobotBrainTest {
 			}
 		}).anyTimes();
 		expect(scribbleBoard.getScoreEngine()).andReturn(null);
-		expect(scribbleBoard.makeMove(isA(MakeTurn.class))).andReturn(new GameMove(createMock(PlayerMove.class), 12, 1, new Date()));
+		expect(scribbleBoard.makeTurn(same(player), capture(wordCapture))).andAnswer(new IAnswer<MakeTurn>() {
+			@Override
+			public MakeTurn answer() throws Throwable {
+				return new MakeTurn((Personality) getCurrentArguments()[0], 10, new Date(), (Word) getCurrentArguments()[1]);
+			}
+		});
 		expect(scribbleBoard.isActive()).andReturn(false);
 		replay(scribbleBoard);
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
 		brain.putInAction(scribbleBoard, RobotType.TRAINEE);
 		brain.putInAction(scribbleBoard, RobotType.TRAINEE); // no action - finished
+
+		assertNotNull(wordCapture.getValue());
 
 		verify(scribbleBoard);
 	}
@@ -191,13 +204,13 @@ public class ScribbleRobotBrainTest {
 
 		final TilesPlacement board = new MockTilesPlacement(workTiles);
 
-		final ScribblePlayerHand hand = new ScribblePlayerHand(1L, new Tile[]{
+		final Tile[] tiles = new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(7, 'b', 1),
 				new Tile(8, 'c', 1),
 				new Tile(9, 'd', 1),
 				new Tile(10, '*', 0),
-		});
+		};
 
 		final ScribbleRobotBrain brain = new ScribbleRobotBrain();
 
@@ -219,7 +232,7 @@ public class ScribbleRobotBrainTest {
 			freeMemory = runtime.freeMemory();
 			timeMS = System.currentTimeMillis();
 			timeNS = System.nanoTime();
-			List<Word> list = brain.analyzeValidWords(board, hand, RobotType.EXPERT, dictionary);
+			List<Word> list = brain.analyzeValidWords(dictionary, board, tiles, RobotType.EXPERT);
 			System.out.println("TreeSet search time: " + (System.nanoTime() - timeNS) + "ns or " + (System.currentTimeMillis() - timeMS) + "ms" +
 					". Free memory taken: " + (runtime.freeMemory() - freeMemory) +
 					". Found: " + list.size() + " words");
@@ -227,7 +240,7 @@ public class ScribbleRobotBrainTest {
 			freeMemory = runtime.freeMemory();
 			timeMS = System.currentTimeMillis();
 			timeNS = System.nanoTime();
-			list = brain.analyzeValidWords(board, hand, RobotType.EXPERT, dictionary);
+			list = brain.analyzeValidWords(dictionary, board, tiles, RobotType.EXPERT);
 			System.out.println("HashSet search time: " + (System.nanoTime() - timeNS) + "ns or " + (System.currentTimeMillis() - timeMS) + "ms" +
 					". Free memory taken: " + (runtime.freeMemory() - freeMemory) +
 					". Found: " + list.size() + " words");
@@ -235,7 +248,7 @@ public class ScribbleRobotBrainTest {
 			freeMemory = runtime.freeMemory();
 			timeMS = System.currentTimeMillis();
 			timeNS = System.nanoTime();
-			list = brain.analyzeValidWords(board, hand, RobotType.EXPERT, dictionary);
+			list = brain.analyzeValidWords(dictionary, board, tiles, RobotType.EXPERT);
 			System.out.println("Default search time: " + (System.nanoTime() - timeNS) + "ns or " + (System.currentTimeMillis() - timeMS) + "ms" +
 					". Free memory taken: " + (runtime.freeMemory() - freeMemory) +
 					". Found: " + list.size() + " words");

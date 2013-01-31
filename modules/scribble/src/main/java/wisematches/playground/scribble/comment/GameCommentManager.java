@@ -1,6 +1,6 @@
 package wisematches.playground.scribble.comment;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.GameBoard;
 
 import java.util.List;
@@ -14,72 +14,72 @@ public interface GameCommentManager {
 	/**
 	 * Adds new comment to specified board by specified personality.
 	 *
-	 * @param board       the board
-	 * @param personality the personality who wants add a comment.
-	 * @param text        the text
+	 * @param board  the board
+	 * @param player the personality who wants add a comment.
+	 * @param text   the text
 	 * @return created game comment
 	 */
-	GameComment addComment(GameBoard board, Personality personality, String text);
+	GameComment addComment(GameBoard board, Player player, String text);
 
 	/**
 	 * Removes a comment that should be removed.
 	 *
-	 * @param board       the board
-	 * @param personality the personality who wants remove the comment.
-	 * @param commentId   the comment id.
+	 * @param board     the board
+	 * @param player    the personality who wants remove the comment.
+	 * @param commentId the comment id.
 	 * @return removed game comment or null if no comments were removed.
 	 */
-	GameComment removeComment(GameBoard board, Personality personality, long commentId);
+	GameComment removeComment(GameBoard board, Player player, long commentId);
 
 	/**
 	 * Returns comments count for specified board and player.
 	 *
-	 * @param board       the board
-	 * @param personality the player
+	 * @param board  the board
+	 * @param player the player
 	 * @return comments count
 	 */
-	int getCommentsCount(GameBoard board, Personality personality);
+	int getCommentsCount(GameBoard board, Player player);
 
 	/**
 	 * Returns collection of comments for specified ids. Not exist comments are not included
 	 * in result collection.
 	 *
-	 * @param board       the board
-	 * @param personality the personality who wants load comments.
-	 * @param ids         the list of ids
+	 * @param board  the board
+	 * @param player the personality who wants load comments.
+	 * @param ids    the list of ids
 	 * @return the collection of requested comments.
 	 */
-	List<GameComment> getComments(GameBoard board, Personality personality, long... ids);
+	List<GameComment> getComments(GameBoard board, Player player, long... ids);
 
 	/**
 	 * Returns collection of all comments for specified board what are available for specified personality.
 	 *
-	 * @param board       the board
-	 * @param personality the personality who wants receive comments.
+	 * @param board  the board
+	 * @param player the personality who wants receive comments.
 	 * @return collection of comment states or empty collection if there are no comments.
 	 */
-	List<GameCommentState> getCommentStates(GameBoard board, Personality personality);
+	List<GameCommentState> getCommentStates(GameBoard board, Player player);
 
 
 	/**
 	 * Marks all comments as read for specified played and board. If all comments should be marked as
 	 * read when {@code ids} parameter should be {@code null}.
 	 *
-	 * @param board       the board
-	 * @param personality the personality who wants mark comments as read.
-	 * @param ids         the ids of comments which should be marked as read.
+	 * @param board  the board
+	 * @param player the personality who wants mark comments as read.
+	 * @param ids    the ids of comments which should be marked as read.
 	 */
-	void markRead(GameBoard board, Personality personality, long... ids);
+	void markRead(GameBoard board, Player player, long... ids);
 
 	/**
 	 * Marks all comments as unread for specified played and board. If all comments should be marked as
 	 * unread when {@code ids} parameter should be {@code null}.
 	 *
-	 * @param board       the board
-	 * @param personality the personality who wants mark comments as unread.
-	 * @param ids         the ids of comments which should be marked as unread.
+	 * @param board  the board
+	 * @param player the personality who wants mark comments as unread.
+	 * @param ids    the ids of comments which should be marked as unread.
 	 */
-	void markUnread(GameBoard board, Personality personality, long... ids);
+	void markUnread(GameBoard board, Player player, long... ids);
 
 
 	/**

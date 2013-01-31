@@ -9,8 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
+import wisematches.core.Player;
+import wisematches.core.personality.player.Guest;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -33,13 +33,13 @@ import static junit.framework.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
+		"classpath:/config/personality-config.xml",
 		"classpath:/config/scribble-junit-config.xml"
 })
 public class HibernateGameCommentManagerTest {
-	private Personality player1;
-	private Personality player2;
+	private Player player1;
+	private Player player2;
+
 	private ScribbleBoard board;
 
 	@Autowired
@@ -53,10 +53,10 @@ public class HibernateGameCommentManagerTest {
 
 	@Before
 	public void setUp() throws BoardCreationException {
-		player1 = RobotPlayer.DULL;
-		player2 = RobotPlayer.EXPERT;
+		player1 = Guest.byLanguage(Language.RU);
+		player2 = Guest.byLanguage(Language.EN);
 
-		board = boardManager.createBoard(new ScribbleSettings("Mock game", Language.EN, 3, false, false), Arrays.<Personality>asList(player1, player2));
+		board = boardManager.createBoard(new ScribbleSettings("Mock game", Language.EN, 3, false, false), Arrays.<Player>asList(player1, player2), null);
 	}
 
 	@Test

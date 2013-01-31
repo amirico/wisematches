@@ -1,6 +1,6 @@
 package wisematches.server.services.message;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Collection;
 
@@ -23,7 +23,7 @@ public interface MessageManager {
 	 * @throws NullPointerException     if sender or recipient is null
 	 * @throws IllegalArgumentException if body is null or empty
 	 */
-	void sendMessage(Personality sender, Personality recipient, String body);
+	void sendMessage(Player sender, Player recipient, String body);
 
 	/**
 	 * Sent a message to specified player
@@ -35,7 +35,7 @@ public interface MessageManager {
 	 * @throws NullPointerException     if sender or recipient is null
 	 * @throws IllegalArgumentException if body is null or empty
 	 */
-	void sendMessage(Personality sender, Personality recipient, String body, boolean quite);
+	void sendMessage(Player sender, Player recipient, String body, boolean quite);
 
 	/**
 	 * Reply to specified message.
@@ -46,7 +46,7 @@ public interface MessageManager {
 	 * @throws NullPointerException     if sender, recipient or message is null
 	 * @throws IllegalArgumentException if body is null or empty
 	 */
-	void replyMessage(Personality sender, Message message, String body);
+	void replyMessage(Player sender, Message message, String body);
 
 	/**
 	 * Reply to specified message.
@@ -58,7 +58,7 @@ public interface MessageManager {
 	 * @throws NullPointerException     if sender, recipient or message is null
 	 * @throws IllegalArgumentException if body is null or empty
 	 */
-	void replyMessage(Personality sender, Message message, String body, boolean quite);
+	void replyMessage(Player sender, Message message, String body, boolean quite);
 
 	/**
 	 * Sent notification to specified player with specified body
@@ -68,7 +68,7 @@ public interface MessageManager {
 	 * @throws NullPointerException     if recipient is null
 	 * @throws IllegalArgumentException if recipient is unknown or {@code body} is empty.
 	 */
-	void sendNotification(Personality recipient, String body);
+	void sendNotification(Player recipient, String body);
 
 	/**
 	 * Sent notification to specified player with specified body
@@ -79,7 +79,7 @@ public interface MessageManager {
 	 * @throws NullPointerException     if recipient is null
 	 * @throws IllegalArgumentException if recipient is unknown or {@code body} is empty.
 	 */
-	void sendNotification(Personality recipient, String body, boolean quite);
+	void sendNotification(Player recipient, String body, boolean quite);
 
 	/**
 	 * Returns a message with specified id.
@@ -95,7 +95,7 @@ public interface MessageManager {
 	 * @param personality the person who's messages count should be received.
 	 * @return the number of messages received from last time
 	 */
-	int getNewMessagesCount(Personality personality);
+	int getNewMessagesCount(Player personality);
 
 	/**
 	 * Returns number of messages sent today.
@@ -104,7 +104,7 @@ public interface MessageManager {
 	 * @param direction   the message direction.
 	 * @return the number of messages sent today.
 	 */
-	int getTodayMessagesCount(Personality personality, MessageDirection direction);
+	int getTodayMessagesCount(Player personality, MessageDirection direction);
 
 	/**
 	 * Returns collection of all message for specified person.
@@ -113,16 +113,16 @@ public interface MessageManager {
 	 * @param direction the message direction.
 	 * @return the collection of all message.
 	 */
-	Collection<Message> getMessages(Personality person, MessageDirection direction);
+	Collection<Message> getMessages(Player person, MessageDirection direction);
 
 	/**
 	 * Removes a message with specified id
 	 *
 	 * @param person    a person who's message should be removed
-	 * @param direction the message direction.
 	 * @param messageId the message id
+	 * @param direction the message direction.
 	 */
-	void removeMessage(Personality person, long messageId, MessageDirection direction);
+	void removeMessage(Player person, long messageId, MessageDirection direction);
 
 	/**
 	 * Clears all messages according to rules

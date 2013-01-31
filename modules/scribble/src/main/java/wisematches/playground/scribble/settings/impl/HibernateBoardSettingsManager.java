@@ -3,7 +3,7 @@ package wisematches.playground.scribble.settings.impl;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 
@@ -26,21 +26,21 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 
 	private String tilesClassDefault = "tilesSetClassic";
 	private final Lock lock = new ReentrantLock();
-	private final Map<Personality, HibernateBoardSettings> cache = new WeakHashMap<>();
+	private final Map<Player, HibernateBoardSettings> cache = new WeakHashMap<>();
 
 	public HibernateBoardSettingsManager() {
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public BoardSettings getScribbleSettings(Personality personality) {
-		if (personality == null) {
+	public BoardSettings getScribbleSettings(Player player) {
+		if (player == null) {
 			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, showCaptionsDefault, enableShareDefault, tilesClassDefault);
 		}
 
 		lock.lock();
 		try {
-			return getHibernateBoardSettings(personality).clone();
+			return getHibernateBoardSettings(player).clone();
 		} finally {
 			lock.unlock();
 		}
@@ -48,10 +48,10 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = false)
-	public void setScribbleSettings(Personality personality, BoardSettings settings) {
+	public void setScribbleSettings(Player player, BoardSettings settings) {
 		lock.lock();
 		try {
-			HibernateBoardSettings s = getHibernateBoardSettings(personality);
+			HibernateBoardSettings s = getHibernateBoardSettings(player);
 			s.update(settings);
 			saveBoardSettings(s);
 		} finally {
@@ -59,23 +59,23 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 		}
 	}
 
-	private HibernateBoardSettings getHibernateBoardSettings(Personality personality) {
-		HibernateBoardSettings settings = cache.get(personality);
+	private HibernateBoardSettings getHibernateBoardSettings(Player player) {
+		HibernateBoardSettings settings = cache.get(player);
 		if (settings == null) {
-			settings = loadBoardSettings(personality);
-			cache.put(personality, settings);
+			settings = loadBoardSettings(player);
+			cache.put(player, settings);
 		}
 		if (settings == null) {
-			settings = new HibernateBoardSettings(personality.getId(),
+			settings = new HibernateBoardSettings(player.getId(),
 					clearMemoryDefault, checkWordsDefault,
 					clearByClickDefault, showCaptionsDefault, enableShareDefault, tilesClassDefault);
-			cache.put(personality, settings);
+			cache.put(player, settings);
 		}
 		return settings;
 	}
 
-	private HibernateBoardSettings loadBoardSettings(Personality personality) {
-		return (HibernateBoardSettings) sessionFactory.getCurrentSession().get(HibernateBoardSettings.class, personality.getId());
+	private HibernateBoardSettings loadBoardSettings(Player player) {
+		return (HibernateBoardSettings) sessionFactory.getCurrentSession().get(HibernateBoardSettings.class, player.getId());
 	}
 
 	private void saveBoardSettings(HibernateBoardSettings settings) {

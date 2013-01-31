@@ -16,13 +16,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
+import wisematches.core.Robot;
+import wisematches.core.RobotType;
+import wisematches.core.personality.player.Guest;
 import wisematches.playground.*;
-import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribblePlayManager;
-import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.playground.scribble.*;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -41,9 +40,9 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-junit-config.xml"})
+		"classpath:/config/personality-config.xml",
+		"classpath:/config/scribble-junit-config.xml"
+})
 public class SmallRobotsGameTest {
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -73,33 +72,65 @@ public class SmallRobotsGameTest {
 
 	@Test
 	public void test_makeSmallGame() throws BoardCreationException, InterruptedException {
+		final ScribblePlayerHand d = doSmallGame(RobotType.DULL);
+		final ScribblePlayerHand t = doSmallGame(RobotType.TRAINEE);
+		final ScribblePlayerHand e = doSmallGame(RobotType.EXPERT);
+
+		System.out.println("Dull points: " + d);
+		System.out.println("Trainee points: " + t);
+		System.out.println("Expert points: " + e);
+	}
+
+	private ScribblePlayerHand doSmallGame(final RobotType robotType) throws BoardCreationException, InterruptedException {
 		long currentTime = System.currentTimeMillis();
-
 		assertNotNull("No room manager", scribbleBoardManager);
-
-		final RobotPlayer r1 = RobotPlayer.DULL;
-		final RobotPlayer r2 = RobotPlayer.TRAINEE;
-		final RobotPlayer r3 = RobotPlayer.EXPERT;
-
-		final ScribbleBoard board = scribbleBoardManager.createBoard(
-				new ScribbleSettings("This is robots game", Language.RU, 3, false, true),
-				Arrays.<Personality>asList(r1, r2, r3));
-		scribbleBoardManager.addGamePlayListener(new GamePlayListener() {
+		final Guest player = Guest.byLanguage(Language.RU);
+		final ScribbleSettings settings = new ScribbleSettings("This is robots game", player.getLanguage(), 3, true, true);
+		scribbleBoardManager.addBoardListener(new BoardListener() {
 			@Override
-			public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+			public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b) {
+				passGuestTurn(b);
 			}
 
 			@Override
-			public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+			public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameMove move, GameMoveScore moveScore) {
+				passGuestTurn(b);
 			}
 
 			@Override
-			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
-				if (board.getBoardId() == b.getBoardId()) {
-					notifyGameFinished();
+			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameResolution resolution, Collection<Personality> winners) {
+				notifyGameFinished();
+			}
+
+			private void passGuestTurn(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b) {
+				if (b.getPlayerTurn() == player) {
+					ScribbleBoard sb = (ScribbleBoard) b;
+					try {
+						if (Math.random() < 0.5) {
+							final ScribblePlayerHand playerHand = sb.getPlayerHand(player);
+							final Tile[] tiles1 = playerHand.getTiles();
+							final int length = Math.min(tiles1.length, sb.getBankRemained());
+							if (length == 0) {
+								sb.passTurn(player);
+							} else {
+								int[] tiles = new int[length];
+								for (int i = 0; i < length; i++) {
+									tiles[i] = tiles1[i].getNumber();
+								}
+								sb.exchangeTiles(player, tiles);
+							}
+						} else {
+							sb.passTurn(player);
+						}
+					} catch (GameMoveException e) {
+						log.error("Something wrong", e);
+						notifyGameFinished();
+					}
 				}
 			}
 		});
+
+		final ScribbleBoard board = scribbleBoardManager.createBoard(settings, player, robotType);
 		assertTrue("Game is not in progress state", board.isActive());
 
 		gameFinishedLock.lock();
@@ -113,31 +144,20 @@ public class SmallRobotsGameTest {
 		assertTrue("Board is not saved", board.getBoardId() > 0);
 		assertFalse("Board is not finished", board.isActive());
 		assertTrue("Board has no one move", board.getGameMoves().size() > 0);
-		if (board.getResolution() == GameResolution.STALEMATE) {
-			assertNull("Board has a player who has a turn", board.getPlayerTurn());
+		final Personality playerTurn = board.getPlayerTurn();
+		if (board.getResolution() == GameResolution.RESIGNED || board.getResolution() == GameResolution.INTERRUPTED) {
+			assertNotNull("Board has a player who has a turn: " + playerTurn, playerTurn);
 		} else {
-			assertNotNull("Board has a player who has a turn", board.getPlayerTurn());
+			assertNull("Board has a player who has a turn: " + playerTurn, playerTurn);
 		}
 
-		final int dullPoints = board.getPlayerHand(r1.getId()).getPoints();
-		final int stagerPoints = board.getPlayerHand(r2.getId()).getPoints();
-		final int expertPoints = board.getPlayerHand(r3.getId()).getPoints();
+		final Robot robot = robotType.getPlayer();
 
-		if (log.isDebugEnabled()) {
-			log.debug("Moves count: " + board.getGameMoves().size());
-			log.debug("Players points: DULL - " + dullPoints +
-					", TRAINEE - " + stagerPoints +
-					", EXPERT - " + expertPoints);
-			log.debug("Tiles in hands:");
-			log.debug("     DULL - " + Arrays.toString(board.getPlayerHand(r1.getId()).getTiles()));
-			log.debug("     TRAINEE - " + Arrays.toString(board.getPlayerHand(r2.getId()).getTiles()));
-			log.debug("     EXPERT - " + Arrays.toString(board.getPlayerHand(r3.getId()).getTiles()));
-		}
-
-		assertTrue("Dull won a stager???", dullPoints < stagerPoints);
-		assertTrue("Stager won a expert???", stagerPoints < expertPoints);
-		assertEquals("More that one winner???", 1, board.getWonPlayers().size());
-		assertEquals("EXPERT didn't win???", r3.getId(), board.getWonPlayers().get(0).getPlayerId());
+		final ScribblePlayerHand playerHand = board.getPlayerHand(robot);
+		assertTrue(playerHand.getPoints() > 0);
+		assertTrue(playerHand.getOldRating() == robot.getRating());
+		assertTrue(playerHand.getNewRating() > robot.getRating());
+		return playerHand;
 	}
 
 	private void notifyGameFinished() {

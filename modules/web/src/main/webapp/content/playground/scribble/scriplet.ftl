@@ -48,7 +48,7 @@
         players: [
         <#list board.players as hand>
             <#assign p = playerManager.getPlayer(hand.playerId)/>
-            {playerId: ${hand.playerId}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.membership!""}', points: ${hand.points}}<#if hand_has_next>,</#if>
+            {playerId: ${hand.playerId}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.playerType!""}', points: ${hand.points}}<#if hand_has_next>,</#if>
         </#list>],
 
     <#if !board.active>

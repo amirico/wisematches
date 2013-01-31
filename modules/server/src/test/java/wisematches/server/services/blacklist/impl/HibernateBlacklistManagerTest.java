@@ -2,18 +2,9 @@ package wisematches.server.services.blacklist.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.server.services.blacklist.BlacklistManager;
-import wisematches.server.services.blacklist.BlacklistRecord;
-import wisematches.server.services.blacklist.BlacklistedException;
-
-import java.util.Collection;
-
-import static junit.framework.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -26,6 +17,11 @@ import static junit.framework.Assert.*;
 		"classpath:/config/playground-junit-config.xml"
 })
 public class HibernateBlacklistManagerTest {
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("commented");
+	}
+/*
 	@Autowired
 	private BlacklistManager blacklistManager;
 
@@ -75,4 +71,5 @@ public class HibernateBlacklistManagerTest {
 		assertEquals(whom.getId(), record.getWhom());
 		assertEquals(c, record.getMessage());
 	}
+*/
 }

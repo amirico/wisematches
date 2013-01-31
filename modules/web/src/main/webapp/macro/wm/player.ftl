@@ -17,4 +17,4 @@
 <div class="nickname">${gameMessageSource.getPlayerNick(p, locale)}</div></#macro>
 
 <#macro icon p>
-<div class="icon<#if p.playerType.member> ${p.membership.code}</#if>"></div></#macro>
+<div class="icon<#if p.playerType.member> ${p.playerType.code}</#if>"></div></#macro>

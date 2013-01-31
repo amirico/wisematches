@@ -11,17 +11,17 @@ import java.util.Date;
 public final class ExchangeMove extends GameMove {
 	private final int[] tilesIds;
 
-	protected ExchangeMove(Personality player, int points, int moveNumber, Date moveTime, int[] tilesIds) {
-		super(player, points, moveNumber, moveTime);
+	protected ExchangeMove(Personality player, int[] tilesIds) {
+		super(player);
 		this.tilesIds = tilesIds;
 	}
 
-	//	public ExchangeTilesMove(long gamePlayer, int[] tilesIds) {
-//		super(gamePlayer);
-//		this.tilesIds = tilesIds.clone();
-//	}
+	public ExchangeMove(Personality player, int points, Date moveTime, int[] tilesIds) {
+		super(player, points, moveTime);
+		this.tilesIds = tilesIds;
+	}
 
-	public int[] getTilesIds() {
+	public int[] getTileIds() {
 		return tilesIds.clone();
 	}
 }

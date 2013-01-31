@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="awards-config.xml"/>
+    <import resource="restriction-config.xml"/>
+
+    <bean id="awardsManager" class="wisematches.server.services.award.impl.HibernateAwardsManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="awardDescriptors" ref="awardDescriptors"/>
+        <property name="judicialAssemblies">
+            <list>
+                <bean class="wisematches.server.services.award.impl.assembly.RobotJudicialAssembly">
+                    <property name="statisticManager" ref="scribbleStatisticsManager"/>
+                </bean>
+                <bean class="wisematches.server.services.award.impl.assembly.TourneyJudicialAssembly">
+                    <property name="playerManager" ref="playerManager"/>
+                    <property name="tourneyManager" ref="regularTourneyManager"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="messageManager" class="wisematches.server.services.message.impl.HibernateMessageManager">
+        <property name="playerManager" ref="playerManager"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="restrictionManager" ref="restrictionManager"/>
+    </bean>
+
+    <bean id="blacklistManager" class="wisematches.server.services.blacklist.impl.HibernateBlacklistManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="friendsManager" class="wisematches.server.services.friends.impl.HibernateFriendsManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+    <bean id="playerSearchManager" class="wisematches.server.services.players.ScribblePlayerSearchManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- run every morning at 00:00:00.000 -->
+        <property name="cronExpression" value="0 0 0 * * ?"/>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="name" value="breakingDayNotification"/>
+                <property name="jobClass" value="wisematches.core.task.scheduler.BreakingDayExecutorJob"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cleaningDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- run every morning at 2 AM -->
+        <property name="cronExpression" value="0 0 2 * * ?"/>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="name" value="cleaningDayNotification"/>
+                <property name="jobClass" value="wisematches.core.task.scheduler.CleaningDayExecutorJob"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="breakingDayTrigger"/>
+                <ref bean="cleaningDayTrigger"/>
+            </list>
+        </property>
+        <property name="applicationContextSchedulerContextKey" value="SpringApplicationContext"/>
+    </bean>
+</beans>

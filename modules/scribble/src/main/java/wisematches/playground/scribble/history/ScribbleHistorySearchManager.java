@@ -7,6 +7,7 @@ import wisematches.playground.GameResolution;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class ScribbleHistorySearchManager extends AbstractDescriptiveSearchManager<ScribbleHistoryEntity, GameResolution, SearchFilter> {
 	public ScribbleHistorySearchManager() {
 		super(ScribbleHistoryEntity.class, true);

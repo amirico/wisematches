@@ -27,7 +27,7 @@
                                 <#if principal.playerType.guest>
                                     <@message code="membership.name.guest"/>
                                 <#else>
-                                    <@message code="membership.name.${principal.membership.code}"/>
+                                    <@message code="membership.name.${principal.playerType.code}"/>
                                 </#if>
                             <#else>
                                 <@message code="membership.unregistered.label"/>
@@ -60,7 +60,7 @@
                                             </button>
                                         </#if>
                                     <#else>
-                                        <#if (!principal?? || !principal.playerType.member || principal.membership.ordinal() >= m.ordinal())>
+                                        <#if (!principal?? || !principal.playerType.member || principal.playerType.ordinal() >= m.ordinal())>
                                             <button disabled="disabled"><@message code="membership.subscribe"/></button>
                                         <#else>
                                             <button onclick="wm.util.url.redirect('/account/membership/subscribe')"><@message code="membership.subscribe"/></button>

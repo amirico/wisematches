@@ -1,16 +1,20 @@
 package wisematches.playground.scribble;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import wisematches.core.RobotType;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class ScribblePlayerHandTest extends TestCase {
+public class ScribblePlayerHandTest {
 	public ScribblePlayerHandTest() {
 	}
 
+	@Test
 	public void testTiles() {
-		ScribblePlayerHand ph = new ScribblePlayerHand(1);
+		final ScribblePlayerHand ph = new ScribblePlayerHand(RobotType.DULL.getPlayer());
 		ph.setTiles(new Tile[]{new Tile(1, 'A', 1)});
 		assertEquals(1, ph.getTiles().length);
 

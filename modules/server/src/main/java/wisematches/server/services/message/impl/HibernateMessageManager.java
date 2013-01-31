@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayerManager;
-import wisematches.core.Membership;
+import wisematches.core.Player;
+import wisematches.core.personality.PlayerManager;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
@@ -28,7 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateMessageManager implements MessageManager {
-	private MemberPlayerManager playerManager;
+	private PlayerManager playerManager;
 	private SessionFactory sessionFactory;
 
 	private RestrictionManager restrictionManager;
@@ -55,25 +55,25 @@ public class HibernateMessageManager implements MessageManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void sendNotification(Personality recipient, String body) {
+	public void sendNotification(Player recipient, String body) {
 		sendNotification(recipient, body, false);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void sendMessage(Personality sender, Personality recipient, String body) {
+	public void sendMessage(Player sender, Player recipient, String body) {
 		sendMessage(sender, recipient, body, false);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void replyMessage(Personality sender, Message message, String body) {
+	public void replyMessage(Player sender, Message message, String body) {
 		replyMessage(sender, message, body, false);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void sendMessage(Personality sender, Personality recipient, String body, boolean quite) {
+	public void sendMessage(Player sender, Player recipient, String body, boolean quite) {
 		if (recipient == null) {
 			throw new NullPointerException("Recipient can't be null");
 		}
@@ -85,7 +85,7 @@ public class HibernateMessageManager implements MessageManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void replyMessage(Personality sender, Message message, String body, boolean quite) {
+	public void replyMessage(Player sender, Message message, String body, boolean quite) {
 		if (sender == null) {
 			throw new NullPointerException("Sender can't be null");
 		}
@@ -102,7 +102,7 @@ public class HibernateMessageManager implements MessageManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void sendNotification(Personality recipient, String body, boolean quite) {
+	public void sendNotification(Player recipient, String body, boolean quite) {
 		if (recipient == null) {
 			throw new NullPointerException("Recipient can't be null");
 		}
@@ -125,27 +125,27 @@ public class HibernateMessageManager implements MessageManager {
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED, readOnly = true)
-	public int getNewMessagesCount(final Personality person) {
+	public int getNewMessagesCount(final Player person) {
 		final Session session = sessionFactory.getCurrentSession();
-		final SQLQuery sqlQuery = session.createSQLQuery("select count(*) " +
-				"FROM player_message as m left join player_activity as a on m.recipient=a.pid " +
-				"WHERE m.recipient=:pid and (a.last_messages_check is null or m.created>a.last_messages_check)");
+		final SQLQuery sqlQuery = session.createSQLQuery("SELECT count(*) " +
+				"FROM player_message AS m LEFT JOIN player_activity AS a ON m.recipient=a.pid " +
+				"WHERE m.recipient=:pid AND (a.last_messages_check IS null OR m.created>a.last_messages_check)");
 		sqlQuery.setParameter("pid", person.getId());
 		return ((Number) sqlQuery.uniqueResult()).intValue();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getTodayMessagesCount(Personality person, MessageDirection direction) {
+	public int getTodayMessagesCount(Player person, MessageDirection direction) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query;
 		if (direction == MessageDirection.SENT) {
 			query = session.createQuery("select count(*) " +
-					"from wisematches.playground.message.impl.HibernateMessage " +
+					"from HibernateMessage " +
 					"where sender = :pid and creationDate>= CURDATE()");
 		} else {
 			query = session.createQuery("select count(*) " +
-					"from wisematches.playground.message.impl.HibernateMessage " +
+					"from HibernateMessage " +
 					"where recipient = :pid and creationDate>= CURDATE()");
 		}
 		query.setParameter("pid", person.getId());
@@ -155,7 +155,7 @@ public class HibernateMessageManager implements MessageManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Collection<Message> getMessages(Personality person, MessageDirection direction) {
+	public Collection<Message> getMessages(Player person, MessageDirection direction) {
 		if (direction == MessageDirection.RECEIVED) {
 			updateLastCheckTime(person);
 		}
@@ -163,12 +163,12 @@ public class HibernateMessageManager implements MessageManager {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query;
 		if (direction == MessageDirection.SENT) {
-			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
+			query = session.createQuery("from HibernateMessage where " +
 					"sender = :pid and state in (0, :state) order by creationDate desc");
 			query.setParameter("pid", person.getId());
 			query.setInteger("state", MessageDirection.RECEIVED.mask());
 		} else {
-			query = session.createQuery("from wisematches.playground.message.impl.HibernateMessage where " +
+			query = session.createQuery("from HibernateMessage where " +
 					"recipient = :pid and state in (0,:state) order by creationDate desc");
 			query.setParameter("pid", person.getId());
 			query.setInteger("state", MessageDirection.SENT.mask());
@@ -178,7 +178,7 @@ public class HibernateMessageManager implements MessageManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void removeMessage(Personality person, long messageId, MessageDirection direction) {
+	public void removeMessage(Player person, long messageId, MessageDirection direction) {
 		removesLock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
@@ -214,6 +214,8 @@ public class HibernateMessageManager implements MessageManager {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void cleanup() {
+		throw new UnsupportedOperationException("Commented");
+/*
 		final StringBuilder b = new StringBuilder();
 		b.append("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient where ");
 		b.append("(");
@@ -255,14 +257,15 @@ public class HibernateMessageManager implements MessageManager {
 		} finally {
 			removesLock.unlock();
 		}
+*/
+	}
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-	}
-
-	public void setPlayerManager(MemberPlayerManager playerManager) {
-		this.playerManager = playerManager;
 	}
 
 	public void setRestrictionManager(RestrictionManager restrictionManager) {

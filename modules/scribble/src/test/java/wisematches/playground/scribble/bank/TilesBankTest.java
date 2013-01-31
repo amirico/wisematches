@@ -1,17 +1,20 @@
 package wisematches.playground.scribble.bank;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import wisematches.core.Language;
 import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
 
+import static org.junit.Assert.*;
+
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class TilesBankTest extends TestCase {
+public class TilesBankTest {
 	public TilesBankTest() {
 	}
 
+	@Test
 	public void testBank() {
 		final TilesBankInfoEditor editor = new TilesBankInfoEditor(Language.EN);
 		editor.add('a', 5, 1);
@@ -42,7 +45,6 @@ public class TilesBankTest extends TestCase {
 			b.requestTile(1);
 			fail("Exception must be here: tile already requested");
 		} catch (IllegalArgumentException ex) {
-			;
 		}
 
 		final Tile[] requredTiles = b.requestTiles(12);

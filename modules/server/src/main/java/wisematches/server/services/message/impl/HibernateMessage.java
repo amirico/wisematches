@@ -1,6 +1,6 @@
 package wisematches.server.services.message.impl;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.server.services.message.Message;
 
 import javax.persistence.*;
@@ -30,9 +30,6 @@ public class HibernateMessage implements Message {
 	@Column(name = "text", nullable = true, updatable = false, length = 65535)
 	private String text;
 
-	@Column(name = "notification", nullable = true, updatable = false)
-	private boolean notification;
-
 	@Column(name = "sender", nullable = true, updatable = false)
 	private long sender;
 
@@ -51,45 +48,29 @@ public class HibernateMessage implements Message {
 	 * @param recipient the recipient who will received the message.
 	 * @param text      the message
 	 */
-	public HibernateMessage(Personality recipient, String text) {
-		this(recipient, text, true, null, null);
+	public HibernateMessage(Player recipient, String text) {
+		this(recipient.getId(), text, 0, null);
 	}
 
-	/**
-	 * Creates new message for specified personality from an user.
-	 *
-	 * @param recipient t
-	 * @param text
-	 * @param sender
-	 */
-	public HibernateMessage(Personality recipient, String text, Personality sender) {
-		this(recipient, text, false, sender, null);
+	public HibernateMessage(Player recipient, String text, Player sender) {
+		this(recipient.getId(), text, sender.getId(), null);
 	}
 
-	public HibernateMessage(Message original, String text, Personality sender) {
-		this(Personality.person(original.getSender()), text, false, sender, original);
+	public HibernateMessage(Message original, String text, Player sender) {
+		this(original.getSender(), text, sender.getId(), original);
 	}
 
-	private HibernateMessage(Personality recipient, String text, boolean notification, Personality sender, Message original) {
-		if (recipient == null) {
-			throw new IllegalArgumentException("Recipient is not specified");
-		}
+	private HibernateMessage(long recipient, String text, long sender, Message original) {
 		if (text == null || text.trim().isEmpty()) {
 			throw new IllegalArgumentException("There is no message content");
 		}
-		if (notification && sender != null) {
-			throw new IllegalArgumentException("Sender can't sent a notification");
-		}
-		this.recipient = recipient.getId();
-		if (sender != null) {
-			this.sender = sender.getId();
-		}
+		this.recipient = recipient;
+		this.sender = sender;
 		if (original != null) {
 			this.original = original.getId();
 		}
 		this.creationDate = new Date();
 		this.text = text;
-		this.notification = notification;
 	}
 
 	@Override
@@ -114,7 +95,7 @@ public class HibernateMessage implements Message {
 
 	@Override
 	public boolean isNotification() {
-		return notification;
+		return sender == 0;
 	}
 
 	@Override

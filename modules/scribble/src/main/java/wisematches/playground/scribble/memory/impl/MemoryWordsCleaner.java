@@ -1,6 +1,7 @@
 package wisematches.playground.scribble.memory.impl;
 
 import org.apache.log4j.Logger;
+import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
@@ -29,17 +30,17 @@ public class MemoryWordsCleaner {
 
 	public void setScribbleBoardManager(ScribblePlayManager scribbleBoardManager) {
 		if (this.scribbleBoardManager != null) {
-			this.scribbleBoardManager.removeGamePlayListener(boardStateListener);
+			this.scribbleBoardManager.removeBoardListener(boardStateListener);
 		}
 
 		this.scribbleBoardManager = scribbleBoardManager;
 
 		if (this.scribbleBoardManager != null) {
-			this.scribbleBoardManager.addGamePlayListener(boardStateListener);
+			this.scribbleBoardManager.addBoardListener(boardStateListener);
 		}
 	}
 
-	private class TheGamePlayListener implements GamePlayListener {
+	private class TheGamePlayListener implements BoardListener {
 		private TheGamePlayListener() {
 		}
 
@@ -52,7 +53,7 @@ public class MemoryWordsCleaner {
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
 			if (log.isDebugEnabled()) {
 				log.debug("Game on board" + board.getBoardId() + " has been finished and all memory words will be cleaned.");
 			}

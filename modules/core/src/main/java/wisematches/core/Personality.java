@@ -25,20 +25,10 @@ public abstract class Personality implements Serializable {
 	 *
 	 * @param id the id for this personality.
 	 */
-	Personality(Long id) {
-		if (id == null) {
-			throw new NullPointerException("ID can't be null");
-		}
+	Personality(long id) {
 		this.id = id;
 		hashCode = (int) (id ^ (id >>> 32));
 	}
-
-	/**
-	 * Returns type of this player.
-	 *
-	 * @return the type of this player.
-	 */
-	public abstract Type getType();
 
 	/**
 	 * Returns personality id.
@@ -80,21 +70,5 @@ public abstract class Personality implements Serializable {
 		final StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName()).append("{id=").append(id).append('}');
 		return sb.toString();
-	}
-
-	/**
-	 * @author Sergey Klimenko (smklimenko@gmail.com)
-	 */
-	public static enum Type {
-		PLAYER,
-		MACHINERY;
-
-		public boolean isPlayer() {
-			return this == PLAYER;
-		}
-
-		public boolean isMachinery() {
-			return this == MACHINERY;
-		}
 	}
 }

@@ -1,16 +1,18 @@
 package wisematches.playground.scribble.tracking.impl;
 
 /**
+ * TODO: commented!
+ *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class PlayerStatisticValidator {
 /*
 	private SessionFactory sessionFactory;
 	private ScribblePlayManager boardManager;
-	private PlayerTrackingCenterDao trackingCenterDao;
 	private ScribbleStatisticsTrapper statisticsTrapper;
 
-	private static final Logger log = Logger.getLogger("wisematches.server.statistics.validator");
+	private static final Log log = LogFactory.getLog("wisematches.server.statistics.validator");
 
 	public PlayerStatisticValidator() {
 	}
@@ -18,7 +20,7 @@ public class PlayerStatisticValidator {
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void recalculateStatistics() {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select account.id from wisematches.core.personality.member.account.impl.HibernateAccountImpl as account");
+		final Query query = session.createQuery("select account.id from HibernateAccountImpl as account");
 		final List list = query.list();
 		for (Object o : list) {
 			Long pid = (Long) o;
@@ -30,7 +32,7 @@ public class PlayerStatisticValidator {
 	public void recalculateStatistics(Personality player) {
 		log.info("Validate player statistic: " + player);
 
-		final List<ScribbleBoard> scribbleBoards = new ArrayList<ScribbleBoard>();
+		final List<ScribbleBoard> scribbleBoards = new ArrayList<>();
 
 		scribbleBoards.addAll(boardManager.searchEntities(player, GameState.ACTIVE, null, null, null));
 		scribbleBoards.addAll(boardManager.searchEntities(player, GameState.FINISHED, null, null, null));

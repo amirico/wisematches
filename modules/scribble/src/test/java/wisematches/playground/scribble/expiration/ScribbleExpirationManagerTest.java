@@ -13,8 +13,12 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.core.Language;
+import wisematches.core.Personality;
 import wisematches.core.expiration.ExpirationListener;
-import wisematches.playground.*;
+import wisematches.playground.BoardListener;
+import wisematches.playground.GameBoard;
+import wisematches.playground.GameMove;
+import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSettings;
@@ -76,7 +80,7 @@ public class ScribbleExpirationManagerTest {
 		expect(gameBoard2.isActive()).andReturn(true);
 		replay(gameBoard2);
 
-		scribbleBoardManager.addGamePlayListener(isA(GamePlayListener.class));
+		scribbleBoardManager.addBoardListener(isA(BoardListener.class));
 		expect(scribbleBoardManager.openBoard(15L)).andReturn(gameBoard);
 		expect(scribbleBoardManager.openBoard(16L)).andReturn(gameBoard2);
 		replay(scribbleBoardManager);
@@ -118,9 +122,9 @@ public class ScribbleExpirationManagerTest {
 	public void testListeners() throws Exception {
 		final long time = System.currentTimeMillis();
 
-		final Capture<GamePlayListener> boardStateListener = new Capture<>();
+		final Capture<BoardListener> boardStateListener = new Capture<>();
 
-		scribbleBoardManager.addGamePlayListener(capture(boardStateListener));
+		scribbleBoardManager.addBoardListener(capture(boardStateListener));
 		replay(scribbleBoardManager);
 
 		final ExpirationListener<Long, ScribbleExpirationType> l = createMock(ExpirationListener.class);
@@ -151,9 +155,11 @@ public class ScribbleExpirationManagerTest {
 		expirationManager.setBoardManager(scribbleBoardManager);
 		expirationManager.afterPropertiesSet();
 
+		final GameMove move = createMock(GameMove.class);
+
 		boardStateListener.getValue().gameStarted(gameBoard);
-		boardStateListener.getValue().gameMoveDone(gameBoard, new GameMove(new MakeTurnMove(12L), 12, 1, new Date()), null);
-		boardStateListener.getValue().gameFinished(gameBoard, GameResolution.FINISHED, Collections.<GamePlayerHand>emptyList());
+		boardStateListener.getValue().gameMoveDone(gameBoard, move, null);
+		boardStateListener.getValue().gameFinished(gameBoard, GameResolution.FINISHED, Collections.<Personality>emptyList());
 
 		Thread.sleep(500);
 

@@ -3,10 +3,10 @@ package wisematches.server.services.friends.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import wisematches.core.Personality;
-import wisematches.playground.friends.FriendRelation;
-import wisematches.playground.friends.FriendsListener;
-import wisematches.playground.friends.FriendsManager;
+import wisematches.core.Player;
+import wisematches.server.services.friends.FriendRelation;
+import wisematches.server.services.friends.FriendsListener;
+import wisematches.server.services.friends.FriendsManager;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -34,7 +34,7 @@ public class HibernateFriendsManager implements FriendsManager {
 	}
 
 	@Override
-	public void addFriend(Personality person, Personality friend, String comment) {
+	public void addFriend(Player person, Player friend, String comment) {
 		final Session session = sessionFactory.getCurrentSession();
 		HibernateFriendRelation relation = (HibernateFriendRelation) session.get(HibernateFriendRelation.class, new HibernateFriendRelation.PK(person, friend));
 		if (relation == null) {
@@ -51,7 +51,7 @@ public class HibernateFriendsManager implements FriendsManager {
 	}
 
 	@Override
-	public void removeFriend(Personality person, Personality friend) {
+	public void removeFriend(Player person, Player friend) {
 		final Session session = sessionFactory.getCurrentSession();
 		HibernateFriendRelation relation = (HibernateFriendRelation) session.get(HibernateFriendRelation.class, new HibernateFriendRelation.PK(person, friend));
 		if (relation != null) {
@@ -65,18 +65,18 @@ public class HibernateFriendsManager implements FriendsManager {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<Long> getFriendsIds(Personality person) {
+	public Collection<Long> getFriendsIds(Player person) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select friend from wisematches.playground.friends.impl.HibernateFriendRelation where person=:pid");
+		final Query query = session.createQuery("select friend from HibernateFriendRelation where person=:pid");
 		query.setParameter("pid", person.getId());
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<FriendRelation> getFriendsList(Personality person) {
+	public Collection<FriendRelation> getFriendsList(Player person) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("from wisematches.playground.friends.impl.HibernateFriendRelation where person=:pid");
+		final Query query = session.createQuery("from HibernateFriendRelation where person=:pid");
 		query.setParameter("pid", person.getId());
 		return query.list();
 	}

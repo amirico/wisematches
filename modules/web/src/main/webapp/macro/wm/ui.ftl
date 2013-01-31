@@ -8,7 +8,7 @@
 <table width="100%">
     <tr>
         <td width="165px" valign="top" align="left" rowspan="2">
-            <#if !principal.playerType.member || principal.membership.default>
+            <#if !principal.playerType.member || principal.playerType.default>
             <#assign advertisementBlock=advertisementManager.getAdvertisementBlock(id, locale)!""/>
             <#include "/content/templates/advertisement.ftl">
             </#if>

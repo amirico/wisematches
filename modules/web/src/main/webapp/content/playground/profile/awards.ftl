@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="country" type="wisematches.personality.membership.Country" -->
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
-<#-- @ftlvariable name="awards" type="wisematches.playground.award.Award[]" -->
+<#-- @ftlvariable name="awards" type="wisematches.server.services.award.Award[]" -->
 <#include "/core.ftl">
 
 <table width="100%" cellpadding="0" cellspacing="0">

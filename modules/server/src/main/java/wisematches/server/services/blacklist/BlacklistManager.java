@@ -1,6 +1,6 @@
 package wisematches.server.services.blacklist;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Collection;
 
@@ -19,7 +19,7 @@ public interface BlacklistManager {
 	 * @param whom    the person who should be added to blacklist.
 	 * @param comment the ignore comment
 	 */
-	void addPlayer(Personality person, Personality whom, String comment);
+	void addPlayer(Player person, Player whom, String comment);
 
 	/**
 	 * Removes a {@code whom} personality from the {@code person} blacklist
@@ -27,7 +27,7 @@ public interface BlacklistManager {
 	 * @param person the person who wants remove another one from black list
 	 * @param whom   the person who should be removed to blacklist.
 	 */
-	void removePlayer(Personality person, Personality whom);
+	void removePlayer(Player person, Player whom);
 
 	/**
 	 * Checks is {@code whom} person in a black list of the {@code peson} personality.
@@ -36,7 +36,7 @@ public interface BlacklistManager {
 	 * @param whom   the person who is checked.
 	 * @return {@code true} if {@code whom} personality in blacklist of {@code person}; {@code false} - otherwise.
 	 */
-	boolean isBlacklisted(Personality person, Personality whom);
+	boolean isBlacklisted(Player person, Player whom);
 
 	/**
 	 * Checks is {@code whom} person in blacklist of the {@code peson} personality.
@@ -45,7 +45,7 @@ public interface BlacklistManager {
 	 * @param whom   the person who is checked.
 	 * @throws BlacklistedException if {@code whom} person in blacklist of specified {@code person}.
 	 */
-	void checkBlacklist(Personality person, Personality whom) throws BlacklistedException;
+	void checkBlacklist(Player person, Player whom) throws BlacklistedException;
 
 	/**
 	 * Returns collection of all players in a blacklist.
@@ -53,5 +53,5 @@ public interface BlacklistManager {
 	 * @param person the person who's blacklist should be returned.
 	 * @return the collection of
 	 */
-	Collection<BlacklistRecord> getBlacklist(Personality person);
+	Collection<BlacklistRecord> getBlacklist(Player person);
 }

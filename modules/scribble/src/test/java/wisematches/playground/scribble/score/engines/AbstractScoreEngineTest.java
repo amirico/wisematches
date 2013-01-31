@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.score.ScoreBonus;
-import wisematches.playground.scribble.ScribbleMoveScore;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -59,7 +58,7 @@ public class AbstractScoreEngineTest {
 		expect(tp.isBoardTile(2)).andReturn(false);
 		expect(tp.isBoardTile(3)).andReturn(true);
 		replay(tp);
-		ScribbleMoveScore res = scoreEngine.calculateWordScore(new Word(new Position(7, 7), Direction.VERTICAL, tiles1), tp);
+		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(7, 7), Direction.VERTICAL, tiles1));
 		assertEquals(6, res.getPoints());
 		assertEquals(3, res.getBonuses().length);
 		assertEquals("1 + 2 + 3", res.getFormula());
@@ -70,7 +69,7 @@ public class AbstractScoreEngineTest {
 	public void allHandBonus() {
 		expect(tp.isBoardTile(anyInt())).andReturn(false).times(7);
 		replay(tp);
-		ScribbleMoveScore res = scoreEngine.calculateWordScore(new Word(new Position(7, 7), Direction.VERTICAL, tiles3), tp);
+		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(7, 7), Direction.VERTICAL, tiles3));
 		assertEquals(16, res.getPoints());
 		assertEquals(7, res.getBonuses().length);
 		assertEquals("(1 + 2 + 3 + 0 + 0 + 0 + 0) + 10", res.getFormula());
@@ -83,7 +82,7 @@ public class AbstractScoreEngineTest {
 		expect(tp.isBoardTile(2)).andReturn(false);
 		expect(tp.isBoardTile(3)).andReturn(true);
 		replay(tp);
-		ScribbleMoveScore res = scoreEngine.calculateWordScore(new Word(new Position(0, 0), Direction.VERTICAL, tiles1), tp);
+		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(0, 0), Direction.VERTICAL, tiles1));
 		assertEquals(7, res.getPoints());
 		assertEquals(3, res.getBonuses().length);
 		assertSame(ScoreBonus.Type.DOUBLE_LETTER, res.getBonuses()[0]);
@@ -98,7 +97,7 @@ public class AbstractScoreEngineTest {
 		expect(tp.isBoardTile(3)).andReturn(true);
 		expect(tp.isBoardTile(4)).andReturn(false);
 		replay(tp);
-		ScribbleMoveScore res = scoreEngine.calculateWordScore(new Word(new Position(0, 0), Direction.VERTICAL, tiles2), tp);
+		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(0, 0), Direction.VERTICAL, tiles2));
 		assertEquals(22, res.getPoints());
 		assertEquals(4, res.getBonuses().length);
 		assertSame(ScoreBonus.Type.DOUBLE_LETTER, res.getBonuses()[0]);
@@ -114,7 +113,7 @@ public class AbstractScoreEngineTest {
 		expect(tp.isBoardTile(3)).andReturn(true);
 		expect(tp.isBoardTile(4)).andReturn(true);
 		replay(tp);
-		ScribbleMoveScore res = scoreEngine.calculateWordScore(new Word(new Position(0, 0), Direction.VERTICAL, tiles2), tp);
+		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(0, 0), Direction.VERTICAL, tiles2));
 		assertEquals(11, res.getPoints());
 		assertEquals(4, res.getBonuses().length);
 		assertSame(ScoreBonus.Type.DOUBLE_LETTER, res.getBonuses()[0]);

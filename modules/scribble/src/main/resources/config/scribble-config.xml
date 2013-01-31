@@ -3,76 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="awards-config.xml"/>
-
     <bean id="tilesBankingHouse" class="wisematches.playground.scribble.bank.impl.XMLTilesBankingHouse">
         <property name="banksPath" value="classpath:/banks/*"/>
     </bean>
 
-    <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribblePlayManager">
-        <property name="ratingManager" ref="ratingManager"/>
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
-        <property name="dictionaryManager" ref="dictionaryManager"/>
+    <bean id="dictionaryManager" class="wisematches.playground.dictionary.impl.FileDictionaryManager">
+        <property name="dictionariesFolder" value="${server.dictionary.path}"/>
     </bean>
-
-    <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.impl.ScribbleStatisticsTrapper">
-    </bean>
-
-    <bean id="scribbleSettingsProvider" class="wisematches.playground.scribble.tourney.ScribbleTourneySettingsProvider">
-        <property name="daysPerMove" value="3"/>
-    </bean>
-
-    <bean id="scribbleStatisticValidator"
-          class="wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="gamePlayManager" ref="scribbleBoardManager"/>
-        <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
-        <property name="trackingCenterDao" ref="trackingCenterDao"/>
-    </bean>
-
-    <bean id="scribbleTrackingCenter" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
-        <property name="playerStatisticManager">
-            <bean class="wisematches.playground.tracking.impl.AbstractStatisticManager">
-                <property name="ratingManager" ref="ratingManager"/>
-                <property name="accountManager" ref="accountManager"/>
-                <property name="gamePlayManager" ref="scribbleBoardManager"/>
-                <property name="tourneyManager" ref="regularTourneyManager"/>
-                <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
-                <property name="trackingCenterDao" ref="trackingCenterDao"/>
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="scribbleProposalManager"
-          class="wisematches.playground.propose.impl.file.FileProposalManager">
-        <property name="proposalsResource" value="${server.proposals.file}"/>
-        <property name="playerStatisticManager" ref="scribbleTrackingCenter"/>
-    </bean>
-
-    <bean id="expirationTaskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
-        <property name="poolSize" value="2"/>
-        <property name="threadGroupName" value="ExpirationSchedulers"/>
-        <property name="threadNamePrefix" value="ExpirationScheduler"/>
-        <property name="waitForTasksToCompleteOnShutdown" value="false"/>
-    </bean>
-
-    <bean id="scribbleGameExpirationManager"
-          class="wisematches.playground.scribble.expiration.ScribbleExpirationManager" destroy-method="destroy">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="gamePlayManager" ref="scribbleBoardManager"/>
-        <property name="taskScheduler" ref="expirationTaskScheduler"/>
-        <property name="transactionTemplate" ref="transactionRequiresNew"/>
-    </bean>
-
-    <bean id="scribbleProposalExpirationManager" class="wisematches.playground.propose.ProposalExpirationManager">
-        <property name="intentionExpirationMillis" value="0"/>
-        <property name="challengeExpirationMillis" value="604800000"/>
-        <property name="taskScheduler" ref="expirationTaskScheduler"/>
-        <property name="proposalManager" ref="scribbleProposalManager"/>
-    </bean>
-
-    <bean id="scribbleRobotBrain" class="wisematches.playground.scribble.robot.ScribbleRobotBrain"/>
 
     <bean id="scribbleRobotTaskExecutor" class="wisematches.core.task.executor.TransactionAwareExecutor">
         <property name="taskExecutor">
@@ -88,12 +25,78 @@
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="scribbleCommentManager"
-          class="wisematches.playground.scribble.comment.impl.HibernateGameCommentManager">
+    <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribblePlayManager">
+        <property name="playerManager" ref="playerManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
+        <property name="dictionaryManager" ref="dictionaryManager"/>
+        <property name="taskExecutor" ref="scribbleRobotTaskExecutor"/>
+        <property name="statisticManager" ref="scribbleStatisticsManager"/>
+        <property name="ratingSystem">
+            <bean class="wisematches.playground.rating.ELORatingSystem"/>
+        </property>
     </bean>
 
-    <bean id="playerSearchManager" class="wisematches.playground.scribble.player.ScribblePlayerSearchManager">
+    <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.impl.ScribbleStatisticsTrapper">
+    </bean>
+
+    <bean id="scribbleSettingsProvider" class="wisematches.playground.scribble.tourney.ScribbleTourneySettingsProvider">
+        <property name="daysPerMove" value="3"/>
+    </bean>
+
+    <!--
+        <bean id="scribbleStatisticValidator"
+              class="wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator">
+            <property name="sessionFactory" ref="sessionFactory"/>
+            <property name="gamePlayManager" ref="scribbleBoardManager"/>
+            <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
+            <property name="trackingCenterDao" ref="trackingCenterDao"/>
+        </bean>
+    -->
+
+    <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
+        <property name="playerStatisticManager">
+            <bean class="wisematches.playground.scribble.tracking.impl.HibernateScribbleStatisticsManager">
+                <property name="playerManager" ref="playerManager"/>
+                <property name="sessionFactory" ref="sessionFactory"/>
+                <property name="gamePlayManager" ref="scribbleBoardManager"/>
+                <property name="tourneyManager" ref="regularTourneyManager"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="scribbleProposalManager"
+          class="wisematches.playground.propose.impl.file.FileProposalManager">
+        <property name="proposalsResource" value="${server.proposals.file}"/>
+        <property name="playerStatisticManager" ref="scribbleStatisticsManager"/>
+    </bean>
+
+    <bean id="expirationTaskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+        <property name="poolSize" value="2"/>
+        <property name="threadGroupName" value="ExpirationSchedulers"/>
+        <property name="threadNamePrefix" value="ExpirationScheduler"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="false"/>
+    </bean>
+
+    <bean id="scribbleGameExpirationManager"
+          class="wisematches.playground.scribble.expiration.ScribbleExpirationManager" destroy-method="destroy">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="taskScheduler" ref="expirationTaskScheduler"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
+    </bean>
+
+    <bean id="scribbleProposalExpirationManager" class="wisematches.playground.propose.ProposalExpirationManager">
+        <property name="intentionExpirationMillis" value="0"/>
+        <property name="challengeExpirationMillis" value="604800000"/>
+        <property name="taskScheduler" ref="expirationTaskScheduler"/>
+        <property name="proposalManager" ref="scribbleProposalManager"/>
+    </bean>
+
+    <bean id="scribbleRobotBrain" class="wisematches.playground.scribble.robot.ScribbleRobotBrain"/>
+
+    <bean id="scribbleCommentManager"
+          class="wisematches.playground.scribble.comment.impl.HibernateGameCommentManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -118,7 +121,6 @@
         <property name="tilesClassDefault" value="tiles-set-classic"/>
     </bean>
 
-    <!-- Move to server -->
     <bean id="tournamentTaskExecutor" class="wisematches.core.task.executor.TransactionAwareExecutor">
         <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -131,7 +133,6 @@
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <!-- Move to server -->
     <bean id="regularTourneyManager" class="wisematches.playground.tourney.regular.impl.HibernateTourneyManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="cronExpression" value="0 0 0 ? * 2#1"/>
@@ -140,22 +141,5 @@
         <property name="taskExecutor" ref="tournamentTaskExecutor"/>
         <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
-    </bean>
-
-    <!-- Move to server -->
-    <bean id="awardsManager" class="wisematches.playground.award.impl.HibernateAwardsManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="awardDescriptors" ref="awardDescriptors"/>
-        <property name="judicialAssemblies">
-            <list>
-                <bean class="wisematches.playground.award.impl.assembly.RobotJudicialAssembly">
-                    <property name="statisticManager" ref="scribbleTrackingCenter"/>
-                </bean>
-                <bean class="wisematches.playground.award.impl.assembly.TourneyJudicialAssembly">
-                    <property name="playerManager" ref="playerManager"/>
-                    <property name="tourneyManager" ref="regularTourneyManager"/>
-                </bean>
-            </list>
-        </property>
     </bean>
 </beans>

@@ -2,19 +2,9 @@ package wisematches.playground.scribble.history;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.core.search.Order;
-import wisematches.core.search.Orders;
-import wisematches.core.search.Range;
-import wisematches.playground.GameResolution;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -23,11 +13,15 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
+		"classpath:/config/personality-config.xml",
 		"classpath:/config/scribble-junit-config.xml"
 })
 public class ScribbleHistorySearchManagerTest {
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("Commented");
+	}
+/*
 	@Autowired
 	private ScribbleHistorySearchManager historySearchManager;
 
@@ -56,4 +50,5 @@ public class ScribbleHistorySearchManagerTest {
 		historySearchManager.searchEntities(player, GameResolution.STALEMATE, null, null, null);
 		historySearchManager.searchEntities(player, GameResolution.INTERRUPTED, null, null, null);
 	}
+*/
 }

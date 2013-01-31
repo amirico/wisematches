@@ -38,7 +38,7 @@ public class XMLTilesBankingHouse extends AbstractTilesBankingHouse {
 	@Override
 	protected LettersDistribution loadTilesBankInfo(Language language, int playersCount, boolean wildcardAllowed) throws Exception {
 		final DocumentBuilder builder = BUILDER_FACTORY.newDocumentBuilder();
-		final Document document1 = builder.parse(banksPath.createRelative("bank_" + language.code() + ".xml").getInputStream());
+		final Document document1 = builder.parse(banksPath.createRelative("bank_" + language.getCode() + ".xml").getInputStream());
 
 		final NodeList list = document1.getElementsByTagName("letter");
 		final TilesBankInfoEditor info = new TilesBankInfoEditor(language);
