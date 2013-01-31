@@ -2,7 +2,7 @@ package wisematches.playground.scribble.memory.impl;
 
 import org.easymock.Capture;
 import org.junit.Test;
-import wisematches.playground.GamePlayListener;
+import wisematches.playground.BoardListener;
 import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
@@ -26,10 +26,10 @@ public class MemoryWordsCleanerTest {
 		wordManager.clearMemoryWords(board);
 		replay(wordManager);
 
-		final Capture<GamePlayListener> capture = new Capture<GamePlayListener>();
+		final Capture<BoardListener> capture = new Capture<>();
 
 		final ScribblePlayManager manager = createMock(ScribblePlayManager.class);
-		manager.addGamePlayListener(capture(capture));
+		manager.addBoardListener(capture(capture));
 		replay(manager);
 
 		MemoryWordsCleaner cleaner = new MemoryWordsCleaner();

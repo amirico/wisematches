@@ -1,7 +1,7 @@
 package wisematches.core.personality.player.membership;
 
-import wisematches.core.Membership;
 import wisematches.core.expiration.ExpirationManager;
+import wisematches.core.personality.player.Membership;
 import wisematches.core.personality.player.account.Account;
 
 import java.util.Date;
@@ -25,9 +25,9 @@ public interface MembershipManager extends ExpirationManager<Account, Membership
 	 * return and fires {@link MembershipListener#membershipCardUpdated(Account, MembershipCard, MembershipCard)}
 	 * event if it's expired. The event can be fire in the same or in separate thread.
 	 * <p/>
-	 * If person is unknown {@link wisematches.core.Membership#BASIC} will be returned.
+	 * If person is unknown {@link Membership#BASIC} will be returned.
 	 *
-	 * @param personality the peronality who's membership should be returned.
+	 * @param personality the personality who's membership should be returned.
 	 * @return the person's membership.
 	 * @see MembershipListener#membershipCardUpdated(Account, MembershipCard, MembershipCard)
 	 */

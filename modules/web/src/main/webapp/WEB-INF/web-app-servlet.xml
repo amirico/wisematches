@@ -94,8 +94,8 @@
         <property name="exposeEnums">
             <list>
                 <value>wisematches.core.Language</value>
-                <value>wisematches.core.Membership</value>
-                <value>wisematches.playground.award.AwardType</value>
+                <value>wisematches.core.PlayerType</value>
+                <value>wisematches.server.services.award.AwardType</value>
             </list>
         </property>
         <property name="viewClass" value="wisematches.server.web.view.WMFreeMarkerView"/>

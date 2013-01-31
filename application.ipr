@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/webserver/target/webserver-5.0.0-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/web/target/webserver-5.0.0-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="web/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -73,7 +73,7 @@
       </root>
     </artifact>
     <artifact type="war" name="webserver:war">
-      <output-path>$PROJECT_DIR$/modules/webserver/target</output-path>
+      <output-path>$PROJECT_DIR$/modules/web/target</output-path>
       <root id="archive" name="webserver-5.0.0-SNAPSHOT.war">
         <element id="artifact" artifact-name="webserver:war exploded" />
       </root>
@@ -119,7 +119,7 @@
       <directory url="file://$PROJECT_DIR$/modules/web/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/personality/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/modules/scribble/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/modules/playground/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/modules/gameplay/target/generated-sources/annotations" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
@@ -145,13 +145,15 @@
         <processorPath useClasspath="true" />
         <module name="core" />
         <module name="database" />
-        <module name="playground" />
+        <module name="gameplay" />
+        <module name="scribble" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="application" target="1.7" />
       <module name="core" target="1.7" />
       <module name="database" target="1.7" />
+      <module name="gameplay" target="1.7" />
       <module name="personality" target="1.7" />
       <module name="playground" target="1.7" />
       <module name="scribble" target="1.7" />
@@ -163,7 +165,7 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" hash="1311506149" />
+  <component name="DataSourceManagerImpl" compressed="false" hash="4174575830" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -184,7 +186,7 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/core" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/modules/playground" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/gameplay" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/scribble" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/web" charset="UTF-8" />
@@ -484,7 +486,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/application.iml" filepath="$PROJECT_DIR$/application.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/core/core.iml" filepath="$PROJECT_DIR$/modules/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/playground/playground.iml" filepath="$PROJECT_DIR$/modules/playground/playground.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/gameplay/gameplay.iml" filepath="$PROJECT_DIR$/modules/gameplay/gameplay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/server/server.iml" filepath="$PROJECT_DIR$/modules/server/server.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -501,10 +505,10 @@
     </option>
   </component>
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateQueryHelper.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneyProcessor.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/playground/src/main/java/wisematches/playground/tracking/RatingCurve.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/playground/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/gameplay/src/main/java/wisematches/playground/tourney/regular/impl/HibernateQueryHelper.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/gameplay/src/main/java/wisematches/playground/tourney/regular/impl/HibernateTourneyProcessor.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/gameplay/src/main/java/wisematches/playground/tracking/RatingCurve.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/gameplay/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/tracking/impl/ScribbleStatisticsEditor.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/server/src/main/java/wisematches/server/services/message/impl/HibernateMessageManager.java" dialect="MySQL" />
@@ -1061,6 +1065,19 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/3.1.2.RELEASE/spring-tx-3.1.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:playground:5.0.0-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/5.0.0-SNAPSHOT/playground-5.0.0-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/playground/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/5.0.0-SNAPSHOT/playground-5.0.0-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/playground/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/5.0.0-SNAPSHOT/playground-5.0.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

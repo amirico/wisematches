@@ -16,11 +16,11 @@
         <strong>${player.nickname}</strong>
     </div>
     <div>
-    <#assign m=player.membership/>
+    <#assign m=player.playerType/>
         <div class="player member">
         <#if !m.default>
             <div class="membership ${m.code}"></div></#if>
-            <a href="/account/membership">
+            <a href="/account/playerType">
                 <div class="nickname"><@message code="membership.name.${m.code}"/> <@message code="member.label"/></div>
             </a>
         </div>

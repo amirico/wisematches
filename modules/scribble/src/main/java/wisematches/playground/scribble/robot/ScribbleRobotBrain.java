@@ -2,7 +2,8 @@ package wisematches.playground.scribble.robot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.core.personality.machinery.RobotType;
+import wisematches.core.Personality;
+import wisematches.core.RobotType;
 import wisematches.playground.GameMove;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.dictionary.Dictionary;
@@ -19,14 +20,10 @@ import java.util.List;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
+public final class ScribbleRobotBrain {
 	private static final Log log = LogFactory.getLog("wisematches.scribble.robot.brain");
 
 	public ScribbleRobotBrain() {
-	}
-
-	public RobotType[] getRobotTypes() {
-		return RobotType.values();
 	}
 
 	public void putInAction(ScribbleBoard board, RobotType type) {
@@ -42,14 +39,16 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 					" at " + currentTime);
 		}
 
-		final ScribblePlayerHand robotHand = board.getPlayerTurn();
-		final List<Word> words = searchAvailableMoves(board, robotHand, type);
+		final Personality personality = board.getPlayerTurn();
+		final ScribblePlayerHand hand = board.getPlayerHand(personality);
+
+		final List<Word> words = searchAvailableMoves(board, hand.getTiles(), type);
 		if (words == null) {
 			if (log.isInfoEnabled()) {
 				log.info("Dictionary is not iterable. Turn passed.");
 			}
 			try {
-				board.makeMove(new PassTurn(robotHand.getPlayerId()));
+				board.passTurn(personality);
 			} catch (GameMoveException e) {
 				log.error("Turn can't be passed", e);
 			}
@@ -67,13 +66,13 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 		try {
 			if (word != null) {
 				try {
-					final GameMove move = board.makeMove(new MakeTurn(robotHand.getPlayerId(), word));
+					final GameMove move = board.makeTurn(personality, word);
 					if (log.isDebugEnabled()) {
 						log.debug("Robot made a word and took " + move.getPoints() + " points");
 					}
 				} catch (GameMoveException ex) {
 					log.error("Move can't be done", ex);
-					board.makeMove(new PassTurn(robotHand.getPlayerId()));
+					board.passTurn(personality);
 				}
 			} else {
 				int bankRemained = Math.min(7, board.getBankRemained());
@@ -81,13 +80,13 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 					if (log.isDebugEnabled()) {
 						log.debug("No available word. Turn passed.");
 					}
-					board.makeMove(new PassTurn(robotHand.getPlayerId()));
+					board.passTurn(personality);
 				} else {
-					int[] tiles = selectTilesForExchange(robotHand, bankRemained);
+					int[] tiles = selectTilesForExchange(hand, bankRemained);
 					if (log.isDebugEnabled()) {
 						log.debug("No available word. Exchange tiles: " + Arrays.toString(tiles));
 					}
-					board.makeMove(new ExchangeMove(robotHand.getPlayerId(), tiles));
+					board.exchangeTiles(personality, tiles);
 				}
 			}
 		} catch (GameMoveException ex) {
@@ -101,36 +100,35 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 		}
 	}
 
-	public List<Word> getAvailableMoves(ScribbleBoard board, ScribblePlayerHand hand) {
-		return searchAvailableMoves(board, hand, RobotType.EXPERT); // expert knows about all moves
+	public List<Word> getAvailableMoves(ScribbleBoard board, Tile[] tiles) {
+		return searchAvailableMoves(board, tiles, RobotType.EXPERT); // expert knows about all moves
 	}
 
-	List<Word> searchAvailableMoves(ScribbleBoard board, ScribblePlayerHand hand, RobotType type) {
+	List<Word> searchAvailableMoves(ScribbleBoard board, Tile[] tiles, RobotType type) {
 		if (log.isTraceEnabled()) {
-			log.trace("Hand robot tiles: " + Arrays.toString(hand.getTiles()));
+			log.trace("Hand robot tiles: " + Arrays.toString(tiles));
 		}
-		return analyzeValidWords(board, hand, type, board.getDictionary()); // expert has all moves
+		return analyzeValidWords(board.getDictionary(), board, tiles, type);
 	}
 
-	List<Word> analyzeValidWords(final TilesPlacement board, final ScribblePlayerHand hand,
-								 final RobotType type, final Dictionary dictionary) {
-		final List<WorkTile> tiles = new ArrayList<>();
+	List<Word> analyzeValidWords(final Dictionary dictionary, final TilesPlacement placement, Tile[] tiles, final RobotType type) {
+		final List<WorkTile> wordTiles = new ArrayList<>();
 		for (int row = 0; row < ScribbleBoard.CELLS_NUMBER; row++) {
 			for (int column = 0; column < ScribbleBoard.CELLS_NUMBER; column++) {
-				final Tile boardTile = board.getBoardTile(row, column);
+				final Tile boardTile = placement.getBoardTile(row, column);
 				if (boardTile != null) {
-					tiles.add(new WorkTile(boardTile, new Position(row, column)));
+					wordTiles.add(new WorkTile(boardTile, new Position(row, column)));
 				}
 			}
 		}
 
-		for (Tile tile : hand.getTiles()) {
-			tiles.add(new WorkTile(tile, null));
+		for (Tile tile : tiles) {
+			wordTiles.add(new WorkTile(tile, null));
 		}
 
 		final List<Word> words = new ArrayList<>();
 		boolean lastWasIncorrect = false;
-		final AnalyzingTree analyzingTree = new AnalyzingTree(board, tiles);
+		final AnalyzingTree analyzingTree = new AnalyzingTree(placement, wordTiles);
 		for (WordEntry entry : dictionary.getWordEntries()) {
 			final String word = entry.getWord();
 			if (!isLegalWord(word, type)) {
@@ -251,7 +249,7 @@ public final class ScribbleRobotBrain implements RobotBrain<ScribbleBoard> {
 
 		int maxPoints = 0;
 		for (Word word : words) {
-			final ScribbleMoveScore calculation = scoreEngine.calculateWordScore(word, tilesPlacement);
+			final ScribbleMoveScore calculation = scoreEngine.calculateWordScore(tilesPlacement, word);
 			final int points = calculation.getPoints();
 			if (points > maxPoints) {
 				result = word;

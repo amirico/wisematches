@@ -1,14 +1,13 @@
 package wisematches.playground.scribble;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Projection;
 import org.junit.Before;
 import org.junit.Test;
 import wisematches.core.Language;
 import wisematches.core.Personality;
+import wisematches.core.RobotType;
+import wisematches.core.personality.PlayerManager;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.dictionary.Dictionary;
@@ -16,11 +15,8 @@ import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
-import wisematches.playground.search.GameState;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertNotNull;
@@ -32,10 +28,14 @@ import static org.junit.Assert.assertSame;
 public class ScribbleBoardManagerTest {
 	private Session session;
 
+	private PlayerManager playerManager;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
-	private ScribblePlayManager scribbleRoomManager;
+	private ScribblePlayManager scribblePlayManager;
+
+	private Personality player1 = RobotType.DULL.getPlayer();
+	private Personality player2 = RobotType.TRAINEE.getPlayer();
 
 	public ScribbleBoardManagerTest() {
 	}
@@ -48,13 +48,15 @@ public class ScribbleBoardManagerTest {
 		expect(sessionFactory.getCurrentSession()).andReturn(session).anyTimes();
 		replay(sessionFactory);
 
+		playerManager = createStrictMock(PlayerManager.class);
 		dictionaryManager = createStrictMock(DictionaryManager.class);
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
 
-		scribbleRoomManager = new ScribblePlayManager();
-		scribbleRoomManager.setSessionFactory(sessionFactory);
-		scribbleRoomManager.setDictionaryManager(dictionaryManager);
-		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
+		scribblePlayManager = new ScribblePlayManager();
+		scribblePlayManager.setSessionFactory(sessionFactory);
+		scribblePlayManager.setPlayerManager(playerManager);
+		scribblePlayManager.setDictionaryManager(dictionaryManager);
+		scribblePlayManager.setTilesBankingHouse(tilesBankingHouse);
 	}
 
 	@Test
@@ -66,8 +68,8 @@ public class ScribbleBoardManagerTest {
 
 		final ScribbleBoard board = createStrictMock(ScribbleBoard.class);
 		expect(board.getSettings()).andReturn(settings);
-		expect(board.getPlayers()).andReturn(Arrays.<ScribblePlayerHand>asList(null, null, null));
-		board.initGameAfterLoading(tilesBank, dictionary);
+		expect(board.getPlayersCount()).andReturn(3);
+		board.initGameAfterLoading(tilesBank, dictionary, playerManager);
 		replay(board);
 
 		expect(session.get(ScribbleBoard.class, 1L)).andReturn(board);
@@ -80,7 +82,7 @@ public class ScribbleBoardManagerTest {
 		expect(tilesBankingHouse.createTilesBank(Language.EN, 3, true)).andReturn(tilesBank);
 		replay(tilesBankingHouse);
 
-		final ScribbleBoard board1 = scribbleRoomManager.loadBoardImpl(1L);
+		final ScribbleBoard board1 = scribblePlayManager.loadBoardImpl(1L);
 		assertSame(board, board1);
 
 		verify(board);
@@ -105,11 +107,10 @@ public class ScribbleBoardManagerTest {
 		expect(tilesBankingHouse.createTilesBank(Language.EN, 2, true)).andReturn(tilesBank);
 		replay(tilesBankingHouse);
 
-		scribbleRoomManager.setDictionaryManager(dictionaryManager);
-		scribbleRoomManager.setTilesBankingHouse(tilesBankingHouse);
+		scribblePlayManager.setDictionaryManager(dictionaryManager);
+		scribblePlayManager.setTilesBankingHouse(tilesBankingHouse);
 
-		final ScribbleBoard board1 = scribbleRoomManager.createBoardImpl(settings,
-				null, Arrays.asList(Personality.person(1), Personality.person(2)));
+		final ScribbleBoard board1 = scribblePlayManager.createBoardImpl(settings, Arrays.asList(player1, player2), null);
 		assertNotNull(board1);
 
 		verify(dictionaryManager);
@@ -128,34 +129,8 @@ public class ScribbleBoardManagerTest {
 		replay(dictionaryManager);
 		replay(tilesBankingHouse);
 
-		scribbleRoomManager.saveBoardImpl(board);
+		scribblePlayManager.saveBoardImpl(board);
 
-		verify(session);
-		verify(dictionaryManager);
-		verify(tilesBankingHouse);
-	}
-
-	@Test
-	public void testActivePlayerBoards() {
-		final List<Long> ids = Arrays.asList(1L, 2L, 3L);
-
-		final Criteria criteria = createMock(Criteria.class);
-		expect(criteria.createAlias("playerHands", "hand")).andReturn(criteria);
-		expect(criteria.add(anyObject(Criterion.class))).andReturn(criteria).anyTimes();
-		expect(criteria.setProjection(anyObject(Projection.class))).andReturn(criteria).anyTimes();
-		expect(criteria.list()).andReturn(ids);
-		replay(criteria);
-
-		expect(session.createCriteria(ScribbleBoard.class)).andReturn(criteria);
-		replay(session);
-
-		replay(dictionaryManager);
-		replay(tilesBankingHouse);
-
-		final Collection<Long> longCollection = scribbleRoomManager.loadPlayerBoards(Personality.person(1), GameState.ACTIVE, null, null, null);
-		assertSame(ids, longCollection);
-
-		verify(criteria);
 		verify(session);
 		verify(dictionaryManager);
 		verify(tilesBankingHouse);

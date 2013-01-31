@@ -18,6 +18,7 @@ import java.util.Date;
  */
 @Entity
 @SearchableBean(uniformityProperty = "boardId")
+@Deprecated
 public class ScribbleHistoryEntity {
 	@Id
 	@SearchableProperty(column = "board.boardId")

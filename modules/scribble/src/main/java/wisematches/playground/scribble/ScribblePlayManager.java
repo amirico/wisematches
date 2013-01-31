@@ -2,18 +2,15 @@ package wisematches.playground.scribble;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.search.Orders;
-import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
+import wisematches.core.Robot;
+import wisematches.core.RobotType;
+import wisematches.core.personality.PlayerManager;
 import wisematches.playground.AbstractGamePlayManager;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
@@ -23,9 +20,11 @@ import wisematches.playground.dictionary.DictionaryException;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
-import wisematches.playground.search.GameState;
+import wisematches.playground.scribble.robot.ScribbleRobotBrain;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
 
 /**
  * Implementation of the room for scribble game
@@ -33,18 +32,21 @@ import java.util.Collection;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSettings, ScribbleBoard> {
+	private PlayerManager playerManager;
 	private SessionFactory sessionFactory;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
+	private final ScribbleRobotBrain scribbleRobotBrain = new ScribbleRobotBrain();
+
 	private static final Log log = LogFactory.getLog("wisematches.room.scribble");
 
 	public ScribblePlayManager() {
-		super(log);
+		super(log, EnumSet.allOf(RobotType.class));
 	}
 
 	@Override
-	protected ScribbleBoard createBoardImpl(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players) throws BoardCreationException {
+	protected ScribbleBoard createBoardImpl(ScribbleSettings settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
 		final Language language = settings.getLanguage();
 		try {
 			final Dictionary dictionary = getDictionary(language);
@@ -68,8 +70,8 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 		final Language language = settings.getLanguage();
 		try {
 			final Dictionary dictionary = getDictionary(language);
-			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, board.getPlayers().size(), true);
-			board.initGameAfterLoading(tilesBank, dictionary);
+			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, board.getPlayersCount(), true);
+			board.initGameAfterLoading(tilesBank, dictionary, playerManager);
 		} catch (DictionaryException ex) {
 			throw new BoardLoadingException(ex.getMessage());
 		}
@@ -93,6 +95,17 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 		session.evict(board);
 	}
 
+	@Override
+	protected Collection<Long> loadActiveRobotGames() {
+		return Collections.emptyList();
+	}
+
+	@Override
+	protected void processRobotMove(ScribbleBoard board, Robot player) {
+		scribbleRobotBrain.putInAction(board, player.getRobotType());
+	}
+
+	/*
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	protected int loadPlayerBoardsCount(Personality player, GameState state, SearchFilter filters) {
@@ -126,7 +139,9 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 		}
 		return criteria.list();
 	}
+*/
 
+/*
 	private Criteria createSearchCriteria(Personality player, GameState state) {
 		final Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(ScribbleBoard.class)
@@ -141,6 +156,11 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 				break;
 		}
 		return criteria;
+	}
+*/
+
+	public void setPlayerManager(PlayerManager playerManager) {
+		this.playerManager = playerManager;
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {

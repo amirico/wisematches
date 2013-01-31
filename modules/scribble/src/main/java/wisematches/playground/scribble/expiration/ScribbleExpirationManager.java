@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import wisematches.core.Personality;
 import wisematches.core.expiration.impl.AbstractExpirationManager;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -24,7 +25,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 	private SessionFactory sessionFactory;
 	private ScribblePlayManager boardManager;
 
-	private final TheGamePlayListener stateListener = new TheGamePlayListener();
+	private final TheBoardListener stateListener = new TheBoardListener();
 
 	private static final int MILLIS_IN_DAY = 86400000;//24 * 60 * 60 * 1000;
 
@@ -64,7 +65,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 	@Override
 	protected boolean executeTermination(Long boardId) {
 		try {
-			final GameBoard board = boardManager.openBoard(boardId);
+			final ScribbleBoard board = boardManager.openBoard(boardId);
 			if (board != null) {
 				if (!board.isActive()) {
 					log.info("Terminate game: " + boardId);
@@ -90,18 +91,18 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 
 	public void setBoardManager(ScribblePlayManager boardManager) {
 		if (this.boardManager != null) {
-			this.boardManager.removeGamePlayListener(stateListener);
+			this.boardManager.removeBoardListener(stateListener);
 		}
 
 		this.boardManager = boardManager;
 
 		if (this.boardManager != null) {
-			this.boardManager.addGamePlayListener(stateListener);
+			this.boardManager.addBoardListener(stateListener);
 		}
 	}
 
-	private class TheGamePlayListener implements GamePlayListener {
-		private TheGamePlayListener() {
+	private class TheBoardListener implements BoardListener {
+		private TheBoardListener() {
 		}
 
 		@Override
@@ -115,7 +116,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
 			cancelTermination(board.getBoardId());
 		}
 	}

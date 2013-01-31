@@ -2,19 +2,9 @@ package wisematches.server.services.friends.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.server.services.friends.FriendRelation;
-import wisematches.server.services.friends.FriendsListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -27,6 +17,12 @@ import static org.junit.Assert.assertEquals;
 		"classpath:/config/playground-junit-config.xml"
 })
 public class HibernateFriendsManagerTest {
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("commented");
+	}
+
+/*
 	@Autowired
 	private HibernateFriendsManager friendsManager;
 
@@ -90,4 +86,5 @@ public class HibernateFriendsManagerTest {
 		assertEquals(friend.getId(), f1.getFriend());
 		assertEquals(comment, f1.getComment());
 	}
+*/
 }

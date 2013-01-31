@@ -31,7 +31,7 @@ public abstract class Account implements Serializable {
 		this.id = id;
 	}
 
-	public final Long getId() {
+	public Long getId() {
 		return id;
 	}
 

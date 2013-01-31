@@ -1,6 +1,6 @@
 package wisematches.core.personality.player.membership.impl;
 
-import wisematches.core.Membership;
+import wisematches.core.personality.player.Membership;
 import wisematches.core.personality.player.membership.MembershipCard;
 
 import javax.persistence.*;

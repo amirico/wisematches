@@ -1,6 +1,6 @@
-<#-- @ftlvariable name="context.award" type="wisematches.playground.award.Award" -->
+<#-- @ftlvariable name="context.award" type="wisematches.server.services.award.Award" -->
 <#-- @ftlvariable name="context.player" type="wisematches.core.Personality" -->
-<#-- @ftlvariable name="context.descriptor" type="wisematches.playground.award.AwardDescriptor" -->
+<#-- @ftlvariable name="context.descriptor" type="wisematches.server.services.award.AwardDescriptor" -->
 <#import "/spring.ftl" as spring/>
 <#import "../../utils.ftl" as notify>
 

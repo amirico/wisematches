@@ -43,7 +43,7 @@ public class AbstractScoreEngine implements ScoreEngine {
 		return bonuses;
 	}
 
-	public ScribbleMoveScore calculateWordScore(Word word, TilesPlacement tilesPlacement) {
+	public ScribbleMoveScore calculateWordScore(TilesPlacement tilesPlacement, Word word) {
 		ScoreBonus.Type[] bonuses = new ScoreBonus.Type[word.length()];
 
 		StringBuilder formula = new StringBuilder();

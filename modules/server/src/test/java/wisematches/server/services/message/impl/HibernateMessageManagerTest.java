@@ -1,25 +1,10 @@
 package wisematches.server.services.message.impl;
 
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.core.Membership;
-import wisematches.playground.restriction.impl.RestrictionDescription;
-import wisematches.playground.restriction.impl.RestrictionManagerImpl;
-import wisematches.server.services.message.Message;
-import wisematches.server.services.message.MessageDirection;
-import wisematches.server.services.message.MessageManager;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -32,6 +17,11 @@ import java.util.Map;
 		"classpath:/config/playground-junit-config.xml"
 })
 public class HibernateMessageManagerTest {
+	@Test
+	public void commented() {
+		throw new UnsupportedOperationException("commented");
+	}
+/*
 	@Autowired
 	MessageManager messageManager;
 
@@ -152,6 +142,7 @@ public class HibernateMessageManagerTest {
 		final SessionFactory sessionFactory = EasyMock.createMock(SessionFactory.class);
 		EasyMock.expect(sessionFactory.getCurrentSession()).andReturn(session);
 		EasyMock.replay(sessionFactory);
+*/
 /*
 		expect(template.bulkUpdate("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient and " +
                 "((m.notification and " +
@@ -166,7 +157,8 @@ public class HibernateMessageManagerTest {
                 "(a.membership = 'SECOND' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'FIRST' and created < DATE_SUB(curdate(), INTERVAL 20 DAY)) or " +
                 "(a.membership = 'PLATINUM' and created < DATE_SUB(curdate(), INTERVAL 20 DAY))))")).andReturn(0);
-*/
+*//*
+
 
 		final HibernateMessageManager m = new HibernateMessageManager();
 		m.setSessionFactory(sessionFactory);
@@ -176,4 +168,5 @@ public class HibernateMessageManagerTest {
 
 		EasyMock.verify(sessionFactory, session, query);
 	}
+*/
 }

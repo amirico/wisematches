@@ -1,6 +1,6 @@
 package wisematches.core.personality.player.membership;
 
-import wisematches.core.Membership;
+import wisematches.core.personality.player.Membership;
 
 import java.util.Date;
 
@@ -8,13 +8,6 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface MembershipCard {
-	/**
-	 * Returns expiration date for this membership card or {@code null} if it's permanent membership.
-	 *
-	 * @return the expiration date for this membership card or {@code null} if it's permanent membership.
-	 */
-	Date getExpiration();
-
 	/**
 	 * Checks is this membership card expired or not based on current timestamp.
 	 * <p/>
@@ -24,6 +17,13 @@ public interface MembershipCard {
 	 * @see System#currentTimeMillis()
 	 */
 	boolean isExpired();
+
+	/**
+	 * Returns expiration date for this membership card or {@code null} if it's permanent membership.
+	 *
+	 * @return the expiration date for this membership card or {@code null} if it's permanent membership.
+	 */
+	Date getExpiration();
 
 	/**
 	 * Returns current membership for this card.

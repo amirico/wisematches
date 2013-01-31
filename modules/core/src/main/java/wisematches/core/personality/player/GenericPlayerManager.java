@@ -8,8 +8,8 @@ import wisematches.core.personality.PlayerManager;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class GenericPlayerManager extends AbstractPlayerManager implements PlayerManager {
-	private GuestPlayerManager guestPlayerManager;
-	private MemberPlayerManager memberPlayerManager;
+	private GuestManager guestPlayerManager;
+	private MemberManager memberPlayerManager;
 
 	private final ThePlayerListener playerListener = new ThePlayerListener();
 
@@ -25,11 +25,11 @@ public final class GenericPlayerManager extends AbstractPlayerManager implements
 		return null;
 	}
 
-	public void setGuestPlayerManager(GuestPlayerManager guestPlayerManager) {
+	public void setGuestPlayerManager(GuestManager guestPlayerManager) {
 		this.guestPlayerManager = guestPlayerManager;
 	}
 
-	public void setMemberPlayerManager(MemberPlayerManager memberPlayerManager) {
+	public void setMemberPlayerManager(MemberManager memberPlayerManager) {
 		if (this.memberPlayerManager != null) {
 			this.memberPlayerManager.removePlayerListener(playerListener);
 		}
@@ -37,7 +37,7 @@ public final class GenericPlayerManager extends AbstractPlayerManager implements
 		this.memberPlayerManager = memberPlayerManager;
 
 		if (this.memberPlayerManager != null) {
-			this.addPlayerListener(playerListener);
+			this.memberPlayerManager.addPlayerListener(playerListener);
 		}
 	}
 

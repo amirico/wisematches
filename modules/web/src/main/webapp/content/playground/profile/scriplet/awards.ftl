@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
-<#-- @ftlvariable name="awardsSummary" type="wisematches.playground.award.AwardsSummary" -->
+<#-- @ftlvariable name="awardsSummary" type="wisematches.server.services.award.AwardsSummary" -->
 
 <#include "/core.ftl">
 

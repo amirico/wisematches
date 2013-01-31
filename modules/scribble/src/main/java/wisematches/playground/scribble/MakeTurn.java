@@ -13,8 +13,13 @@ import java.util.Date;
 public final class MakeTurn extends GameMove {
 	private final Word word;
 
-	protected MakeTurn(Personality player, int points, int moveNumber, Date moveTime, Word word) {
-		super(player, points, moveNumber, moveTime);
+	protected MakeTurn(Personality player, Word word) {
+		super(player);
+		this.word = word;
+	}
+
+	public MakeTurn(Personality player, int points, Date moveTime, Word word) {
+		super(player, points, moveTime);
 		this.word = word;
 	}
 

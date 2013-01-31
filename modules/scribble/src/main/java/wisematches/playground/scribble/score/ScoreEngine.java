@@ -22,10 +22,10 @@ public interface ScoreEngine {
 	/**
 	 * Returns score calculation for specified word.
 	 *
-	 * @param word		   the for for score calculation.
 	 * @param tilesPlacement the placements of tiles.
+	 * @param word           the for for score calculation.
 	 * @return the score calculation.
 	 * @throws NullPointerException is specified word is <code>null</code>.
 	 */
-	ScribbleMoveScore calculateWordScore(Word word, TilesPlacement tilesPlacement);
+	ScribbleMoveScore calculateWordScore(TilesPlacement tilesPlacement, Word word);
 }

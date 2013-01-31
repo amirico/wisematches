@@ -1,6 +1,6 @@
 package wisematches.server.services.friends;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Collection;
 
@@ -13,11 +13,11 @@ public interface FriendsManager {
 	void removeFriendsListener(FriendsListener l);
 
 
-	void addFriend(Personality person, Personality friend, String comment);
+	void addFriend(Player person, Player friend, String comment);
 
-	void removeFriend(Personality person, Personality friend);
+	void removeFriend(Player person, Player friend);
 
-	Collection<Long> getFriendsIds(Personality person);
+	Collection<Long> getFriendsIds(Player person);
 
-	Collection<FriendRelation> getFriendsList(Personality person);
+	Collection<FriendRelation> getFriendsList(Player person);
 }

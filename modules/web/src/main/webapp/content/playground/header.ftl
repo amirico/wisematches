@@ -17,7 +17,7 @@
                     <td valign="top" align="right">
                     <@wm.player.name player=principal showState=false/>
                         |
-                        <a href="/account/membership"><@message code="membership.label"/></a>
+                        <a href="/account/playerType"><@message code="membership.label"/></a>
                     <#if hasNewFeatues>
                         |
                         <a href="/info/features"

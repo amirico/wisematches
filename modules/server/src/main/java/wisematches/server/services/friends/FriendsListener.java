@@ -1,12 +1,12 @@
 package wisematches.server.services.friends;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface FriendsListener {
-	void friendAdded(Personality person, Personality fried, FriendRelation relation);
+	void friendAdded(Player person, Player fried, FriendRelation relation);
 
-	void friendRemoved(Personality person, Personality fried, FriendRelation relation);
+	void friendRemoved(Player person, Player fried, FriendRelation relation);
 }

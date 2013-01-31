@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.server.services.blacklist.BlacklistListener;
 import wisematches.server.services.blacklist.BlacklistManager;
 import wisematches.server.services.blacklist.BlacklistRecord;
@@ -38,7 +38,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void addPlayer(final Personality person, final Personality whom, final String comment) {
+	public void addPlayer(final Player person, final Player whom, final String comment) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
 		}
@@ -63,7 +63,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void removePlayer(final Personality person, final Personality whom) {
+	public void removePlayer(final Player person, final Player whom) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
 		}
@@ -83,7 +83,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public boolean isBlacklisted(Personality person, Personality whom) {
+	public boolean isBlacklisted(Player person, Player whom) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
 		}
@@ -93,7 +93,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 		@SuppressWarnings("unchecked")
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select count(*) from wisematches.playground.blacklist.BlacklistRecord where person=:pid and whom=:whom");
+		final Query query = session.createQuery("select count(*) from BlacklistRecord where person=:pid and whom=:whom");
 		query.setParameter("pid", person.getId());
 		query.setParameter("whom", whom.getId());
 		return ((Long) query.uniqueResult()) == 1;
@@ -101,7 +101,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public void checkBlacklist(Personality person, Personality whom) throws BlacklistedException {
+	public void checkBlacklist(Player person, Player whom) throws BlacklistedException {
 		if (isBlacklisted(person, whom)) {
 			throw new BlacklistedException();
 		}
@@ -110,12 +110,12 @@ public class HibernateBlacklistManager implements BlacklistManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public Collection<BlacklistRecord> getBlacklist(final Personality person) {
+	public Collection<BlacklistRecord> getBlacklist(final Player person) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
 		}
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("from wisematches.playground.blacklist.BlacklistRecord where person=:pid");
+		final Query query = session.createQuery("from BlacklistRecord where person=:pid");
 		query.setParameter("pid", person.getId());
 		return query.list();
 	}

@@ -10,7 +10,7 @@ public interface FriendRelation {
 
 	long getFriend();
 
-	Date getRegistered();
-
 	String getComment();
+
+	Date getRegistered();
 }
