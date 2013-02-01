@@ -7,8 +7,8 @@ import wisematches.core.personality.proprietary.guest.GuestPlayer;
 import wisematches.server.security.impl.WMPlayerDetails;
 import wisematches.server.web.services.state.PlayerStateListener;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.easymock.EasyMock.*;
 
 /**

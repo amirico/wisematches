@@ -24,7 +24,7 @@ import wisematches.playground.scribble.comment.GameCommentState;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

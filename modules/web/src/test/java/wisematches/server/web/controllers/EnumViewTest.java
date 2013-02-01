@@ -4,8 +4,8 @@ import org.junit.Test;
 import wisematches.playground.award.AwardType;
 import wisematches.server.web.view.EnumView;
 
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

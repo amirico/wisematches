@@ -1,6 +1,5 @@
 package wisematches.server.services.award.impl;
 
-import junit.framework.Assert;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +18,8 @@ import wisematches.server.services.award.AwardWeight;
 import wisematches.server.services.award.AwardsSummary;
 
 import java.util.EnumSet;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -48,7 +49,7 @@ public class HibernateAwardsManagerTest {
 	@Test
 	public void testGetAwardsSummary() {
 		final AwardsSummary awardsSummary = awardsManager.getAwardsSummary(person);
-		Assert.assertNotNull(awardsSummary);
+		assertNotNull(awardsSummary);
 	}
 
 	@Test

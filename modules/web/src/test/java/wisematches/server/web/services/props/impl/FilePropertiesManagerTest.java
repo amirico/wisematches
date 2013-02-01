@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Date;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

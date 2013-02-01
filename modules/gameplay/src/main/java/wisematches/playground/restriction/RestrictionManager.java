@@ -1,6 +1,7 @@
 package wisematches.playground.restriction;
 
 import wisematches.core.Player;
+import wisematches.core.PlayerType;
 
 import java.util.Collection;
 
@@ -26,7 +27,7 @@ public interface RestrictionManager {
 	Collection<String> getRestrictionNames();
 
 	/**
-	 * Returns current restriction threshold for specified restriction and membership.
+	 * Returns current restriction threshold for specified restriction and player.
 	 *
 	 * @param name   the name of restriction.
 	 * @param player the membership to be checked.
@@ -35,6 +36,17 @@ public interface RestrictionManager {
 	 * @throws NullPointerException     if {@code name} or {@code membership} is {@code null}
 	 */
 	Comparable getRestrictionThreshold(String name, Player player);
+
+	/**
+	 * Returns current restriction threshold for specified restriction and player.
+	 *
+	 * @param name   the name of restriction.
+	 * @param player the membership to be checked.
+	 * @return current restriction threshold or {@code null} if there are no any restrictions.
+	 * @throws IllegalArgumentException if specified restriction name is unknown.
+	 * @throws NullPointerException     if {@code name} or {@code membership} is {@code null}
+	 */
+	Comparable getRestrictionThreshold(String name, PlayerType player);
 
 	/**
 	 * Checks and returns restriction description for specified player.

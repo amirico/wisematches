@@ -15,7 +15,7 @@ import wisematches.playground.tourney.regular.TourneySection;
 
 import java.util.Date;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -25,8 +25,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/personality-config.xml",
-		"classpath:/config/playground-junit-config.xml"
+		"classpath:/config/personality-config.xml"
 })
 public class HibernateTourneyEntityTest {
 	@Autowired
