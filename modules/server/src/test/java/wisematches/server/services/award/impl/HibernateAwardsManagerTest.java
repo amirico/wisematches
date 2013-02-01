@@ -10,10 +10,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.server.services.MockPlayer;
 import wisematches.server.services.award.AwardContext;
 import wisematches.server.services.award.AwardWeight;
 import wisematches.server.services.award.AwardsSummary;
@@ -34,7 +34,7 @@ public class HibernateAwardsManagerTest {
 
 	private HibernateAwardsManager awardsManager;
 
-	private final Player person = new MockPlayer(1001L);
+	final Player person = new DefaultPlayer(901, null, null, null, null, null);
 
 	public HibernateAwardsManagerTest() {
 	}

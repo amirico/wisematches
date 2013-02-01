@@ -2,6 +2,7 @@ package wisematches.playground.scribble;
 
 import org.junit.Test;
 import wisematches.core.RobotType;
+import wisematches.core.personality.DefaultRobot;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +15,7 @@ public class ScribblePlayerHandTest {
 
 	@Test
 	public void testTiles() {
-		final ScribblePlayerHand ph = new ScribblePlayerHand(RobotType.DULL.getPlayer());
+		final ScribblePlayerHand ph = new ScribblePlayerHand(new DefaultRobot(RobotType.DULL));
 		ph.setTiles(new Tile[]{new Tile(1, 'A', 1)});
 		assertEquals(1, ph.getTiles().length);
 

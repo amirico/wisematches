@@ -2,8 +2,8 @@ package wisematches.server.services.award.impl.assembly;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.core.personality.PlayerManager;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.*;
@@ -13,7 +13,7 @@ import wisematches.server.services.award.AwardWeight;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
-	private PlayerManager playerManager;
+	private PersonalityManager playerManager;
 	private RegularTourneyManager tourneyManager;
 	private final TheAwardsListener listener = new TheAwardsListener();
 
@@ -43,7 +43,7 @@ public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
 		}
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

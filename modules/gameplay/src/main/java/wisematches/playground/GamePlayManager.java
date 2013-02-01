@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import wisematches.core.Player;
+import wisematches.core.Personality;
 import wisematches.core.RobotType;
 
 import java.util.Collection;
@@ -26,7 +26,7 @@ public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, 
 	 * @return created board.
 	 * @throws BoardCreationException
 	 */
-	B createBoard(S settings, Player player, RobotType robotType) throws BoardCreationException;
+	B createBoard(S settings, Personality player, RobotType robotType) throws BoardCreationException;
 
 	/**
 	 * Creates new game board with specified settings and relationship.
@@ -37,5 +37,5 @@ public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, 
 	 * @return the created game.
 	 * @throws BoardCreationException if board can't be created by some reasons.
 	 */
-	B createBoard(S settings, Collection<Player> players, GameRelationship relationship) throws BoardCreationException;
+	B createBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException;
 }

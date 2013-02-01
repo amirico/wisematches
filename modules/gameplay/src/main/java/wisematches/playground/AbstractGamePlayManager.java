@@ -1,13 +1,11 @@
 package wisematches.playground;
 
 import org.apache.commons.logging.Log;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import wisematches.core.Personality;
-import wisematches.core.Player;
-import wisematches.core.Robot;
-import wisematches.core.RobotType;
+import wisematches.core.*;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.lang.ref.Reference;
@@ -28,11 +26,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public abstract class AbstractGamePlayManager<S extends GameSettings, B extends AbstractGameBoard<S, ?>>
-		implements GamePlayManager<S, B> {
+		implements GamePlayManager<S, B>, InitializingBean {
 	private RatingSystem ratingSystem;
 
-	private TaskExecutor taskExecutor;
-	private StatisticManager statisticManager;
+	protected TaskExecutor taskExecutor;
+	protected StatisticManager statisticManager;
+	protected PersonalityManager personalityManager;
 
 	private final Log log;
 	private final Lock openBoardLock = new ReentrantLock();
@@ -75,21 +74,41 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 	@Override
-	public B createBoard(S settings, Player player, RobotType robotType) throws BoardCreationException {
+	public void afterPropertiesSet() throws Exception {
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final Collection<Long> longs = loadActiveRobotGames();
+				if (longs != null && longs.size() > 0) {
+					log.info("Found unprocessed moves. Schedule robot activities for: " + longs);
+					for (Long boardId : longs) {
+						taskExecutor.execute(new MakeRobotTurnTask(boardId, 1));
+					}
+				}
+			}
+		});
+	}
+
+	@Override
+	public B createBoard(S settings, Personality player, RobotType robotType) throws BoardCreationException {
 		if (!robotTypes.contains(robotType)) {
 			throw new BoardCreationException("Unsupported robot type: " + robotType);
 		}
-		final B gameBoard = createGameBoard(settings, Arrays.asList(player, robotType.getPlayer()), null);
+		final Robot robot = personalityManager.getRobot(robotType);
+		if (robot == null) {
+			throw new BoardCreationException("Unsupported robot type: " + robotType);
+		}
+		final B gameBoard = createGameBoard(settings, Arrays.asList(player, robot), null);
 		processRobotMove(gameBoard, 1);
 		return gameBoard;
 	}
 
 	@Override
-	public B createBoard(S settings, Collection<Player> players, GameRelationship relationship) throws BoardCreationException {
+	public B createBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
 		if (log.isDebugEnabled()) {
 			log.debug("Creating new board: settings - " + settings + ", players - " + players);
 		}
-		return createGameBoard(settings, new ArrayList<Personality>(players), relationship);
+		return createGameBoard(settings, players, relationship);
 	}
 
 	@Override
@@ -207,6 +226,8 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 			if (player instanceof Robot) {
 				oldRatings[i] = ((Robot) player).getRating();
+			} else if (player instanceof Visitor) {
+				oldRatings[i] = 1200;
 			} else {
 				oldRatings[i] = statisticManager.getRating((Player) player);
 			}
@@ -257,6 +278,10 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 	public void setStatisticManager(StatisticManager statisticManager) {
 		this.statisticManager = statisticManager;
+	}
+
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
 	}
 
 	/* ======================== Inner classes definition ================ */

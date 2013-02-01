@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.memory.MemoryWordManager;
 
@@ -36,8 +37,8 @@ public class HibernateMemoryWordManagerTest {
 
 	private ScribbleBoard board;
 
-	private Player player1 = new MockPlayer(13L);
-	private Player player2 = new MockPlayer(14L);
+	private final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
+	private final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
 
 	public HibernateMemoryWordManagerTest() {
 	}

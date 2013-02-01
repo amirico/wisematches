@@ -26,15 +26,8 @@
         <property name="accountManager" ref="accountManager"/>
     </bean>
 
-    <bean id="memberPlayerManager" class="wisematches.core.personality.player.MemberManager">
+    <bean id="playerManager" class="wisematches.core.personality.DefaultPersonalityManager">
         <property name="accountManager" ref="accountManager"/>
         <property name="membershipManager" ref="membershipManager"/>
-    </bean>
-
-    <bean id="guestPlayerManager" class="wisematches.core.personality.player.GuestManager"/>
-
-    <bean id="playerManager" class="wisematches.core.personality.player.GenericPlayerManager">
-        <property name="guestPlayerManager" ref="guestPlayerManager"/>
-        <property name="memberPlayerManager" ref="memberPlayerManager"/>
     </bean>
 </beans>

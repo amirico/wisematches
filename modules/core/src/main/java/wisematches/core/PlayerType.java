@@ -1,33 +1,27 @@
 package wisematches.core;
 
 /**
- * Each player has one of predefined membership listed in this enumeration.
- * <p/>
- * According to the membership some features can be limited or disable for the player.
- * <p/>
- * Each membership has a few constrains, like number of simultaneous games, ads visibility and so on.
- *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerType implements Comparable<PlayerType> {
+public enum PlayerType {
 	/**
-	 * Indicates that it's guest player.
+	 * Indicates that it's basic registered player.
 	 */
-	GUEST,
+	BASIC,
 
 	/**
-	 * Indicates that it's premium player.
+	 * Silver player. It's more well than the <i>GUEST<i> player.
 	 */
-	MEMBER;
+	SILVER,
 
-	PlayerType() {
-	}
+	/**
+	 * Gold player. It's more well than the <i>GOLD<i> player.
+	 */
+	GOLD,
 
-	public boolean isGuest() {
-		return this == GUEST;
-	}
-
-	public boolean isMember() {
-		return this == MEMBER;
-	}
+	/**
+	 * o
+	 * Platinum player. A player with this membership has full access.
+	 */
+	PLATINUM
 }

@@ -6,7 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.LongType;
 import wisematches.core.Language;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.PersonalityManager;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
@@ -83,7 +83,7 @@ class HibernateTourneyProcessor {
 		}
 	}
 
-	<S extends GameSettings> void initiateDivisions(Session session, GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PlayerManager playerManager) throws BoardCreationException {
+	<S extends GameSettings> void initiateDivisions(Session session, GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PersonalityManager playerManager) throws BoardCreationException {
 		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound = 0 and d.finishedDate is null");
 		for (Object o : query.list()) {
 			final HibernateTourneyDivision division = (HibernateTourneyDivision) o;

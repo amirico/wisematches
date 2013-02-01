@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.core.personality.PlayerManager;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.core.search.SearchFilter;
@@ -40,7 +40,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private TaskExecutor taskExecutor;
 	private CronExpression cronExpression;
 
-	private PlayerManager playerManager;
+	private PersonalityManager playerManager;
 	private GamePlayManager<S, ?> gamePlayManager;
 	private GameSettingsProvider<S, TourneyGroup> settingsProvider;
 	private HibernateTourneyProcessor tourneyProcessor = new HibernateTourneyProcessor();
@@ -379,7 +379,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 		}
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

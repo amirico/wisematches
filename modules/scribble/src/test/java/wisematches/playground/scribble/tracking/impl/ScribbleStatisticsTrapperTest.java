@@ -3,6 +3,7 @@ package wisematches.playground.scribble.tracking.impl;
 import org.junit.Before;
 import org.junit.Test;
 import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.playground.GameMove;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.score.ScoreBonus;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class ScribbleStatisticsTrapperTest {
 	private ScribbleStatisticsTrapper movesStatistician;
 
-	private final Player player = new MockPlayer(13L);
+	private final Player player = new DefaultPlayer(901, null, null, null, null, null);
 
 	public ScribbleStatisticsTrapperTest() {
 	}

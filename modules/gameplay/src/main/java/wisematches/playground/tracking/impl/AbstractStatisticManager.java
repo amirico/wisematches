@@ -3,11 +3,7 @@ package wisematches.playground.tracking.impl;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.core.Player;
-import wisematches.core.personality.PlayerListener;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.player.Guest;
+import wisematches.core.*;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.RegularTourneyListener;
@@ -30,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public abstract class AbstractStatisticManager<S extends Statistics, E extends StatisticsEditor> implements StatisticManager<S> {
-	private PlayerManager playerManager;
+	private PersonalityManager playerManager;
 	private GamePlayManager gamePlayManager;
 	private RegularTourneyManager tourneyManager;
 
@@ -39,7 +35,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	private final Lock statisticLock = new ReentrantLock();
 	private final Map<Personality, Short> ratingsCache = new WeakHashMap<>();
 
-	private final PlayerListener playerListener = new ThePlayerListener();
+	private final PersonalityListener playerListener = new ThePersonalityListener();
 	private final BoardListener gamePlayListener = new TheBoardListener();
 	private final RegularTourneyListener tourneyListener = new TheRegularTourneyListener();
 
@@ -101,15 +97,15 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		}
 	}
 
-	public void setPlayerManager(PlayerManager playerManager) {
+	public void setPlayerManager(PersonalityManager playerManager) {
 		if (this.playerManager != null) {
-			this.playerManager.removePlayerListener(playerListener);
+			this.playerManager.removePersonalityListener(playerListener);
 		}
 
 		this.playerManager = playerManager;
 
 		if (this.playerManager != null) {
-			this.playerManager.addPlayerListener(playerListener);
+			this.playerManager.addPersonalityListener(playerListener);
 		}
 	}
 
@@ -129,7 +125,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		final Collection<Personality> players = board.getPlayers();
 		for (Personality personality : players) {
-			if (personality instanceof Player && !(personality instanceof Guest)) {
+			if (personality instanceof Player && !(personality instanceof Visitor)) {
 				final Player player = (Player) personality;
 				statisticLock.lock();
 				try {
@@ -149,7 +145,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	@SuppressWarnings("unchecked")
 	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 		final Personality personality = move.getPlayer();
-		if (personality instanceof Player && !(personality instanceof Guest)) {
+		if (personality instanceof Player && !(personality instanceof Visitor)) {
 			final Player player = (Player) personality;
 			statisticLock.lock();
 			try {
@@ -169,7 +165,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		final Collection<Personality> hands = board.getPlayers();
 		for (Personality personality : hands) {
-			if (personality instanceof Player && !(personality instanceof Guest)) {
+			if (personality instanceof Player && !(personality instanceof Visitor)) {
 				final Player player = (Player) personality;
 				statisticLock.lock();
 				try {
@@ -226,18 +222,22 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 
 	protected abstract Number loadPlayerRating(Personality person);
 
-	private class ThePlayerListener implements PlayerListener {
-		private ThePlayerListener() {
+	private class ThePersonalityListener implements PersonalityListener {
+		private ThePersonalityListener() {
 		}
 
 		@Override
-		public void playerRegistered(Player player) {
-			createStatistic(player);
+		public void playerRegistered(Personality player) {
+			if (player instanceof Player) {
+				createStatistic((Player) player);
+			}
 		}
 
 		@Override
-		public void playerUnregistered(Player player) {
-			removeStatistic(player);
+		public void playerUnregistered(Personality player) {
+			if (player instanceof Player) {
+				removeStatistic((Player) player);
+			}
 		}
 	}
 

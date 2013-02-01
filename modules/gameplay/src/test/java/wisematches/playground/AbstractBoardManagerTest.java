@@ -9,6 +9,7 @@ import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.Robot;
 import wisematches.core.RobotType;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.*;
@@ -24,6 +25,9 @@ public class AbstractBoardManagerTest {
 	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
 
 	private BoardListener gamePlayListener;
+
+	private static final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
+	private static final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
 
 	public AbstractBoardManagerTest() {
 	}
@@ -75,7 +79,7 @@ public class AbstractBoardManagerTest {
 	public void testCreatePlayersGame() throws BoardCreationException {
 		final GameSettings settings = new MockGameSettings("test", 3);
 
-		final Collection<Player> players = Arrays.<Player>asList(new MockPlayer(1), new MockPlayer(2));
+		final Collection<Personality> players = Arrays.<Personality>asList(player1, player2);
 
 		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
@@ -209,9 +213,6 @@ public class AbstractBoardManagerTest {
 
 	@Test
 	public void testSaveListeners() throws BoardLoadingException {
-		final Player player1 = new MockPlayer(1L);
-		final Player player2 = new MockPlayer(2L);
-
 		final AbstractPlayerHand h1 = new AbstractPlayerHand(player1, (short) 100);
 		final AbstractPlayerHand h2 = new AbstractPlayerHand(player2, (short) 200);
 

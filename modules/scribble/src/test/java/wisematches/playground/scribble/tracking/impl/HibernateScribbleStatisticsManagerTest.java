@@ -11,9 +11,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.core.personality.PlayerManager;
-import wisematches.core.personality.player.Member;
+import wisematches.core.PlayerType;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ExchangeMove;
@@ -45,7 +46,7 @@ public class HibernateScribbleStatisticsManagerTest {
 	private Account person;
 
 	@Autowired
-	private PlayerManager playerManager;
+	private PersonalityManager playerManager;
 
 	@Autowired
 	private AccountManager accountManager;
@@ -74,7 +75,7 @@ public class HibernateScribbleStatisticsManagerTest {
 
 		final String uuid = UUID.randomUUID().toString();
 		person = accountManager.createAccount(new AccountEditor(uuid + "@mock.wm", uuid, "AS").createAccount());
-		player = new Member(person);
+		player = new DefaultPlayer(person, PlayerType.BASIC);
 
 		boardListener = listenerCapture.getValue();
 	}

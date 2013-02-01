@@ -2,8 +2,8 @@ package wisematches.playground.propose.impl;
 
 import org.junit.Test;
 import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.MockPlayer;
 import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.propose.criteria.ComparableOperator;
 import wisematches.playground.propose.criteria.PlayerRestrictions;
@@ -19,10 +19,10 @@ import static org.junit.Assert.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultPublicProposalTest {
-	private static final Player PERSON1 = new MockPlayer(901);
-	private static final Player PERSON2 = new MockPlayer(902);
-	private static final Player PERSON3 = new MockPlayer(903);
-	private static final Player PERSON4 = new MockPlayer(904);
+	private static final Player PERSON1 = new DefaultPlayer(901, null, null, null, null, null);
+	private static final Player PERSON2 = new DefaultPlayer(902, null, null, null, null, null);
+	private static final Player PERSON3 = new DefaultPlayer(903, null, null, null, null, null);
+	private static final Player PERSON4 = new DefaultPlayer(904, null, null, null, null, null);
 
 	public DefaultPublicProposalTest() {
 	}

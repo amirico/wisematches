@@ -7,18 +7,16 @@ package wisematches.core;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public final class Robot extends Personality {
-	private final short rating;
+public class Robot extends Personality {
 	private final RobotType robotType;
 
-	Robot(long id, short rating, RobotType robotType) {
-		super(id);
-		this.rating = rating;
+	protected Robot(RobotType robotType) {
+		super(100 + robotType.ordinal());
 		this.robotType = robotType;
 	}
 
 	public short getRating() {
-		return rating;
+		return robotType.getRating();
 	}
 
 	public RobotType getRobotType() {

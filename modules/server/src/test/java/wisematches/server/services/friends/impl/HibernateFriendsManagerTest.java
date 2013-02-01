@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
-import wisematches.server.services.MockPlayer;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.server.services.friends.FriendRelation;
 import wisematches.server.services.friends.FriendsListener;
 
@@ -37,9 +37,9 @@ public class HibernateFriendsManagerTest {
 
 	@Test
 	public void test() {
-		final Player p1 = new MockPlayer(1);
-		final Player p2 = new MockPlayer(2);
-		final Player p3 = new MockPlayer(3);
+		final Player p1 = new DefaultPlayer(901, null, null, null, null, null);
+		final Player p2 = new DefaultPlayer(902, null, null, null, null, null);
+		final Player p3 = new DefaultPlayer(903, null, null, null, null, null);
 
 		final FriendsListener listener = createStrictMock(FriendsListener.class);
 		listener.friendAdded(same(p1), same(p3), isA(FriendRelation.class));

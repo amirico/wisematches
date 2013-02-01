@@ -1,6 +1,6 @@
 package wisematches.core.personality.player.membership.impl;
 
-import wisematches.core.personality.player.Membership;
+import wisematches.core.PlayerType;
 import wisematches.core.personality.player.membership.MembershipCard;
 
 import javax.persistence.*;
@@ -22,12 +22,12 @@ public class HibernateMembershipCard implements MembershipCard, Cloneable {
 
 	@Column(name = "membership")
 	@Enumerated(EnumType.ORDINAL)
-	private Membership membership;
+	private PlayerType membership;
 
 	HibernateMembershipCard() {
 	}
 
-	HibernateMembershipCard(long player, Membership membership, Date expiration) {
+	HibernateMembershipCard(long player, PlayerType membership, Date expiration) {
 		this.player = player;
 		this.expiration = expiration;
 		this.membership = membership;
@@ -47,14 +47,14 @@ public class HibernateMembershipCard implements MembershipCard, Cloneable {
 		return expiration;
 	}
 
-	public Membership getMembership() {
+	public PlayerType getMembership() {
 		return membership;
 	}
 
 	@Override
-	public Membership getValidMembership() {
+	public PlayerType getValidMembership() {
 		if (isExpired()) {
-			return Membership.BASIC;
+			return PlayerType.BASIC;
 		}
 		return membership;
 	}
@@ -63,7 +63,7 @@ public class HibernateMembershipCard implements MembershipCard, Cloneable {
 		this.expiration = expiration;
 	}
 
-	public void setMembership(Membership membership) {
+	public void setMembership(PlayerType membership) {
 		this.membership = membership;
 	}
 
