@@ -13,5 +13,5 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
-    <import resource="playground-config.xml"/>
+    <import resource="classpath:/config/playground-config.xml"/>
 </beans>

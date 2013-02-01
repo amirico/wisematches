@@ -1,6 +1,7 @@
 package wisematches.playground.restriction.impl;
 
 import wisematches.core.Player;
+import wisematches.core.PlayerType;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 
@@ -30,7 +31,18 @@ public class RestrictionManagerImpl implements RestrictionManager {
 
 	@Override
 	public Comparable<?> getRestrictionThreshold(String name, Player player) {
+		return getRestrictionThreshold(name, player.getPlayerType());
+	}
+
+	@Override
+	public Comparable getRestrictionThreshold(String name, PlayerType player) {
+		if (name == null) {
+			throw new NullPointerException("Name can't be null");
+		}
 		final RestrictionDescription<?> descriptor = getDescriptor(name);
+		if (descriptor == null) {
+			throw new IllegalArgumentException("Unknown restriction: " + name);
+		}
 		return descriptor.getRestriction(player);
 	}
 

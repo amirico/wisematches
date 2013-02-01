@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
+import wisematches.core.PlayerType;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
@@ -214,18 +215,16 @@ public class HibernateMessageManager implements MessageManager {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void cleanup() {
-		throw new UnsupportedOperationException("Commented");
-/*
 		final StringBuilder b = new StringBuilder();
 		b.append("DELETE m FROM player_message as m INNER JOIN account_personality as a ON a.id=m.recipient where ");
 		b.append("(");
 		b.append("(state = 3 and created < DATE_SUB(curdate(), INTERVAL 1 DAY))");
 
-		final Membership[] values = Membership.values();
+		final PlayerType[] values = PlayerType.values();
 		if (restrictionManager.containsRestriction("messages.hist.private")) {
 			b.append(" or ");
 			b.append("(m.notification and ");
-			for (Membership value : values) {
+			for (PlayerType value : values) {
 				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.private", value);
 				if (restriction != null) {
 					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
@@ -238,7 +237,7 @@ public class HibernateMessageManager implements MessageManager {
 		if (restrictionManager.containsRestriction("messages.hist.notice")) {
 			b.append(" or ");
 			b.append("(not m.notification and ");
-			for (Membership value : values) {
+			for (PlayerType value : values) {
 				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.notice", value);
 				if (restriction != null) {
 					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
@@ -257,7 +256,6 @@ public class HibernateMessageManager implements MessageManager {
 		} finally {
 			removesLock.unlock();
 		}
-*/
 	}
 
 	public void setPlayerManager(PersonalityManager playerManager) {

@@ -21,8 +21,8 @@ import java.util.List;
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
 		"classpath:/config/personality-config.xml",
-		"classpath:/config/playground-config.xml",
-		"classpath:/config/scribble-config.xml"
+		"classpath:/config/scribble-config.xml",
+		"classpath:/config/playground-junit-config.xml"
 })
 public class ScribblePlayerSearchManagerTest {
 	@Autowired

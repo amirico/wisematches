@@ -13,15 +13,15 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 
 	@Override
 	protected String getEntitiesList(PlayerSearchArea area, SearchFilter filter) {
-		String r = "wisematches.core.personality.player.account.impl.HibernateAccountImpl account, wisematches.playground.scribble.tracking.impl.ScribbleStatisticsEditor stats";
+		String r = "HibernateAccountImpl account, ScribbleStatisticsEditor stats";
 
 		switch (area) {
 			case PLAYERS:
 				return r;
 			case FRIENDS:
-				return r + ", wisematches.server.services.friends.impl.HibernateFriendRelation r";
+				return r + ", HibernateFriendRelation r";
 			case FORMERLY:
-				return r + ", wisematches.playground.scribble.ScribbleBoard board left join board.playerHands l left join board.playerHands r";
+				return r + ", ScribbleBoard board left join board.hands l left join board.hands r";
 			default:
 				throw new UnsupportedOperationException("Area filter not implemented for " + area);
 		}

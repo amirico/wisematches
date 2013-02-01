@@ -16,7 +16,7 @@ import wisematches.server.web.services.state.PlayerStateListener;
 
 import java.util.Date;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 
 /**

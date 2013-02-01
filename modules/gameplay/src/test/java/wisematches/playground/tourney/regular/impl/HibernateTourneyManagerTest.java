@@ -31,8 +31,8 @@ import wisematches.playground.tourney.regular.*;
 import java.text.ParseException;
 import java.util.*;
 
-import static junit.framework.Assert.*;
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

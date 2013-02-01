@@ -8,8 +8,8 @@ import wisematches.playground.tourney.regular.impl.HibernateTourneyWinner;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
