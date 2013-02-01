@@ -5,6 +5,7 @@ import org.junit.Test;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.RobotType;
+import wisematches.core.personality.DefaultRobot;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.TilesBank;
@@ -24,9 +25,9 @@ import static wisematches.playground.scribble.ScribbleBoard.LETTERS_IN_HAND;
 public class ScribbleBoardTest {
 	private ScribbleSettings settings;
 
-	private Personality player1 = RobotType.DULL.getPlayer();
-	private Personality player2 = RobotType.TRAINEE.getPlayer();
-	private Personality player3 = RobotType.EXPERT.getPlayer();
+	private Personality player1 = new DefaultRobot(RobotType.DULL);
+	private Personality player2 = new DefaultRobot(RobotType.TRAINEE);
+	private Personality player3 = new DefaultRobot(RobotType.EXPERT);
 
 	private ScribblePlayerHand h1;
 	private ScribblePlayerHand h2;

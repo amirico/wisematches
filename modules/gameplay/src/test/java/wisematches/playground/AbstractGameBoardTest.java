@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import wisematches.core.Personality;
 import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 
 import java.util.*;
 
@@ -17,9 +18,10 @@ import static org.junit.Assert.*;
  */
 @SuppressWarnings("unchecked")
 public class AbstractGameBoardTest {
-	private Player player1 = new MockPlayer(1L);
-	private Player player2 = new MockPlayer(2L);
-	private Player player3 = new MockPlayer(3L);
+	private static final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
+	private static final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
+	private static final Player player3 = new DefaultPlayer(903, null, null, null, null, null);
+	private static final Player player4 = new DefaultPlayer(904, null, null, null, null, null);
 
 	private AbstractPlayerHand h1;
 	private AbstractPlayerHand h2;
@@ -83,7 +85,7 @@ public class AbstractGameBoardTest {
 		assertSame(h1, board.getPlayerHand(player1));
 		assertSame(h2, board.getPlayerHand(player2));
 		assertSame(h3, board.getPlayerHand(player3));
-		assertNull(board.getPlayerHand(new MockPlayer(4)));
+		assertNull(board.getPlayerHand(player4));
 	}
 
 	@Test
@@ -108,14 +110,14 @@ public class AbstractGameBoardTest {
 		assertSame(h1, board.getPlayerHand(player1));
 		assertSame(h2, board.getPlayerHand(player2));
 		assertSame(h3, board.getPlayerHand(player3));
-		assertNull(board.getPlayerHand(new MockPlayer(4)));
+		assertNull(board.getPlayerHand(player4));
 	}
 
 	@Test
 	public void test_illegalMoves() throws GameMoveException {
 		//unknown player
 		try {
-			board.makeMove(new MockPlayer(13));
+			board.makeMove(player4);
 			fail("Exception must be here");
 		} catch (UnsuitablePlayerException ignore) {
 		}
@@ -256,7 +258,7 @@ public class AbstractGameBoardTest {
 		board.setFinishScore(new short[]{0, 0, 0});
 
 		try {
-			board.resign(new MockPlayer(13));
+			board.resign(player4);
 			fail("Exception must be here");
 		} catch (UnsuitablePlayerException ignore) {
 		} catch (BoardUpdatingException e) {

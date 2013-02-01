@@ -1,7 +1,7 @@
 package wisematches.playground;
 
 import wisematches.core.Personality;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.PersonalityManager;
 
 import javax.persistence.*;
 import java.util.*;
@@ -124,12 +124,13 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		currentPlayerIndex = selectFirstPlayer(players);
 	}
 
-	protected void initializePlayers(PlayerManager playerManager) {
+	protected void initializePlayers(PersonalityManager playerManager) {
 		players = new ArrayList<>(hands.size()); // create new list. It's transient and not stored
 		for (H h : hands) {
-			final Personality player = playerManager.getPlayer(h.getPlayerId());
+			final long playerId = h.getPlayerId();
+			final Personality player = playerManager.getPerson(playerId);
 			if (player == null) {
-				throw new IllegalStateException("Player can't be loaded: " + h.getPlayerId());
+				throw new IllegalStateException("Player can't be loaded: " + playerId);
 			}
 			players.add(player);
 		}

@@ -2,15 +2,13 @@ package wisematches.playground.scribble;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Robot;
 import wisematches.core.RobotType;
-import wisematches.core.personality.PlayerManager;
 import wisematches.playground.AbstractGamePlayManager;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
@@ -22,9 +20,10 @@ import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 import wisematches.playground.scribble.robot.ScribbleRobotBrain;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Implementation of the room for scribble game
@@ -32,7 +31,6 @@ import java.util.EnumSet;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSettings, ScribbleBoard> {
-	private PlayerManager playerManager;
 	private SessionFactory sessionFactory;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
@@ -58,7 +56,6 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	protected ScribbleBoard loadBoardImpl(long gameId) throws BoardLoadingException {
 		final Session session = sessionFactory.getCurrentSession();
 		final ScribbleBoard board = (ScribbleBoard) session.get(ScribbleBoard.class, gameId);
@@ -71,23 +68,14 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 		try {
 			final Dictionary dictionary = getDictionary(language);
 			final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, board.getPlayersCount(), true);
-			board.initGameAfterLoading(tilesBank, dictionary, playerManager);
+			board.initGameAfterLoading(tilesBank, dictionary, personalityManager);
 		} catch (DictionaryException ex) {
 			throw new BoardLoadingException(ex.getMessage());
 		}
 		return board;
 	}
 
-	private Dictionary getDictionary(Language language) throws DictionaryException {
-		final Dictionary dictionary = dictionaryManager.getDictionary(language);
-		if (dictionary == null) {
-			throw new DictionaryException("There is no dictionary for language " + language);
-		}
-		return dictionary;
-	}
-
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY)
 	protected void saveBoardImpl(ScribbleBoard board) {
 		final Session session = sessionFactory.getCurrentSession();
 		session.saveOrUpdate(board);
@@ -97,13 +85,33 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 
 	@Override
 	protected Collection<Long> loadActiveRobotGames() {
-		return Collections.emptyList();
+		final Session session = sessionFactory.getCurrentSession();
+
+		final Query query = session.createQuery("select b.boardId from ScribbleBoard b left join b.hands as h where h.playerId in (100, 101, 102) " +
+				"and b.gameResolution is null and b.currentPlayerIndex = index(h)");
+
+		final List list = query.list();
+		final Collection<Long> res = new ArrayList<>(list.size());
+		for (Object o : list) {
+			res.add(((Number) o).longValue());
+		}
+		return res;
 	}
 
 	@Override
 	protected void processRobotMove(ScribbleBoard board, Robot player) {
 		scribbleRobotBrain.putInAction(board, player.getRobotType());
 	}
+
+
+	private Dictionary getDictionary(Language language) throws DictionaryException {
+		final Dictionary dictionary = dictionaryManager.getDictionary(language);
+		if (dictionary == null) {
+			throw new DictionaryException("There is no dictionary for language " + language);
+		}
+		return dictionary;
+	}
+
 
 	/*
 	@Override
@@ -158,10 +166,6 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 		return criteria;
 	}
 */
-
-	public void setPlayerManager(PlayerManager playerManager) {
-		this.playerManager = playerManager;
-	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

@@ -1,8 +1,7 @@
 package wisematches.playground.tourney.regular.impl;
 
 import wisematches.core.Personality;
-import wisematches.core.Player;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.PersonalityManager;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyGameResolution;
 import wisematches.playground.tourney.regular.TourneyGroup;
@@ -104,7 +103,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 	@Column(name = "finishedGamesCount")
 	private byte finishedGamesCount;
 
-	public HibernateTourneyGroup() {
+	HibernateTourneyGroup() {
 	}
 
 	public HibernateTourneyGroup(int group, HibernateTourneyRound round, long[] players) {
@@ -213,27 +212,27 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return finishedDate;
 	}
 
-	<S extends GameSettings> int initializeGames(GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PlayerManager playerManager) throws BoardCreationException {
+	<S extends GameSettings> int initializeGames(GamePlayManager<S, ?> gamePlayManager, GameSettingsProvider<S, TourneyGroup> settingsProvider, PersonalityManager playerManager) throws BoardCreationException {
 		if (totalGamesCount != 0) {
 			throw new IllegalStateException("Group already initialized");
 		}
 
 		final S settings = settingsProvider.createGameSettings(this);
 		final TourneyRelationship relationship = new TourneyRelationship(getRound().getDivision().getTourney().getNumber());
-		final Player p0 = playerManager.getPlayer(player0);
-		final Player p1 = playerManager.getPlayer(player1);
+		final Personality p0 = playerManager.getPerson(player0);
+		final Personality p1 = playerManager.getPerson(player1);
 		if (playersCount == 2) {
 			game0 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p1), relationship).getBoardId();
 			totalGamesCount = 1;
 		} else if (playersCount == 3) {
-			final Player p2 = playerManager.getPlayer(player2);
+			final Personality p2 = playerManager.getPerson(player2);
 			game0 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p1), relationship).getBoardId();
 			game1 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p2), relationship).getBoardId();
 			game2 = gamePlayManager.createBoard(settings, Arrays.asList(p1, p2), relationship).getBoardId();
 			totalGamesCount = 3;
 		} else if (playersCount == 4) {
-			final Player p2 = playerManager.getPlayer(player2);
-			final Player p3 = playerManager.getPlayer(player3);
+			final Personality p2 = playerManager.getPerson(player2);
+			final Personality p3 = playerManager.getPerson(player3);
 			game0 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p1), relationship).getBoardId();
 			game1 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p2), relationship).getBoardId();
 			game2 = gamePlayManager.createBoard(settings, Arrays.asList(p0, p3), relationship).getBoardId();

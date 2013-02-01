@@ -6,8 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import wisematches.core.Language;
 import wisematches.core.Personality;
+import wisematches.core.PersonalityManager;
 import wisematches.core.RobotType;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.personality.DefaultRobot;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.dictionary.Dictionary;
@@ -28,14 +29,14 @@ import static org.junit.Assert.assertSame;
 public class ScribbleBoardManagerTest {
 	private Session session;
 
-	private PlayerManager playerManager;
+	private PersonalityManager playerManager;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
 	private ScribblePlayManager scribblePlayManager;
 
-	private Personality player1 = RobotType.DULL.getPlayer();
-	private Personality player2 = RobotType.TRAINEE.getPlayer();
+	private Personality player1 = new DefaultRobot(RobotType.DULL);
+	private Personality player2 = new DefaultRobot(RobotType.TRAINEE);
 
 	public ScribbleBoardManagerTest() {
 	}
@@ -48,13 +49,13 @@ public class ScribbleBoardManagerTest {
 		expect(sessionFactory.getCurrentSession()).andReturn(session).anyTimes();
 		replay(sessionFactory);
 
-		playerManager = createStrictMock(PlayerManager.class);
+		playerManager = createStrictMock(PersonalityManager.class);
 		dictionaryManager = createStrictMock(DictionaryManager.class);
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
 
 		scribblePlayManager = new ScribblePlayManager();
 		scribblePlayManager.setSessionFactory(sessionFactory);
-		scribblePlayManager.setPlayerManager(playerManager);
+		scribblePlayManager.setPersonalityManager(playerManager);
 		scribblePlayManager.setDictionaryManager(dictionaryManager);
 		scribblePlayManager.setTilesBankingHouse(tilesBankingHouse);
 	}

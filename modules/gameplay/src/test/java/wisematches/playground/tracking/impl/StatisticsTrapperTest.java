@@ -1,10 +1,9 @@
 package wisematches.playground.tracking.impl;
 
 import org.junit.Test;
-import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.core.personality.player.Guest;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.playground.*;
 
 import java.util.Arrays;
@@ -21,16 +20,16 @@ import static org.junit.Assert.assertEquals;
 public class StatisticsTrapperTest {
 	private StatisticsTrapper statisticsTrapper = new StatisticsTrapper<StatisticsEditor>();
 
-	private final Player player1 = new MockPlayer(13L);
-	private final Player player2 = new MockPlayer(14L);
-	private final Player player3 = new MockPlayer(15L);
+	private static final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
+	private static final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
+	private static final Player player3 = new DefaultPlayer(903, null, null, null, null, null);
 
 	public StatisticsTrapperTest() {
 	}
 
 	@Test
 	public void testUpdateGamesStatistic1() throws Exception {
-		final Player player = Guest.byLanguage(Language.DEFAULT);
+		final Player player = new DefaultPlayer(900, null, null, null, null, null);
 		final StatisticsEditor editor = new StatisticsEditor();
 
 		statisticsTrapper.trapGameStarted(player, editor);
@@ -249,9 +248,9 @@ public class StatisticsTrapperTest {
 			assertEquals(1403, editor.getHighestRating());
 			assertEquals(1400, editor.getLowestRating());
 			assertEquals(1000, editor.getHighestWonOpponentRating());
-			assertEquals(13L, editor.getHighestWonOpponentId());
+			assertEquals(901L, editor.getHighestWonOpponentId());
 			assertEquals(1800, editor.getLowestLostOpponentRating());
-			assertEquals(15L, editor.getLowestLostOpponentId());
+			assertEquals(903L, editor.getLowestLostOpponentId());
 			verify(board);
 		}
 
@@ -274,9 +273,9 @@ public class StatisticsTrapperTest {
 			assertEquals(1425, editor.getHighestRating());
 			assertEquals(1400, editor.getLowestRating());
 			assertEquals(1800, editor.getHighestWonOpponentRating());
-			assertEquals(15L, editor.getHighestWonOpponentId());
+			assertEquals(903L, editor.getHighestWonOpponentId());
 			assertEquals(1800, editor.getLowestLostOpponentRating());
-			assertEquals(15L, editor.getLowestLostOpponentId());
+			assertEquals(903L, editor.getLowestLostOpponentId());
 			verify(board);
 		}
 
@@ -299,9 +298,9 @@ public class StatisticsTrapperTest {
 			assertEquals(1425, editor.getHighestRating());
 			assertEquals(1392, editor.getLowestRating());
 			assertEquals(1800, editor.getHighestWonOpponentRating());
-			assertEquals(15L, editor.getHighestWonOpponentId());
+			assertEquals(903L, editor.getHighestWonOpponentId());
 			assertEquals(1000, editor.getLowestLostOpponentRating());
-			assertEquals(13L, editor.getLowestLostOpponentId());
+			assertEquals(901L, editor.getLowestLostOpponentId());
 			verify(board);
 		}
 	}

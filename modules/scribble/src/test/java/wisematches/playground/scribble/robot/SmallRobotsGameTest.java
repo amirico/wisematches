@@ -14,11 +14,8 @@ import org.springframework.orm.hibernate4.SessionHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.core.Robot;
-import wisematches.core.RobotType;
-import wisematches.core.personality.player.Guest;
+import wisematches.core.*;
+import wisematches.core.personality.DefaultVisitor;
 import wisematches.playground.*;
 import wisematches.playground.scribble.*;
 
@@ -84,7 +81,7 @@ public class SmallRobotsGameTest {
 	private ScribblePlayerHand doSmallGame(final RobotType robotType) throws BoardCreationException, InterruptedException {
 		long currentTime = System.currentTimeMillis();
 		assertNotNull("No room manager", scribbleBoardManager);
-		final Guest player = Guest.byLanguage(Language.RU);
+		final Visitor player = new DefaultVisitor(Language.RU);
 		final ScribbleSettings settings = new ScribbleSettings("This is robots game", player.getLanguage(), 3, true, true);
 		scribbleBoardManager.addBoardListener(new BoardListener() {
 			@Override
@@ -151,8 +148,7 @@ public class SmallRobotsGameTest {
 			assertNull("Board has a player who has a turn: " + playerTurn, playerTurn);
 		}
 
-		final Robot robot = robotType.getPlayer();
-
+		final Robot robot = (Robot) board.getPlayers().get(1);
 		final ScribblePlayerHand playerHand = board.getPlayerHand(robot);
 		assertTrue(playerHand.getPoints() > 0);
 		assertTrue(playerHand.getOldRating() == robot.getRating());

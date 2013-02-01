@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.playground.scribble.MockPlayer;
+import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 
@@ -31,24 +32,27 @@ public class HibernateBoardSettingsManagerTest {
 
 	@Test
 	public void test() {
-		final BoardSettings s1 = boardSettingsManager.getScribbleSettings(new MockPlayer(123));
+		final Player p1 = new DefaultPlayer(900, null, null, null, null, null);
+		final Player p2 = new DefaultPlayer(901, null, null, null, null, null);
+
+		final BoardSettings s1 = boardSettingsManager.getScribbleSettings(p2);
 		assertSettings(s1, true, true, true, "tiles-set-classic");
 
-		final BoardSettings s2 = boardSettingsManager.getScribbleSettings(new MockPlayer(1001));
+		final BoardSettings s2 = boardSettingsManager.getScribbleSettings(p1);
 		assertSettings(s2, true, true, true, "tiles-set-classic");
 		s2.setTilesClass("mock-tiles");
 		s2.setCheckWords(false);
 		s2.setCleanMemory(false);
 		s2.setShowCaptions(false);
-		boardSettingsManager.setScribbleSettings(new MockPlayer(1001), s2);
+		boardSettingsManager.setScribbleSettings(p1, s2);
 
-		final BoardSettings s3 = boardSettingsManager.getScribbleSettings(new MockPlayer(1001));
+		final BoardSettings s3 = boardSettingsManager.getScribbleSettings(p1);
 		assertSettings(s3, false, false, false, "mock-tiles");
 		s3.setTilesClass("tiles-set-classic");
 		s3.setCheckWords(true);
 		s3.setCleanMemory(true);
 		s3.setShowCaptions(true);
-		boardSettingsManager.setScribbleSettings(new MockPlayer(1001), s3);
+		boardSettingsManager.setScribbleSettings(p1, s3);
 	}
 
 	private void assertSettings(BoardSettings s, boolean checkWords, boolean clearMemory, boolean showCaptions, String tilesClass) {

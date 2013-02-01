@@ -1,6 +1,6 @@
 package wisematches.core.personality.player.membership;
 
-import wisematches.core.personality.player.Membership;
+import wisematches.core.PlayerType;
 
 import java.util.Date;
 
@@ -30,12 +30,12 @@ public interface MembershipCard {
 	 *
 	 * @return the current membership for this card.
 	 */
-	Membership getMembership();
+	PlayerType getMembership();
 
 	/**
 	 * Returns valid membership for current moment. This method checks current time.
 	 *
 	 * @return valid membership for current moment. This method checks current time.
 	 */
-	Membership getValidMembership();
+	PlayerType getValidMembership();
 }

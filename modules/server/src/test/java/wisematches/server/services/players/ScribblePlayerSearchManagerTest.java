@@ -1,4 +1,4 @@
-package wisematches.playground.scribble.player;
+package wisematches.server.services.players;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,12 +7,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
-import wisematches.server.services.MockPlayer;
-import wisematches.server.services.players.PlayerEntityBean;
-import wisematches.server.services.players.PlayerSearchArea;
-import wisematches.server.services.players.ScribblePlayerSearchManager;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class ScribblePlayerSearchManagerTest {
 	@Autowired
 	private ScribblePlayerSearchManager playerSearchManager;
 
-	private final Player player = new MockPlayer(1029);
+	private final Player player = new DefaultPlayer(1029, null, null, null, null, null);
 
 	public ScribblePlayerSearchManagerTest() {
 	}

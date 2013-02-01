@@ -7,8 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.core.PlayerType;
 import wisematches.core.expiration.ExpirationListener;
-import wisematches.core.personality.player.Membership;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountManager;
 import wisematches.core.personality.player.membership.MembershipCard;
@@ -61,10 +61,10 @@ public class HibernateMembershipManager implements MembershipManager, CleaningDa
 	}
 
 	@Override
-	public Membership getMembership(Account personality) {
+	public PlayerType getMembership(Account personality) {
 		final MembershipCard card = getPlayerMembership(personality);
 		if (card == null) {
-			return Membership.BASIC;
+			return PlayerType.BASIC;
 		}
 		return card.getValidMembership();
 	}
@@ -82,7 +82,7 @@ public class HibernateMembershipManager implements MembershipManager, CleaningDa
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public MembershipCard updatePlayerMembership(Account person, Membership membership, Date expiration) {
+	public MembershipCard updatePlayerMembership(Account person, PlayerType membership, Date expiration) {
 		if (person == null) {
 			throw new NullPointerException("Person can't be null");
 		}

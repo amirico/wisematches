@@ -7,6 +7,7 @@ import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Robot;
 import wisematches.core.RobotType;
+import wisematches.core.personality.DefaultRobot;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryException;
@@ -127,7 +128,7 @@ public class ScribbleRobotBrainTest {
 		expect(dictionary.getWordEntries()).andReturn(words);
 		replay(dictionary);
 
-		final Robot player = RobotType.DULL.getPlayer();
+		final Robot player = new DefaultRobot(RobotType.DULL);
 		final ScribblePlayerHand hand = new ScribblePlayerHand(player, new Tile[]{
 				new Tile(6, 'a', 1),
 				new Tile(9, 'd', 1),

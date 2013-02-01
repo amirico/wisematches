@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 import wisematches.core.Personality;
-import wisematches.core.personality.PlayerManager;
+import wisematches.core.PersonalityManager;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.scribble.bank.LettersDistribution;
@@ -544,7 +544,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 
-	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PlayerManager playerManager) {
+	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PersonalityManager playerManager) {
 		initializePlayers(playerManager);
 
 		this.dictionary = vocabulary;
