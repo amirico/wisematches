@@ -237,7 +237,7 @@ public class PlayerProfileController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPlayerManager(PersonalityManager playerManager) {
+	public void setPersonalityManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

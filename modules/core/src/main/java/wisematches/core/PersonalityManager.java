@@ -1,7 +1,7 @@
 package wisematches.core;
 
 /**
- * The {@code PlayerManager} provides ability to get players and machineries by id.
+ * The {@code PersonalityManager} provides ability to get players and machineries by id.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */

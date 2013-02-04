@@ -66,11 +66,11 @@ public class AbstractBoardDescription<S extends GameSettings, H extends Abstract
 	public AbstractBoardDescription() {
 	}
 
-	protected void initializePlayers(PersonalityManager playerManager) {
+	protected void initializePlayers(PersonalityManager personalityManager) {
 		players = new ArrayList<>(hands.size()); // create new list. It's transient and not stored
 		for (H h : hands) {
 			final long playerId = h.getPlayerId();
-			final Personality player = playerManager.getPerson(playerId);
+			final Personality player = personalityManager.getPerson(playerId);
 			if (player == null) {
 				throw new IllegalStateException("Player can't be loaded: " + playerId);
 			}

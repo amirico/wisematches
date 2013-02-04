@@ -38,7 +38,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private TaskExecutor taskExecutor;
 	private CronExpression cronExpression;
 
-	private PersonalityManager playerManager;
+	private PersonalityManager personalityManager;
 	private GamePlayManager<S, ?> gamePlayManager;
 	private GameSettingsProvider<S, TourneyGroup> settingsProvider;
 	private HibernateTourneyProcessor tourneyProcessor = new HibernateTourneyProcessor();
@@ -277,7 +277,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 			public void run() {
 				lock.lock();
 				try {
-					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), gamePlayManager, settingsProvider, playerManager);
+					tourneyProcessor.initiateDivisions(sessionFactory.getCurrentSession(), gamePlayManager, settingsProvider, personalityManager);
 				} catch (Exception ex) {
 					log.error("Divisions can't be initiated by internal error", ex);
 					throw new TourneyProcessingException("Divisions can't be initiated by internal error", ex);
@@ -372,8 +372,8 @@ public class HibernateTourneyManager<S extends GameSettings>
 		}
 	}
 
-	public void setPlayerManager(PersonalityManager playerManager) {
-		this.playerManager = playerManager;
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
 	}
 
 	public void setGamePlayManager(GamePlayManager<S, ?> gamePlayManager) {

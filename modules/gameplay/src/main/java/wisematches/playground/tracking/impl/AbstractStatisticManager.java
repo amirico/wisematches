@@ -3,7 +3,10 @@ package wisematches.playground.tracking.impl;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.*;
+import wisematches.core.Personality;
+import wisematches.core.PersonalityListener;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.RegularTourneyListener;
@@ -26,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public abstract class AbstractStatisticManager<S extends Statistics, E extends StatisticsEditor> implements StatisticManager<S> {
-	private PersonalityManager playerManager;
+	private PersonalityManager personalityManager;
 	private GamePlayManager gamePlayManager;
 	private RegularTourneyManager tourneyManager;
 
@@ -97,15 +100,15 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		}
 	}
 
-	public void setPlayerManager(PersonalityManager playerManager) {
-		if (this.playerManager != null) {
-			this.playerManager.removePersonalityListener(playerListener);
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		if (this.personalityManager != null) {
+			this.personalityManager.removePersonalityListener(playerListener);
 		}
 
-		this.playerManager = playerManager;
+		this.personalityManager = personalityManager;
 
-		if (this.playerManager != null) {
-			this.playerManager.addPersonalityListener(playerListener);
+		if (this.personalityManager != null) {
+			this.personalityManager.addPersonalityListener(playerListener);
 		}
 	}
 
@@ -125,7 +128,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		final Collection<Personality> players = board.getPlayers();
 		for (Personality personality : players) {
-			if (personality instanceof Player && !(personality instanceof Visitor)) {
+			if (personality instanceof Player) {
 				final Player player = (Player) personality;
 				statisticLock.lock();
 				try {
@@ -145,7 +148,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	@SuppressWarnings("unchecked")
 	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 		final Personality personality = move.getPlayer();
-		if (personality instanceof Player && !(personality instanceof Visitor)) {
+		if (personality instanceof Player) {
 			final Player player = (Player) personality;
 			statisticLock.lock();
 			try {
@@ -165,7 +168,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		final Collection<Personality> hands = board.getPlayers();
 		for (Personality personality : hands) {
-			if (personality instanceof Player && !(personality instanceof Visitor)) {
+			if (personality instanceof Player) {
 				final Player player = (Player) personality;
 				statisticLock.lock();
 				try {
@@ -185,7 +188,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processTourneyFinished(TourneyDivision division) {
 		final Collection<TourneyWinner> tourneyWinners = division.getTourneyWinners();
 		for (TourneyWinner winner : tourneyWinners) {
-			final Player player = playerManager.getPlayer(winner.getPlayer());
+			final Player player = personalityManager.getPlayer(winner.getPlayer());
 			if (player == null) {
 				continue;
 			}

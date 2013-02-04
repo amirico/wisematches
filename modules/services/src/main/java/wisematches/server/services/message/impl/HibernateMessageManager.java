@@ -258,7 +258,7 @@ public class HibernateMessageManager implements MessageManager {
 		}
 	}
 
-	public void setPlayerManager(PersonalityManager playerManager) {
+	public void setPersonalityManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 
