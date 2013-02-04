@@ -5,7 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import wisematches.core.Personality;
-import wisematches.core.Membership;
+import wisematches.core.Player;
+import wisematches.core.PlayerType;
+import wisematches.core.Visitor;
 
 import java.util.*;
 
@@ -26,13 +28,13 @@ public enum WMAuthorities implements GrantedAuthority {
 
 	static final Set<GrantedAuthority> GUEST_AUTHORITIES = new HashSet<GrantedAuthority>(EnumSet.of(USER, GUEST));
 
-	private static final Map<Membership, Set<GrantedAuthority>> authoritiesCache = new HashMap<>();
+	private static final Map<PlayerType, Set<GrantedAuthority>> authoritiesCache = new HashMap<>();
 
 	static {
-		authoritiesCache.put(Membership.BASIC, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER)));
-		authoritiesCache.put(Membership.GOLD, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, GOLD)));
-		authoritiesCache.put(Membership.SILVER, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, SILVER)));
-		authoritiesCache.put(Membership.PLATINUM, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, PLATINUM)));
+		authoritiesCache.put(PlayerType.BASIC, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER)));
+		authoritiesCache.put(PlayerType.GOLD, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, GOLD)));
+		authoritiesCache.put(PlayerType.SILVER, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, SILVER)));
+		authoritiesCache.put(PlayerType.PLATINUM, new HashSet<GrantedAuthority>(EnumSet.of(USER, MEMBER, PLATINUM)));
 	}
 
 	@Override
@@ -62,12 +64,11 @@ public enum WMAuthorities implements GrantedAuthority {
 	}
 
 	public static Collection<GrantedAuthority> forPlayer(Personality player) {
-		final Personality.Type playerType = player.getPlayerType();
-		if (playerType.isGuest()) {
+		if (player instanceof Visitor) {
 			return GUEST_AUTHORITIES;
 		}
-		if (player.getMembership() != null) {
-			return authoritiesCache.get(player.getMembership());
+		if (player instanceof Player) {
+			return authoritiesCache.get(((Player) player).getPlayerType());
 		}
 		return Collections.emptyList();
 	}

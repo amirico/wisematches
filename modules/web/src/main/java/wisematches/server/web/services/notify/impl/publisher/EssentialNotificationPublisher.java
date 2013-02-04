@@ -6,7 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationException;
 import wisematches.server.web.services.notify.NotificationScope;
@@ -46,7 +46,7 @@ public class EssentialNotificationPublisher implements NotificationPublisher {
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = false)
 	public void publishNotification(Notification notification) throws NotificationException {
 		final String code = notification.getCode();
-		final Account target = notification.getTarget();
+		final Player target = notification.getTarget();
 
 		if (redundantNotifications.contains(code)) {
 			final Date activityDate = playerStateManager.getLastActivityDate(target);

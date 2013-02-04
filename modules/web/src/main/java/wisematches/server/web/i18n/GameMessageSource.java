@@ -4,12 +4,10 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 import org.springframework.context.MessageSource;
-import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.core.personality.proprietary.ProprietaryPlayer;
-import wisematches.playground.GameBoard;
+import wisematches.core.*;
+import wisematches.playground.BoardDescription;
 import wisematches.playground.GameRelationship;
-import wisematches.playground.propose.criteria.CriterionViolation;
+import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.tourney.regular.TourneyRelationship;
 
 import java.text.DateFormat;
@@ -22,13 +20,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class GameMessageSource {
-	private static final Map<Locale, DateFormat> DATE_FORMATTER = new ConcurrentHashMap<Locale, DateFormat>();
-	private static final Map<Locale, DateFormat> TIME_FORMATTER = new ConcurrentHashMap<Locale, DateFormat>();
+	private static final Map<Locale, DateFormat> DATE_FORMATTER = new ConcurrentHashMap<>();
+	private static final Map<Locale, DateFormat> TIME_FORMATTER = new ConcurrentHashMap<>();
 
 	static {
 		for (Language lang : Language.values()) {
-			DATE_FORMATTER.put(lang.locale(), DateFormat.getDateInstance(DateFormat.LONG, lang.locale()));
-			TIME_FORMATTER.put(lang.locale(), DateFormat.getTimeInstance(DateFormat.SHORT, lang.locale()));
+			DATE_FORMATTER.put(lang.getLocale(), DateFormat.getDateInstance(DateFormat.LONG, lang.getLocale()));
+			TIME_FORMATTER.put(lang.getLocale(), DateFormat.getTimeInstance(DateFormat.SHORT, lang.getLocale()));
 		}
 	}
 
@@ -39,9 +37,6 @@ public class GameMessageSource {
 
 	/**
 	 * Taken from here: http://stackoverflow.com/questions/1224996/java-convert-string-to-html-string
-	 *
-	 * @param string
-	 * @return
 	 */
 	public static String stringToHTMLString(String string) {
 		final StringBuilder sb = new StringBuilder(string.length());
@@ -104,17 +99,25 @@ public class GameMessageSource {
 	}
 
 	public String getPlayerNick(Personality p, Locale locale) {
-		if (p instanceof ProprietaryPlayer) {
-			return getRobotNick((ProprietaryPlayer) p, locale);
+		if (p instanceof Robot) {
+			return getRobotNick((Robot) p, locale);
+		} else if (p instanceof Visitor) {
+			return getVisitorNick((Visitor) p, locale);
+		} else if (p instanceof Player) {
+			return ((Player) p).getNickname();
 		}
-		return p.getNickname();
+		throw new IllegalArgumentException("Unsupported personality type: " + p.getClass());
 	}
 
-	public String getRobotNick(ProprietaryPlayer player, Locale locale) {
-		return messageSource.getMessage("game.player." + player.getNickname(), null, locale);
+	public String getRobotNick(Robot player, Locale locale) {
+		return messageSource.getMessage("game.player." + player.getRobotType().name().toLowerCase(), null, locale);
 	}
 
-	public String getBoardTitle(GameBoard<?, ?> board, Locale locale) {
+	public String getVisitorNick(Visitor player, Locale locale) {
+		return messageSource.getMessage("game.player.guest", null, locale);
+	}
+
+	public String getBoardTitle(BoardDescription<?, ?> board, Locale locale) {
 		return getBoardTitle(board.getSettings().getTitle(), board.getRelationship(), locale);
 	}
 
@@ -161,7 +164,7 @@ public class GameMessageSource {
 		return TIME_FORMATTER.get(locale).format(date);
 	}
 
-	public String formatSpentTime(GameBoard board, Locale locale) {
+	public String formatSpentTime(BoardDescription<?, ?> board, Locale locale) {
 		return formatTimeMinutes(getSpentMinutes(board), locale);
 	}
 
@@ -177,7 +180,7 @@ public class GameMessageSource {
 		return formatTimeMinutes((endTime - startTime) / 1000 / 60, locale);
 	}
 
-	public String formatRemainedTime(GameBoard board, Locale locale) {
+	public String formatRemainedTime(BoardDescription<?, ?> board, Locale locale) {
 		return formatTimeMinutes(getRemainedMinutes(board), locale);
 	}
 
@@ -192,7 +195,7 @@ public class GameMessageSource {
 		return date.getTime();
 	}
 
-	public long getSpentMinutes(GameBoard board) {
+	public long getSpentMinutes(BoardDescription<?, ?> board) {
 		final long startTime = board.getStartedTime().getTime();
 		final long endTime;
 		final Date finishedTime = board.getFinishedTime();
@@ -204,7 +207,7 @@ public class GameMessageSource {
 		return (endTime - startTime) / 1000 / 60;
 	}
 
-	public long getRemainedMinutes(GameBoard board) {
+	public long getRemainedMinutes(BoardDescription<?, ?> board) {
 		final int daysPerMove = board.getSettings().getDaysPerMove();
 		final long elapsedTime = System.currentTimeMillis() - board.getLastMoveTime().getTime();
 
@@ -223,51 +226,52 @@ public class GameMessageSource {
 		final int minutes = (int) (time % 60);
 
 		final Language language = Language.byLocale(locale);
+		final Localization localization = language.getLocalization();
 		if (days == 0 && hours == 0 && minutes == 0) {
-			return language.getMomentAgoLabel();
+			return localization.getMomentAgoLabel();
 		}
 
 		if (hours <= 0 && minutes <= 0) {
-			return days + " " + language.getDaysLabel(days);
+			return days + " " + localization.getDaysLabel(days);
 		}
 		if (days <= 0 && minutes <= 0) {
-			return hours + " " + language.getHoursLabel(hours);
+			return hours + " " + localization.getHoursLabel(hours);
 		}
 		if (days <= 0 && hours <= 0) {
-			return minutes + " " + language.getMinutesLabel(minutes);
+			return minutes + " " + localization.getMinutesLabel(minutes);
 		}
 
 		final StringBuilder b = new StringBuilder();
 		if (days > 0) {
-			b.append(days).append(language.getDaysCode()).append(" ");
+			b.append(days).append(localization.getDaysCode()).append(" ");
 		}
 		if (hours > 0) {
-			b.append(hours).append(language.getHoursCode()).append(" ");
+			b.append(hours).append(localization.getHoursCode()).append(" ");
 		}
 		if ((days == 0 || hours == 0) && (minutes > 0)) {
-			b.append(minutes).append(language.getMinutesCode()).append(" ");
+			b.append(minutes).append(localization.getMinutesCode()).append(" ");
 		}
 		return b.toString().trim();
 	}
 
 	public String formatDays(int days, Locale locale) {
-		return Language.byLocale(locale).getDaysLabel(days);
+		return Language.byLocale(locale).getLocalization().getDaysLabel(days);
 	}
 
 	public String formatHours(int hours, Locale locale) {
-		return Language.byLocale(locale).getHoursLabel(hours);
+		return Language.byLocale(locale).getLocalization().getHoursLabel(hours);
 	}
 
 	public String formatMinutes(int minutes, Locale locale) {
-		return Language.byLocale(locale).getMinutesLabel(minutes);
+		return Language.byLocale(locale).getLocalization().getMinutesLabel(minutes);
 	}
 
 	public String getWordEnding(int quantity, Locale locale) {
-		return Language.byLocale(locale).getWordEnding(quantity);
+		return Language.byLocale(locale).getLocalization().getWordEnding(quantity);
 	}
 
 	public String getNumeralEnding(int value, Locale locale) {
-		return Language.byLocale(locale).getNumeralEnding(value);
+		return Language.byLocale(locale).getLocalization().getNumeralEnding(value);
 	}
 
 	public void setMessageSource(MessageSource messageSource) {

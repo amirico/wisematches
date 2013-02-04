@@ -155,7 +155,7 @@
 
     <bean id="notificationOriginCenter"
           class="wisematches.server.web.services.notify.impl.NotificationOriginCenter">
-        <property name="playerManager" ref="playerManager"/>
+        <property name="personalityManager" ref="personalityManager"/>
         <property name="awardsManager" ref="awardsManager"/>
         <property name="messageManager" ref="messageManager"/>
         <property name="gamePlayManager" ref="scribbleBoardManager"/>

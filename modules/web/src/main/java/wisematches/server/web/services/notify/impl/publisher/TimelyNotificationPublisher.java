@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.task.TaskExecutor;
 import wisematches.core.Personality;
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationException;
 import wisematches.server.web.services.notify.NotificationScope;
@@ -58,7 +58,7 @@ public class TimelyNotificationPublisher implements NotificationPublisher {
 	private void postponeNotification(final Notification notification) {
 		lock.lock();
 		try {
-			final Account account = notification.getTarget();
+			final Player account = notification.getTarget();
 			Collection<Notification> notifications = waitingNotifications.get(account);
 			if (notifications == null) {
 				notifications = new ArrayList<>();

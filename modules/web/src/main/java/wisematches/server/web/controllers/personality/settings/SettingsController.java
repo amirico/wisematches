@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.core.Language;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
@@ -47,7 +47,7 @@ public class SettingsController extends WisematchesController {
 
 	@RequestMapping(value = "")
 	public String modifyAccountPage(Model model, @ModelAttribute("settings") SettingsForm form) {
-		final Personality principal = getPrincipal();
+		final Player principal = getPrincipal();
 		if (principal.getTimeZone() != null) {
 			form.setTimezone(principal.getTimeZone().getID());
 		}
@@ -81,7 +81,7 @@ public class SettingsController extends WisematchesController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String modifyAccountAction(@Valid @ModelAttribute("settings") SettingsForm form,
 									  BindingResult errors, Model model, HttpServletRequest request) throws UnknownEntityException {
-		final Personality personality = getPersonality();
+		final Player personality = getPrincipal();
 		final Account account = accountManager.getAccount(personality.getId());
 		if (account == null) {
 			throw new UnknownEntityException(null, "account");

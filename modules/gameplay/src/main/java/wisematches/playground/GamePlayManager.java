@@ -37,5 +37,5 @@ public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, 
 	 * @return the created game.
 	 * @throws BoardCreationException if board can't be created by some reasons.
 	 */
-	B createBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException;
+	B createBoard(S settings, Collection<? extends Personality> players, GameRelationship relationship) throws BoardCreationException;
 }

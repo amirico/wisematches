@@ -38,7 +38,7 @@
     </beans:bean>
 
     <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
-        <beans:property name="playerManager" ref="playerManager"/>
+        <beans:property name="personalityManager" ref="personalityManager"/>
         <beans:property name="accountManager" ref="accountManager"/>
         <beans:property name="accountLockManager" ref="lockAccountManager"/>
         <beans:property name="authenticationManager" ref="authenticationManager"/>

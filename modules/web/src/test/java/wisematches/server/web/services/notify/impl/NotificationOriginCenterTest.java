@@ -1,58 +1,10 @@
 package wisematches.server.web.services.notify.impl;
 
-import freemarker.template.Configuration;
-import org.easymock.Capture;
-import org.easymock.CaptureType;
-import org.easymock.IMockBuilder;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.core.expiration.ExpirationListener;
-import wisematches.core.personality.player.MemberPlayerManager;
-import wisematches.core.personality.player.MemberPlayer;
-import wisematches.core.personality.player.account.Account;
-import wisematches.core.search.Orders;
-import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
-import wisematches.core.task.executor.TransactionAwareExecutor;
-import wisematches.playground.*;
-import wisematches.playground.award.*;
-import wisematches.playground.dictionary.Dictionary;
-import wisematches.playground.message.MessageListener;
-import wisematches.playground.message.MessageManager;
-import wisematches.playground.message.impl.HibernateMessage;
-import wisematches.playground.propose.*;
-import wisematches.playground.propose.impl.DefaultGameProposal;
-import wisematches.playground.scribble.*;
-import wisematches.playground.scribble.bank.TilesBank;
-import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
-import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
-import wisematches.playground.scribble.expiration.ScribbleExpirationType;
-import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.regular.*;
-import wisematches.server.web.services.dictionary.ChangeSuggestion;
-import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
-import wisematches.server.web.services.dictionary.DictionarySuggestionManager;
-import wisematches.server.web.services.dictionary.SuggestionType;
-import wisematches.server.web.services.notify.Notification;
-import wisematches.server.web.services.notify.NotificationScope;
-import wisematches.server.web.services.props.impl.MemoryPropertiesManager;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -69,7 +21,11 @@ import static org.easymock.EasyMock.*;
 		"classpath:/config/services-junit-config.xml"
 })
 public class NotificationOriginCenterTest {
-	@Autowired
+	@Test
+	public void asd() {
+		throw new UnsupportedOperationException("Commented");
+	}
+/*	@Autowired
 	private Configuration notificationFreemarkerConfig;
 
 	@Autowired
@@ -94,7 +50,7 @@ public class NotificationOriginCenterTest {
 
 	@Before
 	public void setUp() throws Exception {
-		final MemberPlayerManager playerManager = createMock(MemberPlayerManager.class);
+		final PersonalityManager playerManager = createMock(PersonalityManager.class);
 		expect(playerManager.getPlayer(1001L)).andReturn(new MemberPlayer(p1)).anyTimes();
 		expect(playerManager.getPlayer(1002L)).andReturn(new MemberPlayer(p2)).anyTimes();
 		expect(playerManager.getPlayer(p1)).andReturn(new MemberPlayer(p1)).anyTimes();
@@ -108,7 +64,7 @@ public class NotificationOriginCenterTest {
 
 		publisherCenter.setPlayerManager(playerManager);
 
-		notificationFreemarkerConfig.setSharedVariable("playerManager", playerManager);
+		notificationFreemarkerConfig.setSharedVariable("personalityManager", playerManager);
 		notificationFreemarkerConfig.setSharedVariable("ratingManager", ratingManager);
 
 		final TransactionAwareExecutor taskExecutor = new TransactionAwareExecutor();
@@ -446,7 +402,7 @@ public class NotificationOriginCenterTest {
 		verify(searchManager);
 	}
 
-/*
+*//*
 	@Test
 	public void testTourneyFinished() throws InterruptedException {
 		final Capture<RegularTourneyListener> tourneyListener = new Capture<>();
@@ -479,7 +435,7 @@ public class NotificationOriginCenterTest {
 
 		verify(tourneyManager);
 	}
-*/
+*//*
 
 	@Test
 	public void testAwardGranted() throws Exception {
@@ -550,5 +506,5 @@ public class NotificationOriginCenterTest {
 		expect(mock.getEmail()).andReturn("support@localhost").anyTimes();
 		replay(mock);
 		return mock;
-	}
+	}*/
 }

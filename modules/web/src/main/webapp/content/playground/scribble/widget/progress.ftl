@@ -74,10 +74,10 @@
                 <div class="sample game-resolution-player">
                     <#if board.resolution??>
                 <#switch board.resolution>
-                        <#case 'FINISHED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'FINISHED'><@message code="game.resolution.by"/> ${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
                         <#case 'STALEMATE'><@message code="game.resolution.timeout"/><#break>
-                        <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
-                        <#case 'RESIGNED'><@message code="game.resolution.by"/> ${playerManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'RESIGNED'><@message code="game.resolution.by"/> ${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
                         <#default>
                     </#switch>
                 </#if>

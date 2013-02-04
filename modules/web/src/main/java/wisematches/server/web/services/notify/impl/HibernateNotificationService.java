@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.core.Personality;
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 import wisematches.core.task.TransactionalExecutor;
 import wisematches.server.web.services.notify.*;
 
@@ -84,7 +84,7 @@ public class HibernateNotificationService implements NotificationService, Initia
 	}
 
 	@Override
-	public Notification raiseNotification(String code, Account target, NotificationSender sender, Object context) throws NotificationException {
+	public Notification raiseNotification(String code, Player target, NotificationSender sender, Object context) throws NotificationException {
 		final NotificationScope personalScope;
 		if (descriptorsMap.containsKey(code)) {
 			personalScope = getNotificationScope(code, target);

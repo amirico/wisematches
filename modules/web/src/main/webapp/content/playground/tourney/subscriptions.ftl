@@ -40,7 +40,7 @@
                         <tbody>
                             <#list tourneySubscriptions as s>
                             <tr>
-                                <td><@wm.player.name playerManager.getPlayer(s.player)/></td>
+                                <td><@wm.player.name personalityManager.getPlayer(s.player)/></td>
                                 <td><@wm.tourney.section s.section/></td>
                                 <td><@message code="tourney.round.label"/> ${s.round?string}</td>
                                 <td>&nbsp;</td>

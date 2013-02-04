@@ -47,13 +47,12 @@ public class FilePropertiesManagerTest {
 		filePropertiesManager.setDouble("mock.group", "p3", 12.3d);
 		filePropertiesManager.setFloat("mock.group", "p4", 13.2f);
 		filePropertiesManager.setInt("mock.group", "p5", 10);
-		filePropertiesManager.setParameter("mock.group", "p6", 20L);
 		filePropertiesManager.setString("mock.group", "p7", "mock");
 
 		assertEquals(true, filePropertiesManager.getBoolean("mock.group", "p1", false));
 		assertEquals(value, filePropertiesManager.getDate("mock.group", "p2", null));
-		assertEquals(12.3d, filePropertiesManager.getDouble("mock.group", "p3", Double.NaN));
-		assertEquals(13.2f, filePropertiesManager.getFloat("mock.group", "p4", Float.NaN));
+		assertEquals(12.3d, filePropertiesManager.getDouble("mock.group", "p3", Double.NaN), 0.00001);
+		assertEquals(13.2f, filePropertiesManager.getFloat("mock.group", "p4", Float.NaN), 0.00001);
 		assertEquals(10, filePropertiesManager.getInt("mock.group", "p5", 0));
 		assertEquals(20L, filePropertiesManager.getLong("mock.group", "p6", 0));
 		assertEquals("mock", filePropertiesManager.getString("mock.group", "p7", null));

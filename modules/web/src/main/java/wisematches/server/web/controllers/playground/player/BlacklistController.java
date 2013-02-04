@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
 import wisematches.server.services.blacklist.BlacklistManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
@@ -23,8 +23,8 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/blacklist")
 public class BlacklistController extends WisematchesController {
-	private MemberPlayerManager playerManager;
 	private BlacklistManager blacklistManager;
+	private PersonalityManager playerManager;
 	private GameMessageSource gameMessageSource;
 
 	public BlacklistController() {
@@ -40,11 +40,11 @@ public class BlacklistController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public ServiceResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
-		final Personality player = playerManager.getPlayer(form.getPerson());
+		final Player player = playerManager.getPlayer(form.getPerson());
 		if (player == null) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("blacklist.err.unknown", locale));
 		}
-		blacklistManager.addPlayer(getPersonality(), player, form.getComment());
+		blacklistManager.addPlayer(getPrincipal(), player, form.getComment());
 		return ServiceResponse.SUCCESS;
 	}
 
@@ -52,15 +52,16 @@ public class BlacklistController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
 	public ServiceResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {
-		final Personality personality = getPersonality();
+		final Player player = getPrincipal();
 		for (Long id : removeList) {
-			blacklistManager.removePlayer(personality, Personality.person(id));
+			final Player player1 = playerManager.getPlayer(id);
+			blacklistManager.removePlayer(player, player1);
 		}
 		return ServiceResponse.SUCCESS;
 	}
 
 	@Autowired
-	public void setPlayerManager(MemberPlayerManager playerManager) {
+	public void setPlayerManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

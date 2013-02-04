@@ -2,8 +2,8 @@ package wisematches.server.web.services.notify.impl.publisher;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import wisematches.core.personality.player.account.Account;
-import wisematches.playground.message.MessageManager;
+import wisematches.core.Player;
+import wisematches.server.services.message.MessageManager;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationSender;
 
@@ -18,7 +18,7 @@ public class MessageNotificationPublisherTest {
 
 	@Test
 	public void testSendNotification() {
-		final Account account = EasyMock.createNiceMock(Account.class);
+		final Player account = EasyMock.createNiceMock(Player.class);
 
 		final MessageManager manager = createStrictMock(MessageManager.class);
 		manager.sendNotification(account, "mock.message", true);

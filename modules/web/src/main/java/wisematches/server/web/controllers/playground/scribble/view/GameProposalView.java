@@ -1,7 +1,7 @@
 package wisematches.server.web.controllers.playground.scribble.view;
 
+import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.propose.GameProposal;
-import wisematches.playground.propose.criteria.CriterionViolation;
 import wisematches.playground.scribble.ScribbleSettings;
 
 import java.util.Collection;

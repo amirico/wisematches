@@ -13,8 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayerManager;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.security.AccountSecurityService;
 
@@ -30,8 +30,8 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 
 	private String administratorPassword;
 
-	private MemberPlayerManager playerManager;
 	private AccountManager accountManager;
+	private PersonalityManager personalityManager;
 	private AccountLockManager accountLockManager;
 	private AuthenticationManager authenticationManager;
 
@@ -53,7 +53,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 		if (p == null) {
 			throw new UsernameNotFoundException("Account with email " + username + " not found in the system");
 		}
-		Personality player = playerManager.getPlayer(p);
+		Player player = personalityManager.getPlayer(p.getId());
 		if (player == null) {
 			throw new UsernameNotFoundException("Player for account " + p + " can't be created");
 		}
@@ -127,8 +127,8 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 		}
 	}
 
-	public void setPlayerManager(MemberPlayerManager playerManager) {
-		this.playerManager = playerManager;
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
 	}
 
 	public void setSaltSource(SaltSource saltSource) {

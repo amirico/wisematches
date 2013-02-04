@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
@@ -48,8 +48,8 @@ public class ScribbleCommentController extends WisematchesController {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 		}
 
-		final Personality personality = getPersonality();
-		if (board.getPlayerHand(personality.getId()) == null) {
+		final Player personality = getPrincipal();
+		if (board.getPlayerHand(personality) == null) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
 		}
 		return ServiceResponse.success(null, "comments", commentManager.getCommentStates(board, personality));
@@ -67,12 +67,12 @@ public class ScribbleCommentController extends WisematchesController {
 		} catch (BoardLoadingException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 		}
-		if (board.getPlayerHand(getPersonality().getId()) == null) {
+		if (board.getPlayerHand(getPrincipal()) == null) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
 		}
 
 		final Collection<Map<?, ?>> a = new ArrayList<Map<?, ?>>();
-		final List<GameComment> comments = commentManager.getComments(board, getPersonality(), ids);
+		final List<GameComment> comments = commentManager.getComments(board, getPrincipal(), ids);
 		for (GameComment comment : comments) {
 			a.add(scribbleObjectsConverter.convertGameComment(comment, locale));
 		}
@@ -139,7 +139,7 @@ public class ScribbleCommentController extends WisematchesController {
 		} catch (BoardLoadingException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
 		}
-		commentManager.markRead(board, getPersonality());
+		commentManager.markRead(board, getPrincipal());
 		return ServiceResponse.success();
 	}
 

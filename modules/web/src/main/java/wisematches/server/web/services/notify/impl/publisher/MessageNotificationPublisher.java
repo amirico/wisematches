@@ -4,8 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.personality.player.account.Account;
-import wisematches.playground.message.MessageManager;
+import wisematches.core.Player;
+import wisematches.server.services.message.MessageManager;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationScope;
 import wisematches.server.web.services.notify.impl.NotificationPublisher;
@@ -34,7 +34,7 @@ public class MessageNotificationPublisher implements NotificationPublisher {
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = true)
 	public void publishNotification(final Notification notification) {
-		final Account target = notification.getTarget();
+		final Player target = notification.getTarget();
 		if (log.isDebugEnabled()) {
 			log.debug("Send message notification '" + notification.getCode() + "' to player: " + target);
 		}

@@ -95,7 +95,7 @@
                             <@message code="profile.undefined"/>
                         <#else>
                         ${statistics.lowestLostOpponentRating}
-                            <#assign llp=playerManager.getPlayer(statistics.lowestLostOpponentId)!""/>
+                            <#assign llp=personalityManager.getPlayer(statistics.lowestLostOpponentId)!""/>
                             <#if llp?has_content>( <@wm.player.name player=llp showType=false/>)</#if>
                         </#if>
                         </div>
@@ -107,7 +107,7 @@
                             <@message code="profile.undefined"/>
                         <#else>
                         ${statistics.highestWonOpponentRating}
-                            <#assign hwp=playerManager.getPlayer(statistics.highestWonOpponentId)!""/>
+                            <#assign hwp=personalityManager.getPlayer(statistics.highestWonOpponentId)!""/>
                             <#if hwp?has_content>( <@wm.player.name player=hwp showType=false/>
                                 )</#if>
                         </#if>

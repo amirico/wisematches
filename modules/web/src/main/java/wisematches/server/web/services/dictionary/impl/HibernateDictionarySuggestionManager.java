@@ -12,7 +12,6 @@ import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
@@ -152,12 +151,6 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public <Ctx extends SuggestionContext> int getTotalCount(Personality person, Ctx context) {
-		return getFilteredCount(person, context, null);
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends SuggestionContext, Fl extends SearchFilter.NoFilter> int getFilteredCount(Personality person, Ctx context, Fl filter) {
 		Query q = createSearchQuery(true, context, null);
 		return ((Number) q.uniqueResult()).intValue();
 	}
@@ -165,7 +158,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends SuggestionContext, Fl extends SearchFilter.NoFilter> List<ChangeSuggestion> searchEntities(Personality person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends SuggestionContext> List<ChangeSuggestion> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
 		Query q = createSearchQuery(false, context, null);
 		if (range != null) {
 			range.apply(q);

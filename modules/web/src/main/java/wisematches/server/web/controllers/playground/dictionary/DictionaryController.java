@@ -66,7 +66,7 @@ public class DictionaryController extends WisematchesController {
 
 		final SuggestionContext ctx = new SuggestionContext(language, null, EnumSet.of(SuggestionState.WAITING));
 
-		final List<ChangeSuggestion> waitingSuggestions = dictionarySuggestionManager.searchEntities(null, ctx, null, null, null);
+		final List<ChangeSuggestion> waitingSuggestions = dictionarySuggestionManager.searchEntities(null, ctx, null, null);
 		model.addAttribute("waitingSuggestions", waitingSuggestions);
 
 		// TODO: must be changed according to use role.

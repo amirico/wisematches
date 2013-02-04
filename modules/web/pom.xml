@@ -75,7 +75,7 @@
 
         <dependency>
             <groupId>wisematches</groupId>
-            <artifactId>server</artifactId>
+            <artifactId>services</artifactId>
             <version>5.0.0-SNAPSHOT</version>
         </dependency>
 

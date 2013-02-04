@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
@@ -73,7 +74,7 @@ public class ScribbleMemoryController extends WisematchesController {
 
 	private ServiceResponse executeSaveAction(final long boardId, Locale locale, Word word, MemoryAction action) {
 		try {
-			final Personality personality = getPersonality();
+			final Player personality = getPrincipal();
 			if (personality == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.personality", locale));
 			}
@@ -81,19 +82,19 @@ public class ScribbleMemoryController extends WisematchesController {
 			if (board == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.board.unknown", locale));
 			}
-			final ScribblePlayerHand hand = board.getPlayerHand(personality.getId());
+			final ScribblePlayerHand hand = board.getPlayerHand(personality);
 			if (hand == null) {
 				return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.hand.unknown", locale));
 			}
 			if (action == MemoryAction.ADD) {
 				final Personality principal = ScribbleMemoryController.this.getPrincipal();
-				final int memoryWordsCount = memoryWordManager.getMemoryWordsCount(board, hand);
-				final Restriction restriction = restrictionManager.validateRestriction(principal, "scribble.memory", memoryWordsCount);
+				final int memoryWordsCount = memoryWordManager.getMemoryWordsCount(board, personality);
+				final Restriction restriction = restrictionManager.validateRestriction(personality, "scribble.memory", memoryWordsCount);
 				if (restriction != null) {
 					throw new MemoryActionException("game.memory.err.limit", restriction.getThreshold());
 				}
 			}
-			return ServiceResponse.success(null, action.doAction(memoryWordManager, board, hand, word));
+			return ServiceResponse.success(null, action.doAction(memoryWordManager, board, personality, word));
 		} catch (MemoryActionException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage(ex.getCode(), locale, ex.getArgs()));
 		} catch (BoardLoadingException ex) {
@@ -125,42 +126,42 @@ public class ScribbleMemoryController extends WisematchesController {
 	private enum MemoryAction {
 		LOAD {
 			@Override
-			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) {
-				return Collections.singletonMap("words", (Object) wordManager.getMemoryWords(board, hand));
+			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) {
+				return Collections.singletonMap("words", (Object) wordManager.getMemoryWords(board, player));
 			}
 		},
 		CLEAR {
 			@Override
-			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) {
+			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) {
 				if (log.isDebugEnabled()) {
-					log.debug("Clear memory words for " + hand.getPlayerId() + "@" + board.getBoardId());
+					log.debug("Clear memory words for " + player.getId() + "@" + board.getBoardId());
 				}
-				wordManager.clearMemoryWords(board, hand);
+				wordManager.clearMemoryWords(board, player);
 				return null;
 			}
 		},
 		ADD {
 			@Override
-			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) throws MemoryActionException {
+			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) throws MemoryActionException {
 				if (log.isDebugEnabled()) {
-					log.debug("Add memory word for " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word);
+					log.debug("Add memory word for " + player.getId() + "@" + board.getBoardId() + ": " + word);
 				}
-				wordManager.addMemoryWord(board, hand, word);
+				wordManager.addMemoryWord(board, player, word);
 				return null;
 			}
 		},
 		REMOVE {
 			@Override
-			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) {
+			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) {
 				if (log.isDebugEnabled()) {
-					log.debug("Remove memory word for " + hand.getPlayerId() + "@" + board.getBoardId() + ": " + word);
+					log.debug("Remove memory word for " + player.getId() + "@" + board.getBoardId() + ": " + word);
 				}
-				wordManager.removeMemoryWord(board, hand, word);
+				wordManager.removeMemoryWord(board, player, word);
 				return null;
 			}
 		};
 
-		public abstract Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, ScribblePlayerHand hand, Word word) throws MemoryActionException;
+		public abstract Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) throws MemoryActionException;
 	}
 
 	private static class MemoryActionException extends Exception {

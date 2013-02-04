@@ -17,6 +17,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.core.Language;
+import wisematches.core.Player;
+import wisematches.core.PlayerType;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.security.AccountSecurityService;
 import wisematches.server.web.controllers.ServiceResponse;
@@ -91,11 +94,11 @@ public class CreateAccountController {
 		// Validate before next steps
 		validateRegistrationForm(form, result);
 
-		Account player = null;
+		Player player = null;
 		// Create account if no errors
 		if (!result.hasErrors()) {
 			try {
-				player = createAccount(form, request);
+				player = new DefaultPlayer(createAccount(form, request), PlayerType.BASIC);
 			} catch (DuplicateAccountException ex) {
 				final Set<String> fieldNames = ex.getFieldNames();
 				if (fieldNames.contains("email")) {

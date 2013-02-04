@@ -8,31 +8,23 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.core.personality.proprietary.ProprietaryPlayer;
-import wisematches.core.personality.machinery.RobotType;
-import wisematches.playground.BoardCreationException;
+import wisematches.core.RobotType;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.propose.criteria.ComparableOperator;
-import wisematches.playground.propose.criteria.PlayerCriterion;
-import wisematches.playground.propose.criteria.PlayerRestrictions;
-import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
-import wisematches.playground.scribble.ScribblePlayerHand;
-import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.playground.scribble.player.PlayerSearchArea;
-import wisematches.playground.scribble.player.ScribblePlayerSearchManager;
+import wisematches.server.services.players.PlayerSearchArea;
+import wisematches.server.services.players.ScribblePlayerSearchManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleForm;
 import wisematches.server.web.controllers.playground.scribble.form.CreateScribbleTab;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -76,6 +68,7 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
+/*
 		final Personality principal = getPrincipal();
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "games.active", getActiveGamesCount(principal)));
@@ -92,6 +85,7 @@ public class CreateGameController extends AbstractGameController {
 		} else {
 			model.addAttribute("playRobotsOnly", false);
 		}
+*/
 		return "/content/playground/scribble/create";
 	}
 
@@ -99,7 +93,7 @@ public class CreateGameController extends AbstractGameController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "create.ajax", method = RequestMethod.POST)
 	public ServiceResponse createGameAction(@RequestBody CreateScribbleForm form, Locale locale) {
-		if (log.isInfoEnabled()) {
+/*		if (log.isInfoEnabled()) {
 			log.info("Create new game: " + form);
 		}
 
@@ -162,7 +156,7 @@ public class CreateGameController extends AbstractGameController {
 				} else if (ProprietaryPlayer.isComputerPlayer(opponent)) {
 					return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
 				} else if (opponent != 0) {
-					Personality p = playerManager.getPlayer(opponent);
+					Personality p = personalityManager.getPlayer(opponent);
 					if (p == null) {
 						return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
 					} else {
@@ -193,7 +187,7 @@ public class CreateGameController extends AbstractGameController {
 			if (robot) { // robot
 				players.add(principal);
 				try {
-					board = boardManager.createBoard(s, players);
+					board = playManager.createBoard(s, players);
 				} catch (BoardCreationException ex) {
 					log.error("New board can't be created: " + s + ", " + players, ex);
 					return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale));
@@ -223,7 +217,8 @@ public class CreateGameController extends AbstractGameController {
 		if (board != null) {
 			return ServiceResponse.success(null, "board", board.getBoardId());
 		}
-		return ServiceResponse.success();
+		return ServiceResponse.success();*/
+		return ServiceResponse.failure();
 	}
 
 	private void initRobotForm(CreateScribbleForm form, String parameter) {
@@ -259,7 +254,7 @@ public class CreateGameController extends AbstractGameController {
 			final String[] split = parameter.split("\\|");
 			for (String id : split) {
 				try {
-					Personality player = playerManager.getPlayer(Long.valueOf(id));
+					Personality player = personalityManager.getPlayer(Long.valueOf(id));
 					if (player != null) {
 						ids.add(player.getId());
 					}
@@ -279,21 +274,21 @@ public class CreateGameController extends AbstractGameController {
 
 	private void initBoardCloneForm(CreateScribbleForm form, String parameter, Locale locale) {
 		try {
-			final ScribbleBoard board = boardManager.openBoard(Long.valueOf(parameter));
+			final ScribbleBoard board = playManager.openBoard(Long.valueOf(parameter));
 			if (board != null) {
 				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
 				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
 				form.setDaysPerMove(board.getSettings().getDaysPerMove());
-				form.setBoardLanguage(board.getSettings().getLanguage().code());
+				form.setBoardLanguage(board.getSettings().getLanguage().getCode());
 
 				int index = 0;
-				final List<ScribblePlayerHand> playersHands = board.getPlayers();
+				final List<Personality> playersHands = board.getPlayers();
 				final long[] players = new long[playersHands.size() - 1];
-				for (ScribblePlayerHand playersHand : playersHands) {
-					if (playersHand.getPlayerId() == getPersonality().getId()) {
+				for (Personality playersHand : playersHands) {
+					if (playersHand.equals(getPersonality())) {
 						continue;
 					}
-					players[index++] = playersHand.getPlayerId();
+					players[index++] = playersHand.getId();
 				}
 				form.setOpponents(players);
 				form.setCreateTab(CreateScribbleTab.CHALLENGE);

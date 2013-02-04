@@ -1,7 +1,7 @@
 package wisematches.server.web.controllers;
 
 import wisematches.core.Personality;
-import wisematches.core.Membership;
+import wisematches.core.PlayerType;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -14,29 +14,33 @@ public class ServicePlayer {
 	private long id;
 	private boolean online;
 	private String nickname;
-	private Membership membership;
+	private PlayerType membership;
 
 	private ServicePlayer() {
 	}
 
-	public ServicePlayer(long id, String nickname, boolean online, Membership membership) {
+	public ServicePlayer(long id, String nickname, boolean online, PlayerType membership) {
 		this.id = id;
 		this.online = online;
 		this.nickname = nickname;
-		this.membership = membership != null ? membership : Membership.BASIC;
+		this.membership = membership != null ? membership : PlayerType.BASIC;
 	}
 
-	public static ServicePlayer get(long pid, String nickname, Membership membership, PlayerStateManager stateManager) {
-		return new ServicePlayer(pid, nickname, stateManager.isPlayerOnline(Personality.person(pid)), membership);
+	public static ServicePlayer get(long pid, String nickname, PlayerType membership, PlayerStateManager stateManager) {
+		throw new UnsupportedOperationException("commented");
+//		return new ServicePlayer(pid, nickname, stateManager.isPlayerOnline(null), membership);
 	}
 
 	public static ServicePlayer get(Personality player, GameMessageSource source, PlayerStateManager stateManager, Locale locale) {
+		throw new UnsupportedOperationException("commented");
+/*
 		ServicePlayer p = new ServicePlayer();
 		p.id = player.getId();
 		p.online = stateManager.isPlayerOnline(player);
 		p.nickname = source.getPlayerNick(player, locale);
-		p.membership = player.getMembership();
+		p.membership = null;//player.g();
 		return p;
+*/
 	}
 
 	public long getId() {
@@ -51,7 +55,7 @@ public class ServicePlayer {
 		return nickname;
 	}
 
-	public Membership getMembership() {
+	public PlayerType getMembership() {
 		return membership;
 	}
 }

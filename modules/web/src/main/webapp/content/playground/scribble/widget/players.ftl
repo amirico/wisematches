@@ -8,7 +8,7 @@
     <table cellpadding="5" width="100%" border="1">
         <tbody>
             <#list board.players as hand>
-                <#assign p = playerManager.getPlayer(hand.getPlayerId())/>
+                <#assign p = personalityManager.getPlayer(hand.getPlayerId())/>
             <tr class="player-info-${p.id} player-info">
                 <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">&nbsp;</td>
                 <td class="nickname ui-table-middle">

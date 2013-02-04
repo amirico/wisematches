@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
-import wisematches.core.search.SearchFilter;
-import wisematches.playground.scribble.player.PlayerEntityBean;
-import wisematches.playground.scribble.player.PlayerSearchArea;
-import wisematches.playground.scribble.player.ScribblePlayerSearchManager;
+import wisematches.server.services.players.PlayerEntityBean;
+import wisematches.server.services.players.PlayerSearchArea;
+import wisematches.server.services.players.ScribblePlayerSearchManager;
 import wisematches.server.web.controllers.ServicePlayer;
 import wisematches.server.web.controllers.playground.AbstractSearchController;
 import wisematches.server.web.i18n.GameMessageSource;
@@ -29,7 +28,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/players")
-public class PlayerSearchController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea, SearchFilter> {
+public class PlayerSearchController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
 	private GameMessageSource messageSource;
 	private PlayerStateManager stateManager;
 
@@ -63,9 +62,9 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 
 	@Override
 	protected void convertEntity(PlayerEntityBean info, Personality personality, Map<String, Object> map, Locale locale) {
-		map.put("nickname", ServicePlayer.get(info.getPid(), info.getNickname(), info.getMembership(), stateManager));
+		map.put("nickname", ServicePlayer.get(info.getPid(), info.getNickname(), info.getPlayerType(), stateManager));
 		if (info.getLanguage() != null) {
-			map.put("language", messageSource.getMessage("language." + info.getLanguage().code(), locale));
+			map.put("language", messageSource.getMessage("language." + info.getLanguage().getCode(), locale));
 		} else {
 			map.put("language", messageSource.getMessage("search.err.language", locale));
 		}
@@ -74,7 +73,7 @@ public class PlayerSearchController extends AbstractSearchController<PlayerEntit
 		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
 		map.put("activeGames", info.getActiveGames());
 		map.put("finishedGames", info.getFinishedGames());
-		map.put("playerOnline", stateManager.isPlayerOnline(Personality.person(info.getPid())));
+//		map.put("playerOnline", stateManager.isPlayerOnline(Personality.person(info.getPid())));
 		map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatTimeMinutes((long) (info.getAverageMoveTime() / 1000 / 60), locale) : messageSource.getMessage("search.err.nomoves", locale));
 	}
 

@@ -1,7 +1,7 @@
 package wisematches.server.web.services.notify;
 
 import wisematches.core.Personality;
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 
 import java.util.Set;
 
@@ -49,11 +49,11 @@ public interface NotificationService {
 	 *
 	 * @param code        notification code
 	 * @param personality player who's descriptor should be updated.
-	 * @param descriptor  personal descriptor for notification.
+	 * @param scope       personal descriptor for notification.
 	 * @return previous personal descriptor or {@code null} if player don't have previous personal descriptor
 	 */
 	NotificationScope setNotificationScope(String code, Personality personality, NotificationScope scope);
 
 
-	Notification raiseNotification(String code, Account target, NotificationSender sender, Object context) throws NotificationException;
+	Notification raiseNotification(String code, Player target, NotificationSender sender, Object context) throws NotificationException;
 }

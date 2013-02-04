@@ -10,11 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.BoardCreationException;
+import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
-import wisematches.playground.propose.criteria.CriterionViolation;
 import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
@@ -44,7 +44,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("join")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String showWaitingGames(Model model) {
-		final Personality principal = getPrincipal();
+		final Player principal = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + principal);
 		}
@@ -56,7 +56,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("join.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ServiceResponse showWaitingGamesAjax() {
-		final Personality principal = getPrincipal();
+		final Player principal = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + principal);
 		}
@@ -67,7 +67,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("accept.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public ServiceResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
-		final Personality player = getPrincipal();
+		final Player player = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
 		}
@@ -82,7 +82,7 @@ public class WaitingGameController extends AbstractGameController {
 			if (gameProposal == null) {
 				return ServiceResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
 			} else if (gameProposal.isReady()) {
-				final ScribbleBoard board = boardManager.createBoard(gameProposal.getSettings(), gameProposal.getPlayers());
+				final ScribbleBoard board = playManager.createBoard(gameProposal.getSettings(), gameProposal.getPlayers(), null);
 				return ServiceResponse.success(null, "board", board.getBoardId());
 			}
 			return ServiceResponse.SUCCESS;
@@ -101,7 +101,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("decline.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public ServiceResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
-		final Personality player = getPrincipal();
+		final Player player = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
 		}
@@ -120,10 +120,10 @@ public class WaitingGameController extends AbstractGameController {
 		}
 	}
 
-	private WaitingGamesView createWaitingGamesView(Personality principal) {
+	private WaitingGamesView createWaitingGamesView(Player principal) {
 		final CriterionViolation globalViolation = checkGlobalViolation(principal);
 		final List<GameProposalView> activeProposals = new ArrayList<>();
-		for (GameProposal<ScribbleSettings> proposal : proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null, null)) {
+		for (GameProposal<ScribbleSettings> proposal : proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null)) {
 			if (globalViolation == null) {
 				activeProposals.add(new GameProposalView(proposal, checkProposalViolation(proposal)));
 			} else {
@@ -136,18 +136,20 @@ public class WaitingGameController extends AbstractGameController {
 		return new WaitingGamesView(globalViolation, activeProposals);
 	}
 
-	private CriterionViolation checkGlobalViolation(Personality player) {
+	private CriterionViolation checkGlobalViolation(Player player) {
 		CriterionViolation globalViolation = null;
-		if (player.getPlayerType().isGuest()) {
+/*
+		if (player instanceof Visitor) {
 			globalViolation = new CriterionViolation("guest", null);
 		}
+*/
 
-		if (globalViolation == null) {
-			final int finishedGamesCount = getFinishedGamesCount(player);
-			if (finishedGamesCount < 1) {
-				globalViolation = new CriterionViolation("newbie", finishedGamesCount, 1);
-			}
+//		if (globalViolation == null) {
+		final int finishedGamesCount = getFinishedGamesCount(player);
+		if (finishedGamesCount < 1) {
+			globalViolation = new CriterionViolation("newbie", finishedGamesCount, 1);
 		}
+//		}
 
 		if (globalViolation == null) {
 			final int activeGamesCount = getActiveGamesCount(player);
@@ -160,11 +162,11 @@ public class WaitingGameController extends AbstractGameController {
 	}
 
 	private Collection<CriterionViolation> checkProposalViolation(GameProposal<ScribbleSettings> proposal) {
-		final Personality principal = getPrincipal();
+		final Player principal = getPrincipal();
 
 		boolean blacklisted = false;
-		for (Iterator<Personality> iterator = proposal.getPlayers().iterator(); iterator.hasNext() && !blacklisted; ) {
-			Personality personality = iterator.next();
+		for (Iterator<Player> iterator = proposal.getPlayers().iterator(); iterator.hasNext() && !blacklisted; ) {
+			Player personality = iterator.next();
 			if (personality != null && !principal.equals(personality)) {
 				blacklisted = blacklistManager.isBlacklisted(personality, principal);
 			}

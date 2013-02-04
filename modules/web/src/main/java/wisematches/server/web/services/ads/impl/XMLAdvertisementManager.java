@@ -44,7 +44,7 @@ public class XMLAdvertisementManager implements AdvertisementManager {
 
 	@Override
 	public AdvertisementBlock getAdvertisementBlock(String name, Language language) {
-		return getAdvertisementBlock(name, language.locale());
+		return getAdvertisementBlock(name, language.getLocale());
 	}
 
 	public void setAdsResource(Resource resource) throws ParserConfigurationException, IOException, SAXException {
@@ -81,7 +81,7 @@ public class XMLAdvertisementManager implements AdvertisementManager {
 		private final Locale locale;
 
 		private AdsBlockKey(String name, Language language) {
-			this(name, language.locale());
+			this(name, language.getLocale());
 		}
 
 		private AdsBlockKey(String name, Locale locale) {

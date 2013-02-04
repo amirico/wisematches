@@ -8,16 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.core.personality.proprietary.guest.GuestPlayer;
-import wisematches.server.security.impl.WMPlayerDetails;
-import wisematches.server.web.services.state.PlayerStateListener;
-
-import java.util.Date;
-
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -39,6 +29,8 @@ public class HibernatePlayerStateManagerTest {
 
 	@Test
 	public void test() throws InterruptedException {
+		throw new UnsupportedOperationException("Commented");
+/*
 		final Personality player1 = GuestPlayer.GUEST;
 		final Personality player2 = RobotPlayer.DULL;
 
@@ -133,5 +125,6 @@ public class HibernatePlayerStateManagerTest {
 		assertEquals(lastActivity2, stateManager.getLastActivityDate(player2));
 
 		verify(listener);
+*/
 	}
 }

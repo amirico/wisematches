@@ -1,7 +1,7 @@
 package wisematches.server.web.controllers.playground.scribble.form;
 
 import org.hibernate.validator.constraints.Length;
-import wisematches.core.personality.machinery.RobotType;
+import wisematches.core.RobotType;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

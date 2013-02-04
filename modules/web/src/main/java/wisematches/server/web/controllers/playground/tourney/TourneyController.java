@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Language;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.core.search.Range;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
@@ -53,7 +54,7 @@ public class TourneyController extends WisematchesController {
 	public String showDashboard(Model model) {
 		final Personality personality = getPersonality();
 
-		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
+		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null);
 		model.addAttribute("participated", participated);
 
 		setupAnnounce(model);
@@ -64,7 +65,7 @@ public class TourneyController extends WisematchesController {
 	@RequestMapping("active")
 	public String showActive(Model model) {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
-		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
 
 		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
@@ -76,7 +77,7 @@ public class TourneyController extends WisematchesController {
 	@RequestMapping("finished")
 	public String showFinished(Model model) {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
-		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
 
 		model.addAttribute("winnerPlaces", TourneyPlace.values());
 		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
@@ -102,7 +103,7 @@ public class TourneyController extends WisematchesController {
 		final RegistrationRecord.Context context = new RegistrationRecord.Context(t, language, 1);
 
 		final RegistrationSearchManager searchManager = tourneyManager.getRegistrationSearchManager();
-		final List<RegistrationRecord> tourneySubscriptions = searchManager.searchEntities(null, context, null, null, null);
+		final List<RegistrationRecord> tourneySubscriptions = searchManager.searchEntities(null, context, null, null);
 		model.addAttribute("tourney", tourney);
 		model.addAttribute("tourneyLanguage", language);
 		model.addAttribute("tourneySubscriptions", tourneySubscriptions);
@@ -142,7 +143,7 @@ public class TourneyController extends WisematchesController {
 		model.addAttribute("winnerPlaces", TourneyPlace.values());
 
 		final TourneyRound.Context ctx = new TourneyRound.Context(tourney.getId(), null);
-		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null, null);
+		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null);
 		model.addAttribute("divisionsTree", new TourneyTree(rounds.toArray(new TourneyRound[rounds.size()])));
 
 		return "/content/playground/tourney/view/tourney";
@@ -153,7 +154,7 @@ public class TourneyController extends WisematchesController {
 		final TourneyGroup.Context ctx = new TourneyGroup.Context(roundId, null);
 
 		final int totalCount = tourneyManager.getTotalCount(null, ctx);
-		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, ctx, null, null, Range.limit(page * 30, 30));
+		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, ctx, null, Range.limit(page * 30, 30));
 
 		model.addAttribute("round", tourneyManager.getTourneyEntity(roundId));
 		model.addAttribute("groups", groups);
@@ -207,7 +208,7 @@ public class TourneyController extends WisematchesController {
 			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
 		}
 
-		final Personality principal = getPrincipal();
+		final Player principal = getPrincipal();
 		try {
 			final boolean doRegistration = section != null && language != null;
 			if (doRegistration) {
@@ -243,9 +244,9 @@ public class TourneyController extends WisematchesController {
 	}
 
 	private void setupAnnounce(Model model) {
-		final Personality personality = getPrincipal();
+		final Player personality = getPrincipal();
 
-		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null, null);
+		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null);
 		Tourney announce = null;
 		if (announces.size() > 1) {
 			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());

@@ -26,7 +26,7 @@
         <property name="accountManager" ref="accountManager"/>
     </bean>
 
-    <bean id="playerManager" class="wisematches.core.personality.DefaultPersonalityManager">
+    <bean id="personalityManager" class="wisematches.core.personality.DefaultPersonalityManager">
         <property name="accountManager" ref="accountManager"/>
         <property name="membershipManager" ref="membershipManager"/>
     </bean>

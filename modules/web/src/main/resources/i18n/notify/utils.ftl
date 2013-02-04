@@ -5,7 +5,7 @@
 
 <#macro player player showRating=false>
     <#assign person=player>
-    <#if player?is_number><#assign person=playerManager.getPlayer(player?number)><#else><#assign person=playerManager.getPlayer(player)></#if>
+    <#if player?is_number><#assign person=personalityManager.getPlayer(player?number)><#else><#assign person=personalityManager.getPlayer(player)></#if>
     <#assign computerPlayer=(person.playerType == "GUEST") || (person.playerType == "ROBOT")/>
     <#if computerPlayer>
     <em>${gameMessageSource.getPlayerNick(person, locale)}</em>

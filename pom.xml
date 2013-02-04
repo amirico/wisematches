@@ -14,7 +14,7 @@
         <module>modules/gameplay</module>
         <module>modules/scribble</module>
         <module>modules/services</module>
-        <!--<module>modules/web</module>-->
+        <module>modules/web</module>
     </modules>
 
     <developers>

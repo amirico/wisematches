@@ -11,11 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.GameMove;
-import wisematches.playground.UnsuitablePlayerException;
-import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.bank.LetterDescription;
@@ -41,7 +38,6 @@ import java.util.concurrent.Callable;
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends WisematchesController {
 	private ScribblePlayManager boardManager;
-	private DictionaryManager dictionaryManager;
 	private BoardSettingsManager boardSettingsManager;
 	private ScribbleObjectsConverter scribbleObjectsConverter;
 
@@ -56,7 +52,7 @@ public class ScribbleBoardController extends WisematchesController {
 								@RequestParam(value = "t", required = false) String tiles,
 								Model model) throws UnknownEntityException {
 		try {
-			final Personality player = getPrincipal();
+			final Player player = getPrincipal();
 			final ScribbleBoard board = boardManager.openBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
@@ -70,7 +66,7 @@ public class ScribbleBoardController extends WisematchesController {
 				if (ts.length > 0 && ts.length < 8) {
 					boolean valid = true;
 					final Tile[] t = new Tile[ts.length];
-					final LettersDistribution lettersDistribution = board.getLettersDistribution();
+					final LettersDistribution lettersDistribution = board.getDistribution();
 					for (int i = 0; i < t.length && valid; i++) {
 						final LetterDescription description = lettersDistribution.getLetterDescription(Character.toLowerCase(ts[i]));
 						if (description != null) {
@@ -94,7 +90,7 @@ public class ScribbleBoardController extends WisematchesController {
 				model.addAttribute("boardSettings", BOARD_SETTINGS);
 			} else {
 				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
-				model.addAttribute("viewMode", !board.isActive() || board.getPlayerHand(player.getId()) == null);
+				model.addAttribute("viewMode", !board.isActive() || board.getPlayerHand(player) == null);
 			}
 			return "/content/playground/scribble/playboard";
 		} catch (BoardLoadingException ex) {
@@ -114,8 +110,11 @@ public class ScribbleBoardController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Personality currentPlayer = getPrincipal();
-				return processGameMove(gameId, new MakeTurn(currentPlayer.getId(), word.createWord()), locale);
+				final Player player = getPrincipal();
+
+				final ScribbleBoard board = boardManager.openBoard(gameId);
+				final MakeTurn gameMove = board.makeTurn(player, word.createWord());
+				return scribbleObjectsConverter.convertGameMove(locale, player, board, gameMove);
 			}
 		}, locale);
 	}
@@ -130,8 +129,10 @@ public class ScribbleBoardController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Personality currentPlayer = getPrincipal();
-				return processGameMove(gameId, new PassTurn(currentPlayer.getId()), locale);
+				final Player player = getPrincipal();
+				final ScribbleBoard board = boardManager.openBoard(gameId);
+				final PassTurn gameMove = board.passTurn(player);
+				return scribbleObjectsConverter.convertGameMove(locale, player, board, gameMove);
 			}
 		}, locale);
 	}
@@ -151,8 +152,11 @@ public class ScribbleBoardController extends WisematchesController {
 				for (int i = 0; i < tiles.length; i++) {
 					t[i] = tiles[i].getNumber();
 				}
-				final Personality currentPlayer = getPrincipal();
-				return processGameMove(gameId, new ExchangeMove(currentPlayer.getId(), t), locale);
+
+				final Player player = getPrincipal();
+				final ScribbleBoard board = boardManager.openBoard(gameId);
+				final ExchangeMove gameMove = board.exchangeTiles(player, t);
+				return scribbleObjectsConverter.convertGameMove(locale, player, board, gameMove);
 			}
 		}, locale);
 	}
@@ -167,9 +171,8 @@ public class ScribbleBoardController extends WisematchesController {
 		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				Personality currentPlayer = getPrincipal();
 				final ScribbleBoard board = boardManager.openBoard(gameId);
-				board.resign(board.getPlayerHand(currentPlayer.getId()));
+				board.resign(getPrincipal());
 
 				final Map<String, Object> res = new HashMap<>();
 				res.put("state", scribbleObjectsConverter.convertGameState(board, locale));
@@ -180,6 +183,7 @@ public class ScribbleBoardController extends WisematchesController {
 			}
 		}, locale);
 	}
+/*
 
 	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
 		final Personality currentPlayer = getPrincipal();
@@ -191,6 +195,7 @@ public class ScribbleBoardController extends WisematchesController {
 		final GameMove gameMove = board.makeMove(move);
 		return scribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
 	}
+*/
 
 	@Autowired
 	public void setBoardManager(ScribblePlayManager scribbleBoardManager) {
@@ -205,10 +210,5 @@ public class ScribbleBoardController extends WisematchesController {
 	@Autowired
 	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
 		this.boardSettingsManager = boardSettingsManager;
-	}
-
-	@Autowired
-	public void setDictionaryManager(DictionaryManager dictionaryManager) {
-		this.dictionaryManager = dictionaryManager;
 	}
 }

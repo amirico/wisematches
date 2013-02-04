@@ -45,7 +45,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @throws NullPointerException if setting is {@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractGameBoard(S settings, Collection<Personality> players, GameRelationship relationship) {
+	protected AbstractGameBoard(S settings, Collection<? extends Personality> players, GameRelationship relationship) {
 		if (settings == null) {
 			throw new IllegalArgumentException("Settings can't be null");
 		}
@@ -196,7 +196,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @param players the list of all players to select first.
 	 * @return the player who should be first.
 	 */
-	protected byte selectFirstPlayer(Collection<Personality> players) {
+	protected byte selectFirstPlayer(Collection<? extends Personality> players) {
 		return (byte) FIRST_PLAYER_RANDOM.nextInt(players.size());
 	}
 
@@ -289,9 +289,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 */
 	protected abstract H createPlayerHand(Personality player);
 
-/*
 	@Override
-	public List<GameMove> getGameChanges(long playerId) {
+	public List<GameMove> getGameChanges(Personality player) {
 		lock.lock();
 		try {
 			final ListIterator<GameMove> iterator = moves.listIterator(moves.size());
@@ -300,7 +299,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 			}
 
 			GameMove previous = iterator.previous();
-			if (previous.getPlayerMove().getPlayerId() == playerId) { // no new moves
+			if (previous.getPlayer().equals(player)) { // no new moves
 				return Collections.emptyList();
 			}
 
@@ -308,7 +307,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 			res.add(previous);
 			while (iterator.hasPrevious()) {
 				previous = iterator.previous();
-				if (previous.getPlayerMove().getPlayerId() == playerId) { // no new moves
+				if (previous.getPlayer().equals(player)) { // no new moves
 					break;
 				}
 				res.add(previous);
@@ -319,5 +318,4 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 			lock.unlock();
 		}
 	}
- */
 }
