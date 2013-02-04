@@ -26,8 +26,8 @@
     </bean>
 
     <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribblePlayManager">
-        <property name="personalityManager" ref="playerManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="personalityManager" ref="playerManager"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
         <property name="dictionaryManager" ref="dictionaryManager"/>
         <property name="taskExecutor" ref="scribbleRobotTaskExecutor"/>
@@ -35,6 +35,11 @@
         <property name="ratingSystem">
             <bean class="wisematches.playground.rating.ELORatingSystem"/>
         </property>
+    </bean>
+
+    <bean id="scribbleSearchManager" class="wisematches.playground.scribble.ScribbleSearchManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="personalityManager" ref="playerManager"/>
     </bean>
 
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.impl.ScribbleStatisticsTrapper">
@@ -97,10 +102,6 @@
 
     <bean id="scribbleCommentManager"
           class="wisematches.playground.scribble.comment.impl.HibernateGameCommentManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="historySearchManager" class="wisematches.playground.scribble.history.ScribbleHistorySearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

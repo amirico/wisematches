@@ -1,7 +1,6 @@
 package wisematches.playground.propose;
 
 import wisematches.core.Player;
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.criteria.ViolatedCriteriaException;
@@ -15,7 +14,7 @@ import java.util.Collection;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameProposalManager<S extends GameSettings> extends SearchManager<GameProposal<S>, ProposalRelation, SearchFilter> {
+public interface GameProposalManager<S extends GameSettings> extends SearchManager<GameProposal<S>, ProposalRelation> {
 	void addGameProposalListener(GameProposalListener l);
 
 	void removeGameProposalListener(GameProposalListener l);

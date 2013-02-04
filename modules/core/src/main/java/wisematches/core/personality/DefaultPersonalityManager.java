@@ -84,7 +84,7 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 				return memberPlayer;
 			}
 		}
-		return null;
+		return (Player) personality;
 	}
 
 	@Override

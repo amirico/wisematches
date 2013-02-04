@@ -71,7 +71,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	private void saveAllProposals() {
 		lock.lock();
 		try {
-			final List<GameProposal<S>> activeProposals = searchEntities(null, ProposalRelation.AVAILABLE, null, null, null);
+			final List<GameProposal<S>> activeProposals = searchEntities(null, ProposalRelation.AVAILABLE, null, null);
 			proposalFile.position(0);
 			final ObjectOutputStream outputStream = new ObjectOutputStream(Channels.newOutputStream(this.proposalFile));
 			outputStream.writeInt(activeProposals.size());

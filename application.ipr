@@ -158,6 +158,7 @@
       <module name="playground" target="1.7" />
       <module name="scribble" target="1.7" />
       <module name="server" target="1.7" />
+      <module name="services" target="1.7" />
       <module name="web" target="1.7" />
       <module name="webserver" target="1.7" />
     </bytecodeTargetLevel>
@@ -188,7 +189,7 @@
     <file url="file://$PROJECT_DIR$/modules/core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/gameplay" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/scribble" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/modules/server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/services" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/modules/web" charset="UTF-8" />
   </component>
   <component name="EntryPointsManager">
@@ -488,7 +489,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/core/core.iml" filepath="$PROJECT_DIR$/modules/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/gameplay/gameplay.iml" filepath="$PROJECT_DIR$/modules/gameplay/gameplay.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/scribble/scribble.iml" filepath="$PROJECT_DIR$/modules/scribble/scribble.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/server/server.iml" filepath="$PROJECT_DIR$/modules/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/services/services.iml" filepath="$PROJECT_DIR$/modules/services/services.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -511,7 +512,7 @@
     <file url="file://$PROJECT_DIR$/modules/gameplay/src/test/java/wisematches/playground/tourney/regular/impl/HibernateTourneyManagerTest.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/comment/impl/HibernateGameCommentManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/scribble/src/main/java/wisematches/playground/scribble/tracking/impl/ScribbleStatisticsEditor.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/modules/server/src/main/java/wisematches/server/services/message/impl/HibernateMessageManager.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/services/src/main/java/wisematches/server/services/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/HibernateNotificationService.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/services/notify/impl/publisher/EssentialNotificationPublisher.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />

@@ -1,18 +1,17 @@
 package wisematches.server.services.players;
 
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.descriptive.AbstractDescriptiveSearchManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManager<PlayerEntityBean, PlayerSearchArea, SearchFilter> {
+public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManager<PlayerEntityBean, PlayerSearchArea> {
 	public ScribblePlayerSearchManager() {
 		super(PlayerEntityBean.class);
 	}
 
 	@Override
-	protected String getEntitiesList(PlayerSearchArea area, SearchFilter filter) {
+	protected String getEntitiesList(PlayerSearchArea area) {
 		String r = "HibernateAccountImpl account, ScribbleStatisticsEditor stats";
 
 		switch (area) {
@@ -28,7 +27,7 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 	}
 
 	@Override
-	protected String getWhereCriterias(PlayerSearchArea area, SearchFilter filter) {
+	protected String getWhereCriterias(PlayerSearchArea area) {
 		String r = "account.id=stats.playerId and ";
 		switch (area) {
 			case PLAYERS:
@@ -43,7 +42,7 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 	}
 
 	@Override
-	protected String getGroupCriterias(PlayerSearchArea context, SearchFilter filter) {
+	protected String getGroupCriterias(PlayerSearchArea context) {
 		return null;
 	}
 }

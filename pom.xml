@@ -13,7 +13,7 @@
         <module>modules/core</module>
         <module>modules/gameplay</module>
         <module>modules/scribble</module>
-        <module>modules/server</module>
+        <module>modules/services</module>
         <!--<module>modules/web</module>-->
     </modules>
 

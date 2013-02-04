@@ -1,7 +1,6 @@
 package wisematches.server.services.award;
 
 import wisematches.core.Player;
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 
 import java.util.Collection;
@@ -9,7 +8,7 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface AwardsManager extends SearchManager<Award, AwardContext, SearchFilter.NoFilter> {
+public interface AwardsManager extends SearchManager<Award, AwardContext> {
 	void addAwardsListener(AwardsListener l);
 
 	void removeAwardsListener(AwardsListener l);

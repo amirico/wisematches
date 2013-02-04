@@ -88,7 +88,7 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Query query = session.createQuery("select b.boardId from ScribbleBoard b left join b.hands as h where h.playerId in (100, 101, 102) " +
-				"and b.gameResolution is null and b.currentPlayerIndex = index(h)");
+				"and b.resolution is null and b.currentPlayerIndex = index(h)");
 
 		final List list = query.list();
 		final Collection<Long> res = new ArrayList<>(list.size());
@@ -157,10 +157,10 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 				.add(Restrictions.eq("hand.playerId", player.getId()));
 		switch (state) {
 			case ACTIVE:
-				criteria.add(Restrictions.isNull("gameResolution"));
+				criteria.add(Restrictions.isNull("resolution"));
 				break;
 			case FINISHED:
-				criteria.add(Restrictions.isNotNull("gameResolution"));
+				criteria.add(Restrictions.isNotNull("resolution"));
 				break;
 		}
 		return criteria;

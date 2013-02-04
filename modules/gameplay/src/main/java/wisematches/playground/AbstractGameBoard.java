@@ -1,12 +1,10 @@
 package wisematches.playground;
 
 import wisematches.core.Personality;
-import wisematches.core.PersonalityManager;
 
-import javax.persistence.*;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This class contains information about game - game settings, all moves and so on.
@@ -23,56 +21,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @MappedSuperclass
-public abstract class AbstractGameBoard<S extends GameSettings, H extends AbstractPlayerHand> implements GameBoard<S, H> {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "boardId")
-	private long boardId;
-
-	@Embedded
-	private S settings;
-
-	@Column(name = "startedDate")
-	private Date startedDate;
-
-	@Column(name = "finishedDate")
-	private Date finishedDate;
-
-	@OrderColumn(name = "playerIndex")
-	@ElementCollection(fetch = FetchType.EAGER)
-	@org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.ALL)
-	@CollectionTable(name = "scribble_player", joinColumns = @JoinColumn(name = "boardId"))
-	private List<H> hands;
-
-	@Transient
-	private List<Personality> players;
-
-	@Column(name = "playersCount")
-	private int playersCount;
-
-	@Column(name = "movesCount")
-	private int movesCount = 0;
-
-	@Column(name = "currentPlayerIndex")
-	private int currentPlayerIndex = -1;
-
-	@Column(name = "lastMoveTime")
-	private Date lastMoveTime;
-
-	@Column(name = "resolution")
-	private GameResolution gameResolution = null;
-
-	@Column(name = "rated")
-	private boolean rated = true;
-
-	@Embedded
-	private GameRelationship relationship;
-
+public abstract class AbstractGameBoard<S extends GameSettings, H extends AbstractPlayerHand> extends AbstractBoardDescription<S, H> implements GameBoard<S, H> {
 	@Transient
 	private BoardListener gamePlayListener;
-
-	@Transient
-	protected final Lock lock = new ReentrantLock();
 
 	@Transient
 	private final List<GameMove> moves = new ArrayList<>();
@@ -124,57 +75,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		currentPlayerIndex = selectFirstPlayer(players);
 	}
 
-	protected void initializePlayers(PersonalityManager playerManager) {
-		players = new ArrayList<>(hands.size()); // create new list. It's transient and not stored
-		for (H h : hands) {
-			final long playerId = h.getPlayerId();
-			final Personality player = playerManager.getPerson(playerId);
-			if (player == null) {
-				throw new IllegalStateException("Player can't be loaded: " + playerId);
-			}
-			players.add(player);
-		}
-	}
-
-	@Override
-	public S getSettings() {
-		return settings;
-	}
-
-	@Override
-	public long getBoardId() {
-		return boardId;
-	}
-
-	@Override
-	public Date getStartedTime() {
-		return startedDate;
-	}
-
-	@Override
-	public Date getLastMoveTime() {
-		return lastMoveTime;
-	}
-
-	@Override
-	public Date getFinishedTime() {
-		return finishedDate;
-	}
-
-	@Override
-	public GameRelationship getRelationship() {
-		return relationship;
-	}
-
-	@Override
-	public int getMovesCount() {
-		lock.lock();
-		try {
-			return movesCount;
-		} finally {
-			lock.unlock();
-		}
-	}
 
 	@Override
 	public List<GameMove> getGameMoves() {
@@ -184,74 +84,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	@Override
-	public boolean isRated() {
-		return rated;
-	}
-
-	@Override
-	public boolean isActive() {
-		lock.lock();
-		try {
-			return gameResolution == null && !isGameExpired();
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	public Personality getPlayerTurn() {
-		if (currentPlayerIndex < 0) {
-			return null;
-		}
-		return players.get(currentPlayerIndex);
-	}
-
-	@Override
-	public int getPlayersCount() {
-		return hands.size();
-	}
-
-	@Override
-	public List<Personality> getPlayers() {
-		return players;
-	}
-
-	@Override
-	public H getPlayerHand(Personality player) {
-		final int i = players.indexOf(player);
-		if (i < 0) {
-			return null;
-		}
-		return hands.get(i);
-	}
-
-	@Override
-	public GameResolution getResolution() {
-		lock.lock();
-		try {
-			return gameResolution;
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	public Collection<Personality> getWonPlayers() {
-		if (isActive()) {
-			return null;
-		}
-
-		final Collection<Personality> res = new ArrayList<>();
-		for (int i = 0; i < hands.size(); i++) {
-			H hand = hands.get(i);
-			if (hand.isWinner()) {
-				res.add(players.get(i));
-			}
-		}
-		return res;
 	}
 
 	public void terminate() throws GameMoveException {
@@ -292,8 +124,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @throws GameStateException if game state is not <code>ACTIVE</code>.
 	 */
 	protected void checkState() throws GameStateException {
-		if (gameResolution != null) {
-			throw new GameFinishedException(gameResolution);
+		if (resolution != null) {
+			throw new GameFinishedException(resolution);
 		}
 
 		if (isGameExpired()) {
@@ -333,7 +165,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 				finalizeGame(GameResolution.FINISHED);
 				if (gamePlayListener != null) {
 					gamePlayListener.gameMoveDone(this, move, moveScore);
-					gamePlayListener.gameFinished(this, gameResolution, getWonPlayers());
+					gamePlayListener.gameFinished(this, resolution, getWonPlayers());
 				}
 			} else {
 				currentPlayerIndex = getNextPlayerIndex();
@@ -379,17 +211,13 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		}
 	}
 
-	private boolean isGameExpired() {
-		return System.currentTimeMillis() - getLastMoveTime().getTime() > settings.getDaysPerMove() * 86400000;
-	}
-
 
 	private void finalizeGame(GameResolution resolution) {
-		finishedDate = new Date();
-		gameResolution = resolution;
+		this.finishedDate = new Date();
+		this.resolution = resolution;
 
-		currentPlayerIndex = -1;
-		rated = rated && movesCount >= playersCount * 2;
+		this.currentPlayerIndex = -1;
+		this.rated = rated && movesCount >= playersCount * 2;
 
 		int cnt = 0;
 		int maxPoints = 0; // select max points
@@ -419,7 +247,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 	private void closeImpl(Personality player, boolean byTimeout) throws GameMoveException {
-		if (gameResolution != null) {
+		if (resolution != null) {
 			return;
 		}
 		final H hand = getPlayerHand(player);
@@ -434,7 +262,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		//According to requirements if game was interrupted when terminator should be set as a current player.
 		currentPlayerIndex = players.indexOf(player);
 		if (gamePlayListener != null) {
-			gamePlayListener.gameFinished(this, gameResolution, getWonPlayers());
+			gamePlayListener.gameFinished(this, resolution, getWonPlayers());
 		}
 	}
 

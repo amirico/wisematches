@@ -5,11 +5,10 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.AliasToBeanResultTransformer;
-import wisematches.core.Player;
+import wisematches.core.Personality;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +16,7 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFilter> implements DescriptiveSearchManager<T, C, F> {
+public abstract class AbstractDescriptiveSearchManager<T, C> implements DescriptiveSearchManager<T, C> {
 	private SessionFactory sessionFactory;
 
 	private final boolean sql;
@@ -38,12 +37,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 	}
 
 	@Override
-	public <Ctx extends C> int getTotalCount(Player person, Ctx context) {
-		return getFilteredCount(person, context, null);
-	}
-
-	@Override
-	public <Ctx extends C, Fl extends F> int getFilteredCount(Player person, Ctx context, Fl filter) {
+	public <Ctx extends C> int getTotalCount(Personality person, Ctx context) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -58,9 +52,9 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 		}
 		query.append(")");
 		query.append(" from ");
-		query.append(getEntitiesList(context, filter));
+		query.append(getEntitiesList(context));
 
-		String whereCriterias = getWhereCriterias(context, filter);
+		String whereCriterias = getWhereCriterias(context);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
@@ -74,7 +68,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends C, Fl extends F> List<T> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends C> List<T> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 		final StringBuilder query = new StringBuilder();
 		query.append("select ");
@@ -100,15 +94,15 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 		query.setLength(query.length() - 2);
 
 		query.append(" from ");
-		query.append(getEntitiesList(context, filter));
+		query.append(getEntitiesList(context));
 
-		String whereCriterias = getWhereCriterias(context, filter);
+		String whereCriterias = getWhereCriterias(context);
 		if (whereCriterias != null) {
 			query.append(" where ");
 			query.append(whereCriterias);
 		}
 
-		String groupCriterias = getGroupCriterias(context, filter);
+		String groupCriterias = getGroupCriterias(context);
 		if (groupCriterias != null) {
 			query.append(" group by ");
 			query.append(groupCriterias);
@@ -147,11 +141,11 @@ public abstract class AbstractDescriptiveSearchManager<T, C, F extends SearchFil
 		return query1.list();
 	}
 
-	protected abstract String getEntitiesList(final C context, SearchFilter filter);
+	protected abstract String getEntitiesList(final C context);
 
-	protected abstract String getWhereCriterias(final C context, SearchFilter filter);
+	protected abstract String getWhereCriterias(final C context);
 
-	protected abstract String getGroupCriterias(final C context, SearchFilter filter);
+	protected abstract String getGroupCriterias(final C context);
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

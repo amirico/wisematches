@@ -57,10 +57,10 @@ public class HibernateAwardsManagerTest {
 
 		final AwardContext ctx1 = new AwardContext("moc", null);
 		awardsManager.getTotalCount(person, ctx1);
-		awardsManager.searchEntities(person, ctx1, null, Orders.of(Order.desc("awardedDate")), Range.limit(10));
+		awardsManager.searchEntities(person, ctx1, Orders.of(Order.desc("awardedDate")), Range.limit(10));
 
 		final AwardContext ctx2 = new AwardContext("moc", EnumSet.of(AwardWeight.SILVER));
 		awardsManager.getTotalCount(person, ctx2);
-		awardsManager.searchEntities(person, ctx2, null, Orders.of(Order.desc("awardedDate")), Range.limit(10));
+		awardsManager.searchEntities(person, ctx2, Orders.of(Order.desc("awardedDate")), Range.limit(10));
 	}
 }

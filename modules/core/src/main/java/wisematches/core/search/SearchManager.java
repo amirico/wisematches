@@ -1,6 +1,6 @@
 package wisematches.core.search;
 
-import wisematches.core.Player;
+import wisematches.core.Personality;
 
 import java.util.List;
 
@@ -15,10 +15,9 @@ import java.util.List;
  *
  * @param <E> the entity type that is supported by search manager.
  * @param <C> the context type that is supported by search manager.
- * @param <F> the filter type that is supported by search manager.
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface SearchManager<E, C, F extends SearchFilter> {
+public interface SearchManager<E, C> {
 	/**
 	 * Returns total items count for specified personality and
 	 *
@@ -26,17 +25,7 @@ public interface SearchManager<E, C, F extends SearchFilter> {
 	 * @param context the context for search.
 	 * @return number of items available for search.
 	 */
-	<Ctx extends C> int getTotalCount(Player person, Ctx context);
-
-	/**
-	 * Returns count of filtered items by specified {@code criteria}
-	 *
-	 * @param person  the person who searches entities.
-	 * @param context the context for search.
-	 * @param filter  the search filter
-	 * @return number of items available for search according to specified {@code criteria}
-	 */
-	<Ctx extends C, Fl extends F> int getFilteredCount(Player person, Ctx context, Fl filter);
+	<Ctx extends C> int getTotalCount(Personality person, Ctx context);
 
 	/**
 	 * Searches and returns list of all entities for specified person in specified context and according
@@ -47,10 +36,9 @@ public interface SearchManager<E, C, F extends SearchFilter> {
 	 *
 	 * @param person  the person who searches entities.
 	 * @param context the context for search.
-	 * @param filter  the search filter
 	 * @param orders  orders of result
 	 * @param range   the range of returned entities.
 	 * @return list of entities or empty list if no entities are found.
 	 */
-	<Ctx extends C, Fl extends F> List<E> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range);
+	<Ctx extends C> List<E> searchEntities(Personality person, Ctx context, Orders orders, Range range);
 }

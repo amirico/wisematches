@@ -8,8 +8,6 @@ import java.util.List;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public interface GameBoard<S extends GameSettings, H extends GamePlayerHand> extends BoardDescription<S, H> {
-	int getMovesCount();
-
 	/**
 	 * Returns unmodifiable collection of done moves.
 	 *
