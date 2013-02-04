@@ -36,7 +36,8 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 
 		final Object details = authentication.getPrincipal();
 		if (details instanceof WMPlayerDetails) {
-			return ((WMPlayerDetails) details).getPlayer().getLanguage().locale();
+			throw new UnsupportedOperationException("Commented");
+//			return ((WMPlayerDetails) details).getPlayer().getLanguage().locale();
 		} else {
 			return super.resolveLocale(request);
 		}
@@ -61,8 +62,8 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 	protected Locale resolveLocale(Locale locale) {
 		Language language = Language.byLocale(locale);
 		if (language != null) {
-			return language.locale();
+			return language.getLocale();
 		}
-		return Language.DEFAULT.locale();
+		return Language.DEFAULT.getLocale();
 	}
 }

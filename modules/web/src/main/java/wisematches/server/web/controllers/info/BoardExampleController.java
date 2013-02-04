@@ -6,8 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Robot;
+import wisematches.core.RobotType;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
@@ -30,6 +31,7 @@ import java.util.*;
 public class BoardExampleController extends WisematchesController {
 	private TilesBankingHouse tilesBankingHouse;
 	private DictionaryManager dictionaryManager;
+	private PersonalityManager personalityManager;
 	private BoardSettingsManager boardSettingsManager;
 
 	private final Map<Language, BoardWrapper> boardsCache = new HashMap<>();
@@ -51,9 +53,9 @@ public class BoardExampleController extends WisematchesController {
 		model.addAttribute("viewMode", false);
 
 		model.addAttribute("board", boardWrapper.getBoard());
-		model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPersonality()));
+		model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPrincipal()));
 
-		model.addAttribute("player", RobotPlayer.getComputerPlayer(boardWrapper.getBoard().getPlayerTurn().getPlayerId()));
+		model.addAttribute("player", boardWrapper.getBoard().getPlayerTurn());
 		model.addAttribute("memoryWords", selectMemoryWords(boardWrapper.getAvailableMoves()));
 
 		model.addAttribute("wordAttributes", WordAttribute.values());
@@ -68,7 +70,11 @@ public class BoardExampleController extends WisematchesController {
 	}
 
 	private BoardWrapper createNewBoard(Language language) {
-		final List<Personality> players = Arrays.<Personality>asList(RobotPlayer.DULL, RobotPlayer.EXPERT);
+		final List<Robot> players = new ArrayList<>();
+		for (RobotType robotType : EnumSet.of(RobotType.DULL, RobotType.EXPERT)) {
+			players.add(personalityManager.getRobot(robotType));
+		}
+
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		final TilesBank tilesBank = tilesBankingHouse.createTilesBank(language, players.size(), true);
 
@@ -77,11 +83,11 @@ public class BoardExampleController extends WisematchesController {
 
 		final ScribbleRobotBrain robotBrain = new ScribbleRobotBrain();
 		for (int i = 0; i < 3; i++) {
-			RobotPlayer rp = RobotPlayer.getComputerPlayer(board.getPlayerTurn().getPlayerId());
+			Robot rp = (Robot) board.getPlayerTurn();
 			robotBrain.putInAction(board, rp.getRobotType());
 		}
 
-		final List<Word> allMoves = robotBrain.getAvailableMoves(board, board.getPlayerTurn());
+		final List<Word> allMoves = robotBrain.getAvailableMoves(board, board.getPlayerHand(board.getPlayerTurn()).getTiles());
 		final SortedSet<Word> uniqueMoves = new TreeSet<>(new Comparator<Word>() {
 			@Override
 			public int compare(Word o1, Word o2) {
@@ -108,6 +114,11 @@ public class BoardExampleController extends WisematchesController {
 	@Autowired
 	public void setDictionaryManager(DictionaryManager dictionaryManager) {
 		this.dictionaryManager = dictionaryManager;
+	}
+
+	@Autowired
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
 	}
 
 	@Autowired

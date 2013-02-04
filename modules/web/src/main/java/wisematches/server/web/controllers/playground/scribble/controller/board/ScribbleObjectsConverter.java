@@ -97,7 +97,7 @@ public class ScribbleObjectsConverter {
 		final Map<String, Object> res = new HashMap<String, Object>();
 		res.put("state", convertGameState(board, locale));
 		res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));
-		res.put("hand", board.getPlayerHand(currentPlayer.getId()).getTiles());
+		res.put("hand", board.getPlayerHand(currentPlayer).getTiles());
 		if (!board.isActive()) {
 			res.put("players", board.getPlayers());
 		}
@@ -107,18 +107,18 @@ public class ScribbleObjectsConverter {
 	Map<String, Object> convertGameState(final ScribbleBoard board, Locale locale) {
 		final Map<String, Object> state = new HashMap<String, Object>();
 		state.put("active", board.isActive());
-		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getPlayerId() : null);
+		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getId() : null);
 		state.put("spentTimeMillis", gameMessageSource.getSpentMinutes(board) * 1000 * 60);
 		state.put("spentTimeMessage", gameMessageSource.formatSpentTime(board, locale));
 		if (!board.isActive()) {
-			final List<ScribblePlayerHand> wonPlayers = board.getWonPlayers();
+			final Collection<Personality> wonPlayers = board.getWonPlayers();
 			int index = 0;
 			final long[] res = new long[wonPlayers.size()];
-			for (ScribblePlayerHand wonPlayer : wonPlayers) {
-				res[index++] = wonPlayer.getPlayerId();
+			for (Personality wonPlayer : wonPlayers) {
+				res[index++] = wonPlayer.getId();
 			}
 			state.put("winners", res);
-			state.put("ratings", board.getRatingChanges());
+//			state.put("ratings", board.getRatingChanges());
 			state.put("resolution", board.getResolution());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
 			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
@@ -130,6 +130,7 @@ public class ScribbleObjectsConverter {
 	}
 
 	Map<String, Object> convertPlayerMove(final GameMove move, final Locale locale) {
+/*
 		final PlayerMove playerMove = move.getPlayerMove();
 
 		final Map<String, Object> moveInfo = new HashMap<String, Object>();
@@ -148,6 +149,8 @@ public class ScribbleObjectsConverter {
 			moveInfo.put("tilesCount", ((ExchangeMove) playerMove).getTilesIds().length);
 		}
 		return moveInfo;
+*/
+		throw new UnsupportedOperationException("Commented");
 	}
 
 	Map<String, Object> convertGameComment(final GameComment comment, final Locale locale) {

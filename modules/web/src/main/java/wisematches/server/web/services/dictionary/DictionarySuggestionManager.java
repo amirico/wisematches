@@ -2,7 +2,6 @@ package wisematches.server.web.services.dictionary;
 
 import wisematches.core.Language;
 import wisematches.core.Personality;
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 import wisematches.playground.dictionary.WordAttribute;
 
@@ -11,7 +10,7 @@ import java.util.EnumSet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface DictionarySuggestionManager extends SearchManager<ChangeSuggestion, SuggestionContext, SearchFilter.NoFilter> {
+public interface DictionarySuggestionManager extends SearchManager<ChangeSuggestion, SuggestionContext> {
 	void addDictionaryChangeListener(DictionarySuggestionListener listener);
 
 	void removeDictionaryChangeListener(DictionarySuggestionListener listener);

@@ -75,7 +75,7 @@
                         <#list g.players as p>
                             <tr>
                                 <td class="ui-state-default" style="padding-right: 40px">
-                                ${p_index+1}. <@wm.player.name playerManager.getPlayer(p)/>
+                                ${p_index+1}. <@wm.player.name personalityManager.getPlayer(p)/>
                                 </td>
                                 <#assign games=0/>
                                 <#list g.players as o>

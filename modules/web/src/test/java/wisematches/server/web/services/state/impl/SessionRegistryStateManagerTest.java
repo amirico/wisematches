@@ -1,15 +1,6 @@
 package wisematches.server.web.services.state.impl;
 
 import org.junit.Test;
-import wisematches.core.Personality;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.core.personality.proprietary.guest.GuestPlayer;
-import wisematches.server.security.impl.WMPlayerDetails;
-import wisematches.server.web.services.state.PlayerStateListener;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -20,6 +11,8 @@ public class SessionRegistryStateManagerTest {
 
 	@Test
 	public void test() {
+		throw new UnsupportedOperationException("Commented");
+/*
 		final Personality player1 = GuestPlayer.GUEST;
 		final Personality player2 = RobotPlayer.DULL;
 
@@ -60,5 +53,6 @@ public class SessionRegistryStateManagerTest {
 		assertFalse(stateManager.isPlayerOnline(player1));
 
 		verify(listener);
+*/
 	}
 }

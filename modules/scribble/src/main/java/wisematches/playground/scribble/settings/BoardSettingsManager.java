@@ -17,8 +17,8 @@ public interface BoardSettingsManager {
 	/**
 	 * Updates notifications mask for specified player.
 	 *
-	 * @param personality the player who's notifications mask should be updated.
-	 * @param settings    the new settings for specified personality
+	 * @param player   the player who's notifications mask should be updated.
+	 * @param settings the new settings for specified personality
 	 */
 	void setScribbleSettings(Player player, BoardSettings settings);
 }

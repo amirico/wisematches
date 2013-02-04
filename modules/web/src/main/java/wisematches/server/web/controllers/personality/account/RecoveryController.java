@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import wisematches.core.PlayerType;
+import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountEditor;
 import wisematches.core.personality.player.account.AccountManager;
@@ -68,7 +70,7 @@ public class RecoveryController {
 					mailModel.put("principal", player);
 					mailModel.put("recoveryToken", token.getToken());
 
-					notificationService.raiseNotification("account.recovery", player, NotificationSender.ACCOUNTS, mailModel);
+					notificationService.raiseNotification("account.recovery", new DefaultPlayer(player, PlayerType.BASIC), NotificationSender.ACCOUNTS, mailModel);
 					session.setAttribute(RECOVERING_PLAYER_EMAIL, player.getEmail());
 					return "redirect:/account/recovery/confirmation";
 				} else {
@@ -117,7 +119,7 @@ public class RecoveryController {
 
 				try {
 					accountManager.updateAccount(e.createAccount());
-					notificationService.raiseNotification("account.updated", player, NotificationSender.ACCOUNTS, player);
+					notificationService.raiseNotification("account.updated", new DefaultPlayer(player, PlayerType.BASIC), NotificationSender.ACCOUNTS, player);
 					return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 				} catch (Exception e1) {
 					result.rejectValue("email", "account.recovery.err.system");

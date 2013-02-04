@@ -9,16 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayerManager;
-import wisematches.core.search.SearchFilter;
-import wisematches.playground.GameRelationship;
-import wisematches.playground.GameResolution;
-import wisematches.playground.scribble.history.ScribbleHistoryEntity;
-import wisematches.playground.scribble.history.ScribbleHistorySearchManager;
-import wisematches.server.web.controllers.ServicePlayer;
+import wisematches.core.PersonalityManager;
 import wisematches.server.web.controllers.UnknownEntityException;
-import wisematches.server.web.controllers.playground.AbstractSearchController;
+import wisematches.server.web.controllers.playground.scribble.controller.game.AbstractGameController;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.services.state.PlayerStateManager;
 
@@ -30,19 +23,20 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/scribble/history")
-public class HistoryGameController extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
-	private MemberPlayerManager playerManager;
+public class HistoryGameController extends AbstractGameController { //extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
+	private PersonalityManager playerManager;
 	private GameMessageSource messageSource;
 	private PlayerStateManager playerStateManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
 	public HistoryGameController() {
-		super(new String[]{"title", "startedDate", "finishedDate", "players", "movesCount", "resolution", "newRating", "ratingChange"});
+//		super(new String[]{"title", "startedDate", "finishedDate", "players", "movesCount", "resolution", "newRating", "ratingChange"});
 	}
 
 	@RequestMapping("")
 	public String showHistoryGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
+/*
 		final Personality principal;
 		if (pid == null) {
 			principal = getPrincipal();
@@ -59,12 +53,15 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 		model.addAttribute("player", principal);
 		model.addAttribute("searchColumns", getColumns());
 		model.addAttribute("searchEntityDescriptor", getEntityDescriptor());
+*/
 		return "/content/playground/scribble/history";
 	}
 
 	@ResponseBody
 	@RequestMapping("load.ajax")
 	public Map<String, Object> loadHistoryGames(@RequestParam(value = "p", required = false) Long pid, @RequestBody Map<String, Object> request, Locale locale) {
+		throw new UnsupportedOperationException("commented");
+/*
 		final Personality personality;
 		if (pid == null) {
 			personality = getPersonality();
@@ -72,8 +69,10 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 			personality = Personality.person(pid);
 		}
 		return loadData(personality, request, null, locale);
+*/
 	}
 
+/*
 	@Override
 	protected void convertEntity(ScribbleHistoryEntity entity, Personality personality, Map<String, Object> map, Locale locale) {
 		final GameRelationship relationship = entity.getRelationship();
@@ -94,9 +93,10 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 		map.put("resolution", messageSource.getMessage("game.resolution." + entity.getResolution().name().toLowerCase(), locale));
 		map.put("movesCount", entity.getMovesCount());
 	}
+*/
 
 	@Autowired
-	public void setPlayerManager(MemberPlayerManager playerManager) {
+	public void setPlayerManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 
@@ -109,9 +109,11 @@ public class HistoryGameController extends AbstractSearchController<ScribbleHist
 	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
 		this.playerStateManager = playerStateManager;
 	}
+/*
 
 	@Autowired
 	public void setHistorySearchManager(ScribbleHistorySearchManager historySearchManager) {
 		setEntitySearchManager(historySearchManager);
 	}
+*/
 }

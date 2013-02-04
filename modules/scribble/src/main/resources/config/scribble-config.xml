@@ -27,7 +27,7 @@
 
     <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribblePlayManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="personalityManager" ref="playerManager"/>
+        <property name="personalityManager" ref="personalityManager"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>
         <property name="dictionaryManager" ref="dictionaryManager"/>
         <property name="taskExecutor" ref="scribbleRobotTaskExecutor"/>
@@ -39,7 +39,7 @@
 
     <bean id="scribbleSearchManager" class="wisematches.playground.scribble.ScribbleSearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="personalityManager" ref="playerManager"/>
+        <property name="personalityManager" ref="personalityManager"/>
     </bean>
 
     <bean id="scribbleStatisticTrapper" class="wisematches.playground.scribble.tracking.impl.ScribbleStatisticsTrapper">
@@ -62,7 +62,7 @@
     <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
         <property name="playerStatisticManager">
             <bean class="wisematches.playground.scribble.tracking.impl.HibernateScribbleStatisticsManager">
-                <property name="playerManager" ref="playerManager"/>
+                <property name="personalityManager" ref="personalityManager"/>
                 <property name="sessionFactory" ref="sessionFactory"/>
                 <property name="gamePlayManager" ref="scribbleBoardManager"/>
                 <property name="tourneyManager" ref="regularTourneyManager"/>
@@ -138,9 +138,9 @@
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="cronExpression" value="0 0 0 ? * 2#1"/>
 
-        <property name="playerManager" ref="playerManager"/>
         <property name="taskExecutor" ref="tournamentTaskExecutor"/>
         <property name="gamePlayManager" ref="scribbleBoardManager"/>
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
+        <property name="personalityManager" ref="personalityManager"/>
     </bean>
 </beans>

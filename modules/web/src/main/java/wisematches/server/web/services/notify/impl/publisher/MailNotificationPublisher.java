@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.core.Language;
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 import wisematches.server.web.services.notify.Notification;
 import wisematches.server.web.services.notify.NotificationScope;
 import wisematches.server.web.services.notify.NotificationSender;
@@ -54,7 +54,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 		}
 		final MimeMessagePreparator mm = new MimeMessagePreparator() {
 			public void prepare(MimeMessage mimeMessage) throws Exception {
-				final Account account = notification.getTarget();
+				final Player account = notification.getTarget();
 				final Language language = account.getLanguage();
 
 				final InternetAddress to = new InternetAddress(account.getEmail(), account.getNickname(), "UTF-8");
@@ -66,7 +66,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 				msg.setSubject(notification.getSubject());
 
 				final StringBuilder m = new StringBuilder();
-				final Locale locale = notification.getTarget().getLanguage().locale();
+				final Locale locale = notification.getTarget().getLanguage().getLocale();
 				m.append(messageSource.getMessage("notify.mail.header", null, locale));
 				m.append(" <b>").append(notification.getTarget().getNickname()).append("</b>.");
 				m.append(notification.getMessage());
@@ -98,10 +98,10 @@ public class MailNotificationPublisher implements NotificationPublisher {
 			for (Language language : Language.values()) {
 				try {
 					final String address = messageSource.getMessage("mail.address." + sender.getUserInfo(),
-							null, sender.getUserInfo() + "@" + serverHostName, language.locale());
+							null, sender.getUserInfo() + "@" + serverHostName, language.getLocale());
 
 					final String personal = messageSource.getMessage("mail.personal." + sender.getUserInfo(),
-							null, sender.name(), language.locale());
+							null, sender.name(), language.getLocale());
 
 					addressesCache.put(new SenderKey(sender, language), new InternetAddress(address, personal, "UTF-8"));
 				} catch (UnsupportedEncodingException ex) {

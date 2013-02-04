@@ -32,7 +32,7 @@
                     <input type="checkbox" name="persons" value="${r.whom}">
                 </td>
                 <td>
-                    <div class="blacklist-from"><@wm.player.name playerManager.getPlayer(r.whom)/></div>
+                    <div class="blacklist-from"><@wm.player.name personalityManager.getPlayer(r.whom)/></div>
                 </td>
                 <td>
                     <div class="blacklist-date">

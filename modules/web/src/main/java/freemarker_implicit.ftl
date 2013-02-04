@@ -5,7 +5,7 @@
 [#-- @ftlvariable name="staticDomain" type="java.lang.String" --]
 [#-- @ftlvariable name="serverHostname" type="java.lang.String" --]
 [#-- @ftlvariable name="principal" type="wisematches.core.Personality" --]
-[#-- @ftlvariable name="playerManager" type="wisematches.core.personality.player.MemberManager" --]
+[#-- @ftlvariable name="personalityManager" type="wisematches.core.personality.player.MemberManager" --]
 [#-- @ftlvariable name="playerStateManager" type="wisematches.server.web.services.state.PlayerStateManager" --]
 [#-- @ftlvariable name="captchaService" type="wisematches.server.web.security.captcha.CaptchaService" --]
 [#-- @ftlvariable name="advertisementManager" type="wisematches.server.web.services.ads.AdvertisementManager" --]

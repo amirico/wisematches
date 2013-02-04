@@ -104,11 +104,12 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 	@Override
-	public B createBoard(S settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
+	@SuppressWarnings("unchecked")
+	public B createBoard(S settings, Collection<? extends Personality> players, GameRelationship relationship) throws BoardCreationException {
 		if (log.isDebugEnabled()) {
 			log.debug("Creating new board: settings - " + settings + ", players - " + players);
 		}
-		return createGameBoard(settings, players, relationship);
+		return createGameBoard(settings, (Collection<Personality>) players, relationship);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import wisematches.core.Personality;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.descriptive.DescriptiveSearchManager;
 import wisematches.core.search.descriptive.SearchableDescriptor;
 import wisematches.server.web.controllers.WisematchesController;
@@ -19,10 +18,10 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractSearchController<T, C, F extends SearchFilter> extends WisematchesController {
+public abstract class AbstractSearchController<T, C> extends WisematchesController {
 	private final String[] columns;
 
-	private DescriptiveSearchManager<T, C, F> entitySearchManager;
+	private DescriptiveSearchManager<T, C> entitySearchManager;
 
 	private static final Object[] EMPTY_DATA = new Object[0];
 
@@ -64,7 +63,7 @@ public abstract class AbstractSearchController<T, C, F extends SearchFilter> ext
 			int index = 0;
 			final Range limit = Range.limit((Integer) request.get("iDisplayStart"), (Integer) request.get("iDisplayLength"));
 
-			final List<T> response = entitySearchManager.searchEntities(personality, context, null, Orders.all(orders), limit);
+			final List<T> response = entitySearchManager.searchEntities(personality, context, Orders.all(orders), limit);
 			final Object[] data = new Object[response.size()];
 			for (T entity : response) {
 				final Map<String, Object> a = new HashMap<>();
@@ -79,7 +78,7 @@ public abstract class AbstractSearchController<T, C, F extends SearchFilter> ext
 	protected abstract void convertEntity(T entity, Personality personality, Map<String, Object> map, Locale locale);
 
 
-	public <E extends DescriptiveSearchManager<T, C, F>> void setEntitySearchManager(E entitySearchManager) {
+	public <E extends DescriptiveSearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {
 		this.entitySearchManager = entitySearchManager;
 	}
 }

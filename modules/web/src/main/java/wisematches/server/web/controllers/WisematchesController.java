@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.server.security.WMSecurityContext;
 import wisematches.server.web.i18n.GameMessageSource;
 
@@ -22,8 +23,8 @@ public abstract class WisematchesController {
 	}
 
 	@ModelAttribute("principal")
-	public Personality getPrincipal() {
-		return WMSecurityContext.getPrincipal();
+	public Player getPrincipal() {
+		return WMSecurityContext.getPlayer();
 	}
 
 	@ModelAttribute("personality")

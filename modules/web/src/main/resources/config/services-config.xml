@@ -14,7 +14,7 @@
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="freemarkerVariables">
             <map>
-                <entry key="playerManager" value-ref="playerManager"/>
+                <entry key="personalityManager" value-ref="personalityManager"/>
                 <entry key="playerStateManager" value-ref="playerStateManager"/>
                 <entry key="gameMessageSource" value-ref="gameMessageSource"/>
             </map>

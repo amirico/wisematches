@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import wisematches.core.Personality;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
+import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.robot.ScribbleRobotBrain;
-import wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator;
-import wisematches.playground.tourney.regular.impl.TourneyAdministrationAccess;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -21,9 +21,9 @@ import wisematches.playground.tourney.regular.impl.TourneyAdministrationAccess;
 @RequestMapping("/admin")
 public class AdministrationController {
 	private ScribblePlayManager boardManager;
-	private TourneyAdministrationAccess administrationAccess;
+//	private TourneyAdministrationAccess administrationAccess;
 
-	private PlayerStatisticValidator scribbleStatisticValidator;
+//	private PlayerStatisticValidator scribbleStatisticValidator;
 
 	public AdministrationController() {
 	}
@@ -33,12 +33,14 @@ public class AdministrationController {
 		return "/content/admin/main";
 	}
 
+/*
 	@RequestMapping("/regenerateStatistic")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String regenerateStatistic() {
 		scribbleStatisticValidator.recalculateStatistics();
 		return "/content/admin/main";
 	}
+*/
 
 	@RequestMapping(value = "/moves")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -53,12 +55,16 @@ public class AdministrationController {
 		if (board != null) {
 			ScribbleRobotBrain brain = new ScribbleRobotBrain();
 
+			final Personality playerTurn = board.getPlayerTurn();
+			final ScribblePlayerHand hand = board.getPlayerHand(playerTurn);
+
 			model.addAttribute("board", board);
 			model.addAttribute("scoreEngine", board.getScoreEngine());
-			model.addAttribute("words", brain.getAvailableMoves(board, board.getPlayerTurn()));
+			model.addAttribute("words", brain.getAvailableMoves(board, hand.getTiles()));
 		}
 		return "/content/admin/moves";
 	}
+/*
 
 	@RequestMapping(value = "/tourney")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -75,19 +81,24 @@ public class AdministrationController {
 		}
 		return "/content/admin/tourney";
 	}
+*/
 
 	@Autowired
 	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
 	}
+/*
 
 	@Autowired
 	public void setScribbleStatisticValidator(PlayerStatisticValidator scribbleStatisticValidator) {
 		this.scribbleStatisticValidator = scribbleStatisticValidator;
 	}
+*/
+/*
 
 	@Autowired
 	public void setAdministrationAccess(TourneyAdministrationAccess administrationAccess) {
 		this.administrationAccess = administrationAccess;
 	}
+*/
 }

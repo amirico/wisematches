@@ -16,6 +16,15 @@ public interface GameBoard<S extends GameSettings, H extends GamePlayerHand> ext
 	List<GameMove> getGameMoves();
 
 	/**
+	 * Returns list of all changes from last move for specified player.
+	 *
+	 * @param player the player to be checked.
+	 * @return the list of all changes from last move for specified player.
+	 */
+	List<GameMove> getGameChanges(Personality player);
+
+
+	/**
 	 * Closes this game. State changed to interrupted.
 	 *
 	 * @param player the player who closed the game

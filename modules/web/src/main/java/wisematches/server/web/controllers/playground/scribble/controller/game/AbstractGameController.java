@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayerManager;
-import wisematches.core.personality.proprietary.guest.GuestPlayer;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
+import wisematches.playground.scribble.ScribbleContext;
 import wisematches.playground.scribble.ScribblePlayManager;
+import wisematches.playground.scribble.ScribbleSearchManager;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.playground.search.GameState;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
@@ -22,33 +23,41 @@ import wisematches.server.web.services.state.PlayerStateManager;
 @Controller
 @RequestMapping("/playground/scribble")
 public class AbstractGameController extends WisematchesController {
-	protected MemberPlayerManager playerManager;
 	protected GameMessageSource messageSource;
-	protected ScribblePlayManager boardManager;
+	protected PersonalityManager personalityManager;
+	protected ScribblePlayManager playManager;
+	protected ScribbleSearchManager searchManager;
 	protected PlayerStateManager playerStateManager;
-	protected StatisticManager playerStatisticManager;
+	protected StatisticManager statisticManager;
 	protected GameProposalManager<ScribbleSettings> proposalManager;
+
+	protected static final ScribbleContext ACTIVE_GAMES_CTX = new ScribbleContext(true);
+	protected static final ScribbleContext FINISHED_GAMES_CTX = new ScribbleContext(true);
 
 	public AbstractGameController() {
 	}
 
 	protected int getActiveGamesCount(Personality principal) {
 		int activeGames;
-		if (!GuestPlayer.isGuestPlayer(principal)) {
-			activeGames = playerStatisticManager.getStatistic(principal).getActiveGames();
+		if (principal instanceof Player) {
+			activeGames = statisticManager.getStatistic((Player) principal).getActiveGames();
 		} else {
-			activeGames = boardManager.getTotalCount(principal, GameState.ACTIVE);
+			activeGames = searchManager.getTotalCount(principal, ACTIVE_GAMES_CTX);
 		}
 		return activeGames + proposalManager.getTotalCount(principal, ProposalRelation.INVOLVED);
 	}
 
 	protected int getFinishedGamesCount(Personality principal) {
-		return playerStatisticManager.getStatistic(principal).getFinishedGames();
+		if (principal instanceof Player) {
+			return statisticManager.getStatistic((Player) principal).getFinishedGames();
+		} else {
+			return searchManager.getTotalCount(principal, FINISHED_GAMES_CTX);
+		}
 	}
 
 	@Autowired
-	public void setPlayerManager(MemberPlayerManager playerManager) {
-		this.playerManager = playerManager;
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
 	}
 
 	@Autowired
@@ -57,8 +66,13 @@ public class AbstractGameController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setBoardManager(ScribblePlayManager boardManager) {
-		this.boardManager = boardManager;
+	public void setPlayManager(ScribblePlayManager playManager) {
+		this.playManager = playManager;
+	}
+
+	@Autowired
+	public void setSearchManager(ScribbleSearchManager searchManager) {
+		this.searchManager = searchManager;
 	}
 
 	@Autowired
@@ -67,8 +81,8 @@ public class AbstractGameController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPlayerStatisticManager(StatisticManager playerStatisticManager) {
-		this.playerStatisticManager = playerStatisticManager;
+	public void setStatisticManager(StatisticManager statisticManager) {
+		this.statisticManager = statisticManager;
 	}
 
 	@Autowired

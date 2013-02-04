@@ -6,39 +6,26 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayerManager;
-import wisematches.core.personality.player.profile.Gender;
-import wisematches.core.personality.player.profile.PlayerProfile;
-import wisematches.core.personality.player.profile.PlayerProfileEditor;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
+import wisematches.core.personality.player.profile.CountriesManager;
 import wisematches.core.personality.player.profile.PlayerProfileManager;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
-import wisematches.personality.membership.CountriesManager;
-import wisematches.personality.membership.Country;
-import wisematches.playground.award.Award;
-import wisematches.playground.award.AwardContext;
-import wisematches.playground.award.AwardsManager;
-import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.playground.tourney.TourneyPlace;
-import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.StatisticManager;
-import wisematches.playground.tracking.Statistics;
+import wisematches.server.services.award.AwardsManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.utils.RatingChart;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -47,7 +34,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/profile")
 public class PlayerProfileController extends WisematchesController {
-	private MemberPlayerManager playerManager;
+	private PersonalityManager playerManager;
 	private AwardsManager awardsManager;
 	private GameMessageSource messageSource;
 	private CountriesManager countriesManager;
@@ -79,7 +66,7 @@ public class PlayerProfileController extends WisematchesController {
 	@RequestMapping("view")
 	public String viewProfile(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
-			Personality player;
+			Player player;
 			try {
 				player = playerManager.getPlayer(Long.parseLong(profileId));
 			} catch (NumberFormatException ignore) {
@@ -104,6 +91,7 @@ public class PlayerProfileController extends WisematchesController {
 			c.add(Calendar.DAY_OF_YEAR, -365);
 			final Date start = c.getTime();
 
+/*
 			final PlayerProfile profile = profileManager.getPlayerProfile(player);
 			final Statistics statistics = statisticManager.getStatistic(player);
 			final RatingCurve ratingCurve = statisticManager.getRatingCurve(player, 10, start, end);
@@ -121,6 +109,7 @@ public class PlayerProfileController extends WisematchesController {
 			model.addAttribute("ratingChart", ratingChart);
 			model.addAttribute("tourneyMedals", TOURNEY_PLACEs);
 			model.addAttribute("boardSettings", boardSettings);
+*/
 
 			model.addAttribute("awardsSummary", awardsManager.getAwardsSummary(player));
 
@@ -133,7 +122,8 @@ public class PlayerProfileController extends WisematchesController {
 	@RequestMapping("awards")
 	public String viewAwards(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
-			Personality player = playerManager.getPlayer(Long.parseLong(profileId));
+/*
+			Player player = playerManager.getPlayer(Long.parseLong(profileId));
 			if (player == null) {
 				throw new UnknownEntityException(profileId, "profile");
 			}
@@ -147,6 +137,7 @@ public class PlayerProfileController extends WisematchesController {
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
 			model.addAttribute("awards", awards);
+*/
 			return "/content/playground/profile/awards";
 		} catch (NumberFormatException ex) {
 			throw new UnknownEntityException(profileId, "profile");
@@ -155,7 +146,8 @@ public class PlayerProfileController extends WisematchesController {
 
 	@RequestMapping("edit")
 	public String editProfile(Model model, Locale locale) {
-		final Personality principal = getPrincipal();
+/*
+		final Player principal = getPrincipal();
 		final PlayerProfile profile = profileManager.getPlayerProfile(principal);
 
 		final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
@@ -173,7 +165,7 @@ public class PlayerProfileController extends WisematchesController {
 			form.setGender(profile.getGender().name().toLowerCase());
 		}
 		if (profile.getPrimaryLanguage() != null) {
-			form.setPrimaryLanguage(profile.getPrimaryLanguage().code().toLowerCase());
+			form.setPrimaryLanguage(profile.getPrimaryLanguage().getCode().toLowerCase());
 		}
 		if (profile.getCountryCode() != null) {
 			final Country country = countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale));
@@ -186,6 +178,7 @@ public class PlayerProfileController extends WisematchesController {
 		model.addAttribute("profile", profile);
 		model.addAttribute("profileForm", form);
 		model.addAttribute("countries", countriesManager.getCountries(Language.byLocale(locale)));
+*/
 		return "/content/playground/profile/edit";
 	}
 
@@ -194,6 +187,7 @@ public class PlayerProfileController extends WisematchesController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public ServiceResponse saveProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
 		try {
+/*
 			final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
 
 			final PlayerProfile profile = profileManager.getPlayerProfile(getPersonality());
@@ -235,13 +229,15 @@ public class PlayerProfileController extends WisematchesController {
 			profileManager.updateProfile(editor.createProfile());
 
 			return ServiceResponse.SUCCESS;
+*/
+			return ServiceResponse.FAILURE;
 		} catch (Exception ex) {
 			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
 		}
 	}
 
 	@Autowired
-	public void setPlayerManager(MemberPlayerManager playerManager) {
+	public void setPlayerManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

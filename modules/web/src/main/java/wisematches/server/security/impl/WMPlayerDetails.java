@@ -3,7 +3,7 @@ package wisematches.server.security.impl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import wisematches.core.Personality;
-import wisematches.core.personality.player.MemberPlayer;
+import wisematches.core.Player;
 import wisematches.server.security.WMAuthorities;
 
 import java.util.Collection;
@@ -12,13 +12,13 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMPlayerDetails implements UserDetails {
-	private final MemberPlayer player;
+	private final Player player;
 	private final String username;
 	private final String password;
 	private final boolean accountNonLocked;
 	private final Collection<GrantedAuthority> authorities;
 
-	public WMPlayerDetails(MemberPlayer player, String username, String password, boolean accountNonLocked) {
+	public WMPlayerDetails(Player player, String username, String password, boolean accountNonLocked) {
 		this.player = player;
 		this.username = username;
 		this.password = password;

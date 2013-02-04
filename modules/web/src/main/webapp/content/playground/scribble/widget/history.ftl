@@ -17,7 +17,7 @@
         <tr>
             <td>${1+(move.moveNumber)}</td>
             <td>
-            ${gameMessageSource.getPlayerNick(playerManager.getPlayer(playerMove.playerId), locale)}
+            ${gameMessageSource.getPlayerNick(personalityManager.getPlayer(playerMove.playerId), locale)}
             </td>
             <td>
                 <#if playerMove.class.simpleName == "MakeWordMove">

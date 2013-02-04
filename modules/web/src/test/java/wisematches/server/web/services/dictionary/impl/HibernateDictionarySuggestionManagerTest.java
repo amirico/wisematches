@@ -1,8 +1,5 @@
 package wisematches.server.web.services.dictionary.impl;
 
-import org.easymock.Capture;
-import org.easymock.CaptureType;
-import org.easymock.EasyMock;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,15 +9,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
-import wisematches.core.Personality;
-import wisematches.playground.dictionary.*;
-import wisematches.server.web.services.dictionary.*;
+import wisematches.playground.dictionary.DictionaryException;
+import wisematches.playground.dictionary.DictionaryManager;
+import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
+import wisematches.server.web.services.dictionary.SuggestionContext;
+import wisematches.server.web.services.dictionary.SuggestionState;
+import wisematches.server.web.services.dictionary.SuggestionType;
 
 import java.util.EnumSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -57,20 +56,22 @@ public class HibernateDictionarySuggestionManagerTest {
 	@Test
 	public void testSearch() {
 		changeManager.getTotalCount(null, new SuggestionContext(Language.EN, null, null));
-		changeManager.searchEntities(null, new SuggestionContext(Language.EN, null, null), null, null, null);
+		changeManager.searchEntities(null, new SuggestionContext(Language.EN, null, null), null, null);
 
 		changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null));
-		changeManager.searchEntities(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null), null, null, null);
+		changeManager.searchEntities(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null), null, null);
 
 		changeManager.getTotalCount(null, new SuggestionContext(null, null, EnumSet.of(SuggestionState.REJECTED)));
-		changeManager.searchEntities(null, new SuggestionContext(null, null, EnumSet.of(SuggestionState.REJECTED)), null, null, null);
+		changeManager.searchEntities(null, new SuggestionContext(null, null, EnumSet.of(SuggestionState.REJECTED)), null, null);
 
 		changeManager.getTotalCount(null, new SuggestionContext(Language.EN, EnumSet.of(SuggestionType.REMOVE), EnumSet.of(SuggestionState.REJECTED)));
-		changeManager.searchEntities(null, new SuggestionContext(Language.EN, EnumSet.of(SuggestionType.REMOVE), EnumSet.of(SuggestionState.REJECTED)), null, null, null);
+		changeManager.searchEntities(null, new SuggestionContext(Language.EN, EnumSet.of(SuggestionType.REMOVE), EnumSet.of(SuggestionState.REJECTED)), null, null);
 	}
 
 	@Test
 	public void testAddRemoveUpdate() {
+		throw new UnsupportedOperationException("Commented");
+/*
 		final Capture<ChangeSuggestion> requestCapture = new Capture<>(CaptureType.ALL);
 
 		changeListener.changeRequestRaised(capture(requestCapture));
@@ -129,10 +130,13 @@ public class HibernateDictionarySuggestionManagerTest {
 		assertEquals(SuggestionType.REMOVE, remove.getSuggestionType());
 
 		verify(changeListener, dictionaryManager, dictionary);
+*/
 	}
 
 	@Test
 	public void testApproveReject() throws DictionaryException {
+		throw new UnsupportedOperationException("Commented");
+/*
 		final Capture<ChangeSuggestion> requestCapture = new Capture<>(CaptureType.ALL);
 
 		changeListener.changeRequestRaised(capture(requestCapture));
@@ -163,5 +167,6 @@ public class HibernateDictionarySuggestionManagerTest {
 		changeManager.rejectRequests(r2.getId(), r3.getId());
 
 		verify(changeListener, dictionaryManager, dictionary);
+*/
 	}
 }

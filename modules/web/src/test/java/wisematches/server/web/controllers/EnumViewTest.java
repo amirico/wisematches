@@ -1,7 +1,7 @@
 package wisematches.server.web.controllers;
 
 import org.junit.Test;
-import wisematches.playground.award.AwardType;
+import wisematches.server.services.award.AwardType;
 import wisematches.server.web.view.EnumView;
 
 import static org.junit.Assert.assertSame;

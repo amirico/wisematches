@@ -129,11 +129,11 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	ScribbleBoard() {
 	}
 
-	public ScribbleBoard(ScribbleSettings settings, Collection<Personality> players, TilesBank tilesBank, Dictionary dictionary) {
+	public ScribbleBoard(ScribbleSettings settings, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
 		this(settings, null, players, tilesBank, dictionary);
 	}
 
-	public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<Personality> players, TilesBank tilesBank, Dictionary dictionary) {
+	public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
 		super(settings, players, relationship);
 		if (log.isDebugEnabled()) {
 			log.debug("Game started: " + getBoardId());
@@ -283,7 +283,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		return finalizePlayerMove(new MakeTurn(player, word), score);
 	}
 
-	public GameMove exchangeTiles(Personality player, int[] tilesIds) throws GameMoveException {
+	public ExchangeMove exchangeTiles(Personality player, int[] tilesIds) throws GameMoveException {
 		validatePlayerMove(player);
 
 		if (tilesIds.length == 0) {

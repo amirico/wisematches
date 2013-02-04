@@ -5,26 +5,25 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
 import wisematches.core.Personality;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
 import wisematches.core.expiration.ExpirationListener;
-import wisematches.core.personality.player.MemberPlayerManager;
-import wisematches.core.personality.machinery.RobotPlayer;
-import wisematches.core.personality.player.MemberPlayer;
 import wisematches.core.search.Range;
 import wisematches.core.task.BreakingDayListener;
 import wisematches.playground.*;
-import wisematches.playground.award.Award;
-import wisematches.playground.award.AwardDescriptor;
-import wisematches.playground.award.AwardsListener;
-import wisematches.playground.award.AwardsManager;
-import wisematches.playground.message.Message;
-import wisematches.playground.message.MessageListener;
-import wisematches.playground.message.MessageManager;
 import wisematches.playground.propose.*;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
 import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
+import wisematches.server.services.award.Award;
+import wisematches.server.services.award.AwardDescriptor;
+import wisematches.server.services.award.AwardsListener;
+import wisematches.server.services.award.AwardsManager;
+import wisematches.server.services.message.Message;
+import wisematches.server.services.message.MessageListener;
+import wisematches.server.services.message.MessageManager;
 import wisematches.server.web.services.dictionary.ChangeSuggestion;
 import wisematches.server.web.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.web.services.dictionary.DictionarySuggestionManager;
@@ -43,9 +42,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class NotificationOriginCenter implements BreakingDayListener, InitializingBean {
 	private TaskExecutor taskExecutor;
 	private GamePlayManager gamePlayManager;
-	private MemberPlayerManager playerManager;
 	private AwardsManager awardsManager;
 	private MessageManager messageManager;
+	private PersonalityManager personalityManager;
 	private GameProposalManager proposalManager;
 	private RegularTourneyManager tourneyManager;
 	private ReliablePropertiesManager propertiesManager;
@@ -68,22 +67,21 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 	}
 
 	protected void processNotification(long person, String code, Object context) {
-		final Personality player = playerManager.getPlayer(person);
-		if (player instanceof MemberPlayer) {
-			fireNotification(code, (MemberPlayer) player, context);
+		final Personality player = personalityManager.getPlayer(person);
+		if (player instanceof Player) {
+			fireNotification(code, (Player) player, context);
 		}
 	}
 
 	protected void processNotification(Personality person, String code, Object context) {
-		final Personality player = playerManager.getPlayer(person);
-		if (player instanceof MemberPlayer) {
-			fireNotification(code, (MemberPlayer) player, context);
+		if (person instanceof Player) {
+			fireNotification(code, (Player) person, context);
 		}
 	}
 
-	private void fireNotification(String code, MemberPlayer player, Object context) {
+	private void fireNotification(String code, Player player, Object context) {
 		try {
-			notificationDistributor.raiseNotification(code, player.getAccount(), NotificationSender.GAME, context);
+			notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
 			if (log.isInfoEnabled()) {
 				log.info("Notification was raised to " + player + " [" + code + "]");
 			}
@@ -120,16 +118,16 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 	public void setGamePlayManager(GamePlayManager gamePlayManager) {
 		if (this.gamePlayManager != null) {
-			this.gamePlayManager.removeGamePlayListener(notificationListener);
+			this.gamePlayManager.removeBoardListener(notificationListener);
 		}
 		this.gamePlayManager = gamePlayManager;
 		if (this.gamePlayManager != null) {
-			this.gamePlayManager.addGamePlayListener(notificationListener);
+			this.gamePlayManager.addBoardListener(notificationListener);
 		}
 	}
 
-	public void setPlayerManager(MemberPlayerManager playerManager) {
-		this.playerManager = playerManager;
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
 	}
 
 	public void setAwardsManager(AwardsManager awardsManager) {
@@ -233,7 +231,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 				}
 
 				final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
-				final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, context, null, null, null);
+				final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, context, null, null);
 				for (Tourney tourney : tourneys) {
 					if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
 						log.info("Start notifications for tourney: " + tourney.getNumber());
@@ -300,12 +298,12 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 			try {
 				final GameBoard board = gamePlayManager.openBoard(boardId);
 				if (board != null) {
-					final GamePlayerHand hand = board.getPlayerTurn();
-					if (hand != null) {
+					final Personality player = board.getPlayerTurn();
+					if (player != null) {
 						Map<String, Object> c = new HashMap<>();
 						c.put("board", board);
 						c.put("expirationType", type);
-						processNotification(Personality.person(hand.getPlayerId()), type.getCode(), c);
+						processNotification(player, type.getCode(), c);
 					}
 				}
 			} catch (BoardLoadingException ignored) {
@@ -323,7 +321,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 			if (proposal == null || proposal.isReady()) {
 				return;
 			}
-			final List<Personality> waiting = new ArrayList<>(proposal.getPlayers());
+			final List<Player> waiting = new ArrayList<>(proposal.getPlayers());
 			waiting.removeAll(proposal.getJoinedPlayers());
 			if (!waiting.isEmpty()) {
 				Map<String, Object> c = new HashMap<>();
@@ -336,15 +334,15 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	private class TheNotificationListener implements GamePlayListener, MessageListener, GameProposalListener, RegularTourneyListener, AwardsListener {
+	private class TheNotificationListener implements BoardListener, MessageListener, GameProposalListener, RegularTourneyListener, AwardsListener {
 		private TheNotificationListener() {
 		}
 
 		@Override
 		public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
-			List<Personality> players = proposal.getPlayers();
+			List<Player> players = proposal.getPlayers();
 			for (Personality player : players) {
-				if (player == null || proposal.getInitiator().equals(player) || RobotPlayer.isRobotPlayer(player)) {
+				if (player == null || proposal.getInitiator().equals(player)) {
 					continue;
 				}
 				processNotification(player, "playground.challenge.initiated", Collections.singletonMap("proposal", proposal));
@@ -352,11 +350,11 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
-		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Personality player, ProposalDirective directive) {
+		public void gameProposalUpdated(GameProposal<? extends GameSettings> proposal, Player player, ProposalDirective directive) {
 		}
 
 		@Override
-		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, ProposalResolution resolution, Personality player) {
+		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, Player player, ProposalResolution resolution) {
 			Map<String, Object> c = new HashMap<>();
 			c.put("proposal", proposal);
 			c.put("player", player);
@@ -378,39 +376,40 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 		@Override
 		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
-			final Collection<? extends GamePlayerHand> playersHands = board.getPlayers();
-			for (GamePlayerHand hand : playersHands) {
-				processNotification(hand.getPlayerId(), "playground.game.started", Collections.singletonMap("board", board));
+			final Collection<Personality> playersHands = board.getPlayers();
+			for (Personality person : playersHands) {
+				processNotification(person, "playground.game.started", Collections.singletonMap("board", board));
 			}
 		}
 
 		@Override
 		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
-			final GamePlayerHand playerTurn = board.getPlayerTurn();
+			final Personality playerTurn = board.getPlayerTurn();
 			if (playerTurn != null) {
 				final Map<String, Object> map = new HashMap<>();
 				map.put("board", board);
-				map.put("changes", board.getGameChanges(playerTurn.getPlayerId()));
-				processNotification(Personality.person(playerTurn.getPlayerId()), "playground.game.turn", map);
+				map.put("changes", board.getGameChanges(playerTurn));
+				processNotification(playerTurn, "playground.game.turn", map);
 			}
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<? extends GamePlayerHand> winners) {
-			final Collection<? extends GamePlayerHand> playersHands = board.getPlayers();
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
+			final Collection<Personality> playersHands = board.getPlayers();
 			final Map<String, Object> map = new HashMap<>();
 			map.put("board", board);
 			map.put("winners", winners);
 			map.put("resolution", resolution);
-			for (GamePlayerHand hand : playersHands) {
-				processNotification(Personality.person(hand.getPlayerId()), "playground.game.finished", map);
+			for (Personality hand : playersHands) {
+				processNotification(hand, "playground.game.finished", map);
 			}
 		}
 
 		@Override
 		public void messageSent(Message message, boolean quite) {
 			if (!quite) {
-				processNotification(Personality.person(message.getRecipient()), "playground.message.received", Collections.singletonMap("message", message));
+				final Personality person = personalityManager.getPerson(message.getRecipient());
+				processNotification(person, "playground.message.received", Collections.singletonMap("message", message));
 			}
 		}
 
@@ -439,12 +438,12 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
-		public void playerAwarded(Personality personality, AwardDescriptor descriptor, Award award) {
+		public void playerAwarded(Player player, AwardDescriptor descriptor, Award award) {
 			final Map<String, Object> map = new HashMap<>();
 			map.put("award", award);
-			map.put("player", personality);
+			map.put("player", player);
 			map.put("descriptor", descriptor);
-			processNotification(personality, "playground.award.granted", map);
+			processNotification(player, "playground.award.granted", map);
 		}
 	}
 }

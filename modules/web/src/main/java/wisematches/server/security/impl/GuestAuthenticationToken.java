@@ -2,7 +2,6 @@ package wisematches.server.security.impl;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import wisematches.core.personality.proprietary.guest.GuestPlayer;
 
 import java.io.Serializable;
 
@@ -28,8 +27,10 @@ public class GuestAuthenticationToken extends AbstractAuthenticationToken implem
 	}
 
 	@Override
+	@Deprecated
 	public Object getDetails() {
-		return GuestPlayer.GUEST;
+		throw new UnsupportedOperationException("commented");
+//		return GuestPlayer.GUEST;
 	}
 
 	@Override
