@@ -30,7 +30,7 @@
         <property name="freemarkerVariables">
             <map merge="true">
                 <entry key="serverHostName" value="${server.hostname}"/>
-                <entry key="ratingManager" value-ref="ratingManager"/>
+                <!--<entry key="ratingManager" value-ref="ratingManager"/>-->
             </map>
         </property>
     </bean>

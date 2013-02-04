@@ -46,7 +46,7 @@ public class HibernateScribbleStatisticsManagerTest {
 	private Account person;
 
 	@Autowired
-	private PersonalityManager playerManager;
+	private PersonalityManager personalityManager;
 
 	@Autowired
 	private AccountManager accountManager;

@@ -4,18 +4,18 @@
     <defaultAnt bundledAnt="true" />
   </component>
   <component name="ArtifactManager">
-    <artifact type="exploded-war" build-on-make="true" name="webserver:war exploded">
-      <output-path>$PROJECT_DIR$/modules/web/target/webserver-5.0.0-SNAPSHOT</output-path>
+    <artifact type="exploded-war" name="web:war exploded">
+      <output-path>$PROJECT_DIR$/target/artifacts/web_war_exploded</output-path>
       <root id="root">
-        <element id="javaee-facet-resources" facet="web/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="web" />
+            <element id="module-output" name="core" />
+            <element id="module-output" name="gameplay" />
+            <element id="module-output" name="scribble" />
+            <element id="module-output" name="services" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="core-5.0.0-SNAPSHOT.jar">
-              <element id="module-output" name="core" />
-            </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
             <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
             <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.1.0.GA" />
@@ -27,55 +27,43 @@
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:4.1.7.Final" />
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.3.0.Final" />
             <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
-            <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.21" />
+            <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.22" />
             <element id="library" level="project" name="Maven: cglib:cglib-nodep:2.2.2" />
             <element id="library" level="project" name="Maven: javax.transaction:jta:1.1" />
-            <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache-core:2.6.0" />
-            <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.6.6" />
+            <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache-core:2.6.3" />
+            <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.2" />
             <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1.1" />
             <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
-            <element id="library" level="project" name="Maven: org.slf4j:slf4j-jcl:1.6.6" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-core:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-asm:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-expression:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-beans:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-aop:3.1.2.RELEASE" />
+            <element id="library" level="project" name="Maven: org.slf4j:slf4j-jcl:1.7.2" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-core:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-expression:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-beans:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-aop:3.2.1.RELEASE" />
             <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-context:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-context-support:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-tx:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-orm:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.2.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-context:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-context-support:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-tx:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-orm:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.2.0.M1" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.2.0.M1" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-acl:3.2.0.M1" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-test:3.2.1.RELEASE" />
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-            <element id="archive" name="playground-5.0.0-SNAPSHOT.jar">
-              <element id="module-output" name="playground" />
-            </element>
-            <element id="archive" name="scribble-5.0.0-SNAPSHOT.jar">
-              <element id="module-output" name="scribble" />
-            </element>
-            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" />
-            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-web:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.1.2.RELEASE" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:3.1.2.RELEASE" />
+            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.11" />
+            <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.11" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-web:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.2.1.RELEASE" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.2.0.M1" />
+            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:3.2.0.M1" />
             <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.19" />
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4.5" />
-            <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+            <element id="library" level="project" name="Maven: javax.activation:activation:1.1.1" />
           </element>
         </element>
-      </root>
-    </artifact>
-    <artifact type="war" name="webserver:war">
-      <output-path>$PROJECT_DIR$/modules/web/target</output-path>
-      <root id="archive" name="webserver-5.0.0-SNAPSHOT.war">
-        <element id="artifact" artifact-name="webserver:war exploded" />
+        <element id="javaee-facet-resources" facet="web/web/Web" />
       </root>
     </artifact>
   </component>
@@ -1177,19 +1165,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.2.1.RELEASE/spring-webmvc-3.2.1.RELEASE-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:playground:5.0.0-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/5.0.0-SNAPSHOT/playground-5.0.0-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/playground/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/5.0.0-SNAPSHOT/playground-5.0.0-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/playground/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/playground/5.0.0-SNAPSHOT/playground-5.0.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

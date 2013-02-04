@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
+		"classpath:/config/personality-config.xml",
 		"classpath:/config/playground-config.xml",
 		"classpath:/config/scribble-config.xml",
 		"classpath:/config/services-config.xml",
@@ -62,7 +62,7 @@ public class NotificationOriginCenterTest {
 		expect(ratingManager.getRating(Personality.person(1002))).andReturn((short) 2122).anyTimes();
 		replay(ratingManager);
 
-		publisherCenter.setPlayerManager(playerManager);
+		publisherCenter.setPersonalityManager(playerManager);
 
 		notificationFreemarkerConfig.setSharedVariable("personalityManager", playerManager);
 		notificationFreemarkerConfig.setSharedVariable("ratingManager", ratingManager);

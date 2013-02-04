@@ -29,7 +29,7 @@ import static org.junit.Assert.assertSame;
 public class ScribbleBoardManagerTest {
 	private Session session;
 
-	private PersonalityManager playerManager;
+	private PersonalityManager personalityManager;
 	private DictionaryManager dictionaryManager;
 	private TilesBankingHouse tilesBankingHouse;
 
@@ -49,13 +49,13 @@ public class ScribbleBoardManagerTest {
 		expect(sessionFactory.getCurrentSession()).andReturn(session).anyTimes();
 		replay(sessionFactory);
 
-		playerManager = createStrictMock(PersonalityManager.class);
+		personalityManager = createStrictMock(PersonalityManager.class);
 		dictionaryManager = createStrictMock(DictionaryManager.class);
 		tilesBankingHouse = createStrictMock(TilesBankingHouse.class);
 
 		scribblePlayManager = new ScribblePlayManager();
 		scribblePlayManager.setSessionFactory(sessionFactory);
-		scribblePlayManager.setPersonalityManager(playerManager);
+		scribblePlayManager.setPersonalityManager(personalityManager);
 		scribblePlayManager.setDictionaryManager(dictionaryManager);
 		scribblePlayManager.setTilesBankingHouse(tilesBankingHouse);
 	}
@@ -70,7 +70,7 @@ public class ScribbleBoardManagerTest {
 		final ScribbleBoard board = createStrictMock(ScribbleBoard.class);
 		expect(board.getSettings()).andReturn(settings);
 		expect(board.getPlayersCount()).andReturn(3);
-		board.initGameAfterLoading(tilesBank, dictionary, playerManager);
+		board.initGameAfterLoading(tilesBank, dictionary, personalityManager);
 		replay(board);
 
 		expect(session.get(ScribbleBoard.class, 1L)).andReturn(board);

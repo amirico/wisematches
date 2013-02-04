@@ -65,15 +65,15 @@ public class HibernateTourneyManagerTest {
 
 	@Before
 	public void init() throws ParseException, BoardCreationException, InterruptedException {
-		final PersonalityManager playerManager = createMock(PersonalityManager.class);
-		expect(playerManager.getPerson(901L)).andReturn(player1).anyTimes();
-		expect(playerManager.getPerson(902L)).andReturn(player2).anyTimes();
-		expect(playerManager.getPerson(903L)).andReturn(player3).anyTimes();
-		expect(playerManager.getPerson(904L)).andReturn(player4).anyTimes();
-		expect(playerManager.getPerson(905L)).andReturn(player5).anyTimes();
-		expect(playerManager.getPerson(906L)).andReturn(player6).anyTimes();
-		expect(playerManager.getPerson(907L)).andReturn(player7).anyTimes();
-		replay(playerManager);
+		final PersonalityManager personalityManager = createMock(PersonalityManager.class);
+		expect(personalityManager.getPerson(901L)).andReturn(player1).anyTimes();
+		expect(personalityManager.getPerson(902L)).andReturn(player2).anyTimes();
+		expect(personalityManager.getPerson(903L)).andReturn(player3).anyTimes();
+		expect(personalityManager.getPerson(904L)).andReturn(player4).anyTimes();
+		expect(personalityManager.getPerson(905L)).andReturn(player5).anyTimes();
+		expect(personalityManager.getPerson(906L)).andReturn(player6).anyTimes();
+		expect(personalityManager.getPerson(907L)).andReturn(player7).anyTimes();
+		replay(personalityManager);
 
 		@SuppressWarnings("unchecked")
 		final GameSettingsProvider<GameSettings, TourneyGroup> settingsProvider = createMock(GameSettingsProvider.class);
@@ -115,7 +115,7 @@ public class HibernateTourneyManagerTest {
 		tourneyManager.setTaskExecutor(new SyncTaskExecutor());
 		tourneyManager.setGamePlayManager(gamePlayManager);
 		tourneyManager.setSettingsProvider(settingsProvider);
-		tourneyManager.setPlayerManager(playerManager);
+		tourneyManager.setPersonalityManager(personalityManager);
 	}
 
 	@Test

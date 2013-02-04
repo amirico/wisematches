@@ -16,7 +16,7 @@ public class ScribbleDescription extends AbstractBoardDescription<ScribbleSettin
 	}
 
 	@Override
-	protected void initializePlayers(PersonalityManager playerManager) {
-		super.initializePlayers(playerManager);
+	protected void initializePlayers(PersonalityManager personalityManager) {
+		super.initializePlayers(personalityManager);
 	}
 }

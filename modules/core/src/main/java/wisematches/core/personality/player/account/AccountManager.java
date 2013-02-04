@@ -3,7 +3,7 @@ package wisematches.core.personality.player.account;
 /**
  * <code>AccountManager</code> allows create and authentificate players or does search by some criteria.
  * <p/>
- * {@code AccountManager} does not extends {@code PlayerManager} because {@code PlayerManager} has a lot
+ * {@code AccountManager} does not extends {@code PersonalityManager} because {@code PersonalityManager} has a lot
  * of implementation.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)

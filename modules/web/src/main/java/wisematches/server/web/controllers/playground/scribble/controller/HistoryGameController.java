@@ -96,7 +96,7 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 */
 
 	@Autowired
-	public void setPlayerManager(PersonalityManager playerManager) {
+	public void setPersonalityManager(PersonalityManager playerManager) {
 		this.playerManager = playerManager;
 	}
 

@@ -62,10 +62,10 @@
     <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
         <property name="playerStatisticManager">
             <bean class="wisematches.playground.scribble.tracking.impl.HibernateScribbleStatisticsManager">
-                <property name="personalityManager" ref="personalityManager"/>
                 <property name="sessionFactory" ref="sessionFactory"/>
                 <property name="gamePlayManager" ref="scribbleBoardManager"/>
                 <property name="tourneyManager" ref="regularTourneyManager"/>
+                <property name="personalityManager" ref="personalityManager"/>
             </bean>
         </property>
     </bean>

@@ -17,8 +17,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/accounts-config.xml",
-		"classpath:/config/playground-config.xml",
+		"classpath:/config/personality-config.xml",
+		"classpath:/config/scribble-config.xml",
 		"classpath:/config/playground-config.xml",
 		"classpath:/config/services-junit-config.xml"
 })

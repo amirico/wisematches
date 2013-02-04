@@ -544,8 +544,8 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 
-	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PersonalityManager playerManager) {
-		initializePlayers(playerManager);
+	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PersonalityManager personalityManager) {
+		initializePlayers(personalityManager);
 
 		this.dictionary = vocabulary;
 		this.tilesBank = tilesBank;

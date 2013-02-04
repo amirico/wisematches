@@ -41,6 +41,9 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean id="abuseReportManager" class="wisematches.server.services.abuse.impl.MemoryAbuseReportManager">
+    </bean>
+
     <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- run every morning at 00:00:00.000 -->
         <property name="cronExpression" value="0 0 0 * * ?"/>

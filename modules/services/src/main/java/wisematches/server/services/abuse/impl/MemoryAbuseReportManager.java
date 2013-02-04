@@ -10,10 +10,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class DummyAbuseReportManager implements AbuseReportManager {
+public class MemoryAbuseReportManager implements AbuseReportManager {
 	private final Set<AbuseReportListener> listeners = new CopyOnWriteArraySet<>();
 
-	public DummyAbuseReportManager() {
+	public MemoryAbuseReportManager() {
 	}
 
 	@Override
