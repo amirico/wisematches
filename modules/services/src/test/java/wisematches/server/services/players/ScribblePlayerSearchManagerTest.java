@@ -38,7 +38,7 @@ public class ScribblePlayerSearchManagerTest {
 		int playersCount = playerSearchManager.getTotalCount(player, PlayerSearchArea.FRIENDS);
 		System.out.println(playersCount);
 
-		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.FRIENDS, null, null, null);
+		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.FRIENDS, null, null);
 		System.out.println(playerBeans);
 	}
 
@@ -47,7 +47,7 @@ public class ScribblePlayerSearchManagerTest {
 		int playersCount = playerSearchManager.getTotalCount(player, PlayerSearchArea.FORMERLY);
 		System.out.println(playersCount);
 
-		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.FORMERLY, null, null, null);
+		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.FORMERLY, null, null);
 		System.out.println(playerBeans);
 	}
 
@@ -56,7 +56,7 @@ public class ScribblePlayerSearchManagerTest {
 		int playersCount = playerSearchManager.getTotalCount(player, PlayerSearchArea.PLAYERS);
 		System.out.println(playersCount);
 
-		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.PLAYERS, null, Orders.of(Order.desc("nickname"), Order.asc("language")), null);
+		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.PLAYERS, Orders.of(Order.desc("nickname"), Order.asc("language")), null);
 		System.out.println(playerBeans);
 	}
 }

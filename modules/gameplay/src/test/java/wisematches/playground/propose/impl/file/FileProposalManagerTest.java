@@ -74,9 +74,9 @@ public class FileProposalManagerTest {
 		fileProposalManager = new FileProposalManager<>();
 		fileProposalManager.setProposalsResource(file);
 		fileProposalManager.afterPropertiesSet();
-		assertEquals(2, fileProposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null, null).size());
+		assertEquals(2, fileProposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null).size());
 
-		Object[] objects = fileProposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null, null).toArray();
+		Object[] objects = fileProposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null).toArray();
 		@SuppressWarnings("unchecked")
 		GameProposal<GameSettings> pl1 = (GameProposal<GameSettings>) objects[0];
 		@SuppressWarnings("unchecked")

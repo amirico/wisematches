@@ -1,6 +1,5 @@
 package wisematches.core.search.descriptive;
 
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 
 /**
@@ -13,7 +12,7 @@ import wisematches.core.search.SearchManager;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface DescriptiveSearchManager<E, C, F extends SearchFilter> extends SearchManager<E, C, F> {
+public interface DescriptiveSearchManager<E, C> extends SearchManager<E, C> {
 	/**
 	 * Returns descriptor of entity.
 	 *

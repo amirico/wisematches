@@ -27,7 +27,7 @@ public class ProposalExpirationManager<S extends GameSettings> extends AbstractE
 	public void afterPropertiesSet() throws Exception {
 		lock.lock();
 		try {
-			final List<GameProposal<S>> gameProposals = proposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null, null);
+			final List<GameProposal<S>> gameProposals = proposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null);
 			for (GameProposal<S> proposal : gameProposals) {
 				scheduleProposalTermination(proposal);
 			}

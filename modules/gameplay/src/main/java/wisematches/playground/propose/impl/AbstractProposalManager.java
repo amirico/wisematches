@@ -1,10 +1,10 @@
 package wisematches.playground.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
+import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.*;
 import wisematches.playground.propose.criteria.ViolatedCriteriaException;
@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractProposalManager<S extends GameSettings> implements GameProposalManager<S>, InitializingBean {
 	private StatisticManager statisticManager;
 
@@ -188,12 +189,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 
 
 	@Override
-	public <Ctx extends ProposalRelation> int getTotalCount(Player person, Ctx context) {
-		return getFilteredCount(person, context, null);
-	}
-
-	@Override
-	public <Ctx extends ProposalRelation, Fl extends SearchFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
+	public <Ctx extends ProposalRelation> int getTotalCount(Personality person, Ctx context) {
 		lock.lock();
 		try {
 			int res = 0;
@@ -215,7 +211,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public <Ctx extends ProposalRelation, Fl extends SearchFilter> List<GameProposal<S>> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends ProposalRelation> List<GameProposal<S>> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
 		lock.lock();
 		try {
 			if (context == ProposalRelation.AVAILABLE) {

@@ -4,17 +4,16 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
-import wisematches.core.Player;
+import wisematches.core.Personality;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 
 import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> implements EntitySearchManager<E, C, F> {
+public abstract class AbstractEntitySearchManager<E, C> implements EntitySearchManager<E, C> {
 	private final Class<?> entityType;
 
 	private SessionFactory sessionFactory;
@@ -24,36 +23,31 @@ public abstract class AbstractEntitySearchManager<E, C, F extends SearchFilter> 
 	}
 
 	@Override
-	public <Ctx extends C> int getTotalCount(Player person, Ctx context) {
-		return getFilteredCount(person, context, null);
-	}
-
-	@Override
-	public <Ctx extends C, Fl extends F> int getFilteredCount(Player person, Ctx context, Fl filter) {
+	public <Ctx extends C> int getTotalCount(Personality person, Ctx context) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
-		applyRestrictions(criteria, context, filter);
+		applyRestrictions(criteria, context);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends C, Fl extends F> List<E> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends C> List<E> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final Criteria criteria = session.createCriteria(entityType);
-		applyRestrictions(criteria, context, filter);
-		applyProjections(criteria, context, filter);
+		applyRestrictions(criteria, context);
+		applyProjections(criteria, context);
 		applyOrders(criteria, orders);
 		applyRange(range, criteria);
 		return criteria.list();
 	}
 
-	protected abstract void applyRestrictions(Criteria criteria, C context, SearchFilter filters);
+	protected abstract void applyRestrictions(Criteria criteria, C context);
 
-	protected abstract void applyProjections(Criteria criteria, C context, SearchFilter filters);
+	protected abstract void applyProjections(Criteria criteria, C context);
 
 	protected void applyRange(Range range, Criteria criteria) {
 		if (range != null) {

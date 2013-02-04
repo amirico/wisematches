@@ -9,7 +9,6 @@ import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 import wisematches.playground.GameRelationship;
 import wisematches.server.services.award.*;
 
@@ -76,13 +75,7 @@ public class HibernateAwardsManager implements AwardsManager, AwardExecutiveComm
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends AwardContext> int getTotalCount(Player person, Ctx context) {
-		return getFilteredCount(person, context, null);
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends AwardContext, Fl extends SearchFilter.NoFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
+	public <Ctx extends AwardContext> int getTotalCount(Personality person, Ctx context) {
 		final Query query = createQuery(true, person, context, null);
 		return ((Number) query.uniqueResult()).intValue();
 	}
@@ -90,7 +83,7 @@ public class HibernateAwardsManager implements AwardsManager, AwardExecutiveComm
 	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public <Ctx extends AwardContext, Fl extends SearchFilter.NoFilter> List<Award> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
+	public <Ctx extends AwardContext> List<Award> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
 		final Query query = createQuery(false, person, context, orders);
 		if (range != null) {
 			range.apply(query);

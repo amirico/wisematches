@@ -291,12 +291,12 @@ public class HibernateTourneyManagerTest {
 		assertTrue(1 <= tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE))));
 		assertTrue(1 <= tourneyManager.getTotalCount(player1, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
 		assertTrue(1 <= tourneyManager.getTotalCount(player2, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)))); // has tourney
-		final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null, null);
+		final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null);
 		assertTrue(tourneys.size() >= 1);
 
 
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(tourney.getId(), null)));
-		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, new TourneyDivision.Context(tourney.getId(), null), null, null, null);
+		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, new TourneyDivision.Context(tourney.getId(), null), null, null);
 		assertEquals(1, divisions.size());
 
 		final TourneyDivision division = divisions.iterator().next();
@@ -306,7 +306,7 @@ public class HibernateTourneyManagerTest {
 		assertNotNull(division.getStartedDate());
 
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyRound.Context(division.getId(), null)));
-		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, new TourneyRound.Context(division.getId(), null), null, null, null);
+		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, new TourneyRound.Context(division.getId(), null), null, null);
 		assertEquals(1, rounds.size());
 
 		final TourneyRound round = rounds.iterator().next();
@@ -317,7 +317,7 @@ public class HibernateTourneyManagerTest {
 		assertNotNull(round.getStartedDate());
 
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyGroup.Context(round.getId(), null)));
-		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(round.getId(), null), null, null, null);
+		final List<TourneyGroup> groups = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(round.getId(), null), null, null);
 		assertEquals(1, groups.size());
 
 		final TourneyGroup group = groups.iterator().next();
@@ -397,7 +397,7 @@ public class HibernateTourneyManagerTest {
 		assertEquals(2, tourneyManager.getTotalCount(null, new TourneyDivision.Context(new Tourney.Id(tourney.getNumber()), EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(activeTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.ACTIVE))));
 
-		final List<TourneyGroup> tourneyCasualGroups1 = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(casualRound1, null), null, null, null);
+		final List<TourneyGroup> tourneyCasualGroups1 = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(casualRound1, null), null, null);
 		final TourneyGroup casualGroup = tourneyCasualGroups1.iterator().next();
 		assertEquals(2, casualGroup.getPlayers().length);
 
@@ -415,7 +415,7 @@ public class HibernateTourneyManagerTest {
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(new Tourney.Id(tourney.getNumber()), EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(activeTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.ACTIVE))));
 
-		final List<TourneyGroup> tourneyExpertGroups1 = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(expertRound1, null), null, null, null);
+		final List<TourneyGroup> tourneyExpertGroups1 = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(expertRound1, null), null, null);
 		final TourneyGroup group0 = tourneyExpertGroups1.get(0);
 
 		final GameBoard<GameSettings, GamePlayerHand> board2 = createMock(GameBoard.class);
@@ -481,7 +481,7 @@ public class HibernateTourneyManagerTest {
 		assertEquals(1, tourneyManager.getTotalCount(null, new TourneyDivision.Context(new Tourney.Id(tourney.getNumber()), EnumSet.of(TourneyEntity.State.ACTIVE))));
 		assertEquals(activeTourneys + 1, tourneyManager.getTotalCount(null, new Tourney.Context(EnumSet.of(TourneyEntity.State.ACTIVE))));
 
-		final List<TourneyGroup> tourneyExpertGroups2 = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(expertRound2, null), null, null, null);
+		final List<TourneyGroup> tourneyExpertGroups2 = tourneyManager.searchTourneyEntities(null, new TourneyGroup.Context(expertRound2, null), null, null);
 		final GameBoard<GameSettings, GamePlayerHand> board6 = createMock(GameBoard.class);
 		final TourneyGroup group3 = tourneyExpertGroups2.get(0);
 		expect(board6.getBoardId()).andReturn(group3.getGameId(903, 906)).anyTimes();

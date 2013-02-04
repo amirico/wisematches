@@ -29,7 +29,7 @@ public class ProposalExpirationManagerTest {
 		final ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
 		taskScheduler.afterPropertiesSet();
 
-		expirationManager = new ProposalExpirationManager<MockGameSettings>();
+		expirationManager = new ProposalExpirationManager<>();
 		expirationManager.setTaskScheduler(taskScheduler);
 	}
 
@@ -59,7 +59,7 @@ public class ProposalExpirationManagerTest {
 		replay(proposal3);
 
 		proposalManager.addGameProposalListener(isA(GameProposalListener.class));
-		expect(proposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null, null)).andReturn(Arrays.asList(proposal1, proposal2, proposal3));
+		expect(proposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null)).andReturn(Arrays.asList(proposal1, proposal2, proposal3));
 		expect(proposalManager.terminate(3L)).andReturn(proposal3);
 		replay(proposalManager);
 
@@ -83,12 +83,12 @@ public class ProposalExpirationManagerTest {
 	public void testListeners() throws Exception {
 		final long time = System.currentTimeMillis();
 
-		final Capture<GameProposalListener> proposalListenerCapture = new Capture<GameProposalListener>();
+		final Capture<GameProposalListener> proposalListenerCapture = new Capture<>();
 
 		final GameProposalManager<MockGameSettings> proposalManager = createMock(GameProposalManager.class);
 
 		proposalManager.addGameProposalListener(capture(proposalListenerCapture));
-		expect(proposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null, null)).andReturn(Collections.<GameProposal<MockGameSettings>>emptyList());
+		expect(proposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null)).andReturn(Collections.<GameProposal<MockGameSettings>>emptyList());
 		replay(proposalManager);
 
 		final ExpirationListener<Long, ProposalExpirationType> l = createMock(ExpirationListener.class);

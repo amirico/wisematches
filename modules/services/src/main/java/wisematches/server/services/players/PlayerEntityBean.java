@@ -33,7 +33,7 @@ public class PlayerEntityBean {
 	@SearchableProperty(column = "stats.rating")
 	private int ratingA;
 
-	@SearchableProperty(column = "cast((stats.rating*(stats.wins + stats.loses + stats.draws))/(select count(distinct boardId) from wisematches.playground.scribble.ScribbleBoard where not gameResolution is null) as integer)")
+	@SearchableProperty(column = "cast((stats.rating*(stats.wins + stats.loses + stats.draws))/(select count(distinct boardId) from ScribbleBoard where not resolution is null) as integer)")
 	private int ratingG;
 
 	@SearchableProperty(column = "stats.activeGames")

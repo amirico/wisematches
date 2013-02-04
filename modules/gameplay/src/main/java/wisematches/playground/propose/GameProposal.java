@@ -1,5 +1,6 @@
 package wisematches.playground.propose;
 
+import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 
@@ -71,7 +72,7 @@ public interface GameProposal<S extends GameSettings> {
 	 * @param player the player to be checked.
 	 * @return {@code true} if the proposal contains specified player; {@code false} - otherwise.
 	 */
-	boolean containsPlayer(Player player);
+	boolean containsPlayer(Personality player);
 
 
 	/**

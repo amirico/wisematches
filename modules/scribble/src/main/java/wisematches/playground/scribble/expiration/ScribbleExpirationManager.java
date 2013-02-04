@@ -42,7 +42,7 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
 					final Session session = sessionFactory.getCurrentSession();
 					final Criteria criteria = session.createCriteria(ScribbleBoard.class)
-							.add(Restrictions.isNull("gameResolution"))
+							.add(Restrictions.isNull("resolution"))
 							.setProjection(Projections.projectionList()
 									.add(Projections.property("boardId"))
 									.add(Projections.property("settings.daysPerMove").as("daysPerMove"))

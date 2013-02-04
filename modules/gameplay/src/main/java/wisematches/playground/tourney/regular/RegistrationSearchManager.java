@@ -1,7 +1,6 @@
 package wisematches.playground.tourney.regular;
 
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 import wisematches.core.search.SearchManager;
 
 /**
@@ -12,6 +11,6 @@ import wisematches.core.search.SearchManager;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface RegistrationSearchManager extends SearchManager<RegistrationRecord, RegistrationRecord.Context, SearchFilter.NoFilter> {
+public interface RegistrationSearchManager extends SearchManager<RegistrationRecord, RegistrationRecord.Context> {
 	long[] searchUnregisteredPlayers(Tourney tourney, Range range);
 }

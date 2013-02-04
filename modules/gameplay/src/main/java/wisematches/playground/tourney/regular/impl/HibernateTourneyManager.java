@@ -13,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
-import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.core.search.SearchFilter;
 import wisematches.core.task.BreakingDayListener;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyEntity;
@@ -181,7 +179,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Player person, Ctx context) {
+	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> int getTotalCount(Personality person, Ctx context) {
 		lock.lock();
 		try {
 			final Query query = createEntityQuery(person, context, true);
@@ -193,7 +191,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends RegularTourneyEntity, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTourneyEntities(Personality person, C context, SearchFilter filter, Orders orders, Range range) {
+	public <T extends RegularTourneyEntity, C extends TourneyEntity.Context<? extends T, ?>> List<T> searchTourneyEntities(Personality person, C context, Orders orders, Range range) {
 		lock.lock();
 		try {
 			final Query query1 = createEntityQuery(person, context, false);
@@ -234,13 +232,8 @@ public class HibernateTourneyManager<S extends GameSettings>
 	}
 
 	@Override
-	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> int getFilteredCount(Player person, Ctx context, Fl filter) {
-		return getTotalCount(person, context);
-	}
-
-	@Override
-	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>, Fl extends SearchFilter> List<RegularTourneyEntity> searchEntities(Player person, Ctx context, Fl filter, Orders orders, Range range) {
-		return searchTourneyEntities(person, context, filter, orders, range);
+	public <Ctx extends TourneyEntity.Context<? extends RegularTourneyEntity, ?>> List<RegularTourneyEntity> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
+		return searchTourneyEntities(person, context, orders, range);
 	}
 
 	@Override

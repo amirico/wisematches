@@ -113,8 +113,8 @@ public class AbstractProposalManagerTest {
 		assertTrue(gameProposal1.getId() != gameProposal2.getId());
 
 		assertEquals(2, proposalManager.getTotalCount(player1, ProposalRelation.AVAILABLE));
-		assertTrue(proposalManager.searchEntities(player1, ProposalRelation.AVAILABLE, null, null, null).contains(gameProposal1));
-		assertTrue(proposalManager.searchEntities(player1, ProposalRelation.AVAILABLE, null, null, null).contains(gameProposal2));
+		assertTrue(proposalManager.searchEntities(player1, ProposalRelation.AVAILABLE, null, null).contains(gameProposal1));
+		assertTrue(proposalManager.searchEntities(player1, ProposalRelation.AVAILABLE, null, null).contains(gameProposal2));
 		verify(listener);
 	}
 
@@ -213,24 +213,24 @@ public class AbstractProposalManagerTest {
 		proposalManager.accept(proposal3.getId(), player4);
 
 		assertEquals(3, proposalManager.getTotalCount(player1, ProposalRelation.AVAILABLE));
-		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player1, ProposalRelation.AVAILABLE, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player1, ProposalRelation.AVAILABLE, null, null).toArray());
 		assertEquals(2, proposalManager.getTotalCount(player1, ProposalRelation.INVOLVED));
-		assertArrayEquals(new GameProposal[]{proposal1, proposal2}, proposalManager.searchEntities(player1, ProposalRelation.INVOLVED, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal1, proposal2}, proposalManager.searchEntities(player1, ProposalRelation.INVOLVED, null, null).toArray());
 
 		assertEquals(3, proposalManager.getTotalCount(player2, ProposalRelation.AVAILABLE));
-		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player2, ProposalRelation.AVAILABLE, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player2, ProposalRelation.AVAILABLE, null, null).toArray());
 		assertEquals(2, proposalManager.getTotalCount(player2, ProposalRelation.INVOLVED));
-		assertArrayEquals(new GameProposal[]{proposal2, proposal3}, proposalManager.searchEntities(player2, ProposalRelation.INVOLVED, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal2, proposal3}, proposalManager.searchEntities(player2, ProposalRelation.INVOLVED, null, null).toArray());
 
 		assertEquals(3, proposalManager.getTotalCount(player3, ProposalRelation.AVAILABLE));
-		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player3, ProposalRelation.AVAILABLE, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player3, ProposalRelation.AVAILABLE, null, null).toArray());
 		assertEquals(1, proposalManager.getTotalCount(player3, ProposalRelation.INVOLVED));
-		assertArrayEquals(new GameProposal[]{proposal3}, proposalManager.searchEntities(player3, ProposalRelation.INVOLVED, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal3}, proposalManager.searchEntities(player3, ProposalRelation.INVOLVED, null, null).toArray());
 
 		assertEquals(3, proposalManager.getTotalCount(player4, ProposalRelation.AVAILABLE));
-		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player4, ProposalRelation.AVAILABLE, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal1, proposal2, proposal3}, proposalManager.searchEntities(player4, ProposalRelation.AVAILABLE, null, null).toArray());
 		assertEquals(1, proposalManager.getTotalCount(player4, ProposalRelation.INVOLVED));
-		assertArrayEquals(new GameProposal[]{proposal3}, proposalManager.searchEntities(player4, ProposalRelation.INVOLVED, null, null, null).toArray());
+		assertArrayEquals(new GameProposal[]{proposal3}, proposalManager.searchEntities(player4, ProposalRelation.INVOLVED, null, null).toArray());
 	}
 
 	private void assertPlayers(int total, int joined, GameProposal<?> proposal) {

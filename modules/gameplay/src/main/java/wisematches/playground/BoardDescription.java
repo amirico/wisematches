@@ -56,6 +56,14 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 */
 	Date getFinishedTime();
 
+
+	/**
+	 * Returns number of done moves
+	 *
+	 * @return the number of done moves
+	 */
+	int getMovesCount();
+
 	/**
 	 * Return time of last move in milliseconds.
 	 *
@@ -65,6 +73,13 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 
 
 	/**
+	 * Returns number of player on this board.
+	 *
+	 * @return the number of player on this board.
+	 */
+	int getPlayersCount();
+
+	/**
 	 * Returns player that has a turn or player who made last turn. For finished stalemate games this method returns
 	 * {@code null}.
 	 *
@@ -72,13 +87,6 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 *         {@code null}.
 	 */
 	Personality getPlayerTurn();
-
-	/**
-	 * Returns number of player on this board.
-	 *
-	 * @return the number of player on this board.
-	 */
-	int getPlayersCount();
 
 	/**
 	 * Returns unmodifiable collection of all players in this game.

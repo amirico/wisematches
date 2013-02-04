@@ -75,24 +75,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	private final byte[] boardTiles = new byte[255];
 
 	/**
-	 * Arrays of tiles redifinitions. This field must be stored into {@code TINYBLOB} SQL type because
-	 * required {@literal 8*3 = 24} bytes.
-	 * <p/>
-	 * Here 8 - maximum number of wildcard tiles (2 wildcard tiles for each player and maximum 4 players),
-	 * 3 - number of bytes for each redifinition.
-	 * <p/>
-	 * Each move redifinition encoded by following rule:
-	 * <pre>
-	 *  |--------------------------------|
-	 *  |  2 byte        |  1-0 bytes    |
-	 *  |--------------------------------|
-	 *  | tile number    | new tile char |
-	 *  |--------------------------------|
-	 * </pre>
-	 */
-	private final ByteBuffer tilesRedefinitions = ByteBuffer.allocate(255);
-
-	/**
 	 * Arrays of maden moves. This filed must be stored info {@code BLOB} field because required
 	 * {@literal 224 * 13 = 2912} bytes: if each player puts only one tile from hand, when only 225 (15*15) - 1
 	 * moves can be maden (-1 because first move required at least 2 tiles). This size doesn't take into account passed
@@ -111,6 +93,24 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * </pre>
 	 */
 	private final ByteBuffer boardMoves = ByteBuffer.allocate(2912);
+
+	/**
+	 * Arrays of tiles redifinitions. This field must be stored into {@code TINYBLOB} SQL type because
+	 * required {@literal 8*3 = 24} bytes.
+	 * <p/>
+	 * Here 8 - maximum number of wildcard tiles (2 wildcard tiles for each player and maximum 4 players),
+	 * 3 - number of bytes for each redifinition.
+	 * <p/>
+	 * Each move redifinition encoded by following rule:
+	 * <pre>
+	 *  |--------------------------------|
+	 *  |  2 byte        |  1-0 bytes    |
+	 *  |--------------------------------|
+	 *  | tile number    | new tile char |
+	 *  |--------------------------------|
+	 * </pre>
+	 */
+	private final ByteBuffer tilesRedefinitions = ByteBuffer.allocate(255);
 
 	public static final int CELLS_NUMBER = 15;
 	public static final int LETTERS_IN_HAND = 7;
