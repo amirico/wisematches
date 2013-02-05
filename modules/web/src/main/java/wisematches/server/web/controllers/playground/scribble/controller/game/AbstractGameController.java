@@ -13,9 +13,9 @@ import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSearchManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.tracking.StatisticManager;
+import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.state.PlayerStateManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)

@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="moderator" type="boolean" -->
-<#-- @ftlvariable name="waitingSuggestions" type="wisematches.server.web.services.dictionary.ChangeSuggestion[]" -->
+<#-- @ftlvariable name="waitingSuggestions" type="wisematches.server.services.dictionary.ChangeSuggestion[]" -->
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>

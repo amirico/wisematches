@@ -12,7 +12,7 @@ import java.util.Set;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMRedirectStrategy extends DefaultRedirectStrategy {
-	private final Set<String> redirectParameters = new HashSet<String>();
+	private final Set<String> redirectParameters = new HashSet<>();
 
 	public WMRedirectStrategy() {
 	}

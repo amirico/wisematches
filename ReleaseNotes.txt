@@ -1,3 +1,0 @@
-3.03
-    + Issue 235: 	Duplicate entry forr key 'username_UNIQUE'
-    + Issue 237: 	Template processing error

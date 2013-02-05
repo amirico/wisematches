@@ -26,7 +26,7 @@
             <property name="paramName" value="language"/>
         </bean>
 
-        <bean id="browserDetectionInterceptor" class="wisematches.server.web.view.WMBrowserDetectionInterceptor">
+        <bean id="browserDetectionInterceptor" class="wisematches.server.web.view.BrowserDetectionInterceptor">
             <property name="supportedBrowsers">
                 <map>
                     <entry key="CHROME" value="12"/>
@@ -49,7 +49,7 @@
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="messageInterpolator">
-            <bean class="wisematches.server.web.i18n.SpringMessageInterpolator">
+            <bean class="wisematches.server.web.validator.SpringMessageInterpolator">
                 <property name="messageSource" ref="messageSource"/>
             </bean>
         </property>

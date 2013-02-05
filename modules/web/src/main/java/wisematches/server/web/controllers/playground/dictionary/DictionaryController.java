@@ -15,12 +15,12 @@ import wisematches.core.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
+import wisematches.server.services.dictionary.*;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.playground.dictionary.form.WordApprovalForm;
 import wisematches.server.web.controllers.playground.dictionary.form.WordEntryForm;
-import wisematches.server.web.services.dictionary.*;
 
 import java.util.EnumSet;
 import java.util.List;

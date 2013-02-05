@@ -39,26 +39,26 @@
           factory-bean="notificationFreemarkerConfigurer" factory-method="createConfiguration"/>
 
     <bean id="notificationConverter"
-          class="wisematches.server.web.services.notify.impl.converter.FreeMarkerNotificationConverter">
+          class="wisematches.server.services.notify.impl.converter.FreeMarkerNotificationConverter">
         <property name="messageSource" ref="messageSource"/>
         <property name="freeMarkerConfig" ref="notificationFreemarkerConfig"/>
     </bean>
 
     <bean id="mailNotificationPublisher"
-          class="wisematches.server.web.services.notify.impl.publisher.MailNotificationPublisher">
+          class="wisematches.server.services.notify.impl.publisher.MailNotificationPublisher">
         <property name="hostName" value="${server.hostname}"/>
         <property name="mailSender" ref="springMailSender"/>
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
     <bean id="messageNotificationPublisher"
-          class="wisematches.server.web.services.notify.impl.publisher.MessageNotificationPublisher">
+          class="wisematches.server.services.notify.impl.publisher.MessageNotificationPublisher">
         <property name="messageManager" ref="messageManager"/>
     </bean>
 
-    <bean id="notification" class="wisematches.server.web.services.notify.NotificationDescriptor" abstract="true"/>
+    <bean id="notification" class="wisematches.server.services.notify.NotificationDescriptor" abstract="true"/>
 
-    <bean id="notificationService" class="wisematches.server.web.services.notify.impl.HibernateNotificationService">
+    <bean id="notificationService" class="wisematches.server.services.notify.impl.HibernateNotificationService">
         <property name="taskExecutor" ref="notificationTaskExecutor"/>
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="notificationConverter" ref="notificationConverter"/>
@@ -66,11 +66,11 @@
             <list>
                 <ref bean="messageNotificationPublisher"/>
 
-                <bean class="wisematches.server.web.services.notify.impl.publisher.TimelyNotificationPublisher">
+                <bean class="wisematches.server.services.notify.impl.publisher.TimelyNotificationPublisher">
                     <property name="taskExecutor" ref="notificationTaskExecutor"/>
                     <property name="playerStateManager" ref="playerStateManager"/>
                     <property name="notificationPublisher">
-                        <bean class="wisematches.server.web.services.notify.impl.publisher.EssentialNotificationPublisher">
+                        <bean class="wisematches.server.services.notify.impl.publisher.EssentialNotificationPublisher">
                             <property name="sessionFactory" ref="sessionFactory"/>
                             <property name="playerStateManager" ref="playerStateManager"/>
                             <property name="notificationPublisher" ref="mailNotificationPublisher"/>
@@ -144,7 +144,7 @@
     </bean>
 
 
-    <bean id="alertsOriginCenter" class="wisematches.server.web.services.notify.impl.AlertsOriginCenter">
+    <bean id="alertsOriginCenter" class="wisematches.server.services.notify.impl.AlertsOriginCenter">
         <property name="hostName" value="${server.hostname}"/>
         <property name="mailSender" ref="springMailSender"/>
 
@@ -154,7 +154,7 @@
     </bean>
 
     <bean id="notificationOriginCenter"
-          class="wisematches.server.web.services.notify.impl.NotificationOriginCenter">
+          class="wisematches.server.services.notify.impl.NotificationOriginCenter">
         <property name="personalityManager" ref="personalityManager"/>
         <property name="awardsManager" ref="awardsManager"/>
         <property name="messageManager" ref="messageManager"/>

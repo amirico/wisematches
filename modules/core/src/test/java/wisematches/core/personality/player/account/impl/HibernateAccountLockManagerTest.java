@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/personality-config.xml"
+		"classpath:/config/personality-junit-config.xml"
 })
 public class HibernateAccountLockManagerTest {
 	@Autowired

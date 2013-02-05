@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="context" type="wisematches.server.web.services.dictionary.ChangeSuggestion" -->
+<#-- @ftlvariable name="context" type="wisematches.server.services.dictionary.ChangeSuggestion" -->
 <#import "../../utils.ftl" as util>
 
 <p>

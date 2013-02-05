@@ -12,18 +12,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.core.PlayerType;
 import wisematches.core.personality.DefaultPlayer;
-import wisematches.core.personality.player.account.Account;
-import wisematches.core.personality.player.account.AccountEditor;
-import wisematches.core.personality.player.account.AccountManager;
+import wisematches.core.personality.player.account.*;
 import wisematches.server.security.AccountSecurityService;
+import wisematches.server.services.notify.NotificationSender;
+import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.controllers.personality.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.controllers.personality.account.form.RecoveryRequestForm;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationService;
-import wisematches.server.web.services.recovery.RecoveryToken;
-import wisematches.server.web.services.recovery.RecoveryTokenManager;
-import wisematches.server.web.services.recovery.TokenExpiredException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +36,7 @@ public class RecoveryController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
-	private RecoveryTokenManager recoveryTokenManager;
+	private AccountRecoveryManager recoveryTokenManager;
 	private AccountSecurityService accountSecurityService;
 
 	private static final String RECOVERING_PLAYER_EMAIL = "RECOVERY_PLAYER_EMAIL";
@@ -63,7 +58,7 @@ public class RecoveryController {
 			try {
 				final Account player = accountManager.findByEmail(form.getEmail());
 				if (player != null) {
-					final RecoveryToken token = recoveryTokenManager.createToken(player);
+					final RecoveryToken token = recoveryTokenManager.generateToken(player);
 					log.info("Recovery token generated: " + token);
 
 					final Map<String, Object> mailModel = new HashMap<>();
@@ -161,15 +156,13 @@ public class RecoveryController {
 			if (player != null) {
 				final RecoveryToken token = recoveryTokenManager.getToken(player);
 				if (token == null) {
-					result.rejectValue("token", "account.recovery.err.token", new Object[]{form.getEmail()}, null);
+					result.rejectValue("token", "account.recovery.err.expired", new Object[]{form.getEmail()}, null);
 				} else if (!token.getToken().equals(form.getToken())) {
 					result.rejectValue("token", "account.recovery.err.token", new Object[]{form.getEmail()}, null);
 				}
 			} else {
 				result.rejectValue("email", "account.recovery.err.unknown");
 			}
-		} catch (TokenExpiredException ex) {
-			result.rejectValue("token", "account.recovery.err.expired", new Object[]{form.getEmail()}, null);
 		} catch (Exception ex) {
 			result.rejectValue("token", "account.recovery.err.system");
 		}
@@ -201,7 +194,7 @@ public class RecoveryController {
 	}
 
 	@Autowired
-	public void setRecoveryTokenManager(RecoveryTokenManager recoveryTokenManager) {
+	public void setRecoveryTokenManager(AccountRecoveryManager recoveryTokenManager) {
 		this.recoveryTokenManager = recoveryTokenManager;
 	}
 
