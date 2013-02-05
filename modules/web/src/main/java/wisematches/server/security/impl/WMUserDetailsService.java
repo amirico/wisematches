@@ -24,6 +24,7 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class WMUserDetailsService implements UserDetailsService, AccountSecurityService {
 	private SaltSource saltSource;
 	private PasswordEncoder passwordEncoder;
@@ -33,6 +34,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 	private AccountManager accountManager;
 	private PersonalityManager personalityManager;
 	private AccountLockManager accountLockManager;
+	// TODO: add token recovery. If has token - credential is expired.
 	private AuthenticationManager authenticationManager;
 
 	private final TheUserDetailsService userDetailsService = new TheUserDetailsService();
@@ -45,6 +47,7 @@ public class WMUserDetailsService implements UserDetailsService, AccountSecurity
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+		// bull shit! It must be role of a user.
 		if ("admin".equals(username)) {
 			return new WMAdminDetails(administratorPassword);
 		}

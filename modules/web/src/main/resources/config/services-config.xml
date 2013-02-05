@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="reliablePropertiesManager"
-          class="wisematches.server.web.services.props.impl.FilePropertiesManager">
+          class="wisematches.server.services.props.impl.FilePropertiesManager">
         <property name="propertiesFile" value="${server.properties.file}"/>
     </bean>
 
@@ -62,15 +62,7 @@
         <property name="messageSource" ref="messageSource"/>
     </bean>
 
-    <bean id="accountRecoveryManager" class="wisematches.server.web.services.recovery.RecoveryTokenManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="playerImagesManager" class="wisematches.server.web.services.images.impl.FilePlayerImagesManager">
-        <property name="imagesFolder" value="${server.images.path}/players"/>
-    </bean>
-
-    <bean id="playerStateManager" class="wisematches.server.web.services.state.impl.HibernatePlayerStateManager">
+    <bean id="playerStateManager" class="wisematches.server.services.state.impl.HibernatePlayerStateManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
@@ -79,12 +71,12 @@
         <property name="gameMessageSource" ref="gameMessageSource"/>
     </bean>
 
-    <bean id="advertisementManager" class="wisematches.server.web.services.ads.impl.XMLAdvertisementManager">
+    <bean id="advertisementManager" class="wisematches.server.services.reclame.impl.XMLAdvertisementManager">
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
 
     <bean id="dictionaryChangeManager"
-          class="wisematches.server.web.services.dictionary.impl.HibernateDictionarySuggestionManager">
+          class="wisematches.server.services.dictionary.impl.HibernateDictionarySuggestionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="dictionaryManager" ref="dictionaryManager"/>
     </bean>

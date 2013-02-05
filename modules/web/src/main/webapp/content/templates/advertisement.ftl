@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="advertisementBlock" type="wisematches.server.web.services.ads.AdvertisementBlock" -->
+<#-- @ftlvariable name="advertisementBlock" type="wisematches.server.services.reclame.AdvertisementBlock" -->
 
 <#if advertisementBlock?? && advertisementBlock?has_content>
     <#if advertisementBlock.provider.name() == 'GOOGLE'>

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="blacklist" type="java.util.Collection<wisematches.server.services.blacklist.BlacklistRecord>" -->
+<#-- @ftlvariable name="blacklist" type="java.util.Collection<wisematches.server.services.players.blacklist.BlacklistRecord>" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>

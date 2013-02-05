@@ -22,12 +22,12 @@ import wisematches.core.PlayerType;
 import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.security.AccountSecurityService;
+import wisematches.server.services.notify.NotificationException;
+import wisematches.server.services.notify.NotificationSender;
+import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.personality.account.form.AccountRegistrationForm;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.services.notify.NotificationException;
-import wisematches.server.web.services.notify.NotificationSender;
-import wisematches.server.web.services.notify.NotificationService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

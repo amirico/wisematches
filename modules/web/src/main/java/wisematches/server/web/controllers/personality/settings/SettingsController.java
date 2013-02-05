@@ -17,13 +17,13 @@ import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.security.AccountSecurityService;
+import wisematches.server.services.notify.NotificationScope;
+import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.controllers.personality.settings.form.SettingsForm;
 import wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo;
 import wisematches.server.web.controllers.personality.settings.view.NotificationsTreeView;
-import wisematches.server.web.services.notify.NotificationScope;
-import wisematches.server.web.services.notify.NotificationService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

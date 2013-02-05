@@ -28,11 +28,11 @@
         <property name="restrictionManager" ref="restrictionManager"/>
     </bean>
 
-    <bean id="blacklistManager" class="wisematches.server.services.blacklist.impl.HibernateBlacklistManager">
+    <bean id="blacklistManager" class="wisematches.server.services.players.blacklist.impl.HibernateBlacklistManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="friendsManager" class="wisematches.server.services.friends.impl.HibernateFriendsManager">
+    <bean id="friendsManager" class="wisematches.server.services.players.friends.impl.HibernateFriendsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

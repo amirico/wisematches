@@ -1,6 +1,6 @@
 package wisematches.server.web.controllers.personality.settings.view;
 
-import wisematches.server.web.services.notify.NotificationScope;
+import wisematches.server.services.notify.NotificationScope;
 
 import java.util.HashMap;
 import java.util.Map;

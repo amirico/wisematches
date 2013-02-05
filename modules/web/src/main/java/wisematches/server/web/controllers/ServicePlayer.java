@@ -2,8 +2,8 @@ package wisematches.server.web.controllers;
 
 import wisematches.core.Personality;
 import wisematches.core.PlayerType;
+import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.state.PlayerStateManager;
 
 import java.util.Locale;
 

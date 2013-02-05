@@ -7,6 +7,7 @@ import wisematches.core.personality.player.account.Account;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public interface AccountSecurityService {
 	/**
 	 * Re-authenticate specified account in current session and update security context.

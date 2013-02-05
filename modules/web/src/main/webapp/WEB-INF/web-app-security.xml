@@ -25,7 +25,7 @@
     <beans:bean id="rememberMeServices"
                 class="wisematches.server.web.security.spring.fixes.WMPersistentTokenBasedRememberMeServices">
         <beans:constructor-arg name="key" value="${security.remember.token}"/>
-        <beans:constructor-arg name="userDetailsService" ref="userDetailsService"/>
+        <beans:constructor-arg name="userDetailsService" ref="personalityDetailsManager"/>
         <beans:constructor-arg name="tokenRepository">
             <beans:bean class="wisematches.server.web.security.spring.fixes.WMPersistentTokenRepository">
                 <beans:property name="dataSource" ref="dataSource"/>
@@ -37,16 +37,18 @@
         <beans:property name="cookieName" value="WM_RM"/>
     </beans:bean>
 
-    <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
-        <beans:property name="personalityManager" ref="personalityManager"/>
-        <beans:property name="accountManager" ref="accountManager"/>
-        <beans:property name="accountLockManager" ref="lockAccountManager"/>
-        <beans:property name="authenticationManager" ref="authenticationManager"/>
-        <beans:property name="administratorPassword" value="${server.admin.password}"/>
+    <!--
+        <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
+            <beans:property name="personalityManager" ref="personalityManager"/>
+            <beans:property name="accountManager" ref="accountManager"/>
+            <beans:property name="accountLockManager" ref="lockAccountManager"/>
+            <beans:property name="authenticationManager" ref="authenticationManager"/>
+            <beans:property name="administratorPassword" value="${server.admin.password}"/>
 
-        <beans:property name="saltSource" ref="saltSource"/>
-        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
-    </beans:bean>
+            <beans:property name="saltSource" ref="saltSource"/>
+            <beans:property name="passwordEncoder" ref="passwordEncoder"/>
+        </beans:bean>
+    -->
 
     <beans:bean id="redirectStrategy" class="wisematches.server.web.security.spring.WMRedirectStrategy">
         <beans:property name="redirectParameters">
@@ -113,21 +115,21 @@
         <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
     </beans:bean>
 
-    <beans:bean id="guestFilter" class="wisematches.server.security.impl.GuestAuthenticationFilter">
+    <beans:bean id="guestFilter" class="wisematches.server.web.security.guest.GuestAuthenticationFilter">
         <beans:property name="guestProcessingUrl" value="/account/loginGuest"/>
         <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
         <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
     </beans:bean>
 
     <beans:bean id="guestAuthenticationProvider"
-                class="wisematches.server.security.impl.GuestAuthenticationProvider">
+                class="wisematches.server.web.security.guest.GuestAuthenticationProvider">
     </beans:bean>
 
     <beans:bean id="memberAuthenticationProvider"
                 class="wisematches.server.security.impl.MemberAuthenticationProvider">
         <beans:property name="saltSource" ref="saltSource"/>
         <beans:property name="passwordEncoder" ref="passwordEncoder"/>
-        <beans:property name="userDetailsService" ref="userDetailsService"/>
+        <beans:property name="userDetailsService" ref="personalityDetailsManager"/>
     </beans:bean>
 
     <beans:bean id="concurrentSessionFilter"
@@ -144,7 +146,6 @@
 
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="guestAuthenticationProvider"/>
-
         <authentication-provider ref="memberAuthenticationProvider"/>
     </authentication-manager>
 

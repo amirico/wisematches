@@ -3,13 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="lockAccountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountLockManager">
+    <bean id="accountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="accountLockManager" ref="accountLockManager"/>
+    </bean>
+
+    <bean id="accountLockManager" class="wisematches.core.personality.player.account.impl.HibernateAccountLockManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="accountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountManager">
+    <bean id="accountRecoveryManager"
+          class="wisematches.core.personality.player.account.impl.HibernateAccountRecoveryManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="accountLockManager" ref="lockAccountManager"/>
     </bean>
 
     <bean id="membershipManager" class="wisematches.core.personality.player.membership.impl.HibernateMembershipManager">
@@ -17,17 +22,31 @@
         <property name="accountManager" ref="accountManager"/>
     </bean>
 
-    <bean id="countriesManager" class="wisematches.core.personality.player.profile.impl.CSVCountriesManager">
-        <property name="csvCountriesFile" value="classpath:/i18n/countries.csv"/>
-    </bean>
-
     <bean id="profileManager" class="wisematches.core.personality.player.profile.impl.HibernatePlayerProfileManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="accountManager" ref="accountManager"/>
     </bean>
 
+    <bean id="profileImagesManager" class="wisematches.core.personality.player.profile.impl.FilePlayerImagesManager"
+          scope="request">
+        <property name="imagesFolder" value="${server.images.path}/players"/>
+    </bean>
+
+    <bean id="profileCountriesManager" class="wisematches.core.personality.player.profile.impl.CSVCountriesManager">
+        <property name="csvCountriesFile" value="classpath:/i18n/countries.csv"/>
+    </bean>
+
     <bean id="personalityManager" class="wisematches.core.personality.DefaultPersonalityManager">
         <property name="accountManager" ref="accountManager"/>
         <property name="membershipManager" ref="membershipManager"/>
+    </bean>
+
+    <bean id="personalityDetailsManager" class="wisematches.core.security.PersonalityDetailsManager">
+        <property name="accountManager" ref="accountManager"/>
+        <property name="accountLockManager" ref="accountLockManager"/>
+        <property name="accountRecoveryManager" ref="accountRecoveryManager"/>
+
+        <property name="administrators" value="${server.administrators}"/>
+        <property name="personalityManager" ref="personalityManager"/>
     </bean>
 </beans>

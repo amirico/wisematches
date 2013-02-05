@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.PersonalityManager;
+import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.controllers.UnknownEntityException;
 import wisematches.server.web.controllers.playground.scribble.controller.game.AbstractGameController;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.state.PlayerStateManager;
 
 import java.util.Locale;
 import java.util.Map;

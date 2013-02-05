@@ -20,7 +20,7 @@ import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.server.services.blacklist.BlacklistManager;
+import wisematches.server.services.players.blacklist.BlacklistManager;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.playground.scribble.view.GameProposalView;
 import wisematches.server.web.controllers.playground.scribble.view.WaitingGamesView;

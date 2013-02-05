@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
+import wisematches.core.personality.player.profile.PlayerImageType;
+import wisematches.core.personality.player.profile.PlayerImagesManager;
+import wisematches.core.personality.player.profile.UnsupportedImageException;
 import wisematches.server.web.controllers.ServiceResponse;
 import wisematches.server.web.controllers.WisematchesController;
 import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.services.images.PlayerImageType;
-import wisematches.server.web.services.images.PlayerImagesManager;
-import wisematches.server.web.services.images.UnsupportedImageException;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
