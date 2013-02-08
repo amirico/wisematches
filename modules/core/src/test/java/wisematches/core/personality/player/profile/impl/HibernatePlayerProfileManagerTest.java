@@ -40,7 +40,7 @@ public class HibernatePlayerProfileManagerTest {
 	public void test() throws InadmissibleUsernameException, DuplicateAccountException, UnknownAccountException {
 		final Capture<PlayerProfile> profileCapture = new Capture<>();
 
-		final Account account = accountManager.createAccount(createMockAccount());
+		final Account account = accountManager.createAccount(createMockAccount(), "mock");
 		final PlayerProfile profile = profileManager.getPlayerProfile(account);
 		assertNotNull(profile);
 		assertNull(profile.getRealName());
@@ -81,6 +81,6 @@ public class HibernatePlayerProfileManagerTest {
 
 	private Account createMockAccount() {
 		final String id = UUID.randomUUID().toString();
-		return new AccountEditor(id + "@mock.junit", id, "mock").createAccount();
+		return new AccountEditor(id + "@mock.junit", id).createAccount();
 	}
 }

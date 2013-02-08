@@ -11,7 +11,6 @@ public class AccountEditor {
 	private long id = 0;
 	private String email;
 	private String nickname;
-	private String password;
 	private TimeZone timeZone = TimeZone.getDefault();
 	private Language language = Language.DEFAULT;
 
@@ -21,16 +20,14 @@ public class AccountEditor {
 	public AccountEditor(Account account) {
 		this.id = account.getId();
 		this.nickname = account.getNickname();
-		this.password = account.getPassword();
 		this.email = account.getEmail();
 		this.language = account.getLanguage();
 		this.timeZone = account.getTimeZone();
 	}
 
-	public AccountEditor(String email, String nickname, String password) {
+	public AccountEditor(String email, String nickname) {
 		this.email = email;
 		this.nickname = nickname;
-		this.password = password;
 	}
 
 	public String getEmail() {
@@ -48,15 +45,6 @@ public class AccountEditor {
 
 	public AccountEditor setNickname(String nickname) {
 		this.nickname = nickname;
-		return this;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public AccountEditor setPassword(String password) {
-		this.password = password;
 		return this;
 	}
 
@@ -84,7 +72,7 @@ public class AccountEditor {
 		if (nickname == null) {
 			throw new IllegalArgumentException("nickname is not specified");
 		}
-		return new AccountDetails(id, email, nickname, password, language, timeZone);
+		return new AccountDetails(id, email, nickname, language, timeZone);
 	}
 
 	/**
@@ -92,18 +80,16 @@ public class AccountEditor {
 	 *
 	 * @author Sergey Klimenko (smklimenko@gmail.com)
 	 */
-	private static class AccountDetails extends Account {
+	protected static class AccountDetails extends Account {
 		private final String email;
 		private final String nickname;
-		private final String password;
 		private final TimeZone timeZone;
 		private final Language language;
 
-		private AccountDetails(Long id, String email, String nickname, String password, Language language, TimeZone timeZone) {
+		private AccountDetails(Long id, String email, String nickname, Language language, TimeZone timeZone) {
 			super(id);
 			this.email = email;
 			this.nickname = nickname;
-			this.password = password;
 			this.language = language;
 			this.timeZone = timeZone;
 		}
@@ -116,11 +102,6 @@ public class AccountEditor {
 		@Override
 		public String getNickname() {
 			return nickname;
-		}
-
-		@Override
-		public String getPassword() {
-			return password;
 		}
 
 		@Override

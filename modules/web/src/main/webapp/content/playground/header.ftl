@@ -24,10 +24,13 @@
                            style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
                     </#if>
                         |
-                    <#if principal.playerType.member><a
-                            href="/account/modify"><@message code="game.menu.settings.label"/></a>
-                        |
-                    </#if>
+                    <#--TODO: commented-->
+                    <#--
+                                        <#if principal.playerType.member><a
+                                                href="/account/modify"><@message code="game.menu.settings.label"/></a>
+                                            |
+                                        </#if>
+                    -->
                         <a href="/info/help"><@message code="game.menu.help.label"/></a>
                         |
                         <a href="/account/logout"><@message code="account.signout.label"/></a>
@@ -45,7 +48,9 @@
                             <div class="wm-ui-buttonset">
                             <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
                             <#if messageManager?has_content>
-                                <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
+                                <#assign newMessagesCount=0/>
+                            <#--TODO: commented-->
+                            <#--messageManager.getNewMessagesCount(principal)/>-->
                                 <#assign newMessages=newMessagesCount?? && newMessagesCount !=0/>
                                 <a href="/playground/messages/view">
                                     <#if newMessages><img src="<@s "images/dashboard/newMessageIcon.png"/>"

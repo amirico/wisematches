@@ -54,13 +54,6 @@ public abstract class Account implements Serializable {
 	public abstract String getNickname();
 
 	/**
-	 * Returns player's password.
-	 *
-	 * @return the player's password.
-	 */
-	public abstract String getPassword();
-
-	/**
 	 * Returns default language of the player.
 	 * <p/>
 	 * This value can't be null.

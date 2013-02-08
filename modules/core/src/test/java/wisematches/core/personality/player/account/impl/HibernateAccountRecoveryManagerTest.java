@@ -46,9 +46,8 @@ public class HibernateAccountRecoveryManagerTest {
 		final AccountEditor editor = new AccountEditor();
 		editor.setNickname("mock");
 		editor.setEmail("mock@wm.net");
-		editor.setPassword("mock");
 
-		final Account p = accountManager.createAccount(editor.createAccount());
+		final Account p = accountManager.createAccount(editor.createAccount(), "mock");
 
 		final RecoveryToken token = recoveryTokenManager.generateToken(p);
 		assertNotNull(token);

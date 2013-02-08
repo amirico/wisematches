@@ -1,5 +1,8 @@
 <#include "/core.ftl">
 
+<#--TODO: commented-->
+
+<#--
 <#if principal.playerType.guest>
 <div class="shadow ui-state-highlight" style="text-align: left; padding: 5px 5px 5px 30px;">
     <table>
@@ -31,4 +34,4 @@
         </tr>
     </table>
 </div>
-</#if>
+</#if>-->

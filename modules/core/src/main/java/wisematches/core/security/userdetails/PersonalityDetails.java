@@ -1,12 +1,15 @@
-package wisematches.core.security;
+package wisematches.core.security.userdetails;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -28,18 +31,14 @@ public final class PersonalityDetails implements UserDetails {
 		this.accountExpired = expired;
 		this.personality = personality;
 
-		this.authorities = new HashSet<>();
+		final Set<GrantedAuthority> a = new HashSet<>();
 		if (authorities != null) {
 			for (String authority : authorities) {
-				this.authorities.add(new SimpleGrantedAuthority(authority));
+				a.add(new SimpleGrantedAuthority(authority));
 			}
 		}
+		this.authorities = Collections.unmodifiableSet(a);
 	}
-
-	public Personality getPersonality() {
-		return personality;
-	}
-
 
 	@Override
 	public String getUsername() {
@@ -56,6 +55,18 @@ public final class PersonalityDetails implements UserDetails {
 		return true;
 	}
 
+	public String getNickname() {
+		if (personality instanceof Player) {
+			Player player = (Player) personality;
+			return player.getNickname();
+		}
+		return "NO_NICKNAME";
+	}
+
+	public Personality getPersonality() {
+		return personality;
+	}
+
 	@Override
 	public boolean isAccountNonLocked() {
 		return !accountLocked;
@@ -70,6 +81,7 @@ public final class PersonalityDetails implements UserDetails {
 	public boolean isCredentialsNonExpired() {
 		return !accountExpired;
 	}
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -20,7 +20,7 @@ public class PlayerStatisticValidator {
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void recalculateStatistics() {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select account.id from HibernateAccountImpl as account");
+		final Query query = session.createQuery("select account.id from HibernateAccount as account");
 		final List list = query.list();
 		for (Object o : list) {
 			Long pid = (Long) o;

@@ -3,7 +3,7 @@ package wisematches.server.services.state.impl;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import wisematches.core.Personality;
-import wisematches.core.security.PersonalityDetails;
+import wisematches.core.security.userdetails.PersonalityDetails;
 import wisematches.server.services.state.PlayerStateListener;
 import wisematches.server.services.state.PlayerStateManager;
 
