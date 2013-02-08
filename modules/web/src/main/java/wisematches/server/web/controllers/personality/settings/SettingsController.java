@@ -16,7 +16,6 @@ import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.server.security.AccountSecurityService;
 import wisematches.server.services.notify.NotificationScope;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.controllers.UnknownEntityException;
@@ -38,7 +37,6 @@ public class SettingsController extends WisematchesController {
 	private AccountManager accountManager;
 	private NotificationService notificationService;
 	private BoardSettingsManager boardSettingsManager;
-	private AccountSecurityService accountSecurityService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.settings");
 
@@ -145,19 +143,18 @@ public class SettingsController extends WisematchesController {
 				editor.setEmail(form.getEmail());
 			}
 
+			String pwd = null;
 			if (form.isChangePassword()) {
-				if (accountSecurityService != null) {
-					editor.setPassword(accountSecurityService.encodePlayerPassword(editor.createAccount(), form.getPassword()));
-				} else {
-					editor.setPassword(form.getPassword());
-				}
+				pwd = form.getPassword();
 			}
 
 			try {
-				final Account a = accountManager.updateAccount(editor.createAccount());
+				final Account a = accountManager.updateAccount(editor.createAccount(), pwd);
+/*
 				if (accountSecurityService != null) {
 					accountSecurityService.authenticatePlayer(a, form.isChangePassword() ? form.getPassword() : null);
 				}
+*/
 				return "redirect:/account/modify#" + form.getOpenedTab();
 			} catch (UnknownAccountException e) {
 				throw new UnknownEntityException(null, "account");
@@ -198,9 +195,11 @@ public class SettingsController extends WisematchesController {
 	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
 		this.boardSettingsManager = boardSettingsManager;
 	}
+/*
 
 	@Autowired
 	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
 		this.accountSecurityService = accountSecurityService;
 	}
+*/
 }

@@ -47,12 +47,12 @@ public class HibernateBlacklistManager implements BlacklistManager {
 		}
 
 		final Session session = sessionFactory.getCurrentSession();
-		BlacklistRecord record = (BlacklistRecord) session.get(BlacklistRecord.class, new BlacklistRecordId(person, whom));
+		BlacklistRecord record = (BlacklistRecord) session.get(HibernateBlacklistRecord.class, new BlacklistRecordId(person, whom));
 		if (record == null) {
-			record = new BlacklistRecord(person, whom, comment);
+			record = new HibernateBlacklistRecord(person, whom, comment);
 			session.save(record);
 		} else {
-			record = new BlacklistRecord(person, whom, comment);
+			record = new HibernateBlacklistRecord(person, whom, comment);
 			session.merge(record);
 		}
 
@@ -72,7 +72,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 		}
 
 		final Session session = sessionFactory.getCurrentSession();
-		final BlacklistRecord record = (BlacklistRecord) session.get(BlacklistRecord.class, new BlacklistRecordId(person, whom));
+		final BlacklistRecord record = (BlacklistRecord) session.get(HibernateBlacklistRecord.class, new BlacklistRecordId(person, whom));
 		if (record != null) {
 			session.delete(record);
 			for (BlacklistListener listener : listeners) {
@@ -93,7 +93,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 
 		@SuppressWarnings("unchecked")
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("select count(*) from BlacklistRecord where person=:pid and whom=:whom");
+		final Query query = session.createQuery("select count(*) from HibernateBlacklistRecord where person=:pid and whom=:whom");
 		query.setParameter("pid", person.getId());
 		query.setParameter("whom", whom.getId());
 		return ((Long) query.uniqueResult()) == 1;
@@ -115,7 +115,7 @@ public class HibernateBlacklistManager implements BlacklistManager {
 			throw new NullPointerException("Person can't be null");
 		}
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = session.createQuery("from BlacklistRecord where person=:pid");
+		final Query query = session.createQuery("from HibernateBlacklistRecord where person=:pid");
 		query.setParameter("pid", person.getId());
 		return query.list();
 	}

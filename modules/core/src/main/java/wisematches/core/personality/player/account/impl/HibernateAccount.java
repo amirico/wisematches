@@ -18,7 +18,7 @@ import java.util.TimeZone;
 @Entity
 @Table(name = "account_personality")
 @Cacheable(true)
-public class HibernateAccountImpl extends Account {
+public class HibernateAccount extends Account {
 	@Basic
 	@Column(name = "nickname", nullable = false, length = 100, updatable = false)
 	private String nickname;
@@ -41,13 +41,14 @@ public class HibernateAccountImpl extends Account {
 	/**
 	 * Hibernate only constructor
 	 */
-	HibernateAccountImpl() {
+	HibernateAccount() {
 	}
 
-	public HibernateAccountImpl(Account account) {
+	public HibernateAccount(Account account, String password) {
 		super(account.getId());
 		this.nickname = account.getNickname();
-		updateAccountInfo(account);
+		this.password = password;
+		updateAccountInfo(account, password);
 	}
 
 	@Override
@@ -60,7 +61,6 @@ public class HibernateAccountImpl extends Account {
 		return nickname;
 	}
 
-	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -78,7 +78,7 @@ public class HibernateAccountImpl extends Account {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("HibernateAccountImpl");
+		sb.append("HibernateAccount");
 		sb.append("{id=").append(getId());
 		sb.append('}');
 		return sb.toString();
@@ -89,12 +89,15 @@ public class HibernateAccountImpl extends Account {
 	 *
 	 * @param account the player with exist
 	 */
-	final void updateAccountInfo(Account account) {
+	final void updateAccountInfo(Account account, String password) {
 		if (!this.equals(account)) {
 			throw new IllegalArgumentException("Player ids are not equals.");
 		}
-		this.password = account.getPassword();
+		if (password != null) {
+			this.password = password;
+		}
 		this.email = account.getEmail();
+		this.nickname = account.getNickname();
 		this.language = account.getLanguage();
 		this.timeZone = account.getTimeZone();
 	}

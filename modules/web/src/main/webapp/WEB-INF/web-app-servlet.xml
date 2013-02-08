@@ -57,7 +57,7 @@
 
     <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
 
-    <bean id="localeResolver" class="wisematches.server.web.i18n.WMPlayerLocaleResolver"/>
+    <bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
 
     <bean id="annotationMethodHandlerExceptionResolver"
           class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">

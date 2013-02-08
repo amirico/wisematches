@@ -3,6 +3,8 @@ package wisematches.core.personality.player.account.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +22,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HibernateAccountManager implements AccountManager {
 	private SessionFactory sessionFactory;
 	private AccountLockManager accountLockManager;
+	private PasswordEncoder passwordEncoder = new PlaintextPasswordEncoder();
 
 	private final Collection<AccountListener> accountListeners = new CopyOnWriteArraySet<>();
+
 	private static final String CHECK_ACCOUNT_AVAILABILITY = "" +
 			"select account.nickname, account.email " +
-			"from HibernateAccountImpl as account " +
+			"from HibernateAccount as account " +
 			"where account.nickname like :nick or account.email like :email";
 
 	private final Lock lock = new ReentrantLock();
@@ -51,7 +55,7 @@ public class HibernateAccountManager implements AccountManager {
 	public Account getAccount(long playerId) {
 		lock.lock();
 		try {
-			return (Account) sessionFactory.getCurrentSession().get(HibernateAccountImpl.class, playerId);
+			return (HibernateAccount) sessionFactory.getCurrentSession().get(HibernateAccount.class, playerId);
 		} finally {
 			lock.unlock();
 		}
@@ -63,7 +67,7 @@ public class HibernateAccountManager implements AccountManager {
 		lock.lock();
 		try {
 			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("from HibernateAccountImpl user where user.email=:email");
+			final Query query = session.createQuery("from HibernateAccount user where user.email=:email");
 			query.setString("email", email);
 			final List l = query.list();
 			if (l.size() != 1) {
@@ -76,32 +80,15 @@ public class HibernateAccountManager implements AccountManager {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_UNCOMMITTED)
-	public Account findByUsername(String username) {
-		lock.lock();
-		try {
-			final Session session = sessionFactory.getCurrentSession();
-			final Query query = session.createQuery("from HibernateAccountImpl as user where user.nickname=:nick");
-			query.setString("nick", username);
-			final List l = query.list();
-			if (l.size() != 1) {
-				return null;
-			}
-			return (Account) l.get(0);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
 	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_UNCOMMITTED)
-	public Account createAccount(Account account) throws DuplicateAccountException, InadmissibleUsernameException {
+	public Account createAccount(Account account, String password) throws DuplicateAccountException, InadmissibleUsernameException {
 		lock.lock();
 		try {
 			checkAccount(account);
 
 			final Session session = sessionFactory.getCurrentSession();
-			final HibernateAccountImpl hp = new HibernateAccountImpl(account);
+			final HibernateAccount hp = new HibernateAccount(account,
+					passwordEncoder.encodePassword(password, account.getNickname()));
 			session.save(hp);
 			for (AccountListener accountListener : accountListeners) {
 				accountListener.accountCreated(hp);
@@ -114,10 +101,10 @@ public class HibernateAccountManager implements AccountManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_UNCOMMITTED)
-	public Account updateAccount(Account account) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException {
+	public Account updateAccount(Account account, String password) throws UnknownAccountException, DuplicateAccountException, InadmissibleUsernameException {
 		lock.lock();
 		try {
-			Account oldAccount = getAccount(account.getId());
+			HibernateAccount oldAccount = (HibernateAccount) getAccount(account.getId());
 			if (oldAccount == null) {
 				throw new UnknownAccountException(account);
 			}
@@ -129,15 +116,22 @@ public class HibernateAccountManager implements AccountManager {
 			}
 
 			// Copy previous state
-			oldAccount = new AccountEditor(oldAccount).createAccount();
+			final Account prev = new AccountEditor(oldAccount).createAccount();
+
+			String pwd = password;
+			if (pwd != null) {
+				pwd = passwordEncoder.encodePassword(password, account.getNickname());
+			}
 
 			// merge and update
 			final Session session = sessionFactory.getCurrentSession();
-			final Account a = (Account) session.merge(new HibernateAccountImpl(account));
+			oldAccount.updateAccountInfo(account, pwd);
+			session.save(oldAccount);
+
 			for (AccountListener playerListener : accountListeners) {
-				playerListener.accountUpdated(oldAccount, a);
+				playerListener.accountUpdated(prev, oldAccount);
 			}
-			return a;
+			return oldAccount;
 		} finally {
 			lock.unlock();
 		}
@@ -145,17 +139,35 @@ public class HibernateAccountManager implements AccountManager {
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_UNCOMMITTED)
-	public void removeAccount(Account account) throws UnknownAccountException {
+	public Account removeAccount(Account account) throws UnknownAccountException {
 		lock.lock();
 		try {
-			final HibernateAccountImpl hp = (HibernateAccountImpl) getAccount(account.getId());
+			final HibernateAccount hp = (HibernateAccount) getAccount(account.getId());
 			if (hp != null) {
 				sessionFactory.getCurrentSession().delete(hp);
 
 				for (AccountListener accountListener : accountListeners) {
 					accountListener.accountRemove(account);
 				}
+				return hp;
 			}
+			return null;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_UNCOMMITTED)
+	public boolean checkAccountCredentials(long id, String password) {
+		lock.lock();
+		try {
+			final Session session = sessionFactory.getCurrentSession();
+			final Query query = session.createQuery("select password, nickname from HibernateAccount where id=:pid");
+			query.setParameter("pid", id);
+
+			final Object[] o = (Object[]) query.uniqueResult();
+			return o != null && passwordEncoder.isPasswordValid((String) o[0], password, o[1]);
 		} finally {
 			lock.unlock();
 		}
@@ -208,6 +220,10 @@ public class HibernateAccountManager implements AccountManager {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+
+	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public void setAccountLockManager(AccountLockManager accountLockManager) {

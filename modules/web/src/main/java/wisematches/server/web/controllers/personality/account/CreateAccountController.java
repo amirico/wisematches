@@ -21,7 +21,6 @@ import wisematches.core.Player;
 import wisematches.core.PlayerType;
 import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.personality.player.account.*;
-import wisematches.server.security.AccountSecurityService;
 import wisematches.server.services.notify.NotificationException;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
@@ -46,7 +45,6 @@ public class CreateAccountController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
-	private AccountSecurityService accountSecurityService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
 
@@ -216,14 +214,17 @@ public class CreateAccountController {
 		final AccountEditor editor = new AccountEditor();
 		editor.setEmail(registration.getEmail());
 		editor.setNickname(registration.getNickname());
-		editor.setPassword(registration.getPassword());
+//		editor.setPassword();
 		editor.setLanguage(Language.byCode(registration.getLanguage()));
 		editor.setTimeZone(Calendar.getInstance(request.getLocale()).getTimeZone());
 
+/*
+TODO: commented
 		if (accountSecurityService != null) {
 			editor.setPassword(accountSecurityService.encodePlayerPassword(editor.createAccount(), registration.getPassword()));
 		}
-		return accountManager.createAccount(editor.createAccount());
+*/
+		return accountManager.createAccount(editor.createAccount(), registration.getPassword());
 	}
 
 
@@ -246,9 +247,9 @@ public class CreateAccountController {
 	public void setNotificationService(NotificationService notificationService) {
 		this.notificationService = notificationService;
 	}
-
+/*
 	@Autowired
 	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
 		this.accountSecurityService = accountSecurityService;
-	}
+	}*/
 }

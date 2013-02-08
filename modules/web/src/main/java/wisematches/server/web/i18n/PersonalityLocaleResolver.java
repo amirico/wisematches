@@ -4,8 +4,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import wisematches.core.Language;
-import wisematches.server.security.WMAuthorities;
-import wisematches.server.security.impl.WMPlayerDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +12,8 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WMPlayerLocaleResolver extends SessionLocaleResolver {
-	public WMPlayerLocaleResolver() {
+public class PersonalityLocaleResolver extends SessionLocaleResolver {
+	public PersonalityLocaleResolver() {
 	}
 
 	/**
@@ -30,8 +28,10 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 		if (authentication == null) {
 			return super.resolveLocale(request);
 		}
+		return super.resolveLocale(request);
+/*
+TODO: commented
 		if (authentication.getAuthorities().contains(WMAuthorities.GUEST)) {
-			return super.resolveLocale(request);
 		}
 
 		final Object details = authentication.getPrincipal();
@@ -41,6 +41,7 @@ public class WMPlayerLocaleResolver extends SessionLocaleResolver {
 		} else {
 			return super.resolveLocale(request);
 		}
+*/
 	}
 
 	@Override

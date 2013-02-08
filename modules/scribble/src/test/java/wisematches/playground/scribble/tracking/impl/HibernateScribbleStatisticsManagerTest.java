@@ -74,7 +74,7 @@ public class HibernateScribbleStatisticsManagerTest {
 		scribbleStatisticsManager.setGamePlayManager(gamePlayManager);
 
 		final String uuid = UUID.randomUUID().toString();
-		person = accountManager.createAccount(new AccountEditor(uuid + "@mock.wm", uuid, "AS").createAccount());
+		person = accountManager.createAccount(new AccountEditor(uuid + "@mock.wm", uuid).createAccount(), "AS");
 		player = new DefaultPlayer(person, PlayerType.BASIC);
 
 		boardListener = listenerCapture.getValue();

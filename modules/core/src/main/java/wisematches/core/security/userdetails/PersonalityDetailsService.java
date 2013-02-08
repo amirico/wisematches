@@ -1,4 +1,4 @@
-package wisematches.core.security;
+package wisematches.core.security.userdetails;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PersonalityDetailsManager implements UserDetailsService {
+public class PersonalityDetailsService implements UserDetailsService {
 	private AccountManager accountManager;
 	private AccountLockManager accountLockManager;
 	private AccountRecoveryManager accountRecoveryManager;
@@ -29,14 +29,18 @@ public class PersonalityDetailsManager implements UserDetailsService {
 
 	private final Set<String> administrators = new HashSet<>();
 
-	public PersonalityDetailsManager() {
+	public PersonalityDetailsService() {
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		final Account account = accountManager.findByEmail(username);
+		return loadPlayerByEmail(username);
+	}
+
+	public PersonalityDetails loadPlayerByEmail(String email) throws UsernameNotFoundException {
+		final Account account = accountManager.findByEmail(email);
 		if (account == null) {
-			throw new UsernameNotFoundException("Account with email " + username + " not found in the system");
+			throw new UsernameNotFoundException("Account with email " + email + " not found in the system");
 		}
 
 		final Player player = personalityManager.getPlayer(account.getId());
@@ -47,25 +51,28 @@ public class PersonalityDetailsManager implements UserDetailsService {
 		final boolean expired = (accountRecoveryManager.getToken(account) != null);
 
 		final Collection<String> authorities = new HashSet<>();
-		if (administrators.contains(username)) {
+		if (administrators.contains(account.getNickname())) {
 			authorities.add("admin");
 		}
 		authorities.add("player");
 		authorities.add(player.getPlayerType().name().toLowerCase());
-		return new PersonalityDetails(player, account.getNickname(), account.getPassword(), locked, expired, authorities);
+		return new PersonalityDetails(player, account.getEmail(), null, locked, expired, authorities);
 	}
 
-	public UserDetails loadVisitorByLanguage(String language) throws UsernameNotFoundException {
-		final Language l = Language.byCode(language);
-		if (l == null) {
+	public PersonalityDetails loadVisitorByLanguage(Language language) throws UsernameNotFoundException {
+		if (language == null) {
 			throw new UsernameNotFoundException("Unsupported guest language: " + language);
 		}
 
-		final Visitor visitor = personalityManager.getVisitor(l);
+		final Visitor visitor = personalityManager.getVisitor(language);
 		if (visitor == null) {
 			throw new UsernameNotFoundException("Unsupported guest language: " + language);
 		}
-		return new PersonalityDetails(visitor, "guest", "guest", false, false, Arrays.asList("player", "guest"));
+		return new PersonalityDetails(visitor, "guest", null, false, false, Arrays.asList("player", "guest"));
+	}
+
+	public boolean isPasswordValid(PersonalityDetails details, String rawPass) {
+		return accountManager.checkAccountCredentials(details.getPersonality().getId(), rawPass);
 	}
 
 	public void setAdministrators(Set<String> administrators) {
@@ -80,15 +87,15 @@ public class PersonalityDetailsManager implements UserDetailsService {
 		this.accountManager = accountManager;
 	}
 
-	public void setAccountRecoveryManager(AccountRecoveryManager accountRecoveryManager) {
-		this.accountRecoveryManager = accountRecoveryManager;
-	}
-
 	public void setAccountLockManager(AccountLockManager accountLockManager) {
 		this.accountLockManager = accountLockManager;
 	}
 
 	public void setPersonalityManager(PersonalityManager personalityManager) {
 		this.personalityManager = personalityManager;
+	}
+
+	public void setAccountRecoveryManager(AccountRecoveryManager accountRecoveryManager) {
+		this.accountRecoveryManager = accountRecoveryManager;
 	}
 }

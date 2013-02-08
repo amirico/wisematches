@@ -7,6 +7,8 @@
           class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
         <property name="properties">
             <props>
+                <prop key="server.admins">test1,test2</prop>
+                <prop key="server.images.path">file:${java.io.tmpdir}/wisematches/work/images</prop>
                 <prop key="server.proposals.file">file:${java.io.tmpdir}/wisematches/work/proposals.ser</prop>
                 <prop key="server.properties.file">file:${java.io.tmpdir}/wisematches/work/properties.ser</prop>
                 <prop key="server.dictionary.path">../../resources/dictionaries</prop>

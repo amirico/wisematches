@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.core.PlayerType;
 import wisematches.core.personality.DefaultPlayer;
 import wisematches.core.personality.player.account.*;
-import wisematches.server.security.AccountSecurityService;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.controllers.personality.account.form.RecoveryConfirmationForm;
@@ -37,7 +36,6 @@ public class RecoveryController {
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
 	private AccountRecoveryManager recoveryTokenManager;
-	private AccountSecurityService accountSecurityService;
 
 	private static final String RECOVERING_PLAYER_EMAIL = "RECOVERY_PLAYER_EMAIL";
 
@@ -106,14 +104,8 @@ public class RecoveryController {
 			final Account player = checkRecoveryForm(request, response, form, result);
 			if (!result.hasErrors()) {
 				final AccountEditor e = new AccountEditor(player);
-				if (accountSecurityService != null) {
-					e.setPassword(accountSecurityService.encodePlayerPassword(player, form.getPassword()));
-				} else {
-					e.setPassword(form.getPassword());
-				}
-
 				try {
-					accountManager.updateAccount(e.createAccount());
+					accountManager.updateAccount(e.createAccount(), form.getPassword());
 					notificationService.raiseNotification("account.updated", new DefaultPlayer(player, PlayerType.BASIC), NotificationSender.ACCOUNTS, player);
 					return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 				} catch (Exception e1) {
@@ -197,9 +189,11 @@ public class RecoveryController {
 	public void setRecoveryTokenManager(AccountRecoveryManager recoveryTokenManager) {
 		this.recoveryTokenManager = recoveryTokenManager;
 	}
+/*
 
 	@Autowired
 	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
 		this.accountSecurityService = accountSecurityService;
 	}
+*/
 }

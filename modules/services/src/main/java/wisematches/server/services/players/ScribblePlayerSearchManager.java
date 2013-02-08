@@ -12,7 +12,7 @@ public class ScribblePlayerSearchManager extends AbstractDescriptiveSearchManage
 
 	@Override
 	protected String getEntitiesList(PlayerSearchArea area) {
-		String r = "HibernateAccountImpl account, ScribbleStatisticsEditor stats";
+		String r = "HibernateAccount account, ScribbleStatisticsEditor stats";
 
 		switch (area) {
 			case PLAYERS:

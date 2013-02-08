@@ -4,7 +4,7 @@
     <defaultAnt bundledAnt="true" />
   </component>
   <component name="ArtifactManager">
-    <artifact type="exploded-war" name="web:war exploded">
+    <artifact type="exploded-war" build-on-make="true" name="web:war exploded">
       <output-path>$PROJECT_DIR$/target/artifacts/web_war_exploded</output-path>
       <root id="root">
         <element id="directory" name="WEB-INF">
@@ -505,6 +505,7 @@
     <file url="file://$PROJECT_DIR$/modules/services/src/main/java/wisematches/server/services/message/impl/HibernateMessageManager.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/services/src/main/java/wisematches/server/services/notify/impl/HibernateNotificationService.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/services/src/main/java/wisematches/server/services/notify/impl/publisher/EssentialNotificationPublisher.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/modules/web/src/main/java/wisematches/server/web/security/spring/fixes/WMPersistentTokenRepository.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/database_data.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/resources/database/latest_patch.sql" dialect="MySQL" />

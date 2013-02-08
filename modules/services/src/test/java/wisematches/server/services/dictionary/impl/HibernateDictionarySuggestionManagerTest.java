@@ -28,6 +28,8 @@ import static org.easymock.EasyMock.createNiceMock;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
+		"classpath:/config/personality-config.xml",
+		"classpath:/config/playground-junit-config.xml"
 })
 public class HibernateDictionarySuggestionManagerTest {
 	@Autowired

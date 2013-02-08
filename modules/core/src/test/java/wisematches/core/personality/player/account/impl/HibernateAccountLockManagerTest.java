@@ -49,7 +49,7 @@ public class HibernateAccountLockManagerTest {
 	@Before
 	public void createAccount() throws Exception {
 		UUID uuid = UUID.randomUUID();
-		player = accountManager.createAccount(new AccountEditor(uuid + "@qwe.ru", uuid.toString(), "asd").createAccount());
+		player = accountManager.createAccount(new AccountEditor(uuid + "@qwe.ru", uuid.toString()).createAccount(), "asd");
 	}
 
 	@After
@@ -98,7 +98,7 @@ public class HibernateAccountLockManagerTest {
 	public void testIsAccountLocked() throws InterruptedException {
 		final Date unlockDate = new Date(System.currentTimeMillis() + 1000);
 
-		assertFalse(accountLockManager.isAccountLocked(new AccountEditor("asd", "qwe", "zc").createAccount()));
+		assertFalse(accountLockManager.isAccountLocked(new AccountEditor("asd", "qwe").createAccount()));
 
 		reset(accountLockListener);
 		accountLockListener.accountLocked(player, "t", "t", unlockDate);
@@ -125,7 +125,7 @@ public class HibernateAccountLockManagerTest {
 
 		accountLockManager.lockAccount(player, "t1", "t2", unlockDate);
 
-		assertNull(accountLockManager.getAccountLockInfo(new AccountEditor("asd", "qwe", "zc").createAccount()));
+		assertNull(accountLockManager.getAccountLockInfo(new AccountEditor("asd", "qwe").createAccount()));
 		final AccountLockInfo lockInfo = accountLockManager.getAccountLockInfo(player);
 		assertEquals(player, lockInfo.getAccount());
 		assertEquals("t1", lockInfo.getPublicReason());

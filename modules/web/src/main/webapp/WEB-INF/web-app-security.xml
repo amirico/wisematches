@@ -11,12 +11,6 @@
 
     <global-method-security jsr250-annotations="enabled"/>
 
-    <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
-        <beans:property name="userPropertyToUse" value="nickname"/>
-    </beans:bean>
-
-    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
-
     <beans:bean id="sessionRegistryFixFilter"
                 class="wisematches.server.web.security.spring.fixes.SessionRegistryFixFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
@@ -36,19 +30,6 @@
         <beans:property name="parameter" value="rememberMe"/>
         <beans:property name="cookieName" value="WM_RM"/>
     </beans:bean>
-
-    <!--
-        <beans:bean id="userDetailsService" class="wisematches.server.security.impl.WMUserDetailsService">
-            <beans:property name="personalityManager" ref="personalityManager"/>
-            <beans:property name="accountManager" ref="accountManager"/>
-            <beans:property name="accountLockManager" ref="lockAccountManager"/>
-            <beans:property name="authenticationManager" ref="authenticationManager"/>
-            <beans:property name="administratorPassword" value="${server.admin.password}"/>
-
-            <beans:property name="saltSource" ref="saltSource"/>
-            <beans:property name="passwordEncoder" ref="passwordEncoder"/>
-        </beans:bean>
-    -->
 
     <beans:bean id="redirectStrategy" class="wisematches.server.web.security.spring.WMRedirectStrategy">
         <beans:property name="redirectParameters">
@@ -115,21 +96,12 @@
         <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
     </beans:bean>
 
-    <beans:bean id="guestFilter" class="wisematches.server.web.security.guest.GuestAuthenticationFilter">
-        <beans:property name="guestProcessingUrl" value="/account/loginGuest"/>
-        <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
+    <beans:bean id="visitorAuthenticationFilter"
+                class="wisematches.server.web.security.filter.VisitorAuthenticationFilter">
+        <beans:property name="visitorProcessingUrl" value="/account/loginGuest"/>
         <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
-    </beans:bean>
-
-    <beans:bean id="guestAuthenticationProvider"
-                class="wisematches.server.web.security.guest.GuestAuthenticationProvider">
-    </beans:bean>
-
-    <beans:bean id="memberAuthenticationProvider"
-                class="wisematches.server.security.impl.MemberAuthenticationProvider">
-        <beans:property name="saltSource" ref="saltSource"/>
-        <beans:property name="passwordEncoder" ref="passwordEncoder"/>
-        <beans:property name="userDetailsService" ref="personalityDetailsManager"/>
+        <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
     </beans:bean>
 
     <beans:bean id="concurrentSessionFilter"
@@ -145,8 +117,8 @@
     </beans:bean>
 
     <authentication-manager alias="authenticationManager">
-        <authentication-provider ref="guestAuthenticationProvider"/>
-        <authentication-provider ref="memberAuthenticationProvider"/>
+        <authentication-provider ref="playerAuthenticationProvider"/>
+        <authentication-provider ref="visitorAuthenticationProvider"/>
     </authentication-manager>
 
     <http pattern="/static/**" security="none"/>
@@ -167,7 +139,7 @@
 
         <intercept-url pattern="/**" access="permitAll"/>
 
-        <custom-filter before="ANONYMOUS_FILTER" ref="guestFilter"/>
+        <custom-filter before="ANONYMOUS_FILTER" ref="visitorAuthenticationFilter"/>
         <custom-filter after="SESSION_MANAGEMENT_FILTER" ref="sessionRegistryFixFilter"/>
         <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrentSessionFilter"/>
 
