@@ -120,7 +120,7 @@
 
     <servlet>
         <servlet-name>web-app</servlet-name>
-        <servlet-class>wisematches.server.web.view.WMDispatcherServlet</servlet-class>
+        <servlet-class>wisematches.server.web.servlet.WiseMatchesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

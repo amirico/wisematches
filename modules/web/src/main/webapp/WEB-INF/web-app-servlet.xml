@@ -15,7 +15,7 @@
 
     <context:property-placeholder properties-ref="applicationProperties"/>
 
-    <context:component-scan base-package="wisematches.server.web.controllers"/>
+    <context:component-scan base-package="wisematches.server.web.servlet.mvc"/>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
@@ -26,7 +26,8 @@
             <property name="paramName" value="language"/>
         </bean>
 
-        <bean id="browserDetectionInterceptor" class="wisematches.server.web.view.BrowserDetectionInterceptor">
+        <bean id="browserDetectionInterceptor"
+              class="wisematches.server.web.servlet.handler.BrowserDetectionInterceptor">
             <property name="supportedBrowsers">
                 <map>
                     <entry key="CHROME" value="12"/>
@@ -49,27 +50,15 @@
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="messageInterpolator">
-            <bean class="wisematches.server.web.validator.SpringMessageInterpolator">
+            <bean class="wisematches.server.web.validation.SpringMessageInterpolator">
                 <property name="messageSource" ref="messageSource"/>
             </bean>
         </property>
     </bean>
 
-    <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
-
     <bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
 
-    <bean id="annotationMethodHandlerExceptionResolver"
-          class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
-    </bean>
-
-    <bean id="responseStatusExceptionResolver"
-          class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
-    </bean>
-
-    <bean id="defaultHandlerExceptionResolver"
-          class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
-    </bean>
+    <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
 
     <bean id="freemarkerConfig" parent="commonFreemarkerConfigurer">
         <property name="templateLoaderPath" value=""/>
@@ -84,7 +73,7 @@
         </property>
     </bean>
 
-    <bean id="freemarkerViewResolver" class="wisematches.server.web.view.WMFreeMarkerViewResolver">
+    <bean id="viewResolver" class="wisematches.server.web.servlet.view.WMFreeMarkerViewResolver">
         <property name="cache" value="true"/>
         <property name="prefix" value=""/>
         <property name="suffix" value=".ftl"/>
@@ -98,8 +87,20 @@
                 <value>wisematches.server.services.award.AwardType</value>
             </list>
         </property>
-        <property name="viewClass" value="wisematches.server.web.view.WMFreeMarkerView"/>
+        <property name="viewClass" value="wisematches.server.web.servlet.view.WMFreeMarkerView"/>
     </bean>
 
-    <alias alias="viewResolver" name="freemarkerViewResolver"/>
+
+    <bean id="annotationMethodHandlerExceptionResolver"
+          class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+    </bean>
+
+    <bean id="responseStatusExceptionResolver"
+          class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
+    </bean>
+
+    <bean id="defaultHandlerExceptionResolver"
+          class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
+    </bean>
+
 </beans>

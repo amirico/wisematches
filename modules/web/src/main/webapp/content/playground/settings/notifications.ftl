@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="notificationsView" type="wisematches.server.web.controllers.personality.settings.view.NotificationsTreeView" -->
+<#-- @ftlvariable name="notificationsView" type="wisematches.server.web.servlet.mvc.playground.player.settings.form.NotificationsTreeView" -->
 
 <#include "/core.ftl">
 

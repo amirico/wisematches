@@ -12,16 +12,16 @@
     <global-method-security jsr250-annotations="enabled"/>
 
     <beans:bean id="sessionRegistryFixFilter"
-                class="wisematches.server.web.security.spring.fixes.SessionRegistryFixFilter">
+                class="wisematches.server.web.security.filter.SessionRegistryFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
     </beans:bean>
 
     <beans:bean id="rememberMeServices"
-                class="wisematches.server.web.security.spring.fixes.WMPersistentTokenBasedRememberMeServices">
+                class="wisematches.server.web.security.authentication.rememberme.WMRememberMeServices">
         <beans:constructor-arg name="key" value="${security.remember.token}"/>
         <beans:constructor-arg name="userDetailsService" ref="personalityDetailsManager"/>
         <beans:constructor-arg name="tokenRepository">
-            <beans:bean class="wisematches.server.web.security.spring.fixes.WMPersistentTokenRepository">
+            <beans:bean class="wisematches.server.web.security.authentication.rememberme.WMPersistentTokenRepository">
                 <beans:property name="dataSource" ref="dataSource"/>
                 <beans:property name="createTableOnStartup" value="false"/>
             </beans:bean>
@@ -31,7 +31,7 @@
         <beans:property name="cookieName" value="WM_RM"/>
     </beans:bean>
 
-    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.spring.WMRedirectStrategy">
+    <beans:bean id="redirectStrategy" class="wisematches.server.web.security.WMRedirectStrategy">
         <beans:property name="redirectParameters">
             <beans:set>
                 <beans:value>rememberMe</beans:value>
@@ -40,13 +40,13 @@
     </beans:bean>
 
     <beans:bean id="authenticationSuccessHandler"
-                class="wisematches.server.web.security.spring.WMAuthenticationSuccessHandler">
+                class="wisematches.server.web.security.authentication.WMAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/playground/scribble/active"/>
         <beans:property name="targetUrlParameter" value="continue"/>
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler"
-                class="wisematches.server.web.security.spring.WMAuthenticationFailureHandler">
+                class="wisematches.server.web.security.authentication.WMAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
         <beans:property name="defaultFailureUrl" value="/account/loginAuth?error=system"/>
         <beans:property name="allowSessionCreation" value="true"/>
@@ -92,7 +92,7 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.spring.fixes.WMAccessDeniedHandler">
+    <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.access.WMAccessDeniedHandler">
         <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
     </beans:bean>
 

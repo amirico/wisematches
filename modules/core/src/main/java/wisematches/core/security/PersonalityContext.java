@@ -13,6 +13,7 @@ public final class PersonalityContext {
 	private PersonalityContext() {
 	}
 
+	@Deprecated
 	public static Player getPlayer() {
 		final Personality personality = getPersonality();
 		if (personality instanceof Player) {

@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="statistics" type="wisematches.playground.scribble.tracking.ScribbleStatistics" -->
-<#-- @ftlvariable name="ratingChart" type="wisematches.server.web.utils.RatingChart" -->
+<#-- @ftlvariable name="ratingChart" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.RatingChart" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
