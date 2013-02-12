@@ -17,7 +17,7 @@ import wisematches.server.services.abuse.AbuseReportManager;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
 import wisematches.server.services.message.MessageManager;
-import wisematches.server.services.players.blacklist.BlacklistManager;
+import wisematches.server.services.relations.blacklist.BlacklistManager;
 import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.servlet.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;

@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.server.services.players.friends.FriendsManager;
+import wisematches.server.services.relations.friends.FriendsManager;
 import wisematches.server.web.servlet.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.relations.form.FriendRelationForm;

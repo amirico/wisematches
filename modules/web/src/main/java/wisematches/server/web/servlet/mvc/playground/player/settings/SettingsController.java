@@ -16,8 +16,8 @@ import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
+import wisematches.server.services.notify.NotificationManager;
 import wisematches.server.services.notify.NotificationScope;
-import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.player.settings.form.NotificationsTreeView;
@@ -35,7 +35,7 @@ import java.util.*;
 @RequestMapping("/account/modify")
 public class SettingsController extends WisematchesController {
 	private AccountManager accountManager;
-	private NotificationService notificationService;
+	private NotificationManager notificationManager;
 	private BoardSettingsManager boardSettingsManager;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.settings");
@@ -55,8 +55,8 @@ public class SettingsController extends WisematchesController {
 		model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
 
 		final Map<String, NotificationScope> descriptors = new HashMap<>();
-		for (String code : new TreeSet<>(notificationService.getNotificationCodes())) {
-			descriptors.put(code, notificationService.getNotificationScope(code, principal));
+		for (String code : new TreeSet<>(notificationManager.getNotificationCodes())) {
+			descriptors.put(code, notificationManager.getNotificationScope(code, principal));
 		}
 		model.addAttribute("notificationsView", new NotificationsTreeView(descriptors));
 
@@ -86,11 +86,11 @@ public class SettingsController extends WisematchesController {
 			throw new UnknownEntityException(null, "account");
 		}
 
-		final Set<String> codes = notificationService.getNotificationCodes();
+		final Set<String> codes = notificationManager.getNotificationCodes();
 		for (String code : codes) {
 			final String parameter = request.getParameter(code);
 			final NotificationScope scope = parameter != null && !parameter.isEmpty() ? NotificationScope.valueOf(parameter.toUpperCase()) : null;
-			notificationService.setNotificationScope(code, personality, scope);
+			notificationManager.setNotificationScope(code, personality, scope);
 		}
 
 		boardSettingsManager.setScribbleSettings(personality,
@@ -183,8 +183,8 @@ public class SettingsController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setNotificationService(NotificationService notificationService) {
-		this.notificationService = notificationService;
+	public void setNotificationManager(NotificationManager notificationManager) {
+		this.notificationManager = notificationManager;
 	}
 
 	@Autowired

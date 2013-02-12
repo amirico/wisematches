@@ -5,6 +5,7 @@
 
     <import resource="awards-config.xml"/>
     <import resource="restriction-config.xml"/>
+    <import resource="notifications-config.xml"/>
 
     <bean id="awardsManager" class="wisematches.server.services.award.impl.HibernateAwardsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -28,20 +29,60 @@
         <property name="restrictionManager" ref="restrictionManager"/>
     </bean>
 
-    <bean id="blacklistManager" class="wisematches.server.services.players.blacklist.impl.HibernateBlacklistManager">
+    <bean id="blacklistManager" class="wisematches.server.services.relations.blacklist.impl.HibernateBlacklistManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="friendsManager" class="wisematches.server.services.players.friends.impl.HibernateFriendsManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-
-    <bean id="playerSearchManager" class="wisematches.server.services.players.ScribblePlayerSearchManager">
+    <bean id="friendsManager" class="wisematches.server.services.relations.friends.impl.HibernateFriendsManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="abuseReportManager" class="wisematches.server.services.abuse.impl.MemoryAbuseReportManager">
+
+    </bean>
+
+    <bean id="playerStateManager" class="wisematches.server.services.state.impl.HibernatePlayerStateManager">
+
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="playerSearchManager" class="wisematches.server.services.relations.ScribblePlayerSearchManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="applicationEventTaskExecutor" class="wisematches.core.task.executor.TransactionAwareExecutor">
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="1"/>
+                <property name="threadNamePrefix" value="NotificationManager"/>
+                <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+            </bean>
+        </property>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="applicationEventMulticaster" class="org.springframework.context.event.SimpleApplicationEventMulticaster">
+        <property name="taskExecutor" ref="applicationEventTaskExecutor"/>
+    </bean>
+
+    <bean id="reliablePropertiesManager"
+          class="wisematches.server.services.props.impl.FilePropertiesManager">
+        <property name="propertiesFile" value="${server.properties.file}"/>
+    </bean>
+
+    <bean id="advertisementManager" class="wisematches.server.services.reclame.impl.XMLAdvertisementManager">
+        <property name="adsResource" value="${advertisement.providers.file}"/>
+    </bean>
+
+    <bean id="dictionaryChangeManager"
+          class="wisematches.server.services.dictionary.impl.HibernateDictionarySuggestionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="dictionaryManager" ref="dictionaryManager"/>
+    </bean>
+
+    <bean id="notificationManager" class="wisematches.server.services.notify.impl.HibernateNotificationManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="notificationDescriptors" ref="notificationsList"/>
     </bean>
 
     <bean id="breakingDayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
