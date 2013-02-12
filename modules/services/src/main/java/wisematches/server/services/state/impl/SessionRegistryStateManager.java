@@ -55,11 +55,13 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 
 	@Override
 	public void registerNewSession(String sessionId, Object principal) {
-		super.registerNewSession(sessionId, principal);
+		final Personality personality = personality((PersonalityDetails) principal);
+
+		super.registerNewSession(sessionId, personality);
 
 		final SessionInformation info = getSessionInformation(sessionId);
-		if (info != null && info.getPrincipal() instanceof PersonalityDetails) {
-			processPlayerOnline(personality(info));
+		if (info != null && info.getPrincipal() instanceof Personality) {
+			processPlayerOnline(personality);
 		}
 	}
 
@@ -68,8 +70,8 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 		super.refreshLastRequest(sessionId);
 
 		final SessionInformation info = getSessionInformation(sessionId);
-		if (info != null && info.getPrincipal() instanceof PersonalityDetails) {
-			processPlayerAlive(personality(info));
+		if (info != null && info.getPrincipal() instanceof Personality) {
+			processPlayerAlive((Personality) info.getPrincipal());
 		}
 	}
 
@@ -79,17 +81,17 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 
 		super.removeSessionInformation(sessionId);
 
-		if (info != null && info.getPrincipal() instanceof PersonalityDetails) {
-			final Personality player = personality(info);
+		if (info != null && info.getPrincipal() instanceof Personality) {
+			final Personality player = (Personality) info.getPrincipal();
 			// notify listeners only about last session
 			if (getAllSessions(player, true).isEmpty()) {
-				processPlayerOffline(personality(info));
+				processPlayerOffline(player);
 			}
 		}
 	}
 
-	private Personality personality(SessionInformation info) {
-		return ((PersonalityDetails) info.getPrincipal()).getPersonality();
+	private Personality personality(PersonalityDetails info) {
+		return info.getPersonality();
 	}
 
 	protected void processPlayerOnline(Personality player) {

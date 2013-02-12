@@ -24,7 +24,7 @@ public final class PersonalityDetails implements UserDetails {
 	private final Personality personality;
 	private final Collection<GrantedAuthority> authorities;
 
-	PersonalityDetails(Personality personality, String username, String password, boolean locked, boolean expired, Collection<String> authorities) {
+	public PersonalityDetails(Personality personality, String username, String password, boolean locked, boolean expired, Collection<String> authorities) {
 		this.username = username;
 		this.password = password;
 		this.accountLocked = locked;

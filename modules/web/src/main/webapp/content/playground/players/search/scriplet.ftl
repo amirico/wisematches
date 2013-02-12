@@ -1,8 +1,8 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="searchColumns" type="java.util.Collection<java.lang.String>" -->
 <#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.core.search.descriptive.SearchableDescriptor" -->
-<#-- @ftlvariable name="searchArea" type="wisematches.server.services.players.PlayerSearchArea" -->
-<#-- @ftlvariable name="searchAreas" type="wisematches.server.services.players.PlayerSearchArea[]" -->
+<#-- @ftlvariable name="searchArea" type="wisematches.server.services.relations.PlayerSearchArea" -->
+<#-- @ftlvariable name="searchAreas" type="wisematches.server.services.relations.PlayerSearchArea[]" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>

@@ -1,5 +1,8 @@
 package wisematches.server.services.dictionary.impl;
 
+import org.easymock.Capture;
+import org.easymock.CaptureType;
+import org.easymock.EasyMock;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,17 +12,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
-import wisematches.playground.dictionary.DictionaryException;
-import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.server.services.dictionary.DictionarySuggestionListener;
-import wisematches.server.services.dictionary.SuggestionContext;
-import wisematches.server.services.dictionary.SuggestionState;
-import wisematches.server.services.dictionary.SuggestionType;
+import wisematches.core.Personality;
+import wisematches.core.RobotType;
+import wisematches.core.personality.DefaultRobot;
+import wisematches.playground.dictionary.*;
+import wisematches.server.services.dictionary.*;
 
 import java.util.EnumSet;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -29,6 +32,7 @@ import static org.easymock.EasyMock.createNiceMock;
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
 		"classpath:/config/personality-config.xml",
+		"classpath:/config/scribble-config.xml",
 		"classpath:/config/playground-junit-config.xml"
 })
 public class HibernateDictionarySuggestionManagerTest {
@@ -38,6 +42,8 @@ public class HibernateDictionarySuggestionManagerTest {
 	private DictionaryManager dictionaryManager;
 	private DictionarySuggestionListener changeListener;
 	private HibernateDictionarySuggestionManager changeManager;
+
+	private static final Personality PERSON = new DefaultRobot(RobotType.DULL);
 
 	public HibernateDictionarySuggestionManagerTest() {
 	}
@@ -72,8 +78,6 @@ public class HibernateDictionarySuggestionManagerTest {
 
 	@Test
 	public void testAddRemoveUpdate() {
-		throw new UnsupportedOperationException("Commented");
-/*
 		final Capture<ChangeSuggestion> requestCapture = new Capture<>(CaptureType.ALL);
 
 		changeListener.changeRequestRaised(capture(requestCapture));
@@ -91,15 +95,15 @@ public class HibernateDictionarySuggestionManagerTest {
 		replay(dictionaryManager);
 
 		int countAdd = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.ADD), null));
-		changeManager.addWord("poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE), Language.EN, Personality.person(101));
+		changeManager.addWord("poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE), Language.EN, PERSON);
 		assertEquals(countAdd + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.ADD), null)));
 
 		int countUpdate = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.UPDATE), null));
-		changeManager.updateWord("poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE), Language.EN, Personality.person(101));
+		changeManager.updateWord("poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE), Language.EN, PERSON);
 		assertEquals(countUpdate + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.UPDATE), null)));
 
 		int countDelete = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null));
-		changeManager.removeWord("poofgjnwhj", Language.EN, Personality.person(101));
+		changeManager.removeWord("poofgjnwhj", Language.EN, PERSON);
 		assertEquals(countDelete + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null)));
 
 		assertEquals(3, requestCapture.getValues().size());
@@ -107,7 +111,7 @@ public class HibernateDictionarySuggestionManagerTest {
 		final ChangeSuggestion add = requestCapture.getValues().get(0);
 		assertEquals("poofgjnwhj", add.getWord());
 		assertEquals(Language.EN, add.getLanguage());
-		assertEquals(101L, add.getRequester());
+		assertEquals(PERSON.getId().longValue(), add.getRequester());
 		assertEquals(EnumSet.of(WordAttribute.MASCULINE), add.getAttributes());
 		assertEquals("This is testing word", add.getDefinition());
 		assertEquals(SuggestionState.WAITING, add.getSuggestionState());
@@ -116,7 +120,7 @@ public class HibernateDictionarySuggestionManagerTest {
 		final ChangeSuggestion update = requestCapture.getValues().get(1);
 		assertEquals("poofgjnwhj", update.getWord());
 		assertEquals(Language.EN, update.getLanguage());
-		assertEquals(101L, update.getRequester());
+		assertEquals(PERSON.getId().longValue(), update.getRequester());
 		assertEquals(EnumSet.of(WordAttribute.FEMININE), update.getAttributes());
 		assertEquals("This is testing word 2", update.getDefinition());
 		assertEquals(SuggestionState.WAITING, update.getSuggestionState());
@@ -125,20 +129,17 @@ public class HibernateDictionarySuggestionManagerTest {
 		final ChangeSuggestion remove = requestCapture.getValues().get(2);
 		assertEquals("poofgjnwhj", remove.getWord());
 		assertEquals(Language.EN, remove.getLanguage());
-		assertEquals(101L, remove.getRequester());
+		assertEquals(PERSON.getId().longValue(), remove.getRequester());
 		assertNull(remove.getAttributes());
 		assertNull(remove.getDefinition());
 		assertEquals(SuggestionState.WAITING, remove.getSuggestionState());
 		assertEquals(SuggestionType.REMOVE, remove.getSuggestionType());
 
 		verify(changeListener, dictionaryManager, dictionary);
-*/
 	}
 
 	@Test
 	public void testApproveReject() throws DictionaryException {
-		throw new UnsupportedOperationException("Commented");
-/*
 		final Capture<ChangeSuggestion> requestCapture = new Capture<>(CaptureType.ALL);
 
 		changeListener.changeRequestRaised(capture(requestCapture));
@@ -161,14 +162,13 @@ public class HibernateDictionarySuggestionManagerTest {
 		expect(dictionaryManager.getDictionary(Language.EN)).andReturn(dictionary).anyTimes();
 		replay(dictionaryManager);
 
-		final ChangeSuggestion r1 = changeManager.addWord("poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE), Language.EN, Personality.person(101));
+		final ChangeSuggestion r1 = changeManager.addWord("poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE), Language.EN, PERSON);
 		changeManager.approveRequests(r1.getId());
 
-		final ChangeSuggestion r2 = changeManager.updateWord("poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE), Language.EN, Personality.person(101));
-		final ChangeSuggestion r3 = changeManager.removeWord("poofgjnwhj", Language.EN, Personality.person(101));
+		final ChangeSuggestion r2 = changeManager.updateWord("poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE), Language.EN, PERSON);
+		final ChangeSuggestion r3 = changeManager.removeWord("poofgjnwhj", Language.EN, PERSON);
 		changeManager.rejectRequests(r2.getId(), r3.getId());
 
 		verify(changeListener, dictionaryManager, dictionary);
-*/
 	}
 }
