@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="timeZones" type="java.util.Collection<wisematches.server.web.controllers.personality.settings.form.TimeZoneInfo>" -->
-<#-- @ftlvariable name="settings" type="wisematches.server.web.controllers.personality.settings.form.SettingsForm" -->
+<#-- @ftlvariable name="timeZones" type="java.util.Collection<wisematches.server.web.servlet.mvc.playground.player.settings.form.TimeZoneInfo>" -->
+<#-- @ftlvariable name="settings" type="wisematches.server.web.servlet.mvc.playground.player.settings.form.SettingsForm" -->
 <#include "/core.ftl">
 
 <table class="common-settings ui-widget-content ui-state-default shadow ui-corner-all" style="background-image: none;"

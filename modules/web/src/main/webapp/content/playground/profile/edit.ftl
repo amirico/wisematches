@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="countries" type="java.util.Collection<wisematches.personality.membership.Country>" -->
 <#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
-<#-- @ftlvariable name="profileForm" type="wisematches.server.web.controllers.personality.profile.form.PlayerProfileForm" -->
+<#-- @ftlvariable name="profileForm" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 
 <script type="text/javascript" src="<@s "js/fileuploader.js"/>"></script>

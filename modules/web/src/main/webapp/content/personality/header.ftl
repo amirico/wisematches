@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="headerTitle" type="java.lang.String" -->
+<#-- @ftlvariable name="title" type="java.lang.String" -->
 <#-- @ftlvariable name="requestQueryString" type="java.lang.String" -->
 <#include "/core.ftl">
 
@@ -25,7 +25,7 @@
             <table>
                 <tr>
                     <td id="header-welcome-label" style="width: 100%; text-align: left;">
-                        <@message code=headerTitle!"title.default"/>
+                        <@message code=title!"title.default"/>
                     </td>
                     <td style="text-align: right;">
                         <div id="language-combobox" class="ui-widget" style="display:  inline-block;">

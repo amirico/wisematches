@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="waitingGames" type="wisematches.server.web.controllers.playground.scribble.view.WaitingGamesView" -->
+<#-- @ftlvariable name="waitingGames" type="wisematches.server.web.servlet.mvc.playground.scribble.game.form.WaitingGamesForm" -->
 
 <#include "/core.ftl">
 

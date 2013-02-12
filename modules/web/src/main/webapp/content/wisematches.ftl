@@ -1,10 +1,10 @@
-<#-- @ftlvariable name="headerTitle" type="java.lang.String" -->
+<#-- @ftlvariable name="title" type="java.lang.String" -->
 <#-- @ftlvariable name="originalTemplateName" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title><@message code=headerTitle!"title.default"/></title>
+    <title><@message code=title!"title.default"/></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>
@@ -60,7 +60,7 @@
 </div>
 
 <script type="text/javascript">
-    $("#wisematchesHeader #gameToolbar").show();
+    $("#wisematchesHeader").find("#gameToolbar").show();
     $("#wisematchesFooter").show();
     $("#wisematchesContent").show();
 </script>

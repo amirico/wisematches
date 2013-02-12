@@ -1,9 +1,11 @@
 package wisematches.server.web.i18n;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import wisematches.core.Language;
+import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.core.Visitor;
+import wisematches.core.security.PersonalityContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,25 +25,17 @@ public class PersonalityLocaleResolver extends SessionLocaleResolver {
 	 * @param request the request
 	 * @return the locale
 	 */
+	@Override
 	public Locale resolveLocale(HttpServletRequest request) {
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) {
-			return super.resolveLocale(request);
+		final Personality personality = PersonalityContext.getPersonality();
+		if (personality instanceof Player) {
+			final Player player = (Player) personality;
+			return player.getLanguage().getLocale();
+		} else if (personality instanceof Visitor) {
+			final Visitor visitor = (Visitor) personality;
+			return visitor.getLanguage().getLocale();
 		}
 		return super.resolveLocale(request);
-/*
-TODO: commented
-		if (authentication.getAuthorities().contains(WMAuthorities.GUEST)) {
-		}
-
-		final Object details = authentication.getPrincipal();
-		if (details instanceof WMPlayerDetails) {
-			throw new UnsupportedOperationException("Commented");
-//			return ((WMPlayerDetails) details).getPlayer().getLanguage().locale();
-		} else {
-			return super.resolveLocale(request);
-		}
-*/
 	}
 
 	@Override
