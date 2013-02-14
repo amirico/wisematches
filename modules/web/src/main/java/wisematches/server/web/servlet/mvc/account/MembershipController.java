@@ -6,14 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.playground.restriction.RestrictionManager;
-import wisematches.server.web.servlet.mvc.ContentController;
+import wisematches.server.web.servlet.mvc.WisematchesController;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/account/membership")
-public class MembershipController extends ContentController {
+public class MembershipController extends WisematchesController {
 	private RestrictionManager restrictionManager;
 
 	public MembershipController() {

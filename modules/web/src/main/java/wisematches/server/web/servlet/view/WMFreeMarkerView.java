@@ -24,6 +24,7 @@ public class WMFreeMarkerView extends FreeMarkerView {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void processTemplate(Template template, SimpleHash model, HttpServletResponse response) throws IOException, TemplateException {
 		model.put("locale", template.getLocale());
 		model.put("language", Language.byLocale(template.getLocale()));
@@ -40,7 +41,7 @@ public class WMFreeMarkerView extends FreeMarkerView {
 				(model.get("plain") != null && ((TemplateBooleanModel) model.get("plain")).getAsBoolean())) {
 			super.processTemplate(template, model, response);
 		} else {
-			model.put("originalTemplateName", getUrl());
+			model.put("templateName", getUrl());
 			super.processTemplate(getTemplate("/content/wisematches.ftl", template.getLocale()), model, response);
 		}
 	}

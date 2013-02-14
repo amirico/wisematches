@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.settings.form.BoardSettingsForm;
 

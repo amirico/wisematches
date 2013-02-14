@@ -9,7 +9,7 @@
        style="background: none; border-width: 0;border-bottom-width: 1px;">
     <tr>
         <td width="178px" height="72px">
-            <img id="header-image" src="<@s "/images/logo.png"/>" width="178" height="72" alt="logo"/>
+            <img id="header-image" src="<@wm.ui.static "/images/logo.png"/>" width="178" height="72" alt="logo"/>
         </td>
         <td width="100%" height="72px">
             <table style="height: 100%; width: 100%;">
@@ -53,7 +53,7 @@
                             <#--messageManager.getNewMessagesCount(principal)/>-->
                                 <#assign newMessages=newMessagesCount?? && newMessagesCount !=0/>
                                 <a href="/playground/messages/view">
-                                    <#if newMessages><img src="<@s "images/dashboard/newMessageIcon.png"/>"
+                                    <#if newMessages><img src="<@wm.ui.static "images/dashboard/newMessageIcon.png"/>"
                                                           style="width: 16px; height: 16px; padding-right: 5px; padding-bottom: 2px; vertical-align: bottom;"
                                                           alt=""/></#if><@message code="game.menu.messages.label"/><#if newMessages>
                                     <strong>(${newMessagesCount})</strong>

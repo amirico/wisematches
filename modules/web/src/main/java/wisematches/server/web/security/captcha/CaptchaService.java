@@ -1,7 +1,7 @@
 package wisematches.server.web.security.captcha;
 
 import org.springframework.validation.Errors;
-import wisematches.server.web.i18n.GameMessageSource;
+import wisematches.playground.GameMessageSource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

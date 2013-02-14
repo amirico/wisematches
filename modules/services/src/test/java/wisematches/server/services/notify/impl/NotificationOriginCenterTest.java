@@ -1,10 +1,62 @@
 package wisematches.server.services.notify.impl;
 
+import org.easymock.Capture;
+import org.easymock.CaptureType;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.core.Language;
+import wisematches.core.Personality;
+import wisematches.core.Player;
+import wisematches.core.PlayerType;
+import wisematches.core.expiration.ExpirationListener;
+import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultVisitor;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
+import wisematches.core.task.executor.TransactionAwareExecutor;
+import wisematches.playground.*;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.propose.*;
+import wisematches.playground.propose.impl.DefaultPrivateProposal;
+import wisematches.playground.scribble.Direction;
+import wisematches.playground.scribble.Position;
+import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.playground.scribble.bank.TilesBank;
+import wisematches.playground.scribble.bank.impl.TilesBankInfoEditor;
+import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
+import wisematches.playground.scribble.expiration.ScribbleExpirationType;
+import wisematches.playground.tourney.TourneyEntity;
+import wisematches.playground.tourney.regular.*;
+import wisematches.server.services.award.*;
+import wisematches.server.services.dictionary.ChangeSuggestion;
+import wisematches.server.services.dictionary.DictionarySuggestionListener;
+import wisematches.server.services.dictionary.DictionarySuggestionManager;
+import wisematches.server.services.dictionary.SuggestionType;
+import wisematches.server.services.message.MessageListener;
+import wisematches.server.services.message.MessageManager;
+import wisematches.server.services.message.impl.HibernateMessage;
+import wisematches.server.services.notify.Notification;
+import wisematches.server.services.notify.NotificationScope;
+import wisematches.server.services.notify.NotificationService;
+import wisematches.server.services.props.impl.MemoryPropertiesManager;
+import wisematches.server.services.relations.PlayerEntityBean;
+import wisematches.server.services.relations.PlayerSearchArea;
+import wisematches.server.services.relations.ScribblePlayerSearchManager;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -14,34 +66,27 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = {
 		"classpath:/config/database-junit-config.xml",
 		"classpath:/config/personality-config.xml",
-		"classpath:/config/playground-config.xml",
 		"classpath:/config/scribble-config.xml",
-		"classpath:/config/services-config.xml",
-		"classpath:/config/notifications-config.xml",
-		"classpath:/config/services-junit-config.xml"
+		"classpath:/config/playground-junit-config.xml"
 })
 public class NotificationOriginCenterTest {
-	@Test
-	public void asd() {
-		throw new UnsupportedOperationException("Commented");
-	}
-/*	@Autowired
-	private Configuration notificationFreemarkerConfig;
+	@Autowired
+	private NotificationService notificationService;
 
 	@Autowired
-	private HibernateNotificationService notificationService;
+	private NotificationOriginCenter publisherCenter;
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 
 	@Autowired
-	private NotificationOriginCenter publisherCenter;
+	private ScribblePlayerSearchManager playerSearchManager;
 
 	private ScribbleBoard board1;
 	private ScribbleBoard board2;
 
-	private final Account p1 = createMockPlayer(1001, Language.RU);
-	private final Account p2 = createMockPlayer(1002, Language.EN);
+	private Player p1;
+	private Player p2;
 
 	private final Capture<Notification> publishedNotifications = new Capture<>(CaptureType.ALL);
 
@@ -50,28 +95,9 @@ public class NotificationOriginCenterTest {
 
 	@Before
 	public void setUp() throws Exception {
-		final PersonalityManager playerManager = createMock(PersonalityManager.class);
-		expect(playerManager.getPlayer(1001L)).andReturn(new MemberPlayer(p1)).anyTimes();
-		expect(playerManager.getPlayer(1002L)).andReturn(new MemberPlayer(p2)).anyTimes();
-		expect(playerManager.getPlayer(p1)).andReturn(new MemberPlayer(p1)).anyTimes();
-		expect(playerManager.getPlayer(p2)).andReturn(new MemberPlayer(p2)).anyTimes();
-		replay(playerManager);
-
-		final RatingManager ratingManager = createMock(RatingManager.class);
-		expect(ratingManager.getRating(Personality.person(1001))).andReturn((short) 1234).anyTimes();
-		expect(ratingManager.getRating(Personality.person(1002))).andReturn((short) 2122).anyTimes();
-		replay(ratingManager);
-
-		publisherCenter.setPersonalityManager(playerManager);
-
-		notificationFreemarkerConfig.setSharedVariable("personalityManager", playerManager);
-		notificationFreemarkerConfig.setSharedVariable("ratingManager", ratingManager);
-
 		final TransactionAwareExecutor taskExecutor = new TransactionAwareExecutor();
 		taskExecutor.setTaskExecutor(new SyncTaskExecutor());
 		taskExecutor.setTransactionManager(transactionManager);
-
-		publisherCenter.setTaskExecutor(new SyncTaskExecutor());
 
 		final NotificationPublisher notificationPublisher = createMock(NotificationPublisher.class);
 		expect(notificationPublisher.getNotificationScope()).andReturn(NotificationScope.GLOBAL).anyTimes();
@@ -79,122 +105,138 @@ public class NotificationOriginCenterTest {
 		expectLastCall().anyTimes();
 		replay(notificationPublisher);
 
-		notificationService.setTaskExecutor(taskExecutor);
-		notificationService.setPublishers(Arrays.asList(notificationPublisher));
+		if (notificationService instanceof PublishNotificationService) {
+			final PublishNotificationService service = (PublishNotificationService) notificationService;
+			service.setTaskExecutor(taskExecutor);
+			service.setNotificationPublishers(Arrays.asList(notificationPublisher));
+		} else {
+			fail("NotificationService is not PublishNotificationService");
+		}
+
+		publisherCenter.setTaskExecutor(new SyncTaskExecutor());
 
 		final Dictionary vocabulary = createNiceMock(Dictionary.class);
 		expect(vocabulary.contains(isA(String.class))).andReturn(true).anyTimes();
 		replay(vocabulary);
 
+		final List<PlayerEntityBean> peb = playerSearchManager.searchEntities(new DefaultVisitor(Language.EN), PlayerSearchArea.PLAYERS, null, Range.limit(2));
+
+		p1 = new DefaultPlayer(peb.get(0).getPid(), "mock1", "mock1@localhost", TimeZone.getDefault(), PlayerType.BASIC, Language.RU);
+		p2 = new DefaultPlayer(peb.get(1).getPid(), "mock2", "mock2@localhost", TimeZone.getDefault(), PlayerType.BASIC, Language.EN);
+
 		board1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
 
 		do {
 			board2 = new ScribbleBoard(new ScribbleSettings("mock2", Language.EN, 5), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
-		} while (board1.getPlayerTurn().getPlayerId() == board2.getPlayerTurn().getPlayerId());
+		} while (board1.getPlayerTurn().getId().equals(board2.getPlayerTurn().getId()));
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		for (Notification notification : publishedNotifications.getValues()) {
+			System.out.println(notification);
+		}
 	}
 
 	@Test
 	public void testGameStarted() throws GameMoveException {
-		final Capture<GamePlayListener> listenerCapture = new Capture<>();
+		final Capture<BoardListener> listenerCapture = new Capture<>();
 
-		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
-		gamePlayManager.addGamePlayListener(capture(listenerCapture));
-		gamePlayManager.removeGamePlayListener(capture(listenerCapture));
+		final BoardManager gamePlayManager = createStrictMock(BoardManager.class);
+		gamePlayManager.addBoardListener(capture(listenerCapture));
+		gamePlayManager.removeBoardListener(capture(listenerCapture));
 		replay(gamePlayManager);
 
-		publisherCenter.setGamePlayManager(gamePlayManager);
+		publisherCenter.setBoardManager(gamePlayManager);
 
-		final GamePlayListener gamePlayListener = listenerCapture.getValue();
+		final BoardListener gamePlayListener = listenerCapture.getValue();
 		gamePlayListener.gameStarted(board1);
 		gamePlayListener.gameStarted(board2);
 		assertEquals(4, publishedNotifications.getValues().size());
 
-		publisherCenter.setGamePlayManager(null);
+		publisherCenter.setBoardManager(null);
 
 		verify(gamePlayManager);
 	}
 
 	@Test
 	public void testGameMoveDone() throws GameMoveException {
-		final Capture<GamePlayListener> listenerCapture = new Capture<>();
+		final Capture<BoardListener> listenerCapture = new Capture<>();
 
-		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
-		gamePlayManager.addGamePlayListener(capture(listenerCapture));
-		gamePlayManager.removeGamePlayListener(capture(listenerCapture));
+		final BoardManager gamePlayManager = createStrictMock(BoardManager.class);
+		gamePlayManager.addBoardListener(capture(listenerCapture));
+		gamePlayManager.removeBoardListener(capture(listenerCapture));
 		replay(gamePlayManager);
 
-		publisherCenter.setGamePlayManager(gamePlayManager);
+		publisherCenter.setBoardManager(gamePlayManager);
 
-		final GamePlayListener gamePlayListener = listenerCapture.getValue();
+		final BoardListener gamePlayListener = listenerCapture.getValue();
 
 		// Pass turn
-		board1.makeMove(new PassTurn(board1.getPlayerTurn().getPlayerId()));
-		board2.makeMove(new PassTurn(board2.getPlayerTurn().getPlayerId()));
+		board1.passTurn(board1.getPlayerTurn());
+		board2.passTurn(board2.getPlayerTurn());
 		gamePlayListener.gameMoveDone(board1, null, null);
 		gamePlayListener.gameMoveDone(board2, null, null);
 		assertEquals(2, publishedNotifications.getValues().size());
-		publishedNotifications.reset();
 
-		final wisematches.playground.scribble.Word word = new wisematches.playground.scribble.Word(new Position(7, 7), Direction.HORIZONTAL, board1.getPlayerHand(p1.getId()).getTiles());
-		board1.makeMove(new MakeTurn(board1.getPlayerTurn().getPlayerId(), word));
-		board2.makeMove(new MakeTurn(board2.getPlayerTurn().getPlayerId(), word));
+		final wisematches.playground.scribble.Word word = new wisematches.playground.scribble.Word(new Position(7, 7), Direction.HORIZONTAL, board1.getPlayerHand(p1).getTiles());
+		board1.makeTurn(board1.getPlayerTurn(), word);
+		board2.makeTurn(board2.getPlayerTurn(), word);
 		gamePlayListener.gameMoveDone(board1, null, null);
 		gamePlayListener.gameMoveDone(board2, null, null);
-		assertEquals(2, publishedNotifications.getValues().size());
-		publishedNotifications.reset();
+		assertEquals(4, publishedNotifications.getValues().size());
 
 		int[] tiles1 = new int[3];
 		for (int i = 0; i < tiles1.length; i++) {
-			tiles1[i] = board1.getPlayerTurn().getTiles()[i].getNumber();
+			tiles1[i] = board1.getPlayerHand(board1.getPlayerTurn()).getTiles()[i].getNumber();
 		}
 		int[] tiles2 = new int[3];
 		for (int i = 0; i < tiles2.length; i++) {
-			tiles2[i] = board2.getPlayerTurn().getTiles()[i].getNumber();
+			tiles2[i] = board2.getPlayerHand(board2.getPlayerTurn()).getTiles()[i].getNumber();
 		}
-		board1.makeMove(new ExchangeMove(board1.getPlayerTurn().getPlayerId(), tiles1));
-		board2.makeMove(new ExchangeMove(board2.getPlayerTurn().getPlayerId(), tiles2));
+		board1.exchangeTiles(board1.getPlayerTurn(), tiles1);
+		board2.exchangeTiles(board2.getPlayerTurn(), tiles2);
 		gamePlayListener.gameMoveDone(board1, null, null);
 		gamePlayListener.gameMoveDone(board2, null, null);
-		assertEquals(2, publishedNotifications.getValues().size());
-		publishedNotifications.reset();
+		assertEquals(6, publishedNotifications.getValues().size());
 
-		publisherCenter.setGamePlayManager(null);
+		publisherCenter.setBoardManager(null);
 
 		verify(gamePlayManager);
 	}
 
 	@Test
-	public void testGameFinished() throws GameMoveException {
-		final Capture<GamePlayListener> listenerCapture = new Capture<>();
+	public void testGameFinished() throws BoardUpdatingException {
+		final Capture<BoardListener> listenerCapture = new Capture<>();
 
-		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
-		gamePlayManager.addGamePlayListener(capture(listenerCapture));
-		gamePlayManager.removeGamePlayListener(capture(listenerCapture));
+		final BoardManager gamePlayManager = createStrictMock(BoardManager.class);
+		gamePlayManager.addBoardListener(capture(listenerCapture));
+		gamePlayManager.removeBoardListener(capture(listenerCapture));
 		replay(gamePlayManager);
 
-		publisherCenter.setGamePlayManager(gamePlayManager);
-		board1.makeMove(new PassTurn(board1.getPlayerTurn().getPlayerId()));
-		board2.makeMove(new PassTurn(board2.getPlayerTurn().getPlayerId()));
-		final wisematches.playground.scribble.Word word = new wisematches.playground.scribble.Word(new Position(7, 7), Direction.HORIZONTAL, board1.getPlayerHand(p1.getId()).getTiles());
-		board1.makeMove(new MakeTurn(board1.getPlayerTurn().getPlayerId(), word));
-		board2.makeMove(new MakeTurn(board2.getPlayerTurn().getPlayerId(), word));
-		board1.makeMove(new PassTurn(board1.getPlayerTurn().getPlayerId()));
-		board2.makeMove(new PassTurn(board2.getPlayerTurn().getPlayerId()));
+		publisherCenter.setBoardManager(gamePlayManager);
+		board1.passTurn(board1.getPlayerTurn());
+		board2.passTurn(board2.getPlayerTurn());
+		final wisematches.playground.scribble.Word word = new wisematches.playground.scribble.Word(new Position(7, 7), Direction.HORIZONTAL, board1.getPlayerHand(p1).getTiles());
+		board1.makeTurn(board1.getPlayerTurn(), word);
+		board2.makeTurn(board2.getPlayerTurn(), word);
+		board1.passTurn(board1.getPlayerTurn());
+		board2.passTurn(board2.getPlayerTurn());
 		board1.resign(board1.getPlayerTurn());
 		board2.resign(board2.getPlayerTurn());
 
-		final GamePlayListener gamePlayListener = listenerCapture.getValue();
-		gamePlayListener.gameFinished(board1, GameResolution.FINISHED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board1, GameResolution.STALEMATE, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board1, GameResolution.RESIGNED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board1, GameResolution.INTERRUPTED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board2, GameResolution.FINISHED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board2, GameResolution.STALEMATE, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board2, GameResolution.RESIGNED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
-		gamePlayListener.gameFinished(board2, GameResolution.INTERRUPTED, Collections.<GamePlayerHand>singleton(board1.getPlayerHand(p1.getId())));
+		final BoardListener gamePlayListener = listenerCapture.getValue();
+		gamePlayListener.gameFinished(board1, GameResolution.FINISHED, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board1, GameResolution.STALEMATE, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board1, GameResolution.RESIGNED, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board1, GameResolution.INTERRUPTED, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board2, GameResolution.FINISHED, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board2, GameResolution.STALEMATE, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board2, GameResolution.RESIGNED, Collections.<Personality>singleton(p1));
+		gamePlayListener.gameFinished(board2, GameResolution.INTERRUPTED, Collections.<Personality>singleton(p1));
 		assertEquals(16, publishedNotifications.getValues().size());
 
-		publisherCenter.setGamePlayManager(null);
+		publisherCenter.setBoardManager(null);
 
 		verify(gamePlayManager);
 	}
@@ -203,18 +245,18 @@ public class NotificationOriginCenterTest {
 	public void testScribbleExpiring() throws BoardLoadingException {
 		final Capture<ExpirationListener<Long, ScribbleExpirationType>> listenerCapture = new Capture<>();
 
-		final GamePlayManager gamePlayManager = createStrictMock(GamePlayManager.class);
-		gamePlayManager.addGamePlayListener(isA(GamePlayListener.class));
+		final BoardManager gamePlayManager = createStrictMock(BoardManager.class);
+		gamePlayManager.addBoardListener(isA(BoardListener.class));
 		expect(gamePlayManager.openBoard(1L)).andReturn(board1).times(3);
 		expect(gamePlayManager.openBoard(2L)).andReturn(board2).times(3);
-		gamePlayManager.removeGamePlayListener(isA(GamePlayListener.class));
+		gamePlayManager.removeBoardListener(isA(BoardListener.class));
 		replay(gamePlayManager);
 
 		final ScribbleExpirationManager expirationManager = createStrictMock(ScribbleExpirationManager.class);
 		expirationManager.addExpirationListener(capture(listenerCapture));
 		replay(expirationManager);
 
-		publisherCenter.setGamePlayManager(gamePlayManager);
+		publisherCenter.setBoardManager(gamePlayManager);
 		publisherCenter.setScribbleExpirationManager(expirationManager);
 
 		listenerCapture.getValue().expirationTriggered(1L, ScribbleExpirationType.ONE_DAY);
@@ -226,7 +268,7 @@ public class NotificationOriginCenterTest {
 
 		assertEquals(6, publishedNotifications.getValues().size());
 
-		publisherCenter.setGamePlayManager(null);
+		publisherCenter.setBoardManager(null);
 
 		verify(gamePlayManager);
 	}
@@ -242,10 +284,10 @@ public class NotificationOriginCenterTest {
 
 		publisherCenter.setProposalManager(proposalManager);
 
-		final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
-		final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
-		final DefaultGameProposal<GameSettings> gp3 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
-		final DefaultGameProposal<GameSettings> gp4 = new DefaultGameProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
+		final GameProposal<GameSettings> gp1 = new DefaultPrivateProposal<GameSettings>(1, null, new ScribbleSettings("Scribble game", Language.RU), p1, Arrays.asList(p2));
+		final GameProposal<GameSettings> gp2 = new DefaultPrivateProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU), p1, Arrays.asList(p2));
+		final GameProposal<GameSettings> gp3 = new DefaultPrivateProposal<GameSettings>(1, null, new ScribbleSettings("Scribble game", Language.RU), p2, Arrays.asList(p1));
+		final GameProposal<GameSettings> gp4 = new DefaultPrivateProposal<GameSettings>(1, "Hey, let's play!", new ScribbleSettings("Scribble game", Language.RU), p2, Arrays.asList(p1));
 
 		listenerCapture.getValue().gameProposalInitiated(gp1);
 		listenerCapture.getValue().gameProposalInitiated(gp2);
@@ -269,23 +311,23 @@ public class NotificationOriginCenterTest {
 
 		publisherCenter.setProposalManager(proposalManager);
 
-		final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
-		final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
+		final GameProposal<GameSettings> gp1 = new DefaultPrivateProposal<GameSettings>(1, null, new ScribbleSettings("Scribble game", Language.RU), p1, Arrays.asList(p2));
+		final GameProposal<GameSettings> gp2 = new DefaultPrivateProposal<GameSettings>(1, null, new ScribbleSettings("Scribble game", Language.RU), p2, Arrays.asList(p1));
 
 		listenerCapture.getValue().gameProposalUpdated(gp1, p1, ProposalDirective.ACCEPTED);  // no messages
 		listenerCapture.getValue().gameProposalUpdated(gp2, p2, ProposalDirective.ACCEPTED);  // no messages
 
-		listenerCapture.getValue().gameProposalFinalized(gp1, ProposalResolution.READY, p2); // no messages
-		listenerCapture.getValue().gameProposalFinalized(gp2, ProposalResolution.READY, p1); // no messages
+		listenerCapture.getValue().gameProposalFinalized(gp1, p2, ProposalResolution.READY); // no messages
+		listenerCapture.getValue().gameProposalFinalized(gp2, p1, ProposalResolution.READY); // no messages
 
-		listenerCapture.getValue().gameProposalFinalized(gp1, ProposalResolution.REJECTED, p2);
-		listenerCapture.getValue().gameProposalFinalized(gp2, ProposalResolution.REJECTED, p1);
+		listenerCapture.getValue().gameProposalFinalized(gp1, p2, ProposalResolution.REJECTED);
+		listenerCapture.getValue().gameProposalFinalized(gp2, p1, ProposalResolution.REJECTED);
 
-		listenerCapture.getValue().gameProposalFinalized(gp1, ProposalResolution.REPUDIATED, p2);
-		listenerCapture.getValue().gameProposalFinalized(gp2, ProposalResolution.REPUDIATED, p1);
+		listenerCapture.getValue().gameProposalFinalized(gp1, p2, ProposalResolution.REPUDIATED);
+		listenerCapture.getValue().gameProposalFinalized(gp2, p1, ProposalResolution.REPUDIATED);
 
-		listenerCapture.getValue().gameProposalFinalized(gp1, ProposalResolution.TERMINATED, p2);
-		listenerCapture.getValue().gameProposalFinalized(gp2, ProposalResolution.TERMINATED, p1);
+		listenerCapture.getValue().gameProposalFinalized(gp1, p2, ProposalResolution.TERMINATED);
+		listenerCapture.getValue().gameProposalFinalized(gp2, p1, ProposalResolution.TERMINATED);
 
 		assertEquals(6, publishedNotifications.getValues().size());
 
@@ -299,8 +341,8 @@ public class NotificationOriginCenterTest {
 	public void testProposalExpiration() {
 		final Capture<ExpirationListener<Long, ProposalExpirationType>> listenerCapture = new Capture<>();
 
-		final DefaultGameProposal<GameSettings> gp1 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p1, new Personality[]{p2});
-		final DefaultGameProposal<GameSettings> gp2 = new DefaultGameProposal<GameSettings>(1, new ScribbleSettings("Scribble game", Language.RU), p2, new Personality[]{p1});
+		final GameProposal<GameSettings> gp1 = new DefaultPrivateProposal<GameSettings>(1, null, new ScribbleSettings("Scribble game", Language.RU), p1, Arrays.asList(p2));
+		final GameProposal<GameSettings> gp2 = new DefaultPrivateProposal<GameSettings>(1, null, new ScribbleSettings("Scribble game", Language.RU), p2, Arrays.asList(p1));
 
 		final GameProposalManager proposalManager = createStrictMock(GameProposalManager.class);
 		proposalManager.addGameProposalListener(isA(GameProposalListener.class));
@@ -356,7 +398,7 @@ public class NotificationOriginCenterTest {
 		final RegularTourneyManager tourneyManager = createMock(RegularTourneyManager.class);
 		final List<RegularTourneyEntity> value = Collections.emptyList();
 		tourneyManager.addRegularTourneyListener(isA(RegularTourneyListener.class));
-		expect(tourneyManager.searchTourneyEntities(isNull(Personality.class), isA(TourneyEntity.Context.class), isNull(SearchFilter.class), isNull(Orders.class), isNull(Range.class))).andReturn(value);
+		expect(tourneyManager.searchTourneyEntities(isNull(Personality.class), isA(TourneyEntity.Context.class), isNull(Orders.class), isNull(Range.class))).andReturn(value);
 		replay(tourneyManager);
 		publisherCenter.setTourneyManager(tourneyManager);
 
@@ -383,11 +425,11 @@ public class NotificationOriginCenterTest {
 
 		@SuppressWarnings("unchecked")
 		final RegistrationSearchManager searchManager = createMock(RegistrationSearchManager.class);
-		expect(searchManager.searchUnregisteredPlayers(t2, Range.limit(0, 1000))).andReturn(new long[]{1001L, 1002L});
+		expect(searchManager.searchUnregisteredPlayers(t2, Range.limit(0, 1000))).andReturn(new long[]{p1.getId(), p2.getId()});
 		replay(searchManager);
 
 		reset(tourneyManager);
-		expect(tourneyManager.searchTourneyEntities(isNull(Personality.class), isA(RegularTourneyEntity.Context.class), isNull(SearchFilter.class), isNull(Orders.class), isNull(Range.class))).andReturn(Arrays.<RegularTourneyEntity>asList(t1, t2, t3));
+		expect(tourneyManager.searchTourneyEntities(isNull(Personality.class), isA(RegularTourneyEntity.Context.class), isNull(Orders.class), isNull(Range.class))).andReturn(Arrays.<RegularTourneyEntity>asList(t1, t2, t3));
 		expect(tourneyManager.getRegistrationSearchManager()).andReturn(searchManager);
 		tourneyManager.removeRegularTourneyListener(isA(RegularTourneyListener.class));
 		replay(tourneyManager);
@@ -402,7 +444,7 @@ public class NotificationOriginCenterTest {
 		verify(searchManager);
 	}
 
-*//*
+/*
 	@Test
 	public void testTourneyFinished() throws InterruptedException {
 		final Capture<RegularTourneyListener> tourneyListener = new Capture<>();
@@ -435,9 +477,10 @@ public class NotificationOriginCenterTest {
 
 		verify(tourneyManager);
 	}
-*//*
+*/
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testAwardGranted() throws Exception {
 		final Capture<AwardsListener> awardsListener = new Capture<>();
 
@@ -480,7 +523,7 @@ public class NotificationOriginCenterTest {
 		publisherCenter.setDictionarySuggestionManager(suggestionManager);
 
 		final ChangeSuggestion suggestion = createMock(ChangeSuggestion.class);
-		expect(suggestion.getRequester()).andReturn(1001L).times(2);
+		expect(suggestion.getRequester()).andReturn(p1.getId()).times(2);
 		expect(suggestion.getWord()).andReturn("MockSuggest").times(2);
 		expect(suggestion.getSuggestionType()).andReturn(SuggestionType.ADD);
 		replay(suggestion);
@@ -495,16 +538,4 @@ public class NotificationOriginCenterTest {
 
 		verify(suggestionManager, suggestion);
 	}
-
-	private Account createMockPlayer(long i, Language en) {
-		IMockBuilder<Account> mockBuilder = createMockBuilder(Account.class);
-		mockBuilder.withConstructor(i);
-
-		final Account mock = mockBuilder.createMock("mock" + i);
-		expect(mock.getLanguage()).andReturn(en).anyTimes();
-		expect(mock.getNickname()).andReturn("mock" + i).anyTimes();
-		expect(mock.getEmail()).andReturn("support@localhost").anyTimes();
-		replay(mock);
-		return mock;
-	}*/
 }

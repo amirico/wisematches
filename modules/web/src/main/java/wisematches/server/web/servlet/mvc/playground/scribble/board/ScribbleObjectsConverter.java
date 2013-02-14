@@ -6,8 +6,7 @@ import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.comment.GameComment;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -57,7 +56,7 @@ public class ScribbleObjectsConverter {
 		} catch (UnsuitablePlayerException ex) {
 			return gameMessageSource.getMessage("game.error.unsuitable", locale);
 		} catch (UnknownWordException ex) {
-			return gameMessageSource.getMessage("game.error.word", locale, ex.getWord());
+			return gameMessageSource.getMessage("game.error.word", ex.getWord(), locale);
 		} catch (IncorrectTilesException ex) {
 			switch (ex.getType()) {
 				case CELL_ALREADY_BUSY:

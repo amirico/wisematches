@@ -16,7 +16,7 @@ import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleTab;
 
@@ -246,7 +246,7 @@ public class CreateGameController extends AbstractGameController {
 	}
 
 	private void initChallengeForm(CreateScribbleForm form, String parameter, Locale locale) {
-		form.setTitle(messageSource.getMessage("game.challenge.player.label", locale, getPrincipal().getNickname()));
+		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPrincipal().getNickname(), locale));
 		form.setChallengeMessage("");
 		form.setCreateTab(CreateScribbleTab.CHALLENGE);
 		final List<Long> ids = new ArrayList<>();
@@ -276,8 +276,8 @@ public class CreateGameController extends AbstractGameController {
 		try {
 			final ScribbleBoard board = playManager.openBoard(Long.valueOf(parameter));
 			if (board != null) {
-				form.setTitle(messageSource.getMessage("game.challenge.replay.label", locale, board.getBoardId()));
-				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", locale, messageSource.getPlayerNick(getPrincipal(), locale)));
+				form.setTitle(messageSource.getMessage("game.challenge.replay.label", board.getBoardId(), locale));
+				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", messageSource.getPersonalityNick(getPrincipal(), locale), locale));
 				form.setDaysPerMove(board.getSettings().getDaysPerMove());
 				form.setBoardLanguage(board.getSettings().getLanguage().getCode());
 

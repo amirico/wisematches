@@ -22,4 +22,9 @@ public class Robot extends Personality {
 	public RobotType getRobotType() {
 		return robotType;
 	}
+
+	@Override
+	public final boolean isTraceable() {
+		return false;
+	}
 }

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
-import wisematches.server.web.servlet.mvc.ContentController;
+import wisematches.playground.GameMessageSource;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import java.util.Locale;
 
@@ -18,7 +18,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/info")
-public class InformationController extends ContentController {
+public class InformationController extends WisematchesController {
 	private GameMessageSource messageSource;
 
 	public InformationController() {
@@ -29,7 +29,7 @@ public class InformationController extends ContentController {
 	public String infoPages(@PathVariable String pageName,
 							@RequestParam(value = "plain", required = false) String plain,
 							Model model, Locale locale) throws InformationUnavailableException {
-		if (!processInfoPage(pageName, "features".equals(pageName), model, locale)) {
+		if (!staticContentGenerator.generatePage(pageName, "features".equals(pageName), model, locale)) {
 			throw new InformationUnavailableException(pageName, plain);
 		}
 

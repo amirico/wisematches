@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.core.Language;
 import wisematches.core.Player;
+import wisematches.server.services.ServerDescriptor;
 import wisematches.server.services.notify.Notification;
 import wisematches.server.services.notify.NotificationScope;
 import wisematches.server.services.notify.NotificationSender;
@@ -26,9 +27,9 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class MailNotificationPublisher implements NotificationPublisher {
-	private String serverHostName;
 	private JavaMailSender mailSender;
 	private MessageSource messageSource;
+	private ServerDescriptor serverDescriptor;
 
 	private final Map<SenderKey, InternetAddress> addressesCache = new HashMap<>();
 
@@ -90,7 +91,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 	private void validateAddressesCache() {
 		addressesCache.clear();
 
-		if (messageSource == null || serverHostName == null) {
+		if (messageSource == null || serverDescriptor == null) {
 			return;
 		}
 
@@ -98,7 +99,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 			for (Language language : Language.values()) {
 				try {
 					final String address = messageSource.getMessage("mail.address." + sender.getUserInfo(),
-							null, sender.getUserInfo() + "@" + serverHostName, language.getLocale());
+							null, sender.getMailAddress(serverDescriptor), language.getLocale());
 
 					final String personal = messageSource.getMessage("mail.personal." + sender.getUserInfo(),
 							null, sender.name(), language.getLocale());
@@ -120,8 +121,8 @@ public class MailNotificationPublisher implements NotificationPublisher {
 		validateAddressesCache();
 	}
 
-	public void setHostName(String serverHostName) {
-		this.serverHostName = serverHostName;
+	public void setServerDescriptor(ServerDescriptor serverDescriptor) {
+		this.serverDescriptor = serverDescriptor;
 		validateAddressesCache();
 	}
 

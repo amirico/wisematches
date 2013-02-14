@@ -31,6 +31,15 @@ public abstract class Personality implements Serializable {
 	}
 
 	/**
+	 * Indicates that this personality is traceable and have profile, statistics and so on.
+	 * <p/>
+	 * This method can be used is view forms for fast checks.
+	 *
+	 * @return {@code true} if personality is traceable or {@code false} if not.
+	 */
+	public abstract boolean isTraceable();
+
+	/**
 	 * Returns personality id.
 	 *
 	 * @return the id of the personality.

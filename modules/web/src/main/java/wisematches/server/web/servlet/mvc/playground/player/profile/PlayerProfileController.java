@@ -12,12 +12,12 @@ import wisematches.core.personality.player.profile.CountriesManager;
 import wisematches.core.personality.player.profile.PlayerProfileManager;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
+import wisematches.playground.GameMessageSource;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.server.services.award.AwardsManager;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm;
@@ -232,7 +232,7 @@ public class PlayerProfileController extends WisematchesController {
 */
 			return ServiceResponse.FAILURE;
 		} catch (Exception ex) {
-			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
+			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		}
 	}
 

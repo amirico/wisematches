@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.PersonalityManager;
+import wisematches.playground.GameMessageSource;
 import wisematches.server.services.state.PlayerStateManager;
-import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 
 import java.util.Locale;

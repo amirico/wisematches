@@ -3,7 +3,7 @@ package wisematches.server.web.security.captcha.captchas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.Errors;
-import wisematches.server.web.i18n.GameMessageSource;
+import wisematches.playground.GameMessageSource;
 import wisematches.server.web.security.captcha.CaptchaService;
 
 import javax.servlet.http.HttpServletRequest;

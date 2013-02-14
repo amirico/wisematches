@@ -21,7 +21,7 @@ import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.GameProposalForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.WaitingGamesForm;
 

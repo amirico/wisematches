@@ -2,8 +2,8 @@ package wisematches.server.web.servlet.mvc;
 
 import wisematches.core.Personality;
 import wisematches.core.PlayerType;
+import wisematches.playground.GameMessageSource;
 import wisematches.server.services.state.PlayerStateManager;
-import wisematches.server.web.i18n.GameMessageSource;
 
 import java.util.Locale;
 
@@ -38,7 +38,7 @@ public class ServicePlayer {
 		ServicePlayer p = new ServicePlayer();
 		p.id = player.getId();
 		p.online = stateManager.isPlayerOnline(player);
-		p.nickname = source.getPlayerNick(player, locale);
+		p.nickname = source.getPersonalityNick(player, locale);
 		p.membership = null;//player.g();
 		return p;
 */

@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
+import wisematches.playground.GameMessageSource;
 import wisematches.server.services.relations.PlayerEntityBean;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
 import wisematches.server.services.state.PlayerStateManager;
-import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.servlet.mvc.ServicePlayer;
 import wisematches.server.web.servlet.mvc.playground.AbstractSearchController;
 

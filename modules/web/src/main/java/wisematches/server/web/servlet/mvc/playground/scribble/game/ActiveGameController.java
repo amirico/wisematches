@@ -14,7 +14,7 @@ import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.PlayerInfoForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleInfoForm;

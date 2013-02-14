@@ -41,7 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class NotificationOriginCenter implements BreakingDayListener, InitializingBean {
 	private TaskExecutor taskExecutor;
-	private GamePlayManager gamePlayManager;
+	private BoardManager boardManager;
 	private AwardsManager awardsManager;
 	private MessageManager messageManager;
 	private PersonalityManager personalityManager;
@@ -116,13 +116,13 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	public void setGamePlayManager(GamePlayManager gamePlayManager) {
-		if (this.gamePlayManager != null) {
-			this.gamePlayManager.removeBoardListener(notificationListener);
+	public void setBoardManager(BoardManager boardManager) {
+		if (this.boardManager != null) {
+			this.boardManager.removeBoardListener(notificationListener);
 		}
-		this.gamePlayManager = gamePlayManager;
-		if (this.gamePlayManager != null) {
-			this.gamePlayManager.addBoardListener(notificationListener);
+		this.boardManager = boardManager;
+		if (this.boardManager != null) {
+			this.boardManager.addBoardListener(notificationListener);
 		}
 	}
 
@@ -280,7 +280,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 		@Override
 		public void changeRequestApproved(ChangeSuggestion request) {
-			processNotification(request.getRequester(), "playground.dictionary.approved", request);
+			processNotification(request.getRequester(), "playground.dictionary.accepted", request);
 		}
 
 		@Override
@@ -296,7 +296,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		@Override
 		public void expirationTriggered(Long boardId, ScribbleExpirationType type) {
 			try {
-				final GameBoard board = gamePlayManager.openBoard(boardId);
+				final GameBoard board = boardManager.openBoard(boardId);
 				if (board != null) {
 					final Personality player = board.getPlayerTurn();
 					if (player != null) {
@@ -340,6 +340,10 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 		@Override
 		public void gameProposalInitiated(GameProposal<? extends GameSettings> proposal) {
+			if (!(proposal instanceof PrivateProposal<?>)) {
+				return;
+			}
+
 			List<Player> players = proposal.getPlayers();
 			for (Personality player : players) {
 				if (player == null || proposal.getInitiator().equals(player)) {
@@ -355,7 +359,11 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 		@Override
 		public void gameProposalFinalized(GameProposal<? extends GameSettings> proposal, Player player, ProposalResolution resolution) {
-			Map<String, Object> c = new HashMap<>();
+			if (!(proposal instanceof PrivateProposal<?>)) {
+				return;
+			}
+
+			final Map<String, Object> c = new HashMap<>();
 			c.put("proposal", proposal);
 			c.put("player", player);
 			c.put("resolution", resolution);
@@ -409,7 +417,10 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		public void messageSent(Message message, boolean quite) {
 			if (!quite) {
 				final Personality person = personalityManager.getPerson(message.getRecipient());
-				processNotification(person, "playground.message.received", Collections.singletonMap("message", message));
+				final Map<String, Object> params = new HashMap<>();
+				params.put("sender", personalityManager.getPerson(message.getSender()));
+				params.put("message", message);
+				processNotification(person, "playground.message.received", params);
 			}
 		}
 

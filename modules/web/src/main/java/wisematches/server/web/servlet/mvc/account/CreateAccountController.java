@@ -25,7 +25,7 @@ import wisematches.server.services.notify.NotificationException;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.account.form.AccountRegistrationForm;
 
 import javax.servlet.http.HttpServletRequest;

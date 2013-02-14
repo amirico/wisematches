@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.GameMessageSource;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleCommentForm;
 
@@ -87,7 +87,7 @@ public class ScribbleCommentController extends WisematchesController {
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.empty", locale));
 		}
 		if (form.getText().length() > 250) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.length", locale, 250));
+			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.length", 250, locale));
 		}
 
 		final ScribbleBoard board;

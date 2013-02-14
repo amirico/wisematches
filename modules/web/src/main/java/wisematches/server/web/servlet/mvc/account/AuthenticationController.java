@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wisematches.server.web.servlet.mvc.ContentController;
+import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.AccountLoginForm;
 
 import javax.servlet.http.HttpSession;
@@ -23,7 +23,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/account")
-public class AuthenticationController extends ContentController {
+public class AuthenticationController extends WisematchesController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 
 	public AuthenticationController() {
@@ -147,9 +147,9 @@ public class AuthenticationController extends ContentController {
 	}
 
 	private String processLoginPage(String page, Model model, Locale locale) {
-		if (!processInfoPage(page, false, model, locale)) { // process page with a error
+		if (!staticContentGenerator.generatePage(page, false, model, locale)) { // process page with a error
 			// if appropriate content for error page not found - process with default value
-			processInfoPage("info/general", false, model, locale);
+			staticContentGenerator.generatePage("info/general", false, model, locale);
 		}
 		model.addAttribute("infoId", "general"); // this is CSS class name and FTL page name. Always login.
 		return "/content/personality/general";

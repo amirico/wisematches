@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.GameMessageSource;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -20,8 +21,7 @@ import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.memory.MemoryWordManager;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
 
@@ -96,7 +96,7 @@ public class ScribbleMemoryController extends WisematchesController {
 			}
 			return ServiceResponse.success(null, action.doAction(memoryWordManager, board, personality, word));
 		} catch (MemoryActionException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage(ex.getCode(), locale, ex.getArgs()));
+			return ServiceResponse.failure(gameMessageSource.getMessage(ex.getCode(), ex.getArgs(), locale));
 		} catch (BoardLoadingException ex) {
 			log.error("Memory word can't be loaded for board: " + boardId, ex);
 			return ServiceResponse.failure(gameMessageSource.getMessage("game.memory.err.board.loading", locale));

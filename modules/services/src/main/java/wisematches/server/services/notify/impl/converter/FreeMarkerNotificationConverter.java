@@ -40,8 +40,8 @@ public class FreeMarkerNotificationConverter implements NotificationConverter {
 		variables.put("code", code);
 		variables.put("template", getTemplate(code));
 		// people
-		variables.put("creator", sender);
-		variables.put("principal", target);
+		variables.put("sender", sender);
+		variables.put("personality", target);
 		// common
 		variables.put("locale", locale);
 		variables.put("context", context);
