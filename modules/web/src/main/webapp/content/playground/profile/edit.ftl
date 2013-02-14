@@ -4,7 +4,7 @@
 <#-- @ftlvariable name="profileForm" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 
-<script type="text/javascript" src="<@s "js/fileuploader.js"/>"></script>
+<script type="text/javascript" src="<@wm.ui.static "js/fileuploader.js"/>"></script>
 
 <div class="notification shadow ui-state-highlight" style="text-align: center; padding: 5px;">
 <@message code="profile.edit.description"/>
@@ -22,7 +22,7 @@
 
                 <div class="remove">
                     <img title="<@message code="profile.edit.photo.remove.label"/>"
-                         src="<@s "images/close.png"/>"
+                         src="<@wm.ui.static "images/close.png"/>"
                          onclick="wm.ui.profile.removeProfilePhoto()"/>
                 </div>
 

@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
+import wisematches.playground.GameMessageSource;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.services.abuse.AbuseReportManager;
@@ -18,8 +19,7 @@ import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
 import wisematches.server.services.message.MessageManager;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.message.form.MessageForm;
 
@@ -106,7 +106,7 @@ public class MessageController extends WisematchesController {
 		final int sent = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
 		final Restriction restriction = restrictionManager.validateRestriction(principal, "messages.count", sent);
 		if (restriction != null) {
-			return ServiceResponse.failure(messageSource.getMessage("messages.create.forbidden", locale, restriction.getThreshold()));
+			return ServiceResponse.failure(messageSource.getMessage("messages.create.forbidden", restriction.getThreshold(), locale));
 		}
 
 		Message message = null;

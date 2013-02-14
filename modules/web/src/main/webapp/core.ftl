@@ -4,4 +4,5 @@
 
 <#import "macro/wm.ftl" as wm />
 
-<#macro s p>${staticDomain}/${p}</#macro>
+<#assign security=JspTaglibs["http://www.springframework.org/security/tags"] />
+

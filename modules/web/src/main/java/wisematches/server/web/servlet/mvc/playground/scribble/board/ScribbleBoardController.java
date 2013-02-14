@@ -19,7 +19,7 @@ import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleTileForm;

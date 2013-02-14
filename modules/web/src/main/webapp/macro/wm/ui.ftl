@@ -1,17 +1,19 @@
+<#-- @ftlvariable name="staticResourcesDomain" type="java.lang.String" -->
+
 <#include "/macro/message.ftl"/>
 
 <#import "/spring.ftl" as spring />
 <#import "ui/table.ftl" as table />
 <#import "ui/panel.ftl" as panel />
 
+<#macro static p>${staticResourcesDomain}/${p}</#macro>
+
 <#macro playground id>
 <table width="100%">
     <tr>
         <td width="165px" valign="top" align="left" rowspan="2">
-            <#if !principal.playerType.member || principal.playerType.default>
-            <#assign advertisementBlock=advertisementManager.getAdvertisementBlock(id, locale)!""/>
-            <#include "/content/templates/advertisement.ftl">
-            </#if>
+            <#global advertisementBlockId=id/>
+            <#include "/content/advertisement.ftl">
         </td>
         <td valign="top">
             <div <#if id?has_content>id="${id}"</#if>>
@@ -23,7 +25,7 @@
 </#macro>
 
 <#macro bind path>
-    <@spring.bind path/>
+    <@wm.ui.staticpring.bind path/>
 
     <#assign status=spring.status>
     <#assign statusValue=spring.stringStatusValue>

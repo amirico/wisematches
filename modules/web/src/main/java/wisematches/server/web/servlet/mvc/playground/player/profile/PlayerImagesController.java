@@ -15,8 +15,8 @@ import wisematches.core.Personality;
 import wisematches.core.personality.player.profile.PlayerImageType;
 import wisematches.core.personality.player.profile.PlayerImagesManager;
 import wisematches.core.personality.player.profile.UnsupportedImageException;
-import wisematches.server.web.i18n.GameMessageSource;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.playground.GameMessageSource;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import javax.servlet.ServletInputStream;
@@ -105,7 +105,7 @@ public class PlayerImagesController extends WisematchesController {
 			final Personality principal = getPrincipal();
 			final ServletInputStream inputStream = request.getInputStream();
 			if (request.getContentLength() > 512000) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.size2", locale, 512000));
+				return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
 			}
 
 			final PlayerImageType type = PlayerImageType.PROFILE;
@@ -120,7 +120,7 @@ public class PlayerImagesController extends WisematchesController {
 			httpSession.setAttribute(PREVIEW_ATTRIBUTE_NAME, tempFile);
 			return ServiceResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
+			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		}
 	}
 
@@ -152,7 +152,7 @@ public class PlayerImagesController extends WisematchesController {
 
 			return ServiceResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", locale, ex.getMessage()));
+			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		} catch (UnsupportedImageException ex) {
 			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.unsupported", locale));
 		}

@@ -89,7 +89,7 @@
                                                 <#if success?has_content>
                                                     <#assign games=games+1/>
                                                 ${success.points/2}
-                                                    <span style="color: <@successColor success/>">
+                                                    <span style="color: <@wm.ui.staticuccessColor success/>">
                                                         <@message code="tourney.success.${success.name()?lower_case}.label"/>
                                                     </span>
                                                 <#else>

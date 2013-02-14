@@ -22,7 +22,7 @@
 </#macro>
 
 <#macro element activeVisible=true passiveVisible=true showSeparator=true>
-    <#if showSeparator><@separator activeVisible=activeVisible passiveVisible=passiveVisible/></#if>
+    <#if showSeparator><@wm.ui.staticeparator activeVisible=activeVisible passiveVisible=passiveVisible/></#if>
     <@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
 </#macro>
 

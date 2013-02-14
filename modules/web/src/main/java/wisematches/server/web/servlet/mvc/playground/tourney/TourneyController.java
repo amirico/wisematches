@@ -19,7 +19,7 @@ import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.tourney.form.EntityIdForm;
@@ -214,7 +214,7 @@ public class TourneyController extends WisematchesController {
 			if (doRegistration) {
 				final Restriction restriction = restrictionManager.validateRestriction(principal, "tourneys.count", getActiveTourneysCount(principal));
 				if (restriction != null) {
-					return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscribe.forbidden", locale, restriction.getThreshold()));
+					return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscribe.forbidden", restriction.getThreshold(), locale));
 				}
 			}
 

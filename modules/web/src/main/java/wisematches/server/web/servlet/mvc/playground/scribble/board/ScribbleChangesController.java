@@ -15,7 +15,7 @@ import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
 import wisematches.playground.scribble.comment.GameCommentState;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import java.util.*;

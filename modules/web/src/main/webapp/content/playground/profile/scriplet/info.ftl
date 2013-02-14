@@ -4,7 +4,7 @@
 
 <#include "/core.ftl">
 
-<#include "/content/templates/addthis.ftl"/>
+<#include "/content/addthis.ftl"/>
 
 <div class="personality">
     <div class="photo">

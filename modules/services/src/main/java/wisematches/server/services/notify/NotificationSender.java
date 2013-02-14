@@ -1,5 +1,7 @@
 package wisematches.server.services.notify;
 
+import wisematches.server.services.ServerDescriptor;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
@@ -37,5 +39,9 @@ public enum NotificationSender {
 	 */
 	public String getUserInfo() {
 		return userInfo;
+	}
+
+	public String getMailAddress(ServerDescriptor descriptor) {
+		return userInfo + "@" + descriptor.getMailHostName();
 	}
 }

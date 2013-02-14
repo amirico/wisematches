@@ -16,7 +16,7 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
 import wisematches.server.services.dictionary.*;
-import wisematches.server.web.servlet.ServiceResponse;
+import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordApprovalForm;

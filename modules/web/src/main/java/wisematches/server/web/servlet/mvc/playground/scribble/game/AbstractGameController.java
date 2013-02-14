@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
+import wisematches.playground.GameMessageSource;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleContext;
@@ -14,7 +15,6 @@ import wisematches.playground.scribble.ScribbleSearchManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.server.services.state.PlayerStateManager;
-import wisematches.server.web.i18n.GameMessageSource;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 /**

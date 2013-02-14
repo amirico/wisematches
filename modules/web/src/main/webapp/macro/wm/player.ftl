@@ -4,7 +4,7 @@
 <#--
     <#assign l=showLink && player.playerType.member/>
 <span class="player ${player.playerType.name()?lower_case}<#if waiting> waiting</#if>">
-    <#if showState && player.playerType.member><@state player/></#if>
+    <#if showState && player.playerType.member><@wm.ui.statictate player/></#if>
     <#if l><@link player><@nick player/><#if showType><@icon player/></#if></@link><#else><@nick player/><#if showType><@icon player/></#if></#if>
 </span>
 -->
@@ -17,7 +17,7 @@
 <#macro link p><a href="/playground/profile/view?h=${p.id}"><#nested/></a></#macro>
 
 <#macro nick p>
-<#--<div class="nickname">${gameMessageSource.getPlayerNick(p, locale)}</div>-->
+<#--<div class="nickname">${gameMessageSource.getPersonalityNick(p, locale)}</div>-->
 </#macro>
 
 <#macro icon p>

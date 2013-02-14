@@ -7,12 +7,14 @@ import org.springframework.mail.SimpleMailMessage;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountListener;
 import wisematches.core.personality.player.account.AccountManager;
+import wisematches.server.services.ServerDescriptor;
 import wisematches.server.services.abuse.AbuseReportListener;
 import wisematches.server.services.abuse.AbuseReportManager;
 import wisematches.server.services.dictionary.ChangeSuggestion;
 import wisematches.server.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.services.dictionary.DictionarySuggestionManager;
 import wisematches.server.services.message.Message;
+import wisematches.server.services.notify.NotificationSender;
 
 import java.util.Date;
 
@@ -20,9 +22,9 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class AlertsOriginCenter {
-	private String hostName;
 	private MailSender mailSender;
 	private AccountManager accountManager;
+	private ServerDescriptor serverDescriptor;
 	private AbuseReportManager abuseReportManager;
 	private DictionarySuggestionManager dictionarySuggestionManager;
 
@@ -38,8 +40,8 @@ public class AlertsOriginCenter {
 	protected void raiseAlarm(String system, String subj, String msg) {
 		try {
 			final SimpleMailMessage message = new SimpleMailMessage();
-			message.setTo("alert@" + hostName);
-			message.setFrom("no-replay@" + hostName);
+			message.setTo(serverDescriptor.getAlertsMailBox());
+			message.setFrom(NotificationSender.SUPPORT.getMailAddress(serverDescriptor));
 			message.setSentDate(new Date());
 			message.setSubject("[" + system + "] " + subj);
 			message.setText(msg);
@@ -50,8 +52,8 @@ public class AlertsOriginCenter {
 		}
 	}
 
-	public void setHostName(String hostName) {
-		this.hostName = hostName;
+	public void setServerDescriptor(ServerDescriptor serverDescriptor) {
+		this.serverDescriptor = serverDescriptor;
 	}
 
 	public void setMailSender(MailSender mailSender) {
