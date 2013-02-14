@@ -25,7 +25,7 @@
 </#macro>
 
 <#macro bind path>
-    <@wm.ui.staticpring.bind path/>
+    <@spring.bind path/>
 
     <#assign status=spring.status>
     <#assign statusValue=spring.stringStatusValue>
@@ -58,7 +58,7 @@
 
 
 <#macro captcha path>
-    <#if captchaService??><@field path>${captchaService.createCaptchaScript(gameMessageSource, locale)}</@field></#if>
+    <#if captchaService??><@field path>${captchaService.createCaptchaScript(messageSource, locale)}</@field></#if>
 </#macro>
 
 <#macro widget title id="" class="" style="" help="" hidden=false>

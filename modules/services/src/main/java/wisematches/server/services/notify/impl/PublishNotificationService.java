@@ -26,10 +26,6 @@ public class PublishNotificationService implements NotificationService {
 
 	@Override
 	public Notification raiseNotification(String code, Player target, NotificationSender sender, Object context) throws NotificationException {
-		final NotificationDescriptor descriptor = notificationManager.getDescriptor(code);
-		if (descriptor == null) {
-			return null;
-		}
 		final NotificationScope notificationScope = notificationManager.getNotificationScope(code, target);
 		final NotificationScope personalScope = notificationScope != null ? notificationScope : NotificationScope.EXTERNAL;
 

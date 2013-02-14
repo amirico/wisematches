@@ -1,7 +1,7 @@
-<#-- @ftlvariable name="infoId" type="java.lang.String" -->
+<#-- @ftlvariable name="staticContentId" type="java.lang.String" -->
 <#include "/core.ftl">
 
-<#macro markSelected pageName><#if infoId?? && infoId==pageName>class="selected"</#if></#macro>
+<#macro markSelected pageName><#if staticContentId?? && staticContentId==pageName>class="selected"</#if></#macro>
 
 <div id="info-navigation">
     <ul>

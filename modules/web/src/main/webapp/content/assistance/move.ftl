@@ -1,11 +1,12 @@
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#-- @ftlvariable name="memoryWords" type="java.util.Collection<wisematches.playground.scribble.Word>" -->
 
 <#include "/core.ftl">
-<#assign oldPrincipal=principal!""/>
-<#assign principal=player/>
+<#assign oldPersonality=personality!""/>
+<#assign personality=player/>
 
 <style type="text/css">
     span.ui-icon {
@@ -183,4 +184,4 @@
     $("#board${board.boardId} .scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
 </script>
 
-<#assign principal=oldPrincipal/>
+<#assign personality=oldPersonality/>

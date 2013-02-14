@@ -75,7 +75,7 @@
                     <@message code="language.${s.language?lower_case}"/>
                 </td>
                 <td>
-                ${gameMessageSource.formatDate(s.requestDate, locale)}
+                ${messageSource.formatDate(s.requestDate, locale)}
                 </td>
                 <td>
                     <@message code="dict.word.type.${s.suggestionType.name()?lower_case}.label"/>

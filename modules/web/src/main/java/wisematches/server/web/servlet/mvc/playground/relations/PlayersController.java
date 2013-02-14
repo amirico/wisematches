@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
-import wisematches.playground.GameMessageSource;
 import wisematches.server.services.relations.PlayerEntityBean;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
@@ -29,7 +28,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/playground/players")
 public class PlayersController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
-	private GameMessageSource messageSource;
 	private PlayerStateManager stateManager;
 
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
@@ -80,11 +78,6 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 	@Autowired
 	public void setStateManager(PlayerStateManager stateManager) {
 		this.stateManager = stateManager;
-	}
-
-	@Autowired
-	public void setMessageSource(GameMessageSource messageSource) {
-		this.messageSource = messageSource;
 	}
 
 	@Autowired

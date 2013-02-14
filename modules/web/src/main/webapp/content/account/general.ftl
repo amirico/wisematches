@@ -6,7 +6,7 @@
 <table width="100%">
     <tr>
         <td width="100%" style="vertical-align: top; text-align: left;">
-        <#include "/content/info/resources.ftl">
+        <#include "/content/assistance/static.ftl">
         </td>
 
         <td width="270" style="vertical-align: top;">

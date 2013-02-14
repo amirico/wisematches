@@ -36,18 +36,14 @@ public class HibernateNotificationManager implements NotificationManager, Initia
 
 	@Override
 	public NotificationDescriptor getDescriptor(String code) {
-		final NotificationDescriptor descriptor = descriptorsMap.get(code);
-		if (descriptor == null) {
-			throw new IllegalArgumentException("Unknown notification: " + code);
-		}
-		return descriptor;
+		return descriptorsMap.get(code);
 	}
 
 	@Override
 	public NotificationScope getNotificationScope(String code, Personality personality) {
 		final NotificationDescriptor descriptor = descriptorsMap.get(code);
 		if (descriptor == null) {
-			throw new IllegalArgumentException("Unknown notification: " + code);
+			return null;
 		}
 		final Session session = sessionFactory.getCurrentSession();
 		final Query sqlQuery = session.createSQLQuery("SELECT `" + code + "` FROM notification_settings WHERE pid=:pid");

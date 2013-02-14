@@ -22,7 +22,7 @@
 </#macro>
 
 <#macro element activeVisible=true passiveVisible=true showSeparator=true>
-    <#if showSeparator><@wm.ui.staticeparator activeVisible=activeVisible passiveVisible=passiveVisible/></#if>
+    <#if showSeparator><@separator activeVisible=activeVisible passiveVisible=passiveVisible/></#if>
     <@row activeVisible=activeVisible passiveVisible=passiveVisible><#nested></@row>
 </#macro>
 
@@ -33,7 +33,7 @@
         <td nowrap="nowrap"><strong><@message code="game.state.started"/>:</strong></td>
         <td width="100%">
             <div class="gameStartedTime">
-            ${gameMessageSource.formatDate(board.startedTime, locale)}
+            ${messageSource.formatDate(board.startedTime, locale)}
             </div>
         </td>
     </@element>
@@ -42,7 +42,7 @@
         <td nowrap="nowrap"><strong><@message code="game.state.finished"/>:</strong></td>
         <td>
             <div class="gameFinishedTime">
-                <#if board.finishedTime??>${gameMessageSource.formatDate(board.finishedTime, locale)}</#if>
+                <#if board.finishedTime??>${messageSource.formatDate(board.finishedTime, locale)}</#if>
             </div>
         </td>
     </@element>
@@ -74,10 +74,10 @@
                 <div class="sample game-resolution-player">
                     <#if board.resolution??>
                 <#switch board.resolution>
-                        <#case 'FINISHED'><@message code="game.resolution.by"/> ${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'FINISHED'><@message code="game.resolution.by"/> ${messageSource.getPersonalityNick(board.getPlayerTurn(), locale)}<#break>
                         <#case 'STALEMATE'><@message code="game.resolution.timeout"/><#break>
-                        <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
-                        <#case 'RESIGNED'><@message code="game.resolution.by"/> ${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname}<#break>
+                        <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${messageSource.getPersonalityNick(board.getPlayerTurn(), locale)}<#break>
+                        <#case 'RESIGNED'><@message code="game.resolution.by"/> ${messageSource.getPersonalityNick(board.getPlayerTurn(), locale)}<#break>
                         <#default>
                     </#switch>
                 </#if>
@@ -94,7 +94,7 @@
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.spent"/>:</strong></td>
         <td>
-            <div class="spentTime">${gameMessageSource.formatSpentTime(board, locale)}</div>
+            <div class="spentTime">${messageSource.formatSpentTime(board, locale)}</div>
         </td>
     </@element>
 
@@ -107,7 +107,7 @@
 
     <@element passiveVisible=false>
         <td nowrap="nowrap"><strong><@message code="game.state.time"/>:</strong></td>
-        <td>${board.settings.daysPerMove} ${gameMessageSource.formatDays(board.settings.daysPerMove, locale)} <@message code="game.state.move"/></td>
+        <td>${board.settings.daysPerMove} ${messageSource.formatDays(board.settings.daysPerMove, locale)} <@message code="game.state.move"/></td>
     </@element>
 
     <#if board.settings.scratch>

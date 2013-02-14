@@ -36,7 +36,7 @@
         <div></div>
         <div style="font-style: italic;">
             This is reply to the message of <@wm.player.name player=personalityManager.getPlayer(original.sender)/> received
-        ${gameMessageSource.formatDate(original.created, locale)} ${gameMessageSource.formatTime(original.created, locale)}
+        ${messageSource.formatDate(original.created, locale)} ${messageSource.formatTime(original.created, locale)}
         </div>
     </div>
 </#if>

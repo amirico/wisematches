@@ -39,7 +39,6 @@ import java.util.concurrent.Callable;
 public class ScribbleBoardController extends WisematchesController {
 	private ScribblePlayManager boardManager;
 	private BoardSettingsManager boardSettingsManager;
-	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 	public static final BoardSettings BOARD_SETTINGS = new BoardSettings(false, false, true, true, true, "tiles-set-classic");
@@ -52,7 +51,7 @@ public class ScribbleBoardController extends WisematchesController {
 								@RequestParam(value = "t", required = false) String tiles,
 								Model model) throws UnknownEntityException {
 		try {
-			final Player player = getPrincipal();
+			final Player player = getPlayer();
 			final ScribbleBoard board = boardManager.openBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
@@ -107,16 +106,16 @@ public class ScribbleBoardController extends WisematchesController {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's move: " + gameId + ", word: " + word);
 		}
-		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player player = getPrincipal();
+				final Player player = getPlayer();
 
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 				final MakeTurn gameMove = board.makeTurn(player, word.createWord());
-				return scribbleObjectsConverter.convertGameMove(locale, player, board, gameMove);
+				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
 			}
-		}, locale);
+		}, messageSource, locale);
 	}
 
 	@ResponseBody
@@ -126,15 +125,15 @@ public class ScribbleBoardController extends WisematchesController {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's pass: " + gameId);
 		}
-		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player player = getPrincipal();
+				final Player player = getPlayer();
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 				final PassTurn gameMove = board.passTurn(player);
-				return scribbleObjectsConverter.convertGameMove(locale, player, board, gameMove);
+				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
 			}
-		}, locale);
+		}, messageSource, locale);
 	}
 
 	@ResponseBody
@@ -145,7 +144,7 @@ public class ScribbleBoardController extends WisematchesController {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
 		}
-		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				int[] t = new int[tiles.length];
@@ -153,12 +152,12 @@ public class ScribbleBoardController extends WisematchesController {
 					t[i] = tiles[i].getNumber();
 				}
 
-				final Player player = getPrincipal();
+				final Player player = getPlayer();
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 				final ExchangeMove gameMove = board.exchangeTiles(player, t);
-				return scribbleObjectsConverter.convertGameMove(locale, player, board, gameMove);
+				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
 			}
-		}, locale);
+		}, messageSource, locale);
 	}
 
 	@ResponseBody
@@ -168,43 +167,38 @@ public class ScribbleBoardController extends WisematchesController {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's resign: " + gameId);
 		}
-		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				final ScribbleBoard board = boardManager.openBoard(gameId);
-				board.resign(getPrincipal());
+				board.resign(getPlayer());
 
 				final Map<String, Object> res = new HashMap<>();
-				res.put("state", scribbleObjectsConverter.convertGameState(board, locale));
+				res.put("state", ScribbleObjectsConverter.convertGameState(board, messageSource, locale));
 				if (!board.isActive()) {
 					res.put("players", board.getPlayers());
 				}
 				return res;
 			}
-		}, locale);
+		}, messageSource, locale);
 	}
 /*
 
 	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
-		final Personality currentPlayer = getPrincipal();
+		final Personality currentPlayer = getPlayer();
 		if (move.getPlayerId() != currentPlayer.getId()) {
 			throw new UnsuitablePlayerException("make turn", currentPlayer);
 		}
 
 		final ScribbleBoard board = boardManager.openBoard(gameId);
 		final GameMove gameMove = board.makeMove(move);
-		return scribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
+		return ScribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
 	}
 */
 
 	@Autowired
 	public void setBoardManager(ScribblePlayManager scribbleBoardManager) {
 		this.boardManager = scribbleBoardManager;
-	}
-
-	@Autowired
-	public void setScribbleObjectsConverter(ScribbleObjectsConverter scribbleObjectsConverter) {
-		this.scribbleObjectsConverter = scribbleObjectsConverter;
 	}
 
 	@Autowired

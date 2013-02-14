@@ -6,13 +6,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.core.personality.player.profile.CountriesManager;
 import wisematches.core.personality.player.profile.PlayerProfileManager;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
-import wisematches.playground.GameMessageSource;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tracking.StatisticManager;
@@ -34,9 +32,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/playground/profile")
 public class PlayerProfileController extends WisematchesController {
-	private PersonalityManager playerManager;
 	private AwardsManager awardsManager;
-	private GameMessageSource messageSource;
 	private CountriesManager countriesManager;
 	private StatisticManager statisticManager;
 	private PlayerProfileManager profileManager;
@@ -61,6 +57,7 @@ public class PlayerProfileController extends WisematchesController {
 	private static final TourneyPlace[] TOURNEY_PLACEs = TourneyPlace.values();
 
 	public PlayerProfileController() {
+		super("title.profile");
 	}
 
 	@RequestMapping("view")
@@ -68,7 +65,7 @@ public class PlayerProfileController extends WisematchesController {
 		try {
 			Player player;
 			try {
-				player = playerManager.getPlayer(Long.parseLong(profileId));
+				player = personalityManager.getPlayer(Long.parseLong(profileId));
 			} catch (NumberFormatException ignore) {
 				player = null;
 			}
@@ -147,7 +144,7 @@ public class PlayerProfileController extends WisematchesController {
 	@RequestMapping("edit")
 	public String editProfile(Model model, Locale locale) {
 /*
-		final Player principal = getPrincipal();
+		final Player principal = getPlayer();
 		final PlayerProfile profile = profileManager.getPlayerProfile(principal);
 
 		final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
@@ -237,11 +234,6 @@ public class PlayerProfileController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPersonalityManager(PersonalityManager playerManager) {
-		this.playerManager = playerManager;
-	}
-
-	@Autowired
 	public void setAwardsManager(AwardsManager awardsManager) {
 		this.awardsManager = awardsManager;
 	}
@@ -262,17 +254,7 @@ public class PlayerProfileController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.messageSource = gameMessageSource;
-	}
-
-	@Autowired
 	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
 		this.boardSettingsManager = boardSettingsManager;
-	}
-
-	@ModelAttribute("headerTitle")
-	public String getHeaderTitle() {
-		return "title.profile";
 	}
 }

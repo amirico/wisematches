@@ -10,12 +10,12 @@
 <@wm.ui.table.dtinit/>
 
 <#if principal??>
-    <#if !player??><#assign player=principal></#if>
+    <#if !player??><#assign player=personality></#if>
 </#if>
 
 <script type="text/javascript">
     <#if player??>
-        <#assign playerHand=board.getPlayerHand(player.getId())!""/>
+        <#assign playerHand=board.getPlayerHand(player)!""/>
         <#if playerHand?has_content>
             <#assign tiles=playerHand.tiles/>
         </#if>
@@ -26,35 +26,36 @@
         readOnly: ${viewMode?string},
         language: '${board.settings.language}',
         daysPerMove: ${board.settings.daysPerMove},
-        startedMillis: ${gameMessageSource.getTimeMillis(board.startedTime)},
-        startedMessage: '${gameMessageSource.formatDate(board.startedTime, locale)}',
+        startedMillis: ${messageSource.getTimeMillis(board.startedTime)},
+        startedMessage: '${messageSource.formatDate(board.startedTime, locale)}',
 
         state: {
             active: ${board.active?string},
-            spentTimeMillis: ${(gameMessageSource.getSpentMinutes(board)*1000*60)},
-            spentTimeMessage: '${gameMessageSource.formatSpentTime(board, locale)}',
-        playerTurn:<#if board.playerTurn??>${board.playerTurn.playerId}<#else>null</#if>,
+            spentTimeMillis: ${(messageSource.getSpentMinutes(board)*1000*60)},
+            spentTimeMessage: '${messageSource.formatSpentTime(board, locale)}',
+        playerTurn:<#if board.playerTurn??>${board.playerTurn.id}<#else>null</#if>,
         <#if board.active>
-            remainedTimeMillis: ${(gameMessageSource.getRemainedMinutes(board)*1000*60)},
-            remainedTimeMessage: '${gameMessageSource.formatRemainedTime(board, locale)}'
+            remainedTimeMillis: ${(messageSource.getRemainedMinutes(board)*1000*60)},
+            remainedTimeMessage: '${messageSource.formatRemainedTime(board, locale)}'
         </#if>
         <#if !board.active>
-            winners: [<#list board.wonPlayers as winner>${winner.playerId}<#if winner_has_next>,</#if></#list>],
+            winners: [<#list board.wonPlayers as winner>${winner.id}<#if winner_has_next>,</#if></#list>],
             resolution: '${board.resolution}',
-            finishTimeMillis: ${gameMessageSource.getTimeMillis(board.finishedTime)},
-            finishTimeMessage: '${gameMessageSource.formatDate(board.finishedTime, locale)}'
+            finishTimeMillis: ${messageSource.getTimeMillis(board.finishedTime)},
+            finishTimeMessage: '${messageSource.formatDate(board.finishedTime, locale)}'
         </#if>},
 
         players: [
-        <#list board.players as hand>
-            <#assign p = personalityManager.getPlayer(hand.playerId)/>
-            {playerId: ${hand.playerId}, nickname: '${gameMessageSource.getPlayerNick(p, locale)}', membership: '${p.playerType!""}', points: ${hand.points}}<#if hand_has_next>,</#if>
+        <#list board.players as p>
+            <#assign hand=board.getPlayerHand(p)/>
+            {playerId: ${p.id}, nickname: '${messageSource.getPersonalityNick(p, locale)}', points: ${hand.points}}<#if p_has_next>,</#if>
         </#list>],
 
     <#if !board.active>
         ratings: [
-            <#list board.ratingChanges as rating>
-                {playerId: ${rating.playerId}, oldRating: ${rating.oldRating}, newRating: ${rating.newRating}, ratingDelta: ${rating.ratingDelta}, points: ${rating.points}}<#if rating_has_next>,</#if>
+            <#list board.players as p>
+                <#assign hand=board.getPlayerHand(p)/>
+                {playerId: ${p.id}, oldRating: ${hand.oldRating}, newRating: ${hand.newRating}, points: ${hand.points}}<#if p_has_next>,</#if>
             </#list>
         ],
     </#if>
@@ -66,17 +67,16 @@
             </#list>
             ],
             moves: [<#list board.gameMoves as move>
-                <#assign playerMove = move.playerMove/>
-                {number: ${move.moveNumber}, points: ${move.points}, player: ${playerMove.playerId},
-                    <#if playerMove.class.simpleName == "MakeWordMove">
-                        <#assign word=playerMove.word/>
+                {number: ${move.moveNumber}, points: ${move.points}, player: ${move.player.id},
+                    <#if move.class.simpleName == "MakeTurn">
+                        <#assign word=move.word/>
                         type: 'make',
                         word: {
                             position: { row: ${word.position.row}, column: ${word.position.column}},
                             direction: '${word.direction}', text: '${word.text}',
                             tiles: [ <#list word.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list> ]
                         }
-                    <#elseif playerMove.class.simpleName == "ExchangeTilesMove">
+                    <#elseif move.class.simpleName == "ExchangeMove">
                         type: 'exchange'
                     <#else>
                         type: 'pass'
@@ -88,7 +88,7 @@
         bank: {
             capacity: ${board.bankCapacity},
             tilesInfo: [
-                <#list board.lettersDistribution.letterDescriptions as tbi>{letter: '${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}, wildcard: ${(tbi.cost==0)?string}}<#if tbi_has_next>,</#if></#list>]
+                <#list board.distribution.letterDescriptions as tbi>{letter: '${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}, wildcard: ${(tbi.cost==0)?string}}<#if tbi_has_next>,</#if></#list>]
         }
 
     <#if tiles??>
@@ -122,6 +122,6 @@
 <div id="wildcardSelectionPanel" class="${boardSettings.tilesClass}" title="<@message code="game.play.wildcard.label"/>"
      style="display: none;">
     <div><@message code="game.play.wildcard.description"/></div>
-    <div style="position: relative; height: ${(((board.lettersDistribution?size)/15)?ceiling)*22}px;"></div>
+    <div style="position: relative; height: ${(((board.distribution?size)/15)?ceiling)*22}px;"></div>
 </div>
 </#if>

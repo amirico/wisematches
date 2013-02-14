@@ -13,16 +13,15 @@
     </thead>
     <tbody>
         <#list board.gameMoves as move>
-            <#assign playerMove = move.playerMove/>
         <tr>
             <td>${1+(move.moveNumber)}</td>
             <td>
-            ${gameMessageSource.getPlayerNick(personalityManager.getPlayer(playerMove.playerId), locale)}
+            ${messageSource.getPersonalityNick(move.player, locale)}
             </td>
             <td>
-                <#if playerMove.class.simpleName == "MakeWordMove">
-                    <span class="moveMade">${playerMove.word.text}</span>
-                <#elseif playerMove.class.simpleName == "ExchangeTilesMove">
+                <#if move.class.simpleName == "MakeTurn">
+                    <span class="moveMade">${move.word.text}</span>
+                <#elseif move.class.simpleName == "ExchangeMove">
                     <span class="moveExchange"><@message code="game.history.exchange.label"/></span>
                 <#else>
                     <span class="movePassed"><@message code="game.history.passed.label"/></span>

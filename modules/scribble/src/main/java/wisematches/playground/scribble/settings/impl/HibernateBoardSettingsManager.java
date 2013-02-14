@@ -32,10 +32,15 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 	}
 
 	@Override
+	public BoardSettings getDefaultSettings() {
+		return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, showCaptionsDefault, enableShareDefault, tilesClassDefault);
+	}
+
+	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BoardSettings getScribbleSettings(Player player) {
 		if (player == null) {
-			return new BoardSettings(clearMemoryDefault, checkWordsDefault, clearByClickDefault, showCaptionsDefault, enableShareDefault, tilesClassDefault);
+			return getDefaultSettings();
 		}
 
 		lock.lock();

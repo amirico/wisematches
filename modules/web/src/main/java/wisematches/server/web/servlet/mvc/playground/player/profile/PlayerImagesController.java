@@ -15,7 +15,6 @@ import wisematches.core.Personality;
 import wisematches.core.personality.player.profile.PlayerImageType;
 import wisematches.core.personality.player.profile.PlayerImagesManager;
 import wisematches.core.personality.player.profile.UnsupportedImageException;
-import wisematches.playground.GameMessageSource;
 import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
@@ -36,7 +35,6 @@ import java.util.Map;
 @RequestMapping("/playground/profile/image")
 public class PlayerImagesController extends WisematchesController {
 	private ResourceLoader resourceLoader;
-	private GameMessageSource gameMessageSource;
 	private PlayerImagesManager playerImagesManager;
 
 	private final Map<PlayerImageType, Resource> noPlayersResources = new HashMap<PlayerImageType, Resource>();
@@ -102,10 +100,10 @@ public class PlayerImagesController extends WisematchesController {
 	@RequestMapping("preview")
 	private ServiceResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
 		try {
-			final Personality principal = getPrincipal();
+			final Personality principal = getPlayer();
 			final ServletInputStream inputStream = request.getInputStream();
 			if (request.getContentLength() > 512000) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
+				return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
 			}
 
 			final PlayerImageType type = PlayerImageType.PROFILE;
@@ -120,7 +118,7 @@ public class PlayerImagesController extends WisematchesController {
 			httpSession.setAttribute(PREVIEW_ATTRIBUTE_NAME, tempFile);
 			return ServiceResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		}
 	}
 
@@ -132,7 +130,7 @@ public class PlayerImagesController extends WisematchesController {
 			f.delete();
 		}
 		httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
-		playerImagesManager.removePlayerImage(getPrincipal().getId(), PlayerImageType.PROFILE);
+		playerImagesManager.removePlayerImage(getPlayer().getId(), PlayerImageType.PROFILE);
 		return ServiceResponse.success();
 	}
 
@@ -140,7 +138,7 @@ public class PlayerImagesController extends WisematchesController {
 	@RequestMapping("set")
 	private ServiceResponse setPlayerImage(HttpSession httpSession, Locale locale) {
 		try {
-			final Personality principal = getPrincipal();
+			final Personality principal = getPlayer();
 			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 			if (f == null) {
 				return ServiceResponse.failure("No preview image");
@@ -152,9 +150,9 @@ public class PlayerImagesController extends WisematchesController {
 
 			return ServiceResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		} catch (UnsupportedImageException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("profile.edit.error.photo.unsupported", locale));
+			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.photo.unsupported", locale));
 		}
 	}
 
@@ -170,10 +168,5 @@ public class PlayerImagesController extends WisematchesController {
 	@Autowired
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
-	}
-
-	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
 	}
 }

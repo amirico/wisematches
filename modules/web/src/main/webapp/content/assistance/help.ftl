@@ -7,7 +7,7 @@
         <#include "navigation.ftl"/>
         </td>
         <td id="info-content" style="vertical-align: top; width: 100%">
-        <#if resourceTemplate??><#include resourceTemplate><#else><#include "staticContent.ftl"></#if>
+        <#if resourceTemplate??><#include resourceTemplate><#else><#include "static.ftl"></#if>
         </td>
     </tr>
 </table>

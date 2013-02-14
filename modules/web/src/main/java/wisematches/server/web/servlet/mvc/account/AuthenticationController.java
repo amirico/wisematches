@@ -27,6 +27,7 @@ public class AuthenticationController extends WisematchesController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 
 	public AuthenticationController() {
+		super("title.authentication");
 	}
 
 	/**
@@ -41,8 +42,7 @@ public class AuthenticationController extends WisematchesController {
 	public String loginPage(@ModelAttribute("login") AccountLoginForm form, Model model, Locale locale) {
 		enableFullView(model);
 		form.setRememberMe("true"); // by default remember me enabled
-
-		return processLoginPage("info/general", model, locale);
+		return processLoginPage("general", model, locale);
 	}
 
 	@RequestMapping("loginAuth")
@@ -58,7 +58,7 @@ public class AuthenticationController extends WisematchesController {
 		enableFullView(model);
 		result.rejectValue("j_password", "account.login.err.credential");
 
-		return processLoginPage("info/general", model, locale);
+		return processLoginPage("general", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=session")
@@ -67,7 +67,7 @@ public class AuthenticationController extends WisematchesController {
 		restoreAccountLoginForm(form, session);
 		enableShortView(form, model, true);
 
-		return processLoginPage("account/session", model, locale);
+		return processLoginPage("session", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=status")
@@ -88,7 +88,7 @@ public class AuthenticationController extends WisematchesController {
 				result.rejectValue("j_password", "account.login.err.status.expired");
 			}
 		}
-		return processLoginPage("account/status", model, locale);
+		return processLoginPage("status", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=insufficient")
@@ -97,7 +97,7 @@ public class AuthenticationController extends WisematchesController {
 		restoreAccountLoginForm(form, session);
 		enableShortView(form, model, false);
 
-		return processLoginPage("account/insufficient", model, locale);
+		return processLoginPage("insufficient", model, locale);
 	}
 
 	@RequestMapping(value = "loginAuth", params = "error=system")
@@ -109,13 +109,7 @@ public class AuthenticationController extends WisematchesController {
 		final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		log.error("Unknown authentication exception received for " + form, ex);
 
-		return processLoginPage("account/system", model, locale);
-	}
-
-
-	@ModelAttribute("headerTitle")
-	public String getHeaderTitle() {
-		return "title.authentication";
+		return processLoginPage("system", model, locale);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -147,11 +141,9 @@ public class AuthenticationController extends WisematchesController {
 	}
 
 	private String processLoginPage(String page, Model model, Locale locale) {
-		if (!staticContentGenerator.generatePage(page, false, model, locale)) { // process page with a error
-			// if appropriate content for error page not found - process with default value
-			staticContentGenerator.generatePage("info/general", false, model, locale);
+		if (!staticContentGenerator.generatePage(page, "general", false, model, locale)) {
+			staticContentGenerator.generatePage("general", "general", false, model, locale);
 		}
-		model.addAttribute("infoId", "general"); // this is CSS class name and FTL page name. Always login.
-		return "/content/personality/general";
+		return "/content/account/general";
 	}
 }

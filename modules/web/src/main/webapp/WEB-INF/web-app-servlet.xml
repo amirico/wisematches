@@ -8,26 +8,25 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
-            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <mvc:annotation-driven validator="beanValidator"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <context:property-placeholder properties-ref="applicationProperties"/>
 
     <context:component-scan base-package="wisematches.server.web.servlet.mvc"/>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <mvc:annotation-driven validator="validator"/>
-
     <mvc:interceptors>
-        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="language"/>
         </bean>
 
-        <bean id="browserDetectionInterceptor"
-              class="wisematches.server.web.servlet.handler.BrowserDetectionInterceptor">
+        <bean class="wisematches.server.web.servlet.handler.BrowserDetectionInterceptor">
             <property name="supportedBrowsers">
                 <map>
                     <entry key="CHROME" value="12"/>
@@ -39,48 +38,34 @@
         </bean>
     </mvc:interceptors>
 
+    <bean id="messageSource" class="wisematches.playground.GameMessageSource">
+        <property name="parentMessageSource">
+            <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+                <property name="defaultEncoding" value="UTF-8"/>
+                <property name="fallbackToSystemLocale" value="false"/>
+                <property name="useCodeAsDefaultMessage" value="true"/>
 
-    <bean id="staticContentGenerator" class="wisematches.server.web.servlet.view.StaticContentGenerator">
-        <property name="resourcesPaths" value="classpath:/i18n/"/>
-    </bean>
-
-
-    <!-- TODO: validate beans list. -->
-
-    <bean id="commonFreemarkerConfigurer"
-          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPath" value=""/>
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="freemarkerVariables">
-            <map>
-                <entry key="gameMessageSource" value-ref="gameMessageSource"/>
-                <entry key="personalityManager" value-ref="personalityManager"/>
-                <entry key="playerStateManager" value-ref="playerStateManager"/>
-            </map>
-        </property>
-        <property name="freemarkerSettings">
-            <props>
-                <prop key="number_format">computer</prop>
-                <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
-                <prop key="template_exception_handler">rethrow</prop>
-            </props>
+                <property name="basenames">
+                    <array>
+                        <value>classpath:/i18n/web</value>
+                        <value>classpath:/i18n/tips</value>
+                        <value>classpath:/i18n/exceptions</value>
+                    </array>
+                </property>
+            </bean>
         </property>
     </bean>
 
-
-    <bean name="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="fallbackToSystemLocale" value="false"/>
-        <property name="useCodeAsDefaultMessage" value="true"/>
-
-        <property name="basenames">
-            <array>
-                <value>classpath:/i18n/web</value>
-                <value>classpath:/i18n/tips</value>
-                <value>classpath:/i18n/exceptions</value>
-            </array>
+    <!-- https://jira.springsource.org/browse/SPR-9708: when it will be implemented this code can be removed. -->
+    <bean id="beanValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="messageInterpolator">
+            <bean class="wisematches.server.web.validation.SpringMessageInterpolator">
+                <property name="messageSource" ref="messageSource"/>
+            </bean>
         </property>
     </bean>
+
+    <bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
 
     <bean id="captchaService" class="wisematches.server.web.security.captcha.captchas.CaptchasCaptchaService">
         <property name="publicKey" value="${captchasNet.publickey}"/>
@@ -91,30 +76,15 @@
         <property name="height" value="80"/>
     </bean>
 
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-        <property name="messageInterpolator">
-            <bean class="wisematches.server.web.validation.SpringMessageInterpolator">
-                <property name="messageSource" ref="messageSource"/>
-            </bean>
+    <bean id="staticContentGenerator" class="wisematches.server.web.servlet.view.StaticContentGenerator">
+        <property name="resourcesPaths">
+            <list>
+                <value>classpath:/i18n/account/</value>
+                <value>classpath:/i18n/assistance/</value>
+            </list>
         </property>
     </bean>
 
-    <bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
-
-    <bean id="requestHandlerAdapter" class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
-
-    <bean id="freemarkerConfig" parent="commonFreemarkerConfigurer">
-        <property name="templateLoaderPath" value=""/>
-        <property name="freemarkerVariables">
-            <map merge="true">
-                <entry key="addThisCode" value="${sociality.addThisCode}"/>
-                <entry key="staticDomain" value="${server.static.domain}"/>
-                <entry key="analyticsCode" value="${analytics.trackcode}"/>
-                <entry key="captchaService" value-ref="captchaService"/>
-                <entry key="advertisementManager" value-ref="advertisementManager"/>
-            </map>
-        </property>
-    </bean>
 
     <bean id="viewResolver" class="wisematches.server.web.servlet.view.WMFreeMarkerViewResolver">
         <property name="cache" value="true"/>
@@ -130,29 +100,49 @@
                 <value>wisematches.server.services.award.AwardType</value>
             </list>
         </property>
+
+        <property name="configuration">
+            <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+                <property name="templateLoaderPath" value=""/>
+                <property name="defaultEncoding" value="UTF-8"/>
+                <property name="freemarkerVariables">
+                    <map merge="true">
+                        <entry key="addThisCode" value="${sociality.addThisCode}"/>
+                        <entry key="analyticsCode" value="${analytics.trackcode}"/>
+                        <entry key="captchaService" value-ref="captchaService"/>
+                        <entry key="playerStateManager" value-ref="playerStateManager"/>
+                        <entry key="advertisementManager" value-ref="advertisementManager"/>
+
+                        <entry key="messageSource" value-ref="messageSource"/>
+                        <entry key="staticResourcesDomain" value="${server.static.domain}"/>
+                    </map>
+                </property>
+                <property name="freemarkerSettings">
+                    <props>
+                        <prop key="number_format">computer</prop>
+                        <prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
+                        <prop key="template_exception_handler">rethrow</prop>
+                    </props>
+                </property>
+            </bean>
+        </property>
         <property name="viewClass" value="wisematches.server.web.servlet.view.WMFreeMarkerView"/>
     </bean>
 
-    <bean id="gameMessageSource" class="wisematches.playground.GameMessageSource">
-        <property name="messageSource" ref="messageSource"/>
-    </bean>
 
-    <bean id="scribbleObjectsConverter"
-          class="wisematches.server.web.servlet.mvc.playground.scribble.board.ScribbleObjectsConverter">
-        <property name="gameMessageSource" ref="gameMessageSource"/>
-    </bean>
+    <!--
 
+        <bean id="annotationMethodHandlerExceptionResolver"
+              class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+        </bean>
 
-    <bean id="annotationMethodHandlerExceptionResolver"
-          class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
-    </bean>
+        <bean id="responseStatusExceptionResolver"
+              class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
+        </bean>
 
-    <bean id="responseStatusExceptionResolver"
-          class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
-    </bean>
-
-    <bean id="defaultHandlerExceptionResolver"
-          class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
-    </bean>
+        <bean id="defaultHandlerExceptionResolver"
+              class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver">
+        </bean>
+    -->
 
 </beans>

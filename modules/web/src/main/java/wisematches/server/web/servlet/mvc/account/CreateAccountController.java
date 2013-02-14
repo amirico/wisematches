@@ -26,6 +26,7 @@ import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.security.captcha.CaptchaService;
 import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.AccountRegistrationForm;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +42,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/account")
-public class CreateAccountController {
+public class CreateAccountController extends WisematchesController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
@@ -49,6 +50,7 @@ public class CreateAccountController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
 
 	public CreateAccountController() {
+		super("title.account");
 	}
 
 	/**
@@ -63,7 +65,7 @@ public class CreateAccountController {
 									@ModelAttribute("registration")
 									AccountRegistrationForm form) {
 		model.addAttribute("infoId", "create");
-		return "/content/personality/create";
+		return "/content/account/create";
 	}
 
 	/**
@@ -225,12 +227,6 @@ TODO: commented
 		}
 */
 		return accountManager.createAccount(editor.createAccount(), registration.getPassword());
-	}
-
-
-	@ModelAttribute("headerTitle")
-	public String getHeaderTitle() {
-		return "title.account";
 	}
 
 	@Autowired

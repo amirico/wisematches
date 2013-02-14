@@ -14,15 +14,13 @@ import java.util.concurrent.Callable;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleObjectsConverter {
-	private GameMessageSource gameMessageSource;
-
+public final class ScribbleObjectsConverter {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
-	public ScribbleObjectsConverter() {
+	private ScribbleObjectsConverter() {
 	}
 
-	ServiceResponse processSafeAction(Callable<Map<String, Object>> callable, Locale locale) {
+	static ServiceResponse processSafeAction(Callable<Map<String, Object>> callable, GameMessageSource messageSource, Locale locale) {
 		try {
 			Map<String, Object> call = callable.call();
 			if (call != null) {
@@ -32,83 +30,32 @@ public class ScribbleObjectsConverter {
 			}
 		} catch (BoardLoadingException e) {
 			log.info("Board can't be loaded", e);
-			return ServiceResponse.failure(translateSystemException(e, locale));
+			return ServiceResponse.failure(translateSystemException(e, messageSource, locale));
 		} catch (GameMoveException e) {
-			return ServiceResponse.failure(translateBoardException(e, locale));
+			return ServiceResponse.failure(translateBoardException(e, messageSource, locale));
 		} catch (Exception e) {
 			log.error("System move exception", e);
-			return ServiceResponse.failure(translateSystemException(e, locale));
+			return ServiceResponse.failure(translateSystemException(e, messageSource, locale));
 		}
 	}
 
-	private String translateSystemException(Exception e, Locale locale) {
-		log.error("System exception found that can't be translated", e);
-		return gameMessageSource.getMessage("game.error.expired", locale);
-	}
-
-	private String translateBoardException(GameMoveException e, Locale locale) {
-		try {
-			throw e;
-		} catch (GameExpiredException ex) {
-			return gameMessageSource.getMessage("game.error.expired", locale);
-		} catch (GameFinishedException ex) {
-			return gameMessageSource.getMessage("game.error.finished", locale);
-		} catch (UnsuitablePlayerException ex) {
-			return gameMessageSource.getMessage("game.error.unsuitable", locale);
-		} catch (UnknownWordException ex) {
-			return gameMessageSource.getMessage("game.error.word", ex.getWord(), locale);
-		} catch (IncorrectTilesException ex) {
-			switch (ex.getType()) {
-				case CELL_ALREADY_BUSY:
-					return gameMessageSource.getMessage("game.error.tiles.busy", locale);
-				case NO_BOARD_TILES:
-					return gameMessageSource.getMessage("game.error.tiles.board", locale);
-				case NO_HAND_TILES:
-					return gameMessageSource.getMessage("game.error.tiles.hand", locale);
-				case TILE_ALREADY_PLACED:
-					return gameMessageSource.getMessage("game.error.tiles.placed", locale);
-				case UNKNOWN_TILE:
-					return gameMessageSource.getMessage("game.error.tiles.unknown", locale);
-			}
-		} catch (IncorrectPositionException ex) {
-			if (ex.isMustBeInCenter()) {
-				return gameMessageSource.getMessage("game.error.pos.center", locale);
-			} else {
-				return gameMessageSource.getMessage("game.error.pos.general", locale);
-			}
-		} catch (IncorrectExchangeException ex) {
-			switch (ex.getType()) {
-				case EMPTY_TILES:
-					return gameMessageSource.getMessage("game.error.exchange.empty", locale);
-				case UNKNOWN_TILES:
-					return gameMessageSource.getMessage("game.error.exchange.unknown", locale);
-				case EMPTY_BANK:
-					return gameMessageSource.getMessage("game.error.exchange.bank", locale);
-			}
-		} catch (GameMoveException ex) {
-			log.error("Unexpected game move exception found: " + ex.getClass(), ex);
-			return translateSystemException(e, locale);
-		}
-		return translateSystemException(e, locale);
-	}
-
-	Map<String, Object> convertGameMove(Locale locale, Personality currentPlayer, ScribbleBoard board, GameMove gameMove) {
-		final Map<String, Object> res = new HashMap<String, Object>();
-		res.put("state", convertGameState(board, locale));
-		res.put("moves", Collections.singleton(convertPlayerMove(gameMove, locale)));
-		res.put("hand", board.getPlayerHand(currentPlayer).getTiles());
+	static Map<String, Object> convertGameMove(Personality player, ScribbleBoard board, GameMove move, GameMessageSource messageSource, Locale locale) {
+		final Map<String, Object> res = new HashMap<>();
+		res.put("state", convertGameState(board, messageSource, locale));
+		res.put("moves", Collections.singleton(convertPlayerMove(move, messageSource, locale)));
+		res.put("hand", board.getPlayerHand(player).getTiles());
 		if (!board.isActive()) {
 			res.put("players", board.getPlayers());
 		}
 		return res;
 	}
 
-	Map<String, Object> convertGameState(final ScribbleBoard board, Locale locale) {
-		final Map<String, Object> state = new HashMap<String, Object>();
+	static Map<String, Object> convertGameState(final ScribbleBoard board, GameMessageSource messageSource, Locale locale) {
+		final Map<String, Object> state = new HashMap<>();
 		state.put("active", board.isActive());
 		state.put("playerTurn", board.getPlayerTurn() != null ? board.getPlayerTurn().getId() : null);
-		state.put("spentTimeMillis", gameMessageSource.getSpentMinutes(board) * 1000 * 60);
-		state.put("spentTimeMessage", gameMessageSource.formatSpentTime(board, locale));
+		state.put("spentTimeMillis", messageSource.getSpentMinutes(board) * 1000 * 60);
+		state.put("spentTimeMessage", messageSource.formatSpentTime(board, locale));
 		if (!board.isActive()) {
 			final Collection<Personality> wonPlayers = board.getWonPlayers();
 			int index = 0;
@@ -120,48 +67,91 @@ public class ScribbleObjectsConverter {
 //			state.put("ratings", board.getRatingChanges());
 			state.put("resolution", board.getResolution());
 			state.put("finishTimeMillis", board.getFinishedTime().getTime());
-			state.put("finishTimeMessage", gameMessageSource.formatDate(board.getFinishedTime(), locale));
+			state.put("finishTimeMessage", messageSource.formatDate(board.getFinishedTime(), locale));
 		} else {
-			state.put("remainedTimeMillis", gameMessageSource.getRemainedMinutes(board) * 1000 * 60);
-			state.put("remainedTimeMessage", gameMessageSource.formatRemainedTime(board, locale));
+			state.put("remainedTimeMillis", messageSource.getRemainedMinutes(board) * 1000 * 60);
+			state.put("remainedTimeMessage", messageSource.formatRemainedTime(board, locale));
 		}
 		return state;
 	}
 
-	Map<String, Object> convertPlayerMove(final GameMove move, final Locale locale) {
-/*
-		final PlayerMove playerMove = move.getPlayerMove();
-
-		final Map<String, Object> moveInfo = new HashMap<String, Object>();
+	static Map<String, Object> convertPlayerMove(final GameMove move, GameMessageSource messageSource, final Locale locale) {
+		final Map<String, Object> moveInfo = new HashMap<>();
 		moveInfo.put("number", move.getMoveNumber());
 		moveInfo.put("points", move.getPoints());
-		moveInfo.put("player", playerMove.getPlayerId());
+		moveInfo.put("player", move.getPlayer().getId());
 		moveInfo.put("timeMillis", move.getMoveTime().getTime());
-		moveInfo.put("timeMessage", gameMessageSource.formatDate(move.getMoveTime(), locale));
-		if (playerMove instanceof PassTurn) {
+		moveInfo.put("timeMessage", messageSource.formatDate(move.getMoveTime(), locale));
+		if (move instanceof PassTurn) {
 			moveInfo.put("type", "pass");
-		} else if (playerMove instanceof MakeTurn) {
+		} else if (move instanceof MakeTurn) {
 			moveInfo.put("type", "make");
-			moveInfo.put("word", ((MakeTurn) playerMove).getWord());
-		} else if (playerMove instanceof ExchangeMove) {
+			moveInfo.put("word", ((MakeTurn) move).getWord());
+		} else if (move instanceof ExchangeMove) {
 			moveInfo.put("type", "exchange");
-			moveInfo.put("tilesCount", ((ExchangeMove) playerMove).getTilesIds().length);
+			moveInfo.put("tilesCount", ((ExchangeMove) move).getTileIds().length);
 		}
 		return moveInfo;
-*/
-		throw new UnsupportedOperationException("Commented");
 	}
 
-	Map<String, Object> convertGameComment(final GameComment comment, final Locale locale) {
-		Map<String, Object> res = new HashMap<String, Object>();
+	static Map<String, Object> convertGameComment(final GameComment comment, GameMessageSource messageSource, final Locale locale) {
+		Map<String, Object> res = new HashMap<>();
 		res.put("id", comment.getId());
 		res.put("text", comment.getText());
 		res.put("person", comment.getPerson());
-		res.put("elapsed", gameMessageSource.formatElapsedTime(comment.getCreationDate(), locale));
+		res.put("elapsed", messageSource.formatElapsedTime(comment.getCreationDate(), locale));
 		return res;
 	}
 
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
+
+	private static String translateSystemException(Exception e, GameMessageSource messageSource, Locale locale) {
+		log.error("System exception found that can't be translated", e);
+		return messageSource.getMessage("game.error.expired", locale);
+	}
+
+	private static String translateBoardException(GameMoveException e, GameMessageSource messageSource, Locale locale) {
+		try {
+			throw e;
+		} catch (GameExpiredException ex) {
+			return messageSource.getMessage("game.error.expired", locale);
+		} catch (GameFinishedException ex) {
+			return messageSource.getMessage("game.error.finished", locale);
+		} catch (UnsuitablePlayerException ex) {
+			return messageSource.getMessage("game.error.unsuitable", locale);
+		} catch (UnknownWordException ex) {
+			return messageSource.getMessage("game.error.word", ex.getWord(), locale);
+		} catch (IncorrectTilesException ex) {
+			switch (ex.getType()) {
+				case CELL_ALREADY_BUSY:
+					return messageSource.getMessage("game.error.tiles.busy", locale);
+				case NO_BOARD_TILES:
+					return messageSource.getMessage("game.error.tiles.board", locale);
+				case NO_HAND_TILES:
+					return messageSource.getMessage("game.error.tiles.hand", locale);
+				case TILE_ALREADY_PLACED:
+					return messageSource.getMessage("game.error.tiles.placed", locale);
+				case UNKNOWN_TILE:
+					return messageSource.getMessage("game.error.tiles.unknown", locale);
+			}
+		} catch (IncorrectPositionException ex) {
+			if (ex.isMustBeInCenter()) {
+				return messageSource.getMessage("game.error.pos.center", locale);
+			} else {
+				return messageSource.getMessage("game.error.pos.general", locale);
+			}
+		} catch (IncorrectExchangeException ex) {
+			switch (ex.getType()) {
+				case EMPTY_TILES:
+					return messageSource.getMessage("game.error.exchange.empty", locale);
+				case UNKNOWN_TILES:
+					return messageSource.getMessage("game.error.exchange.unknown", locale);
+				case EMPTY_BANK:
+					return messageSource.getMessage("game.error.exchange.bank", locale);
+			}
+		} catch (GameMoveException ex) {
+			log.error("Unexpected game move exception found: " + ex.getClass(), ex);
+			return translateSystemException(e, messageSource, locale);
+		}
+		return translateSystemException(e, messageSource, locale);
 	}
 }

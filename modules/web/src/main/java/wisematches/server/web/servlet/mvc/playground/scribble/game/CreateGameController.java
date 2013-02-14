@@ -69,7 +69,7 @@ public class CreateGameController extends AbstractGameController {
 		}
 
 /*
-		final Personality principal = getPrincipal();
+		final Personality principal = getPlayer();
 		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
 		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "games.active", getActiveGamesCount(principal)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", principal.getMembership()));
@@ -97,7 +97,7 @@ public class CreateGameController extends AbstractGameController {
 			log.info("Create new game: " + form);
 		}
 
-		final Personality principal = getPrincipal();
+		final Personality principal = getPlayer();
 		if (form.getTitle().length() > 150) {
 			return ServiceResponse.failure(messageSource.getMessage("game.create.title.err.max", locale));
 		}
@@ -246,7 +246,7 @@ public class CreateGameController extends AbstractGameController {
 	}
 
 	private void initChallengeForm(CreateScribbleForm form, String parameter, Locale locale) {
-		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPrincipal().getNickname(), locale));
+		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPlayer().getNickname(), locale));
 		form.setChallengeMessage("");
 		form.setCreateTab(CreateScribbleTab.CHALLENGE);
 		final List<Long> ids = new ArrayList<>();
@@ -277,7 +277,7 @@ public class CreateGameController extends AbstractGameController {
 			final ScribbleBoard board = playManager.openBoard(Long.valueOf(parameter));
 			if (board != null) {
 				form.setTitle(messageSource.getMessage("game.challenge.replay.label", board.getBoardId(), locale));
-				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", messageSource.getPersonalityNick(getPrincipal(), locale), locale));
+				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", messageSource.getPersonalityNick(getPlayer(), locale), locale));
 				form.setDaysPerMove(board.getSettings().getDaysPerMove());
 				form.setBoardLanguage(board.getSettings().getLanguage().getCode());
 
