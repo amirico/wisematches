@@ -58,9 +58,9 @@
 </div>
 
 <script type="text/javascript">
-    <#assign readOnlySuggestion=!principal?? || !principal.playerType.member/>
+    <#assign readOnlySuggestion=!principal?? || !personality.traceable/>
 
-    var dictionarySuggestion = new wm.game.dict.Suggestion('${dictionaryLanguage.code()}', ${readOnlySuggestion?string}, {
+    var dictionarySuggestion = new wm.game.dict.Suggestion('${dictionaryLanguage.getCode()}', ${readOnlySuggestion?string}, {
     <#list wordAttributes as wa>
         "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
     </#list>

@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.mvc.account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.web.servlet.mvc.WisematchesController;
@@ -17,6 +16,7 @@ public class MembershipController extends WisematchesController {
 	private RestrictionManager restrictionManager;
 
 	public MembershipController() {
+		super("title.membership");
 	}
 
 	@RequestMapping("")
@@ -27,12 +27,7 @@ public class MembershipController extends WisematchesController {
 	@RequestMapping("view")
 	public String viewMembershipPages(Model model) {
 		model.addAttribute("restrictionManager", restrictionManager);
-		return "/content/personality/membership/view";
-	}
-
-	@ModelAttribute("headerTitle")
-	public String getMembershipTitle() {
-		return "title.membership";
+		return "/content/account/membership/view";
 	}
 
 	@Autowired

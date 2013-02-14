@@ -17,9 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @deprecated TODO: must be refactored. Function names are not clear.
  */
-@Deprecated
 public class GameMessageSource extends DelegatingMessageSource implements MessageSource {
 	private static final Map<Locale, DateFormat> DATE_FORMATTER = new ConcurrentHashMap<>();
 	private static final Map<Locale, DateFormat> TIME_FORMATTER = new ConcurrentHashMap<>();
@@ -67,6 +65,18 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 	}
 
 
+	public String getRobotNick(Robot player, Locale locale) {
+		return getMessage("game.player." + player.getRobotType().name().toLowerCase(), locale);
+	}
+
+	public String getPlayerNick(Player player, Locale locale) {
+		return player.getNickname();
+	}
+
+	public String getVisitorNick(Visitor player, Locale locale) {
+		return getMessage("game.player.guest", locale);
+	}
+
 	public String getPersonalityNick(Personality p, Locale locale) {
 		if (p instanceof Robot) {
 			return getRobotNick((Robot) p, locale);
@@ -78,86 +88,6 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 		throw new IllegalArgumentException("Unsupported personality type: " + p.getClass());
 	}
 
-	public String getPlayerNick(Player player, Locale locale) {
-		return player.getNickname();
-	}
-
-	public String getRobotNick(Robot player, Locale locale) {
-		return getMessage("game.player." + player.getRobotType().name().toLowerCase(), locale);
-	}
-
-	public String getVisitorNick(Visitor player, Locale locale) {
-		return getMessage("game.player.guest", locale);
-	}
-
-
-	/**
-	 * Taken from here: http://stackoverflow.com/questions/1224996/java-convert-string-to-html-string
-	 */
-	public static String stringToHTMLString(String string) {
-		final StringBuilder sb = new StringBuilder(string.length());
-		// true if last char was blank
-		boolean lastWasBlankChar = false;
-		int len = string.length();
-		char c;
-
-		for (int i = 0; i < len; i++) {
-			c = string.charAt(i);
-			if (c == ' ') {
-				// blank gets extra work,
-				// this solves the problem you get if you replace all
-				// blanks with &nbsp;, if you do that you loss
-				// word breaking
-				if (lastWasBlankChar) {
-					lastWasBlankChar = false;
-					sb.append("&nbsp;");
-				} else {
-					lastWasBlankChar = true;
-					sb.append(' ');
-				}
-			} else {
-				lastWasBlankChar = false;
-				//
-				// HTML Special Chars
-				switch (c) {
-					case '"':
-						sb.append("&quot;");
-						break;
-					case '&':
-						sb.append("&amp;");
-						break;
-					case '<':
-						sb.append("&lt;");
-						break;
-					case '>':
-						sb.append("&gt;");
-						break;
-					case '\n':
-						// Handle Newline
-						sb.append("<br>");
-						break;
-					default:
-						int ci = 0xffff & c;
-						if (ci < 160)
-							// nothing special only 7 Bit
-							sb.append(c);
-						else {
-							// Not 7 Bit use the unicode system
-							sb.append("&#");
-							sb.append(String.valueOf(ci));
-							sb.append(';');
-						}
-						break;
-				}
-			}
-		}
-		return sb.toString();
-	}
-
-
-	public String formatViolation(CriterionViolation violation, Locale locale, boolean isShort) {
-		return getMessage("game.join.err." + violation.getCode() + (isShort ? ".label" : ".description"), violation.getReceived(), violation.getExpected(), locale);
-	}
 
 	public String formatDate(Date date, Locale locale) {
 		return DATE_FORMATTER.get(locale).format(date);
@@ -186,6 +116,11 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 	public String formatRemainedTime(BoardDescription<?, ?> board, Locale locale) {
 		return formatTimeMinutes(getRemainedMinutes(board), locale);
 	}
+
+	public String formatViolation(CriterionViolation violation, Locale locale, boolean isShort) {
+		return getMessage("game.join.err." + violation.getCode() + (isShort ? ".label" : ".description"), violation.getReceived(), violation.getExpected(), locale);
+	}
+
 
 	public int getAge(Date date) {
 		DateMidnight birthdate = new DateMidnight(date);

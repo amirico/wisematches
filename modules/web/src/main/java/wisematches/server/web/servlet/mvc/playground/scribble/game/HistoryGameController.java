@@ -2,16 +2,12 @@ package wisematches.server.web.servlet.mvc.playground.scribble.game;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.PersonalityManager;
-import wisematches.playground.GameMessageSource;
-import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 
 import java.util.Locale;
@@ -23,10 +19,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/playground/scribble/history")
 public class HistoryGameController extends AbstractGameController { //extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
-	private PersonalityManager playerManager;
-	private GameMessageSource messageSource;
-	private PlayerStateManager playerStateManager;
-
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 
 	public HistoryGameController() {
@@ -38,7 +30,7 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 /*
 		final Personality principal;
 		if (pid == null) {
-			principal = getPrincipal();
+			principal = getPlayer();
 		} else {
 			principal = playerManager.getPlayer(pid);
 		}
@@ -94,20 +86,6 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 	}
 */
 
-	@Autowired
-	public void setPersonalityManager(PersonalityManager playerManager) {
-		this.playerManager = playerManager;
-	}
-
-	@Autowired
-	public void setMessageSource(GameMessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
-	@Autowired
-	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
-		this.playerStateManager = playerStateManager;
-	}
 /*
 
 	@Autowired

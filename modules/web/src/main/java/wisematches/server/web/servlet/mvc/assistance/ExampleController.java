@@ -5,10 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import wisematches.core.Language;
-import wisematches.core.PersonalityManager;
-import wisematches.core.Robot;
-import wisematches.core.RobotType;
+import wisematches.core.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
@@ -31,7 +28,6 @@ import java.util.*;
 public class ExampleController extends WisematchesController {
 	private TilesBankingHouse tilesBankingHouse;
 	private DictionaryManager dictionaryManager;
-	private PersonalityManager personalityManager;
 	private BoardSettingsManager boardSettingsManager;
 
 	private final Map<Language, BoardWrapper> boardsCache = new HashMap<>();
@@ -42,6 +38,7 @@ public class ExampleController extends WisematchesController {
 	@RequestMapping("/move")
 	public String showHowToMove(final @RequestParam(value = "plain", required = false) String plain, final Model model, final Locale locale) throws Exception {
 		final Language language = Language.byLocale(locale);
+		final Personality personality = getPersonality();
 
 		BoardWrapper boardWrapper = boardsCache.get(language);
 		if (boardWrapper == null || !boardWrapper.getBoard().isActive()) {
@@ -49,11 +46,15 @@ public class ExampleController extends WisematchesController {
 			boardsCache.put(language, boardWrapper);
 		}
 
-		model.addAttribute("infoId", "move");
 		model.addAttribute("viewMode", false);
+		model.addAttribute("staticContentId", "move");
 
 		model.addAttribute("board", boardWrapper.getBoard());
-		model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPrincipal()));
+		if (personality == null || !(personality instanceof Player)) {
+			model.addAttribute("boardSettings", boardSettingsManager.getDefaultSettings());
+		} else {
+			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings((Player) personality));
+		}
 
 		model.addAttribute("player", boardWrapper.getBoard().getPlayerTurn());
 		model.addAttribute("memoryWords", selectMemoryWords(boardWrapper.getAvailableMoves()));
@@ -62,10 +63,10 @@ public class ExampleController extends WisematchesController {
 		model.addAttribute("dictionaryLanguage", language);
 
 		if (plain != null) {
-			return "/content/info/move";
+			return "/content/assistance/move";
 		} else {
-			model.addAttribute("resourceTemplate", "/content/info/move.ftl");
-			return "/content/info/help";
+			model.addAttribute("resourceTemplate", "/content/assistance/move.ftl");
+			return "/content/assistance/help";
 		}
 	}
 
@@ -114,11 +115,6 @@ public class ExampleController extends WisematchesController {
 	@Autowired
 	public void setDictionaryManager(DictionaryManager dictionaryManager) {
 		this.dictionaryManager = dictionaryManager;
-	}
-
-	@Autowired
-	public void setPersonalityManager(PersonalityManager personalityManager) {
-		this.personalityManager = personalityManager;
 	}
 
 	@Autowired

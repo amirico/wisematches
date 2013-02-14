@@ -55,13 +55,13 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 
 	@Override
 	public void registerNewSession(String sessionId, Object principal) {
-		final Personality personality = personality((PersonalityDetails) principal);
+		final Object personality = personality(principal);
 
 		super.registerNewSession(sessionId, personality);
 
 		final SessionInformation info = getSessionInformation(sessionId);
 		if (info != null && info.getPrincipal() instanceof Personality) {
-			processPlayerOnline(personality);
+			processPlayerOnline((Personality) info.getPrincipal());
 		}
 	}
 
@@ -90,8 +90,11 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 		}
 	}
 
-	private Personality personality(PersonalityDetails info) {
-		return info.getPersonality();
+	private Object personality(Object info) {
+		if (info instanceof PersonalityDetails) {
+			return ((PersonalityDetails) info).getPersonality();
+		}
+		return info;
 	}
 
 	protected void processPlayerOnline(Personality player) {

@@ -43,6 +43,7 @@ public class TourneyController extends WisematchesController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.tourney");
 
 	public TourneyController() {
+		super("title.tourney");
 	}
 
 	@RequestMapping("")
@@ -187,14 +188,14 @@ public class TourneyController extends WisematchesController {
 	public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
 		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
 		if (tourney == null) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.unknown", locale));
+			return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.unknown", locale));
 		}
 
 		Language language = null;
 		if (form.getLanguage() != null) {
 			language = Language.byCode(form.getLanguage());
 			if (language == null) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.language", locale));
+				return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.language", locale));
 			}
 		}
 
@@ -205,16 +206,16 @@ public class TourneyController extends WisematchesController {
 				section = TourneySection.valueOf(sectionName.toUpperCase());
 			}
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.section", locale));
+			return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.section", locale));
 		}
 
-		final Player principal = getPrincipal();
+		final Player principal = getPlayer();
 		try {
 			final boolean doRegistration = section != null && language != null;
 			if (doRegistration) {
 				final Restriction restriction = restrictionManager.validateRestriction(principal, "tourneys.count", getActiveTourneysCount(principal));
 				if (restriction != null) {
-					return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscribe.forbidden", restriction.getThreshold(), locale));
+					return ServiceResponse.failure(messageSource.getMessage("tourney.subscribe.forbidden", restriction.getThreshold(), locale));
 				}
 			}
 
@@ -228,7 +229,7 @@ public class TourneyController extends WisematchesController {
 			}
 		} catch (RegistrationException ex) {
 			log.error("Subscription can't be changed: " + form, ex);
-			return ServiceResponse.failure(gameMessageSource.getMessage("tourney.subscription.err.internal", locale));
+			return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.internal", locale));
 		}
 
 		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
@@ -244,7 +245,7 @@ public class TourneyController extends WisematchesController {
 	}
 
 	private void setupAnnounce(Model model) {
-		final Player personality = getPrincipal();
+		final Player personality = getPlayer();
 
 		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null);
 		Tourney announce = null;
@@ -290,10 +291,5 @@ public class TourneyController extends WisematchesController {
 	@Autowired
 	public void setRestrictionManager(RestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
-	}
-
-	@Override
-	public String getHeaderTitle() {
-		return "title.tourney";
 	}
 }

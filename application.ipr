@@ -141,21 +141,30 @@
     <bytecodeTargetLevel>
       <module name="application" target="1.7" />
       <module name="core" target="1.7" />
-      <module name="database" target="1.7" />
       <module name="gameplay" target="1.7" />
-      <module name="personality" target="1.7" />
-      <module name="playground" target="1.7" />
       <module name="scribble" target="1.7" />
-      <module name="server" target="1.7" />
       <module name="services" target="1.7" />
       <module name="web" target="1.7" />
-      <module name="webserver" target="1.7" />
     </bytecodeTargetLevel>
   </component>
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" compressed="false" hash="1769099847" />
+  <component name="DataSourceManagerImpl" format="xml" hash="1769099847">
+    <data-source source="LOCAL" name="Data Source" product="MySQL" version="5.5.24" jdbc-version="4.0" driver-name="MySQL-AB JDBC Driver" driver-version="mysql-connector-java-5.1.21 ( Revision: ${bzr.revision-id} )" uuid="e0c38fe3-49da-41a4-83b9-aa5ed9ff72b5">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost/wisematches</jdbc-url>
+      <user-name>wisematches</user-name>
+      <user-password>dfdedfcfdfd9dfde</user-password>
+      <libraries>
+        <library>
+          <url>jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar!/</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -252,6 +261,9 @@
     <file url="file://$PROJECT_DIR$/modules/web/src/main/webapp/content/advertisement.ftl" libraries="{show_ads}" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/webapp/content/playground/welcome.ftl" libraries="{openapi}" />
     <file url="file://$PROJECT_DIR$/modules/web/src/main/webapp/content/wisematches.ftl" libraries="{jquery, jquery-1.8.3, jquery-ui, jquery.dataTables}" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-Xlint:unchecked" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />

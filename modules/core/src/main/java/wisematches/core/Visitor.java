@@ -18,9 +18,4 @@ public class Visitor extends Personality {
 	public Language getLanguage() {
 		return language;
 	}
-
-	@Override
-	public final boolean isTraceable() {
-		return false;
-	}
 }

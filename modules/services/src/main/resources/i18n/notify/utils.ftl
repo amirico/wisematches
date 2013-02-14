@@ -5,7 +5,7 @@
 <#macro board board><@link href="playground/scribble/board?b=${board.boardId}">#${board.boardId} (${messageSource.getBoardTitle(board, locale)})</@link></#macro>
 
 <#macro player personality showRating=false>
-    <#if personality.traceable>
+    <#if personality.type.traceable>
     <em>${messageSource.getPersonalityNick(personality, locale)}</em>
     <#else>
         <@link href="playground/profile/view?p=${personality.id}">

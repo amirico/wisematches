@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import wisematches.core.Personality;
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.core.security.PersonalityContext;
 import wisematches.playground.GameMessageSource;
+import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.view.StaticContentGenerator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class WisematchesController {
 	private final String title;
 
-	@Autowired
-	protected GameMessageSource gameMessageSource;
-
-	@Autowired
+	protected GameMessageSource messageSource;
+	protected PlayerStateManager playerStateManager;
+	protected PersonalityManager personalityManager;
 	protected StaticContentGenerator staticContentGenerator;
 
 	protected WisematchesController() {
@@ -34,9 +35,20 @@ public abstract class WisematchesController {
 		this.title = title;
 	}
 
+	@ModelAttribute("title")
+	public String getTitle() {
+		return title;
+	}
+
 	@Deprecated
-	public Player getPrincipal() {
-		throw new UnsupportedOperationException("TODO: deprecated");
+	public Player getPlayer() {
+/*
+		final Personality personality = getPersonality();
+		if (personality instanceof Player) {
+			return (Player) personality;
+		}
+*/
+		throw new UnsupportedOperationException("It's not a player. What to do?");
 	}
 
 	@ModelAttribute("personality")
@@ -44,14 +56,29 @@ public abstract class WisematchesController {
 		return PersonalityContext.getPersonality();
 	}
 
-	@ModelAttribute("title")
-	public String getHeaderTitle() {
-		return title;
-	}
-
 	@ModelAttribute("requestQueryString")
-	public final String getRequestQueryString() {
+	public String getRequestQueryString() {
 		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		return request.getQueryString();
+	}
+
+	@Autowired
+	public void setMessageSource(GameMessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+
+	@Autowired
+	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
+		this.playerStateManager = playerStateManager;
+	}
+
+	@Autowired
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
+	}
+
+	@Autowired
+	public void setStaticContentGenerator(StaticContentGenerator staticContentGenerator) {
+		this.staticContentGenerator = staticContentGenerator;
 	}
 }

@@ -22,7 +22,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class FileProposalManager<S extends GameSettings> extends AbstractProposalManager<S> implements Closeable {
-	private FileChannel proposalFile;
+	private File file;
+	private FileChannel channel;
+
 	private final Lock lock = new ReentrantLock();
 
 	private static final Log log = LogFactory.getLog("wisematches.server.playground.proposal");
@@ -35,11 +37,11 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	protected Collection<AbstractGameProposal<S>> loadGameProposals() {
 		lock.lock();
 		try {
-			if (!proposalFile.isOpen() || proposalFile.size() == 0) {
+			if (!channel.isOpen() || channel.size() == 0) {
 				return Collections.emptyList();
 			}
-			proposalFile.position(0);
-			final ObjectInputStream inputStream = new ObjectInputStream(Channels.newInputStream(proposalFile));
+			channel.position(0);
+			final ObjectInputStream inputStream = new ObjectInputStream(Channels.newInputStream(channel));
 			int count = inputStream.readInt();
 			if (count == 0) {
 				return Collections.emptyList();
@@ -51,7 +53,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 			}
 			return res;
 		} catch (IOException | ClassNotFoundException ex) {
-			log.error("File proposal can't be loaded", ex);
+			log.error("File proposal can't be loaded from: " + file, ex);
 		} finally {
 			lock.unlock();
 		}
@@ -72,8 +74,8 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 		lock.lock();
 		try {
 			final List<GameProposal<S>> activeProposals = searchEntities(null, ProposalRelation.AVAILABLE, null, null);
-			proposalFile.position(0);
-			final ObjectOutputStream outputStream = new ObjectOutputStream(Channels.newOutputStream(this.proposalFile));
+			channel.position(0);
+			final ObjectOutputStream outputStream = new ObjectOutputStream(Channels.newOutputStream(this.channel));
 			outputStream.writeInt(activeProposals.size());
 			for (GameProposal proposal : activeProposals) {
 				outputStream.writeObject(proposal);
@@ -89,10 +91,16 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	public void setProposalsResource(File proposalFile) throws IOException {
 		lock.lock();
 		try {
+			if (this.channel != null) {
+				this.channel.close();
+			}
+
+			this.file = proposalFile;
+
 			if (!proposalFile.exists()) {
 				proposalFile.createNewFile();
 			}
-			this.proposalFile = new RandomAccessFile(proposalFile, "rw").getChannel();
+			this.channel = new RandomAccessFile(proposalFile, "rw").getChannel();
 		} finally {
 			lock.unlock();
 		}
@@ -102,8 +110,8 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 	public void close() throws IOException {
 		lock.lock();
 		try {
-			if (proposalFile != null) {
-				proposalFile.close();
+			if (channel != null) {
+				channel.close();
 			}
 		} finally {
 			lock.unlock();

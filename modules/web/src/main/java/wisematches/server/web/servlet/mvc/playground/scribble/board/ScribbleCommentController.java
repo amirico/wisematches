@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.GameMessageSource;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.comment.GameComment;
@@ -28,9 +27,7 @@ import java.util.*;
 @RequestMapping("/playground/scribble/comment")
 public class ScribbleCommentController extends WisematchesController {
 	private ScribblePlayManager boardManager;
-	private GameMessageSource gameMessageSource;
 	private GameCommentManager commentManager;
-	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	public ScribbleCommentController() {
 	}
@@ -42,15 +39,15 @@ public class ScribbleCommentController extends WisematchesController {
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 
-		final Player personality = getPrincipal();
+		final Player personality = getPlayer();
 		if (board.getPlayerHand(personality) == null) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 		}
 		return ServiceResponse.success(null, "comments", commentManager.getCommentStates(board, personality));
 	}
@@ -62,19 +59,19 @@ public class ScribbleCommentController extends WisematchesController {
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
-		if (board.getPlayerHand(getPrincipal()) == null) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
+		if (board.getPlayerHand(getPlayer()) == null) {
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 		}
 
 		final Collection<Map<?, ?>> a = new ArrayList<Map<?, ?>>();
-		final List<GameComment> comments = commentManager.getComments(board, getPrincipal(), ids);
+		final List<GameComment> comments = commentManager.getComments(board, getPlayer(), ids);
 		for (GameComment comment : comments) {
-			a.add(scribbleObjectsConverter.convertGameComment(comment, locale));
+			a.add(ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 		}
 		return ServiceResponse.success(null, "comments", a);
 	}
@@ -84,26 +81,26 @@ public class ScribbleCommentController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
 		if (form.getText().trim().isEmpty()) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.empty", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.empty", locale));
 		}
 		if (form.getText().length() > 250) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.length", 250, locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.length", 250, locale));
 		}
 
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 		if (!board.isActive()) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.finished", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.finished", locale));
 		}
-		final GameComment comment = commentManager.addComment(board, getPrincipal(), form.getText());
-		return ServiceResponse.success(null, scribbleObjectsConverter.convertGameComment(comment, locale));
+		final GameComment comment = commentManager.addComment(board, getPlayer(), form.getText());
+		return ServiceResponse.success(null, ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 	}
 
 	@ResponseBody
@@ -114,16 +111,16 @@ public class ScribbleCommentController extends WisematchesController {
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
-		final GameComment comment = commentManager.removeComment(board, getPrincipal(), commentId);
+		final GameComment comment = commentManager.removeComment(board, getPlayer(), commentId);
 		if (comment != null) {
 			return ServiceResponse.success();
 		}
-		return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.owner", locale));
+		return ServiceResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 	}
 
 	@ResponseBody
@@ -134,12 +131,12 @@ public class ScribbleCommentController extends WisematchesController {
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("game.comment.err.board", locale));
+			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
-		commentManager.markRead(board, getPrincipal());
+		commentManager.markRead(board, getPlayer());
 		return ServiceResponse.success();
 	}
 
@@ -151,15 +148,5 @@ public class ScribbleCommentController extends WisematchesController {
 	@Autowired
 	public void setCommentManager(GameCommentManager commentManager) {
 		this.commentManager = commentManager;
-	}
-
-	@Autowired
-	public void setGameMessageSource(GameMessageSource gameMessageSource) {
-		this.gameMessageSource = gameMessageSource;
-	}
-
-	@Autowired
-	public void setScribbleObjectsConverter(ScribbleObjectsConverter scribbleObjectsConverter) {
-		this.scribbleObjectsConverter = scribbleObjectsConverter;
 	}
 }

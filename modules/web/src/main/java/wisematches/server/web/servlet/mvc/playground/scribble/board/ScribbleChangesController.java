@@ -29,7 +29,6 @@ import java.util.concurrent.Callable;
 public class ScribbleChangesController extends WisematchesController {
 	private GameCommentManager commentManager;
 	private ScribblePlayManager boardManager;
-	private ScribbleObjectsConverter scribbleObjectsConverter;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
@@ -44,24 +43,24 @@ public class ScribbleChangesController extends WisematchesController {
 		if (log.isDebugEnabled()) {
 			log.debug("Load board changes for: " + gameId + "@" + movesCount);
 		}
-		return scribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 
 				final Map<String, Object> res = new HashMap<String, Object>();
-				res.put("state", scribbleObjectsConverter.convertGameState(board, locale));
+				res.put("state", ScribbleObjectsConverter.convertGameState(board, messageSource, locale));
 				final List<GameMove> gameMoves = board.getGameMoves();
 
 				final int newMovesCount = gameMoves.size() - movesCount;
 				if (newMovesCount > 0) {
 					final List<Map<String, Object>> moves = new ArrayList<Map<String, Object>>();
 					for (GameMove move : gameMoves.subList(movesCount, gameMoves.size())) {
-						moves.add(scribbleObjectsConverter.convertPlayerMove(move, locale));
+						moves.add(ScribbleObjectsConverter.convertPlayerMove(move, messageSource, locale));
 					}
 					res.put("moves", moves);
 
-					final Personality currentPlayer = getPrincipal(); // update hand only if new moves found
+					final Personality currentPlayer = getPlayer(); // update hand only if new moves found
 					if (currentPlayer != null) {
 						ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer);
 						if (playerHand != null) {
@@ -71,9 +70,9 @@ public class ScribbleChangesController extends WisematchesController {
 				}
 
 				if (commentsCount != -1) {
-					final int newCommentsCount = commentManager.getCommentsCount(board, getPrincipal()) - commentsCount;
+					final int newCommentsCount = commentManager.getCommentsCount(board, getPlayer()) - commentsCount;
 					if (newCommentsCount > 0) {
-						List<GameCommentState> commentStates = commentManager.getCommentStates(board, getPrincipal());
+						List<GameCommentState> commentStates = commentManager.getCommentStates(board, getPlayer());
 						commentStates = commentStates.subList(0, newCommentsCount);
 
 						int index = 0;
@@ -81,10 +80,10 @@ public class ScribbleChangesController extends WisematchesController {
 						for (GameCommentState commentState : commentStates) {
 							ids[index++] = commentState.getId();
 						}
-						final List<GameComment> comments = commentManager.getComments(board, getPrincipal(), ids);
+						final List<GameComment> comments = commentManager.getComments(board, getPlayer(), ids);
 						final List<Map<String, Object>> c = new ArrayList<Map<String, Object>>();
 						for (GameComment comment : comments) {
-							c.add(scribbleObjectsConverter.convertGameComment(comment, locale));
+							c.add(ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 						}
 						res.put("comments", c);
 					}
@@ -95,7 +94,7 @@ public class ScribbleChangesController extends WisematchesController {
 				}
 				return res;
 			}
-		}, locale);
+		}, messageSource, locale);
 	}
 
 	@Autowired
@@ -106,10 +105,5 @@ public class ScribbleChangesController extends WisematchesController {
 	@Autowired
 	public void setCommentManager(GameCommentManager commentManager) {
 		this.commentManager = commentManager;
-	}
-
-	@Autowired
-	public void setScribbleObjectsConverter(ScribbleObjectsConverter scribbleObjectsConverter) {
-		this.scribbleObjectsConverter = scribbleObjectsConverter;
 	}
 }

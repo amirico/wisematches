@@ -21,9 +21,4 @@ public abstract class Player extends Personality {
 	public abstract TimeZone getTimeZone();
 
 	public abstract PlayerType getPlayerType();
-
-	@Override
-	public final boolean isTraceable() {
-		return true;
-	}
 }

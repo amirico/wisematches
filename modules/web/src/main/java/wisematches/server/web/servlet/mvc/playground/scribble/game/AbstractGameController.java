@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import wisematches.core.Personality;
-import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.playground.GameMessageSource;
 import wisematches.playground.propose.GameProposalManager;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleContext;
@@ -14,7 +12,6 @@ import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribbleSearchManager;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.tracking.StatisticManager;
-import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 /**
@@ -23,12 +20,9 @@ import wisematches.server.web.servlet.mvc.WisematchesController;
 @Controller
 @RequestMapping("/playground/scribble")
 public class AbstractGameController extends WisematchesController {
-	protected GameMessageSource messageSource;
-	protected PersonalityManager personalityManager;
 	protected ScribblePlayManager playManager;
-	protected ScribbleSearchManager searchManager;
-	protected PlayerStateManager playerStateManager;
 	protected StatisticManager statisticManager;
+	protected ScribbleSearchManager searchManager;
 	protected GameProposalManager<ScribbleSettings> proposalManager;
 
 	protected static final ScribbleContext ACTIVE_GAMES_CTX = new ScribbleContext(true);
@@ -56,16 +50,6 @@ public class AbstractGameController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setPersonalityManager(PersonalityManager personalityManager) {
-		this.personalityManager = personalityManager;
-	}
-
-	@Autowired
-	public void setMessageSource(GameMessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
-	@Autowired
 	public void setPlayManager(ScribblePlayManager playManager) {
 		this.playManager = playManager;
 	}
@@ -73,11 +57,6 @@ public class AbstractGameController extends WisematchesController {
 	@Autowired
 	public void setSearchManager(ScribbleSearchManager searchManager) {
 		this.searchManager = searchManager;
-	}
-
-	@Autowired
-	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
-		this.playerStateManager = playerStateManager;
 	}
 
 	@Autowired

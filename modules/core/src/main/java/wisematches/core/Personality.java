@@ -20,14 +20,34 @@ public abstract class Personality implements Serializable {
 
 	private final int hashCode;
 
+	private final PersonalityType type;
+
 	/**
 	 * Creates new personality with specified id.
 	 *
 	 * @param id the id for this personality.
 	 */
 	Personality(long id) {
+		if (this instanceof Player) {
+			type = PersonalityType.PLAYER;
+		} else if (this instanceof Visitor) {
+			type = PersonalityType.VISITOR;
+		} else if (this instanceof Robot) {
+			type = PersonalityType.ROBOT;
+		} else {
+			throw new IncompatibleClassChangeError("You can't extends Personality directly. Please extend one of: Visitor, Robot or Player classes");
+		}
 		this.id = id;
 		hashCode = (int) (id ^ (id >>> 32));
+	}
+
+	/**
+	 * Returns personality id.
+	 *
+	 * @return the id of the personality.
+	 */
+	public final Long getId() {
+		return id;
 	}
 
 	/**
@@ -37,15 +57,8 @@ public abstract class Personality implements Serializable {
 	 *
 	 * @return {@code true} if personality is traceable or {@code false} if not.
 	 */
-	public abstract boolean isTraceable();
-
-	/**
-	 * Returns personality id.
-	 *
-	 * @return the id of the personality.
-	 */
-	public final Long getId() {
-		return id;
+	public final PersonalityType getType() {
+		return type;
 	}
 
 	/**

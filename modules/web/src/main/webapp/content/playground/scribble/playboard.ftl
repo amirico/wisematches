@@ -17,7 +17,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !principal??><#include "/content/info/navigation.ftl"/></#if>
+        <#if !principal??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top" align="center">
             <div id="board${board.boardId}" class="${boardSettings.tilesClass}">

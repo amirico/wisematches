@@ -19,8 +19,7 @@ public interface NotificationManager {
 	 * Returns default descriptor for specified notification.
 	 *
 	 * @param code notification code
-	 * @return default descriptor for specified notification.
-	 * @throws IllegalArgumentException if there is no notification with specified code.
+	 * @return default descriptor for specified notification or {@code null} if there is no notification with specified code.
 	 */
 	NotificationDescriptor getDescriptor(String code);
 
@@ -29,8 +28,8 @@ public interface NotificationManager {
 	 *
 	 * @param code        notification code
 	 * @param personality personality who's descriptor should be returned.
-	 * @return personal descriptor for notification of default descriptor if personality doesn't have personal descriptor.
-	 * @throws IllegalArgumentException if there is no notification with specified code.
+	 * @return personal descriptor for notification of default descriptor if personality doesn't have personal
+	 *         descriptor or {@code null} if there is no notification with specified code.
 	 */
 	NotificationScope getNotificationScope(String code, Personality personality);
 

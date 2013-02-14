@@ -242,21 +242,22 @@ public class NotificationOriginCenterTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testScribbleExpiring() throws BoardLoadingException {
 		final Capture<ExpirationListener<Long, ScribbleExpirationType>> listenerCapture = new Capture<>();
 
-		final BoardManager gamePlayManager = createStrictMock(BoardManager.class);
-		gamePlayManager.addBoardListener(isA(BoardListener.class));
-		expect(gamePlayManager.openBoard(1L)).andReturn(board1).times(3);
-		expect(gamePlayManager.openBoard(2L)).andReturn(board2).times(3);
-		gamePlayManager.removeBoardListener(isA(BoardListener.class));
-		replay(gamePlayManager);
+		final BoardManager boardManager = createStrictMock(BoardManager.class);
+		boardManager.addBoardListener(isA(BoardListener.class));
+		expect(boardManager.openBoard(1L)).andReturn((GameBoard) board1).times(3);
+		expect(boardManager.openBoard(2L)).andReturn((GameBoard) board2).times(3);
+		boardManager.removeBoardListener(isA(BoardListener.class));
+		replay(boardManager);
 
 		final ScribbleExpirationManager expirationManager = createStrictMock(ScribbleExpirationManager.class);
 		expirationManager.addExpirationListener(capture(listenerCapture));
 		replay(expirationManager);
 
-		publisherCenter.setBoardManager(gamePlayManager);
+		publisherCenter.setBoardManager(boardManager);
 		publisherCenter.setScribbleExpirationManager(expirationManager);
 
 		listenerCapture.getValue().expirationTriggered(1L, ScribbleExpirationType.ONE_DAY);
@@ -270,7 +271,7 @@ public class NotificationOriginCenterTest {
 
 		publisherCenter.setBoardManager(null);
 
-		verify(gamePlayManager);
+		verify(boardManager);
 	}
 
 	@Test
@@ -394,6 +395,7 @@ public class NotificationOriginCenterTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testTourneyAnnounced() throws InterruptedException {
 		final RegularTourneyManager tourneyManager = createMock(RegularTourneyManager.class);
 		final List<RegularTourneyEntity> value = Collections.emptyList();

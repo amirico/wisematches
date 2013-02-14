@@ -16,6 +16,7 @@ import wisematches.core.personality.player.account.*;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.security.captcha.CaptchaService;
+import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.RecoveryConfirmationForm;
 import wisematches.server.web.servlet.mvc.account.form.RecoveryRequestForm;
 
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/account/recovery")
-public class RecoveryController {
+public class RecoveryController extends WisematchesController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
@@ -42,6 +43,7 @@ public class RecoveryController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 
 	public RecoveryController() {
+		super("title.recovery");
 	}
 
 	@RequestMapping(value = "request")
@@ -74,8 +76,8 @@ public class RecoveryController {
 				result.rejectValue("email", "account.recovery.err.system");
 			}
 		}
-		model.addAttribute("resourceTemplate", "/content/personality/recovery/request.ftl");
-		return "/content/info/help";
+		model.addAttribute("resourceTemplate", "/content/account/recovery/request.ftl");
+		return "/content/assistance/help";
 	}
 
 	@RequestMapping(value = "confirmation")
@@ -115,8 +117,8 @@ public class RecoveryController {
 		}
 		model.addAttribute("submittedEmail", email);
 		model.addAttribute("notificationWasSent", notificationWasSent);
-		model.addAttribute("resourceTemplate", "/content/personality/recovery/confirmation.ftl");
-		return "/content/info/help";
+		model.addAttribute("resourceTemplate", "/content/account/recovery/confirmation.ftl");
+		return "/content/assistance/help";
 	}
 
 	private Account checkRecoveryForm(HttpServletRequest request, HttpServletResponse response, RecoveryConfirmationForm form, BindingResult result) {
@@ -163,11 +165,6 @@ public class RecoveryController {
 
 	private boolean isEmpty(String email) {
 		return email == null || email.isEmpty();
-	}
-
-	@ModelAttribute("headerTitle")
-	public String getHeaderTitle() {
-		return "title.recovery";
 	}
 
 	@Autowired

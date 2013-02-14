@@ -4,8 +4,6 @@ import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.template.*;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContextException;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 import wisematches.core.Language;
@@ -18,6 +16,7 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WMFreeMarkerView extends FreeMarkerView {
+	private FreeMarkerConfig configuration;
 	private Collection<Class<? extends Enum>> exposeEnums;
 
 	public WMFreeMarkerView() {
@@ -48,6 +47,12 @@ public class WMFreeMarkerView extends FreeMarkerView {
 
 	@Override
 	protected FreeMarkerConfig autodetectConfiguration() throws BeansException {
+		return configuration;
+	}
+
+/*
+	@Override
+	protected FreeMarkerConfig autodetectConfiguration() throws BeansException {
 		try {
 			return getApplicationContext().getBean("freemarkerConfig", FreeMarkerConfig.class);
 		} catch (NoSuchBeanDefinitionException ex) {
@@ -56,6 +61,11 @@ public class WMFreeMarkerView extends FreeMarkerView {
 							"(may be inherited): FreeMarkerConfigurer is the usual implementation. " +
 							"This bean may be given any name.", ex);
 		}
+	}
+*/
+
+	public void setConfiguration(FreeMarkerConfig configuration) {
+		this.configuration = configuration;
 	}
 
 	public void setExposeEnums(Collection<Class<? extends Enum>> exposeEnums) throws TemplateModelException {

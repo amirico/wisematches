@@ -8,23 +8,19 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import wisematches.core.security.PersonalityContext;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 @Controller
 @RequestMapping("/info/error")
-public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolver {
-	public WMExceptionResolver() {
+public class ErrorsController {
+	public ErrorsController() {
 	}
-
 
 	@RequestMapping(value = "")
 	public ModelAndView processException() {
@@ -60,18 +56,12 @@ public class WMExceptionResolver extends AnnotationMethodHandlerExceptionResolve
 	}
 
 	private ModelAndView processException(String errorCode, Exception exception, Object... arguments) {
-		final ModelAndView res = new ModelAndView("/content/templates/errors");
+		final ModelAndView res = new ModelAndView("/content/errors");
+		res.addObject("title", "title.playboard");
 		res.addObject("errorCode", errorCode);
 		res.addObject("errorArguments", arguments);
 		res.addObject("errorException", exception);
-		res.addObject("principal", PersonalityContext.getPlayer());
 		res.addObject("personality", PersonalityContext.getPersonality());
-		res.addObject("title", "title.playboard");
 		return res;
-	}
-
-	@Override
-	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-		return super.doResolveException(request, response, this, ex);
 	}
 }

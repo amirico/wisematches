@@ -38,11 +38,7 @@ public class DictionaryController extends WisematchesController {
 	private static final Log log = LogFactory.getLog("wisematches.server.dict.suggest");
 
 	public DictionaryController() {
-	}
-
-	@Override
-	public String getHeaderTitle() {
-		return "dict.header";
+		super("dict.header");
 	}
 
 	@RequestMapping("")
@@ -82,11 +78,11 @@ public class DictionaryController extends WisematchesController {
 		try {
 			language = Language.valueOf(lang.toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.language", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
 		}
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (dictionary == null) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.dictionary", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.dictionary", locale));
 		}
 		return ServiceResponse.success(null, "wordEntry", dictionary.getWordEntry(word.toLowerCase()));
 	}
@@ -98,11 +94,11 @@ public class DictionaryController extends WisematchesController {
 		try {
 			language = Language.valueOf(lang.toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.language", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
 		}
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (dictionary == null) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.dictionary", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.dictionary", locale));
 		}
 		return ServiceResponse.success(null, "wordEntries", dictionary.getWordEntries(prefix.toLowerCase()));
 	}
@@ -115,30 +111,30 @@ public class DictionaryController extends WisematchesController {
 		try {
 			language = Language.valueOf(form.getLanguage().toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.language", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
 		}
 
 		final SuggestionType suggestionType;
 		try {
 			suggestionType = SuggestionType.valueOf(form.getAction().toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.action", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.action", locale));
 		}
 
 		final String word = form.getWord().toLowerCase();
 		if (word.length() < 2) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.short", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.short", locale));
 		}
 
 		if (!language.getAlphabet().validate(word)) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.alphabet", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.alphabet", locale));
 		}
 
 		EnumSet<WordAttribute> attributes1 = null;
 		if (suggestionType != SuggestionType.REMOVE) {
 			final String[] attributes = form.getAttributes();
 			if (attributes == null || attributes.length == 0) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.attributes.empty", locale));
+				return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.empty", locale));
 			}
 
 
@@ -147,19 +143,19 @@ public class DictionaryController extends WisematchesController {
 				try {
 					attrs[i] = WordAttribute.valueOf(attributes[i]);
 				} catch (IllegalArgumentException ex) {
-					return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.attributes.unknown", locale));
+					return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.unknown", locale));
 				}
 			}
 
 			attributes1 = WordAttribute.fromArray(attrs);
 			if (!attributes1.contains(WordAttribute.FEMININE) && !attributes1.contains(WordAttribute.MASCULINE) && !attributes1.contains(WordAttribute.NEUTER)) {
-				return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.attributes.gender", locale));
+				return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.gender", locale));
 			}
 		}
 
 		final int cnt = dictionarySuggestionManager.getTotalCount(null, new SuggestionContext(word, null, null, EnumSet.of(SuggestionState.WAITING)));
 		if (cnt != 0) {
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.waiting", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.waiting", locale));
 		}
 
 		try {
@@ -167,19 +163,19 @@ public class DictionaryController extends WisematchesController {
 			switch (suggestionType) {
 				case ADD:
 					if (contains) {
-						return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.word.exist", locale));
+						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.exist", locale));
 					}
 					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPersonality());
 					break;
 				case UPDATE:
 					if (!contains) {
-						return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.word.unknown", locale));
+						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
 					}
 					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPersonality());
 					break;
 				case REMOVE:
 					if (!contains) {
-						return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.word.unknown", locale));
+						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
 					}
 					dictionarySuggestionManager.removeWord(word, language, getPersonality());
 					break;
@@ -187,7 +183,7 @@ public class DictionaryController extends WisematchesController {
 			return ServiceResponse.success();
 		} catch (Exception ex) {
 			log.error("Word suggest can't be processed: " + form, ex);
-			return ServiceResponse.failure(gameMessageSource.getMessage("dict.suggest.err.system", locale));
+			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.system", locale));
 		}
 	}
 
@@ -222,7 +218,7 @@ public class DictionaryController extends WisematchesController {
 	}
 
 	private boolean isModerator() {
-		final String nickname = getPrincipal().getNickname();
+		final String nickname = getPlayer().getNickname();
 		return nickname.equals("smklimenko") || nickname.equals("test");
 	}
 
