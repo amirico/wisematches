@@ -8,6 +8,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
+import wisematches.core.PersonalityManager;
+import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.core.personality.player.profile.*;
 
@@ -31,6 +33,9 @@ public class HibernatePlayerProfileManagerTest {
 	private AccountManager accountManager;
 
 	@Autowired
+	private PersonalityManager personalityManager;
+
+	@Autowired
 	private PlayerProfileManager profileManager;
 
 	public HibernatePlayerProfileManagerTest() {
@@ -41,7 +46,9 @@ public class HibernatePlayerProfileManagerTest {
 		final Capture<PlayerProfile> profileCapture = new Capture<>();
 
 		final Account account = accountManager.createAccount(createMockAccount(), "mock");
-		final PlayerProfile profile = profileManager.getPlayerProfile(account);
+		final Player player = personalityManager.getPlayer(account.getId());
+
+		final PlayerProfile profile = profileManager.getPlayerProfile(player);
 		assertNotNull(profile);
 		assertNull(profile.getRealName());
 		assertNull(profile.getCountryCode());
@@ -51,7 +58,7 @@ public class HibernatePlayerProfileManagerTest {
 
 
 		final PlayerProfileListener listener = createStrictMock(PlayerProfileListener.class);
-		listener.playerProfileChanged(same(account), capture(profileCapture));
+		listener.playerProfileChanged(same(player), capture(profileCapture));
 		replay(listener);
 
 		profileManager.addPlayerProfileListener(listener);
@@ -64,9 +71,9 @@ public class HibernatePlayerProfileManagerTest {
 		editor.setBirthday(birthday);
 		editor.setGender(Gender.FEMALE);
 		editor.setPrimaryLanguage(Language.RU);
-		profileManager.updateProfile(account, editor.createProfile());
+		profileManager.updateProfile(player, editor.createProfile());
 
-		final PlayerProfile profileUpdated = profileManager.getPlayerProfile(account);
+		final PlayerProfile profileUpdated = profileManager.getPlayerProfile(player);
 		assertEquals("Mock Real Name", profileUpdated.getRealName());
 		assertEquals("ru", profileUpdated.getCountryCode());
 		assertEquals(birthday, profileUpdated.getBirthday());
@@ -74,7 +81,7 @@ public class HibernatePlayerProfileManagerTest {
 		assertEquals(Language.RU, profileUpdated.getPrimaryLanguage());
 
 		accountManager.removeAccount(account);
-		assertNull(profileManager.getPlayerProfile(account));
+		assertNull(profileManager.getPlayerProfile(player));
 
 		verify(listener);
 	}

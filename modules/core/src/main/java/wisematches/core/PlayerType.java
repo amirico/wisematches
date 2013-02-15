@@ -23,5 +23,21 @@ public enum PlayerType {
 	 * o
 	 * Platinum player. A player with this membership has full access.
 	 */
-	PLATINUM
+	PLATINUM;
+
+	public boolean isBasic() {
+		return this == BASIC;
+	}
+
+	public boolean isSilver() {
+		return this == SILVER;
+	}
+
+	public boolean isGold() {
+		return this == GOLD;
+	}
+
+	public boolean isPlatinum() {
+		return this == PLATINUM;
+	}
 }

@@ -33,16 +33,16 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/profile/image")
-public class PlayerImagesController extends WisematchesController {
+public class ImagesController extends WisematchesController {
 	private ResourceLoader resourceLoader;
 	private PlayerImagesManager playerImagesManager;
 
 	private final Map<PlayerImageType, Resource> noPlayersResources = new HashMap<PlayerImageType, Resource>();
 
-	private static final Log log = LogFactory.getLog(PlayerImagesController.class);
+	private static final Log log = LogFactory.getLog(ImagesController.class);
 	public static final String PREVIEW_ATTRIBUTE_NAME = "PLAYER_IMAGE_PREVIEW_FILE";
 
-	public PlayerImagesController() {
+	public ImagesController() {
 	}
 
 	@RequestMapping("view")

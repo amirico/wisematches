@@ -5,7 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import wisematches.core.Language;
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 import wisematches.core.personality.player.profile.Gender;
 import wisematches.core.personality.player.profile.PlayerProfile;
 
@@ -56,7 +56,7 @@ class HibernatePlayerProfile implements PlayerProfile {
 	HibernatePlayerProfile() {
 	}
 
-	HibernatePlayerProfile(Account account) {
+	HibernatePlayerProfile(Player account) {
 		this.playerId = account.getId();
 	}
 

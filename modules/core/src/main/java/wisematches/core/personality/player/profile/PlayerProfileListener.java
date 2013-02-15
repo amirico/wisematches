@@ -1,10 +1,10 @@
 package wisematches.core.personality.player.profile;
 
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface PlayerProfileListener {
-	void playerProfileChanged(Account account, PlayerProfile playerProfile);
+	void playerProfileChanged(Player player, PlayerProfile playerProfile);
 }

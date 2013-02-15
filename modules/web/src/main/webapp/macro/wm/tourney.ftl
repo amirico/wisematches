@@ -4,7 +4,7 @@
     <#assign id=tourneyId/>
     <#if !(id?is_number)><#assign id=tourneyId.number/></#if>
     <#if link><a
-            href="/playground/tourney/view?t=${id?string}"></#if>${id?string}${gameMessageSource.getNumeralEnding(id, locale)} <@message code="tourney.label"/><#if link></a></#if>
+            href="/playground/tourney/view?t=${id?string}"></#if>${id?string}${messageSource.getNumeralEnding(id, locale)} <@message code="tourney.label"/><#if link></a></#if>
 </#macro>
 
 <#macro round roundId link=false final=false>

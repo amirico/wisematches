@@ -7,7 +7,7 @@ package wisematches.core;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public class Robot extends Personality {
+public abstract class Robot extends Personality {
 	private final RobotType robotType;
 
 	protected Robot(RobotType robotType) {
@@ -21,5 +21,10 @@ public class Robot extends Personality {
 
 	public RobotType getRobotType() {
 		return robotType;
+	}
+
+	@Override
+	public final PersonalityType getType() {
+		return PersonalityType.ROBOT;
 	}
 }

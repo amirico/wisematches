@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
-import wisematches.server.web.servlet.mvc.playground.player.profile.PlayerProfileController;
+import wisematches.server.web.servlet.mvc.playground.player.profile.ProfileController;
 
 import java.util.Locale;
 
@@ -15,19 +16,19 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/")
 public class WelcomePageController extends WisematchesController {
-	private PlayerProfileController playerProfileController;
+	private ProfileController playerProfileController;
 
 	public WelcomePageController() {
 	}
 
 	@RequestMapping("/playground/welcome")
-	public String welcomePage(Model model, Locale locale) {
+	public String welcomePage(Model model, Locale locale) throws UnknownEntityException {
 		playerProfileController.editProfile(model, locale);
 		return "/content/playground/welcome";
 	}
 
 	@Autowired
-	public void setPlayerProfileController(PlayerProfileController playerProfileController) {
+	public void setPlayerProfileController(ProfileController playerProfileController) {
 		this.playerProfileController = playerProfileController;
 	}
 }

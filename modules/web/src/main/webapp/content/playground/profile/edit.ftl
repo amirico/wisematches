@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
-<#-- @ftlvariable name="countries" type="java.util.Collection<wisematches.personality.membership.Country>" -->
 <#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
+<#-- @ftlvariable name="countries" type="java.util.Collection<wisematches.core.personality.player.profile.Country>" -->
 <#-- @ftlvariable name="profileForm" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 
@@ -9,7 +9,7 @@
 <div class="notification shadow ui-state-highlight" style="text-align: center; padding: 5px;">
 <@message code="profile.edit.description"/>
     <button class="wm-ui-button"
-            onclick="wm.util.url.redirect('/playground/profile/view?p=${profile.playerId}')"><@message code="profile.edit.done"/></button>
+            onclick="wm.util.url.redirect('/playground/profile/view?p=${player.id}')"><@message code="profile.edit.done"/></button>
 </div>
 
 
@@ -36,7 +36,7 @@
         <td class="content shadow ui-state-default">
         <#if profileForm.gender??><#assign genderName=springMacroRequestContext.getMessage("gender."+profileForm.gender)/></#if>
         <#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage?lower_case)/></#if>
-        <#if profileForm.birthday??><#assign birthdayName=gameMessageSource.formatDate(profile.birthday, locale)/></#if>
+        <#if profileForm.birthday??><#assign birthdayName=messageSource.formatDate(profile.birthday, locale)/></#if>
 
             <div class="title">
             <@wm.ui.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player-name"/>

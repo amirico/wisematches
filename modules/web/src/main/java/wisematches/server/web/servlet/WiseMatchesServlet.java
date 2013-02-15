@@ -58,7 +58,11 @@ public class WiseMatchesServlet extends DispatcherServlet {
 
 	@Override
 	protected ModelAndView processHandlerException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		log.error("Handled exception received: " + ex.getMessage(), ex);
-		return super.processHandlerException(request, response, handler, ex);
+		try {
+			return super.processHandlerException(request, response, handler, ex);
+		} catch (Exception e) {
+			log.error("Handled exception received: " + ex.getMessage(), e);
+			throw e;
+		}
 	}
 }

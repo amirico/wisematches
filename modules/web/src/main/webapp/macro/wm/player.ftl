@@ -12,11 +12,10 @@
 <div class="state <#if playerStateManager.isPlayerOnline(p)>online<#else>offline</#if>"></div>
 </#macro>
 
-<#macro link p><a href="/playground/profile/view?h=${p.id}"><#nested/></a></#macro>
+<#macro link p><a href="/playground/profile/view?p=${p.id}"><#nested/></a></#macro>
 
 <#macro nick p>
-<div class="nickname">${messageSource.getPersonalityNick(p, locale)}</div>
-</#macro>
+<div class="nickname">${messageSource.getPersonalityNick(p, locale)}</div></#macro>
 
 <#macro icon p>
 <div class="icon<#if p.type.player> ${p.playerType.name()?lower_case}</#if>"></div></#macro>

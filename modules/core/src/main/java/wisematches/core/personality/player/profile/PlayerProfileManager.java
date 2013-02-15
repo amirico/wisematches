@@ -1,6 +1,6 @@
 package wisematches.core.personality.player.profile;
 
-import wisematches.core.personality.player.account.Account;
+import wisematches.core.Player;
 
 /**
  * {@code PlayerProfileManager} provides access to {@code PlayerProfile} object with details about a player.
@@ -18,16 +18,16 @@ public interface PlayerProfileManager {
 	/**
 	 * Returns profile for specified personality.
 	 *
-	 * @param account the personality who's profile should be returned.
+	 * @param player the personality who's profile should be returned.
 	 * @return the profile for specified personality or {@code null} if personality doesn't have a profile.
 	 */
-	PlayerProfile getPlayerProfile(Account account);
+	PlayerProfile getPlayerProfile(Player player);
 
 	/**
 	 * Updates the player profile.
 	 *
-	 * @param account       the personality who's profile should be updated
+	 * @param player        the personality who's profile should be updated
 	 * @param playerProfile the profile object with new information about the player.
 	 */
-	void updateProfile(Account account, PlayerProfile playerProfile);
+	void updateProfile(Player player, PlayerProfile playerProfile);
 }

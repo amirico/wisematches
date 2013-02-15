@@ -1,6 +1,7 @@
 package wisematches.server.web.servlet.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -40,11 +41,6 @@ public abstract class WisematchesController {
 		return title;
 	}
 
-	@Deprecated
-	public Player getPlayer() {
-		throw new UnsupportedOperationException("It's not a player. What to do?");
-	}
-
 	@ModelAttribute("personality")
 	public Personality getPersonality() {
 		return PersonalityContext.getPersonality();
@@ -54,6 +50,21 @@ public abstract class WisematchesController {
 	public String getRequestQueryString() {
 		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		return request.getQueryString();
+	}
+
+	protected Player getPlayer() {
+		final Personality personality = getPersonality();
+		if (personality == null) {
+			return null;
+		}
+		if (!(personality instanceof Player)) {
+			throw new AccessDeniedException("Incorrect personality type where Player is expected: " + personality.getType());
+		}
+		return (Player) personality;
+	}
+
+	protected boolean isPlayerAuthorized() {
+		return getPersonality() instanceof Player;
 	}
 
 	@Autowired

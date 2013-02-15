@@ -38,9 +38,9 @@ public class ActiveGameController extends AbstractGameController {
 	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
-			principal = getPlayer();
+			principal = getPersonality();
 		} else {
-			principal = personalityManager.getPlayer(pid);
+			principal = personalityManager.getPerson(pid);
 		}
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");

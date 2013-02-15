@@ -21,4 +21,9 @@ public abstract class Player extends Personality {
 	public abstract TimeZone getTimeZone();
 
 	public abstract PlayerType getPlayerType();
+
+	@Override
+	public final PersonalityType getType() {
+		return PersonalityType.PLAYER;
+	}
 }
