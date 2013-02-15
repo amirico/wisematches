@@ -42,14 +42,14 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/account")
-public class CreateAccountController extends WisematchesController {
+public class AccountController extends WisematchesController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
 
-	public CreateAccountController() {
+	public AccountController() {
 		super("title.account");
 	}
 

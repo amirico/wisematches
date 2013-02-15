@@ -83,7 +83,7 @@ public class AuthenticationController extends WisematchesController {
 			} else if (ex instanceof DisabledException) {
 				result.rejectValue("j_password", "account.login.err.status.disabled");
 			} else if (ex instanceof CredentialsExpiredException) {
-				result.rejectValue("j_password", "account.login.err.status.expired");
+				result.rejectValue("j_password", "account.login.err.status.credential");
 			} else if (ex instanceof AccountExpiredException) {
 				result.rejectValue("j_password", "account.login.err.status.expired");
 			}

@@ -1,7 +1,7 @@
 package wisematches.server.web.servlet.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Controller
+@ControllerAdvice
 public abstract class WisematchesController {
 	private final String title;
 
@@ -42,12 +42,6 @@ public abstract class WisematchesController {
 
 	@Deprecated
 	public Player getPlayer() {
-/*
-		final Personality personality = getPersonality();
-		if (personality instanceof Player) {
-			return (Player) personality;
-		}
-*/
 		throw new UnsupportedOperationException("It's not a player. What to do?");
 	}
 

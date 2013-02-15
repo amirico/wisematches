@@ -10,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wisematches.core.PlayerType;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
@@ -33,8 +32,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/account/recovery")
 public class RecoveryController extends WisematchesController {
-	private AccountManager accountManager;
 	private CaptchaService captchaService;
+	private AccountManager accountManager;
 	private NotificationService notificationService;
 	private AccountRecoveryManager recoveryTokenManager;
 
@@ -54,19 +53,19 @@ public class RecoveryController extends WisematchesController {
 		}
 
 		if (form.isRecoveryAccount()) {
-			result.rejectValue("email", "account.register.email.err.blank");
 			try {
-				final Account player = accountManager.findByEmail(form.getEmail());
-				if (player != null) {
-					final RecoveryToken token = recoveryTokenManager.generateToken(player);
+				final Account account = accountManager.findByEmail(form.getEmail());
+				if (account != null) {
+					final RecoveryToken token = recoveryTokenManager.generateToken(account);
 					log.info("Recovery token generated: " + token);
 
 					final Map<String, Object> mailModel = new HashMap<>();
-					mailModel.put("principal", player);
+					mailModel.put("principal", account);
 					mailModel.put("recoveryToken", token.getToken());
 
-					notificationService.raiseNotification("account.recovery", new DefaultPlayer(player, PlayerType.BASIC), NotificationSender.ACCOUNTS, mailModel);
-					session.setAttribute(RECOVERING_PLAYER_EMAIL, player.getEmail());
+					final Player player = personalityManager.getPlayer(account.getId());
+					notificationService.raiseNotification("account.recovery", player, NotificationSender.ACCOUNTS, mailModel);
+					session.setAttribute(RECOVERING_PLAYER_EMAIL, account.getEmail());
 					return "redirect:/account/recovery/confirmation";
 				} else {
 					result.rejectValue("email", "account.recovery.err.unknown");
@@ -103,13 +102,16 @@ public class RecoveryController extends WisematchesController {
 		}
 
 		if (form.isRecoveryAccount()) {
-			final Account player = checkRecoveryForm(request, response, form, result);
+			final Account account = checkRecoveryForm(request, response, form, result);
 			if (!result.hasErrors()) {
-				final AccountEditor e = new AccountEditor(player);
+				final AccountEditor e = new AccountEditor(account);
 				try {
+					recoveryTokenManager.clearToken(account); // remove token. Mandatory operation or expired exception will be thrown
 					accountManager.updateAccount(e.createAccount(), form.getPassword());
-					notificationService.raiseNotification("account.updated", new DefaultPlayer(player, PlayerType.BASIC), NotificationSender.ACCOUNTS, player);
-					return CreateAccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
+
+					final Player player = personalityManager.getPlayer(account.getId());
+					notificationService.raiseNotification("account.updated", player, NotificationSender.ACCOUNTS, player);
+					return AccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 				} catch (Exception e1) {
 					result.rejectValue("email", "account.recovery.err.system");
 				}
