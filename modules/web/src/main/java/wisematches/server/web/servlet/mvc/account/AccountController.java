@@ -61,9 +61,7 @@ public class AccountController extends WisematchesController {
 	 * @return the FTL full page name without extension
 	 */
 	@RequestMapping(value = "create", method = RequestMethod.GET)
-	public String createAccountPage(Model model,
-									@ModelAttribute("registration")
-									AccountRegistrationForm form) {
+	public String createAccountPage(Model model, @ModelAttribute("registration") AccountRegistrationForm form) {
 		model.addAttribute("infoId", "create");
 		return "/content/account/create";
 	}
@@ -135,26 +133,6 @@ public class AccountController extends WisematchesController {
 		}
 	}
 
-	protected static String forwardToAuthentication(final String email, final String password, final boolean rememberMe) {
-		try {
-			final StringBuilder b = new StringBuilder();
-			b.append("j_username=").append(URLEncoder.encode(email, "UTF-8"));
-			b.append("&");
-			b.append("j_password=").append(URLEncoder.encode(password, "UTF-8"));
-			b.append("&");
-			b.append("continue=").append("/playground/welcome");
-			if (rememberMe) {
-				b.append("&").append("rememberMe=true");
-			}
-			//noinspection SpringMVCViewInspection
-			return "forward:/account/loginProcessing?" + b;
-		} catch (UnsupportedEncodingException ex) {
-			log.error("Very strange exception that mustn't be here", ex);
-			//noinspection SpringMVCViewInspection
-			return "redirect:/account/login";
-		}
-	}
-
 	/**
 	 * JSON request for email and username validation.
 	 *
@@ -190,6 +168,42 @@ public class AccountController extends WisematchesController {
 	}
 
 
+	@Autowired
+	public void setCaptchaService(CaptchaService captchaService) {
+		this.captchaService = captchaService;
+	}
+
+	@Autowired
+	public void setAccountManager(AccountManager accountManager) {
+		this.accountManager = accountManager;
+	}
+
+	@Autowired
+	public void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
+
+
+	protected static String forwardToAuthentication(final String email, final String password, final boolean rememberMe) {
+		try {
+			final StringBuilder b = new StringBuilder();
+			b.append("j_username=").append(URLEncoder.encode(email, "UTF-8"));
+			b.append("&");
+			b.append("j_password=").append(URLEncoder.encode(password, "UTF-8"));
+			b.append("&");
+			b.append("continue=").append("/playground/welcome");
+			if (rememberMe) {
+				b.append("&").append("rememberMe=true");
+			}
+			//noinspection SpringMVCViewInspection
+			return "forward:/account/loginProcessing?" + b;
+		} catch (UnsupportedEncodingException ex) {
+			log.error("Very strange exception that mustn't be here", ex);
+			//noinspection SpringMVCViewInspection
+			return "redirect:/account/login";
+		}
+	}
+
 	/**
 	 * Checks that specified form is valid. Otherwise fills specified errors object.
 	 *
@@ -212,40 +226,12 @@ public class AccountController extends WisematchesController {
 	 * @throws DuplicateAccountException     if account with the same email or nickname already exist
 	 * @throws InadmissibleUsernameException if nickname can't be used.
 	 */
-	private Account createAccount(AccountRegistrationForm registration, HttpServletRequest request) throws DuplicateAccountException, InadmissibleUsernameException {
+	private Account createAccount(AccountRegistrationForm registration, HttpServletRequest request) throws AccountException {
 		final AccountEditor editor = new AccountEditor();
 		editor.setEmail(registration.getEmail());
 		editor.setNickname(registration.getNickname());
-//		editor.setPassword();
 		editor.setLanguage(Language.byCode(registration.getLanguage()));
 		editor.setTimeZone(Calendar.getInstance(request.getLocale()).getTimeZone());
-
-/*
-TODO: commented
-		if (accountSecurityService != null) {
-			editor.setPassword(accountSecurityService.encodePlayerPassword(editor.createAccount(), registration.getPassword()));
-		}
-*/
 		return accountManager.createAccount(editor.createAccount(), registration.getPassword());
 	}
-
-	@Autowired
-	public void setCaptchaService(CaptchaService captchaService) {
-		this.captchaService = captchaService;
-	}
-
-	@Autowired
-	public void setAccountManager(AccountManager accountManager) {
-		this.accountManager = accountManager;
-	}
-
-	@Autowired
-	public void setNotificationService(NotificationService notificationService) {
-		this.notificationService = notificationService;
-	}
-/*
-	@Autowired
-	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
-		this.accountSecurityService = accountSecurityService;
-	}*/
 }

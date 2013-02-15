@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PlayerProfileControllerTest {
-	public PlayerProfileControllerTest() {
+public class ProfileControllerTest {
+	public ProfileControllerTest() {
 	}
 
 	final String[] NAMES = new String[]{"Jun", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};

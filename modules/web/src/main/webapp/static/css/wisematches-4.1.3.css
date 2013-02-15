@@ -963,7 +963,7 @@ a.ui-icon {
     background: url("../images/player/membership.png") no-repeat left top;
 }
 
-.player.guest .icon {
+.player.visitor .icon {
     background-position: -16px 0 !important;
 }
 

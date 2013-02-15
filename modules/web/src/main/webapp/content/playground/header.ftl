@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="pageName" type="java.lang.String" -->
 <#-- @ftlvariable name="messageManager" type="wisematches.server.services.message.MessageManager" -->
 <#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
 <#include "/core.ftl">
@@ -15,22 +14,17 @@
             <table style="height: 100%; width: 100%;">
                 <tr>
                     <td valign="top" align="right">
-                    <@wm.player.name player=principal showState=false/>
-                        |
-                        <a href="/account/playerType"><@message code="membership.label"/></a>
+                    <@wm.player.name personality true false/>
                     <#if hasNewFeatues>
                         |
                         <a href="/info/features"
                            style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
                     </#if>
                         |
-                    <#--TODO: commented-->
-                    <#--
-                                        <#if principal.playerType.member><a
-                                                href="/account/modify"><@message code="game.menu.settings.label"/></a>
-                                            |
-                                        </#if>
-                    -->
+                    <#if personality.type.player><a
+                            href="/account/modify"><@message code="game.menu.settings.label"/></a>
+                        |
+                    </#if>
                         <a href="/info/help"><@message code="game.menu.help.label"/></a>
                         |
                         <a href="/account/logout"><@message code="account.signout.label"/></a>

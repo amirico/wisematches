@@ -1,48 +1,35 @@
 package wisematches.server.web.servlet.mvc;
 
-import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.authentication.rememberme.CookieTheftException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import wisematches.core.security.PersonalityContext;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
+@ControllerAdvice
 @RequestMapping("/info/error")
-public class ErrorsController {
-	public ErrorsController() {
+public class ErrorController {
+	public ErrorController() {
 	}
 
 	@RequestMapping(value = "")
-	public ModelAndView processException() {
-		return processException("???", null);
+	public ModelAndView processException(HttpServletRequest request, HttpServletResponse response) {
+		return processException(String.valueOf(response.getStatus()), null, request.getRequestURI());
 	}
 
-	@RequestMapping(value = "", params = "c=400")
-	@ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class, TypeMismatchException.class})
-	public ModelAndView processBadRequest() {
-		return processException("400", null);
-	}
-
-	@RequestMapping(value = "", params = "c=404")
-	@ExceptionHandler(NoSuchRequestHandlingMethodException.class)
-	public ModelAndView processPageNotFound(HttpServletRequest request) {
-		return processException("404", null, request.getRequestURI());
-	}
-
-	@RequestMapping(value = "", params = "c=500")
-	@ExceptionHandler(Exception.class)
-	public ModelAndView processUnhandledException(Exception exception) {
-		return processException("500", exception);
+	@ExceptionHandler(AccessDeniedException.class)
+	public ModelAndView processAccessException(Exception exception) {
+		return processException("access", exception);
 	}
 
 	@ExceptionHandler(UnknownEntityException.class)

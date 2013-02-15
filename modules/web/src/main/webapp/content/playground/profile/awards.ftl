@@ -1,13 +1,13 @@
-<#-- @ftlvariable name="country" type="wisematches.personality.membership.Country" -->
-<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
-<#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Player" -->
 <#-- @ftlvariable name="awards" type="wisematches.server.services.award.Award[]" -->
+<#-- @ftlvariable name="country" type="wisematches.core.personality.player.profile.Country" -->
+<#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
 <#include "/core.ftl">
 
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !principal??><#include "/content/assistance/navigation.ftl"/></#if>
+        <#if !personality??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top">
             <table class="profile shadow ui-state-default" width="960px">
@@ -47,7 +47,7 @@
                                     <@wm.award.image a.code a.weight/>
                                     <div>
                                         <p>
-                                        ${gameMessageSource.formatDate(a.awardedDate, locale)}
+                                        ${messageSource.formatDate(a.awardedDate, locale)}
                                         </p>
 
                                         <p><@message code="awards.${a.code}.label"/></p>

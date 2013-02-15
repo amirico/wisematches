@@ -1,5 +1,6 @@
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="awardsSummary" type="wisematches.server.services.award.AwardsSummary" -->
+<#-- @ftlvariable name="AwardType" type="wisematches.server.services.award.AwardType.static" -->
 
 <#include "/core.ftl">
 
@@ -64,7 +65,7 @@
 
 <#if totalCount != 0>
     <div style="text-align: right">
-        <a href="/playground/profile/awards?h=${player.id?string}"><@message code="profile.awards.label"/></a>
+        <a href="/playground/profile/awards?p=${player.id?string}"><@message code="profile.awards.label"/></a>
     </div>
 </#if>
 </div>

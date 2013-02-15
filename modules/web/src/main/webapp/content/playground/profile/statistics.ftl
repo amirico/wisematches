@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Player" -->
 <#-- @ftlvariable name="statistics" type="wisematches.playground.scribble.tracking.ScribbleStatistics" -->
 <#-- @ftlvariable name="ratingChart" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.RatingChart" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
@@ -10,7 +10,7 @@
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<#if principal??>
+<#if personality??>
     <#include "/content/playground/messages/scriplet.ftl">
     <#include "/content/playground/players/blacklist/scriplet.ftl">
     <#include "/content/playground/players/friends/scriplet.ftl">
@@ -95,8 +95,8 @@
                             <@message code="profile.undefined"/>
                         <#else>
                         ${statistics.lowestLostOpponentRating}
-                            <#assign llp=personalityManager.getPlayer(statistics.lowestLostOpponentId)!""/>
-                            <#if llp?has_content>( <@wm.player.name player=llp showType=false/>)</#if>
+                            <#assign llp=personalityManager.getPerson(statistics.lowestLostOpponentId)!""/>
+                            <#if llp?has_content>(<@wm.player.name player=llp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -107,9 +107,8 @@
                             <@message code="profile.undefined"/>
                         <#else>
                         ${statistics.highestWonOpponentRating}
-                            <#assign hwp=personalityManager.getPlayer(statistics.highestWonOpponentId)!""/>
-                            <#if hwp?has_content>( <@wm.player.name player=hwp showType=false/>
-                                )</#if>
+                            <#assign hwp=personalityManager.getPerson(statistics.highestWonOpponentId)!""/>
+                            <#if hwp?has_content>(<@wm.player.name player=hwp showType=false/>)</#if>
                         </#if>
                         </div>
                     </div>
@@ -154,7 +153,7 @@
                         <div><@message code="profile.last"/>:</div>
                         <div>
                         <#if statistics.lastMoveTime??>
-                                                ${gameMessageSource.formatDate(statistics.lastMoveTime, locale)}
+                                                ${messageSource.formatDate(statistics.lastMoveTime, locale)}
                                                 <#else>
                             <@message code="profile.undefined"/>
                         </#if>
@@ -164,7 +163,7 @@
                         <div><@message code="profile.avg.time"/>:</div>
                         <div>
                         <#if statistics.averageMoveTime != 0>
-                                            ${gameMessageSource.formatTimeMinutes(statistics.averageMoveTime/1000/60?round, locale)}
+                                            ${messageSource.formatTimeMinutes((statistics.averageMoveTime/1000/60)?round, locale)}
                                             <#else>
                             <@message code="profile.undefined"/>
                         </#if>
@@ -245,13 +244,13 @@
     </div>
 </div>
 
-<#if principal??>
+<#if personality??>
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
-    <a href="/playground/scribble/active?h=${player.id}"><@message code="game.dashboard.label"/></a>
+    <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
     |
-    <a href="/playground/scribble/history?h=${player.id}"><@message code="game.past.history.label"/></a>
+    <a href="/playground/scribble/history?p=${player.id}"><@message code="game.past.history.label"/></a>
     |
-    <a href="/playground/scribble/create?t=challenge&h=${player.id}"><@message code="game.challenge.label"/></a>
+    <a href="/playground/scribble/create?t=challenge&p=${player.id}"><@message code="game.challenge.label"/></a>
     <br>
     <@privateMessage pid=player.id><@message code="messages.send.label"/></@privateMessage>
     |

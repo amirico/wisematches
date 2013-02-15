@@ -1,9 +1,6 @@
 <#include "/core.ftl">
 
-<#--TODO: commented-->
-
-<#--
-<#if principal.playerType.guest>
+<#if personality.type.visitor>
 <div class="shadow ui-state-highlight" style="text-align: left; padding: 5px 5px 5px 30px;">
     <table>
         <tr>
@@ -11,7 +8,7 @@
                 <div class="restriction-icon wm-icon-warning" style="float: left; padding-right: 5px;"></div>
             </td>
             <td align="left" valign="top" width="100%">
-                <div><b><@message code="game.guest.warn.label"/></b></div>
+                <div><strong><@message code="game.guest.warn.label"/></strong></div>
                 <div>
                     <@message code="game.guest.warn.description"/>
                     <a href="#"
@@ -34,4 +31,4 @@
         </tr>
     </table>
 </div>
-</#if>-->
+</#if>
