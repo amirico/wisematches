@@ -47,7 +47,7 @@ public class WMAuthenticationFailureHandler implements AuthenticationFailureHand
 	 */
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 										AuthenticationException exception) throws IOException, ServletException {
-		String url = failureUrlMap.get(exception.getClass().getName());
+		String url = getMappingByClass(exception.getClass());
 		if (url != null) {
 			redirect(request, response, url, exception);
 		} else if (defaultFailureUrl == null) {
@@ -56,8 +56,16 @@ public class WMAuthenticationFailureHandler implements AuthenticationFailureHand
 			}
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed: " + exception.getMessage());
 		} else {
-			redirect(request, response, url, exception);
+			redirect(request, response, defaultFailureUrl, exception);
 		}
+	}
+
+	private String getMappingByClass(Class clazz) {
+		final String s = failureUrlMap.get(clazz.getName());
+		if (s == null) {
+			return getMappingByClass(clazz.getSuperclass());
+		}
+		return s;
 	}
 
 	protected void redirect(HttpServletRequest request, HttpServletResponse response, String url, AuthenticationException exception) throws IOException {
