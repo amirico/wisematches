@@ -1,6 +1,6 @@
 package wisematches.playground.restriction;
 
-import wisematches.core.Player;
+import wisematches.core.Personality;
 import wisematches.core.PlayerType;
 
 import java.util.Collection;
@@ -30,12 +30,12 @@ public interface RestrictionManager {
 	 * Returns current restriction threshold for specified restriction and player.
 	 *
 	 * @param name   the name of restriction.
-	 * @param player the membership to be checked.
+	 * @param person the membership to be checked.
 	 * @return current restriction threshold or {@code null} if there are no any restrictions.
 	 * @throws IllegalArgumentException if specified restriction name is unknown.
 	 * @throws NullPointerException     if {@code name} or {@code membership} is {@code null}
 	 */
-	Comparable getRestrictionThreshold(String name, Player player);
+	Comparable getRestrictionThreshold(String name, Personality person);
 
 	/**
 	 * Returns current restriction threshold for specified restriction and player.
@@ -54,11 +54,11 @@ public interface RestrictionManager {
 	 * Manager checks that current {@code value} is less when value for specified restriction. If so,
 	 * method returns {@code null} otherwise it returns {@code Restriction} object.
 	 *
-	 * @param player the player who's restriction must be checked.
+	 * @param person the personality who's restriction should be validated.
 	 * @param name   the restriction name
 	 * @param value  current value for this restriction.
 	 * @return {@code null} if player doesn't break restriction's threshold; {@code false} if access to specified
 	 *         functionality is restricted for specified player.
 	 */
-	Restriction validateRestriction(Player player, String name, Comparable value);
+	Restriction validateRestriction(Personality person, String name, Comparable value);
 }

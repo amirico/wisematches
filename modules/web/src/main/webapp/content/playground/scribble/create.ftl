@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
-<#-- @ftlvariable name="robotPlayers" type="wisematches.core.Robot[]" -->
+<#-- @ftlvariable name="supportedRobots" type="wisematches.core.RobotType[]" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>
@@ -65,7 +65,7 @@
                 <select id="daysPerMove" name="daysPerMove" style="width: 170px;">
                     <#list [2,3,4,5,7,10,14] as l>
                         <option value="${l}"
-                                <#if (l==(wm.ui.statusValue)?number)>selected="selected"</#if>>${gameMessageSource.formatTimeMinutes(l*24*60, locale)}</option>
+                                <#if (l==(wm.ui.statusValue)?number)>selected="selected"</#if>>${messageSource.formatTimeMinutes(l*24*60, locale)}</option>
                     </#list>
                 </select>
             </@wm.ui.field>
@@ -100,18 +100,17 @@
             <div id="robotForm" class="create-form <#if createTab!="robot">ui-helper-hidden</#if>">
                 <table width="100%" style="border-spacing: 5px">
                     <@wm.ui.field path="create.robotType">
-                        <#list robotPlayers as robot>
-                            <#assign t=robot.robotType/>
+                        <#list supportedRobots as type>
                             <tr>
                                 <td nowrap="nowrap">
-                                    <input id="robotType${t}" name="robotType" type="radio" value="${t}"
-                                           <#if wm.ui.statusValue==t?upper_case>checked="checked"</#if>/>
-                                    <label for="robotType${t}">
-                                        <@wm.player.name player=robot showType=false/> (${robot.rating})
+                                    <input id="robotType${type}" name="robotType" type="radio" value="${type}"
+                                           <#if wm.ui.statusValue==type?upper_case>checked="checked"</#if>/>
+                                    <label for="robotType${type}">
+                                        <@wm.player.name player=robot showType=false/> (${type.rating})
                                     </label>
                                 </td>
                                 <td width="100%">
-                                    - <@message code="game.create.robot.${t?lower_case}.description"/>
+                                    - <@message code="game.create.robot.${type?lower_case}.description"/>
                                 </td>
                             </tr>
                         </#list>
@@ -176,7 +175,7 @@
                                                         <#if "0"==wm.ui.statusValue>selected="selected"</#if>><@message code="game.create.limits.no"/></option>
                                                 <#list [1, 5, 10, 20, 50, 100] as g>
                                                     <option value="${g}">${g}
-                                                            <@message code="game.create.limits.game"/>${gameMessageSource.getWordEnding(g, locale)}</option>
+                                                            <@message code="game.create.limits.game"/>${messageSource.getWordEnding(g, locale)}</option>
                                                 </#list>
                                             </select>
                                         </@wm.ui.field>

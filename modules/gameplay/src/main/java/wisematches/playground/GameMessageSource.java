@@ -66,7 +66,11 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 
 
 	public String getRobotNick(Robot player, Locale locale) {
-		return getMessage("game.player." + player.getRobotType().name().toLowerCase(), locale);
+		return getRobotNick(player.getRobotType(), locale);
+	}
+
+	public String getRobotNick(RobotType type, Locale locale) {
+		return getMessage("game.player." + type.name().toLowerCase(), locale);
 	}
 
 	public String getPlayerNick(Player player, Locale locale) {
@@ -74,6 +78,10 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 	}
 
 	public String getVisitorNick(Visitor player, Locale locale) {
+		return getVisitorNick(player.getLanguage(), locale);
+	}
+
+	public String getVisitorNick(Language language, Locale locale) {
 		return getMessage("game.player.guest", locale);
 	}
 

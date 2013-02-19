@@ -17,5 +17,8 @@
 <#macro nick p>
 <div class="nickname">${messageSource.getPersonalityNick(p, locale)}</div></#macro>
 
+<#macro robot type>
+<div class="nickname">${messageSource.getRobotNick(type, locale)}</div></#macro>
+
 <#macro icon p>
 <div class="icon<#if p.type.player> ${p.playerType.name()?lower_case}</#if>"></div></#macro>

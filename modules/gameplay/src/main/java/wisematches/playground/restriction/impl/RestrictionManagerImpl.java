@@ -1,7 +1,9 @@
 package wisematches.playground.restriction.impl;
 
+import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.PlayerType;
+import wisematches.core.Visitor;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 
@@ -30,33 +32,33 @@ public class RestrictionManagerImpl implements RestrictionManager {
 	}
 
 	@Override
-	public Comparable<?> getRestrictionThreshold(String name, Player player) {
-		return getRestrictionThreshold(name, player.getPlayerType());
-	}
-
-	@Override
-	public Comparable getRestrictionThreshold(String name, PlayerType player) {
-		if (name == null) {
-			throw new NullPointerException("Name can't be null");
-		}
+	public Comparable<?> getRestrictionThreshold(String name, PlayerType player) {
 		final RestrictionDescription<?> descriptor = getDescriptor(name);
-		if (descriptor == null) {
-			throw new IllegalArgumentException("Unknown restriction: " + name);
-		}
 		return descriptor.getRestriction(player);
 	}
 
 	@Override
+	public Comparable<?> getRestrictionThreshold(String name, Personality person) {
+		if (person instanceof Player) {
+			return getRestrictionThreshold(name, ((Player) person).getPlayerType());
+		} else if (person instanceof Visitor) {
+			final RestrictionDescription<?> descriptor = getDescriptor(name);
+			return descriptor.getRestriction(null);
+		}
+		throw new IllegalArgumentException("Unsupported person type: " + person);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public Restriction validateRestriction(Player player, String name, Comparable value) {
-		if (player == null) {
+	public Restriction validateRestriction(Personality person, String name, Comparable value) {
+		if (person == null) {
 			throw new NullPointerException("Player can't be null");
 		}
 		if (value == null) {
 			throw new NullPointerException("Value can't be null");
 		}
 
-		final Comparable comparable = getRestrictionThreshold(name, player);
+		final Comparable comparable = getRestrictionThreshold(name, person);
 		if (comparable.compareTo(value) <= 0) {
 			return new Restriction(name, comparable, value);
 		}

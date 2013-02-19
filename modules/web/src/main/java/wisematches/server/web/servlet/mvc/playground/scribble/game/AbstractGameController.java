@@ -26,7 +26,7 @@ public class AbstractGameController extends WisematchesController {
 	protected GameProposalManager<ScribbleSettings> proposalManager;
 
 	protected static final ScribbleContext ACTIVE_GAMES_CTX = new ScribbleContext(true);
-	protected static final ScribbleContext FINISHED_GAMES_CTX = new ScribbleContext(true);
+	protected static final ScribbleContext FINISHED_GAMES_CTX = new ScribbleContext(false);
 
 	public AbstractGameController() {
 	}

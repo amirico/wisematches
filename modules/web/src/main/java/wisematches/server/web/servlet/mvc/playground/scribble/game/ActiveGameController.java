@@ -56,7 +56,7 @@ public class ActiveGameController extends AbstractGameController {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
 		}
 
-		if (principal == getPlayer()) {
+		if (principal.equals(getPersonality())) {
 			final Collection<GameProposal<ScribbleSettings>> proposals =
 					proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
 			model.addAttribute("activeProposals", proposals);
