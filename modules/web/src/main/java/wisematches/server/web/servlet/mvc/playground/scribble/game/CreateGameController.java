@@ -34,7 +34,7 @@ import java.util.Locale;
 public class CreateGameController extends AbstractGameController {
 	private DictionaryManager dictionaryManager;
 	private RestrictionManager restrictionManager;
-	private ScribblePlayerSearchManager searchManager;
+	private ScribblePlayerSearchManager playerSearchManager;
 
 	private static final String[] SEARCH_COLUMNS = new String[]{"nickname", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"};
 	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
@@ -68,24 +68,22 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
-/*
-		final Personality principal = getPlayer();
-		model.addAttribute("robotPlayers", RobotPlayer.getRobotPlayers());
-		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "games.active", getActiveGamesCount(principal)));
-		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", principal.getMembership()));
+		final Personality personality = getPersonality();
+		model.addAttribute("robots", playManager.getSupportedRobots());
+		model.addAttribute("restriction", restrictionManager.validateRestriction(personality, "games.active", getActiveGamesCount(personality)));
+		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", personality));
 
 		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
 		model.addAttribute("searchAreas", SEARCH_AREAS);
 		model.addAttribute("searchColumns", SEARCH_COLUMNS);
-		model.addAttribute("searchEntityDescriptor", searchManager.getEntityDescriptor());
+		model.addAttribute("searchEntityDescriptor", playerSearchManager.getEntityDescriptor());
 
-		if (principal.getPlayerType().isGuest()) {
+		if (personality.getType().isVisitor()) {
 			form.setCreateTab(CreateScribbleTab.ROBOT);
 			model.addAttribute("playRobotsOnly", true);
 		} else {
 			model.addAttribute("playRobotsOnly", false);
 		}
-*/
 		return "/content/playground/scribble/create";
 	}
 
@@ -313,7 +311,7 @@ public class CreateGameController extends AbstractGameController {
 	}
 
 	@Autowired
-	public void setSearchManager(ScribblePlayerSearchManager searchManager) {
-		this.searchManager = searchManager;
+	public void setPlayerSearchManager(ScribblePlayerSearchManager playerSearchManager) {
+		this.playerSearchManager = playerSearchManager;
 	}
 }
