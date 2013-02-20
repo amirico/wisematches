@@ -1,6 +1,6 @@
 package wisematches.playground.restriction.impl;
 
-import wisematches.core.PlayerType;
+import wisematches.core.Membership;
 
 import java.util.Map;
 
@@ -10,12 +10,12 @@ import java.util.Map;
 public final class RestrictionDescription<T> {
 	private String name;
 	private Comparable<T> nonMemberRestriction;
-	private Map<PlayerType, Comparable<T>> restrictions;
+	private Map<Membership, Comparable<T>> restrictions;
 
 	public RestrictionDescription() {
 	}
 
-	public RestrictionDescription(String name, Comparable<T> nonMemberRestriction, Map<PlayerType, Comparable<T>> restrictions) {
+	public RestrictionDescription(String name, Comparable<T> nonMemberRestriction, Map<Membership, Comparable<T>> restrictions) {
 		this.name = name;
 		this.restrictions = restrictions;
 	}
@@ -24,14 +24,14 @@ public final class RestrictionDescription<T> {
 		return name;
 	}
 
-	public Comparable<T> getRestriction(PlayerType playerType) {
+	public Comparable<T> getRestriction(Membership playerType) {
 		if (playerType == null) {
 			return nonMemberRestriction;
 		}
 		return restrictions.get(playerType);
 	}
 
-	public Map<PlayerType, Comparable<T>> getRestrictions() {
+	public Map<Membership, Comparable<T>> getRestrictions() {
 		return restrictions;
 	}
 
@@ -43,7 +43,7 @@ public final class RestrictionDescription<T> {
 		this.nonMemberRestriction = nonMemberRestriction;
 	}
 
-	public void setRestrictions(Map<PlayerType, Comparable<T>> restrictions) {
+	public void setRestrictions(Map<Membership, Comparable<T>> restrictions) {
 		this.restrictions = restrictions;
 	}
 }

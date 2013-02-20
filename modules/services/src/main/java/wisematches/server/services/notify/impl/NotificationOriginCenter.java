@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
+import wisematches.core.Member;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
@@ -67,19 +68,19 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 	}
 
 	protected void processNotification(long person, String code, Object context) {
-		final Personality player = personalityManager.getPlayer(person);
-		if (player instanceof Player) {
-			fireNotification(code, (Player) player, context);
+		final Member member = personalityManager.getMember(person);
+		if (member != null) {
+			fireNotification(code, member, context);
 		}
 	}
 
 	protected void processNotification(Personality person, String code, Object context) {
-		if (person instanceof Player) {
-			fireNotification(code, (Player) person, context);
+		if (person instanceof Member) {
+			fireNotification(code, (Member) person, context);
 		}
 	}
 
-	private void fireNotification(String code, Player player, Object context) {
+	private void fireNotification(String code, Member player, Object context) {
 		try {
 			notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
 			if (log.isInfoEnabled()) {
@@ -443,7 +444,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
                 map.put("division", division);
                 map.put("place", tourneyWinner.getPlace());
 
-                processNotification(tourneyWinner.getPlayer(), "playground.tourney.finished", map);
+                processNotification(tourneyWinner.getMember(), "playground.tourney.finished", map);
             }
 */
 		}

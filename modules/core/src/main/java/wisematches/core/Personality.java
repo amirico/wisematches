@@ -46,6 +46,7 @@ public abstract class Personality implements Serializable {
 	 *
 	 * @return {@code true} if personality is traceable or {@code false} if not.
 	 */
+	@Deprecated
 	public abstract PersonalityType getType();
 
 	/**

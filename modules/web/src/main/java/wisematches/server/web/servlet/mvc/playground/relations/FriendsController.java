@@ -38,7 +38,7 @@ public class FriendsController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public ServiceResponse addFriend(@RequestBody FriendRelationForm form, Locale locale) {
-		final Player player = personalityManager.getPlayer(form.getPerson());
+		final Player player = personalityManager.getMember(form.getPerson());
 		if (player == null) {
 			return ServiceResponse.failure(messageSource.getMessage("friends.err.unknown", locale));
 		}
@@ -52,7 +52,7 @@ public class FriendsController extends WisematchesController {
 	public ServiceResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
 		final Player personality = getPlayer();
 		for (Long id : removeList) {
-			final Player player1 = personalityManager.getPlayer(id);
+			final Player player1 = personalityManager.getMember(id);
 			friendsManager.removeFriend(personality, player1);
 		}
 		return ServiceResponse.SUCCESS;

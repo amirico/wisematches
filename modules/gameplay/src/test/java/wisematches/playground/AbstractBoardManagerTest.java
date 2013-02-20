@@ -9,7 +9,7 @@ import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.Robot;
 import wisematches.core.RobotType;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.*;
@@ -26,8 +26,8 @@ public class AbstractBoardManagerTest {
 
 	private BoardListener gamePlayListener;
 
-	private static final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
-	private static final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
+	private static final Player player1 = new DefaultMember(901, null, null, null, null, null);
+	private static final Player player2 = new DefaultMember(902, null, null, null, null, null);
 
 	public AbstractBoardManagerTest() {
 	}
@@ -112,7 +112,7 @@ public class AbstractBoardManagerTest {
 		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
-		expect(board.getPlayerTurn()).andReturn(RobotType.DULL.getPlayer());
+		expect(board.getPlayerTurn()).andReturn(RobotType.DULL.getMember());
 		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
 
@@ -139,7 +139,7 @@ public class AbstractBoardManagerTest {
 		final GameBoard<?, ?> newBoard = mock.createBoard(settings, player, RobotType.DULL);
 		assertSame(board, newBoard);
 
-		assertEquals(Arrays.asList(player, RobotType.DULL.getPlayer()), personalityCapture.getValue());
+		assertEquals(Arrays.asList(player, RobotType.DULL.getMember()), personalityCapture.getValue());
 
 		verify(board);
 		verify(dao);

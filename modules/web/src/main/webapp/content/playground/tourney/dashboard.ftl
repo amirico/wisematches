@@ -61,7 +61,7 @@
                                     <#list g.players as p>
                                         <#if p != pid>
                                             <div>
-                                                <@wm.player.name personalityManager.getPlayer(p)/>
+                                                <@wm.player.name personalityManager.getMember(p)/>
                                             </div>
                                         </#if>
                                     </#list>
