@@ -38,7 +38,7 @@ public class ActiveGameController extends AbstractGameController {
 	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
-			principal = getPersonality();
+			principal = getPlayer();
 		} else {
 			principal = personalityManager.getPerson(pid);
 		}
@@ -56,7 +56,7 @@ public class ActiveGameController extends AbstractGameController {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
 		}
 
-		if (principal.equals(getPersonality())) {
+		if (principal.equals(getPlayer())) {
 			final Collection<GameProposal<ScribbleSettings>> proposals =
 					proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
 			model.addAttribute("activeProposals", proposals);
@@ -77,7 +77,7 @@ public class ActiveGameController extends AbstractGameController {
 		if (pid == null) {
 			principal = getPlayer();
 		} else {
-			principal = personalityManager.getPlayer(pid);
+			principal = personalityManager.getMember(pid);
 		}
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");
@@ -98,7 +98,7 @@ public class ActiveGameController extends AbstractGameController {
 				final Personality player = playersHands.get(i);
 				// TODO: commented
 /*
-				final Personality player = personalityManager.getPlayer(hand.getPlayerId());
+				final Personality player = personalityManager.getMember(hand.getPlayerId());
 				players[i] = new PlayerInfoForm(player.getId(),
 						player.getNickname(),
 						player.getMembership().name(),

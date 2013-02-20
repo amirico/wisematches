@@ -2,7 +2,7 @@ package wisematches.playground.propose.impl.memory;
 
 import org.junit.Test;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.impl.DefaultPrivateProposal;
@@ -16,9 +16,9 @@ import static org.junit.Assert.assertEquals;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class MemoryProposalManagerTest {
-	private static final Player P1 = new DefaultPlayer(901, null, null, null, null, null);
-	private static final Player P2 = new DefaultPlayer(902, null, null, null, null, null);
-	private static final Player P3 = new DefaultPlayer(903, null, null, null, null, null);
+	private static final Player P1 = new DefaultMember(901, null, null, null, null, null);
+	private static final Player P2 = new DefaultMember(902, null, null, null, null, null);
+	private static final Player P3 = new DefaultMember(903, null, null, null, null, null);
 
 	public MemoryProposalManagerTest() {
 	}

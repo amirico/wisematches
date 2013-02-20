@@ -1,7 +1,7 @@
 package wisematches.server.services.relations;
 
 import wisematches.core.Language;
-import wisematches.core.PlayerType;
+import wisematches.core.Membership;
 import wisematches.core.search.descriptive.SearchableBean;
 import wisematches.core.search.descriptive.SearchableProperty;
 
@@ -28,7 +28,7 @@ public class PlayerEntityBean {
 	//	@Enumerated(EnumType.STRING)
 //	@SearchableProperty(column = "membership.membership")
 	@Transient
-	private PlayerType playerType;
+	private Membership playerType;
 
 	@SearchableProperty(column = "stats.rating")
 	private int ratingA;
@@ -83,11 +83,11 @@ public class PlayerEntityBean {
 		this.nickname = nickname;
 	}
 
-	public PlayerType getPlayerType() {
+	public Membership getPlayerType() {
 		return playerType;
 	}
 
-	public void setPlayerType(PlayerType playerType) {
+	public void setPlayerType(Membership playerType) {
 		this.playerType = playerType;
 	}
 

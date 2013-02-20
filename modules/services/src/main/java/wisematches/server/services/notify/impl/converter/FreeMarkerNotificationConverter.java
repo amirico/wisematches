@@ -5,7 +5,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.server.services.notify.Notification;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.TransformationException;
@@ -30,7 +30,7 @@ public class FreeMarkerNotificationConverter implements NotificationConverter {
 	}
 
 	@Override
-	public Notification createNotification(String code, Player target, NotificationSender sender, Object context) throws TransformationException {
+	public Notification createNotification(String code, Member target, NotificationSender sender, Object context) throws TransformationException {
 		final Locale locale = target.getLanguage().getLocale();
 
 		final String subject = messageSource.getMessage("notify.subject." + code, null, locale);

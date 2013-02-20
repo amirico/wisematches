@@ -3,7 +3,7 @@ package wisematches.core;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class Visitor extends Personality {
+public abstract class Visitor extends Player {
 	private final Language language;
 
 	protected Visitor(Language language) {

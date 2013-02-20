@@ -3,7 +3,7 @@ package wisematches.core.security.userdetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import wisematches.core.Personality;
+import wisematches.core.Member;
 import wisematches.core.Player;
 
 import java.util.Collection;
@@ -14,22 +14,22 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class PersonalityDetails implements UserDetails {
+public final class PlayerDetails implements UserDetails {
 	private final String username;
 	private final String password;
 
 	private final boolean accountLocked;
 	private final boolean accountExpired;
 
-	private final Personality personality;
+	private final Player player;
 	private final Collection<GrantedAuthority> authorities;
 
-	public PersonalityDetails(Personality personality, String username, String password, boolean locked, boolean expired, Collection<String> authorities) {
+	public PlayerDetails(Player player, String username, String password, boolean locked, boolean expired, Collection<String> authorities) {
 		this.username = username;
 		this.password = password;
 		this.accountLocked = locked;
 		this.accountExpired = expired;
-		this.personality = personality;
+		this.player = player;
 
 		final Set<GrantedAuthority> a = new HashSet<>();
 		if (authorities != null) {
@@ -56,15 +56,14 @@ public final class PersonalityDetails implements UserDetails {
 	}
 
 	public String getNickname() {
-		if (personality instanceof Player) {
-			Player player = (Player) personality;
-			return player.getNickname();
+		if (player instanceof Member) {
+			return ((Member) player).getNickname();
 		}
 		return "NO_NICKNAME";
 	}
 
-	public Personality getPersonality() {
-		return personality;
+	public Player getPlayer() {
+		return player;
 	}
 
 	@Override

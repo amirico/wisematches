@@ -1,6 +1,6 @@
 package wisematches.server.services.notify;
 
-import wisematches.core.Player;
+import wisematches.core.Member;
 
 import java.io.Serializable;
 
@@ -13,10 +13,10 @@ public class Notification implements Serializable {
 	private final String code;
 	private final String subject;
 	private final String message;
-	private final Player target;
+	private final Member target;
 	private final NotificationSender sender;
 
-	public Notification(long id, String code, String subject, String message, Player target, NotificationSender sender) {
+	public Notification(long id, String code, String subject, String message, Member target, NotificationSender sender) {
 		this.id = id;
 		this.timestamp = System.currentTimeMillis();
 		this.code = code;
@@ -46,7 +46,7 @@ public class Notification implements Serializable {
 		return message;
 	}
 
-	public Player getTarget() {
+	public Member getTarget() {
 		return target;
 	}
 

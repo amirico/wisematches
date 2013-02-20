@@ -5,7 +5,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.server.services.notify.NotificationDescriptor;
 import wisematches.server.services.notify.NotificationManager;
 import wisematches.server.services.notify.NotificationScope;
@@ -40,7 +40,7 @@ public class HibernateNotificationManager implements NotificationManager, Initia
 	}
 
 	@Override
-	public NotificationScope getNotificationScope(String code, Personality personality) {
+	public NotificationScope getNotificationScope(String code, Member member) {
 		final NotificationDescriptor descriptor = descriptorsMap.get(code);
 		if (descriptor == null) {
 			return null;
@@ -48,7 +48,7 @@ public class HibernateNotificationManager implements NotificationManager, Initia
 		final Session session = sessionFactory.getCurrentSession();
 		final Query sqlQuery = session.createSQLQuery("SELECT `" + code + "` FROM notification_settings WHERE pid=:pid");
 		sqlQuery.setCacheable(true);
-		sqlQuery.setParameter("pid", personality.getId());
+		sqlQuery.setParameter("pid", member.getId());
 
 		final List list = sqlQuery.list();
 		if (list.isEmpty()) {
@@ -60,12 +60,12 @@ public class HibernateNotificationManager implements NotificationManager, Initia
 	}
 
 	@Override
-	public NotificationScope setNotificationScope(String code, Personality personality, NotificationScope scope) {
+	public NotificationScope setNotificationScope(String code, Player player, NotificationScope scope) {
 		final String query = "INSERT INTO notification_settings (`pid`, `" + code + "`) VALUES (:pid, :scope) ON DUPLICATE KEY UPDATE `" + code + "`=:scope";
 		final Session session = sessionFactory.getCurrentSession();
-		final Query sqlQuery = session.createSQLQuery(query).setParameter("pid", personality.getId());
+		final Query sqlQuery = session.createSQLQuery(query).setParameter("pid", player.getId());
 		sqlQuery.setCacheable(true);
-		sqlQuery.setParameter("pid", personality.getId());
+		sqlQuery.setParameter("pid", player.getId());
 		sqlQuery.setParameter("scope", scope == null ? null : scope.ordinal());
 		sqlQuery.executeUpdate();
 		return null;
