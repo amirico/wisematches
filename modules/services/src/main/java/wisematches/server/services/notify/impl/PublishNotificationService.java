@@ -2,7 +2,7 @@ package wisematches.server.services.notify.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.core.task.TransactionalExecutor;
 import wisematches.server.services.notify.*;
 
@@ -25,7 +25,7 @@ public class PublishNotificationService implements NotificationService {
 	}
 
 	@Override
-	public Notification raiseNotification(String code, Player target, NotificationSender sender, Object context) throws NotificationException {
+	public Notification raiseNotification(String code, Member target, NotificationSender sender, Object context) throws NotificationException {
 		final NotificationScope notificationScope = notificationManager.getNotificationScope(code, target);
 		final NotificationScope personalScope = notificationScope != null ? notificationScope : NotificationScope.EXTERNAL;
 

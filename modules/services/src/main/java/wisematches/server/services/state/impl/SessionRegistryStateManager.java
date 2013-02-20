@@ -3,7 +3,7 @@ package wisematches.server.services.state.impl;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import wisematches.core.Personality;
-import wisematches.core.security.userdetails.PersonalityDetails;
+import wisematches.core.security.userdetails.PlayerDetails;
 import wisematches.server.services.state.PlayerStateListener;
 import wisematches.server.services.state.PlayerStateManager;
 
@@ -91,8 +91,8 @@ public class SessionRegistryStateManager extends SessionRegistryImpl implements 
 	}
 
 	private Object personality(Object info) {
-		if (info instanceof PersonalityDetails) {
-			return ((PersonalityDetails) info).getPersonality();
+		if (info instanceof PlayerDetails) {
+			return ((PlayerDetails) info).getPlayer();
 		}
 		return info;
 	}

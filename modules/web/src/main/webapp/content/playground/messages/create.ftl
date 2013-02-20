@@ -35,7 +35,7 @@
     <div>
         <div></div>
         <div style="font-style: italic;">
-            This is reply to the message of <@wm.player.name player=personalityManager.getPlayer(original.sender)/> received
+            This is reply to the message of <@wm.player.name player=personalityManager.getMember(original.sender)/> received
         ${messageSource.formatDate(original.created, locale)} ${messageSource.formatTime(original.created, locale)}
         </div>
     </div>

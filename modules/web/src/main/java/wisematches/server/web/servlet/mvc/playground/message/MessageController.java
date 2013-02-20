@@ -83,7 +83,7 @@ public class MessageController extends WisematchesController {
 			}
 		}
 
-		final Player player = personalityManager.getPlayer(playerId);
+		final Player player = personalityManager.getMember(playerId);
 		if (player == null) {
 			result.rejectValue("pid", "messages.err.recipient");
 		} else if (blacklistManager.isBlacklisted(player, principal)) {
@@ -121,7 +121,7 @@ public class MessageController extends WisematchesController {
 			}
 		}
 
-		final Player player = personalityManager.getPlayer(playerId);
+		final Player player = personalityManager.getMember(playerId);
 		if (player == null) {
 			return ServiceResponse.failure(messageSource.getMessage("messages.err.recipients", locale));
 		} else if (blacklistManager.isBlacklisted(player, getPlayer())) {

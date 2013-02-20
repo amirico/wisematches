@@ -36,7 +36,7 @@ public class BlacklistController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public ServiceResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
-		final Player player = personalityManager.getPlayer(form.getPerson());
+		final Player player = personalityManager.getMember(form.getPerson());
 		if (player == null) {
 			return ServiceResponse.failure(messageSource.getMessage("blacklist.err.unknown", locale));
 		}
@@ -50,7 +50,7 @@ public class BlacklistController extends WisematchesController {
 	public ServiceResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {
 		final Player player = getPlayer();
 		for (Long id : removeList) {
-			final Player player1 = personalityManager.getPlayer(id);
+			final Player player1 = personalityManager.getMember(id);
 			blacklistManager.removePlayer(player, player1);
 		}
 		return ServiceResponse.SUCCESS;

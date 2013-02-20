@@ -1,7 +1,7 @@
 package wisematches.server.services.notify.impl.publisher;
 
 import org.junit.Test;
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.server.services.message.MessageManager;
 import wisematches.server.services.notify.Notification;
 import wisematches.server.services.notify.NotificationSender;
@@ -17,7 +17,7 @@ public class MessageNotificationPublisherTest {
 
 	@Test
 	public void testSendNotification() {
-		final Player account = createNiceMock(Player.class);
+		final Member account = createNiceMock(Member.class);
 
 		final MessageManager manager = createStrictMock(MessageManager.class);
 		manager.sendNotification(account, "mock.message", true);

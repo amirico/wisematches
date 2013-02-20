@@ -13,7 +13,7 @@ public class IndexController extends WisematchesController {
 
 	@RequestMapping(value = {"/", "/index"})
 	public final String mainPage() {
-		if (getPersonality() != null) {
+		if (getPlayer() != null) {
 			return "redirect:/playground/scribble/active";
 		}
 		return "forward:/account/login";

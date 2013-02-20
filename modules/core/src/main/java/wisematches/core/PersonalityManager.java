@@ -30,7 +30,7 @@ public interface PersonalityManager {
 	 * @param id the of player
 	 * @return the player by specified id or {@code null}.
 	 */
-	Player getPlayer(long id);
+	Member getMember(long id);
 
 	/**
 	 * Returns robot player by specified type.

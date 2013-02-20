@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import wisematches.core.Language;
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.server.services.ServerDescriptor;
 import wisematches.server.services.notify.Notification;
 import wisematches.server.services.notify.NotificationScope;
@@ -55,10 +55,10 @@ public class MailNotificationPublisher implements NotificationPublisher {
 		}
 		final MimeMessagePreparator mm = new MimeMessagePreparator() {
 			public void prepare(MimeMessage mimeMessage) throws Exception {
-				final Player account = notification.getTarget();
-				final Language language = account.getLanguage();
+				final Member member = notification.getTarget();
+				final Language language = member.getLanguage();
 
-				final InternetAddress to = new InternetAddress(account.getEmail(), account.getNickname(), "UTF-8");
+				final InternetAddress to = new InternetAddress(member.getEmail(), member.getNickname(), "UTF-8");
 				final InternetAddress from = getInternetAddress(notification.getSender(), language);
 
 				final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, false, "UTF-8");

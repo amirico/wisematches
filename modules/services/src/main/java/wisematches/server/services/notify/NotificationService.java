@@ -1,6 +1,6 @@
 package wisematches.server.services.notify;
 
-import wisematches.core.Player;
+import wisematches.core.Member;
 
 /**
  * {@code NotificationDistributor} is main notification distribution interface. It prepares
@@ -15,5 +15,5 @@ import wisematches.core.Player;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface NotificationService {
-	Notification raiseNotification(String code, Player target, NotificationSender sender, Object context) throws NotificationException;
+	Notification raiseNotification(String code, Member target, NotificationSender sender, Object context) throws NotificationException;
 }

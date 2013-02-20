@@ -3,6 +3,7 @@ package wisematches.playground.scribble.settings.impl;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.core.Member;
 import wisematches.core.Player;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
@@ -39,7 +40,7 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BoardSettings getScribbleSettings(Player player) {
-		if (player == null) {
+		if (player == null || !(player instanceof Member)) {
 			return getDefaultSettings();
 		}
 
@@ -54,6 +55,10 @@ public class HibernateBoardSettingsManager implements BoardSettingsManager {
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = false)
 	public void setScribbleSettings(Player player, BoardSettings settings) {
+		if (player == null || !(player instanceof Member)) {
+			return;
+		}
+
 		lock.lock();
 		try {
 			HibernateBoardSettings s = getHibernateBoardSettings(player);

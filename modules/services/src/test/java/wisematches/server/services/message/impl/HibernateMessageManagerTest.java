@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.core.Membership;
 import wisematches.core.Player;
-import wisematches.core.PlayerType;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.playground.restriction.impl.RestrictionDescription;
 import wisematches.playground.restriction.impl.RestrictionManagerImpl;
 import wisematches.server.services.message.Message;
@@ -45,8 +45,8 @@ public class HibernateMessageManagerTest {
 
 	@Test
 	public void testMessage() {
-		final Player p1 = new DefaultPlayer(901, null, null, null, null, null);
-		final Player p2 = new DefaultPlayer(902, null, null, null, null, null);
+		final Player p1 = new DefaultMember(901, null, null, null, null, null);
+		final Player p2 = new DefaultMember(902, null, null, null, null, null);
 
 		assertEquals(0, messageManager.getTodayMessagesCount(p1, MessageDirection.RECEIVED));
 		assertEquals(0, messageManager.getTodayMessagesCount(p1, MessageDirection.SENT));
@@ -97,8 +97,8 @@ public class HibernateMessageManagerTest {
 
 	@Test
 	public void testNotifications() {
-		final Player p1 = new DefaultPlayer(901, null, null, null, null, null);
-		final Player p2 = new DefaultPlayer(902, null, null, null, null, null);
+		final Player p1 = new DefaultMember(901, null, null, null, null, null);
+		final Player p2 = new DefaultMember(902, null, null, null, null, null);
 
 		messageManager.sendNotification(p1, "B1");
 		messageManager.sendNotification(p1, "B2");
@@ -129,17 +129,17 @@ public class HibernateMessageManagerTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testCleanup() {
-		final Map<PlayerType, Comparable<Integer>> a1 = new HashMap<>();
-		a1.put(PlayerType.BASIC, 20);
-		a1.put(PlayerType.SILVER, 40);
-		a1.put(PlayerType.GOLD, 40);
-		a1.put(PlayerType.PLATINUM, 40);
+		final Map<Membership, Comparable<Integer>> a1 = new HashMap<>();
+		a1.put(Membership.BASIC, 20);
+		a1.put(Membership.SILVER, 40);
+		a1.put(Membership.GOLD, 40);
+		a1.put(Membership.PLATINUM, 40);
 
-		final Map<PlayerType, Comparable<Integer>> a2 = new HashMap<>();
-		a2.put(PlayerType.BASIC, 10);
-		a2.put(PlayerType.SILVER, 20);
-		a2.put(PlayerType.GOLD, 20);
-		a2.put(PlayerType.PLATINUM, 20);
+		final Map<Membership, Comparable<Integer>> a2 = new HashMap<>();
+		a2.put(Membership.BASIC, 10);
+		a2.put(Membership.SILVER, 20);
+		a2.put(Membership.GOLD, 20);
+		a2.put(Membership.PLATINUM, 20);
 
 		final RestrictionManagerImpl r = new RestrictionManagerImpl();
 		r.setRestrictions(Arrays.asList(

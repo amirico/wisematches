@@ -73,7 +73,7 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 		return getMessage("game.player." + type.name().toLowerCase(), locale);
 	}
 
-	public String getPlayerNick(Player player, Locale locale) {
+	public String getPlayerNick(Member player, Locale locale) {
 		return player.getNickname();
 	}
 
@@ -90,8 +90,8 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 			return getRobotNick((Robot) p, locale);
 		} else if (p instanceof Visitor) {
 			return getVisitorNick((Visitor) p, locale);
-		} else if (p instanceof Player) {
-			return getPlayerNick((Player) p, locale);
+		} else if (p instanceof Member) {
+			return getPlayerNick((Member) p, locale);
 		}
 		throw new IllegalArgumentException("Unsupported personality type: " + p.getClass());
 	}

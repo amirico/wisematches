@@ -36,7 +36,7 @@ public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
 				break;
 		}
 		if (weight != null) {
-			final Player player = personalityManager.getPlayer(pid);
+			final Player player = personalityManager.getMember(pid);
 			grantAward(player, "tourney.winner", weight, new TourneyRelationship(tourney.getNumber()));
 		} else {
 			log.error("TourneyPlace can't be converted to AwardWeight: " + place);

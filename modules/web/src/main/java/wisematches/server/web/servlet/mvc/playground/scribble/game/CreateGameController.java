@@ -68,7 +68,7 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
-		final Personality personality = getPersonality();
+		final Personality personality = getPlayer();
 		model.addAttribute("robots", playManager.getSupportedRobots());
 		model.addAttribute("restriction", restrictionManager.validateRestriction(personality, "games.active", getActiveGamesCount(personality)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", personality));
@@ -95,7 +95,7 @@ public class CreateGameController extends AbstractGameController {
 			log.info("Create new game: " + form);
 		}
 
-		final Personality principal = getPlayer();
+		final Personality principal = getMember();
 		if (form.getTitle().length() > 150) {
 			return ServiceResponse.failure(messageSource.getMessage("game.create.title.err.max", locale));
 		}
@@ -154,7 +154,7 @@ public class CreateGameController extends AbstractGameController {
 				} else if (ProprietaryPlayer.isComputerPlayer(opponent)) {
 					return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
 				} else if (opponent != 0) {
-					Personality p = personalityManager.getPlayer(opponent);
+					Personality p = personalityManager.getMember(opponent);
 					if (p == null) {
 						return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
 					} else {
@@ -252,7 +252,7 @@ public class CreateGameController extends AbstractGameController {
 			final String[] split = parameter.split("\\|");
 			for (String id : split) {
 				try {
-					Personality player = personalityManager.getPlayer(Long.valueOf(id));
+					Personality player = personalityManager.getMember(Long.valueOf(id));
 					if (player != null) {
 						ids.add(player.getId());
 					}
@@ -283,7 +283,7 @@ public class CreateGameController extends AbstractGameController {
 				final List<Personality> playersHands = board.getPlayers();
 				final long[] players = new long[playersHands.size() - 1];
 				for (Personality playersHand : playersHands) {
-					if (playersHand.equals(getPersonality())) {
+					if (playersHand.equals(getPlayer())) {
 						continue;
 					}
 					players[index++] = playersHand.getId();

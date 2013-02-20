@@ -4,29 +4,22 @@ package wisematches.core;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum PersonalityType {
-	ROBOT(false),
-	PLAYER(true),
-	VISITOR(false);
+	ROBOT,
+	MEMBER,
+	VISITOR;
 
-	private final boolean traceable;
-
-	private PersonalityType(boolean traceable) {
-		this.traceable = traceable;
+	private PersonalityType() {
 	}
 
 	public boolean isRobot() {
 		return this == ROBOT;
 	}
 
-	public boolean isPlayer() {
-		return this == PLAYER;
+	public boolean isMember() {
+		return this == MEMBER;
 	}
 
 	public boolean isVisitor() {
 		return this == VISITOR;
-	}
-
-	public boolean isTraceable() {
-		return traceable;
 	}
 }

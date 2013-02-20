@@ -3,6 +3,7 @@ package wisematches.server.web.servlet.mvc.playground.player.settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.core.Language;
+import wisematches.core.Member;
 import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
@@ -46,21 +48,26 @@ public class SettingsController extends WisematchesController {
 
 	@RequestMapping(value = "")
 	public String modifyAccountPage(Model model, @ModelAttribute("settings") SettingsForm form) {
-		final Player principal = getPlayer();
-		if (principal.getTimeZone() != null) {
-			form.setTimezone(principal.getTimeZone().getID());
+		final Player player = getPlayer();
+		if (!(player instanceof Member)) {
+			throw new AccessDeniedException("unregistered");
 		}
-		form.setLanguage(principal.getLanguage().name().toLowerCase());
-		form.setEmail(principal.getEmail());
+
+		final Member member = (Member) player;
+		if (player.getTimeZone() != null) {
+			form.setTimezone(player.getTimeZone().getID());
+		}
+		form.setLanguage(player.getLanguage().name().toLowerCase());
+		form.setEmail(player.getEmail());
 		model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
 
 		final Map<String, NotificationScope> descriptors = new HashMap<>();
 		for (String code : new TreeSet<>(notificationManager.getNotificationCodes())) {
-			descriptors.put(code, notificationManager.getNotificationScope(code, principal));
+			descriptors.put(code, notificationManager.getNotificationScope(code, player));
 		}
 		model.addAttribute("notificationsView", new NotificationsTreeView(descriptors));
 
-		final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
+		final BoardSettings settings = boardSettingsManager.getScribbleSettings(player);
 		form.setTilesClass(settings.getTilesClass());
 		form.setCheckWords(settings.isCheckWords());
 		form.setCleanMemory(settings.isCleanMemory());

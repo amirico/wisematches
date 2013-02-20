@@ -66,12 +66,12 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		if (id < 1000) {
 			return playerMap.get(id);
 		} else {
-			return getPlayer(id);
+			return getMember(id);
 		}
 	}
 
 	@Override
-	public Player getPlayer(long id) {
+	public Member getMember(long id) {
 		if (id < 1000) {
 			return null;
 		}
@@ -79,12 +79,12 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		if (personality == null) {
 			final Account account = accountManager.getAccount(id);
 			if (account != null) {
-				final DefaultPlayer memberPlayer = createMemberPlayer(account);
+				final DefaultMember memberPlayer = createMemberPlayer(account);
 				playerMap.put(memberPlayer.getId(), memberPlayer);
 				return memberPlayer;
 			}
 		}
-		return (Player) personality;
+		return (Member) personality;
 	}
 
 	@Override
@@ -121,9 +121,9 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		}
 	}
 
-	private DefaultPlayer createMemberPlayer(Account account) {
-		final PlayerType card = membershipManager.getMembership(account);
-		return new DefaultPlayer(account, card);
+	private DefaultMember createMemberPlayer(Account account) {
+		final Membership card = membershipManager.getMembership(account);
+		return new DefaultMember(account, card);
 	}
 
 	private final class TheMemberPlayerListener implements AccountListener, MembershipListener {
@@ -155,7 +155,7 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 
 		@Override
 		public void membershipCardUpdated(Account account, MembershipCard oldCard, MembershipCard newCard) {
-			playerMap.put(account.getId(), new DefaultPlayer(account, newCard.getValidMembership()));
+			playerMap.put(account.getId(), new DefaultMember(account, newCard.getValidMembership()));
 		}
 	}
 }

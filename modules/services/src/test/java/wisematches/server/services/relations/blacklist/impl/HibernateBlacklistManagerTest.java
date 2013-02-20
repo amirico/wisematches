@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
 import wisematches.server.services.relations.blacklist.BlacklistRecord;
 import wisematches.server.services.relations.blacklist.BlacklistedException;
@@ -37,8 +37,8 @@ public class HibernateBlacklistManagerTest {
 
 	@Test
 	public void test() throws BlacklistedException {
-		final Player p1 = new DefaultPlayer(901, null, null, null, null, null);
-		final Player p2 = new DefaultPlayer(902, null, null, null, null, null);
+		final Player p1 = new DefaultMember(901, null, null, null, null, null);
+		final Player p2 = new DefaultMember(902, null, null, null, null, null);
 
 		blacklistManager.checkBlacklist(p1, p2);
 		assertFalse(blacklistManager.isBlacklisted(p1, p2));

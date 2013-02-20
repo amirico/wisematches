@@ -47,7 +47,7 @@
                         <#list view.proposal.players as p>
                         <div>
                             <#if p??>
-                                <@wm.player.name player=personalityManager.getPlayer(p) waiting=!view.proposal.isPlayerJoined(p)/>
+                                <@wm.player.name player=personalityManager.getMember(p) waiting=!view.proposal.isPlayerJoined(p)/>
                             <#else>
                                 <span class="player waiting"><span
                                         class="nickname"><@message code="game.status.waiting"/></span></span>

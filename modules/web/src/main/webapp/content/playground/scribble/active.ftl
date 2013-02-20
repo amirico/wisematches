@@ -8,7 +8,7 @@
         <#if board.getPlayerTurn() == personality>
             <@wm.board.href board.boardId><strong><@message code="game.status.move_you"/></strong></@wm.board.href>
         <#else>
-            <@message code="game.status.move_opp" args=["${personalityManager.getPlayer(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
+            <@message code="game.status.move_opp" args=["${personalityManager.getMember(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
         </#if>
     </#if>
 </#macro>
@@ -66,7 +66,7 @@
                 </td>
                 <td>
                     <#list board.players as hand>
-                        <div><@wm.player.name personalityManager.getPlayer(hand.getId())/></div>
+                        <div><@wm.player.name personalityManager.getMember(hand.getId())/></div>
                     </#list>
                 </td>
                 <td class="center">
@@ -100,7 +100,7 @@
                     <#list proposal.players as p>
                     <div>
                         <#if p??>
-                            <@wm.player.name player=personalityManager.getPlayer(p) waiting=!proposal.isPlayerJoined(p)/>
+                            <@wm.player.name player=personalityManager.getMember(p) waiting=!proposal.isPlayerJoined(p)/>
                         <#else>
                             <span class="player waiting"><span
                                     class="nickname"><@message code="game.status.waiting"/></span></span>

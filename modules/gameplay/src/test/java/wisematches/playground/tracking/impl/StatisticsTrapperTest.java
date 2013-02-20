@@ -3,7 +3,7 @@ package wisematches.playground.tracking.impl;
 import org.junit.Test;
 import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.playground.*;
 
 import java.util.Arrays;
@@ -20,16 +20,16 @@ import static org.junit.Assert.assertEquals;
 public class StatisticsTrapperTest {
 	private StatisticsTrapper statisticsTrapper = new StatisticsTrapper<StatisticsEditor>();
 
-	private static final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
-	private static final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
-	private static final Player player3 = new DefaultPlayer(903, null, null, null, null, null);
+	private static final Player player1 = new DefaultMember(901, null, null, null, null, null);
+	private static final Player player2 = new DefaultMember(902, null, null, null, null, null);
+	private static final Player player3 = new DefaultMember(903, null, null, null, null, null);
 
 	public StatisticsTrapperTest() {
 	}
 
 	@Test
 	public void testUpdateGamesStatistic1() throws Exception {
-		final Player player = new DefaultPlayer(900, null, null, null, null, null);
+		final Player player = new DefaultMember(900, null, null, null, null, null);
 		final StatisticsEditor editor = new StatisticsEditor();
 
 		statisticsTrapper.trapGameStarted(player, editor);

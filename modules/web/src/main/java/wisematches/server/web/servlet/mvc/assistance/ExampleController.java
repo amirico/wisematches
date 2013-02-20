@@ -38,7 +38,7 @@ public class ExampleController extends WisematchesController {
 	@RequestMapping("/move")
 	public String showHowToMove(final @RequestParam(value = "plain", required = false) String plain, final Model model, final Locale locale) throws Exception {
 		final Language language = Language.byLocale(locale);
-		final Personality personality = getPersonality();
+		final Personality personality = getPlayer();
 
 		BoardWrapper boardWrapper = boardsCache.get(language);
 		if (boardWrapper == null || !boardWrapper.getBoard().isActive()) {

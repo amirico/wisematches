@@ -30,9 +30,9 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 /*
 		final Personality principal;
 		if (pid == null) {
-			principal = getPlayer();
+			principal = getMember();
 		} else {
-			principal = playerManager.getPlayer(pid);
+			principal = playerManager.getMember(pid);
 		}
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");
@@ -55,7 +55,7 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 /*
 		final Personality personality;
 		if (pid == null) {
-			personality = getPersonality();
+			personality = getPlayer();
 		} else {
 			personality = Personality.person(pid);
 		}
@@ -78,7 +78,7 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 		final long[] playerIds = entity.getPlayers(personality);
 		final ServicePlayer[] players = new ServicePlayer[playerIds.length];
 		for (int i = 0, players1Length = playerIds.length; i < players1Length; i++) {
-			players[i] = ServicePlayer.get(playerManager.getPlayer(playerIds[i]), messageSource, playerStateManager, locale);
+			players[i] = ServicePlayer.get(playerManager.getMember(playerIds[i]), messageSource, playerStateManager, locale);
 		}
 		map.put("players", players);
 		map.put("resolution", messageSource.getMessage("game.resolution." + entity.getResolution().name().toLowerCase(), locale));
