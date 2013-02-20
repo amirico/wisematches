@@ -72,7 +72,7 @@ public class ProfileController extends WisematchesController {
 		try {
 			Player player;
 			try {
-				player = personalityManager.getPlayer(Long.parseLong(profileId));
+				player = personalityManager.getMember(Long.parseLong(profileId));
 			} catch (NumberFormatException ignore) {
 				player = null;
 			}
@@ -105,11 +105,7 @@ public class ProfileController extends WisematchesController {
 				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
 			}
 
-			if (!isPlayerAuthorized()) {
-				model.addAttribute("boardSettings", boardSettingsManager.getDefaultSettings());
-			} else {
-				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPlayer()));
-			}
+			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPlayer()));
 
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
@@ -127,7 +123,7 @@ public class ProfileController extends WisematchesController {
 	@RequestMapping("awards")
 	public String viewAwards(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
-			Player player = personalityManager.getPlayer(Long.parseLong(profileId));
+			Player player = personalityManager.getMember(Long.parseLong(profileId));
 			if (player == null) {
 				throw new UnknownEntityException(profileId, "profile");
 			}

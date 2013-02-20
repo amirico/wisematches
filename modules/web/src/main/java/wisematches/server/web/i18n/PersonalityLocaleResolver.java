@@ -27,7 +27,7 @@ public class PersonalityLocaleResolver extends SessionLocaleResolver {
 	 */
 	@Override
 	public Locale resolveLocale(HttpServletRequest request) {
-		final Personality personality = PersonalityContext.getPersonality();
+		final Personality personality = PersonalityContext.getPlayer();
 		if (personality instanceof Player) {
 			final Player player = (Player) personality;
 			return player.getLanguage().getLocale();

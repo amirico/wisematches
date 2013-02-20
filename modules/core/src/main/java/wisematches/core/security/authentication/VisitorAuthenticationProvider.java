@@ -4,19 +4,19 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import wisematches.core.Language;
-import wisematches.core.security.userdetails.PersonalityDetails;
+import wisematches.core.security.userdetails.PlayerDetails;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class VisitorAuthenticationProvider extends PersonalityAuthenticationProvider {
+public class VisitorAuthenticationProvider extends PlayerAuthenticationProvider {
 	private int visitorKeyHast;
 
 	public VisitorAuthenticationProvider() {
 	}
 
 	@Override
-	protected PersonalityDetails loadValidPersonalityDetails(Authentication authentication) {
+	protected PlayerDetails loadValidPersonalityDetails(Authentication authentication) {
 		final AnonymousAuthenticationToken token = (AnonymousAuthenticationToken) authentication;
 		if (token.getKeyHash() != visitorKeyHast) {
 			return null;

@@ -3,7 +3,7 @@ package wisematches.core;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerType {
+public enum Membership {
 	/**
 	 * Indicates that it's basic registered player.
 	 */

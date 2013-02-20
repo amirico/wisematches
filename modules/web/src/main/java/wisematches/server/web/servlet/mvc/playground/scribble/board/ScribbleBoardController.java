@@ -185,7 +185,7 @@ public class ScribbleBoardController extends WisematchesController {
 /*
 
 	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
-		final Personality currentPlayer = getPlayer();
+		final Personality currentPlayer = getMember();
 		if (move.getPlayerId() != currentPlayer.getId()) {
 			throw new UnsuitablePlayerException("make turn", currentPlayer);
 		}

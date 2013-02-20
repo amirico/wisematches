@@ -46,7 +46,7 @@ public class HibernatePlayerProfileManagerTest {
 		final Capture<PlayerProfile> profileCapture = new Capture<>();
 
 		final Account account = accountManager.createAccount(createMockAccount(), "mock");
-		final Player player = personalityManager.getPlayer(account.getId());
+		final Player player = personalityManager.getMember(account.getId());
 
 		final PlayerProfile profile = profileManager.getPlayerProfile(player);
 		assertNotNull(profile);

@@ -53,7 +53,7 @@ public class TourneyController extends WisematchesController {
 
 	@RequestMapping("dashboard")
 	public String showDashboard(Model model) {
-		final Personality personality = getPersonality();
+		final Personality personality = getPlayer();
 
 		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null);
 		model.addAttribute("participated", participated);

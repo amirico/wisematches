@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 
@@ -28,7 +28,7 @@ public class ScribblePlayerSearchManagerTest {
 	@Autowired
 	private ScribblePlayerSearchManager playerSearchManager;
 
-	private final Player player = new DefaultPlayer(1029, null, null, null, null, null);
+	private final Player player = new DefaultMember(1029, null, null, null, null, null);
 
 	public ScribblePlayerSearchManagerTest() {
 	}

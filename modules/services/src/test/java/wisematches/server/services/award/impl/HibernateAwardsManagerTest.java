@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
@@ -35,7 +35,7 @@ public class HibernateAwardsManagerTest {
 
 	private HibernateAwardsManager awardsManager;
 
-	final Player person = new DefaultPlayer(901, null, null, null, null, null);
+	final Player person = new DefaultMember(901, null, null, null, null, null);
 
 	public HibernateAwardsManagerTest() {
 	}

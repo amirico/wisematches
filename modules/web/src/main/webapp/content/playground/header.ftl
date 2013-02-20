@@ -21,7 +21,7 @@
                            style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
                     </#if>
                         |
-                    <#if personality.type.player><a
+                    <#if personality.type.member><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>
                         |
                     </#if>

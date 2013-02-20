@@ -48,7 +48,7 @@ public class ErrorController {
 		res.addObject("errorCode", errorCode);
 		res.addObject("errorArguments", arguments);
 		res.addObject("errorException", exception);
-		res.addObject("personality", PersonalityContext.getPersonality());
+		res.addObject("personality", PersonalityContext.getPlayer());
 		return res;
 	}
 }

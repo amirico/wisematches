@@ -1,15 +1,15 @@
 package wisematches.core.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import wisematches.core.security.userdetails.PersonalityDetails;
+import wisematches.core.security.userdetails.PlayerDetails;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class PersonalityAuthentication extends AbstractAuthenticationToken {
-	private PersonalityDetails personality;
+public class PlayerAuthentication extends AbstractAuthenticationToken {
+	private PlayerDetails personality;
 
-	public PersonalityAuthentication(PersonalityDetails personality) {
+	public PlayerAuthentication(PlayerDetails personality) {
 		super(personality.getAuthorities());
 		setAuthenticated(true);
 		this.personality = personality;
@@ -21,7 +21,7 @@ public class PersonalityAuthentication extends AbstractAuthenticationToken {
 	}
 
 	@Override
-	public PersonalityDetails getPrincipal() {
+	public PlayerDetails getPrincipal() {
 		return personality;
 	}
 }

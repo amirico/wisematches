@@ -9,10 +9,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import wisematches.core.Membership;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.core.PlayerType;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
@@ -94,7 +94,7 @@ public class HibernateMessageManager implements MessageManager {
 			throw new NullPointerException("Message can't be null");
 		}
 
-		final Personality recipient = playerManager.getPlayer(message.getSender());
+		final Personality recipient = playerManager.getMember(message.getSender());
 		if (recipient == null) {
 			throw new IllegalStateException("Recipient is unknown");
 		}
@@ -220,11 +220,11 @@ public class HibernateMessageManager implements MessageManager {
 		b.append("(");
 		b.append("(state = 3 and created < DATE_SUB(curdate(), INTERVAL 1 DAY))");
 
-		final PlayerType[] values = PlayerType.values();
+		final Membership[] values = Membership.values();
 		if (restrictionManager.containsRestriction("messages.hist.private")) {
 			b.append(" or ");
 			b.append("(m.notification and ");
-			for (PlayerType value : values) {
+			for (Membership value : values) {
 				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.private", value);
 				if (restriction != null) {
 					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");
@@ -237,7 +237,7 @@ public class HibernateMessageManager implements MessageManager {
 		if (restrictionManager.containsRestriction("messages.hist.notice")) {
 			b.append(" or ");
 			b.append("(not m.notification and ");
-			for (PlayerType value : values) {
+			for (Membership value : values) {
 				Comparable restriction = restrictionManager.getRestrictionThreshold("messages.hist.notice", value);
 				if (restriction != null) {
 					b.append("(a.membership = '").append(value.name()).append("' and created < DATE_SUB(curdate(), INTERVAL ").append(restriction).append(" DAY)) or ");

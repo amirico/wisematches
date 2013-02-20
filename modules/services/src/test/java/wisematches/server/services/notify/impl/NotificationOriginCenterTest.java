@@ -13,11 +13,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
+import wisematches.core.Membership;
 import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.core.PlayerType;
 import wisematches.core.expiration.ExpirationListener;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.core.personality.DefaultVisitor;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
@@ -121,8 +121,8 @@ public class NotificationOriginCenterTest {
 
 		final List<PlayerEntityBean> peb = playerSearchManager.searchEntities(new DefaultVisitor(Language.EN), PlayerSearchArea.PLAYERS, null, Range.limit(2));
 
-		p1 = new DefaultPlayer(peb.get(0).getPid(), "mock1", "mock1@localhost", TimeZone.getDefault(), PlayerType.BASIC, Language.RU);
-		p2 = new DefaultPlayer(peb.get(1).getPid(), "mock2", "mock2@localhost", TimeZone.getDefault(), PlayerType.BASIC, Language.EN);
+		p1 = new DefaultMember(peb.get(0).getPid(), "mock1", "mock1@localhost", TimeZone.getDefault(), Membership.BASIC, Language.RU);
+		p2 = new DefaultMember(peb.get(1).getPid(), "mock2", "mock2@localhost", TimeZone.getDefault(), Membership.BASIC, Language.EN);
 
 		board1 = new ScribbleBoard(new ScribbleSettings("mock1", Language.RU, 3), Arrays.asList(p1, p2), new TilesBank(new TilesBankInfoEditor(Language.EN).add('A', 100, 1).createTilesBankInfo()), vocabulary);
 

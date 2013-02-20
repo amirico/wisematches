@@ -45,7 +45,7 @@
         <property name="membershipManager" ref="membershipManager"/>
     </bean>
 
-    <bean id="personalityDetailsManager" class="wisematches.core.security.userdetails.PersonalityDetailsService">
+    <bean id="personalityDetailsManager" class="wisematches.core.security.userdetails.PlayerDetailsService">
         <property name="accountManager" ref="accountManager"/>
         <property name="accountLockManager" ref="accountLockManager"/>
         <property name="accountRecoveryManager" ref="accountRecoveryManager"/>
@@ -62,7 +62,7 @@
     </bean>
 
     <bean id="playerAuthenticationProvider"
-          class="wisematches.core.security.authentication.PlayerAuthenticationProvider">
+          class="wisematches.core.security.authentication.MemberAuthenticationProvider">
         <property name="userDetailsChecker" ref="userDetailsChecker"/>
         <property name="personalityDetailsService" ref="personalityDetailsManager"/>
     </bean>

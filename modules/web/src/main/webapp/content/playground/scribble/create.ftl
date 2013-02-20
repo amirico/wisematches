@@ -213,7 +213,7 @@
                             <#if p?has_content>
                                 <#assign opponentsCount=opponentsCount+1/>
                                 <div>
-                                    <#assign player=personalityManager.getPlayer(p?number)!""/>
+                                    <#assign player=personalityManager.getMember(p?number)!""/>
                                     <@wm.player.name player=player showState=false/>
                                     <input type="hidden" name="opponents" value="${player.id}"/>
                                 </div>

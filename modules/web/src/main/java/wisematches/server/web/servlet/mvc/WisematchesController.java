@@ -1,20 +1,14 @@
 package wisematches.server.web.servlet.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.core.security.PersonalityContext;
 import wisematches.playground.GameMessageSource;
 import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.view.StaticContentGenerator;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -41,16 +35,19 @@ public abstract class WisematchesController {
 		return title;
 	}
 
-	@ModelAttribute("personality")
-	public Personality getPersonality() {
-		return PersonalityContext.getPersonality();
+	@ModelAttribute("player")
+	public Player getPlayer() {
+		return PersonalityContext.getPlayer();
 	}
 
+/*
 	@ModelAttribute("requestQueryString")
 	public String getRequestQueryString() {
 		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		return request.getQueryString();
 	}
+*/
+/*
 
 	protected Player getPlayer() {
 		final Personality personality = getPersonality();
@@ -62,10 +59,7 @@ public abstract class WisematchesController {
 		}
 		return (Player) personality;
 	}
-
-	protected boolean isPlayerAuthorized() {
-		return getPersonality() instanceof Player;
-	}
+*/
 
 	@Autowired
 	public void setMessageSource(GameMessageSource messageSource) {

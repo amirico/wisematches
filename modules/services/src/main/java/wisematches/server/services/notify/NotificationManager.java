@@ -1,6 +1,6 @@
 package wisematches.server.services.notify;
 
-import wisematches.core.Personality;
+import wisematches.core.Player;
 
 import java.util.Set;
 
@@ -26,20 +26,20 @@ public interface NotificationManager {
 	/**
 	 * Returns personal descriptor for specified player and notification code.
 	 *
-	 * @param code        notification code
-	 * @param personality personality who's descriptor should be returned.
+	 * @param code   notification code
+	 * @param player personality who's descriptor should be returned.
 	 * @return personal descriptor for notification of default descriptor if personality doesn't have personal
 	 *         descriptor or {@code null} if there is no notification with specified code.
 	 */
-	NotificationScope getNotificationScope(String code, Personality personality);
+	NotificationScope getNotificationScope(String code, Player player);
 
 	/**
 	 * Changes personal descriptor for notification.
 	 *
-	 * @param code        notification code
-	 * @param personality player who's descriptor should be updated.
-	 * @param scope       personal descriptor for notification.
+	 * @param code   notification code
+	 * @param player player who's descriptor should be updated.
+	 * @param scope  personal descriptor for notification.
 	 * @return previous personal descriptor or {@code null} if player don't have previous personal descriptor
 	 */
-	NotificationScope setNotificationScope(String code, Personality personality, NotificationScope scope);
+	NotificationScope setNotificationScope(String code, Player player, NotificationScope scope);
 }

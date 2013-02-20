@@ -50,7 +50,7 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 	@ResponseBody
 	@RequestMapping("load.ajax")
 	public Map<String, Object> load(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
-		final Personality personality = getPersonality();
+		final Personality personality = getPlayer();
 		final PlayerSearchArea area = PlayerSearchArea.valueOf(areaName.toUpperCase());
 		if (log.isDebugEnabled()) {
 			log.debug("Loading players for area: " + area + " for player " + personality);

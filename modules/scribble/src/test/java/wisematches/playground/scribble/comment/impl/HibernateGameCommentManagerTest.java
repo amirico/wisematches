@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.GameMoveException;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -54,8 +54,8 @@ public class HibernateGameCommentManagerTest {
 
 	@Before
 	public void setUp() throws BoardCreationException {
-		player1 = new DefaultPlayer(901, null, null, null, null, null);
-		player2 = new DefaultPlayer(902, null, null, null, null, null);
+		player1 = new DefaultMember(901, null, null, null, null, null);
+		player2 = new DefaultMember(902, null, null, null, null, null);
 
 		board = boardManager.createBoard(new ScribbleSettings("Mock game", Language.EN, 3, false, false), Arrays.<Personality>asList(player1, player2), null);
 	}

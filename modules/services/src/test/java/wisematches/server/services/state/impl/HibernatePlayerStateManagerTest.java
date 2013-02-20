@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.core.RobotType;
-import wisematches.core.personality.DefaultRobot;
-import wisematches.core.security.userdetails.PersonalityDetails;
+import wisematches.core.Language;
+import wisematches.core.Player;
+import wisematches.core.personality.DefaultVisitor;
+import wisematches.core.security.userdetails.PlayerDetails;
 import wisematches.server.services.state.PlayerStateListener;
 
 import java.util.Arrays;
@@ -36,8 +36,8 @@ public class HibernatePlayerStateManagerTest {
 
 	@Test
 	public void test() throws InterruptedException {
-		final Personality player1 = new DefaultRobot(RobotType.DULL);
-		final Personality player2 = new DefaultRobot(RobotType.EXPERT);
+		final Player player1 = new DefaultVisitor(Language.RU);
+		final Player player2 = new DefaultVisitor(Language.EN);
 
 		final PlayerStateListener listener = createStrictMock(PlayerStateListener.class);
 
@@ -67,22 +67,22 @@ public class HibernatePlayerStateManagerTest {
 		assertFalse(stateManager.isPlayerOnline(player1));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S1", new PersonalityDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S1", new PlayerDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
 		assertTrue(stateManager.isPlayerOnline(player1));
 		assertTrue(lastActivity1.before(lastActivity1 = stateManager.getLastActivityDate(player1)));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S2", new PersonalityDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S2", new PlayerDetails(player1, "asd", "qwe", false, false, Arrays.asList("mock")));
 		assertFalse(stateManager.isPlayerOnline(player2));
 		assertTrue(lastActivity1.before(lastActivity1 = stateManager.getLastActivityDate(player1)));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S3", new PersonalityDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S3", new PlayerDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
 		assertTrue(stateManager.isPlayerOnline(player2));
 		assertTrue(lastActivity2.before(lastActivity2 = stateManager.getLastActivityDate(player2)));
 
 		Thread.sleep(100);
-		stateManager.registerNewSession("S4", new PersonalityDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
+		stateManager.registerNewSession("S4", new PlayerDetails(player2, "asd", "qwe", false, false, Arrays.asList("mock")));
 		assertTrue(lastActivity2.before(lastActivity2 = stateManager.getLastActivityDate(player2)));
 
 		Thread.sleep(100);

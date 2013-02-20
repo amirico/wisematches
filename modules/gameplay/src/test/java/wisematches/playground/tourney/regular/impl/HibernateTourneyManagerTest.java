@@ -20,7 +20,7 @@ import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
-import wisematches.core.personality.DefaultPlayer;
+import wisematches.core.personality.DefaultMember;
 import wisematches.core.search.Range;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyEntity;
@@ -53,13 +53,13 @@ public class HibernateTourneyManagerTest {
 
 	private HibernateTourneyManager<GameSettings> tourneyManager;
 
-	private static final Player player1 = new DefaultPlayer(901, null, null, null, null, null);
-	private static final Player player2 = new DefaultPlayer(902, null, null, null, null, null);
-	private static final Player player3 = new DefaultPlayer(903, null, null, null, null, null);
-	private static final Player player4 = new DefaultPlayer(904, null, null, null, null, null);
-	private static final Player player5 = new DefaultPlayer(905, null, null, null, null, null);
-	private static final Player player6 = new DefaultPlayer(906, null, null, null, null, null);
-	private static final Player player7 = new DefaultPlayer(907, null, null, null, null, null);
+	private static final Player player1 = new DefaultMember(901, null, null, null, null, null);
+	private static final Player player2 = new DefaultMember(902, null, null, null, null, null);
+	private static final Player player3 = new DefaultMember(903, null, null, null, null, null);
+	private static final Player player4 = new DefaultMember(904, null, null, null, null, null);
+	private static final Player player5 = new DefaultMember(905, null, null, null, null, null);
+	private static final Player player6 = new DefaultMember(906, null, null, null, null, null);
+	private static final Player player7 = new DefaultMember(907, null, null, null, null, null);
 
 	public HibernateTourneyManagerTest() {
 	}
@@ -358,10 +358,10 @@ public class HibernateTourneyManagerTest {
 		Thread.sleep(1000);
 
 		for (int i = 0; i < 2; i++) {
-			tourneyManager.register(new DefaultPlayer(901 + i, null, null, null, null, null), tourney, Language.RU, TourneySection.CASUAL);
+			tourneyManager.register(new DefaultMember(901 + i, null, null, null, null, null), tourney, Language.RU, TourneySection.CASUAL);
 		}
 		for (int i = 0; i < 5; i++) {
-			tourneyManager.register(new DefaultPlayer(903 + i, null, null, null, null, null), tourney, Language.RU, TourneySection.EXPERT);
+			tourneyManager.register(new DefaultMember(903 + i, null, null, null, null, null), tourney, Language.RU, TourneySection.EXPERT);
 		}
 
 		// new day!

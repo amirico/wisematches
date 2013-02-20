@@ -63,7 +63,7 @@ public class RecoveryController extends WisematchesController {
 					mailModel.put("principal", account);
 					mailModel.put("recoveryToken", token.getToken());
 
-					final Player player = personalityManager.getPlayer(account.getId());
+					final Player player = personalityManager.getMember(account.getId());
 					notificationService.raiseNotification("account.recovery", player, NotificationSender.ACCOUNTS, mailModel);
 					session.setAttribute(RECOVERING_PLAYER_EMAIL, account.getEmail());
 					return "redirect:/account/recovery/confirmation";
@@ -109,7 +109,7 @@ public class RecoveryController extends WisematchesController {
 					recoveryTokenManager.clearToken(account); // remove token. Mandatory operation or expired exception will be thrown
 					accountManager.updateAccount(e.createAccount(), form.getPassword());
 
-					final Player player = personalityManager.getPlayer(account.getId());
+					final Player player = personalityManager.getMember(account.getId());
 					notificationService.raiseNotification("account.updated", player, NotificationSender.ACCOUNTS, player);
 					return AccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 				} catch (Exception e1) {

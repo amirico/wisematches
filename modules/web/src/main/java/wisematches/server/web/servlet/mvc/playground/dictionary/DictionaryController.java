@@ -165,19 +165,19 @@ public class DictionaryController extends WisematchesController {
 					if (contains) {
 						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.exist", locale));
 					}
-					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPersonality());
+					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPlayer());
 					break;
 				case UPDATE:
 					if (!contains) {
 						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
 					}
-					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPersonality());
+					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPlayer());
 					break;
 				case REMOVE:
 					if (!contains) {
 						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
 					}
-					dictionarySuggestionManager.removeWord(word, language, getPersonality());
+					dictionarySuggestionManager.removeWord(word, language, getPlayer());
 					break;
 			}
 			return ServiceResponse.success();

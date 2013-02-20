@@ -188,7 +188,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processTourneyFinished(TourneyDivision division) {
 		final Collection<TourneyWinner> tourneyWinners = division.getTourneyWinners();
 		for (TourneyWinner winner : tourneyWinners) {
-			final Player player = personalityManager.getPlayer(winner.getPlayer());
+			final Player player = personalityManager.getMember(winner.getPlayer());
 			if (player == null) {
 				continue;
 			}
