@@ -7,6 +7,7 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class WaitingGamesForm {
 	private final CriterionViolation globalViolation;
 	private final Collection<GameProposalForm> proposalViews;

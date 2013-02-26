@@ -2,6 +2,7 @@ package wisematches.server.web.servlet.view;
 
 import org.junit.Test;
 import wisematches.server.services.award.AwardType;
+import wisematches.server.web.servlet.view.freemarker.FreeMarkerEnumMap;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;

@@ -3,6 +3,7 @@ package wisematches.server.web.servlet.mvc.playground.scribble.game.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class PlayerInfoForm {
 	private final long id;
 	private final String nickname;

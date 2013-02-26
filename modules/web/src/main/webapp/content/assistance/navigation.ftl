@@ -55,7 +55,7 @@
 
         <li class="x-panel-body-noheader separator"
             style="border-color: #dad7d7; padding-bottom: 5px;"></li>
-    <#if personality??>
+    <#if player??>
         <li>
             <strong><@message code="info.continue.label"/></strong>
             <ul id="continue">

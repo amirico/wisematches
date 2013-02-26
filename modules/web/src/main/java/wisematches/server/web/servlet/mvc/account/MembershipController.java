@@ -12,6 +12,7 @@ import wisematches.server.web.servlet.mvc.WisematchesController;
  */
 @Controller
 @RequestMapping("/account/membership")
+@Deprecated
 public class MembershipController extends WisematchesController {
 	private RestrictionManager restrictionManager;
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.settings.form.BoardSettingsForm;
 
@@ -20,6 +20,7 @@ import wisematches.server.web.servlet.mvc.playground.scribble.settings.form.Boar
  */
 @Controller
 @RequestMapping("/playground/scribble/settings")
+@Deprecated
 public class ScribbleSettingsController extends WisematchesController {
 	private BoardSettingsManager boardSettingsManager;
 
@@ -48,10 +49,10 @@ public class ScribbleSettingsController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("save")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
+	public DeprecatedResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
 		final BoardSettings settings = new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.isShowCaptions(), form.isEnableShare(), form.getTilesClass());
 		boardSettingsManager.setScribbleSettings(getPlayer(), settings);
-		return ServiceResponse.success(null, "settings", form);
+		return DeprecatedResponse.success(null, "settings", form);
 	}
 
 	@Autowired
