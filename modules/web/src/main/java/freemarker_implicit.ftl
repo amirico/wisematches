@@ -2,7 +2,7 @@
 [#-- @implicitly included --]
 [#-- @ftlvariable name="locale" type="java.util.Locale" --]
 
-[#-- @ftlvariable name="player" type="wisematches.core.Player" --]
+[#-- @ftlvariable name="principal" type="wisematches.core.Player" --]
 [#-- @ftlvariable name="language" type="wisematches.core.Language" --]
 
 [#-- @ftlvariable name="messageSource" type="wisematches.playground.GameMessageSource" --]
@@ -11,4 +11,5 @@
 [#-- @ftlvariable name="personalityManager" type="wisematches.core.PersonalityManager" --]
 [#-- @ftlvariable name="playerStateManager" type="wisematches.server.services.state.PlayerStateManager" --]
 
-[#-- @ftlvariable name="WordAttribute" type="wisematches.playground.dictionary.WordAttribute" --]
+[#-- @ftlvariable name="AwardType" type="wisematches.server.services.award.AwardType.static" --]
+[#-- @ftlvariable name="WordAttribute" type="wisematches.playground.dictionary.WordAttribute.static" --]

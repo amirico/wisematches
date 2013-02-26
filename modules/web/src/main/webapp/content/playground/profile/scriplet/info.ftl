@@ -1,9 +1,8 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Member" -->
 <#-- @ftlvariable name="country" type="wisematches.core.personality.player.profile.Country" -->
 <#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
 
 <#include "/core.ftl">
-
 <#include "/content/addthis.ftl"/>
 
 <div class="personality">
@@ -12,23 +11,27 @@
              src="/playground/profile/image/view?pid=${player.id}"
              alt="Photo">
     </div>
-    <div>
-        <strong>${player.nickname}</strong>
+    <div style="padding-bottom: 10px">
+    <@wm.player.name player/>
     </div>
+<#--
     <div>
-    <#assign m=player.playerType/>
+
+    <#assign m=player.membership/>
         <div class="player personality">
         <#if !m.basic>
-            <div class="membership ${m.name()?lower_case}"></div></#if>
-            <a href="/account/playerType">
+            <div class="membership ${m.name()?lower_case}"></div>
+        </#if>
+            <a href="/account/membership">
                 <div class="nickname"><@message code="membership.name.${m.name()?lower_case}"/> <@message code="personality.label"/></div>
             </a>
         </div>
     </div>
+-->
     <div style="padding-top: 4px; padding-bottom: 4px;">
-    <#if player?? && player.id == player.id>
+    <#if principal?? && principal.id == player.id>
     <@addthis title="share.profile.my.label" description="share.profile.my.description" args=[player.nickname]/>
-<#elseif player??>
+<#elseif principal??>
         <@addthis title="share.profile.other.label" description="share.profile.other.description" args=[player.nickname]/>
     </#if>
     </div>

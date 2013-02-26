@@ -1,11 +1,11 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Member" -->
 <#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
 <#include "/core.ftl">
 
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !player??><#include "/content/assistance/navigation.ftl"/></#if>
+        <#if !principal??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top">
             <table class="profile shadow ui-state-default">
@@ -29,7 +29,7 @@
                             ${messageSource.formatDate(profile.creationDate, locale)}
                             </div>
                         </div>
-                    <#if player?? && player.id == player.id>
+                    <#if principal?? && principal.id == player.id>
                         <div class="edit">
                             <button class="wm-ui-button"
                                     onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="profile.edit"/></button>

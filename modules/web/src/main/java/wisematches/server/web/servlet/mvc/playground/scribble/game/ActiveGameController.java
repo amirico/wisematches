@@ -39,7 +39,7 @@ public class ActiveGameController extends AbstractGameController {
 	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
-			principal = getPlayer();
+			principal = getPrincipal();
 		} else {
 			principal = personalityManager.getPerson(pid);
 		}
@@ -57,7 +57,7 @@ public class ActiveGameController extends AbstractGameController {
 			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
 		}
 
-		if (principal.equals(getPlayer())) {
+		if (principal.equals(getPrincipal())) {
 			final Collection<GameProposal<ScribbleSettings>> proposals =
 					proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
 			model.addAttribute("activeProposals", proposals);
@@ -76,7 +76,7 @@ public class ActiveGameController extends AbstractGameController {
 	public DeprecatedResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
-			principal = getPlayer();
+			principal = getPrincipal();
 		} else {
 			principal = personalityManager.getMember(pid);
 		}

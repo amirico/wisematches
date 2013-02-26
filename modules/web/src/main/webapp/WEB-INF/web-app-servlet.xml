@@ -96,6 +96,7 @@
         <property name="contentType" value="text/html;charset=UTF-8"/>
         <property name="exposeEnums">
             <list>
+                <value>wisematches.server.services.award.AwardType</value>
                 <value>wisematches.playground.dictionary.WordAttribute</value>
             </list>
         </property>

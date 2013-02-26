@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Member" -->
 <#-- @ftlvariable name="statistics" type="wisematches.playground.scribble.tracking.ScribbleStatistics" -->
 <#-- @ftlvariable name="ratingChart" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.RatingChart" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
@@ -10,7 +10,7 @@
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<#if player??>
+<#if principal??>
     <#include "/content/playground/messages/scriplet.ftl">
     <#include "/content/playground/players/blacklist/scriplet.ftl">
     <#include "/content/playground/players/friends/scriplet.ftl">
@@ -244,7 +244,7 @@
     </div>
 </div>
 
-<#if player??>
+<#if principal??>
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
     <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
     |

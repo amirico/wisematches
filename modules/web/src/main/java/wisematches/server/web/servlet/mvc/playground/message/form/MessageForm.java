@@ -5,7 +5,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageForm {
 	private long pid;

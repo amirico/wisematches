@@ -5,8 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Language;
+import wisematches.core.Member;
 import wisematches.core.Player;
 import wisematches.core.personality.player.profile.*;
 import wisematches.core.search.Order;
@@ -19,11 +23,11 @@ import wisematches.playground.tracking.Statistics;
 import wisematches.server.services.award.Award;
 import wisematches.server.services.award.AwardContext;
 import wisematches.server.services.award.AwardsManager;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm;
 import wisematches.server.web.servlet.mvc.playground.player.profile.form.RatingChart;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -65,13 +69,12 @@ public class ProfileController extends WisematchesController {
 	private static final TourneyPlace[] TOURNEY_PLACEs = TourneyPlace.values();
 
 	public ProfileController() {
-		super("title.profile");
 	}
 
 	@RequestMapping("view")
-	public String viewProfile(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) {
+	public String viewProfilePage(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) {
 		try {
-			Player player;
+			Member player;
 			try {
 				player = personalityManager.getMember(Long.parseLong(profileId));
 			} catch (NumberFormatException ignore) {
@@ -106,14 +109,13 @@ public class ProfileController extends WisematchesController {
 				model.addAttribute("country", countriesManager.getCountry(profile.getCountryCode(), Language.byLocale(locale)));
 			}
 
-			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPlayer()));
-
 			model.addAttribute("player", player);
 			model.addAttribute("profile", profile);
 			model.addAttribute("statistics", statistics);
 			model.addAttribute("ratingChart", ratingChart);
 			model.addAttribute("tourneyMedals", TOURNEY_PLACEs);
 			model.addAttribute("awardsSummary", awardsManager.getAwardsSummary(player));
+			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPrincipal()));
 
 			return "/content/playground/profile/view";
 		} catch (NumberFormatException ex) {
@@ -122,7 +124,7 @@ public class ProfileController extends WisematchesController {
 	}
 
 	@RequestMapping("awards")
-	public String viewAwards(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
+	public String viewAwardsPage(@RequestParam(value = "p", required = false) String profileId, Model model, Locale locale) throws UnknownEntityException {
 		try {
 			Player player = personalityManager.getMember(Long.parseLong(profileId));
 			if (player == null) {
@@ -145,16 +147,14 @@ public class ProfileController extends WisematchesController {
 	}
 
 	@RequestMapping("edit")
-	public String editProfile(Model model, Locale locale) {
-		final Player player = getPlayer();
+	public String editProfilePage(Model model, @ModelAttribute("form") PlayerProfileForm form, Locale locale) {
+		final Player player = getPrincipal();
 		final PlayerProfile profile = profileManager.getPlayerProfile(player);
 
 		final DateFormat dateFormat = DATE_FORMAT_THREAD_LOCAL.get();
 
-		final PlayerProfileForm form = new PlayerProfileForm();
 		form.setComments(profile.getComments());
 		form.setCountryCode(profile.getCountryCode());
-
 		form.setRealName(profile.getRealName());
 
 		if (profile.getBirthday() != null) {
@@ -174,19 +174,15 @@ public class ProfileController extends WisematchesController {
 		}
 
 		model.addAttribute("player", player);
-		model.addAttribute("profile", profile);
-		model.addAttribute("profileForm", form); // TODO: not clear why it's required here?
 		model.addAttribute("countries", countriesManager.getCountries(Language.byLocale(locale)));
-
 		return "/content/playground/profile/edit";
 	}
 
-	@ResponseBody
+	@RequestMapping(value = "save")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public DeprecatedResponse saveProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
+	public ServiceResponse saveProfileService(@RequestBody final PlayerProfileForm form, Locale locale) {
 		try {
-			final Player player = getPlayer();
+			final Player player = getPrincipal();
 			final PlayerProfile profile = profileManager.getPlayerProfile(player);
 
 			final PlayerProfileEditor editor = new PlayerProfileEditor(profile);
@@ -200,7 +196,7 @@ public class ProfileController extends WisematchesController {
 				try {
 					editor.setBirthday(DATE_FORMAT_THREAD_LOCAL.get().parse(form.getBirthday()));
 				} catch (ParseException ex) {
-					return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.birthday", locale));
+					return responseFactory.failure("profile.edit.error.birthday", locale);
 				}
 			}
 
@@ -210,7 +206,7 @@ public class ProfileController extends WisematchesController {
 				try {
 					editor.setGender(Gender.valueOf(form.getGender().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
-					return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.gender", locale));
+					return responseFactory.failure("profile.edit.error.gender", locale);
 				}
 			}
 
@@ -220,14 +216,14 @@ public class ProfileController extends WisematchesController {
 				try {
 					editor.setPrimaryLanguage(Language.valueOf(form.getPrimaryLanguage().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
-					return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.primary", locale));
+					return responseFactory.failure("profile.edit.error.primary", locale);
 				}
 			}
 			profileManager.updateProfile(player, editor.createProfile());
 
-			return DeprecatedResponse.SUCCESS;
+			return responseFactory.success();
 		} catch (Exception ex) {
-			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return responseFactory.failure("profile.edit.error.system", locale);
 		}
 	}
 

@@ -5,7 +5,7 @@
 
 <#include "scriplet.ftl"/>
 
-<#if !player??>
+<#if !principal??>
 <script type="text/javascript">
     var scribbleController = new function () {
         this.execute = function (widget, type, params, data, callback) {
@@ -17,7 +17,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !player??><#include "/content/assistance/navigation.ftl"/></#if>
+        <#if !principal??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top" align="center">
             <div id="board${board.boardId}" class="${boardSettings.tilesClass}">
@@ -45,7 +45,7 @@
                             <#include "widget/memory.ftl"/>
                         <#else>
                         </#if>
-                            <#if player??><#include "widget/help.ftl"/></#if>
+                            <#if principal??><#include "widget/help.ftl"/></#if>
                         </td>
                     </tr>
                 </table>

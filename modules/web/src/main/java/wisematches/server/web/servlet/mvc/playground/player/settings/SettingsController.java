@@ -47,7 +47,7 @@ public class SettingsController extends WisematchesController {
 
 	@RequestMapping(value = "")
 	public String modifyAccountPage(Model model, @ModelAttribute("settings") SettingsForm form) {
-		final Member member = getPlayer(Member.class);
+		final Member member = getPrincipal(Member.class);
 		if (member.getTimeZone() != null) {
 			form.setTimezone(member.getTimeZone().getID());
 		}
@@ -81,7 +81,7 @@ public class SettingsController extends WisematchesController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String modifyAccountAction(@Valid @ModelAttribute("settings") SettingsForm form,
 									  BindingResult errors, Model model, HttpServletRequest request) throws UnknownEntityException {
-		final Member member = getPlayer(Member.class);
+		final Member member = getPrincipal(Member.class);
 		final Account account = accountManager.getAccount(member.getId());
 		if (account == null) {
 			throw new UnknownEntityException(null, "account");

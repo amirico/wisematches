@@ -58,7 +58,7 @@
 </div>
 
 <script type="text/javascript">
-    <#assign readOnlySuggestion=!player?? || !player.type.member/>
+    <#assign readOnlySuggestion=!principal?? || !principal.type.member/>
 
     var dictionarySuggestion = new wm.game.dict.Suggestion('${dictionary.language.getCode()}', ${readOnlySuggestion?string}, {
     <#list WordAttribute.values() as wa>

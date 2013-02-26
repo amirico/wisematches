@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="principal" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->

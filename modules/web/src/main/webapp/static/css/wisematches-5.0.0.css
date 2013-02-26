@@ -1174,10 +1174,6 @@ a.ui-icon {
     padding-right: 10px;
 }
 
-.profile .player .nickname {
-    font-weight: normal;
-}
-
 #changeProfileDialog {
     position: relative;
     width: 100%;

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="principal" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.BoardDescription>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">

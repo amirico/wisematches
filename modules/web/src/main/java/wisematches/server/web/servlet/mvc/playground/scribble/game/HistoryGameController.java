@@ -56,7 +56,7 @@ public class HistoryGameController extends AbstractGameController { //extends Ab
 /*
 		final Personality personality;
 		if (pid == null) {
-			personality = getPlayer();
+			personality = getPrincipal();
 		} else {
 			personality = Personality.person(pid);
 		}

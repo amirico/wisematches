@@ -45,7 +45,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("join")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String showWaitingGames(Model model) {
-		final Player principal = getPlayer();
+		final Player principal = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + principal);
 		}
@@ -57,7 +57,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("join.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public DeprecatedResponse showWaitingGamesAjax() {
-		final Player principal = getPlayer();
+		final Player principal = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + principal);
 		}
@@ -68,7 +68,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("accept.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public DeprecatedResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
-		final Player player = getPlayer();
+		final Player player = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
 		}
@@ -102,7 +102,7 @@ public class WaitingGameController extends AbstractGameController {
 	@RequestMapping("decline.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public DeprecatedResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
-		final Player player = getPlayer();
+		final Player player = getPrincipal();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
 		}
@@ -163,7 +163,7 @@ public class WaitingGameController extends AbstractGameController {
 	}
 
 	private Collection<CriterionViolation> checkProposalViolation(GameProposal<ScribbleSettings> proposal) {
-		final Player principal = getPlayer();
+		final Player principal = getPrincipal();
 
 		boolean blacklisted = false;
 		for (Iterator<Player> iterator = proposal.getPlayers().iterator(); iterator.hasNext() && !blacklisted; ) {

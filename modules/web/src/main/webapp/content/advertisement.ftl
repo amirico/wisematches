@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="advertisementBlockId" type="java.lang.String" -->
 <#-- @ftlvariable name="advertisementManager" type="wisematches.server.services.reclame.AdvertisementManager" -->
 
-<#if !player.type.member || player.membership.basic>
+<#if !principal.type.member || principal.membership.basic>
     <#assign advertisementBlock=advertisementManager.getAdvertisementBlock(advertisementBlockId, locale)!""/>
     <#if advertisementBlock?? && advertisementBlock?has_content>
         <#if advertisementBlock.provider.name() == 'GOOGLE'>

@@ -14,14 +14,14 @@
             <table style="height: 100%; width: 100%;">
                 <tr>
                     <td valign="top" align="right">
-                    <@wm.player.name player true false/>
+                    <@wm.player.name principal true false/>
                     <#if hasNewFeatues>
                         |
                         <a href="/info/features"
                            style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
                     </#if>
                         |
-                    <#if player.type.member><a
+                    <#if principal.type.member><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>
                         |
                     </#if>

@@ -1,7 +1,6 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
-<#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Member" -->
 <#-- @ftlvariable name="countries" type="java.util.Collection<wisematches.core.personality.player.profile.Country>" -->
-<#-- @ftlvariable name="profileForm" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm" -->
+<#-- @ftlvariable name="form" type="wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm" -->
 <#include "/core.ftl">
 
 <script type="text/javascript" src="<@wm.ui.static "js/fileuploader.js"/>"></script>
@@ -34,24 +33,24 @@
         </td>
 
         <td class="content shadow ui-state-default">
-        <#if profileForm.gender??><#assign genderName=springMacroRequestContext.getMessage("gender."+profileForm.gender)/></#if>
-        <#if profileForm.primaryLanguage??><#assign languageName=springMacroRequestContext.getMessage("language."+profileForm.primaryLanguage?lower_case)/></#if>
-        <#if profileForm.birthday??><#assign birthdayName=messageSource.formatDate(profile.birthday, locale)/></#if>
+        <#if form.gender??><#assign genderName=messageSource.getMessage("gender."+form.gender, locale)/></#if>
+        <#if form.primaryLanguage??><#assign languageName=messageSource.getMessage("language."+form.primaryLanguage?lower_case, locale)/></#if>
+        <#if form.birthday??><#assign birthdayName=form.birthday/></#if>
 
             <div class="title">
-            <@wm.ui.editor id="realName" code="profile.edit.realname" value=profileForm.realName classes="player-name"/>
+            <@wm.ui.editor id="realName" code="profile.edit.realname" value=form.realName classes="player-name"/>
             </div>
 
             <div class="ui-layout-table">
-            <@wm.ui.editor id="comments" code="profile.edit.comments" value=profileForm.comments/>
+            <@wm.ui.editor id="comments" code="profile.edit.comments" value=form.comments/>
 
-<@wm.ui.editor id="gender" code="profile.edit.gender" value=profileForm.gender view=genderName/>
+<@wm.ui.editor id="gender" code="profile.edit.gender" value=form.gender view=genderName/>
 
-<@wm.ui.editor id="birthday" code="profile.edit.birthday" value=profileForm.birthday view=birthdayName/>
+<@wm.ui.editor id="birthday" code="profile.edit.birthday" value=form.birthday view=birthdayName/>
 
-<@wm.ui.editor id="countryCode" code="profile.edit.country" value=profileForm.countryCode view=profileForm.country/>
+<@wm.ui.editor id="countryCode" code="profile.edit.country" value=form.countryCode view=form.country/>
 
-<@wm.ui.editor id="primaryLanguage" code="profile.edit.language" value=profileForm.primaryLanguage view=languageName/>
+<@wm.ui.editor id="primaryLanguage" code="profile.edit.language" value=form.primaryLanguage view=languageName/>
             </div>
         </td>
     </tr>
@@ -245,7 +244,7 @@
                                 changeMonth: true,
                                 changeYear: true,
                                 dateFormat: 'dd-mm-yy',
-                                displayFormat: 'MM d, yy',
+                                displayFormat: 'dd-mm-yy',
                                 yearRange: '1900:2011'
 
                             }

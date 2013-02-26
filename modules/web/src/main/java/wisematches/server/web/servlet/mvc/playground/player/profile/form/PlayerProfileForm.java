@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.mvc.playground.player.profile.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public class PlayerProfileForm {
 	private String realName;
 	private String country;

@@ -42,12 +42,12 @@
 <#include 'browser.ftl'/>
 
 <div id="wisematchesHeader">
-<#if player??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>
+<#if principal??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>
 </div>
 
 <div id="notification-block"></div>
 
-<#if player??>
+<#if principal??>
 <div id="header-separator" style="height: 20px;"></div>
 </#if>
 
@@ -56,7 +56,7 @@
 </div>
 
 <div id="wisematchesFooter" style="display: none;">
-<#if player?? && player?has_content><#include "playground/footer.ftl"/><#else><#include "account/footer.ftl"/></#if>
+<#if principal?? && principal?has_content><#include "playground/footer.ftl"/><#else><#include "account/footer.ftl"/></#if>
 </div>
 
 <script type="text/javascript">

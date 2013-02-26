@@ -30,7 +30,7 @@ public class ScribbleSettingsController extends WisematchesController {
 	@RequestMapping("load")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String loadBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
-		final Player principal = getPlayer();
+		final Player principal = getPrincipal();
 
 		final BoardSettings settings = boardSettingsManager.getScribbleSettings(principal);
 		form.setTilesClass(settings.getTilesClass());
@@ -51,7 +51,7 @@ public class ScribbleSettingsController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public DeprecatedResponse saveBoardSettings(final Model model, @ModelAttribute("settings") final BoardSettingsForm form) {
 		final BoardSettings settings = new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(), form.isShowCaptions(), form.isEnableShare(), form.getTilesClass());
-		boardSettingsManager.setScribbleSettings(getPlayer(), settings);
+		boardSettingsManager.setScribbleSettings(getPrincipal(), settings);
 		return DeprecatedResponse.success(null, "settings", form);
 	}
 
