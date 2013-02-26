@@ -19,8 +19,9 @@
         <thead>
         <tr>
             <th>
-                <input title="select all messages" type="checkbox" id="removeAll" name="removeAll" value="true"
-                       onchange="wm.messages.selectAll()">
+                <label for="removeAll"></label><input title="select all messages" type="checkbox" id="removeAll"
+                                                      name="removeAll" value="true"
+                                                      onchange="wm.messages.selectAll()">
             </th>
             <th nowrap="nowrap"><@message code="messages.column.to"/></th>
             <th width="100%"><@message code="messages.column.message"/></th>
@@ -30,17 +31,19 @@
             <#list messages as m>
             <tr id="message${m.id}" class="message ui-state-default">
                 <td class="message-checkbox">
-                    <input type="checkbox" name="removeList" value="${m.id}">
+                    <label>
+                        <input type="checkbox" name="removeList" value="${m.id}">
+                    </label>
                 </td>
                 <td>
                     <div class="message-from"><@wm.player.name personalityManager.getMember(m.recipient)/></div>
                     <div class="message-date">
-                    ${gameMessageSource.formatDate(m.creationDate, locale)} ${gameMessageSource.formatTime(m.creationDate, locale)}
+                    ${messageSource.formatDate(m.creationDate, locale)} ${messageSource.formatTime(m.creationDate, locale)}
                     </div>
                 </td>
                 <td width="100%">
                     <div class="message-text">
-                    ${gameMessageSource.stringToHTMLString(m.text)}
+                    ${messageSource.stringToHTMLString(m.text)}
                     </div>
 
                     <div class="message-controls">
@@ -66,6 +69,8 @@
 <script type="text/javascript">
     wm.messages = $.extend({}, wm.messages, new function () {
         var widget = $("#messagesWidget");
+        var messages = $("#messages");
+
         wm.ui.dataTable('#messages', {
             "bSortClasses": false,
             "aaSorting": [
@@ -83,7 +88,7 @@
         };
 
         this.removeSelected = function () {
-            var selected = new Array();
+            var selected = [];
             $(".message-checkbox input:checked").each(function (index, el) {
                 selected.push($(el).val());
             });
@@ -104,7 +109,7 @@
                         if (response.success) {
                             var dataTable = $('#messages').dataTable();
                             $.each(msgs, function (i, v) {
-                                dataTable.fnDeleteRow($("#messages #message" + v).get(0));
+                                dataTable.fnDeleteRow(messages.find("#message" + v).get(0));
                             });
                             wm.ui.unlock(widget, "<@message code="messages.status.remove.sent"/>");
                         } else {

@@ -42,8 +42,8 @@ public abstract class WisematchesController {
 		return "title." + uri.replaceAll("/", ".").substring(1);
 	}
 
-	@ModelAttribute("player")
-	public Player getPlayer() {
+	@ModelAttribute("principal")
+	public Player getPrincipal() {
 		return PersonalityContext.getPlayer();
 	}
 
@@ -52,15 +52,15 @@ public abstract class WisematchesController {
 		return PersonalityContext.hasRole(role);
 	}
 
-	protected <P extends Player> P getPlayer(Class<P> type) {
-		final Player player = getPlayer();
-		if (player == null) {
+	protected <P extends Player> P getPrincipal(Class<P> type) {
+		final Player principal = getPrincipal();
+		if (principal == null) {
 			throw new AccessDeniedException("unregistered");
 		}
-		if (type.isAssignableFrom(player.getClass())) {
+		if (type.isAssignableFrom(principal.getClass())) {
 			throw new AccessDeniedException("unregistered");
 		}
-		return (P) player;
+		return (P) principal;
 	}
 
 	/*

@@ -24,11 +24,11 @@ public final class RestrictionDescription<T> {
 		return name;
 	}
 
-	public Comparable<T> getRestriction(Membership playerType) {
-		if (playerType == null) {
+	public Comparable<T> getRestriction(Membership membership) {
+		if (membership == null) {
 			return nonMemberRestriction;
 		}
-		return restrictions.get(playerType);
+		return restrictions.get(membership);
 	}
 
 	public Map<Membership, Comparable<T>> getRestrictions() {

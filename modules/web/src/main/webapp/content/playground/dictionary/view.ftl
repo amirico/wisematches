@@ -40,7 +40,7 @@
 
                 <td align="right" valign="bottom">
                     <button id="addNewWord" class="ui-wm-button"
-                            style="white-space: nowrap" <#if !player?? || !player.type.member>disabled="disabled"
+                            style="white-space: nowrap" <#if !principal?? || !principal.type.member>disabled="disabled"
                             title="<@message code="security.member"/>"</#if>>
                         <@message code="dict.add.label"/>
                     </button>

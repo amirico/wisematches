@@ -1,14 +1,15 @@
 package wisematches.server.web.servlet.mvc.playground.message;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Player;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
@@ -17,9 +18,9 @@ import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
 import wisematches.server.services.message.MessageManager;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.message.form.MessageForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import java.util.List;
 import java.util.Locale;
@@ -36,42 +37,37 @@ public class MessageController extends WisematchesController {
 	private AbuseReportManager abuseReportManager;
 	private RestrictionManager restrictionManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.messages");
-
 	public MessageController() {
-		super("title.messages");
+	}
+
+	@RequestMapping("sent")
+	public String showSentMessagePage(Model model) {
+		model.addAttribute("messages", messageManager.getMessages(getPrincipal(), MessageDirection.SENT));
+		return "/content/playground/messages/sent";
 	}
 
 	@RequestMapping("view")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public String showReceivedMessage(Model model) {
-		final Player principal = getPlayer();
-		model.addAttribute("messages", messageManager.getMessages(principal, MessageDirection.RECEIVED));
+	public String showReceivedMessagesPage(Model model) {
+		model.addAttribute("messages", messageManager.getMessages(getPrincipal(), MessageDirection.RECEIVED));
 		return "/content/playground/messages/view";
-	}
-
-	@RequestMapping("sent")
-	public String showSentMessage(Model model) {
-		model.addAttribute("messages", messageManager.getMessages(getPlayer(), MessageDirection.SENT));
-		return "/content/playground/messages/sent";
 	}
 
 	@RequestMapping(value = "create")
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public String createMessageDialog(@RequestParam(value = "dialog", required = false) boolean dialog, Model model,
-									  @ModelAttribute("form") MessageForm form, BindingResult result) {
-		final Player principal = getPlayer();
-
+	public String createNewMessagePage(@RequestParam(value = "dialog", required = false) boolean dialog, Model model,
+									   @ModelAttribute("form") MessageForm form, BindingResult result) {
+		final Player player = getPrincipal();
 		model.addAttribute("plain", dialog);
 
-		final int todayMessagesCount = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
-		model.addAttribute("restriction", restrictionManager.validateRestriction(principal, "messages.count", todayMessagesCount));
+		final int todayMessagesCount = messageManager.getTodayMessagesCount(player, MessageDirection.SENT);
+		model.addAttribute("restriction", restrictionManager.validateRestriction(player, "messages.count", todayMessagesCount));
 
 		long playerId = form.getPid();
 		if (form.isReply()) {
 			final Message message = messageManager.getMessage(form.getPid());
 			if (message != null) {
-				if (message.getRecipient() == principal.getId() || message.getSender() == principal.getId()) {
+				if (message.getRecipient() == player.getId() || message.getSender() == player.getId()) {
 					playerId = message.getSender();
 					model.addAttribute("original", message);
 				} else {
@@ -84,10 +80,10 @@ public class MessageController extends WisematchesController {
 			}
 		}
 
-		final Player player = personalityManager.getMember(playerId);
-		if (player == null) {
+		final Player recipient = personalityManager.getMember(playerId);
+		if (recipient == null) {
 			result.rejectValue("pid", "messages.err.recipient");
-		} else if (blacklistManager.isBlacklisted(player, principal)) {
+		} else if (blacklistManager.isBlacklisted(recipient, player)) {
 			result.rejectValue("pid", "messages.err.ignored");
 		} else {
 			model.addAttribute("recipient", player);
@@ -95,16 +91,15 @@ public class MessageController extends WisematchesController {
 		return "/content/playground/messages/create";
 	}
 
-	@ResponseBody
+	@RequestMapping(value = "send")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "send", method = RequestMethod.POST)
-	public DeprecatedResponse sendMessage(@RequestBody MessageForm form, Locale locale) {
-		final Player principal = getPlayer();
+	public ServiceResponse sendMessageService(@RequestBody MessageForm form, Locale locale) {
+		final Player player = getPrincipal();
 
-		final int sent = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
-		final Restriction restriction = restrictionManager.validateRestriction(principal, "messages.count", sent);
+		final int sent = messageManager.getTodayMessagesCount(player, MessageDirection.SENT);
+		final Restriction restriction = restrictionManager.validateRestriction(player, "messages.count", sent);
 		if (restriction != null) {
-			return DeprecatedResponse.failure(messageSource.getMessage("messages.create.forbidden", restriction.getThreshold(), locale));
+			return responseFactory.failure("messages.create.forbidden", new Object[]{restriction.getThreshold()}, locale);
 		}
 
 		Message message = null;
@@ -112,63 +107,62 @@ public class MessageController extends WisematchesController {
 		if (form.isReply()) {
 			message = messageManager.getMessage(form.getPid());
 			if (message != null) {
-				if (message.getRecipient() == principal.getId() || message.getSender() == principal.getId()) {
+				if (message.getRecipient() == player.getId() || message.getSender() == player.getId()) {
 					playerId = message.getSender();
 				} else {
-					return DeprecatedResponse.failure(messageSource.getMessage("messages.err.owner", locale));
+					return responseFactory.failure("messages.err.owner", locale);
 				}
 			} else {
-				return DeprecatedResponse.failure(messageSource.getMessage("messages.err.original", locale));
+				return responseFactory.failure("messages.err.original", locale);
 			}
 		}
 
-		final Player player = personalityManager.getMember(playerId);
-		if (player == null) {
-			return DeprecatedResponse.failure(messageSource.getMessage("messages.err.recipients", locale));
-		} else if (blacklistManager.isBlacklisted(player, getPlayer())) {
-			return DeprecatedResponse.failure(messageSource.getMessage("messages.err.ignored", locale));
+		final Player recipient = personalityManager.getMember(playerId);
+		if (recipient == null) {
+			return responseFactory.failure("messages.err.recipients", locale);
+		} else if (blacklistManager.isBlacklisted(recipient, getPrincipal())) {
+			return responseFactory.failure("messages.err.ignored", locale);
 		}
 
 		if (form.isReply()) {
-			messageManager.replyMessage(principal, message, form.getMessage());
+			messageManager.replyMessage(player, message, form.getMessage());
 		} else {
-			messageManager.sendMessage(principal, player, form.getMessage());
+			messageManager.sendMessage(player, recipient, form.getMessage());
 		}
-		return DeprecatedResponse.SUCCESS;
+		return responseFactory.success();
 	}
 
-	@ResponseBody
 	@RequestMapping("abuse.ajax")
-	public DeprecatedResponse reportAbuse(@RequestParam("m") long mid, Locale locale) {
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse reportAbuseService(@RequestParam("m") long mid, Locale locale) {
 		final Message message = messageManager.getMessage(mid);
 		if (message != null) {
-			if (message.getRecipient() == getPlayer().getId()) {
+			if (message.getRecipient() == getPrincipal().getId()) {
 				abuseReportManager.reportAbuseMessage(message);
-				return DeprecatedResponse.success();
+				return responseFactory.success();
 			} else {
-				return DeprecatedResponse.failure(messageSource.getMessage("messages.err.owner", locale));
+				return responseFactory.failure("messages.err.owner", locale);
 			}
 		} else {
-			return DeprecatedResponse.failure(messageSource.getMessage("messages.err.unknown", locale));
+			return responseFactory.failure("messages.err.unknown", locale);
 		}
 	}
 
-	@ResponseBody
+	@RequestMapping(value = "remove")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@RequestMapping(value = "remove", method = RequestMethod.POST)
-	public DeprecatedResponse removeMessage(@RequestParam(value = "sent", required = false) boolean sent, @RequestParam(value = "messages[]") List<Long> removeList) {
-		final long principal = getPlayer().getId();
+	public ServiceResponse removeMessage(@RequestParam(value = "sent", required = false) boolean sent, @RequestParam(value = "messages[]") List<Long> removeList) {
+		final long principal = getPrincipal().getId();
 		for (Long mid : removeList) {
 			final Message message = messageManager.getMessage(mid);
 			if (message != null) {
 				if (sent && message.getSender() == principal) {
-					messageManager.removeMessage(getPlayer(), mid, MessageDirection.SENT);
+					messageManager.removeMessage(getPrincipal(), mid, MessageDirection.SENT);
 				} else if (!sent && message.getRecipient() == principal) {
-					messageManager.removeMessage(getPlayer(), mid, MessageDirection.RECEIVED);
+					messageManager.removeMessage(getPrincipal(), mid, MessageDirection.RECEIVED);
 				}
 			}
 		}
-		return DeprecatedResponse.SUCCESS;
+		return responseFactory.success();
 	}
 
 	@Autowired

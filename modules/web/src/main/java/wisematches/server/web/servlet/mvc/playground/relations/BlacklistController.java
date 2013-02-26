@@ -29,7 +29,7 @@ public class BlacklistController extends WisematchesController {
 
 	@RequestMapping("view")
 	public String viewBlacklist(Model model) {
-		model.addAttribute("blacklist", blacklistManager.getBlacklist(getPlayer()));
+		model.addAttribute("blacklist", blacklistManager.getBlacklist(getPrincipal()));
 		return "/content/playground/players/blacklist/view";
 	}
 
@@ -41,7 +41,7 @@ public class BlacklistController extends WisematchesController {
 		if (player == null) {
 			return DeprecatedResponse.failure(messageSource.getMessage("blacklist.err.unknown", locale));
 		}
-		blacklistManager.addPlayer(getPlayer(), player, form.getComment());
+		blacklistManager.addPlayer(getPrincipal(), player, form.getComment());
 		return DeprecatedResponse.SUCCESS;
 	}
 
@@ -49,7 +49,7 @@ public class BlacklistController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
 	public DeprecatedResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {
-		final Player player = getPlayer();
+		final Player player = getPrincipal();
 		for (Long id : removeList) {
 			final Player player1 = personalityManager.getMember(id);
 			blacklistManager.removePlayer(player, player1);

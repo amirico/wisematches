@@ -52,7 +52,7 @@ public class ScribbleBoardController extends WisematchesController {
 								@RequestParam(value = "t", required = false) String tiles,
 								Model model) throws UnknownEntityException {
 		try {
-			final Player player = getPlayer();
+			final Player player = getPrincipal();
 			final ScribbleBoard board = boardManager.openBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
@@ -110,7 +110,7 @@ public class ScribbleBoardController extends WisematchesController {
 		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player player = getPlayer();
+				final Player player = getPrincipal();
 
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 				final MakeTurn gameMove = board.makeTurn(player, word.createWord());
@@ -129,7 +129,7 @@ public class ScribbleBoardController extends WisematchesController {
 		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
-				final Player player = getPlayer();
+				final Player player = getPrincipal();
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 				final PassTurn gameMove = board.passTurn(player);
 				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
@@ -153,7 +153,7 @@ public class ScribbleBoardController extends WisematchesController {
 					t[i] = tiles[i].getNumber();
 				}
 
-				final Player player = getPlayer();
+				final Player player = getPrincipal();
 				final ScribbleBoard board = boardManager.openBoard(gameId);
 				final ExchangeMove gameMove = board.exchangeTiles(player, t);
 				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
@@ -172,7 +172,7 @@ public class ScribbleBoardController extends WisematchesController {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				final ScribbleBoard board = boardManager.openBoard(gameId);
-				board.resign(getPlayer());
+				board.resign(getPrincipal());
 
 				final Map<String, Object> res = new HashMap<>();
 				res.put("state", ScribbleObjectsConverter.convertGameState(board, messageSource, locale));

@@ -49,7 +49,7 @@ public class TourneyController extends WisematchesController {
 
 	@RequestMapping(value = {"", "dashboard"})
 	public String showDashboardPage(Model model) {
-		final Personality personality = getPlayer();
+		final Personality personality = getPrincipal();
 
 		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null);
 		model.addAttribute("participated", participated);
@@ -205,7 +205,7 @@ public class TourneyController extends WisematchesController {
 			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.section", locale));
 		}
 
-		final Player principal = getPlayer();
+		final Player principal = getPrincipal();
 		try {
 			final boolean doRegistration = section != null && language != null;
 			if (doRegistration) {
@@ -241,7 +241,7 @@ public class TourneyController extends WisematchesController {
 	}
 
 	private void setupAnnounce(Model model) {
-		final Player personality = getPlayer();
+		final Player personality = getPrincipal();
 
 		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null);
 		Tourney announce = null;

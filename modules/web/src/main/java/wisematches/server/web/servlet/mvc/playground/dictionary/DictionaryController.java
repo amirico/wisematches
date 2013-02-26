@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
@@ -68,7 +67,6 @@ public class DictionaryController extends WisematchesController {
 		return "/content/playground/dictionary/changes";
 	}
 
-	@ResponseBody
 	@RequestMapping("loadWordEntry.ajax")
 	public ServiceResponse loadWordEntryService(@RequestParam("l") String lang, @RequestParam("w") String word, Locale locale) {
 		final Language language;
@@ -84,7 +82,6 @@ public class DictionaryController extends WisematchesController {
 		return responseFactory.success(dictionary.getWordEntry(word.toLowerCase()));
 	}
 
-	@ResponseBody
 	@RequestMapping("loadWordEntries.ajax")
 	public ServiceResponse loadWordEntriesService(@RequestParam("l") String lang, @RequestParam("p") String prefix, Locale locale) {
 		final Language language;
@@ -100,7 +97,6 @@ public class DictionaryController extends WisematchesController {
 		return responseFactory.success(dictionary.getWordEntries(prefix.toLowerCase()));
 	}
 
-	@ResponseBody
 	@RequestMapping("editWordEntry.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse createWordService(@RequestBody WordDefinitionForm form, Locale locale) {
@@ -162,19 +158,19 @@ public class DictionaryController extends WisematchesController {
 					if (contains) {
 						return responseFactory.failure("dict.suggest.err.word.exist", locale);
 					}
-					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPlayer());
+					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPrincipal());
 					break;
 				case UPDATE:
 					if (!contains) {
 						return responseFactory.failure("dict.suggest.err.word.unknown", locale);
 					}
-					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPlayer());
+					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPrincipal());
 					break;
 				case REMOVE:
 					if (!contains) {
 						return responseFactory.failure("dict.suggest.err.word.unknown", locale);
 					}
-					dictionarySuggestionManager.removeWord(word, language, getPlayer());
+					dictionarySuggestionManager.removeWord(word, language, getPrincipal());
 					break;
 			}
 			return responseFactory.success();
@@ -184,7 +180,6 @@ public class DictionaryController extends WisematchesController {
 		}
 	}
 
-	@ResponseBody
 	@Secured("moderator")
 	@RequestMapping("resolveWordEntry.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)

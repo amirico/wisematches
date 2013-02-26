@@ -26,6 +26,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/players")
+@Deprecated
 public class PlayersController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
@@ -46,7 +47,7 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 
 	@RequestMapping("load.ajax")
 	public ServiceResponse loadPlayersService(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
-		final Player player = getPlayer();
+		final Player player = getPrincipal();
 		final PlayerSearchArea area = PlayerSearchArea.valueOf(areaName.toUpperCase());
 		if (log.isDebugEnabled()) {
 			log.debug("Loading players for area: " + area + " for player " + player);

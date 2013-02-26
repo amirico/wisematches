@@ -10,12 +10,14 @@ import java.util.Locale;
 public final class ServiceResponseFactory {
 	private final GameMessageSource messageSource;
 
+	private static final ServiceResponse SUCCESS = new ServiceResponse(new ServiceResponse.Success(null));
+
 	public ServiceResponseFactory(GameMessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
 
 	public ServiceResponse success() {
-		return success(null);
+		return SUCCESS;
 	}
 
 	public ServiceResponse success(Object data) {

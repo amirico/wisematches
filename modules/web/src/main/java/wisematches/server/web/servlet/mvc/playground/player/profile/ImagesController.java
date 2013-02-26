@@ -101,7 +101,7 @@ public class ImagesController extends WisematchesController {
 	@RequestMapping("preview")
 	private DeprecatedResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
 		try {
-			final Personality principal = getPlayer();
+			final Personality principal = getPrincipal();
 			final ServletInputStream inputStream = request.getInputStream();
 			if (request.getContentLength() > 512000) {
 				return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
@@ -131,7 +131,7 @@ public class ImagesController extends WisematchesController {
 			f.delete();
 		}
 		httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
-		playerImagesManager.removePlayerImage(getPlayer().getId(), PlayerImageType.PROFILE);
+		playerImagesManager.removePlayerImage(getPrincipal().getId(), PlayerImageType.PROFILE);
 		return DeprecatedResponse.success();
 	}
 
@@ -139,7 +139,7 @@ public class ImagesController extends WisematchesController {
 	@RequestMapping("set")
 	private DeprecatedResponse setPlayerImage(HttpSession httpSession, Locale locale) {
 		try {
-			final Personality principal = getPlayer();
+			final Personality principal = getPrincipal();
 			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 			if (f == null) {
 				return DeprecatedResponse.failure("No preview image");

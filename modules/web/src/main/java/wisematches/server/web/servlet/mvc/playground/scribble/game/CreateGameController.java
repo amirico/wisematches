@@ -69,7 +69,7 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
-		final Player player = getPlayer();
+		final Player player = getPrincipal();
 		model.addAttribute("robots", playManager.getSupportedRobots());
 		model.addAttribute("restriction", restrictionManager.validateRestriction(player, "games.active", getActiveGamesCount(player)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", player));
@@ -91,7 +91,7 @@ public class CreateGameController extends AbstractGameController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "create.ajax", method = RequestMethod.POST)
 	public ServiceResponse createGameService(@RequestBody CreateScribbleForm form, Locale locale) {
-		final Player player = getPlayer();
+		final Player player = getPrincipal();
 		if (form.getTitle().length() > 150) {
 			return responseFactory.failure("game.create.title.err.max", locale);
 		}
@@ -196,7 +196,7 @@ public class CreateGameController extends AbstractGameController {
 	}
 
 	private void initChallengeForm(CreateScribbleForm form, String parameter, Locale locale) {
-		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPlayer(Member.class).getNickname(), locale));
+		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPrincipal(Member.class).getNickname(), locale));
 		form.setChallengeMessage("");
 		form.setCreateTab(CreateScribbleTab.CHALLENGE);
 		final List<Long> ids = new ArrayList<>();
@@ -227,7 +227,7 @@ public class CreateGameController extends AbstractGameController {
 			final ScribbleBoard board = playManager.openBoard(Long.valueOf(parameter));
 			if (board != null) {
 				form.setTitle(messageSource.getMessage("game.challenge.replay.label", board.getBoardId(), locale));
-				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", messageSource.getPersonalityNick(getPlayer(), locale), locale));
+				form.setChallengeMessage(messageSource.getMessage("game.challenge.replay.description", messageSource.getPersonalityNick(getPrincipal(), locale), locale));
 				form.setDaysPerMove(board.getSettings().getDaysPerMove());
 				form.setBoardLanguage(board.getSettings().getLanguage().getCode());
 
@@ -235,7 +235,7 @@ public class CreateGameController extends AbstractGameController {
 				final List<Personality> playersHands = board.getPlayers();
 				final long[] players = new long[playersHands.size() - 1];
 				for (Personality playersHand : playersHands) {
-					if (playersHand.equals(getPlayer())) {
+					if (playersHand.equals(getPrincipal())) {
 						continue;
 					}
 					players[index++] = playersHand.getId();

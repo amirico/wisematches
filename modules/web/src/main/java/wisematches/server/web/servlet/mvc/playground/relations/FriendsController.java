@@ -30,7 +30,7 @@ public class FriendsController extends WisematchesController {
 	@RequestMapping("view")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String viewBlacklist(Model model) {
-		model.addAttribute("friends", friendsManager.getFriendsList(getPlayer()));
+		model.addAttribute("friends", friendsManager.getFriendsList(getPrincipal()));
 		return "/content/playground/players/friends/view";
 	}
 
@@ -43,7 +43,7 @@ public class FriendsController extends WisematchesController {
 		if (player == null) {
 			return DeprecatedResponse.failure(messageSource.getMessage("friends.err.unknown", locale));
 		}
-		friendsManager.addFriend(getPlayer(), player, form.getComment());
+		friendsManager.addFriend(getPrincipal(), player, form.getComment());
 		return DeprecatedResponse.SUCCESS;
 	}
 
@@ -51,7 +51,7 @@ public class FriendsController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
 	public DeprecatedResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
-		final Player personality = getPlayer();
+		final Player personality = getPrincipal();
 		for (Long id : removeList) {
 			final Player player1 = personalityManager.getMember(id);
 			friendsManager.removeFriend(personality, player1);

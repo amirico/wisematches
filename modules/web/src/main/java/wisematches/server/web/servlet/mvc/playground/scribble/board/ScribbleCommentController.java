@@ -46,7 +46,7 @@ public class ScribbleCommentController extends WisematchesController {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 
-		final Player personality = getPlayer();
+		final Player personality = getPrincipal();
 		if (board.getPlayerHand(personality) == null) {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 		}
@@ -65,12 +65,12 @@ public class ScribbleCommentController extends WisematchesController {
 		} catch (BoardLoadingException ex) {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
-		if (board.getPlayerHand(getPlayer()) == null) {
+		if (board.getPlayerHand(getPrincipal()) == null) {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 		}
 
 		final Collection<Map<?, ?>> a = new ArrayList<Map<?, ?>>();
-		final List<GameComment> comments = commentManager.getComments(board, getPlayer(), ids);
+		final List<GameComment> comments = commentManager.getComments(board, getPrincipal(), ids);
 		for (GameComment comment : comments) {
 			a.add(ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 		}
@@ -100,7 +100,7 @@ public class ScribbleCommentController extends WisematchesController {
 		if (!board.isActive()) {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.finished", locale));
 		}
-		final GameComment comment = commentManager.addComment(board, getPlayer(), form.getText());
+		final GameComment comment = commentManager.addComment(board, getPrincipal(), form.getText());
 		return DeprecatedResponse.success(null, ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 	}
 
@@ -117,7 +117,7 @@ public class ScribbleCommentController extends WisematchesController {
 		} catch (BoardLoadingException ex) {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
-		final GameComment comment = commentManager.removeComment(board, getPlayer(), commentId);
+		final GameComment comment = commentManager.removeComment(board, getPrincipal(), commentId);
 		if (comment != null) {
 			return DeprecatedResponse.success();
 		}
@@ -137,7 +137,7 @@ public class ScribbleCommentController extends WisematchesController {
 		} catch (BoardLoadingException ex) {
 			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
-		commentManager.markRead(board, getPlayer());
+		commentManager.markRead(board, getPrincipal());
 		return DeprecatedResponse.success();
 	}
 

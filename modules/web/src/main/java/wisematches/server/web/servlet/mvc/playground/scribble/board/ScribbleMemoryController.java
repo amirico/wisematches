@@ -73,7 +73,7 @@ public class ScribbleMemoryController extends WisematchesController {
 
 	private DeprecatedResponse executeSaveAction(final long boardId, Locale locale, Word word, MemoryAction action) {
 		try {
-			final Player personality = getPlayer();
+			final Player personality = getPrincipal();
 			if (personality == null) {
 				return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.personality", locale));
 			}
@@ -86,7 +86,7 @@ public class ScribbleMemoryController extends WisematchesController {
 				return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.hand.unknown", locale));
 			}
 			if (action == MemoryAction.ADD) {
-				final Personality principal = ScribbleMemoryController.this.getPlayer();
+				final Personality principal = ScribbleMemoryController.this.getPrincipal();
 				final int memoryWordsCount = memoryWordManager.getMemoryWordsCount(board, personality);
 				final Restriction restriction = restrictionManager.validateRestriction(personality, "scribble.memory", memoryWordsCount);
 				if (restriction != null) {

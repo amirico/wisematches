@@ -61,7 +61,7 @@ public class ScribbleChangesController extends WisematchesController {
 					}
 					res.put("moves", moves);
 
-					final Personality currentPlayer = getPlayer(); // update hand only if new moves found
+					final Personality currentPlayer = getPrincipal(); // update hand only if new moves found
 					if (currentPlayer != null) {
 						ScribblePlayerHand playerHand = board.getPlayerHand(currentPlayer);
 						if (playerHand != null) {
@@ -71,9 +71,9 @@ public class ScribbleChangesController extends WisematchesController {
 				}
 
 				if (commentsCount != -1) {
-					final int newCommentsCount = commentManager.getCommentsCount(board, getPlayer()) - commentsCount;
+					final int newCommentsCount = commentManager.getCommentsCount(board, getPrincipal()) - commentsCount;
 					if (newCommentsCount > 0) {
-						List<GameCommentState> commentStates = commentManager.getCommentStates(board, getPlayer());
+						List<GameCommentState> commentStates = commentManager.getCommentStates(board, getPrincipal());
 						commentStates = commentStates.subList(0, newCommentsCount);
 
 						int index = 0;
@@ -81,7 +81,7 @@ public class ScribbleChangesController extends WisematchesController {
 						for (GameCommentState commentState : commentStates) {
 							ids[index++] = commentState.getId();
 						}
-						final List<GameComment> comments = commentManager.getComments(board, getPlayer(), ids);
+						final List<GameComment> comments = commentManager.getComments(board, getPrincipal(), ids);
 						final List<Map<String, Object>> c = new ArrayList<Map<String, Object>>();
 						for (GameComment comment : comments) {
 							c.add(ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="player" type="wisematches.core.Player" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Member" -->
 <#-- @ftlvariable name="awards" type="wisematches.server.services.award.Award[]" -->
 <#-- @ftlvariable name="country" type="wisematches.core.personality.player.profile.Country" -->
 <#-- @ftlvariable name="profile" type="wisematches.core.personality.player.profile.PlayerProfile" -->
@@ -7,7 +7,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !player??><#include "/content/assistance/navigation.ftl"/></#if>
+        <#if !principal??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top">
             <table class="profile shadow ui-state-default" width="960px">
