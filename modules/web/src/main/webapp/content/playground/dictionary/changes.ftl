@@ -1,5 +1,4 @@
-<#-- @ftlvariable name="moderator" type="boolean" -->
-<#-- @ftlvariable name="waitingSuggestions" type="wisematches.server.services.dictionary.ChangeSuggestion[]" -->
+<#-- @ftlvariable name="changeSuggestion" type="wisematches.server.services.dictionary.ChangeSuggestion[]" -->
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>
@@ -36,10 +35,12 @@
     <table id="dictionaryChanges" width="100%" class="display">
         <thead>
         <tr>
-            <#if moderator>
+            <@security.authorize ifAllGranted="moderator">
+                <th></th>
                 <th>
+                    <@message code="dict.changes.player.label"/>
                 </th>
-            </#if>
+            </@security.authorize>
             <th>
                 <@message code="dict.changes.word.label"/>
             </th>
@@ -61,13 +62,18 @@
         </tr>
         </thead>
         <tbody>
-            <#list waitingSuggestions as s>
+            <#list changeSuggestion as s>
             <tr class="ui-state-default">
-                <#if moderator>
+                <@security.authorize ifAllGranted="moderator">
                     <td>
-                        <input type="checkbox" name="suggestion" value="${s.id?string}">
+                        <label>
+                            <input type="checkbox" name="suggestion" value="${s.id?string}">
+                        </label>
                     </td>
-                </#if>
+                    <td>
+                        <@wm.player.name personalityManager.getPerson(s.requester) false false true/>
+                    </td>
+                </@security.authorize>
                 <td>
                 ${s.word}
                 </td>
@@ -95,16 +101,15 @@
     </@wm.ui.table.content>
 
     <@wm.ui.table.statusbar align="left">
-        <#if moderator>
+        <@security.authorize ifAllGranted="moderator">
         <button id="approveChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
             <@message code="dict.changes.approve.label"/>
         </button>
         <button id="rejectChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
             <@message code="dict.changes.reject.label"/>
         </button>
-        <#else>
-        &nbsp;
-        </#if>
+        </@security.authorize>
+    &nbsp;
     </@wm.ui.table.statusbar>
 
     <@wm.ui.table.footer/>
@@ -114,7 +119,10 @@
     wm.ui.dataTable('#dictionaryChanges', {
         "bSortClasses": false,
         "aoColumns": [
-            <#if moderator>{ "bSortable": false },</#if>
+        <@security.authorize ifAllGranted="moderator">
+            { "bSortable": false },
+            { "bSortable": false },
+        </@security.authorize>
             { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },
@@ -124,7 +132,7 @@
         ]
     });
 
-    <#if moderator>
+    <@security.authorize ifAllGranted="moderator">
     $(document).ready(function () {
         var processRequest = function (type) {
             var widget = $("#dictionaryWidget");
@@ -135,7 +143,7 @@
                 ids.push($(v).val());
             });
 
-            $.post('/playground/dictionary/processChangeRequest.ajax?type=' + type, JSON.stringify({type: type, ids: ids}), function (result) {
+            $.post('/playground/dictionary/resolveWordEntry.ajax?type=' + type, JSON.stringify({type: type, ids: ids}), function (result) {
                 if (result.success) {
                     wm.util.url.reload();
                 } else {
@@ -152,5 +160,5 @@
             processRequest('reject');
         });
     });
-    </#if>
+    </@security.authorize>
 </script>

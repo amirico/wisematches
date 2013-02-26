@@ -972,7 +972,7 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
                 wm.ui.unlock(v, i18n['waiting'], false);
                 wordEntryEditor.dialog("close");
             } else {
-                wm.ui.unlock(v, response.summary, true);
+                wm.ui.unlock(v, response.message, true);
             }
         });
     };
@@ -1100,9 +1100,9 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
     this.checkWordEntry = function (word, callback) {
         $.post("/playground/dictionary/loadWordEntry.ajax?l=" + lang + "&w=" + word, function (response) {
             if (response.success) {
-                callback(response.data.wordEntry, null);
+                callback(response.data, null);
             } else {
-                callback(null, response.summary);
+                callback(null, response.message);
             }
         });
     };
@@ -1156,7 +1156,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
         } else {
             $.post("/playground/dictionary/loadWordEntries.ajax?l=" + lang + "&p=" + prefix, null, function (response) {
                 if (response.success) {
-                    var words = response.data.wordEntries;
+                    var words = response.data;
                     wordsViewStatus.text(words.length);
 
                     $.each(words, function (i, v) {
@@ -1165,7 +1165,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
                     wordsViewScrollPane.reinitialise();
                     wm.ui.unlock(wordsViewPanel);
                 } else {
-                    wm.ui.unlock(wordsViewPanel, response.summary, true);
+                    wm.ui.unlock(wordsViewPanel, response.message, true);
                 }
             });
         }
@@ -3644,7 +3644,7 @@ $(document).ready(function () {
         }
     });
 
-    $("[title]").cluetip({ showTitle: false});
+    $('[title]').cluetip({ showTitle: false, activation: 'hover', local: true});
 
     var notifications = $(".notification");
     if (notifications.size() > 0) {
@@ -3764,36 +3764,37 @@ $(document).ready(function () {
 $(document).ready(function () {
     var timeoutID;
 
-    $("#language-combobox .ui-state-default").hover(function () {
+    $("#language-combobox").find(".ui-state-default").hover(function () {
         $(this).addClass('ui-state-active').removeClass('ui-state-default');
     }, function () {
         $(this).addClass('ui-state-default').removeClass('ui-state-active');
     });
 
-    $('.dropdown').mouseenter(function () {
-        var submenu = $('.sublinks').stop(false, true).hide();
-        window.clearTimeout(timeoutID);
+    $('.dropdown')
+            .mouseenter(function () {
+                var submenu = $('.sublinks').stop(false, true).hide();
+                window.clearTimeout(timeoutID);
 
-        submenu.css({
-            width: $(this).width() + 20 + 'px',
-            top: $(this).offset().top + $(this).height() + 7 + 'px',
-            left: $(this).offset().left + 'px'
-        });
+                submenu.css({
+                    width: $(this).width() + 20 + 'px',
+                    top: $(this).offset().top + $(this).height() + 7 + 'px',
+                    left: $(this).offset().left + 'px'
+                });
 
-        submenu.stop().slideDown(300);
+                submenu.stop().slideDown(300);
 
-        submenu.mouseleave(function () {
-            $(this).slideUp(300);
-        });
+                submenu.mouseleave(function () {
+                    $(this).slideUp(300);
+                });
 
-        submenu.mouseenter(function () {
-            window.clearTimeout(timeoutID);
-        });
+                submenu.mouseenter(function () {
+                    window.clearTimeout(timeoutID);
+                });
 
-    });
-    $('.dropdown').mouseleave(function () {
-        timeoutID = window.setTimeout(function () {
-            $('.sublinks').stop(false, true).slideUp(300);
-        }, 250);
-    });
+            })
+            .mouseleave(function () {
+                timeoutID = window.setTimeout(function () {
+                    $('.sublinks').stop(false, true).slideUp(300);
+                }, 250);
+            });
 });

@@ -3,6 +3,8 @@ package wisematches.playground.dictionary;
 import java.util.*;
 
 /**
+ * Enumeration of all possible word attributes.
+ *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public enum WordAttribute {

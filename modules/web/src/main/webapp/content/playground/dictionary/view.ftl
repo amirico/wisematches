@@ -1,12 +1,12 @@
 <#-- @ftlvariable name="dictionary" type="wisematches.playground.dictionary.Dictionary" -->
-<#-- @ftlvariable name="dictionaryLanguage" type="wisematches.core.Language" -->
-<#-- @ftlvariable name="wordAttributes" type="wisematches.playground.dictionary.WordAttribute[]" -->
 <#include "/core.ftl"/>
 
 <@wm.ui.playground id="dictionaryWidget">
 <div id="dictionary">
     <@wm.ui.table.header>
         <@message code="dict.label"/>
+
+    ${WordAttribute.INDECLINABLE.name()}
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left" class="search-panel">
@@ -40,7 +40,11 @@
 
                 <td align="right" valign="bottom">
                     <button id="addNewWord" class="ui-wm-button"
-                            style="white-space: nowrap"><@message code="dict.add.label"/></button>
+                            style="white-space: nowrap" <#if !player?? || !player.type.member>disabled="disabled"
+                            title="<@message code="security.member"/>"</#if>>
+                        <@message code="dict.add.label"/>
+                    </button>
+
                 </td>
             </tr>
         </table>
@@ -95,8 +99,8 @@
 <script type="text/javascript">
     var dictionary;
     $(document).ready(function () {
-        dictionary = new wm.game.dict.Dictionary('${dictionaryLanguage}', {
-        <#list wordAttributes as wa>
+        dictionary = new wm.game.dict.Dictionary('${dictionary.language}', {
+        <#list WordAttribute.values() as wa>
             "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
         </#list>
             "status.words.empty": "<@message code="dict.search.result.empty"/>",

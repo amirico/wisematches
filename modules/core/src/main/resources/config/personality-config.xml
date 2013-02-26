@@ -50,6 +50,7 @@
         <property name="accountLockManager" ref="accountLockManager"/>
         <property name="accountRecoveryManager" ref="accountRecoveryManager"/>
 
+        <property name="moderators" value="${server.moderators}"/>
         <property name="administrators" value="${server.admins}"/>
         <property name="personalityManager" ref="personalityManager"/>
     </bean>

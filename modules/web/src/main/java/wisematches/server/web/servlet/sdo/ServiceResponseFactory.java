@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.sdo;
 import wisematches.playground.GameMessageSource;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -19,7 +18,7 @@ public final class ServiceResponseFactory {
 		return success(null);
 	}
 
-	public ServiceResponse success(Map<String, ?> data) {
+	public ServiceResponse success(Object data) {
 		return new ServiceResponse(new ServiceResponse.Success(data));
 	}
 

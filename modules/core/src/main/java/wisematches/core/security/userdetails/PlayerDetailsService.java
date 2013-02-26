@@ -27,7 +27,8 @@ public class PlayerDetailsService implements UserDetailsService {
 
 	private PersonalityManager personalityManager;
 
-	private final Set<String> administrators = new HashSet<>();
+	private final Set<Long> moderators = new HashSet<>();
+	private final Set<Long> administrators = new HashSet<>();
 
 	public PlayerDetailsService() {
 	}
@@ -51,8 +52,11 @@ public class PlayerDetailsService implements UserDetailsService {
 		final boolean expired = (accountRecoveryManager.getToken(account) != null);
 
 		final Collection<String> authorities = new HashSet<>();
-		if (administrators.contains(account.getNickname())) {
+		if (administrators.contains(account.getId())) {
 			authorities.add("admin");
+		}
+		if (moderators.contains(account.getId())) {
+			authorities.add("moderator");
 		}
 		authorities.add("player");
 		authorities.add(member.getMembership().name().toLowerCase());
@@ -75,11 +79,23 @@ public class PlayerDetailsService implements UserDetailsService {
 		return accountManager.checkAccountCredentials(details.getPlayer().getId(), rawPass);
 	}
 
-	public void setAdministrators(Set<String> administrators) {
+	public void setModerators(String moderators) {
+		this.moderators.clear();
+
+		if (moderators != null) {
+			for (String moderator : moderators.split(",")) {
+				this.moderators.add(Long.valueOf(moderator));
+			}
+		}
+	}
+
+	public void setAdministrators(String administrators) {
 		this.administrators.clear();
 
 		if (administrators != null) {
-			this.administrators.addAll(administrators);
+			for (String administrator : administrators.split(",")) {
+				this.administrators.add(Long.valueOf(administrator));
+			}
 		}
 	}
 
