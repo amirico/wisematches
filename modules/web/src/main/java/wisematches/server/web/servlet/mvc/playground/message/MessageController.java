@@ -17,7 +17,7 @@ import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
 import wisematches.server.services.message.MessageManager;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.message.form.MessageForm;
 
@@ -29,6 +29,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/messages")
+@Deprecated
 public class MessageController extends WisematchesController {
 	private MessageManager messageManager;
 	private BlacklistManager blacklistManager;
@@ -97,13 +98,13 @@ public class MessageController extends WisematchesController {
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "send", method = RequestMethod.POST)
-	public ServiceResponse sendMessage(@RequestBody MessageForm form, Locale locale) {
+	public DeprecatedResponse sendMessage(@RequestBody MessageForm form, Locale locale) {
 		final Player principal = getPlayer();
 
 		final int sent = messageManager.getTodayMessagesCount(principal, MessageDirection.SENT);
 		final Restriction restriction = restrictionManager.validateRestriction(principal, "messages.count", sent);
 		if (restriction != null) {
-			return ServiceResponse.failure(messageSource.getMessage("messages.create.forbidden", restriction.getThreshold(), locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("messages.create.forbidden", restriction.getThreshold(), locale));
 		}
 
 		Message message = null;
@@ -114,18 +115,18 @@ public class MessageController extends WisematchesController {
 				if (message.getRecipient() == principal.getId() || message.getSender() == principal.getId()) {
 					playerId = message.getSender();
 				} else {
-					return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
+					return DeprecatedResponse.failure(messageSource.getMessage("messages.err.owner", locale));
 				}
 			} else {
-				return ServiceResponse.failure(messageSource.getMessage("messages.err.original", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("messages.err.original", locale));
 			}
 		}
 
 		final Player player = personalityManager.getMember(playerId);
 		if (player == null) {
-			return ServiceResponse.failure(messageSource.getMessage("messages.err.recipients", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("messages.err.recipients", locale));
 		} else if (blacklistManager.isBlacklisted(player, getPlayer())) {
-			return ServiceResponse.failure(messageSource.getMessage("messages.err.ignored", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("messages.err.ignored", locale));
 		}
 
 		if (form.isReply()) {
@@ -133,29 +134,29 @@ public class MessageController extends WisematchesController {
 		} else {
 			messageManager.sendMessage(principal, player, form.getMessage());
 		}
-		return ServiceResponse.SUCCESS;
+		return DeprecatedResponse.SUCCESS;
 	}
 
 	@ResponseBody
 	@RequestMapping("abuse.ajax")
-	public ServiceResponse reportAbuse(@RequestParam("m") long mid, Locale locale) {
+	public DeprecatedResponse reportAbuse(@RequestParam("m") long mid, Locale locale) {
 		final Message message = messageManager.getMessage(mid);
 		if (message != null) {
 			if (message.getRecipient() == getPlayer().getId()) {
 				abuseReportManager.reportAbuseMessage(message);
-				return ServiceResponse.success();
+				return DeprecatedResponse.success();
 			} else {
-				return ServiceResponse.failure(messageSource.getMessage("messages.err.owner", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("messages.err.owner", locale));
 			}
 		} else {
-			return ServiceResponse.failure(messageSource.getMessage("messages.err.unknown", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("messages.err.unknown", locale));
 		}
 	}
 
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
-	public ServiceResponse removeMessage(@RequestParam(value = "sent", required = false) boolean sent, @RequestParam(value = "messages[]") List<Long> removeList) {
+	public DeprecatedResponse removeMessage(@RequestParam(value = "sent", required = false) boolean sent, @RequestParam(value = "messages[]") List<Long> removeList) {
 		final long principal = getPlayer().getId();
 		for (Long mid : removeList) {
 			final Message message = messageManager.getMessage(mid);
@@ -167,7 +168,7 @@ public class MessageController extends WisematchesController {
 				}
 			}
 		}
-		return ServiceResponse.SUCCESS;
+		return DeprecatedResponse.SUCCESS;
 	}
 
 	@Autowired

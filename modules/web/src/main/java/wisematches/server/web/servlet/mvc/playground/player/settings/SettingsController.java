@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.mvc.playground.player.settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.core.Language;
 import wisematches.core.Member;
-import wisematches.core.Player;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
@@ -35,6 +33,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/account/modify")
+@Deprecated
 public class SettingsController extends WisematchesController {
 	private AccountManager accountManager;
 	private NotificationManager notificationManager;
@@ -48,26 +47,21 @@ public class SettingsController extends WisematchesController {
 
 	@RequestMapping(value = "")
 	public String modifyAccountPage(Model model, @ModelAttribute("settings") SettingsForm form) {
-		final Player player = getPlayer();
-		if (!(player instanceof Member)) {
-			throw new AccessDeniedException("unregistered");
+		final Member member = getPlayer(Member.class);
+		if (member.getTimeZone() != null) {
+			form.setTimezone(member.getTimeZone().getID());
 		}
-
-		final Member member = (Member) player;
-		if (player.getTimeZone() != null) {
-			form.setTimezone(player.getTimeZone().getID());
-		}
-		form.setLanguage(player.getLanguage().name().toLowerCase());
-		form.setEmail(player.getEmail());
+		form.setLanguage(member.getLanguage().name().toLowerCase());
+		form.setEmail(member.getEmail());
 		model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
 
 		final Map<String, NotificationScope> descriptors = new HashMap<>();
 		for (String code : new TreeSet<>(notificationManager.getNotificationCodes())) {
-			descriptors.put(code, notificationManager.getNotificationScope(code, player));
+			descriptors.put(code, notificationManager.getNotificationScope(code, member));
 		}
 		model.addAttribute("notificationsView", new NotificationsTreeView(descriptors));
 
-		final BoardSettings settings = boardSettingsManager.getScribbleSettings(player);
+		final BoardSettings settings = boardSettingsManager.getScribbleSettings(member);
 		form.setTilesClass(settings.getTilesClass());
 		form.setCheckWords(settings.isCheckWords());
 		form.setCleanMemory(settings.isCleanMemory());
@@ -87,8 +81,8 @@ public class SettingsController extends WisematchesController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String modifyAccountAction(@Valid @ModelAttribute("settings") SettingsForm form,
 									  BindingResult errors, Model model, HttpServletRequest request) throws UnknownEntityException {
-		final Player personality = getPlayer();
-		final Account account = accountManager.getAccount(personality.getId());
+		final Member member = getPlayer(Member.class);
+		final Account account = accountManager.getAccount(member.getId());
 		if (account == null) {
 			throw new UnknownEntityException(null, "account");
 		}
@@ -97,10 +91,10 @@ public class SettingsController extends WisematchesController {
 		for (String code : codes) {
 			final String parameter = request.getParameter(code);
 			final NotificationScope scope = parameter != null && !parameter.isEmpty() ? NotificationScope.valueOf(parameter.toUpperCase()) : null;
-			notificationManager.setNotificationScope(code, personality, scope);
+			notificationManager.setNotificationScope(code, member, scope);
 		}
 
-		boardSettingsManager.setScribbleSettings(personality,
+		boardSettingsManager.setScribbleSettings(member,
 				new BoardSettings(form.isCleanMemory(), form.isCheckWords(), form.isClearByClick(),
 						form.isShowCaptions(), form.isEnableShare(), form.getTilesClass()));
 
@@ -157,12 +151,7 @@ public class SettingsController extends WisematchesController {
 			}
 
 			try {
-				final Account a = accountManager.updateAccount(editor.createAccount(), pwd);
-/*
-				if (accountSecurityService != null) {
-					accountSecurityService.authenticatePlayer(a, form.isChangePassword() ? form.getPassword() : null);
-				}
-*/
+				accountManager.updateAccount(editor.createAccount(), pwd);
 				return "redirect:/account/modify#" + form.getOpenedTab();
 			} catch (UnknownAccountException e) {
 				throw new UnknownEntityException(null, "account");
@@ -198,11 +187,4 @@ public class SettingsController extends WisematchesController {
 	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
 		this.boardSettingsManager = boardSettingsManager;
 	}
-/*
-
-	@Autowired
-	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
-		this.accountSecurityService = accountSecurityService;
-	}
-*/
 }

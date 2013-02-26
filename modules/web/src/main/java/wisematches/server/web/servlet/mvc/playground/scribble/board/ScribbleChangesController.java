@@ -15,7 +15,7 @@ import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
 import wisematches.playground.scribble.comment.GameCommentState;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import java.util.*;
@@ -26,6 +26,7 @@ import java.util.concurrent.Callable;
  */
 @Controller
 @RequestMapping("/playground/scribble")
+@Deprecated
 public class ScribbleChangesController extends WisematchesController {
 	private GameCommentManager commentManager;
 	private ScribblePlayManager boardManager;
@@ -37,9 +38,9 @@ public class ScribbleChangesController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("changes")
-	public ServiceResponse loadChangesAjax(@RequestParam("b") final long gameId,
-										   @RequestParam("m") final int movesCount,
-										   @RequestParam(value = "c", required = false, defaultValue = "-1") final int commentsCount, final Locale locale) {
+	public DeprecatedResponse loadChangesAjax(@RequestParam("b") final long gameId,
+											  @RequestParam("m") final int movesCount,
+											  @RequestParam(value = "c", required = false, defaultValue = "-1") final int commentsCount, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Load board changes for: " + gameId + "@" + movesCount);
 		}

@@ -197,7 +197,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 				res = proposals.size();
 			} else if (context == ProposalRelation.INVOLVED) {
 				for (AbstractGameProposal<S> proposal : proposals.values()) {
-					if (proposal.containsPlayer(person)) {
+					if (person instanceof Player && proposal.containsPlayer((Player) person)) {
 						res++;
 					}
 				}
@@ -219,7 +219,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			} else if (context == ProposalRelation.INVOLVED) {
 				final List<GameProposal<S>> res = new ArrayList<>();
 				for (AbstractGameProposal<S> proposal : proposals.values()) {
-					if (proposal.containsPlayer(person)) {
+					if (person instanceof Player && proposal.containsPlayer((Player) person)) {
 						res.add(proposal);
 					}
 				}

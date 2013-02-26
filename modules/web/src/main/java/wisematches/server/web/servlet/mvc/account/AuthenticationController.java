@@ -23,6 +23,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/account")
+@Deprecated
 public class AuthenticationController extends WisematchesController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
 

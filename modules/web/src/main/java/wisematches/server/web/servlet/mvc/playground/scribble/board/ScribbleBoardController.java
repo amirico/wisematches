@@ -19,7 +19,7 @@ import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleTileForm;
@@ -36,6 +36,7 @@ import java.util.concurrent.Callable;
  */
 @Controller
 @RequestMapping("/playground/scribble/board")
+@Deprecated
 public class ScribbleBoardController extends WisematchesController {
 	private ScribblePlayManager boardManager;
 	private BoardSettingsManager boardSettingsManager;
@@ -101,8 +102,8 @@ public class ScribbleBoardController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("make")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
-										@RequestBody final ScribbleWordForm word, final Locale locale) {
+	public DeprecatedResponse makeTurnAjax(@RequestParam("b") final long gameId,
+										   @RequestBody final ScribbleWordForm word, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's move: " + gameId + ", word: " + word);
 		}
@@ -121,7 +122,7 @@ public class ScribbleBoardController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("pass")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
+	public DeprecatedResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's pass: " + gameId);
 		}
@@ -139,8 +140,8 @@ public class ScribbleBoardController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("exchange")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
-											 @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
+	public DeprecatedResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
+												@RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
 		}
@@ -163,7 +164,7 @@ public class ScribbleBoardController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("resign")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
+	public DeprecatedResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Process player's resign: " + gameId);
 		}

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import java.util.Locale;
@@ -16,6 +16,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/info")
+@Deprecated
 public class InformationController extends WisematchesController {
 	public InformationController() {
 	}
@@ -37,7 +38,7 @@ public class InformationController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("/tip.ajax")
-	public ServiceResponse loadTip(@RequestParam("s") String section, Locale locale) {
-		return ServiceResponse.success(messageSource.getMessage("game.tip." + section, locale));
+	public DeprecatedResponse loadTip(@RequestParam("s") String section, Locale locale) {
+		return DeprecatedResponse.success(messageSource.getMessage("game.tip." + section, locale));
 	}
 }

@@ -20,7 +20,7 @@ import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.memory.MemoryWordManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
 
@@ -33,6 +33,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/scribble/memory")
+@Deprecated
 public class ScribbleMemoryController extends WisematchesController {
 	private ScribblePlayManager boardManager;
 	private MemoryWordManager memoryWordManager;
@@ -45,44 +46,44 @@ public class ScribbleMemoryController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("load")
-	public ServiceResponse loadMemoryAjax(@RequestParam("b") final long gameId, Locale locale) {
+	public DeprecatedResponse loadMemoryAjax(@RequestParam("b") final long gameId, Locale locale) {
 		return executeSaveAction(gameId, locale, null, MemoryAction.LOAD);
 	}
 
 	@ResponseBody
 	@RequestMapping("clear")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse clearMemoryAjax(@RequestParam("b") final long gameId, Locale locale) {
+	public DeprecatedResponse clearMemoryAjax(@RequestParam("b") final long gameId, Locale locale) {
 		return executeSaveAction(gameId, locale, null, MemoryAction.CLEAR);
 	}
 
 	@ResponseBody
 	@RequestMapping("add")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse addMemoryWordAjax(@RequestParam("b") final long gameId, @RequestBody ScribbleWordForm wordForm, Locale locale) {
+	public DeprecatedResponse addMemoryWordAjax(@RequestParam("b") final long gameId, @RequestBody ScribbleWordForm wordForm, Locale locale) {
 		return executeSaveAction(gameId, locale, wordForm.createWord(), MemoryAction.ADD);
 	}
 
 	@ResponseBody
 	@RequestMapping("remove")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse removeMemoryWordAjax(@RequestParam("b") final long gameId, @RequestBody ScribbleWordForm wordForm, Locale locale) {
+	public DeprecatedResponse removeMemoryWordAjax(@RequestParam("b") final long gameId, @RequestBody ScribbleWordForm wordForm, Locale locale) {
 		return executeSaveAction(gameId, locale, wordForm.createWord(), MemoryAction.REMOVE);
 	}
 
-	private ServiceResponse executeSaveAction(final long boardId, Locale locale, Word word, MemoryAction action) {
+	private DeprecatedResponse executeSaveAction(final long boardId, Locale locale, Word word, MemoryAction action) {
 		try {
 			final Player personality = getPlayer();
 			if (personality == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.memory.err.personality", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.personality", locale));
 			}
 			final ScribbleBoard board = boardManager.openBoard(boardId);
 			if (board == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.memory.err.board.unknown", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.board.unknown", locale));
 			}
 			final ScribblePlayerHand hand = board.getPlayerHand(personality);
 			if (hand == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.memory.err.hand.unknown", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.hand.unknown", locale));
 			}
 			if (action == MemoryAction.ADD) {
 				final Personality principal = ScribbleMemoryController.this.getPlayer();
@@ -92,12 +93,12 @@ public class ScribbleMemoryController extends WisematchesController {
 					throw new MemoryActionException("game.memory.err.limit", restriction.getThreshold());
 				}
 			}
-			return ServiceResponse.success(null, action.doAction(memoryWordManager, board, personality, word));
+			return DeprecatedResponse.success(null, action.doAction(memoryWordManager, board, personality, word));
 		} catch (MemoryActionException ex) {
-			return ServiceResponse.failure(messageSource.getMessage(ex.getCode(), ex.getArgs(), locale));
+			return DeprecatedResponse.failure(messageSource.getMessage(ex.getCode(), ex.getArgs(), locale));
 		} catch (BoardLoadingException ex) {
 			log.error("Memory word can't be loaded for board: " + boardId, ex);
-			return ServiceResponse.failure(messageSource.getMessage("game.memory.err.board.loading", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.board.loading", locale));
 		}
 	}
 

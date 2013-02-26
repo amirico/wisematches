@@ -219,7 +219,6 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 	public String getNumeralEnding(int value, Locale locale) {
 		return Language.byLocale(locale).getLocalization().getNumeralEnding(value);
 	}
-
 //
 //
 //	public void setMessageSource(MessageSource messageSource) {

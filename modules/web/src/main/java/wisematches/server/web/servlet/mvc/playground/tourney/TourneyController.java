@@ -19,7 +19,7 @@ import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.tourney.form.EntityIdForm;
@@ -35,6 +35,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/tourney")
+@Deprecated
 public class TourneyController extends WisematchesController {
 	private RegularTourneyManager tourneyManager;
 	private RestrictionManager restrictionManager;
@@ -46,13 +47,8 @@ public class TourneyController extends WisematchesController {
 		super("title.tourney");
 	}
 
-	@RequestMapping("")
-	public String tourneysRoot(Model model) {
-		return showDashboard(model);
-	}
-
-	@RequestMapping("dashboard")
-	public String showDashboard(Model model) {
+	@RequestMapping(value = {"", "dashboard"})
+	public String showDashboardPage(Model model) {
 		final Personality personality = getPlayer();
 
 		final List<TourneyGroup> participated = tourneyManager.searchTourneyEntities(personality, new TourneyGroup.Context(EnumSet.of(Tourney.State.ACTIVE)), null, null);
@@ -64,7 +60,7 @@ public class TourneyController extends WisematchesController {
 	}
 
 	@RequestMapping("active")
-	public String showActive(Model model) {
+	public String showActiveTourneysPage(Model model) {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.ACTIVE));
 		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
 
@@ -76,7 +72,7 @@ public class TourneyController extends WisematchesController {
 	}
 
 	@RequestMapping("finished")
-	public String showFinished(Model model) {
+	public String showFinishedTourneysPage(Model model) {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
 		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
 
@@ -185,17 +181,17 @@ public class TourneyController extends WisematchesController {
 	@ResponseBody
 	@RequestMapping("changeSubscription.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
+	public DeprecatedResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
 		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
 		if (tourney == null) {
-			return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.unknown", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.unknown", locale));
 		}
 
 		Language language = null;
 		if (form.getLanguage() != null) {
 			language = Language.byCode(form.getLanguage());
 			if (language == null) {
-				return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.language", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.language", locale));
 			}
 		}
 
@@ -206,7 +202,7 @@ public class TourneyController extends WisematchesController {
 				section = TourneySection.valueOf(sectionName.toUpperCase());
 			}
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.section", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.section", locale));
 		}
 
 		final Player principal = getPlayer();
@@ -215,7 +211,7 @@ public class TourneyController extends WisematchesController {
 			if (doRegistration) {
 				final Restriction restriction = restrictionManager.validateRestriction(principal, "tourneys.count", getActiveTourneysCount(principal));
 				if (restriction != null) {
-					return ServiceResponse.failure(messageSource.getMessage("tourney.subscribe.forbidden", restriction.getThreshold(), locale));
+					return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscribe.forbidden", restriction.getThreshold(), locale));
 				}
 			}
 
@@ -229,7 +225,7 @@ public class TourneyController extends WisematchesController {
 			}
 		} catch (RegistrationException ex) {
 			log.error("Subscription can't be changed: " + form, ex);
-			return ServiceResponse.failure(messageSource.getMessage("tourney.subscription.err.internal", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.internal", locale));
 		}
 
 		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
@@ -241,7 +237,7 @@ public class TourneyController extends WisematchesController {
 				stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));
 			}
 		}
-		return ServiceResponse.success("", "subscriptions", res);
+		return DeprecatedResponse.success("", "subscriptions", res);
 	}
 
 	private void setupAnnounce(Model model) {

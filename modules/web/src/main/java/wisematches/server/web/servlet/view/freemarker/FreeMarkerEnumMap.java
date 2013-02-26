@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.view;
+package wisematches.server.web.servlet.view.freemarker;
 
 import org.springframework.ui.Model;
 

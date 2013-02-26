@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
+@Deprecated
 public class IndexController extends WisematchesController {
 	public IndexController() {
 	}

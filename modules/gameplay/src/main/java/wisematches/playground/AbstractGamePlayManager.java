@@ -37,7 +37,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	private final Lock openBoardLock = new ReentrantLock();
 
 	private final BoardsMap<B> boardsCache;
-	private final Set<RobotType> robotTypes = new HashSet<>();
+	private final Set<RobotType> robotTypes = new TreeSet<>();
 
 	private final BoardListener gameBoardListener = new TheBoardListener();
 	private final Collection<BoardListener> listeners = new CopyOnWriteArraySet<>();

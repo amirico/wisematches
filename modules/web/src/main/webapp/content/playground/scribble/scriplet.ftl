@@ -10,7 +10,7 @@
 <@wm.ui.table.dtinit/>
 
 <#if principal??>
-    <#if !player??><#assign player=personality></#if>
+    <#if !player??><#assign player=player></#if>
 </#if>
 
 <script type="text/javascript">

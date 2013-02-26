@@ -18,6 +18,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/scribble/history")
+@Deprecated
 public class HistoryGameController extends AbstractGameController { //extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
 

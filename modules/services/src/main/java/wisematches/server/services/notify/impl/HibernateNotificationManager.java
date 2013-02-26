@@ -40,7 +40,7 @@ public class HibernateNotificationManager implements NotificationManager, Initia
 	}
 
 	@Override
-	public NotificationScope getNotificationScope(String code, Member member) {
+	public NotificationScope getNotificationScope(String code, Player member) {
 		final NotificationDescriptor descriptor = descriptorsMap.get(code);
 		if (descriptor == null) {
 			return null;

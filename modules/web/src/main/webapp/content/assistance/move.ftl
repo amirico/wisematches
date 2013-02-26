@@ -5,8 +5,8 @@
 <#-- @ftlvariable name="memoryWords" type="java.util.Collection<wisematches.playground.scribble.Word>" -->
 
 <#include "/core.ftl">
-<#assign oldPersonality=personality!""/>
-<#assign personality=player/>
+<#assign oldPersonality=player!""/>
+<#assign player=player/>
 
 <style type="text/css">
     span.ui-icon {
@@ -184,4 +184,4 @@
     $("#board${board.boardId} .scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
 </script>
 
-<#assign personality=oldPersonality/>
+<#assign player=oldPersonality/>

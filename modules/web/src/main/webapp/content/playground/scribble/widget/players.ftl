@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#include "/core.ftl">
 
-<#assign playerInGame=personality?? && board.getPlayerHand(personality)??/>
+<#assign playerInGame=player?? && board.getPlayerHand(player)??/>
 
 <@wm.ui.widget class="playersInfo" title="game.player.label" help="board.players">
 <div>

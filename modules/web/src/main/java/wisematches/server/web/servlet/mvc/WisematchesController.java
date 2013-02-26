@@ -1,6 +1,7 @@
 package wisematches.server.web.servlet.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import wisematches.core.PersonalityManager;
@@ -8,16 +9,19 @@ import wisematches.core.Player;
 import wisematches.core.security.PersonalityContext;
 import wisematches.playground.GameMessageSource;
 import wisematches.server.services.state.PlayerStateManager;
+import wisematches.server.web.servlet.sdo.ServiceResponseFactory;
 import wisematches.server.web.servlet.view.StaticContentGenerator;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @ControllerAdvice
+@SuppressWarnings("unchecked")
 public abstract class WisematchesController {
 	private final String title;
 
 	protected GameMessageSource messageSource;
+	protected ServiceResponseFactory responseFactory;
 	protected PlayerStateManager playerStateManager;
 	protected PersonalityManager personalityManager;
 	protected StaticContentGenerator staticContentGenerator;
@@ -40,6 +44,21 @@ public abstract class WisematchesController {
 		return PersonalityContext.getPlayer();
 	}
 
+	protected boolean hasRole(String role) {
+		return PersonalityContext.hasRole(role);
+	}
+
+	protected <P extends Player> P getPlayer(Class<P> type) {
+		final Player player = getPlayer();
+		if (player == null) {
+			throw new AccessDeniedException("unregistered");
+		}
+		if (type.isAssignableFrom(player.getClass())) {
+			throw new AccessDeniedException("unregistered");
+		}
+		return (P) player;
+	}
+
 /*
 	@ModelAttribute("requestQueryString")
 	public String getRequestQueryString() {
@@ -47,33 +66,21 @@ public abstract class WisematchesController {
 		return request.getQueryString();
 	}
 */
-/*
-
-	protected Player getPlayer() {
-		final Personality personality = getPersonality();
-		if (personality == null) {
-			return null;
-		}
-		if (!(personality instanceof Player)) {
-			throw new AccessDeniedException("Incorrect personality type where Player is expected: " + personality.getType());
-		}
-		return (Player) personality;
-	}
-*/
 
 	@Autowired
 	public void setMessageSource(GameMessageSource messageSource) {
 		this.messageSource = messageSource;
-	}
-
-	@Autowired
-	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
-		this.playerStateManager = playerStateManager;
+		this.responseFactory = new ServiceResponseFactory(messageSource);
 	}
 
 	@Autowired
 	public void setPersonalityManager(PersonalityManager personalityManager) {
 		this.personalityManager = personalityManager;
+	}
+
+	@Autowired
+	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
+		this.playerStateManager = playerStateManager;
 	}
 
 	@Autowired

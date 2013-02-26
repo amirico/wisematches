@@ -308,25 +308,77 @@ wm.ui = new function () {
         }
     };
 
-    this.player = function (info, hideLink) {
-        var id = (info.playerId != undefined ? info.playerId : info.id);
-        var html = '<span class="player ' + info.membership.toLowerCase() + '">';
-        if (info.online) {
-            html += '<div class="state online"></div> ';
+    this.player = function (player, showLink, showState, showType, waiting) {
+        showType = (showType !== undefined) ? showType : true;
+        showState = (showState !== undefined) ? showState : true;
+        showLink = (showLink !== undefined) ? showLink : true;
+        waiting = (waiting !== undefined) ? waiting : false;
+
+        var l = showLink && (player.membership != null);
+        var html = '';
+        html += '<span class="player';
+        html += ' ' + player.type.toLowerCase();
+
+        if (player.robotType != null) {
+            html += ' ' + player.robotType.toLowerCase();
         }
-        if (!hideLink && id >= 1000) {
-            html += '<a href="/playground/profile/view?p=' + id + '">';
+        if (player.membership != null) {
+            html += ' ' + player.membership.toLowerCase();
         }
-        html += '<div class="nickname">' + info.nickname + '</div>';
-        if (info.membership.toLowerCase() != 'basic') {
-            html += ' <div class="membership"></div>';
+        if (waiting) {
+            html += ' waiting';
         }
-        if (!hideLink && id > 1000) {
-            html += '</a>';
+        html += '">';
+        if (showState && player.membership != null) {
+            html += '<div class="state ' + (player.online ? 'online' : 'offline') + '"></div>';
+        }
+        if (l) {
+            html += '<a href="/playground/profile/view?p=' + player.id + '">';
+        }
+        html += '<div class="nickname">' + player.nickname + '</div>';
+
+        if (showType) {
+            html += '<div class="icon"></div>';
+        }
+
+        if (l) {
+            html += "</a>";
         }
         html += '</span>';
         return html;
     };
+
+    /*
+     this.player = function (player, hideLink) {
+     var id = player.id;
+     var html = '';
+
+     html += '<span class="player';
+     html += ' ' + player.type.toLowerCase();
+     if (player.membership != null) {
+     html += player.membership.toLowerCase();
+     }
+     if (player.robotType != null) {
+     html += player.robotType.toLowerCase();
+     }
+
+     if (player.online) {
+     html += '<div class="state online"></div> ';
+     }
+     if (!hideLink && id >= 1000) {
+     html += '<a href="/playground/profile/view?p=' + id + '">';
+     }
+     html += '<div class="nickname">' + info.nickname + '</div>';
+     if (info.membership.toLowerCase() != 'basic') {
+     html += ' <div class="membership"></div>';
+     }
+     if (!hideLink && id > 1000) {
+     html += '</a>';
+     }
+     html += '</span>';
+     return html;
+     };
+     */
 
     $(document).ready(function () {
         var body = $("body");
@@ -675,7 +727,7 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
     };
 
     var insertPlayer = function (playerInfo) {
-        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, true) + '<input type="hidden" name="opponents" value="' + playerInfo.id + '"/></div>');
+        var s = $('<div style="display: none;">' + wm.ui.player(playerInfo, false) + '<input type="hidden" name="opponents" value="' + playerInfo.id + '"/></div>');
         attachPlayerSearchActions(s);
         $("#opponentsList").append(s);
         $("#opponentsList .ui-state-error-text").remove();
@@ -686,7 +738,7 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
         }
     };
 
-    $("#opponentsList div").each(function (i, a) {
+    $('#opponentsList div').each(function (i, a) {
         attachPlayerSearchActions(a);
     });
 
@@ -812,9 +864,9 @@ wm.game.Search = function (columns, scriplet, language) {
     var search = this;
 
     $.each(columns, function (i, a) {
-        if (a.sName == 'nickname') {
+        if (a.sName == 'player') {
             a.fnRender = function (oObj) {
-                return wm.ui.player(oObj.aData.nickname, scriplet);
+                return wm.ui.player(oObj.aData.player, !scriplet);
             };
         }
     });
@@ -835,8 +887,10 @@ wm.game.Search = function (columns, scriplet, language) {
                 data[aoData[i]['name']] = aoData[i]['value'];
             }
             $.post(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), JSON.stringify(data), function (json) {
-                players = json.aaData;
-                fnCallback(json)
+                if (json.success) {
+                    players = json.data.aaData;
+                    fnCallback(json.data);
+                }
             });
         }
     });
@@ -849,7 +903,7 @@ wm.game.Search = function (columns, scriplet, language) {
         var p = $(event.target).closest('tr');
         search.closeDialog();
         var pos = resultTable.fnGetPosition(p.get(0));
-        callback(players[pos]['nickname']);
+        callback(players[pos]['player']);
     });
 
     this.closeDialog = function () {

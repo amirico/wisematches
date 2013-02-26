@@ -3,6 +3,7 @@ package wisematches.server.web.servlet.mvc.playground.relations.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class BlacklistRecordForm {
 	private long person;
 	private String comment;

@@ -7,6 +7,7 @@ import java.util.TimeZone;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public final class TimeZoneInfo {
 	private final String offsetName;
 	private final TimeZone timeZone;

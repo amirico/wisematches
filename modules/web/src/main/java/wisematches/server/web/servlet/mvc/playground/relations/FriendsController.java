@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Player;
 import wisematches.server.services.relations.friends.FriendsManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.relations.form.FriendRelationForm;
 
@@ -20,6 +20,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/friends")
+@Deprecated
 public class FriendsController extends WisematchesController {
 	private FriendsManager friendsManager;
 
@@ -37,25 +38,25 @@ public class FriendsController extends WisematchesController {
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
-	public ServiceResponse addFriend(@RequestBody FriendRelationForm form, Locale locale) {
+	public DeprecatedResponse addFriend(@RequestBody FriendRelationForm form, Locale locale) {
 		final Player player = personalityManager.getMember(form.getPerson());
 		if (player == null) {
-			return ServiceResponse.failure(messageSource.getMessage("friends.err.unknown", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("friends.err.unknown", locale));
 		}
 		friendsManager.addFriend(getPlayer(), player, form.getComment());
-		return ServiceResponse.SUCCESS;
+		return DeprecatedResponse.SUCCESS;
 	}
 
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
-	public ServiceResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
+	public DeprecatedResponse removeFriend(@RequestParam(value = "persons[]") List<Long> removeList) {
 		final Player personality = getPlayer();
 		for (Long id : removeList) {
 			final Player player1 = personalityManager.getMember(id);
 			friendsManager.removeFriend(personality, player1);
 		}
-		return ServiceResponse.SUCCESS;
+		return DeprecatedResponse.SUCCESS;
 	}
 
 	@Autowired

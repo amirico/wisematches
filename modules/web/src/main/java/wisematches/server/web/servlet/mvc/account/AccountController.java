@@ -17,15 +17,15 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.core.Language;
+import wisematches.core.Member;
 import wisematches.core.Membership;
-import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.services.notify.NotificationException;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.AccountRegistrationForm;
 
@@ -42,6 +42,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/account")
+@Deprecated
 public class AccountController extends WisematchesController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
@@ -92,11 +93,11 @@ public class AccountController extends WisematchesController {
 		// Validate before next steps
 		validateRegistrationForm(form, result);
 
-		Player player = null;
+		Member member = null;
 		// Create account if no errors
 		if (!result.hasErrors()) {
 			try {
-				player = new DefaultMember(createAccount(form, request), Membership.BASIC);
+				member = new DefaultMember(createAccount(form, request), Membership.BASIC);
 			} catch (DuplicateAccountException ex) {
 				final Set<String> fieldNames = ex.getFieldNames();
 				if (fieldNames.contains("email")) {
@@ -113,7 +114,7 @@ public class AccountController extends WisematchesController {
 			}
 		}
 
-		if (result.hasErrors() || player == null) {
+		if (result.hasErrors() || member == null) {
 			if (log.isInfoEnabled()) {
 				log.info("Account form is not correct: " + result.toString());
 			}
@@ -125,7 +126,7 @@ public class AccountController extends WisematchesController {
 
 			status.setComplete();
 			try {
-				notificationService.raiseNotification("account.created", player, NotificationSender.ACCOUNTS, null);
+				notificationService.raiseNotification("account.created", member, NotificationSender.ACCOUNTS, null);
 			} catch (NotificationException e) {
 				log.error("Notification about new account can't be sent", e);
 			}
@@ -143,16 +144,16 @@ public class AccountController extends WisematchesController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkAvailability")
-	private ServiceResponse getAvailabilityStatus(@RequestParam("email") String email,
-												  @RequestParam("nickname") String nickname,
-												  Errors result) {
+	private DeprecatedResponse getAvailabilityStatus(@RequestParam("email") String email,
+													 @RequestParam("nickname") String nickname,
+													 Errors result) {
 		if (log.isDebugEnabled()) {
 			log.debug("Check account validation for: " + email + " (\"" + nickname + "\")");
 		}
 
 		final AccountAvailability a = accountManager.checkAccountAvailable(nickname, email);
 		if (a.isAvailable()) {
-			return ServiceResponse.success();
+			return DeprecatedResponse.success();
 		} else {
 			if (!a.isEmailAvailable()) {
 				result.rejectValue("email", "account.register.email.err.busy");
@@ -163,7 +164,7 @@ public class AccountController extends WisematchesController {
 			if (!a.isUsernameProhibited()) {
 				result.rejectValue("nickname", "account.register.nickname.err.incorrect");
 			}
-			return ServiceResponse.convert(result);
+			return DeprecatedResponse.convert(result);
 		}
 	}
 

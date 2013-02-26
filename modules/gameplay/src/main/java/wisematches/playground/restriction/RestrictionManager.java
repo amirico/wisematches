@@ -26,6 +26,7 @@ public interface RestrictionManager {
 	 */
 	Collection<String> getRestrictionNames();
 
+
 	/**
 	 * Returns current restriction threshold for specified restriction and player.
 	 *
@@ -47,6 +48,7 @@ public interface RestrictionManager {
 	 * @throws NullPointerException     if {@code name} or {@code membership} is {@code null}
 	 */
 	Comparable getRestrictionThreshold(String name, Membership player);
+
 
 	/**
 	 * Checks and returns restriction description for specified player.

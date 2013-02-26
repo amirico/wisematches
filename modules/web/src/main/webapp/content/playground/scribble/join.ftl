@@ -42,12 +42,12 @@
                 <tr>
                     <td>${settings.title}</td>
                     <td><@message code="language.${settings.language?lower_case}"/></td>
-                    <td align="center">${gameMessageSource.formatTimeMinutes(settings.daysPerMove*24*60,locale)}</td>
+                    <td align="center">${messageSource.formatTimeMinutes(settings.daysPerMove*24*60,locale)}</td>
                     <td>
                         <#list view.proposal.players as p>
                         <div>
                             <#if p??>
-                                <@wm.player.name player=personalityManager.getMember(p) waiting=!view.proposal.isPlayerJoined(p)/>
+                                <@wm.player.name player=p waiting=!view.proposal.isPlayerJoined(p)/>
                             <#else>
                                 <span class="player waiting"><span
                                         class="nickname"><@message code="game.status.waiting"/></span></span>
@@ -58,7 +58,7 @@
                     <td class="center">
                         <#if view.violations?? && !view.violations.empty>
                             <#list view.violations as violation>
-                                <div class="game-join-error">${gameMessageSource.formatViolation(violation, locale, true)}</div>
+                                <div class="game-join-error">${messageSource.formatViolation(violation, locale, true)}</div>
                             </#list>
                         <#else>
                             <#if view.proposal.proposalType == "CHALLENGE">
@@ -82,7 +82,7 @@
     <@wm.ui.table.footer>
         <#if waitingGames.globalViolation??>
             <div class="ui-state-error-text">
-            ${gameMessageSource.formatViolation(waitingGames.globalViolation, locale, false)}
+            ${messageSource.formatViolation(waitingGames.globalViolation, locale, false)}
             </div>
         </#if>
     </@wm.ui.table.footer>

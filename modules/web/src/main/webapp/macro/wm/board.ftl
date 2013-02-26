@@ -4,7 +4,7 @@
 <#import "/macro/wm/tourney.ftl" as tourney/>
 
 <#macro name board link=true number=true>
-    <#assign title=gameMessageSource.getBoardTitle(board, locale)/>
+    <#assign title=messageSource.getBoardTitle(board, locale)/>
     <#if link><@href board.boardId>${title}<#if number> #${board.boardId}</#if></@href><#else>${title} <#if number> #${board.boardId}</#if></#if>
 </#macro>
 

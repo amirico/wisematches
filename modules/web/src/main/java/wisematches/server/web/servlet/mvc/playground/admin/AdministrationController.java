@@ -19,6 +19,7 @@ import wisematches.playground.scribble.robot.ScribbleRobotBrain;
  */
 @Controller
 @RequestMapping("/admin")
+@Deprecated
 public class AdministrationController {
 	private ScribblePlayManager boardManager;
 //	private TourneyAdministrationAccess administrationAccess;

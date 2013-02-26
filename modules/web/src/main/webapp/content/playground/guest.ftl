@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<#if personality.type.visitor>
+<#if player.type.visitor>
 <div class="shadow ui-state-highlight" style="text-align: left; padding: 5px 5px 5px 30px;">
     <table>
         <tr>

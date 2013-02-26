@@ -5,6 +5,7 @@ import wisematches.playground.scribble.ScribbleSettings;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class ScribbleInfoForm {
 	private final long id;
 	private final ScribbleSettings settings;

@@ -32,8 +32,8 @@
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.freeow-1.0.2.min.js"/>"></script>
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.hoverIntent-0.0.6.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-4.1.3.css"/>"/>
-    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-4.1.3.js"/>"></script>
+    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.0.0.css"/>"/>
+    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.0.0.js"/>"></script>
 
 <#include "analytics.ftl">
 <#include 'localization.ftl'/>
@@ -42,12 +42,12 @@
 <#include 'browser.ftl'/>
 
 <div id="wisematchesHeader">
-<#if personality??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>
+<#if player??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>
 </div>
 
 <div id="notification-block"></div>
 
-<#if personality??>
+<#if player??>
 <div id="header-separator" style="height: 20px;"></div>
 </#if>
 
@@ -56,7 +56,7 @@
 </div>
 
 <div id="wisematchesFooter" style="display: none;">
-<#if personality?? && personality?has_content><#include "playground/footer.ftl"/><#else><#include "account/footer.ftl"/></#if>
+<#if player?? && player?has_content><#include "playground/footer.ftl"/><#else><#include "account/footer.ftl"/></#if>
 </div>
 
 <script type="text/javascript">

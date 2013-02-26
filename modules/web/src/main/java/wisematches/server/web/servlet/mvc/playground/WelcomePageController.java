@@ -15,6 +15,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/")
+@Deprecated
 public class WelcomePageController extends WisematchesController {
 	private ProfileController playerProfileController;
 

@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.core.personality.player.account.*;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
@@ -31,6 +31,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/account/recovery")
+@Deprecated
 public class RecoveryController extends WisematchesController {
 	private CaptchaService captchaService;
 	private AccountManager accountManager;
@@ -63,8 +64,8 @@ public class RecoveryController extends WisematchesController {
 					mailModel.put("principal", account);
 					mailModel.put("recoveryToken", token.getToken());
 
-					final Player player = personalityManager.getMember(account.getId());
-					notificationService.raiseNotification("account.recovery", player, NotificationSender.ACCOUNTS, mailModel);
+					final Member member = personalityManager.getMember(account.getId());
+					notificationService.raiseNotification("account.recovery", member, NotificationSender.ACCOUNTS, mailModel);
 					session.setAttribute(RECOVERING_PLAYER_EMAIL, account.getEmail());
 					return "redirect:/account/recovery/confirmation";
 				} else {
@@ -109,8 +110,8 @@ public class RecoveryController extends WisematchesController {
 					recoveryTokenManager.clearToken(account); // remove token. Mandatory operation or expired exception will be thrown
 					accountManager.updateAccount(e.createAccount(), form.getPassword());
 
-					final Player player = personalityManager.getMember(account.getId());
-					notificationService.raiseNotification("account.updated", player, NotificationSender.ACCOUNTS, player);
+					final Member member = personalityManager.getMember(account.getId());
+					notificationService.raiseNotification("account.updated", member, NotificationSender.ACCOUNTS, member);
 					return AccountController.forwardToAuthentication(form.getEmail(), form.getPassword(), form.isRememberMe());
 				} catch (Exception e1) {
 					result.rejectValue("email", "account.recovery.err.system");

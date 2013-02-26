@@ -16,7 +16,7 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.dictionary.WordAttribute;
 import wisematches.server.services.dictionary.*;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordApprovalForm;
@@ -31,6 +31,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/dictionary")
+@Deprecated
 public class DictionaryController extends WisematchesController {
 	private DictionaryManager dictionaryManager;
 	private DictionarySuggestionManager dictionarySuggestionManager;
@@ -73,68 +74,68 @@ public class DictionaryController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("loadWordEntry.ajax")
-	public ServiceResponse loadWordEntry(@RequestParam("l") String lang, @RequestParam("w") String word, Locale locale) {
+	public DeprecatedResponse loadWordEntry(@RequestParam("l") String lang, @RequestParam("w") String word, Locale locale) {
 		final Language language;
 		try {
 			language = Language.valueOf(lang.toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
 		}
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (dictionary == null) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.dictionary", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.dictionary", locale));
 		}
-		return ServiceResponse.success(null, "wordEntry", dictionary.getWordEntry(word.toLowerCase()));
+		return DeprecatedResponse.success(null, "wordEntry", dictionary.getWordEntry(word.toLowerCase()));
 	}
 
 	@ResponseBody
 	@RequestMapping("loadWordEntries.ajax")
-	public ServiceResponse loadWordEntries(@RequestParam("l") String lang, @RequestParam("p") String prefix, Locale locale) {
+	public DeprecatedResponse loadWordEntries(@RequestParam("l") String lang, @RequestParam("p") String prefix, Locale locale) {
 		final Language language;
 		try {
 			language = Language.valueOf(lang.toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
 		}
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (dictionary == null) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.dictionary", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.dictionary", locale));
 		}
-		return ServiceResponse.success(null, "wordEntries", dictionary.getWordEntries(prefix.toLowerCase()));
+		return DeprecatedResponse.success(null, "wordEntries", dictionary.getWordEntries(prefix.toLowerCase()));
 	}
 
 	@ResponseBody
 	@RequestMapping("editWordEntry.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse createWord(@RequestBody WordEntryForm form, Locale locale) {
+	public DeprecatedResponse createWord(@RequestBody WordEntryForm form, Locale locale) {
 		Language language;
 		try {
 			language = Language.valueOf(form.getLanguage().toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.language", locale));
 		}
 
 		final SuggestionType suggestionType;
 		try {
 			suggestionType = SuggestionType.valueOf(form.getAction().toUpperCase());
 		} catch (IllegalArgumentException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.action", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.action", locale));
 		}
 
 		final String word = form.getWord().toLowerCase();
 		if (word.length() < 2) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.short", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.short", locale));
 		}
 
 		if (!language.getAlphabet().validate(word)) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.alphabet", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.alphabet", locale));
 		}
 
 		EnumSet<WordAttribute> attributes1 = null;
 		if (suggestionType != SuggestionType.REMOVE) {
 			final String[] attributes = form.getAttributes();
 			if (attributes == null || attributes.length == 0) {
-				return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.empty", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.empty", locale));
 			}
 
 
@@ -143,19 +144,19 @@ public class DictionaryController extends WisematchesController {
 				try {
 					attrs[i] = WordAttribute.valueOf(attributes[i]);
 				} catch (IllegalArgumentException ex) {
-					return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.unknown", locale));
+					return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.unknown", locale));
 				}
 			}
 
 			attributes1 = WordAttribute.fromArray(attrs);
 			if (!attributes1.contains(WordAttribute.FEMININE) && !attributes1.contains(WordAttribute.MASCULINE) && !attributes1.contains(WordAttribute.NEUTER)) {
-				return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.gender", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.attributes.gender", locale));
 			}
 		}
 
 		final int cnt = dictionarySuggestionManager.getTotalCount(null, new SuggestionContext(word, null, null, EnumSet.of(SuggestionState.WAITING)));
 		if (cnt != 0) {
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.waiting", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.waiting", locale));
 		}
 
 		try {
@@ -163,36 +164,36 @@ public class DictionaryController extends WisematchesController {
 			switch (suggestionType) {
 				case ADD:
 					if (contains) {
-						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.exist", locale));
+						return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.word.exist", locale));
 					}
 					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPlayer());
 					break;
 				case UPDATE:
 					if (!contains) {
-						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
+						return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
 					}
 					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPlayer());
 					break;
 				case REMOVE:
 					if (!contains) {
-						return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
+						return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.word.unknown", locale));
 					}
 					dictionarySuggestionManager.removeWord(word, language, getPlayer());
 					break;
 			}
-			return ServiceResponse.success();
+			return DeprecatedResponse.success();
 		} catch (Exception ex) {
 			log.error("Word suggest can't be processed: " + form, ex);
-			return ServiceResponse.failure(messageSource.getMessage("dict.suggest.err.system", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("dict.suggest.err.system", locale));
 		}
 	}
 
 	@ResponseBody
 	@RequestMapping("processChangeRequest.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse processChangeRequest(@RequestBody WordApprovalForm form, Locale locale) {
+	public DeprecatedResponse processChangeRequest(@RequestBody WordApprovalForm form, Locale locale) {
 		if (!isModerator()) {
-			return ServiceResponse.failure("You are not moderator!");
+			return DeprecatedResponse.failure("You are not moderator!");
 		}
 		try {
 			if ("approve".equalsIgnoreCase(form.getType())) {
@@ -202,9 +203,9 @@ public class DictionaryController extends WisematchesController {
 			}
 		} catch (Exception ex) {
 			log.error("Approval request can't be processed: " + form, ex);
-			return ServiceResponse.failure(ex.getMessage());
+			return DeprecatedResponse.failure(ex.getMessage());
 		}
-		return ServiceResponse.success();
+		return DeprecatedResponse.success();
 	}
 
 	private Language getLanguage(String lang, Locale locale) {
@@ -218,8 +219,7 @@ public class DictionaryController extends WisematchesController {
 	}
 
 	private boolean isModerator() {
-		final String nickname = getPlayer().getNickname();
-		return nickname.equals("smklimenko") || nickname.equals("test");
+		return hasRole("moderator");
 	}
 
 	@Autowired

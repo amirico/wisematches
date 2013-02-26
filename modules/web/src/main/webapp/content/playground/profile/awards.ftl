@@ -7,7 +7,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !personality??><#include "/content/assistance/navigation.ftl"/></#if>
+        <#if !player??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top">
             <table class="profile shadow ui-state-default" width="960px">

@@ -1,6 +1,6 @@
-<#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
+<#-- @ftlvariable name="robots" type="wisematches.core.RobotType[]" -->
 <#-- @ftlvariable name="maxOpponents" type="java.lang.Integer" -->
-<#-- @ftlvariable name="supportedRobots" type="wisematches.core.RobotType[]" -->
+<#-- @ftlvariable name="playRobotsOnly" type="java.lang.Boolean" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>
@@ -100,13 +100,14 @@
             <div id="robotForm" class="create-form <#if createTab!="robot">ui-helper-hidden</#if>">
                 <table width="100%" style="border-spacing: 5px">
                     <@wm.ui.field path="create.robotType">
-                        <#list supportedRobots as type>
+                        <#list robots as type>
                             <tr>
                                 <td nowrap="nowrap">
                                     <input id="robotType${type}" name="robotType" type="radio" value="${type}"
                                            <#if wm.ui.statusValue==type?upper_case>checked="checked"</#if>/>
                                     <label for="robotType${type}">
-                                        <@wm.player.name player=robot showType=false/> (${type.rating})
+                                        <@wm.player.name player=personalityManager.getRobot(type) showType=false/>
+                                        (${type.rating})
                                     </label>
                                 </td>
                                 <td width="100%">

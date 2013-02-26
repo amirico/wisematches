@@ -2,10 +2,15 @@ package wisematches.server.web.servlet.mvc.playground.scribble.game.form;
 
 import org.hibernate.validator.constraints.Length;
 import wisematches.core.RobotType;
+import wisematches.playground.propose.PlayerCriterion;
+import wisematches.playground.propose.criteria.ComparableOperator;
+import wisematches.playground.propose.criteria.PlayerRestrictions;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -156,6 +161,23 @@ public class CreateScribbleForm {
 
 	public void setCommonError(boolean commonError) {
 		this.commonError = commonError;
+	}
+
+	public PlayerCriterion[] createPlayerCriterion() {
+		final List<PlayerCriterion> res = new ArrayList<>();
+		if (minRating > 0) {
+			res.add(PlayerRestrictions.rating("player.rating.min", minRating, ComparableOperator.GE));
+		}
+		if (maxRating > 0) {
+			res.add(PlayerRestrictions.rating("player.rating.max", maxRating, ComparableOperator.LE));
+		}
+		if (timeouts > 0) {
+			res.add(PlayerRestrictions.timeouts("game.timeouts", timeouts, ComparableOperator.LE));
+		}
+		if (completed > 0) {
+			res.add(PlayerRestrictions.completed("game.completed", completed, ComparableOperator.GE));
+		}
+		return res.toArray(new PlayerCriterion[res.size()]);
 	}
 
 	@Override
