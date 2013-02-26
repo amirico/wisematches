@@ -18,6 +18,7 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public abstract class AbstractSearchController<T, C> extends WisematchesController {
 	private final String[] columns;
 
@@ -68,14 +69,14 @@ public abstract class AbstractSearchController<T, C> extends WisematchesControll
 			for (T entity : response) {
 				final Map<String, Object> a = new HashMap<>();
 				data[index++] = a;
-				convertEntity(entity, personality, a, locale);
+				convertEntity(entity, a, locale);
 			}
 			res.put("aaData", data);
 		}
 		return res;
 	}
 
-	protected abstract void convertEntity(T entity, Personality personality, Map<String, Object> map, Locale locale);
+	protected abstract void convertEntity(T entity, Map<String, Object> map, Locale locale);
 
 
 	public <E extends DescriptiveSearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {

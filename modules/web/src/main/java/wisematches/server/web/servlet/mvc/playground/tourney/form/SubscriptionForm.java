@@ -3,6 +3,7 @@ package wisematches.server.web.servlet.mvc.playground.tourney.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class SubscriptionForm {
 	private String section;
 	private String language;

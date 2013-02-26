@@ -1,6 +1,5 @@
 package wisematches.playground.propose;
 
-import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 
@@ -58,6 +57,14 @@ public interface GameProposal<S extends GameSettings> {
 
 
 	/**
+	 * Returns {@code true} if specified player already joined to the proposal.
+	 *
+	 * @param player the player to be checked
+	 * @return {@code true} if specified player already joined to the proposal; {@code false} - otherwise.
+	 */
+	boolean isPlayerJoined(Player player);
+
+	/**
 	 * Checks that specified player can join to this proposal.
 	 *
 	 * @param player the player to be checked.
@@ -72,7 +79,7 @@ public interface GameProposal<S extends GameSettings> {
 	 * @param player the player to be checked.
 	 * @return {@code true} if the proposal contains specified player; {@code false} - otherwise.
 	 */
-	boolean containsPlayer(Personality player);
+	boolean containsPlayer(Player player);
 
 
 	/**

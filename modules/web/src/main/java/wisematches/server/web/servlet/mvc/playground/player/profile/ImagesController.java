@@ -15,7 +15,7 @@ import wisematches.core.Personality;
 import wisematches.core.personality.player.profile.PlayerImageType;
 import wisematches.core.personality.player.profile.PlayerImagesManager;
 import wisematches.core.personality.player.profile.UnsupportedImageException;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import javax.servlet.ServletInputStream;
@@ -33,6 +33,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/profile/image")
+@Deprecated
 public class ImagesController extends WisematchesController {
 	private ResourceLoader resourceLoader;
 	private PlayerImagesManager playerImagesManager;
@@ -98,12 +99,12 @@ public class ImagesController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("preview")
-	private ServiceResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
+	private DeprecatedResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
 		try {
 			final Personality principal = getPlayer();
 			final ServletInputStream inputStream = request.getInputStream();
 			if (request.getContentLength() > 512000) {
-				return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
 			}
 
 			final PlayerImageType type = PlayerImageType.PROFILE;
@@ -116,43 +117,43 @@ public class ImagesController extends WisematchesController {
 			out.close();
 
 			httpSession.setAttribute(PREVIEW_ATTRIBUTE_NAME, tempFile);
-			return ServiceResponse.success();
+			return DeprecatedResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		}
 	}
 
 	@ResponseBody
 	@RequestMapping("remove")
-	private ServiceResponse removePlayerImage(HttpSession httpSession) {
+	private DeprecatedResponse removePlayerImage(HttpSession httpSession) {
 		final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 		if (f != null) {
 			f.delete();
 		}
 		httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
 		playerImagesManager.removePlayerImage(getPlayer().getId(), PlayerImageType.PROFILE);
-		return ServiceResponse.success();
+		return DeprecatedResponse.success();
 	}
 
 	@ResponseBody
 	@RequestMapping("set")
-	private ServiceResponse setPlayerImage(HttpSession httpSession, Locale locale) {
+	private DeprecatedResponse setPlayerImage(HttpSession httpSession, Locale locale) {
 		try {
 			final Personality principal = getPlayer();
 			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 			if (f == null) {
-				return ServiceResponse.failure("No preview image");
+				return DeprecatedResponse.failure("No preview image");
 			}
 
 			playerImagesManager.setPlayerImage(principal.getId(), new FileInputStream(f), PlayerImageType.PROFILE);
 			httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
 			f.delete();
 
-			return ServiceResponse.success();
+			return DeprecatedResponse.success();
 		} catch (IOException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		} catch (UnsupportedImageException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.photo.unsupported", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.photo.unsupported", locale));
 		}
 	}
 

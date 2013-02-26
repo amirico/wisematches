@@ -11,6 +11,7 @@ import java.util.Arrays;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScribbleWordForm {
 	private String direction;

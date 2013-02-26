@@ -7,6 +7,7 @@ import wisematches.server.web.servlet.mvc.UnknownEntityException;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class EntityIdForm {
 	private String t; // tourney
 	private String l; // language

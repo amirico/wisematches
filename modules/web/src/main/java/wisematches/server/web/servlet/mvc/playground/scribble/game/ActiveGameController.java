@@ -14,7 +14,7 @@ import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.PlayerInfoForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleInfoForm;
@@ -26,6 +26,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
+@Deprecated
 public class ActiveGameController extends AbstractGameController {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.game.active");
 
@@ -72,7 +73,7 @@ public class ActiveGameController extends AbstractGameController {
 	@ResponseBody
 	@RequestMapping(value = "active.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ServiceResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
+	public DeprecatedResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
 			principal = getPlayer();
@@ -109,6 +110,6 @@ public class ActiveGameController extends AbstractGameController {
 			final String elapsedTime = messageSource.formatRemainedTime(board, locale);
 			forms.add(new ScribbleInfoForm(board.getBoardId(), settings, elapsedTime, playerTurn, players));
 		}
-		return ServiceResponse.success(null, "boards", forms);
+		return DeprecatedResponse.success(null, "boards", forms);
 	}
 }

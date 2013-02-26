@@ -1,34 +1,24 @@
 package wisematches.server.services.relations;
 
 import wisematches.core.Language;
-import wisematches.core.Membership;
 import wisematches.core.search.descriptive.SearchableBean;
 import wisematches.core.search.descriptive.SearchableProperty;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 import java.util.Date;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@SearchableBean(uniformityProperty = "pid")
+@SearchableBean(uniformityProperty = "player")
 public class PlayerEntityBean {
 	@SearchableProperty(column = "account.id")
-	private long pid;
-
-	@SearchableProperty(column = "account.nickname")
-	private String nickname;
+	private long player;
 
 	@Enumerated(EnumType.STRING)
 	@SearchableProperty(column = "account.language")
 	private Language language;
-
-	//	@Enumerated(EnumType.STRING)
-//	@SearchableProperty(column = "membership.membership")
-	@Transient
-	private Membership playerType;
 
 	@SearchableProperty(column = "stats.rating")
 	private int ratingA;
@@ -51,12 +41,12 @@ public class PlayerEntityBean {
 	public PlayerEntityBean() {
 	}
 
-	public long getPid() {
-		return pid;
+	public long getPlayer() {
+		return player;
 	}
 
-	public void setPid(long pid) {
-		this.pid = pid;
+	public void setPlayer(long player) {
+		this.player = player;
 	}
 
 	public int getRatingA() {
@@ -73,30 +63,6 @@ public class PlayerEntityBean {
 
 	public void setRatingG(int ratingG) {
 		this.ratingG = ratingG;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public Membership getPlayerType() {
-		return playerType;
-	}
-
-	public void setPlayerType(Membership playerType) {
-		this.playerType = playerType;
-	}
-
-	public Language getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(Language language) {
-		this.language = language;
 	}
 
 	public int getActiveGames() {
@@ -131,12 +97,19 @@ public class PlayerEntityBean {
 		this.averageMoveTime = averageMoveTime;
 	}
 
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("PlayerEntityBean");
-		sb.append("{pid=").append(pid);
-		sb.append(", nickname='").append(nickname).append('\'');
+		sb.append("{player=").append(player);
 		sb.append(", language=").append(language);
 		sb.append(", ratingA=").append(ratingA);
 		sb.append(", ratingG=").append(ratingG);

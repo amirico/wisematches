@@ -10,6 +10,7 @@ import java.util.TreeSet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class NotificationsTreeView {
 	private Map<String, Set<String>> sections = new HashMap<>();
 	private Map<String, Set<String>> subsections = new HashMap<>();

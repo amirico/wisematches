@@ -8,6 +8,7 @@ import wisematches.server.web.servlet.mvc.playground.scribble.settings.form.Boar
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class SettingsForm extends BoardSettingsForm {
 	@NotEmpty(message = "account.register.language.err.blank")
 	private String language;

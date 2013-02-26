@@ -10,7 +10,7 @@
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<#if personality??>
+<#if player??>
     <#include "/content/playground/messages/scriplet.ftl">
     <#include "/content/playground/players/blacklist/scriplet.ftl">
     <#include "/content/playground/players/friends/scriplet.ftl">
@@ -244,7 +244,7 @@
     </div>
 </div>
 
-<#if personality??>
+<#if player??>
 <div class="statistic ui-corner-all ui-state-default shadow" style="text-align: center; font-weight: normal;">
     <a href="/playground/scribble/active?p=${player.id}"><@message code="game.dashboard.label"/></a>
     |

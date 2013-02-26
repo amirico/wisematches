@@ -1,6 +1,5 @@
 package wisematches.playground.propose.impl;
 
-import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.CriterionViolation;
@@ -83,6 +82,15 @@ public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameP
 		return res;
 	}
 
+	@Override
+	public boolean isPlayerJoined(Player player) {
+		for (Player p : players) {
+			if (player.equals(p)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public Collection<PlayerCriterion> getPlayerCriterion() {
@@ -90,7 +98,7 @@ public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameP
 	}
 
 	@Override
-	public boolean containsPlayer(Personality player) {
+	public boolean containsPlayer(Player player) {
 		for (Player p : players) {
 			if (player.equals(p)) {
 				return true;
