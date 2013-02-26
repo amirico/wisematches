@@ -2,8 +2,6 @@ package wisematches.server.web.servlet.sdo;
 
 import org.springframework.http.HttpEntity;
 
-import java.util.Map;
-
 /**
  * This is service response object that is returned by
  *
@@ -46,14 +44,14 @@ public final class ServiceResponse extends HttpEntity<ServiceResponse.ResponseBo
 	}
 
 	public static final class Success extends ServiceResponse.ResponseBody {
-		private final Map<String, ?> data;
+		private final Object data;
 
-		public Success(Map<String, ?> data) {
+		public Success(Object data) {
 			super(true);
 			this.data = data;
 		}
 
-		public Map<String, ?> getData() {
+		public Object getData() {
 			return data;
 		}
 	}

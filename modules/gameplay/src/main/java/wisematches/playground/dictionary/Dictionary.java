@@ -1,6 +1,7 @@
 package wisematches.playground.dictionary;
 
 import wisematches.core.Alphabet;
+import wisematches.core.Language;
 
 import java.util.Collection;
 import java.util.Date;
@@ -19,6 +20,9 @@ public interface Dictionary {
 	Alphabet getAlphabet();
 
 	Alphabet getAlphabet(char ch);
+
+
+	Language getLanguage();
 
 
 	Date getLastModification();

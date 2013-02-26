@@ -24,7 +24,7 @@ public class FileDictionary implements Dictionary {
 	private final Lock lock = new ReentrantLock();
 	private final NavigableMap<String, WordEntry> entryMap = new TreeMap<>();
 
-	private final Map<String, Collection<WordEntry>> searchCachce = new HashMap<>();
+	private final Map<String, Collection<WordEntry>> searchCache = new HashMap<>();
 
 	public FileDictionary(Language language, File dictionaryFile) throws DictionaryException {
 		this(language, dictionaryFile, true);
@@ -150,6 +150,11 @@ public class FileDictionary implements Dictionary {
 	}
 
 	@Override
+	public Language getLanguage() {
+		return language;
+	}
+
+	@Override
 	public boolean contains(String word) {
 		return entryMap.containsKey(word);
 	}
@@ -169,10 +174,10 @@ public class FileDictionary implements Dictionary {
 		Collection<WordEntry> cache = null;
 		if (prefix.length() >= 2) {
 			final String key = prefix.substring(0, 2);
-			cache = searchCachce.get(key);
+			cache = searchCache.get(key);
 			if (cache == null) {
 				cache = filterWordEntries(key, entryMap.values());
-				searchCachce.put(key, cache);
+				searchCache.put(key, cache);
 			}
 		}
 		if (prefix.length() == 2) {

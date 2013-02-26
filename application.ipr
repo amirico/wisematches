@@ -432,6 +432,7 @@
         <w>curdate</w>
         <w>datatable</w>
         <w>dayofyear</w>
+        <w>dropdown</w>
         <w>expirations</w>
         <w>extjs</w>
         <w>forecasted</w>

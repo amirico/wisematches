@@ -1,6 +1,5 @@
 [#ftl]
 [#-- @implicitly included --]
-
 [#-- @ftlvariable name="locale" type="java.util.Locale" --]
 
 [#-- @ftlvariable name="player" type="wisematches.core.Player" --]
@@ -11,3 +10,5 @@
 
 [#-- @ftlvariable name="personalityManager" type="wisematches.core.PersonalityManager" --]
 [#-- @ftlvariable name="playerStateManager" type="wisematches.server.services.state.PlayerStateManager" --]
+
+[#-- @ftlvariable name="WordAttribute" type="wisematches.playground.dictionary.WordAttribute" --]

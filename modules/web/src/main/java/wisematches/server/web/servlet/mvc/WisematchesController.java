@@ -12,14 +12,14 @@ import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.sdo.ServiceResponseFactory;
 import wisematches.server.web.servlet.view.StaticContentGenerator;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @ControllerAdvice
 @SuppressWarnings("unchecked")
 public abstract class WisematchesController {
-	private final String title;
-
 	protected GameMessageSource messageSource;
 	protected ServiceResponseFactory responseFactory;
 	protected PlayerStateManager playerStateManager;
@@ -27,16 +27,19 @@ public abstract class WisematchesController {
 	protected StaticContentGenerator staticContentGenerator;
 
 	protected WisematchesController() {
-		this("title.playboard");
 	}
 
+	@Deprecated
 	protected WisematchesController(String title) {
-		this.title = title;
 	}
 
 	@ModelAttribute("title")
-	public String getTitle() {
-		return title;
+	public String getTitle(HttpServletRequest request) {
+		final String uri = request.getRequestURI();
+		if (uri.length() <= 1) {
+			return "title.default";
+		}
+		return "title." + uri.replaceAll("/", ".").substring(1);
 	}
 
 	@ModelAttribute("player")
@@ -44,6 +47,7 @@ public abstract class WisematchesController {
 		return PersonalityContext.getPlayer();
 	}
 
+	@Deprecated
 	protected boolean hasRole(String role) {
 		return PersonalityContext.hasRole(role);
 	}
@@ -59,14 +63,13 @@ public abstract class WisematchesController {
 		return (P) player;
 	}
 
-/*
-	@ModelAttribute("requestQueryString")
-	public String getRequestQueryString() {
-		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		return request.getQueryString();
-	}
-*/
-
+	/*
+		@ModelAttribute("requestQueryString")
+		public String getRequestQueryString() {
+			final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+			return request.getQueryString();
+		}
+	*/
 	@Autowired
 	public void setMessageSource(GameMessageSource messageSource) {
 		this.messageSource = messageSource;

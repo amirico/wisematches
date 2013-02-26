@@ -1,7 +1,5 @@
 package wisematches.server.web.servlet.mvc.playground;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import wisematches.core.Personality;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
@@ -18,15 +16,12 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public abstract class AbstractSearchController<T, C> extends WisematchesController {
 	private final String[] columns;
 
 	private DescriptiveSearchManager<T, C> entitySearchManager;
 
 	private static final Object[] EMPTY_DATA = new Object[0];
-
-	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
 
 	public AbstractSearchController(String[] columns) {
 		this.columns = columns;
@@ -78,8 +73,7 @@ public abstract class AbstractSearchController<T, C> extends WisematchesControll
 
 	protected abstract void convertEntity(T entity, Map<String, Object> map, Locale locale);
 
-
-	public <E extends DescriptiveSearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {
+	protected final <E extends DescriptiveSearchManager<T, C>> void setEntitySearchManager(E entitySearchManager) {
 		this.entitySearchManager = entitySearchManager;
 	}
 }

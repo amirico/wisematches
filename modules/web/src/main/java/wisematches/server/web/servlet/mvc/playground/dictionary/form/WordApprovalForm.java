@@ -5,7 +5,6 @@ import java.util.Arrays;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public class WordApprovalForm {
 	private String type;
 	private long[] ids;

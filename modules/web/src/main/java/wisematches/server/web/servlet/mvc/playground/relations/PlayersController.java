@@ -12,7 +12,6 @@ import wisematches.core.Player;
 import wisematches.server.services.relations.PlayerEntityBean;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
-import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.mvc.playground.AbstractSearchController;
 import wisematches.server.web.servlet.sdo.PersonalityData;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
@@ -28,8 +27,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/playground/players")
 public class PlayersController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
-	private PlayerStateManager stateManager;
-
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
@@ -59,7 +56,7 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 
 	@Override
 	protected void convertEntity(PlayerEntityBean info, Map<String, Object> map, Locale locale) {
-		map.put("player", PersonalityData.get(personalityManager.getPerson(info.getPlayer()), stateManager));
+		map.put("player", PersonalityData.get(personalityManager.getPerson(info.getPlayer()), playerStateManager));
 		if (info.getLanguage() != null) {
 			map.put("language", messageSource.getMessage("language." + info.getLanguage().getCode(), locale));
 		} else {
@@ -71,11 +68,6 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 		map.put("finishedGames", info.getFinishedGames());
 		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
 		map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatTimeMinutes((long) (info.getAverageMoveTime() / 1000 / 60), locale) : messageSource.getMessage("search.err.nomoves", locale));
-	}
-
-	@Autowired
-	public void setStateManager(PlayerStateManager stateManager) {
-		this.stateManager = stateManager;
 	}
 
 	@Autowired

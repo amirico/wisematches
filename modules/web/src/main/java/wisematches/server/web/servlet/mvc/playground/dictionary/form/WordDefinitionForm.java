@@ -6,15 +6,14 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
-public class WordEntryForm {
+public class WordDefinitionForm {
 	private String word;
 	private String language;
 	private String action;
 	private String definition;
 	private Object attributes;
 
-	public WordEntryForm() {
+	public WordDefinitionForm() {
 	}
 
 	public String getWord() {

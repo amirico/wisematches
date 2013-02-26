@@ -7,6 +7,8 @@ import wisematches.playground.dictionary.DictionaryManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +22,12 @@ public class FileDictionaryManager implements DictionaryManager {
 	}
 
 	@Override
+	public Collection<Language> getLanguages() {
+		return Collections.unmodifiableCollection(dictionaries.keySet());
+	}
+
+	@Override
 	public Dictionary getDictionary(Language language) {
-		if (!dictionaries.containsKey(language)) {
-			throw new IllegalArgumentException("Unsupported language: " + language);
-		}
 		return dictionaries.get(language);
 	}
 

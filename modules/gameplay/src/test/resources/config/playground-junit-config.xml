@@ -7,7 +7,8 @@
           class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
         <property name="properties">
             <props>
-                <prop key="server.admins">test1,test2</prop>
+                <prop key="server.admins">1028</prop>
+                <prop key="server.moderators">1028</prop>
                 <prop key="server.images.path">file:${java.io.tmpdir}/wisematches/work/images</prop>
             </props>
         </property>
