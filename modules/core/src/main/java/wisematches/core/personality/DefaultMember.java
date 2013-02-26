@@ -15,24 +15,24 @@ public final class DefaultMember extends Member {
 	private final String nickname;
 	private final TimeZone timeZone;
 	private final Language language;
-	private final Membership playerType;
+	private final Membership membership;
 
-	public DefaultMember(Account account, Membership playerType) {
+	public DefaultMember(Account account, Membership membership) {
 		super(account.getId());
 		this.nickname = account.getNickname();
 		this.email = account.getEmail();
 		this.timeZone = account.getTimeZone();
 		this.language = account.getLanguage();
-		this.playerType = playerType;
+		this.membership = membership;
 	}
 
-	public DefaultMember(long id, String nickname, String email, TimeZone timeZone, Membership playerType, Language language) {
+	public DefaultMember(long id, String nickname, String email, TimeZone timeZone, Membership membership, Language language) {
 		super(id);
 		this.email = email;
 		this.nickname = nickname;
 		this.timeZone = timeZone;
 		this.language = language;
-		this.playerType = playerType;
+		this.membership = membership;
 	}
 
 	@Override
@@ -57,6 +57,6 @@ public final class DefaultMember extends Member {
 
 	@Override
 	public Membership getMembership() {
-		return playerType;
+		return membership;
 	}
 }

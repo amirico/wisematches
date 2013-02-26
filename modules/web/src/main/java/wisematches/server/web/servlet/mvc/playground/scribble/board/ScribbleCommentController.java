@@ -14,7 +14,7 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleCommentForm;
 
@@ -25,6 +25,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble/comment")
+@Deprecated
 public class ScribbleCommentController extends WisematchesController {
 	private ScribblePlayManager boardManager;
 	private GameCommentManager commentManager;
@@ -34,38 +35,38 @@ public class ScribbleCommentController extends WisematchesController {
 
 	@ResponseBody
 	@RequestMapping("load")
-	public ServiceResponse loadComments(@RequestParam("b") final long gameId, Locale locale) {
+	public DeprecatedResponse loadComments(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 
 		final Player personality = getPlayer();
 		if (board.getPlayerHand(personality) == null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 		}
-		return ServiceResponse.success(null, "comments", commentManager.getCommentStates(board, personality));
+		return DeprecatedResponse.success(null, "comments", commentManager.getCommentStates(board, personality));
 	}
 
 	@ResponseBody
 	@RequestMapping("get")
-	public ServiceResponse getComments(@RequestParam("b") final long gameId, @RequestBody final long[] ids, Locale locale) {
+	public DeprecatedResponse getComments(@RequestParam("b") final long gameId, @RequestBody final long[] ids, Locale locale) {
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 		if (board.getPlayerHand(getPlayer()) == null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 		}
 
 		final Collection<Map<?, ?>> a = new ArrayList<Map<?, ?>>();
@@ -73,71 +74,71 @@ public class ScribbleCommentController extends WisematchesController {
 		for (GameComment comment : comments) {
 			a.add(ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 		}
-		return ServiceResponse.success(null, "comments", a);
+		return DeprecatedResponse.success(null, "comments", a);
 	}
 
 	@ResponseBody
 	@RequestMapping("add")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
+	public DeprecatedResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
 		if (form.getText().trim().isEmpty()) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.empty", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.empty", locale));
 		}
 		if (form.getText().length() > 250) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.length", 250, locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.length", 250, locale));
 		}
 
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 		if (!board.isActive()) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.finished", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.finished", locale));
 		}
 		final GameComment comment = commentManager.addComment(board, getPlayer(), form.getText());
-		return ServiceResponse.success(null, ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
+		return DeprecatedResponse.success(null, ScribbleObjectsConverter.convertGameComment(comment, messageSource, locale));
 	}
 
 	@ResponseBody
 	@RequestMapping("remove")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse removeComment(@RequestParam("b") final long gameId, @RequestParam("c") final long commentId, Locale locale) {
+	public DeprecatedResponse removeComment(@RequestParam("b") final long gameId, @RequestParam("c") final long commentId, Locale locale) {
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 		final GameComment comment = commentManager.removeComment(board, getPlayer(), commentId);
 		if (comment != null) {
-			return ServiceResponse.success();
+			return DeprecatedResponse.success();
 		}
-		return ServiceResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
+		return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.owner", locale));
 	}
 
 	@ResponseBody
 	@RequestMapping("mark")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse markComment(@RequestParam("b") final long gameId, Locale locale) {
+	public DeprecatedResponse markComment(@RequestParam("b") final long gameId, Locale locale) {
 		final ScribbleBoard board;
 		try {
 			board = boardManager.openBoard(gameId);
 			if (board == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 			}
 		} catch (BoardLoadingException ex) {
-			return ServiceResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.comment.err.board", locale));
 		}
 		commentManager.markRead(board, getPlayer());
-		return ServiceResponse.success();
+		return DeprecatedResponse.success();
 	}
 
 	@Autowired

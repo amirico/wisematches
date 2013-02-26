@@ -6,7 +6,7 @@ import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.comment.GameComment;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -14,28 +14,29 @@ import java.util.concurrent.Callable;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public final class ScribbleObjectsConverter {
 	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
 
 	private ScribbleObjectsConverter() {
 	}
 
-	static ServiceResponse processSafeAction(Callable<Map<String, Object>> callable, GameMessageSource messageSource, Locale locale) {
+	static DeprecatedResponse processSafeAction(Callable<Map<String, Object>> callable, GameMessageSource messageSource, Locale locale) {
 		try {
 			Map<String, Object> call = callable.call();
 			if (call != null) {
-				return ServiceResponse.success(null, call);
+				return DeprecatedResponse.success(null, call);
 			} else {
-				return ServiceResponse.success();
+				return DeprecatedResponse.success();
 			}
 		} catch (BoardLoadingException e) {
 			log.info("Board can't be loaded", e);
-			return ServiceResponse.failure(translateSystemException(e, messageSource, locale));
+			return DeprecatedResponse.failure(translateSystemException(e, messageSource, locale));
 		} catch (GameMoveException e) {
-			return ServiceResponse.failure(translateBoardException(e, messageSource, locale));
+			return DeprecatedResponse.failure(translateBoardException(e, messageSource, locale));
 		} catch (Exception e) {
 			log.error("System move exception", e);
-			return ServiceResponse.failure(translateSystemException(e, messageSource, locale));
+			return DeprecatedResponse.failure(translateSystemException(e, messageSource, locale));
 		}
 	}
 

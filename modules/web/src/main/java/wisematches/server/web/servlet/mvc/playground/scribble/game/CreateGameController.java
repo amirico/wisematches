@@ -8,35 +8,36 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wisematches.core.Personality;
-import wisematches.core.RobotType;
+import wisematches.core.*;
+import wisematches.playground.BoardCreationException;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
+import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleTab;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/playground/scribble")
+@Deprecated
 public class CreateGameController extends AbstractGameController {
 	private DictionaryManager dictionaryManager;
 	private RestrictionManager restrictionManager;
 	private ScribblePlayerSearchManager playerSearchManager;
 
-	private static final String[] SEARCH_COLUMNS = new String[]{"nickname", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"};
+	private static final String[] SEARCH_COLUMNS = new String[]{"player", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"};
 	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
 
 	private static final Log log = LogFactory.getLog("wisematches.server.web.game.create");
@@ -68,17 +69,17 @@ public class CreateGameController extends AbstractGameController {
 			}
 		}
 
-		final Personality personality = getPlayer();
+		final Player player = getPlayer();
 		model.addAttribute("robots", playManager.getSupportedRobots());
-		model.addAttribute("restriction", restrictionManager.validateRestriction(personality, "games.active", getActiveGamesCount(personality)));
-		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", personality));
+		model.addAttribute("restriction", restrictionManager.validateRestriction(player, "games.active", getActiveGamesCount(player)));
+		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", player));
 
 		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
 		model.addAttribute("searchAreas", SEARCH_AREAS);
 		model.addAttribute("searchColumns", SEARCH_COLUMNS);
 		model.addAttribute("searchEntityDescriptor", playerSearchManager.getEntityDescriptor());
 
-		if (personality.getType().isVisitor()) {
+		if (player.getType().isVisitor()) {
 			form.setCreateTab(CreateScribbleTab.ROBOT);
 			model.addAttribute("playRobotsOnly", true);
 		} else {
@@ -87,136 +88,87 @@ public class CreateGameController extends AbstractGameController {
 		return "/content/playground/scribble/create";
 	}
 
-	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "create.ajax", method = RequestMethod.POST)
-	public ServiceResponse createGameAction(@RequestBody CreateScribbleForm form, Locale locale) {
-/*		if (log.isInfoEnabled()) {
-			log.info("Create new game: " + form);
-		}
-
-		final Personality principal = getMember();
+	public ServiceResponse createGameService(@RequestBody CreateScribbleForm form, Locale locale) {
+		final Player player = getPlayer();
 		if (form.getTitle().length() > 150) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.title.err.max", locale));
+			return responseFactory.failure("game.create.title.err.max", locale);
 		}
 		if (form.getDaysPerMove() < 2) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.time.err.min", locale));
+			return responseFactory.failure("game.create.time.err.min", locale);
 		} else if (form.getDaysPerMove() > 14) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.time.err.max", locale));
+			return responseFactory.failure("game.create.time.err.max", locale);
 		}
 
 		if (form.getCreateTab() == null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponent.err.blank", locale));
+			return responseFactory.failure("game.create.opponent.err.blank", locale);
 		}
 
 		if (form.getChallengeMessage().length() > 254) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponent.challenge.err", locale));
+			return responseFactory.failure("game.create.opponent.challenge.err", locale);
 		}
 
 		final Language language = Language.byCode(form.getBoardLanguage());
 		if (language == null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.language.err.blank", locale));
+			return responseFactory.failure("game.create.language.err.blank", locale);
 		}
 
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (dictionary == null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.dictionary.err.unknown", locale));
+			return responseFactory.failure("game.create.dictionary.err.unknown", locale);
 		}
 
-		long[] opponents;
+		final int activeGamesCount = getActiveGamesCount(player);
+		if (restrictionManager.validateRestriction(player, "games.active", activeGamesCount) != null) {
+			return responseFactory.failure("game.create.forbidden", new Object[]{activeGamesCount}, locale);
+		}
+
 		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
-		if (form.getCreateTab() == CreateScribbleTab.ROBOT) {
-			opponents = new long[]{RobotPlayer.valueOf(form.getRobotType()).getId()};
-		} else if (form.getCreateTab() == CreateScribbleTab.WAIT) {
-			opponents = new long[form.getOpponentsCount()];
-		} else if (form.getCreateTab() == CreateScribbleTab.CHALLENGE) {
-			opponents = form.getOpponents();
-		} else {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponent.err.incorrect", locale));
-		}
 
-		boolean robot = false;
-		final List<Personality> players = new ArrayList<>();
-		if (opponents == null || opponents.length == 0) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.min", locale));
-		} else if (opponents.length > 3) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.max", locale));
-		} else {
-			for (long opponent : opponents) {
-				final ProprietaryPlayer computerPlayer = RobotPlayer.getComputerPlayer(opponent);
-				if (computerPlayer instanceof RobotPlayer) {
-					robot = true;
-					if (opponents.length > 1) {
-						return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.robot", locale));
-					} else {
-						players.add(computerPlayer);
-					}
-				} else if (ProprietaryPlayer.isComputerPlayer(opponent)) {
-					return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
-				} else if (opponent != 0) {
-					Personality p = personalityManager.getMember(opponent);
+		try {
+			ScribbleBoard board = null;
+			if (form.getCreateTab() == CreateScribbleTab.ROBOT) {
+				board = playManager.createBoard(s, player, form.getRobotType());
+			} else if (form.getCreateTab() == CreateScribbleTab.WAIT) {
+				final int count = form.getOpponentsCount();
+				final ServiceResponse response = validateOpponentsCount(player, count, locale);
+				if (response != null) {
+					return response;
+				}
+				proposalManager.initiate(s, player, count, form.createPlayerCriterion());
+			} else if (form.getCreateTab() == CreateScribbleTab.CHALLENGE) {
+				final long[] opponents = form.getOpponents();
+				final ServiceResponse response = validateOpponentsCount(player, opponents.length, locale);
+				if (response != null) {
+					return response;
+				}
+
+				final Collection<Player> players = new ArrayList<>(opponents.length);
+				for (long opponent : opponents) {
+					Player p = personalityManager.getMember(opponent);
 					if (p == null) {
-						return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale, opponent));
+						return responseFactory.failure("game.create.opponents.err.unknown", new Object[]{opponent}, locale);
+					} else if (players.contains(p)) {
+						return responseFactory.failure("game.create.opponents.err.duplicate", locale);
 					} else {
 						players.add(p);
 					}
 				}
+				proposalManager.initiate(s, form.getChallengeMessage(), player, players);
+			} else {
+				return responseFactory.failure("game.create.opponent.err.incorrect", locale);
 			}
-		}
 
-		final Set<Personality> check = new HashSet<>(players);
-		check.add(principal);
-		if (check.size() < players.size() + 1) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.duplicate", locale));
-		}
-
-		final int activeGamesCount = getActiveGamesCount(principal);
-		if (restrictionManager.validateRestriction(principal, "games.active", activeGamesCount) != null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.forbidden", locale, activeGamesCount));
-		}
-
-		final Restriction restriction = restrictionManager.validateRestriction(principal, "scribble.opponents", opponents.length - 1);
-		if (restriction != null) {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.count", locale, restriction.getThreshold()));
-		}
-
-		ScribbleBoard board = null;
-		if (players.size() == opponents.length) { // challenge or robot
-			if (robot) { // robot
-				players.add(principal);
-				try {
-					board = playManager.createBoard(s, players);
-				} catch (BoardCreationException ex) {
-					log.error("New board can't be created: " + s + ", " + players, ex);
-					return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.unknown", locale));
-				}
-			} else { // challenge
-				proposalManager.initiate(s, principal, players, form.getChallengeMessage());
+			if (board == null) {
+				return responseFactory.success();
+			} else {
+				return responseFactory.success(Collections.singletonMap("board", board.getBoardId()));
 			}
-		} else if (players.size() == 0) { // waiting
-			final List<PlayerCriterion> res = new ArrayList<>();
-			if (form.getMinRating() > 0) {
-				res.add(PlayerRestrictions.rating("player.rating.min", form.getMinRating(), ComparableOperator.GE));
-			}
-			if (form.getMaxRating() > 0) {
-				res.add(PlayerRestrictions.rating("player.rating.max", form.getMaxRating(), ComparableOperator.LE));
-			}
-			if (form.getTimeouts() > 0) {
-				res.add(PlayerRestrictions.timeouts("game.timeouts", form.getTimeouts(), ComparableOperator.LE));
-			}
-			if (form.getCompleted() > 0) {
-				res.add(PlayerRestrictions.completed("game.completed", form.getCompleted(), ComparableOperator.GE));
-			}
-			proposalManager.initiate(s, principal, opponents.length, res.toArray(new PlayerCriterion[res.size()]));
-		} else {
-			return ServiceResponse.failure(messageSource.getMessage("game.create.opponents.err.mixed", locale));
+		} catch (BoardCreationException ex) {
+			log.error("New board can't be created: " + form, ex);
+			return responseFactory.failure("game.create.opponents.err.unknown", locale);
 		}
-
-		if (board != null) {
-			return ServiceResponse.success(null, "board", board.getBoardId());
-		}
-		return ServiceResponse.success();*/
-		return ServiceResponse.failure();
 	}
 
 	private void initRobotForm(CreateScribbleForm form, String parameter) {
@@ -244,7 +196,7 @@ public class CreateGameController extends AbstractGameController {
 	}
 
 	private void initChallengeForm(CreateScribbleForm form, String parameter, Locale locale) {
-		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPlayer().getNickname(), locale));
+		form.setTitle(messageSource.getMessage("game.challenge.player.label", getPlayer(Member.class).getNickname(), locale));
 		form.setChallengeMessage("");
 		form.setCreateTab(CreateScribbleTab.CHALLENGE);
 		final List<Long> ids = new ArrayList<>();
@@ -298,6 +250,19 @@ public class CreateGameController extends AbstractGameController {
 	private void initDefaultForm(CreateScribbleForm form) {
 		form.setCreateTab(CreateScribbleTab.ROBOT);
 		form.setOpponentsCount(1);
+	}
+
+	private ServiceResponse validateOpponentsCount(Player player, int count, Locale locale) {
+		if (count < 1) {
+			return responseFactory.failure("game.create.opponents.err.min", locale);
+		} else if (count > 3) {
+			return responseFactory.failure("game.create.opponents.err.max", locale);
+		}
+		final Restriction restriction = restrictionManager.validateRestriction(player, "scribble.opponents", count - 1);
+		if (restriction != null) {
+			return responseFactory.failure("game.create.opponents.err.count", new Object[]{restriction.getThreshold()}, locale);
+		}
+		return null;
 	}
 
 	@Autowired

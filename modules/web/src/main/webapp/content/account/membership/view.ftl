@@ -41,7 +41,7 @@
                                 <div class="header ui-state-hover"><@message code="membership.level"/></div>
                             <#list memberships as m>
                                 <div class="header ui-state-hover">
-                                    <div class="player member">
+                                    <div class="player personality">
                                         <div class="icon ${m.code}"></div>
                                         <div class="nickname"><@message code="membership.name.${m.name()?lower_case}"/></div>
                                     </div>
@@ -60,7 +60,7 @@
                                             </button>
                                         </#if>
                                     <#else>
-                                        <#if (!principal?? || !principal.playerType.member || principal.playerType.ordinal() >= m.ordinal())>
+                                        <#if (!principal?? || !principal.playerType.personality || principal.playerType.ordinal() >= m.ordinal())>
                                             <button disabled="disabled"><@message code="membership.subscribe"/></button>
                                         <#else>
                                             <button onclick="wm.util.url.redirect('/account/membership/subscribe')"><@message code="membership.subscribe"/></button>

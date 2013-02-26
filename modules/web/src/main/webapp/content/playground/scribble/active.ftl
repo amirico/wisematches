@@ -1,11 +1,11 @@
 <#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.BoardDescription>" -->
-<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.server.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
+<#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
 
 <#macro gameStatus board>
-    <#if board.isGameActive()>
-        <#if board.getPlayerTurn() == personality>
+    <#if board.active>
+        <#if board.playerTurn == player>
             <@wm.board.href board.boardId><strong><@message code="game.status.move_you"/></strong></@wm.board.href>
         <#else>
             <@message code="game.status.move_opp" args=["${personalityManager.getMember(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
@@ -17,7 +17,7 @@
 
 <@wm.ui.playground id="activeGamesWidget">
     <@wm.ui.table.header>
-        <#if player != personality>
+        <#if player != player>
             <@message code="game.player"/> <@wm.player.name player/>
         <#else><@message code="game.menu.games.label"/>
         </#if>
@@ -35,7 +35,7 @@
             </td>
             <td align="right">
                 <div class="wm-ui-buttonset">
-                    <a href="/playground/scribble/history<#if player != personality>?p=${player.id}</#if>"><@message code="game.past.history.label"/></a>
+                    <a href="/playground/scribble/history<#if player != player>?p=${player.id}</#if>"><@message code="game.past.history.label"/></a>
                 </div>
             </td>
         </tr>
@@ -65,8 +65,8 @@
                 ${messageSource.formatRemainedTime(board, locale)}
                 </td>
                 <td>
-                    <#list board.players as hand>
-                        <div><@wm.player.name personalityManager.getMember(hand.getId())/></div>
+                    <#list board.players as p>
+                        <div><@wm.player.name p/></div>
                     </#list>
                 </td>
                 <td class="center">
@@ -100,7 +100,7 @@
                     <#list proposal.players as p>
                     <div>
                         <#if p??>
-                            <@wm.player.name player=personalityManager.getMember(p) waiting=!proposal.isPlayerJoined(p)/>
+                            <@wm.player.name player=p waiting=!proposal.isPlayerJoined(p)/>
                         <#else>
                             <span class="player waiting"><span
                                     class="nickname"><@message code="game.status.waiting"/></span></span>
@@ -127,7 +127,7 @@
     var activeGames = new wm.game.Active({
         cancelled: "<@message code="game.proposal.cancelled"/>",
         cancelling: "<@message code="game.proposal.cancelling"/>"
-    <#if player == personality>
+    <#if player == player>
         , "sEmptyTable": "<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
     </#if>
     });

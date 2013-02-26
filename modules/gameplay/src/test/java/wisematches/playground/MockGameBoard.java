@@ -56,7 +56,7 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> 
 //			PlayersIterator<GamePlayerHand> iterator;
 			final Field field;
 			try {
-				field = getClass().getSuperclass().getDeclaredField("currentPlayerIndex");
+				field = AbstractBoardDescription.class.getDeclaredField("currentPlayerIndex");
 				field.setAccessible(true);
 				field.setByte(this, (byte) 0);
 //				iterator = (PlayersIterator<GamePlayerHand>) field.get(this);

@@ -14,5 +14,13 @@ public enum ProposalType {
 	/**
 	 * Private proposal and only pre-defined player can join the proposal.
 	 */
-	PRIVATE
+	PRIVATE;
+
+	public boolean isPublic() {
+		return this == PUBLIC;
+	}
+
+	public boolean isPrivate() {
+		return this == PRIVATE;
+	}
 }

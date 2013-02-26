@@ -1,6 +1,5 @@
 package wisematches.playground.propose.impl;
 
-import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.PrivateProposal;
@@ -86,7 +85,7 @@ public class DefaultPrivateProposal<S extends GameSettings> extends AbstractGame
 	}
 
 	@Override
-	public boolean containsPlayer(Personality player) {
+	public boolean containsPlayer(Player player) {
 		return players.contains(player);
 	}
 

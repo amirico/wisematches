@@ -25,6 +25,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/info")
+@Deprecated
 public class ExampleController extends WisematchesController {
 	private TilesBankingHouse tilesBankingHouse;
 	private DictionaryManager dictionaryManager;

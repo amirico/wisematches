@@ -24,7 +24,7 @@
         <thead>
         <tr>
             <#list searchColumns as c>
-                <th <#if c="nickname">width="100%"</#if>><@message code="search.column.${c}"/>
+                <th <#if c="player">width="100%"</#if>><@message code="search.column.${c}"/>
                     <#if c=="ratingA" || c=="ratingG">
                     <@wm.ui.info><@message code="search.column.${c}.description"/></@wm.ui.info>
                 </#if>

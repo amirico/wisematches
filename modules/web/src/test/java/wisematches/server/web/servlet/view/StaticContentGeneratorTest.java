@@ -26,7 +26,7 @@ public class StaticContentGeneratorTest {
 
 	@Test
 	public void testparseInfoHolder() throws Exception {
-		final Resource r = new ClassPathResource("/i18n/info/parsingTest.properties");
+		final Resource r = new ClassPathResource("/i18n/assistance/parsingTest.properties");
 
 		final StaticContentGenerator c = new StaticContentGenerator();
 		final NodeModel holder = c.parseInfoHolder(r);
@@ -59,7 +59,7 @@ public class StaticContentGeneratorTest {
 	@Test
 	public void testgetInfoHolder() throws Exception {
 		final StaticContentGenerator c = new StaticContentGenerator();
-		c.setResourcesPaths("classpath:/i18n/info/");
+		c.setResourcesPaths("classpath:/i18n/assistance/");
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("en")), "L_default", "I_default", "D_default", 0);
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("jp")), "L_default", "I_default", "D_default", 0);
 		assertHolder(c.loadInfoHolder("loadTest", new Locale("ru")), "L_ru", "I_ru", "D_ru", 0);

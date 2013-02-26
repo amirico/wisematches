@@ -8,14 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import wisematches.core.Personality;
+import wisematches.core.Player;
 import wisematches.server.services.relations.PlayerEntityBean;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
 import wisematches.server.services.state.PlayerStateManager;
-import wisematches.server.web.servlet.mvc.ServicePlayer;
 import wisematches.server.web.servlet.mvc.playground.AbstractSearchController;
+import wisematches.server.web.servlet.sdo.PersonalityData;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,11 +35,11 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
 
 	public PlayersController() {
-		super(new String[]{"nickname", "ratingG", "ratingA", "language", "activeGames", "finishedGames", "averageMoveTime", "lastMoveTime"});
+		super(new String[]{"player", "ratingG", "ratingA", "activeGames", "finishedGames", "averageMoveTime", "lastMoveTime"});
 	}
 
 	@RequestMapping("")
-	public String showPlayersSearchForm(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model) {
+	public String showPlayersPage(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model) {
 		model.addAttribute("searchArea", area);
 		model.addAttribute("searchAreas", AREAS);
 		model.addAttribute("searchColumns", getColumns());
@@ -47,20 +47,19 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 		return "/content/playground/players/search/view";
 	}
 
-	@ResponseBody
 	@RequestMapping("load.ajax")
-	public Map<String, Object> load(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
-		final Personality personality = getPlayer();
+	public ServiceResponse loadPlayersService(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
+		final Player player = getPlayer();
 		final PlayerSearchArea area = PlayerSearchArea.valueOf(areaName.toUpperCase());
 		if (log.isDebugEnabled()) {
-			log.debug("Loading players for area: " + area + " for player " + personality);
+			log.debug("Loading players for area: " + area + " for player " + player);
 		}
-		return loadData(personality, request, area, locale);
+		return responseFactory.success(loadData(player, request, area, locale));
 	}
 
 	@Override
-	protected void convertEntity(PlayerEntityBean info, Personality personality, Map<String, Object> map, Locale locale) {
-		map.put("nickname", ServicePlayer.get(info.getPid(), info.getNickname(), info.getPlayerType(), stateManager));
+	protected void convertEntity(PlayerEntityBean info, Map<String, Object> map, Locale locale) {
+		map.put("player", PersonalityData.get(personalityManager.getPerson(info.getPlayer()), stateManager));
 		if (info.getLanguage() != null) {
 			map.put("language", messageSource.getMessage("language." + info.getLanguage().getCode(), locale));
 		} else {
@@ -68,10 +67,9 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 		}
 		map.put("ratingG", info.getRatingG());
 		map.put("ratingA", info.getRatingA());
-		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
 		map.put("activeGames", info.getActiveGames());
 		map.put("finishedGames", info.getFinishedGames());
-//		map.put("playerOnline", stateManager.isPlayerOnline(Personality.person(info.getPid())));
+		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
 		map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatTimeMinutes((long) (info.getAverageMoveTime() / 1000 / 60), locale) : messageSource.getMessage("search.err.nomoves", locale));
 	}
 

@@ -19,7 +19,7 @@ import wisematches.playground.tracking.Statistics;
 import wisematches.server.services.award.Award;
 import wisematches.server.services.award.AwardContext;
 import wisematches.server.services.award.AwardsManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.player.profile.form.PlayerProfileForm;
@@ -38,6 +38,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/profile")
+@Deprecated
 public class ProfileController extends WisematchesController {
 	private AwardsManager awardsManager;
 	private CountriesManager countriesManager;
@@ -183,7 +184,7 @@ public class ProfileController extends WisematchesController {
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public ServiceResponse saveProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
+	public DeprecatedResponse saveProfile(@RequestBody final PlayerProfileForm form, Locale locale) {
 		try {
 			final Player player = getPlayer();
 			final PlayerProfile profile = profileManager.getPlayerProfile(player);
@@ -199,7 +200,7 @@ public class ProfileController extends WisematchesController {
 				try {
 					editor.setBirthday(DATE_FORMAT_THREAD_LOCAL.get().parse(form.getBirthday()));
 				} catch (ParseException ex) {
-					return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.birthday", locale));
+					return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.birthday", locale));
 				}
 			}
 
@@ -209,7 +210,7 @@ public class ProfileController extends WisematchesController {
 				try {
 					editor.setGender(Gender.valueOf(form.getGender().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
-					return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.gender", locale));
+					return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.gender", locale));
 				}
 			}
 
@@ -219,14 +220,14 @@ public class ProfileController extends WisematchesController {
 				try {
 					editor.setPrimaryLanguage(Language.valueOf(form.getPrimaryLanguage().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
-					return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.primary", locale));
+					return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.primary", locale));
 				}
 			}
 			profileManager.updateProfile(player, editor.createProfile());
 
-			return ServiceResponse.SUCCESS;
+			return DeprecatedResponse.SUCCESS;
 		} catch (Exception ex) {
-			return ServiceResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
 		}
 	}
 

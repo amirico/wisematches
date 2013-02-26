@@ -21,7 +21,7 @@ import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.servlet.mvc.ServiceResponse;
+import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.GameProposalForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.WaitingGamesForm;
 
@@ -32,6 +32,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
+@Deprecated
 public class WaitingGameController extends AbstractGameController {
 	private BlacklistManager blacklistManager;
 	private RestrictionManager restrictionManager;
@@ -55,18 +56,18 @@ public class WaitingGameController extends AbstractGameController {
 	@ResponseBody
 	@RequestMapping("join.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ServiceResponse showWaitingGamesAjax() {
+	public DeprecatedResponse showWaitingGamesAjax() {
 		final Player principal = getPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Loading waiting games for personality: " + principal);
 		}
-		return ServiceResponse.success(null, "waitingGames", createWaitingGamesView(principal));
+		return DeprecatedResponse.success(null, "waitingGames", createWaitingGamesView(principal));
 	}
 
 	@ResponseBody
 	@RequestMapping("accept.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-	public ServiceResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
+	public DeprecatedResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
 		final Player player = getPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
@@ -80,27 +81,27 @@ public class WaitingGameController extends AbstractGameController {
 
 			final GameProposal<ScribbleSettings> gameProposal = proposalManager.accept(proposal, player);
 			if (gameProposal == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
 			} else if (gameProposal.isReady()) {
 				final ScribbleBoard board = playManager.createBoard(gameProposal.getSettings(), gameProposal.getPlayers(), null);
-				return ServiceResponse.success(null, "board", board.getBoardId());
+				return DeprecatedResponse.success(null, "board", board.getBoardId());
 			}
-			return ServiceResponse.SUCCESS;
+			return DeprecatedResponse.SUCCESS;
 		} catch (ViolatedCriteriaException e) {
 			final CriterionViolation violation = e.getViolatedCriterion();
 			if (violation != null) {
-				return ServiceResponse.failure(messageSource.formatViolation(violation, locale, false));
+				return DeprecatedResponse.failure(messageSource.formatViolation(violation, locale, false));
 			}
-			return ServiceResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
 		} catch (BoardCreationException e) {
-			return ServiceResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
 		}
 	}
 
 	@ResponseBody
 	@RequestMapping("decline.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-	public ServiceResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
+	public DeprecatedResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
 		final Player player = getPlayer();
 		if (log.isDebugEnabled()) {
 			log.debug("Cancel proposal " + proposal + " for player " + player);
@@ -108,15 +109,15 @@ public class WaitingGameController extends AbstractGameController {
 
 		try {
 			if (proposalManager.reject(proposal, player) == null) {
-				return ServiceResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
+				return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
 			}
-			return ServiceResponse.SUCCESS;
+			return DeprecatedResponse.SUCCESS;
 		} catch (ViolatedCriteriaException e) {
 			final CriterionViolation violation = e.getViolatedCriterion();
 			if (violation != null) {
-				return ServiceResponse.failure(messageSource.formatViolation(violation, locale, false));
+				return DeprecatedResponse.failure(messageSource.formatViolation(violation, locale, false));
 			}
-			return ServiceResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
+			return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
 		}
 	}
 

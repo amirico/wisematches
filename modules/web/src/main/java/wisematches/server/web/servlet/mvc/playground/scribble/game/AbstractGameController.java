@@ -19,6 +19,7 @@ import wisematches.server.web.servlet.mvc.WisematchesController;
  */
 @Controller
 @RequestMapping("/playground/scribble")
+@Deprecated
 public class AbstractGameController extends WisematchesController {
 	protected ScribblePlayManager playManager;
 	protected StatisticManager statisticManager;

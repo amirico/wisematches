@@ -6,6 +6,7 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class WordEntryForm {
 	private String word;
 	private String language;

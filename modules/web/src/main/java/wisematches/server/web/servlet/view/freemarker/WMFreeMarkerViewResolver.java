@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.view;
+package wisematches.server.web.servlet.view.freemarker;
 
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;

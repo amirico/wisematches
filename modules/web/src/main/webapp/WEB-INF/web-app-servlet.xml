@@ -13,7 +13,8 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <mvc:annotation-driven validator="beanValidator"/>
+    <mvc:annotation-driven validator="beanValidator">
+    </mvc:annotation-driven>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
@@ -86,20 +87,13 @@
     </bean>
 
 
-    <bean id="viewResolver" class="wisematches.server.web.servlet.view.WMFreeMarkerViewResolver">
+    <bean id="viewResolver" class="wisematches.server.web.servlet.view.freemarker.WMFreeMarkerViewResolver">
         <property name="cache" value="true"/>
         <property name="prefix" value=""/>
         <property name="suffix" value=".ftl"/>
         <property name="exposeSpringMacroHelpers" value="true"/>
         <property name="exposeRedirectModelAttributes" value="false"/>
         <property name="contentType" value="text/html;charset=UTF-8"/>
-        <property name="exposeEnums">
-            <list>
-                <value>wisematches.core.Language</value>
-                <value>wisematches.core.Membership</value>
-                <value>wisematches.server.services.award.AwardType</value>
-            </list>
-        </property>
 
         <property name="configuration">
             <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
@@ -127,7 +121,7 @@
                 </property>
             </bean>
         </property>
-        <property name="viewClass" value="wisematches.server.web.servlet.view.WMFreeMarkerView"/>
+        <property name="viewClass" value="wisematches.server.web.servlet.view.freemarker.WMFreeMarkerView"/>
     </bean>
 
 

@@ -9,6 +9,7 @@ import java.util.Collection;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public class GameProposalForm {
 	private final GameProposal<ScribbleSettings> proposal;
 	private final Collection<CriterionViolation> violations;

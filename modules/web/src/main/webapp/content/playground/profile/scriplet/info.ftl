@@ -17,18 +17,18 @@
     </div>
     <div>
     <#assign m=player.playerType/>
-        <div class="player member">
+        <div class="player personality">
         <#if !m.basic>
             <div class="membership ${m.name()?lower_case}"></div></#if>
             <a href="/account/playerType">
-                <div class="nickname"><@message code="membership.name.${m.name()?lower_case}"/> <@message code="member.label"/></div>
+                <div class="nickname"><@message code="membership.name.${m.name()?lower_case}"/> <@message code="personality.label"/></div>
             </a>
         </div>
     </div>
     <div style="padding-top: 4px; padding-bottom: 4px;">
-    <#if personality?? && personality.id == player.id>
+    <#if player?? && player.id == player.id>
     <@addthis title="share.profile.my.label" description="share.profile.my.description" args=[player.nickname]/>
-<#elseif personality??>
+<#elseif player??>
         <@addthis title="share.profile.other.label" description="share.profile.other.description" args=[player.nickname]/>
     </#if>
     </div>

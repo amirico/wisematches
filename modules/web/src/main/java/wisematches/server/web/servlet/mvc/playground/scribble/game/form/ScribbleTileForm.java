@@ -6,6 +6,7 @@ import wisematches.playground.scribble.Tile;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScribbleTileForm {
 	private int cost;

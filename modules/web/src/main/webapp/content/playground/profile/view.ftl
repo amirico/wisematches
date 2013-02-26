@@ -5,7 +5,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top">
-        <#if !personality??><#include "/content/assistance/navigation.ftl"/></#if>
+        <#if !player??><#include "/content/assistance/navigation.ftl"/></#if>
         </td>
         <td valign="top">
             <table class="profile shadow ui-state-default">
@@ -29,7 +29,7 @@
                             ${messageSource.formatDate(profile.creationDate, locale)}
                             </div>
                         </div>
-                    <#if personality?? && personality.id == player.id>
+                    <#if player?? && player.id == player.id>
                         <div class="edit">
                             <button class="wm-ui-button"
                                     onclick="wm.util.url.redirect('/playground/profile/edit')"><@message code="profile.edit"/></button>
