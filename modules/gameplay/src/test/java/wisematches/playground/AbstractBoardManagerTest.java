@@ -1,10 +1,11 @@
 package wisematches.playground;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.easymock.Capture;
 import org.easymock.IAnswer;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.Robot;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
  */
 @SuppressWarnings("unchecked")
 public class AbstractBoardManagerTest {
-	private static final Log log = LogFactory.getLog("test.wisematches.room.abstract");
+	private static final Logger log = LoggerFactory.getLogger(AbstractBoardManagerTest.class);
 
 	private BoardListener gamePlayListener;
 
@@ -299,7 +300,7 @@ public class AbstractBoardManagerTest {
 		private final GameBoardDao boardDao;
 
 		protected MockGamePlayManager(GameBoardDao boardDao) {
-			super(log, EnumSet.of(RobotType.DULL));
+			super(EnumSet.of(RobotType.DULL), log);
 			this.boardDao = boardDao;
 		}
 

@@ -1,8 +1,9 @@
 package wisematches.playground.scribble;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.annotations.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Personality;
 import wisematches.core.PersonalityManager;
 import wisematches.playground.*;
@@ -49,6 +50,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 * <p/>
 	 * This buffer contains tile number incremented by 1. Zero value means no tile.
 	 */
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "handTiles")
+	@Access(AccessType.PROPERTY)
 	private final byte[] handTiles = new byte[42];
 
 	/**
@@ -72,6 +77,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *  |-----------------|
 	 * </pre>
 	 */
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "boardTiles")
+	@Access(AccessType.PROPERTY)
 	private final byte[] boardTiles = new byte[255];
 
 	/**
@@ -92,6 +101,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *  |-------------------------------------------------------------------------------------------------------------|
 	 * </pre>
 	 */
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "moves")
+	@Access(AccessType.PROPERTY)
 	private final ByteBuffer boardMoves = ByteBuffer.allocate(2912);
 
 	/**
@@ -110,6 +123,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *  |--------------------------------|
 	 * </pre>
 	 */
+	@Lob
+	@Type(type = "[B")
+	@Column(name = "redefinitions")
+	@Access(AccessType.PROPERTY)
 	private final ByteBuffer tilesRedefinitions = ByteBuffer.allocate(255);
 
 	public static final int CELLS_NUMBER = 15;
@@ -120,7 +137,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	private static final int[] EMPTY_TILES_IDS = new int[0];
 
-	private static final Log log = LogFactory.getLog("wisematches.games.scribble");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.Board");
 
 	/**
 	 * This is Hibernate constructor. It must not be used directly. It should be default visible for
@@ -135,9 +152,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	public ScribbleBoard(ScribbleSettings settings, GameRelationship relationship, Collection<? extends Personality> players, TilesBank tilesBank, Dictionary dictionary) {
 		super(settings, players, relationship);
-		if (log.isDebugEnabled()) {
-			log.debug("Game started: " + getBoardId());
-		}
+		log.debug("Game started: ", getBoardId());
 
 		this.tilesBank = tilesBank;
 		this.dictionary = dictionary;
@@ -146,9 +161,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		for (Personality player : players) {
 			final ScribblePlayerHand hand = getPlayerHand(player);
 			hand.addTiles(tilesBank.requestTiles(LETTERS_IN_HAND));
-			if (log.isDebugEnabled()) {
-				log.debug("Initialize player " + hand + " hand with tiles: " + Arrays.toString(hand.getTiles()));
-			}
+			log.debug("Initialize player {} hand with tiles: {}", hand, Arrays.toString(hand.getTiles()));
 			updateHandTilesBuffer(player, hand);
 		}
 	}
@@ -257,25 +270,18 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("Finish player " + player + " make word move. Move tiles: " +
-					Arrays.toString(moveTiles) + ", hand tiles: " +
-					Arrays.toString(handTiles) + ", tiles to remove from hand: " + tilesToRemove);
+			log.debug("Finish player {} make word move. Move tiles: {}, hand tiles: {}, tiles to remove from hand: {}",
+					player, moveTiles, handTiles, tilesToRemove);
 		}
 		hand.removeTiles(tilesToRemove.toArray(new Tile[tilesToRemove.size()]));
 		if (!tilesBank.isEmpty()) {
 			final Tile[] tiles = tilesBank.requestTiles(LETTERS_IN_HAND - hand.getTiles().length);
-			if (log.isDebugEnabled()) {
-				log.debug("Add new tiles to player's hand " + player + ": " + Arrays.toString(tiles));
-			}
+			log.debug("Add new tiles to player's hand {}: {}", player, tiles);
 			hand.addTiles(tiles);
 		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("Bank is empty. No tiles added to player's hand.");
-			}
+			log.debug("Bank is empty. No tiles added to player's hand.");
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("New player " + player + " hand: " + Arrays.toString(hand.getTiles()));
-		}
+		log.debug("New player {} hand: {}", player, hand.getTiles());
 		passesCount = 0;
 		updateHandTilesBuffer(player, hand);
 
@@ -311,14 +317,10 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			}
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("Exchange tiles for player " + player + " with ids: " + Arrays.toString(tilesIds));
-		}
+		log.debug("Exchange tiles for player {} with ids: {}", player, tilesIds);
 
 		final Tile[] tiles = tilesBank.requestTiles(tilesIds.length);
-		if (log.isDebugEnabled()) {
-			log.debug("New tiles requested from bank: " + Arrays.toString(tiles));
-		}
+		log.debug("New tiles requested from bank: {}", (Object) tiles);
 
 		int index = 0;
 		for (int i = 0; i < handTiles.length; i++) {
@@ -332,9 +334,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			}
 		}
 		hand.setTiles(handTiles);
-		if (log.isDebugEnabled()) {
-			log.debug("New player " + player + " hand: " + Arrays.toString(hand.getTiles()));
-		}
+		log.debug("New player {} hand: {}", player, hand.getTiles());
 		passesCount = 0;
 		updateHandTilesBuffer(player, hand); // update player hand buffer
 		return finalizePlayerMove(new ExchangeMove(player, tilesIds), null);
@@ -609,10 +609,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	 *
 	 * @return the encoded board tiles that should be stored into database.
 	 */
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "boardTiles")
-	@Access(AccessType.PROPERTY)
 	byte[] getBoardTiles() {
 		return boardTiles;
 	}
@@ -621,10 +617,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		System.arraycopy(boardTiles, 0, this.boardTiles, 0, boardTiles.length);
 	}
 
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "handTiles")
-	@Access(AccessType.PROPERTY)
 	byte[] getHandTiles() {
 		return handTiles;
 	}
@@ -633,10 +625,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		System.arraycopy(handTiles, 0, this.handTiles, 0, handTiles.length);
 	}
 
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "redefinitions")
-	@Access(AccessType.PROPERTY)
 	byte[] getTilesRedefinitions() {
 		return tilesRedefinitions.array();
 	}
@@ -647,10 +635,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		this.tilesRedefinitions.rewind();
 	}
 
-	@Lob
-	@Type(type = "[B")
-	@Column(name = "moves")
-	@Access(AccessType.PROPERTY)
 	byte[] getBoardMoves() {
 		return boardMoves.array();
 	}

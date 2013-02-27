@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.game;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ import java.util.*;
 @RequestMapping("/playground/scribble")
 @Deprecated
 public class ActiveGameController extends AbstractGameController {
-	private static final Log log = LogFactory.getLog("wisematches.server.web.game.active");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ActiveGameController");
 
 	public ActiveGameController() {
 	}
@@ -46,24 +47,18 @@ public class ActiveGameController extends AbstractGameController {
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("Loading active games for personality: " + principal);
-		}
+		log.debug("Loading active games for personality: {}", principal);
 		model.addAttribute("player", principal);
 
 		final Collection<ScribbleDescription> activeBoards = searchManager.searchEntities(principal, ACTIVE_GAMES_CTX, null, null);
 		model.addAttribute("activeBoards", activeBoards);
-		if (log.isDebugEnabled()) {
-			log.debug("Found " + activeBoards.size() + " active games for personality: " + principal);
-		}
+		log.debug("Found {} active games for personality: {}", activeBoards.size(), principal);
 
 		if (principal.equals(getPrincipal())) {
 			final Collection<GameProposal<ScribbleSettings>> proposals =
 					proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
 			model.addAttribute("activeProposals", proposals);
-			if (log.isDebugEnabled()) {
-				log.debug("Found " + proposals.size() + " proposals for personality: " + principal);
-			}
+			log.debug("Found {} proposals for personality: {}", proposals.size(), principal);
 		} else {
 			model.addAttribute("activeProposals", Collections.emptyList());
 		}
@@ -83,9 +78,7 @@ public class ActiveGameController extends AbstractGameController {
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("Loading active games for personality: " + principal);
-		}
+		log.debug("Loading active games for personality: {}", principal);
 
 		final Collection<ScribbleDescription> activeBoards = searchManager.searchEntities(principal, ACTIVE_GAMES_CTX, null, null);
 		final List<ScribbleInfoForm> forms = new ArrayList<>(activeBoards.size());

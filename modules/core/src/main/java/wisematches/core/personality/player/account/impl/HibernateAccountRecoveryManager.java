@@ -1,10 +1,11 @@
 package wisematches.core.personality.player.account.impl;
 
-import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.personality.player.account.Account;
@@ -24,7 +25,7 @@ public class HibernateAccountRecoveryManager implements AccountRecoveryManager, 
 
 	private static final int DEFAULT_EXPIRATION_TIME = 24 * 60 * 60 * 1000;  // 1day
 
-	private static final Logger log = Logger.getLogger(HibernateAccountLockManager.class);
+	private static final Logger log = LoggerFactory.getLogger("wisematches.account.RecoveryManager");
 
 	public HibernateAccountRecoveryManager() {
 	}
@@ -75,9 +76,8 @@ public class HibernateAccountRecoveryManager implements AccountRecoveryManager, 
 			final Date val = new Date(today.getTime() - tokenExpirationTime);
 			query.setParameter("date", val);
 			final int i = query.executeUpdate();
-			log.info("Expired recovery tokens were cleaned: " + i);
+			log.info("Expired recovery tokens were cleaned: {}", i);
 		} catch (HibernateException ex) {
-			ex.printStackTrace();
 			log.error("Expired recovery tokens can't be cleaned ", ex);
 		}
 	}
