@@ -1,7 +1,8 @@
 package wisematches.server.services.award.impl.assembly;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.playground.tourney.TourneyPlace;
@@ -17,7 +18,7 @@ public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
 	private RegularTourneyManager tourneyManager;
 	private final TheAwardsListener listener = new TheAwardsListener();
 
-	protected final Log log = LogFactory.getLog("wisematches.playground.awards.tourney");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.awards.TourneyJudicial");
 
 	public TourneyJudicialAssembly() {
 	}
@@ -39,7 +40,7 @@ public class TourneyJudicialAssembly extends AbstractJudicialAssembly {
 			final Player player = personalityManager.getMember(pid);
 			grantAward(player, "tourney.winner", weight, new TourneyRelationship(tourney.getNumber()));
 		} else {
-			log.error("TourneyPlace can't be converted to AwardWeight: " + place);
+			log.error("TourneyPlace can't be converted to AwardWeight: {}", place);
 		}
 	}
 

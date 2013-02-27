@@ -1,7 +1,8 @@
 package wisematches.server.services.notify.impl.publisher;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
 import wisematches.core.Personality;
 import wisematches.core.Player;
@@ -30,7 +31,7 @@ public class TimelyNotificationPublisher implements NotificationPublisher {
 	private final Set<String> mandatoryNotifications = new HashSet<>();
 	private final Map<Personality, Collection<Notification>> waitingNotifications = new HashMap<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.notify.essential");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.notification.TimelyPublisher");
 
 	public TimelyNotificationPublisher() {
 	}

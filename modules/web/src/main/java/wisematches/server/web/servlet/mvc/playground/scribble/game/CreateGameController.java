@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.game;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,7 +41,7 @@ public class CreateGameController extends AbstractGameController {
 	private static final String[] SEARCH_COLUMNS = new String[]{"player", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"};
 	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.game.create");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.CreateGameController");
 
 	public CreateGameController() {
 	}
@@ -166,7 +167,7 @@ public class CreateGameController extends AbstractGameController {
 				return responseFactory.success(Collections.singletonMap("board", board.getBoardId()));
 			}
 		} catch (BoardCreationException ex) {
-			log.error("New board can't be created: " + form, ex);
+			log.error("New board can't be created: {}", form, ex);
 			return responseFactory.failure("game.create.opponents.err.unknown", locale);
 		}
 	}

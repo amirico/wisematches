@@ -1,7 +1,7 @@
 package wisematches.server.web.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +13,7 @@ public class WebClient {
 	private final int majorVersion;
 	private final String fullVersion;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.client");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.http.WebClient");
 
 	public WebClient(UserAgent userAgent, int majorVersion, String fullVersion) {
 		this.userAgent = userAgent;
@@ -140,7 +140,7 @@ public class WebClient {
 					return new WebClient(ua, Integer.parseInt(ver.substring(0, ver.indexOf("."))), ver);
 				}
 			} catch (Exception ex) {
-				log.error("WebClient can't be parsed for " + userAgentString, ex);
+				log.error("WebClient can't be parsed for {}", userAgentString, ex);
 			}
 		}
 		return null;

@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.account;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -25,7 +26,7 @@ import java.util.Locale;
 @RequestMapping("/account")
 @Deprecated
 public class AuthenticationController extends WisematchesController {
-	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AuthenticationController");
 
 	public AuthenticationController() {
 		super("title.authentication");
@@ -108,7 +109,7 @@ public class AuthenticationController extends WisematchesController {
 		enableFullView(model);
 
 		final AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-		log.error("Unknown authentication exception received for " + form, ex);
+		log.error("Unknown authentication exception received for {}", form, ex);
 
 		return processLoginPage("system", model, locale);
 	}

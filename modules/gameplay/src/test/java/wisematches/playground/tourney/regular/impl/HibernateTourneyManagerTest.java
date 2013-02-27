@@ -40,9 +40,9 @@ import static org.junit.Assert.*;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/personality-config.xml",
-		"classpath:/config/playground-junit-config.xml"
+		"classpath:/conf/configuration.xml",
+		"classpath:/config/database-config.xml",
+		"classpath:/config/personality-config.xml"
 })
 @SuppressWarnings("unchecked")
 public class HibernateTourneyManagerTest {

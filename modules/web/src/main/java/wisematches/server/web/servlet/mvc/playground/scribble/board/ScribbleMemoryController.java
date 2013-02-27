@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.board;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,7 +40,7 @@ public class ScribbleMemoryController extends WisematchesController {
 	private MemoryWordManager memoryWordManager;
 	private RestrictionManager restrictionManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.memory");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ScribbleMemoryController");
 
 	public ScribbleMemoryController() {
 	}
@@ -97,7 +98,7 @@ public class ScribbleMemoryController extends WisematchesController {
 		} catch (MemoryActionException ex) {
 			return DeprecatedResponse.failure(messageSource.getMessage(ex.getCode(), ex.getArgs(), locale));
 		} catch (BoardLoadingException ex) {
-			log.error("Memory word can't be loaded for board: " + boardId, ex);
+			log.error("Memory word can't be loaded for board: {}", boardId, ex);
 			return DeprecatedResponse.failure(messageSource.getMessage("game.memory.err.board.loading", locale));
 		}
 	}
@@ -127,9 +128,7 @@ public class ScribbleMemoryController extends WisematchesController {
 		CLEAR {
 			@Override
 			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) {
-				if (log.isDebugEnabled()) {
-					log.debug("Clear memory words for " + player.getId() + "@" + board.getBoardId());
-				}
+				log.debug("Clear memory words for {}@{}", player.getId(), board.getBoardId());
 				wordManager.clearMemoryWords(board, player);
 				return null;
 			}
@@ -137,9 +136,7 @@ public class ScribbleMemoryController extends WisematchesController {
 		ADD {
 			@Override
 			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) throws MemoryActionException {
-				if (log.isDebugEnabled()) {
-					log.debug("Add memory word for " + player.getId() + "@" + board.getBoardId() + ": " + word);
-				}
+				log.debug("Add memory word for {}@{}: {}", player.getId(), board.getBoardId(), word);
 				wordManager.addMemoryWord(board, player, word);
 				return null;
 			}
@@ -147,9 +144,7 @@ public class ScribbleMemoryController extends WisematchesController {
 		REMOVE {
 			@Override
 			public Map<String, Object> doAction(MemoryWordManager wordManager, ScribbleBoard board, Player player, Word word) {
-				if (log.isDebugEnabled()) {
-					log.debug("Remove memory word for " + player.getId() + "@" + board.getBoardId() + ": " + word);
-				}
+				log.debug("Remove memory word for {}@{}: {}", player.getId(), board.getBoardId(), word);
 				wordManager.removeMemoryWord(board, player, word);
 				return null;
 			}

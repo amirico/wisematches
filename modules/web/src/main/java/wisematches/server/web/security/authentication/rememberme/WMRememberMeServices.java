@@ -1,5 +1,7 @@
 package wisematches.server.web.security.authentication.rememberme;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,8 @@ import java.util.Date;
  */
 public class WMRememberMeServices extends PersistentTokenBasedRememberMeServices {
 	private WMPersistentTokenRepository tokenRepository;
+
+	private static final Logger log = LoggerFactory.getLogger("wisematches.security.RememberMeService");
 
 	public WMRememberMeServices(String key, UserDetailsService userDetailsService, WMPersistentTokenRepository tokenRepository) {
 		super(key, userDetailsService, tokenRepository);
@@ -58,8 +62,8 @@ public class WMRememberMeServices extends PersistentTokenBasedRememberMeServices
 		}
 
 		// Token also matches, so login is valid. Update the token value, keeping the *same* series number.
-		if (logger.isDebugEnabled()) {
-			logger.debug("Refreshing persistent login token for user '" + token.getUsername() + "', series '" +
+		if (log.isDebugEnabled()) {
+			log.debug("Refreshing persistent login token for user '" + token.getUsername() + "', series '" +
 					token.getSeries() + "'");
 		}
 
@@ -70,7 +74,7 @@ public class WMRememberMeServices extends PersistentTokenBasedRememberMeServices
 			tokenRepository.updateToken(newToken.getSeries(), newToken.getTokenValue(), newToken.getDate());
 			addCookie(newToken, request, response);
 		} catch (DataAccessException e) {
-			logger.error("Failed to update token: ", e);
+			log.error("Failed to update token: ", e);
 			throw new RememberMeAuthenticationException("Autologin failed due to data access problem");
 		}
 
@@ -84,8 +88,8 @@ public class WMRememberMeServices extends PersistentTokenBasedRememberMeServices
 
 		// Copied from AbstractRememberMeServices.logout. The super.logout(request, response, authentication);
 		// can't be used because tokenRepository.removeUserTokens is invoked
-		if (logger.isDebugEnabled()) {
-			logger.debug("Logout of user "
+		if (log.isDebugEnabled()) {
+			log.debug("Logout of user "
 					+ (authentication == null ? "Unknown" : authentication.getName()));
 		}
 		cancelCookie(request, response);

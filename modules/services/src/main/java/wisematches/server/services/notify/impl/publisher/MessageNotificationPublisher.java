@@ -1,7 +1,8 @@
 package wisematches.server.services.notify.impl.publisher;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Player;
@@ -16,7 +17,7 @@ import wisematches.server.services.notify.impl.NotificationPublisher;
 public class MessageNotificationPublisher implements NotificationPublisher {
 	private MessageManager messageManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.notify.message");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.notification.MessagePublisher");
 
 	public MessageNotificationPublisher() {
 	}
@@ -35,9 +36,7 @@ public class MessageNotificationPublisher implements NotificationPublisher {
 	@Transactional(propagation = Propagation.MANDATORY, readOnly = true)
 	public void publishNotification(final Notification notification) {
 		final Player target = notification.getTarget();
-		if (log.isDebugEnabled()) {
-			log.debug("Send message notification '" + notification.getCode() + "' to player: " + target);
-		}
+		log.debug("Send message notification '{}' to player: {}", notification.getCode(), target);
 		messageManager.sendNotification(target, notification.getMessage(), true);
 	}
 

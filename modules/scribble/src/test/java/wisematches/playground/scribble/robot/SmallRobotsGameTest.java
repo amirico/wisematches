@@ -1,13 +1,14 @@
 package wisematches.playground.scribble.robot;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.orm.hibernate4.SessionHolder;
@@ -36,9 +37,10 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
+		"classpath:/conf/configuration.xml",
+		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
-		"classpath:/config/scribble-junit-config.xml"
+		"classpath:/config/scribble-config.xml"
 })
 public class SmallRobotsGameTest {
 	@Autowired
@@ -50,7 +52,7 @@ public class SmallRobotsGameTest {
 	private final Lock gameFinishedLock = new ReentrantLock();
 	private final Condition gameFinishedCondition = gameFinishedLock.newCondition();
 
-	private static final Log log = LogFactory.getLog("wisematches.scribble.robot.test");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.SmallRobotsGameTest");
 
 	public SmallRobotsGameTest() {
 	}
@@ -136,7 +138,7 @@ public class SmallRobotsGameTest {
 		}
 		gameFinishedLock.unlock();
 
-		log.info("Game was finished at " + (System.currentTimeMillis() - currentTime) + "ms");
+		log.info("Game was finished at {}ms ", +(System.currentTimeMillis() - currentTime));
 
 		assertTrue("Board is not saved", board.getBoardId() > 0);
 		assertFalse("Board is not finished", board.isActive());

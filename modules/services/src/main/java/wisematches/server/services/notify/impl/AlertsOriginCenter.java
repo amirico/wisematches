@@ -1,7 +1,8 @@
 package wisematches.server.services.notify.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import wisematches.core.personality.player.account.Account;
@@ -32,7 +33,7 @@ public class AlertsOriginCenter {
 	private final TheDictionaryListener dictionaryListener = new TheDictionaryListener();
 	private final TheAbuseReportListener abuseReportListener = new TheAbuseReportListener();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.alerts.center");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.alerts.OriginCenter");
 
 	public AlertsOriginCenter() {
 	}
@@ -48,7 +49,7 @@ public class AlertsOriginCenter {
 
 			mailSender.send(message);
 		} catch (Exception ex) {
-			log.error("Alerts can't be sent: system=[" + system + "], subj=[" + subj + "], msg=[" + msg + "]");
+			log.error("Alerts can't be sent: system=[{}], subj=[{}], msg=[{}]", system, subj, msg);
 		}
 	}
 

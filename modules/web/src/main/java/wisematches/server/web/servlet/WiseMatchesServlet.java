@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WiseMatchesServlet extends DispatcherServlet {
-	private static final Log log = LogFactory.getLog("wisematches.server.web.servlet");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.Servlet");
 
 	public WiseMatchesServlet() {
 	}
@@ -51,7 +52,7 @@ public class WiseMatchesServlet extends DispatcherServlet {
 		try {
 			super.doDispatch(request, response);
 		} catch (Exception ex) {
-			log.error("Page can't be opened: " + request.getRequestURI() + "?" + request.getQueryString(), ex);
+			log.error("Page can't be opened: {}?{}", request.getRequestURI(), request.getQueryString(), ex);
 			throw ex;
 		}
 	}
@@ -61,7 +62,7 @@ public class WiseMatchesServlet extends DispatcherServlet {
 		try {
 			return super.processHandlerException(request, response, handler, ex);
 		} catch (Exception e) {
-			log.error("Handled exception received: " + ex.getMessage(), e);
+			log.error("Handled exception received: {}", ex.getMessage(), e);
 			throw e;
 		}
 	}

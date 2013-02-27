@@ -1,7 +1,8 @@
 package wisematches.server.services.notify.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Member;
 import wisematches.core.task.TransactionalExecutor;
 import wisematches.server.services.notify.*;
@@ -19,7 +20,7 @@ public class PublishNotificationService implements NotificationService {
 
 	private final Collection<NotificationPublisher> publishers = new ArrayList<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.notice.service");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.notification.PublishService");
 
 	public PublishNotificationService() {
 	}
@@ -41,7 +42,7 @@ public class PublishNotificationService implements NotificationService {
 						try {
 							publisher.publishNotification(notification);
 						} catch (NotificationException ex) {
-							log.error("Notification can't be processed: code=" + notification.getCode() + ",publisher=" + publisher.getName(), ex);
+							log.error("Notification can't be processed: code={},publisher={}", notification.getCode(), publisher.getName(), ex);
 						}
 					}
 				}

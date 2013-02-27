@@ -17,7 +17,7 @@
             classpath:/config/personality-config.xml
             classpath:/config/scribble-config.xml
             classpath:/config/playground-config.xml
-            /WEB-INF/web-app-settings.xml
+            /config/web-app-settings.xml
             /WEB-INF/web-app-security.xml
         </param-value>
     </context-param>

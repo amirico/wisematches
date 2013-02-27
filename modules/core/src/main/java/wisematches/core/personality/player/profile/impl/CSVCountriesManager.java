@@ -1,7 +1,6 @@
 package wisematches.core.personality.player.profile.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.springframework.core.io.Resource;
 import wisematches.core.Language;
 import wisematches.core.personality.player.profile.CountriesManager;
@@ -18,12 +17,10 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public class CSVCountriesManager implements CountriesManager {
-	private final Map<Language, List<Country>> countries = new HashMap<Language, List<Country>>();
-	private final Map<Language, Map<String, Country>> countriesMap = new HashMap<Language, Map<String, Country>>();
+	private final Map<Language, List<Country>> countries = new HashMap<>();
+	private final Map<Language, Map<String, Country>> countriesMap = new HashMap<>();
 
 	private static final Pattern PATTERN = Pattern.compile("\"([^\"]+?)\",?|([^,]+),?|,");
-
-	private static final Log log = LogFactory.getLog(CSVCountriesManager.class);
 
 	public CSVCountriesManager() {
 	}
@@ -53,12 +50,7 @@ public class CSVCountriesManager implements CountriesManager {
 	}
 
 	private void parseResource(Resource csvCountriesFile) throws IOException {
-		if (log.isDebugEnabled()) {
-			log.debug("Parsing CSV file: " + csvCountriesFile);
-		}
-
-		final BufferedReader br = new BufferedReader(new InputStreamReader(csvCountriesFile.getInputStream(), "UTF-8"));
-		try {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(csvCountriesFile.getInputStream(), "UTF-8"))) {
 			final Matcher matcher = PATTERN.matcher(br.readLine());// parse header with locales
 
 			final List<Language> locales = parseLocales(matcher);
@@ -96,8 +88,6 @@ public class CSVCountriesManager implements CountriesManager {
 			for (List<Country> countryList : countries.values()) {
 				Collections.sort(countryList);
 			}
-		} finally {
-			br.close();
 		}
 	}
 
@@ -105,13 +95,9 @@ public class CSVCountriesManager implements CountriesManager {
 		if (!matcher.find()) {
 			throw new IOException("CSV file does not contains header record");
 		}
-		final List<Language> locales = new ArrayList<Language>();
+		final List<Language> locales = new ArrayList<>();
 		while (matcher.find()) {
 			locales.add(Language.byCode(matcher.group(1)));
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("Found following locales: " + locales);
 		}
 		return locales;
 	}

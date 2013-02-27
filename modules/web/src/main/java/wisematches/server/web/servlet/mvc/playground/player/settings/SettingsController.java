@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.player.settings;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,7 +40,7 @@ public class SettingsController extends WisematchesController {
 	private NotificationManager notificationManager;
 	private BoardSettingsManager boardSettingsManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.settings");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.SettingsController");
 
 	public SettingsController() {
 		super("title.settings");

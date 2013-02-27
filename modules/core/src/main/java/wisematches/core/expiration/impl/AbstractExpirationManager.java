@@ -1,7 +1,6 @@
 package wisematches.core.expiration.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -25,19 +24,21 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class AbstractExpirationManager<ID, T extends Enum<? extends ExpirationType>> implements ExpirationManager<ID, T> {
 	private TaskScheduler taskScheduler;
 
+	private final Logger log;
+
 	protected final Lock lock = new ReentrantLock();
+
 	protected TransactionTemplate transactionTemplate;
 
 	private final T[] expirationPoints;
-	private final Map<ID, ScheduledFuture> scheduledExpirations = new HashMap<ID, ScheduledFuture>();
-	private final Collection<ExpirationListener<ID, T>> listeners = new CopyOnWriteArraySet<ExpirationListener<ID, T>>();
+	private final Map<ID, ScheduledFuture> scheduledExpirations = new HashMap<>();
+	private final Collection<ExpirationListener<ID, T>> listeners = new CopyOnWriteArraySet<>();
 
-	protected final Log log = LogFactory.getLog("wisematches.core.expiration." + getClass().getSimpleName().toLowerCase());
-
-	protected AbstractExpirationManager(Class<T> typesClass) {
+	protected AbstractExpirationManager(Class<T> typesClass, Logger log) {
 		if (typesClass == null) {
 			throw new NullPointerException("Types class can't be null");
 		}
+		this.log = log;
 		expirationPoints = typesClass.getEnumConstants();
 	}
 
@@ -70,11 +71,11 @@ public abstract class AbstractExpirationManager<ID, T extends Enum<? extends Exp
 			final T type = nextExpiringPoint(extinctionTime);
 			final ExpirationTask task = new ExpirationTask(id, extinctionTime, type);
 			if (type == null) { // expired
-				log.info("Entity is expired and will be terminated: " + id);
+				log.info("Entity is expired and will be terminated: {}", id);
 				schedule = taskScheduler.schedule(task, extinctionTime);
 			} else {
 				final Date triggerTime = new Date(((ExpirationType) type).getTriggerTime(extinctionTime.getTime()));
-				log.info("Start expiration scheduler for " + id + " to " + triggerTime + "(" + type + ")");
+				log.info("Start expiration scheduler for {}  to {} ({})", new Object[]{id, triggerTime, type});
 				schedule = taskScheduler.schedule(task, triggerTime);
 			}
 			scheduledExpirations.put(id, schedule);
@@ -86,7 +87,7 @@ public abstract class AbstractExpirationManager<ID, T extends Enum<? extends Exp
 	protected final void cancelTermination(final ID id) {
 		lock.lock();
 		try {
-			log.info("Cancel entity termination " + id);
+			log.info("Cancel entity termination: {}", id);
 
 			ScheduledFuture scheduledFuture = scheduledExpirations.get(id);
 			if (scheduledFuture != null) {
@@ -113,10 +114,10 @@ public abstract class AbstractExpirationManager<ID, T extends Enum<? extends Exp
 
 	private boolean terminateOrNotify(final ID id, final T type) {
 		if (type == null) {
-			log.info("Terminate entity " + id + ": " + executeTermination(id));
+			log.info("Terminate entity {}: {}", id, executeTermination(id));
 			return false;
 		} else {
-			log.info("Notify about expiration for entity " + id + ": " + type);
+			log.info("Notify about expiration for entity {}: {}", id, type);
 			for (ExpirationListener<ID, T> listener : listeners) {
 				listener.expirationTriggered(id, type);
 			}
@@ -127,7 +128,7 @@ public abstract class AbstractExpirationManager<ID, T extends Enum<? extends Exp
 	private void processExpiration(final ID id, final Date extinctionTime, final T type) {
 		lock.lock();
 		try {
-			log.info("Process entity expiration: " + id + " at " + extinctionTime + " (" + type + ")");
+			log.info("Process entity expiration: {} at {} ({})", new Object[]{id, extinctionTime, type});
 			final ScheduledFuture scheduledFuture = scheduledExpirations.get(id);
 			if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
 				final boolean reschedulingRequired;
@@ -163,7 +164,7 @@ public abstract class AbstractExpirationManager<ID, T extends Enum<? extends Exp
 	public void destroy() {
 		lock.lock();
 		try {
-			log.info("Destroy and cancel expirations for: " + scheduledExpirations.keySet());
+			log.info("Destroy and cancel expirations for: {}", scheduledExpirations.keySet());
 			for (ScheduledFuture scheduledFuture : scheduledExpirations.values()) {
 				scheduledFuture.cancel(false);
 			}

@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.dictionary;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,7 @@ public class DictionaryController extends WisematchesController {
 	private DictionaryManager dictionaryManager;
 	private DictionarySuggestionManager dictionarySuggestionManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.dict.suggest");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.DictionaryController");
 
 	public DictionaryController() {
 	}
@@ -175,7 +176,7 @@ public class DictionaryController extends WisematchesController {
 			}
 			return responseFactory.success();
 		} catch (Exception ex) {
-			log.error("Word suggest can't be processed: " + form, ex);
+			log.error("Word suggest can't be processed: {}", form, ex);
 			return responseFactory.failure("dict.suggest.err.system", locale);
 		}
 	}
@@ -191,7 +192,7 @@ public class DictionaryController extends WisematchesController {
 				dictionarySuggestionManager.rejectRequests(form.getIds());
 			}
 		} catch (Exception ex) {
-			log.error("Approval request can't be processed: " + form, ex);
+			log.error("Approval request can't be processed: {}", form, ex);
 			return responseFactory.failure("dict.suggest.err.system", locale);
 		}
 		return responseFactory.success();

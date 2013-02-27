@@ -64,10 +64,11 @@ import static org.junit.Assert.fail;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
+		"classpath:/conf/configuration.xml",
+		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
+		"classpath:/config/playground-config.xml",
 		"classpath:/config/scribble-config.xml",
-		"classpath:/config/playground-junit-config.xml"
 })
 public class NotificationOriginCenterTest {
 	@Autowired

@@ -1,11 +1,12 @@
 package wisematches.server.services.message.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class HibernateMessageManager implements MessageManager {
 	private final Lock removesLock = new ReentrantLock();
 
 	private final Collection<MessageListener> listeners = new CopyOnWriteArraySet<>();
-	private static final Log log = LogFactory.getLog("wisematches.server.playground.message");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.message.Manager");
 
 	public HibernateMessageManager() {
 	}
@@ -248,7 +249,7 @@ public class HibernateMessageManager implements MessageManager {
 		}
 		b.append(")");
 
-		log.info("Cleanup old messages: " + b);
+		log.info("Cleanup old messages: {}", b);
 
 		removesLock.lock();
 		try {

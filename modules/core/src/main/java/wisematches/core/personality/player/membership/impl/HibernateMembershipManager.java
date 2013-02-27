@@ -1,10 +1,10 @@
 package wisematches.core.personality.player.membership.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Membership;
@@ -31,7 +31,7 @@ public class HibernateMembershipManager implements MembershipManager, CleaningDa
 	private final Set<MembershipListener> listeners = new CopyOnWriteArraySet<>();
 	private final Set<ExpirationListener<Account, MembershipExpiration>> expirationListeners = new CopyOnWriteArraySet<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.membership");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.player.MembershipManager");
 
 	public HibernateMembershipManager() {
 	}
@@ -155,7 +155,7 @@ public class HibernateMembershipManager implements MembershipManager, CleaningDa
 			final Account account = accountManager.getAccount(old.getPlayer());
 			session.delete(old);
 
-			log.info("Membership expired and was removed: " + old);
+			log.info("Membership expired and was removed: {}", old);
 
 			for (MembershipListener listener : listeners) {
 				listener.membershipCardUpdated(account, old, null);

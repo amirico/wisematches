@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.game;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/playground/scribble/history")
 @Deprecated
 public class HistoryGameController extends AbstractGameController { //extends AbstractSearchController<ScribbleHistoryEntity, GameResolution, SearchFilter> {
-	private static final Log log = LogFactory.getLog("wisematches.server.web.dashboard");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.HistoryGameController");
 
 	public HistoryGameController() {
 //		super(new String[]{"title", "startedDate", "finishedDate", "players", "movesCount", "resolution", "newRating", "ratingChange"});

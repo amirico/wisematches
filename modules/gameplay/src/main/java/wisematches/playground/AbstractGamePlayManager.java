@@ -1,6 +1,6 @@
 package wisematches.playground;
 
-import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
@@ -33,7 +33,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	protected StatisticManager statisticManager;
 	protected PersonalityManager personalityManager;
 
-	private final Log log;
+	private final Logger log;
 	private final Lock openBoardLock = new ReentrantLock();
 
 	private final BoardsMap<B> boardsCache;
@@ -47,7 +47,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	 *
 	 * @param log logger for this room.
 	 */
-	protected AbstractGamePlayManager(Log log, Set<RobotType> robotTypes) {
+	protected AbstractGamePlayManager(Set<RobotType> robotTypes, Logger log) {
 		this.log = log;
 		boardsCache = new BoardsMap<>(log);
 
@@ -80,7 +80,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 			public void run() {
 				final Collection<Long> longs = loadActiveRobotGames();
 				if (longs != null && longs.size() > 0) {
-					log.info("Found unprocessed moves. Schedule robot activities for: " + longs);
+					log.info("Found unprocessed moves. Schedule robot activities for: {}", longs);
 					for (Long boardId : longs) {
 						taskExecutor.execute(new MakeRobotTurnTask(boardId, 1));
 					}
@@ -106,9 +106,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	@Override
 	@SuppressWarnings("unchecked")
 	public B createBoard(S settings, Collection<? extends Personality> players, GameRelationship relationship) throws BoardCreationException {
-		if (log.isDebugEnabled()) {
-			log.debug("Creating new board: settings - " + settings + ", players - " + players);
-		}
+		log.debug("Creating new board: settings - {}, players - {}", settings, players);
 		return createGameBoard(settings, (Collection<Personality>) players, relationship);
 	}
 
@@ -116,9 +114,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	public B openBoard(long boardId) throws BoardLoadingException {
 		B board = boardsCache.getBoard(boardId);
 		if (board != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Board found in memory cache");
-			}
+			log.debug("Board found in memory cache");
 			return board;
 		}
 
@@ -129,14 +125,10 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 				return board;
 			}
 
-			if (log.isInfoEnabled()) {
-				log.info("Loading board from DB: " + boardId);
-			}
+			log.info("Loading board from DB: {}", boardId);
 			final B loaded = loadBoardImpl(boardId);
 			if (loaded == null) {
-				if (log.isDebugEnabled()) {
-					log.debug("Board is unknown");
-				}
+				log.debug("Board is unknown");
 				return null;
 			}
 			loaded.setBoardListener(gameBoardListener);
@@ -248,7 +240,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		final Personality player = board.getPlayerTurn();
 		if (player instanceof Robot) {
 			final long boardId = board.getBoardId();
-			log.info("Initialize robot activity [attempt=" + attempt + "] for board: " + boardId);
+			log.info("Initialize robot activity [attempt={}] for board: {}", attempt, boardId);
 
 			try {
 				if (TransactionSynchronizationManager.isSynchronizationActive()) {
@@ -297,15 +289,15 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 		public void run() {
 			try {
-				log.info("Start robot action for board " + boardId);
+				log.info("Start robot action for board {}", boardId);
 				final B board = openBoard(boardId);
 				final Personality playerTurn = board.getPlayerTurn();
 				if (playerTurn instanceof Robot) {
 					try {
 						AbstractGamePlayManager.this.processRobotMove(board, (Robot) playerTurn);
-						log.info("Robot made a turn for board " + boardId + ": " + playerTurn);
+						log.info("Robot made a turn for board {}: ", boardId, playerTurn);
 					} catch (Throwable th) {
-						log.error("Robot can't make a turn [attempt=" + attempt + "] for board " + boardId, th);
+						log.error("Robot can't make a turn [attempt={}] for board ", attempt, boardId, th);
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException ignore) {
@@ -313,10 +305,10 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 						processRobotMove(board, attempt + 1);
 					}
 				} else {
-					log.info("It's not robot turn for board " + boardId);
+					log.info("It's not robot turn for board {}", boardId);
 				}
 			} catch (BoardLoadingException ex) {
-				log.error("Board for robot's move can't be loaded: " + boardId, ex);
+				log.error("Board for robot's move can't be loaded: {}", boardId, ex);
 			}
 		}
 	}
@@ -338,9 +330,9 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		private final ReferenceQueue<B> boardsQueue = new ReferenceQueue<>();
 		private final Map<Long, BoardWeakReference<B>> boardsReferences = new HashMap<>();
 
-		private final Log log;
+		private final Logger log;
 
-		BoardsMap(Log log) {
+		BoardsMap(Logger log) {
 			this.log = log;
 		}
 
@@ -356,9 +348,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 			if (id == 0) {
 				throw new IllegalArgumentException("Board id can't be zero");
 			}
-			if (log.isDebugEnabled()) {
-				log.debug("Add board to boards map: " + id);
-			}
+			log.debug("Add board to boards map: {}", id);
 			boardsReferences.put(id, value);
 		}
 
@@ -388,9 +378,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 			while (reference != null) {
 				final BoardWeakReference ref = (BoardWeakReference) reference;
 				final long id = ref.getBoardId();
-				if (log.isDebugEnabled()) {
-					log.debug("Board is expired and removed from map: " + id);
-				}
+				log.debug("Board is expired and removed from map: {}", id);
 				boardsReferences.remove(id);
 				reference = boardsQueue.poll();
 			}

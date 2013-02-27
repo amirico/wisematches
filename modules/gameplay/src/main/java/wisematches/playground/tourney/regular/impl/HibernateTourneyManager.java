@@ -1,11 +1,12 @@
 package wisematches.playground.tourney.regular.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.quartz.CronExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.annotation.Propagation;
@@ -50,7 +51,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 	private final Collection<RegularTourneyListener> tourneyListeners = new CopyOnWriteArraySet<>();
 	private final Collection<RegistrationListener> subscriptionListeners = new CopyOnWriteArraySet<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.tourney.TourneyManager");
 
 	public HibernateTourneyManager() {
 	}
@@ -312,7 +313,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 				try {
 					tourneyProcessor.finalizeDivisions(sessionFactory.getCurrentSession(), board, subscriptionListeners, tourneyListeners);
 				} catch (Exception ex) {
-					log.error("Board can't be finalized by internal error: " + board.getBoardId(), ex);
+					log.error("Board can't be finalized by internal error: {}", board.getBoardId(), ex);
 					throw new TourneyProcessingException("Board can't be finalized by internal error", ex);
 				} finally {
 					lock.unlock();
@@ -345,7 +346,7 @@ public class HibernateTourneyManager<S extends GameSettings>
 		}
 
 		int number = HibernateQueryHelper.getNextTourneyNumber(session);
-		log.info("It's time for new tourney: number - " + number + ", scheduled date - " + scheduledDate);
+		log.info("It's time for new tourney: number - {}, scheduled date - {}", number, scheduledDate);
 
 		final HibernateTourney t = new HibernateTourney(number, scheduledDate);
 		session.save(t);

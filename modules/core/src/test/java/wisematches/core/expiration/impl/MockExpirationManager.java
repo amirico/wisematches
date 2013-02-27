@@ -1,5 +1,6 @@
 package wisematches.core.expiration.impl;
 
+import org.slf4j.LoggerFactory;
 import wisematches.core.expiration.MockExpirationType;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ class MockExpirationManager extends AbstractExpirationManager<Long, MockExpirati
 	private List<Long> terminated = new ArrayList<>();
 
 	protected MockExpirationManager() {
-		super(MockExpirationType.class);
+		super(MockExpirationType.class, LoggerFactory.getLogger("wisematches.expiration.MockExpirationManager"));
 	}
 
 	@Override

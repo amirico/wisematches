@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.board;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.*;
@@ -16,7 +17,7 @@ import java.util.concurrent.Callable;
  */
 @Deprecated
 public final class ScribbleObjectsConverter {
-	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ScribbleObjectsConverter");
 
 	private ScribbleObjectsConverter() {
 	}
@@ -150,7 +151,7 @@ public final class ScribbleObjectsConverter {
 					return messageSource.getMessage("game.error.exchange.bank", locale);
 			}
 		} catch (GameMoveException ex) {
-			log.error("Unexpected game move exception found: " + ex.getClass(), ex);
+			log.error("Unexpected game move exception found: {}", ex.getClass(), ex);
 			return translateSystemException(e, messageSource, locale);
 		}
 		return translateSystemException(e, messageSource, locale);

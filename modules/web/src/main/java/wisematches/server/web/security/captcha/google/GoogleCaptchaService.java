@@ -1,7 +1,8 @@
 package wisematches.server.web.security.captcha.google;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
 import wisematches.playground.GameMessageSource;
 import wisematches.server.web.security.captcha.CaptchaService;
@@ -28,7 +29,7 @@ public class GoogleCaptchaService implements CaptchaService {
 	private String generationUrl = "http://www.google.com/recaptcha/api/challenge?k=";
 	private String verificationUrl = "http://www.google.com/recaptcha/api/verify?";
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.captcha");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.security.GoogleCaptchaService");
 
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 

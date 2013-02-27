@@ -1,10 +1,11 @@
 package wisematches.core.personality.player.account.impl;
 
-import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.personality.player.account.*;
@@ -21,7 +22,7 @@ public class HibernateAccountLockManager implements AccountLockManager {
 	private final Collection<AccountLockListener> accountLockListeners = new CopyOnWriteArraySet<AccountLockListener>();
 	private final Collection<AccountNicknameLockListener> listenerAccountNicknames = new CopyOnWriteArraySet<AccountNicknameLockListener>();
 
-	private static final Logger log = Logger.getLogger(HibernateAccountLockManager.class);
+	private static final Logger log = LoggerFactory.getLogger("wisematches.account.HibernateLockManager");
 
 	public HibernateAccountLockManager() {
 	}
@@ -105,9 +106,8 @@ public class HibernateAccountLockManager implements AccountLockManager {
 	public AccountLockInfo getAccountLockInfo(Account player) {
 		final Session session = sessionFactory.getCurrentSession();
 		HibernateAccountLockInfo accountInfo = (HibernateAccountLockInfo) session.get(HibernateAccountLockInfo.class, player.getId());
-		if (log.isDebugEnabled()) {
-			log.debug("Get account lock info: " + accountInfo);
-		}
+
+		log.debug("Get account lock info: {}", accountInfo);
 		if (accountInfo != null) {
 			//object can be cached so we must update it from database.
 			try {
@@ -116,15 +116,11 @@ public class HibernateAccountLockManager implements AccountLockManager {
 			}
 
 			if (System.currentTimeMillis() < accountInfo.getUnlockDate().getTime()) {
-				if (log.isDebugEnabled()) {
-					log.debug("Account is stil locked");
-				}
+				log.debug("Account is still locked");
 				accountInfo.setAccount(player);
 			} else {
-				if (log.isDebugEnabled()) {
-					log.debug("Account already isn't locked. We can remove lock. Unlock date: " +
-							accountInfo.getUnlockDate().getTime() + ". Now time: " + System.currentTimeMillis());
-				}
+				log.debug("Account already isn't locked. We can remove lock. Unlock date - {},  current time - ",
+						accountInfo.getUnlockDate().getTime(), System.currentTimeMillis());
 				session.delete(accountInfo);
 
 				for (AccountLockListener accountLockListener : accountLockListeners) {

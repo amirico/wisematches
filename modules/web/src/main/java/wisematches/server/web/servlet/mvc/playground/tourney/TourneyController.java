@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.tourney;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,7 +42,7 @@ public class TourneyController extends WisematchesController {
 	private RestrictionManager restrictionManager;
 	private StatisticManager statisticManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.tourney");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.TourneyController");
 
 	public TourneyController() {
 		super("title.tourney");
@@ -224,7 +225,7 @@ public class TourneyController extends WisematchesController {
 				tourneyManager.register(principal, tourney, language, section);
 			}
 		} catch (RegistrationException ex) {
-			log.error("Subscription can't be changed: " + form, ex);
+			log.error("Subscription can't be changed: {}", form, ex);
 			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.internal", locale));
 		}
 
@@ -246,7 +247,7 @@ public class TourneyController extends WisematchesController {
 		final List<Tourney> announces = tourneyManager.searchTourneyEntities(null, new Tourney.Context(EnumSet.of(Tourney.State.SCHEDULED)), null, null);
 		Tourney announce = null;
 		if (announces.size() > 1) {
-			log.warn("More than one scheduled tourney. Shouldn't be possible: " + announces.size());
+			log.warn("More than one scheduled tourney. Shouldn't be possible: {}", announces.size());
 			announce = announces.get(0);
 		} else if (announces.size() == 1) {
 			announce = announces.get(0);
