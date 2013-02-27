@@ -1,6 +1,8 @@
 package wisematches.playground.scribble.memory.impl;
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Personality;
 import wisematches.playground.*;
 import wisematches.playground.scribble.ScribbleBoard;
@@ -18,7 +20,7 @@ public class MemoryWordsCleaner {
 
 	private final TheGamePlayListener boardStateListener = new TheGamePlayListener();
 
-	private static final Logger log = Logger.getLogger("wisematches.server.scribble.memory");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.MemoryCleaner");
 
 	public MemoryWordsCleaner() {
 	}
@@ -54,9 +56,7 @@ public class MemoryWordsCleaner {
 
 		@Override
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
-			if (log.isDebugEnabled()) {
-				log.debug("Game on board" + board.getBoardId() + " has been finished and all memory words will be cleaned.");
-			}
+			log.debug("Game on board {} has been finished and all memory words will be cleaned.", board.getBoardId());
 			memoryWordManager.clearMemoryWords((ScribbleBoard) board);
 		}
 	}

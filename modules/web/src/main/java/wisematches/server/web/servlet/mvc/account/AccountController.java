@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2011, WiseMatches (by Sergey Klimenko).
  */
-
 package wisematches.server.web.servlet.mvc.account;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Isolation;
@@ -48,7 +47,7 @@ public class AccountController extends WisematchesController {
 	private CaptchaService captchaService;
 	private NotificationService notificationService;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.account");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AccountController");
 
 	public AccountController() {
 		super("title.account");
@@ -83,9 +82,7 @@ public class AccountController extends WisematchesController {
 	public String createAccountAction(HttpServletRequest request, HttpServletResponse response,
 									  @Valid @ModelAttribute("registration") AccountRegistrationForm form,
 									  BindingResult result, Model model, SessionStatus status) {
-		if (log.isInfoEnabled()) {
-			log.info("Create new account request: " + form);
-		}
+		log.info("Create new account request: {}", form);
 
 		if (captchaService != null) {
 			captchaService.validateCaptcha(request, response, result);
@@ -115,14 +112,10 @@ public class AccountController extends WisematchesController {
 		}
 
 		if (result.hasErrors() || member == null) {
-			if (log.isInfoEnabled()) {
-				log.info("Account form is not correct: " + result.toString());
-			}
+			log.info("Account form is not correct: {}", result);
 			return createAccountPage(model, form);
 		} else {
-			if (log.isInfoEnabled()) {
-				log.info("Account has been created.");
-			}
+			log.info("Account has been created.");
 
 			status.setComplete();
 			try {
@@ -147,9 +140,7 @@ public class AccountController extends WisematchesController {
 	private DeprecatedResponse getAvailabilityStatus(@RequestParam("email") String email,
 													 @RequestParam("nickname") String nickname,
 													 Errors result) {
-		if (log.isDebugEnabled()) {
-			log.debug("Check account validation for: " + email + " (\"" + nickname + "\")");
-		}
+		log.debug("Check account validation for: {} ('{}')", email, nickname);
 
 		final AccountAvailability a = accountManager.checkAccountAvailable(nickname, email);
 		if (a.isAvailable()) {

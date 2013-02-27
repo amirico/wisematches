@@ -1,7 +1,8 @@
 package wisematches.server.services.notify.impl.publisher;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,7 +34,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 
 	private final Map<SenderKey, InternetAddress> addressesCache = new HashMap<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.notify.email");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.notification.MailPublisher");
 
 	public MailNotificationPublisher() {
 	}
@@ -50,9 +51,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 
 	@Override
 	public void publishNotification(final Notification notification) throws PublicationException {
-		if (log.isDebugEnabled()) {
-			log.debug("Send mail notification '" + notification.getCode() + "' to " + notification.getTarget());
-		}
+		log.debug("Send mail notification '{}' to {}", notification.getCode(), notification.getTarget());
 		final MimeMessagePreparator mm = new MimeMessagePreparator() {
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				final Member member = notification.getTarget();
@@ -106,7 +105,7 @@ public class MailNotificationPublisher implements NotificationPublisher {
 
 					addressesCache.put(new SenderKey(sender, language), new InternetAddress(address, personal, "UTF-8"));
 				} catch (UnsupportedEncodingException ex) {
-					log.fatal("JAVA SYSTEM ERROR - NOT UTF8!", ex);
+					log.error("JAVA SYSTEM ERROR - NOT UTF8!", ex);
 				}
 			}
 		}

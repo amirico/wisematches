@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.relations;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class PlayersController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.search");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.PlayersController");
 
 	public PlayersController() {
 		super(new String[]{"player", "ratingG", "ratingA", "activeGames", "finishedGames", "averageMoveTime", "lastMoveTime"});
@@ -49,9 +50,7 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 	public ServiceResponse loadPlayersService(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
 		final Player player = getPrincipal();
 		final PlayerSearchArea area = PlayerSearchArea.valueOf(areaName.toUpperCase());
-		if (log.isDebugEnabled()) {
-			log.debug("Loading players for area: " + area + " for player " + player);
-		}
+		log.debug("Loading players for area: {} for player ", area, player);
 		return responseFactory.success(loadData(player, request, area, locale));
 	}
 

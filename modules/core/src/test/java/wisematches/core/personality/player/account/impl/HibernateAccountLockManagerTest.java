@@ -1,6 +1,5 @@
 package wisematches.core.personality.player.account.impl;
 
-import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +24,8 @@ import static org.junit.Assert.*;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
-		"classpath:/config/personality-junit-config.xml"
+		"classpath:/config/database-config.xml",
+		"classpath:/config/personality-config.xml"
 })
 public class HibernateAccountLockManagerTest {
 	@Autowired
@@ -36,9 +35,6 @@ public class HibernateAccountLockManagerTest {
 	private AccountManager accountManager;
 
 	private Account player;
-
-	@Autowired
-	private SessionFactory sessionFactory;
 
 	private AccountLockListener accountLockListener;
 	private AccountNicknameLockListener listenerAccountNickname;

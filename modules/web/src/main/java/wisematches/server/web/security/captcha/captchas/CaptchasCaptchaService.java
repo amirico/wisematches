@@ -1,7 +1,8 @@
 package wisematches.server.web.security.captcha.captchas;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
 import wisematches.playground.GameMessageSource;
 import wisematches.server.web.security.captcha.CaptchaService;
@@ -41,7 +42,7 @@ public class CaptchasCaptchaService implements CaptchaService {
 		}
 	};
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.captcha");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.security.CaptchasCaptchaService");
 
 	public CaptchasCaptchaService() {
 	}

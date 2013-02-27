@@ -1,10 +1,11 @@
 package wisematches.playground.tourney.regular.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.LongType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Language;
 import wisematches.core.PersonalityManager;
 import wisematches.playground.*;
@@ -20,7 +21,7 @@ import java.util.*;
 class HibernateTourneyProcessor {
 	private TourneyReferee tourneyReferee = new FinalGroupResultReferee();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.playground.tourney.regular");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.tourney.TourneyProcessor");
 
 	HibernateTourneyProcessor() {
 	}
@@ -31,16 +32,16 @@ class HibernateTourneyProcessor {
 
 		final List list = query.list();
 		if (list.size() > 0) {
-			log.info("Initialize tourneys: " + list.size());
+			log.info("Initialize tourneys: {}", list.size());
 		}
 		for (Object o : list) {
 			final HibernateTourney tourney = (HibernateTourney) o;
-			log.info("Start initialisation of tourney: " + tourney.getId());
+			log.info("Start initialisation of tourney: {}", tourney.getId());
 			final int tourneyNumber = tourney.getNumber();
 			final Collection<TourneyResubscription> resubscriptions = resortRegistrations(session, tourneyNumber, 1);
 
 			if (resubscriptions.size() != 0) {
-				log.info("Some players were sectionChanged: " + resubscriptions);
+				log.info("Some players were sectionChanged: {}", resubscriptions);
 			} else {
 				log.info("No resubscriptions for this tourney");
 			}
@@ -57,7 +58,7 @@ class HibernateTourneyProcessor {
 				}
 			}
 
-			log.info("Initiated divisions: " + divisions);
+			log.info("Initiated divisions: {}", divisions);
 
 			tourney.startTourney();
 			if (subscriptions.getPlayers() == 0) { // no subscription - finish the tourney right now
@@ -87,7 +88,7 @@ class HibernateTourneyProcessor {
 		final Query query = session.createQuery("from HibernateTourneyDivision d where d.activeRound = 0 and d.finishedDate is null");
 		for (Object o : query.list()) {
 			final HibernateTourneyDivision division = (HibernateTourneyDivision) o;
-			log.info("Initiating finished division: " + division.getId());
+			log.info("Initiating finished division: {}", division.getId());
 
 			final Query roundsCountQuery = session.createQuery("select max(r.round) from HibernateTourneyRound r where r.division=:division");
 			roundsCountQuery.setParameter("division", division);
@@ -97,7 +98,7 @@ class HibernateTourneyProcessor {
 			if (subscribedPlayers.size() <= 1) {
 				log.error("Broken registered players count! We can get winners from previous round and previous was last.");
 			}
-			log.info("Next round number: " + nextRoundNumber + ", registered players: " + subscribedPlayers.size());
+			log.info("Next round number: {}, registered players: {}", nextRoundNumber, subscribedPlayers.size());
 			final HibernateTourneyRound round = new HibernateTourneyRound(division, nextRoundNumber);
 			session.save(round);
 
@@ -120,7 +121,7 @@ class HibernateTourneyProcessor {
 	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<RegistrationListener> subscriptionListeners, Collection<RegularTourneyListener> tourneyListeners) {
 		final HibernateTourneyGroup group = getGroupByBoard(session, board);
 		if (group != null) {
-			log.info("Finalize tourney group: " + group);
+			log.info("Finalize tourney group: {}", group);
 			group.finalizeGame(board);
 			session.update(group);
 
@@ -130,9 +131,9 @@ class HibernateTourneyProcessor {
 
 			final HibernateTourneyDivision division = round.getDivision();
 			if (round.getFinishedDate() != null) { // finished
-				log.info("Finalize tourney round: " + round);
+				log.info("Finalize tourney round: {}", round);
 				if (division.finishRound(round)) {
-					log.info("Finalize tourney division: " + division);
+					log.info("Finalize tourney division: {}", division);
 					division.finishDivision(tourneyReferee.getWinnersList(group, round, division));
 
 					for (RegularTourneyListener listener : tourneyListeners) {
@@ -155,7 +156,7 @@ class HibernateTourneyProcessor {
 						final HibernateRegistrationRecord s = new HibernateRegistrationRecord(number, winner.getPlayer(), round.getRound() + 1, divisionId.getLanguage(), divisionId.getSection());
 						session.save(s);
 
-						log.info("Subscribe player to next round: " + s);
+						log.info("Subscribe player to next round: {}", s);
 
 						for (RegistrationListener listener : subscriptionListeners) {
 							listener.registered(s, "won.tourney.group");
@@ -173,7 +174,7 @@ class HibernateTourneyProcessor {
 			final HibernateTourney t = (HibernateTourney) o;
 			t.finishTourney();
 
-			log.info("Finalize tourney: " + t);
+			log.info("Finalize tourney: {}", t);
 		}
 	}
 
@@ -187,7 +188,7 @@ class HibernateTourneyProcessor {
 				"WHERE d.started IS NOT null AND d.finished IS null");
 
 		final int i = query.executeUpdate();
-		log.info("Clear not required registrations: " + i);
+		log.info("Clear not required registrations: {}", i);
 	}
 
 	Collection<TourneyResubscription> resortRegistrations(Session session, int tourney, int round) {

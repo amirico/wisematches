@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.game;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,7 +38,7 @@ public class WaitingGameController extends AbstractGameController {
 	private BlacklistManager blacklistManager;
 	private RestrictionManager restrictionManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.game.waiting");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AccountController");
 
 	public WaitingGameController() {
 	}
@@ -46,9 +47,7 @@ public class WaitingGameController extends AbstractGameController {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String showWaitingGames(Model model) {
 		final Player principal = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Loading waiting games for personality: " + principal);
-		}
+		log.debug("Loading waiting games for personality: {}", principal);
 		model.addAttribute("waitingGames", createWaitingGamesView(principal));
 		return "/content/playground/scribble/join";
 	}
@@ -58,9 +57,7 @@ public class WaitingGameController extends AbstractGameController {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public DeprecatedResponse showWaitingGamesAjax() {
 		final Player principal = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Loading waiting games for personality: " + principal);
-		}
+		log.debug("Loading waiting games for personality: {}", principal);
 		return DeprecatedResponse.success(null, "waitingGames", createWaitingGamesView(principal));
 	}
 
@@ -69,9 +66,7 @@ public class WaitingGameController extends AbstractGameController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public DeprecatedResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
 		final Player player = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Cancel proposal " + proposal + " for player " + player);
-		}
+		log.debug("Cancel proposal {} for player {}", proposal, player);
 
 		try {
 			final CriterionViolation violation = checkGlobalViolation(player);
@@ -103,9 +98,7 @@ public class WaitingGameController extends AbstractGameController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public DeprecatedResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
 		final Player player = getPrincipal();
-		if (log.isDebugEnabled()) {
-			log.debug("Cancel proposal " + proposal + " for player " + player);
-		}
+		log.debug("Cancel proposal {} for player {}", proposal, player);
 
 		try {
 			if (proposalManager.reject(proposal, player) == null) {
@@ -131,9 +124,7 @@ public class WaitingGameController extends AbstractGameController {
 				activeProposals.add(new GameProposalForm(proposal, Collections.singleton(globalViolation)));
 			}
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("Found " + activeProposals.size() + " proposals for personality: " + principal);
-		}
+		log.debug("Found {} proposals for personality: {}", activeProposals.size(), principal);
 		return new WaitingGamesForm(globalViolation, activeProposals);
 	}
 

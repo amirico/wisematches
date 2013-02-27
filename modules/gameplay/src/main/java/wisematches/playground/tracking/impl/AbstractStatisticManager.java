@@ -1,6 +1,7 @@
 package wisematches.playground.tracking.impl;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
@@ -45,7 +46,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 
 	private final Set<StatisticsListener> statisticsListeners = new CopyOnWriteArraySet<>();
 
-	private static final Logger log = Logger.getLogger("wisematches.playground.tracking");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.playground.tracking");
 
 	protected AbstractStatisticManager(StatisticsTrapper<E> statisticsTrapper) {
 		this.statisticsTrapper = statisticsTrapper;
@@ -137,7 +138,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 					saveStatisticEditor(editor);
 					fireStatisticUpdated(player, editor);
 				} catch (Throwable th) {
-					log.error("Statistic can't be updated for player: " + personality, th);
+					log.error("Statistic can't be updated for player: {}", personality, th);
 				} finally {
 					statisticLock.unlock();
 				}
@@ -157,7 +158,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 				saveStatisticEditor(editor);
 				fireStatisticUpdated(player, editor);
 			} catch (Throwable th) {
-				log.error("Statistic can't be updated for player: " + player, th);
+				log.error("Statistic can't be updated for player: {}", player, th);
 			} finally {
 				statisticLock.unlock();
 			}
@@ -177,7 +178,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 					saveStatisticEditor(editor);
 					fireStatisticUpdated(player, editor);
 				} catch (Throwable th) {
-					log.error("Statistic can't be updated for player: " + player, th);
+					log.error("Statistic can't be updated for player: {}", player, th);
 				} finally {
 					statisticLock.unlock();
 				}
@@ -199,7 +200,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 				saveStatisticEditor(editor);
 				fireStatisticUpdated(player, editor);
 			} catch (Throwable th) {
-				log.error("Statistic can't be updated for player: " + player, th);
+				log.error("Statistic can't be updated for player: {}", player, th);
 			} finally {
 				statisticLock.unlock();
 			}

@@ -5,6 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -28,9 +30,10 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 	private final TheBoardListener stateListener = new TheBoardListener();
 
 	private static final int MILLIS_IN_DAY = 86400000;//24 * 60 * 60 * 1000;
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.ExpirationManager");
 
 	public ScribbleExpirationManager() {
-		super(ScribbleExpirationType.class);
+		super(ScribbleExpirationType.class, log);
 	}
 
 	@Override
@@ -68,19 +71,19 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 			final ScribbleBoard board = boardManager.openBoard(boardId);
 			if (board != null) {
 				if (!board.isActive()) {
-					log.info("Terminate game: " + boardId);
+					log.info("Terminate game: {}", boardId);
 					board.terminate();
 					return true;
 				} else {
-					log.info("Looks like the game still active: " + boardId);
+					log.info("Looks like the game still active: {}", boardId);
 				}
 			} else {
 				return true; // no board - nothing to do
 			}
 		} catch (BoardLoadingException e) {
-			log.error("Board " + boardId + " can't be loaded for termination", e);
+			log.error("Board {} can't be loaded for termination", boardId, e);
 		} catch (GameMoveException e) {
-			log.error("Board " + boardId + " can't be terminated", e);
+			log.error("Board {} can't be terminated", boardId, e);
 		}
 		return false;
 	}

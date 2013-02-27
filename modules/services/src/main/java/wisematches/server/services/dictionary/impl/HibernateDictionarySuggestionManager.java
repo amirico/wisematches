@@ -1,11 +1,12 @@
 package wisematches.server.services.dictionary.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.LongType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Language;
@@ -32,7 +33,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 
 	private final Set<DictionarySuggestionListener> listeners = new CopyOnWriteArraySet<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.dict.");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.dictionary.SuggestionManager");
 
 	public HibernateDictionarySuggestionManager() {
 	}
@@ -92,7 +93,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 					listener.changeRequestApproved(r);
 				}
 			} catch (Exception ex) {
-				log.error("Change request can't be processed: " + r, ex);
+				log.error("Change request can't be processed: {}", r, ex);
 			}
 		}
 	}

@@ -1,10 +1,11 @@
 package wisematches.playground.scribble;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Robot;
@@ -37,10 +38,10 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 
 	private final ScribbleRobotBrain scribbleRobotBrain = new ScribbleRobotBrain();
 
-	private static final Log log = LogFactory.getLog("wisematches.room.scribble");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.PlayManager");
 
 	public ScribblePlayManager() {
-		super(log, EnumSet.allOf(RobotType.class));
+		super(EnumSet.allOf(RobotType.class), log);
 	}
 
 	@Override

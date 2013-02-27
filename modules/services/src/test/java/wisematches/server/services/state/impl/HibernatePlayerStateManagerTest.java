@@ -25,7 +25,8 @@ import static org.junit.Assert.*;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml"
+		"classpath:/conf/configuration.xml",
+		"classpath:/config/database-config.xml"
 })
 public class HibernatePlayerStateManagerTest {
 	@Autowired

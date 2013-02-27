@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.board;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,7 +26,6 @@ import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleTileForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class ScribbleBoardController extends WisematchesController {
 	private ScribblePlayManager boardManager;
 	private BoardSettingsManager boardSettingsManager;
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.playboard");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ScribbleBoardController");
 	public static final BoardSettings BOARD_SETTINGS = new BoardSettings(false, false, true, true, true, "tiles-set-classic");
 
 	public ScribbleBoardController() {
@@ -94,7 +94,7 @@ public class ScribbleBoardController extends WisematchesController {
 			}
 			return "/content/playground/scribble/playboard";
 		} catch (BoardLoadingException ex) {
-			log.error("Board " + gameId + " can't be loaded", ex);
+			log.error("Board {} can't be loaded", gameId, ex);
 			throw new UnknownEntityException(gameId, "board");
 		}
 	}
@@ -104,9 +104,7 @@ public class ScribbleBoardController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public DeprecatedResponse makeTurnAjax(@RequestParam("b") final long gameId,
 										   @RequestBody final ScribbleWordForm word, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's move: " + gameId + ", word: " + word);
-		}
+		log.debug("Process player's move: {}, word: {}", gameId, word);
 		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
@@ -123,9 +121,7 @@ public class ScribbleBoardController extends WisematchesController {
 	@RequestMapping("pass")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public DeprecatedResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's pass: " + gameId);
-		}
+		log.debug("Process player's pass: {}", gameId);
 		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
@@ -142,9 +138,7 @@ public class ScribbleBoardController extends WisematchesController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public DeprecatedResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
 												@RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's exchange: " + gameId + ", tiles: " + Arrays.toString(tiles));
-		}
+		log.debug("Process player's exchange: {}, tiles: {}", gameId, tiles);
 		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
@@ -165,9 +159,7 @@ public class ScribbleBoardController extends WisematchesController {
 	@RequestMapping("resign")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public DeprecatedResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
-		if (log.isDebugEnabled()) {
-			log.debug("Process player's resign: " + gameId);
-		}
+		log.debug("Process player's resign: {}", gameId);
 		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {

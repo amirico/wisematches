@@ -1,7 +1,8 @@
 package wisematches.server.services.reclame.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,9 +25,9 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class XMLAdvertisementManager implements AdvertisementManager {
-	private final Map<AdsBlockKey, AdvertisementBlock> advertisementBlocks = new HashMap<AdsBlockKey, AdvertisementBlock>();
+	private final Map<AdsBlockKey, AdvertisementBlock> advertisementBlocks = new HashMap<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.adds");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.reclame.XMLAdvertisementManager");
 
 	private static final DocumentBuilderFactory BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
@@ -37,7 +38,7 @@ public class XMLAdvertisementManager implements AdvertisementManager {
 	public AdvertisementBlock getAdvertisementBlock(String name, Locale language) {
 		AdvertisementBlock advertisementBlock = advertisementBlocks.get(new AdsBlockKey(name, language));
 		if (advertisementBlock == null) {
-			log.error("No adds block for language " + language + " by name " + name);
+			log.error("No adds block for language {} by name {}", language, name);
 		}
 		return advertisementBlock;
 	}

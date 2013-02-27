@@ -1,7 +1,8 @@
 package wisematches.server.services.props.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.server.services.props.ReliablePropertiesManager;
 
@@ -22,7 +23,7 @@ public class FilePropertiesManager implements ReliablePropertiesManager, Initial
 	private final Lock lock = new ReentrantLock();
 	private final Map<String, Serializable> cache = new ConcurrentHashMap<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.properties");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.properties.FileManager");
 
 	public FilePropertiesManager() {
 	}

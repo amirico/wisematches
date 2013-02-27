@@ -1,7 +1,8 @@
 package wisematches.playground.scribble.robot;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Personality;
 import wisematches.core.RobotType;
 import wisematches.playground.GameMove;
@@ -21,7 +22,7 @@ import java.util.List;
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 public final class ScribbleRobotBrain {
-	private static final Log log = LogFactory.getLog("wisematches.scribble.robot.brain");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.RobotBrain");
 
 	public ScribbleRobotBrain() {
 	}
@@ -44,9 +45,7 @@ public final class ScribbleRobotBrain {
 
 		final List<Word> words = searchAvailableMoves(board, hand.getTiles(), type);
 		if (words == null) {
-			if (log.isInfoEnabled()) {
-				log.info("Dictionary is not iterable. Turn passed.");
-			}
+			log.info("Dictionary is not iterable. Turn passed.");
 			try {
 				board.passTurn(personality);
 			} catch (GameMoveException e) {
@@ -54,22 +53,16 @@ public final class ScribbleRobotBrain {
 			}
 			return;
 		}
-		if (log.isTraceEnabled()) {
-			log.trace("Found " + words.size() + " variants of words ");
-		}
+		log.trace("Found {} variants of words", words.size());
 
 		final Word word = selectResultWord(words, type, board.getScoreEngine(), board);
-		if (log.isDebugEnabled()) {
-			log.debug("Robot selected word: " + word);
-		}
+		log.debug("Robot selected word: {}", word);
 
 		try {
 			if (word != null) {
 				try {
 					final GameMove move = board.makeTurn(personality, word);
-					if (log.isDebugEnabled()) {
-						log.debug("Robot made a word and took " + move.getPoints() + " points");
-					}
+					log.debug("Robot made a word and took {} points", move.getPoints());
 				} catch (GameMoveException ex) {
 					log.error("Move can't be done", ex);
 					board.passTurn(personality);
@@ -77,15 +70,11 @@ public final class ScribbleRobotBrain {
 			} else {
 				int bankRemained = Math.min(7, board.getBankRemained());
 				if (bankRemained == 0) {
-					if (log.isDebugEnabled()) {
-						log.debug("No available word. Turn passed.");
-					}
+					log.debug("No available word. Turn passed.");
 					board.passTurn(personality);
 				} else {
 					int[] tiles = selectTilesForExchange(hand, bankRemained);
-					if (log.isDebugEnabled()) {
-						log.debug("No available word. Exchange tiles: " + Arrays.toString(tiles));
-					}
+					log.debug("No available word. Exchange tiles: {}", tiles);
 					board.exchangeTiles(personality, tiles);
 				}
 			}
@@ -105,9 +94,7 @@ public final class ScribbleRobotBrain {
 	}
 
 	List<Word> searchAvailableMoves(ScribbleBoard board, Tile[] tiles, RobotType type) {
-		if (log.isTraceEnabled()) {
-			log.trace("Hand robot tiles: " + Arrays.toString(tiles));
-		}
+		log.trace("Hand robot tiles: {}", (Object) tiles);
 		return analyzeValidWords(board.getDictionary(), board, tiles, type);
 	}
 

@@ -1,7 +1,8 @@
 package wisematches.server.web.security.authentication;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -34,7 +35,7 @@ public class WMAuthenticationFailureHandler implements AuthenticationFailureHand
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	private final Map<String, String> failureUrlMap = new HashMap<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.security");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.security.AuthenticationFailureHandler");
 
 	public WMAuthenticationFailureHandler() {
 	}
@@ -51,9 +52,7 @@ public class WMAuthenticationFailureHandler implements AuthenticationFailureHand
 		if (url != null) {
 			redirect(request, response, url, exception);
 		} else if (defaultFailureUrl == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("No failure URL set, sending 401 Unauthorized error");
-			}
+			log.debug("No failure URL set, sending 401 Unauthorized error");
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed: " + exception.getMessage());
 		} else {
 			redirect(request, response, defaultFailureUrl, exception);
@@ -70,9 +69,7 @@ public class WMAuthenticationFailureHandler implements AuthenticationFailureHand
 
 	protected void redirect(HttpServletRequest request, HttpServletResponse response, String url, AuthenticationException exception) throws IOException {
 		saveException(request, exception);
-		if (log.isDebugEnabled()) {
-			log.debug("Redirecting to " + url);
-		}
+		log.debug("Redirecting to {}", url);
 		redirectStrategy.sendRedirect(request, response, url);
 	}
 

@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.account;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,7 +41,7 @@ public class RecoveryController extends WisematchesController {
 
 	private static final String RECOVERING_PLAYER_EMAIL = "RECOVERY_PLAYER_EMAIL";
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.accoint");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.RecoveryController");
 
 	public RecoveryController() {
 		super("title.recovery");
@@ -49,16 +50,14 @@ public class RecoveryController extends WisematchesController {
 	@RequestMapping(value = "request")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String recoveryRequestPage(HttpSession session, Model model, @Valid @ModelAttribute("recovery") RecoveryRequestForm form, BindingResult result) {
-		if (log.isInfoEnabled()) {
-			log.info("Recovery password for: " + form);
-		}
+		log.info("Recovery password for {}", form);
 
 		if (form.isRecoveryAccount()) {
 			try {
 				final Account account = accountManager.findByEmail(form.getEmail());
 				if (account != null) {
 					final RecoveryToken token = recoveryTokenManager.generateToken(account);
-					log.info("Recovery token generated: " + token);
+					log.info("Recovery token generated: {}", token);
 
 					final Map<String, Object> mailModel = new HashMap<>();
 					mailModel.put("principal", account);
@@ -85,9 +84,7 @@ public class RecoveryController extends WisematchesController {
 	public String recoveredConfirmationAction(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 											  @Valid @ModelAttribute("recovery") RecoveryConfirmationForm form,
 											  BindingResult result, Model model) {
-		if (log.isInfoEnabled()) {
-			log.info("Process recovery confirmation: " + form);
-		}
+		log.info("Process recovery confirmation: {}", form);
 
 		boolean notificationWasSent = false;
 		String email = form.getEmail();

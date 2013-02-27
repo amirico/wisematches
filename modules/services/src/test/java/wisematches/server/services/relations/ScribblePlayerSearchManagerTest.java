@@ -19,10 +19,11 @@ import java.util.List;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/config/database-junit-config.xml",
+		"classpath:/conf/configuration.xml",
+		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
+		"classpath:/config/playground-config.xml",
 		"classpath:/config/scribble-config.xml",
-		"classpath:/config/playground-junit-config.xml"
 })
 public class ScribblePlayerSearchManagerTest {
 	@Autowired
@@ -56,7 +57,7 @@ public class ScribblePlayerSearchManagerTest {
 		int playersCount = playerSearchManager.getTotalCount(player, PlayerSearchArea.PLAYERS);
 		System.out.println(playersCount);
 
-		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.PLAYERS, Orders.of(Order.desc("nickname"), Order.asc("language")), null);
+		List<PlayerEntityBean> playerBeans = playerSearchManager.searchEntities(player, PlayerSearchArea.PLAYERS, Orders.of(Order.desc("player"), Order.asc("language")), null);
 		System.out.println(playerBeans);
 	}
 }

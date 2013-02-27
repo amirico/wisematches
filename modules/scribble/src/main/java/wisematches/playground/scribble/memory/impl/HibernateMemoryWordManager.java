@@ -1,9 +1,11 @@
 package wisematches.playground.scribble.memory.impl;
 
-import org.apache.log4j.Logger;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Personality;
@@ -21,7 +23,8 @@ import java.util.List;
  */
 public class HibernateMemoryWordManager implements MemoryWordManager {
 	private SessionFactory sessionFactory;
-	private static final Logger log = Logger.getLogger("wisematches.server.scribble.memory");
+
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scribble.MemoryManager");
 
 	public HibernateMemoryWordManager() {
 	}

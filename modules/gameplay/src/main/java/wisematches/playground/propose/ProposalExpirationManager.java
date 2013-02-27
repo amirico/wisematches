@@ -1,5 +1,6 @@
 package wisematches.playground.propose;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import wisematches.core.Player;
 import wisematches.core.expiration.impl.AbstractExpirationManager;
@@ -20,7 +21,7 @@ public class ProposalExpirationManager<S extends GameSettings> extends AbstractE
 	private final TheGameProposalListener gameProposalListener = new TheGameProposalListener();
 
 	public ProposalExpirationManager() {
-		super(ProposalExpirationType.class);
+		super(ProposalExpirationType.class, LoggerFactory.getLogger("wisematches.proposal.ExpirationManager"));
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package wisematches.core.personality.player.profile.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import wisematches.core.personality.player.profile.PlayerImageType;
@@ -27,7 +27,7 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 
 	private final Collection<PlayerImagesListener> listeners = new CopyOnWriteArraySet<PlayerImagesListener>();
 
-	private static final Log log = LogFactory.getLog(FilePlayerImagesManager.class);
+	private static final Logger log = LoggerFactory.getLogger("wisematches.player.ImageManager");
 
 	public FilePlayerImagesManager() {
 	}
@@ -98,9 +98,7 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 		}
 
 		final File f = new File(imagesFolder.getFile(), getImageFilename(playerId, type));
-		if (log.isDebugEnabled()) {
-			log.debug("Update player image file: " + f + " (" + f.getAbsolutePath() + ")");
-		}
+		log.debug("Update player image file: {} ({})", f, f.getAbsolutePath());
 
 		boolean added = false;
 		if (!f.exists()) {
@@ -110,12 +108,9 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 			added = true;
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("Update image for player " + playerId + " of type " + type);
-		}
+		log.debug("Update image for player {} of type {}", playerId, type);
 
-		final FileOutputStream out = new FileOutputStream(f);
-		try {
+		try (FileOutputStream out = new FileOutputStream(f)) {
 			FileCopyUtils.copy(stream, out);
 
 			if (added) {
@@ -127,8 +122,6 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 					listener.playerImageUpdated(playerId, type);
 				}
 			}
-		} finally {
-			out.close();
 		}
 
 /*
@@ -160,14 +153,10 @@ public class FilePlayerImagesManager implements PlayerImagesManager {
 	public void setImagesFolder(Resource imagesFolder) throws IOException {
 		this.imagesFolder = imagesFolder;
 
-		if (log.isDebugEnabled()) {
-			log.debug("Change images folder to " + imagesFolder + ". Absolute path: " + imagesFolder.getFile().getAbsolutePath());
-		}
-		if (imagesFolder != null && !imagesFolder.exists()) {
+		log.debug("Change images folder to {}. Absolute path: {}", imagesFolder, imagesFolder.getFile().getAbsolutePath());
+		if (!imagesFolder.exists()) {
 			if (imagesFolder.getFile().mkdirs()) {
-				if (log.isDebugEnabled()) {
-					log.debug("images folder created");
-				}
+				log.debug("images folder created");
 			} else {
 				log.warn("Images folder can't be created by system error");
 			}

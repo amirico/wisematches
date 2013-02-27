@@ -1,7 +1,8 @@
 package wisematches.playground.propose.impl.file;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
@@ -27,7 +28,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 
 	private final Lock lock = new ReentrantLock();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.playground.proposal");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.proposal.FileManager");
 
 	public FileProposalManager() {
 	}
@@ -53,7 +54,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 			}
 			return res;
 		} catch (IOException | ClassNotFoundException ex) {
-			log.error("File proposal can't be loaded from: " + file, ex);
+			log.error("File proposal can't be loaded from: {}", file, ex);
 		} finally {
 			lock.unlock();
 		}
