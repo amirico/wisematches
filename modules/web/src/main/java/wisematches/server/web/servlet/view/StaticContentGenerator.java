@@ -5,8 +5,8 @@
 package wisematches.server.web.servlet.view;
 
 import freemarker.ext.dom.NodeModel;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -34,7 +34,7 @@ public final class StaticContentGenerator {
 
 	private final Map<String, Map<Locale, NodeModel>> cachedFileNames = new HashMap<>();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.web.info");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.view.StaticContentGenerator");
 
 	public StaticContentGenerator() {
 		this("classpath:/i18n/");
@@ -202,7 +202,7 @@ public final class StaticContentGenerator {
 			cache.clear();
 			return m;
 		} catch (Exception ex) {
-			log.warn("Properties can't be loaded from resource " + resource, ex);
+			log.warn("Properties can't be loaded from resource {}", resource, ex);
 			return null;
 		}
 	}

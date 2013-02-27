@@ -1,10 +1,11 @@
 package wisematches.core.task.scheduler;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -19,7 +20,7 @@ import java.util.Map;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class CleaningDayExecutorJob implements Job {
-	private static final Log log = LogFactory.getLog("wisematches.core.task.cleaningday");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.scheduler.CleaningDayJob");
 
 	public CleaningDayExecutorJob() {
 	}

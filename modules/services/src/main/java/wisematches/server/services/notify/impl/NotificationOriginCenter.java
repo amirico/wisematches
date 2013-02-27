@@ -1,7 +1,8 @@
 package wisematches.server.services.notify.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.TaskExecutor;
 import wisematches.core.Member;
@@ -62,7 +63,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 	private final TheScribbleGameExpirationListener gameExpirationListener = new TheScribbleGameExpirationListener();
 	private final TheScribbleProposalExpirationListener proposalExpirationListener = new TheScribbleProposalExpirationListener();
 
-	private static final Log log = LogFactory.getLog("wisematches.server.notice.center");
+	private static final Logger log = LoggerFactory.getLogger("wisematches.notification.OriginCenter");
 
 	public NotificationOriginCenter() {
 	}
@@ -83,9 +84,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 	private void fireNotification(String code, Member player, Object context) {
 		try {
 			notificationDistributor.raiseNotification(code, player, NotificationSender.GAME, context);
-			if (log.isInfoEnabled()) {
-				log.info("Notification was raised to " + player + " [" + code + "]");
-			}
+			log.info("Notification was raised to {} [{}]", player, code);
 		} catch (NotificationException ex) {
 			log.error("Notification can't be sent to player: code=" + code + ", player=" + player.getId(), ex);
 		}
@@ -226,18 +225,18 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 
 				if (processingPlayer != 0) { // finish previous work
 					final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(processingTourney));
-					log.info("Restart notifications for tourney: " + processingTourney + " from position " + processingPlayer);
+					log.info("Restart notifications for tourney: {} from position {}", processingPlayer, processingPlayer);
 					int res = notifyUpCommingTourney(tourney, processingPlayer);
-					log.info("Tourney notifications were sent to " + res + " players");
+					log.info("Tourney notifications were sent to {} players", res);
 				}
 
 				final Tourney.Context context = new Tourney.Context(EnumSet.of(TourneyEntity.State.SCHEDULED));
 				final List<Tourney> tourneys = tourneyManager.searchTourneyEntities(null, context, null, null);
 				for (Tourney tourney : tourneys) {
 					if ((processingTourney == 0 || tourney.getNumber() > processingTourney) && isInSevenDays(tourney.getScheduledDate())) {
-						log.info("Start notifications for tourney: " + tourney.getNumber());
+						log.info("Start notifications for tourney: {}" + tourney.getNumber());
 						int res = notifyUpCommingTourney(tourney, 0);
-						log.info("Tourney notifications were sent to " + res + " players");
+						log.info("Tourney notifications were sent to {} players", res);
 					}
 				}
 			} catch (Throwable ex) {

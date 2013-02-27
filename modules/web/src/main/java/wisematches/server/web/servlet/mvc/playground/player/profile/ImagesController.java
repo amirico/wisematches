@@ -1,7 +1,8 @@
 package wisematches.server.web.servlet.mvc.playground.player.profile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -33,15 +34,15 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/playground/profile/image")
-@Deprecated
 public class ImagesController extends WisematchesController {
 	private ResourceLoader resourceLoader;
 	private PlayerImagesManager playerImagesManager;
 
 	private final Map<PlayerImageType, Resource> noPlayersResources = new HashMap<PlayerImageType, Resource>();
 
-	private static final Log log = LogFactory.getLog(ImagesController.class);
 	public static final String PREVIEW_ATTRIBUTE_NAME = "PLAYER_IMAGE_PREVIEW_FILE";
+
+	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ImagesController");
 
 	public ImagesController() {
 	}
@@ -50,9 +51,7 @@ public class ImagesController extends WisematchesController {
 	public void getPlayerImage(@RequestParam("pid") String playerId,
 							   @RequestParam(value = "preview", required = false) String preview,
 							   Model model, HttpServletResponse response, HttpSession httpSession) throws IOException {
-		if (log.isDebugEnabled()) {
-			log.debug("Load player image: " + playerId);
-		}
+		log.debug("Load player image: {}", playerId);
 
 		if (playerId == null) {
 			throw new IllegalArgumentException("PlayerId is not specified");

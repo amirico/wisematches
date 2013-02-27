@@ -8,7 +8,6 @@
     <name>GameServer</name>
     <packaging>pom</packaging>
 
-    <groupId>wisematches</groupId>
     <artifactId>services</artifactId>
     <version>5.0.0-SNAPSHOT</version>
 
