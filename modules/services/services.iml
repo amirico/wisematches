@@ -5,13 +5,12 @@
       <configuration>
         <fileset id="fileset1" name="XML Application Context" removed="false">
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-config.xml</file>
-          <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-junit-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/awards-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/playground-config.xml</file>
-          <file>file://$MODULE_DIR$/src/test/resources/config/playground-junit-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/restriction-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/properties-config.xml</file>
         </fileset>
       </configuration>
     </facet>

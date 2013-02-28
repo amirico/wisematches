@@ -5,18 +5,15 @@
       <configuration>
         <fileset id="fileset1" name="XML Application Context" removed="false">
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-config.xml</file>
-          <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-junit-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/../scribble/src/main/resources/config/scribble-config.xml</file>
           <file>file://$MODULE_DIR$/../services/src/main/resources/config/awards-config.xml</file>
           <file>file://$MODULE_DIR$/../services/src/main/resources/config/playground-config.xml</file>
           <file>file://$MODULE_DIR$/../services/src/main/resources/config/restriction-config.xml</file>
           <file>file://$MODULE_DIR$/../services/src/main/resources/config/notifications-config.xml</file>
-          <file>file://$MODULE_DIR$/../services/src/main/resources/config/services-config.xml</file>
-          <file>file://$MODULE_DIR$/src/test/resources/config/services-junit-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-servlet.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-app-security.xml</file>
-          <file>file://$MODULE_DIR$/../conf/src/main/resources/conf/configuration.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/properties-config.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -28,10 +25,6 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
       </configuration>
     </facet>
   </component>
