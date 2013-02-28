@@ -33,7 +33,7 @@
         <td nowrap="nowrap"><strong><@message code="game.state.started"/>:</strong></td>
         <td width="100%">
             <div class="gameStartedTime">
-            ${messageSource.formatDate(board.startedTime, locale)}
+            ${messageSource.formatDate(board.startedDate, locale)}
             </div>
         </td>
     </@element>
@@ -42,7 +42,7 @@
         <td nowrap="nowrap"><strong><@message code="game.state.finished"/>:</strong></td>
         <td>
             <div class="gameFinishedTime">
-                <#if board.finishedTime??>${messageSource.formatDate(board.finishedTime, locale)}</#if>
+                <#if board.finishedDate??>${messageSource.formatDate(board.finishedDate, locale)}</#if>
             </div>
         </td>
     </@element>

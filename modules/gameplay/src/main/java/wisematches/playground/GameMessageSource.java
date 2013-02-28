@@ -142,9 +142,9 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 	}
 
 	public long getSpentMinutes(BoardDescription<?, ?> board) {
-		final long startTime = board.getStartedTime().getTime();
+		final long startTime = board.getStartedDate().getTime();
 		final long endTime;
-		final Date finishedTime = board.getFinishedTime();
+		final Date finishedTime = board.getFinishedDate();
 		if (finishedTime != null) {
 			endTime = finishedTime.getTime();
 		} else {

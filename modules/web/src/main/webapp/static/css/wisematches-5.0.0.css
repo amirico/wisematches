@@ -1323,7 +1323,8 @@ a.ui-icon {
     cursor: pointer;
 }
 
-#searchResult th, #searchResult td {
+#searchResult th,
+#searchResult td {
     padding-left: 3px !important;
     padding-right: 3px !important;
     white-space: nowrap !important;
@@ -1341,6 +1342,17 @@ a.ui-icon {
     vertical-align: bottom;
     border-bottom: 1px dashed;
     background: none !important;
+}
+
+.player-search-dlg .data-table-top,
+.player-search-dlg .data-table-content,
+.player-search-dlg .data-table-bottom {
+    border-left: none;
+    border-right: none;
+}
+
+.player-search-dlg .data-table-footer {
+    display: none;
 }
 
 .rating div {

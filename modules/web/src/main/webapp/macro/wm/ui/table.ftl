@@ -33,6 +33,23 @@
 </script>
 </#macro>
 
+<#macro dtnames columns prefix>
+    <#list columns?keys as c>
+    <th><@message code="${prefix}.${c}"/></th>
+    </#list>
+</#macro>
+
+<#macro dtobjects columns>
+[<#list columns?keys as c>
+{
+"sName": '${c}',
+"mDataProp": '${c}',
+"bSortable": ${columns[c]?string}
+}<#if c_has_next>,</#if>
+</#list>]
+</#macro>
+
+
 <#macro header class="" align="left">
 <div class="data-table-header ui-widget-header ui-corner-top ${class}" style="text-align: ${align}"><#nested/></div>
 </#macro>

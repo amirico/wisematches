@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public abstract class AbstractSearchController<T, C> extends WisematchesController {
 	private final String[] columns;
 

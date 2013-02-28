@@ -216,7 +216,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameResolution.FINISHED, board.getResolution());
 		assertNull(board.getPlayerTurn());
-		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getFinishedDate());
 
 		verify(l);
 		assertNull(board.getFinishScore());
@@ -242,7 +242,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameResolution.FINISHED, board.getResolution());
 		assertNull(board.getPlayerTurn());
-		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getFinishedDate());
 		assertEquals(0, board.getWonPlayers().size());
 
 		verify(l);
@@ -270,7 +270,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameResolution.RESIGNED, board.getResolution());
 		assertSame(player1, board.getPlayerTurn());
-		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getFinishedDate());
 	}
 
 	@Test
@@ -288,7 +288,7 @@ public class AbstractGameBoardTest {
 
 		assertEquals(GameResolution.INTERRUPTED, board.getResolution());
 		assertSame(playerTurn, board.getPlayerTurn());
-		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getFinishedDate());
 	}
 
 	@Test
@@ -308,7 +308,7 @@ public class AbstractGameBoardTest {
 
 		assertFalse(board.isRated());
 		assertEquals(GameResolution.INTERRUPTED, board.getResolution());
-		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getFinishedDate());
 	}
 
 	@Test
@@ -330,6 +330,6 @@ public class AbstractGameBoardTest {
 
 		assertTrue(board.isRated());
 		assertEquals(GameResolution.INTERRUPTED, board.getResolution());
-		assertNotNull(board.getFinishedTime());
+		assertNotNull(board.getFinishedDate());
 	}
 }

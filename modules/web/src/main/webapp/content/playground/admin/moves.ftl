@@ -76,4 +76,5 @@ Unknown board. Please check board's id
                 ],
                 "oLanguage":language
         */
-    });</script>
+    });
+</script>

@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @ControllerAdvice
-@SuppressWarnings("unchecked")
 public abstract class WisematchesController {
 	protected GameMessageSource messageSource;
 	protected ServiceResponseFactory responseFactory;
@@ -47,11 +46,7 @@ public abstract class WisematchesController {
 		return PersonalityContext.getPlayer();
 	}
 
-	@Deprecated
-	protected boolean hasRole(String role) {
-		return PersonalityContext.hasRole(role);
-	}
-
+	@SuppressWarnings("unchecked")
 	protected <P extends Player> P getPrincipal(Class<P> type) {
 		final Player principal = getPrincipal();
 		if (principal == null) {

@@ -1,10 +1,10 @@
-<#-- @ftlvariable name="searchColumns" type="java.lang.String[]" -->
-<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.core.search.descriptive.SearchableDescriptor" -->
-<#-- @ftlvariable name="principal" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>
+
+<#assign columns={"title":true, "language":true, "ratingChange":false, "opponents": false, "movesCount":true, "resolution":true, "startedDate":true, "finishedDate":true}/>
 
 <@wm.ui.playground id="pastGamesWidget">
     <@wm.ui.table.header>
@@ -33,14 +33,9 @@
     <@wm.ui.table.content>
     <table id="history" width="100%" class="display">
         <thead>
-        <tr>
-            <#list searchColumns as c>
-                <th><@message code="game.past.history.column.${c}"/></th>
-            </#list>
-        </tr>
+        <tr><@wm.ui.table.dtnames columns, "game.past.history.column"/></tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
     </@wm.ui.table.content>
 
@@ -49,13 +44,7 @@
 
 <script type="text/javascript">
     var history = new wm.game.History(${player.id},
-            [<#list searchColumns as c>
-                <#assign d=searchEntityDescriptor.getProperty(c)!""/>
-                {
-                    "sName": '${c}',
-                    "mDataProp": '${c}',
-                "bSortable": <#if d?has_content>${d.sortable()?string}<#else>false</#if>
-                }<#if c_has_next>,</#if></#list>],
+    <@wm.ui.table.dtobjects columns/>,
             {
                 "sEmptyTable": "<@message code="game.past.history.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
             }
