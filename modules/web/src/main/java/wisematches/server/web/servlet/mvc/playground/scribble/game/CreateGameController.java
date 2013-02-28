@@ -32,7 +32,6 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
-@Deprecated
 public class CreateGameController extends AbstractGameController {
 	private DictionaryManager dictionaryManager;
 	private RestrictionManager restrictionManager;
@@ -60,7 +59,7 @@ public class CreateGameController extends AbstractGameController {
 			if ("robot".equalsIgnoreCase(type)) {
 				initRobotForm(form, parameter);
 			} else if ("wait".equalsIgnoreCase(type)) {
-				initWaitOpponentForm(form, parameter);
+				initWaitingForm(form, parameter);
 			} else if ("challenge".equalsIgnoreCase(type)) {
 				initChallengeForm(form, parameter, locale);
 			} else if ("board".equalsIgnoreCase(type)) {
@@ -172,6 +171,12 @@ public class CreateGameController extends AbstractGameController {
 		}
 	}
 
+
+	private void initDefaultForm(CreateScribbleForm form) {
+		form.setCreateTab(CreateScribbleTab.ROBOT);
+		form.setOpponentsCount(1);
+	}
+
 	private void initRobotForm(CreateScribbleForm form, String parameter) {
 		form.setCreateTab(CreateScribbleTab.ROBOT);
 
@@ -185,7 +190,7 @@ public class CreateGameController extends AbstractGameController {
 		form.setRobotType(type);
 	}
 
-	private void initWaitOpponentForm(CreateScribbleForm form, String parameter) {
+	private void initWaitingForm(CreateScribbleForm form, String parameter) {
 		form.setCreateTab(CreateScribbleTab.WAIT);
 		form.setOpponentsCount(1);
 		if (parameter != null) {
@@ -246,11 +251,6 @@ public class CreateGameController extends AbstractGameController {
 			}
 		} catch (BoardLoadingException ignore) { // do nothing
 		}
-	}
-
-	private void initDefaultForm(CreateScribbleForm form) {
-		form.setCreateTab(CreateScribbleTab.ROBOT);
-		form.setOpponentsCount(1);
 	}
 
 	private ServiceResponse validateOpponentsCount(Player player, int count, Locale locale) {

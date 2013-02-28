@@ -26,8 +26,8 @@
         readOnly: ${viewMode?string},
         language: '${board.settings.language}',
         daysPerMove: ${board.settings.daysPerMove},
-        startedMillis: ${messageSource.getTimeMillis(board.startedTime)},
-        startedMessage: '${messageSource.formatDate(board.startedTime, locale)}',
+        startedMillis: ${messageSource.getTimeMillis(board.startedDate)},
+        startedMessage: '${messageSource.formatDate(board.startedDate, locale)}',
 
         state: {
             active: ${board.active?string},
@@ -41,8 +41,8 @@
         <#if !board.active>
             winners: [<#list board.wonPlayers as winner>${winner.id}<#if winner_has_next>,</#if></#list>],
             resolution: '${board.resolution}',
-            finishTimeMillis: ${messageSource.getTimeMillis(board.finishedTime)},
-            finishTimeMessage: '${messageSource.formatDate(board.finishedTime, locale)}'
+            finishTimeMillis: ${messageSource.getTimeMillis(board.finishedDate)},
+            finishTimeMessage: '${messageSource.formatDate(board.finishedDate, locale)}'
         </#if>},
 
         players: [

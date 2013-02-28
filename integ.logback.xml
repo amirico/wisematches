@@ -14,11 +14,12 @@
         </encoder>
     </appender>
 
-    <logger name="wisematches" level="DEBUG"/>
-
-    <root level="WARN">
-        <appender-ref ref="FileAppender"/>
+    <logger name="wisematches" level="INFO">
         <appender-ref ref="ConsoleAppender"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="FileAppender"/>
     </root>
 </configuration>
 

@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.sdo;
+package wisematches.server.web.servlet.sdo.person;
 
 import wisematches.core.*;
 import wisematches.server.services.state.PlayerStateManager;
@@ -8,19 +8,21 @@ import wisematches.server.services.state.PlayerStateManager;
  */
 public final class PersonalityData {
 	private boolean online;
+	private String nickname;
 	private Personality personality;
 
-	private PersonalityData(Personality personality, boolean online) {
+	private PersonalityData(String nickname, Personality personality, boolean online) {
+		this.nickname = nickname;
 		this.personality = personality;
 		this.online = online;
 	}
 
-	public static PersonalityData get(Personality member, boolean online) {
-		return new PersonalityData(member, online);
+	public static PersonalityData get(String nickname, Personality member, boolean online) {
+		return new PersonalityData(nickname, member, online);
 	}
 
-	public static PersonalityData get(Personality member, PlayerStateManager stateManager) {
-		return new PersonalityData(member, stateManager.isPlayerOnline(member));
+	public static PersonalityData get(String nickname, Personality member, PlayerStateManager stateManager) {
+		return new PersonalityData(nickname, member, stateManager.isPlayerOnline(member));
 	}
 
 	public long getId() {
@@ -28,11 +30,7 @@ public final class PersonalityData {
 	}
 
 	public String getNickname() {
-		if (personality instanceof Member) {
-			Member member = (Member) personality;
-			return member.getNickname();
-		}
-		return null;
+		return nickname;
 	}
 
 	public PersonalityType getType() {

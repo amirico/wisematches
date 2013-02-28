@@ -163,10 +163,10 @@ public class StatisticsTrapperTest {
 		final GameBoard gb = createStrictMock(GameBoard.class);
 		expect(gb.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
 
-		expect(gb.getStartedTime()).andReturn(new Date(time - 2000));
+		expect(gb.getStartedDate()).andReturn(new Date(time - 2000));
 		expect(gb.getGameMoves()).andReturn(Arrays.asList(m1));
 
-		expect(gb.getStartedTime()).andReturn(new Date(time - 1000));
+		expect(gb.getStartedDate()).andReturn(new Date(time - 1000));
 		expect(gb.getGameMoves()).andReturn(Arrays.asList(m2, m3));
 		replay(gb);
 

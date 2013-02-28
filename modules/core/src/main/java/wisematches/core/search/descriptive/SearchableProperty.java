@@ -7,19 +7,18 @@ import java.lang.annotation.*;
  * system.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
- * @see wisematches.core.search.DesiredEntityBean
  */
 @Documented
 @Inherited
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface SearchableProperty {
 	/**
 	 * Returns appropriate column for the attribute.
 	 *
 	 * @return the appropriate column name.
 	 */
-	String column();
+	String column() default "";
 
 	/**
 	 * Indicates is attribute is sortable or not.

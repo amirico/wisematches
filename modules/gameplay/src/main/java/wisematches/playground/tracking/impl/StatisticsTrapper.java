@@ -178,7 +178,7 @@ public class StatisticsTrapper<E extends StatisticsEditor> {
 		final List<GameMove> list = board.getGameMoves();
 		final int i = list.lastIndexOf(move);
 		if (i < 1) {
-			return board.getStartedTime();
+			return board.getStartedDate();
 		}
 		return list.get(i - 1).getMoveTime();
 	}

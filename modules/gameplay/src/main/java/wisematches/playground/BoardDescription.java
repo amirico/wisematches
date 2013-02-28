@@ -47,14 +47,14 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 *
 	 * @return return time when game was started or {@code null} if game was not started yet.
 	 */
-	Date getStartedTime();
+	Date getStartedDate();
 
 	/**
 	 * Returns time when game was finished.
 	 *
 	 * @return return time when game was finished or {@code null} if game is not finished yet.
 	 */
-	Date getFinishedTime();
+	Date getFinishedDate();
 
 
 	/**

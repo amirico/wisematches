@@ -115,7 +115,7 @@ public class HibernateScribbleStatisticsManagerTest {
 
 		reset(board);
 		expect(board.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
-		expect(board.getStartedTime()).andReturn(new Date());
+		expect(board.getStartedDate()).andReturn(new Date());
 		replay(board);
 		boardListener.gameMoveDone(board, new PassTurn(player, 0, new Date()), null);
 		assertEquals(1, statistic.getActiveGames());
@@ -128,7 +128,7 @@ public class HibernateScribbleStatisticsManagerTest {
 
 		reset(board);
 		expect(board.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
-		expect(board.getStartedTime()).andReturn(new Date());
+		expect(board.getStartedDate()).andReturn(new Date());
 		replay(board);
 		boardListener.gameMoveDone(board, new ExchangeMove(player, 0, new Date(), new int[]{}), null);
 		assertEquals(1, statistic.getActiveGames());

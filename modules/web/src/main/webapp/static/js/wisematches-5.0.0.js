@@ -722,7 +722,7 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
     };
 
     this.selectOpponent = function () {
-        playerSearch.openDialog(insertPlayer);
+        playerSearch.openDialog(insertPlayer, 'player-search-dlg');
         return false;
     };
 
@@ -798,10 +798,10 @@ wm.game.History = function (pid, columns, language) {
                     return title;
                 }
             };
-        } else if (a.sName == 'players') {
+        } else if (a.sName == 'opponents') {
             a.fnRender = function (oObj) {
                 var res = "";
-                var opponents = oObj.aData['players'];
+                var opponents = oObj.aData['opponents'];
                 for (var i in opponents) {
                     res += wm.ui.player(opponents[i]);
                     if (i != opponents.length - 1) {
@@ -812,13 +812,14 @@ wm.game.History = function (pid, columns, language) {
             };
         } else if (a.sName == 'ratingChange') {
             a.fnRender = function (oObj) {
-                var rc = oObj.aData['ratingChange'];
+                var hand = oObj.aData['ratingChange'];
+                var change = hand.newRating - hand.oldRating;
                 var res = '';
-                res += '<div class="rating ' + (rc < 0 ? 'down' : rc == 0 ? 'same' : 'up') + '">';
-                res += '<div class="change"><sub>' + (rc < 0 ? '' : '+') + rc + '</sub></div>';
+                res += '<div class="rating ' + (change < 0 ? 'down' : change == 0 ? 'same' : 'up') + '">';
+                res += '<div class="change"><sub>' + (change < 0 ? '' : '+') + change + '</sub></div>';
                 res += '</div>';
                 return res;
-            }
+            };
             /*
              } else if (a.sName == 'resolution') {
              a.fnRender = function (oObj) {
@@ -851,7 +852,17 @@ wm.game.History = function (pid, columns, language) {
             for (var i in aoData) {
                 data[aoData[i]['name']] = aoData[i]['value'];
             }
-            $.post(sSource, JSON.stringify(data), fnCallback);
+            $.post(sSource, JSON.stringify(data), function (result, b, c) {
+                if (result.success) {
+                    result.data.sEcho = result.data.echo;
+                    result.data.iTotalRecords = result.data.totalRecords;
+                    result.data.iTotalDisplayRecords = result.data.totalDisplayRecords;
+                    result.data.aaData = result.data.data;
+                    fnCallback(result.data, b, c);
+                } else {
+                    wm.ui.unlock(null, result.summary, true);
+                }
+            });
         },
         "oLanguage": language
     });
@@ -910,11 +921,12 @@ wm.game.Search = function (columns, scriplet, language) {
         $("#searchPlayerWidget").dialog('close');
     };
 
-    this.openDialog = function (c) {
+    this.openDialog = function (c, clazz) {
         callback = c;
         reloadContent();
         $("#searchPlayerWidget").dialog({
             title: language['title'],
+            dialogClass: clazz,
             modal: true,
             width: 800,
             buttons: [

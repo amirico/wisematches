@@ -68,8 +68,8 @@ public final class ScribbleObjectsConverter {
 			state.put("winners", res);
 //			state.put("ratings", board.getRatingChanges());
 			state.put("resolution", board.getResolution());
-			state.put("finishTimeMillis", board.getFinishedTime().getTime());
-			state.put("finishTimeMessage", messageSource.formatDate(board.getFinishedTime(), locale));
+			state.put("finishTimeMillis", board.getFinishedDate().getTime());
+			state.put("finishTimeMessage", messageSource.formatDate(board.getFinishedDate(), locale));
 		} else {
 			state.put("remainedTimeMillis", messageSource.getRemainedMinutes(board) * 1000 * 60);
 			state.put("remainedTimeMessage", messageSource.formatRemainedTime(board, locale));

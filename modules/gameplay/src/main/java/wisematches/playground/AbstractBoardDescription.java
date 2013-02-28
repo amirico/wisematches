@@ -89,7 +89,7 @@ public class AbstractBoardDescription<S extends GameSettings, H extends Abstract
 	}
 
 	@Override
-	public Date getStartedTime() {
+	public Date getStartedDate() {
 		return startedDate;
 	}
 
@@ -99,7 +99,7 @@ public class AbstractBoardDescription<S extends GameSettings, H extends Abstract
 	}
 
 	@Override
-	public Date getFinishedTime() {
+	public Date getFinishedDate() {
 		return finishedDate;
 	}
 

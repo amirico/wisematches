@@ -9,13 +9,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.server.services.relations.PlayerEntityBean;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
 import wisematches.server.web.servlet.mvc.playground.AbstractSearchController;
-import wisematches.server.web.servlet.sdo.PersonalityData;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
+import wisematches.server.web.servlet.sdo.person.PersonalityData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,16 +26,16 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 @Controller
 @RequestMapping("/playground/players")
-@Deprecated
 public class PlayersController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.PlayersController");
 
 	public PlayersController() {
-		super(new String[]{"player", "ratingG", "ratingA", "activeGames", "finishedGames", "averageMoveTime", "lastMoveTime"});
+		super(new String[]{"player", "language", "ratingG", "ratingA", "activeGames", "finishedGames", "averageMoveTime", "lastMoveTime"});
 	}
 
 	@RequestMapping("")
@@ -56,7 +57,8 @@ public class PlayersController extends AbstractSearchController<PlayerEntityBean
 
 	@Override
 	protected void convertEntity(PlayerEntityBean info, Map<String, Object> map, Locale locale) {
-		map.put("player", PersonalityData.get(personalityManager.getPerson(info.getPlayer()), playerStateManager));
+		final Personality person = personalityManager.getPerson(info.getPlayer());
+		map.put("player", PersonalityData.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager));
 		if (info.getLanguage() != null) {
 			map.put("language", messageSource.getMessage("language." + info.getLanguage().getCode(), locale));
 		} else {
