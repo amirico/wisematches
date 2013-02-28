@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/conf/configuration.xml",
+		"classpath:/config/properties-config.xml",
 		"classpath:/config/database-config.xml"
 })
 public class ScribblePlayManagerTest {

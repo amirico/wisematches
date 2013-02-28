@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNull;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/conf/configuration.xml",
+		"classpath:/config/properties-config.xml",
 		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
 		"classpath:/config/scribble-config.xml",

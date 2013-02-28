@@ -11,13 +11,14 @@
     </facet>
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset1" name="XML Application Context" removed="false">
+        <fileset id="fileset1" name="XML Application Context" removed="false" profiles="test,live">
           <file>file://$MODULE_DIR$/src/main/resources/config/database-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/database-junit-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/src/test/resources/config/personality-junit-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/settings-dev.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/settings-prod.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/properties-config.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -32,7 +33,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
       <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>

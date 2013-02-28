@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
-import wisematches.core.PersonalityListener;
-import wisematches.core.PersonalityManager;
-import wisematches.core.Player;
+import wisematches.core.*;
 import wisematches.playground.*;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.RegularTourneyListener;
@@ -149,7 +146,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	@SuppressWarnings("unchecked")
 	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
 		final Personality personality = move.getPlayer();
-		if (personality instanceof Player) {
+		if (personality instanceof Member) {
 			final Player player = (Player) personality;
 			statisticLock.lock();
 			try {
@@ -169,7 +166,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
 		final Collection<Personality> hands = board.getPlayers();
 		for (Personality personality : hands) {
-			if (personality instanceof Player) {
+			if (personality instanceof Member) {
 				final Player player = (Player) personality;
 				statisticLock.lock();
 				try {
@@ -189,7 +186,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processTourneyFinished(TourneyDivision division) {
 		final Collection<TourneyWinner> tourneyWinners = division.getTourneyWinners();
 		for (TourneyWinner winner : tourneyWinners) {
-			final Player player = personalityManager.getMember(winner.getPlayer());
+			final Member player = personalityManager.getMember(winner.getPlayer());
 			if (player == null) {
 				continue;
 			}

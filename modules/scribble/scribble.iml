@@ -5,9 +5,9 @@
       <configuration>
         <fileset id="fileset1" name="XML Application Context" removed="false">
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-config.xml</file>
-          <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-junit-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/scribble-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/properties-config.xml</file>
         </fileset>
       </configuration>
     </facet>

@@ -13,11 +13,11 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
+            classpath:/config/properties-config.xml
             classpath:/config/database-config.xml
             classpath:/config/personality-config.xml
             classpath:/config/scribble-config.xml
             classpath:/config/playground-config.xml
-            /config/web-app-settings.xml
             /WEB-INF/web-app-security.xml
         </param-value>
     </context-param>

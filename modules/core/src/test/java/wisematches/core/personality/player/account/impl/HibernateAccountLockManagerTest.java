@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+		"classpath:/config/properties-config.xml",
 		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml"
 })
