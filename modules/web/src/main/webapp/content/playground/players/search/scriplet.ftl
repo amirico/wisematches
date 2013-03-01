@@ -1,6 +1,4 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="searchColumns" type="java.util.Collection<java.lang.String>" -->
-<#-- @ftlvariable name="searchEntityDescriptor" type="wisematches.core.search.descriptive.SearchableDescriptor" -->
 <#-- @ftlvariable name="searchArea" type="wisematches.server.services.relations.PlayerSearchArea" -->
 <#-- @ftlvariable name="searchAreas" type="wisematches.server.services.relations.PlayerSearchArea[]" -->
 <#include "/core.ftl">
@@ -23,13 +21,14 @@
     <table id="searchResult" class="display">
         <thead>
         <tr>
-            <#list searchColumns as c>
-                <th <#if c="player">width="100%"</#if>><@message code="search.column.${c}"/>
-                    <#if c=="ratingA" || c=="ratingG">
-                    <@wm.ui.info><@message code="search.column.${c}.description"/></@wm.ui.info>
-                </#if>
-                </th>
-            </#list>
+            <th width="100%"><@message code="search.column.player"/></th>
+            <th><@message code="search.column.language"/></th>
+            <th><@message code="search.column.ratingG"/> <@wm.ui.info><@message code="search.column.ratingG.description"/></@wm.ui.info></th>
+            <th><@message code="search.column.ratingA"/> <@wm.ui.info><@message code="search.column.ratingA.description"/></@wm.ui.info></th>
+            <th><@message code="search.column.activeGames"/></th>
+            <th><@message code="search.column.finishedGames"/></th>
+            <th><@message code="search.column.averageMoveTime"/></th>
+            <th><@message code="search.column.lastMoveTime"/></th>
         </tr>
         </thead>
         <tbody>
@@ -42,12 +41,18 @@
 
 <script type="text/javascript">
     var playerSearch = new wm.game.Search(
-            [<#list searchColumns as c>{
-                "sName": '${c}',
-                "mDataProp": '${c}',
-                "bSortable": ${searchEntityDescriptor.getProperty(c).sortable()?string}
-            }<#if c_has_next>,</#if></#list>],
-    ${scriplet?string}, {
+            [
+                {"mDataProp": 'player', bSortable: true},
+                {"mDataProp": 'language', bSortable: true},
+                {"mDataProp": 'ratingG', bSortable: true},
+                {"mDataProp": 'ratingA', bSortable: true},
+                {"mDataProp": 'activeGames', bSortable: true},
+                {"mDataProp": 'finishedGames', bSortable: true},
+                {"mDataProp": 'averageMoveTime', bSortable: true},
+                {"mDataProp": 'lastMoveTime', bSortable: true}
+            ],
+    ${scriplet?string},
+            {
                 title: '<@message code="search.label"/>',
                 close: '<@message code="button.close"/>'
             });
