@@ -14,66 +14,58 @@ import wisematches.core.Player;
 import wisematches.server.services.relations.PlayerEntityBean;
 import wisematches.server.services.relations.PlayerSearchArea;
 import wisematches.server.services.relations.ScribblePlayerSearchManager;
-import wisematches.server.web.servlet.mvc.playground.AbstractSearchController;
+import wisematches.server.web.servlet.mvc.WisematchesController;
+import wisematches.server.web.servlet.sdo.DataTablesRequest;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
-import wisematches.server.web.servlet.sdo.person.PersonalityData;
+import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
+import wisematches.server.web.servlet.sdo.person.PersonalityLongInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 @Controller
 @RequestMapping("/playground/players")
-public class PlayersController extends AbstractSearchController<PlayerEntityBean, PlayerSearchArea> {
+public class PlayersController extends WisematchesController {
+	private ScribblePlayerSearchManager playerSearchManager;
+
 	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.PlayersController");
 
 	public PlayersController() {
-		super(new String[]{"player", "language", "ratingG", "ratingA", "activeGames", "finishedGames", "averageMoveTime", "lastMoveTime"});
 	}
 
 	@RequestMapping("")
 	public String showPlayersPage(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model) {
 		model.addAttribute("searchArea", area);
 		model.addAttribute("searchAreas", AREAS);
-		model.addAttribute("searchColumns", getColumns());
-		model.addAttribute("searchEntityDescriptor", getEntityDescriptor());
 		return "/content/playground/players/search/view";
 	}
 
 	@RequestMapping("load.ajax")
-	public ServiceResponse loadPlayersService(@RequestParam("area") String areaName, @RequestBody Map<String, Object> request, Locale locale) {
+	public ServiceResponse loadPlayersService(@RequestParam("area") String areaName, @RequestBody DataTablesRequest request, Locale locale) {
 		final Player player = getPrincipal();
 		final PlayerSearchArea area = PlayerSearchArea.valueOf(areaName.toUpperCase());
 		log.debug("Loading players for area: {} for player ", area, player);
-		return responseFactory.success(loadData(player, request, area, locale));
-	}
 
-	@Override
-	protected void convertEntity(PlayerEntityBean info, Map<String, Object> map, Locale locale) {
-		final Personality person = personalityManager.getPerson(info.getPlayer());
-		map.put("player", PersonalityData.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager));
-		if (info.getLanguage() != null) {
-			map.put("language", messageSource.getMessage("language." + info.getLanguage().getCode(), locale));
-		} else {
-			map.put("language", messageSource.getMessage("search.err.language", locale));
+		final int totalCount = playerSearchManager.getTotalCount(player, area);
+		final List<PlayerEntityBean> beans = playerSearchManager.searchEntities(player, area, request.getOrders(), request.getLimit());
+		final List<PersonalityLongInfo> rows = new ArrayList<>();
+		for (PlayerEntityBean bean : beans) {
+			final Personality person = personalityManager.getPerson(bean.getPlayer());
+			final PersonalityInfo pi = PersonalityInfo.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
+			rows.add(new PersonalityLongInfo(pi, bean, messageSource, locale));
 		}
-		map.put("ratingG", info.getRatingG());
-		map.put("ratingA", info.getRatingA());
-		map.put("activeGames", info.getActiveGames());
-		map.put("finishedGames", info.getFinishedGames());
-		map.put("lastMoveTime", info.getLastMoveTime() != null ? messageSource.formatDate(info.getLastMoveTime(), locale) : messageSource.getMessage("search.err.nomoves", locale));
-		map.put("averageMoveTime", info.getAverageMoveTime() != 0 ? messageSource.formatTimeMinutes((long) (info.getAverageMoveTime() / 1000 / 60), locale) : messageSource.getMessage("search.err.nomoves", locale));
+		return responseFactory.success(request.replay(totalCount, rows));
 	}
 
 	@Autowired
 	public void setPlayerSearchManager(ScribblePlayerSearchManager playerSearchManager) {
-		setEntitySearchManager(playerSearchManager);
+		this.playerSearchManager = playerSearchManager;
 	}
 }

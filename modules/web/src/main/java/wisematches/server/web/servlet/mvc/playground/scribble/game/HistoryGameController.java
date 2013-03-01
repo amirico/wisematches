@@ -13,10 +13,10 @@ import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.client.ScribbleDescriptorObj;
 import wisematches.server.web.servlet.sdo.DataTablesRequest;
 import wisematches.server.web.servlet.sdo.DataTablesResponse;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
+import wisematches.server.web.servlet.sdo.game.ScribbleGameInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,9 +64,9 @@ public class HistoryGameController extends AbstractGameController {
 			}
 			final Range limit = tableRequest.getLimit();
 			final List<ScribbleDescription> descriptors = searchManager.searchEntities(player, FINISHED_GAMES_CTX, orders, limit);
-			final List<ScribbleDescriptorObj> rows = new ArrayList<>(descriptors.size());
+			final List<ScribbleGameInfo> rows = new ArrayList<>(descriptors.size());
 			for (ScribbleDescription description : descriptors) {
-				rows.add(new ScribbleDescriptorObj(description, messageSource, playerStateManager, locale));
+				rows.add(new ScribbleGameInfo(description, messageSource, playerStateManager, locale));
 			}
 			return responseFactory.success(new DataTablesResponse(totalCount, rows, tableRequest));
 		}

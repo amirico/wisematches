@@ -1,11 +1,11 @@
-package wisematches.server.web.servlet.mvc.playground.scribble.game.client;
+package wisematches.server.web.servlet.sdo.game;
 
 import wisematches.core.Personality;
 import wisematches.playground.GameMessageSource;
 import wisematches.playground.GamePlayerHand;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.server.services.state.PlayerStateManager;
-import wisematches.server.web.servlet.sdo.person.PersonalityData;
+import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -14,13 +14,13 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleDescriptorObj {
+public class ScribbleGameInfo {
 	private final Locale locale;
 	private final GameMessageSource messageSource;
 	private final ScribbleDescription description;
 	private final PlayerStateManager playerStateManager;
 
-	public ScribbleDescriptorObj(ScribbleDescription description, GameMessageSource messageSource, PlayerStateManager playerStateManager, Locale locale) {
+	public ScribbleGameInfo(ScribbleDescription description, GameMessageSource messageSource, PlayerStateManager playerStateManager, Locale locale) {
 		this.locale = locale;
 		this.description = description;
 		this.messageSource = messageSource;
@@ -63,12 +63,12 @@ public class ScribbleDescriptorObj {
 		return null;
 	}
 
-	public PersonalityData[] getPlayers() {
+	public PersonalityInfo[] getPlayers() {
 		final List<Personality> players = description.getPlayers();
-		final PersonalityData[] ps = new PersonalityData[players.size()];
+		final PersonalityInfo[] ps = new PersonalityInfo[players.size()];
 		int index = 0;
 		for (Personality person : players) {
-			ps[index++] = PersonalityData.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
+			ps[index++] = PersonalityInfo.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
 		}
 		return ps;
 	}

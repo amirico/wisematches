@@ -165,13 +165,10 @@ wm.ui = new function () {
                         if (!o[key]) {
                             o[key] = [];
                         }
-                        console.log('index=' + index);
                         o[key][index] = obj.value;
-                        //console.log(key + ".push(" + obj.value + ")");
                         return;
                     }
                 }
-                //console.log(obj.name+"=" + obj.value);
                 o[obj.name] = obj.value;
             }
             else {
@@ -895,9 +892,9 @@ wm.game.Search = function (columns, scriplet, language) {
     var search = this;
 
     $.each(columns, function (i, a) {
-        if (a.sName == 'player') {
-            a.fnRender = function (oObj) {
-                return wm.ui.player(oObj.aData.player, !scriplet);
+        if (a.mDataProp == 'player') {
+            a.mRender = function (data, type, row) {
+                return wm.ui.player(data, !scriplet);
             };
         }
     });
@@ -913,15 +910,9 @@ wm.game.Search = function (columns, scriplet, language) {
         ],
         "sAjaxSource": "/playground/players/load.ajax",
         "fnServerData": function (sSource, aoData, fnCallback) {
-            var data = {};
-            for (var i in aoData) {
-                data[aoData[i]['name']] = aoData[i]['value'];
-            }
-            $.post(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), JSON.stringify(data), function (json) {
-                if (json.success) {
-                    players = json.data.aaData;
-                    fnCallback(json.data);
-                }
+            $.fn.dataTable.defaults.fnServerData(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), aoData, function (res) {
+                players = res.aaData;
+                fnCallback(res);
             });
         }
     });

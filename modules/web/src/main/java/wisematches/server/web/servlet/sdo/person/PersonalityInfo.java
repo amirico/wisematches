@@ -6,23 +6,23 @@ import wisematches.server.services.state.PlayerStateManager;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class PersonalityData {
+public final class PersonalityInfo {
 	private boolean online;
 	private String nickname;
 	private Personality personality;
 
-	private PersonalityData(String nickname, Personality personality, boolean online) {
+	private PersonalityInfo(String nickname, Personality personality, boolean online) {
 		this.nickname = nickname;
 		this.personality = personality;
 		this.online = online;
 	}
 
-	public static PersonalityData get(String nickname, Personality member, boolean online) {
-		return new PersonalityData(nickname, member, online);
+	public static PersonalityInfo get(String nickname, Personality member, boolean online) {
+		return new PersonalityInfo(nickname, member, online);
 	}
 
-	public static PersonalityData get(String nickname, Personality member, PlayerStateManager stateManager) {
-		return new PersonalityData(nickname, member, stateManager.isPlayerOnline(member));
+	public static PersonalityInfo get(String nickname, Personality member, PlayerStateManager stateManager) {
+		return new PersonalityInfo(nickname, member, stateManager.isPlayerOnline(member));
 	}
 
 	public long getId() {

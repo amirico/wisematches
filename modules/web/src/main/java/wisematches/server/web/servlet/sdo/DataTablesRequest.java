@@ -6,6 +6,7 @@ import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * {
@@ -93,5 +94,9 @@ public class DataTablesRequest implements Serializable {
 
 	public Range getLimit() {
 		return Range.limit(displayStart, displayLength);
+	}
+
+	public DataTablesResponse replay(int totalCount, List<?> rows) {
+		return new DataTablesResponse(totalCount, rows, this);
 	}
 }
