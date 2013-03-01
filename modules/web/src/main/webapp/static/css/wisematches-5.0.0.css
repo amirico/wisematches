@@ -1390,8 +1390,17 @@ a.ui-icon {
     background: url("../images/scribble/board/dynamic.png") no-repeat -76px 0 !important;
 }
 
+#history th,
 #history td {
     white-space: nowrap;
+}
+
+#history td.cell-title {
+    width: 100%;
+}
+
+#history td.cell-moves {
+    text-align: center;
 }
 
 #pastGamesWidget .title, #pastGamesWidget .title span, #activeGamesWidget .title, #activeGamesWidget .title span {

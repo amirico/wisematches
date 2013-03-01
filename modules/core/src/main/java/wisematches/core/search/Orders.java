@@ -3,6 +3,7 @@ package wisematches.core.search;
 import org.hibernate.Criteria;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -40,6 +41,21 @@ public final class Orders implements Iterable<Order> {
 		orders1[0] = o1;
 		System.arraycopy(res, 0, orders1, 1, res.length);
 		return new Orders(orders1);
+	}
+
+	public Orders map(Map<String, String> maps) {
+		int index = 0;
+		final Order[] res = new Order[orders.length];
+		for (Order order : orders) {
+			final String s = maps.get(order.getPropertyName());
+			if (s != null) {
+				res[index] = order.isAscending() ? Order.asc(s) : Order.desc(s);
+			} else {
+				res[index] = order;
+			}
+			index++;
+		}
+		return Orders.all(res);
 	}
 
 	public String apply(String query) {
