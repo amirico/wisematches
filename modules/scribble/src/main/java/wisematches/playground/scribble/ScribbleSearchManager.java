@@ -49,9 +49,9 @@ public class ScribbleSearchManager implements BoardSearchManager<ScribbleDescrip
 
 		String queryString = (count ? "select count(*) " : "") + "from ScribbleDescription d left join d.hands h where :pid=h.playerId and ";
 		if (ctx.isActive()) {
-			queryString += " d.finishedTime is null";
+			queryString += " d.finishedDate is null";
 		} else {
-			queryString += " d.resolution is not null";
+			queryString += " d.finishedDate is not null";
 		}
 
 		if (orders != null) {

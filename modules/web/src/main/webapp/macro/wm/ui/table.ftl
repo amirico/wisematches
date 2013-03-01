@@ -5,11 +5,6 @@
     wm.ui.dataTable = function (selector, opts) {
         var $2 = $(selector);
         var dataTableLanguage = {
-            "sUrl": "",
-            "bJQueryUI": true,
-            "sInfoPostFix": "",
-            "sPaginationType": "full_numbers",
-            "sDom": '<"data-table-top"<"ui-widget-content">><"data-table-content"t><"data-table-bottom"<"ui-widget-content"rlip>>',
             "oLanguage": {
                 "sProcessing": "<@message code="datatable.processing.label"/>",
                 "sLengthMenu": "<@message code="datatable.menu.label"/>",
@@ -24,31 +19,11 @@
                     "sLast": "&nbsp"
                 }
             },
-            "fnInitComplete": function () {
-                $('.dataTables_scrollBody').jScrollPane({showArrows: false});
-            }
         };
         return $2.dataTable($.extend(true, dataTableLanguage, opts));
     };
 </script>
 </#macro>
-
-<#macro dtnames columns prefix>
-    <#list columns?keys as c>
-    <th><@message code="${prefix}.${c}"/></th>
-    </#list>
-</#macro>
-
-<#macro dtobjects columns>
-[<#list columns?keys as c>
-{
-"sName": '${c}',
-"mDataProp": '${c}',
-"bSortable": ${columns[c]?string}
-}<#if c_has_next>,</#if>
-</#list>]
-</#macro>
-
 
 <#macro header class="" align="left">
 <div class="data-table-header ui-widget-header ui-corner-top ${class}" style="text-align: ${align}"><#nested/></div>

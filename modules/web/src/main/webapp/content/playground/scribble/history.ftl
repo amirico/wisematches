@@ -4,8 +4,6 @@
 
 <@wm.ui.table.dtinit/>
 
-<#assign columns={"title":true, "language":true, "ratingChange":false, "opponents": false, "movesCount":true, "resolution":true, "startedDate":true, "finishedDate":true}/>
-
 <@wm.ui.playground id="pastGamesWidget">
     <@wm.ui.table.header>
         <#if player != principal>
@@ -33,7 +31,16 @@
     <@wm.ui.table.content>
     <table id="history" width="100%" class="display">
         <thead>
-        <tr><@wm.ui.table.dtnames columns, "game.past.history.column"/></tr>
+        <tr>
+            <th><@message code="game.past.history.column.title"/></th>
+            <th><@message code="game.past.history.column.language"/></th>
+            <th><@message code="game.past.history.column.ratingChange"/></th>
+            <th><@message code="game.past.history.column.opponents"/></th>
+            <th><@message code="game.past.history.column.movesCount"/></th>
+            <th><@message code="game.past.history.column.resolution"/></th>
+            <th><@message code="game.past.history.column.startedDate"/></th>
+            <th><@message code="game.past.history.column.finishedDate"/></th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -44,7 +51,16 @@
 
 <script type="text/javascript">
     var history = new wm.game.History(${player.id},
-    <@wm.ui.table.dtobjects columns/>,
+            [
+                { "sClass": 'cell-title', "mDataProp": 'title', "bSortable": true},
+                { "sClass": 'cell-language', "mDataProp": 'language', "bSortable": true},
+                { "sClass": 'cell-rating', "mDataProp": 'playerHands', "bSortable": true},
+                { "sClass": 'cell-players', "mDataProp": 'players', "bSortable": false},
+                { "sClass": 'cell-moves', "mDataProp": 'movesCount', "bSortable": true},
+                { "sClass": 'cell-resolution', "mDataProp": 'resolution', "bSortable": true},
+                { "sClass": 'cell-started', "mDataProp": 'startedDate', "bSortable": true},
+                { "sClass": 'cell-finished', "mDataProp": 'finishedDate', "bSortable": true}
+            ],
             {
                 "sEmptyTable": "<@message code="game.past.history.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
             }

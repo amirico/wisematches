@@ -153,6 +153,53 @@ wm.ui = new function () {
         contentType: 'application/json'
     });
 
+    var stringify_aoData = function (aoData) {
+        var o = {};
+        var modifiers = ['mDataProp_', 'sSearch_', 'iSortCol_', 'bSortable_', 'bRegex_', 'bSearchable_', 'sSortDir_'];
+        jQuery.each(aoData, function (idx, obj) {
+            if (obj.name) {
+                for (var i = 0; i < modifiers.length; i++) {
+                    if (obj.name.substring(0, modifiers[i].length) == modifiers[i]) {
+                        var index = parseInt(obj.name.substring(modifiers[i].length));
+                        var key = 'a' + modifiers[i].substring(0, modifiers[i].length - 1);
+                        if (!o[key]) {
+                            o[key] = [];
+                        }
+                        console.log('index=' + index);
+                        o[key][index] = obj.value;
+                        //console.log(key + ".push(" + obj.value + ")");
+                        return;
+                    }
+                }
+                //console.log(obj.name+"=" + obj.value);
+                o[obj.name] = obj.value;
+            }
+            else {
+                o[idx] = obj;
+            }
+        });
+        return JSON.stringify(o);
+    };
+
+    $.extend($.fn.dataTable.defaults, {
+        "sUrl": "",
+        "bJQueryUI": true,
+        "sInfoPostFix": "",
+        "sPaginationType": "full_numbers",
+        "sDom": '<"data-table-top"<"ui-widget-content">><"data-table-content"t><"data-table-bottom"<"ui-widget-content"rlip>>',
+        "fnInitComplete": function () {
+            $('.dataTables_scrollBody').jScrollPane({showArrows: false});
+        },
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            $.post(sSource, stringify_aoData(aoData), function (result, b, c) {
+                if (result.success) {
+                    fnCallback(result.data, b, c);
+                } else {
+                    wm.ui.unlock(null, result.summary, true);
+                }
+            })
+        }});
+
     var alertTemplate = function (title, message) {
         var e;
         e = ['<div>', '<div class="content">', '<h2>' + title + '</h2>', '<p>' + message + '</p>', '</div>', '<span class="icon"></span>', '<span class="close"></span>', '</div>'].join("");
@@ -788,50 +835,40 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
 
 wm.game.History = function (pid, columns, language) {
     $.each(columns, function (i, a) {
-        if (a.sName == 'title') {
-            a.fnRender = function (oObj) {
-                var id = oObj.aData['boardId'];
-                var title = oObj.aData['title'];
+        var index;
+        if (a.mDataProp == 'title') {
+            a.mRender = function (data, type, row) {
+                var id = row.boardId;
+                var title = row.title;
                 if (id != 0) {
                     return "<a href='/playground/scribble/board?b=" + id + "'>" + title + "</a>";
                 } else {
                     return title;
                 }
             };
-        } else if (a.sName == 'opponents') {
-            a.fnRender = function (oObj) {
-                var res = "";
-                var opponents = oObj.aData['opponents'];
-                for (var i in opponents) {
-                    res += wm.ui.player(opponents[i]);
-                    if (i != opponents.length - 1) {
-                        res += ', ';
+        } else if (a.mDataProp == 'players') {
+            a.mRender = function (data, type, row) {
+                var res = $.map(data, function (p, i) {
+                    if (p.id != pid) {
+                        return wm.ui.player(p);
                     }
-                }
-                return res;
+                    return null;
+                });
+                return res.join(', ');
             };
-        } else if (a.sName == 'ratingChange') {
-            a.fnRender = function (oObj) {
-                var hand = oObj.aData['ratingChange'];
+        } else if (a.mDataProp == 'playerHands') {
+            a.mRender = function (data, type, row) {
+                var hand = $.grep(data, function (n, i) {
+                    return row.players[i].id == pid;
+                })[0];
                 var change = hand.newRating - hand.oldRating;
                 var res = '';
                 res += '<div class="rating ' + (change < 0 ? 'down' : change == 0 ? 'same' : 'up') + '">';
                 res += '<div class="change"><sub>' + (change < 0 ? '' : '+') + change + '</sub></div>';
+                res += '&nbsp;' + hand.newRating;
                 res += '</div>';
                 return res;
             };
-            /*
-             } else if (a.sName == 'resolution') {
-             a.fnRender = function (oObj) {
-             var id = oObj.aData['boardId'];
-             var state = oObj.aData['resolution'];
-             if (id != 0) {
-             return "<a href='/playground/scribble/board?b=" + id + "'>" + state + "</a>";
-             } else {
-             return state;
-             }
-             }
-             */
         }
     });
 
@@ -847,23 +884,6 @@ wm.game.History = function (pid, columns, language) {
         "bProcessing": true,
         "bServerSide": true,
         "sAjaxSource": "/playground/scribble/history/load.ajax?p=" + pid,
-        "fnServerData": function (sSource, aoData, fnCallback) {
-            var data = {};
-            for (var i in aoData) {
-                data[aoData[i]['name']] = aoData[i]['value'];
-            }
-            $.post(sSource, JSON.stringify(data), function (result, b, c) {
-                if (result.success) {
-                    result.data.sEcho = result.data.echo;
-                    result.data.iTotalRecords = result.data.totalRecords;
-                    result.data.iTotalDisplayRecords = result.data.totalDisplayRecords;
-                    result.data.aaData = result.data.data;
-                    fnCallback(result.data, b, c);
-                } else {
-                    wm.ui.unlock(null, result.summary, true);
-                }
-            });
-        },
         "oLanguage": language
     });
 };

@@ -8,25 +8,25 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.playground.GameRelationship;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
 import wisematches.playground.scribble.ScribbleDescription;
-import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.form.HistoryGameForm;
+import wisematches.server.web.servlet.mvc.playground.scribble.game.client.ScribbleDescriptorObj;
+import wisematches.server.web.servlet.sdo.DataTablesRequest;
+import wisematches.server.web.servlet.sdo.DataTablesResponse;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
-import wisematches.server.web.servlet.sdo.person.PersonalityData;
-import wisematches.server.web.servlet.sdo.table.DataTableRequest;
-import wisematches.server.web.servlet.sdo.table.DataTableResponse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
-@Deprecated
 @RequestMapping("/playground/scribble/history")
 public class HistoryGameController extends AbstractGameController {
 	private static final List<Object> NO_ROWS_LIST = Collections.emptyList();
@@ -48,23 +48,27 @@ public class HistoryGameController extends AbstractGameController {
 	}
 
 	@RequestMapping("load.ajax")
-	public ServiceResponse loadHistoryGames(@RequestParam(value = "p", required = false) Long pid, @RequestBody Map<String, Object> request, Locale locale) {
+	public ServiceResponse loadHistoryGames(@RequestParam(value = "p", required = false) Long pid, @RequestBody DataTablesRequest tableRequest, Locale locale) {
 		final Player player = getPlayerToShow(pid);
 		if (player == null) {
 			return responseFactory.failure("game.history.err.player", locale);
 		}
 
-		final DataTableRequest tableRequest = new DataTableRequest(request);
 		final int totalCount = searchManager.getTotalCount(player, FINISHED_GAMES_CTX);
 		if (totalCount == 0) {
-			return responseFactory.success(new DataTableResponse(0, NO_ROWS_LIST, tableRequest));
+			return responseFactory.success(new DataTablesResponse(0, NO_ROWS_LIST, tableRequest));
 		} else {
-			final List<ScribbleDescription> descriptors = searchManager.searchEntities(player, FINISHED_GAMES_CTX, tableRequest.getOrders(), tableRequest.getLimit());
-			final List<HistoryGameForm> rows = new ArrayList<>(descriptors.size());
-			for (ScribbleDescription description : descriptors) {
-				rows.add(convertDescriptor(description, player, locale));
+			Orders orders = tableRequest.getOrders();
+			if (orders != null) {
+				orders = orders.map(Collections.singletonMap("playerHands", "newRating-oldRating"));
 			}
-			return responseFactory.success(new DataTableResponse(totalCount, rows, tableRequest));
+			final Range limit = tableRequest.getLimit();
+			final List<ScribbleDescription> descriptors = searchManager.searchEntities(player, FINISHED_GAMES_CTX, orders, limit);
+			final List<ScribbleDescriptorObj> rows = new ArrayList<>(descriptors.size());
+			for (ScribbleDescription description : descriptors) {
+				rows.add(new ScribbleDescriptorObj(description, messageSource, playerStateManager, locale));
+			}
+			return responseFactory.success(new DataTablesResponse(totalCount, rows, tableRequest));
 		}
 	}
 
@@ -76,31 +80,5 @@ public class HistoryGameController extends AbstractGameController {
 			player = personalityManager.getMember(pid);
 		}
 		return player;
-	}
-
-	private HistoryGameForm convertDescriptor(ScribbleDescription description, Player player, Locale locale) {
-		final ScribbleSettings settings = description.getSettings();
-		final GameRelationship relationship = description.getRelationship();
-
-		final HistoryGameForm entry = new HistoryGameForm();
-		entry.setBoardId(description.getBoardId());
-		entry.setTitle(messageSource.getBoardTitle(settings.getTitle(), relationship, locale));
-		entry.setLanguage(messageSource.getMessage("language." + settings.getLanguage().name().toLowerCase(), locale));
-		entry.setResolution(messageSource.getMessage("game.resolution." + description.getResolution().name().toLowerCase(), locale));
-		entry.setMovesCount(description.getMovesCount());
-		entry.setRatingChange(description.getPlayerHand(player));
-		entry.setStartedDate(messageSource.formatDate(description.getStartedDate(), locale));
-		entry.setFinishedDate(messageSource.formatDate(description.getFinishedDate(), locale));
-
-		final List<Personality> players1 = description.getPlayers();
-		final PersonalityData[] ps = new PersonalityData[players1.size() - 1];
-		int index = 0;
-		for (Personality person : players1) {
-			if (!person.equals(player)) {
-				ps[index++] = PersonalityData.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
-			}
-		}
-		entry.setOpponents(ps);
-		return entry;
 	}
 }
