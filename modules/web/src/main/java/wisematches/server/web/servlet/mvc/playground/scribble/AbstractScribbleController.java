@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.mvc.playground.scribble.game;
+package wisematches.server.web.servlet.mvc.playground.scribble;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import wisematches.server.web.servlet.mvc.WisematchesController;
  */
 @Controller
 @RequestMapping("/playground/scribble")
-public class AbstractGameController extends WisematchesController {
+public class AbstractScribbleController extends WisematchesController {
 	protected StatisticManager statisticManager;
 	protected ScribblePlayManager playManager;
 	protected ScribbleSearchManager searchManager;
@@ -28,7 +28,7 @@ public class AbstractGameController extends WisematchesController {
 	protected static final ScribbleContext ACTIVE_GAMES_CTX = new ScribbleContext(true);
 	protected static final ScribbleContext FINISHED_GAMES_CTX = new ScribbleContext(false);
 
-	public AbstractGameController() {
+	public AbstractScribbleController() {
 	}
 
 	protected int getActiveGamesCount(Personality principal) {

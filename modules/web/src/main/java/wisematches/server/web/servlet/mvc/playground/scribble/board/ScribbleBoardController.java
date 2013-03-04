@@ -23,6 +23,7 @@ import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
+import wisematches.server.web.servlet.mvc.playground.scribble.ScribbleObjectsConverter;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleTileForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
 

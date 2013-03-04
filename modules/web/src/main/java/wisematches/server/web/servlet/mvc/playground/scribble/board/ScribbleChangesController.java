@@ -18,6 +18,7 @@ import wisematches.playground.scribble.comment.GameCommentManager;
 import wisematches.playground.scribble.comment.GameCommentState;
 import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
+import wisematches.server.web.servlet.mvc.playground.scribble.ScribbleObjectsConverter;
 
 import java.util.*;
 import java.util.concurrent.Callable;

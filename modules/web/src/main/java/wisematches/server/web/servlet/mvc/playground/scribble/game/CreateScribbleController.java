@@ -19,6 +19,7 @@ import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.PlayerSearchArea;
+import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleTab;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
@@ -31,13 +32,13 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
-public class CreateGameController extends AbstractGameController {
+public class CreateScribbleController extends AbstractScribbleController {
 	private DictionaryManager dictionaryManager;
 	private RestrictionManager restrictionManager;
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.CreateGameController");
 
-	public CreateGameController() {
+	public CreateScribbleController() {
 	}
 
 	@RequestMapping("create")

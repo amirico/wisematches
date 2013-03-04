@@ -23,6 +23,7 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
 import wisematches.server.web.servlet.mvc.DeprecatedResponse;
+import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.GameProposalForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.WaitingGamesForm;
 
@@ -34,13 +35,13 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/scribble")
 @Deprecated
-public class WaitingGameController extends AbstractGameController {
+public class WaitingScribbleController extends AbstractScribbleController {
 	private BlacklistManager blacklistManager;
 	private RestrictionManager restrictionManager;
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AccountController");
 
-	public WaitingGameController() {
+	public WaitingScribbleController() {
 	}
 
 	@RequestMapping("join")

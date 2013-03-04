@@ -19,7 +19,6 @@ import wisematches.playground.scribble.robot.ScribbleRobotBrain;
  */
 @Controller
 @RequestMapping("/admin")
-@Deprecated
 public class AdministrationController {
 	private ScribblePlayManager boardManager;
 //	private TourneyAdministrationAccess administrationAccess;
@@ -60,8 +59,8 @@ public class AdministrationController {
 			final ScribblePlayerHand hand = board.getPlayerHand(playerTurn);
 
 			model.addAttribute("board", board);
-			model.addAttribute("scoreEngine", board.getScoreEngine());
 			model.addAttribute("words", brain.getAvailableMoves(board, hand.getTiles()));
+			model.addAttribute("scoreEngine", board.getScoreEngine());
 		}
 		return "/content/admin/moves";
 	}

@@ -17,6 +17,7 @@ import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
+import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.PlayerInfoForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleInfoForm;
 
@@ -28,10 +29,10 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/scribble")
 @Deprecated
-public class ActiveGameController extends AbstractGameController {
+public class ActiveScribbleController extends AbstractScribbleController {
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ActiveGameController");
 
-	public ActiveGameController() {
+	public ActiveScribbleController() {
 	}
 
 
