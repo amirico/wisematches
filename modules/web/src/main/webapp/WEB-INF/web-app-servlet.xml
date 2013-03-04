@@ -98,6 +98,7 @@
             <list>
                 <value>wisematches.server.services.award.AwardType</value>
                 <value>wisematches.playground.dictionary.WordAttribute</value>
+                <value>wisematches.server.services.relations.PlayerSearchArea</value>
             </list>
         </property>
 

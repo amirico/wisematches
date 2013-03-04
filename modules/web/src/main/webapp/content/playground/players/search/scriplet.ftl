@@ -1,9 +1,10 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="searchArea" type="wisematches.server.services.relations.PlayerSearchArea" -->
-<#-- @ftlvariable name="searchAreas" type="wisematches.server.services.relations.PlayerSearchArea[]" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>
+
+<#assign searchAreas=[PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS]/>
 
 <#if !scriplet??><#assign scriplet=true/></#if>
 <div id="searchPlayerWidget" <#if scriplet>class="ui-helper-hidden" style="padding-top: 10px" </#if>>
