@@ -40,12 +40,12 @@
             </td>
             <td>
                                     <span>
-                                    ${gameMessageSource.formatDate(announce.getScheduledDate(), locale)}
+                                    ${messageSource.formatDate(announce.getScheduledDate(), locale)}
                                     </span>
                 <br>
                                     <span class="sample">
                                         (<@message code="separator.in"/>
-                                    ${gameMessageSource.formatRemainedTime(announce.getScheduledDate(), locale)})
+                                    ${messageSource.formatRemainedTime(announce.getScheduledDate(), locale)})
                                     </span>
             </td>
         </tr>
@@ -58,13 +58,13 @@
                     <#list languages?reverse as l>
                         <div>
                             <div style="font-weight: normal">
-                                <a href="/playground/tourney/subscriptions?t=${announce.number}&l=${l.code()}">
+                                <a href="/playground/tourney/subscriptions?t=${announce.number}&l=${l.code}">
                                     <@wm.tourney.language l/>
                                 </a>
                             </div>
                             <div style="padding-left: 5px; padding-right: 5px;">-</div>
                             <div class="subscriptionDetails${l}">
-                                <a href="/playground/tourney/subscriptions?t=${announce.number}&l=${l.code()}">
+                                <a href="/playground/tourney/subscriptions?t=${announce.number}&l=${l.code}">
                                 ${subscriptions.getPlayers(l)?string}
                                 </a>
                             </div>

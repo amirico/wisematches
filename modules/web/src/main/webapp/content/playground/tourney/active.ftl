@@ -59,7 +59,7 @@
                             <@wm.tourney.tourney tourney.id, true/>
                         </td>
                         <td>
-                        ${gameMessageSource.formatDate(tourney.startedDate, locale)}
+                        ${messageSource.formatDate(tourney.startedDate, locale)}
                         </td>
                             <#list languages?reverse as l>
                             <td>

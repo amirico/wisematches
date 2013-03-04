@@ -56,9 +56,9 @@
 
                                     <span class="sample">
                                         (<@message code="tourney.started.label"/>:
-                                    ${gameMessageSource.formatDate(tourney.startedDate, locale)},
+                                    ${messageSource.formatDate(tourney.startedDate, locale)},
                                         <@message code="tourney.finished.label"/>:
-                                    ${gameMessageSource.formatDate(tourney.finishedDate, locale)})
+                                    ${messageSource.formatDate(tourney.finishedDate, locale)})
                                     </span>
                                 </td>
 
