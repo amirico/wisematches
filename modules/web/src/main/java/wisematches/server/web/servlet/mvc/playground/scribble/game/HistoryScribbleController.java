@@ -13,6 +13,7 @@ import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
+import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.sdo.DataTablesRequest;
 import wisematches.server.web.servlet.sdo.DataTablesResponse;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
@@ -28,11 +29,11 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/scribble/history")
-public class HistoryGameController extends AbstractGameController {
+public class HistoryScribbleController extends AbstractScribbleController {
 	private static final List<Object> NO_ROWS_LIST = Collections.emptyList();
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.HistoryGameController");
 
-	public HistoryGameController() {
+	public HistoryScribbleController() {
 	}
 
 	@RequestMapping("")

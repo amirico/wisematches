@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.mvc.playground.scribble.board;
+package wisematches.server.web.servlet.mvc.playground.scribble;
 
 
 import org.slf4j.Logger;
