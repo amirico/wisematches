@@ -192,7 +192,7 @@ wm.ui = new function () {
                 if (result.success) {
                     fnCallback(result.data, b, c);
                 } else {
-                    wm.ui.unlock(null, result.summary, true);
+                    wm.ui.unlock(null, result.message, true);
                 }
             })
         }});
@@ -702,7 +702,7 @@ wm.game.Active = function (language) {
                     $("#proposal" + id).fadeOut();
                     wm.ui.unlock(widget, language['cancelled']);
                 } else {
-                    wm.ui.unlock(widget, result.summary, true);
+                    wm.ui.unlock(widget, result.message, true);
                 }
             }
         });
@@ -729,7 +729,7 @@ wm.game.Join = function (language) {
                     wm.util.url.redirect('/playground/scribble/board?b=' + result.data.board);
                 }
             } else {
-                wm.ui.unlock(widget, result.summary, true);
+                wm.ui.unlock(widget, result.message, true);
             }
         });
     };
@@ -740,7 +740,7 @@ wm.game.Join = function (language) {
             if (result.success) {
                 wm.util.url.redirect('/playground/scribble/join');
             } else {
-                wm.ui.unlock(widget, result.summary, true);
+                wm.ui.unlock(widget, result.message, true);
             }
         });
     };
@@ -808,9 +808,9 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
     });
 
     this.submitForm = function () {
-        var $gameWidget = $("#createGame");
+        var gameWidget = $("#createGame");
 
-        wm.ui.lock($gameWidget, language['waiting']);
+        wm.ui.lock(gameWidget, language['waiting']);
         var serializeObject = $("#form").serializeObject();
         if (serializeObject.opponents != undefined && !$.isArray(serializeObject.opponents)) {
             serializeObject.opponents = [serializeObject.opponents];
@@ -824,7 +824,7 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
                             wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
                         }
                     } else {
-                        wm.ui.unlock($gameWidget, response.summary, true);
+                        wm.ui.unlock(gameWidget, response.message, true);
                     }
                 }, 'json');
     };
@@ -1305,7 +1305,7 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                         subscriptions = response.data.subscriptions;
                         wm.ui.unlock(comp, language["register.subscribed"]);
                     } else {
-                        wm.ui.unlock(comp, response.summary, true);
+                        wm.ui.unlock(comp, response.message, true);
                     }
                     updateAnnounceView(true);
                     callback(response.success);
@@ -1320,7 +1320,7 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                         subscriptions = response.data.subscriptions;
                         wm.ui.unlock(comp, language["register.unsubscribed"]);
                     } else {
-                        wm.ui.unlock(comp, response.summary, true);
+                        wm.ui.unlock(comp, response.message, true);
                     }
                     updateAnnounceView(false);
                     callback(response.success);
@@ -1642,7 +1642,7 @@ wm.scribble.Comments = function (board, controller, language) {
                 }
                 controller.execute('comments', 'mark', 'b=' + board.getBoardId());
             } else {
-                wm.ui.unlock(widget, result.summary, true);
+                wm.ui.unlock(widget, result.message, true);
             }
         });
     };
@@ -1673,7 +1673,7 @@ wm.scribble.Comments = function (board, controller, language) {
                 updateStatus();
                 wm.ui.unlock(widget);
             } else {
-                wm.ui.unlock(widget, result.summary, true);
+                wm.ui.unlock(widget, result.message, true);
             }
         });
         return true;
@@ -1784,7 +1784,7 @@ wm.scribble.Comments = function (board, controller, language) {
                 wm.ui.unlock(widget, language['saved']);
             } else {
                 showEditorError();
-                wm.ui.unlock(widget, result.summary);
+                wm.ui.unlock(widget, result.message);
             }
         });
     };
@@ -1913,7 +1913,7 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
                 successHandler(result.data);
                 wm.ui.unlock(memoryWordWidget);
             } else {
-                wm.ui.unlock(memoryWordWidget, result.summary, true);
+                wm.ui.unlock(memoryWordWidget, result.message, true);
             }
         });
     };
@@ -3125,7 +3125,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var sendServerRequest = function (type, data, resultHandler) {
         controller.execute('board', type, 'b=' + id + '&m=' + moves.length, data, function (response) {
             processServerResponse(response);
-            resultHandler.call(playboard, response.success, response.summary);
+            resultHandler.call(playboard, response.success, response.message);
         });
     };
 

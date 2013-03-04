@@ -116,7 +116,7 @@
                             });
                             wm.ui.unlock(widget, "<@message code="friends.status.removed"/>");
                         } else {
-                            wm.ui.unlock(widget, response.summary, true);
+                            wm.ui.unlock(widget, response.message, true);
                         }
                     });
             return false;
