@@ -44,8 +44,8 @@
                 <@wm.tourney.round round.id, true/>
             </div>
             <div class="sample" style="padding-left: 10px">
-                (${gameMessageSource.formatDate(round.startedDate, locale)}
-                <#if round.finishedDate??>— ${gameMessageSource.formatDate(round.finishedDate, locale)}</#if>)
+                (${messageSource.formatDate(round.startedDate, locale)}
+                <#if round.finishedDate??>— ${messageSource.formatDate(round.finishedDate, locale)}</#if>)
             </div>
         </div>
     </@wm.ui.table.toolbar>
@@ -89,7 +89,7 @@
                                                 <#if success?has_content>
                                                     <#assign games=games+1/>
                                                 ${success.points/2}
-                                                    <span style="color: <@wm.ui.staticuccessColor success/>">
+                                                    <span style="color: <@successColor success/>">
                                                         <@message code="tourney.success.${success.name()?lower_case}.label"/>
                                                     </span>
                                                 <#else>

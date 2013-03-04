@@ -25,11 +25,11 @@
             <tr>
                 <td>
                     <#if tourney.startedDate??>
-                        <strong><@message code="tourney.started.label"/></strong> ${gameMessageSource.formatDate(tourney.startedDate, locale)}
+                        <strong><@message code="tourney.started.label"/></strong> ${messageSource.formatDate(tourney.startedDate, locale)}
                     </#if>
                     <#if tourney.finishedDate??>
                         ,
-                        <strong><@message code="tourney.finished.label"/></strong> ${gameMessageSource.formatDate(tourney.finishedDate, locale)}
+                        <strong><@message code="tourney.finished.label"/></strong> ${messageSource.formatDate(tourney.finishedDate, locale)}
                     </#if>
                 </td>
             </tr>
@@ -51,7 +51,7 @@
                         </#list>
                         <#if division.finishedDate??>
                             <span class="sample">
-                                — <@messageLower code="tourney.finished.label"/> ${gameMessageSource.formatDate(division.finishedDate, locale)}
+                                — <@messageLower code="tourney.finished.label"/> ${messageSource.formatDate(division.finishedDate, locale)}
                                 </span>
                         <#else>
                             <#assign activeRound=divisionsTree.getRound(division, division.activeRound)/>

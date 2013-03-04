@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.Player;
@@ -20,11 +23,11 @@ import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.tourney.form.EntityIdForm;
 import wisematches.server.web.servlet.mvc.playground.tourney.form.SubscriptionForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import java.util.*;
 
@@ -36,16 +39,14 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/tourney")
-@Deprecated
 public class TourneyController extends WisematchesController {
+	private StatisticManager statisticManager;
 	private RegularTourneyManager tourneyManager;
 	private RestrictionManager restrictionManager;
-	private StatisticManager statisticManager;
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.TourneyController");
 
 	public TourneyController() {
-		super("title.tourney");
 	}
 
 	@RequestMapping(value = {"", "dashboard"})
@@ -179,20 +180,19 @@ public class TourneyController extends WisematchesController {
 		return "/content/playground/tourney/view/round";
 	}
 
-	@ResponseBody
 	@RequestMapping("changeSubscription.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public DeprecatedResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
+	public ServiceResponse changeSubscriptionAjax(@RequestParam("t") int tourneyNumber, @RequestBody SubscriptionForm form, Locale locale) {
 		final Tourney tourney = tourneyManager.getTourneyEntity(new Tourney.Id(tourneyNumber));
 		if (tourney == null) {
-			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.unknown", locale));
+			return responseFactory.failure("tourney.subscription.err.unknown", locale);
 		}
 
 		Language language = null;
 		if (form.getLanguage() != null) {
 			language = Language.byCode(form.getLanguage());
 			if (language == null) {
-				return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.language", locale));
+				return responseFactory.failure("tourney.subscription.err.language", locale);
 			}
 		}
 
@@ -203,7 +203,7 @@ public class TourneyController extends WisematchesController {
 				section = TourneySection.valueOf(sectionName.toUpperCase());
 			}
 		} catch (IllegalArgumentException ex) {
-			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.section", locale));
+			return responseFactory.failure("tourney.subscription.err.section", locale);
 		}
 
 		final Player principal = getPrincipal();
@@ -212,7 +212,7 @@ public class TourneyController extends WisematchesController {
 			if (doRegistration) {
 				final Restriction restriction = restrictionManager.validateRestriction(principal, "tourneys.count", getActiveTourneysCount(principal));
 				if (restriction != null) {
-					return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscribe.forbidden", restriction.getThreshold(), locale));
+					return responseFactory.failure("tourney.subscribe.forbidden", new Object[]{restriction.getThreshold()}, locale);
 				}
 			}
 
@@ -226,7 +226,7 @@ public class TourneyController extends WisematchesController {
 			}
 		} catch (RegistrationException ex) {
 			log.error("Subscription can't be changed: {}", form, ex);
-			return DeprecatedResponse.failure(messageSource.getMessage("tourney.subscription.err.internal", locale));
+			return responseFactory.failure("tourney.subscription.err.internal", locale);
 		}
 
 		final RegistrationsSummary subscriptions = tourneyManager.getRegistrationsSummary(tourney);
@@ -238,7 +238,7 @@ public class TourneyController extends WisematchesController {
 				stringIntegerMap.put(s.name(), subscriptions.getPlayers(l, s));
 			}
 		}
-		return DeprecatedResponse.success("", "subscriptions", res);
+		return responseFactory.success(res);
 	}
 
 	private void setupAnnounce(Model model) {

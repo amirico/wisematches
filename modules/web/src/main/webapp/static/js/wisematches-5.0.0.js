@@ -1302,7 +1302,7 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, data,
                 function (response) {
                     if (response.success) {
-                        subscriptions = response.data.subscriptions;
+                        subscriptions = response.data;
                         wm.ui.unlock(comp, language["register.subscribed"]);
                     } else {
                         wm.ui.unlock(comp, response.message, true);
@@ -1317,7 +1317,7 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, JSON.stringify({}),
                 function (response) {
                     if (response.success) {
-                        subscriptions = response.data.subscriptions;
+                        subscriptions = response.data;
                         wm.ui.unlock(comp, language["register.unsubscribed"]);
                     } else {
                         wm.ui.unlock(comp, response.message, true);
