@@ -43,7 +43,7 @@ public abstract class WisematchesController {
 
 	@ModelAttribute("principal")
 	public Player getPrincipal() {
-		return PersonalityContext.getPlayer();
+		return PersonalityContext.getPrincipal();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public abstract class WisematchesController {
 		if (principal == null) {
 			throw new AccessDeniedException("unregistered");
 		}
-		if (type.isAssignableFrom(principal.getClass())) {
+		if (!type.isAssignableFrom(principal.getClass())) {
 			throw new AccessDeniedException("unregistered");
 		}
 		return (P) principal;

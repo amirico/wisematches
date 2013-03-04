@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.mvc.playground.scribble.settings.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public class BoardSettingsForm {
 	private String tilesClass;
 	private boolean checkWords;

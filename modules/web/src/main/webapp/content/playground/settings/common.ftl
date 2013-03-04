@@ -12,7 +12,7 @@
         <@wm.ui.field path="settings.language">
             <select id="language" name="language" style="width: 170px;">
                 <#list ["en", "ru"] as l>
-                    <option value="${l}" <#if (locale==l)>selected="selected"</#if>>
+                    <option value="${l}" <#if (settings.language==l)>selected="selected"</#if>>
                         <@message code="language.${l?lower_case}"/>
                     </option>
                 </#list>

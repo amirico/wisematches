@@ -4,6 +4,7 @@ package wisematches.server.web.servlet.mvc.playground.player.settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import wisematches.core.Language;
 import wisematches.core.Member;
 import wisematches.core.personality.player.account.*;
+import wisematches.core.security.authentication.PlayerAuthentication;
+import wisematches.core.security.userdetails.PlayerDetails;
+import wisematches.core.security.userdetails.PlayerDetailsService;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.services.notify.NotificationManager;
@@ -34,26 +38,26 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/account/modify")
-@Deprecated
 public class SettingsController extends WisematchesController {
 	private AccountManager accountManager;
+	private PlayerDetailsService detailsService;
 	private NotificationManager notificationManager;
 	private BoardSettingsManager boardSettingsManager;
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.SettingsController");
 
 	public SettingsController() {
-		super("title.settings");
 	}
 
 	@RequestMapping(value = "")
 	public String modifyAccountPage(Model model, @ModelAttribute("settings") SettingsForm form) {
 		final Member member = getPrincipal(Member.class);
-		if (member.getTimeZone() != null) {
-			form.setTimezone(member.getTimeZone().getID());
+		final Account account = accountManager.getAccount(member.getId());
+		if (account.getTimeZone() != null) {
+			form.setTimezone(account.getTimeZone().getID());
 		}
-		form.setLanguage(member.getLanguage().name().toLowerCase());
-		form.setEmail(member.getEmail());
+		form.setLanguage(account.getLanguage().name().toLowerCase());
+		form.setEmail(account.getEmail());
 		model.addAttribute("timeZones", TimeZoneInfo.getTimeZones());
 
 		final Map<String, NotificationScope> descriptors = new HashMap<>();
@@ -134,41 +138,53 @@ public class SettingsController extends WisematchesController {
 		}
 
 		if (!errors.hasErrors()) {
+			boolean changeRequired = false;
 			final AccountEditor editor = new AccountEditor(account);
 			if (language != editor.getLanguage()) {
+				changeRequired = true;
 				editor.setLanguage(language);
 			}
 			if (!editor.getTimeZone().equals(timeZone)) {
+				changeRequired = true;
 				editor.setTimeZone(timeZone);
 			}
 
 			if (form.isChangeEmail() && !editor.getEmail().equals(form.getEmail())) {
+				changeRequired = true;
 				editor.setEmail(form.getEmail());
 			}
 
 			String pwd = null;
 			if (form.isChangePassword()) {
+				changeRequired = true;
 				pwd = form.getPassword();
 			}
 
-			try {
-				accountManager.updateAccount(editor.createAccount(), pwd);
-				return "redirect:/account/modify#" + form.getOpenedTab();
-			} catch (UnknownAccountException e) {
-				throw new UnknownEntityException(null, "account");
-			} catch (DuplicateAccountException ex) {
-				final Set<String> fieldNames = ex.getFieldNames();
-				if (fieldNames.contains("email")) {
-					errors.rejectValue("email", "account.register.email.err.busy");
+			if (changeRequired) {
+				try {
+					accountManager.updateAccount(editor.createAccount(), pwd);
+
+					final PlayerDetails details = detailsService.loadMemberByEmail(account.getEmail());
+					if (details != null) {
+						SecurityContextHolder.getContext().setAuthentication(new PlayerAuthentication(details));
+					}
+					return "redirect:/account/modify#" + form.getOpenedTab();
+				} catch (UnknownAccountException e) {
+					throw new UnknownEntityException(null, "account");
+				} catch (DuplicateAccountException ex) {
+					final Set<String> fieldNames = ex.getFieldNames();
+					if (fieldNames.contains("email")) {
+						errors.rejectValue("email", "account.register.email.err.busy");
+					}
+					if (fieldNames.contains("nickname")) {
+						errors.rejectValue("nickname", "account.register.nickname.err.busy");
+					}
+				} catch (InadmissibleUsernameException ex) {
+					errors.rejectValue("nickname", "account.register.nickname.err.incorrect");
+				} catch (Exception ex) {
+					log.error("Account can't be created", ex);
+					errors.reject("wisematches.error.internal");
 				}
-				if (fieldNames.contains("nickname")) {
-					errors.rejectValue("nickname", "account.register.nickname.err.busy");
-				}
-			} catch (InadmissibleUsernameException ex) {
-				errors.rejectValue("nickname", "account.register.nickname.err.incorrect");
-			} catch (Exception ex) {
-				log.error("Account can't be created", ex);
-				errors.reject("wisematches.error.internal");
 			}
 		}
 		return modifyAccountPage(model, form);
@@ -177,6 +193,11 @@ public class SettingsController extends WisematchesController {
 	@Autowired
 	public void setAccountManager(AccountManager accountManager) {
 		this.accountManager = accountManager;
+	}
+
+	@Autowired
+	public void setDetailsService(PlayerDetailsService detailsService) {
+		this.detailsService = detailsService;
 	}
 
 	@Autowired
