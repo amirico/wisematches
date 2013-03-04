@@ -19,7 +19,6 @@ import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.PlayerSearchArea;
-import wisematches.server.services.relations.ScribblePlayerSearchManager;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleTab;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
@@ -35,10 +34,6 @@ import java.util.*;
 public class CreateGameController extends AbstractGameController {
 	private DictionaryManager dictionaryManager;
 	private RestrictionManager restrictionManager;
-	private ScribblePlayerSearchManager playerSearchManager;
-
-	private static final String[] SEARCH_COLUMNS = new String[]{"player", "ratingG", "ratingA", "language", "averageMoveTime", "lastMoveTime"};
-	private static final List<PlayerSearchArea> SEARCH_AREAS = Arrays.asList(PlayerSearchArea.values());
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.CreateGameController");
 
@@ -75,9 +70,6 @@ public class CreateGameController extends AbstractGameController {
 		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", player));
 
 		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
-		model.addAttribute("searchAreas", SEARCH_AREAS);
-		model.addAttribute("searchColumns", SEARCH_COLUMNS);
-		model.addAttribute("searchEntityDescriptor", playerSearchManager.getEntityDescriptor());
 
 		if (player.getType().isVisitor()) {
 			form.setCreateTab(CreateScribbleTab.ROBOT);
@@ -274,10 +266,5 @@ public class CreateGameController extends AbstractGameController {
 	@Autowired
 	public void setRestrictionManager(RestrictionManager restrictionManager) {
 		this.restrictionManager = restrictionManager;
-	}
-
-	@Autowired
-	public void setPlayerSearchManager(ScribblePlayerSearchManager playerSearchManager) {
-		this.playerSearchManager = playerSearchManager;
 	}
 }

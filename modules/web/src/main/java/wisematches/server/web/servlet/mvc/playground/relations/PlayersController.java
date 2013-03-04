@@ -21,7 +21,6 @@ import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
 import wisematches.server.web.servlet.sdo.person.PersonalityLongInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,8 +32,6 @@ import java.util.Locale;
 public class PlayersController extends WisematchesController {
 	private ScribblePlayerSearchManager playerSearchManager;
 
-	private static final List<PlayerSearchArea> AREAS = Arrays.asList(PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS);
-
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.PlayersController");
 
 	public PlayersController() {
@@ -43,7 +40,6 @@ public class PlayersController extends WisematchesController {
 	@RequestMapping("")
 	public String showPlayersPage(@RequestParam(value = "area", required = false, defaultValue = "FRIENDS") PlayerSearchArea area, Model model) {
 		model.addAttribute("searchArea", area);
-		model.addAttribute("searchAreas", AREAS);
 		return "/content/playground/players/search/view";
 	}
 
