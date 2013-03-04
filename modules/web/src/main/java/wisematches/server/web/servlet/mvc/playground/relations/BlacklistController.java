@@ -8,9 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wisematches.core.Player;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.relations.form.BlacklistRecordForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +20,6 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/blacklist")
-@Deprecated
 public class BlacklistController extends WisematchesController {
 	private BlacklistManager blacklistManager;
 
@@ -36,25 +35,25 @@ public class BlacklistController extends WisematchesController {
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
-	public DeprecatedResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
+	public ServiceResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
 		final Player player = personalityManager.getMember(form.getPerson());
 		if (player == null) {
-			return DeprecatedResponse.failure(messageSource.getMessage("blacklist.err.unknown", locale));
+			return responseFactory.failure("blacklist.err.unknown", locale);
 		}
 		blacklistManager.addPlayer(getPrincipal(), player, form.getComment());
-		return DeprecatedResponse.SUCCESS;
+		return responseFactory.success();
 	}
 
 	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
-	public DeprecatedResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {
+	public ServiceResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {
 		final Player player = getPrincipal();
 		for (Long id : removeList) {
 			final Player player1 = personalityManager.getMember(id);
 			blacklistManager.removePlayer(player, player1);
 		}
-		return DeprecatedResponse.SUCCESS;
+		return responseFactory.success();
 	}
 
 	@Autowired

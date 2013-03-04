@@ -18,8 +18,9 @@
         <thead>
         <tr>
             <th>
-                <input title="select all friends" type="checkbox" id="removeAll" name="removeAll" value="true"
-                       onchange="wm.friends.selectAll()">
+                <label for="removeAll"></label><input title="select all friends" type="checkbox" id="removeAll"
+                                                      name="removeAll" value="true"
+                                                      onchange="wm.friends.selectAll()">
             </th>
             <th nowrap="nowrap"><@message code="friends.column.player"/></th>
             <th nowrap="nowrap"><@message code="friends.column.since"/></th>
@@ -30,14 +31,16 @@
             <#list friends as f>
             <tr id="friend${f.friend}" class="friend ui-state-default">
                 <td class="friend-checkbox">
-                    <input type="checkbox" name="removeList" value="${f.friend}">
+                    <label>
+                        <input type="checkbox" name="removeList" value="${f.friend}">
+                    </label>
                 </td>
                 <td nowrap="nowrap">
                     <div class="friend-name"><@wm.player.name personalityManager.getMember(f.friend)/></div>
                 </td>
                 <td nowrap="nowrap">
                     <div class="friends-registered">
-                    ${gameMessageSource.formatDate(f.registered, locale)} ${gameMessageSource.formatTime(f.registered, locale)}
+                    ${messageSource.formatDate(f.registered, locale)} ${messageSource.formatTime(f.registered, locale)}
                     </div>
                 </td>
                 <td width="100%">

@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.mvc.playground.relations.form;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public class FriendRelationForm {
 	private long person;
 	private String comment;
