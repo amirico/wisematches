@@ -17,8 +17,9 @@
         <thead>
         <tr>
             <th>
-                <input title="select all player" type="checkbox" id="removeAll" name="removeAll" value="true"
-                       onchange="wm.blacklist.selectAll()">
+                <label for="removeAll"></label><input title="select all player" type="checkbox" id="removeAll"
+                                                      name="removeAll" value="true"
+                                                      onchange="wm.blacklist.selectAll()">
             </th>
             <th><@message code="blacklist.column.player"/></th>
             <th><@message code="blacklist.column.since"/></th>
@@ -29,19 +30,21 @@
             <#list blacklist as r>
             <tr id="blacklist${r.whom}" class="blacklist ui-state-default">
                 <td class="blacklist-checkbox">
-                    <input type="checkbox" name="persons" value="${r.whom}">
+                    <label>
+                        <input type="checkbox" name="persons" value="${r.whom}">
+                    </label>
                 </td>
                 <td>
                     <div class="blacklist-from"><@wm.player.name personalityManager.getMember(r.whom)/></div>
                 </td>
                 <td>
                     <div class="blacklist-date">
-                    ${gameMessageSource.formatDate(r.since, locale)} ${gameMessageSource.formatTime(r.since, locale)}
+                    ${messageSource.formatDate(r.since, locale)} ${messageSource.formatTime(r.since, locale)}
                     </div>
                 </td>
                 <td width="100%">
                     <div class="blacklist-text">
-                    ${gameMessageSource.stringToHTMLString(r.message)}
+                    ${r.message?html}
                     </div>
 
                     <div class="blacklist-controls">
