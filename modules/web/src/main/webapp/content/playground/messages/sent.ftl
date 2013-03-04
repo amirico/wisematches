@@ -43,7 +43,7 @@
                 </td>
                 <td width="100%">
                     <div class="message-text">
-                    ${messageSource.stringToHTMLString(m.text)}
+                    ${m.text?html}
                     </div>
 
                     <div class="message-controls">
@@ -113,7 +113,7 @@
                             });
                             wm.ui.unlock(widget, "<@message code="messages.status.remove.sent"/>");
                         } else {
-                            wm.ui.unlock(widget, response.summary, true);
+                            wm.ui.unlock(widget, response.message, true);
                         }
                     });
             return false;

@@ -101,7 +101,7 @@
                             });
                             wm.ui.unlock(widget, "<@message code="blacklist.status.removed"/>");
                         } else {
-                            wm.ui.unlock(widget, response.summary, true);
+                            wm.ui.unlock(widget, response.message, true);
                         }
                     });
             return false;

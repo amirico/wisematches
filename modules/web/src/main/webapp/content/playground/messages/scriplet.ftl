@@ -33,7 +33,7 @@
                                     wm.ui.unlock(widget, "<@message code="messages.status.sent"/>");
                                     dlg.dialog("close");
                                 } else {
-                                    wm.ui.unlock(widget, result.summary, true);
+                                    wm.ui.unlock(widget, result.message, true);
                                 }
                             });
                         }

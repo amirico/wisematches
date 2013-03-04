@@ -105,7 +105,7 @@
                 if (result.success) {
                     wm.ui.unlock(widget, "<@message code="messages.status.abuse.sent"/>");
                 } else {
-                    wm.ui.unlock(widget, result.summary, true);
+                    wm.ui.unlock(widget, result.message, true);
                 }
             });
             return false;
@@ -138,11 +138,11 @@
                         if (response.success) {
                             var dataTable = $('#messages').dataTable();
                             $.each(msgs, function (i, v) {
-                                dataTable.fnDeleteRow($messages.find("#message" + v).get(0));
+                                dataTable.fnDeleteRow(dataTable.find("#message" + v).get(0));
                             });
                             wm.ui.unlock(widget, "<@message code="messages.status.remove.sent"/>");
                         } else {
-                            wm.ui.unlock(widget, response.summary, true);
+                            wm.ui.unlock(widget, response.message, true);
                         }
                     });
             return false;

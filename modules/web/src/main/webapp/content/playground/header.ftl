@@ -42,9 +42,7 @@
                             <div class="wm-ui-buttonset">
                             <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
                             <#if messageManager?has_content>
-                                <#assign newMessagesCount=0/>
-                            <#--TODO: commented-->
-                            <#--messageManager.getNewMessagesCount(principal)/>-->
+                                <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
                                 <#assign newMessages=newMessagesCount?? && newMessagesCount !=0/>
                                 <a href="/playground/messages/view">
                                     <#if newMessages><img src="<@wm.ui.static "images/dashboard/newMessageIcon.png"/>"

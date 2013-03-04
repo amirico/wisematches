@@ -30,7 +30,6 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/messages")
-@Deprecated
 public class MessageController extends WisematchesController {
 	private MessageManager messageManager;
 	private BlacklistManager blacklistManager;
@@ -100,6 +99,10 @@ public class MessageController extends WisematchesController {
 		final Restriction restriction = restrictionManager.validateRestriction(player, "messages.count", sent);
 		if (restriction != null) {
 			return responseFactory.failure("messages.create.forbidden", new Object[]{restriction.getThreshold()}, locale);
+		}
+
+		if (form.getMessage() == null || form.getMessage().trim().isEmpty()) {
+			return responseFactory.failure("messages.err.empty", locale);
 		}
 
 		Message message = null;

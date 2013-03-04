@@ -140,7 +140,7 @@
                 if (responseJSON.success) {
                     updatePreviewImage();
                 } else {
-                    this.showMessage(responseJSON.summary);
+                    this.showMessage(responseJSON.message);
                 }
             },
             onCancel: function (id, fileName) {
@@ -189,7 +189,7 @@
                                         updateProfileImage();
                                         dialogElement.dialog("close");
                                     } else {
-                                        showErrorMessage(data.summary);
+                                        showErrorMessage(data.message);
                                     }
                                 }
                             });
@@ -214,8 +214,8 @@
                             },
                             success: function (data, textStatus, jqXHR) {
                                 if (!data.success) {
-                                    wm.ui.unlock(null, "<@message code="profile.edit.error"/>: <br><b>" + data.summary + "</b>", true);
-                                    callback(data.summary);
+                                    wm.ui.unlock(null, "<@message code="profile.edit.error"/>: <br><b>" + data.message + "</b>", true);
+                                    callback(data.message);
                                 } else {
                                     wm.ui.unlock(null, "<@message code="profile.edit.saved"/>");
                                     callback();
