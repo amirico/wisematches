@@ -2,9 +2,7 @@ package wisematches.server.web.i18n;
 
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import wisematches.core.Language;
-import wisematches.core.Personality;
 import wisematches.core.Player;
-import wisematches.core.Visitor;
 import wisematches.core.security.PersonalityContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +25,9 @@ public class PersonalityLocaleResolver extends SessionLocaleResolver {
 	 */
 	@Override
 	public Locale resolveLocale(HttpServletRequest request) {
-		final Personality personality = PersonalityContext.getPlayer();
-		if (personality instanceof Player) {
-			final Player player = (Player) personality;
+		final Player player = PersonalityContext.getPrincipal();
+		if (player != null) {
 			return player.getLanguage().getLocale();
-		} else if (personality instanceof Visitor) {
-			final Visitor visitor = (Visitor) personality;
-			return visitor.getLanguage().getLocale();
 		}
 		return super.resolveLocale(request);
 	}

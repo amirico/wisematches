@@ -13,7 +13,7 @@ public final class PersonalityContext {
 	private PersonalityContext() {
 	}
 
-	public static Player getPlayer() {
+	public static Player getPrincipal() {
 		final PlayerDetails details = getPlayerDetails();
 		if (details != null) {
 			return details.getPlayer();
