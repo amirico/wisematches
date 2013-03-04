@@ -42,7 +42,6 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/playground/profile")
-@Deprecated
 public class ProfileController extends WisematchesController {
 	private AwardsManager awardsManager;
 	private CountriesManager countriesManager;
@@ -66,7 +65,7 @@ public class ProfileController extends WisematchesController {
 		}
 	};
 
-	private static final TourneyPlace[] TOURNEY_PLACEs = TourneyPlace.values();
+	private static final TourneyPlace[] TOURNEY_PLACES = TourneyPlace.values();
 
 	public ProfileController() {
 	}
@@ -113,7 +112,7 @@ public class ProfileController extends WisematchesController {
 			model.addAttribute("profile", profile);
 			model.addAttribute("statistics", statistics);
 			model.addAttribute("ratingChart", ratingChart);
-			model.addAttribute("tourneyMedals", TOURNEY_PLACEs);
+			model.addAttribute("tourneyMedals", TOURNEY_PLACES);
 			model.addAttribute("awardsSummary", awardsManager.getAwardsSummary(player));
 			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(getPrincipal()));
 
