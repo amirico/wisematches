@@ -141,11 +141,6 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		}
 	}
 
-	protected final void registerGameMove(GameMove move, int points, Date date) {
-		move.finalizeMove(points, movesCount, date);
-		moves.add(move);
-		movesCount = moves.size();
-	}
 
 	protected <M extends GameMove> M finalizePlayerMove(M move, GameMoveScore moveScore) throws GameMoveException {
 		lock.lock();
@@ -159,6 +154,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 			lastMoveTime = new Date();
 
 			registerGameMove(move, points, lastMoveTime);
+			processMoveDone(move);
 
 			final boolean finished = isGameFinished();
 			if (finished) {
@@ -177,6 +173,12 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	protected final <M extends GameMove> void registerGameMove(M move, int points, final Date date) {
+		move.finalizeMove(points, moves.size(), date);
+		moves.add(move);
+		movesCount = moves.size();
 	}
 
 
@@ -280,6 +282,8 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	 * @see #getPlayers()
 	 */
 	protected abstract short[] processGameFinished();
+
+	protected abstract void processMoveDone(GameMove move);
 
 	/**
 	 * Creates a player hand for specified player.

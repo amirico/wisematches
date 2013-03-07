@@ -42,7 +42,7 @@ public class ScribbleStatisticsTrapper extends StatisticsTrapper<ScribbleStatist
 					editor.setAllHandTilesBonuses(editor.getAllHandTilesBonuses() + 1);
 				}
 			}
-		} else if (move instanceof ExchangeMove) {
+		} else if (move instanceof ExchangeTiles) {
 			editor.setExchangesCount(editor.getExchangesCount() + 1);
 		}
 	}

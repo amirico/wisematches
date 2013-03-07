@@ -1,7 +1,6 @@
 package wisematches.playground.scribble;
 
 import wisematches.core.Personality;
-import wisematches.playground.GameMove;
 
 import java.util.Date;
 
@@ -10,7 +9,7 @@ import java.util.Date;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class MakeTurn extends GameMove {
+public final class MakeTurn extends ScribbleMove {
 	private final Word word;
 
 	protected MakeTurn(Personality player, Word word) {
@@ -25,5 +24,10 @@ public final class MakeTurn extends GameMove {
 
 	public Word getWord() {
 		return word;
+	}
+
+	@Override
+	public ScribbleMoveType getMoveType() {
+		return ScribbleMoveType.MAKE;
 	}
 }

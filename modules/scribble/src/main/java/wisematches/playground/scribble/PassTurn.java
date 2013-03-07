@@ -1,7 +1,6 @@
 package wisematches.playground.scribble;
 
 import wisematches.core.Personality;
-import wisematches.playground.GameMove;
 
 import java.util.Date;
 
@@ -10,12 +9,17 @@ import java.util.Date;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public final class PassTurn extends GameMove {
+public final class PassTurn extends ScribbleMove {
 	protected PassTurn(Personality player) {
 		super(player);
 	}
 
 	public PassTurn(Personality player, int points, Date moveTime) {
 		super(player, points, moveTime);
+	}
+
+	@Override
+	public ScribbleMoveType getMoveType() {
+		return ScribbleMoveType.PASS;
 	}
 }

@@ -2,6 +2,7 @@ package wisematches.server.web.servlet.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import wisematches.core.PersonalityManager;
@@ -44,6 +45,10 @@ public abstract class WisematchesController {
 	@ModelAttribute("principal")
 	public Player getPrincipal() {
 		return PersonalityContext.getPrincipal();
+	}
+
+	protected void addTitleExtension(String value, Model model) {
+		model.addAttribute("titleExtension", value);
 	}
 
 	@SuppressWarnings("unchecked")

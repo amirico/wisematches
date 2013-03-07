@@ -11,11 +11,10 @@ import java.util.Arrays;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScribbleWordForm {
 	private String direction;
-	private PositionEditor position;
+	private PositionForm position;
 	private ScribbleTileForm[] tiles;
 
 	public ScribbleWordForm() {
@@ -46,11 +45,11 @@ public class ScribbleWordForm {
 		this.tiles = tiles;
 	}
 
-	public PositionEditor getPosition() {
+	public PositionForm getPosition() {
 		return position;
 	}
 
-	public void setPosition(PositionEditor position) {
+	public void setPosition(PositionForm position) {
 		this.position = position;
 	}
 
@@ -66,11 +65,11 @@ public class ScribbleWordForm {
 	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class PositionEditor {
+	public static class PositionForm {
 		private int row;
 		private int column;
 
-		public PositionEditor() {
+		public PositionForm() {
 		}
 
 		public int getRow() {

@@ -3,7 +3,6 @@ package wisematches.server.web.servlet.mvc.playground.scribble.board;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,25 +10,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
 import wisematches.playground.dictionary.WordAttribute;
-import wisematches.playground.scribble.*;
+import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
-import wisematches.playground.scribble.settings.BoardSettings;
-import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
-import wisematches.server.web.servlet.mvc.WisematchesController;
-import wisematches.server.web.servlet.mvc.playground.scribble.ScribbleObjectsConverter;
+import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleTileForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
+import wisematches.server.web.servlet.sdo.board.ScribbleDescriptionInfo;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -37,13 +32,9 @@ import java.util.concurrent.Callable;
  */
 @Controller
 @RequestMapping("/playground/scribble/board")
-@Deprecated
-public class ScribbleBoardController extends WisematchesController {
-	private ScribblePlayManager boardManager;
-	private BoardSettingsManager boardSettingsManager;
+public class ScribbleBoardController extends AbstractScribbleController {
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ScribbleBoardController");
-	public static final BoardSettings BOARD_SETTINGS = new BoardSettings(false, false, true, true, true, "tiles-set-classic");
 
 	public ScribbleBoardController() {
 	}
@@ -54,14 +45,14 @@ public class ScribbleBoardController extends WisematchesController {
 								Model model) throws UnknownEntityException {
 		try {
 			final Player player = getPrincipal();
-			final ScribbleBoard board = boardManager.openBoard(gameId);
+			final ScribbleBoard board = playManager.openBoard(gameId);
 			if (board == null) { // unknown board
 				throw new UnknownEntityException(gameId, "board");
 			}
 
 			model.addAttribute("board", board);
+			addTitleExtension(" #" + board.getBoardId() + " (" + board.getSettings().getTitle() + ")", model);
 
-			// Issue 206: Share tiles
 			if (tiles != null && !tiles.isEmpty()) {
 				final char[] ts = tiles.toCharArray();
 				if (ts.length > 0 && ts.length < 8) {
@@ -88,7 +79,7 @@ public class ScribbleBoardController extends WisematchesController {
 
 			if (player == null) {
 				model.addAttribute("viewMode", Boolean.TRUE);
-				model.addAttribute("boardSettings", BOARD_SETTINGS);
+				model.addAttribute("boardSettings", DEFAULT_BOARD_SETTINGS);
 			} else {
 				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
 				model.addAttribute("viewMode", !board.isActive() || board.getPlayerHand(player) == null);
@@ -100,103 +91,76 @@ public class ScribbleBoardController extends WisematchesController {
 		}
 	}
 
-	@ResponseBody
 	@RequestMapping("make")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public DeprecatedResponse makeTurnAjax(@RequestParam("b") final long gameId,
-										   @RequestBody final ScribbleWordForm word, final Locale locale) {
+	public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
+										@RequestBody final ScribbleWordForm word, final Locale locale) {
 		log.debug("Process player's move: {}, word: {}", gameId, word);
-		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				final Player player = getPrincipal();
 
-				final ScribbleBoard board = boardManager.openBoard(gameId);
-				final MakeTurn gameMove = board.makeTurn(player, word.createWord());
-				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
+		final Player player = getPrincipal();
+		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
+			@Override
+			public ScribbleDescriptionInfo call() throws Exception {
+				final ScribbleBoard board = playManager.openBoard(gameId);
+				board.makeTurn(player, word.createWord());
+				return new ScribbleDescriptionInfo(player, board, board.getMovesCount() - 1, messageSource, locale);
 			}
-		}, messageSource, locale);
+		}, locale);
 	}
 
-	@ResponseBody
 	@RequestMapping("pass")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public DeprecatedResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
+	public ServiceResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		log.debug("Process player's pass: {}", gameId);
-		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+
+		final Player player = getPrincipal();
+		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
 			@Override
-			public Map<String, Object> call() throws Exception {
-				final Player player = getPrincipal();
-				final ScribbleBoard board = boardManager.openBoard(gameId);
-				final PassTurn gameMove = board.passTurn(player);
-				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
+			public ScribbleDescriptionInfo call() throws Exception {
+				final ScribbleBoard board = playManager.openBoard(gameId);
+				board.passTurn(player);
+				return new ScribbleDescriptionInfo(player, board, board.getMovesCount() - 1, messageSource, locale);
 			}
-		}, messageSource, locale);
+		}, locale);
 	}
 
-	@ResponseBody
 	@RequestMapping("exchange")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public DeprecatedResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
-												@RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
+	public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
+											 @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
 		log.debug("Process player's exchange: {}, tiles: {}", gameId, tiles);
-		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+
+		final Player player = getPrincipal();
+		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
 			@Override
-			public Map<String, Object> call() throws Exception {
-				int[] t = new int[tiles.length];
+			public ScribbleDescriptionInfo call() throws Exception {
+				final int[] t = new int[tiles.length];
 				for (int i = 0; i < tiles.length; i++) {
 					t[i] = tiles[i].getNumber();
 				}
 
-				final Player player = getPrincipal();
-				final ScribbleBoard board = boardManager.openBoard(gameId);
-				final ExchangeMove gameMove = board.exchangeTiles(player, t);
-				return ScribbleObjectsConverter.convertGameMove(player, board, gameMove, messageSource, locale);
+				final ScribbleBoard board = playManager.openBoard(gameId);
+				board.exchangeTiles(player, t);
+				return new ScribbleDescriptionInfo(player, board, board.getMovesCount() - 1, messageSource, locale);
 			}
-		}, messageSource, locale);
+		}, locale);
 	}
 
-	@ResponseBody
 	@RequestMapping("resign")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public DeprecatedResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
+	public ServiceResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		log.debug("Process player's resign: {}", gameId);
-		return ScribbleObjectsConverter.processSafeAction(new Callable<Map<String, Object>>() {
+
+		final Player player = getPrincipal();
+		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
 			@Override
-			public Map<String, Object> call() throws Exception {
-				final ScribbleBoard board = boardManager.openBoard(gameId);
-				board.resign(getPrincipal());
+			public ScribbleDescriptionInfo call() throws Exception {
+				final ScribbleBoard board = playManager.openBoard(gameId);
+				board.resign(player);
 
-				final Map<String, Object> res = new HashMap<>();
-				res.put("state", ScribbleObjectsConverter.convertGameState(board, messageSource, locale));
-				if (!board.isActive()) {
-					res.put("players", board.getPlayers());
-				}
-				return res;
+				final ScribbleDescriptionInfo scribbleDescriptionInfo = new ScribbleDescriptionInfo(player, board, 0, messageSource, locale);
+				return scribbleDescriptionInfo;
 			}
-		}, messageSource, locale);
-	}
-/*
-
-	private Map<String, Object> processGameMove(final long gameId, final PlayerMove move, final Locale locale) throws Exception {
-		final Personality currentPlayer = getMember();
-		if (move.getPlayerId() != currentPlayer.getId()) {
-			throw new UnsuitablePlayerException("make turn", currentPlayer);
-		}
-
-		final ScribbleBoard board = boardManager.openBoard(gameId);
-		final GameMove gameMove = board.makeMove(move);
-		return ScribbleObjectsConverter.convertGameMove(locale, currentPlayer, board, gameMove);
-	}
-*/
-
-	@Autowired
-	public void setBoardManager(ScribblePlayManager scribbleBoardManager) {
-		this.boardManager = scribbleBoardManager;
-	}
-
-	@Autowired
-	public void setBoardSettingsManager(BoardSettingsManager boardSettingsManager) {
-		this.boardSettingsManager = boardSettingsManager;
+		}, locale);
 	}
 }

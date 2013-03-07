@@ -2123,8 +2123,10 @@ ul.bonuses .bonus-cell {
     display: inline-block;
 }
 
-.player-info .winner-icon {
-    vertical-align: top;
+.player-info .winner-icon.ui-state-highlight div {
+    width: 24px;
+    height: 24px;
+    background: transparent url('../images/scribble/winner.png') no-repeat 0 0;
 }
 
 .word-check {

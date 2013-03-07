@@ -38,6 +38,10 @@ class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> 
 		return a;
 	}
 
+	@Override
+	protected void processMoveDone(GameMove move) {
+	}
+
 	public boolean isAllowNextMove() {
 		return allowNextMove;
 	}

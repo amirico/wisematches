@@ -173,171 +173,215 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 
 	@Override
 	public boolean isBoardTile(int tileNumber) {
-		return positions[tileNumber] != null;
+		lock.lock();
+		try {
+			return positions[tileNumber] != null;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public Tile getBoardTile(int row, int column) {
-		int index = row * CELLS_NUMBER + column;
-		final int tileNumber = byteToInt(boardTiles[index]);
-		if (tileNumber != 0) {
-			return tilesBank.getTile(tileNumber - 1);
+		lock.lock();
+		try {
+			int index = row * CELLS_NUMBER + column;
+			final int tileNumber = byteToInt(boardTiles[index]);
+			if (tileNumber != 0) {
+				return tilesBank.getTile(tileNumber - 1);
+			}
+			return null;
+		} finally {
+			lock.unlock();
 		}
-		return null;
+	}
+
+
+	public int getBankCapacity() {
+		lock.lock();
+		try {
+			return tilesBank.getBankCapacity();
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public int getBankRemained() {
+		lock.lock();
+		try {
+			return tilesBank.getTilesLimit();
+		} finally {
+			lock.unlock();
+		}
 	}
 
 
 	public PassTurn passTurn(Personality player) throws GameMoveException {
-		validatePlayerMove(player);
+		lock.lock();
+		try {
+			validatePlayerMove(player);
 
-		passesCount++;
-		return finalizePlayerMove(new PassTurn(player), null);
+			passesCount++;
+			return finalizePlayerMove(new PassTurn(player), null);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	public MakeTurn makeTurn(Personality player, Word word) throws GameMoveException {
-		validatePlayerMove(player);
+		lock.lock();
+		try {
+			validatePlayerMove(player);
 
-		final int length = word.length();
-		final Position position = word.getPosition();
-		final Direction direction = word.getDirection();
+			final int length = word.length();
+			final Position position = word.getPosition();
+			final Direction direction = word.getDirection();
 
-		if (position.row < 0 || position.column < 0 ||
-				(direction == Direction.VERTICAL && position.row + length > CELLS_NUMBER) ||
-				(direction == Direction.HORIZONTAL && position.column + length > CELLS_NUMBER)) {
-			throw new IncorrectPositionException(position, direction, length, false);
-		}
+			if (position.row < 0 || position.column < 0 ||
+					(direction == Direction.VERTICAL && position.row + length > CELLS_NUMBER) ||
+					(direction == Direction.HORIZONTAL && position.column + length > CELLS_NUMBER)) {
+				throw new IncorrectPositionException(position, direction, length, false);
+			}
 
-		final ScribblePlayerHand hand = getPlayerHand(player);
-		if (getBoardTile(CENTER_CELL, CENTER_CELL) == null) { // Is first move...
-			if (direction == Direction.VERTICAL) {
-				if (!(position.row <= CENTER_CELL &&
-						position.row + length >= CENTER_CELL && position.column == CENTER_CELL)) {
-					throw new IncorrectPositionException(position, direction, length, true);
+			final ScribblePlayerHand hand = getPlayerHand(player);
+			if (getBoardTile(CENTER_CELL, CENTER_CELL) == null) { // Is first move...
+				if (direction == Direction.VERTICAL) {
+					if (!(position.row <= CENTER_CELL &&
+							position.row + length >= CENTER_CELL && position.column == CENTER_CELL)) {
+						throw new IncorrectPositionException(position, direction, length, true);
+					}
+				} else {
+					if (!(position.column <= CENTER_CELL &&
+							position.column + length >= CENTER_CELL && position.row == CENTER_CELL)) {
+						throw new IncorrectPositionException(position, direction, length, true);
+					}
 				}
 			} else {
-				if (!(position.column <= CENTER_CELL &&
-						position.column + length >= CENTER_CELL && position.row == CENTER_CELL)) {
-					throw new IncorrectPositionException(position, direction, length, true);
-				}
-			}
-		} else {
-			boolean hasTileOnBoard = false;
-			boolean hasTileInHand = false;
-			for (Word.IteratorItem item : word) {
-				final Tile tile = item.getTile();
+				boolean hasTileOnBoard = false;
+				boolean hasTileInHand = false;
+				for (Word.IteratorItem item : word) {
+					final Tile tile = item.getTile();
 
-				final Tile boardTile = getBoardTile(item.getRow(), item.getColumn());
-				if (boardTile != null && boardTile.getNumber() != tile.getNumber()) {
-					throw new IncorrectTilesException(tile, boardTile, new Position(item.getRow(), item.getColumn()));
-				}
-
-
-				final Position pos = positions[tile.getNumber()];
-				if (pos == null) {
-					if (!hand.containsTile(tile)) {
-						throw new IncorrectTilesException(tile);
+					final Tile boardTile = getBoardTile(item.getRow(), item.getColumn());
+					if (boardTile != null && boardTile.getNumber() != tile.getNumber()) {
+						throw new IncorrectTilesException(tile, boardTile, new Position(item.getRow(), item.getColumn()));
 					}
-					hasTileInHand = true;
-				} else if (pos.row != item.getRow() || pos.column != item.getColumn()) {
-					throw new IncorrectTilesException(tile, new Position(item.getRow(), item.getColumn()), pos);
-				} else {
-					hasTileOnBoard = true;
+
+
+					final Position pos = positions[tile.getNumber()];
+					if (pos == null) {
+						if (!hand.containsTile(tile)) {
+							throw new IncorrectTilesException(tile);
+						}
+						hasTileInHand = true;
+					} else if (pos.row != item.getRow() || pos.column != item.getColumn()) {
+						throw new IncorrectTilesException(tile, new Position(item.getRow(), item.getColumn()), pos);
+					} else {
+						hasTileOnBoard = true;
+					}
+				}
+
+				if (!hasTileOnBoard) {
+					throw new IncorrectTilesException(true);
+				} else if (!hasTileInHand) {
+					throw new IncorrectTilesException(false);
 				}
 			}
 
-			if (!hasTileOnBoard) {
-				throw new IncorrectTilesException(true);
-			} else if (!hasTileInHand) {
-				throw new IncorrectTilesException(false);
+			final String w = word.getText();
+			if (!dictionary.contains(w)) {
+				throw new UnknownWordException(w);
 			}
-		}
 
-		final String w = word.getText();
-		if (!dictionary.contains(w)) {
-			throw new UnknownWordException(w);
-		}
+			final Tile[] moveTiles = word.getTiles();
+			final Tile[] handTiles = hand.getTiles();
 
-		final Tile[] moveTiles = word.getTiles();
-		final Tile[] handTiles = hand.getTiles();
-
-		final List<Tile> tilesToRemove = new ArrayList<>(LETTERS_IN_HAND);
-		for (Tile handTile : handTiles) {
-			for (Tile moveTile : moveTiles) {
-				if (moveTile.equals(handTile)) {
-					tilesToRemove.add(moveTile);
+			final List<Tile> tilesToRemove = new ArrayList<>(LETTERS_IN_HAND);
+			for (Tile handTile : handTiles) {
+				for (Tile moveTile : moveTiles) {
+					if (moveTile.equals(handTile)) {
+						tilesToRemove.add(moveTile);
+					}
 				}
 			}
-		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("Finish player {} make word move. Move tiles: {}, hand tiles: {}, tiles to remove from hand: {}",
-					player, moveTiles, handTiles, tilesToRemove);
-		}
-		hand.removeTiles(tilesToRemove.toArray(new Tile[tilesToRemove.size()]));
-		if (!tilesBank.isEmpty()) {
-			final Tile[] tiles = tilesBank.requestTiles(LETTERS_IN_HAND - hand.getTiles().length);
-			log.debug("Add new tiles to player's hand {}: {}", player, tiles);
-			hand.addTiles(tiles);
-		} else {
-			log.debug("Bank is empty. No tiles added to player's hand.");
-		}
-		log.debug("New player {} hand: {}", player, hand.getTiles());
-		passesCount = 0;
-		updateHandTilesBuffer(player, hand);
+			if (log.isDebugEnabled()) {
+				log.debug("Finish player {} make word move. Move tiles: {}, hand tiles: {}, tiles to remove from hand: {}",
+						player, moveTiles, handTiles, tilesToRemove);
+			}
+			hand.removeTiles(tilesToRemove.toArray(new Tile[tilesToRemove.size()]));
+			if (!tilesBank.isEmpty()) {
+				final Tile[] tiles = tilesBank.requestTiles(LETTERS_IN_HAND - hand.getTiles().length);
+				log.debug("Add new tiles to player's hand {}: {}", player, tiles);
+				hand.addTiles(tiles);
+			} else {
+				log.debug("Bank is empty. No tiles added to player's hand.");
+			}
+			log.debug("New player {} hand: {}", player, hand.getTiles());
+			passesCount = 0;
+			updateHandTilesBuffer(player, hand);
 
-		final ScribbleMoveScore score = scoreEngine.calculateWordScore(this, word);
-		return finalizePlayerMove(new MakeTurn(player, word), score);
+			final ScribbleMoveScore score = scoreEngine.calculateWordScore(this, word);
+			return finalizePlayerMove(new MakeTurn(player, word), score);
+		} finally {
+			lock.unlock();
+		}
 	}
 
-	public ExchangeMove exchangeTiles(Personality player, int[] tilesIds) throws GameMoveException {
-		validatePlayerMove(player);
+	public ExchangeTiles exchangeTiles(Personality player, int[] tilesIds) throws GameMoveException {
+		lock.lock();
+		try {
+			validatePlayerMove(player);
 
-		if (tilesIds.length == 0) {
-			throw new IncorrectExchangeException("No tiles for exchange", IncorrectExchangeException.Type.EMPTY_TILES);
-		}
-		if (tilesIds.length > tilesBank.getTilesLimit()) {
-			throw new IncorrectExchangeException("Not required tiles to in bank", IncorrectExchangeException.Type.EMPTY_BANK);
-		}
-
-		final ScribblePlayerHand hand = getPlayerHand(player);
-		final Tile[] handTiles = hand.getTiles();
-
-		for (int tileNumber : tilesIds) {
-			boolean found = false;
-			for (Tile tile : handTiles) {
-				if (tileNumber == tile.getNumber()) {
-					found = true;
-					break;
-				}
+			if (tilesIds.length == 0) {
+				throw new IncorrectExchangeException("No tiles for exchange", IncorrectExchangeException.Type.EMPTY_TILES);
+			}
+			if (tilesIds.length > tilesBank.getTilesLimit()) {
+				throw new IncorrectExchangeException("Not required tiles to in bank", IncorrectExchangeException.Type.EMPTY_BANK);
 			}
 
-			if (!found) {
-				throw new IncorrectExchangeException("Player does not contains tiles to exchange",
-						IncorrectExchangeException.Type.UNKNOWN_TILES);
-			}
-		}
+			final ScribblePlayerHand hand = getPlayerHand(player);
+			final Tile[] handTiles = hand.getTiles();
 
-		log.debug("Exchange tiles for player {} with ids: {}", player, tilesIds);
-
-		final Tile[] tiles = tilesBank.requestTiles(tilesIds.length);
-		log.debug("New tiles requested from bank: {}", (Object) tiles);
-
-		int index = 0;
-		for (int i = 0; i < handTiles.length; i++) {
-			final Tile handTile = handTiles[i];
 			for (int tileNumber : tilesIds) {
-				if (tileNumber == handTile.getNumber()) { //if hand tile in list to be replaced
-					tilesBank.rollbackTile(tileNumber); // rollback tile
-					handTiles[i] = tiles[index++]; // and replace it in hand
-					break;
+				boolean found = false;
+				for (Tile tile : handTiles) {
+					if (tileNumber == tile.getNumber()) {
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) {
+					throw new IncorrectExchangeException("Player does not contains tiles to exchange",
+							IncorrectExchangeException.Type.UNKNOWN_TILES);
 				}
 			}
+
+			log.debug("Exchange tiles for player {} with ids: {}", player, tilesIds);
+
+			final Tile[] tiles = tilesBank.requestTiles(tilesIds.length);
+			log.debug("New tiles requested from bank: {}", (Object) tiles);
+
+			int index = 0;
+			for (int i = 0; i < handTiles.length; i++) {
+				final Tile handTile = handTiles[i];
+				for (int tileNumber : tilesIds) {
+					if (tileNumber == handTile.getNumber()) { //if hand tile in list to be replaced
+						tilesBank.rollbackTile(tileNumber); // rollback tile
+						handTiles[i] = tiles[index++]; // and replace it in hand
+						break;
+					}
+				}
+			}
+			hand.setTiles(handTiles);
+			log.debug("New player {} hand: {}", player, hand.getTiles());
+			passesCount = 0;
+			updateHandTilesBuffer(player, hand); // update player hand buffer
+			return finalizePlayerMove(new ExchangeTiles(player, tilesIds), null);
+		} finally {
+			lock.unlock();
 		}
-		hand.setTiles(handTiles);
-		log.debug("New player {} hand: {}", player, hand.getTiles());
-		passesCount = 0;
-		updateHandTilesBuffer(player, hand); // update player hand buffer
-		return finalizePlayerMove(new ExchangeMove(player, tilesIds), null);
 	}
 
 	@Override
@@ -439,7 +483,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 			} else if (type == 1) {
 				registerGameMove(new PassTurn(player), points, time);
 			} else if (type == 2) {
-				registerGameMove(new ExchangeMove(player, EMPTY_TILES_IDS), points, time);
+				registerGameMove(new ExchangeTiles(player, EMPTY_TILES_IDS), points, time);
 			} else {
 				throw new IllegalStateException("Board state can't be restored. Unknown move type: " + type);
 			}
@@ -490,9 +534,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	}
 
 	@Override
-	protected <M extends GameMove> M finalizePlayerMove(M move, GameMoveScore moveScore) throws GameMoveException {
-		super.finalizePlayerMove(move, moveScore);
-
+	protected void processMoveDone(GameMove move) {
 		int moveType;
 		if (move instanceof MakeTurn) {
 			moveType = 0; // maden
@@ -540,9 +582,7 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 		}
 		boardMoves.putShort((short) move.getPoints());
 		boardMoves.putLong(move.getMoveTime().getTime());
-		return move;
 	}
-
 
 	void initGameAfterLoading(TilesBank tilesBank, Dictionary vocabulary, PersonalityManager personalityManager) {
 		initializePlayers(personalityManager);
@@ -556,14 +596,6 @@ public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribbleP
 	@Override
 	protected ScribblePlayerHand createPlayerHand(Personality player) {
 		return new ScribblePlayerHand(player);
-	}
-
-	public int getBankCapacity() {
-		return tilesBank.getBankCapacity();
-	}
-
-	public int getBankRemained() {
-		return tilesBank.getTilesLimit();
 	}
 
 	/**

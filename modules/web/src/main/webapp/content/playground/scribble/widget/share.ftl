@@ -6,8 +6,8 @@
 
 <div class="shareWidget ui-helper-hidden">
     <div class="shareToolbox ui-widget-content ui-corner-all shadow" align="left" style="position: relative">
-    <#if principal?? && board.getPlayerHand(principal.id)??>
-        <@addthis title="share.board.my.label" description="share.board.my.description" args=[principal.nickname] counter=false/>
+    <#if principal?? && board.getPlayerHand(principal)??>
+        <@addthis title="share.board.my.label" description="share.board.my.description" args=[messageSource.getPersonalityNick(principal, locale)] counter=false/>
         <div class="shareHandElement ui-helper-hidden ui-state-active"
              style="position: absolute; top: 24px; left: 0; padding: 2px">
             <input type="checkbox" id="shareHandInput" name="shareHandInput" style="vertical-align: text-bottom;">
@@ -24,7 +24,7 @@
         $(".shareWidget").slideDown('fast');
     });
 
-    <#if principal?? && board.getPlayerHand(principal.id)??>
+    <#if principal?? && board.getPlayerHand(principal)??>
     wm.scribble.share = function (board) {
         var firstInitiated = false;
         var shareTilesInput = $(".shareToolbox input");

@@ -337,7 +337,7 @@ public class ScribbleBoardTest {
 
 		assertEquals(7, hand.getTiles().length);
 		assertEquals(1, board.getGameMoves().size());
-		assertEquals(ExchangeMove.class, board.getGameMoves().get(0).getClass());
+		assertEquals(ExchangeTiles.class, board.getGameMoves().get(0).getClass());
 		assertEquals(13, tilesBank.getTilesLimit());
 
 		//Check that tiles was rolled back to bank
