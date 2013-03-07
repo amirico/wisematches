@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="principal" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
 <#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="tiles" type="wisematches.playground.scribble.Tile[]" -->
@@ -10,7 +9,7 @@
 <@wm.ui.table.dtinit/>
 
 <#if principal??>
-    <#if !player??><#assign player=player></#if>
+    <#if !player??><#assign player=principal></#if>
 </#if>
 
 <script type="text/javascript">
@@ -39,7 +38,6 @@
             remainedTimeMessage: '${messageSource.formatRemainedTime(board, locale)}'
         </#if>
         <#if !board.active>
-            winners: [<#list board.wonPlayers as winner>${winner.id}<#if winner_has_next>,</#if></#list>],
             resolution: '${board.resolution}',
             finishTimeMillis: ${messageSource.getTimeMillis(board.finishedDate)},
             finishTimeMessage: '${messageSource.formatDate(board.finishedDate, locale)}'
@@ -48,17 +46,13 @@
         players: [
         <#list board.players as p>
             <#assign hand=board.getPlayerHand(p)/>
-            {playerId: ${p.id}, nickname: '${messageSource.getPersonalityNick(p, locale)}', points: ${hand.points}}<#if p_has_next>,</#if>
+            {playerId: ${p.id},
+                nickname: '${messageSource.getPersonalityNick(p, locale)}', points: ${hand.points?string},
+                oldRating: ${hand.oldRating?string}, newRating: ${hand.newRating?string},
+                winner: ${hand.winner?string}
+                <#if p == player && tiles??>, tiles: [<#list tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]</#if>
+            }<#if p_has_next>,</#if>
         </#list>],
-
-    <#if !board.active>
-        ratings: [
-            <#list board.players as p>
-                <#assign hand=board.getPlayerHand(p)/>
-                {playerId: ${p.id}, oldRating: ${hand.oldRating}, newRating: ${hand.newRating}, points: ${hand.points}}<#if p_has_next>,</#if>
-            </#list>
-        ],
-    </#if>
 
         board: {
             bonuses: [
@@ -68,18 +62,14 @@
             ],
             moves: [<#list board.gameMoves as move>
                 {number: ${move.moveNumber}, points: ${move.points}, player: ${move.player.id},
-                    <#if move.class.simpleName == "MakeTurn">
+                    type: '${move.moveType.name()}',
+                    <#if move.moveType == ScribbleMoveType.MAKE>
                         <#assign word=move.word/>
-                        type: 'make',
                         word: {
                             position: { row: ${word.position.row}, column: ${word.position.column}},
                             direction: '${word.direction}', text: '${word.text}',
                             tiles: [ <#list word.tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list> ]
                         }
-                    <#elseif move.class.simpleName == "ExchangeMove">
-                        type: 'exchange'
-                    <#else>
-                        type: 'pass'
                     </#if>
                 }<#if move_has_next>,</#if>
             </#list>]
@@ -90,13 +80,6 @@
             tilesInfo: [
                 <#list board.distribution.letterDescriptions as tbi>{letter: '${tbi.letter}', cost: ${tbi.cost}, count: ${tbi.count}, wildcard: ${(tbi.cost==0)?string}}<#if tbi_has_next>,</#if></#list>]
         }
-
-    <#if tiles??>
-        ,
-        privacy: {
-            handTiles: [<#list tiles as tile><@tileToJS tile/><#if tile_has_next>,</#if></#list>]
-        }
-    </#if>
     };
 
     wm.i18n.extend({

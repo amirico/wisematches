@@ -90,6 +90,7 @@ public class AbstractPlayerHand implements GamePlayerHand {
 		sb.append("AbstractPlayerHand");
 		sb.append("{playerId=").append(playerId);
 		sb.append(", points=").append(points);
+		sb.append(", winner=").append(winner);
 		sb.append(", oldRating=").append(oldRating);
 		sb.append(", newRating=").append(newRating);
 		sb.append('}');

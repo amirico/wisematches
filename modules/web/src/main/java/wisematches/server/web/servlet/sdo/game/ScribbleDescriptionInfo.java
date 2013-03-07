@@ -14,13 +14,13 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleGameInfo {
+public class ScribbleDescriptionInfo {
 	private final Locale locale;
 	private final GameMessageSource messageSource;
 	private final ScribbleDescription description;
 	private final PlayerStateManager playerStateManager;
 
-	public ScribbleGameInfo(ScribbleDescription description, GameMessageSource messageSource, PlayerStateManager playerStateManager, Locale locale) {
+	public ScribbleDescriptionInfo(ScribbleDescription description, GameMessageSource messageSource, PlayerStateManager playerStateManager, Locale locale) {
 		this.locale = locale;
 		this.description = description;
 		this.messageSource = messageSource;

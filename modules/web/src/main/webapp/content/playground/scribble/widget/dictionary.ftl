@@ -3,6 +3,7 @@
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
+<#assign dictionary=board.dictionary/>
 <#include "/content/playground/dictionary/card.ftl"/>
 
 <@wm.ui.widget class="dictionaryWidget" title="game.dictionary.label" help="board.dictionary">

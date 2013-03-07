@@ -10,7 +10,9 @@
             <#list board.players as p>
                 <#assign hand=board.getPlayerHand(p)/>
             <tr class="player-info-${p.id} player-info">
-                <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">&nbsp;</td>
+                <td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left">
+                    <div></div>
+                </td>
                 <td class="nickname ui-table-middle">
                     <@wm.player.name p/>
                 </td>

@@ -89,14 +89,14 @@ public final class ScribbleObjectsConverter {
 		} else if (move instanceof MakeTurn) {
 			moveInfo.put("type", "make");
 			moveInfo.put("word", ((MakeTurn) move).getWord());
-		} else if (move instanceof ExchangeMove) {
+		} else if (move instanceof ExchangeTiles) {
 			moveInfo.put("type", "exchange");
-			moveInfo.put("tilesCount", ((ExchangeMove) move).getTileIds().length);
+			moveInfo.put("tilesCount", ((ExchangeTiles) move).getTileIds().length);
 		}
 		return moveInfo;
 	}
 
-	static Map<String, Object> convertGameComment(final GameComment comment, GameMessageSource messageSource, final Locale locale) {
+	public static Map<String, Object> convertGameComment(final GameComment comment, GameMessageSource messageSource, final Locale locale) {
 		Map<String, Object> res = new HashMap<>();
 		res.put("id", comment.getId());
 		res.put("text", comment.getText());

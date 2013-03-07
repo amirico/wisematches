@@ -38,7 +38,7 @@ public class ScribbleStatisticsTrapperTest {
 
 		final GameMove move1 = new MakeTurn(player, 20, new Date(moveTime), new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4)));
 		final GameMove move2 = new MakeTurn(player, 10, new Date(moveTime + 3000), new Word(new Position(1, 2), Direction.HORIZONTAL, new Tile(1, 'A', 3), new Tile(1, 'B', 4), new Tile(1, 'C', 1), new Tile(1, 'D', 1)));
-		final GameMove move3 = new ExchangeMove(player, 6, new Date(moveTime + 8000), new int[0]);
+		final GameMove move3 = new ExchangeTiles(player, 6, new Date(moveTime + 8000), new int[0]);
 		final GameMove move4 = new PassTurn(player, 0, new Date(moveTime + 13000));
 
 		final ScribbleBoard gb = createMock(ScribbleBoard.class);

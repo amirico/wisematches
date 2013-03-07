@@ -17,7 +17,7 @@ import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.core.personality.player.account.*;
 import wisematches.playground.*;
-import wisematches.playground.scribble.ExchangeMove;
+import wisematches.playground.scribble.ExchangeTiles;
 import wisematches.playground.scribble.PassTurn;
 import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.tracking.ScribbleStatistics;
@@ -130,7 +130,7 @@ public class HibernateScribbleStatisticsManagerTest {
 		expect(board.getGameMoves()).andReturn(Collections.<GameMove>emptyList());
 		expect(board.getStartedDate()).andReturn(new Date());
 		replay(board);
-		boardListener.gameMoveDone(board, new ExchangeMove(player, 0, new Date(), new int[]{}), null);
+		boardListener.gameMoveDone(board, new ExchangeTiles(player, 0, new Date(), new int[]{}), null);
 		assertEquals(1, statistic.getActiveGames());
 		assertEquals(0, statistic.getFinishedGames());
 		assertEquals(2, statistic.getTurnsCount());

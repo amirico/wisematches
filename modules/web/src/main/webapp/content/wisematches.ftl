@@ -1,10 +1,11 @@
 <#-- @ftlvariable name="title" type="java.lang.String" -->
+<#-- @ftlvariable name="titleExtension" type="java.lang.Object" -->
 <#-- @ftlvariable name="templateName" type="java.lang.String" -->
 <#include "/core.ftl">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title><@message code=title!"title.default"/></title>
+    <title><@message code=title!"title.default"/><#if titleExtension?has_content>${titleExtension}</#if></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>
@@ -34,6 +35,7 @@
 
     <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.0.0.css"/>"/>
     <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.0.0.js"/>"></script>
+    <script type="text/javascript" src="<@wm.ui.static "js/asd.js"/>"></script>
 
 <#include "analytics.ftl">
 <#include 'localization.ftl'/>
