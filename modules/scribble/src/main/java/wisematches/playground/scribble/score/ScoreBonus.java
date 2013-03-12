@@ -27,19 +27,9 @@ public final class ScoreBonus {
 	}
 
 	public static enum Type {
-		DOUBLE_LETTER("2l"),
-		TRIPLE_LETTER("3l"),
-		DOUBLE_WORD("2w"),
-		TRIPLE_WORD("3w");
-
-		private final String displayName;
-
-		Type(String displayName) {
-			this.displayName = displayName;
-		}
-
-		public String getDisplayName() {
-			return displayName;
-		}
+		L2,
+		L3,
+		W2,
+		W3
 	}
 }

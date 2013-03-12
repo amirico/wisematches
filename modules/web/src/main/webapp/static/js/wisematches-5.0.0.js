@@ -1732,7 +1732,7 @@ wm.scribble.Comments = function (board, controller, language) {
         var item = $('<div class="item' + (collapsed ? ' collapsed' : '') + '"></div>');
         var info = $('<div class="info"></div>').appendTo(item);
         var time = $('<div class="time"></div>').appendTo(info).html('(' + comment.elapsed + ' ' + language['ago'] + ')');
-        var player = $('<div class="sender"></div>').appendTo(info).html(wm.ui.player(board.getPlayerInfo(comment.person)));
+        var player = $('<div class="sender"></div>').appendTo(info).html(wm.ui.player(board.getPlayerInfo(comment.person), false, false, false));
 
         var msg = $('<div class="message"></div>').appendTo(item).html(comment.text + "<span></span>");
 
@@ -2141,6 +2141,10 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
         }
     };
 
+    var checkWord = function () {
+        validateWord(input.val());
+    };
+
     board.bind('wordSelection',
             function (event, word) {
                 if (word != null) {
@@ -2153,7 +2157,7 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
 
     input.keyup(function (e) {
         if (e.which == 13) {
-            instance.checkWord();
+            checkWord();
             e.preventDefault();
         } else {
             validateInputValue();
@@ -2162,7 +2166,7 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
 
     controlButton.button({text: false}).click(function (e) {
         if (activeAction == 'ui-icon-search') {
-            validateWord();
+            checkWord();
         } else if (activeAction == 'ui-icon-pencil') {
             suggestion.addWordEntry(input.val());
         } else if (activeAction == 'ui-icon-script') {
@@ -2258,19 +2262,24 @@ wm.scribble.BankInfo = function (board, language) {
 };
 
 wm.scribble.History = function (board, language) {
-    var addMoveToHistory = function (move) {
-        var link = '';
-        if (move.type == 'MAKE') {
-            var word = move.word;
-            link = '<span class="moveMade">' + word.text + '</span>';
-        } else if (move.type == 'EXCHANGE') {
-            link = '<span class="moveExchange">' + language['exchange'] + '</span>';
-        } else if (move.type == 'PASS') {
-            link = '<span class="movePassed">' + language['passed'] + '</span>';
-        }
-        movesHistoryTable.fnAddData([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
+    var insert = function (moves) {
+        var rows = [];
+        $.each(moves, function (i, move) {
+            var link = '';
+            if (move.type == 'MAKE') {
+                var word = move.word;
+                link = '<span class="moveMade">' + word.text + '</span>';
+            } else if (move.type == 'EXCHANGE') {
+                link = '<span class="moveExchange">' + language['exchange'] + '</span>';
+            } else if (move.type == 'PASS') {
+                link = '<span class="movePassed">' + language['passed'] + '</span>';
+            }
+            rows.push([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
+        });
+        movesHistoryTable.fnAddData(rows, false);
+        movesHistoryTable.fnDraw(true);
 
-        var closest = board.getPlayboardElement('.movesHistory .jspScrollable');
+        var closest = board.getPlayboardElement('.movesHistory .dataTables_scrollBody');
         if (closest.length != 0) {
             closest.data('jsp').reinitialise();
         }
@@ -2301,8 +2310,10 @@ wm.scribble.History = function (board, language) {
     });
 
     $(document).ready(function () {
+        insert(board.getGameMoves());
+
         board.bind('gameMoves', function (event, move) {
-            addMoveToHistory(move);
+            insert([move]);
         });
     });
 };
@@ -2521,6 +2532,10 @@ wm.scribble.Players = function (board) {
         updatePlayerInfo(pid, "<div class='rating " + iconClass + "'><div class='change'><sub>" + ratingDelta + "</sub></div><div class='value'>" + newRating + "</div></div>");
     };
 
+    var showChallengeButton = function () {
+        playersInfo.find('.createChallenge').show();
+    };
+
     var updatePlayerPoints = function (pid, points) {
         getPlayerInfoCells(pid, ".points").text(points);
     };
@@ -2539,6 +2554,7 @@ wm.scribble.Players = function (board) {
             showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime());
         } else {
             hideActiveMarker();
+            showChallengeButton();
             $.each(board.getPlayers(), function (i, p) {
                 if (p.winner) {
                     showWinnerMarker(p.playerId);
@@ -2548,12 +2564,29 @@ wm.scribble.Players = function (board) {
         }
     };
 
+    var initPlayersView = function () {
+        var table = playersInfo.find("tbody");
+        $.each(board.getPlayers(), function (i, p) {
+            var row = '';
+            row += '<tr class="player-info-' + p.id + ' player-info">';
+            row += '<td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left"><div></div></td>';
+            row += '<td class="nickname ui-table-middle">' + wm.ui.player(p) + '</td>';
+            row += '<td width="20px" class="points ui-table-middle">' + 0 + '</td>';
+            row += '<td width="60px" class="info ui-corner-right ui-table-right"></td>';
+            row += '</tr>';
+            table.append(row);
+        });
+    };
+
+    initPlayersView();
     updateBoardState();
 
+    $(".createChallenge button").click(function () {
+        wm.util.url.redirect('/playground/scribble/create?t=board&p=' + board.getBoardId());
+    });
+
     board.bind('gameState', function (event, type, state) {
-        if (type == 'info') {
-            updateBoardState();
-        }
+        updateBoardState();
     });
 };
 
@@ -2627,18 +2660,18 @@ wm.scribble.ScoreEngine = function (gameBonuses, board) {
                 bonus = 1;
             } else {
                 switch (bonus) {
-                    case '2l':
+                    case 'L2':
                         bonus = 2;
                         break;
-                    case '3l':
+                    case 'L3':
                         bonus = 3;
                         break;
-                    case '2w':
+                    case 'W2':
                         bonus = 1;
                         pointsMult *= 2;
                         formulaMult += '*2';
                         break;
-                    case '3w':
+                    case 'W3':
                         bonus = 1;
                         pointsMult *= 3;
                         formulaMult += '*3';

@@ -25,7 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public abstract class AbstractGamePlayManager<S extends GameSettings, B extends AbstractGameBoard<S, ?>>
+public abstract class AbstractGamePlayManager<S extends GameSettings, B extends AbstractGameBoard<S, ?, ?>>
 		implements GamePlayManager<S, B>, InitializingBean {
 	private RatingSystem ratingSystem;
 
@@ -204,7 +204,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		return board;
 	}
 
-	private void recalculatePlayerRatings(GameBoard<?, ? extends AbstractPlayerHand> board) {
+	private void recalculatePlayerRatings(GameBoard<?, ? extends AbstractPlayerHand, ? extends GameMove> board) {
 		final List<Personality> players = board.getPlayers();
 
 		final AbstractPlayerHand[] hands = new AbstractPlayerHand[players.size()];
@@ -236,7 +236,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		}
 	}
 
-	private void processRobotMove(final GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, final int attempt) {
+	private void processRobotMove(final GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, final int attempt) {
 		final Personality player = board.getPlayerTurn();
 		if (player instanceof Robot) {
 			final long boardId = board.getBoardId();
@@ -410,13 +410,13 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		}
 
 		@Override
-		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 			processRobotMove(board, 1);
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 			saveBoardImpl((B) board);
 
 			for (BoardListener statesListener : listeners) {
@@ -428,8 +428,8 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
-			recalculatePlayerRatings((GameBoard<?, ? extends AbstractPlayerHand>) board);
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners) {
+			recalculatePlayerRatings((GameBoard<?, ? extends AbstractPlayerHand, ? extends GameMove>) board);
 			saveBoardImpl((B) board);
 
 			for (BoardListener statesListener : listeners) {

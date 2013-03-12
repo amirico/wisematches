@@ -1,5 +1,3 @@
-<#-- @ftlvariable name="dictionary" type="wisematches.playground.dictionary.Dictionary" -->
-
 <#include "/core.ftl"/>
 
 <div id="wordEntryEditor" class="ui-helper-hidden">
@@ -60,7 +58,7 @@
 <script type="text/javascript">
     <#assign readOnlySuggestion=!principal?? || !principal.type.member/>
 
-    var dictionarySuggestion = new wm.game.dict.Suggestion('${dictionary.language.getCode()}', ${readOnlySuggestion?string}, {
+    var dictionarySuggestion = new wm.game.dict.Suggestion(dictionaryLanguage, ${readOnlySuggestion?string}, {
     <#list WordAttribute.values() as wa>
         "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
     </#list>

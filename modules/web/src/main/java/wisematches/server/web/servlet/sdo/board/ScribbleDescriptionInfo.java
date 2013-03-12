@@ -21,13 +21,13 @@ public class ScribbleDescriptionInfo {
 	public ScribbleDescriptionInfo(Personality person, ScribbleBoard board, int movesCount, GameMessageSource messageSource, Locale locale) {
 		state = new ScribbleStateInfo(board, messageSource, locale);
 
-		final List<GameMove> gameMoves = board.getGameMoves();
+		final List<ScribbleMove> gameMoves = board.getGameMoves();
 
 
 		if (gameMoves.size() > movesCount) {
 			int index = 0;
 			moves = new ScribbleMoveInfo[gameMoves.size() - movesCount];
-			final ListIterator<GameMove> gameMoveListIterator = gameMoves.listIterator(movesCount);
+			final ListIterator<ScribbleMove> gameMoveListIterator = gameMoves.listIterator(movesCount);
 			while (gameMoveListIterator.hasNext()) {
 				final GameMove move = gameMoveListIterator.next();
 				moves[index++] = new ScribbleMoveInfo((ScribbleMove) move, messageSource, locale);

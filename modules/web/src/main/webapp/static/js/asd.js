@@ -2,11 +2,14 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var playboard = this;
 
     var id = gameInfo.id;
-    var state = gameInfo.state;
+    var language = gameInfo.settings.language;
+
     var bank = gameInfo.bank;
+    var moves = gameInfo.moves;
     var players = gameInfo.players;
-    var moves = gameInfo.board.moves;
-    var language = gameInfo.language;
+
+    var state = gameInfo.state;
+    var outcomes = gameInfo.outcomes;
 
     var enabled = true;
     var handTiles = new Array(7);
@@ -75,7 +78,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         };
     };
 
-    var scoreEngine = new wm.scribble.ScoreEngine(gameInfo.board.bonuses, this);
+    var scoreEngine = new wm.scribble.ScoreEngine(gameInfo.bonuses, this);
 
     var initializeGame = function () {
         if (settings.showCaptions == undefined || settings.showCaptions) {
@@ -98,7 +101,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
                 var bonus = scoreEngine.getCellBonus(i, j);
                 if (bonus != undefined) {
                     var text = wm.i18n.value(bonus, bonus.toUpperCase());
-                    $("<div></div>").addClass('cell bonus-cell').addClass('bonus-cell-' + bonus).text(text).offset({left: j * 22, top: i * 22}).appendTo(bonuses);
+                    $("<div></div>").addClass('cell bonus-cell').addClass('bonus-cell-' + bonus.toLowerCase()).text(text).offset({left: j * 22, top: i * 22}).appendTo(bonuses);
                 }
             }
         }
@@ -111,9 +114,9 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
         });
 
         var playerInfo = playboard.getPlayerInfo(boardViewer);
-        if (playerInfo != null && playerInfo.tiles != null) {
+        if (playerInfo != null && gameInfo.handTiles != null) {
             $("<div></div>").addClass('hand').appendTo(background);
-            validateHandTile(playerInfo.tiles);
+            validateHandTile(gameInfo.handTiles);
         }
 
         $(document).mouseup(onTileUp);
@@ -469,7 +472,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     var updateGameState = function (newState) {
         var oldState = state;
         state = newState;
-        if (!state.active) {
+        if (outcomes.resolution != null) {
             enabled = false;
             clearSelectionImpl();
             scribble.trigger('gameState', ['finished', state]);
@@ -540,7 +543,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
             });
 
             var panel = $($('#' + wildcardHandlerElement + ' div').get(1)).empty();
-            $.each(bank.tilesInfo, function (i, bti) {
+            $.each(playboard.getBankTilesInfo(), function (i, bti) {
                 var row = Math.floor(i / 15);
                 var col = (i - row * 15);
                 var t = wm.scribble.tile.createTileWidget({number: 0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
@@ -588,7 +591,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     this.getPlayerInfo = function (playerId) {
         var res = null;
         $.each(players, function (i, player) {
-            if (player.playerId == playerId) {
+            if (player.id == playerId) {
                 res = player;
                 return false;
             }
@@ -815,11 +818,11 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     };
 
     this.getBankCapacity = function () {
-        return bank.capacity;
+        return bank.lettersCount;
     };
 
     this.getBankTilesInfo = function () {
-        return bank.tilesInfo;
+        return bank.letterDistributions;
     };
 
     this.getBoardTile = function (column, row) {
@@ -884,7 +887,7 @@ wm.scribble.Board = function (gameInfo, boardViewer, wildcardHandlerElement, con
     };
 
     this.isBoardActive = function () {
-        return state.active;
+        return outcomes.resolution == null;
     };
 
     this.isBoardEnabled = function () {

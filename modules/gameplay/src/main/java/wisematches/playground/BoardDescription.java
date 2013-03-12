@@ -71,6 +71,18 @@ public interface BoardDescription<S extends GameSettings, H extends GamePlayerHa
 	 */
 	Date getLastMoveTime();
 
+	/**
+	 * Returns time of last changes:
+	 * <ul>
+	 * <li>If game is active, the method returns time of last move.</li>
+	 * <li>If there is no moves, the method returns start time.</li>
+	 * <li>If game is finished, the method returns finished time.</li>
+	 * </ul>
+	 *
+	 * @return the time of last changes.
+	 */
+	Date getLastChangeTime();
+
 
 	/**
 	 * Returns number of player on this board.

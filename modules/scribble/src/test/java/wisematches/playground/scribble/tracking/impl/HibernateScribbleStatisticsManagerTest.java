@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.Membership;
 import wisematches.core.Personality;
-import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.core.personality.player.account.*;
@@ -45,9 +44,6 @@ import static org.junit.Assert.assertNotNull;
 public class HibernateScribbleStatisticsManagerTest {
 	private Player player;
 	private Account person;
-
-	@Autowired
-	private PersonalityManager personalityManager;
 
 	@Autowired
 	private AccountManager accountManager;
@@ -100,7 +96,8 @@ public class HibernateScribbleStatisticsManagerTest {
 		assertEquals(0, statistic.getWordsCount());
 		assertEquals(0, statistic.getResigned());
 
-		final GameBoard<?, ?> board = createMock(GameBoard.class);
+		@SuppressWarnings("unchecked")
+		final GameBoard<?, ?, GameMove> board = createMock(GameBoard.class);
 		expect(board.getPlayers()).andReturn(Arrays.<Personality>asList(player));
 		replay(board);
 

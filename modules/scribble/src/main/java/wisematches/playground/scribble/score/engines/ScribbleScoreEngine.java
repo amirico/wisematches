@@ -16,22 +16,22 @@ public class ScribbleScoreEngine extends AbstractScoreEngine {
 
 	private static ScoreBonus[] getScoreBonusesImpl() {
 		return new ScoreBonus[]{
-				new ScoreBonus(0, 3, ScoreBonus.Type.TRIPLE_WORD),
-				new ScoreBonus(0, 6, ScoreBonus.Type.TRIPLE_LETTER),
-				new ScoreBonus(1, 2, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(1, 5, ScoreBonus.Type.DOUBLE_WORD),
-				new ScoreBonus(2, 1, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(2, 4, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(3, 0, ScoreBonus.Type.TRIPLE_WORD),
-				new ScoreBonus(3, 3, ScoreBonus.Type.TRIPLE_LETTER),
-				new ScoreBonus(3, 7, ScoreBonus.Type.DOUBLE_WORD),
-				new ScoreBonus(4, 2, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(4, 6, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(5, 1, ScoreBonus.Type.DOUBLE_WORD),
-				new ScoreBonus(5, 5, ScoreBonus.Type.TRIPLE_LETTER),
-				new ScoreBonus(6, 0, ScoreBonus.Type.TRIPLE_LETTER),
-				new ScoreBonus(6, 4, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(7, 3, ScoreBonus.Type.DOUBLE_WORD),
+				new ScoreBonus(0, 3, ScoreBonus.Type.W3),
+				new ScoreBonus(0, 6, ScoreBonus.Type.L3),
+				new ScoreBonus(1, 2, ScoreBonus.Type.L2),
+				new ScoreBonus(1, 5, ScoreBonus.Type.W2),
+				new ScoreBonus(2, 1, ScoreBonus.Type.L2),
+				new ScoreBonus(2, 4, ScoreBonus.Type.L2),
+				new ScoreBonus(3, 0, ScoreBonus.Type.W3),
+				new ScoreBonus(3, 3, ScoreBonus.Type.L3),
+				new ScoreBonus(3, 7, ScoreBonus.Type.W2),
+				new ScoreBonus(4, 2, ScoreBonus.Type.L2),
+				new ScoreBonus(4, 6, ScoreBonus.Type.L2),
+				new ScoreBonus(5, 1, ScoreBonus.Type.W2),
+				new ScoreBonus(5, 5, ScoreBonus.Type.L3),
+				new ScoreBonus(6, 0, ScoreBonus.Type.L3),
+				new ScoreBonus(6, 4, ScoreBonus.Type.L2),
+				new ScoreBonus(7, 3, ScoreBonus.Type.W2),
 		};
 	}
 }

@@ -109,17 +109,17 @@ public class ScribbleExpirationManager extends AbstractExpirationManager<Long, S
 		}
 
 		@Override
-		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 			gameMoveDone(board, null, null);
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 			scheduleTermination(board.getBoardId(), new Date(board.getLastMoveTime().getTime() + board.getSettings().getDaysPerMove() * MILLIS_IN_DAY));
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners) {
 			cancelTermination(board.getBoardId());
 		}
 	}

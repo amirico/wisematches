@@ -1,5 +1,3 @@
-<#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
-
 <#include "/core.ftl">
 
 <div class="annotation ui-widget">
@@ -9,12 +7,10 @@
                rel="/info/tip.ajax?s=board.annotations"></a>
         </div>
         <div class="controls">
-        <#if board.active>
             <div class="ui-helper-hidden create-comment">
                 <a class="action" href="#"
                    onclick="comments.create(); return false;"><@message code="game.comment.add"/></a>
             </div>
-        </#if>
             <div class="loading-image" style="width: 150px">&nbsp;</div>
         </div>
         <div class="label">

@@ -245,7 +245,7 @@ public class HibernateTourneyGroup implements TourneyGroup {
 		return totalGamesCount;
 	}
 
-	void finalizeGame(GameBoard<?, ?> board) {
+	void finalizeGame(GameBoard<?, ?, ?> board) {
 		if (finishedDate != null) {
 			throw new IllegalStateException("Group already finished");
 		}

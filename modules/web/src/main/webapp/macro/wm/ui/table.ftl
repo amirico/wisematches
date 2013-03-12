@@ -18,7 +18,7 @@
                     "sNext": "&nbsp",
                     "sLast": "&nbsp"
                 }
-            },
+            }
         };
         return $2.dataTable($.extend(true, dataTableLanguage, opts));
     };

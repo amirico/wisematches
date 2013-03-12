@@ -13,7 +13,7 @@ public interface BoardListener {
 	 *
 	 * @param board indicates that game has beed started.
 	 */
-	void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board);
+	void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board);
 
 	/**
 	 * Indicates that player has made move.
@@ -22,7 +22,7 @@ public interface BoardListener {
 	 * @param move      the made move
 	 * @param moveScore calculated score for the move
 	 */
-	void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore);
+	void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore);
 
 	/**
 	 * Indicates that game has been finished
@@ -31,5 +31,5 @@ public interface BoardListener {
 	 * @param resolution the game finalization resolution
 	 * @param winners    the winners list or empty list if no winners (draw).
 	 */
-	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners);
+	void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners);
 }

@@ -47,15 +47,15 @@ public class MemoryWordsCleaner {
 		}
 
 		@Override
-		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners) {
 			log.debug("Game on board {} has been finished and all memory words will be cleaned.", board.getBoardId());
 			memoryWordManager.clearMemoryWords((ScribbleBoard) board);
 		}

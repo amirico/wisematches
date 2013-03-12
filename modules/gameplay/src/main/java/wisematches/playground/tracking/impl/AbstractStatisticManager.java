@@ -123,7 +123,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 		final Collection<Personality> players = board.getPlayers();
 		for (Personality personality : players) {
 			if (personality instanceof Player) {
@@ -144,7 +144,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 		final Personality personality = move.getPlayer();
 		if (personality instanceof Member) {
 			final Player player = (Player) personality;
@@ -163,7 +163,7 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void processGameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+	protected void processGameFinished(GameBoard<?, ?, ?> board) {
 		final Collection<Personality> hands = board.getPlayers();
 		for (Personality personality : hands) {
 			if (personality instanceof Member) {
@@ -247,17 +247,17 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		}
 
 		@Override
-		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 			processGameStarted(board);
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 			processGameMoveDone(board, move, moveScore);
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners) {
 			processGameFinished(board);
 		}
 	}

@@ -73,19 +73,19 @@ public class AbstractScoreEngine implements ScoreEngine {
 					bonuses[index] = bonus;
 
 					switch (bonus) {
-						case DOUBLE_LETTER:
+						case L2:
 							formula.append("*2");
 							points += tile.getCost();
 							break;
-						case TRIPLE_LETTER:
+						case L3:
 							formula.append("*3");
 							points += tile.getCost() * 2;
 							break;
-						case DOUBLE_WORD:
+						case W2:
 							mults.append("*2");
 							mult *= 2;
 							break;
-						case TRIPLE_WORD:
+						case W3:
 							mults.append("*3");
 							mult *= 3;
 							break;

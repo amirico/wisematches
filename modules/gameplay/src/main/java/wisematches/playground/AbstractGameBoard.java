@@ -21,12 +21,12 @@ import java.util.*;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @MappedSuperclass
-public abstract class AbstractGameBoard<S extends GameSettings, H extends AbstractPlayerHand> extends AbstractBoardDescription<S, H> implements GameBoard<S, H> {
+public abstract class AbstractGameBoard<S extends GameSettings, H extends AbstractPlayerHand, M extends GameMove> extends AbstractBoardDescription<S, H> implements GameBoard<S, H, M> {
 	@Transient
 	private BoardListener gamePlayListener;
 
 	@Transient
-	private final List<GameMove> moves = new ArrayList<>();
+	private final List<M> moves = new ArrayList<>();
 
 	private static final Random FIRST_PLAYER_RANDOM = new Random();
 
@@ -77,7 +77,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 
 
 	@Override
-	public List<GameMove> getGameMoves() {
+	public List<M> getGameMoves() {
 		lock.lock();
 		try {
 			return moves;
@@ -142,7 +142,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	}
 
 
-	protected <M extends GameMove> M finalizePlayerMove(M move, GameMoveScore moveScore) throws GameMoveException {
+	protected <T extends M> T finalizePlayerMove(T move, GameMoveScore moveScore) throws GameMoveException {
 		lock.lock();
 		try {
 			validatePlayerMove(move.getPlayer());
@@ -175,7 +175,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 		}
 	}
 
-	protected final <M extends GameMove> void registerGameMove(M move, int points, final Date date) {
+	protected final <T extends M> void registerGameMove(T move, int points, final Date date) {
 		move.finalizeMove(points, moves.size(), date);
 		moves.add(move);
 		movesCount = moves.size();
@@ -294,20 +294,20 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 	protected abstract H createPlayerHand(Personality player);
 
 	@Override
-	public List<GameMove> getGameChanges(Personality player) {
+	public List<M> getGameChanges(Personality player) {
 		lock.lock();
 		try {
-			final ListIterator<GameMove> iterator = moves.listIterator(moves.size());
+			final ListIterator<M> iterator = moves.listIterator(moves.size());
 			if (!iterator.hasPrevious()) {
 				return Collections.emptyList();
 			}
 
-			GameMove previous = iterator.previous();
+			M previous = iterator.previous();
 			if (previous.getPlayer().equals(player)) { // no new moves
 				return Collections.emptyList();
 			}
 
-			final List<GameMove> res = new ArrayList<>();
+			final List<M> res = new ArrayList<>();
 			res.add(previous);
 			while (iterator.hasPrevious()) {
 				previous = iterator.previous();

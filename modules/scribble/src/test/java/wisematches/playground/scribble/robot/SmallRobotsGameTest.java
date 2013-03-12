@@ -87,21 +87,21 @@ public class SmallRobotsGameTest {
 		final ScribbleSettings settings = new ScribbleSettings("This is robots game", player.getLanguage(), 3, true, true);
 		scribbleBoardManager.addBoardListener(new BoardListener() {
 			@Override
-			public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b) {
+			public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> b) {
 				passGuestTurn(b);
 			}
 
 			@Override
-			public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameMove move, GameMoveScore moveScore) {
+			public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> b, GameMove move, GameMoveScore moveScore) {
 				passGuestTurn(b);
 			}
 
 			@Override
-			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b, GameResolution resolution, Collection<Personality> winners) {
+			public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> b, GameResolution resolution, Collection<Personality> winners) {
 				notifyGameFinished();
 			}
 
-			private void passGuestTurn(GameBoard<? extends GameSettings, ? extends GamePlayerHand> b) {
+			private void passGuestTurn(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> b) {
 				if (b.getPlayerTurn() == player) {
 					ScribbleBoard sb = (ScribbleBoard) b;
 					try {

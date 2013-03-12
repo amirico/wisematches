@@ -7,13 +7,13 @@ import java.util.List;
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
-public interface GameBoard<S extends GameSettings, H extends GamePlayerHand> extends BoardDescription<S, H> {
+public interface GameBoard<S extends GameSettings, H extends GamePlayerHand, M extends GameMove> extends BoardDescription<S, H> {
 	/**
 	 * Returns unmodifiable collection of done moves.
 	 *
 	 * @return the unmodifiable collection of done moves.
 	 */
-	List<GameMove> getGameMoves();
+	List<M> getGameMoves();
 
 	/**
 	 * Returns list of all changes from last move for specified player.
@@ -21,7 +21,7 @@ public interface GameBoard<S extends GameSettings, H extends GamePlayerHand> ext
 	 * @param player the player to be checked.
 	 * @return the list of all changes from last move for specified player.
 	 */
-	List<GameMove> getGameChanges(Personality player);
+	List<M> getGameChanges(Personality player);
 
 
 	/**

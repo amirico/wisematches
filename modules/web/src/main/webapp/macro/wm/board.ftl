@@ -8,9 +8,9 @@
     <#if link><@href board.boardId>${title}<#if number> #${board.boardId}</#if></@href><#else>${title} <#if number> #${board.boardId}</#if></#if>
 </#macro>
 
-<#macro relationship board link=true>
-    <#if board.relationship??>
-        <#if board.relationship.code=1><@tourney.tourney board.relationship.id, link/></#if>
+<#macro relationship relationship link=true>
+    <#if relationship??>
+        <#if relationship.code=1><@tourney.tourney relationship.id, link/></#if>
     </#if>
 </#macro>
 

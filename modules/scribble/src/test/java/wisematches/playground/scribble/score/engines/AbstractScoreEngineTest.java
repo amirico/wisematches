@@ -22,8 +22,8 @@ public class AbstractScoreEngineTest {
 	@Before
 	public void init() {
 		scoreEngine = new AbstractScoreEngine(new ScoreBonus[]{
-				new ScoreBonus(0, 0, ScoreBonus.Type.DOUBLE_LETTER),
-				new ScoreBonus(3, 0, ScoreBonus.Type.DOUBLE_WORD)
+				new ScoreBonus(0, 0, ScoreBonus.Type.L2),
+				new ScoreBonus(3, 0, ScoreBonus.Type.W2)
 		}, 10);
 
 		tiles1 = new Tile[]{
@@ -85,7 +85,7 @@ public class AbstractScoreEngineTest {
 		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(0, 0), Direction.VERTICAL, tiles1));
 		assertEquals(7, res.getPoints());
 		assertEquals(3, res.getBonuses().length);
-		assertSame(ScoreBonus.Type.DOUBLE_LETTER, res.getBonuses()[0]);
+		assertSame(ScoreBonus.Type.L2, res.getBonuses()[0]);
 		assertEquals("1*2 + 2 + 3", res.getFormula());
 		verify(tp);
 	}
@@ -100,8 +100,8 @@ public class AbstractScoreEngineTest {
 		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(0, 0), Direction.VERTICAL, tiles2));
 		assertEquals(22, res.getPoints());
 		assertEquals(4, res.getBonuses().length);
-		assertSame(ScoreBonus.Type.DOUBLE_LETTER, res.getBonuses()[0]);
-		assertSame(ScoreBonus.Type.DOUBLE_WORD, res.getBonuses()[3]);
+		assertSame(ScoreBonus.Type.L2, res.getBonuses()[0]);
+		assertSame(ScoreBonus.Type.W2, res.getBonuses()[3]);
 		assertEquals("(1*2 + 2 + 3 + 4)*2", res.getFormula());
 		verify(tp);
 	}
@@ -116,7 +116,7 @@ public class AbstractScoreEngineTest {
 		ScribbleMoveScore res = scoreEngine.calculateWordScore(tp, new Word(new Position(0, 0), Direction.VERTICAL, tiles2));
 		assertEquals(11, res.getPoints());
 		assertEquals(4, res.getBonuses().length);
-		assertSame(ScoreBonus.Type.DOUBLE_LETTER, res.getBonuses()[0]);
+		assertSame(ScoreBonus.Type.L2, res.getBonuses()[0]);
 		assertNull(res.getBonuses()[1]);
 		assertNull(res.getBonuses()[2]);
 		assertNull(res.getBonuses()[3]);
