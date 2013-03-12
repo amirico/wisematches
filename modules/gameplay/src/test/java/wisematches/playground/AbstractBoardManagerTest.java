@@ -82,7 +82,7 @@ public class AbstractBoardManagerTest {
 
 		final Collection<Personality> players = Arrays.<Personality>asList(player1, player2);
 
-		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board = createStrictMock(AbstractGameBoard.class);
+		final AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
@@ -96,7 +96,7 @@ public class AbstractBoardManagerTest {
 
 		final MockGamePlayManager mock = new MockGamePlayManager(dao);
 
-		final GameBoard<?, ?> newBoard = mock.createBoard(settings, players, null);
+		final GameBoard<?, ?, ?> newBoard = mock.createBoard(settings, players, null);
 		assertSame(board, newBoard);
 
 		assertEquals(personalityCapture.getValue(), new ArrayList<Personality>(players));
@@ -149,7 +149,7 @@ public class AbstractBoardManagerTest {
 
 	@Test
 	public void testOpenBoard() throws BoardLoadingException {
-		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board = createStrictMock(AbstractGameBoard.class);
+		final AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		replay(board);
@@ -160,7 +160,7 @@ public class AbstractBoardManagerTest {
 
 		final MockGamePlayManager mock = new MockGamePlayManager(dao);
 
-		final GameBoard<?, ?> newBoard = mock.openBoard(1L);
+		final GameBoard<?, ?, ?> newBoard = mock.openBoard(1L);
 		assertSame(board, newBoard);
 
 		verify(board);
@@ -170,7 +170,7 @@ public class AbstractBoardManagerTest {
 		reset(board);
 		replay(board);
 
-		final GameBoard<?, ?> newBoard2 = mock.openBoard(1L);
+		final GameBoard<?, ?, ?> newBoard2 = mock.openBoard(1L);
 		assertSame(board, newBoard2);
 		assertSame(newBoard, newBoard2);
 
@@ -217,7 +217,7 @@ public class AbstractBoardManagerTest {
 		final AbstractPlayerHand h1 = new AbstractPlayerHand(player1, (short) 100);
 		final AbstractPlayerHand h2 = new AbstractPlayerHand(player2, (short) 200);
 
-		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board = createStrictMock(AbstractGameBoard.class);
+		final AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board = createStrictMock(AbstractGameBoard.class);
 		expectListeners(board);
 		expect(board.getBoardId()).andReturn(1L);
 		expect(board.getPlayers()).andReturn(Arrays.<Personality>asList(player1, player2));
@@ -275,7 +275,7 @@ public class AbstractBoardManagerTest {
 		verify(board, dao, boardListener, ratingSystem, move, statisticManager);
 	}
 
-	private void expectListeners(AbstractGameBoard<?, ?> board) {
+	private void expectListeners(AbstractGameBoard<?, ?, ?> board) {
 		board.setBoardListener(isA(BoardListener.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
 			public Object answer() throws Throwable {
@@ -286,17 +286,17 @@ public class AbstractBoardManagerTest {
 	}
 
 	private interface GameBoardDao {
-		void saveBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand> board);
+		void saveBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board);
 
-		AbstractGameBoard<GameSettings, AbstractPlayerHand> loadBoardImpl(long gameId);
+		AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> loadBoardImpl(long gameId);
 
-		AbstractGameBoard<GameSettings, AbstractPlayerHand> createBoardImpl(GameSettings settings, Collection<Personality> players, GameRelationship relationship);
+		AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> createBoardImpl(GameSettings settings, Collection<Personality> players, GameRelationship relationship);
 
-		void processGameMove(AbstractGameBoard<GameSettings, AbstractPlayerHand> board, Robot player);
+		void processGameMove(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board, Robot player);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static class MockGamePlayManager extends AbstractGamePlayManager<GameSettings, AbstractGameBoard<GameSettings, AbstractPlayerHand>> {
+	private static class MockGamePlayManager extends AbstractGamePlayManager<GameSettings, AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove>> {
 		private final GameBoardDao boardDao;
 
 		protected MockGamePlayManager(GameBoardDao boardDao) {
@@ -305,17 +305,17 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected void saveBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand> board) {
+		protected void saveBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board) {
 			boardDao.saveBoardImpl(board);
 		}
 
 		@Override
-		protected AbstractGameBoard<GameSettings, AbstractPlayerHand> loadBoardImpl(long gameId) throws BoardLoadingException {
+		protected AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> loadBoardImpl(long gameId) throws BoardLoadingException {
 			return boardDao.loadBoardImpl(gameId);
 		}
 
 		@Override
-		protected AbstractGameBoard<GameSettings, AbstractPlayerHand> createBoardImpl(GameSettings settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
+		protected AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> createBoardImpl(GameSettings settings, Collection<Personality> players, GameRelationship relationship) throws BoardCreationException {
 			return boardDao.createBoardImpl(settings, players, relationship);
 		}
 
@@ -325,7 +325,7 @@ public class AbstractBoardManagerTest {
 		}
 
 		@Override
-		protected void processRobotMove(AbstractGameBoard<GameSettings, AbstractPlayerHand> board, Robot player) {
+		protected void processRobotMove(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board, Robot player) {
 			boardDao.processGameMove(board, player);
 		}
 	}

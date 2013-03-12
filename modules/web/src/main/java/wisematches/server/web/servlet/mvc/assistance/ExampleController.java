@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.*;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.Word;
@@ -59,9 +58,6 @@ public class ExampleController extends WisematchesController {
 
 		model.addAttribute("player", boardWrapper.getBoard().getPlayerTurn());
 		model.addAttribute("memoryWords", selectMemoryWords(boardWrapper.getAvailableMoves()));
-
-		model.addAttribute("wordAttributes", WordAttribute.values());
-		model.addAttribute("dictionaryLanguage", language);
 
 		if (plain != null) {
 			return "/content/assistance/move";

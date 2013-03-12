@@ -10,7 +10,7 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @SuppressWarnings("unchecked")
-class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand> {
+class MockGameBoard extends AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> {
 	private boolean allowNextMove = true;
 	private boolean gameFinished = false;
 	private boolean moveFinished;

@@ -1,16 +1,16 @@
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
-<#assign dictionary=board.dictionary/>
 <#include "/content/playground/dictionary/card.ftl"/>
 
 <@wm.ui.widget class="dictionaryWidget" title="game.dictionary.label" help="board.dictionary">
 <table width="100%">
     <tr>
         <td width="100%" valign="middle">
-            <input class="word-value" style="width: 100%;">
+            <label>
+                <input class="word-value" style="width: 100%;">
+            </label>
         </td>
         <td nowrap="nowrap" align="center">
             <button class="word-control" style="width: 22px; height: 22px"></button>

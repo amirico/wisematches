@@ -1,9 +1,8 @@
-<#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
-
 <#include "/core.ftl">
 
 <#include "/content/addthis.ftl"/>
 
+<#--
 <div class="shareWidget ui-helper-hidden">
     <div class="shareToolbox ui-widget-content ui-corner-all shadow" align="left" style="position: relative">
     <#if principal?? && board.getPlayerHand(principal)??>
@@ -61,3 +60,4 @@
     }(board);
     </#if>
 </script>
+-->

@@ -5,8 +5,6 @@
 <div id="dictionary">
     <@wm.ui.table.header>
         <@message code="dict.label"/>
-
-    ${WordAttribute.INDECLINABLE.name()}
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left" class="search-panel">
@@ -94,21 +92,23 @@
 </div>
 </@wm.ui.playground>
 
-<#include "card.ftl"/>
 
 <script type="text/javascript">
-    var dictionary;
+    var dictionaryLanguage = '${dictionary.language}';
+
     $(document).ready(function () {
-        dictionary = new wm.game.dict.Dictionary('${dictionary.language}', {
+        $("#addNewWord").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function () {
+            dictionarySuggestion.addWordEntry();
+        });
+
+        var dictionary = new wm.game.dict.Dictionary(dictionaryLanguage, {
         <#list WordAttribute.values() as wa>
             "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
         </#list>
             "status.words.empty": "<@message code="dict.search.result.empty"/>",
             "status.words.loading": "<@message code="dict.search.result.loading"/>"
         });
-
-        $("#addNewWord").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function () {
-            dictionarySuggestion.addWordEntry();
-        });
     });
 </script>
+
+<#include "card.ftl"/>

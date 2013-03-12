@@ -118,7 +118,7 @@ class HibernateTourneyProcessor {
 		}
 	}
 
-	void finalizeDivisions(Session session, GameBoard<?, ?> board, Collection<RegistrationListener> subscriptionListeners, Collection<RegularTourneyListener> tourneyListeners) {
+	void finalizeDivisions(Session session, GameBoard<?, ?, ?> board, Collection<RegistrationListener> subscriptionListeners, Collection<RegularTourneyListener> tourneyListeners) {
 		final HibernateTourneyGroup group = getGroupByBoard(session, board);
 		if (group != null) {
 			log.info("Finalize tourney group: {}", group);
@@ -306,7 +306,7 @@ class HibernateTourneyProcessor {
 		return res;
 	}
 
-	HibernateTourneyGroup getGroupByBoard(Session session, GameBoard<?, ?> board) {
+	HibernateTourneyGroup getGroupByBoard(Session session, GameBoard<?, ?, ?> board) {
 		final Query query = session.createQuery("from HibernateTourneyGroup g where " +
 				"g.game0=:game or g.game1 = :game or g.game2 = :game or " +
 				"g.game3 = :game or g.game4 = :game or g.game5 = :game");

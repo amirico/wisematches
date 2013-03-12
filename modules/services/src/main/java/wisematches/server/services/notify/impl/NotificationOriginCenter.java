@@ -383,7 +383,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
-		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+		public void gameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 			final Collection<Personality> playersHands = board.getPlayers();
 			for (Personality person : playersHands) {
 				processNotification(person, "playground.game.started", Collections.singletonMap("board", board));
@@ -391,7 +391,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
-		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore moveScore) {
+		public void gameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 			final Personality playerTurn = board.getPlayerTurn();
 			if (playerTurn != null) {
 				final Map<String, Object> map = new HashMap<>();
@@ -402,7 +402,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
-		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameResolution resolution, Collection<Personality> winners) {
+		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners) {
 			final Collection<Personality> playersHands = board.getPlayers();
 			final Map<String, Object> map = new HashMap<>();
 			map.put("board", board);

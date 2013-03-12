@@ -3,7 +3,7 @@ package wisematches.playground;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?>> {
+public interface BoardManager<S extends GameSettings, B extends GameBoard<S, ?, ?>> {
 	void addBoardListener(BoardListener l);
 
 	void removeBoardListener(BoardListener l);

@@ -1,14 +1,14 @@
-<#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardInfo" type="wisematches.server.web.servlet.sdo.scribble.BoardInfo" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 
 <#include "/core.ftl">
 
 <#macro row activeVisible=true passiveVisible=true>
-    <#if !passiveVisible && !board.active> <#-- nothing to do if not active and -->
+    <#if !passiveVisible && !boardInfo.state.active> <#-- nothing to do if not active and -->
         <#return>
     </#if>
 
-<tr class="<#if !activeVisible || !passiveVisible>state-change-marker</#if><#if board.active && !activeVisible> ui-helper-hidden</#if>">
+<tr class="<#if !activeVisible || !passiveVisible>state-change-marker</#if><#if !boardInfo.state.active && !activeVisible> ui-helper-hidden</#if>">
     <#nested>
 </tr>
 </#macro>
@@ -32,9 +32,7 @@
     <@element showSeparator=false>
         <td nowrap="nowrap"><strong><@message code="game.state.started"/>:</strong></td>
         <td width="100%">
-            <div class="gameStartedTime">
-            ${messageSource.formatDate(board.startedDate, locale)}
-            </div>
+            <div class="gameStartedTime">${boardInfo.startedTime.text}</div>
         </td>
     </@element>
 
@@ -42,7 +40,7 @@
         <td nowrap="nowrap"><strong><@message code="game.state.finished"/>:</strong></td>
         <td>
             <div class="gameFinishedTime">
-                <#if board.finishedDate??>${messageSource.formatDate(board.finishedDate, locale)}</#if>
+                <#if boardInfo.outcomes.finishedTime??>${boardInfo.outcomes.finishedTime.text}</#if>
             </div>
         </td>
     </@element>
@@ -68,12 +66,13 @@
             <div class="gameResolution">
                 <div class="ui-progressbar game-progress">
                     <div class="ui-progressbar-value ui-corner-all game-progress-finished game-progress-caption sample">
-                        <#if board.resolution??><@message code="game.resolution.${board.resolution.name()?lower_case}"/></#if>
+                        <#if boardInfo.outcomes.resolution??><@message code="game.resolution.${boardInfo.outcomes.resolution.name()?lower_case}"/></#if>
                     </div>
                 </div>
                 <div class="sample game-resolution-player">
-                    <#if board.resolution??>
-                <#switch board.resolution>
+                <#--
+                    <#if boardInfo.outcomes.resolution??>
+                <#switch boardInfo.outcomes.resolution>
                         <#case 'FINISHED'><@message code="game.resolution.by"/> ${messageSource.getPersonalityNick(board.getPlayerTurn(), locale)}<#break>
                         <#case 'STALEMATE'><@message code="game.resolution.timeout"/><#break>
                         <#case 'TIMEOUT'><@message code="game.resolution.for"/> ${messageSource.getPersonalityNick(board.getPlayerTurn(), locale)}<#break>
@@ -81,6 +80,7 @@
                         <#default>
                     </#switch>
                 </#if>
+-->
                 </div>
             </div>
         </td>
@@ -88,29 +88,29 @@
 
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.language"/>:</strong></td>
-        <td><@message code="language."+board.settings.language?lower_case/></td>
+        <td><@message code="language."+boardInfo.settings.language?lower_case/></td>
     </@element>
 
     <@element>
         <td nowrap="nowrap"><strong><@message code="game.state.spent"/>:</strong></td>
         <td>
-            <div class="spentTime">${messageSource.formatSpentTime(board, locale)}</div>
+            <div class="spentTime">${boardInfo.state.spentTime.text}</div>
         </td>
     </@element>
 
-    <#if board.relationship??>
+    <#if boardInfo.outcomes.relationship??>
         <@element>
             <td nowrap="nowrap"><strong><@message code="game.state.relationship"/>:</strong></td>
-            <td><@wm.board.relationship board, true/></td>
+            <td><@wm.board.relationship boardInfo.relationship, true/></td>
         </@element>
     </#if>
 
     <@element passiveVisible=false>
         <td nowrap="nowrap"><strong><@message code="game.state.time"/>:</strong></td>
-        <td>${board.settings.daysPerMove} ${messageSource.formatDays(board.settings.daysPerMove, locale)} <@message code="game.state.move"/></td>
+        <td>${boardInfo.settings.daysPerMove} ${messageSource.formatDays(boardInfo.settings.daysPerMove, locale)} <@message code="game.state.move"/></td>
     </@element>
 
-    <#if board.settings.scratch>
+    <#if boardInfo.settings.scratch>
         <@element>
             <td colspan="2">
                 <div class="game-state-scratch">
@@ -123,7 +123,7 @@
 </table>
 </@wm.ui.widget>
 
-<#if board.active>
+<#if boardInfo.state.active>
 <script type="text/javascript">
     wm.scribble.state = function (board) {
         var status = this;

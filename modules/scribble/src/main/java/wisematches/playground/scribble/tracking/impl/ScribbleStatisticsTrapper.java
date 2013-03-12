@@ -13,7 +13,7 @@ public class ScribbleStatisticsTrapper extends StatisticsTrapper<ScribbleStatist
 	}
 
 	@Override
-	public void trapGameMoveDone(Player player, ScribbleStatisticsEditor editor, GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore score) {
+	public void trapGameMoveDone(Player player, ScribbleStatisticsEditor editor, GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore score) {
 		super.trapGameMoveDone(player, editor, board, move, score);
 
 		if (move instanceof PassTurn) {

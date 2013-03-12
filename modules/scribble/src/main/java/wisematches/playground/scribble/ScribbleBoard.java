@@ -22,7 +22,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "scribble_board")
-public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribblePlayerHand> implements TilesPlacement {
+public class ScribbleBoard extends AbstractGameBoard<ScribbleSettings, ScribblePlayerHand, ScribbleMove> implements TilesPlacement {
 	@Transient
 	private TilesBank tilesBank;
 

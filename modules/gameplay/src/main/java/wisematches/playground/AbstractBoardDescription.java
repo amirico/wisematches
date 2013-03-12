@@ -95,12 +95,38 @@ public class AbstractBoardDescription<S extends GameSettings, H extends Abstract
 
 	@Override
 	public Date getLastMoveTime() {
-		return lastMoveTime;
+		lock.lock();
+		try {
+			return lastMoveTime;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public Date getLastChangeTime() {
+		lock.lock();
+		try {
+			if (movesCount == 0) {
+				return startedDate;
+			}
+			if (finishedDate != null) {
+				return finishedDate;
+			}
+			return lastMoveTime;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public Date getFinishedDate() {
-		return finishedDate;
+		lock.lock();
+		try {
+			return finishedDate;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -172,21 +198,31 @@ public class AbstractBoardDescription<S extends GameSettings, H extends Abstract
 
 	@Override
 	public Collection<Personality> getWonPlayers() {
-		if (isActive()) {
-			return null;
-		}
-
-		final Collection<Personality> res = new ArrayList<>();
-		for (int i = 0; i < hands.size(); i++) {
-			H hand = hands.get(i);
-			if (hand.isWinner()) {
-				res.add(players.get(i));
+		lock.lock();
+		try {
+			if (isActive()) {
+				return null;
 			}
+
+			final Collection<Personality> res = new ArrayList<>();
+			for (int i = 0; i < hands.size(); i++) {
+				H hand = hands.get(i);
+				if (hand.isWinner()) {
+					res.add(players.get(i));
+				}
+			}
+			return res;
+		} finally {
+			lock.unlock();
 		}
-		return res;
 	}
 
 	protected boolean isGameExpired() {
-		return System.currentTimeMillis() - getLastMoveTime().getTime() > settings.getDaysPerMove() * 86400000;
+		lock.lock();
+		try {
+			return System.currentTimeMillis() - lastMoveTime.getTime() > settings.getDaysPerMove() * 86400000;
+		} finally {
+			lock.unlock();
+		}
 	}
 }

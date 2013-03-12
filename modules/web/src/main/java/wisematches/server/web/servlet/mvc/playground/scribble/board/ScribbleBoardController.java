@@ -1,6 +1,7 @@
 package wisematches.server.web.servlet.mvc.playground.scribble.board;
 
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Player;
 import wisematches.playground.BoardLoadingException;
-import wisematches.playground.dictionary.WordAttribute;
 import wisematches.playground.scribble.ScribbleBoard;
+import wisematches.playground.scribble.ScribblePlayerHand;
 import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.bank.LetterDescription;
 import wisematches.playground.scribble.bank.LettersDistribution;
@@ -23,16 +24,20 @@ import wisematches.server.web.servlet.mvc.playground.scribble.game.form.Scribble
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 import wisematches.server.web.servlet.sdo.board.ScribbleDescriptionInfo;
+import wisematches.server.web.servlet.sdo.scribble.BoardInfo;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 @Controller
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends AbstractScribbleController {
+	private final ObjectMapper jsonObjectConverter = new ObjectMapper();
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ScribbleBoardController");
 
@@ -42,7 +47,7 @@ public class ScribbleBoardController extends AbstractScribbleController {
 	@RequestMapping("")
 	public String showPlayboard(@RequestParam("b") long gameId,
 								@RequestParam(value = "t", required = false) String tiles,
-								Model model) throws UnknownEntityException {
+								Model model, Locale locale) throws UnknownEntityException {
 		try {
 			final Player player = getPrincipal();
 			final ScribbleBoard board = playManager.openBoard(gameId);
@@ -50,8 +55,12 @@ public class ScribbleBoardController extends AbstractScribbleController {
 				throw new UnknownEntityException(gameId, "board");
 			}
 
-			model.addAttribute("board", board);
-			addTitleExtension(" #" + board.getBoardId() + " (" + board.getSettings().getTitle() + ")", model);
+
+			Tile[] handTiles = null;
+			final ScribblePlayerHand playerHand = board.getPlayerHand(player);
+			if (playerHand != null) {
+				handTiles = playerHand.getTiles();
+			}
 
 			if (tiles != null && !tiles.isEmpty()) {
 				final char[] ts = tiles.toCharArray();
@@ -69,23 +78,26 @@ public class ScribbleBoardController extends AbstractScribbleController {
 					}
 
 					if (valid) {
-						model.addAttribute("tiles", t);
+						handTiles = t;
 					}
 				}
 			}
 
-			model.addAttribute("wordAttributes", WordAttribute.values());
-			model.addAttribute("dictionaryLanguage", board.getSettings().getLanguage());
+			final BoardInfo info = new BoardInfo(board, handTiles, playerStateManager, messageSource, locale);
+			model.addAttribute("boardInfo", info);
+			model.addAttribute("boardInfoJSON", jsonObjectConverter.writeValueAsString(info));
 
 			if (player == null) {
 				model.addAttribute("viewMode", Boolean.TRUE);
 				model.addAttribute("boardSettings", DEFAULT_BOARD_SETTINGS);
 			} else {
-				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
 				model.addAttribute("viewMode", !board.isActive() || board.getPlayerHand(player) == null);
+				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
 			}
+
+			addTitleExtension(" #" + board.getBoardId() + " (" + messageSource.getBoardTitle(board, locale) + ")", model);
 			return "/content/playground/scribble/playboard";
-		} catch (BoardLoadingException ex) {
+		} catch (BoardLoadingException | IOException ex) {
 			log.error("Board {} can't be loaded", gameId, ex);
 			throw new UnknownEntityException(gameId, "board");
 		}

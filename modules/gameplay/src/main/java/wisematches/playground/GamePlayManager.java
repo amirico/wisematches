@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, ?>> extends BoardManager<S, B> {
+public interface GamePlayManager<S extends GameSettings, B extends GameBoard<S, ?, ?>> extends BoardManager<S, B> {
 	/**
 	 * Returns set of supported robots by this player.
 	 *

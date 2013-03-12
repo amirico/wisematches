@@ -20,13 +20,13 @@ public class StatisticsTrapper<E extends StatisticsEditor> {
 		editor.setActiveGames(editor.getActiveGames() + 1);
 	}
 
-	public void trapGameFinished(Player player, E editor, GameBoard<? extends GameSettings, ? extends GamePlayerHand> board) {
+	public void trapGameFinished(Player player, E editor, GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 		editor.setActiveGames(editor.getActiveGames() - 1);
 		editor.setFinishedGames(editor.getFinishedGames() + 1);
 
 		// Update average moves per game
 		int movesCount = 0;
-		final List<GameMove> list = board.getGameMoves();
+		final List<? extends GameMove> list = board.getGameMoves();
 		for (GameMove gameMove : list) {
 			if (gameMove.getPlayer().equals(player)) {
 				movesCount++;
@@ -151,7 +151,7 @@ public class StatisticsTrapper<E extends StatisticsEditor> {
 		}
 	}
 
-	public void trapGameMoveDone(Player player, E editor, GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move, GameMoveScore score) {
+	public void trapGameMoveDone(Player player, E editor, GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore score) {
 		final int turnsCount = editor.getTurnsCount() + 1;
 
 		editor.setTurnsCount(turnsCount);
@@ -174,8 +174,8 @@ public class StatisticsTrapper<E extends StatisticsEditor> {
 		editor.setTourneyWins(place, editor.getTourneyWins(place) + 1);
 	}
 
-	protected final Date previousMoveTime(GameBoard<? extends GameSettings, ? extends GamePlayerHand> board, GameMove move) {
-		final List<GameMove> list = board.getGameMoves();
+	protected final Date previousMoveTime(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move) {
+		final List<? extends GameMove> list = board.getGameMoves();
 		final int i = list.lastIndexOf(move);
 		if (i < 1) {
 			return board.getStartedDate();
