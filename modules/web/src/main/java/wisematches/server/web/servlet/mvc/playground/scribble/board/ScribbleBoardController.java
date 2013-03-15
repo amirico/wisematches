@@ -23,8 +23,10 @@ import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleCo
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleTileForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleWordForm;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
-import wisematches.server.web.servlet.sdo.board.ScribbleDescriptionInfo;
-import wisematches.server.web.servlet.sdo.scribble.BoardInfo;
+import wisematches.server.web.servlet.sdo.scribble.board.BoardUpdatesInfo;
+import wisematches.server.web.servlet.sdo.scribble.board.GameInfo;
+import wisematches.server.web.servlet.sdo.scribble.board.MoveInfo;
+import wisematches.server.web.servlet.sdo.scribble.board.StatusInfo;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -33,7 +35,6 @@ import java.util.concurrent.Callable;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 @Controller
 @RequestMapping("/playground/scribble/board")
 public class ScribbleBoardController extends AbstractScribbleController {
@@ -83,7 +84,7 @@ public class ScribbleBoardController extends AbstractScribbleController {
 				}
 			}
 
-			final BoardInfo info = new BoardInfo(board, handTiles, playerStateManager, messageSource, locale);
+			final GameInfo info = new GameInfo(board, handTiles, playerStateManager, messageSource, locale);
 			model.addAttribute("boardInfo", info);
 			model.addAttribute("boardInfoJSON", jsonObjectConverter.writeValueAsString(info));
 
@@ -110,12 +111,17 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		log.debug("Process player's move: {}, word: {}", gameId, word);
 
 		final Player player = getPrincipal();
-		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
+		return processSafeAction(new Callable<BoardUpdatesInfo>() {
 			@Override
-			public ScribbleDescriptionInfo call() throws Exception {
+			public BoardUpdatesInfo call() throws Exception {
 				final ScribbleBoard board = playManager.openBoard(gameId);
+				final int movesCount = board.getMovesCount();
 				board.makeTurn(player, word.createWord());
-				return new ScribbleDescriptionInfo(player, board, board.getMovesCount() - 1, messageSource, locale);
+
+				final StatusInfo status = new StatusInfo(board, messageSource, locale);
+				final Tile[] tiles = board.getPlayerHand(player).getTiles();
+				final MoveInfo[] movesInfo = MoveInfo.getMovesInfo(board, movesCount, messageSource, locale);
+				return new BoardUpdatesInfo(board, status, movesInfo, tiles);
 			}
 		}, locale);
 	}
@@ -126,12 +132,17 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		log.debug("Process player's pass: {}", gameId);
 
 		final Player player = getPrincipal();
-		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
+		return processSafeAction(new Callable<BoardUpdatesInfo>() {
 			@Override
-			public ScribbleDescriptionInfo call() throws Exception {
+			public BoardUpdatesInfo call() throws Exception {
 				final ScribbleBoard board = playManager.openBoard(gameId);
+				final int movesCount = board.getMovesCount();
 				board.passTurn(player);
-				return new ScribbleDescriptionInfo(player, board, board.getMovesCount() - 1, messageSource, locale);
+
+				final StatusInfo status = new StatusInfo(board, messageSource, locale);
+				final Tile[] tiles = board.getPlayerHand(player).getTiles();
+				final MoveInfo[] movesInfo = MoveInfo.getMovesInfo(board, movesCount, messageSource, locale);
+				return new BoardUpdatesInfo(board, status, movesInfo, tiles);
 			}
 		}, locale);
 	}
@@ -143,17 +154,22 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		log.debug("Process player's exchange: {}, tiles: {}", gameId, tiles);
 
 		final Player player = getPrincipal();
-		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
+		return processSafeAction(new Callable<BoardUpdatesInfo>() {
 			@Override
-			public ScribbleDescriptionInfo call() throws Exception {
+			public BoardUpdatesInfo call() throws Exception {
 				final int[] t = new int[tiles.length];
 				for (int i = 0; i < tiles.length; i++) {
 					t[i] = tiles[i].getNumber();
 				}
 
 				final ScribbleBoard board = playManager.openBoard(gameId);
+				final int movesCount = board.getMovesCount();
 				board.exchangeTiles(player, t);
-				return new ScribbleDescriptionInfo(player, board, board.getMovesCount() - 1, messageSource, locale);
+
+				final StatusInfo status = new StatusInfo(board, messageSource, locale);
+				final Tile[] tiles = board.getPlayerHand(player).getTiles();
+				final MoveInfo[] movesInfo = MoveInfo.getMovesInfo(board, movesCount, messageSource, locale);
+				return new BoardUpdatesInfo(board, status, movesInfo, tiles);
 			}
 		}, locale);
 	}
@@ -164,14 +180,15 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		log.debug("Process player's resign: {}", gameId);
 
 		final Player player = getPrincipal();
-		return processSafeAction(new Callable<ScribbleDescriptionInfo>() {
+		return processSafeAction(new Callable<BoardUpdatesInfo>() {
 			@Override
-			public ScribbleDescriptionInfo call() throws Exception {
+			public BoardUpdatesInfo call() throws Exception {
 				final ScribbleBoard board = playManager.openBoard(gameId);
 				board.resign(player);
 
-				final ScribbleDescriptionInfo scribbleDescriptionInfo = new ScribbleDescriptionInfo(player, board, 0, messageSource, locale);
-				return scribbleDescriptionInfo;
+				final StatusInfo status = new StatusInfo(board, messageSource, locale);
+				final Tile[] tiles = board.getPlayerHand(player).getTiles();
+				return new BoardUpdatesInfo(board, status, null, tiles);
 			}
 		}, locale);
 	}

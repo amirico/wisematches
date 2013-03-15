@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="viewMode" type="boolean" -->
-<#-- @ftlvariable name="boardInfo" type="wisematches.server.web.servlet.sdo.scribble.BoardInfo" -->
+<#-- @ftlvariable name="boardInfo" type="wisematches.server.web.servlet.sdo.scribble.board.GameInfo" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#include "/core.ftl">
 
@@ -38,9 +38,9 @@
                         <td style="vertical-align: top; width: 280px">
                         <#include "widget/players.ftl"/>
                             <#if viewMode><#if boardSettings.enableShare><#include "widget/share.ftl"/></#if></#if>
-                        <#if !viewMode>
                             <#include "widget/selection.ftl"/>
                             <#include "widget/dictionary.ftl"/>
+                        <#if !viewMode>
                             <#include "widget/memory.ftl"/>
                         <#else>
                         </#if>

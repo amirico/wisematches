@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.sdo.game;
+package wisematches.server.web.servlet.sdo.scribble.board;
 
 import wisematches.core.Personality;
 import wisematches.playground.GameMessageSource;
@@ -14,13 +14,13 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleDescriptionInfo {
+public class HistGameInfo {
 	private final Locale locale;
 	private final GameMessageSource messageSource;
 	private final ScribbleDescription description;
 	private final PlayerStateManager playerStateManager;
 
-	public ScribbleDescriptionInfo(ScribbleDescription description, GameMessageSource messageSource, PlayerStateManager playerStateManager, Locale locale) {
+	public HistGameInfo(ScribbleDescription description, GameMessageSource messageSource, PlayerStateManager playerStateManager, Locale locale) {
 		this.locale = locale;
 		this.description = description;
 		this.messageSource = messageSource;
@@ -68,7 +68,7 @@ public class ScribbleDescriptionInfo {
 		final PersonalityInfo[] ps = new PersonalityInfo[players.size()];
 		int index = 0;
 		for (Personality person : players) {
-			ps[index++] = PersonalityInfo.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
+			ps[index++] = new PersonalityInfo(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
 		}
 		return ps;
 	}

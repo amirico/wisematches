@@ -54,7 +54,7 @@ public class PlayersController extends WisematchesController {
 		final List<PersonalityLongInfo> rows = new ArrayList<>();
 		for (PlayerEntityBean bean : beans) {
 			final Personality person = personalityManager.getPerson(bean.getPlayer());
-			final PersonalityInfo pi = PersonalityInfo.get(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
+			final PersonalityInfo pi = new PersonalityInfo(messageSource.getPersonalityNick(person, locale), person, playerStateManager);
 			rows.add(new PersonalityLongInfo(pi, bean, messageSource, locale));
 		}
 		return responseFactory.success(request.replay(totalCount, rows));
