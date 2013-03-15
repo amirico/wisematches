@@ -6,10 +6,13 @@ import wisematches.playground.GameBoard;
 import java.util.List;
 
 /**
+ * TODO: searcheable manager should be added here.
+ * <p/>
  * Scribble comments manager. Allows add/remove and receive comments.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@Deprecated
 public interface GameCommentManager {
 	/**
 	 * Adds new comment to specified board by specified personality.

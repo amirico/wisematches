@@ -1614,12 +1614,12 @@ wm.scribble.Comments = function (board, controller, language) {
         wm.ui.lock(widget);
         controller.execute('comments', 'load', 'b=' + board.getBoardId(), null, function (result) {
             if (result.success) {
-                comments = result.data.comments;
+                comments = result.data;
 
                 var count = 0;
                 var historyCount = 0;
                 var unreadLoaded = true;
-                $.each(result.data.comments, function (i, a) {
+                $.each(result.data, function (i, a) {
                     if (!a.read && unreadLoaded) {
                         count++;
                     } else {
@@ -1665,7 +1665,7 @@ wm.scribble.Comments = function (board, controller, language) {
         wm.ui.lock(widget, language['loading']);
         controller.execute('comments', 'get', 'b=' + board.getBoardId(), visible, function (result) {
             if (result.success) {
-                $.each(result.data.comments, function (i, a) {
+                $.each(result.data, function (i, a) {
                     showComment(a, read['c' + a.id], false);
                 });
                 loadedComments += count;
@@ -1732,7 +1732,7 @@ wm.scribble.Comments = function (board, controller, language) {
         var item = $('<div class="item' + (collapsed ? ' collapsed' : '') + '"></div>');
         var info = $('<div class="info"></div>').appendTo(item);
         var time = $('<div class="time"></div>').appendTo(info).html('(' + comment.elapsed + ' ' + language['ago'] + ')');
-        var player = $('<div class="sender"></div>').appendTo(info).html(wm.ui.player(board.getPlayerInfo(comment.person), false, false, false));
+        var player = $('<div class="sender"></div>').appendTo(info).html(wm.ui.player(board.getPlayer(comment.person).info, false, false, false));
 
         var msg = $('<div class="message"></div>').appendTo(item).html(comment.text + "<span></span>");
 
@@ -1798,18 +1798,21 @@ wm.scribble.Comments = function (board, controller, language) {
 
     this.getMonitoringBean = function () {
         var processLoadedComments = function (response) {
-            var d = response.data.comments;
-            if (d != undefined && d.length > 0) {
-                $.each(d.reverse(), function (i, a) {
-                    comments.unshift({id: a.id, read: false});
-                    showComment(a, false, true);
-                });
-                loadedComments += d.length;
-                if (loadedComments == d.length) {
-                    widget.find('.content').show();
-                    updateStatus();
+            var a = response.data.commentChanges;
+            if (a != null && a != undefined) {
+                var b = a.comments;
+                if (b != undefined && b.length > 0) {
+                    $.each(b.reverse(), function (i, a) {
+                        comments.unshift({id: a.id, read: false});
+                        showComment(a, false, true);
+                    });
+                    loadedComments += b.length;
+                    if (loadedComments == b.length) {
+                        widget.find('.content').show();
+                        updateStatus();
+                    }
+                    $.post('/playground/scribble/comment/mark.ajax?b=' + board.getBoardId());
                 }
-                $.post('/playground/scribble/comment/mark.ajax?b=' + board.getBoardId());
             }
         };
 
@@ -1824,12 +1827,11 @@ wm.scribble.Comments = function (board, controller, language) {
         };
     };
 
-    board.bind('gameState',
-            function (event, type, state) {
-                if (type === 'finished') {
-                    widget.find('.create-comment').remove();
-                }
-            });
+    board.bind('resolution', function (event, oldResolution, newResolution) {
+        if (newResolution != null) {
+            widget.find('.create-comment').remove();
+        }
+    });
 
     $(document).ready(function () {
         initWidget();
@@ -1920,7 +1922,7 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
     var reloadMemoryWords = function () {
         memoryTable.fnClearTable();
         executeRequest('load', null, function (data) {
-            $.each(data.words, function (i, word) {
+            $.each(data, function (i, word) {
                 addWord(word, true);
             });
         });
@@ -1990,21 +1992,25 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
         "oLanguage": language
     });
 
+    var processWordSelected = function (event, word) {
+        addWordButton.button(word == null ? "disable" : "enable");
+    };
+
+    var processGameFinished = function (event, oldResolution, newResolution) {
+        memoryWordWidget.remove();
+        board.unbind('selectedWord', processWordSelected);
+    };
+
+    var processNewMoves = function (event, moves) {
+        validateWords();
+    };
+
     addWordButton.button({disabled: true, icons: {primary: 'icon-memory-add'}}).click(this.remember);
     clearWordButton.button({disabled: true, icons: {primary: 'icon-memory-clear'}}).click(this.clear);
 
-    board.bind('wordSelection',
-            function (event, word) {
-                addWordButton.button(word == null ? "disable" : "enable");
-            }).bind('gameState',
-            function (event, type, state) {
-                if (type === 'finished') {
-                    memoryWordWidget.remove();
-                }
-            }).bind('gameMoves',
-            function (event, move) {
-                validateWords();
-            });
+    board.bind('selectedWord', processWordSelected)
+            .bind('resolution', processGameFinished)
+            .bind('gameMoves', processNewMoves);
 
     $(document).ready(function () {
         reloadMemoryWords();
@@ -2020,8 +2026,8 @@ wm.scribble.Selection = function (board) {
     var selectedWordCost = wordCostElement.text();
     var selectedTilesInfo = selectedTilesElement.text();
 
-    board.bind("tileSelection",
-            function (event, selected, tile) {
+    board.bind("selectedTiles",
+            function (event, tile, selected) {
                 var tiles = selectedTilesElement.find('div');
                 var length = board.getSelectedTiles().length;
                 if (selected && length == 1) {
@@ -2045,7 +2051,7 @@ wm.scribble.Selection = function (board) {
                     selectedTilesElement.text(selectedTilesInfo);
                 }
             })
-            .bind('wordSelection',
+            .bind('selectedWord',
             function (event, word) {
                 if (word != null) {
                     wordCostElement.empty().text(board.getScoreEngine().getWordPoints(word).formula);
@@ -2145,7 +2151,7 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
         validateWord(input.val());
     };
 
-    board.bind('wordSelection',
+    board.bind('selectedWord',
             function (event, word) {
                 if (word != null) {
                     input.val(word.text);
@@ -2274,7 +2280,7 @@ wm.scribble.History = function (board, language) {
             } else if (move.type == 'PASS') {
                 link = '<span class="movePassed">' + language['passed'] + '</span>';
             }
-            rows.push([1 + move.number, board.getPlayerInfo(move.player).nickname, link, move.points]);
+            rows.push([1 + move.number, board.getPlayer(move.player).info.nickname, link, move.points]);
         });
         movesHistoryTable.fnAddData(rows, false);
         movesHistoryTable.fnDraw(true);
@@ -2312,8 +2318,8 @@ wm.scribble.History = function (board, language) {
     $(document).ready(function () {
         insert(board.getGameMoves());
 
-        board.bind('gameMoves', function (event, move) {
-            insert([move]);
+        board.bind('gameMoves', function (event, newMoves) {
+            insert(newMoves);
         });
     });
 };
@@ -2352,11 +2358,11 @@ wm.scribble.Controls = function (board, language) {
         }
     };
 
-    var blockBoard = function () {
+    var lockBoard = function () {
         wm.ui.lock(widget, language['updatingBoard']);
     };
 
-    var unblockBoard = function () {
+    var unlockBoard = function () {
         updateControlsState();
 
         wm.ui.unlock(widget);
@@ -2377,22 +2383,23 @@ wm.scribble.Controls = function (board, language) {
         resignGameButton.button(board.isBoardActive() ? "enable" : "disable");
     };
 
-    var updateGameState = function (type, state) {
-        if (type === 'turn') {
+    var updateGameState = function (type) {
+        var playerTurn = board.getPlayer(board.getPlayerTurn());
+        if (type === 'playerTurn') {
             updateControlsState();
 
             if (board.isPlayerActive()) {
                 wm.ui.notification(language['updatedLabel'], language['updatedYour'], 'your-turn');
             } else {
-                wm.ui.notification(language['updatedLabel'], language['updatedOther'] + ' <b>' + board.getPlayerInfo(state.playerTurn).nickname + '</b>.', 'opponent-turn');
+                wm.ui.notification(language['updatedLabel'], language['updatedOther'] + ' <b>' + playerTurn.info.nickname + '</b>.', 'opponent-turn');
             }
-        } else if (type === 'finished') {
+        } else if (type === 'resolution') {
             toolbarElement.hide();
             toolbarElement.find('button').button({disabled: true});
             var msg;
             var opts = {autoHide: false};
-            if (state.resolution == 'RESIGNED') {
-                msg = language['finishedInterrupted'] + " <b>" + board.getPlayerInfo(state.playerTurn).nickname + "</b>.";
+            if (board.getResolution() == 'RESIGNED') {
+                msg = language['finishedInterrupted'] + " <b>" + playerTurn.info.nickname + "</b>.";
             } else {
                 var winners = board.getWonPlayers();
                 if (winners == undefined || winners.length == 0) {
@@ -2469,22 +2476,24 @@ wm.scribble.Controls = function (board, language) {
         )
     };
 
-    board.bind("tileSelection",
-            function (event, selected, tile) {
+    board
+            .bind("selectedTiles", function (event, tile, selected) {
                 updateSelectionState();
             })
-            .bind('wordSelection',
-            function (event, word) {
+            .bind('selectedWord', function (event, word) {
                 updateControlsState();
-            }).bind('gameState',
-            function (event, type, state) {
-                updateGameState(type, state);
-            }).bind('boardState',
-            function (event, enabled) {
-                if (!enabled) {
-                    blockBoard();
+            })
+            .bind('playerTurn', function (event, oldPlayerTurn, newPlayerTurn) {
+                updateGameState('playerTurn');
+            })
+            .bind('resolution', function (event, oldResolution, newResolution) {
+                updateGameState('resolution');
+            })
+            .bind('locked', function (event, locked) {
+                if (locked) {
+                    lockBoard();
                 } else {
-                    unblockBoard();
+                    unlockBoard();
                 }
             });
 
@@ -2546,20 +2555,20 @@ wm.scribble.Players = function (board) {
 
     var updateBoardState = function () {
         $.each(board.getPlayers(), function (i, p) {
-            updatePlayerPoints(p.playerId, p.points);
+            updatePlayerPoints(p.id, p.score.points);
         });
 
         if (board.isBoardActive()) {
             showActiveMarker(board.getPlayerTurn());
-            showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime());
+            showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime().text);
         } else {
             hideActiveMarker();
             showChallengeButton();
             $.each(board.getPlayers(), function (i, p) {
-                if (p.winner) {
-                    showWinnerMarker(p.playerId);
+                if (p.score.winner) {
+                    showWinnerMarker(p.id);
                 }
-                showPlayerRating(p.playerId, p.oldRating, p.newRating);
+                showPlayerRating(p.id, p.score.oldRating, p.score.newRating);
             });
         }
     };
@@ -2570,24 +2579,24 @@ wm.scribble.Players = function (board) {
             var row = '';
             row += '<tr class="player-info-' + p.id + ' player-info">';
             row += '<td width="24px" height="24px" class="winner-icon ui-corner-left ui-table-left"><div></div></td>';
-            row += '<td class="nickname ui-table-middle">' + wm.ui.player(p) + '</td>';
-            row += '<td width="20px" class="points ui-table-middle">' + 0 + '</td>';
+            row += '<td class="nickname ui-table-middle">' + wm.ui.player(p.info) + '</td>';
+            row += '<td width="20px" class="points ui-table-middle">' + p.score.points + '</td>';
             row += '<td width="60px" class="info ui-corner-right ui-table-right"></td>';
             row += '</tr>';
             table.append(row);
         });
     };
 
-    initPlayersView();
-    updateBoardState();
-
     $(".createChallenge button").click(function () {
         wm.util.url.redirect('/playground/scribble/create?t=board&p=' + board.getBoardId());
     });
 
-    board.bind('gameState', function (event, type, state) {
+    board.bind('validated', function () {
         updateBoardState();
     });
+
+    initPlayersView();
+    updateBoardState();
 };
 
 wm.scribble.Settings = function (board, language) {
@@ -2700,7 +2709,1026 @@ wm.scribble.ScoreEngine = function (gameBonuses, board) {
     };
 };
 
-// TODO: put board here
+wm.scribble.Progress = function (board, language) {
+    var updateProgressBar = function () {
+        var count = board.getBankCapacity();
+        var bo = board.getBoardTilesCount(), ha = board.getHandTilesCount(), ba = board.getBankTilesCount();
+        var p3 = Math.round(100 * ha / count), p2 = Math.round(100 * ba / count), p1 = 100 - p3 - p2;
+
+        var boardWidget = board.getPlayboardElement(".game-progress .game-progress-board").css('width', p1 + '%');
+        var bankWidget = board.getPlayboardElement(".game-progress .game-progress-bank").css('width', p2 + '%');
+        var handWidget = board.getPlayboardElement(".game-progress .game-progress-hand").css('width', p3 + '%');
+        board.getPlayboardElement(".game-progress .game-progress-caption").text(bo + ' / ' + ba + ' / ' + ha);
+
+        if (p1 < 2) {
+            boardWidget.hide();
+            bankWidget.addClass("ui-corner-left");
+        } else {
+            boardWidget.show();
+            bankWidget.removeClass("ui-corner-left");
+        }
+        if (p3 < 2) {
+            handWidget.hide();
+            bankWidget.addClass("ui-corner-right");
+        }
+    };
+
+    var markAsFinished = function () {
+        board.getPlayboardElement(".gameFinishedTime").html(board.getFinishedTime().text);
+
+        var cap = board.getPlayboardElement(".gameResolution .game-progress-caption");
+        var desc = board.getPlayboardElement(".gameResolution .game-resolution-player");
+        var playerTurn = board.getPlayerTurn();
+        switch (board.getResolution()) {
+            case 'FINISHED':
+                cap.text(language['resolution.finished']);
+                desc.text(language['resolution.by'] + ' ' + board.getPlayer(playerTurn).info.nickname);
+                break;
+            case 'STALEMATE':
+                cap.text(language['resolution.stalemate']);
+                desc.text(language['resolution.moves']);
+                break;
+            case 'TIMEOUT':
+                cap.text(language['resolution.timeout']);
+                desc.text(language['resolution.for'] + ' ' + board.getPlayer(playerTurn).info.nickname);
+                break;
+            case 'RESIGNED':
+                cap.text(language['resolution.resigned']);
+                desc.text(language['resolution.by'] + ' ' + board.getPlayer(playerTurn).info.nickname);
+                break;
+        }
+    };
+
+    board.bind('validated',
+            function (event, type) {
+                board.getPlayboardElement(".spentTime").html(board.getSpentTime().text);
+            }).bind('resolution',
+            function (event, resolution) {
+                markAsFinished();
+                $(".state-change-marker").toggle();
+            }).bind('gameMoves',
+            function (event, moves) {
+                updateProgressBar();
+            });
+
+    if (!board.isBoardActive()) {
+        markAsFinished();
+    } else {
+        updateProgressBar();
+    }
+};
+
+wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller, settings) {
+    var playboard = this;
+
+    var id = board.id;
+    var language = board.settings.language;
+
+    var bank = board.bank;
+    var moves = board.moves;
+    var players = board.players;
+
+    var locked = false;
+    var enabled = true;
+    var handTiles = new Array(7);
+    var boardTiles = wm.util.createMatrix(15);
+
+    var draggingTile = null;
+
+    var selectedWord = null;
+    var selectedTileWidgets = [];
+
+    var wildcardSelectionDialog = null;
+
+    var scribbleEl = $("<div></div>").addClass('scribble');
+    var backgroundEl = $("<div></div>").addClass('background').appendTo(scribbleEl);
+    var fieldEl = $("<div></div>").addClass('field').appendTo(scribbleEl);
+    var bonusesEl = $("<div></div>").addClass('bonuses').appendTo($(backgroundEl));
+    var handEl = $("<div></div>").addClass('hand').appendTo($(fieldEl));
+    var boardEl = $("<div></div>").addClass('board').appendTo($(fieldEl));
+    var colorEl = $("<div></div>").addClass('color').appendTo(backgroundEl);
+    var gridEl = $("<div></div>").addClass('grid').appendTo(backgroundEl);
+
+    var highlighting = new function () {
+        var element = $('<div></div>').addClass('highlighting').hide().appendTo(fieldEl);
+        var previousCell = null;
+
+        var updatePosition = function (cell) {
+            var offset = cell.container.offset();
+            element.offset({left: offset.left + cell.x * 22, top: offset.top + cell.y * 22});
+        };
+
+        this.start = function (tileWidget, cell) {
+            element.css('backgroundPosition', -tileWidget.data('tile').cost * 22 + "px -88px");
+            if (cell != null) {
+                element.show();
+                updatePosition(cell);
+            }
+            previousCell = cell;
+        };
+
+        this.stop = function () {
+            element.hide();
+            element.offset({top: 0, left: 0});
+            previousCell = null;
+        };
+
+        this.highlight = function (cell) {
+            if (cell != null) {
+                if (previousCell == null) {
+                    element.show();
+                    updatePosition(cell);
+                } else {
+                    if (previousCell.x != cell.x || previousCell.y != cell.y) {
+                        updatePosition(cell);
+                    }
+                }
+            } else {
+                if (previousCell != null) {
+                    element.hide();
+                    element.offset({top: 0, left: 0});
+                }
+            }
+            previousCell = cell;
+        };
+    };
+
+    var scoreEngine = new wm.scribble.ScoreEngine(board.bonuses, this);
+
+    var initializeGame = function () {
+        if (settings.showCaptions == undefined || settings.showCaptions) {
+            var gameBorder = $("<div></div>").addClass('border ui-corner-all').appendTo(scribbleEl);
+            for (var b = 0; b < 15; b++) {
+                var z = wm.i18n.value('board.captions', 'ABCDEFGHIJKLMNO');
+                var vv = z.charAt(b);
+                var vh = '' + (b + 1);
+                var pv = 18 + 22 * b;
+                var ph = 12 + 22 * b;
+                gameBorder.append("<span class='v' style='right: 1px; top: " + pv + "px;'>" + vv + "</span>");
+                gameBorder.append("<span class='v' style='left: 0; top: " + pv + "px;'>" + vv + "</span>");
+                gameBorder.append("<span class='h' style='top: -1px; left: " + ph + "px;'>" + vh + "</span>");
+                gameBorder.append("<span class='h' style='bottom: 2px; left: " + ph + "px;'>" + vh + "</span>");
+            }
+        }
+
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                var bonus = scoreEngine.getCellBonus(i, j);
+                if (bonus != undefined) {
+                    var text = wm.i18n.value(bonus, bonus.toUpperCase());
+                    $("<div></div>").addClass('cell bonus-cell').addClass('bonus-cell-' + bonus.toLowerCase()).text(text).offset({left: j * 22, top: i * 22}).appendTo(bonusesEl);
+                }
+            }
+        }
+        if (scoreEngine.getCellBonus(7, 7) == undefined) {
+            $("<div></div>").addClass('cell').addClass('bonus-cell-center').offset({left: 7 * 22, top: 7 * 22}).appendTo(bonusesEl);
+        }
+
+        $.each(moves, function (i, move) {
+            registerBoardMove(move, true);
+        });
+
+        var playerInfo = playboard.getPlayer(viewer);
+        if (playerInfo != null && board.handTiles != null) {
+            $("<div></div>").addClass('hand').appendTo(backgroundEl);
+            validateHandTile(board.handTiles);
+        }
+
+        $(document).mouseup(onTileUp);
+        $(document).mousemove(onTileMove);
+        $(scribbleEl).mousedown(onBoardClick);
+    };
+
+    var onTileSelected = function () {
+        if (!enabled) {
+            return;
+        }
+        if (wm.scribble.tile.isTileSelected(this)) {
+            changeTileSelection(this, false, true);
+        } else {
+            changeTileSelection(this, true, true);
+        }
+    };
+
+    var onTileDown = function (ev) {
+        if (!enabled) {
+            return;
+        }
+        draggingTile = $(this);
+        var offset = draggingTile.offset();
+        var relatedCell = getRelatedCell(ev, {left: 0, top: 0});
+        draggingTile.data('mouseOffset', {left: ev.pageX - offset.left, top: ev.pageY - offset.top});
+        draggingTile.data('originalState', {offset: offset, cell: relatedCell, zIndex: draggingTile.css('zIndex')});
+        draggingTile.css('zIndex', 333);
+        highlighting.start(draggingTile, relatedCell);
+        ev.preventDefault();
+    };
+
+    var onTileMove = function (ev) {
+        if (!enabled) {
+            return;
+        }
+        if (draggingTile != null && draggingTile != undefined) {
+            var tileOffset = draggingTile.data('mouseOffset');
+            var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
+            draggingTile.offset({left: ev.pageX - tileOffset.left, top: ev.pageY - tileOffset.top});
+            highlighting.highlight(relatedCell);
+        }
+        ev.preventDefault();
+    };
+
+    var onTileUp = function (ev) {
+        if (!enabled) {
+            return;
+        }
+        if (draggingTile == null || draggingTile == undefined) {
+            return;
+        }
+
+        var tileOffset = draggingTile.data('mouseOffset');
+        var originalState = draggingTile.data('originalState');
+        var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
+        if (relatedCell == null ||
+                (relatedCell.container == boardEl && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
+                (relatedCell.container == handEl && handTiles[relatedCell.x] != undefined)) {
+            draggingTile.offset(originalState.offset);
+        } else {
+            // clear original position
+            var originalCell = originalState.cell;
+            if (originalCell.container == boardEl) {
+                boardTiles[originalCell.x][originalCell.y] = null;
+            } else if (originalCell.container == handEl) {
+                handTiles[originalCell.x] = null;
+            }
+
+            // move to new position
+            if (originalCell.container != relatedCell.container) {
+                draggingTile.detach();
+                draggingTile.css('top', relatedCell.y * 22).css('left', relatedCell.x * 22);
+                draggingTile.appendTo(relatedCell.container);
+            } else {
+                draggingTile.css('top', relatedCell.y * 22).css('left', relatedCell.x * 22);
+            }
+
+            var tile = draggingTile.data('tile');
+            if (relatedCell.container == boardEl) {
+                if (tile.wildcard) {
+                    var replacingTile = draggingTile;
+                    wildcardHandler(tile, function (letter) {
+                        wm.scribble.tile.setLetter(replacingTile, letter);
+                        tile.row = relatedCell.y;
+                        tile.column = relatedCell.x;
+                        boardTiles[relatedCell.x][relatedCell.y] = replacingTile;
+                        changeTileSelection(replacingTile.get(0), true, true);
+                    });
+                } else {
+                    tile.row = relatedCell.y;
+                    tile.column = relatedCell.x;
+                    boardTiles[relatedCell.x][relatedCell.y] = draggingTile;
+                    changeTileSelection(draggingTile.get(0), true, true);
+                }
+            } else if (relatedCell.container == handEl) {
+                if (tile.wildcard) {
+                    wm.scribble.tile.setLetter(draggingTile, '*');
+                }
+                handTiles[relatedCell.x] = draggingTile;
+                changeTileSelection(draggingTile.get(0), false, true);
+            }
+        }
+
+        highlighting.stop();
+
+        draggingTile.css('zIndex', originalState.zIndex);
+        draggingTile.removeData('mouseOffset');
+        draggingTile.removeData('originalState');
+
+        draggingTile = null;
+
+        ev.preventDefault();
+    };
+
+    var onBoardClick = function (ev) {
+        if (!enabled || !settings.clearByClick) {
+            return;
+        }
+        var relatedCell = getRelatedCell(ev, {left: 0, top: 0});
+        if (relatedCell == null) {
+            return;
+        }
+        if (relatedCell.container != boardEl || relatedCell.x < 0 || relatedCell.y < 0 || relatedCell.x > 14 || relatedCell.y > 14) {
+            return;
+        }
+        if (boardTiles[relatedCell.x][relatedCell.y] != undefined) {
+            return;
+        }
+        clearSelectionImpl();
+        ev.preventDefault();
+    };
+
+    var getRelatedCell = function (ev, tileOffset) {
+        var bo = boardEl.offset();
+        var x = (((ev.pageX - bo.left - tileOffset.left) / 22) | 0);
+        var y = (((ev.pageY - bo.top - tileOffset.top) / 22) | 0);
+        if (x >= 0 && x <= 14 && y >= 0 && y <= 14) {
+            return {x: x, y: y, container: boardEl};
+        }
+
+        var ho = handEl.offset();
+        x = (((ev.pageX - ho.left - tileOffset.left) / 22) | 0);
+        y = (((ev.pageY - ho.top - tileOffset.top) / 22) | 0);
+        if (x >= 0 && x <= 6 && y == 0) {
+            return {x: x, y: y, container: handEl};
+        }
+        return null;
+    };
+
+    var changeTileSelection = function (tileWidget, select, notifyWord) {
+        var tile = $(tileWidget).data('tile');
+        if (wm.scribble.tile.isTileSelected(tileWidget) != select) {
+            if (select) {
+                wm.scribble.tile.selectTile(tileWidget);
+                selectedTileWidgets.push(tileWidget);
+                scribbleEl.trigger('selectedTiles', [tile, true]);
+            } else {
+                wm.scribble.tile.deselectTile(tileWidget);
+                for (var i = 0, len = selectedTileWidgets.length; i < len; i++) {
+                    if (selectedTileWidgets[i] == tileWidget) {
+                        selectedTileWidgets.splice(i, 1);
+                        break;
+                    }
+                }
+                scribbleEl.trigger('selectedTiles', [tile, false]);
+            }
+        }
+        if (notifyWord) {
+            changeSelectedWord(playboard.getSelectedWord());
+        }
+    };
+
+    var addHandTile = function (tile) {
+        $.each(handTiles, function (i, handTile) {
+            if (handTile == null || handTile == undefined) {
+                handTiles[i] = wm.scribble.tile.createTileWidget(tile).
+                        offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(handEl);
+                return false;
+            }
+        });
+    };
+
+    var getHandTileIndex = function (tile) {
+        var res = null;
+        $.each(handTiles, function (i, handTile) {
+            if (handTile != null && handTile != undefined && handTile.data('tile').number == tile.number) {
+                res = i;
+                return false;
+            }
+        });
+        return res;
+    };
+
+    var removeHandTile = function (tile) {
+        $.each(handTiles, function (i, handTile) {
+            if (handTile != null && handTile != undefined && handTile.data('tile').number == tile.number) {
+                handTile.remove();
+                handTiles[i] = null;
+                return false;
+            }
+        });
+    };
+
+    var validateHandTile = function (tiles) {
+        var handTiles = playboard.getHandTiles();
+        $.each(handTiles, function (i, tile) {
+            if (tile != null && tile != undefined) {
+                if (!isTileInList(tile, tiles)) {
+                    removeHandTile(tile);
+                }
+            }
+        });
+
+        $.each(tiles, function (i, tile) {
+            if (!isTileInList(tile, handTiles)) {
+                addHandTile(tile);
+            }
+        });
+    };
+
+    var registerBoardMove = function (move, init) {
+        if (!init && move.number < moves.length) {
+            return;
+        }
+
+        var movesCount = moves.length;
+        if (move.type == 'MAKE') {
+            $.each(move.word.tiles, function (i, tile) {
+                tile.row = move.word.position.row + (move.word.direction == 'VERTICAL' ? i : 0 );
+                tile.column = move.word.position.column + (move.word.direction == 'VERTICAL' ? 0 : i );
+
+                removeHandTile(tile); // remove tile from the hand if it's hand tile
+
+                if (boardTiles[tile.column][tile.row] == null || boardTiles[tile.column][tile.row] == undefined) {
+                    var w = wm.scribble.tile.createTileWidget(tile).
+                            offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
+                    wm.scribble.tile.pinTile(w.get(0));
+                    boardTiles[tile.column][tile.row] = w.appendTo(boardEl);
+                }
+            });
+        }
+
+        if (!init) {
+            moves.push(move);
+            scribbleEl.trigger('gameMoves', [
+                [move],
+                moves
+            ]);
+        }
+    };
+
+    var isTileInList = function (tile, tiles) {
+        for (var i = 0, count = tiles.length; i < count; i++) {
+            var listTile = tiles[i];
+            if (tile != null && tile != undefined && listTile != null && listTile != undefined && listTile.number == tile.number) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    var setBoardEnabled = function (enabled, locked) {
+        if (playboard.enabled !== enabled) {
+            playboard.enabled = enabled;
+            scribbleEl.trigger('enabled', [enabled]);
+        }
+
+        if (playboard.locked !== locked) {
+            playboard.locked = locked;
+            scribbleEl.trigger('locked', [locked]);
+        }
+    };
+
+    var isWordSelected = function (word) {
+        if (word == selectedWord) {
+            return true;
+        }
+
+        if (word != null && selectedWord != null) {
+            if (word.text == selectedWord.text &&
+                    word.position.row == selectedWord.position.row &&
+                    word.position.column == selectedWord.position.column &&
+                    word.direction == selectedWord.direction) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    var changeSelectedWord = function (word) {
+        if (!isWordSelected(word)) {
+            if (word == null) {
+                scribbleEl.trigger('selectedWord', null);
+            } else {
+                scribbleEl.trigger('selectedWord', word);
+            }
+        }
+        selectedWord = word;
+    };
+
+    var clearSelectionImpl = function () {
+        if (selectedTileWidgets.length == 0) {
+            return;
+        }
+        while (selectedTileWidgets.length != 0) {
+            var widget = selectedTileWidgets[0];
+            if (!wm.scribble.tile.isTilePined(widget)) {
+                $.each(handTiles, function (i, hv) {
+                    if (hv == undefined || hv == null) {
+                        handTiles[i] = $(widget).detach().css('top', 0).css('left', i * 22).appendTo(handEl);
+                        return false;
+                    }
+                });
+                var tile = $(widget).data('tile');
+                if (tile.wildcard) {
+                    wm.scribble.tile.setLetter(widget, '*');
+                }
+                changeTileSelection(widget, false, false);
+                boardTiles[tile.column][tile.row] = null;
+            } else {
+                changeTileSelection(widget, false, false);
+            }
+        }
+        changeSelectedWord(null);
+    };
+
+    var makeMove = function (type, data, handler) {
+        setBoardEnabled(false, true);
+        sendServerRequest(type, data, function (status, message, errorThrown) {
+            setBoardEnabled(true, false);
+            handler.call(this, status, message, errorThrown);
+        });
+    };
+
+    var sendServerRequest = function (type, data, resultHandler) {
+        controller.execute('board', type, 'b=' + id + '&m=' + moves.length, data, function (response) {
+            processServerResponse(response);
+            resultHandler.call(playboard, response.success, response.message);
+        });
+    };
+
+    var updatePlayerScores = function (score) {
+        if (score != null && score != undefined) {
+            $.each(score, function (i, s) {
+                players[i].score = s;
+            });
+        }
+    };
+
+
+    var updateHandTiles = function (tiles) {
+        if (tiles != null && tiles != undefined) {
+            var ownerInfo = playboard.getPlayer(viewer);
+            if (ownerInfo != null && ownerInfo != undefined && tiles != null && tiles != undefined) {
+                validateHandTile(tiles);
+            }
+        }
+    }
+
+    var updateGameState = function (state) {
+        var oldResolution = board.resolution;
+        var oldPlayerTurn = board.playerTurn;
+        board = $.extend(false, {}, board, state);
+
+        if (board.resolution != null && board.resolution != oldResolution) {
+            setBoardEnabled(false, false);
+            clearSelectionImpl();
+            scribbleEl.trigger('resolution', oldResolution, board.resolution);
+        }
+
+        if (board.playerTurn != oldPlayerTurn) {
+            scribbleEl.trigger('playerTurn', oldPlayerTurn, board.playerTurn);
+        }
+    };
+
+    var updateMovesInfo = function (moves) {
+        if (moves != undefined && moves.length > 0) {
+            clearSelectionImpl();
+
+            var lastMove = null;
+            $.each(moves, function (i, move) {
+                lastMove = move;
+                registerBoardMove(move, false);
+            });
+
+            if (lastMove != null && lastMove.word != null && lastMove.word != undefined) {
+                playboard.selectWord(lastMove.word);
+            }
+        }
+    };
+
+    var processServerResponse = function (response) {
+        if (!response.success) {
+            return;
+        }
+
+        if (response.data != null && response.data != undefined) {
+            updatePlayerScores(response.data.score);
+            updateHandTiles(response.data.handTiles);
+            updateMovesInfo(response.data.moves);
+            updateGameState(response.data.status);
+
+            scribbleEl.trigger('validated');
+        }
+    };
+
+    var wordIterator = function (word, handler) {
+        var rowK = 0, columnK = 0;
+        var row = word.position.row;
+        var column = word.position.column;
+        if (word.direction == 'VERTICAL') {
+            rowK = 1;
+        } else {
+            columnK = 1;
+        }
+        for (var i = 0, count = word.tiles.length; i < count; i++) {
+            var res = handler(word.tiles[i], row, column, i, word.text[i]);
+            if (res === false) {
+                return false;
+            }
+            row += rowK;
+            column += columnK;
+        }
+        return true;
+    };
+
+    var wildcardHandler = function (tile, replacer) {
+        if (wildcardSelectionDialog == null) {
+            var tileLetter = tile.letter;
+            wildcardSelectionDialog = $('#' + wildcardHandlerElement).dialog({
+                autoOpen: false,
+                draggable: false,
+                modal: true,
+                resizable: false,
+                width: 400,
+                close: function (event, ui) {
+                    wildcardSelectionDialog.replacer(tileLetter);
+                }
+            });
+
+            var panel = $($('#' + wildcardHandlerElement + ' div').get(1)).empty();
+            $.each(playboard.getBankTilesInfo(), function (i, bti) {
+                var row = Math.floor(i / 15);
+                var col = (i - row * 15);
+                var t = wm.scribble.tile.createTileWidget({number: 0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
+                t.hover(
+                        function () {
+                            wm.scribble.tile.selectTile(this);
+                        },
+                        function () {
+                            wm.scribble.tile.deselectTile(this);
+                        }).click(
+                        function () {
+                            tileLetter = $(this).data('tile').letter;
+                            wildcardSelectionDialog.dialog("close");
+                        }).appendTo(panel);
+            });
+        }
+        wildcardSelectionDialog.replacer = replacer;
+        wildcardSelectionDialog.dialog("open");
+    };
+
+    this.getBoardId = function () {
+        return id;
+    };
+
+    this.getBoardElement = function () {
+        return scribbleEl.get(0);
+    };
+
+    this.getStartedTime = function () {
+        return board.startedTime;
+    };
+
+    this.getFinishedTime = function () {
+        return board.finishedTime;
+    };
+
+    this.getSpentTime = function () {
+        return board.spentTime;
+    };
+
+    this.getRemainedTime = function () {
+        return board.remainedTime;
+    };
+
+    this.getResolution = function () {
+        return board.resolution;
+    };
+
+    this.getPlayboardElement = function (selector) {
+        return $("#board" + id + " " + selector);
+    };
+
+    this.bind = function (event, handler) {
+        return scribbleEl.bind(event, handler);
+    };
+
+    this.unbind = function (event, handler) {
+        return scribbleEl.unbind(event, handler);
+    };
+
+    this.isEnabled = function () {
+        return enabled;
+    };
+
+    this.isLocked = function () {
+        return locked;
+    };
+
+    this.getPlayer = function (playerId) {
+        var res = null;
+        $.each(players, function (i, player) {
+            if (player.id == playerId) {
+                res = player;
+                return false;
+            }
+        });
+        return res;
+    };
+
+    this.getPlayers = function () {
+        return players;
+    };
+
+    this.getWonPlayers = function () {
+        return $.grep(players, function (e, i) {
+            return e.winner;
+        });
+    };
+
+    this.getScoreEngine = function () {
+        return scoreEngine;
+    };
+
+    this.isBoardTile = function (column, row) {
+        var tile = boardTiles[column][row];
+        return tile != null && wm.scribble.tile.isTilePined(tile);
+    };
+
+    this.getSelectedTiles = function () {
+        var tiles = new Array(selectedTileWidgets.length);
+        $.each(selectedTileWidgets, function (i, v) {
+            tiles[i] = $(v).data('tile');
+        });
+        return tiles;
+    };
+
+    this.getSelectedWord = function () {
+        if (selectedTileWidgets instanceof Array && selectedTileWidgets.length > 1) {
+            var tiles = playboard.getSelectedTiles();
+
+            var direction;
+            if (tiles[0].row == tiles[1].row) {
+                direction = 'HORIZONTAL';
+            } else if (tiles[0].column == tiles[1].column) {
+                direction = 'VERTICAL';
+            } else {
+                return null; // not a word
+            }
+
+            tiles.sort(function (a, b) {
+                if (direction == 'VERTICAL') {
+                    return a.row - b.row;
+                } else {
+                    return a.column - b.column;
+                }
+            });
+
+            for (var i = 1, count = tiles.length; i < count; i++) {
+                if (direction == 'HORIZONTAL' && (tiles[i].row != tiles[i - 1].row || tiles[i].column != tiles[i - 1].column + 1)) {
+                    return null; // not a word
+                } else if (direction == 'VERTICAL' && (tiles[i].column != tiles[i - 1].column || tiles[i].row != tiles[i - 1].row + 1)) {
+                    return null; // not a word
+                }
+            }
+            var word = "";
+            $.each(tiles, function (i, v) {
+                word += v.letter
+            });
+            return {
+                tiles: tiles,
+                direction: direction,
+                position: { row: tiles[0].row, column: tiles[0].column},
+                text: word
+            }
+        }
+    };
+
+    this.makeTurn = function (handler) {
+        if (enabled) {
+            makeMove('make', playboard.getSelectedWord(), handler);
+        }
+    };
+
+    this.passTurn = function (handler) {
+        if (enabled) {
+            makeMove('pass', null, handler);
+        }
+    };
+
+    this.exchangeTiles = function (tiles, handler) {
+        if (enabled) {
+            makeMove('exchange', tiles, handler);
+        }
+    };
+
+    this.resign = function (handler) {
+        if (enabled) {
+            makeMove('resign', null, handler);
+        }
+    };
+
+    this.checkWord = function (word) {
+        return wordIterator(word, function (tile, row, column, i, letter) {
+            var boardTile = boardTiles[column][row];
+            if (boardTile != null && boardTile != undefined) {
+                if (tile.number != boardTile.data('tile').number) {
+                    return false;
+                }
+            } else {
+                if (getHandTileIndex(tile) == null) {
+                    return false;
+                }
+            }
+        });
+    };
+
+    this.isWordPlaced = function (word) {
+        return wordIterator(word, function (tile, row, column, i, letter) {
+            var boardTile = boardTiles[column][row];
+            if (boardTile == null || boardTile == undefined) {
+                return false;
+            }
+
+            if (tile.number != boardTile.data('tile').number) {
+                return false;
+            }
+        });
+    };
+
+    this.selectWord = function (word) {
+        if (isWordSelected(word)) {
+            return;
+        }
+        clearSelectionImpl();
+        if (!playboard.checkWord(word)) {
+            return false;
+        }
+        var res = wordIterator(word, function (tile, row, column, i, letter) {
+            var boardTile = boardTiles[column][row];
+            if (wm.scribble.tile.isTilePined(boardTile)) {
+                if (tile.number != boardTile.data('tile').number) {
+                    return false;
+                }
+                changeTileSelection(boardTile.get(0), true, false);
+            } else {
+                var tileIndex = getHandTileIndex(tile);
+                if (tileIndex == null) {
+                    return false;
+                }
+                var tileWidget = handTiles[tileIndex];
+                tile = tileWidget.data('tile');
+
+                if (tile.wildcard) {
+                    wm.scribble.tile.setLetter(tileWidget, letter);
+                }
+                tile.row = row;
+                tile.column = column;
+                handTiles[tileIndex] = null;
+                boardTiles[column][row] = tileWidget;
+                tileWidget.detach().css('top', row * 22).css('left', column * 22).appendTo(boardEl);
+                changeTileSelection(tileWidget.get(0), true, true);
+            }
+        });
+        if (res) {
+            changeSelectedWord(word);
+        }
+    };
+
+    this.selectMove = function (moveNumber) {
+        if (!enabled) {
+            return;
+        }
+        if (moves[moveNumber].word != undefined) {
+            playboard.selectHistoryWord(moves[moveNumber].word);
+        } else {
+            clearSelectionImpl();
+        }
+    };
+
+    this.selectHistoryWord = function (word) {
+        if (!enabled || isWordSelected(word)) {
+            return;
+        }
+        clearSelectionImpl();
+
+        var rowK, columnK;
+        var row = word.position.row;
+        var column = word.position.column;
+        if (word.direction == 'VERTICAL') {
+            rowK = 1;
+            columnK = 0;
+        } else {
+            rowK = 0;
+            columnK = 1;
+        }
+        for (var i = 0, count = word.tiles.length; i < count; i++) {
+            changeTileSelection(boardTiles[column + i * columnK][row + i * rowK].get(0), true, false);
+        }
+        changeSelectedWord(playboard.getSelectedWord());
+    };
+
+    this.selectLetters = function (letter) {
+        if (!enabled) {
+            return;
+        }
+
+        clearSelectionImpl();
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                var tile = boardTiles[i][j];
+                if (tile != null && tile != undefined && wm.scribble.tile.isTilePined(tile)) {
+                    var d = tile.data('tile');
+                    if (d.letter == letter) {
+                        changeTileSelection(tile.get(0), true, false);
+                    }
+                }
+            }
+        }
+    };
+
+    this.clearSelection = function () {
+        if (!enabled) {
+            return;
+        }
+        clearSelectionImpl();
+    };
+
+    this.getBankCapacity = function () {
+        return bank.lettersCount;
+    };
+
+    this.getBankTilesInfo = function () {
+        return bank.letterDistributions;
+    };
+
+    this.getBoardTile = function (column, row) {
+        var tile = boardTiles[column][row];
+        if (tile == null || tile == undefined) {
+            return null;
+        }
+        return wm.scribble.tile.isTilePined(tile) ? tile.data('tile') : null;
+    };
+
+    this.getBoardTilesCount = function () {
+        var count = 0;
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                if (boardTiles[i][j] != null && boardTiles[i][j] != undefined) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    };
+
+    this.getGameMoves = function () {
+        return moves;
+    };
+
+    this.getHandTiles = function () {
+        var res = new Array(handTiles.length);
+        $.each(handTiles, function (i, tw) {
+            if (tw != null && tw != undefined) {
+                res[i] = tw.data('tile');
+            } else {
+                res[i] = null;
+            }
+        });
+        return res;
+    };
+
+    this.getHandTilesCount = function () {
+        var bankCapacity = playboard.getBankCapacity();
+        var boardTiles = playboard.getBoardTilesCount();
+        var handTiles = 7 * players.length;
+
+        var cof = bankCapacity - boardTiles - handTiles;
+        if (cof < 0) {
+            handTiles += cof;
+        }
+        return handTiles;
+    };
+
+    this.getBankTilesCount = function () {
+        var v = playboard.getBankCapacity() - playboard.getBoardTilesCount() - playboard.getHandTilesCount();
+        return v < 0 ? 0 : v;
+    };
+
+    this.getPlayerTurn = function () {
+        return board.playerTurn;
+    };
+
+    this.isPlayerActive = function () {
+        return viewer === board.playerTurn;
+    };
+
+    this.isBoardActive = function () {
+        return board.resolution == null;
+    };
+
+    this.isBoardEnabled = function () {
+        return enabled;
+    };
+
+    this.getLanguage = function () {
+        return language;
+    };
+
+    this.getMonitoringBean = function () {
+        return new function () {
+            this.getParameters = function () {
+                return "l=" + board.lastChange;
+            };
+
+            this.getCallback = function () {
+                return function (response) {
+                    processServerResponse({success: response.success, data: response.data.boardChanges});
+                }
+            };
+        };
+    };
+
+    initializeGame();
+};
 
 wm.scribble.Monitoring = function (board) {
     var items = {};
@@ -2717,7 +3745,7 @@ wm.scribble.Monitoring = function (board) {
             }
         });
 
-        $.post('/playground/scribble/changes.ajax?b=' + board.getBoardId() + params, null).success(
+        $.post('/playground/scribble/observe.ajax?b=' + board.getBoardId() + params, null).success(
                 function (response) {
                     $.each(items, function (i, v) {
                         if (v != null) {
@@ -2753,10 +3781,8 @@ wm.scribble.Monitoring = function (board) {
         $(board).stopTime('board' + board.getBoardId() + 'Monitoring');
     };
 
-    board.bind('gameState', function (event, type, state) {
-        if (type === 'finished') {
-            monitoringInstance.stopMonitoring();
-        }
+    board.bind('resolution', function (event, resolution) {
+        monitoringInstance.stopMonitoring();
     });
 };
 

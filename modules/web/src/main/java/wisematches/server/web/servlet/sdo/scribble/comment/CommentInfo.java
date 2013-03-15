@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.sdo.board;
+package wisematches.server.web.servlet.sdo.scribble.comment;
 
 import wisematches.playground.GameMessageSource;
 import wisematches.playground.scribble.comment.GameComment;
@@ -9,10 +9,10 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ScribbleCommentInfo extends InternationalisedInfo {
+public class CommentInfo extends InternationalisedInfo {
 	private final GameComment comment;
 
-	public ScribbleCommentInfo(GameComment comment, GameMessageSource messageSource, Locale locale) {
+	public CommentInfo(GameComment comment, GameMessageSource messageSource, Locale locale) {
 		super(messageSource, locale);
 		this.comment = comment;
 	}

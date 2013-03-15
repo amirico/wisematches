@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" type="text/css"
           href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/redmond/jquery-ui.css"/>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/jquery.dataTables_themeroller-1.9.4.css"/>">
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.dataTables-1.9.4.min.js"/>"></script>
@@ -35,7 +35,6 @@
 
     <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.0.0.css"/>"/>
     <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.0.0.js"/>"></script>
-    <script type="text/javascript" src="<@wm.ui.static "js/asd.js"/>"></script>
 
 <#include "analytics.ftl">
 <#include 'localization.ftl'/>

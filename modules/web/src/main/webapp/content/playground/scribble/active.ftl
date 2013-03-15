@@ -1,14 +1,14 @@
-<#-- @ftlvariable name="principal" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="activeBoards" type="java.util.Collection<wisematches.playground.BoardDescription>" -->
 <#-- @ftlvariable name="activeProposals" type="java.util.Collection<wisematches.playground.propose.GameProposal<wisematches.server.playground.scribble.ScribbleSettings>" -->
 <#include "/core.ftl">
 
 <#macro gameStatus board>
     <#if board.active>
-        <#if board.playerTurn == player>
+        <#if board.playerTurn == principal>
             <@wm.board.href board.boardId><strong><@message code="game.status.move_you"/></strong></@wm.board.href>
         <#else>
-            <@message code="game.status.move_opp" args=["${personalityManager.getMember(board.getPlayerTurn().getPlayerId()).nickname!}"]/>
+            <@message code="game.status.move_opp" args=["${messageSource.getPersonalityNick(board.getPlayerTurn(), locale)!}"]/>
         </#if>
     </#if>
 </#macro>
@@ -17,7 +17,7 @@
 
 <@wm.ui.playground id="activeGamesWidget">
     <@wm.ui.table.header>
-        <#if player != player>
+        <#if player != principal>
             <@message code="game.player"/> <@wm.player.name player/>
         <#else><@message code="game.menu.games.label"/>
         </#if>
@@ -35,7 +35,7 @@
             </td>
             <td align="right">
                 <div class="wm-ui-buttonset">
-                    <a href="/playground/scribble/history<#if player != player>?p=${player.id}</#if>"><@message code="game.past.history.label"/></a>
+                    <a href="/playground/scribble/history<#if player != principal>?p=${player.id}</#if>"><@message code="game.past.history.label"/></a>
                 </div>
             </td>
         </tr>
@@ -127,7 +127,7 @@
     var activeGames = new wm.game.Active({
         cancelled: "<@message code="game.proposal.cancelled"/>",
         cancelling: "<@message code="game.proposal.cancelling"/>"
-    <#if player == player>
+    <#if player == principal>
         , "sEmptyTable": "<@message code="game.dashboard.empty" args=['/playground/scribble/create', '/playground/scribble/join']/>"
     </#if>
     });

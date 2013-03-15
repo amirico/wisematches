@@ -1,10 +1,11 @@
-package wisematches.server.web.servlet.sdo.scribble;
+package wisematches.server.web.servlet.sdo.scribble.board;
 
 import wisematches.playground.GameMessageSource;
 import wisematches.playground.scribble.*;
 import wisematches.server.web.servlet.sdo.InternationalisedInfo;
 import wisematches.server.web.servlet.sdo.time.TimeInfo;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,10 +35,6 @@ public class MoveInfo extends InternationalisedInfo {
 		return new TimeInfo(move.getMoveTime(), messageSource, locale);
 	}
 
-	public ScribbleMoveType getType() {
-		return move.getMoveType();
-	}
-
 	public Word getWord() {
 		if (move instanceof MakeTurn) {
 			final MakeTurn makeTurn = (MakeTurn) move;
@@ -52,5 +49,22 @@ public class MoveInfo extends InternationalisedInfo {
 			return exchangeMove.getTileIds().length;
 		}
 		return 0;
+	}
+
+	public ScribbleMoveType getType() {
+		return move.getMoveType();
+	}
+
+
+	public static MoveInfo[] getMovesInfo(ScribbleBoard board, int fromPosition, GameMessageSource messageSource, Locale locale) {
+		final List<ScribbleMove> gameMoves1 = board.getGameMoves();
+
+		int index = 0;
+		final List<ScribbleMove> gameMoves = gameMoves1.subList(fromPosition, gameMoves1.size());
+		MoveInfo[] moves = new MoveInfo[gameMoves.size()];
+		for (ScribbleMove gameMove : gameMoves) {
+			moves[index++] = new MoveInfo(gameMove, messageSource, locale);
+		}
+		return moves;
 	}
 }

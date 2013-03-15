@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.sdo.scribble;
+package wisematches.server.web.servlet.sdo.scribble.board;
 
 import wisematches.playground.GamePlayerHand;
 
