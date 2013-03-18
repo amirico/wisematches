@@ -13,7 +13,6 @@ import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleCommentForm;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 import wisematches.server.web.servlet.sdo.scribble.comment.CommentInfo;
 
@@ -77,11 +76,11 @@ public class ScribbleCommentController extends AbstractScribbleController {
 
 	@RequestMapping("add.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody ScribbleCommentForm form, Locale locale) {
-		if (form.getText().trim().isEmpty()) {
+	public ServiceResponse addComment(@RequestParam("b") final long gameId, @RequestBody String comment, Locale locale) {
+		if (comment.trim().isEmpty()) {
 			return responseFactory.failure("game.comment.err.empty", locale);
 		}
-		if (form.getText().length() > 250) {
+		if (comment.length() > 250) {
 			return responseFactory.failure("game.comment.err.length", new Object[]{250}, locale);
 		}
 
@@ -97,8 +96,8 @@ public class ScribbleCommentController extends AbstractScribbleController {
 		if (!board.isActive()) {
 			return responseFactory.failure("game.comment.err.finished", locale);
 		}
-		final GameComment comment = commentManager.addComment(board, getPrincipal(), form.getText());
-		return responseFactory.success(new CommentInfo(comment, messageSource, locale));
+		final GameComment gc = commentManager.addComment(board, getPrincipal(), comment);
+		return responseFactory.success(new CommentInfo(gc, messageSource, locale));
 	}
 
 	@RequestMapping("remove.ajax")

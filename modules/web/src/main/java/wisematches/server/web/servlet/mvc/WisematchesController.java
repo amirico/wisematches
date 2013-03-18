@@ -35,7 +35,7 @@ public abstract class WisematchesController {
 
 	@ModelAttribute("title")
 	public String getTitle(HttpServletRequest request) {
-		final String uri = request.getRequestURI();
+		final String uri = request.getServletPath() + request.getPathInfo();
 		if (uri.length() <= 1) {
 			return "title.default";
 		}

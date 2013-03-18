@@ -12,7 +12,6 @@ import java.util.List;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-@Deprecated
 public interface GameCommentManager {
 	/**
 	 * Adds new comment to specified board by specified personality.

@@ -54,7 +54,7 @@
             [
                 { "sClass": 'cell-title', "mDataProp": 'title', "bSortable": true},
                 { "sClass": 'cell-language', "mDataProp": 'language', "bSortable": true},
-                { "sClass": 'cell-rating', "mDataProp": 'playerHands', "bSortable": true},
+                { "sClass": 'cell-rating', "mDataProp": 'scores', "bSortable": true},
                 { "sClass": 'cell-players', "mDataProp": 'players', "bSortable": false},
                 { "sClass": 'cell-moves', "mDataProp": 'movesCount', "bSortable": true},
                 { "sClass": 'cell-resolution', "mDataProp": 'resolution', "bSortable": true},

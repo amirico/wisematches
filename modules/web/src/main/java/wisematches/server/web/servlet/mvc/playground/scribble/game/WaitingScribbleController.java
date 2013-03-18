@@ -12,20 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
+import wisematches.core.Visitor;
 import wisematches.playground.BoardCreationException;
 import wisematches.playground.propose.CriterionViolation;
+import wisematches.playground.propose.CriterionViolationException;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
-import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.form.GameProposalForm;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.form.WaitingGamesForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
+import wisematches.server.web.servlet.sdo.scribble.game.ProposalInfo;
+import wisematches.server.web.servlet.sdo.scribble.game.WaitingGamesInfo;
 
 import java.util.*;
 
@@ -34,7 +35,6 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/playground/scribble")
-@Deprecated
 public class WaitingScribbleController extends AbstractScribbleController {
 	private BlacklistManager blacklistManager;
 	private RestrictionManager restrictionManager;
@@ -46,112 +46,123 @@ public class WaitingScribbleController extends AbstractScribbleController {
 
 	@RequestMapping("join")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String showWaitingGames(Model model) {
+	public String activeProposalsPage(Model model) {
 		final Player principal = getPrincipal();
 		log.debug("Loading waiting games for personality: {}", principal);
-		model.addAttribute("waitingGames", createWaitingGamesView(principal));
+
+		final Collection<CriterionViolation> globalViolations = checkGlobalViolations(principal);
+		model.addAttribute("globalViolations", globalViolations);
+
+		Collection<Map.Entry<GameProposal<ScribbleSettings>, Collection<CriterionViolation>>> waitingGames = new ArrayList<>();
+		final List<GameProposal<ScribbleSettings>> proposals = proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null);
+		for (GameProposal<ScribbleSettings> proposal : proposals) {
+			Collection<CriterionViolation> criterionViolations;
+			if (globalViolations != null && !globalViolations.isEmpty()) {
+				criterionViolations = globalViolations;
+			} else {
+				criterionViolations = checkProposalViolation(proposal);
+			}
+
+			waitingGames.add(new AbstractMap.SimpleImmutableEntry<>(proposal, criterionViolations));
+		}
+		model.addAttribute("proposals", waitingGames);
+
 		return "/content/playground/scribble/join";
 	}
 
-	@ResponseBody
 	@RequestMapping("join.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DeprecatedResponse showWaitingGamesAjax() {
+	public ServiceResponse activeProposalsService() {
 		final Player principal = getPrincipal();
 		log.debug("Loading waiting games for personality: {}", principal);
-		return DeprecatedResponse.success(null, "waitingGames", createWaitingGamesView(principal));
+		return responseFactory.success(createProposals(principal));
 	}
 
 	@ResponseBody
 	@RequestMapping("accept.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-	public DeprecatedResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
+	public ServiceResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
 		final Player player = getPrincipal();
 		log.debug("Cancel proposal {} for player {}", proposal, player);
 
 		try {
-			final CriterionViolation violation = checkGlobalViolation(player);
-			if (violation != null) {
-				throw new ViolatedCriteriaException(violation);
+			final Collection<CriterionViolation> violations = checkGlobalViolations(player);
+			if (violations != null) {
+				throw new CriterionViolationException(violations);
 			}
 
 			final GameProposal<ScribbleSettings> gameProposal = proposalManager.accept(proposal, player);
 			if (gameProposal == null) {
-				return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
+				return responseFactory.failure("game.join.err.game.unknown.description", locale);
 			} else if (gameProposal.isReady()) {
 				final ScribbleBoard board = playManager.createBoard(gameProposal.getSettings(), gameProposal.getPlayers(), null);
-				return DeprecatedResponse.success(null, "board", board.getBoardId());
+				return responseFactory.success(board.getBoardId());
 			}
-			return DeprecatedResponse.SUCCESS;
-		} catch (ViolatedCriteriaException e) {
-			final CriterionViolation violation = e.getViolatedCriterion();
+			return responseFactory.success();
+		} catch (CriterionViolationException e) {
+			final CriterionViolation violation = e.getCriterion();
 			if (violation != null) {
-				return DeprecatedResponse.failure(messageSource.formatViolation(violation, locale, false));
+				return responseFactory.failure("game.join.err." + violation.getCode() + ".description",
+						new Object[]{violation.getExpected(), violation.getReceived()}, locale);
 			}
-			return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
+			return responseFactory.failure("game.join.err.system.description", locale);
 		} catch (BoardCreationException e) {
-			return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
+			return responseFactory.failure("game.join.err.system.description", locale);
 		}
 	}
 
 	@ResponseBody
 	@RequestMapping("decline.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-	public DeprecatedResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
+	public ServiceResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {
 		final Player player = getPrincipal();
 		log.debug("Cancel proposal {} for player {}", proposal, player);
 
 		try {
 			if (proposalManager.reject(proposal, player) == null) {
-				return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.game.unknown.description", locale));
+				return responseFactory.failure("game.join.err.game.unknown.description", locale);
 			}
-			return DeprecatedResponse.SUCCESS;
-		} catch (ViolatedCriteriaException e) {
-			final CriterionViolation violation = e.getViolatedCriterion();
+			return responseFactory.success();
+		} catch (CriterionViolationException e) {
+			final CriterionViolation violation = e.getCriterion();
 			if (violation != null) {
-				return DeprecatedResponse.failure(messageSource.formatViolation(violation, locale, false));
+				return responseFactory.failure("game.join.err." + violation.getCode() + ".description",
+						new Object[]{violation.getExpected(), violation.getReceived()}, locale);
 			}
-			return DeprecatedResponse.failure(messageSource.getMessage("game.join.err.system.description", locale));
+			return responseFactory.failure("game.join.err.system.description", locale);
 		}
 	}
 
-	private WaitingGamesForm createWaitingGamesView(Player principal) {
-		final CriterionViolation globalViolation = checkGlobalViolation(principal);
-		final List<GameProposalForm> activeProposals = new ArrayList<>();
+	private WaitingGamesInfo createProposals(Player principal) {
+		final Collection<CriterionViolation> globalViolations = checkGlobalViolations(principal);
+		final List<ProposalInfo> activeProposals = new ArrayList<>();
 		for (GameProposal<ScribbleSettings> proposal : proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null)) {
-			if (globalViolation == null) {
-				activeProposals.add(new GameProposalForm(proposal, checkProposalViolation(proposal)));
+			if (globalViolations == null) {
+				activeProposals.add(new ProposalInfo(proposal, checkProposalViolation(proposal)));
 			} else {
-				activeProposals.add(new GameProposalForm(proposal, Collections.singleton(globalViolation)));
+				activeProposals.add(new ProposalInfo(proposal, globalViolations));
 			}
 		}
 		log.debug("Found {} proposals for personality: {}", activeProposals.size(), principal);
-		return new WaitingGamesForm(globalViolation, activeProposals);
+		return new WaitingGamesInfo(activeProposals, globalViolations);
 	}
 
-	private CriterionViolation checkGlobalViolation(Player player) {
-		CriterionViolation globalViolation = null;
-/*
+	private Collection<CriterionViolation> checkGlobalViolations(Player player) {
 		if (player instanceof Visitor) {
-			globalViolation = new CriterionViolation("guest", null);
+			return Collections.singleton(new CriterionViolation("guest", null));
 		}
-*/
 
-//		if (globalViolation == null) {
 		final int finishedGamesCount = getFinishedGamesCount(player);
 		if (finishedGamesCount < 1) {
-			globalViolation = new CriterionViolation("newbie", finishedGamesCount, 1);
+			return Collections.singleton(new CriterionViolation("newbie", finishedGamesCount, 1));
 		}
-//		}
 
-		if (globalViolation == null) {
-			final int activeGamesCount = getActiveGamesCount(player);
-			final Restriction restriction = restrictionManager.validateRestriction(player, "games.active", activeGamesCount);
-			if (restriction != null) {
-				globalViolation = new CriterionViolation("restricted", restriction.getViolation(), restriction.getThreshold());
-			}
+		final int activeGamesCount = getActiveGamesCount(player);
+		final Restriction restriction = restrictionManager.validateRestriction(player, "games.active", activeGamesCount);
+		if (restriction != null) {
+			return Collections.singleton(new CriterionViolation("restricted", restriction.getViolation(), restriction.getThreshold()));
 		}
-		return globalViolation;
+		return null;
 	}
 
 	private Collection<CriterionViolation> checkProposalViolation(GameProposal<ScribbleSettings> proposal) {

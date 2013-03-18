@@ -5,9 +5,9 @@ import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.CriterionViolation;
-import wisematches.playground.propose.criteria.ComparableOperator;
-import wisematches.playground.propose.criteria.PlayerRestrictions;
-import wisematches.playground.propose.criteria.ViolatedCriteriaException;
+import wisematches.playground.propose.CriterionViolationException;
+import wisematches.playground.propose.criterion.ComparableOperator;
+import wisematches.playground.propose.criterion.PlayerRestrictions;
 import wisematches.playground.tracking.Statistics;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class DefaultPublicProposalTest {
 	}
 
 	@Test
-	public void testAttachDetach() throws ViolatedCriteriaException {
+	public void testAttachDetach() throws CriterionViolationException {
 		final DefaultPublicProposal<MockGameSettings> mock = new DefaultPublicProposal<>(1, new MockGameSettings("Mock", 3), PERSON1, 1, null);
 		assertFalse(mock.isReady());
 		assertEquals(PERSON1, mock.getInitiator());

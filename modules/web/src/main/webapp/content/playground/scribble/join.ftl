@@ -1,4 +1,5 @@
-<#-- @ftlvariable name="waitingGames" type="wisematches.server.web.servlet.mvc.playground.scribble.game.form.WaitingGamesForm" -->
+<#-- @ftlvariable name="proposals" type="java.util.Map.Entry<wisematches.playground.propose.GameProposal<wisematches.playground.scribble.ScribbleSettings>, wisematches.playground.propose.CriterionViolation[]>[]" -->
+<#-- @ftlvariable name="globalViolations" type="wisematches.playground.propose.CriterionViolation[]" -->
 
 <#include "/core.ftl">
 
@@ -37,17 +38,18 @@
             </tr>
             </thead>
             <tbody>
-                <#list waitingGames.proposalViews as view>
-                    <#assign settings=view.proposal.settings/>
+                <#list proposals as entry>
+                    <#assign proposal=entry.key/>
+                    <#assign violations=entry.value!""/>
                 <tr>
-                    <td>${settings.title}</td>
-                    <td><@message code="language.${settings.language?lower_case}"/></td>
-                    <td align="center">${messageSource.formatTimeMinutes(settings.daysPerMove*24*60,locale)}</td>
+                    <td>${proposal.settings.title}</td>
+                    <td><@message code="language.${proposal.settings.language?lower_case}"/></td>
+                    <td align="center">${messageSource.formatTimeMinutes(proposal.settings.daysPerMove*24*60,locale)}</td>
                     <td>
-                        <#list view.proposal.players as p>
+                        <#list proposal.players as p>
                         <div>
                             <#if p??>
-                                <@wm.player.name player=p waiting=!view.proposal.isPlayerJoined(p)/>
+                                <@wm.player.name player=p waiting=!proposal.isPlayerJoined(p)/>
                             <#else>
                                 <span class="player waiting"><span
                                         class="nickname"><@message code="game.status.waiting"/></span></span>
@@ -55,21 +57,21 @@
                             </#if>
                         </#list>
                     </td>
-                    <td class="center">
-                        <#if view.violations?? && !view.violations.empty>
-                            <#list view.violations as violation>
+                    <td>
+                        <#if violations?has_content>
+                            <#list violations as violation>
                                 <div class="game-join-error">${messageSource.formatViolation(violation, locale, true)}</div>
                             </#list>
                         <#else>
-                            <#if view.proposal.proposalType == "CHALLENGE">
+                            <#if proposal.proposalType.private>
                                 <a href="#accept"
-                                   onclick="join.accept(${view.proposal.id}); return false;">&raquo; <@message code="game.join.accept.label"/></a>
+                                   onclick="proposal.accept(${proposal.id}); return false;">&raquo; <@message code="game.join.accept.label"/></a>
                                 <br>
                                 <a href="#decline"
-                                   onclick="join.decline(${view.proposal.id}); return false;">&raquo; <@message code="game.join.decline.label"/></a>
+                                   onclick="proposal.decline(${proposal.id}); return false;">&raquo; <@message code="game.join.decline.label"/></a>
                             <#else>
                                 <a href="#join"
-                                   onclick="join.accept(${view.proposal.id}); return false;">&raquo; <@message code="game.join.join.label"/></a>
+                                   onclick="proposal.accept(${proposal.id}); return false;">&raquo; <@message code="game.join.join.label"/></a>
                             </#if>
                         </#if>
                     </td>
@@ -80,19 +82,31 @@
     </@wm.ui.table.content>
 
     <@wm.ui.table.footer>
-        <#if waitingGames.globalViolation??>
-            <div class="ui-state-error-text">
-            ${messageSource.formatViolation(waitingGames.globalViolation, locale, false)}
-            </div>
+        <#if globalViolations??>
+            <#list globalViolations as v>
+                <div class="ui-state-error-text">
+                ${messageSource.formatViolation(v, locale, false)}
+                </div>
+            </#list>
         </#if>
     </@wm.ui.table.footer>
 </@wm.ui.playground>
 
     <script type="text/javascript">
-        var join = new wm.game.Join({
-            "accepting": "<@message code="game.join.accepting"/>",
-            "declining": "<@message code="game.join.declining"/>",
-            "sEmptyTable": "<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"
+        wm.ui.dataTable('#gameboard', {
+            "bStateSave": true,
+            "bFilter": false,
+            "bSort": false,
+            "bSortClasses": false,
+            "oLanguage": {"sEmptyTable": "<@message code="game.gameboard.empty" args=["/playground/scribble/create"]/>"}
         });
+
+        var proposal = new wm.game.Proposal($("#waitingGamesWidget"), {
+            accepted: "<@message code="game.proposal.accepted"/>",
+            accepting: "<@message code="game.proposal.accepting"/>",
+            declined: "<@message code="game.proposal.declined"/>",
+            declining: "<@message code="game.proposal.declining"/>",
+            cancelled: "<@message code="game.proposal.cancelled"/>",
+            cancelling: "<@message code="game.proposal.cancelling"/>"});
     </script>
 </div>

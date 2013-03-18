@@ -18,7 +18,7 @@ import wisematches.playground.scribble.comment.GameCommentState;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 import wisematches.server.web.servlet.sdo.scribble.ObservedInfo;
-import wisematches.server.web.servlet.sdo.scribble.board.BoardUpdatesInfo;
+import wisematches.server.web.servlet.sdo.scribble.board.ChangesInfo;
 import wisematches.server.web.servlet.sdo.scribble.board.MoveInfo;
 import wisematches.server.web.servlet.sdo.scribble.board.StatusInfo;
 import wisematches.server.web.servlet.sdo.scribble.comment.CommentInfo;
@@ -79,7 +79,7 @@ public class ScribbleObservingController extends AbstractScribbleController {
 				}
 
 				final StatusInfo status = new StatusInfo(board, messageSource, locale);
-				final BoardUpdatesInfo boardUpdates = new BoardUpdatesInfo(board, status, movesInfo, tiles);
+				final ChangesInfo boardUpdates = new ChangesInfo(board, status, movesInfo, tiles);
 
 				CommentUpdatesInfo commentUpdates = null;
 				if (commentsCount != -1) {

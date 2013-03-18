@@ -15,7 +15,7 @@ public interface PublicProposal<S extends GameSettings> extends GameProposal<S> 
 	 *
 	 * @return the collection of all criterion for this waiting proposal.
 	 */
-	Collection<PlayerCriterion> getPlayerCriterion();
+	Collection<Criterion> getPlayerCriterion();
 
 	/**
 	 * Validates that specified player with specified statistics can join to this proposals.

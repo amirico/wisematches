@@ -7,7 +7,6 @@ import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.*;
-import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.*;
@@ -68,13 +67,13 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public PublicProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria) {
+	public PublicProposal<S> initiate(S settings, Player initiator, int opponentsCount, Criterion... criteria) {
 		final long id = proposalIds.incrementAndGet();
 		return registerProposal(new DefaultPublicProposal<>(id, settings, initiator, opponentsCount, Arrays.asList(criteria)));
 	}
 
 	@Override
-	public GameProposal<S> accept(long proposalId, Player player) throws ViolatedCriteriaException {
+	public GameProposal<S> accept(long proposalId, Player player) throws CriterionViolationException {
 		lock.lock();
 		try {
 			final AbstractGameProposal<S> proposal = proposals.get(proposalId);
@@ -84,7 +83,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 
 			Collection<CriterionViolation> violations = validate(proposalId, player);
 			if (violations != null) {
-				throw new ViolatedCriteriaException(violations);
+				throw new CriterionViolationException(violations);
 			}
 
 			proposal.attach(player);
@@ -103,7 +102,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
-	public GameProposal<S> reject(long proposalId, Player player) throws ViolatedCriteriaException {
+	public GameProposal<S> reject(long proposalId, Player player) throws CriterionViolationException {
 		lock.lock();
 		try {
 			final AbstractGameProposal<S> proposal = proposals.get(proposalId);
@@ -175,9 +174,14 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 		if (proposal == null) {
 			return null;
 		}
+
+		if (proposal.isPlayerJoined(player)) {
+			return Collections.singleton(new CriterionViolation("player.joined", player.getId()));
+		}
+
 		if (proposal.getProposalType() == ProposalType.PRIVATE) {
 			if (!proposal.validatePlayer(player)) {
-				return Collections.singleton(new CriterionViolation("player.unexpected", player, ""));
+				return Collections.singleton(new CriterionViolation("player.unexpected", player.getId()));
 			}
 			return null;
 		}

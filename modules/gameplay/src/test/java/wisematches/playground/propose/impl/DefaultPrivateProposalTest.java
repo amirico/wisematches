@@ -4,7 +4,7 @@ import org.junit.Test;
 import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.playground.MockGameSettings;
-import wisematches.playground.propose.criteria.ViolatedCriteriaException;
+import wisematches.playground.propose.CriterionViolationException;
 
 import java.util.Arrays;
 
@@ -23,7 +23,7 @@ public class DefaultPrivateProposalTest {
 	}
 
 	@Test
-	public void testAttachDetach() throws ViolatedCriteriaException {
+	public void testAttachDetach() throws CriterionViolationException {
 		final DefaultPrivateProposal<MockGameSettings> mock = new DefaultPrivateProposal<>(1, "mock", new MockGameSettings("Mock", 3), player1, Arrays.asList(player2));
 		assertFalse(mock.isReady());
 		assertEquals(player1, mock.getInitiator());

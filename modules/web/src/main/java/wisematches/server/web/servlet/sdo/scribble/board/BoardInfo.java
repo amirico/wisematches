@@ -12,6 +12,9 @@ import wisematches.playground.scribble.score.ScoreBonus;
 import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.sdo.InternationalisedInfo;
 import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
+import wisematches.server.web.servlet.sdo.scribble.PlayerInfo;
+import wisematches.server.web.servlet.sdo.scribble.ScoreInfo;
+import wisematches.server.web.servlet.sdo.scribble.SettingsInfo;
 import wisematches.server.web.servlet.sdo.time.TimeInfo;
 
 import java.util.Date;
@@ -21,12 +24,12 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class GameInfo extends InternationalisedInfo {
+public class BoardInfo extends InternationalisedInfo {
 	private final Tile[] handTiles;
 	private final ScribbleBoard board;
 	private final PlayerStateManager stateManager;
 
-	public GameInfo(ScribbleBoard board, Tile[] handTiles, PlayerStateManager stateManager, GameMessageSource messageSource, Locale locale) {
+	public BoardInfo(ScribbleBoard board, Tile[] handTiles, PlayerStateManager stateManager, GameMessageSource messageSource, Locale locale) {
 		super(messageSource, locale);
 		this.board = board;
 		this.handTiles = handTiles;
@@ -37,8 +40,8 @@ public class GameInfo extends InternationalisedInfo {
 		return board.getBoardId();
 	}
 
-	public SettingInfo getSettings() {
-		return new SettingInfo(board.getSettings(), board.getRelationship(), messageSource, locale);
+	public SettingsInfo getSettings() {
+		return new SettingsInfo(board.getSettings(), board.getRelationship(), messageSource, locale);
 	}
 
 	public GameRelationship getRelationship() {

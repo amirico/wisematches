@@ -673,59 +673,15 @@ wm.game.help = new function () {
     };
 };
 
-wm.game.Active = function (language) {
-    var widget = $("#activeGamesWidget");
-    wm.ui.dataTable('#dashboard', {
-        "bStateSave": true,
-        "bFilter": false,
-        "bSortClasses": false,
-        "aaSorting": [
-            [3, 'asc']
-        ],
-        "aoColumns": [
-            null,
-            null,
-            null,
-            null,
-            { "bSortable": false },
-            { "bSortable": false }
-        ],
-        "oLanguage": language
-    });
-
-    this.cancelProposal = function (id) {
-        wm.ui.lock(widget, language['cancelling']);
-        $.ajax('decline.ajax?p=' + id, {
-            success: function (result) {
-                if (result.success) {
-                    $("#proposal" + id).fadeOut();
-                    wm.ui.unlock(widget, language['cancelled']);
-                } else {
-                    wm.ui.unlock(widget, result.message, true);
-                }
-            }
-        });
-    }
-};
-
-wm.game.Join = function (language) {
-    var widget = $("#waitingGamesWidget");
-    wm.ui.dataTable('#gameboard', {
-        "bStateSave": true,
-        "bFilter": false,
-        "bSort": false,
-        "bSortClasses": false,
-        "oLanguage": language
-    });
-
+wm.game.Proposal = function (widget, language) {
     this.accept = function (id) {
         wm.ui.lock(widget, language['accepting']);
         $.post("/playground/scribble/accept.ajax?p=" + id, function (result) {
             if (result.success) {
-                if (result.data.board == undefined) {
-                    wm.util.url.redirect('/playground/scribble/join');
+                if (result.data == undefined) {
+                    wm.util.url.reload();
                 } else {
-                    wm.util.url.redirect('/playground/scribble/board?b=' + result.data.board);
+                    wm.util.url.redirect('/playground/scribble/board?b=' + result.data);
                 }
             } else {
                 wm.ui.unlock(widget, result.message, true);
@@ -737,12 +693,24 @@ wm.game.Join = function (language) {
         wm.ui.lock(widget, language['declining']);
         $.post("/playground/scribble/decline.ajax?p=" + id, function (result) {
             if (result.success) {
-                wm.util.url.redirect('/playground/scribble/join');
+                wm.util.url.reload();
             } else {
                 wm.ui.unlock(widget, result.message, true);
             }
         });
     };
+
+    this.cancel = function (id) {
+        wm.ui.lock(widget, language['cancelling']);
+        $.post('/playground/scribble/decline.ajax?p=' + id, function (result) {
+            if (result.success) {
+                wm.ui.unlock(widget, language['cancelled']);
+                wm.util.url.reload();
+            } else {
+                wm.ui.unlock(widget, result.message, true);
+            }
+        });
+    }
 };
 
 wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
@@ -852,7 +820,7 @@ wm.game.History = function (pid, columns, language) {
                 });
                 return res.join(', ');
             };
-        } else if (a.mDataProp == 'playerHands') {
+        } else if (a.mDataProp == 'scores') {
             a.mRender = function (data, type, row) {
                 var hand = $.grep(data, function (n, i) {
                     return row.players[i].id == pid;
@@ -1772,7 +1740,7 @@ wm.scribble.Comments = function (board, controller, language) {
             return false;
         }
         wm.ui.lock(widget, language['saving']);
-        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), JSON.stringify({text: val}), function (result) {
+        $.post('/playground/scribble/comment/add.ajax?b=' + board.getBoardId(), val, function (result) {
             if (result.success) {
                 loadedComments += 1;
                 comments.unshift({id: result.data.id, read: true});
@@ -3771,8 +3739,7 @@ wm.scribble.Monitoring = function (board) {
 
         monitoringInstance.stopMonitoring();
 
-        // TODO: must be 60000
-        $(board).everyTime(10000, 'board' + board.getBoardId() + 'Monitoring', function () {
+        $(board).everyTime(60000, 'board' + board.getBoardId() + 'Monitoring', function () {
             sendServerRequest();
         });
     };

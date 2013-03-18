@@ -2,8 +2,8 @@ package wisematches.playground.propose.impl;
 
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
+import wisematches.playground.propose.Criterion;
 import wisematches.playground.propose.CriterionViolation;
-import wisematches.playground.propose.PlayerCriterion;
 import wisematches.playground.propose.ProposalType;
 import wisematches.playground.propose.PublicProposal;
 import wisematches.playground.tracking.Statistics;
@@ -15,9 +15,9 @@ import java.util.*;
  */
 public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameProposal<S> implements PublicProposal<S> {
 	private final Player[] players;
-	private final Collection<PlayerCriterion> criterion;
+	private final Collection<Criterion> criterion;
 
-	public DefaultPublicProposal(long id, S settings, Player initiator, int opponentsCount, Collection<PlayerCriterion> criterion) {
+	public DefaultPublicProposal(long id, S settings, Player initiator, int opponentsCount, Collection<Criterion> criterion) {
 		super(id, settings, initiator);
 		this.criterion = criterion;
 
@@ -93,7 +93,7 @@ public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameP
 	}
 
 	@Override
-	public Collection<PlayerCriterion> getPlayerCriterion() {
+	public Collection<Criterion> getPlayerCriterion() {
 		return Collections.unmodifiableCollection(criterion);
 	}
 
@@ -124,7 +124,7 @@ public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameP
 		}
 
 		Collection<CriterionViolation> res = new ArrayList<>();
-		for (PlayerCriterion c : criterion) {
+		for (Criterion c : criterion) {
 			final CriterionViolation v = c.checkViolation(player, statistics);
 			if (v != null) {
 				res.add(v);

@@ -9,7 +9,6 @@ import wisematches.core.personality.DefaultMember;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.*;
-import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.Arrays;
@@ -91,7 +90,7 @@ public class AbstractProposalManagerTest {
 
 
 	@Test
-	public void testInitiateGameProposal() throws ViolatedCriteriaException {
+	public void testInitiateGameProposal() throws CriterionViolationException {
 		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -119,7 +118,7 @@ public class AbstractProposalManagerTest {
 	}
 
 	@Test
-	public void testAcceptRejectAny() throws ViolatedCriteriaException {
+	public void testAcceptRejectAny() throws CriterionViolationException {
 		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -144,7 +143,7 @@ public class AbstractProposalManagerTest {
 	}
 
 	@Test
-	public void testRejectWaited() throws ViolatedCriteriaException {
+	public void testRejectWaited() throws CriterionViolationException {
 		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -157,8 +156,8 @@ public class AbstractProposalManagerTest {
 		try {
 			proposalManager.accept(gameProposal1.getId(), player3);
 			fail("Exception must be here");
-		} catch (ViolatedCriteriaException ex) {
-			assertEquals("player.unexpected", ex.getViolatedCriterion().getCode());
+		} catch (CriterionViolationException ex) {
+			assertEquals("player.unexpected", ex.getCriterion().getCode());
 		}
 
 		proposalManager.reject(gameProposal1.getId(), player4);
@@ -169,7 +168,7 @@ public class AbstractProposalManagerTest {
 	}
 
 	@Test
-	public void testRejectInitiator() throws ViolatedCriteriaException {
+	public void testRejectInitiator() throws CriterionViolationException {
 		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -187,7 +186,7 @@ public class AbstractProposalManagerTest {
 	}
 
 	@Test
-	public void testTerminate() throws ViolatedCriteriaException {
+	public void testTerminate() throws CriterionViolationException {
 		final Capture<GameProposal<GameSettings>> proposalCapture = new Capture<>();
 
 		final GameProposalListener listener = createStrictMock(GameProposalListener.class);
@@ -203,7 +202,7 @@ public class AbstractProposalManagerTest {
 	}
 
 	@Test
-	public void testSearchEntities() throws ViolatedCriteriaException {
+	public void testSearchEntities() throws CriterionViolationException {
 		final GameProposal<GameSettings> proposal1 = proposalManager.initiate(SETTINGS, player1, 3);
 		final GameProposal<GameSettings> proposal2 = proposalManager.initiate(SETTINGS, player1, 3);
 		proposalManager.accept(proposal2.getId(), player2);

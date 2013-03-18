@@ -1,4 +1,4 @@
-package wisematches.playground.propose.criteria;
+package wisematches.playground.propose.criterion;
 
 import wisematches.core.Personality;
 import wisematches.playground.tracking.Statistics;
@@ -6,7 +6,7 @@ import wisematches.playground.tracking.Statistics;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerProperty {
+enum PlayerProperty {
 	RATING() {
 		@Override
 		public Comparable getProperty(Personality player, Statistics statistics) {

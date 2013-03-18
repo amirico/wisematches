@@ -6,6 +6,7 @@ import org.joda.time.Years;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DelegatingMessageSource;
 import wisematches.core.*;
+import wisematches.playground.propose.Criterion;
 import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.tourney.regular.TourneyRelationship;
 
@@ -40,11 +41,11 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 		return super.getMessage(code, new Object[]{a1}, locale);
 	}
 
-	public String getMessage(String code, Object a2, Object a1, Locale locale) {
+	public String getMessage(String code, Object a1, Object a2, Locale locale) {
 		return super.getMessage(code, new Object[]{a1, a2}, locale);
 	}
 
-	public String getMessage(String code, Object a3, Object a1, Object a2, Locale locale) {
+	public String getMessage(String code, Object a1, Object a2, Object a3, Locale locale) {
 		return super.getMessage(code, new Object[]{a1, a2, a3}, locale);
 	}
 
@@ -125,10 +126,13 @@ public class GameMessageSource extends DelegatingMessageSource implements Messag
 		return formatTimeMinutes(getRemainedMinutes(board), locale);
 	}
 
-	public String formatViolation(CriterionViolation violation, Locale locale, boolean isShort) {
-		return getMessage("game.join.err." + violation.getCode() + (isShort ? ".label" : ".description"), violation.getReceived(), violation.getExpected(), locale);
+	public String formatCriterion(Criterion criterion, Locale locale, boolean isShort) {
+		return getMessage("game.join.err." + criterion.getCode() + (isShort ? ".label" : ".description"), criterion.getExpected(), null, locale);
 	}
 
+	public String formatViolation(CriterionViolation violation, Locale locale, boolean isShort) {
+		return getMessage("game.join.err." + violation.getCode() + (isShort ? ".label" : ".description"), violation.getExpected(), violation.getReceived(), locale);
+	}
 
 	public int getAge(Date date) {
 		DateMidnight birthdate = new DateMidnight(date);

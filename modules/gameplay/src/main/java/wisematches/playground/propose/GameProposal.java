@@ -87,8 +87,7 @@ public interface GameProposal<S extends GameSettings> {
 	 *
 	 * @return {@code true} if proposal is ready; {@code false} - otherwise.
 	 */
-	public boolean isReady();
-
+	boolean isReady();
 
 	/**
 	 * Returns type of the proposal. Depends on the type a proposal can have differ behaviour.
