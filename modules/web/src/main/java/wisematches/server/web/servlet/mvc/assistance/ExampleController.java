@@ -1,5 +1,6 @@
 package wisematches.server.web.servlet.mvc.assistance;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +11,14 @@ import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.playground.scribble.Tile;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.bank.TilesBank;
 import wisematches.playground.scribble.bank.TilesBankingHouse;
 import wisematches.playground.scribble.robot.ScribbleRobotBrain;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.server.web.servlet.mvc.WisematchesController;
+import wisematches.server.web.servlet.sdo.scribble.board.BoardInfo;
 
 import java.util.*;
 
@@ -24,7 +27,6 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/info")
-@Deprecated
 public class ExampleController extends WisematchesController {
 	private TilesBankingHouse tilesBankingHouse;
 	private DictionaryManager dictionaryManager;
@@ -32,11 +34,13 @@ public class ExampleController extends WisematchesController {
 
 	private final Map<Language, BoardWrapper> boardsCache = new HashMap<>();
 
+	private final ObjectMapper jsonObjectConverter = new ObjectMapper();
+
 	public ExampleController() {
 	}
 
 	@RequestMapping("/move")
-	public String showHowToMove(final @RequestParam(value = "plain", required = false) String plain, final Model model, final Locale locale) throws Exception {
+	public String howToMovePage(final @RequestParam(value = "plain", required = false) String plain, final Model model, final Locale locale) throws Exception {
 		final Language language = Language.byLocale(locale);
 		final Personality personality = getPrincipal();
 
@@ -49,15 +53,20 @@ public class ExampleController extends WisematchesController {
 		model.addAttribute("viewMode", false);
 		model.addAttribute("staticContentId", "move");
 
-		model.addAttribute("board", boardWrapper.getBoard());
-		if (personality == null || !(personality instanceof Player)) {
+		final ScribbleBoard board = boardWrapper.getBoard();
+		final Tile[] handTiles = board.getPlayerHand(board.getPlayerTurn()).getTiles();
+		final BoardInfo info = new BoardInfo(board, handTiles, playerStateManager, messageSource, locale);
+		model.addAttribute("boardInfo", info);
+		model.addAttribute("boardInfoJSON", jsonObjectConverter.writeValueAsString(info));
+
+		model.addAttribute("player", board.getPlayerTurn());
+		model.addAttribute("memoryWords", selectMemoryWords(boardWrapper.getAvailableMoves()));
+
+		if (personality == null || !(personality instanceof Member)) {
 			model.addAttribute("boardSettings", boardSettingsManager.getDefaultSettings());
 		} else {
 			model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings((Player) personality));
 		}
-
-		model.addAttribute("player", boardWrapper.getBoard().getPlayerTurn());
-		model.addAttribute("memoryWords", selectMemoryWords(boardWrapper.getAvailableMoves()));
 
 		if (plain != null) {
 			return "/content/assistance/move";

@@ -323,6 +323,12 @@ tr.even:hover td, tr.odd:hover td {
     background: url('../images/status/warning_32.png') no-repeat left top;
 }
 
+.wm-icon-close {
+    width: 24px;
+    height: 24px;
+    background: transparent url('../images/close.png') no-repeat 0 0;
+}
+
 div.space-line {
     clear: both;
     margin: 0;

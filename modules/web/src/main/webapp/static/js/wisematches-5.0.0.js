@@ -203,7 +203,7 @@ wm.ui = new function () {
     };
 
     var messageTemplate = function (title, message) {
-        return '<div style="padding: 10px 24px; padding-bottom: 10px">' + message + '</div><div class="closeButton"><a href="#"><img src="../images/close.png"></a></div>';
+        return '<div style="padding: 10px 24px; padding-bottom: 10px">' + message + '</div><div class="closeButton"><a href="#"><div class="wm-icon-close"/></a></div>';
     };
 
     var statusTemplate = function (title, message) {

@@ -95,7 +95,6 @@ public class ScribbleBoardController extends AbstractScribbleController {
 				model.addAttribute("viewMode", !board.isActive() || board.getPlayerHand(player) == null);
 				model.addAttribute("boardSettings", boardSettingsManager.getScribbleSettings(player));
 			}
-
 			addTitleExtension(" #" + board.getBoardId() + " (" + messageSource.getBoardTitle(board, locale) + ")", model);
 			return "/content/playground/scribble/playboard";
 		} catch (BoardLoadingException | IOException ex) {
