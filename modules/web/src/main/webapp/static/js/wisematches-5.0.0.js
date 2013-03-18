@@ -3605,7 +3605,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
     };
 
     this.getBankTilesInfo = function () {
-        return bank.letterDistributions;
+        return bank.letterDescriptions;
     };
 
     this.getBoardTile = function (column, row) {

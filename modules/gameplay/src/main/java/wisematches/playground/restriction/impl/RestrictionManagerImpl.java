@@ -77,7 +77,7 @@ public class RestrictionManagerImpl implements RestrictionManager {
 		return description;
 	}
 
-	public <T extends Comparable<?>> void setRestrictions(Collection<RestrictionDescription<T>> restrictions) {
+	public <T extends Comparable<T>> void setRestrictions(Collection<RestrictionDescription<T>> restrictions) {
 		this.descriptions.clear();
 
 		if (restrictions != null) {

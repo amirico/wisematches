@@ -28,16 +28,16 @@ public class RestrictionManagerImplTest {
 	public void setUp() {
 		restrictionManager = new RestrictionManagerImpl();
 
-		Map<Membership, Comparable<Integer>> r1 = new HashMap<>();
+		Map<Membership, Integer> r1 = new HashMap<>();
 		r1.put(Membership.BASIC, 1);
 		r1.put(Membership.GOLD, 10);
 
-		Map<Membership, Comparable<Integer>> r2 = new HashMap<>();
+		Map<Membership, Integer> r2 = new HashMap<>();
 		r2.put(Membership.BASIC, 2);
 		r2.put(Membership.GOLD, 12);
 
-		final RestrictionDescription<Integer> mock1 = new RestrictionDescription<>("mock1", 0, r1);
-		final RestrictionDescription<Integer> mock2 = new RestrictionDescription<>("mock2", 0, r2);
+		final RestrictionDescription<Integer> mock1 = new RestrictionDescription.Integer("mock1", 0, r1);
+		final RestrictionDescription<Integer> mock2 = new RestrictionDescription.Integer("mock2", 0, r2);
 		restrictionManager.setRestrictions(Arrays.asList(mock1, mock2));
 	}
 
