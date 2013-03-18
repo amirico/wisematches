@@ -3814,8 +3814,11 @@ $(document).ready(function () {
         closeText: wm.i18n.value('button.close'),
         arrows: false,
         sticky: true,
-        ajaxProcess: function (E) {
-            return E.summary;
+        ajaxProcess: function (response) {
+            if (response.success) {
+                return response.data;
+            }
+            return null;
         },
         ajaxSettings: {
             type: 'post',
