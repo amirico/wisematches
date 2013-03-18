@@ -28,6 +28,16 @@ public interface RestrictionManager {
 
 
 	/**
+	 * Returns default restriction threshold.
+	 *
+	 * @param name the name of restriction.
+	 * @return current restriction threshold or {@code null} if there are no any restrictions.
+	 * @throws IllegalArgumentException if specified restriction name is unknown.
+	 * @throws NullPointerException     if {@code name} or {@code membership} is {@code null}
+	 */
+	Comparable getDefaultThreshold(String name);
+
+	/**
 	 * Returns current restriction threshold for specified restriction and player.
 	 *
 	 * @param name   the name of restriction.

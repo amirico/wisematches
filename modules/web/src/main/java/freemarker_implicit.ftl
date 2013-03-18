@@ -11,6 +11,7 @@
 [#-- @ftlvariable name="personalityManager" type="wisematches.core.PersonalityManager" --]
 [#-- @ftlvariable name="playerStateManager" type="wisematches.server.services.state.PlayerStateManager" --]
 
+[#-- @ftlvariable name="Membership" type="wisematches.core.Membership.static" --]
 [#-- @ftlvariable name="AwardType" type="wisematches.server.services.award.AwardType.static" --]
 [#-- @ftlvariable name="WordAttribute" type="wisematches.playground.dictionary.WordAttribute.static" --]
 [#-- @ftlvariable name="ScribbleMoveType" type="wisematches.playground.scribble.ScribbleMoveType.static" --]

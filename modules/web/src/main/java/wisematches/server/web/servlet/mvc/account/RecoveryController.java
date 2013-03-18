@@ -32,7 +32,6 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/account/recovery")
-@Deprecated
 public class RecoveryController extends WisematchesController {
 	private CaptchaService captchaService;
 	private AccountManager accountManager;
@@ -44,7 +43,6 @@ public class RecoveryController extends WisematchesController {
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.RecoveryController");
 
 	public RecoveryController() {
-		super("title.recovery");
 	}
 
 	@RequestMapping(value = "request")
@@ -186,11 +184,4 @@ public class RecoveryController extends WisematchesController {
 	public void setRecoveryTokenManager(AccountRecoveryManager recoveryTokenManager) {
 		this.recoveryTokenManager = recoveryTokenManager;
 	}
-/*
-
-	@Autowired
-	public void setAccountSecurityService(AccountSecurityService accountSecurityService) {
-		this.accountSecurityService = accountSecurityService;
-	}
-*/
 }
