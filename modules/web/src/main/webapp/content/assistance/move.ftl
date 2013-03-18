@@ -1,12 +1,12 @@
-<#-- @ftlvariable name="principal" type="wisematches.core.Personality" -->
+<#-- @ftlvariable name="player" type="wisematches.core.Personality" -->
 <#-- @ftlvariable name="viewMode" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="board" type="wisematches.playground.scribble.ScribbleBoard" -->
+<#-- @ftlvariable name="boardInfo" type="wisematches.server.web.servlet.sdo.scribble.board.BoardInfo" -->
 <#-- @ftlvariable name="boardSettings" type="wisematches.playground.scribble.settings.BoardSettings" -->
 <#-- @ftlvariable name="memoryWords" type="java.util.Collection<wisematches.playground.scribble.Word>" -->
 
 <#include "/core.ftl">
-<#assign oldPersonality=player!""/>
-<#assign player=player/>
+<#assign oldPersonality=principal!""/>
+<#assign principal=player/>
 
 <style type="text/css">
     span.ui-icon {
@@ -32,27 +32,26 @@
         this.execute = function (widget, type, params, data, callback) {
             if (widget == 'memory') {
                 if (type == 'load') {
-                    callback({success: true, data: {
-                        words: [
-                        <#list memoryWords as w>
-                            {
-                                text: '${w.text}',
-                                direction: '${w.direction.name()}',
-                                position: {row:${w.position.row}, column:${w.position.column}},
-                                tiles: [
-                                    <#list w.tiles as t>
-                                        {number: ${t.number}, letter: '${t.letter?upper_case}', cost: ${t.cost}}<#if t_has_next>,</#if>
-                                    </#list>
-                                ]
-                            }<#if w_has_next>,</#if>
-                        </#list>
-                        ]}
+                    callback({success: true, data: [
+                    <#list memoryWords as w>
+                        {
+                            text: '${w.text}',
+                            direction: '${w.direction.name()}',
+                            position: {row:${w.position.row}, column:${w.position.column}},
+                            tiles: [
+                                <#list w.tiles as t>
+                                    {number: ${t.number}, letter: '${t.letter?upper_case}', cost: ${t.cost}}<#if t_has_next>,</#if>
+                                </#list>
+                            ]
+                        }<#if w_has_next>,</#if>
+                    </#list>
+                    ]
                     });
                 } else {
                     callback({success: true});
                 }
             } else {
-                callback({success: false, summary: "This is just example board. You can not do any real actions."});
+                callback({success: false, message: "<@message code="info.example.mock"/>"});
             }
         }
     };
@@ -60,7 +59,7 @@
 
 <#include "/content/playground/scribble/scriplet.ftl"/>
 
-<div id="board${board.boardId}" class="playboard ${boardSettings.tilesClass}">
+<div id="board${boardInfo.id}" class="playboard ${boardSettings.tilesClass}">
     <div id="info-move">
         <div id="info-move-header" class="info-header">
             <div id="info-move-label" class="info-label"><@messageCapFirst code="info.rules.move.label"/></div>
@@ -181,7 +180,7 @@
 </div>
 
 <script type="text/javascript">
-    $("#board${board.boardId} .scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
+    $("#board${boardInfo.id}").find(".scribbleBoard .ui-widget-content").prepend(board.getBoardElement());
 </script>
 
-<#assign player=oldPersonality/>
+<#assign principal=oldPersonality/>
