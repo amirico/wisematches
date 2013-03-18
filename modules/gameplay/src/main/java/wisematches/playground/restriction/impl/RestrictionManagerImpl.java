@@ -31,9 +31,8 @@ public class RestrictionManagerImpl implements RestrictionManager {
 	}
 
 	@Override
-	public Comparable<?> getRestrictionThreshold(String name, Membership membership) {
-		final RestrictionDescription<?> descriptor = getDescriptor(name);
-		return descriptor.getRestriction(membership);
+	public Comparable getDefaultThreshold(String name) {
+		return getDescriptor(name).getRestriction(null);
 	}
 
 	@Override
@@ -43,6 +42,11 @@ public class RestrictionManagerImpl implements RestrictionManager {
 			membership = ((Member) player).getMembership();
 		}
 		return getRestrictionThreshold(name, membership);
+	}
+
+	@Override
+	public Comparable<?> getRestrictionThreshold(String name, Membership membership) {
+		return getDescriptor(name).getRestriction(membership);
 	}
 
 	@Override

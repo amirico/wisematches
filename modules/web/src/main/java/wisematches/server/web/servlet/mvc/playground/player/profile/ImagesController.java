@@ -11,13 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
 import wisematches.core.personality.player.profile.PlayerImageType;
 import wisematches.core.personality.player.profile.PlayerImagesManager;
 import wisematches.core.personality.player.profile.UnsupportedImageException;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
@@ -93,17 +92,19 @@ public class ImagesController extends WisematchesController {
 		ServletOutputStream outputStream = response.getOutputStream();
 		FileCopyUtils.copy(stream, outputStream);
 		outputStream.flush();
-		stream.close();
+
+		if (stream != null) {
+			stream.close();
+		}
 	}
 
-	@ResponseBody
 	@RequestMapping("preview")
-	private DeprecatedResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
+	private ServiceResponse previewPlayerImage(HttpServletRequest request, HttpSession httpSession, Locale locale) {
 		try {
 			final Personality principal = getPrincipal();
 			final ServletInputStream inputStream = request.getInputStream();
 			if (request.getContentLength() > 512000) {
-				return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.photo.size2", 512000, locale));
+				return responseFactory.failure("profile.edit.error.photo.size2", new Object[]{512000}, locale);
 			}
 
 			final PlayerImageType type = PlayerImageType.PROFILE;
@@ -116,43 +117,41 @@ public class ImagesController extends WisematchesController {
 			out.close();
 
 			httpSession.setAttribute(PREVIEW_ATTRIBUTE_NAME, tempFile);
-			return DeprecatedResponse.success();
+			return responseFactory.success();
 		} catch (IOException ex) {
-			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return responseFactory.failure("profile.edit.error.system", locale);
 		}
 	}
 
-	@ResponseBody
 	@RequestMapping("remove")
-	private DeprecatedResponse removePlayerImage(HttpSession httpSession) {
+	private ServiceResponse removePlayerImage(HttpSession httpSession) {
 		final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 		if (f != null) {
 			f.delete();
 		}
 		httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
 		playerImagesManager.removePlayerImage(getPrincipal().getId(), PlayerImageType.PROFILE);
-		return DeprecatedResponse.success();
+		return responseFactory.success();
 	}
 
-	@ResponseBody
 	@RequestMapping("set")
-	private DeprecatedResponse setPlayerImage(HttpSession httpSession, Locale locale) {
+	private ServiceResponse setPlayerImage(HttpSession httpSession, Locale locale) {
 		try {
 			final Personality principal = getPrincipal();
 			final File f = (File) httpSession.getAttribute(PREVIEW_ATTRIBUTE_NAME);
 			if (f == null) {
-				return DeprecatedResponse.failure("No preview image");
+				return responseFactory.failure("profile.edit.preview.empty", locale);
 			}
 
 			playerImagesManager.setPlayerImage(principal.getId(), new FileInputStream(f), PlayerImageType.PROFILE);
 			httpSession.removeAttribute(PREVIEW_ATTRIBUTE_NAME);
 			f.delete();
 
-			return DeprecatedResponse.success();
+			return responseFactory.success();
 		} catch (IOException ex) {
-			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.system", ex.getMessage(), locale));
+			return responseFactory.failure("profile.edit.error.system", locale);
 		} catch (UnsupportedImageException ex) {
-			return DeprecatedResponse.failure(messageSource.getMessage("profile.edit.error.photo.unsupported", locale));
+			return responseFactory.failure("profile.edit.error.photo.unsupported", locale);
 		}
 	}
 

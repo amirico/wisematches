@@ -5,7 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Player;
 import wisematches.server.services.relations.blacklist.BlacklistManager;
 import wisematches.server.web.servlet.mvc.WisematchesController;
@@ -32,7 +35,6 @@ public class BlacklistController extends WisematchesController {
 		return "/content/playground/players/blacklist/view";
 	}
 
-	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public ServiceResponse addToBlacklist(@RequestBody BlacklistRecordForm form, Locale locale) {
@@ -44,7 +46,6 @@ public class BlacklistController extends WisematchesController {
 		return responseFactory.success();
 	}
 
-	@ResponseBody
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@RequestMapping(value = "remove", method = RequestMethod.POST)
 	public ServiceResponse removeFromBlacklist(@RequestParam(value = "persons[]") List<Long> removeList) {

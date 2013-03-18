@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Player;
 import wisematches.core.Visitor;
 import wisematches.playground.BoardCreationException;
@@ -78,7 +77,6 @@ public class WaitingScribbleController extends AbstractScribbleController {
 		return responseFactory.success(createProposals(principal));
 	}
 
-	@ResponseBody
 	@RequestMapping("accept.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public ServiceResponse acceptProposalAjax(@RequestParam("p") long proposal, Locale locale) {
@@ -111,7 +109,6 @@ public class WaitingScribbleController extends AbstractScribbleController {
 		}
 	}
 
-	@ResponseBody
 	@RequestMapping("decline.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public ServiceResponse declineProposalAjax(@RequestParam("p") long proposal, Locale locale) {

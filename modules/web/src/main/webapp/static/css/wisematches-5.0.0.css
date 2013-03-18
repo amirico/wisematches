@@ -2343,7 +2343,6 @@ ul.bonuses .bonus-cell {
 #membershipView .levels>div>div {
     padding: 5px;
     text-align: center;
-    white-space: nowrap;
     vertical-align: top;
 }
 

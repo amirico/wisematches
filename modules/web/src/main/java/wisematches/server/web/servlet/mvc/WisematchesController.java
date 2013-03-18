@@ -29,10 +29,6 @@ public abstract class WisematchesController {
 	protected WisematchesController() {
 	}
 
-	@Deprecated
-	protected WisematchesController(String title) {
-	}
-
 	@ModelAttribute("title")
 	public String getTitle(HttpServletRequest request) {
 		final String uri = request.getServletPath() + request.getPathInfo();
