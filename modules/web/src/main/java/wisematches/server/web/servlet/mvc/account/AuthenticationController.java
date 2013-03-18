@@ -24,12 +24,10 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/account")
-@Deprecated
 public class AuthenticationController extends WisematchesController {
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AuthenticationController");
 
 	public AuthenticationController() {
-		super("title.authentication");
 	}
 
 	/**
