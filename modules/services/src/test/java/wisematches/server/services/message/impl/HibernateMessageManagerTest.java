@@ -19,8 +19,9 @@ import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageDirection;
 import wisematches.server.services.message.MessageManager;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -130,22 +131,25 @@ public class HibernateMessageManagerTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testCleanup() {
-		final Map<Membership, Comparable<Integer>> a1 = new HashMap<>();
+		final Map<Membership, Integer> a1 = new HashMap<>();
 		a1.put(Membership.BASIC, 20);
 		a1.put(Membership.SILVER, 40);
 		a1.put(Membership.GOLD, 40);
 		a1.put(Membership.PLATINUM, 40);
 
-		final Map<Membership, Comparable<Integer>> a2 = new HashMap<>();
+		final Map<Membership, Integer> a2 = new HashMap<>();
 		a2.put(Membership.BASIC, 10);
 		a2.put(Membership.SILVER, 20);
 		a2.put(Membership.GOLD, 20);
 		a2.put(Membership.PLATINUM, 20);
 
 		final RestrictionManagerImpl r = new RestrictionManagerImpl();
-		r.setRestrictions(Arrays.asList(
-				new RestrictionDescription<>("messages.hist.private", 0, a1),
-				new RestrictionDescription<>("messages.hist.notice", 0, a2)));
+
+		final List<RestrictionDescription<Integer>> a = new ArrayList<>();
+		a.add(new RestrictionDescription.Integer("messages.hist.private", 0, a1));
+		a.add(new RestrictionDescription.Integer("messages.hist.notice", 0, a2));
+
+		r.setRestrictions(a);
 
 		final SQLQuery query = EasyMock.createMock(SQLQuery.class);
 		EasyMock.expect(query.executeUpdate()).andReturn(1);

@@ -7,16 +7,17 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class RestrictionDescription<T> {
+public class RestrictionDescription<T extends Comparable<T>> {
 	private String name;
-	private Comparable<T> nonMemberRestriction;
-	private Map<Membership, Comparable<T>> restrictions;
+	private T nonMemberRestriction;
+	private Map<Membership, T> restrictions;
 
-	public RestrictionDescription() {
+	private RestrictionDescription() {
 	}
 
-	public RestrictionDescription(String name, Comparable<T> nonMemberRestriction, Map<Membership, Comparable<T>> restrictions) {
+	private RestrictionDescription(String name, T nonMemberRestriction, Map<Membership, T> restrictions) {
 		this.name = name;
+		this.nonMemberRestriction = nonMemberRestriction;
 		this.restrictions = restrictions;
 	}
 
@@ -31,7 +32,7 @@ public final class RestrictionDescription<T> {
 		return restrictions.get(membership);
 	}
 
-	public Map<Membership, Comparable<T>> getRestrictions() {
+	public Map<Membership, T> getRestrictions() {
 		return restrictions;
 	}
 
@@ -39,11 +40,30 @@ public final class RestrictionDescription<T> {
 		this.name = name;
 	}
 
-	public void setUndefined(Comparable<T> nonMemberRestriction) {
+	public void setUndefined(T nonMemberRestriction) {
 		this.nonMemberRestriction = nonMemberRestriction;
 	}
 
-	public void setRestrictions(Map<Membership, Comparable<T>> restrictions) {
+	public void setRestrictions(Map<Membership, T> restrictions) {
 		this.restrictions = restrictions;
+	}
+
+	public static final class Integer extends RestrictionDescription<java.lang.Integer> {
+		public Integer() {
+		}
+
+		public Integer(String name, java.lang.Integer nonMemberRestriction, Map<Membership, java.lang.Integer> restrictions) {
+			super(name, nonMemberRestriction, restrictions);
+		}
+
+		@Override
+		public void setUndefined(java.lang.Integer nonMemberRestriction) {
+			super.setUndefined(nonMemberRestriction);
+		}
+
+		@Override
+		public void setRestrictions(Map<Membership, java.lang.Integer> restrictions) {
+			super.setRestrictions(restrictions);
+		}
 	}
 }

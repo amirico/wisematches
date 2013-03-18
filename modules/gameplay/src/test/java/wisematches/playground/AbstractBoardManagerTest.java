@@ -177,41 +177,6 @@ public class AbstractBoardManagerTest {
 		verify(board);
 	}
 
-/*
-	TODO: move to board search manager
-	@Test
-	public void testGetActiveBoards() throws BoardLoadingException {
-		final Personality player = Personality.person(1);
-
-		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board1 = createStrictMock(AbstractGameBoard.class);
-		expectListeners(board1);
-		expect(board1.getBoardId()).andReturn(1L);
-		replay(board1);
-
-		final AbstractGameBoard<GameSettings, AbstractPlayerHand> board2 = createStrictMock(AbstractGameBoard.class);
-		expectListeners(board2);
-		expect(board2.getBoardId()).andReturn(2L);
-		replay(board2);
-
-		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
-		expect(dao.loadPlayerBoards(player, GameState.ACTIVE, null, null, null)).andReturn(Arrays.asList(1L, 2L));
-		expect(dao.loadBoard(1L)).andReturn(board1);
-		expect(dao.loadBoard(2L)).andReturn(board2);
-		replay(dao);
-
-		final MockGamePlayManager mock = new MockGamePlayManager(dao);
-
-		final Collection<AbstractGameBoard<GameSettings, AbstractPlayerHand>> waitingBoards = mock.searchEntities(player, GameState.ACTIVE, null, null, null);
-		assertEquals(2, waitingBoards.size());
-		assertTrue(waitingBoards.contains(board1));
-		assertTrue(waitingBoards.contains(board2));
-
-		verify(board1);
-		verify(board2);
-		verify(dao);
-	}
-*/
-
 	@Test
 	public void testSaveListeners() throws BoardLoadingException {
 		final AbstractPlayerHand h1 = new AbstractPlayerHand(player1, (short) 100);
