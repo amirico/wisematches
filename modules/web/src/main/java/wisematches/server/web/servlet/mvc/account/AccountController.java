@@ -45,7 +45,6 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/account")
-@Deprecated
 public class AccountController extends WisematchesController {
 	private AccountManager accountManager;
 	private CaptchaService captchaService;
