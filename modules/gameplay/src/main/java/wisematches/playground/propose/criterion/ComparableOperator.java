@@ -1,8 +1,8 @@
-package wisematches.playground.propose.criteria;
+package wisematches.playground.propose.criterion;
 
 import wisematches.core.Player;
+import wisematches.playground.propose.Criterion;
 import wisematches.playground.propose.CriterionViolation;
-import wisematches.playground.propose.PlayerCriterion;
 import wisematches.playground.tracking.Statistics;
 
 /**
@@ -43,13 +43,23 @@ public enum ComparableOperator {
 
 	abstract <T extends Comparable> boolean test(T a, T b);
 
-	PlayerCriterion createCriterion(final String code, final Comparable value, final PlayerProperty property) {
-		return new PlayerCriterion() {
+	Criterion createCriterion(final String code, final Comparable value, final PlayerProperty property) {
+		return new Criterion() {
+			@Override
+			public String getCode() {
+				return code;
+			}
+
+			@Override
+			public Comparable getExpected() {
+				return value;
+			}
+
 			@Override
 			public CriterionViolation checkViolation(Player player, Statistics statistics) {
 				final Comparable comparable = property.getProperty(player, statistics);
 				if (!test(comparable, value)) {
-					return new CriterionViolation(code, comparable, value, this);
+					return new CriterionViolation(code, comparable, value);
 				}
 				return null;
 			}

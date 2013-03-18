@@ -9,36 +9,37 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import wisematches.core.Personality;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.form.PlayerInfoForm;
-import wisematches.server.web.servlet.mvc.playground.scribble.game.form.ScribbleInfoForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
+import wisematches.server.web.servlet.sdo.scribble.game.ActiveGamesInfo;
+import wisematches.server.web.servlet.sdo.scribble.game.GameInfo;
+import wisematches.server.web.servlet.sdo.scribble.game.ProposalInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/playground/scribble")
-@Deprecated
 public class ActiveScribbleController extends AbstractScribbleController {
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.ActiveGameController");
 
 	public ActiveScribbleController() {
 	}
 
-
 	@RequestMapping("active")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String showActiveGames(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
+	public String activeGamesPage(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
 			principal = getPrincipal();
@@ -48,28 +49,26 @@ public class ActiveScribbleController extends AbstractScribbleController {
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");
 		}
+
 		log.debug("Loading active games for personality: {}", principal);
 		model.addAttribute("player", principal);
 
 		final Collection<ScribbleDescription> activeBoards = searchManager.searchEntities(principal, ACTIVE_GAMES_CTX, null, null);
-		model.addAttribute("activeBoards", activeBoards);
+		model.addAttribute("boards", activeBoards);
 		log.debug("Found {} active games for personality: {}", activeBoards.size(), principal);
 
 		if (principal.equals(getPrincipal())) {
 			final Collection<GameProposal<ScribbleSettings>> proposals =
 					proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
-			model.addAttribute("activeProposals", proposals);
+			model.addAttribute("proposals", proposals);
 			log.debug("Found {} proposals for personality: {}", proposals.size(), principal);
-		} else {
-			model.addAttribute("activeProposals", Collections.emptyList());
 		}
 		return "/content/playground/scribble/active";
 	}
 
-	@ResponseBody
 	@RequestMapping(value = "active.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DeprecatedResponse showActiveGamesAjax(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
+	public ServiceResponse activeGamesService(@RequestParam(value = "p", required = false) Long pid, Locale locale) throws UnknownEntityException {
 		final Personality principal;
 		if (pid == null) {
 			principal = getPrincipal();
@@ -79,31 +78,26 @@ public class ActiveScribbleController extends AbstractScribbleController {
 		if (principal == null) {
 			throw new UnknownEntityException(null, "account");
 		}
+		final ActiveGamesInfo activeGames = createActiveGames(principal, locale);
 		log.debug("Loading active games for personality: {}", principal);
+		return responseFactory.success(activeGames);
+	}
 
-		final Collection<ScribbleDescription> activeBoards = searchManager.searchEntities(principal, ACTIVE_GAMES_CTX, null, null);
-		final List<ScribbleInfoForm> forms = new ArrayList<>(activeBoards.size());
+	private ActiveGamesInfo createActiveGames(Personality principal, Locale locale) {
+		Collection<ScribbleDescription> activeBoards = searchManager.searchEntities(principal, ACTIVE_GAMES_CTX, null, null);
+		List<GameInfo> boards = new ArrayList<>(activeBoards.size());
 		for (ScribbleDescription board : activeBoards) {
-			final ScribbleSettings settings = board.getSettings();
-			final long playerTurn = board.getPlayerTurn() != null ? board.getPlayerTurn().getId() : 0;
-
-			final List<Personality> playersHands = board.getPlayers();
-			final PlayerInfoForm[] players = new PlayerInfoForm[playersHands.size()];
-			for (int i = 0, playersHandsSize = playersHands.size(); i < playersHandsSize; i++) {
-				final Personality player = playersHands.get(i);
-				// TODO: commented
-/*
-				final Personality player = personalityManager.getMember(hand.getPlayerId());
-				players[i] = new PlayerInfoForm(player.getId(),
-						player.getNickname(),
-						player.getMembership().name(),
-						playerStateManager.isPlayerOnline(player),
-						hand.getPoints());
-*/
-			}
-			final String elapsedTime = messageSource.formatRemainedTime(board, locale);
-			forms.add(new ScribbleInfoForm(board.getBoardId(), settings, elapsedTime, playerTurn, players));
+			boards.add(new GameInfo(board, messageSource, playerStateManager, locale));
 		}
-		return DeprecatedResponse.success(null, "boards", forms);
+
+		Collection<ProposalInfo> proposalInfos = null;
+		if (principal.equals(getPrincipal())) {
+			final List<GameProposal<ScribbleSettings>> proposals = proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
+			proposalInfos = new ArrayList<>(proposals.size());
+			for (GameProposal<ScribbleSettings> proposal : proposals) {
+				proposalInfos.add(new ProposalInfo(proposal, null));
+			}
+		}
+		return new ActiveGamesInfo(boards, proposalInfos);
 	}
 }

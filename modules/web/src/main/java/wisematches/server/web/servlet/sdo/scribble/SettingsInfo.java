@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.sdo.scribble.board;
+package wisematches.server.web.servlet.sdo.scribble;
 
 import wisematches.playground.GameMessageSource;
 import wisematches.playground.GameRelationship;
@@ -10,11 +10,11 @@ import java.util.Locale;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class SettingInfo extends InternationalisedInfo {
+public class SettingsInfo extends InternationalisedInfo {
 	private final ScribbleSettings settings;
 	private final GameRelationship relationship;
 
-	public SettingInfo(ScribbleSettings settings, GameRelationship relationship, GameMessageSource messageSource, Locale locale) {
+	public SettingsInfo(ScribbleSettings settings, GameRelationship relationship, GameMessageSource messageSource, Locale locale) {
 		super(messageSource, locale);
 		this.settings = settings;
 		this.relationship = relationship;

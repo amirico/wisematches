@@ -1,4 +1,4 @@
-package wisematches.server.web.servlet.sdo.scribble.board;
+package wisematches.server.web.servlet.sdo.scribble;
 
 import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
 

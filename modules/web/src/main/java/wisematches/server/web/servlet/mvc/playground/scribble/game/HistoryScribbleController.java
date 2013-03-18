@@ -17,7 +17,7 @@ import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleCo
 import wisematches.server.web.servlet.sdo.DataTablesRequest;
 import wisematches.server.web.servlet.sdo.DataTablesResponse;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
-import wisematches.server.web.servlet.sdo.scribble.board.HistGameInfo;
+import wisematches.server.web.servlet.sdo.scribble.game.GameInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,13 +61,13 @@ public class HistoryScribbleController extends AbstractScribbleController {
 		} else {
 			Orders orders = tableRequest.getOrders();
 			if (orders != null) {
-				orders = orders.map(Collections.singletonMap("playerHands", "newRating-oldRating"));
+				orders = orders.map(Collections.singletonMap("scores", "newRating-oldRating"));
 			}
 			final Range limit = tableRequest.getLimit();
 			final List<ScribbleDescription> descriptors = searchManager.searchEntities(player, FINISHED_GAMES_CTX, orders, limit);
-			final List<HistGameInfo> rows = new ArrayList<>(descriptors.size());
+			final List<GameInfo> rows = new ArrayList<>(descriptors.size());
 			for (ScribbleDescription description : descriptors) {
-				rows.add(new HistGameInfo(description, messageSource, playerStateManager, locale));
+				rows.add(new GameInfo(description, messageSource, playerStateManager, locale));
 			}
 			return responseFactory.success(new DataTablesResponse(totalCount, rows, tableRequest));
 		}

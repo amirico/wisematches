@@ -132,6 +132,9 @@ public class CreateScribbleController extends AbstractScribbleController {
 				proposalManager.initiate(s, player, count, form.createPlayerCriterion());
 			} else if (form.getCreateTab() == CreateScribbleTab.CHALLENGE) {
 				final long[] opponents = form.getOpponents();
+				if (opponents == null) {
+					return validateOpponentsCount(player, 0, locale);
+				}
 				final ServiceResponse response = validateOpponentsCount(player, opponents.length, locale);
 				if (response != null) {
 					return response;

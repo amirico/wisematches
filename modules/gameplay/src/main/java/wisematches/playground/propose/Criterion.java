@@ -10,6 +10,11 @@ import java.io.Serializable;
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface PlayerCriterion extends Serializable {
+public interface Criterion extends Serializable {
+	String getCode();
+
+	Comparable getExpected();
+
+
 	CriterionViolation checkViolation(Player player, Statistics statistics);
 }

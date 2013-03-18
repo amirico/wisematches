@@ -3,7 +3,6 @@ package wisematches.playground.propose;
 import wisematches.core.Player;
 import wisematches.core.search.SearchManager;
 import wisematches.playground.GameSettings;
-import wisematches.playground.propose.criteria.ViolatedCriteriaException;
 
 import java.util.Collection;
 
@@ -32,7 +31,7 @@ public interface GameProposalManager<S extends GameSettings> extends SearchManag
 	 *                                  is less than two or if {@code players} collection size more than
 	 *                                  {@code playersCount} or contains null.
 	 */
-	PublicProposal<S> initiate(S settings, Player initiator, int opponentsCount, PlayerCriterion... criteria);
+	PublicProposal<S> initiate(S settings, Player initiator, int opponentsCount, Criterion... criteria);
 
 	/**
 	 * Initiates new challenge if it's possible.
@@ -63,10 +62,10 @@ public interface GameProposalManager<S extends GameSettings> extends SearchManag
 	 * @param proposalId the id of proposal
 	 * @param player     the player who wants accept the proposal.
 	 * @return the accepted proposal or {@code null} if there is no proposal with specified id.
-	 * @throws NullPointerException      if {@code player} is null;
-	 * @throws ViolatedCriteriaException if player violates one ore more proposal's restrictions.
+	 * @throws NullPointerException        if {@code player} is null;
+	 * @throws CriterionViolationException if player violates one ore more proposal's restrictions.
 	 */
-	GameProposal<S> accept(long proposalId, Player player) throws ViolatedCriteriaException;
+	GameProposal<S> accept(long proposalId, Player player) throws CriterionViolationException;
 
 	/**
 	 * The player would like reject accepted proposal or received challenge.
@@ -78,10 +77,10 @@ public interface GameProposalManager<S extends GameSettings> extends SearchManag
 	 * @param proposalId the proposal
 	 * @param player     the player who rejected the proposal.
 	 * @return rejected proposal or {@code null} if player doesn't belong to the proposal.
-	 * @throws NullPointerException      if {@code player} is null;
-	 * @throws ViolatedCriteriaException if player violates one ore more proposal's restrictions.
+	 * @throws NullPointerException        if {@code player} is null;
+	 * @throws CriterionViolationException if player violates one ore more proposal's restrictions.
 	 */
-	GameProposal<S> reject(long proposalId, Player player) throws ViolatedCriteriaException;
+	GameProposal<S> reject(long proposalId, Player player) throws CriterionViolationException;
 
 	/**
 	 * Terminates specified proposal. This is system function and usually is executed by administrator or

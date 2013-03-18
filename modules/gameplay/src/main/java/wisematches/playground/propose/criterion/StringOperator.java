@@ -1,9 +1,9 @@
-package wisematches.playground.propose.criteria;
+package wisematches.playground.propose.criterion;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum StringOperator {
+enum StringOperator {
 	EQ() {
 		@Override
 		boolean test(String a, String b) {

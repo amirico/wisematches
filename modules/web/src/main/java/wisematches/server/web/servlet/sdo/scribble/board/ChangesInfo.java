@@ -3,13 +3,14 @@ package wisematches.server.web.servlet.sdo.scribble.board;
 import wisematches.core.Personality;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.Tile;
+import wisematches.server.web.servlet.sdo.scribble.ScoreInfo;
 
 import java.util.List;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class BoardUpdatesInfo {
+public class ChangesInfo {
 	private final Tile[] handTiles;
 	private final MoveInfo[] moves;
 	private final StatusInfo status;
@@ -17,7 +18,7 @@ public class BoardUpdatesInfo {
 	private final long generated;
 	private final ScribbleBoard board;
 
-	public BoardUpdatesInfo(ScribbleBoard board, StatusInfo status, MoveInfo[] moves, Tile[] tiles) {
+	public ChangesInfo(ScribbleBoard board, StatusInfo status, MoveInfo[] moves, Tile[] tiles) {
 		this.board = board;
 		this.moves = moves;
 		this.status = status;
