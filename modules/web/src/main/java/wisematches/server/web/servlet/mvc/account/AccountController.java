@@ -13,7 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import wisematches.core.Language;
 import wisematches.core.Member;
@@ -24,9 +27,9 @@ import wisematches.server.services.notify.NotificationException;
 import wisematches.server.services.notify.NotificationSender;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.web.security.captcha.CaptchaService;
-import wisematches.server.web.servlet.mvc.DeprecatedResponse;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.AccountRegistrationForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +37,7 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -50,7 +54,6 @@ public class AccountController extends WisematchesController {
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.AccountController");
 
 	public AccountController() {
-		super("title.account");
 	}
 
 	/**
@@ -81,14 +84,14 @@ public class AccountController extends WisematchesController {
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String createAccountAction(HttpServletRequest request, HttpServletResponse response,
 									  @Valid @ModelAttribute("registration") AccountRegistrationForm form,
-									  BindingResult result, Model model, SessionStatus status) {
+									  BindingResult result, Model model, SessionStatus status, Locale locale) {
 		log.info("Create new account request: {}", form);
 
 		if (captchaService != null) {
 			captchaService.validateCaptcha(request, response, result);
 		}
 		// Validate before next steps
-		validateRegistrationForm(form, result);
+		validateRegistrationForm(form, result, locale);
 
 		Member member = null;
 		// Create account if no errors
@@ -135,16 +138,15 @@ public class AccountController extends WisematchesController {
 	 * @param result   the bind errors that will be filled in case of any errors.
 	 * @return the service response that also contains information about errors.
 	 */
-	@ResponseBody
 	@RequestMapping(value = "checkAvailability")
-	private DeprecatedResponse getAvailabilityStatus(@RequestParam("email") String email,
-													 @RequestParam("nickname") String nickname,
-													 Errors result) {
+	private ServiceResponse getAvailabilityStatus(@RequestParam("email") String email,
+												  @RequestParam("nickname") String nickname,
+												  Errors result, Locale locale) {
 		log.debug("Check account validation for: {} ('{}')", email, nickname);
 
 		final AccountAvailability a = accountManager.checkAccountAvailable(nickname, email);
 		if (a.isAvailable()) {
-			return DeprecatedResponse.success();
+			return responseFactory.success();
 		} else {
 			if (!a.isEmailAvailable()) {
 				result.rejectValue("email", "account.register.email.err.busy");
@@ -155,7 +157,7 @@ public class AccountController extends WisematchesController {
 			if (!a.isUsernameProhibited()) {
 				result.rejectValue("nickname", "account.register.nickname.err.incorrect");
 			}
-			return DeprecatedResponse.convert(result);
+			return responseFactory.failure("account.register.err.busy", locale);
 		}
 	}
 
@@ -202,11 +204,11 @@ public class AccountController extends WisematchesController {
 	 * @param form   the form to be checked
 	 * @param errors the binding errors to be filled in case of any error.
 	 */
-	private void validateRegistrationForm(AccountRegistrationForm form, Errors errors) {
+	private void validateRegistrationForm(AccountRegistrationForm form, Errors errors, Locale locale) {
 		if (!form.getPassword().equals(form.getConfirm())) {
 			errors.rejectValue("confirm", "account.register.pwd-cfr.err.mismatch");
 		}
-		getAvailabilityStatus(form.getEmail(), form.getNickname(), errors);
+		getAvailabilityStatus(form.getEmail(), form.getNickname(), errors, locale);
 	}
 
 	/**
