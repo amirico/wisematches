@@ -78,7 +78,7 @@ public class ScribbleStatisticsEditor extends StatisticsEditor implements Scribb
 	ScribbleStatisticsEditor() {
 	}
 
-	ScribbleStatisticsEditor(Player player) {
+	public ScribbleStatisticsEditor(Player player) {
 		super(player);
 	}
 
@@ -152,16 +152,19 @@ public class ScribbleStatisticsEditor extends StatisticsEditor implements Scribb
 		return averageWordLength;
 	}
 
+
 	@Override
 	public String toString() {
-		return "ScribbleStatisticsEditor{" +
-				"wordsCount=" + wordsCount +
-				", passesCount=" + passesCount +
-				", exchangesCount=" + exchangesCount +
-				", averageWordLength=" + averageWordLength +
-				", lastLongestWord=" + lastLongestWord +
-				", lastValuableWord=" + lastValuableWord +
-				", allHandTilesBonuses=" + allHandTilesBonuses +
-				"} + " + super.toString();
+		final StringBuilder sb = new StringBuilder("ScribbleStatisticsEditor{");
+		sb.append("wordsCount=").append(wordsCount);
+		sb.append(", passesCount=").append(passesCount);
+		sb.append(", exchangesCount=").append(exchangesCount);
+		sb.append(", averageWordLength=").append(averageWordLength);
+		sb.append(", lastLongestWord=").append(lastLongestWord);
+		sb.append(", lastValuableWord=").append(lastValuableWord);
+		sb.append(", allHandTilesBonuses=").append(allHandTilesBonuses);
+		sb.append('}');
+		sb.append(super.toString());
+		return sb.toString();
 	}
 }

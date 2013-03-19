@@ -49,15 +49,14 @@
         <property name="daysPerMove" value="3"/>
     </bean>
 
-    <!--
-        <bean id="scribbleStatisticValidator"
-              class="wisematches.playground.scribble.tracking.impl.PlayerStatisticValidator">
-            <property name="sessionFactory" ref="sessionFactory"/>
-            <property name="gamePlayManager" ref="scribbleBoardManager"/>
-            <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
-            <property name="trackingCenterDao" ref="trackingCenterDao"/>
-        </bean>
-    -->
+    <bean id="scribbleStatisticValidator"
+          class="wisematches.playground.scribble.PlayerStatisticValidator">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="boardManager" ref="scribbleBoardManager"/>
+        <property name="searchManager" ref="scribbleSearchManager"/>
+        <property name="personalityManager" ref="personalityManager"/>
+        <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
+    </bean>
 
     <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
         <property name="playerStatisticManager">

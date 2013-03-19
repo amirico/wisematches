@@ -30,7 +30,7 @@
                         </td>
 
                         <td style="vertical-align: top; padding-left: 5px; padding-right: 5px;">
-                        <@wm.ui.widget class="scribbleBoard" style="width: 100%" title="<center>${boardInfo.settings.title}</center>"  help="board.playboard"/>
+                        <@wm.ui.widget class="scribbleBoard" style="width: 100%" title="<center>${boardInfo.settings.title} #${boardInfo.id?string}</center>"  help="board.playboard"/>
             <#include "widget/controls.ftl"/>
             <#if boardInfo.handTiles?has_content><#include "widget/annotation.ftl"/></#if>
                         </td>

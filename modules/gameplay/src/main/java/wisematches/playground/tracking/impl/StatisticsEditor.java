@@ -468,7 +468,7 @@ public class StatisticsEditor implements Statistics, Serializable {
 		return "StatisticsEditor{" +
 				"playerId=" + playerId +
 				", rating=" + rating +
-				", updateTime=" + updateTime +
+				", updateTime=" + updateTime.getTime() +
 				", wins=" + wins +
 				", loses=" + loses +
 				", draws=" + draws +

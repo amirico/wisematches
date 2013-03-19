@@ -6,7 +6,7 @@
 
 <@wm.ui.table.dtinit/>
 
-<#assign rows=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"]/>
+<#assign rows=messageSource.getMessage("game.play.captions", locale).toCharArray()/>
 
 <div>
 <#assign boardId=""/>
@@ -42,7 +42,7 @@ Unknown board. Please check board's id
         </thead>
         <tbody>
             <#list words as w>
-                <#assign score=scoreEngine.calculateWordScore(w, board)/>
+                <#assign score=scoreEngine.calculateWordScore(board, w)/>
             <tr>
                 <td>${w.text}</td>
                 <td>${score.points}</td>

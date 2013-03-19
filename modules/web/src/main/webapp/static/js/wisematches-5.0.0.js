@@ -841,7 +841,7 @@ wm.game.History = function (pid, columns, language) {
         "bFilter": false,
         "bSortClasses": false,
         "aaSorting": [
-            [0, 'desc']
+            [7, 'desc']
         ],
         "iDisplayStart": 0,
         "aoColumns": columns,
@@ -2719,13 +2719,13 @@ wm.scribble.Progress = function (board, language) {
                 cap.text(language['resolution.finished']);
                 desc.text(language['resolution.by'] + ' ' + board.getPlayer(playerTurn).info.nickname);
                 break;
+            case 'INTERRUPTED':
+                cap.text(language['resolution.interrupted']);
+                desc.text(language['resolution.for'] + ' ' + board.getPlayer(playerTurn).info.nickname);
+                break;
             case 'STALEMATE':
                 cap.text(language['resolution.stalemate']);
                 desc.text(language['resolution.moves']);
-                break;
-            case 'TIMEOUT':
-                cap.text(language['resolution.timeout']);
-                desc.text(language['resolution.for'] + ' ' + board.getPlayer(playerTurn).info.nickname);
                 break;
             case 'RESIGNED':
                 cap.text(language['resolution.resigned']);

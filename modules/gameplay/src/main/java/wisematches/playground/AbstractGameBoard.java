@@ -239,7 +239,7 @@ public abstract class AbstractGameBoard<S extends GameSettings, H extends Abstra
 			}
 		}
 
-		if (cnt != hands.size()) {
+		if (rated && cnt != hands.size()) {
 			for (H hand : hands) {
 				if (hand.getPoints() == maxPoints) {
 					hand.markAsWinner();
