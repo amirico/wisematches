@@ -111,11 +111,11 @@
 
 <script type="text/javascript">
     new wm.scribble.Progress(board, {
+        'resolution.resigned': "<@message code="game.resolution.resigned"/>",
         'resolution.finished': "<@message code="game.resolution.finished"/>",
         'resolution.stalemate': "<@message code="game.resolution.stalemate"/>",
+        'resolution.interrupted': "<@message code="game.resolution.interrupted"/>",
         'resolution.moves': "<@message code="game.resolution.moves"/>",
-        'resolution.resigned': "<@message code="game.resolution.resigned"/>",
-        'resolution.timeout': "<@message code="game.resolution.timeout"/>",
         'resolution.for': "<@message code="game.resolution.for"/>",
         'resolution.by': "<@message code="game.resolution.by"/>"
     });

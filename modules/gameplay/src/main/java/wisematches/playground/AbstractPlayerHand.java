@@ -75,11 +75,11 @@ public class AbstractPlayerHand implements GamePlayerHand {
 		return points;
 	}
 
-	void markAsWinner() {
+	public void markAsWinner() {
 		this.winner = true;
 	}
 
-	void updateRating(short oldRating, short newRating) {
+	public void updateRating(short oldRating, short newRating) {
 		this.oldRating = oldRating;
 		this.newRating = newRating;
 	}
