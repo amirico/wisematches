@@ -5,12 +5,12 @@
 <#assign hasNewFeatues=false/>
 
 <table id="header" class="ui-widget-content shadow"
-       style="background: none; border-width: 0;border-bottom-width: 1px;">
+       style="width: 100%; height: 70px; background: none; border-width: 0;border-bottom-width: 1px; padding-bottom: 0">
     <tr>
-        <td width="178px" height="72px">
-            <img id="header-image" src="<@wm.ui.static "/images/logo.png"/>" width="178" height="72" alt="logo"/>
+        <td width="165px">
+            <img id="header-image" src="<@wm.ui.static "/images/logo.png"/>" width="165px" height="70px" alt="logo"/>
         </td>
-        <td width="100%" height="72px">
+        <td>
             <table style="height: 100%; width: 100%;">
                 <tr>
                     <td valign="top" align="right">

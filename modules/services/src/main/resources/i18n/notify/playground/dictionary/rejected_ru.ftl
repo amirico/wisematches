@@ -5,3 +5,8 @@
     Пожалуйста, обратите внимание, что выш запрос на изменение словаря для слова <strong>${context.word}</strong> был
     отклонен.
 </p>
+<#if context.commentary?has_content>
+<p>
+    Причина отклонения: ${context.commentary}
+</p>
+</#if>

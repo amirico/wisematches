@@ -112,38 +112,6 @@
     padding-top: 10px;
 }
 
-#language-combobox {
-    width: auto;
-    text-align: left;
-}
-
-#language-combobox ul {
-    display: none;
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    z-index: 1000;
-    list-style: none;
-}
-
-#language-combobox ul li {
-    border: 0;
-    display: block;
-    font-weight: normal;
-    padding: 3px 15px 3px 5px;
-}
-
-#language-combobox .dropdown {
-    position: relative;
-    white-space: nowrap;
-    padding: 3px 15px 3px 5px;
-}
-
-#language-combobox .dropdown span {
-    display: inline-block;
-    vertical-align: middle;
-}
-
 body {
     padding: 0;
     margin: 0 0 8px;
@@ -220,31 +188,20 @@ a.action {
     color: #003333;
 }
 
-#language-combobox {
-    background-color: #DFE8F6;
-    border-color: transparent;
-    width: 130px;
-}
-
-#language-combobox option {
-    background-color: transparent !important;
-    border-color: transparent !important;
-}
-
-.personatity.footer {
+.footer {
     margin-top: 10px;
     white-space: nowrap;
     text-align: center;
     height: auto;
 }
 
-.playground.footer {
+.footer {
     margin-top: 2em;
     text-align: right;
     border-top: 1px solid #C5C8D0;
 }
 
-.playground.footer>span {
+.footer>span {
     font-size: 85%;
 }
 
@@ -363,10 +320,13 @@ div.space-line {
     padding-right: 5px;
 }
 
+#info-navigation>ul {
+    padding: 0 !important;
+}
+
 #info-navigation ul {
     margin: 0;
-    padding: 0;
-    padding-top: 10px;
+    padding: 10px 0 0;
     list-style: none;
     white-space: nowrap;
 }
@@ -482,6 +442,10 @@ div.space-line {
 
 .info-features-description {
     padding-left: 10px;
+}
+
+#info-general-label {
+    display: none;
 }
 
 .info-general-item {
@@ -1573,6 +1537,10 @@ a.ui-icon {
 
 #dictionaryChanges td {
     white-space: nowrap;
+}
+
+#dictionaryChanges td.definition {
+    white-space: normal;
 }
 
 .word-editor-dlg .ui-dialog-buttonset {

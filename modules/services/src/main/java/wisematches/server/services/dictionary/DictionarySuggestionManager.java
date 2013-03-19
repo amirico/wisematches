@@ -16,14 +16,17 @@ public interface DictionarySuggestionManager extends SearchManager<ChangeSuggest
 	void removeDictionaryChangeListener(DictionarySuggestionListener listener);
 
 
-	void rejectRequests(long... ids);
+	void rejectRequests(String commentary, Long... ids);
 
-	void approveRequests(long... ids);
+	void approveRequests(String commentary, Long... ids);
 
 
-	ChangeSuggestion addWord(String word, String definition, EnumSet<WordAttribute> attributes, Language language, Personality person);
+	void updateRequest(Long id, String definition, EnumSet<WordAttribute> attributes);
 
-	ChangeSuggestion updateWord(String word, String definition, EnumSet<WordAttribute> attributes, Language language, Personality person);
 
-	ChangeSuggestion removeWord(String word, Language language, Personality person);
+	ChangeSuggestion addWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes);
+
+	ChangeSuggestion updateWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes);
+
+	ChangeSuggestion removeWord(Personality person, Language language, String word);
 }

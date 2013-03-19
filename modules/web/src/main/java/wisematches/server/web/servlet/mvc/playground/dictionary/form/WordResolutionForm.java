@@ -5,11 +5,16 @@ import java.util.Arrays;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class WordApprovalForm {
+public class WordResolutionForm {
+	private Long[] ids;
 	private String type;
-	private long[] ids;
+	private String commentary;
 
-	public WordApprovalForm() {
+	public WordResolutionForm() {
+	}
+
+	public Long[] getIds() {
+		return ids;
 	}
 
 	public String getType() {
@@ -20,12 +25,16 @@ public class WordApprovalForm {
 		this.type = type;
 	}
 
-	public long[] getIds() {
-		return ids;
+	public void setIds(Long[] ids) {
+		this.ids = ids;
 	}
 
-	public void setIds(long[] ids) {
-		this.ids = ids;
+	public String getCommentary() {
+		return commentary;
+	}
+
+	public void setCommentary(String commentary) {
+		this.commentary = commentary;
 	}
 
 	@Override

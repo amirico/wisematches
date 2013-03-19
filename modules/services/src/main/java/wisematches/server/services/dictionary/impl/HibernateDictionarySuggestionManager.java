@@ -13,13 +13,11 @@ import wisematches.core.Language;
 import wisematches.core.Personality;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.playground.dictionary.Dictionary;
-import wisematches.playground.dictionary.DictionaryManager;
-import wisematches.playground.dictionary.WordAttribute;
-import wisematches.playground.dictionary.WordEntry;
+import wisematches.playground.dictionary.*;
 import wisematches.server.services.dictionary.*;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -52,12 +50,12 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void rejectRequests(long... ids) {
+	public void rejectRequests(String commentary, Long... ids) {
 		final Session session = sessionFactory.getCurrentSession();
 
 		final List<HibernateChangeSuggestion> list = selectRequestsById(session, ids);
 		for (HibernateChangeSuggestion r : list) {
-			r.setSuggestionState(SuggestionState.REJECTED);
+			r.resolveSuggestion(SuggestionState.REJECTED, commentary);
 			session.update(r);
 
 			for (DictionarySuggestionListener listener : listeners) {
@@ -68,12 +66,16 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void approveRequests(long... ids) {
+	public void approveRequests(String commentary, Long... ids) {
 		final Session session = sessionFactory.getCurrentSession();
 		final List<HibernateChangeSuggestion> list = selectRequestsById(session, ids);
+
+		final Set<Dictionary> changed = new HashSet<>();
 		for (HibernateChangeSuggestion r : list) {
 			try {
 				final Dictionary dictionary = dictionaryManager.getDictionary(r.getLanguage());
+				changed.add(dictionary);
+
 				final WordEntry entry = dictionary.getWordEntry(r.getWord());
 				final SuggestionType suggestionType = r.getSuggestionType();
 				if (suggestionType == SuggestionType.ADD) {
@@ -81,12 +83,12 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 				} else if (suggestionType == SuggestionType.REMOVE) {
 					dictionary.removeWordEntry(entry);
 				} else if (suggestionType == SuggestionType.UPDATE) {
-					dictionary.addWordEntry(r.createWordEntry());
+					dictionary.updateWordEntry(r.createWordEntry());
 				} else {
 					throw new IllegalArgumentException("Incorrect change type: " + suggestionType);
 				}
 
-				r.setSuggestionState(SuggestionState.APPROVED);
+				r.resolveSuggestion(SuggestionState.APPROVED, commentary);
 				session.update(r);
 
 				for (DictionarySuggestionListener listener : listeners) {
@@ -96,11 +98,35 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 				log.error("Change request can't be processed: {}", r, ex);
 			}
 		}
+
+		for (Dictionary dictionary : changed) {
+			try {
+				dictionary.flush();
+			} catch (DictionaryException e) {
+				log.error("Dictionary changes can't be stored: " + dictionary.getLanguage(), e);
+			}
+		}
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public ChangeSuggestion addWord(String word, String definition, EnumSet<WordAttribute> attributes, Language language, Personality person) {
+	public void updateRequest(Long id, String definition, EnumSet<WordAttribute> attributes) {
+		final Session session = sessionFactory.getCurrentSession();
+
+		final HibernateChangeSuggestion r = (HibernateChangeSuggestion) session.get(HibernateChangeSuggestion.class, id);
+		if (r != null) {
+			r.updateDefinition(definition, attributes);
+		}
+		session.save(r);
+
+		for (DictionarySuggestionListener listener : listeners) {
+			listener.changeRequestUpdated(r);
+		}
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public ChangeSuggestion addWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes) {
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (dictionary.contains(word)) {
 			throw new IllegalArgumentException("Word already exist");
@@ -117,7 +143,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public ChangeSuggestion updateWord(String word, String definition, EnumSet<WordAttribute> attributes, Language language, Personality person) {
+	public ChangeSuggestion updateWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes) {
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (!dictionary.contains(word)) {
 			throw new IllegalArgumentException("Word is unknown");
@@ -134,7 +160,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public ChangeSuggestion removeWord(String word, Language language, Personality person) {
+	public ChangeSuggestion removeWord(Personality person, Language language, String word) {
 		final Dictionary dictionary = dictionaryManager.getDictionary(language);
 		if (!dictionary.contains(word)) {
 			throw new IllegalArgumentException("Word is unknown");
@@ -214,13 +240,9 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<HibernateChangeSuggestion> selectRequestsById(Session session, long[] ids) {
-		Long[] l = new Long[ids.length];
-		for (int i = 0; i < ids.length; i++) {
-			l[i] = ids[i];
-		}
+	private List<HibernateChangeSuggestion> selectRequestsById(Session session, Long[] ids) {
 		final Query query = session.createQuery("from HibernateChangeSuggestion where id in (:ids)");
-		query.setParameterList("ids", l, LongType.INSTANCE);
+		query.setParameterList("ids", ids, LongType.INSTANCE);
 		return query.list();
 	}
 

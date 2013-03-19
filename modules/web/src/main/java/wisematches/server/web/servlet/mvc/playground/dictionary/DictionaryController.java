@@ -19,8 +19,8 @@ import wisematches.playground.dictionary.WordAttribute;
 import wisematches.server.services.dictionary.*;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
-import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordApprovalForm;
 import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordDefinitionForm;
+import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordResolutionForm;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 
 import java.util.EnumSet;
@@ -64,7 +64,8 @@ public class DictionaryController extends WisematchesController {
 		final SuggestionContext ctx = new SuggestionContext(language, null, EnumSet.of(SuggestionState.WAITING));
 
 		final List<ChangeSuggestion> suggestions = dictionarySuggestionManager.searchEntities(null, ctx, null, null);
-		model.addAttribute("changeSuggestion", suggestions);
+		model.addAttribute("suggestions", suggestions);
+		model.addAttribute("dictionaryLanguage", language);
 		return "/content/playground/dictionary/changes";
 	}
 
@@ -98,9 +99,9 @@ public class DictionaryController extends WisematchesController {
 		return responseFactory.success(dictionary.getWordEntries(prefix.toLowerCase()));
 	}
 
-	@RequestMapping("editWordEntry.ajax")
+	@RequestMapping("suggestWordEntry.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse createWordService(@RequestBody WordDefinitionForm form, Locale locale) {
+	public ServiceResponse suggestWordEntryService(@RequestBody WordDefinitionForm form, Locale locale) {
 		Language language;
 		try {
 			language = Language.valueOf(form.getLanguage().toUpperCase());
@@ -124,26 +125,12 @@ public class DictionaryController extends WisematchesController {
 			return responseFactory.failure("dict.suggest.err.alphabet", locale);
 		}
 
-		EnumSet<WordAttribute> attributes1 = null;
+		EnumSet<WordAttribute> attributes = null;
 		if (suggestionType != SuggestionType.REMOVE) {
-			final String[] attributes = form.getAttributes();
-			if (attributes == null || attributes.length == 0) {
-				return responseFactory.failure("dict.suggest.err.attributes.empty", locale);
-			}
-
-
-			final WordAttribute[] attrs = new WordAttribute[attributes.length];
-			for (int i = 0; i < attributes.length; i++) {
-				try {
-					attrs[i] = WordAttribute.valueOf(attributes[i]);
-				} catch (IllegalArgumentException ex) {
-					return responseFactory.failure("dict.suggest.err.attributes.unknown", locale);
-				}
-			}
-
-			attributes1 = WordAttribute.fromArray(attrs);
-			if (!attributes1.contains(WordAttribute.FEMININE) && !attributes1.contains(WordAttribute.MASCULINE) && !attributes1.contains(WordAttribute.NEUTER)) {
-				return responseFactory.failure("dict.suggest.err.attributes.gender", locale);
+			try {
+				attributes = getWordAttributes(form.getAttributes());
+			} catch (IllegalArgumentException ex) {
+				return responseFactory.failure(ex.getMessage(), locale);
 			}
 		}
 
@@ -159,19 +146,19 @@ public class DictionaryController extends WisematchesController {
 					if (contains) {
 						return responseFactory.failure("dict.suggest.err.word.exist", locale);
 					}
-					dictionarySuggestionManager.addWord(word, form.getDefinition(), attributes1, language, getPrincipal());
+					dictionarySuggestionManager.addWord(getPrincipal(), language, word, form.getDefinition(), attributes);
 					break;
 				case UPDATE:
 					if (!contains) {
 						return responseFactory.failure("dict.suggest.err.word.unknown", locale);
 					}
-					dictionarySuggestionManager.updateWord(word, form.getDefinition(), attributes1, language, getPrincipal());
+					dictionarySuggestionManager.updateWord(getPrincipal(), language, word, form.getDefinition(), attributes);
 					break;
 				case REMOVE:
 					if (!contains) {
 						return responseFactory.failure("dict.suggest.err.word.unknown", locale);
 					}
-					dictionarySuggestionManager.removeWord(word, language, getPrincipal());
+					dictionarySuggestionManager.removeWord(getPrincipal(), language, word);
 					break;
 			}
 			return responseFactory.success();
@@ -182,14 +169,30 @@ public class DictionaryController extends WisematchesController {
 	}
 
 	@Secured("moderator")
+	@RequestMapping("updateWordEntry.ajax")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse updateWordEntryService(@RequestBody WordDefinitionForm form, Locale locale) {
+		try {
+			final EnumSet<WordAttribute> wordAttributes = getWordAttributes(form.getAttributes());
+			dictionarySuggestionManager.updateRequest(form.getId(), form.getDefinition(), wordAttributes);
+		} catch (IllegalArgumentException ex) {
+			return responseFactory.failure(ex.getMessage(), locale);
+		} catch (Exception ex) {
+			log.error("Approval request can't be processed: {}", form, ex);
+			return responseFactory.failure("dict.suggest.err.system", locale);
+		}
+		return responseFactory.success();
+	}
+
+	@Secured("moderator")
 	@RequestMapping("resolveWordEntry.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse processChangeRequestService(@RequestBody WordApprovalForm form, Locale locale) {
+	public ServiceResponse resolveWordEntryService(@RequestBody WordResolutionForm form, Locale locale) {
 		try {
 			if ("approve".equalsIgnoreCase(form.getType())) {
-				dictionarySuggestionManager.approveRequests(form.getIds());
+				dictionarySuggestionManager.approveRequests(form.getCommentary(), form.getIds());
 			} else if ("reject".equalsIgnoreCase(form.getType())) {
-				dictionarySuggestionManager.rejectRequests(form.getIds());
+				dictionarySuggestionManager.rejectRequests(form.getCommentary(), form.getIds());
 			}
 		} catch (Exception ex) {
 			log.error("Approval request can't be processed: {}", form, ex);
@@ -206,6 +209,28 @@ public class DictionaryController extends WisematchesController {
 			language = Language.valueOf(lang.toUpperCase());
 		}
 		return language;
+	}
+
+	private EnumSet<WordAttribute> getWordAttributes(String[] attributes) {
+		if (attributes == null || attributes.length == 0) {
+			throw new IllegalArgumentException("dict.suggest.err.attributes.empty");
+		}
+
+
+		final WordAttribute[] attrs = new WordAttribute[attributes.length];
+		for (int i = 0; i < attributes.length; i++) {
+			try {
+				attrs[i] = WordAttribute.valueOf(attributes[i]);
+			} catch (IllegalArgumentException ex) {
+				throw new IllegalArgumentException("dict.suggest.err.attributes.unknown");
+			}
+		}
+
+		final EnumSet<WordAttribute> attributes1 = WordAttribute.fromArray(attrs);
+		if (!attributes1.contains(WordAttribute.FEMININE) && !attributes1.contains(WordAttribute.MASCULINE) && !attributes1.contains(WordAttribute.NEUTER)) {
+			throw new IllegalArgumentException("dict.suggest.err.attributes.gender");
+		}
+		return attributes1;
 	}
 
 	@Autowired
