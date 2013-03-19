@@ -941,6 +941,8 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
             title = i18n['title.view'];
         } else if ("ADD" == action) {
             title = i18n['title.add'];
+        } else if ("MODIFY" == action) {
+            title = i18n['title.modify'];
         }
         wordEntryEditor.dialog('option', 'title', title);
     };
@@ -953,11 +955,11 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
         return wordEntryAction.val() == action;
     };
 
-    var sendRequest = function () {
+    var sendRequest = function (processor) {
         var v = wordEntryEditor.parent();
         wm.ui.lock(v);
         var serializeObject = wordEntryEditor.find("form").serializeObject();
-        $.post("/playground/dictionary/editWordEntry.ajax", JSON.stringify(serializeObject), function (response) {
+        $.post("/playground/dictionary/" + processor + ".ajax", JSON.stringify(serializeObject), function (response) {
             if (response.success) {
                 wm.ui.unlock(v, i18n['waiting'], false);
                 wordEntryEditor.dialog("close");
@@ -967,8 +969,8 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
         });
     };
 
-    var startEditing = function () {
-        setAction("UPDATE");
+    var startEditing = function (action) {
+        setAction(action);
         wordEntryEditor.find(".view").hide();
         wordEntryEditor.find(".edit").show();
         wordEntryEditor.find(".warn").show();
@@ -1012,6 +1014,11 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
         });
     };
 
+    this.modifyWordEntry = function (wordEntry) {
+        instance.viewWordEntry(wordEntry);
+        startEditing("MODIFY");
+    };
+
     this.viewWordEntry = function (wordEntry) {
         var buttons = [];
         if (!readOnly) {
@@ -1019,12 +1026,12 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
                 id: 'wordEditorChangeBtn',
                 text: i18n['edit'],
                 click: function () {
-                    if (isAction("ADD")) {
-                        sendRequest();
-                    } else if (isAction("VIEW")) {
-                        startEditing();
+                    if (isAction("VIEW")) {
+                        startEditing("UPDATE");
+                    } else if (isAction("MODIFY")) {
+                        sendRequest("updateWordEntry");
                     } else {
-                        sendRequest();
+                        sendRequest("suggestWordEntry");
                     }
                 }
             });
@@ -1036,7 +1043,7 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
                     wm.ui.confirm(i18n['remove.title'], i18n['remove.confirm'], function (approve) {
                         if (approve) {
                             setAction("REMOVE");
-                            sendRequest();
+                            sendRequest("suggestWordEntry");
                         }
                     });
                 }
@@ -1065,6 +1072,7 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
         resetEntryEditor();
 
         if (wordEntry != null) {
+            wordEntryEditor.find("input[name=id]").val(wordEntry.id);
             wordEntryEditor.find(".word-view").text(wordEntry.word);
             wordEntryEditor.find(".word-input").val(wordEntry.word);
             if (wordEntry.definitions != null && wordEntry.definitions != undefined && wordEntry.definitions.length != 0) {
@@ -1079,8 +1087,7 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
                 wordEntryEditor.find(".attributes-view").text(attrs);
             }
         } else {
-            startEditing();
-            setAction("ADD");
+            startEditing("ADD");
             wordEntryEditor.find(".create").toggle();
             $("#wordEditorChangeBtn").find("span").text(i18n['add']);
         }
@@ -3906,12 +3913,6 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     var timeoutID;
-
-    $("#language-combobox").find(".ui-state-default").hover(function () {
-        $(this).addClass('ui-state-active').removeClass('ui-state-default');
-    }, function () {
-        $(this).addClass('ui-state-default').removeClass('ui-state-active');
-    });
 
     $('.dropdown')
             .mouseenter(function () {

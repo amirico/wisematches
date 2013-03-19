@@ -279,6 +279,10 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
+		public void changeRequestUpdated(ChangeSuggestion request) {
+		}
+
+		@Override
 		public void changeRequestApproved(ChangeSuggestion request) {
 			processNotification(request.getRequester(), "playground.dictionary.accepted", request);
 		}

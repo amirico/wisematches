@@ -85,6 +85,7 @@ public class FileDictionary implements Dictionary {
 				throw new IllegalArgumentException("Entry for word already exist: " + word);
 			}
 			entryMap.put(word, entry);
+			searchCache.clear();
 			if (autoFlush) {
 				saveDictionary(dictionaryFile, entryMap.values());
 			}
@@ -108,6 +109,7 @@ public class FileDictionary implements Dictionary {
 				throw new IllegalArgumentException("Entry for word doesn't exist: " + word);
 			}
 			entryMap.put(word, entry);
+			searchCache.clear();
 			if (autoFlush) {
 				saveDictionary(dictionaryFile, entryMap.values());
 			}
@@ -131,6 +133,7 @@ public class FileDictionary implements Dictionary {
 				throw new IllegalArgumentException("Entry for word doesn't exist: " + word);
 			}
 			entryMap.remove(word);
+			searchCache.clear();
 			if (autoFlush) {
 				saveDictionary(dictionaryFile, entryMap.values());
 			}

@@ -40,6 +40,9 @@ public class HibernateChangeSuggestion implements ChangeSuggestion {
 	@Column(name = "definition")
 	private String definition;
 
+	@Column(name = "commentary")
+	private String commentary;
+
 	@Column(name = "requestDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date requestDate;
@@ -76,22 +79,27 @@ public class HibernateChangeSuggestion implements ChangeSuggestion {
 		suggestionState = SuggestionState.WAITING;
 	}
 
+	@Override
 	public long getId() {
 		return id;
 	}
 
+	@Override
 	public String getWord() {
 		return word;
 	}
 
+	@Override
 	public long getRequester() {
 		return requester;
 	}
 
+	@Override
 	public Language getLanguage() {
 		return language;
 	}
 
+	@Override
 	public EnumSet<WordAttribute> getAttributes() {
 		if (attributes == null) {
 			return null;
@@ -102,29 +110,45 @@ public class HibernateChangeSuggestion implements ChangeSuggestion {
 		return wordAttributes;
 	}
 
+	@Override
 	public String getDefinition() {
 		return definition;
 	}
 
+	@Override
 	public Date getRequestDate() {
 		return requestDate;
 	}
 
+	@Override
+	public String getCommentary() {
+		return commentary;
+	}
+
+	@Override
 	public Date getResolutionDate() {
 		return resolutionDate;
 	}
 
+	@Override
 	public SuggestionType getSuggestionType() {
 		return suggestionType;
 	}
 
+	@Override
 	public SuggestionState getSuggestionState() {
 		return suggestionState;
 	}
 
-	void setSuggestionState(SuggestionState state) {
+	void updateDefinition(String definition, EnumSet<WordAttribute> attributes) {
+		this.definition = definition;
+		this.attributes = attributes != null ? WordAttribute.encode(attributes) : null;
+	}
+
+	void resolveSuggestion(SuggestionState state, String commentary) {
 		this.suggestionState = state;
-		requestDate = new Date();
+		this.commentary = commentary;
+		resolutionDate = new Date();
 	}
 
 	WordEntry createWordEntry() {

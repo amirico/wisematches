@@ -7,6 +7,7 @@ import java.util.Collection;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WordDefinitionForm {
+	private Long id;
 	private String word;
 	private String language;
 	private String action;
@@ -14,6 +15,14 @@ public class WordDefinitionForm {
 	private Object attributes;
 
 	public WordDefinitionForm() {
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getWord() {

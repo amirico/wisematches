@@ -1,7 +1,12 @@
-<#-- @ftlvariable name="changeSuggestion" type="wisematches.server.services.dictionary.ChangeSuggestion[]" -->
+<#-- @ftlvariable name="suggestions" type="wisematches.server.services.dictionary.ChangeSuggestion[]" -->
+<#-- @ftlvariable name="dictionaryLanguage" type="wisematches.core.Language" -->
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>
+
+<#assign moderator=false/>
+<#assign readOnlySuggestion=false/>
+<@security.authorize ifAllGranted="moderator"><#assign moderator=true/></@security.authorize>
 
 <@wm.ui.playground id="dictionaryWidget">
     <@wm.ui.table.header>
@@ -35,12 +40,12 @@
     <table id="dictionaryChanges" width="100%" class="display">
         <thead>
         <tr>
-            <@security.authorize ifAllGranted="moderator">
+            <#if moderator>
                 <th></th>
                 <th>
                     <@message code="dict.changes.player.label"/>
                 </th>
-            </@security.authorize>
+            </#if>
             <th>
                 <@message code="dict.changes.word.label"/>
             </th>
@@ -62,9 +67,9 @@
         </tr>
         </thead>
         <tbody>
-            <#list changeSuggestion as s>
-            <tr class="ui-state-default">
-                <@security.authorize ifAllGranted="moderator">
+            <#list suggestions as s>
+            <tr class="ui-state-default" valign="top">
+                <#if moderator>
                     <td>
                         <label>
                             <input type="checkbox" name="suggestion" value="${s.id?string}">
@@ -73,25 +78,31 @@
                     <td>
                         <@wm.player.name personalityManager.getPerson(s.requester) false false true/>
                     </td>
-                </@security.authorize>
+                </#if>
                 <td>
-                ${s.word}
-                </td>
-                <td>
-                    <@message code="language.${s.language?lower_case}"/>
-                </td>
-                <td>
-                ${messageSource.formatDate(s.requestDate, locale)}
-                </td>
-                <td>
-                    <@message code="dict.word.type.${s.suggestionType.name()?lower_case}.label"/>
-                </td>
-                <td>
-                    <#if s.attributes??>
-                        <#list s.attributes as a><@message code="dict.word.attribute.${a.name()?lower_case}.label"/> </#list>
+                    <#if moderator>
+                        <a href="#"
+                           onclick="modifyWordEntry(this); return false;">${s.word}</a>
+                    <#else>
+                    ${s.word}
                     </#if>
                 </td>
-                <td width="100%">
+                <td class="language">
+                    <@message code="language.${s.language?lower_case}"/>
+                </td>
+                <td class="requested">
+                ${messageSource.formatDate(s.requestDate, locale)}
+                </td>
+                <td class="action">
+                    <@message code="dict.word.type.${s.suggestionType.name()?lower_case}.label"/>
+                </td>
+                <td class="attributes">
+                    <#if s.attributes??>
+                        <#list s.attributes as a><span
+                                class="${a.name()}"><@message code="dict.word.attribute.${a.name()?lower_case}.label"/></span></#list>
+                    </#if>
+                </td>
+                <td class="definition" width="100%">
                 ${s.definition!""}
                 </td>
             </tr>
@@ -101,14 +112,14 @@
     </@wm.ui.table.content>
 
     <@wm.ui.table.statusbar align="left">
-        <@security.authorize ifAllGranted="moderator">
+        <#if moderator>
         <button id="approveChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
             <@message code="dict.changes.approve.label"/>
         </button>
         <button id="rejectChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
             <@message code="dict.changes.reject.label"/>
         </button>
-        </@security.authorize>
+        </#if>
     &nbsp;
     </@wm.ui.table.statusbar>
 
@@ -132,18 +143,40 @@
         ]
     });
 
-    <@security.authorize ifAllGranted="moderator">
+    <#if moderator>
+    var dictionaryLanguage = '${dictionaryLanguage}';
+
+    function modifyWordEntry(link) {
+        link = $(link);
+        var row = link.parent().parent();
+
+        var id = row.find("input[name='suggestion']").val();
+        var word = $.trim(link.text());
+        var definition = $.trim(row.find('.definition').text());
+        var attributes = $.map(row.find('.attributes span'), function (e, i) {
+            return e.className;
+        });
+
+        dictionarySuggestion.modifyWordEntry({
+            id: id,
+            word: word,
+            definitions: [
+                {text: definition, attributes: attributes}
+            ]
+        });
+    }
+
     $(document).ready(function () {
-        var processRequest = function (type) {
-            var widget = $("#dictionaryWidget");
-            wm.ui.lock(widget);
+        var widget = $("#dictionaryWidget");
+
+        var sendRequest = function (type, commentary) {
             var input = $("input[name='suggestion']:checked");
             var ids = [];
             $.each(input, function (i, v) {
                 ids.push($(v).val());
             });
 
-            $.post('/playground/dictionary/resolveWordEntry.ajax?type=' + type, JSON.stringify({type: type, ids: ids}), function (result) {
+            $.post('/playground/dictionary/resolveWordEntry.ajax?type=' + type, JSON.stringify({type: type, ids: ids, commentary: commentary}), function (result) {
                 if (result.success) {
                     wm.util.url.reload();
                 } else {
@@ -153,12 +186,54 @@
         };
 
         $("#approveChanges").click(function () {
-            processRequest('approve');
+            sendRequest('approve', null);
         });
 
         $("#rejectChanges").click(function () {
-            processRequest('reject');
+            var dlg = $("#resolutionCommentForm").dialog({
+                title: "Process with a comment",
+                width: 550,
+                modal: true,
+                resizable: false,
+                buttons: [
+                    {
+                        text: "Process",
+                        click: function () {
+                            wm.ui.lock(widget, "Processing your request, please wait...");
+                            sendRequest('reject', $("#resolutionCommentForm").find("textarea").val());
+                        }
+                    },
+                    {
+                        text: "<@message code="button.cancel"/>",
+                        click: function () {
+                            dlg.dialog("close");
+                            wm.ui.unlock(widget);
+                        }
+                    }
+                ]
+            });
         });
     });
-    </@security.authorize>
+    </#if>
 </script>
+
+<#if moderator>
+<div id="resolutionCommentForm" class="ui-helper-hidden">
+    <table width="100%">
+        <tr>
+            <td>
+                <label for="commentary">
+                    Please enter your comment:
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="commentary" name="commentary" style="width: 100%;" rows="10"></textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+</#if>
+
+<#if moderator><#include "card.ftl"/></#if>

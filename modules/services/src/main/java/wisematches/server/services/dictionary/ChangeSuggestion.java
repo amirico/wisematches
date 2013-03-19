@@ -18,11 +18,13 @@ public interface ChangeSuggestion {
 
 	Language getLanguage();
 
-	EnumSet<WordAttribute> getAttributes();
+	Date getRequestDate();
 
 	String getDefinition();
 
-	Date getRequestDate();
+	EnumSet<WordAttribute> getAttributes();
+
+	String getCommentary();
 
 	Date getResolutionDate();
 

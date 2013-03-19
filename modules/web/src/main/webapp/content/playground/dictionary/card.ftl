@@ -2,8 +2,10 @@
 
 <div id="wordEntryEditor" class="ui-helper-hidden">
     <form>
-        <input id="action" name="action" type="hidden" value="VIEW"/>
+        <input name="id" type="hidden" value=""/>
         <input name="language" type="hidden" value="${language.name()}"/>
+
+        <input id="action" name="action" type="hidden" value="VIEW"/>
 
         <table width="100%" cellpadding="3">
             <tr>
@@ -56,7 +58,7 @@
 </div>
 
 <script type="text/javascript">
-    <#assign readOnlySuggestion=!principal?? || !principal.type.member/>
+    <#assign readOnlySuggestion=readOnlySuggestion?? && (!principal?? || !principal.type.member)/>
 
     var dictionarySuggestion = new wm.game.dict.Suggestion(dictionaryLanguage, ${readOnlySuggestion?string}, {
     <#list WordAttribute.values() as wa>

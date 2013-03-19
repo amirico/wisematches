@@ -96,15 +96,15 @@ public class HibernateDictionarySuggestionManagerTest {
 		replay(dictionaryManager);
 
 		int countAdd = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.ADD), null));
-		changeManager.addWord("poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE), Language.EN, PERSON);
+		changeManager.addWord(PERSON, Language.EN, "poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE));
 		assertEquals(countAdd + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.ADD), null)));
 
 		int countUpdate = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.UPDATE), null));
-		changeManager.updateWord("poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE), Language.EN, PERSON);
+		changeManager.updateWord(PERSON, Language.EN, "poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE));
 		assertEquals(countUpdate + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.UPDATE), null)));
 
 		int countDelete = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null));
-		changeManager.removeWord("poofgjnwhj", Language.EN, PERSON);
+		changeManager.removeWord(PERSON, Language.EN, "poofgjnwhj");
 		assertEquals(countDelete + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.REMOVE), null)));
 
 		assertEquals(3, requestCapture.getValues().size());
@@ -163,12 +163,12 @@ public class HibernateDictionarySuggestionManagerTest {
 		expect(dictionaryManager.getDictionary(Language.EN)).andReturn(dictionary).anyTimes();
 		replay(dictionaryManager);
 
-		final ChangeSuggestion r1 = changeManager.addWord("poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE), Language.EN, PERSON);
-		changeManager.approveRequests(r1.getId());
+		final ChangeSuggestion r1 = changeManager.addWord(PERSON, Language.EN, "poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE));
+		changeManager.approveRequests("mock1", r1.getId());
 
-		final ChangeSuggestion r2 = changeManager.updateWord("poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE), Language.EN, PERSON);
-		final ChangeSuggestion r3 = changeManager.removeWord("poofgjnwhj", Language.EN, PERSON);
-		changeManager.rejectRequests(r2.getId(), r3.getId());
+		final ChangeSuggestion r2 = changeManager.updateWord(PERSON, Language.EN, "poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE));
+		final ChangeSuggestion r3 = changeManager.removeWord(PERSON, Language.EN, "poofgjnwhj");
+		changeManager.rejectRequests("mock2", r2.getId(), r3.getId());
 
 		verify(changeListener, dictionaryManager, dictionary);
 	}

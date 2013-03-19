@@ -150,5 +150,11 @@ public class AlertsOriginCenter {
 			raiseAlarm("DIC", "Suggestion rejected: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
+
+		@Override
+		public void changeRequestUpdated(ChangeSuggestion request) {
+			raiseAlarm("DIC", "Suggestion updated: " + request.getWord() + " [" + request.getSuggestionType() + "]",
+					request.getDefinition() + "\n" + request.getAttributes());
+		}
 	}
 }
