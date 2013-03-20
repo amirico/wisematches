@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.servlet.LocaleResolver;
 import wisematches.core.Language;
 
 import javax.servlet.FilterChain;
@@ -30,6 +31,8 @@ import java.util.List;
  */
 public class VisitorAuthenticationFilter extends GenericFilterBean implements InitializingBean {
 	private String visitorProcessingUrl = DEFAULT_GUEST_PROCESSING_URL;
+
+	private LocaleResolver localeResolver;
 
 	private AuthenticationFailureHandler failureHandle;
 	private AuthenticationSuccessHandler successHandler;
@@ -48,7 +51,7 @@ public class VisitorAuthenticationFilter extends GenericFilterBean implements In
 		final HttpServletRequest request = (HttpServletRequest) req;
 		if (applyVisitorForThisRequest(request)) {
 			try {
-				final Language language = Language.byLocale(request.getLocale());
+				final Language language = Language.byLocale(localeResolver.resolveLocale(request));
 
 				final AnonymousAuthenticationToken visitor = new AnonymousAuthenticationToken("visitor", language, VISITOR);
 				visitor.setDetails(authenticationDetailsSource.buildDetails(request));
@@ -67,6 +70,10 @@ public class VisitorAuthenticationFilter extends GenericFilterBean implements In
 
 	protected boolean applyVisitorForThisRequest(HttpServletRequest request) {
 		return visitorProcessingUrl.equals(request.getRequestURI());
+	}
+
+	public void setLocaleResolver(LocaleResolver localeResolver) {
+		this.localeResolver = localeResolver;
 	}
 
 	public void setVisitorProcessingUrl(String guestProcessingUrl) {
