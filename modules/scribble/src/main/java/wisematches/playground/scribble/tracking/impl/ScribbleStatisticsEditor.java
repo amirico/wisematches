@@ -3,7 +3,7 @@ package wisematches.playground.scribble.tracking.impl;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.playground.scribble.Word;
 import wisematches.playground.scribble.tracking.ScribbleStatistics;
 import wisematches.playground.tracking.impl.StatisticsEditor;
@@ -78,7 +78,7 @@ public class ScribbleStatisticsEditor extends StatisticsEditor implements Scribb
 	ScribbleStatisticsEditor() {
 	}
 
-	public ScribbleStatisticsEditor(Player player) {
+	public ScribbleStatisticsEditor(Member player) {
 		super(player);
 	}
 
