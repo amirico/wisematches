@@ -69,7 +69,10 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	public S getStatistic(Player personality) {
 		statisticLock.lock();
 		try {
-			return (S) loadStatisticEditor(personality);
+			if (personality instanceof Member) {
+				return (S) loadStatisticEditor((Member) personality);
+			}
+			return null;
 		} finally {
 			statisticLock.unlock();
 		}
@@ -78,13 +81,16 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public short getRating(final Player person) {
-		Short rating = ratingsCache.get(person);
-		if (rating == null) {
-			Number n = loadPlayerRating(person);
-			rating = (n == null ? 1200 : n.shortValue());
-			ratingsCache.put(person, rating);
+		if (person instanceof Member) {
+			Short rating = ratingsCache.get(person);
+			if (rating == null) {
+				Number n = loadPlayerRating((Member) person);
+				rating = (n == null ? 1200 : n.shortValue());
+				ratingsCache.put(person, rating);
+			}
+			return rating;
 		}
-		return rating;
+		return 1200;
 	}
 
 	public void setGamePlayManager(GamePlayManager gamePlayManager) {
@@ -126,16 +132,16 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameStarted(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board) {
 		final Collection<Personality> players = board.getPlayers();
 		for (Personality personality : players) {
-			if (personality instanceof Player) {
-				final Player player = (Player) personality;
+			if (personality instanceof Member) {
+				final Member member = (Member) personality;
 				statisticLock.lock();
 				try {
-					final E editor = loadStatisticEditor(player);
-					statisticsTrapper.trapGameStarted(player, editor);
+					final E editor = loadStatisticEditor(member);
+					statisticsTrapper.trapGameStarted(member, editor);
 					saveStatisticEditor(editor);
-					fireStatisticUpdated(player, editor);
+					fireStatisticUpdated(member, editor);
 				} catch (Throwable th) {
-					log.error("Statistic can't be updated for player: {}", personality, th);
+					log.error("Statistic can't be updated for member: {}", personality, th);
 				} finally {
 					statisticLock.unlock();
 				}
@@ -147,15 +153,15 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processGameMoveDone(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move, GameMoveScore moveScore) {
 		final Personality personality = move.getPlayer();
 		if (personality instanceof Member) {
-			final Player player = (Player) personality;
+			final Member member = (Member) personality;
 			statisticLock.lock();
 			try {
-				final E editor = loadStatisticEditor(player);
-				statisticsTrapper.trapGameMoveDone(player, editor, board, move, moveScore);
+				final E editor = loadStatisticEditor(member);
+				statisticsTrapper.trapGameMoveDone(member, editor, board, move, moveScore);
 				saveStatisticEditor(editor);
-				fireStatisticUpdated(player, editor);
+				fireStatisticUpdated(member, editor);
 			} catch (Throwable th) {
-				log.error("Statistic can't be updated for player: {}", player, th);
+				log.error("Statistic can't be updated for member: {}", member, th);
 			} finally {
 				statisticLock.unlock();
 			}
@@ -167,15 +173,15 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		final Collection<Personality> hands = board.getPlayers();
 		for (Personality personality : hands) {
 			if (personality instanceof Member) {
-				final Player player = (Player) personality;
+				final Member member = (Member) personality;
 				statisticLock.lock();
 				try {
-					final E editor = loadStatisticEditor(player);
-					statisticsTrapper.trapGameFinished(player, editor, board);
+					final E editor = loadStatisticEditor(member);
+					statisticsTrapper.trapGameFinished(member, editor, board);
 					saveStatisticEditor(editor);
-					fireStatisticUpdated(player, editor);
+					fireStatisticUpdated(member, editor);
 				} catch (Throwable th) {
-					log.error("Statistic can't be updated for player: {}", player, th);
+					log.error("Statistic can't be updated for player: {}", member, th);
 				} finally {
 					statisticLock.unlock();
 				}
@@ -186,42 +192,42 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	protected void processTourneyFinished(TourneyDivision division) {
 		final Collection<TourneyWinner> tourneyWinners = division.getTourneyWinners();
 		for (TourneyWinner winner : tourneyWinners) {
-			final Member player = personalityManager.getMember(winner.getPlayer());
-			if (player == null) {
+			final Member member = personalityManager.getMember(winner.getPlayer());
+			if (member == null) {
 				continue;
 			}
 			statisticLock.lock();
 			try {
-				final E editor = loadStatisticEditor(player);
-				statisticsTrapper.trapTourneyFinished(player, editor, winner.getPlace());
+				final E editor = loadStatisticEditor(member);
+				statisticsTrapper.trapTourneyFinished(member, editor, winner.getPlace());
 				saveStatisticEditor(editor);
-				fireStatisticUpdated(player, editor);
+				fireStatisticUpdated(member, editor);
 			} catch (Throwable th) {
-				log.error("Statistic can't be updated for player: {}", player, th);
+				log.error("Statistic can't be updated for member: {}", member, th);
 			} finally {
 				statisticLock.unlock();
 			}
 		}
 	}
 
-	protected void fireStatisticUpdated(Player player, StatisticsEditor statistic) {
+	protected void fireStatisticUpdated(Member player, StatisticsEditor statistic) {
 		final Set<String> strings = statistic.takeChangedProperties();
 		for (StatisticsListener statisticsListener : statisticsListeners) {
 			statisticsListener.playerStatisticUpdated(player, statistic, strings);
 		}
 	}
 
-	protected abstract E createStatistic(Player player);
+	protected abstract E createStatistic(Member player);
 
-	protected abstract void removeStatistic(Player player);
+	protected abstract void removeStatistic(Member player);
 
 
-	protected abstract E loadStatisticEditor(Personality person);
+	protected abstract E loadStatisticEditor(Member person);
 
 	protected abstract void saveStatisticEditor(E statisticEditor);
 
 
-	protected abstract Number loadPlayerRating(Personality person);
+	protected abstract Number loadPlayerRating(Member person);
 
 	private class ThePersonalityListener implements PersonalityListener {
 		private ThePersonalityListener() {
@@ -229,15 +235,15 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 
 		@Override
 		public void playerRegistered(Personality player) {
-			if (player instanceof Player) {
-				createStatistic((Player) player);
+			if (player instanceof Member) {
+				createStatistic((Member) player);
 			}
 		}
 
 		@Override
 		public void playerUnregistered(Personality player) {
-			if (player instanceof Player) {
-				removeStatistic((Player) player);
+			if (player instanceof Member) {
+				removeStatistic((Member) player);
 			}
 		}
 	}

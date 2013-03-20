@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import wisematches.core.Personality;
+import wisematches.core.Member;
 import wisematches.core.Player;
 import wisematches.playground.scribble.tracking.ScribbleStatistics;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsManager;
@@ -27,7 +27,7 @@ public class HibernateScribbleStatisticsManager
 	}
 
 	@Override
-	protected Number loadPlayerRating(Personality person) {
+	protected Number loadPlayerRating(Member person) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("select rating from ScribbleStatisticsEditor where playerId=:pid");
 		query.setParameter("pid", person.getId());
@@ -35,14 +35,14 @@ public class HibernateScribbleStatisticsManager
 	}
 
 	@Override
-	protected ScribbleStatisticsEditor createStatistic(Player player) {
+	protected ScribbleStatisticsEditor createStatistic(Member player) {
 		final ScribbleStatisticsEditor editor = new ScribbleStatisticsEditor(player);
 		sessionFactory.getCurrentSession().save(editor);
 		return editor;
 	}
 
 	@Override
-	protected void removeStatistic(Player player) {
+	protected void removeStatistic(Member player) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Object o = session.get(ScribbleStatisticsEditor.class, player.getId());
 		if (o != null) {
@@ -63,7 +63,7 @@ public class HibernateScribbleStatisticsManager
 	}
 
 	@Override
-	protected ScribbleStatisticsEditor loadStatisticEditor(Personality person) {
+	protected ScribbleStatisticsEditor loadStatisticEditor(Member person) {
 		return (ScribbleStatisticsEditor) sessionFactory.getCurrentSession().get(ScribbleStatisticsEditor.class, person.getId());
 	}
 

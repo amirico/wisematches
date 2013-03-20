@@ -1,6 +1,6 @@
 package wisematches.playground.tracking.impl;
 
-import wisematches.core.Player;
+import wisematches.core.Member;
 import wisematches.core.RobotType;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tracking.Statistics;
@@ -122,7 +122,7 @@ public class StatisticsEditor implements Statistics, Serializable {
 	protected StatisticsEditor() {
 	}
 
-	protected StatisticsEditor(Player player) {
+	protected StatisticsEditor(Member player) {
 		this.playerId = player.getId();
 		this.updateTime = new Date();
 	}
