@@ -158,6 +158,7 @@ public class HibernateDictionarySuggestionManagerTest {
 
 		expect(dictionary.contains("poofgjnwhj")).andReturn(true);
 		expect(dictionary.contains("poofgjnwhj")).andReturn(true);
+        dictionary.flush();
 		replay(dictionary);
 
 		expect(dictionaryManager.getDictionary(Language.EN)).andReturn(dictionary).anyTimes();
