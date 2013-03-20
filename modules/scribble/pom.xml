@@ -6,12 +6,12 @@
     <packaging>jar</packaging>
 
     <artifactId>scribble</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.1-SNAPSHOT</version>
 
     <parent>
         <groupId>wisematches</groupId>
         <artifactId>application</artifactId>
-        <version>5.0.0-SNAPSHOT</version>
+        <version>5.0.1-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
 
@@ -19,13 +19,13 @@
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>core</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>gameplay</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

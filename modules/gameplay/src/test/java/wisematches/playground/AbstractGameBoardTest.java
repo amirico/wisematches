@@ -204,11 +204,21 @@ public class AbstractGameBoardTest {
 		BoardListener l = createStrictMock(BoardListener.class);
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
 		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
+		l.gameMoveDone(same(board), EasyMock.<GameMove>anyObject(), isA(GameMoveScore.class));
 		l.gameFinished(board, GameResolution.FINISHED, Collections.<Personality>singletonList(player1));
 		replay(l);
 
 		board.setBoardListener(l);
 
+		board.makeMove(board.getPlayerTurn());
+		board.makeMove(board.getPlayerTurn());
+		board.makeMove(board.getPlayerTurn());
+		board.makeMove(board.getPlayerTurn());
+		board.makeMove(board.getPlayerTurn());
 		board.makeMove(board.getPlayerTurn());
 		board.setGameFinished(true);
 		board.setFinishScore(new short[]{10, 3, 4});

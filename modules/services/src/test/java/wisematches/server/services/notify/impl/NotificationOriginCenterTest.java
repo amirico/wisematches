@@ -529,6 +529,7 @@ public class NotificationOriginCenterTest {
 		expect(suggestion.getRequester()).andReturn(p1.getId()).times(2);
 		expect(suggestion.getWord()).andReturn("MockSuggest").times(2);
 		expect(suggestion.getSuggestionType()).andReturn(SuggestionType.ADD);
+		expect(suggestion.getCommentary()).andReturn(null);
 		replay(suggestion);
 
 		tourneyListener.getValue().changeRequestApproved(suggestion);

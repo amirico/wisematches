@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="web:war exploded">
-      <output-path>$PROJECT_DIR$/modules/web/target/web-5.0.0-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/web/target/web-5.0.1-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="web/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -13,7 +13,7 @@
             <element id="module-output" name="web" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="core-5.0.0-SNAPSHOT.jar">
+            <element id="archive" name="core-5.0.1-SNAPSHOT.jar">
               <element id="module-output" name="core" />
             </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
@@ -54,14 +54,14 @@
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.19" />
-            <element id="archive" name="gameplay-5.0.0-SNAPSHOT.jar">
+            <element id="archive" name="gameplay-5.0.1-SNAPSHOT.jar">
               <element id="module-output" name="gameplay" />
             </element>
             <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
-            <element id="archive" name="scribble-5.0.0-SNAPSHOT.jar">
+            <element id="archive" name="scribble-5.0.1-SNAPSHOT.jar">
               <element id="module-output" name="scribble" />
             </element>
-            <element id="archive" name="services-5.0.0-SNAPSHOT.jar">
+            <element id="archive" name="services-5.0.1-SNAPSHOT.jar">
               <element id="module-output" name="services" />
             </element>
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4.5" />
@@ -78,7 +78,7 @@
     </artifact>
     <artifact type="war" name="web:war">
       <output-path>$PROJECT_DIR$/modules/web/target</output-path>
-      <root id="archive" name="web-5.0.0-SNAPSHOT.war">
+      <root id="archive" name="web-5.0.1-SNAPSHOT.war">
         <element id="artifact" artifact-name="web:war exploded" />
       </root>
     </artifact>
@@ -169,7 +169,7 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
-  <component name="DataSourceManagerImpl" format="xml" hash="1769099847">
+  <component name="DataSourceManagerImpl" format="xml" hash="2375164017">
     <data-source source="LOCAL" name="Data Source" product="MySQL" version="5.5.24" jdbc-version="4.0" driver-name="MySQL-AB JDBC Driver" driver-version="mysql-connector-java-5.1.21 ( Revision: ${bzr.revision-id} )" uuid="e0c38fe3-49da-41a4-83b9-aa5ed9ff72b5">
       <extra-name-characters>#@</extra-name-characters>
       <identifier-quote-string>`</identifier-quote-string>
