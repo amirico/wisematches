@@ -2,8 +2,8 @@
 <#import "../../utils.ftl" as util>
 
 <p>
-    Пожалуйста, обратите внимание, что выш запрос на изменение словаря для слова <strong>${context.word}</strong> был
-    отклонен.
+    Пожалуйста, обратите внимание, что выш запрос на изменение словаря для слова <strong>${context.word}</strong> было
+    отклонено.
 </p>
 <#if context.commentary?has_content>
 <p>
