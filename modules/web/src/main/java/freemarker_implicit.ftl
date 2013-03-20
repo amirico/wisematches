@@ -16,3 +16,5 @@
 [#-- @ftlvariable name="WordAttribute" type="wisematches.playground.dictionary.WordAttribute.static" --]
 [#-- @ftlvariable name="ScribbleMoveType" type="wisematches.playground.scribble.ScribbleMoveType.static" --]
 [#-- @ftlvariable name="PlayerSearchArea" type="wisematches.server.services.relations.PlayerSearchArea.static" --]
+
+[#-- @ftlvariable name="springSecurityContext" type="wisematches.server.web.servlet.view.freemarker.SpringSecurityContext" --]

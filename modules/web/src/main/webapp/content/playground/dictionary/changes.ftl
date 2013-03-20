@@ -6,7 +6,7 @@
 
 <#assign moderator=false/>
 <#assign readOnlySuggestion=false/>
-<@security.authorize ifAllGranted="moderator"><#assign moderator=true/></@security.authorize>
+<@wm.security.authorize granted="moderator"><#assign moderator=true/></@wm.security.authorize>
 
 <@wm.ui.playground id="dictionaryWidget">
     <@wm.ui.table.header>
@@ -130,10 +130,10 @@
     wm.ui.dataTable('#dictionaryChanges', {
         "bSortClasses": false,
         "aoColumns": [
-        <@security.authorize ifAllGranted="moderator">
+        <#if moderator>
             { "bSortable": false },
             { "bSortable": false },
-        </@security.authorize>
+        </#if>
             { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },

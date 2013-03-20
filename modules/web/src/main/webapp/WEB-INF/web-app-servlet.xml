@@ -122,6 +122,9 @@
 
                         <entry key="messageSource" value-ref="messageSource"/>
                         <entry key="staticResourcesDomain" value="${server.static.domain}"/>
+                        <entry key="springSecurityContext">
+                            <bean class="wisematches.server.web.servlet.view.freemarker.SpringSecurityContext"/>
+                        </entry>
                     </map>
                 </property>
                 <property name="freemarkerSettings">
