@@ -66,8 +66,6 @@
         </property>
     </bean>
 
-    <bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
-
     <bean id="captchaService" class="wisematches.server.web.security.captcha.captchas.CaptchasCaptchaService">
         <property name="publicKey" value="${captchasNet.publickey}"/>
         <property name="privateKey" value="${captchasNet.privatekey}"/>

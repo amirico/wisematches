@@ -11,6 +11,8 @@
 
     <global-method-security jsr250-annotations="enabled" secured-annotations="enabled"/>
 
+    <beans:bean id="localeResolver" class="wisematches.server.web.i18n.PersonalityLocaleResolver"/>
+
     <beans:bean id="sessionRegistryFixFilter"
                 class="wisematches.server.web.security.filter.SessionRegistryFilter">
         <beans:property name="sessionRegistry" ref="playerStateManager"/>
@@ -98,6 +100,7 @@
 
     <beans:bean id="visitorAuthenticationFilter"
                 class="wisematches.server.web.security.filter.VisitorAuthenticationFilter">
+        <beans:property name="localeResolver" ref="localeResolver"/>
         <beans:property name="visitorProcessingUrl" value="/account/loginGuest"/>
         <beans:property name="failureHandle" ref="authenticationFailureHandler"/>
         <beans:property name="successHandler" ref="authenticationSuccessHandler"/>
