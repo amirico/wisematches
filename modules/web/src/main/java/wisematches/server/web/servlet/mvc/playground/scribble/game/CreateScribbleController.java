@@ -72,11 +72,13 @@ public class CreateScribbleController extends AbstractScribbleController {
 
 		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
 
+		final int finishedGamesCount = getFinishedGamesCount(player);
+
 		if (player.getType().isVisitor()) {
 			form.setCreateTab(CreateScribbleTab.ROBOT);
 			model.addAttribute("playRobotsOnly", true);
 		} else {
-			model.addAttribute("playRobotsOnly", false);
+			model.addAttribute("playRobotsOnly", finishedGamesCount < 1);
 		}
 		return "/content/playground/scribble/create";
 	}
@@ -115,6 +117,13 @@ public class CreateScribbleController extends AbstractScribbleController {
 		final int activeGamesCount = getActiveGamesCount(player);
 		if (restrictionManager.validateRestriction(player, "games.active", activeGamesCount) != null) {
 			return responseFactory.failure("game.create.forbidden", new Object[]{activeGamesCount}, locale);
+		}
+
+		if (form.getCreateTab() != CreateScribbleTab.ROBOT) {
+			final int finishedGamesCount = getFinishedGamesCount(player);
+			if (finishedGamesCount < 1) {
+				return responseFactory.failure("game.create.newbie.err", locale);
+			}
 		}
 
 		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
