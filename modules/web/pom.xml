@@ -21,10 +21,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>2.3</version>
                 <configuration>
                     <packagingExcludes>
-                        **/spring*.jar,**/hibernate*.jar,**/a*.jar,**/c*.jar,,**/dom*.jar,**/e*.jar,**/f*.jar,**/j*.jar,**/log*.jar,**/m*.jar,**/o*.jar,**/q*.jar,**/slf*.jar,**/v*.jar,**/x*.jar,**/g*.jar
+                        %regex[WEB-INF/lib/(?!(core|gameplay|scribble|services)).*.jar]
                     </packagingExcludes>
                 </configuration>
             </plugin>

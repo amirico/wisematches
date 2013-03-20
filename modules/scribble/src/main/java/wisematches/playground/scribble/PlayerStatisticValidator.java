@@ -39,6 +39,7 @@ public class PlayerStatisticValidator {
 	public PlayerStatisticValidator() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void recalculateWinnersAndRatings() throws BoardLoadingException {
 		final Session session = sessionFactory.getCurrentSession();
@@ -146,6 +147,7 @@ public class PlayerStatisticValidator {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void recalculateStatistics(Member player) throws BoardLoadingException {
 		log.info("Validate player statistic: " + player);
