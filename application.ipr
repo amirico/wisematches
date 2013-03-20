@@ -71,7 +71,6 @@
             <element id="library" level="project" name="Maven: org.springframework:spring-web:3.2.1.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:3.2.1.RELEASE" />
             <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.2.0.M1" />
-            <element id="library" level="project" name="Maven: org.springframework.security:spring-security-taglibs:3.2.0.M1" />
           </element>
         </element>
       </root>
@@ -1072,17 +1071,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/3.2.0.M1/spring-security-core-3.2.0.M1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.springframework.security:spring-security-taglibs:3.2.0.M1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.2.0.M1/spring-security-taglibs-3.2.0.M1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.2.0.M1/spring-security-taglibs-3.2.0.M1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-taglibs/3.2.0.M1/spring-security-taglibs-3.2.0.M1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.springframework.security:spring-security-web:3.2.0.M1">

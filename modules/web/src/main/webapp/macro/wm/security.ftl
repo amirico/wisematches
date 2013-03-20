@@ -13,3 +13,5 @@
     </div>
     </#if>
 </#macro>
+
+<#macro authorize granted><#if springSecurityContext.hasRole(granted)><#nested/></#if></#macro>
