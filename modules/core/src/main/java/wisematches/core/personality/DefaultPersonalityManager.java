@@ -1,6 +1,8 @@
 package wisematches.core.personality;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import wisematches.core.*;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountListener;
@@ -18,15 +20,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultPersonalityManager implements PersonalityManager, InitializingBean {
+	private Cache playersCache;
+
 	private AccountManager accountManager;
 	private MembershipManager membershipManager;
 
+	private final Map<Long, Personality> staticCache = new HashMap<>();
 
 	private final Map<RobotType, Robot> robotMap = new HashMap<>();
 	private final Map<Language, Visitor> visitorMap = new HashMap<>();
-
-	// TODO: too many objects in cache
-	private final Map<Long, Personality> playerMap = new HashMap<>();
 
 	private final TheMemberPlayerListener memberPlayerListener = new TheMemberPlayerListener();
 	private final Collection<PersonalityListener> listeners = new CopyOnWriteArraySet<>();
@@ -39,13 +41,13 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		for (RobotType type : RobotType.values()) {
 			final DefaultRobot value = new DefaultRobot(type);
 			robotMap.put(type, value);
-			playerMap.put(value.getId(), value);
+			staticCache.put(value.getId(), value);
 		}
 
 		for (Language language : Language.values()) {
 			final Visitor visitor = new DefaultVisitor(language);
 			visitorMap.put(language, visitor);
-			playerMap.put(visitor.getId(), visitor);
+			staticCache.put(visitor.getId(), visitor);
 		}
 	}
 
@@ -62,29 +64,32 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 	}
 
 	@Override
-	public Personality getPerson(long id) {
+	public Personality getPerson(Long id) {
 		if (id < 1000) {
-			return playerMap.get(id);
+			return staticCache.get(id);
 		} else {
 			return getMember(id);
 		}
 	}
 
 	@Override
-	public Member getMember(long id) {
+	public Member getMember(Long id) {
 		if (id < 1000) {
 			return null;
 		}
-		final Personality personality = playerMap.get(id);
-		if (personality == null) {
-			final Account account = accountManager.getAccount(id);
-			if (account != null) {
-				final DefaultMember memberPlayer = createMemberPlayer(account);
-				playerMap.put(memberPlayer.getId(), memberPlayer);
-				return memberPlayer;
-			}
+
+		final DefaultMember cachedMember = getCachedMember(id);
+		if (cachedMember != null) {
+			return cachedMember;
 		}
-		return (Member) personality;
+
+		final Account account = accountManager.getAccount(id);
+		if (account != null) {
+			final DefaultMember memberPlayer = createMemberPlayer(account);
+			playersCache.put(memberPlayer.getId(), memberPlayer);
+			return memberPlayer;
+		}
+		return null;
 	}
 
 	@Override
@@ -95,6 +100,14 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 	@Override
 	public Visitor getVisitor(Language language) {
 		return visitorMap.get(language);
+	}
+
+	public void setCacheManager(CacheManager cacheManager) {
+		this.playersCache = cacheManager.getCache("players");
+
+		if (this.playersCache == null) {
+			throw new IllegalArgumentException("CacheManager doesn't have players cache");
+		}
 	}
 
 	public void setAccountManager(AccountManager accountManager) {
@@ -121,6 +134,14 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		}
 	}
 
+	private DefaultMember getCachedMember(Long id) {
+		final Cache.ValueWrapper valueWrapper = playersCache.get(id);
+		if (valueWrapper != null) {
+			return (DefaultMember) valueWrapper.get();
+		}
+		return null;
+	}
+
 	private DefaultMember createMemberPlayer(Account account) {
 		final Membership card = membershipManager.getMembership(account);
 		return new DefaultMember(account, card);
@@ -139,7 +160,7 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 
 		@Override
 		public void accountRemove(Account account) {
-			Player remove = (Player) playerMap.remove(account.getId());
+			Player remove = getCachedMember(account.getId());
 			if (remove == null) {
 				remove = createMemberPlayer(account);
 			}
@@ -150,12 +171,18 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 
 		@Override
 		public void accountUpdated(Account oldAccount, Account newAccount) {
-			playerMap.put(newAccount.getId(), createMemberPlayer(newAccount));
+			final DefaultMember personality = getCachedMember(newAccount.getId());
+			if (personality != null) {
+				personality.update(newAccount, membershipManager.getMembership(newAccount));
+			}
 		}
 
 		@Override
 		public void membershipCardUpdated(Account account, MembershipCard oldCard, MembershipCard newCard) {
-			playerMap.put(account.getId(), new DefaultMember(account, newCard.getValidMembership()));
+			final DefaultMember personality = getCachedMember(account.getId());
+			if (personality != null) {
+				personality.update(account, newCard.getValidMembership());
+			}
 		}
 	}
 }

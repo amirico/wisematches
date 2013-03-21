@@ -19,7 +19,7 @@ public interface PersonalityManager {
 	 * @param id the of person
 	 * @return {@code Robot}, {@code Visitor} or {@code Player} personality based on specified id.
 	 */
-	Personality getPerson(long id);
+	Personality getPerson(Long id);
 
 
 	/**
@@ -30,7 +30,7 @@ public interface PersonalityManager {
 	 * @param id the of player
 	 * @return the player by specified id or {@code null}.
 	 */
-	Member getMember(long id);
+	Member getMember(Long id);
 
 	/**
 	 * Returns robot player by specified type.

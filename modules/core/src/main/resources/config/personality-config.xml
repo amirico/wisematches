@@ -5,6 +5,17 @@
 
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
 
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <list>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="players"/>
+                    <property name="allowNullValues" value="false"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
     <bean id="accountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="passwordEncoder" ref="passwordEncoder"/>
@@ -41,6 +52,7 @@
     <bean id="userDetailsChecker" class="org.springframework.security.authentication.AccountStatusUserDetailsChecker"/>
 
     <bean id="personalityManager" class="wisematches.core.personality.DefaultPersonalityManager">
+        <property name="cacheManager" ref="cacheManager"/>
         <property name="accountManager" ref="accountManager"/>
         <property name="membershipManager" ref="membershipManager"/>
     </bean>

@@ -11,19 +11,17 @@ import java.util.TimeZone;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class DefaultMember extends Member {
-	private final String email;
-	private final String nickname;
-	private final TimeZone timeZone;
-	private final Language language;
-	private final Membership membership;
+	private String email;
+	private String nickname;
+	private TimeZone timeZone;
+	private Language language;
+	private Membership membership;
+
+	private static final long serialVersionUID = -3657252453631101842L;
 
 	public DefaultMember(Account account, Membership membership) {
 		super(account.getId());
-		this.nickname = account.getNickname();
-		this.email = account.getEmail();
-		this.timeZone = account.getTimeZone();
-		this.language = account.getLanguage();
-		this.membership = membership;
+		update(account, membership);
 	}
 
 	public DefaultMember(long id, String nickname, String email, TimeZone timeZone, Membership membership, Language language) {
@@ -58,5 +56,16 @@ public final class DefaultMember extends Member {
 	@Override
 	public Membership getMembership() {
 		return membership;
+	}
+
+	final void update(Account account, Membership membership) {
+		if (!getId().equals(account.getId())) {
+			throw new IllegalArgumentException("Incorrect account to be updated");
+		}
+		this.nickname = account.getNickname();
+		this.email = account.getEmail();
+		this.timeZone = account.getTimeZone();
+		this.language = account.getLanguage();
+		this.membership = membership;
 	}
 }

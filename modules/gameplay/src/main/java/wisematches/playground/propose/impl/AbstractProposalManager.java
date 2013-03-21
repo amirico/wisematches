@@ -1,7 +1,13 @@
 package wisematches.playground.propose.impl;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.core.Personality;
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
@@ -21,7 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractProposalManager<S extends GameSettings> implements GameProposalManager<S>, InitializingBean {
-	private StatisticManager statisticManager;
+	private StatisticManager playerStatisticManager;
+	private PersonalityManager personalityManager;
+	protected TransactionTemplate transactionTemplate;
 
 	private final Lock lock = new ReentrantLock();
 	private final AtomicLong proposalIds = new AtomicLong();
@@ -33,16 +41,24 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void afterPropertiesSet() throws Exception {
 		lock.lock();
 		try {
-			long max = 0;
-			final Collection<AbstractGameProposal<S>> gameProposals = loadGameProposals();
-			for (AbstractGameProposal<S> proposal : gameProposals) {
-				max = Math.max(max, proposal.getId());
-				proposals.put(proposal.getId(), proposal);
-			}
-			proposalIds.set(max + 1);
+			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+				@Override
+				protected void doInTransactionWithoutResult(TransactionStatus status) {
+					long max = 0;
+					final Collection<AbstractGameProposal<S>> gameProposals = loadGameProposals();
+					for (AbstractGameProposal<S> proposal : gameProposals) {
+						max = Math.max(max, proposal.getId());
+						proposals.put(proposal.getId(), proposal);
+
+						proposal.validatePlayers(personalityManager);
+					}
+					proposalIds.set(max + 1);
+				}
+			});
 		} finally {
 			lock.unlock();
 		}
@@ -186,7 +202,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 			return null;
 		}
 		if (proposal instanceof PublicProposal) {
-			return ((PublicProposal) proposal).checkViolations(player, statisticManager.getStatistic(player));
+			return ((PublicProposal) proposal).checkViolations(player, playerStatisticManager.getStatistic(player));
 		}
 		return null;
 	}
@@ -255,9 +271,16 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 
 	protected abstract void removeGameProposal(AbstractGameProposal<S> proposal);
 
+	public void setPersonalityManager(PersonalityManager personalityManager) {
+		this.personalityManager = personalityManager;
+	}
 
-	public void setPlayerStatisticManager(StatisticManager statisticManager) {
-		this.statisticManager = statisticManager;
+	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
+		this.transactionTemplate = transactionTemplate;
+	}
+
+	public void setPlayerStatisticManager(StatisticManager playerStatisticManager) {
+		this.playerStatisticManager = playerStatisticManager;
 	}
 
 	protected void fireGameProposalInitiated(GameProposal<S> proposal) {

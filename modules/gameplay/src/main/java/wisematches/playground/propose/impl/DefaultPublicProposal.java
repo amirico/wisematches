@@ -1,5 +1,6 @@
 package wisematches.playground.propose.impl;
 
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.Criterion;
@@ -16,6 +17,8 @@ import java.util.*;
 public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameProposal<S> implements PublicProposal<S> {
 	private final Player[] players;
 	private final Collection<Criterion> criterion;
+
+	private static final long serialVersionUID = 8547922502188407269L;
 
 	public DefaultPublicProposal(long id, S settings, Player initiator, int opponentsCount, Collection<Criterion> criterion) {
 		super(id, settings, initiator);
@@ -146,5 +149,16 @@ public class DefaultPublicProposal<S extends GameSettings> extends AbstractGameP
 	@Override
 	public ProposalType getProposalType() {
 		return ProposalType.PUBLIC;
+	}
+
+	@Override
+	protected void validatePlayers(PersonalityManager personalityManager) {
+		super.validatePlayers(personalityManager);
+
+		for (int i = 0; i < players.length; i++) {
+			if (players[i] != null) {
+				players[i] = (Player) personalityManager.getPerson(players[i].getId());
+			}
+		}
 	}
 }
