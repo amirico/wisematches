@@ -20,6 +20,10 @@
                         <a href="/info/features"
                            style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
                     </#if>
+                    <@wm.security.authorize granted="admin">
+                        |
+                        <a href="/admin/main"><@message code="game.menu.admin.label"/></a>
+                    </@wm.security.authorize>
                         |
                     <#if principal.type.member><a
                             href="/account/modify"><@message code="game.menu.settings.label"/></a>
