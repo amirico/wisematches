@@ -53,7 +53,7 @@ public class FileProposalManager<S extends GameSettings> extends AbstractProposa
 				res.add((AbstractGameProposal<S>) inputStream.readObject());
 			}
 			return res;
-		} catch (IOException | ClassNotFoundException ex) {
+		} catch (Exception ex) {
 			log.error("File proposal can't be loaded from: {}", file, ex);
 		} finally {
 			lock.unlock();

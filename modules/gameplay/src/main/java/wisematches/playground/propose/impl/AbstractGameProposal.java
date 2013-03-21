@@ -1,5 +1,6 @@
 package wisematches.playground.propose.impl;
 
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.GameProposal;
@@ -15,7 +16,9 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
 	private final S settings;
 	private final Date creationDate;
 
-	protected final Player initiator;
+	protected Player initiator;
+
+	private static final long serialVersionUID = -2578240882933330034L;
 
 	protected AbstractGameProposal(long id, S settings, Player initiator) {
 		if (settings == null) {
@@ -53,4 +56,9 @@ public abstract class AbstractGameProposal<S extends GameSettings> implements Ga
 	protected abstract void attach(Player player);
 
 	protected abstract void detach(Player player);
+
+
+	protected void validatePlayers(PersonalityManager personalityManager) {
+		initiator = (Player) personalityManager.getPerson(initiator.getId());
+	}
 }

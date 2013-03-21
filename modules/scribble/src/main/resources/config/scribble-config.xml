@@ -72,6 +72,8 @@
     <bean id="scribbleProposalManager"
           class="wisematches.playground.propose.impl.file.FileProposalManager">
         <property name="proposalsResource" value="${server.proposals.file}"/>
+        <property name="personalityManager" ref="personalityManager"/>
+        <property name="transactionTemplate" ref="transactionRequiresNew"/>
         <property name="playerStatisticManager" ref="scribbleStatisticsManager"/>
     </bean>
 

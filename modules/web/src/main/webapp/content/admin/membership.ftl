@@ -31,7 +31,8 @@
             </tr>
             <tr>
                 <td><label>Expires:</label></td>
-                <td><input name="d" value="<#if membershipCard??>${membershipCard.expiration}</#if>"</td>
+                <td><input name="d"
+                           value="<#if membershipCard??>${membershipCard.expiration?string("dd.MM.yyyy")}</#if>"</td>
             </tr>
         </table>
         <button type="submit">Update membership</button>

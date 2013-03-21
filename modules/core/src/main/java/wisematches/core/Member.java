@@ -6,6 +6,8 @@ import java.util.TimeZone;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public abstract class Member extends Player {
+	private static final long serialVersionUID = -5921468650108338917L;
+
 	protected Member(long id) {
 		super(id);
 	}

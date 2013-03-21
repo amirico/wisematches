@@ -61,7 +61,7 @@ public class AdministrationController {
 					if (nm == null) {
 						membershipManager.removePlayerMembership(account);
 					} else {
-						final Date parse = new SimpleDateFormat("dd.mm.yyyy").parse(d);
+						final Date parse = new SimpleDateFormat("dd.MM.yyyy").parse(d);
 						membershipManager.updatePlayerMembership(account, nm, parse);
 					}
 				}
