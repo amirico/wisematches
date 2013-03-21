@@ -82,6 +82,12 @@ public final class Orders implements Iterable<Order> {
 		}
 	}
 
+	public String toSqlOrders() {
+		final StringBuilder res = new StringBuilder();
+		apply(res);
+		return res.toString();
+	}
+
 	@Override
 	public Iterator<Order> iterator() {
 		return new Iterator<Order>() {

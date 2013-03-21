@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wisematches.core.Player;
+import wisematches.core.search.Range;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleMove;
 import wisematches.playground.scribble.ScribblePlayerHand;
@@ -83,10 +84,9 @@ public class ScribbleObservingController extends AbstractScribbleController {
 
 				CommentUpdatesInfo commentUpdates = null;
 				if (commentsCount != -1) {
-					final int newCommentsCount = commentManager.getCommentsCount(board, getPrincipal()) - commentsCount;
+					final int newCommentsCount = commentManager.getTotalCount(getPrincipal(), board) - commentsCount;
 					if (newCommentsCount > 0) {
-						List<GameCommentState> commentStates = commentManager.getCommentStates(board, getPrincipal());
-						commentStates = commentStates.subList(0, newCommentsCount);
+						List<GameCommentState> commentStates = commentManager.searchEntities(getPrincipal(), board, null, Range.limit(newCommentsCount));
 
 						int index = 0;
 						final long[] ids = new long[commentStates.size()];
