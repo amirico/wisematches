@@ -5,7 +5,10 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.ResultTransformer;
+import wisematches.core.Personality;
 import wisematches.core.Player;
+import wisematches.core.search.Orders;
+import wisematches.core.search.Range;
 import wisematches.playground.GameBoard;
 import wisematches.playground.scribble.comment.GameComment;
 import wisematches.playground.scribble.comment.GameCommentManager;
@@ -50,11 +53,39 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	}
 
 	@Override
-	public int getCommentsCount(GameBoard board, Player player) {
+	public <Ctx extends GameBoard> int getTotalCount(Personality person, Ctx context) {
 		final Session session = sessionFactory.getCurrentSession();
 		final Query query = session.createQuery("select count(*) from HibernateGameComment as c where c.board=:board");
-		query.setParameter("board", board.getBoardId());
+		query.setParameter("board", context.getBoardId());
 		return ((Number) query.uniqueResult()).intValue();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <Ctx extends GameBoard> List<GameCommentState> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
+		final Session session = sessionFactory.getCurrentSession();
+		final SQLQuery sqlQuery = session.createSQLQuery(
+				"SELECT c.id, (c.person=p.playerId) || (c.`read`&(1 << p.playerIndex)) != 0 FROM scribble_comment AS c LEFT JOIN scribble_player AS p " +
+						"ON c.board=p.boardId AND p.playerId=:person " +
+						"WHERE c.board=:board " +
+						(orders != null ? orders.toSqlOrders() : "ORDER BY c.created DESC, c.id DESC"));
+		sqlQuery.setParameter("board", context.getBoardId());
+		sqlQuery.setParameter("person", person.getId());
+		sqlQuery.setResultTransformer(new ResultTransformer() {
+			@Override
+			public Object transformTuple(Object[] tuple, String[] aliases) {
+				return new HibernateGameCommentState(((Number) tuple[0]).longValue(), tuple[1] != null && ((Number) tuple[1]).intValue() != 0);
+			}
+
+			@Override
+			public List transformList(List collection) {
+				return collection;
+			}
+		});
+		if (range != null) {
+			range.apply(sqlQuery);
+		}
+		return sqlQuery.list();
 	}
 
 	@Override
@@ -74,38 +105,13 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<GameCommentState> getCommentStates(final GameBoard board, final Player player) {
-		final Session session = sessionFactory.getCurrentSession();
-		final SQLQuery sqlQuery = session.createSQLQuery(
-				"select c.id, (c.person=p.playerId) || (c.`read`&(1 << p.playerIndex)) != 0 from scribble_comment as c left join scribble_player as p " +
-						"on c.board=p.boardId and p.playerId=:person " +
-						"where c.board=:board " +
-						"order by c.created desc, c.id desc");
-		sqlQuery.setParameter("board", board.getBoardId());
-		sqlQuery.setParameter("person", player.getId());
-		sqlQuery.setResultTransformer(new ResultTransformer() {
-			@Override
-			public Object transformTuple(Object[] tuple, String[] aliases) {
-				return new HibernateGameCommentState(((Number) tuple[0]).longValue(), tuple[1] != null && ((Number) tuple[1]).intValue() != 0);
-			}
-
-			@Override
-			public List transformList(List collection) {
-				return collection;
-			}
-		});
-		return sqlQuery.list();
-	}
-
-	@Override
 	public void markRead(final GameBoard board, final Player player, final long... ids) {
 		final Session session = sessionFactory.getCurrentSession();
 		final SQLQuery sqlQuery = session.createSQLQuery(
-				"update scribble_comment as c left join scribble_player as p " +
-						"on c.board=p.boardId and p.playerId=:person " +
-						"set c.`read`=c.`read`|(1 << p.playerIndex) " +
-						"where c.board=:board" + (ids != null && ids.length != 0 ? " and c.id in (:ids)" : ""));
+				"UPDATE scribble_comment AS c LEFT JOIN scribble_player AS p " +
+						"ON c.board=p.boardId AND p.playerId=:person " +
+						"SET c.`read`=c.`read`|(1 << p.playerIndex) " +
+						"WHERE c.board=:board" + (ids != null && ids.length != 0 ? " AND c.id IN (:ids)" : ""));
 		sqlQuery.setParameter("board", board.getBoardId());
 		sqlQuery.setParameter("person", player.getId());
 		if (ids != null && ids.length != 0) {
@@ -122,10 +128,10 @@ public class HibernateGameCommentManager implements GameCommentManager {
 	public void markUnread(final GameBoard board, final Player player, final long... ids) {
 		final Session session = sessionFactory.getCurrentSession();
 		final SQLQuery sqlQuery = session.createSQLQuery(
-				"update scribble_comment as c left join scribble_player as p " +
-						"on c.board=p.boardId and p.playerId=:person " +
-						"set c.`read`=c.`read`&~(1 << p.playerIndex) " +
-						"where c.board=:board" + (ids != null && ids.length != 0 ? " and c.id in (:ids)" : ""));
+				"UPDATE scribble_comment AS c LEFT JOIN scribble_player AS p " +
+						"ON c.board=p.boardId AND p.playerId=:person " +
+						"SET c.`read`=c.`read`&~(1 << p.playerIndex) " +
+						"WHERE c.board=:board" + (ids != null && ids.length != 0 ? " AND c.id IN (:ids)" : ""));
 		sqlQuery.setParameter("board", board.getBoardId());
 		sqlQuery.setParameter("person", player.getId());
 		if (ids != null && ids.length != 0) {

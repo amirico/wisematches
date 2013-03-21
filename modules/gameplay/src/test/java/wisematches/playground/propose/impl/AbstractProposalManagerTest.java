@@ -4,6 +4,9 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.playground.GameSettings;
@@ -55,6 +58,12 @@ public class AbstractProposalManagerTest {
 			protected void removeGameProposal(AbstractGameProposal<GameSettings> gameProposal) {
 			}
 		};
+		proposalManager.setTransactionTemplate(new TransactionTemplate() {
+			@Override
+			public <T> T execute(TransactionCallback<T> action) throws TransactionException {
+				return action.doInTransaction(null);
+			}
+		});
 		proposalManager.setPlayerStatisticManager(psm);
 		proposalManager.afterPropertiesSet();
 

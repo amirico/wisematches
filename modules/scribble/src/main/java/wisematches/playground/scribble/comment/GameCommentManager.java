@@ -1,18 +1,17 @@
 package wisematches.playground.scribble.comment;
 
 import wisematches.core.Player;
+import wisematches.core.search.SearchManager;
 import wisematches.playground.GameBoard;
 
 import java.util.List;
 
 /**
- * TODO: searcheable manager should be added here.
- * <p/>
  * Scribble comments manager. Allows add/remove and receive comments.
  *
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface GameCommentManager {
+public interface GameCommentManager extends SearchManager<GameCommentState, GameBoard> {
 	/**
 	 * Adds new comment to specified board by specified personality.
 	 *
@@ -34,15 +33,6 @@ public interface GameCommentManager {
 	GameComment removeComment(GameBoard board, Player player, long commentId);
 
 	/**
-	 * Returns comments count for specified board and player.
-	 *
-	 * @param board  the board
-	 * @param player the player
-	 * @return comments count
-	 */
-	int getCommentsCount(GameBoard board, Player player);
-
-	/**
 	 * Returns collection of comments for specified ids. Not exist comments are not included
 	 * in result collection.
 	 *
@@ -52,15 +42,6 @@ public interface GameCommentManager {
 	 * @return the collection of requested comments.
 	 */
 	List<GameComment> getComments(GameBoard board, Player player, long... ids);
-
-	/**
-	 * Returns collection of all comments for specified board what are available for specified personality.
-	 *
-	 * @param board  the board
-	 * @param player the personality who wants receive comments.
-	 * @return collection of comment states or empty collection if there are no comments.
-	 */
-	List<GameCommentState> getCommentStates(GameBoard board, Player player);
 
 
 	/**

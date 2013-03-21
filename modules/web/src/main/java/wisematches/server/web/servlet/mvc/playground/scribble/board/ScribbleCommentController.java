@@ -48,7 +48,7 @@ public class ScribbleCommentController extends AbstractScribbleController {
 		if (board.getPlayerHand(personality) == null) {
 			return responseFactory.failure("game.comment.err.owner", locale);
 		}
-		return responseFactory.success(commentManager.getCommentStates(board, personality));
+		return responseFactory.success(commentManager.searchEntities(personality, board, null, null));
 	}
 
 	@RequestMapping("get.ajax")

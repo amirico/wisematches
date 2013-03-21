@@ -3,6 +3,10 @@ package wisematches.playground.propose.impl.file;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
+import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
 import wisematches.core.personality.DefaultMember;
 import wisematches.playground.GameSettings;
@@ -14,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,6 +45,12 @@ public class FileProposalManagerTest {
 
 		fileProposalManager = new FileProposalManager<>();
 		fileProposalManager.setProposalsResource(file);
+		fileProposalManager.setTransactionTemplate(new TransactionTemplate() {
+			@Override
+			public <T> T execute(TransactionCallback<T> action) throws TransactionException {
+				return action.doInTransaction(null);
+			}
+		});
 	}
 
 	@After
@@ -72,6 +83,19 @@ public class FileProposalManagerTest {
 		fileProposalManager.close();
 
 		fileProposalManager = new FileProposalManager<>();
+		fileProposalManager.setTransactionTemplate(new TransactionTemplate() {
+			@Override
+			public <T> T execute(TransactionCallback<T> action) throws TransactionException {
+				return action.doInTransaction(null);
+			}
+		});
+		final PersonalityManager personalityManager = createNiceMock(PersonalityManager.class);
+		expect(personalityManager.getPerson(P1.getId())).andReturn(P1);
+		expect(personalityManager.getPerson(P2.getId())).andReturn(P2);
+		expect(personalityManager.getPerson(P3.getId())).andReturn(P3);
+		replay(personalityManager);
+
+		fileProposalManager.setPersonalityManager(personalityManager);
 		fileProposalManager.setProposalsResource(file);
 		fileProposalManager.afterPropertiesSet();
 		assertEquals(2, fileProposalManager.searchEntities(null, ProposalRelation.AVAILABLE, null, null).size());
