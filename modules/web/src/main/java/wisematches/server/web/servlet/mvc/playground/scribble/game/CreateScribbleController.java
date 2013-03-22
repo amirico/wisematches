@@ -243,16 +243,26 @@ public class CreateScribbleController extends AbstractScribbleController {
 				form.setBoardLanguage(board.getSettings().getLanguage().getCode());
 
 				int index = 0;
-				final List<Personality> playersHands = board.getPlayers();
-				final long[] players = new long[playersHands.size() - 1];
-				for (Personality playersHand : playersHands) {
-					if (playersHand.equals(getPrincipal())) {
+				final List<Personality> players = board.getPlayers();
+				final long[] ids = new long[players.size() - 1];
+				final Personality[] opponents = new Personality[players.size() - 1];
+				for (Personality player : players) {
+					if (player.equals(getPrincipal())) {
 						continue;
 					}
-					players[index++] = playersHand.getId();
+					ids[index] = player.getId();
+					opponents[index] = player;
+					index++;
 				}
-				form.setOpponents(players);
-				form.setCreateTab(CreateScribbleTab.CHALLENGE);
+
+				// only one and it's robot?
+				if (opponents.length == 1 && opponents[0] instanceof Robot) {
+					form.setCreateTab(CreateScribbleTab.ROBOT);
+					form.setRobotType(((Robot) opponents[0]).getRobotType());
+				} else {
+					form.setOpponents(ids);
+					form.setCreateTab(CreateScribbleTab.CHALLENGE);
+				}
 			}
 		} catch (BoardLoadingException ignore) { // do nothing
 		}
