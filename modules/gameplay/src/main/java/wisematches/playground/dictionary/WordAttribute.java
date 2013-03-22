@@ -59,6 +59,9 @@ public enum WordAttribute {
 	}
 
 	public static EnumSet<WordAttribute> decode(String attributes) {
+		if (attributes == null) {
+			return null;
+		}
 		final String[] split = attributes.split(" ");
 		if (split.length == 0) {
 			return EnumSet.noneOf(WordAttribute.class);

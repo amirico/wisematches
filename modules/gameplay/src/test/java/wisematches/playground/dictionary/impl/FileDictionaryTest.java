@@ -9,13 +9,11 @@ import org.xml.sax.SAXException;
 import wisematches.core.Language;
 import wisematches.playground.dictionary.DictionaryException;
 import wisematches.playground.dictionary.WordAttribute;
-import wisematches.playground.dictionary.WordDefinition;
 import wisematches.playground.dictionary.WordEntry;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 
@@ -96,22 +94,20 @@ public class FileDictionaryTest {
 
 	@Test
 	public void testAddRemoveEntry() throws DictionaryException {
-		dictionary.addWordEntry(new WordEntry("апрунта", Arrays.asList(new WordDefinition("Просто апрунта", EnumSet.of(WordAttribute.FEMININE)))));
+		dictionary.addWordEntry(new WordEntry("апрунта", "Просто апрунта", EnumSet.of(WordAttribute.FEMININE)));
 
 		final WordEntry entry1 = dictionary.getWordEntry("апрунта");
 		Assert.assertNotNull(entry1);
 		assertEquals("апрунта", entry1.getWord());
-		assertEquals(1, entry1.getDefinitions().size());
-		assertEquals(EnumSet.of(WordAttribute.FEMININE), entry1.getDefinitions().get(0).getAttributes());
-		assertEquals("Просто апрунта", entry1.getDefinitions().get(0).getText());
+		assertEquals(EnumSet.of(WordAttribute.FEMININE), entry1.getAttributes());
+		assertEquals("Просто апрунта", entry1.getDefinition());
 
-		dictionary.updateWordEntry(new WordEntry("апрунта", Arrays.asList(new WordDefinition("Не просто апрунта", EnumSet.of(WordAttribute.MASCULINE)))));
+		dictionary.updateWordEntry(new WordEntry("апрунта", "Не просто апрунта", EnumSet.of(WordAttribute.MASCULINE)));
 		final WordEntry entry2 = dictionary.getWordEntry("апрунта");
 		Assert.assertNotNull(entry2);
 		assertEquals("апрунта", entry2.getWord());
-		assertEquals(1, entry2.getDefinitions().size());
-		assertEquals(EnumSet.of(WordAttribute.MASCULINE), entry2.getDefinitions().get(0).getAttributes());
-		assertEquals("Не просто апрунта", entry2.getDefinitions().get(0).getText());
+		assertEquals(EnumSet.of(WordAttribute.MASCULINE), entry2.getAttributes());
+		assertEquals("Не просто апрунта", entry2.getDefinition());
 
 		dictionary.removeWordEntry(entry2);
 		Assert.assertNull(dictionary.getWordEntry("апрунта"));

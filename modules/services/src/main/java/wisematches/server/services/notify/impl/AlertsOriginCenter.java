@@ -11,9 +11,9 @@ import wisematches.core.personality.player.account.AccountManager;
 import wisematches.server.services.ServerDescriptor;
 import wisematches.server.services.abuse.AbuseReportListener;
 import wisematches.server.services.abuse.AbuseReportManager;
-import wisematches.server.services.dictionary.ChangeSuggestion;
 import wisematches.server.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.services.dictionary.DictionarySuggestionManager;
+import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.notify.NotificationSender;
 
@@ -134,25 +134,25 @@ public class AlertsOriginCenter {
 		}
 
 		@Override
-		public void changeRequestRaised(ChangeSuggestion request) {
+		public void changeRequestRaised(WordSuggestion request) {
 			raiseAlarm("DIC", "Suggestion raised: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
 
 		@Override
-		public void changeRequestApproved(ChangeSuggestion request) {
+		public void changeRequestApproved(WordSuggestion request) {
 			raiseAlarm("DIC", "Suggestion approved: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
 
 		@Override
-		public void changeRequestRejected(ChangeSuggestion request) {
+		public void changeRequestRejected(WordSuggestion request) {
 			raiseAlarm("DIC", "Suggestion rejected: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}
 
 		@Override
-		public void changeRequestUpdated(ChangeSuggestion request) {
+		public void changeRequestUpdated(WordSuggestion request) {
 			raiseAlarm("DIC", "Suggestion updated: " + request.getWord() + " [" + request.getSuggestionType() + "]",
 					request.getDefinition() + "\n" + request.getAttributes());
 		}

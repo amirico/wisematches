@@ -926,7 +926,7 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
+wm.game.dict.Suggestion = function (lang, globaReadOnly, i18n) {
     var instance = this;
     var wordEntryEditor = $("#wordEntryEditor");
     var wordEntryAction = wordEntryEditor.find("#action");
@@ -1019,9 +1019,10 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
         startEditing("MODIFY");
     };
 
-    this.viewWordEntry = function (wordEntry) {
+    this.viewWordEntry = function (wordEntry, readOnly) {
+        readOnly = (readOnly == undefined ? false : readOnly);
         var buttons = [];
-        if (!readOnly) {
+        if (!globaReadOnly && !readOnly) {
             buttons.push({
                 id: 'wordEditorChangeBtn',
                 text: i18n['edit'],
@@ -1075,12 +1076,12 @@ wm.game.dict.Suggestion = function (lang, readOnly, i18n) {
             wordEntryEditor.find("input[name=id]").val(wordEntry.id);
             wordEntryEditor.find(".word-view").text(wordEntry.word);
             wordEntryEditor.find(".word-input").val(wordEntry.word);
-            if (wordEntry.definitions != null && wordEntry.definitions != undefined && wordEntry.definitions.length != 0) {
-                wordEntryEditor.find(".definition-view").text(wordEntry.definitions[0].text);
-                wordEntryEditor.find(".definition-input").val(wordEntry.definitions[0].text);
+            if (wordEntry.definition != null && wordEntry.definition != undefined) {
+                wordEntryEditor.find(".definition-view").html(wordEntry.definition.replace(/\n/g, '<br />'));
+                wordEntryEditor.find(".definition-input").val(wordEntry.definition);
 
                 var attrs = "";
-                $.each(wordEntry.definitions[0].attributes, function (i, v) {
+                $.each(wordEntry.attributes, function (i, v) {
                     attrs += " " + i18n[v];
                     $("#" + v).prop('checked', true);
                 });
@@ -1127,16 +1128,14 @@ wm.game.dict.Dictionary = function (lang, i18n) {
 
     var createViewItem = function (entry) {
         var def = "";
-        $.each(entry.definitions, function (j, d) {
-            if (def != "") {
-                def += "<br>";
-            }
-            var attrs = "";
-            $.each(d.attributes, function (k, a) {
-                attrs += " " + i18n[a];
-            });
-            def += "<span class='sample'>" + attrs + "</span> " + d.text;
+        if (def != "") {
+            def += "<br>";
+        }
+        var attrs = "";
+        $.each(entry.attributes, function (k, a) {
+            attrs += " " + i18n[a];
         });
+        def += "<span class='sample'>" + attrs + "</span> " + entry.definition;
         return $("" +
                 "<tr>" +
                 "<td><a href='#' onclick='dictionarySuggestion.loadWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
@@ -1261,7 +1260,50 @@ wm.game.dict.Dictionary = function (lang, i18n) {
             loadWordEntries(hash);
         }
     };
+
+    var initSuggestions = function () {
+        $.post('/playground/dictionary/loadRecentSuggestions.ajax?l=' + lang, function (result) {
+            function initSuggestionsView(sugggestions, view, readOnly) {
+                if (sugggestions.length > 0) {
+                    $.each(sugggestions, function (i, e) {
+                        var link = $('<a href="#">' + e.word + '</a>');
+                        link.click(function () {
+                            dictionarySuggestion.viewWordEntry(sugggestions[i], readOnly);
+                        });
+                        view.append(link);
+                        if (i != sugggestions.length - 1) {
+                            view.append(', ');
+                        }
+                    });
+                    view.parent().show();
+                }
+            }
+
+            if (result.success) {
+                var added = [];
+                var removed = [];
+                var updated = [];
+                $.each(result.data, function (i, e) {
+                    if (e.suggestionType == "ADD") {
+                        added.push(e);
+                    } else if (e.suggestionType == "REMOVE") {
+                        removed.push(e);
+                    } else if (e.suggestionType == "UPDATE") {
+                        updated.push(e);
+                    }
+                });
+
+                initSuggestionsView(added, $("#recentlyAdded").find("div"), false);
+                initSuggestionsView(removed, $("#recentlyRemoved").find("div"), true);
+                initSuggestionsView(updated, $("#recentlyUpdated").find("div"), true);
+            } else {
+                wm.ui.unlock(null, result.message, true);
+            }
+        });
+    };
+
     initByHash();
+    initSuggestions();
 };
 
 wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, language) {

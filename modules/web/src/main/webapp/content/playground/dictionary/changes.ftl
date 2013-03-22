@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="suggestions" type="wisematches.server.services.dictionary.ChangeSuggestion[]" -->
+<#-- @ftlvariable name="suggestions" type="wisematches.server.services.dictionary.WordSuggestion[]" -->
 <#-- @ftlvariable name="dictionaryLanguage" type="wisematches.core.Language" -->
 <#include "/core.ftl"/>
 
@@ -8,32 +8,30 @@
 <#assign readOnlySuggestion=false/>
 <@wm.security.authorize granted="moderator"><#assign moderator=true/></@wm.security.authorize>
 
+<#assign types=["ADD", "REMOVE", "UPDATE"]/>
+<#assign states=["APPROVED", "REJECTED", "WAITING"]/>
+
 <@wm.ui.playground id="dictionaryWidget">
     <@wm.ui.table.header>
-        <@message code="dict.label"/> > <@message code="dict.changes.label"/>
+        <@message code="dict.label"/> > <@message code="suggestion.label"/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
     <#--
-        <table width="100%">
-            <tr>
-                <td align="left">
-                    <div class="wm-ui-buttonset">
-                        <input id="check1" type="checkbox"><label for="check1">B</label>
-                        <input id="check2" type="checkbox"><label for="check2">B</label>
-                    </div>
-                </td>
-                <td align="right">
-                    <div class="wm-ui-buttonset">
-                        <input type="radio"/>
-                        <input type="radio"/>
-                        <input type="radio"/>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div id="suggestionStates" class="wm-ui-buttonset">
+            <#list states as a>
+                <input id="suggestionState${a}" name="suggestionStates" type="radio" value="${a}"/>
+                <label for="suggestionState${a}"><@message code="suggestion.state.${a?lower_case}"/></label>
+            </#list>
+        </div>
+
+        <div id="suggestionTypes" class="wm-ui-buttonset">
+            <#list types as a>
+                <input id="suggestionType${a}" name="suggestionTypes" type="checkbox" value="${a}" checked="checkeds"/>
+                <label for="suggestionType${a}"><@message code="suggestion.type.${a?lower_case}"/></label>
+            </#list>
+        </div>
     -->
-    &nbsp;
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -42,27 +40,27 @@
         <tr>
             <#if moderator>
                 <th></th>
-                <th>
-                    <@message code="dict.changes.player.label"/>
-                </th>
             </#if>
             <th>
-                <@message code="dict.changes.word.label"/>
+                <@message code="suggestion.word.label"/>
             </th>
             <th>
-                <@message code="dict.changes.language.label"/>
+                <@message code="suggestion.type.label"/>
             </th>
             <th>
-                <@message code="dict.changes.added.label"/>
+                <@message code="suggestion.state.label"/>
             </th>
             <th>
-                <@message code="dict.changes.type.label"/>
+                <@message code="suggestion.player.label"/>
             </th>
             <th>
-                <@message code="dict.changes.attributes.label"/>
+                <@message code="suggestion.date.label"/>
+            </th>
+            <th>
+                <@message code="suggestion.attributes.label"/>
             </th>
             <th width="100%">
-                <@message code="dict.changes.definition.label"/>
+                <@message code="suggestion.definition.label"/>
             </th>
         </tr>
         </thead>
@@ -75,9 +73,6 @@
                             <input type="checkbox" name="suggestion" value="${s.id?string}">
                         </label>
                     </td>
-                    <td>
-                        <@wm.player.name personalityManager.getPerson(s.requester) false false true/>
-                    </td>
                 </#if>
                 <td>
                     <#if moderator>
@@ -87,14 +82,17 @@
                     ${s.word}
                     </#if>
                 </td>
-                <td class="language">
-                    <@message code="language.${s.language?lower_case}"/>
+                <td class="type">
+                    <@message code="suggestion.type.${s.suggestionType.name()?lower_case}.label"/>
                 </td>
-                <td class="requested">
+                <td class="state">
+                    <@message code="suggestion.state.${s.suggestionState.name()?lower_case}.label"/>
+                </td>
+                <td class="requester">
+                    <@wm.player.name personalityManager.getPerson(s.requester) false false true/>
+                </td>
+                <td class="date">
                 ${messageSource.formatDate(s.requestDate, locale)}
-                </td>
-                <td class="action">
-                    <@message code="dict.word.type.${s.suggestionType.name()?lower_case}.label"/>
                 </td>
                 <td class="attributes">
                     <#if s.attributes??>
@@ -103,7 +101,7 @@
                     </#if>
                 </td>
                 <td class="definition" width="100%">
-                ${s.definition!""}
+                ${s.definition!""?html?replace("\n", "<br>")}
                 </td>
             </tr>
             </#list>
@@ -114,10 +112,10 @@
     <@wm.ui.table.statusbar align="left">
         <#if moderator>
         <button id="approveChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
-            <@message code="dict.changes.approve.label"/>
+            <@message code="suggestion.approve.label"/>
         </button>
         <button id="rejectChanges" class="wm-ui-button" type="submit" style="margin-left: 0">
-            <@message code="dict.changes.reject.label"/>
+            <@message code="suggestion.reject.label"/>
         </button>
         </#if>
     &nbsp;
@@ -129,9 +127,11 @@
 <script type="text/javascript">
     wm.ui.dataTable('#dictionaryChanges', {
         "bSortClasses": false,
+        "aaSorting": [
+            [ <#if moderator>5<#else>4</#if>, "desc" ]
+        ],
         "aoColumns": [
         <#if moderator>
-            { "bSortable": false },
             { "bSortable": false },
         </#if>
             { "bSortable": true },
@@ -139,6 +139,7 @@
             { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },
+            { "bSortable": false },
             { "bSortable": false }
         ]
     });
@@ -160,9 +161,8 @@
         dictionarySuggestion.modifyWordEntry({
             id: id,
             word: word,
-            definitions: [
-                {text: definition, attributes: attributes}
-            ]
+            definition: definition,
+            attributes: attributes
         });
     }
 

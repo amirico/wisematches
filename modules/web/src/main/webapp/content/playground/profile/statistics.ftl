@@ -198,6 +198,9 @@
             <div><@message code="profile.points.allHandBonuses"/>:</div>
             <div>${statistics.allHandTilesBonuses}</div>
         </div>
+    </div>
+
+    <div class="ui-layout-table" style="padding-top: 10px;">
         <div>
             <div><@message code="profile.points.avg"/>:</div>
             <div><@undefined value=statistics.averagePoints?round/></div>

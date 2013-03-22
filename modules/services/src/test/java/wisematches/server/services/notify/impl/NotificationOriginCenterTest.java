@@ -37,10 +37,10 @@ import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 import wisematches.server.services.award.*;
-import wisematches.server.services.dictionary.ChangeSuggestion;
 import wisematches.server.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.services.dictionary.DictionarySuggestionManager;
 import wisematches.server.services.dictionary.SuggestionType;
+import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.message.MessageListener;
 import wisematches.server.services.message.MessageManager;
 import wisematches.server.services.message.impl.HibernateMessage;
@@ -525,7 +525,7 @@ public class NotificationOriginCenterTest {
 
 		publisherCenter.setDictionarySuggestionManager(suggestionManager);
 
-		final ChangeSuggestion suggestion = createMock(ChangeSuggestion.class);
+		final WordSuggestion suggestion = createMock(WordSuggestion.class);
 		expect(suggestion.getRequester()).andReturn(p1.getId()).times(2);
 		expect(suggestion.getWord()).andReturn("MockSuggest").times(2);
 		expect(suggestion.getSuggestionType()).andReturn(SuggestionType.ADD);

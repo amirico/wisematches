@@ -2,6 +2,7 @@ package wisematches.server.services.dictionary;
 
 import wisematches.core.Language;
 
+import java.util.Date;
 import java.util.EnumSet;
 
 /**
@@ -12,12 +13,13 @@ public final class SuggestionContext {
 	private final Language language;
 	private final EnumSet<SuggestionType> suggestionTypes;
 	private final EnumSet<SuggestionState> suggestionStates;
+	private final Date resolvedAfter;
 
-	public SuggestionContext(Language language, EnumSet<SuggestionType> suggestionTypes, EnumSet<SuggestionState> suggestionStates) {
-		this(null, language, suggestionTypes, suggestionStates);
+	public SuggestionContext(Language language, EnumSet<SuggestionType> suggestionTypes, EnumSet<SuggestionState> suggestionStates, Date resolvedAfter) {
+		this(null, language, suggestionTypes, suggestionStates, resolvedAfter);
 	}
 
-	public SuggestionContext(String word, Language language, EnumSet<SuggestionType> suggestionTypes, EnumSet<SuggestionState> suggestionStates) {
+	public SuggestionContext(String word, Language language, EnumSet<SuggestionType> suggestionTypes, EnumSet<SuggestionState> suggestionStates, Date resolvedAfter) {
 		if (word == null && language == null && suggestionTypes == null && suggestionStates == null) {
 			throw new NullPointerException("All parameters can't be null at the same time");
 		}
@@ -25,6 +27,7 @@ public final class SuggestionContext {
 		this.language = language;
 		this.suggestionTypes = suggestionTypes;
 		this.suggestionStates = suggestionStates;
+		this.resolvedAfter = resolvedAfter;
 	}
 
 	public String getWord() {
@@ -33,6 +36,10 @@ public final class SuggestionContext {
 
 	public Language getLanguage() {
 		return language;
+	}
+
+	public Date getResolvedAfter() {
+		return resolvedAfter;
 	}
 
 	public EnumSet<SuggestionType> getSuggestionTypes() {

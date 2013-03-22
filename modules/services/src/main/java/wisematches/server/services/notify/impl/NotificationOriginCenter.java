@@ -23,9 +23,9 @@ import wisematches.server.services.award.Award;
 import wisematches.server.services.award.AwardDescriptor;
 import wisematches.server.services.award.AwardsListener;
 import wisematches.server.services.award.AwardsManager;
-import wisematches.server.services.dictionary.ChangeSuggestion;
 import wisematches.server.services.dictionary.DictionarySuggestionListener;
 import wisematches.server.services.dictionary.DictionarySuggestionManager;
+import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageListener;
 import wisematches.server.services.message.MessageManager;
@@ -275,20 +275,20 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 
 		@Override
-		public void changeRequestRaised(ChangeSuggestion request) {
+		public void changeRequestRaised(WordSuggestion request) {
 		}
 
 		@Override
-		public void changeRequestUpdated(ChangeSuggestion request) {
+		public void changeRequestUpdated(WordSuggestion request) {
 		}
 
 		@Override
-		public void changeRequestApproved(ChangeSuggestion request) {
+		public void changeRequestApproved(WordSuggestion request) {
 			processNotification(request.getRequester(), "playground.dictionary.accepted", request);
 		}
 
 		@Override
-		public void changeRequestRejected(ChangeSuggestion request) {
+		public void changeRequestRejected(WordSuggestion request) {
 			processNotification(request.getRequester(), "playground.dictionary.rejected", request);
 		}
 	}

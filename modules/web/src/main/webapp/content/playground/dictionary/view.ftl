@@ -52,28 +52,30 @@
         <table width="100%">
             <tr>
                 <td width="200px" valign="top" class="ui-widget-content ui-state-hover navigation">
-                    <div style="width: 200px !important;">
-                        &nbsp;
-                    <#--
-                                            <label>Ожидают добавления:</label>
+                    <div id="recentlyAdded" class="ui-helper-hidden" style="padding-bottom: 20px">
+                        <label>Недавно добавлены:</label>
 
-                                            <div style="padding-left: 10px; ">
-                                                <#list waitingSuggestions as ws>
-                                                ${ws.word}
-                                                    <br>
-                                                </#list>
-                                            </div>
+                        <div style="padding-left: 10px; ">
+                        </div>
+                    </div>
 
-                                            <div style="text-align: right">
-                                                <a href="/playground/dictionary/changes">список всех изменений</a>
-                                            </div>
-                    -->
+                    <div id="recentlyRemoved" class="ui-helper-hidden" style="padding-bottom: 20px">
+                        <label>Недавно исключены:</label>
+
+                        <div style="padding-left: 10px; ">
+                        </div>
+                    </div>
+
+                    <div id="recentlyUpdated" class="ui-helper-hidden">
+                        <label>Недавно изменены:</label>
+
+                        <div style="padding-left: 10px; ">
+                        </div>
                     </div>
                 </td>
                 <td>
                     <div class="scroll-pane" style="display: inline-block">
-                        <table>
-                        </table>
+                        <table></table>
                     </div>
                 </td>
             </tr>
@@ -91,7 +93,6 @@
     </@wm.ui.table.footer>
 </div>
 </@wm.ui.playground>
-
 
 <script type="text/javascript">
     var dictionaryLanguage = '${dictionary.language}';
