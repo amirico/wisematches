@@ -2,7 +2,6 @@ package wisematches.playground.dictionary.impl;
 
 import wisematches.core.Language;
 import wisematches.playground.dictionary.WordAttribute;
-import wisematches.playground.dictionary.WordDefinition;
 import wisematches.playground.dictionary.WordEntry;
 
 import java.io.BufferedReader;
@@ -62,7 +61,7 @@ public class EffremovaConverterMain {
 		String word = null;
 		String awqe = null;
 		StringBuilder b = new StringBuilder();
-		final Collection<WordDefinition> cases = new ArrayList<>();
+//		final Collection<WordDefinition> cases = new ArrayList<>();
 
 		int token = 0;
 		int pcase = 0;
@@ -75,15 +74,14 @@ public class EffremovaConverterMain {
 			l = l.trim();
 
 			if (l.length() == 0) {
+				String text = "";
+				EnumSet<WordAttribute> attributes = EnumSet.noneOf(WordAttribute.class);
 				if (pcase != 0) {
-					final String text = normalizeDefinition(b.toString());
-					final EnumSet<WordAttribute> attributes = normalizeAttrs(awqe);
-					if (text != null && attributes != null && attributes.size() != 0) {
-						cases.add(new WordDefinition(text, attributes));
-					}
+					text = normalizeDefinition(b.toString());
+					attributes = normalizeAttrs(awqe);
 				}
 				if (word != null && !word.contains("-") && !word.contains(" ") && word.length() >= 2) {
-					entries.add(new WordEntry(normalizeWord(word), cases));
+					entries.add(new WordEntry(normalizeWord(word), text, attributes));
 				}
 				token = 0;
 				pcase = 0;
@@ -93,14 +91,13 @@ public class EffremovaConverterMain {
 				if (token == 0) {
 					word = l;
 					token = 1;
-					cases.clear();
 				} else if (token == 1) {
 					if (l.matches("\\d\\.(.+)")) {
 						if (pcase != 0) {
 							final String text = normalizeDefinition(b.toString());
 							final EnumSet<WordAttribute> attributes = normalizeAttrs(awqe);
 							if (text != null && attributes != null && attributes.size() != 0) {
-								cases.add(new WordDefinition(text, attributes));
+//								cases.add(new WordDefinition(text, attributes));
 							}
 						}
 						pcase += 1;
@@ -126,14 +123,11 @@ public class EffremovaConverterMain {
 
 		for (Iterator<WordEntry> iterator2 = entries.iterator(); iterator2.hasNext(); ) {
 			WordEntry explanation = iterator2.next();
-			for (Iterator<WordDefinition> iterator1 = explanation.getDefinitions().iterator(); iterator1.hasNext(); ) {
-				final WordDefinition aCase = iterator1.next();
-				if (aCase.getAttributes() == null || aCase.getAttributes().isEmpty()) {
-					iterator1.remove();
-				}
+			if (explanation.getAttributes() == null || explanation.getAttributes().isEmpty()) {
+				iterator2.remove();
 			}
 
-			if (explanation.getDefinitions().isEmpty()) {
+			if (explanation.getDefinition() == null || explanation.getDefinition().isEmpty()) {
 				iterator2.remove();
 			}
 		}

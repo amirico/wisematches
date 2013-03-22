@@ -3,7 +3,9 @@ package wisematches.playground.dictionary.impl;
 import wisematches.core.Alphabet;
 import wisematches.core.Language;
 import wisematches.playground.dictionary.Dictionary;
-import wisematches.playground.dictionary.*;
+import wisematches.playground.dictionary.DictionaryException;
+import wisematches.playground.dictionary.WordAttribute;
+import wisematches.playground.dictionary.WordEntry;
 
 import java.io.*;
 import java.util.*;
@@ -25,6 +27,8 @@ public class FileDictionary implements Dictionary {
 	private final NavigableMap<String, WordEntry> entryMap = new TreeMap<>();
 
 	private final Map<String, Collection<WordEntry>> searchCache = new HashMap<>();
+
+	private static final EnumSet<WordAttribute> EMPTY_ATTRIBUTES = EnumSet.noneOf(WordAttribute.class);
 
 	public FileDictionary(Language language, File dictionaryFile) throws DictionaryException {
 		this(language, dictionaryFile, true);
@@ -237,7 +241,6 @@ public class FileDictionary implements Dictionary {
 			String word = null;
 			String attributes = null;
 			final StringBuilder definition = new StringBuilder();
-			final Collection<WordDefinition> definitions = new ArrayList<>();
 
 			final Collection<WordEntry> res = new ArrayList<>();
 			String s = reader.readLine();
@@ -252,22 +255,15 @@ public class FileDictionary implements Dictionary {
 						}
 						definition.append(s.trim());
 					} else {
-						if (attributes != null) {
-							definitions.add(new WordDefinition(definition.toString(), WordAttribute.decode(attributes)));
-						}
 						attributes = s.trim();
 						definition.setLength(0);
 					}
 				} else {
-					if (attributes != null) {
-						definitions.add(new WordDefinition(definition.toString(), WordAttribute.decode(attributes)));
-					}
 					if (word != null) {
-						res.add(new WordEntry(word, definitions));
+						res.add(new WordEntry(word, definition.toString(), attributes == null ? EMPTY_ATTRIBUTES : WordAttribute.decode(attributes)));
 					}
 					attributes = null;
 					definition.setLength(0);
-					definitions.clear();
 					word = s;
 				}
 				s = reader.readLine();
@@ -283,12 +279,10 @@ public class FileDictionary implements Dictionary {
 			final PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), language.getNativeCharset()));
 			for (WordEntry entry : entries) {
 				w.println(entry.getWord());
-				for (WordDefinition definition : entry.getDefinitions()) {
-					w.print("\t");
-					w.println(WordAttribute.encode(definition.getAttributes()));
-					w.print("\t\t");
-					w.println(definition.getText().replaceAll(System.lineSeparator(), System.lineSeparator() + "\t\t"));
-				}
+				w.print("\t");
+				w.println(WordAttribute.encode(entry.getAttributes()));
+				w.print("\t\t");
+				w.println(entry.getDefinition().replaceAll(System.lineSeparator(), System.lineSeparator() + "\t\t"));
 			}
 			w.close();
 		} catch (IOException ex) {

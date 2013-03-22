@@ -1,5 +1,7 @@
 package wisematches.playground.dictionary.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wisematches.core.Language;
 import wisematches.playground.dictionary.Dictionary;
 import wisematches.playground.dictionary.DictionaryException;
@@ -17,6 +19,8 @@ import java.util.Map;
  */
 public class FileDictionaryManager implements DictionaryManager {
 	private final Map<Language, Dictionary> dictionaries = new HashMap<>();
+
+	private static final Logger log = LoggerFactory.getLogger("wisematches.dictionary.FileDictionaryManager");
 
 	public FileDictionaryManager() {
 	}
@@ -44,7 +48,12 @@ public class FileDictionaryManager implements DictionaryManager {
 			final String name = f.getName();
 			if (name.endsWith(".dic")) {
 				Language lang = Language.valueOf(name.substring(0, name.length() - 4).toUpperCase());
-				dictionaries.put(lang, new FileDictionary(lang, f, false));
+				try {
+					dictionaries.put(lang, new FileDictionary(lang, f, false));
+				} catch (DictionaryException ex) {
+					log.error("Dictionary for language {} can't be loaded from {}", lang, file.getAbsolutePath(), ex);
+					throw ex;
+				}
 			}
 		}
 		if (dictionaries.size() == 0) {

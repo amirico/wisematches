@@ -15,6 +15,8 @@
                     </div>
                     <div class="create">
                         <span class="word-view"></span>
+
+                        <span class="attributes-view sample"></span>
                     </div>
                 </td>
                 <td>
@@ -23,13 +25,13 @@
             <tr>
                 <td valign="top" width="100%">
                     <div class="edit" style="display: none">
-                        <label for="definition"></label><textarea id="definition" class="definition-input"
-                                                                  name="definition"
-                                                                  style="width: 100%; height: 200px"></textarea>
+                        <label for="definition"></label>
+
+                        <textarea id="definition" class="definition-input"
+                                  name="definition"
+                                  style="width: 100%; height: 200px"></textarea>
                     </div>
                     <div class="view" style="width: 100%; height: 200px">
-                        <span class="attributes-view sample"></span>
-
                         <span class="definition-view"></span>
                     </div>
                 </td>
@@ -58,7 +60,7 @@
 </div>
 
 <script type="text/javascript">
-    <#assign readOnlySuggestion=readOnlySuggestion?? && (!principal?? || !principal.type.member)/>
+    <#assign readOnlySuggestion=readOnlySuggestion?? || (!principal?? || !principal.type.member)/>
 
     var dictionarySuggestion = new wm.game.dict.Suggestion(dictionaryLanguage, ${readOnlySuggestion?string}, {
     <#list WordAttribute.values() as wa>

@@ -2,14 +2,12 @@ package wisematches.server.services.dictionary.impl;
 
 import wisematches.core.Language;
 import wisematches.playground.dictionary.WordAttribute;
-import wisematches.playground.dictionary.WordDefinition;
 import wisematches.playground.dictionary.WordEntry;
-import wisematches.server.services.dictionary.ChangeSuggestion;
 import wisematches.server.services.dictionary.SuggestionState;
 import wisematches.server.services.dictionary.SuggestionType;
+import wisematches.server.services.dictionary.WordSuggestion;
 
 import javax.persistence.*;
-import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 
@@ -18,7 +16,7 @@ import java.util.EnumSet;
  */
 @Entity
 @Table(name = "dictionary_changes")
-public class HibernateChangeSuggestion implements ChangeSuggestion {
+public class HibernateWordSuggestion implements WordSuggestion {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -62,10 +60,10 @@ public class HibernateChangeSuggestion implements ChangeSuggestion {
 	@Transient
 	private EnumSet<WordAttribute> wordAttributes;
 
-	protected HibernateChangeSuggestion() {
+	protected HibernateWordSuggestion() {
 	}
 
-	public HibernateChangeSuggestion(String word, long requester, Language language, EnumSet<WordAttribute> attributes, String definition, SuggestionType suggestionType) {
+	public HibernateWordSuggestion(String word, long requester, Language language, String definition, EnumSet<WordAttribute> attributes, SuggestionType suggestionType) {
 		this.word = word;
 		this.requester = requester;
 		this.language = language;
@@ -152,12 +150,12 @@ public class HibernateChangeSuggestion implements ChangeSuggestion {
 	}
 
 	WordEntry createWordEntry() {
-		return new WordEntry(word, Collections.singleton(new WordDefinition(definition, getAttributes())));
+		return new WordEntry(word, definition, getAttributes());
 	}
 
 	@Override
 	public String toString() {
-		return "HibernateChangeSuggestion{" +
+		return "HibernateWordSuggestion{" +
 				"id=" + id +
 				", word='" + word + '\'' +
 				", requester=" + requester +

@@ -9,7 +9,7 @@ import java.util.EnumSet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface ChangeSuggestion {
+public interface WordSuggestion {
 	long getId();
 
 	String getWord();
@@ -22,8 +22,6 @@ public interface ChangeSuggestion {
 
 	String getDefinition();
 
-	EnumSet<WordAttribute> getAttributes();
-
 	String getCommentary();
 
 	Date getResolutionDate();
@@ -31,4 +29,6 @@ public interface ChangeSuggestion {
 	SuggestionType getSuggestionType();
 
 	SuggestionState getSuggestionState();
+
+	EnumSet<WordAttribute> getAttributes();
 }

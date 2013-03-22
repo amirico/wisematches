@@ -10,7 +10,7 @@ import java.util.EnumSet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface DictionarySuggestionManager extends SearchManager<ChangeSuggestion, SuggestionContext> {
+public interface DictionarySuggestionManager extends SearchManager<WordSuggestion, SuggestionContext> {
 	void addDictionaryChangeListener(DictionarySuggestionListener listener);
 
 	void removeDictionaryChangeListener(DictionarySuggestionListener listener);
@@ -24,9 +24,9 @@ public interface DictionarySuggestionManager extends SearchManager<ChangeSuggest
 	void updateRequest(Long id, String definition, EnumSet<WordAttribute> attributes);
 
 
-	ChangeSuggestion addWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes);
+	WordSuggestion addWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes);
 
-	ChangeSuggestion updateWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes);
+	WordSuggestion updateWord(Personality person, Language language, String word, String definition, EnumSet<WordAttribute> attributes);
 
-	ChangeSuggestion removeWord(Personality person, Language language, String word);
+	WordSuggestion removeWord(Personality person, Language language, String word);
 }
