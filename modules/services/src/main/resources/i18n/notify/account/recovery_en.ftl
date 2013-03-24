@@ -13,7 +13,7 @@
 
 <p>
     You also can use the following link for your account recovering:
-<@util.link href='/account/recovery/confirmation?language=${context.principal.language.code()}&email=${context.principal.email}&token=${context.recoveryToken}'/>
+<@util.link href='/account/recovery/confirmation?language=${context.principal.language.code}&email=${context.principal.email}&token=${context.recoveryToken}'/>
 </p>
 
 <br>
