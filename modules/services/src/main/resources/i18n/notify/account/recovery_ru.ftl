@@ -1,4 +1,5 @@
-<#-- @ftlvariable name="recoveryToken" type="java.lang.String" -->
+<#-- @ftlvariable name="context.principal" type="wisematches.core.personality.player.account.Account" -->
+<#-- @ftlvariable name="context.recoveryToken" type="java.lang.String" -->
 <#import "../utils.ftl" as util>
 
 <p>
@@ -11,7 +12,7 @@
 
 <p>
     Вы так же можете восстановить пароль использую специальную ссылку:
-<@util.link href='/account/recovery/confirmation?language=${context.principal.language.code()}&email=${context.principal.email}&token=${context.recoveryToken}'/>
+<@util.link href='/account/recovery/confirmation?language=${context.principal.language.code}&email=${context.principal.email}&token=${context.recoveryToken}'/>
 </p>
 
 <br>
