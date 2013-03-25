@@ -157,14 +157,18 @@ class HibernateQueryHelper {
 		return query;
 	}
 
-	static Query searchRegistrationRecords(Session session, RegistrationRecord.Context context, boolean count) {
+	static Query searchRegistrationRecords(Session session, Personality person, RegistrationRecord.Context context, boolean count) {
 		final Language language = context.getLanguage();
 		final Query query = session.createQuery((count ? "select count(*) " : "") +
 				"from HibernateRegistrationRecord as a where a.id.round=:round " +
+				(person != null ? " and a.id.player=:pid" : "") +
 				(context.getTourney() != -1 ? " and a.id.tourney=:tourney " : "") +
 				(language != null ? " and a.language=:language" : ""));
 		query.setInteger("round", context.getRound());
 
+		if (person != null) {
+			query.setParameter("pid", person.getId());
+		}
 		if (context.getTourney() != -1) {
 			query.setInteger("tourney", context.getTourney());
 		}
@@ -175,10 +179,10 @@ class HibernateQueryHelper {
 	}
 
 	static Query searchUnregisteredPlayers(Session session, Tourney tourney) {
-		Query namedQuery = session.createSQLQuery("select a.id as player " +
-				"from account_personality as a left join tourney_regular_subs as s " +
-				"on a.id=s.player where s.tourneyNumber!=:tourney or s.tourneyNumber is null " +
-				"order by a.id asc");
+		Query namedQuery = session.createSQLQuery("SELECT a.id AS player " +
+				"FROM account_personality AS a LEFT JOIN tourney_regular_subs AS s " +
+				"ON a.id=s.player WHERE s.tourneyNumber!=:tourney OR s.tourneyNumber IS null " +
+				"ORDER BY a.id ASC");
 		namedQuery.setParameter("tourney", tourney.getNumber());
 		return namedQuery;
 	}
