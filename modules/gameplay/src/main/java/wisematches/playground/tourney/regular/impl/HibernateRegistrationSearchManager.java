@@ -24,7 +24,7 @@ class HibernateRegistrationSearchManager implements RegistrationSearchManager {
 	@Override
 	public <Ctx extends RegistrationRecord.Context> int getTotalCount(Personality person, Ctx context) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = HibernateQueryHelper.searchRegistrationRecords(session, context, true);
+		final Query query = HibernateQueryHelper.searchRegistrationRecords(session, person, context, true);
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
@@ -32,7 +32,7 @@ class HibernateRegistrationSearchManager implements RegistrationSearchManager {
 	@SuppressWarnings("unchecked")
 	public <Ctx extends RegistrationRecord.Context> List<RegistrationRecord> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
 		final Session session = sessionFactory.getCurrentSession();
-		final Query query = HibernateQueryHelper.searchRegistrationRecords(session, context, false);
+		final Query query = HibernateQueryHelper.searchRegistrationRecords(session, person, context, false);
 		if (range != null) {
 			range.apply(query);
 		}
