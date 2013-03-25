@@ -1,5 +1,3 @@
-<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TourneySection[]" -->
-<#-- @ftlvariable name="languages" type="wisematches.core.Language[]" -->
 <#-- @ftlvariable name="statistics" type="wisematches.playground.tracking.Statistics" -->
 
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
@@ -55,7 +53,7 @@
             </td>
             <td>
                 <div class="opponents ui-layout-table" style="border-spacing: 0">
-                    <#list languages?reverse as l>
+                    <#list Language.values() as l>
                         <div>
                             <div style="font-weight: normal">
                                 <a href="/playground/tourney/subscriptions?t=${announce.number}&l=${l.code}">
@@ -73,24 +71,27 @@
                 </div>
             </td>
         </tr>
-        <tr>
-            <td>
-                <div class="${subscriptionStateClass}">
-                    <label><@message code="tourney.announce.section.label"/>:</label>
-                </div>
-            </td>
-            <td>
-                <div class="${subscriptionStateClass}">
-                                <span id="announceSection" class="section">
-                                    <#if subscription??>
-                                        <@wm.tourney.section subscription.section/>
-                                    <#else>
-                                        <@message code="tourney.section.unspecified"/>
-                                    </#if>
-                                </span>
-                </div>
-            </td>
-        </tr>
+    <#--See below. Section selection is disabled at this moment. -->
+    <#--
+            <tr>
+                <td>
+                    <div class="${subscriptionStateClass}">
+                        <label><@message code="tourney.announce.section.label"/>:</label>
+                    </div>
+                </td>
+                <td>
+                    <div class="${subscriptionStateClass}">
+                                    <span id="announceSection" class="section">
+                                        <#if subscription??>
+                                            <@wm.tourney.section subscription.section/>
+                                        <#else>
+                                            <@message code="tourney.section.unspecified"/>
+                                        </#if>
+                                    </span>
+                    </div>
+                </td>
+            </tr>
+    -->
         <tr>
             <td>
                 <div class="${subscriptionStateClass}">
@@ -140,12 +141,17 @@
                 <#assign subscribedSection=subscription.section/>
                 <#assign subscribedLanguage=subscription.language/>
             <#else>
-                <#list sections as s>
-                    <#if s.isRatingAllowed(statistics.rating)>
-                        <#assign subscribedSection=s/>
-                        <#break>
-                    </#if>
-                </#list>
+            <#--See below. Only GRANDMASTER is allowed at this moment.-->
+            <#--
+
+                            <#list TourneySection.values() as s>
+                                <#if s.isRatingAllowed(statistics.rating)>
+                                    <#assign subscribedSection=s/>
+                                    <#break>
+                                </#if>
+                            </#list>
+            -->
+                <#assign subscribedSection=TourneySection.GRANDMASTER/>
                 <#assign subscribedLanguage=language/>
             </#if>
 
@@ -157,7 +163,7 @@
                     </td>
                     <td width="100%">
                         <select id="subscriptionLanguage" name="language" style="width: 170px;">
-                            <#list languages as l>
+                            <#list Language.values() as l>
                                 <option value="${l}" <#if l=subscribedLanguage>selected="selected"</#if>>
                                     <@wm.tourney.language l/>
                                 </option>
@@ -171,13 +177,17 @@
                     </td>
                     <td>
                         <table id="subscriptionSection">
-                            <#list sections?reverse as s>
-                                <#assign disabled=!s.isRatingAllowed(statistics.rating)/>
+                            <#list TourneySection.values()?reverse as s>
+                                <#assign disabled=(s != TourneySection.GRANDMASTER)/>
+                            <#-- Disable by Issue 313:	Disable sections for tourneys-->
+                            <#--<#assign disabled=!s.isRatingAllowed(statistics.rating)/>-->
                                 <tr>
                                     <td style="vertical-align: middle">
                                         <input type="radio" id="subscriptionSection${s.name()}"
                                                name="section" value="${s.name()}"
                                                <#if s=subscribedSection>checked="checked"</#if>
+                                        <#-- Commented by the same reason-->
+                                        <#--<#if s=subscribedSection>checked="checked"</#if>-->
                                                <#if disabled>disabled="disabled"</#if>/>
                                     </td>
                                     <td <#if disabled>class="ui-state-disabled"</#if>>
@@ -202,17 +212,19 @@
             </table>
         </div>
         <div>
-            <div class="sample"><@message code="tourney.rating.current.label"/>
-                - ${statistics.rating?string}</div>
+        <#--<div class="sample"><@message code="tourney.rating.current.label"/>-->
+        <#--- ${statistics.rating?string}</div>-->
+            <div class="sample"><@message code="tourney.subscribe.section.warn"/>
+            </div>
         </div>
     </form>
 </div>
 
 <script type="text/javascript">
     new wm.game.tourney.Subscription(${announce.number?string}, <#if subscription??>true<#else>false</#if>,
-            {<#list languages as l>
+            {<#list Language.values() as l>
                 "${l.name()}": {
-                    <#list sections as s>
+                    <#list TourneySection.values() as s>
                         "${s.name()}": ${subscriptions.getPlayers(l, s)?string} <#if s_has_next>,</#if>
                     </#list>
                 }<#if l_has_next>,</#if>

@@ -1,6 +1,4 @@
 <#-- @ftlvariable name="tourney" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TourneySection[]" -->
-<#-- @ftlvariable name="winnerPlaces" type="wisematches.playground.tourney.TourneyPlace[]" -->
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">
@@ -37,7 +35,7 @@
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content wrap=true>
-        <#list sections as s>
+        <#list TourneySection.values() as s>
             <#assign division=divisionsTree.getDivision(tourney, language, s)!""/>
             <#if division?has_content>
                 <div class="division">
@@ -64,7 +62,7 @@
                         <div class="division-winners">
                             <dl>
                                 <dt><@message code="tourney.winners.label"/>:</dt>
-                                <#list winnerPlaces as p>
+                                <#list TourneyPlace.values() as p>
                                     <#assign players=p.filter(division.tourneyWinners)/>
                                     <#if players?has_content>
                                         <dd>
