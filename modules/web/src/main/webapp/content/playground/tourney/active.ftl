@@ -1,5 +1,3 @@
-<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TourneySection[]" -->
-<#-- @ftlvariable name="languages" type="wisematches.core.Language[]" -->
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
@@ -40,7 +38,7 @@
                     <tr>
                         <th rowspan="2"><@message code="tourney.tourney.label"/></th>
                         <th rowspan="2"><@message code="tourney.started.label"/></th>
-                        <th colspan="${languages?size?string}"
+                        <th colspan="${Language.values()?size?string}"
                             class="ui-state-default"
                             style="font-size: small; border-bottom: 1px solid !important; white-space: nowrap">
                             <@message code="tourney.active.rs"/>
@@ -48,7 +46,7 @@
                         <th rowspan="2" width="100%"></th>
                     </tr>
                     <tr>
-                        <#list languages?reverse as l>
+                        <#list Language.values()?reverse as l>
                             <th><@wm.tourney.language l/></th>
                         </#list>
                     </tr>
@@ -61,7 +59,7 @@
                         <td>
                         ${messageSource.formatDate(tourney.startedDate, locale)}
                         </td>
-                            <#list languages?reverse as l>
+                            <#list Language.values()?reverse as l>
                             <td>
                                 <@divisionsInfo tourney=tourney language=l/>
                             </td>
@@ -89,7 +87,7 @@
         "aoColumns": [
             { "bSortable": true },
             { "bSortable": true },
-        <#list languages as l>
+        <#list Language.values() as l>
             { "bSortable": true },
         </#list>
             { "bSortable": false }

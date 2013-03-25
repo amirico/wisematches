@@ -1,7 +1,4 @@
-<#-- @ftlvariable name="sections" type="wisematches.playground.tourney.regular.TourneySection[]" -->
-<#-- @ftlvariable name="languages" type="wisematches.core.Language[]" -->
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
-<#-- @ftlvariable name="winnerPlaces" type="wisematches.playground.tourney.TourneyPlace[]" -->
 <#-- @ftlvariable name="divisionsTree" type="wisematches.playground.tourney.regular.TourneyTree" -->
 
 <#include "/core.ftl">
@@ -31,7 +28,7 @@
                         <th rowspan="2"><@message code="tourney.tourney.label"/></th>
                         <th rowspan="2"><@message code="tourney.language.label"/></th>
                         <th rowspan="2"><@message code="tourney.level.label"/></th>
-                        <th colspan="${(winnerPlaces?size)?string}"
+                        <th colspan="${(TourneyPlace.values()?size)?string}"
                             class="ui-state-default"
                             style="font-size: small; border-bottom: 1px solid !important; white-space: nowrap">
                             <@message code="tourney.winners.label"/>
@@ -39,7 +36,7 @@
                         <th rowspan="2" width="100%"></th>
                     </tr>
                     <tr>
-                        <#list winnerPlaces as p>
+                        <#list TourneyPlace.values() as p>
                             <th>
                                 <@message code="tourney.place.${p.place}.label"/>
                             </th>
@@ -69,7 +66,7 @@
                                     <@wm.tourney.section d.section/>
                                 </td>
 
-                                <#list winnerPlaces as p>
+                                <#list TourneyPlace.values() as p>
                                     <td>
                                         <#list p.filter(d.tourneyWinners) as w>
                                             <div>

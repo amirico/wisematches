@@ -1,46 +1,46 @@
 package wisematches.server.web.servlet.view.freemarker;
 
-import org.springframework.ui.Model;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class FreeMarkerEnumMap<E extends Enum<E>> implements Map<String, E> {
-	private final Map<String, E> internalMap;
+	private final Class<E> type;
+
+	private final Map<String, E> keys = new LinkedHashMap<>();
+	private final Collection<E> values = new LinkedList<>(); // required for ?reverse operation
 
 	private static final Map<Class<?>, FreeMarkerEnumMap<?>> cache = new HashMap<>();
 
 	private FreeMarkerEnumMap(Class<E> type) {
+		this.type = type;
+
 		final E[] enumConstants = type.getEnumConstants();
-		internalMap = new HashMap<>(enumConstants.length);
 		for (E enumConstant : enumConstants) {
-			internalMap.put(enumConstant.name(), enumConstant);
+			keys.put(enumConstant.name(), enumConstant);
+			values().add(enumConstant);
 		}
 	}
 
 	@Override
 	public int size() {
-		return internalMap.size();
+		return values.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return internalMap.isEmpty();
+		return values.isEmpty();
 	}
 
 	@Override
 	public boolean containsKey(Object key) {
-		return internalMap.containsKey(key);
+		return keys.containsKey(key);
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		return internalMap.containsValue(value);
+		return values.contains(value);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public final class FreeMarkerEnumMap<E extends Enum<E>> implements Map<String, E
 
 	@Override
 	public E get(Object key) {
-		return internalMap.get(key);
+		return keys.get(key);
 	}
 
 	@Override
@@ -70,17 +70,17 @@ public final class FreeMarkerEnumMap<E extends Enum<E>> implements Map<String, E
 
 	@Override
 	public Set<String> keySet() {
-		return internalMap.keySet();
+		return keys.keySet();
 	}
 
 	@Override
 	public Collection<E> values() {
-		return internalMap.values();
+		return values;
 	}
 
 	@Override
 	public Set<Entry<String, E>> entrySet() {
-		return internalMap.entrySet();
+		return keys.entrySet();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -91,10 +91,5 @@ public final class FreeMarkerEnumMap<E extends Enum<E>> implements Map<String, E
 			cache.put(type, enumView);
 		}
 		return enumView;
-	}
-
-	public static <E extends Enum<E>> void expose(Class<E> type, Model model) {
-		final FreeMarkerEnumMap<E> view = FreeMarkerEnumMap.valueOf(type);
-		model.addAllAttributes(view.internalMap);
 	}
 }

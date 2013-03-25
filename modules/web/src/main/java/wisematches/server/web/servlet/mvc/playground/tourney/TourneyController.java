@@ -19,7 +19,6 @@ import wisematches.core.search.Range;
 import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.tourney.TourneyEntity;
-import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tourney.regular.*;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
@@ -78,7 +77,6 @@ public class TourneyController extends WisematchesController {
 		final TourneyDivision.Context context = new TourneyDivision.Context(EnumSet.of(TourneyEntity.State.FINISHED));
 		final List<TourneyDivision> divisions = tourneyManager.searchTourneyEntities(null, context, null, null);
 
-		model.addAttribute("winnerPlaces", TourneyPlace.values());
 		model.addAttribute("divisionsTree", new TourneyTree(divisions.toArray(new TourneyDivision[divisions.size()])));
 
 		setupAnnounce(model);
@@ -138,9 +136,6 @@ public class TourneyController extends WisematchesController {
 	}
 
 	private String showTourneyView(Tourney tourney, Model model) {
-		model.addAttribute("sections", TourneySection.values());
-		model.addAttribute("winnerPlaces", TourneyPlace.values());
-
 		final TourneyRound.Context ctx = new TourneyRound.Context(tourney.getId(), null);
 		final List<TourneyRound> rounds = tourneyManager.searchTourneyEntities(null, ctx, null, null);
 		model.addAttribute("divisionsTree", new TourneyTree(rounds.toArray(new TourneyRound[rounds.size()])));
@@ -254,8 +249,6 @@ public class TourneyController extends WisematchesController {
 		}
 		if (announce != null) {
 			model.addAttribute("announce", announce);
-			model.addAttribute("sections", TourneySection.values());
-			model.addAttribute("languages", Language.values());
 
 			final Statistics statistic = statisticManager.getStatistic(personality);
 			model.addAttribute("statistics", statistic);

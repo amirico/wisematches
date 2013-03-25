@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="languages" type="wisematches.core.Language[]" -->
 <#-- @ftlvariable name="announce" type="wisematches.playground.tourney.regular.Tourney" -->
 
 <#-- @ftlvariable name="tourney" type="wisematches.playground.tourney.regular.Tourney" -->

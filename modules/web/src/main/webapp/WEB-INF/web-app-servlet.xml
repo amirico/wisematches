@@ -99,6 +99,9 @@
                 <value>wisematches.playground.scribble.ScribbleMoveType</value>
                 <value>wisematches.playground.dictionary.WordAttribute</value>
                 <value>wisematches.server.services.relations.PlayerSearchArea</value>
+                <value>wisematches.core.Language</value>
+                <value>wisematches.playground.tourney.TourneyPlace</value>
+                <value>wisematches.playground.tourney.regular.TourneySection</value>
             </list>
         </property>
 
