@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE web-app
-        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-        "http://java.sun.com/dtd/web-app_2_3.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
 
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -168,6 +164,16 @@
     <error-page>
         <exception-type>org.springframework.security.web.authentication.rememberme.CookieTheftException</exception-type>
         <location>/account/loginAuth?error=insufficient</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/info/error</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/info/error</location>
     </error-page>
 
     <error-page>

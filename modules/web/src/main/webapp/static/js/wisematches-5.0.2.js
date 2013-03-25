@@ -2580,7 +2580,9 @@ wm.scribble.Players = function (board) {
             showPlayerTimeout(board.getPlayerTurn(), board.getRemainedTime().text);
         } else {
             hideActiveMarker();
-            showChallengeButton();
+            if (!board.isReadOnly()) {
+                showChallengeButton();
+            }
             $.each(board.getPlayers(), function (i, p) {
                 if (p.score.winner) {
                     showWinnerMarker(p.id);
@@ -3267,7 +3269,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
                 validateHandTile(tiles);
             }
         }
-    }
+    };
 
     var updateGameState = function (state) {
         var oldResolution = board.resolution;
@@ -3420,6 +3422,10 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
         return locked;
     };
 
+    this.isReadOnly = function () {
+        return playboard.getPlayer(viewer) == null;
+    };
+
     this.getPlayer = function (playerId) {
         var res = null;
         $.each(players, function (i, player) {
@@ -3427,6 +3433,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
                 res = player;
                 return false;
             }
+            return true;
         });
         return res;
     };
