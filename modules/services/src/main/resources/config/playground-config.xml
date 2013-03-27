@@ -25,6 +25,10 @@
                     <property name="personalityManager" ref="personalityManager"/>
                     <property name="tourneyManager" ref="regularTourneyManager"/>
                 </bean>
+                <bean class="wisematches.server.services.award.impl.assembly.DictionaryJudicialAssembly">
+                    <property name="personalityManager" ref="personalityManager"/>
+                    <property name="dictionarySuggestionManager" ref="dictionarySuggestionManager"/>
+                </bean>
             </list>
         </property>
     </bean>
@@ -62,7 +66,7 @@
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
 
-    <bean id="dictionaryChangeManager"
+    <bean id="dictionarySuggestionManager"
           class="wisematches.server.services.dictionary.impl.HibernateDictionarySuggestionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="dictionaryManager" ref="dictionaryManager"/>
@@ -209,7 +213,7 @@
 
         <property name="accountManager" ref="accountManager"/>
         <property name="abuseReportManager" ref="abuseReportManager"/>
-        <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
+        <property name="dictionarySuggestionManager" ref="dictionarySuggestionManager"/>
     </bean>
 
     <bean class="wisematches.server.services.notify.impl.NotificationOriginCenter">
@@ -222,7 +226,7 @@
         <property name="proposalManager" ref="scribbleProposalManager"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="propertiesManager" ref="reliablePropertiesManager"/>
-        <property name="dictionarySuggestionManager" ref="dictionaryChangeManager"/>
+        <property name="dictionarySuggestionManager" ref="dictionarySuggestionManager"/>
         <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
         <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
     </bean>

@@ -519,8 +519,8 @@ public class NotificationOriginCenterTest {
 		final Capture<DictionarySuggestionListener> tourneyListener = new Capture<>(CaptureType.ALL);
 
 		final DictionarySuggestionManager suggestionManager = createMock(DictionarySuggestionManager.class);
-		suggestionManager.addDictionaryChangeListener(capture(tourneyListener));
-		suggestionManager.removeDictionaryChangeListener(capture(tourneyListener));
+		suggestionManager.addDictionarySuggestionListener(capture(tourneyListener));
+		suggestionManager.removeDictionarySuggestionListener(capture(tourneyListener));
 		replay(suggestionManager);
 
 		publisherCenter.setDictionarySuggestionManager(suggestionManager);
