@@ -1,37 +1,17 @@
 <#-- @ftlvariable name="suggestions" type="wisematches.server.services.dictionary.WordSuggestion[]" -->
-<#-- @ftlvariable name="dictionaryLanguage" type="wisematches.core.Language" -->
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>
 
 <#assign moderator=false/>
-<#assign readOnlySuggestion=false/>
 <@wm.security.authorize granted="moderator"><#assign moderator=true/></@wm.security.authorize>
-
-<#assign types=["ADD", "REMOVE", "UPDATE"]/>
-<#assign states=["APPROVED", "REJECTED", "WAITING"]/>
 
 <@wm.ui.playground id="dictionaryWidget">
     <@wm.ui.table.header>
-        <@message code="dict.label"/> > <@message code="suggestion.label"/>
+        <@message code="dict.label"/> > <@message code="expectant.label"/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
-    <#--
-        <div id="suggestionStates" class="wm-ui-buttonset">
-            <#list states as a>
-                <input id="suggestionState${a}" name="suggestionStates" type="radio" value="${a}"/>
-                <label for="suggestionState${a}"><@message code="suggestion.state.${a?lower_case}"/></label>
-            </#list>
-        </div>
-
-        <div id="suggestionTypes" class="wm-ui-buttonset">
-            <#list types as a>
-                <input id="suggestionType${a}" name="suggestionTypes" type="checkbox" value="${a}" checked="checkeds"/>
-                <label for="suggestionType${a}"><@message code="suggestion.type.${a?lower_case}"/></label>
-            </#list>
-        </div>
-    -->
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -46,9 +26,6 @@
             </th>
             <th>
                 <@message code="suggestion.type.label"/>
-            </th>
-            <th>
-                <@message code="suggestion.state.label"/>
             </th>
             <th>
                 <@message code="suggestion.player.label"/>
@@ -84,9 +61,6 @@
                 </td>
                 <td class="type">
                     <@message code="suggestion.type.${s.suggestionType.name()?lower_case}.label"/>
-                </td>
-                <td class="state">
-                    <@message code="suggestion.state.${s.suggestionState.name()?lower_case}.label"/>
                 </td>
                 <td class="requester">
                     <@wm.player.name personalityManager.getPerson(s.requester) false false true/>
@@ -138,15 +112,16 @@
             { "bSortable": true },
             { "bSortable": true },
             { "bSortable": true },
-            { "bSortable": true },
             { "bSortable": false },
             { "bSortable": false }
         ]
     });
+</script>
 
-    <#if moderator>
-    var dictionaryLanguage = '${dictionaryLanguage}';
+<#if moderator>
+    <#include "card.ftl"/>
 
+<script type="text/javascript">
     function modifyWordEntry(link) {
         link = $(link);
         var row = link.parent().parent();
@@ -158,9 +133,10 @@
             return e.className;
         });
 
-        dictionarySuggestion.modifyWordEntry({
+        dictionaryManager.editWordEntry({
             id: id,
             word: word,
+            language: 'ru',
             definition: definition,
             attributes: attributes
         });
@@ -176,7 +152,7 @@
                 ids.push($(v).val());
             });
 
-            $.post('/playground/dictionary/resolveWordEntry.ajax?type=' + type, JSON.stringify({type: type, ids: ids, commentary: commentary}), function (result) {
+            $.post('/playground/dictionary/resolve.ajax?type=' + type, JSON.stringify({type: type, ids: ids, commentary: commentary}), function (result) {
                 if (result.success) {
                     wm.util.url.reload();
                 } else {
@@ -214,10 +190,8 @@
             });
         });
     });
-    </#if>
 </script>
 
-<#if moderator>
 <div id="resolutionCommentForm" class="ui-helper-hidden">
     <table width="100%">
         <tr>
@@ -235,5 +209,3 @@
     </table>
 </div>
 </#if>
-
-<#if moderator><#include "card.ftl"/></#if>

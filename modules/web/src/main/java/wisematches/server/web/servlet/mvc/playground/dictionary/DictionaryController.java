@@ -1,6 +1,5 @@
 package wisematches.server.web.servlet.mvc.playground.dictionary;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,11 @@ import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordDefinitionForm;
 import wisematches.server.web.servlet.mvc.playground.dictionary.form.WordResolutionForm;
+import wisematches.server.web.servlet.sdo.DataTablesRequest;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 import wisematches.server.web.servlet.sdo.dictionary.WordSuggestionInfo;
 
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -42,8 +39,10 @@ public class DictionaryController extends WisematchesController {
 	private DictionarySuggestionManager dictionarySuggestionManager;
 
 	private static final EnumSet<SuggestionState> SUGGESTION_STATES = EnumSet.of(SuggestionState.APPROVED);
-	private static final EnumSet<SuggestionType> SUGGESTION_TYPES = EnumSet.of(SuggestionType.ADD, SuggestionType.REMOVE, SuggestionType.UPDATE);
+	private static final EnumSet<SuggestionType> SUGGESTION_TYPES = EnumSet.of(SuggestionType.CREATE, SuggestionType.REMOVE, SuggestionType.UPDATE);
 	private static final Orders SUGGESTIONS_ORDERS = Orders.of(Order.asc("suggestionType"), Order.desc("resolutionDate"), Order.desc("requestDate"));
+
+	private static final EnumSet<SuggestionState> WAITING_SUGGESTIONS = EnumSet.of(SuggestionState.WAITING);
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.DictionaryController");
 
@@ -51,7 +50,7 @@ public class DictionaryController extends WisematchesController {
 	}
 
 	@RequestMapping("view")
-	public String showDictionaryPage(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
+	public String viewPage(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
 		final Language language = getLanguage(lang, locale);
 		if (language == null) {
 			throw new UnknownEntityException(language, "dictionary");
@@ -66,15 +65,34 @@ public class DictionaryController extends WisematchesController {
 		return "/content/playground/dictionary/view";
 	}
 
-	@RequestMapping("changes")
-	public String showDictionaryChangesPage(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
-		final Language language = getLanguage(lang, locale);
-		final SuggestionContext ctx = new SuggestionContext(language, null, EnumSet.of(SuggestionState.WAITING, SuggestionState.APPROVED, SuggestionState.REJECTED), null);
+	@RequestMapping("personal")
+	public String personalPage(@RequestParam(value = "p", required = false) Long pid, Model model) throws UnknownEntityException {
+		final Personality person = (pid == null ? getPrincipal() : personalityManager.getPerson(pid));
+		model.addAttribute("player", person);
+		return "/content/playground/dictionary/personal";
+	}
 
-		final List<WordSuggestion> suggestions = dictionarySuggestionManager.searchEntities(null, ctx, null, null);
-		model.addAttribute("suggestions", suggestions);
-		model.addAttribute("dictionaryLanguage", language);
-		return "/content/playground/dictionary/changes";
+	@RequestMapping("expectant")
+	public String expectantPage(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
+		final Language language = lang != null ? getLanguage(lang, locale) : null;
+		final SuggestionContext ctx = new SuggestionContext(language, null, WAITING_SUGGESTIONS, null);
+		model.addAttribute("suggestions", dictionarySuggestionManager.searchEntities(null, ctx, null, null));
+		return "/content/playground/dictionary/expectant";
+	}
+
+	@RequestMapping("personalWordEntries.ajax")
+	public ServiceResponse personalWordEntriesService(Long pid, @RequestBody DataTablesRequest request, Locale locale) {
+		final Personality person = personalityManager.getPerson(pid);
+		final SuggestionContext ctx = new SuggestionContext(null, null, WAITING_SUGGESTIONS, null);
+
+		final int totalCount = dictionarySuggestionManager.getTotalCount(person, ctx);
+		final List<WordSuggestion> suggestions = dictionarySuggestionManager.searchEntities(person, ctx, request.getOrders(), request.getLimit());
+		final List<WordSuggestionInfo> res = new ArrayList<>(suggestions.size());
+		for (WordSuggestion s : suggestions) {
+			final Personality p = personalityManager.getPerson(s.getRequester());
+			res.add(new WordSuggestionInfo(p, s, playerStateManager, messageSource, locale));
+		}
+		return responseFactory.success(request.replay(totalCount, res));
 	}
 
 	@RequestMapping("loadWordEntry.ajax")
@@ -118,7 +136,6 @@ public class DictionaryController extends WisematchesController {
 
 		final Date dt = new Date(System.currentTimeMillis() - 604800000L); // 7 days
 		final List<WordSuggestion> suggestions = dictionarySuggestionManager.searchEntities(null, new SuggestionContext(language, SUGGESTION_TYPES, SUGGESTION_STATES, dt), SUGGESTIONS_ORDERS, null);
-
 		int index = 0;
 		final WordSuggestionInfo[] res = new WordSuggestionInfo[suggestions.size()];
 		for (WordSuggestion suggestion : suggestions) {
@@ -128,9 +145,25 @@ public class DictionaryController extends WisematchesController {
 		return responseFactory.success(res);
 	}
 
-	@RequestMapping("suggestWordEntry.ajax")
+	@Secured("moderator")
+	@RequestMapping("update.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse suggestWordEntryService(@RequestBody WordDefinitionForm form, Locale locale) {
+	public ServiceResponse updateService(@RequestBody WordDefinitionForm form, Locale locale) {
+		try {
+			final EnumSet<WordAttribute> wordAttributes = getWordAttributes(form.getAttributes());
+			dictionarySuggestionManager.updateRequest(form.getId(), form.getDefinition(), wordAttributes);
+		} catch (IllegalArgumentException ex) {
+			return responseFactory.failure(ex.getMessage(), locale);
+		} catch (Exception ex) {
+			log.error("Approval request can't be processed: {}", form, ex);
+			return responseFactory.failure("dict.suggest.err.system", locale);
+		}
+		return responseFactory.success();
+	}
+
+	@RequestMapping("suggest.ajax")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ServiceResponse suggestService(@RequestBody WordDefinitionForm form, Locale locale) {
 		Language language;
 		try {
 			language = Language.valueOf(form.getLanguage().toUpperCase());
@@ -171,7 +204,7 @@ public class DictionaryController extends WisematchesController {
 		try {
 			final boolean contains = dictionaryManager.getDictionary(language).contains(word);
 			switch (suggestionType) {
-				case ADD:
+				case CREATE:
 					if (contains) {
 						return responseFactory.failure("dict.suggest.err.word.exist", locale);
 					}
@@ -198,25 +231,9 @@ public class DictionaryController extends WisematchesController {
 	}
 
 	@Secured("moderator")
-	@RequestMapping("updateWordEntry.ajax")
+	@RequestMapping("resolve.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse updateWordEntryService(@RequestBody WordDefinitionForm form, Locale locale) {
-		try {
-			final EnumSet<WordAttribute> wordAttributes = getWordAttributes(form.getAttributes());
-			dictionarySuggestionManager.updateRequest(form.getId(), form.getDefinition(), wordAttributes);
-		} catch (IllegalArgumentException ex) {
-			return responseFactory.failure(ex.getMessage(), locale);
-		} catch (Exception ex) {
-			log.error("Approval request can't be processed: {}", form, ex);
-			return responseFactory.failure("dict.suggest.err.system", locale);
-		}
-		return responseFactory.success();
-	}
-
-	@Secured("moderator")
-	@RequestMapping("resolveWordEntry.ajax")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ServiceResponse resolveWordEntryService(@RequestBody WordResolutionForm form, Locale locale) {
+	public ServiceResponse resolveService(@RequestBody WordResolutionForm form, Locale locale) {
 		try {
 			if ("approve".equalsIgnoreCase(form.getType())) {
 				dictionarySuggestionManager.approveRequests(form.getCommentary(), form.getIds());
@@ -229,6 +246,7 @@ public class DictionaryController extends WisematchesController {
 		}
 		return responseFactory.success();
 	}
+
 
 	private Language getLanguage(String lang, Locale locale) {
 		final Language language;

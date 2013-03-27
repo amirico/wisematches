@@ -3,14 +3,13 @@ package wisematches.server.web.servlet.sdo.dictionary;
 import wisematches.core.Personality;
 import wisematches.playground.GameMessageSource;
 import wisematches.playground.dictionary.WordAttribute;
-import wisematches.server.services.dictionary.SuggestionState;
-import wisematches.server.services.dictionary.SuggestionType;
 import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.sdo.InternationalisedInfo;
 import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
 import wisematches.server.web.servlet.sdo.time.TimeInfo;
 
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Locale;
 
@@ -50,18 +49,28 @@ public class WordSuggestionInfo extends InternationalisedInfo {
 	}
 
 	public TimeInfo getResolutionDate() {
-		return new TimeInfo(suggestion.getResolutionDate(), messageSource, locale);
+		final Date resolutionDate = suggestion.getResolutionDate();
+		if (resolutionDate != null) {
+			return new TimeInfo(resolutionDate, messageSource, locale);
+		}
+		return null;
 	}
 
-	public SuggestionType getSuggestionType() {
-		return suggestion.getSuggestionType();
+	public String getSuggestionType() {
+		return messageSource.getMessage("suggestion.type." + suggestion.getSuggestionType().name().toLowerCase() + ".label", locale);
 	}
 
-	public SuggestionState getSuggestionState() {
-		return suggestion.getSuggestionState();
+	public String getSuggestionState() {
+		return messageSource.getMessage("suggestion.state." + suggestion.getSuggestionState().name().toLowerCase() + ".label", locale);
 	}
 
-	public EnumSet<WordAttribute> getAttributes() {
-		return suggestion.getAttributes();
+	public String[] getAttributes() {
+		final EnumSet<WordAttribute> attributes = suggestion.getAttributes();
+		int index = 0;
+		String[] res = new String[attributes.size()];
+		for (WordAttribute attribute : attributes) {
+			res[index++] = messageSource.getMessage("dict.word.attribute." + attribute.name().toLowerCase() + ".label", locale);
+		}
+		return res;
 	}
 }

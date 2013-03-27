@@ -30,7 +30,6 @@
     };
 
     var board = new wm.scribble.Board(boardInfo, <#if player??>${player.id}<#else>0</#if>, "wildcardSelectionPanel", scribbleController, boardSettings);
-    var dictionaryLanguage = board.getLanguage();
 </script>
 
 <#if !viewMode>

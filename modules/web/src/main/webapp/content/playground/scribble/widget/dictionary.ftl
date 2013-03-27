@@ -20,5 +20,5 @@
 </@wm.ui.widget>
 
 <script type="text/javascript">
-    var dictionary = new wm.scribble.Dictionary(board, dictionarySuggestion, ${boardSettings.checkWords?string});
+    var dictionary = new wm.scribble.Dictionary(board, dictionaryManager, ${boardSettings.checkWords?string});
 </script>

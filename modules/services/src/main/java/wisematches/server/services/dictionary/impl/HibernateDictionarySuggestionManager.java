@@ -76,7 +76,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 
 				final WordEntry entry = dictionary.getWordEntry(r.getWord());
 				final SuggestionType suggestionType = r.getSuggestionType();
-				if (suggestionType == SuggestionType.ADD) {
+				if (suggestionType == SuggestionType.CREATE) {
 					dictionary.addWordEntry(r.createWordEntry());
 				} else if (suggestionType == SuggestionType.REMOVE) {
 					dictionary.removeWordEntry(entry);
@@ -130,7 +130,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 			throw new IllegalArgumentException("Word already exist");
 		}
 
-		final HibernateWordSuggestion r = new HibernateWordSuggestion(word, person.getId(), language, definition, attributes, SuggestionType.ADD);
+		final HibernateWordSuggestion r = new HibernateWordSuggestion(word, person.getId(), language, definition, attributes, SuggestionType.CREATE);
 		sessionFactory.getCurrentSession().save(r);
 
 		for (DictionarySuggestionListener listener : listeners) {
@@ -185,7 +185,7 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public <Ctx extends SuggestionContext> List<WordSuggestion> searchEntities(Personality person, Ctx context, Orders orders, Range range) {
-		Query q = createSearchQuery(false, person, context, null);
+		Query q = createSearchQuery(false, person, context, orders);
 		if (range != null) {
 			range.apply(q);
 		}

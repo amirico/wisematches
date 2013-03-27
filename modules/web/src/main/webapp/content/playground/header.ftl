@@ -63,10 +63,11 @@
                             </div>
 
                             <div class="wm-ui-splitbutton">
-                                <a href="/playground/dictionary/view?l=${language}"><@message code="game.menu.dictionary.label"/></a>
+                                <a href="/playground/dictionary/view"><@message code="game.menu.dictionary.label"/></a>
                                 <ul class="ui-helper-hidden">
                                     <li>
-                                        <a href="/playground/dictionary/changes?l=${language}"><@message code="game.menu.dictionary.changes.label"/></a>
+                                        <a href="/playground/dictionary/personal"><@message code="game.menu.dictionary.changes.personal.label"/></a>
+                                        <a href="/playground/dictionary/expectant"><@message code="game.menu.dictionary.changes.expectant.label"/></a>
                                     </li>
                                 </ul>
                             </div>

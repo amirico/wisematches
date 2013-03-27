@@ -926,192 +926,14 @@ wm.game.Search = function (columns, scriplet, language) {
     }
 };
 
-wm.game.dict.Suggestion = function (lang, globaReadOnly, i18n) {
-    var instance = this;
-    var wordEntryEditor = $("#wordEntryEditor");
-    var wordEntryAction = wordEntryEditor.find("#action");
-
-    var setAction = function (action) {
-        wordEntryAction.val(action);
-
-        var title = wordEntryEditor.dialog('option', 'title');
-        if ("UPDATE" == action) {
-            title = i18n['title.edit'];
-        } else if ("VIEW" == action) {
-            title = i18n['title.view'];
-        } else if ("ADD" == action) {
-            title = i18n['title.add'];
-        } else if ("MODIFY" == action) {
-            title = i18n['title.modify'];
-        }
-        wordEntryEditor.dialog('option', 'title', title);
-    };
-
-    var getAction = function (action) {
-        return wordEntryAction.val();
-    };
-
-    var isAction = function (action) {
-        return wordEntryAction.val() == action;
-    };
-
-    var sendRequest = function (processor) {
-        var v = wordEntryEditor.parent();
-        wm.ui.lock(v);
-        var serializeObject = wordEntryEditor.find("form").serializeObject();
-        $.post("/playground/dictionary/" + processor + ".ajax", JSON.stringify(serializeObject), function (response) {
-            if (response.success) {
-                wm.ui.unlock(v, i18n['waiting'], false);
-                wordEntryEditor.dialog("close");
-            } else {
-                wm.ui.unlock(v, response.message, true);
-            }
-        });
-    };
-
-    var startEditing = function (action) {
-        setAction(action);
-        wordEntryEditor.find(".view").hide();
-        wordEntryEditor.find(".edit").show();
-        wordEntryEditor.find(".warn").show();
-        $("#wordEditorRemoveBtn").hide();
-        $("#wordEditorChangeBtn").find("span").text(i18n['save']);
-    };
-
-    var resetEntryEditor = function () {
-        if (isAction("ADD")) {
-            $("#wordEditorRemoveBtn").show();
-            wordEntryEditor.find(".create").toggle();
-        }
-        setAction("VIEW");
-        wordEntryEditor.find(".view").show();
-        wordEntryEditor.find(".edit").hide();
-        wordEntryEditor.find(".warn").hide();
-
-        wordEntryEditor.find(".word-view").text("");
-        wordEntryEditor.find(".word-input").val("");
-        wordEntryEditor.find(".definition-view").text("");
-        wordEntryEditor.find(".definition-input").val("");
-        $("input[name=attributes]").prop('checked', false);
-        wordEntryEditor.find(".attributes-view").text("");
-    };
-
-    this.addWordEntry = function (defaultValue) {
-        instance.viewWordEntry(null);
-        if (defaultValue != undefined && defaultValue != null) {
-            wordEntryEditor.find(".word-input").val(defaultValue);
-        }
-    };
-
-    this.loadWordEntry = function (word) {
-        instance.checkWordEntry(word, function (wordEntry, summary) {
-            if (wordEntry != null) {
-                instance.viewWordEntry(wordEntry);
-                wm.ui.unlock(null);
-            } else {
-                wm.ui.unlock(null, summary, true);
-            }
-        });
-    };
-
-    this.modifyWordEntry = function (wordEntry) {
-        instance.viewWordEntry(wordEntry);
-        startEditing("MODIFY");
-    };
-
-    this.viewWordEntry = function (wordEntry, readOnly) {
-        readOnly = (readOnly == undefined ? false : readOnly);
-        var buttons = [];
-        if (!globaReadOnly && !readOnly) {
-            buttons.push({
-                id: 'wordEditorChangeBtn',
-                text: i18n['edit'],
-                click: function () {
-                    if (isAction("VIEW")) {
-                        startEditing("UPDATE");
-                    } else if (isAction("MODIFY")) {
-                        sendRequest("updateWordEntry");
-                    } else {
-                        sendRequest("suggestWordEntry");
-                    }
-                }
-            });
-
-            buttons.push({
-                id: 'wordEditorRemoveBtn',
-                text: i18n['remove'],
-                click: function () {
-                    wm.ui.confirm(i18n['remove.title'], i18n['remove.confirm'], function (approve) {
-                        if (approve) {
-                            setAction("REMOVE");
-                            sendRequest("suggestWordEntry");
-                        }
-                    });
-                }
-            });
-        }
-
-        buttons.push({
-            id: 'wordEditorCancelBtn',
-            text: wm.i18n.value('button.cancel', 'Cancel'),
-            click: function () {
-                $(this).dialog("close");
-            }
-        });
-
-        var dialog = wordEntryEditor.dialog({
-            title: i18n['title.view'],
-            dialogClass: 'word-editor-dlg',
-            draggable: false,
-            modal: true,
-            autoOpen: false,
-            resizable: false,
-            width: 700,
-            buttons: buttons
-        });
-
-        resetEntryEditor();
-
-        if (wordEntry != null) {
-            wordEntryEditor.find("input[name=id]").val(wordEntry.id);
-            wordEntryEditor.find(".word-view").text(wordEntry.word);
-            wordEntryEditor.find(".word-input").val(wordEntry.word);
-            if (wordEntry.definition != null && wordEntry.definition != undefined) {
-                wordEntryEditor.find(".definition-view").html(wordEntry.definition.replace(/\n/g, '<br />'));
-                wordEntryEditor.find(".definition-input").val(wordEntry.definition);
-
-                var attrs = "";
-                $.each(wordEntry.attributes, function (i, v) {
-                    attrs += " " + i18n[v];
-                    $("#" + v).prop('checked', true);
-                });
-                wordEntryEditor.find(".attributes-view").text(attrs);
-            }
-        } else {
-            startEditing("ADD");
-            wordEntryEditor.find(".create").toggle();
-            $("#wordEditorChangeBtn").find("span").text(i18n['add']);
-        }
-        dialog.dialog("open");
-    };
-
-    this.checkWordEntry = function (word, callback) {
-        $.post("/playground/dictionary/loadWordEntry.ajax?l=" + lang + "&w=" + word, function (response) {
-            if (response.success) {
-                callback(response.data, null);
-            } else {
-                callback(null, response.message);
-            }
-        });
-    };
-};
-
-wm.game.dict.Dictionary = function (lang, i18n) {
+wm.game.Dictionary = function (lang, dictionaryManager, i18n) {
     var instance = this;
     var dictionary = $("#dictionary");
 
     var activeTopLetter;
     var activeSubLetter;
+
+    var activeWordEntries;
 
     var topAlphabet = dictionary.find("#topAlphabet");
     var topAlphabetLinks = topAlphabet.find("a");
@@ -1126,7 +948,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
     var wordsViewStatus = dictionary.find("#wordsCount span");
     var wordsViewScrollPane = wordsViewPanel.jScrollPane({showArrows: false, horizontalGutter: 10, hideFocus: true}).data('jsp');
 
-    var createViewItem = function (entry) {
+    var createViewItem = function (entry, index) {
         var def = "";
         if (def != "") {
             def += "<br>";
@@ -1135,12 +957,13 @@ wm.game.dict.Dictionary = function (lang, i18n) {
         $.each(entry.attributes, function (k, a) {
             attrs += " " + i18n[a];
         });
-        def += "<span class='sample'>" + attrs + "</span> " + entry.definition;
-        return $("" +
-                "<tr>" +
-                "<td><a href='#' onclick='dictionarySuggestion.loadWordEntry(\"" + entry.word + "\"); return false;'>" + entry.word + "<a/></td>" +
-                "<td>" + def + "</td>" +
-                "</tr>");
+
+        var desc = $("<td>" + def + "<span class='sample'>" + attrs + "</span> " + entry.definition + "</td>");
+        var link = $("<td></td>").append($("<a href='#'></a>").text(entry.word).click(function (e) {
+            e.preventDefault();
+            dictionaryManager.viewWordEntry(entry, false);
+        }));
+        return $("<tr></tr>").append(link).append(desc);
     };
 
     var loadWordEntries = function (prefix) {
@@ -1152,11 +975,12 @@ wm.game.dict.Dictionary = function (lang, i18n) {
         } else {
             $.post("/playground/dictionary/loadWordEntries.ajax?l=" + lang + "&p=" + prefix, null, function (response) {
                 if (response.success) {
-                    var words = response.data;
-                    wordsViewStatus.text(words.length);
+                    activeWordEntries = response.data;
+                    wordsViewStatus.text(activeWordEntries.length);
 
-                    $.each(words, function (i, v) {
-                        wordsViewTable.append(createViewItem(v));
+                    $.each(activeWordEntries, function (index, entry) {
+                        entry.language = lang;
+                        wordsViewTable.append(createViewItem(entry, index));
                     });
                     wordsViewScrollPane.reinitialise();
                     wm.ui.unlock(wordsViewPanel);
@@ -1263,12 +1087,13 @@ wm.game.dict.Dictionary = function (lang, i18n) {
 
     var initSuggestions = function () {
         $.post('/playground/dictionary/loadRecentSuggestions.ajax?l=' + lang, function (result) {
-            function initSuggestionsView(sugggestions, view, readOnly) {
+            function initSuggestionsView(sugggestions, view) {
                 if (sugggestions.length > 0) {
                     $.each(sugggestions, function (i, e) {
-                        var link = $('<a href="#">' + e.word + '</a>');
+                        e.language = lang;
+                        var link = $('<a href="#"></a>').text(e.word);
                         link.click(function () {
-                            dictionarySuggestion.viewWordEntry(sugggestions[i], readOnly);
+                            dictionaryManager.viewWordEntry(e, true);
                         });
                         view.append(link);
                         if (i != sugggestions.length - 1) {
@@ -1284,7 +1109,7 @@ wm.game.dict.Dictionary = function (lang, i18n) {
                 var removed = [];
                 var updated = [];
                 $.each(result.data, function (i, e) {
-                    if (e.suggestionType == "ADD") {
+                    if (e.suggestionType == "CREATE") {
                         added.push(e);
                     } else if (e.suggestionType == "REMOVE") {
                         removed.push(e);
@@ -1293,9 +1118,9 @@ wm.game.dict.Dictionary = function (lang, i18n) {
                     }
                 });
 
-                initSuggestionsView(added, $("#recentlyAdded").find("div"), false);
-                initSuggestionsView(removed, $("#recentlyRemoved").find("div"), true);
-                initSuggestionsView(updated, $("#recentlyUpdated").find("div"), true);
+                initSuggestionsView(added, $("#recentlyAdded").find("div"));
+                initSuggestionsView(removed, $("#recentlyRemoved").find("div"));
+                initSuggestionsView(updated, $("#recentlyUpdated").find("div"));
             } else {
                 wm.ui.unlock(null, result.message, true);
             }
@@ -1304,6 +1129,179 @@ wm.game.dict.Dictionary = function (lang, i18n) {
 
     initByHash();
     initSuggestions();
+
+    $("#addNewWord").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function () {
+        dictionaryManager.createWordEntry('', lang);
+    });
+};
+
+wm.game.dict.DictionaryManager = function (readOnly, i18n) {
+    var instance = this;
+    var globalReadOnly = readOnly;
+    var wordEntryEditor = $("#wordEntryEditor");
+    var wordEntryAction = wordEntryEditor.find("#action");
+
+    var isAction = function (action) {
+        return wordEntryAction.val() == action;
+    };
+
+    var setAction = function (action) {
+        wordEntryAction.val(action);
+
+        var title = wordEntryEditor.dialog('option', 'title');
+        if ("UPDATE" == action) {
+            title = i18n['title.edit'];
+        } else if ("VIEW" == action) {
+            title = i18n['title.view'];
+        } else if ("CREATE" == action) {
+            title = i18n['title.add'];
+        } else if ("MODIFY" == action) {
+            title = i18n['title.modify'];
+        }
+        wordEntryEditor.dialog('option', 'title', title);
+    };
+
+    var sendRequest = function (processor) {
+        var v = wordEntryEditor.parent();
+        wm.ui.lock(v);
+        var serializeObject = wordEntryEditor.find("form").serializeObject();
+        $.post("/playground/dictionary/" + processor + ".ajax", JSON.stringify(serializeObject), function (response) {
+            if (response.success) {
+                wm.ui.unlock(v, i18n['waiting'], false);
+                wordEntryEditor.dialog("close");
+            } else {
+                wm.ui.unlock(v, response.message, true);
+            }
+        });
+    };
+
+    var startEditing = function (action) {
+        setAction(action);
+        wordEntryEditor.find(".view").hide();
+        wordEntryEditor.find(".edit").show();
+        wordEntryEditor.find(".warn").show();
+        $("#wordEditorRemoveBtn").hide();
+        $("#wordEditorChangeBtn").find("span").text(i18n['save']);
+    };
+
+    var resetEntryEditor = function () {
+        if (isAction("CREATE")) {
+            $("#wordEditorRemoveBtn").show();
+            wordEntryEditor.find(".create").toggle();
+        }
+        setAction("VIEW");
+        wordEntryEditor.find(".view").show();
+        wordEntryEditor.find(".edit").hide();
+        wordEntryEditor.find(".warn").hide();
+
+        wordEntryEditor.find(".word-view").text("");
+        wordEntryEditor.find(".word-input").val("");
+        wordEntryEditor.find(".language-view").text("");
+        wordEntryEditor.find(".language-input").val("");
+        wordEntryEditor.find(".definition-view").text("");
+        wordEntryEditor.find(".definition-input").val("");
+        $("input[name=attributes]").prop('checked', false);
+        wordEntryEditor.find(".attributes-view").text("");
+    };
+
+    this.createWordEntry = function (word, lang) {
+        instance.viewWordEntry({word: word, language: lang});
+
+        wordEntryEditor.find(".create").toggle();
+        $("#wordEditorChangeBtn").find("span").text(i18n['add']);
+        startEditing("CREATE");
+    };
+
+    this.viewWordEntry = function (entry, readOnly) {
+        readOnly = (readOnly == undefined ? false : readOnly);
+        var buttons = [];
+        if (!globalReadOnly && !readOnly) {
+            buttons.push({
+                id: 'wordEditorChangeBtn',
+                text: i18n['edit'],
+                click: function () {
+                    if (isAction("VIEW")) {
+                        startEditing("UPDATE");
+                    } else if (isAction("MODIFY")) {
+                        sendRequest("update");
+                    } else {
+                        sendRequest("suggest");
+                    }
+                }
+            });
+
+            buttons.push({
+                id: 'wordEditorRemoveBtn',
+                text: i18n['remove'],
+                click: function () {
+                    wm.ui.confirm(i18n['remove.title'], i18n['remove.confirm'], function (approve) {
+                        if (approve) {
+                            setAction("REMOVE");
+                            sendRequest("suggest");
+                        }
+                    });
+                }
+            });
+        }
+
+        buttons.push({
+            id: 'wordEditorCancelBtn',
+            text: wm.i18n.value('button.cancel', 'Cancel'),
+            click: function () {
+                $(this).dialog("close");
+            }
+        });
+
+        var dialog = wordEntryEditor.dialog({
+            title: i18n['title.view'],
+            dialogClass: 'word-editor-dlg',
+            draggable: false,
+            modal: true,
+            autoOpen: false,
+            resizable: false,
+            width: 700,
+            buttons: buttons
+        });
+
+        resetEntryEditor();
+
+        if (entry != null) {
+            wordEntryEditor.find("input[name=id]").val(entry.id);
+            wordEntryEditor.find(".word-view").text(entry.word);
+            wordEntryEditor.find(".word-input").val(entry.word);
+            wordEntryEditor.find(".language-view").text(wm.i18n.value('language.' + entry.language.toLowerCase()));
+            wordEntryEditor.find(".language-input").val(entry.language);
+            if (entry.definition != null && entry.definition != undefined) {
+                wordEntryEditor.find(".definition-view").html(entry.definition.replace(/\n/g, '<br />'));
+                wordEntryEditor.find(".definition-input").val(entry.definition);
+
+                var attrs = "";
+                $.each(entry.attributes, function (i, v) {
+                    attrs += " " + i18n[v];
+                    $("#" + v).prop('checked', true);
+                });
+                wordEntryEditor.find(".attributes-view").text(attrs);
+            }
+        }
+        dialog.dialog("open");
+    };
+
+    this.getWordEntry = function (word, lang, callback) {
+        $.post("/playground/dictionary/loadWordEntry.ajax?l=" + lang + "&w=" + word, function (response) {
+            var entry = response.data;
+            if (response.success) {
+                entry.language = lang;
+                callback(entry, null);
+            } else {
+                callback(null, response.message);
+            }
+        });
+    };
+
+    this.editWordEntry = function (entry) {
+        instance.viewWordEntry(entry);
+        startEditing("MODIFY");
+    };
 };
 
 wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, language) {
@@ -2083,7 +2081,7 @@ wm.scribble.Selection = function (board) {
             });
 };
 
-wm.scribble.Dictionary = function (board, suggestion, checkWords) {
+wm.scribble.Dictionary = function (board, dictionaryManager, checkWords) {
     var instance = this;
     var checkTimer = undefined;
     var input = board.getPlayboardElement('.word-value');
@@ -2131,7 +2129,7 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
 
         var parent = input.parent();
         wm.ui.lock(parent);
-        suggestion.checkWordEntry(text, function (we, message) {
+        dictionaryManager.getWordEntry(text, board.getLanguage(), function (we, message) {
             if (isAutoChecker()) {
                 return;
             }
@@ -2191,9 +2189,9 @@ wm.scribble.Dictionary = function (board, suggestion, checkWords) {
         if (activeAction == 'ui-icon-search') {
             checkWord();
         } else if (activeAction == 'ui-icon-pencil') {
-            suggestion.addWordEntry(input.val());
+            dictionaryManager.createWordEntry(input.val(), board.getLanguage());
         } else if (activeAction == 'ui-icon-script') {
-            suggestion.viewWordEntry(wordEntry);
+            dictionaryManager.viewWordEntry(wordEntry, false);
         }
         e.preventDefault();
     });

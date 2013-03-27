@@ -3,7 +3,8 @@
 
 <p>
     Your change suggestion has been accepted. Word <strong>${context.word}</strong> has been
-<#if context.suggestionType == "ADD">added to the dictionary<#elseif context.suggestionType == "REMOVE">removed from the
+<#if context.suggestionType == "CREATE">added to the dictionary<#elseif context.suggestionType == "REMOVE">removed from
+    the
     dictionary<#else>updated</#if>.
 </p>
 <p>

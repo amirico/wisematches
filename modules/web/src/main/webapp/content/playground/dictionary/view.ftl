@@ -4,7 +4,7 @@
 <@wm.ui.playground id="dictionaryWidget">
 <div id="dictionary">
     <@wm.ui.table.header>
-        <@message code="dict.label"/>
+        <@message code="dict.label"/> > <@message code="language.${dictionary.language.code?lower_case}"/>
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left" class="search-panel">
@@ -94,15 +94,11 @@
 </div>
 </@wm.ui.playground>
 
+<#include "card.ftl"/>
+
 <script type="text/javascript">
-    var dictionaryLanguage = '${dictionary.language}';
-
     $(document).ready(function () {
-        $("#addNewWord").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function () {
-            dictionarySuggestion.addWordEntry();
-        });
-
-        var dictionary = new wm.game.dict.Dictionary(dictionaryLanguage, {
+        new wm.game.Dictionary('${dictionary.language}', dictionaryManager, {
         <#list WordAttribute.values() as wa>
             "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
         </#list>
@@ -111,5 +107,3 @@
         });
     });
 </script>
-
-<#include "card.ftl"/>

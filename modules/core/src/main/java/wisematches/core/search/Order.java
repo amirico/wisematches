@@ -7,10 +7,6 @@ public final class Order {
 	private boolean ascending;
 	private String propertyName;
 
-	public String toString() {
-		return propertyName + ' ' + (ascending ? "asc" : "desc");
-	}
-
 	/**
 	 * Constructor for Order.
 	 *
@@ -48,5 +44,10 @@ public final class Order {
 
 	public String getPropertyName() {
 		return propertyName;
+	}
+
+	@Override
+	public String toString() {
+		return propertyName + " " + (ascending ? "asc" : "desc");
 	}
 }

@@ -94,9 +94,9 @@ public class HibernateDictionarySuggestionManagerTest {
 		expect(dictionaryManager.getDictionary(Language.EN)).andReturn(dictionary).times(3);
 		replay(dictionaryManager);
 
-		int countAdd = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.ADD), null, null));
+		int countAdd = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.CREATE), null, null));
 		changeManager.addWord(PERSON, Language.EN, "poofgjnwhj", "This is testing word", EnumSet.of(WordAttribute.MASCULINE));
-		assertEquals(countAdd + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.ADD), null, null)));
+		assertEquals(countAdd + 1, changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.CREATE), null, null)));
 
 		int countUpdate = changeManager.getTotalCount(null, new SuggestionContext(null, EnumSet.of(SuggestionType.UPDATE), null, null));
 		changeManager.updateWord(PERSON, Language.EN, "poofgjnwhj", "This is testing word 2", EnumSet.of(WordAttribute.FEMININE));
@@ -115,7 +115,7 @@ public class HibernateDictionarySuggestionManagerTest {
 		assertEquals(EnumSet.of(WordAttribute.MASCULINE), add.getAttributes());
 		assertEquals("This is testing word", add.getDefinition());
 		assertEquals(SuggestionState.WAITING, add.getSuggestionState());
-		assertEquals(SuggestionType.ADD, add.getSuggestionType());
+		assertEquals(SuggestionType.CREATE, add.getSuggestionType());
 
 		final WordSuggestion update = requestCapture.getValues().get(1);
 		assertEquals("poofgjnwhj", update.getWord());
