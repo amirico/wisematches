@@ -96,6 +96,7 @@
             <list>
                 <value>wisematches.core.Membership</value>
                 <value>wisematches.server.services.award.AwardType</value>
+                <value>wisematches.server.services.award.AwardWeight</value>
                 <value>wisematches.playground.scribble.ScribbleMoveType</value>
                 <value>wisematches.playground.dictionary.WordAttribute</value>
                 <value>wisematches.server.services.relations.PlayerSearchArea</value>

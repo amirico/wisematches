@@ -13,6 +13,7 @@
 
 [#-- @ftlvariable name="Membership" type="wisematches.core.Membership.static" --]
 [#-- @ftlvariable name="AwardType" type="wisematches.server.services.award.AwardType.static" --]
+[#-- @ftlvariable name="AwardWeight" type="wisematches.server.services.award.AwardWeight.static" --]
 [#-- @ftlvariable name="WordAttribute" type="wisematches.playground.dictionary.WordAttribute.static" --]
 [#-- @ftlvariable name="ScribbleMoveType" type="wisematches.playground.scribble.ScribbleMoveType.static" --]
 [#-- @ftlvariable name="PlayerSearchArea" type="wisematches.server.services.relations.PlayerSearchArea.static" --]

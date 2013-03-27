@@ -1,5 +1,6 @@
 <div>
     <a href="membership">Change Membership</a>
+    <a href="awards">Grant Award</a>
 </div>
 
 <div>
