@@ -10,6 +10,7 @@
     <util:list id="awardDescriptors">
         <bean parent="award" c:code="tourney.winner" c:type="MEDAL"/>
         <bean parent="award" c:code="robot.conqueror" c:type="BADGE"/>
+        <bean parent="award" c:code="dictionary.editor" c:type="BADGE"/>
         <bean parent="award" c:code="word.longest" c:type="RIBBON"/>
     </util:list>
 </beans>

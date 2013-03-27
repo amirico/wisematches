@@ -33,8 +33,8 @@
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.freeow-1.0.2.min.js"/>"></script>
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.hoverIntent-0.0.6.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.0.2.css"/>"/>
-    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.0.2.js"/>"></script>
+    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.1.0.css"/>"/>
+    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.1.0.js"/>"></script>
 
 <#include "analytics.ftl">
 <#include 'localization.ftl'/>

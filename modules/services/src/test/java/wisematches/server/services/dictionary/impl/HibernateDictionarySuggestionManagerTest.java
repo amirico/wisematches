@@ -55,7 +55,7 @@ public class HibernateDictionarySuggestionManagerTest {
 		changeListener = createNiceMock(DictionarySuggestionListener.class);
 
 		changeManager = new HibernateDictionarySuggestionManager();
-		changeManager.addDictionaryChangeListener(changeListener);
+		changeManager.addDictionarySuggestionListener(changeListener);
 
 		changeManager.setSessionFactory(sessionFactory);
 		changeManager.setDictionaryManager(dictionaryManager);

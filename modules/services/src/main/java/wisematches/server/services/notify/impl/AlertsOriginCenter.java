@@ -87,13 +87,13 @@ public class AlertsOriginCenter {
 
 	public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
 		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.removeDictionaryChangeListener(dictionaryListener);
+			this.dictionarySuggestionManager.removeDictionarySuggestionListener(dictionaryListener);
 		}
 
 		this.dictionarySuggestionManager = dictionarySuggestionManager;
 
 		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.addDictionaryChangeListener(dictionaryListener);
+			this.dictionarySuggestionManager.addDictionarySuggestionListener(dictionaryListener);
 		}
 	}
 

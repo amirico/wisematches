@@ -79,4 +79,5 @@
         <property name="userDetailsChecker" ref="userDetailsChecker"/>
         <property name="personalityDetailsService" ref="personalityDetailsManager"/>
     </bean>
+    <bean class="wisematches.server.services.award.impl.assembly.DictionaryJudicialAssembly" id=""/>
 </beans>

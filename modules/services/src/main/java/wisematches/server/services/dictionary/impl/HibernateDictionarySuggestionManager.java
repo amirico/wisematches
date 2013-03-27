@@ -35,14 +35,14 @@ public class HibernateDictionarySuggestionManager implements DictionarySuggestio
 	}
 
 	@Override
-	public void addDictionaryChangeListener(DictionarySuggestionListener listener) {
+	public void addDictionarySuggestionListener(DictionarySuggestionListener listener) {
 		if (listener != null) {
 			listeners.add(listener);
 		}
 	}
 
 	@Override
-	public void removeDictionaryChangeListener(DictionarySuggestionListener listener) {
+	public void removeDictionarySuggestionListener(DictionarySuggestionListener listener) {
 		listeners.remove(listener);
 	}
 

@@ -11,9 +11,9 @@ import java.util.EnumSet;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface DictionarySuggestionManager extends SearchManager<WordSuggestion, SuggestionContext> {
-	void addDictionaryChangeListener(DictionarySuggestionListener listener);
+	void addDictionarySuggestionListener(DictionarySuggestionListener listener);
 
-	void removeDictionaryChangeListener(DictionarySuggestionListener listener);
+	void removeDictionarySuggestionListener(DictionarySuggestionListener listener);
 
 
 	void rejectRequests(String commentary, Long... ids);
