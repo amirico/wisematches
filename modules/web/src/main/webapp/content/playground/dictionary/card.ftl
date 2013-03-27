@@ -3,9 +3,8 @@
 <div id="wordEntryEditor" class="ui-helper-hidden">
     <form>
         <input name="id" type="hidden" value=""/>
-        <input name="language" type="hidden" value="${language.name()}"/>
-
         <input id="action" name="action" type="hidden" value="VIEW"/>
+        <input class="language-input" name="language" type="hidden" value="""/>
 
         <table width="100%" cellpadding="3">
             <tr>
@@ -20,6 +19,7 @@
                     </div>
                 </td>
                 <td>
+                    <div class="sample" style="text-align: right">(<span class="language-view"></span>)</div>
                 </td>
             </tr>
             <tr>
@@ -60,9 +60,7 @@
 </div>
 
 <script type="text/javascript">
-    <#assign readOnlySuggestion=readOnlySuggestion?? || (!principal?? || !principal.type.member)/>
-
-    var dictionarySuggestion = new wm.game.dict.Suggestion(dictionaryLanguage, ${readOnlySuggestion?string}, {
+    var dictionaryManager = new wm.game.dict.DictionaryManager(${(!principal?? || !principal.type.member)?string}, {
     <#list WordAttribute.values() as wa>
         "${wa.name()}": "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
     </#list>

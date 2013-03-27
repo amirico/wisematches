@@ -528,7 +528,7 @@ public class NotificationOriginCenterTest {
 		final WordSuggestion suggestion = createMock(WordSuggestion.class);
 		expect(suggestion.getRequester()).andReturn(p1.getId()).times(2);
 		expect(suggestion.getWord()).andReturn("MockSuggest").times(2);
-		expect(suggestion.getSuggestionType()).andReturn(SuggestionType.ADD);
+		expect(suggestion.getSuggestionType()).andReturn(SuggestionType.CREATE);
 		expect(suggestion.getCommentary()).andReturn(null);
 		replay(suggestion);
 

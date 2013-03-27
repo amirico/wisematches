@@ -1537,6 +1537,7 @@ a.ui-icon {
 
 #dictionaryChanges td {
     white-space: nowrap;
+    vertical-align: top;
 }
 
 #dictionaryChanges td.definition {

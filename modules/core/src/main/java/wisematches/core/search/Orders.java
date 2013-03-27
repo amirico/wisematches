@@ -2,6 +2,7 @@ package wisematches.core.search;
 
 import org.hibernate.Criteria;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -111,5 +112,10 @@ public final class Orders implements Iterable<Order> {
 				throw new UnsupportedOperationException("Not implemented");
 			}
 		};
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(orders);
 	}
 }
