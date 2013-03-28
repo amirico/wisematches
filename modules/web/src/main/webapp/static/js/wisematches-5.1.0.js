@@ -1025,17 +1025,23 @@ wm.game.Dictionary = function (lang, dictionaryManager, i18n) {
     var initAlphabets = function (value) {
         if (value.length > 0) {
             var letter = value.charAt(0).toUpperCase();
-            selectTopLetter(topAlphabet.find('a[href$="#' + letter + '"]'));
+            var el = topAlphabet.find('a[href$="#' + letter + '"]');
+            if (el.length != 0) {
+                selectTopLetter(el);
+
+                if (value.length > 1) {
+                    var subLetter = letter.toLowerCase() + value.charAt(1).toLowerCase();
+                    selectSubLetter(subAlphabet.find('a[href$="#' + subLetter + '"]'));
+                } else {
+                    selectSubLetter(null);
+                }
+            } else {
+                selectSubLetter(null);
+                selectTopLetter(null);
+            }
         } else {
             selectSubLetter(null);
             selectTopLetter(null);
-        }
-
-        if (value.length > 1) {
-            var subLetter = letter.toLowerCase() + value.charAt(1).toLowerCase();
-            selectSubLetter(subAlphabet.find('a[href$="#' + subLetter + '"]'));
-        } else {
-            selectSubLetter(null);
         }
     };
 
@@ -1290,7 +1296,9 @@ wm.game.dict.DictionaryManager = function (readOnly, i18n) {
         $.post("/playground/dictionary/loadWordEntry.ajax?l=" + lang + "&w=" + word, function (response) {
             var entry = response.data;
             if (response.success) {
-                entry.language = lang;
+                if (entry != null) {
+                    entry.language = lang;
+                }
                 callback(entry, null);
             } else {
                 callback(null, response.message);
