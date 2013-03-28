@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import wisematches.core.security.PersonalityContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,11 +43,9 @@ public class ErrorController {
 
 	private ModelAndView processException(String errorCode, Exception exception, Object... arguments) {
 		final ModelAndView res = new ModelAndView("/content/errors");
-		res.addObject("title", "title.playboard");
 		res.addObject("errorCode", errorCode);
 		res.addObject("errorArguments", arguments);
 		res.addObject("errorException", exception);
-		res.addObject("personality", PersonalityContext.getPrincipal());
 		return res;
 	}
 }
