@@ -857,6 +857,7 @@ wm.game.Search = function (columns, scriplet, language) {
     var callback;
 
     var search = this;
+    var filterForm = $("#filterForm");
 
     $.each(columns, function (i, a) {
         if (a.mDataProp == 'player') {
@@ -877,31 +878,31 @@ wm.game.Search = function (columns, scriplet, language) {
         ],
         "sAjaxSource": "/playground/players/load.ajax",
         "fnServerData": function (sSource, aoData, fnCallback) {
-            $.fn.dataTable.defaults.fnServerData(sSource + "?area=" + $("input[name='searchTypes']:checked").val(), aoData, function (res) {
+            $.fn.dataTable.defaults.fnServerData(sSource + "?" + filterForm.serialize(), aoData, function (res) {
                 players = res.aaData;
                 fnCallback(res);
             });
         }
     });
 
+    var clearSearch = function () {
+        filterForm.find('input').val("");
+        filterForm.find('option[value=""]').attr('selected', 'selected');
+        reloadContent();
+    };
+
     var reloadContent = function () {
         resultTable.fnDraw();
     };
 
-    resultTable.find("tbody").click(function (event) {
-        var p = $(event.target).closest('tr');
-        search.closeDialog();
-        var pos = resultTable.fnGetPosition(p.get(0));
-        callback(players[pos]['player']);
-    });
-
     this.closeDialog = function () {
         $("#searchPlayerWidget").dialog('close');
+
     };
 
     this.openDialog = function (c, clazz) {
         callback = c;
-        reloadContent();
+        clearSearch();
         $("#searchPlayerWidget").dialog({
             title: language['title'],
             dialogClass: clazz,
@@ -919,11 +920,34 @@ wm.game.Search = function (columns, scriplet, language) {
         return false;
     };
 
-    $("#searchTypes").buttonset().change(reloadContent);
-
-    if (!scriplet) {
-        reloadContent();
+    if (scriplet) {
+        resultTable.find("tbody").click(function (event) {
+            var p = $(event.target).closest('tr');
+            search.closeDialog();
+            var pos = resultTable.fnGetPosition(p.get(0));
+            callback(players[pos]['player']);
+        });
     }
+
+    $("#searchTypes").buttonset().change(reloadContent);
+    $("#searchFilterReset").button().click(clearSearch);
+    $("#searchFilterDo").button().click(reloadContent);
+    $("#searchFilterApply").button().click(reloadContent);
+
+    $("#playersSearchFilter").keyup(function (e) {
+        if (e.which == 13) {
+            reloadContent();
+        }
+    });
+
+    var visible = false;
+    $("#playersSearchAdvanced").click(function () {
+        $("#advancedFilter").toggle();
+        visible = !visible;
+        if (!visible) {
+            clearSearch();
+        }
+    });
 };
 
 wm.game.Dictionary = function (lang, dictionaryManager, i18n) {
@@ -2098,7 +2122,7 @@ wm.scribble.Dictionary = function (board, dictionaryManager, checkWords) {
     var wordEntry = undefined;
     var activeAction;
 
-    const CHECK_WORD_TIMEOUT = 1000;
+    const CHECK_WORD_TIMEOUT = 3000;
 
     var startAutoChecker = function () {
         stopAutoChecker();

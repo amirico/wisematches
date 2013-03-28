@@ -48,9 +48,9 @@ import wisematches.server.services.notify.Notification;
 import wisematches.server.services.notify.NotificationScope;
 import wisematches.server.services.notify.NotificationService;
 import wisematches.server.services.props.impl.MemoryPropertiesManager;
-import wisematches.server.services.relations.PlayerEntityBean;
-import wisematches.server.services.relations.PlayerSearchArea;
-import wisematches.server.services.relations.ScribblePlayerSearchManager;
+import wisematches.server.services.relations.players.PlayerContext;
+import wisematches.server.services.relations.players.PlayerEntityBean;
+import wisematches.server.services.relations.players.impl.HibernatePlayerSearchManager;
 
 import java.util.*;
 
@@ -81,7 +81,7 @@ public class NotificationOriginCenterTest {
 	private PlatformTransactionManager transactionManager;
 
 	@Autowired
-	private ScribblePlayerSearchManager playerSearchManager;
+	private HibernatePlayerSearchManager playerSearchManager;
 
 	private ScribbleBoard board1;
 	private ScribbleBoard board2;
@@ -120,7 +120,7 @@ public class NotificationOriginCenterTest {
 		expect(vocabulary.contains(isA(String.class))).andReturn(true).anyTimes();
 		replay(vocabulary);
 
-		final List<PlayerEntityBean> peb = playerSearchManager.searchEntities(new DefaultVisitor(Language.EN), PlayerSearchArea.PLAYERS, null, Range.limit(2));
+		final List<PlayerEntityBean> peb = playerSearchManager.searchEntities(new DefaultVisitor(Language.EN), new PlayerContext(null, null), null, Range.limit(2));
 
 		p1 = new DefaultMember(peb.get(0).getPlayer(), "mock1", "mock1@localhost", TimeZone.getDefault(), Membership.BASIC, Language.RU);
 		p2 = new DefaultMember(peb.get(1).getPlayer(), "mock2", "mock2@localhost", TimeZone.getDefault(), Membership.BASIC, Language.EN);

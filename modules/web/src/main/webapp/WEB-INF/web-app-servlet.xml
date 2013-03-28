@@ -99,7 +99,7 @@
                 <value>wisematches.server.services.award.AwardWeight</value>
                 <value>wisematches.playground.scribble.ScribbleMoveType</value>
                 <value>wisematches.playground.dictionary.WordAttribute</value>
-                <value>wisematches.server.services.relations.PlayerSearchArea</value>
+                <value>wisematches.server.services.relations.players.PlayerRelationship</value>
                 <value>wisematches.core.Language</value>
                 <value>wisematches.playground.tourney.TourneyPlace</value>
                 <value>wisematches.playground.tourney.regular.TourneySection</value>

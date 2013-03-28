@@ -1,7 +1,7 @@
 package wisematches.server.web.servlet.sdo.person;
 
 import wisematches.playground.GameMessageSource;
-import wisematches.server.services.relations.PlayerEntityBean;
+import wisematches.server.services.relations.players.PlayerEntityBean;
 
 import java.util.Locale;
 

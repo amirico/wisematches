@@ -53,7 +53,8 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="playerSearchManager" class="wisematches.server.services.relations.ScribblePlayerSearchManager">
+    <bean id="playerSearchManager"
+          class="wisematches.server.services.relations.players.impl.HibernatePlayerSearchManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
