@@ -62,7 +62,7 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 
 		final Query query1 = sql ? session.createSQLQuery(query.toString()) : session.createQuery(query.toString());
 		query1.setCacheable(true);
-		query1.setParameter("pid", person.getId());
+		initParameters(person, context, query1);
 		return ((Number) query1.uniqueResult()).intValue();
 	}
 
@@ -129,16 +129,22 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 			query1.setResultTransformer(new AliasToBeanResultTransformer(entityDescriptor.getDesiredEntityType()));
 		}
 		query1.setCacheable(true);
-		final String[] namedParameters = query1.getNamedParameters();
-		for (String namedParameter : namedParameters) {
-			if ("pid".equals(namedParameter)) {
-				query1.setParameter("pid", person != null ? person.getId() : null);
-			}
-		}
+		initParameters(person, context, query1);
 		if (range != null) {
 			range.apply(query1);
 		}
 		return query1.list();
+	}
+
+	private <Ctx extends C> void initParameters(Personality person, Ctx context, Query query1) {
+		final String[] namedParameters = query1.getNamedParameters();
+		for (String namedParameter : namedParameters) {
+			if ("pid".equals(namedParameter)) {
+				query1.setParameter("pid", person != null ? person.getId() : null);
+			} else {
+				query1.setParameter(namedParameter, getNamedParameter(context, namedParameter));
+			}
+		}
 	}
 
 	protected abstract String getEntitiesList(final C context);
@@ -146,6 +152,8 @@ public abstract class AbstractDescriptiveSearchManager<T, C> implements Descript
 	protected abstract String getWhereCriterias(final C context);
 
 	protected abstract String getGroupCriterias(final C context);
+
+	protected abstract Object getNamedParameter(final C context, final String name);
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

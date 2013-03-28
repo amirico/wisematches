@@ -18,7 +18,7 @@ import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribbleSettings;
-import wisematches.server.services.relations.PlayerSearchArea;
+import wisematches.server.services.relations.players.PlayerRelationship;
 import wisematches.server.web.servlet.mvc.playground.scribble.AbstractScribbleController;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleForm;
 import wisematches.server.web.servlet.mvc.playground.scribble.game.form.CreateScribbleTab;
@@ -70,7 +70,7 @@ public class CreateScribbleController extends AbstractScribbleController {
 		model.addAttribute("restriction", restrictionManager.validateRestriction(player, "games.active", getActiveGamesCount(player)));
 		model.addAttribute("maxOpponents", restrictionManager.getRestrictionThreshold("scribble.opponents", player));
 
-		model.addAttribute("searchArea", PlayerSearchArea.FRIENDS);
+		model.addAttribute("searchArea", PlayerRelationship.FRIENDS);
 
 		final int finishedGamesCount = getFinishedGamesCount(player);
 

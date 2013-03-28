@@ -1,9 +1,9 @@
-package wisematches.server.services.relations;
+package wisematches.server.services.relations.players;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum PlayerSearchArea {
+public enum PlayerRelationship {
 	/**
 	 * Players will be searched only in friends list.
 	 */
@@ -11,9 +11,5 @@ public enum PlayerSearchArea {
 	/**
 	 * Players will be searched only in played formerly.
 	 */
-	FORMERLY,
-	/**
-	 * All players will be searched.
-	 */
-	PLAYERS
+	FORMERLY
 }

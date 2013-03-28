@@ -1,21 +1,103 @@
 <#-- @ftlvariable name="scriplet" type="java.lang.Boolean" -->
-<#-- @ftlvariable name="searchArea" type="wisematches.server.services.relations.PlayerSearchArea" -->
+<#-- @ftlvariable name="searchArea" type="wisematches.server.services.relations.players.PlayerRelationship" -->
 <#include "/core.ftl">
 
 <@wm.ui.table.dtinit/>
 
-<#assign searchAreas=[PlayerSearchArea.FRIENDS, PlayerSearchArea.FORMERLY, PlayerSearchArea.PLAYERS]/>
+<style type="text/css">
+    .filter div {
+        display: inline-block;
+    }
+</style>
+
+<#assign searchAreas=[PlayerRelationship.FRIENDS.name(), PlayerRelationship.FORMERLY.name(), 'PLAYERS']/>
 
 <#if !scriplet??><#assign scriplet=true/></#if>
 <div id="searchPlayerWidget" <#if scriplet>class="ui-helper-hidden" style="padding-top: 10px" </#if>>
-<@wm.ui.table.toolbar>
-    <div id="searchTypes" class="wm-ui-buttonset">
-        <#list searchAreas as a>
-            <input id="search${a.name()?lower_case?capitalize}" name="searchTypes" type="radio" value="${a.name()}"
-                   <#if a=searchArea>checked="checked"</#if>/>
-            <label for="search${a.name()?lower_case?capitalize}"><@message code="search.type.${a.name()?lower_case}"/></label>
-        </#list>
-    </div>
+<@wm.ui.table.toolbar align="left">
+    <form id="filterForm">
+        <table width="100%">
+            <tr>
+                <td valign="top" align="left">
+                    <div class="simpleFilter">
+                        <label for="playersSearchFilter"><@message code="search.column.player"/>: </label>
+                        <input id="playersSearchFilter" name="nickname" type="text" class="sample">
+                        <button id="searchFilterDo" type="button"><@message code="search.do"/></button>
+                        &nbsp;&nbsp;&nbsp;
+                        <a id="playersSearchAdvanced" class="action" href="#"
+                           onclick="return false;"><@message code="search.advanced.label"/></a>
+                    </div>
+                </td>
+
+                <td valign="top" align="right" nowrap="nowrap">
+                    <div id="searchTypes" class="wm-ui-buttonset">
+                        <#list searchAreas as a>
+                            <input id="search${a?lower_case?capitalize}" name="searchTypes" type="radio" value="${a}"
+                                   <#if a=searchArea>checked="checked"</#if>/>
+                            <label for="search${a?lower_case?capitalize}"><@message code="search.type.${a?lower_case}"/></label>
+                        </#list>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="advancedFilter" style="display: none">
+                        <table>
+                            <tr>
+                                <td><@message code="search.column.ratingA"/>:</td>
+                                <td>
+                                    <@message code="search.limit.min"/> <input size="5" type="text" name="ratingMin">
+                                    <@message code="search.limit.max"/> <input size="5" type="text" name="ratingMax">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><@message code="search.column.activeGames"/>:</td>
+                                <td>
+                                    <@message code="search.limit.min"/> <input size="5" type="text" name="activeMin">
+                                    <@message code="search.limit.max"/> <input size="5" type="text" name="activeMax">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><@message code="search.column.finishedGames"/>:</td>
+                                <td>
+                                    <@message code="search.limit.min"/> <input size="5" type="text" name="finishedMin">
+                                    <@message code="search.limit.max"/> <input size="5" type="text" name="finishedMax">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><@message code="search.column.averageMoveTime"/>:</td>
+                                <td>
+                                    <select name="minAverageMoveTime" style="width: 100%">
+                                        <option value=""><@message code="search.limit.unimportant"/></option>
+                                        <option value="86400000"><@message code="search.limit.average.day"/></option>
+                                        <option value="259200000"><@message code="search.limit.average.dais"/></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><@message code="search.column.lastMoveTime"/>:</td>
+                                <td>
+                                    <select name="lastMoveTime" style="width: 100%">
+                                        <option value=""><@message code="search.limit.unimportant"/></option>
+                                        <option value="86400000"><@message code="search.limit.last.day"/></option>
+                                        <option value="604800000"><@message code="search.limit.last.week"/></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" colspan="2">
+                                    <button id="searchFilterApply"
+                                            type="button"><@message code="search.apply"/></button>
+                                    <button id="searchFilterReset"
+                                            type="button"><@message code="search.reset"/></button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
 </@wm.ui.table.toolbar>
 
 <@wm.ui.table.content>

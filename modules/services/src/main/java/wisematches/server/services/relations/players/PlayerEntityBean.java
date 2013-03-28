@@ -1,4 +1,4 @@
-package wisematches.server.services.relations;
+package wisematches.server.services.relations.players;
 
 import wisematches.core.Language;
 import wisematches.core.search.descriptive.SearchableBean;

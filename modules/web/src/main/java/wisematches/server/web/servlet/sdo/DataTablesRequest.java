@@ -78,6 +78,14 @@ public class DataTablesRequest implements Serializable {
 	public DataTablesRequest() {
 	}
 
+	public String getSearchQuery() {
+		return searchQuery;
+	}
+
+	public String[] getColumnSearches() {
+		return columnSearches;
+	}
+
 	public Orders getOrders() {
 		if (sortingCols == 0) {
 			return null;
