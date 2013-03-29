@@ -2,6 +2,7 @@
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>
+<#assign suggestionStates=["WAITING", "APPROVED", "REJECTED"]/>
 
 <@wm.ui.playground id="dictionaryWidget">
     <@wm.ui.table.header>
@@ -10,21 +11,26 @@
     </@wm.ui.table.header>
 
     <@wm.ui.table.toolbar align="left">
-    <#--
+    <form id="filterForm">
+        <input type="hidden" name="pid" value="${player.id}"/>
+
         <div id="suggestionStates" class="wm-ui-buttonset">
-            <#list states as a>
-                <input id="suggestionState${a}" name="suggestionStates" type="radio" value="${a}"/>
-                <label for="suggestionState${a}"><@message code="suggestion.state.${a?lower_case}"/></label>
+            <#list suggestionStates as a>
+                <input id="suggestionState${a}" name="state" type="radio" value="${a}"
+                       <#if a_index==0>checked="checked"</#if>/>
+                <label for="suggestionState${a}"><@messageCapFirst code="suggestion.state.${a?lower_case}.label"/></label>
             </#list>
         </div>
 
-        <div id="suggestionTypes" class="wm-ui-buttonset">
-            <#list types as a>
-                <input id="suggestionType${a}" name="suggestionTypes" type="checkbox" value="${a}" checked="checkeds"/>
-                <label for="suggestionType${a}"><@message code="suggestion.type.${a?lower_case}"/></label>
-            </#list>
-        </div>
+    <#--
+            <div id="suggestionTypes" class="wm-ui-buttonset">
+                <#list ["CREATE", "REMOVE", "UPDATE"] as a>
+                    <input id="suggestionType${a}" name="type" type="checkbox" value="${a}" checked="checked"/>
+                    <label for="suggestionType${a}"><@messageCapFirst code="suggestion.type.${a?lower_case}.label"/></label>
+                </#list>
+            </div>
     -->
+    </form>
     </@wm.ui.table.toolbar>
 
     <@wm.ui.table.content>
@@ -36,9 +42,6 @@
             </th>
             <th>
                 <@message code="suggestion.type.label"/>
-            </th>
-            <th>
-                <@message code="suggestion.state.label"/>
             </th>
             <th>
                 <@message code="suggestion.player.label"/>
@@ -67,14 +70,28 @@
 </@wm.ui.playground>
 
 <script type="text/javascript">
-    wm.ui.dataTable('#dictionaryChanges', {
+    var filterForm = $("#filterForm");
+
+    var langs = {
+    <#list WordAttribute.values() as wa>
+        '${wa.name()}': "<@message code="dict.word.attribute.${wa.name()?lower_case}.label"/>",
+    </#list>
+    <#list ["CREATE", "REMOVE", "UPDATE"] as t>
+        '${t}': '<@message code="suggestion.type.${t?lower_case}.label"/>'<#if t_has_next>,</#if>
+    </#list>
+    };
+
+    var changesTable = wm.ui.dataTable('#dictionaryChanges', {
         "bSortClasses": false,
         "bProcessing": true,
         "bServerSide": true,
         "aoColumns": [
             { "mDataProp": 'word', "sClass": 'word', "bSortable": true },
-            { "mDataProp": 'suggestionType', "sClass": 'type', "bSortable": true},
-            { "mDataProp": 'suggestionState', "sClass": 'state', "bSortable": true },
+            { "mDataProp": 'suggestionType', "sClass": 'type', "bSortable": true,
+                mRender: function (data, type, row) {
+                    return langs[data];
+                }
+            },
             { "mDataProp": 'requester', "sClass": 'requester', "bSortable": true,
                 mRender: function (data, type, row) {
                     return wm.ui.player(data);
@@ -83,12 +100,19 @@
                 mRender: function (data, type, row) {
                     return data.text;
                 } },
-            { "mDataProp": 'attributes', "sClass": 'attributes', "bSortable": false },
+            { "mDataProp": 'attributes', "sClass": 'attributes', "bSortable": false,
+                mRender: function (data, type, row) {
+                    return langs[data];
+                }
+            },
             { "mDataProp": 'definition', "sClass": 'definition', "bSortable": false }
         ],
         "sAjaxSource": "/playground/dictionary/personalWordEntries.ajax",
         "fnServerData": function (sSource, aoData, fnCallback) {
-            $.fn.dataTable.defaults.fnServerData(sSource + "?pid=" + ${player.id}, aoData, fnCallback);
+            $.fn.dataTable.defaults.fnServerData(sSource + "?" + filterForm.serialize(), aoData, fnCallback);
         }
+    });
+    filterForm.find("input").change(function () {
+        changesTable.fnDraw();
     });
 </script>
