@@ -942,7 +942,7 @@ wm.game.Search = function (columns, scriplet, language) {
 
     var visible = false;
     $("#playersSearchAdvanced").click(function () {
-        $("#advancedFilter").toggle();
+        $(".advanced-filter").slideToggle();
         visible = !visible;
         if (!visible) {
             clearSearch();

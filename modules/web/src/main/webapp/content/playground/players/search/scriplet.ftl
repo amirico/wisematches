@@ -20,8 +20,9 @@
             <tr>
                 <td valign="top" align="left">
                     <div class="simpleFilter">
-                        <label for="playersSearchFilter"><@message code="search.column.player"/>: </label>
-                        <input id="playersSearchFilter" name="nickname" type="text" class="sample">
+                        <label for="playersSearchFilter"
+                               style="font-weight: normal"><@message code="search.column.player"/>: </label>
+                        <input id="playersSearchFilter" name="nickname" type="text"">
                         <button id="searchFilterDo" type="button"><@message code="search.do"/></button>
                         &nbsp;&nbsp;&nbsp;
                         <a id="playersSearchAdvanced" class="action" href="#"
@@ -41,7 +42,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <div id="advancedFilter" style="display: none">
+                    <div id="advancedFilter" class="advanced-filter" style="display: none">
                         <table>
                             <tr>
                                 <td><@message code="search.column.ratingA"/>:</td>
