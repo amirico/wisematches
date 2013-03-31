@@ -35,13 +35,17 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/dictionary")
 public class DictionaryController extends WisematchesController {
-    private static final EnumSet<SuggestionType> SUGGESTION_TYPES = EnumSet.allOf(SuggestionType.class);
-    private static final EnumSet<SuggestionState> EXPECTANT_STATES = EnumSet.of(SuggestionState.APPROVED);
-    private static final EnumSet<SuggestionState> PERSONAL_STATES = EnumSet.allOf(SuggestionState.class);
-    private static final Orders SUGGESTIONS_ORDERS = Orders.of(Order.asc("suggestionType"), Order.desc("resolutionDate"), Order.desc("requestDate"));
-    private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.DictionaryController");
     private DictionaryManager dictionaryManager;
     private DictionarySuggestionManager dictionarySuggestionManager;
+
+    private static final EnumSet<SuggestionState> EXPECTANT_STATES = EnumSet.of(SuggestionState.WAITING);
+
+    private static final EnumSet<SuggestionType> SUGGESTION_TYPES = EnumSet.allOf(SuggestionType.class);
+    private static final EnumSet<SuggestionState> SUGGESTION_STATES = EnumSet.of(SuggestionState.APPROVED);
+
+    private static final Orders SUGGESTIONS_ORDERS = Orders.of(Order.asc("suggestionType"), Order.desc("resolutionDate"), Order.desc("requestDate"));
+
+    private static final Logger log = LoggerFactory.getLogger("wisematches.web.mvc.DictionaryController");
 
     public DictionaryController() {
     }
@@ -72,7 +76,7 @@ public class DictionaryController extends WisematchesController {
     @RequestMapping("expectant")
     public String expectantPage(@RequestParam(value = "l", required = false) String lang, Model model, Locale locale) throws UnknownEntityException {
         final Language language = lang != null ? getLanguage(lang, locale) : null;
-        final SuggestionContext ctx = new SuggestionContext(language, null, PERSONAL_STATES, null);
+        final SuggestionContext ctx = new SuggestionContext(language, null, EXPECTANT_STATES, null);
         model.addAttribute("suggestions", dictionarySuggestionManager.searchEntities(null, ctx, null, null));
         return "/content/playground/dictionary/expectant";
     }
@@ -151,7 +155,7 @@ public class DictionaryController extends WisematchesController {
         }
 
         final Date dt = new Date(System.currentTimeMillis() - 604800000L); // 7 days
-        final List<WordSuggestion> suggestions = dictionarySuggestionManager.searchEntities(null, new SuggestionContext(language, SUGGESTION_TYPES, EXPECTANT_STATES, dt), SUGGESTIONS_ORDERS, null);
+        final List<WordSuggestion> suggestions = dictionarySuggestionManager.searchEntities(null, new SuggestionContext(language, SUGGESTION_TYPES, SUGGESTION_STATES, dt), SUGGESTIONS_ORDERS, null);
         int index = 0;
         final WordSuggestionInfo[] res = new WordSuggestionInfo[suggestions.size()];
         for (WordSuggestion suggestion : suggestions) {

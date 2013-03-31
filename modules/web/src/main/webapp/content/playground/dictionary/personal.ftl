@@ -102,6 +102,9 @@
                 } },
             { "mDataProp": 'attributes', "sClass": 'attributes', "bSortable": false,
                 mRender: function (data, type, row) {
+                    if (data == null) {
+                        return null;
+                    }
                     return langs[data];
                 }
             },

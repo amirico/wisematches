@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title><@message code=title!"title.default"/><#if titleExtension?has_content>${titleExtension}</#if></title>
+    <title>${springMacroRequestContext.getMessage(title, springMacroRequestContext.getMessage("title.default"))}<#if titleExtension?has_content>${titleExtension}</#if></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>
@@ -33,8 +33,8 @@
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.freeow-1.0.2.min.js"/>"></script>
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.hoverIntent-0.0.6.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.1.4.css"/>"/>
-    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.1.4.js"/>"></script>
+    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.1.5.css"/>"/>
+    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.1.5.js"/>"></script>
 
 <#include "analytics.ftl">
 <#include 'localization.ftl'/>
