@@ -20,74 +20,74 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ControllerAdvice
 public abstract class WisematchesController {
-	protected GameMessageSource messageSource;
-	protected ServiceResponseFactory responseFactory;
-	protected PlayerStateManager playerStateManager;
-	protected PersonalityManager personalityManager;
-	protected StaticContentGenerator staticContentGenerator;
+    protected GameMessageSource messageSource;
+    protected ServiceResponseFactory responseFactory;
+    protected PlayerStateManager playerStateManager;
+    protected PersonalityManager personalityManager;
+    protected StaticContentGenerator staticContentGenerator;
 
-	protected WisematchesController() {
-	}
+    protected WisematchesController() {
+    }
 
-	@ModelAttribute("title")
-	public String getTitle(HttpServletRequest request) {
-		final Object title = request.getAttribute("title");
-		if (title != null) {
-			return String.valueOf(title);
-		}
-		final String uri = request.getServletPath() + request.getPathInfo();
-		if (uri.length() <= 1) {
-			return "title.default";
-		}
-		return "title." + uri.replaceAll("/", ".").substring(1);
-	}
+    @ModelAttribute("title")
+    public String getTitle(HttpServletRequest request) {
+        final Object title = request.getAttribute("title");
+        if (title != null) {
+            return String.valueOf(title);
+        }
+        final String uri = request.getServletPath() + (request.getPathInfo() != null ? request.getPathInfo() : "");
+        if (uri.length() <= 1) {
+            return "title.default";
+        }
+        return "title." + uri.replaceAll("/", ".").substring(1);
+    }
 
-	@ModelAttribute("principal")
-	public Player getPrincipal() {
-		return PersonalityContext.getPrincipal();
-	}
+    @ModelAttribute("principal")
+    public Player getPrincipal() {
+        return PersonalityContext.getPrincipal();
+    }
 
-	protected void addTitleExtension(String value, Model model) {
-		model.addAttribute("titleExtension", value);
-	}
+    protected void addTitleExtension(String value, Model model) {
+        model.addAttribute("titleExtension", value);
+    }
 
-	@SuppressWarnings("unchecked")
-	protected <P extends Player> P getPrincipal(Class<P> type) {
-		final Player principal = getPrincipal();
-		if (principal == null) {
-			throw new AccessDeniedException("unregistered");
-		}
-		if (!type.isAssignableFrom(principal.getClass())) {
-			throw new AccessDeniedException("unregistered");
-		}
-		return (P) principal;
-	}
+    @SuppressWarnings("unchecked")
+    protected <P extends Player> P getPrincipal(Class<P> type) {
+        final Player principal = getPrincipal();
+        if (principal == null) {
+            throw new AccessDeniedException("unregistered");
+        }
+        if (!type.isAssignableFrom(principal.getClass())) {
+            throw new AccessDeniedException("unregistered");
+        }
+        return (P) principal;
+    }
 
-	/*
-		@ModelAttribute("requestQueryString")
-		public String getRequestQueryString() {
-			final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-			return request.getQueryString();
-		}
-	*/
-	@Autowired
-	public void setMessageSource(GameMessageSource messageSource) {
-		this.messageSource = messageSource;
-		this.responseFactory = new ServiceResponseFactory(messageSource);
-	}
+    /*
+        @ModelAttribute("requestQueryString")
+        public String getRequestQueryString() {
+            final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            return request.getQueryString();
+        }
+    */
+    @Autowired
+    public void setMessageSource(GameMessageSource messageSource) {
+        this.messageSource = messageSource;
+        this.responseFactory = new ServiceResponseFactory(messageSource);
+    }
 
-	@Autowired
-	public void setPersonalityManager(PersonalityManager personalityManager) {
-		this.personalityManager = personalityManager;
-	}
+    @Autowired
+    public void setPersonalityManager(PersonalityManager personalityManager) {
+        this.personalityManager = personalityManager;
+    }
 
-	@Autowired
-	public void setPlayerStateManager(PlayerStateManager playerStateManager) {
-		this.playerStateManager = playerStateManager;
-	}
+    @Autowired
+    public void setPlayerStateManager(PlayerStateManager playerStateManager) {
+        this.playerStateManager = playerStateManager;
+    }
 
-	@Autowired
-	public void setStaticContentGenerator(StaticContentGenerator staticContentGenerator) {
-		this.staticContentGenerator = staticContentGenerator;
-	}
+    @Autowired
+    public void setStaticContentGenerator(StaticContentGenerator staticContentGenerator) {
+        this.staticContentGenerator = staticContentGenerator;
+    }
 }
