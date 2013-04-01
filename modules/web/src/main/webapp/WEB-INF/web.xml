@@ -55,7 +55,7 @@
 
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
-        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/maintain/*</url-pattern>
         <dispatcher>ERROR</dispatcher>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
@@ -120,7 +120,7 @@
 
     <servlet-mapping>
         <servlet-name>web-app</servlet-name>
-        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/maintain/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

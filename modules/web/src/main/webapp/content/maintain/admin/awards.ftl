@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="result" type="java.lang.String" -->
 <#include "/core.ftl"/>
 
-<form action="/admin/awards" method="post">
+<form action="/maintain/admin/awards" method="post">
     <div>
         <label>
             Player: <input type="text" name="p" size="10" value="">

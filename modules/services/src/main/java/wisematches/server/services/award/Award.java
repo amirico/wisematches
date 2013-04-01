@@ -8,11 +8,13 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public interface Award {
-	String getCode();
+	long getRecipient();
 
 	Date getAwardedDate();
 
 	AwardWeight getWeight();
+
+	AwardDescriptor getDescriptor();
 
 	GameRelationship getRelationship();
 }

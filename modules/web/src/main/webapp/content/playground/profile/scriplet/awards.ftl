@@ -17,12 +17,12 @@
         </div>
         <div class="awards-set">
             <#list medals as d>
-                <#list awardsSummary.getAwardWeights(d.code) as w>
+                <#list awardsSummary.getAwardWeights(d.name) as w>
                     <#assign totalCount=totalCount + 1/>
                     <div class="award medal">
-                        <@wm.award.image d.code w/>
+                        <@wm.award.image d w/>
 
-                        <p>${awardsSummary.getAwardsCount(d.code, w)}</p>
+                        <p>${awardsSummary.getAwardsCount(d.name, w)}</p>
                     </div>
                 </#list>
             </#list>
@@ -39,7 +39,7 @@
             <#list badges as d>
                 <#assign totalCount=totalCount + 1/>
                 <div class="award badge">
-                    <@wm.award.image d.code awardsSummary.getHighestWeight(d.code)/>
+                    <@wm.award.image d awardsSummary.getHighestWeight(d.name)/>
                 </div>
             </#list>
         </div>
@@ -55,7 +55,7 @@
             <#list ribbons as d>
                 <#assign totalCount=totalCount + 1/>
                 <div class="award ribbon">
-                    <@wm.award.image d.code ""/>
+                    <@wm.award.image d ""/>
                 </div>
             </#list>
         </div>

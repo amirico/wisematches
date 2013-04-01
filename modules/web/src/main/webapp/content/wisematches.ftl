@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>${springMacroRequestContext.getMessage(title, springMacroRequestContext.getMessage("title.default"))}<#if titleExtension?has_content>${titleExtension}</#if></title>
+    <title><@message code=title!"title.default"/><#if titleExtension?has_content>${titleExtension}</#if></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Language" content="${locale}"/>

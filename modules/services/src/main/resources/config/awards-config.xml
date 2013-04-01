@@ -7,10 +7,26 @@
 
     <bean id="award" class="wisematches.server.services.award.AwardDescriptor" abstract="true"/>
 
+    <!--
+    UUIDs definition rules:
+        All UUIDs have form like abcd where:
+            a - global number of component with allocation:
+                   0 - mustn't be used
+                   1 - tourneys
+                   2 - dictionaries
+                   3 - game success
+            no other rules at this moment
+    -->
     <util:list id="awardDescriptors">
-        <bean parent="award" c:code="tourney.winner" c:type="MEDAL"/>
-        <bean parent="award" c:code="robot.conqueror" c:type="BADGE"/>
-        <bean parent="award" c:code="dictionary.editor" c:type="BADGE"/>
-        <bean parent="award" c:code="word.longest" c:type="RIBBON"/>
+        <!-- Tourney awards -->
+        <bean parent="award" c:code="1100" c:name="tourney.winner" c:type="MEDAL"/>
+        <!--<bean parent="award" c:uuid="1200" c:code="tourney.repeater" c:type="RIBBON"/>-->
+
+        <!-- Dictionary awards -->
+        <bean parent="award" c:code="2100" c:name="dictionary.editor" c:type="BADGE"/>
+
+        <!-- Game awards -->
+        <bean parent="award" c:code="3100" c:name="robot.conqueror" c:type="BADGE"/>
+        <!--<bean parent="award" c:uuid="3100" c:code="word.longest" c:type="RIBBON"/>-->
     </util:list>
 </beans>

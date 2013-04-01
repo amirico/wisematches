@@ -6,16 +6,16 @@ import java.util.EnumSet;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public final class AwardContext {
-	private String code;
+	private AwardDescriptor descriptor;
 	private EnumSet<AwardWeight> weights;
 
-	public AwardContext(String code, EnumSet<AwardWeight> weights) {
-		this.code = code;
+	public AwardContext(AwardDescriptor descriptor, EnumSet<AwardWeight> weights) {
+		this.descriptor = descriptor;
 		this.weights = weights;
 	}
 
-	public String getCode() {
-		return code;
+	public AwardDescriptor getDescriptor() {
+		return descriptor;
 	}
 
 	public EnumSet<AwardWeight> getWeights() {
@@ -24,9 +24,8 @@ public final class AwardContext {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("AwardContext");
-		sb.append("{code='").append(code).append('\'');
+		final StringBuilder sb = new StringBuilder("AwardContext{");
+		sb.append("descriptor=").append(descriptor);
 		sb.append(", weights=").append(weights);
 		sb.append('}');
 		return sb.toString();

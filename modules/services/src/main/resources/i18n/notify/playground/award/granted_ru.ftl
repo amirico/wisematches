@@ -9,7 +9,7 @@
 
 <p>
     За свои успехи вы получили новую награду
-    <strong>"${messageSource.getMessage("awards." + context.award.code+ ".label", locale)}"</strong>
+    <strong>"${messageSource.getMessage("awards." + context.award.descriptor.name+ ".label", locale)}"</strong>
 <#if !context.descriptor.type.ribbon>
     достоинством
     <strong>${messageSource.getMessage("awards." + context.award.weight.name()?lower_case + ".label", locale)}</strong></#if>

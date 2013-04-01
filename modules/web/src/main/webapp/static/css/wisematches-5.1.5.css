@@ -794,9 +794,19 @@ a.ui-icon {
     /*-webkit-filter: grayscale(1);*/
 }
 
+.award a {
+    border: none !important;
+    text-decoration: none !important;
+}
+
 .awards {
     margin: 0 !important;
     padding: 0 !important;
+}
+
+.awards h1 {
+    margin: 0;
+    padding: 0;
 }
 
 .awards-section {

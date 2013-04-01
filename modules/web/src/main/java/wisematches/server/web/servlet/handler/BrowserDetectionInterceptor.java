@@ -1,5 +1,6 @@
 package wisematches.server.web.servlet.handler;
 
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import wisematches.server.web.http.UserAgent;
@@ -14,6 +15,7 @@ import java.util.Map;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
+@ControllerAdvice
 public class BrowserDetectionInterceptor extends HandlerInterceptorAdapter {
 	private Map<UserAgent, Integer> supportedBrowsers = new HashMap<>();
 

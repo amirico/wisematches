@@ -44,13 +44,13 @@
                             <div></#if>
                             <div>
                                 <div class="award-full">
-                                    <@wm.award.image a.code a.weight/>
+                                    <@wm.award.image a.descriptor a.weight/>
                                     <div>
                                         <p>
                                         ${messageSource.formatDate(a.awardedDate, locale)}
                                         </p>
 
-                                        <p><@message code="awards.${a.code}.label"/></p>
+                                        <p><@message code="awards.${a.descriptor.name}.label"/></p>
                                         <#if a.relationship??>
                                             <#if a.relationship.code==1>
                                                 <p><@wm.tourney.tourney a.relationship.id, true/></p>

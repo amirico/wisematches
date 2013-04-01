@@ -11,7 +11,7 @@
     You have received
     new <#if !context.descriptor.type.ribbon>
     <strong>${messageSource.getMessage("awards." + context.award.weight.name()?lower_case + ".label", locale)}</strong></#if>
-    award <strong>"${messageSource.getMessage("awards." + context.award.code+ ".label", locale)}"</strong>.
+    award <strong>"${messageSource.getMessage("awards." + context.award.descriptor.name + ".label", locale)}"</strong>.
 </p>
 
 <p>
