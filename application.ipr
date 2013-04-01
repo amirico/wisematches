@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="exploded-war" build-on-make="true" name="web:war exploded">
-      <output-path>$PROJECT_DIR$/modules/web/target/web-5.1.5-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/web/target/web-5.1.6-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="web/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -13,9 +13,7 @@
             <element id="module-output" name="web" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="core-5.1.5-SNAPSHOT.jar">
-              <element id="module-output" name="core" />
-            </element>
+            <element id="library" level="project" name="Maven: wisematches:core:5.1.5-SNAPSHOT" />
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
             <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
             <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.1.0.GA" />
@@ -54,16 +52,10 @@
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.19" />
-            <element id="archive" name="gameplay-5.1.5-SNAPSHOT.jar">
-              <element id="module-output" name="gameplay" />
-            </element>
+            <element id="library" level="project" name="Maven: wisematches:gameplay:5.1.5-SNAPSHOT" />
             <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
-            <element id="archive" name="scribble-5.1.5-SNAPSHOT.jar">
-              <element id="module-output" name="scribble" />
-            </element>
-            <element id="archive" name="services-5.1.5-SNAPSHOT.jar">
-              <element id="module-output" name="services" />
-            </element>
+            <element id="library" level="project" name="Maven: wisematches:scribble:5.1.5-SNAPSHOT" />
+            <element id="library" level="project" name="Maven: wisematches:services:5.1.5-SNAPSHOT" />
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4.5" />
             <element id="library" level="project" name="Maven: javax.activation:activation:1.1.1" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.11" />
@@ -77,7 +69,7 @@
     </artifact>
     <artifact type="war" name="web:war">
       <output-path>$PROJECT_DIR$/modules/web/target</output-path>
-      <root id="archive" name="web-5.1.5-SNAPSHOT.war">
+      <root id="archive" name="web-5.1.6-SNAPSHOT.war">
         <element id="artifact" artifact-name="web:war exploded" />
       </root>
     </artifact>
@@ -1227,6 +1219,50 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/modules/conf/conf-5.0.0-SNAPSHOT-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/conf/5.0.0-SNAPSHOT/conf-5.0.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:core:5.1.5-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/modules/core/pom.xml!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/core/core-5.1.5-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/core/core-5.1.5-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:gameplay:5.1.5-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/modules/gameplay/pom.xml!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/gameplay/gameplay-5.1.5-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/gameplay/gameplay-5.1.5-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:scribble:5.1.5-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/modules/scribble/pom.xml!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/scribble/scribble-5.1.5-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/scribble/scribble-5.1.5-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: wisematches:services:5.1.5-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/modules/services/pom.xml!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/modules/services/services-5.1.5-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/modules/services/services-5.1.5-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
