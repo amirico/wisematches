@@ -59,6 +59,7 @@
     </bean>
 
     <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
+        <property name="cacheManager" ref="cacheManager"/>
         <property name="playerStatisticManager">
             <bean class="wisematches.playground.scribble.tracking.impl.HibernateScribbleStatisticsManager">
                 <property name="sessionFactory" ref="sessionFactory"/>
