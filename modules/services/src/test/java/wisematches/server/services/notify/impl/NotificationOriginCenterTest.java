@@ -494,10 +494,10 @@ public class NotificationOriginCenterTest {
 
 		publisherCenter.setAwardsManager(awardsManager);
 
-		final AwardDescriptor ad = new AwardDescriptor("tourney.winner", AwardType.MEDAL);
+		final AwardDescriptor ad = new AwardDescriptor(3100, "tourney.winner", AwardType.MEDAL);
 
 		final Award award = createMock(Award.class);
-		expect(award.getCode()).andReturn("tourney.winner").times(2);
+		expect(award.getDescriptor()).andReturn(ad).times(2);
 		expect(award.getAwardedDate()).andReturn(new Date()).times(2);
 		expect(award.getRelationship()).andReturn(new GameRelationship(1, 1)).times(2);
 		expect(award.getWeight()).andReturn(AwardWeight.BRONZE).times(2);

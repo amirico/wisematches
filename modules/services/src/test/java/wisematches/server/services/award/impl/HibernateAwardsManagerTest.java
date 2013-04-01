@@ -13,9 +13,7 @@ import wisematches.core.personality.DefaultMember;
 import wisematches.core.search.Order;
 import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
-import wisematches.server.services.award.AwardContext;
-import wisematches.server.services.award.AwardWeight;
-import wisematches.server.services.award.AwardsSummary;
+import wisematches.server.services.award.*;
 
 import java.util.EnumSet;
 
@@ -55,12 +53,13 @@ public class HibernateAwardsManagerTest {
 
 	@Test
 	public void testSearch() {
+		final AwardDescriptor next = new AwardDescriptor(0, "mock", AwardType.MEDAL);
 
-		final AwardContext ctx1 = new AwardContext("moc", null);
+		final AwardContext ctx1 = new AwardContext(next, null);
 		awardsManager.getTotalCount(person, ctx1);
 		awardsManager.searchEntities(person, ctx1, Orders.of(Order.desc("awardedDate")), Range.limit(10));
 
-		final AwardContext ctx2 = new AwardContext("moc", EnumSet.of(AwardWeight.SILVER));
+		final AwardContext ctx2 = new AwardContext(next, EnumSet.of(AwardWeight.SILVER));
 		awardsManager.getTotalCount(person, ctx2);
 		awardsManager.searchEntities(person, ctx2, Orders.of(Order.desc("awardedDate")), Range.limit(10));
 	}

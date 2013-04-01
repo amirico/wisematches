@@ -4,7 +4,7 @@
 
 <#include "/core.ftl"/>
 
-<form action="/admin/tourney" method="post">
+<form action="/maintain/admin/tourney" method="post">
     <label>
         Group:
         <input type="text" name="group" size="10" value="">

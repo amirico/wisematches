@@ -3,13 +3,14 @@ package wisematches.server.web.servlet.mvc.account;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import wisematches.server.web.servlet.mvc.WisematchesController;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Controller
 @RequestMapping("/account/payment")
-public class PaymentController {
+public class PaymentController extends WisematchesController {
 	public PaymentController() {
 	}
 

@@ -135,7 +135,7 @@
         <intercept-url pattern="/playground/dictionary/loadWordEntry.ajax" access="permitAll"/>
         <intercept-url pattern="/playground/dictionary/loadWordEntries.ajax" access="permitAll"/>
 
-        <intercept-url pattern="/admin/**" access="hasRole('admin') and isFullyAuthenticated()"/>
+        <intercept-url pattern="/maintain/**" access="hasRole('admin') and isFullyAuthenticated()"/>
         <intercept-url pattern="/playground/**" access="isAuthenticated()"/>
 
         <intercept-url pattern="/account/membership" access="permitAll"/>

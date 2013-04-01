@@ -22,7 +22,7 @@
                     </#if>
                     <@wm.security.authorize granted="admin">
                         |
-                        <a href="/admin/main"><@message code="game.menu.admin.label"/></a>
+                        <a href="/maintain/admin/main"><@message code="game.menu.admin.label"/></a>
                     </@wm.security.authorize>
                         |
                     <#if principal.type.member><a

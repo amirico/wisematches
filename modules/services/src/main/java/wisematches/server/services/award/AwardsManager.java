@@ -17,7 +17,10 @@ public interface AwardsManager extends SearchManager<Award, AwardContext> {
 	AwardsSummary getAwardsSummary(Player player);
 
 
-	AwardDescriptor getAwardDescriptor(String code);
+	AwardDescriptor getAwardDescriptor(int code);
+
+	AwardDescriptor getAwardDescriptor(String name);
+
 
 	Collection<AwardDescriptor> getAwardDescriptors();
 }

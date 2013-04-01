@@ -1,11 +1,14 @@
 package wisematches.server.services.award.impl;
 
+import wisematches.core.Player;
 import wisematches.playground.GameRelationship;
 import wisematches.server.services.award.Award;
+import wisematches.server.services.award.AwardDescriptor;
 import wisematches.server.services.award.AwardWeight;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -17,14 +20,14 @@ public class HibernateAward implements Award {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "player", insertable = true, updatable = false, nullable = false)
-	private long player;
-
 	@Column(name = "code", insertable = true, updatable = false, nullable = false)
-	private String code;
+	private int code;
+
+	@Column(name = "recipient", insertable = true, updatable = false, nullable = false)
+	private long recipient;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "awardedDate", insertable = true, updatable = false, nullable = false)
+	@Column(name = "awarded", insertable = true, updatable = false, nullable = false)
 	private Date awardedDate;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -34,28 +37,24 @@ public class HibernateAward implements Award {
 	@Embedded
 	private GameRelationship relationship;
 
+	@Transient
+	private AwardDescriptor descriptor;
+
 	HibernateAward() {
 	}
 
-	public HibernateAward(long player, String code, Date awardedDate, AwardWeight weight) {
-		this(player, code, awardedDate, weight, null);
-	}
-
-	public HibernateAward(long player, String code, Date awardedDate, GameRelationship relationship) {
-		this(player, code, awardedDate, null, relationship);
-	}
-
-	public HibernateAward(long player, String code, Date awardedDate, AwardWeight weight, GameRelationship relationship) {
-		this.player = player;
-		this.code = code;
+	public HibernateAward(AwardDescriptor descriptor, Player recipient, AwardWeight weight, GameRelationship relationship) {
+		this.code = descriptor.getCode();
+		this.descriptor = descriptor;
 		this.weight = weight;
-		this.awardedDate = awardedDate;
+		this.awardedDate = new Date();
 		this.relationship = relationship;
+		this.recipient = recipient.getId();
 	}
 
 	@Override
-	public String getCode() {
-		return code;
+	public long getRecipient() {
+		return recipient;
 	}
 
 	@Override
@@ -69,19 +68,27 @@ public class HibernateAward implements Award {
 	}
 
 	@Override
+	public AwardDescriptor getDescriptor() {
+		return descriptor;
+	}
+
+	@Override
 	public GameRelationship getRelationship() {
 		return relationship;
 	}
 
+	void validateDescriptor(Map<Integer, AwardDescriptor> descriptorMap) {
+		this.descriptor = descriptorMap.get(code);
+	}
+
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("HibernateAward");
-		sb.append("{id=").append(id);
-		sb.append(", player=").append(player);
-		sb.append(", code='").append(code).append('\'');
-		sb.append(", weight=").append(weight);
+		final StringBuilder sb = new StringBuilder("HibernateAward{");
+		sb.append("id=").append(id);
+		sb.append(", code=").append(code);
+		sb.append(", recipient=").append(recipient);
 		sb.append(", awardedDate=").append(awardedDate);
+		sb.append(", weight=").append(weight);
 		sb.append(", relationship=").append(relationship);
 		sb.append('}');
 		return sb.toString();

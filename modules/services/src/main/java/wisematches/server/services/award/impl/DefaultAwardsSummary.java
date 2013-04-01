@@ -20,10 +20,10 @@ public class DefaultAwardsSummary implements AwardsSummary {
 		}
 	};
 
-	DefaultAwardsSummary(List<Object[]> list, Map<String, AwardDescriptor> descriptorMap) {
+	DefaultAwardsSummary(List<Object[]> list, Map<Integer, AwardDescriptor> descriptorMap) {
 		for (Object[] objects : list) {
-			final String object = (String) objects[0];
-			final AwardDescriptor desc = descriptorMap.get(object);
+			final Number object = (Number) objects[0];
+			final AwardDescriptor desc = descriptorMap.get(object.intValue());
 			final AwardWeight weight = (AwardWeight) objects[1];
 			final Integer count = ((Number) objects[2]).intValue();
 
@@ -38,7 +38,7 @@ public class DefaultAwardsSummary implements AwardsSummary {
 				awardDescriptors.add(desc);
 			}
 
-			final String code = desc.getCode();
+			final String code = desc.getName();
 			Map<AwardWeight, Integer> awardWeightIntegerMap = awardsMap.get(code);
 			if (awardWeightIntegerMap == null) {
 				awardWeightIntegerMap = new TreeMap<>(COMPARATOR);

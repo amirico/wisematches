@@ -14,7 +14,7 @@
     <#assign boardId=board.boardId/>
 </#if>
     Moves list for board <#if board??>(<@wm.board.name board, true/>)</#if>:
-    <form action="/admin/moves" method="post">
+    <form action="/maintain/admin/moves" method="post">
         <label>
             <input type="text" name="b" size="10" value="${boardId}">
         </label>

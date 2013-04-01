@@ -4,7 +4,7 @@
 <#include "/core.ftl"/>
 
 <div>
-    <form action="/admin/membership" method="post">
+    <form action="/maintain/admin/membership" method="post">
     <#if !account??>
         <label>
             <input type="text" name="p" size="10" value="">
