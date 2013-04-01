@@ -2,19 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="cache-config.xml"/>
 
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
-
-    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
-        <property name="caches">
-            <list>
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="players"/>
-                    <property name="allowNullValues" value="false"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
 
     <bean id="accountManager" class="wisematches.core.personality.player.account.impl.HibernateAccountManager">
         <property name="sessionFactory" ref="sessionFactory"/>

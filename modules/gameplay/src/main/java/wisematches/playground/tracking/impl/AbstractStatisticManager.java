@@ -16,9 +16,7 @@ import wisematches.playground.tracking.Statistics;
 import wisematches.playground.tracking.StatisticsListener;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -34,12 +32,10 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	private final StatisticsTrapper<E> statisticsTrapper;
 
 	private final Lock statisticLock = new ReentrantLock();
-	private final Map<Personality, Short> ratingsCache = new WeakHashMap<>();
 
-	private final PersonalityListener playerListener = new ThePersonalityListener();
 	private final BoardListener gamePlayListener = new TheBoardListener();
+	private final PersonalityListener playerListener = new ThePersonalityListener();
 	private final RegularTourneyListener tourneyListener = new TheRegularTourneyListener();
-
 
 	private final Set<StatisticsListener> statisticsListeners = new CopyOnWriteArraySet<>();
 
@@ -82,13 +78,8 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public short getRating(final Player person) {
 		if (person instanceof Member) {
-			Short rating = ratingsCache.get(person);
-			if (rating == null) {
-				Number n = loadPlayerRating((Member) person);
-				rating = (n == null ? 1200 : n.shortValue());
-				ratingsCache.put(person, rating);
-			}
-			return rating;
+			Number n = loadPlayerRating((Member) person);
+			return (n == null ? 1200 : n.shortValue());
 		}
 		return 1200;
 	}

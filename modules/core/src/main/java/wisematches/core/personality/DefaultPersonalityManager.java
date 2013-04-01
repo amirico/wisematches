@@ -25,10 +25,10 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 	private AccountManager accountManager;
 	private MembershipManager membershipManager;
 
-	private final Map<Long, Personality> staticCache = new HashMap<>();
-
 	private final Map<RobotType, Robot> robotMap = new HashMap<>();
 	private final Map<Language, Visitor> visitorMap = new HashMap<>();
+
+	private final Map<Long, Personality> predefinedPlayers = new HashMap<>();
 
 	private final TheMemberPlayerListener memberPlayerListener = new TheMemberPlayerListener();
 	private final Collection<PersonalityListener> listeners = new CopyOnWriteArraySet<>();
@@ -41,13 +41,13 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 		for (RobotType type : RobotType.values()) {
 			final DefaultRobot value = new DefaultRobot(type);
 			robotMap.put(type, value);
-			staticCache.put(value.getId(), value);
+			predefinedPlayers.put(value.getId(), value);
 		}
 
 		for (Language language : Language.values()) {
 			final Visitor visitor = new DefaultVisitor(language);
 			visitorMap.put(language, visitor);
-			staticCache.put(visitor.getId(), visitor);
+			predefinedPlayers.put(visitor.getId(), visitor);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 	@Override
 	public Personality getPerson(Long id) {
 		if (id < 1000) {
-			return staticCache.get(id);
+			return predefinedPlayers.get(id);
 		} else {
 			return getMember(id);
 		}
@@ -103,10 +103,10 @@ public class DefaultPersonalityManager implements PersonalityManager, Initializi
 	}
 
 	public void setCacheManager(CacheManager cacheManager) {
-		this.playersCache = cacheManager.getCache("players");
+		this.playersCache = cacheManager.getCache("personality");
 
 		if (this.playersCache == null) {
-			throw new IllegalArgumentException("CacheManager doesn't have players cache");
+			throw new IllegalArgumentException("CacheManager doesn't have 'personality' cache");
 		}
 	}
 
