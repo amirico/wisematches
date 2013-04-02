@@ -3,6 +3,8 @@
 <#-- @ftlvariable name="showPredefinedUsername" type="java.lang.Boolean" -->
 <#include "/core.ftl">
 
+<#--<script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>-->
+
 <table width="100%">
     <tr>
         <td width="100%" style="vertical-align: top; text-align: left;">
@@ -70,6 +72,7 @@
                                 <tr>
                                     <td></td>
                                     <td align="left">
+                                    <#--<button type="button" onclick="doLogin();">asd</button>-->
                                         <button type="submit"><@message code="account.login.signin.label"/></button>
                                     </td>
                                 </tr>
@@ -127,3 +130,17 @@
         return false;
     });
 </script>
+
+<#--
+<script type="text/javascript">
+    VK.init({
+        apiId: 3540475
+    });
+
+    function doLogin() {
+        VK.Auth.login(function(response) {
+            alert(response);
+        });
+    }
+</script>
+-->

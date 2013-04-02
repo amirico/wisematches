@@ -1217,19 +1217,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/3.2.1.RELEASE/spring-webmvc-3.2.1.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: wisematches:conf:5.0.0-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/conf/5.0.0-SNAPSHOT/conf-5.0.0-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/conf/conf-5.0.0-SNAPSHOT-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/conf/5.0.0-SNAPSHOT/conf-5.0.0-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/conf/conf-5.0.0-SNAPSHOT-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/wisematches/conf/5.0.0-SNAPSHOT/conf-5.0.0-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
   </component>
 </project>
 
