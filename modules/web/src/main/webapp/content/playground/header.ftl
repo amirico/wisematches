@@ -5,10 +5,10 @@
 <#assign hasNewFeatues=false/>
 
 <table id="header" class="ui-widget-content shadow"
-       style="width: 100%; height: 70px; background: none; border-width: 0;border-bottom-width: 1px; padding-bottom: 0">
+       style="width: 100%; height: 70px; background: none; border-width: 0;border-bottom-width: 1px; padding: 0">
     <tr>
-        <td width="165px">
-            <img id="header-image" src="<@wm.ui.static "/images/logo.png"/>" width="165px" height="70px" alt="logo"/>
+        <td width="170px">
+            <img id="header-image" src="<@wm.ui.static "/images/logo.png"/>" width="170px" height="70px" alt="logo"/>
         </td>
         <td>
             <table style="height: 100%; width: 100%;">
