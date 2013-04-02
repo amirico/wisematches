@@ -13,7 +13,9 @@
             <element id="module-output" name="web" />
           </element>
           <element id="directory" name="lib">
-            <element id="library" level="project" name="Maven: wisematches:core:5.1.5-SNAPSHOT" />
+            <element id="archive" name="core-5.1.6-SNAPSHOT.jar">
+              <element id="module-output" name="core" />
+            </element>
             <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.1.7.Final" />
             <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
             <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.1.0.GA" />
@@ -52,10 +54,16 @@
             <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.1.6" />
             <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
             <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.19" />
-            <element id="library" level="project" name="Maven: wisematches:gameplay:5.1.5-SNAPSHOT" />
+            <element id="archive" name="gameplay-5.1.6-SNAPSHOT.jar">
+              <element id="module-output" name="gameplay" />
+            </element>
             <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
-            <element id="library" level="project" name="Maven: wisematches:scribble:5.1.5-SNAPSHOT" />
-            <element id="library" level="project" name="Maven: wisematches:services:5.1.5-SNAPSHOT" />
+            <element id="archive" name="scribble-5.1.6-SNAPSHOT.jar">
+              <element id="module-output" name="scribble" />
+            </element>
+            <element id="archive" name="services-5.1.6-SNAPSHOT.jar">
+              <element id="module-output" name="services" />
+            </element>
             <element id="library" level="project" name="Maven: javax.mail:mail:1.4.5" />
             <element id="library" level="project" name="Maven: javax.activation:activation:1.1.1" />
             <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.11" />
