@@ -2,7 +2,7 @@
 <#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
 <#include "/core.ftl">
 
-<#assign hasNewFeatues=true/>
+<#assign hasNewFeatues=false/>
 
 <table id="header" class="ui-widget-content shadow"
        style="width: 100%; height: 70px; background: none; border-width: 0;border-bottom-width: 1px; padding-bottom: 0">
