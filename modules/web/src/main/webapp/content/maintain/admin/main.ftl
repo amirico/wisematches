@@ -30,3 +30,7 @@
     <a href="regenerateRatings">Regenerate All Ratings</a>
     <a href="regenerateStatistic">Regenerate All Statistic</a>
 </div>
+
+<div>
+    <a href="gc">GC</a>
+</div>

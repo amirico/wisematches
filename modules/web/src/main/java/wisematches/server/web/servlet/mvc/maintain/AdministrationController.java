@@ -138,7 +138,6 @@ public class AdministrationController extends WisematchesController {
 	}
 
 	@RequestMapping("/dict/flush")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String flushDictionaryAction() throws DictionaryException {
 		final Collection<Language> languages = dictionaryManager.getLanguages();
 		for (Language language : languages) {
@@ -149,13 +148,18 @@ public class AdministrationController extends WisematchesController {
 	}
 
 	@RequestMapping("/dict/reload")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String reloadDictionaryAction() throws DictionaryException {
 		final Collection<Language> languages = dictionaryManager.getLanguages();
 		for (Language language : languages) {
 			final Dictionary dictionary = dictionaryManager.getDictionary(language);
 			dictionary.reload();
 		}
+		return "redirect:/maintain/admin/main?result=ok";
+	}
+
+	@RequestMapping("/gc")
+	public String gcAction() throws DictionaryException {
+		System.gc();
 		return "redirect:/maintain/admin/main?result=ok";
 	}
 
