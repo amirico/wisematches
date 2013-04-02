@@ -8,6 +8,10 @@ public class MockGameSettings extends GameSettings {
 		super(title, daysPerMove);
 	}
 
+	public MockGameSettings(String title, int daysPerMove, boolean rated, boolean scratch) {
+		super(title, daysPerMove, rated, scratch);
+	}
+
 	@Override
 	public int getMinPlayers() {
 		return 2;

@@ -21,7 +21,7 @@ public abstract class GameSettings implements Serializable {
 	@Transient
 	private boolean ratedGame;
 
-	@Transient
+	@Column(name = "scratch", updatable = false)
 	private boolean scratch;
 
 	public static final int DEFAULT_TIMEOUT_DAYS = 3;
@@ -57,13 +57,13 @@ public abstract class GameSettings implements Serializable {
 		this(title, daysPerMove, true, false);
 	}
 
-	protected GameSettings(String title, int daysPerMove, boolean ratedGame, boolean scratch) {
+	protected GameSettings(String title, int daysPerMove, boolean rated, boolean scratch) {
 		if (daysPerMove < 0) {
 			throw new IllegalArgumentException("Turn timeout can't be less than zero.");
 		}
 		this.title = title;
 		this.daysPerMove = daysPerMove;
-		this.ratedGame = ratedGame;
+		this.ratedGame = rated;
 		this.scratch = scratch;
 	}
 

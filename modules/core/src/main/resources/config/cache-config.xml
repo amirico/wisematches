@@ -6,19 +6,24 @@
     <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
         <property name="caches">
             <list>
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
                     <property name="name" value="personality"/>
-                    <property name="allowNullValues" value="false"/>
+                    <property name="referenceType" value="SOFT"/>
                 </bean>
 
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
+                    <property name="name" value="board"/>
+                    <property name="referenceType" value="SOFT"/>
+                </bean>
+
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
                     <property name="name" value="rating"/>
-                    <property name="allowNullValues" value="false"/>
+                    <property name="referenceType" value="SOFT"/>
                 </bean>
 
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                <bean class="wisematches.core.cache.ReferenceMapCacheFactoryBean">
                     <property name="name" value="statistic"/>
-                    <property name="allowNullValues" value="false"/>
+                    <property name="referenceType" value="SOFT"/>
                 </bean>
             </list>
         </property>

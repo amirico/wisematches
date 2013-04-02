@@ -85,6 +85,14 @@ public class ScribblePlayManager extends AbstractGamePlayManager<ScribbleSetting
 	}
 
 	@Override
+	protected void deleteBoardImpl(ScribbleBoard board) {
+		final Session session = sessionFactory.getCurrentSession();
+		session.delete(board);
+		session.flush();
+		session.evict(board);
+	}
+
+	@Override
 	protected Collection<Long> loadActiveRobotGames() {
 		final Session session = sessionFactory.getCurrentSession();
 

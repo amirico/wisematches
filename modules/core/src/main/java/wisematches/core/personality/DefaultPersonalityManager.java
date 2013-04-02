@@ -4,6 +4,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import wisematches.core.*;
+import wisematches.core.cache.NoOpCache;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountListener;
 import wisematches.core.personality.player.account.AccountManager;
@@ -20,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DefaultPersonalityManager implements PersonalityManager, InitializingBean {
-	private Cache playersCache;
+	private Cache playersCache = NoOpCache.INSTANCE;
 
 	private AccountManager accountManager;
 	private MembershipManager membershipManager;

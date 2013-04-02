@@ -3,6 +3,7 @@ package wisematches.playground.tracking.impl;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import wisematches.core.Player;
+import wisematches.core.cache.NoOpCache;
 import wisematches.playground.tracking.RatingCurve;
 import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
@@ -20,8 +21,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class CacheableStatisticManager<S extends Statistics> implements StatisticManager<S> {
-	private Cache ratingCache;
-	private Cache statisticCache;
+	private Cache ratingCache = NoOpCache.INSTANCE;
+	private Cache statisticCache = NoOpCache.INSTANCE;
 
 	private StatisticManager<S> playerStatisticManager;
 
