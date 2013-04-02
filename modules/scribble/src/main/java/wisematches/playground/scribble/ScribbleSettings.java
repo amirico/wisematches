@@ -48,8 +48,8 @@ public final class ScribbleSettings extends GameSettings {
 		this(title, language, daysPerMove, true, false);
 	}
 
-	public ScribbleSettings(String title, Language language, int daysPerMove, boolean ratedGame, boolean scratch) {
-		super(title, daysPerMove, ratedGame, scratch);
+	public ScribbleSettings(String title, Language language, int daysPerMove, boolean rated, boolean scratch) {
+		super(title, daysPerMove, rated, scratch);
 		if (language == null) {
 			throw new NullPointerException("Language can't be null");
 		}

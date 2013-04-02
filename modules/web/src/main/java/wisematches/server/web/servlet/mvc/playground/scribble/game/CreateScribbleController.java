@@ -126,8 +126,9 @@ public class CreateScribbleController extends AbstractScribbleController {
 			}
 		}
 
-		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove());
-
+		// always not rated and scratch for visitor
+		final boolean visitor = (player instanceof Visitor);
+		final ScribbleSettings s = new ScribbleSettings(form.getTitle(), language, form.getDaysPerMove(), !visitor, visitor);
 		try {
 			ScribbleBoard board = null;
 			if (form.getCreateTab() == CreateScribbleTab.ROBOT) {

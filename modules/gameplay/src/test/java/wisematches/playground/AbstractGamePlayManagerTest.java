@@ -10,70 +10,30 @@ import wisematches.core.Personality;
 import wisematches.core.Player;
 import wisematches.core.Robot;
 import wisematches.core.RobotType;
+import wisematches.core.cache.ReferenceMapCacheManager;
+import wisematches.core.cache.ReferenceType;
 import wisematches.core.personality.DefaultMember;
 import wisematches.playground.tracking.StatisticManager;
 
 import java.util.*;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 /**
  * @author <a href="mailto:smklimenko@gmail.com">Sergey Klimenko</a>
  */
 @SuppressWarnings("unchecked")
-public class AbstractBoardManagerTest {
-	private static final Logger log = LoggerFactory.getLogger(AbstractBoardManagerTest.class);
+public class AbstractGamePlayManagerTest {
+	private static final Logger log = LoggerFactory.getLogger(AbstractGamePlayManagerTest.class);
 
 	private BoardListener gamePlayListener;
 
 	private static final Player player1 = new DefaultMember(901, null, null, null, null, null);
 	private static final Player player2 = new DefaultMember(902, null, null, null, null, null);
 
-	public AbstractBoardManagerTest() {
-	}
-
-	@Test
-	public void testBoardsMap() throws InterruptedException {
-		GameBoard board1 = createMock("Board1", GameBoard.class);
-		expect(board1.getBoardId()).andReturn(1L).anyTimes();
-		replay(board1);
-
-		GameBoard board2 = createMock("Board1", GameBoard.class);
-		expect(board2.getBoardId()).andReturn(2L).anyTimes();
-		replay(board2);
-
-		AbstractGamePlayManager.BoardsMap<GameBoard> board = new AbstractGamePlayManager.BoardsMap<>(log);
-		assertEquals(0, board.size());
-
-		board.addBoard(board1);
-		assertEquals(1, board.size());
-
-		board.addBoard(board2);
-		assertEquals(2, board.size());
-
-		// Start GC. We still have references to boards.
-		System.gc();
-		Thread.sleep(300);
-		assertEquals(2, board.size());
-
-		assertSame("Check that boards are returned", board1, board.getBoard(1L));
-		assertSame("Check that boards are returned", board2, board.getBoard(2L));
-		assertNull("Checks that no exist board return null", board.getBoard(3L));
-
-		board1 = null; //Remove board1
-		System.gc();
-		Thread.sleep(300);
-		assertEquals("If board has no reference it must be removed", 1, board.size());
-		assertNull("Check that removed board return null", board.getBoard(1L));
-		assertSame("Check that boards are returned", board2, board.getBoard(2L));
-
-		board2 = null; //Remove board1
-		System.gc();
-		Thread.sleep(300);
-		assertNull("Check that removed board return null", board.getBoard(1L));
-		assertNull("Check that removed board return null", board.getBoard(2L));
-		assertEquals(0, board.size());
+	public AbstractGamePlayManagerTest() {
 	}
 
 	@Test
@@ -159,6 +119,7 @@ public class AbstractBoardManagerTest {
 		replay(dao);
 
 		final MockGamePlayManager mock = new MockGamePlayManager(dao);
+		mock.setCacheManager(new ReferenceMapCacheManager(ReferenceType.SOFT, "board"));
 
 		final GameBoard<?, ?, ?> newBoard = mock.openBoard(1L);
 		assertSame(board, newBoard);
@@ -189,16 +150,18 @@ public class AbstractBoardManagerTest {
 		expect(board.getPlayerHand(player1)).andReturn(h1);
 		expect(board.getPlayerHand(player2)).andReturn(h2);
 		expect(board.isRated()).andReturn(true);
+		expect(board.getSettings()).andReturn(new MockGameSettings("asd", 10));
 		expect(board.getPlayers()).andReturn(Arrays.<Personality>asList(player1, player2));
 		expect(board.getPlayerHand(player1)).andReturn(h1);
 		expect(board.getPlayerHand(player2)).andReturn(h2);
 		expect(board.isRated()).andReturn(true);
+		expect(board.getSettings()).andReturn(new MockGameSettings("asd", 10, true, true));
 		replay(board);
 
 		final GameBoardDao dao = createStrictMock(GameBoardDao.class);
 		expect(dao.loadBoardImpl(1L)).andReturn(board);
 		dao.saveBoardImpl(board);
-		expectLastCall().times(2);
+		dao.deleteBoardImpl(board);
 		replay(dao);
 
 		final GameMove move = createStrictMock(GameMove.class);
@@ -229,10 +192,12 @@ public class AbstractBoardManagerTest {
 
 		boardListener.gameMoveDone(board, move, null);
 
+		// not scratch
 		gamePlayListener.gameFinished(board, GameResolution.FINISHED, null);
 		assertEquals(1010, h1.getNewRating());
 		assertEquals(1990, h2.getNewRating());
 
+		// scratch
 		gamePlayListener.gameFinished(board, GameResolution.INTERRUPTED, null);
 		assertEquals(990, h1.getNewRating());
 		assertEquals(2010, h2.getNewRating());
@@ -253,6 +218,8 @@ public class AbstractBoardManagerTest {
 	private interface GameBoardDao {
 		void saveBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board);
 
+		void deleteBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board);
+
 		AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> loadBoardImpl(long gameId);
 
 		AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> createBoardImpl(GameSettings settings, Collection<Personality> players, GameRelationship relationship);
@@ -272,6 +239,11 @@ public class AbstractBoardManagerTest {
 		@Override
 		protected void saveBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board) {
 			boardDao.saveBoardImpl(board);
+		}
+
+		@Override
+		protected void deleteBoardImpl(AbstractGameBoard<GameSettings, AbstractPlayerHand, GameMove> board) {
+			boardDao.deleteBoardImpl(board);
 		}
 
 		@Override

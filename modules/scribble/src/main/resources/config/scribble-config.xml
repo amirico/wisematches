@@ -26,6 +26,7 @@
     </bean>
 
     <bean id="scribbleBoardManager" class="wisematches.playground.scribble.ScribblePlayManager">
+        <property name="cacheManager" ref="cacheManager"/>
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="personalityManager" ref="personalityManager"/>
         <property name="tilesBankingHouse" ref="tilesBankingHouse"/>

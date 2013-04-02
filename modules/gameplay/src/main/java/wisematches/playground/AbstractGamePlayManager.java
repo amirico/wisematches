@@ -2,15 +2,15 @@ package wisematches.playground;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.core.*;
+import wisematches.core.cache.NoOpCache;
 import wisematches.playground.tracking.StatisticManager;
 
-import java.lang.ref.Reference;
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
@@ -27,7 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public abstract class AbstractGamePlayManager<S extends GameSettings, B extends AbstractGameBoard<S, ?, ?>>
 		implements GamePlayManager<S, B>, InitializingBean {
+
 	private RatingSystem ratingSystem;
+	private Cache boardsCache = NoOpCache.INSTANCE;
 
 	protected TaskExecutor taskExecutor;
 	protected StatisticManager statisticManager;
@@ -36,7 +38,6 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	private final Logger log;
 	private final Lock openBoardLock = new ReentrantLock();
 
-	private final BoardsMap<B> boardsCache;
 	private final Set<RobotType> robotTypes = new TreeSet<>();
 
 	private final BoardListener gameBoardListener = new TheBoardListener();
@@ -49,7 +50,6 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	 */
 	protected AbstractGamePlayManager(Set<RobotType> robotTypes, Logger log) {
 		this.log = log;
-		boardsCache = new BoardsMap<>(log);
 
 		if (robotTypes != null) {
 			this.robotTypes.addAll(robotTypes);
@@ -111,18 +111,19 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public B openBoard(long boardId) throws BoardLoadingException {
-		B board = boardsCache.getBoard(boardId);
-		if (board != null) {
+		Cache.ValueWrapper valueWrapper = boardsCache.get(boardId);
+		if (valueWrapper != null) {
 			log.debug("Board found in memory cache");
-			return board;
+			return (B) valueWrapper.get();
 		}
 
 		openBoardLock.lock();
 		try {
-			board = boardsCache.getBoard(boardId);  //Double check for optimization.
-			if (board != null) {
-				return board;
+			valueWrapper = boardsCache.get(boardId);
+			if (valueWrapper != null) {
+				return (B) valueWrapper.get();
 			}
 
 			log.info("Loading board from DB: {}", boardId);
@@ -132,7 +133,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 				return null;
 			}
 			loaded.setBoardListener(gameBoardListener);
-			boardsCache.addBoard(loaded);
+			boardsCache.put(loaded.getBoardId(), loaded);
 			return loaded;
 		} finally {
 			openBoardLock.unlock();
@@ -146,6 +147,13 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	 * @param board the board to be saved.
 	 */
 	protected abstract void saveBoardImpl(B board);
+
+	/**
+	 * Removes specified board from storage
+	 *
+	 * @param board the board to be removed
+	 */
+	protected abstract void deleteBoardImpl(B board);
 
 	/**
 	 * Loads game board frome storage by specified game id.
@@ -193,7 +201,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		try {
 			saveBoardImpl(board);
 			board.setBoardListener(gameBoardListener);
-			boardsCache.addBoard(board);
+			boardsCache.put(board.getBoardId(), board);
 
 			for (BoardListener listener : listeners) {
 				listener.gameStarted(board);
@@ -261,6 +269,14 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	}
 
 
+	public void setCacheManager(CacheManager cacheManager) {
+		boardsCache = cacheManager.getCache("board");
+
+		if (boardsCache == null) {
+			throw new IllegalArgumentException("CacheManager doesn't have 'board' cache");
+		}
+	}
+
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
@@ -313,99 +329,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		}
 	}
 
-	/**
-	 * Weak boards map. It contains weak references to boards and automatical cleared when board doesn't required
-	 * any more.
-	 * <p/>
-	 * We are not using <code>Map</code> interface because we don't required so many functionality and we don't want
-	 * implement a lot of redundant methods.
-	 * <p/>
-	 * We can't use <code>WeakHashMap</code> because it use weak reference to key but we need weak reference to value.
-	 * <p/>
-	 * This class is package visible because we wrote unit test but we don't want export it.
-	 *
-	 * @param <B>
-	 */
-	static class BoardsMap<B extends GameBoard> {
-		private final ReferenceQueue<B> boardsQueue = new ReferenceQueue<>();
-		private final Map<Long, BoardWeakReference<B>> boardsReferences = new HashMap<>();
-
-		private final Logger log;
-
-		BoardsMap(Logger log) {
-			this.log = log;
-		}
-
-		/**
-		 * Adds specified board to this map.
-		 *
-		 * @param board board to be added.
-		 * @throws IllegalArgumentException if board id is zero.
-		 */
-		void addBoard(B board) {
-			final BoardWeakReference<B> value = new BoardWeakReference<>(board, boardsQueue);
-			final long id = value.getBoardId();
-			if (id == 0) {
-				throw new IllegalArgumentException("Board id can't be zero");
-			}
-			log.debug("Add board to boards map: {}", id);
-			boardsReferences.put(id, value);
-		}
-
-		/**
-		 * Returns board with specified board id. If no board with specified id <code>null</code> will be returned.
-		 *
-		 * @param boardId the board id
-		 * @return the board with specified id or <code>null</code>.
-		 */
-		B getBoard(long boardId) {
-			clearUnnecessaryBoards();
-
-			final WeakReference<B> weakReference = boardsReferences.get(boardId);
-			if (weakReference == null) {
-				return null;
-			}
-			return weakReference.get();
-		}
-
-		int size() {
-			clearUnnecessaryBoards();
-			return boardsReferences.size();
-		}
-
-		private void clearUnnecessaryBoards() {
-			Reference<? extends B> reference = boardsQueue.poll();
-			while (reference != null) {
-				final BoardWeakReference ref = (BoardWeakReference) reference;
-				final long id = ref.getBoardId();
-				log.debug("Board is expired and removed from map: {}", id);
-				boardsReferences.remove(id);
-				reference = boardsQueue.poll();
-			}
-		}
-	}
-
-	/**
-	 * This class contains weak reference to a board and id of this board. We must keep id of board because
-	 * we are using this reference after board has been deleted and reference returns <code>null</code> as
-	 * result of <code>get</code> operation.
-	 *
-	 * @param <B> the board that this reference is referenced to
-	 */
-	static class BoardWeakReference<B extends GameBoard> extends WeakReference<B> {
-		private final long boardId;
-
-		public BoardWeakReference(B referent, ReferenceQueue<B> q) {
-			super(referent, q);
-			boardId = referent.getBoardId();
-		}
-
-		public long getBoardId() {
-			return boardId;
-		}
-	}
-
-	private class TheBoardListener implements BoardListener {
+	private final class TheBoardListener implements BoardListener {
 		TheBoardListener() {
 		}
 
@@ -430,7 +354,12 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		@SuppressWarnings("unchecked")
 		public void gameFinished(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameResolution resolution, Collection<Personality> winners) {
 			recalculatePlayerRatings((GameBoard<?, ? extends AbstractPlayerHand, ? extends GameMove>) board);
-			saveBoardImpl((B) board);
+
+			if (!board.getSettings().isScratch()) {
+				saveBoardImpl((B) board);
+			} else {
+				deleteBoardImpl((B) board);
+			}
 
 			for (BoardListener statesListener : listeners) {
 				statesListener.gameFinished(board, resolution, winners);
