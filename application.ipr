@@ -1229,50 +1229,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/wisematches/conf/5.0.0-SNAPSHOT/conf-5.0.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: wisematches:core:5.1.5-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/core/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/core/core-5.1.5-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/core/core-5.1.5-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:gameplay:5.1.5-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/gameplay/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/gameplay/gameplay-5.1.5-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/gameplay/gameplay-5.1.5-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:scribble:5.1.5-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/scribble-5.1.5-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/scribble/scribble-5.1.5-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: wisematches:services:5.1.5-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/services/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/services/services-5.1.5-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/services/services-5.1.5-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
   </component>
 </project>
 

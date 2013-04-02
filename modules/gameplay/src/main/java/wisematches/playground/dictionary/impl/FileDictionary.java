@@ -10,7 +10,8 @@ import wisematches.playground.dictionary.WordEntry;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -20,13 +21,14 @@ public class FileDictionary implements Dictionary {
 	private final Language language;
 	private final File dictionaryFile;
 
-	private final Alphabet alphabet;
-	private final Map<Character, Alphabet> alphabets = new TreeMap<>();
+	private Alphabet alphabet;
+	private NavigableMap<String, WordEntry> entryMap = new TreeMap<>();
+	private NavigableMap<Character, Alphabet> alphabets = new TreeMap<>();
+	private Map<String, Collection<WordEntry>> searchCache = new HashMap<>();
 
-	private final Lock lock = new ReentrantLock();
-	private final NavigableMap<String, WordEntry> entryMap = new TreeMap<>();
-
-	private final Map<String, Collection<WordEntry>> searchCache = new HashMap<>();
+	private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+	private final Lock readLock = readWriteLock.readLock();
+	private final Lock writeLock = readWriteLock.writeLock();
 
 	private static final EnumSet<WordAttribute> EMPTY_ATTRIBUTES = EnumSet.noneOf(WordAttribute.class);
 
@@ -36,8 +38,8 @@ public class FileDictionary implements Dictionary {
 
 	public FileDictionary(Language language, File dictionaryFile, boolean autoFlush) throws DictionaryException {
 		this.language = language;
-		this.dictionaryFile = dictionaryFile;
 		this.autoFlush = autoFlush;
+		this.dictionaryFile = dictionaryFile;
 
 		if (!dictionaryFile.exists()) {
 			try {
@@ -49,29 +51,7 @@ public class FileDictionary implements Dictionary {
 			}
 		}
 
-		final SortedMap<Character, SortedSet<Character>> chs = new TreeMap<>();
-
-		final Collection<WordEntry> wordEntries = loadDictionary(dictionaryFile);
-		for (WordEntry entry : wordEntries) {
-			final String word = entry.getWord();
-			final Character c = word.charAt(0);
-
-			SortedSet<Character> characters = chs.get(c);
-			if (characters == null) {
-				characters = new TreeSet<>();
-				chs.put(c, characters);
-			}
-			characters.add(word.charAt(1));
-			entryMap.put(word, entry);
-		}
-
-		int index = 0;
-		final char[] ab = new char[chs.size()];
-		for (Map.Entry<Character, SortedSet<Character>> entry : chs.entrySet()) {
-			ab[index++] = entry.getKey();
-			this.alphabets.put(entry.getKey(), new Alphabet(entry.getValue()));
-		}
-		this.alphabet = new Alphabet(ab);
+		reload();
 	}
 
 	@Override
@@ -82,7 +62,7 @@ public class FileDictionary implements Dictionary {
 		final String word = entry.getWord();
 		validateWord(word, language);
 
-		lock.lock();
+		writeLock.lock();
 		try {
 			final WordEntry wordEntry = entryMap.get(word);
 			if (wordEntry != null) {
@@ -94,7 +74,7 @@ public class FileDictionary implements Dictionary {
 				saveDictionary(dictionaryFile, entryMap.values());
 			}
 		} finally {
-			lock.unlock();
+			writeLock.unlock();
 		}
 	}
 
@@ -106,7 +86,7 @@ public class FileDictionary implements Dictionary {
 		final String word = entry.getWord();
 		validateWord(word, language);
 
-		lock.lock();
+		writeLock.lock();
 		try {
 			final WordEntry wordEntry = entryMap.get(word);
 			if (wordEntry == null) {
@@ -118,7 +98,7 @@ public class FileDictionary implements Dictionary {
 				saveDictionary(dictionaryFile, entryMap.values());
 			}
 		} finally {
-			lock.unlock();
+			writeLock.unlock();
 		}
 	}
 
@@ -130,7 +110,7 @@ public class FileDictionary implements Dictionary {
 		final String word = entry.getWord();
 		validateWord(word, language);
 
-		lock.lock();
+		writeLock.lock();
 		try {
 			final WordEntry wordEntry = entryMap.get(word);
 			if (wordEntry == null) {
@@ -142,18 +122,28 @@ public class FileDictionary implements Dictionary {
 				saveDictionary(dictionaryFile, entryMap.values());
 			}
 		} finally {
-			lock.unlock();
+			writeLock.unlock();
 		}
 	}
 
 	@Override
 	public Alphabet getAlphabet() {
-		return alphabet;
+		readLock.lock();
+		try {
+			return alphabet;
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public Alphabet getAlphabet(char ch) {
-		return alphabets.get(ch);
+		readLock.lock();
+		try {
+			return alphabets.get(ch);
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
@@ -163,48 +153,115 @@ public class FileDictionary implements Dictionary {
 
 	@Override
 	public boolean contains(String word) {
-		return entryMap.containsKey(word);
+		readLock.lock();
+		try {
+			return entryMap.containsKey(word);
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public WordEntry getWordEntry(String word) {
-		return entryMap.get(word);
+		readLock.lock();
+		try {
+			return entryMap.get(word);
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public Collection<WordEntry> getWordEntries() {
-		return entryMap.values();
+		readLock.lock();
+		try {
+			return entryMap.values();
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public Collection<WordEntry> getWordEntries(String prefix) {
-		Collection<WordEntry> cache = null;
-		if (prefix.length() >= 2) {
-			final String key = prefix.substring(0, 2);
-			cache = searchCache.get(key);
-			if (cache == null) {
-				cache = filterWordEntries(key, entryMap.values());
-				searchCache.put(key, cache);
+		readLock.lock();
+		try {
+			Collection<WordEntry> cache = null;
+			if (prefix.length() >= 2) {
+				final String key = prefix.substring(0, 2);
+				cache = searchCache.get(key);
+				if (cache == null) {
+					cache = filterWordEntries(key, entryMap.values());
+					searchCache.put(key, cache);
+				}
 			}
-		}
-		if (prefix.length() == 2) {
-			return cache;
-		}
-		if (cache != null) {
-			return filterWordEntries(prefix, cache);
-		} else {
-			return filterWordEntries(prefix, entryMap.values());
+			if (prefix.length() == 2) {
+				return cache;
+			}
+
+			if (cache != null) {
+				return filterWordEntries(prefix, cache);
+			} else {
+				return filterWordEntries(prefix, entryMap.values());
+			}
+		} finally {
+			readLock.unlock();
 		}
 	}
 
 	@Override
 	public Date getLastModification() {
-		return new Date(dictionaryFile.lastModified());
+		readLock.lock();
+		try {
+			return new Date(dictionaryFile.lastModified());
+		} finally {
+			readLock.unlock();
+		}
+	}
+
+	@Override
+	public void reload() throws DictionaryException {
+		final SortedMap<Character, SortedSet<Character>> chs = new TreeMap<>();
+		final Collection<WordEntry> wordEntries = loadDictionary(dictionaryFile);
+
+		writeLock.lock();
+		try {
+			entryMap.clear();
+			alphabets.clear();
+			searchCache.clear();
+
+			for (WordEntry entry : wordEntries) {
+				final String word = entry.getWord();
+				final Character c = word.charAt(0);
+
+				SortedSet<Character> characters = chs.get(c);
+				if (characters == null) {
+					characters = new TreeSet<>();
+					chs.put(c, characters);
+				}
+				characters.add(word.charAt(1));
+				entryMap.put(word, entry);
+			}
+
+			int index = 0;
+			final char[] ab = new char[chs.size()];
+			for (Map.Entry<Character, SortedSet<Character>> entry : chs.entrySet()) {
+				ab[index++] = entry.getKey();
+				this.alphabets.put(entry.getKey(), new Alphabet(entry.getValue()));
+			}
+			this.alphabet = new Alphabet(ab);
+		} finally {
+			writeLock.unlock();
+		}
 	}
 
 	@Override
 	public void flush() throws DictionaryException {
-		saveDictionary(dictionaryFile, entryMap.values());
+		writeLock.lock();
+		try {
+			saveDictionary(dictionaryFile, entryMap.values());
+		} finally {
+			writeLock.unlock();
+		}
 	}
 
 	private void validateWord(String word, Language language) {
@@ -245,28 +302,30 @@ public class FileDictionary implements Dictionary {
 			final Collection<WordEntry> res = new ArrayList<>();
 			String s = reader.readLine();
 			while (s != null) {
-				if (s.length() == 0) {
-					continue;
-				}
-				if (s.charAt(0) == '\t') {
-					if (s.charAt(1) == '\t') {
-						if (definition.length() != 0) {
-							definition.append(System.lineSeparator());
+				if (s.length() != 0) {
+					if (s.charAt(0) == '\t') {
+						if (s.length() > 1 && s.charAt(1) == '\t') {
+							if (definition.length() != 0) {
+								definition.append(System.lineSeparator());
+							}
+							definition.append(s.trim());
+						} else {
+							attributes = s.trim();
+							definition.setLength(0);
 						}
-						definition.append(s.trim());
 					} else {
-						attributes = s.trim();
+						if (word != null) {
+							res.add(createWordEntry(word, attributes, definition));
+						}
+						attributes = null;
 						definition.setLength(0);
+						word = s;
 					}
-				} else {
-					if (word != null) {
-						res.add(new WordEntry(word, definition.toString(), attributes == null ? EMPTY_ATTRIBUTES : WordAttribute.decode(attributes)));
-					}
-					attributes = null;
-					definition.setLength(0);
-					word = s;
 				}
 				s = reader.readLine();
+			}
+			if (word != null) {
+				res.add(createWordEntry(word, attributes, definition));
 			}
 			return res;
 		} catch (Exception ex) {
@@ -288,5 +347,13 @@ public class FileDictionary implements Dictionary {
 		} catch (IOException ex) {
 			throw new DictionaryException("Dictionary can't be stored: " + file, ex);
 		}
+	}
+
+	private WordEntry createWordEntry(String word, String attributes, StringBuilder definition) {
+		EnumSet<WordAttribute> attributesSet = EMPTY_ATTRIBUTES;
+		if (attributes != null && !attributes.isEmpty()) {
+			attributesSet = WordAttribute.decode(attributes);
+		}
+		return new WordEntry(word, definition.toString(), attributesSet);
 	}
 }
