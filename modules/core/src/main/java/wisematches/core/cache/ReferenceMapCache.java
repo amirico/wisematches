@@ -1,5 +1,7 @@
 package wisematches.core.cache;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import java.lang.ref.ReferenceQueue;
@@ -15,6 +17,8 @@ public class ReferenceMapCache implements Cache {
 
 	private final Map<Object, ReferenceType.CacheValue> cache = new HashMap<>();
 	private final ReferenceQueue<Object> referenceQueue = new ReferenceQueue<>();
+
+	private static final Logger log = LoggerFactory.getLogger("wisematches.cache.ReferenceMapCache");
 
 	public ReferenceMapCache(String name, ReferenceType referenceType) {
 		this.name = name;
@@ -55,10 +59,16 @@ public class ReferenceMapCache implements Cache {
 	}
 
 	private void clearDeadReferences() {
+		int count = 0;
 		ReferenceType.CacheValue reference = (ReferenceType.CacheValue) referenceQueue.poll();
 		while (reference != null) {
+			count++;
 			cache.remove(reference.getKey());
 			reference = (ReferenceType.CacheValue) referenceQueue.poll();
+		}
+
+		if (count > 0) {
+			log.info("Cache '{}' was reduced by {} elements. Current size: {}", name, count, cache.size());
 		}
 	}
 }
