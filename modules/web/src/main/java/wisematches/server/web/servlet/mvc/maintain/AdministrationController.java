@@ -8,15 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import wisematches.core.Membership;
-import wisematches.core.Personality;
-import wisematches.core.PersonalityManager;
-import wisematches.core.Player;
+import wisematches.core.*;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountManager;
 import wisematches.core.personality.player.membership.MembershipCard;
 import wisematches.core.personality.player.membership.MembershipManager;
 import wisematches.playground.BoardLoadingException;
+import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.DictionaryException;
+import wisematches.playground.dictionary.DictionaryManager;
 import wisematches.playground.scribble.PlayerStatisticValidator;
 import wisematches.playground.scribble.ScribbleBoard;
 import wisematches.playground.scribble.ScribblePlayManager;
@@ -28,6 +28,7 @@ import wisematches.server.web.servlet.mvc.WisematchesController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -39,6 +40,7 @@ public class AdministrationController extends WisematchesController {
 	private AccountManager accountManager;
 	private ScribblePlayManager boardManager;
 	private MembershipManager membershipManager;
+	private DictionaryManager dictionaryManager;
 	private PersonalityManager personalityManager;
 	private AwardExecutiveCommittee executiveCommittee;
 	private PlayerStatisticValidator scribbleStatisticValidator;
@@ -47,11 +49,12 @@ public class AdministrationController extends WisematchesController {
 	}
 
 	@RequestMapping("/main")
-	public String mainPage() {
+	public String mainPage(@RequestParam(value = "result", required = false) String result, Model model) {
+		model.addAttribute("result", result);
 		return "/content/maintain/admin/main";
 	}
 
-	@RequestMapping(value = "/membership")
+	@RequestMapping("/membership")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String membership(@RequestParam(value = "p", required = false) String p,
 							 @RequestParam(value = "m", required = false) String m,
@@ -92,7 +95,7 @@ public class AdministrationController extends WisematchesController {
 		return "/content/maintain/admin/main";
 	}
 
-	@RequestMapping(value = "/moves")
+	@RequestMapping("/moves")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String generatePossibleMoves(@RequestParam(value = "b", required = false) String id, Model model) {
 		ScribbleBoard board = null;
@@ -115,7 +118,7 @@ public class AdministrationController extends WisematchesController {
 		return "/content/maintain/admin/moves";
 	}
 
-	@RequestMapping(value = "/awards")
+	@RequestMapping("/awards")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String grantAwards(@RequestParam(value = "p", required = false) Long pid,
 							  @RequestParam(value = "a", required = false) String a,
@@ -132,6 +135,28 @@ public class AdministrationController extends WisematchesController {
 			}
 		}
 		return "/content/maintain/admin/awards";
+	}
+
+	@RequestMapping("/dict/flush")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public String flushDictionaryAction() throws DictionaryException {
+		final Collection<Language> languages = dictionaryManager.getLanguages();
+		for (Language language : languages) {
+			final Dictionary dictionary = dictionaryManager.getDictionary(language);
+			dictionary.flush();
+		}
+		return "redirect:/maintain/admin/main?result=ok";
+	}
+
+	@RequestMapping("/dict/reload")
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public String reloadDictionaryAction() throws DictionaryException {
+		final Collection<Language> languages = dictionaryManager.getLanguages();
+		for (Language language : languages) {
+			final Dictionary dictionary = dictionaryManager.getDictionary(language);
+			dictionary.reload();
+		}
+		return "redirect:/maintain/admin/main?result=ok";
 	}
 
 	@Autowired
@@ -153,6 +178,11 @@ public class AdministrationController extends WisematchesController {
 	@Autowired
 	public void setBoardManager(ScribblePlayManager boardManager) {
 		this.boardManager = boardManager;
+	}
+
+	@Autowired
+	public void setDictionaryManager(DictionaryManager dictionaryManager) {
+		this.dictionaryManager = dictionaryManager;
 	}
 
 	@Autowired

@@ -39,4 +39,6 @@ public interface Dictionary {
 
 
 	void flush() throws DictionaryException;
+
+	void reload() throws DictionaryException;
 }
