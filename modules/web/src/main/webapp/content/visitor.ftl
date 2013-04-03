@@ -1,6 +1,6 @@
 <#include "/core.ftl">
 
-<#if principal.type.visitor>
+<#if principal?? && !principal.type.member>
 <div class="shadow ui-state-highlight" style="text-align: left; padding: 5px 5px 5px 30px;">
     <table>
         <tr>

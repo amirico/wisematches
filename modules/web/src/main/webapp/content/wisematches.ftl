@@ -43,7 +43,18 @@
 <#include 'browser.ftl'/>
 
 <div id="wisematchesHeader">
-<#if principal??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>
+    <table id="header" width="100%" cellpadding="0" cellspacing="0" class="ui-widget-content shadow"
+           style="background: none; border: 0; padding: 0">
+        <tr>
+            <td width="170px" valign="top">
+                <img src="<@wm.ui.static "images/logo170x70x1.png"/>" width="170px" height="70px"/>
+            </td>
+            <td style="padding-right: 5px">
+            <#if principal??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>
+            </td>
+        </tr>
+    </table>
+<#include "visitor.ftl"/>
 </div>
 
 <div id="notification-block"></div>
