@@ -19,10 +19,6 @@ table {
     width: 100%
 }
 
-#header-image {
-    float: left;
-}
-
 .header-welcome-label {
     font-weight: bold;
     font-size: 16px;

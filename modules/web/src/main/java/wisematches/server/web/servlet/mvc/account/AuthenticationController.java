@@ -42,6 +42,7 @@ public class AuthenticationController extends WisematchesController {
 	public String loginPage(@ModelAttribute("login") AccountLoginForm form, Model model, Locale locale) {
 		enableFullView(model);
 		form.setRememberMe("true"); // by default remember me enabled
+//		model.addAttribute("", Boolean.TRUE);
 		return processLoginPage("general", model, locale);
 	}
 

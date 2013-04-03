@@ -2859,7 +2859,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
     var gridEl = $("<div></div>").addClass('grid').appendTo(backgroundEl);
 
     var highlighting = new function () {
-        var element = $('<div></div>').addClass('highlighting').hide().appendTo(fieldEl);
+        var element = $('<div></div>').addClass('highlighting tile').hide().appendTo(fieldEl);
         var previousCell = null;
 
         var updatePosition = function (cell) {

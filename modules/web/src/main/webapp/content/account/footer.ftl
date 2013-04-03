@@ -1,7 +1,5 @@
 <#include "/core.ftl">
 
-<#include "/content/addthis.ftl"/>
-
 <div class="playground footer" style="text-align: right; padding: 5px;">
     <span><a href="/info/terms"><@message "info.policies.terms.label"/></a></span>
     <span>&nbsp;-&nbsp;</span>

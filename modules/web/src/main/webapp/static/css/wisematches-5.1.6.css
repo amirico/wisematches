@@ -1835,10 +1835,9 @@ a.ui-icon {
 
 .scribble .highlighting {
     z-index: 4;
+    position: absolute;
     width: 22px !important;
     height: 22px !important;
-    background: url(../images/scribble/board/tiles.png) no-repeat;
-    position: absolute;
 }
 
 .tile {
