@@ -16,14 +16,17 @@
 
 <table style="width: 100%; height: 70px">
     <tr>
-        <td id="header-welcome-label" style="width: 100%; text-align: left; vertical-align: top">
+        <td id="header-welcome-label" style="text-align: left; vertical-align: bottom">
             <span class="info-header"><span class="info-label"><@message code=title!"title.default"/></span></span>
         </td>
-    </tr>
-    <tr>
+    <#--</tr>-->
+    <#--<tr>-->
         <td style="text-align: right; vertical-align: bottom">
-            <a rel="alternate" href="<@languageUrl code="ru"/>">Русский</a>
-            <a rel="alternate" href="<@languageUrl code="en"/>">English</a>
+            <a rel="alternate" href="<@languageUrl code="ru"/>"><img src="<@wm.ui.static "images/flags/ru.png"/>"
+                                                                     alt=""/> Русский</a>
+            &nbsp;
+            <a rel="alternate" href="<@languageUrl code="en"/>"><img src="<@wm.ui.static "images/flags/en.png"/>"
+                                                                     alt=""/> English</a>
         </td>
     </tr>
 </table>

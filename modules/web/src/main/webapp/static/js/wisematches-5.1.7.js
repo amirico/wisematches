@@ -518,13 +518,13 @@ wm.ui.editor = new function () {
         var previousValue;
 
         var editorDialog = $("<div class='ui-widget-editor ui-widget-content'><div class='ui-layout-table'><div>" +
-                "<div class='ui-editor-label'></div>" +
-                "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
-                "<div class='ui-editor-error'></div>" +
-                "<button class='ui-editor-save'>Save</button> " +
-                "<button class='ui-editor-cancel'>Cancel</button>" +
-                "</div></div>" +
-                "</div></div></div>");
+            "<div class='ui-editor-label'></div>" +
+            "<div><div class='ui-editor-content'></div><div class='ui-editor-controls'>" +
+            "<div class='ui-editor-error'></div>" +
+            "<button class='ui-editor-save'>Save</button> " +
+            "<button class='ui-editor-cancel'>Cancel</button>" +
+            "</div></div>" +
+            "</div></div></div>");
 
         var editorLabel = $(editorDialog).find('.ui-editor-label');
         var editorContent = $(editorDialog).find('.ui-editor-content');
@@ -716,20 +716,20 @@ wm.game.Proposal = function (widget, language) {
 wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language) {
     var attachPlayerSearchActions = function (a) {
         $(a).hover(
-                function () {
-                    $(this).addClass("player-search-remove");
-                },
-                function () {
-                    $(this).removeClass("player-search-remove");
-                }).click(function () {
-                    $(this).fadeOut('fast', function () {
-                        $(this).remove();
-                        if (opponentsCount == maxOpponents) {
-                            $("#opponentsControl").fadeIn('slow');
-                        }
-                        opponentsCount--;
-                    });
+            function () {
+                $(this).addClass("player-search-remove");
+            },
+            function () {
+                $(this).removeClass("player-search-remove");
+            }).click(function () {
+                $(this).fadeOut('fast', function () {
+                    $(this).remove();
+                    if (opponentsCount == maxOpponents) {
+                        $("#opponentsControl").fadeIn('slow');
+                    }
+                    opponentsCount--;
                 });
+            });
     };
 
     this.selectOpponent = function () {
@@ -783,17 +783,17 @@ wm.game.Create = function (maxOpponents, opponentsCount, playerSearch, language)
             serializeObject.opponents = [serializeObject.opponents];
         }
         $.post("create.ajax", JSON.stringify(serializeObject),
-                function (response) {
-                    if (response.success) {
-                        if (response.data == null || response.data.board == undefined) {
-                            wm.util.url.redirect('/playground/scribble/active');
-                        } else {
-                            wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
-                        }
+            function (response) {
+                if (response.success) {
+                    if (response.data == null || response.data.board == undefined) {
+                        wm.util.url.redirect('/playground/scribble/active');
                     } else {
-                        wm.ui.unlock(gameWidget, response.message, true);
+                        wm.util.url.redirect('/playground/scribble/board?b=' + response.data.board);
                     }
-                }, 'json');
+                } else {
+                    wm.ui.unlock(gameWidget, response.message, true);
+                }
+            }, 'json');
     };
 };
 
@@ -1346,31 +1346,31 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
         var data = JSON.stringify({language: lang, section: section});
         wm.ui.lock(comp, language["register.subscribing"]);
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, data,
-                function (response) {
-                    if (response.success) {
-                        subscriptions = response.data;
-                        wm.ui.unlock(comp, language["register.subscribed"]);
-                    } else {
-                        wm.ui.unlock(comp, response.message, true);
-                    }
-                    updateAnnounceView(true);
-                    callback(response.success);
-                }, 'json');
+            function (response) {
+                if (response.success) {
+                    subscriptions = response.data;
+                    wm.ui.unlock(comp, language["register.subscribed"]);
+                } else {
+                    wm.ui.unlock(comp, response.message, true);
+                }
+                updateAnnounceView(true);
+                callback(response.success);
+            }, 'json');
     };
 
     var unsubscribe = function (comp, callback) {
         wm.ui.lock(comp, language["register.unsubscribing"]);
         $.post("/playground/tourney/changeSubscription.ajax?t=" + announce, JSON.stringify({}),
-                function (response) {
-                    if (response.success) {
-                        subscriptions = response.data;
-                        wm.ui.unlock(comp, language["register.unsubscribed"]);
-                    } else {
-                        wm.ui.unlock(comp, response.message, true);
-                    }
-                    updateAnnounceView(false);
-                    callback(response.success);
-                }, 'json');
+            function (response) {
+                if (response.success) {
+                    subscriptions = response.data;
+                    wm.ui.unlock(comp, language["register.unsubscribed"]);
+                } else {
+                    wm.ui.unlock(comp, response.message, true);
+                }
+                updateAnnounceView(false);
+                callback(response.success);
+            }, 'json');
     };
 
     var updateAnnounceView = function (sub) {
@@ -1437,11 +1437,11 @@ wm.game.tourney.Subscription = function (announce, subscribed, subscriptions, la
                     text: language["register.button"],
                     click: function () {
                         subscribe(subscriptionDialog.closest(".ui-dialog"),
-                                getSelectedValue('language', true),
-                                getSelectedValue('section', true),
-                                function () {
-                                    subscriptionDialog.dialog("close");
-                                });
+                            getSelectedValue('language', true),
+                            getSelectedValue('section', true),
+                            function () {
+                                subscriptionDialog.dialog("close");
+                            });
                     }
                 },
                 {
@@ -1513,16 +1513,16 @@ wm.game.settings.Board = function () {
     };
 
     $(".tiles-set-nav").hover(
-            function () {
-                if ($(this).attr('disabled') == undefined) {
-                    $(this).removeClass('ui-state-default').addClass('ui-state-hover');
-                }
-            },
-            function () {
-                if ($(this).attr('disabled') == undefined) {
-                    $(this).removeClass('ui-state-hover').addClass('ui-state-default');
-                }
-            });
+        function () {
+            if ($(this).attr('disabled') == undefined) {
+                $(this).removeClass('ui-state-default').addClass('ui-state-hover');
+            }
+        },
+        function () {
+            if ($(this).attr('disabled') == undefined) {
+                $(this).removeClass('ui-state-hover').addClass('ui-state-default');
+            }
+        });
 
     prevSet.click(function () {
         if (selected > 0) {
@@ -2056,8 +2056,8 @@ wm.scribble.Memory = function (board, controller, clearMemory, language) {
     clearWordButton.button({disabled: true, icons: {primary: 'icon-memory-clear'}}).click(this.clear);
 
     board.bind('selectedWord', processWordSelected)
-            .bind('resolution', processGameFinished)
-            .bind('gameMoves', processNewMoves);
+        .bind('resolution', processGameFinished)
+        .bind('gameMoves', processNewMoves);
 
     $(document).ready(function () {
         reloadMemoryWords();
@@ -2074,43 +2074,43 @@ wm.scribble.Selection = function (board) {
     var selectedTilesInfo = selectedTilesElement.text();
 
     board.bind("selectedTiles",
-            function (event, tile, selected) {
-                var tiles = selectedTilesElement.find('div');
-                var length = board.getSelectedTiles().length;
-                if (selected && length == 1) {
-                    selectedTilesElement.empty();
-                }
-                if (selected) {
-                    wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo(selectedTilesElement);
-                } else {
-                    var updateOffset = false;
-                    $.each(tiles, function (i, tileWidget) {
-                        var v = $(tileWidget);
-                        if (v.data('tile').number == tile.number) {
-                            updateOffset = true;
-                            v.remove();
-                        } else if (updateOffset) {
-                            v.css('left', (i - 1) * 22);
-                        }
-                    });
-                }
-                if (length == 0) {
-                    selectedTilesElement.text(selectedTilesInfo);
-                }
-            })
-            .bind('selectedWord',
-            function (event, word) {
-                if (word != null) {
-                    wordCostElement.empty().text(board.getScoreEngine().getWordPoints(word).formula);
-                    wordInfoElement.empty();
-                    $.each(word.tiles, function (i, t) {
-                        wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(wordInfoElement);
-                    });
-                } else {
-                    wordInfoElement.text(selectedWordInfo);
-                    wordCostElement.text(selectedWordCost);
-                }
-            });
+        function (event, tile, selected) {
+            var tiles = selectedTilesElement.find('div');
+            var length = board.getSelectedTiles().length;
+            if (selected && length == 1) {
+                selectedTilesElement.empty();
+            }
+            if (selected) {
+                wm.scribble.tile.createTileWidget(tile).offset({left: ((length - 1) * 22), top: 0}).appendTo(selectedTilesElement);
+            } else {
+                var updateOffset = false;
+                $.each(tiles, function (i, tileWidget) {
+                    var v = $(tileWidget);
+                    if (v.data('tile').number == tile.number) {
+                        updateOffset = true;
+                        v.remove();
+                    } else if (updateOffset) {
+                        v.css('left', (i - 1) * 22);
+                    }
+                });
+            }
+            if (length == 0) {
+                selectedTilesElement.text(selectedTilesInfo);
+            }
+        })
+        .bind('selectedWord',
+        function (event, word) {
+            if (word != null) {
+                wordCostElement.empty().text(board.getScoreEngine().getWordPoints(word).formula);
+                wordInfoElement.empty();
+                $.each(word.tiles, function (i, t) {
+                    wm.scribble.tile.createTileWidget(t).offset({left: (i * 22), top: 0}).appendTo(wordInfoElement);
+                });
+            } else {
+                wordInfoElement.text(selectedWordInfo);
+                wordCostElement.text(selectedWordCost);
+            }
+        });
 };
 
 wm.scribble.Dictionary = function (board, dictionaryManager, checkWords) {
@@ -2199,14 +2199,14 @@ wm.scribble.Dictionary = function (board, dictionaryManager, checkWords) {
     };
 
     board.bind('selectedWord',
-            function (event, word) {
-                if (word != null) {
-                    input.val(word.text);
-                } else {
-                    input.val('');
-                }
-                validateInputValue();
-            });
+        function (event, word) {
+            if (word != null) {
+                input.val(word.text);
+            } else {
+                input.val('');
+            }
+            validateInputValue();
+        });
 
     input.keyup(function (e) {
         if (e.which == 13) {
@@ -2245,16 +2245,16 @@ wm.scribble.BankInfo = function (board, language) {
             cols = Math.max(cols, col + 1);
             var t = wm.scribble.tile.createTileWidget({number: bti.count, letter: bti.letter, cost: bti.cost}).offset({top: row * 22, left: col * 22});
             t.hover(
-                    function () {
-                        showTileInfo(bti);
-                        wm.scribble.tile.selectTile(this);
-                    },
-                    function () {
-                        wm.scribble.tile.deselectTile(this);
-                    }).click(
-                    function () {
-                        selectActiveTile(bti);
-                    }).appendTo(tilesPanel);
+                function () {
+                    showTileInfo(bti);
+                    wm.scribble.tile.selectTile(this);
+                },
+                function () {
+                    wm.scribble.tile.deselectTile(this);
+                }).click(
+                function () {
+                    selectActiveTile(bti);
+                }).appendTo(tilesPanel);
         });
         tilesPanel.width(cols * 22).height(rows * 22);
 
@@ -2493,56 +2493,56 @@ wm.scribble.Controls = function (board, language) {
         });
 
         $('.exchangeTilesPanel').dialog({
-                    title: language['exchange'],
-                    draggable: false,
-                    modal: true,
-                    resizable: false,
-                    width: 400,
-                    buttons: [
-                        {
-                            text: language['exchange'],
-                            click: function () {
-                                $(this).dialog("close");
-                                var tiles = [];
-                                $.each(tilesPanel.children(), function (i, tw) {
-                                    if (wm.scribble.tile.isTileSelected(tw)) {
-                                        tiles.push($(tw).data('tile'));
-                                    }
-                                });
-                                board.exchangeTiles(tiles, showMoveResult);
-                            }
-                        },
-                        {
-                            text: language['cancel'],
-                            click: function () {
-                                $(this).dialog("close");
-                            }
+                title: language['exchange'],
+                draggable: false,
+                modal: true,
+                resizable: false,
+                width: 400,
+                buttons: [
+                    {
+                        text: language['exchange'],
+                        click: function () {
+                            $(this).dialog("close");
+                            var tiles = [];
+                            $.each(tilesPanel.children(), function (i, tw) {
+                                if (wm.scribble.tile.isTileSelected(tw)) {
+                                    tiles.push($(tw).data('tile'));
+                                }
+                            });
+                            board.exchangeTiles(tiles, showMoveResult);
                         }
-                    ]
-                }
+                    },
+                    {
+                        text: language['cancel'],
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            }
         )
     };
 
     board
-            .bind("selectedTiles", function (event, tile, selected) {
-                updateSelectionState();
-            })
-            .bind('selectedWord', function (event, word) {
-                updateControlsState();
-            })
-            .bind('playerTurn', function (event, oldPlayerTurn, newPlayerTurn) {
-                updateGameState('playerTurn');
-            })
-            .bind('resolution', function (event, oldResolution, newResolution) {
-                updateGameState('resolution');
-            })
-            .bind('locked', function (event, locked) {
-                if (locked) {
-                    lockBoard();
-                } else {
-                    unlockBoard();
-                }
-            });
+        .bind("selectedTiles", function (event, tile, selected) {
+            updateSelectionState();
+        })
+        .bind('selectedWord', function (event, word) {
+            updateControlsState();
+        })
+        .bind('playerTurn', function (event, oldPlayerTurn, newPlayerTurn) {
+            updateGameState('playerTurn');
+        })
+        .bind('resolution', function (event, oldResolution, newResolution) {
+            updateGameState('resolution');
+        })
+        .bind('locked', function (event, locked) {
+            if (locked) {
+                lockBoard();
+            } else {
+                unlockBoard();
+            }
+        });
 
     updateControlsState();
 };
@@ -2664,13 +2664,13 @@ wm.scribble.Settings = function (board, language) {
                     click: function () {
                         wm.ui.lock(null, language['waiting']);
                         $.post("/playground/scribble/settings/save.ajax", JSON.stringify($("#boardSettingsForm").serializeObject()),
-                                function (response) {
-                                    if (response.success) {
-                                        wm.util.url.reload();
-                                    } else {
-                                        wm.ui.unlock(null, response.message, true);
-                                    }
-                                }, 'json');
+                            function (response) {
+                                if (response.success) {
+                                    wm.util.url.reload();
+                                } else {
+                                    wm.ui.unlock(null, response.message, true);
+                                }
+                            }, 'json');
 
                     }
                 },
@@ -2809,16 +2809,16 @@ wm.scribble.Progress = function (board, language) {
     };
 
     board.bind('validated',
-            function (event, type) {
-                board.getPlayboardElement(".spentTime").html(board.getSpentTime().text);
-            }).bind('resolution',
-            function (event, resolution) {
-                markAsFinished();
-                $(".state-change-marker").toggle();
-            }).bind('gameMoves',
-            function (event, moves) {
-                updateProgressBar();
-            });
+        function (event, type) {
+            board.getPlayboardElement(".spentTime").html(board.getSpentTime().text);
+        }).bind('resolution',
+        function (event, resolution) {
+            markAsFinished();
+            $(".state-change-marker").toggle();
+        }).bind('gameMoves',
+        function (event, moves) {
+            updateProgressBar();
+        });
 
     if (!board.isBoardActive()) {
         markAsFinished();
@@ -2998,8 +2998,8 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
         var originalState = draggingTile.data('originalState');
         var relatedCell = getRelatedCell(ev, {left: tileOffset.left - 5, top: tileOffset.top - 5});
         if (relatedCell == null ||
-                (relatedCell.container == boardEl && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
-                (relatedCell.container == handEl && handTiles[relatedCell.x] != undefined)) {
+            (relatedCell.container == boardEl && boardTiles[relatedCell.x][relatedCell.y] != undefined) ||
+            (relatedCell.container == handEl && handTiles[relatedCell.x] != undefined)) {
             draggingTile.offset(originalState.offset);
         } else {
             // clear original position
@@ -3118,7 +3118,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
         $.each(handTiles, function (i, handTile) {
             if (handTile == null || handTile == undefined) {
                 handTiles[i] = wm.scribble.tile.createTileWidget(tile).
-                        offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(handEl);
+                    offset({top: 0, left: i * 22}).mousedown(onTileDown).appendTo(handEl);
                 return false;
             }
         });
@@ -3177,7 +3177,7 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
 
                 if (boardTiles[tile.column][tile.row] == null || boardTiles[tile.column][tile.row] == undefined) {
                     var w = wm.scribble.tile.createTileWidget(tile).
-                            offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
+                        offset({top: tile.row * 22, left: tile.column * 22}).click(onTileSelected);
                     wm.scribble.tile.pinTile(w.get(0));
                     boardTiles[tile.column][tile.row] = w.appendTo(boardEl);
                 }
@@ -3222,9 +3222,9 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
 
         if (word != null && selectedWord != null) {
             if (word.text == selectedWord.text &&
-                    word.position.row == selectedWord.position.row &&
-                    word.position.column == selectedWord.position.column &&
-                    word.direction == selectedWord.direction) {
+                word.position.row == selectedWord.position.row &&
+                word.position.column == selectedWord.position.column &&
+                word.direction == selectedWord.direction) {
                 return true;
             }
         }
@@ -3388,16 +3388,16 @@ wm.scribble.Board = function (board, viewer, wildcardHandlerElement, controller,
                 var col = (i - row * 15);
                 var t = wm.scribble.tile.createTileWidget({number: 0, letter: bti.letter, cost: 0}).offset({top: row * 22, left: col * 22});
                 t.hover(
-                        function () {
-                            wm.scribble.tile.selectTile(this);
-                        },
-                        function () {
-                            wm.scribble.tile.deselectTile(this);
-                        }).click(
-                        function () {
-                            tileLetter = $(this).data('tile').letter;
-                            wildcardSelectionDialog.dialog("close");
-                        }).appendTo(panel);
+                    function () {
+                        wm.scribble.tile.selectTile(this);
+                    },
+                    function () {
+                        wm.scribble.tile.deselectTile(this);
+                    }).click(
+                    function () {
+                        tileLetter = $(this).data('tile').letter;
+                        wildcardSelectionDialog.dialog("close");
+                    }).appendTo(panel);
             });
         }
         wildcardSelectionDialog.replacer = replacer;
@@ -3800,13 +3800,13 @@ wm.scribble.Monitoring = function (board) {
         });
 
         $.post('/playground/scribble/observe.ajax?b=' + board.getBoardId() + params, null).success(
-                function (response) {
-                    $.each(items, function (i, v) {
-                        if (v != null) {
-                            v.getCallback()(response);
-                        }
-                    });
-                }
+            function (response) {
+                $.each(items, function (i, v) {
+                    if (v != null) {
+                        v.getCallback()(response);
+                    }
+                });
+            }
         );
     };
 
@@ -3879,16 +3879,16 @@ $(document).ready(function () {
     }
 
     $(".quickInfo").addClass('ui-state-default').hover(
-            function () {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-hover');
-                }
-            },
-            function () {
-                if (!$(this).hasClass('ui-state-active')) {
-                    $(this).attr('class', 'quickInfo ui-state-default');
-                }
-            });
+        function () {
+            if (!$(this).hasClass('ui-state-active')) {
+                $(this).attr('class', 'quickInfo ui-state-hover');
+            }
+        },
+        function () {
+            if (!$(this).hasClass('ui-state-active')) {
+                $(this).attr('class', 'quickInfo ui-state-default');
+            }
+        });
 
     var activeQuickInfo = undefined;
     $(".quickInfo.ajax a").cluetip({
@@ -3967,25 +3967,25 @@ $(document).ready(function () {
                 primary: "ui-icon-triangle-1-s"
             }
         }).click(function () {
+                if (globalSplitButtonMenu != null) {
+                    globalSplitButtonMenu.hide();
+                    globalSplitButtonMenu = null;
+                }
+
+                globalSplitButtonMenu = $(ch[1]).menu().show().position({
+                    my: "left top",
+                    at: "left bottom",
+                    of: this
+                });
+
+                $(document).one("click", function () {
                     if (globalSplitButtonMenu != null) {
                         globalSplitButtonMenu.hide();
                         globalSplitButtonMenu = null;
                     }
-
-                    globalSplitButtonMenu = $(ch[1]).menu().show().position({
-                        my: "left top",
-                        at: "left bottom",
-                        of: this
-                    });
-
-                    $(document).one("click", function () {
-                        if (globalSplitButtonMenu != null) {
-                            globalSplitButtonMenu.hide();
-                            globalSplitButtonMenu = null;
-                        }
-                    });
-                    return false;
                 });
+                return false;
+            });
         buttons.buttonset();
     });
 });
@@ -3994,30 +3994,30 @@ $(document).ready(function () {
     var timeoutID;
 
     $('.dropdown')
-            .mouseenter(function () {
-                var submenu = $('.sublinks').stop(false, true).hide();
-                window.clearTimeout(timeoutID);
+        .mouseenter(function () {
+            var submenu = $('.sublinks').stop(false, true).hide();
+            window.clearTimeout(timeoutID);
 
-                submenu.css({
-                    width: $(this).width() + 20 + 'px',
-                    top: $(this).offset().top + $(this).height() + 7 + 'px',
-                    left: $(this).offset().left + 'px'
-                });
-
-                submenu.stop().slideDown(300);
-
-                submenu.mouseleave(function () {
-                    $(this).slideUp(300);
-                });
-
-                submenu.mouseenter(function () {
-                    window.clearTimeout(timeoutID);
-                });
-
-            })
-            .mouseleave(function () {
-                timeoutID = window.setTimeout(function () {
-                    $('.sublinks').stop(false, true).slideUp(300);
-                }, 250);
+            submenu.css({
+                width: $(this).width() + 20 + 'px',
+                top: $(this).offset().top + $(this).height() + 7 + 'px',
+                left: $(this).offset().left + 'px'
             });
+
+            submenu.stop().slideDown(300);
+
+            submenu.mouseleave(function () {
+                $(this).slideUp(300);
+            });
+
+            submenu.mouseenter(function () {
+                window.clearTimeout(timeoutID);
+            });
+
+        })
+        .mouseleave(function () {
+            timeoutID = window.setTimeout(function () {
+                $('.sublinks').stop(false, true).slideUp(300);
+            }, 250);
+        });
 });
