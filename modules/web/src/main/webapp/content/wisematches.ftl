@@ -33,8 +33,8 @@
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.freeow-1.0.2.min.js"/>"></script>
     <script type="text/javascript" src="<@wm.ui.static "js/jquery.hoverIntent-0.0.6.min.js"/>"></script>
 
-    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.1.6.css"/>"/>
-    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.1.6.js"/>"></script>
+    <link rel="stylesheet" type="text/css" href="<@wm.ui.static "css/wisematches-5.1.7.css"/>"/>
+    <script type="text/javascript" src="<@wm.ui.static "js/wisematches-5.1.7.js"/>"></script>
 
 <#include "analytics.ftl">
 <#include 'localization.ftl'/>
@@ -47,7 +47,7 @@
            style="background: none; border: 0; padding: 0">
         <tr>
             <td width="170px" valign="top">
-                <img src="<@wm.ui.static "images/logo170x70x1.png"/>" width="170px" height="70px"/>
+                <img src="<@wm.ui.static "images/logo/logo170x70x2.png"/>" width="170px" height="70px"/>
             </td>
             <td style="padding-right: 5px">
             <#if principal??><#include "playground/header.ftl"/><#else><#include "account/header.ftl"/></#if>

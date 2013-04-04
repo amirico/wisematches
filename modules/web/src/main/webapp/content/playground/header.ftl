@@ -4,8 +4,14 @@
 
 <#assign hasNewFeatues=false/>
 
-<table style="width: 100%; height: 70px;">
+<table style="width: 100%; height: 70px; padding-left: 2px">
     <tr>
+        <td valign="top" align="left">
+        <@wm.security.authorize granted="admin">
+            <a href="/maintain/admin/main"
+               style="color: rgba(128,128,128,0.27)"><@message code="game.menu.admin.label"/></a>
+        </@wm.security.authorize>
+        </td>
         <td valign="top" align="right">
         <@wm.player.name principal true false/>
         <#if hasNewFeatues>
@@ -13,10 +19,6 @@
             <a href="/info/features"
                style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
         </#if>
-        <@wm.security.authorize granted="admin">
-            |
-            <a href="/maintain/admin/main"><@message code="game.menu.admin.label"/></a>
-        </@wm.security.authorize>
             |
         <#if principal.type.member><a
                 href="/account/modify"><@message code="game.menu.settings.label"/></a>
@@ -28,7 +30,7 @@
         </td>
     </tr>
     <tr>
-        <td valign="bottom">
+        <td align="left" valign="bottom" colspan="2">
             <div id="gameToolbar" align="left" style="display: none">
                 <div class="wm-ui-buttonset">
                     <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
