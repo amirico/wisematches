@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="net.wisematches.app.scribble"
+          package="wisematches.client.android"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="8"/>
-    <application android:label="@string/app_name">
-        <activity android:name="WMEntryPointActivity"
-                  android:label="@string/app_name">
+
+    <uses-sdk
+            android:minSdkVersion="8"
+            android:targetSdkVersion="8"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+            android:name=".WMApplication"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar">
+        <activity
+                android:name=".activity.EntryPointActivity"
+                android:noHistory="true"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+                android:name=".activity.account.SignInActivity"
+                android:noHistory="true"/>
+
+        <activity
+                android:name=".activity.account.SignOutActivity"
+                android:noHistory="true"/>
+
+        <activity android:name=".activity.playground.DashboardActivity"/>
+
+        <activity android:name=".activity.account.RegistrationActivity"/>
     </application>
 </manifest> 

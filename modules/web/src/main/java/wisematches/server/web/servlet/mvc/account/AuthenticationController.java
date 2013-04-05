@@ -13,10 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import wisematches.core.Player;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.account.form.AccountLoginForm;
+import wisematches.server.web.servlet.sdo.ServiceResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -44,6 +48,27 @@ public class AuthenticationController extends WisematchesController {
 		form.setRememberMe("true"); // by default remember me enabled
 //		model.addAttribute("", Boolean.TRUE);
 		return processLoginPage("general", model, locale);
+	}
+
+	@RequestMapping("login.ajax")
+	public ServiceResponse loginService(HttpServletResponse response) throws IOException {
+		final Player principal = getPrincipal();
+		if (principal != null) {
+			return responseFactory.success(principal);
+		} else {
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return responseFactory.failure();
+		}
+	}
+
+	@RequestMapping("logout.ajax")
+	public ServiceResponse logoutService() {
+		final Player principal = getPrincipal();
+		if (principal == null) {
+			return responseFactory.success();
+		} else {
+			return responseFactory.failure();
+		}
 	}
 
 	@RequestMapping("loginAuth")
