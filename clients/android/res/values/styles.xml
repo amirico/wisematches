@@ -1,10 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="errorLabel">
-        <item name="android:textColor">@color/errorLabel</item>
-    </style>
-
-    <style name="activePlayer">
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">@color/backgroundHeader</item>
+    <style name="error">
+        <item name="android:textColor">#cd0a0a</item>
     </style>
 </resources>

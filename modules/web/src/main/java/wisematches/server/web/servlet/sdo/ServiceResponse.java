@@ -27,15 +27,29 @@ public final class ServiceResponse extends HttpEntity<ServiceResponse.ResponseBo
 	public static final class Failure extends ServiceResponse.ResponseBody {
 		private final String code;
 		private final String message;
+		private final Object data;
+
+		public Failure(Object data) {
+			this(null, data, null);
+		}
 
 		public Failure(String code, String message) {
+			this(code, null, message);
+		}
+
+		public Failure(String code, Object data, String message) {
 			super(false);
 			this.code = code;
+			this.data = data;
 			this.message = message;
 		}
 
 		public String getCode() {
 			return code;
+		}
+
+		public Object getData() {
+			return data;
 		}
 
 		public String getMessage() {

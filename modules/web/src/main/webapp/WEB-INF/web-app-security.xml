@@ -50,52 +50,58 @@
     <beans:bean id="authenticationFailureHandler"
                 class="wisematches.server.web.security.authentication.WMAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="redirectStrategy"/>
-        <beans:property name="defaultFailureUrl" value="/account/loginAuth?error=system"/>
+        <beans:property name="failureUrl" value="/account/loginAuth?error="/>
+        <beans:property name="defaultCode" value="system"/>
         <beans:property name="allowSessionCreation" value="true"/>
-        <beans:property name="exceptionMappings">
+        <beans:property name="exceptionCodes">
             <beans:map>
                 <beans:entry
                         key="org.springframework.security.authentication.BadCredentialsException"
-                        value="/account/loginAuth?error=credential"/>
+                        value="credential"/>
                 <beans:entry
                         key="org.springframework.security.core.userdetails.UsernameNotFoundException"
-                        value="/account/loginAuth?error=credential"/>
+                        value="credential"/>
 
                 <beans:entry
                         key="org.springframework.security.web.authentication.session.SessionAuthenticationException"
-                        value="/account/loginAuth?error=session"/>
+                        value="session"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.www.NonceExpiredException"
-                        value="/account/loginAuth?error=session"/>
+                        value="session"/>
                 <beans:entry
                         key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException"
-                        value="/account/loginAuth?error=session"/>
+                        value="session"/>
                 <beans:entry
                         key="org.springframework.security.authentication.InsufficientAuthenticationException"
-                        value="/account/loginAuth?error=session"/>
+                        value="session"/>
 
                 <beans:entry
                         key="org.springframework.security.authentication.AccountStatusException"
-                        value="/account/loginAuth?error=status"/>
+                        value="status"/>
 
                 <beans:entry
                         key="org.springframework.security.authentication.InsufficientAuthenticationException"
-                        value="/account/loginAuth?error=insufficient"/>
+                        value="insufficient"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException"
-                        value="/account/loginAuth?error=insufficient"/>
+                        value="insufficient"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.CookieTheftException"
-                        value="/account/loginAuth?error=insufficient"/>
+                        value="insufficient"/>
                 <beans:entry
                         key="org.springframework.security.web.authentication.rememberme.InvalidCookieException"
-                        value="/account/loginAuth?error=insufficient"/>
+                        value="insufficient"/>
             </beans:map>
         </beans:property>
     </beans:bean>
 
     <beans:bean id="accessDeniedHandler" class="wisematches.server.web.security.access.WMAccessDeniedHandler">
         <beans:property name="insufficientErrorPage" value="/account/loginAuth?error=insufficient"/>
+    </beans:bean>
+
+    <beans:bean id="authenticationEntryPoint"
+                class="wisematches.server.web.security.authentication.WMAuthenticationEntryPoint">
+        <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler"/>
     </beans:bean>
 
     <beans:bean id="visitorAuthenticationFilter"
@@ -144,6 +150,7 @@
 
         <intercept-url pattern="/**" access="permitAll"/>
 
+        <!--<custom-filter after="BASIC_AUTH_FILTER" ref="androidAuthenticationFilter"/>-->
         <custom-filter before="ANONYMOUS_FILTER" ref="visitorAuthenticationFilter"/>
         <custom-filter after="SESSION_MANAGEMENT_FILTER" ref="sessionRegistryFixFilter"/>
         <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrentSessionFilter"/>
@@ -153,6 +160,8 @@
         <remember-me services-ref="rememberMeServices" key="${security.remember.token}"/>
 
         <access-denied-handler ref="accessDeniedHandler"/>
+
+        <http-basic entry-point-ref="authenticationEntryPoint"/>
 
         <form-login login-page="/account/login"
                     login-processing-url="/account/loginProcessing"

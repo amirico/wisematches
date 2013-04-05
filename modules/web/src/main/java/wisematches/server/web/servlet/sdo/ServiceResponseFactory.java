@@ -11,6 +11,7 @@ public final class ServiceResponseFactory {
 	private final GameMessageSource messageSource;
 
 	private static final ServiceResponse SUCCESS = new ServiceResponse(new ServiceResponse.Success(null));
+	private static final ServiceResponse FAILURE = new ServiceResponse(new ServiceResponse.Failure(null));
 
 	public ServiceResponseFactory(GameMessageSource messageSource) {
 		this.messageSource = messageSource;
@@ -20,8 +21,16 @@ public final class ServiceResponseFactory {
 		return SUCCESS;
 	}
 
+	public ServiceResponse failure() {
+		return FAILURE;
+	}
+
 	public ServiceResponse success(Object data) {
 		return new ServiceResponse(new ServiceResponse.Success(data));
+	}
+
+	public ServiceResponse failure(Object data) {
+		return new ServiceResponse(new ServiceResponse.Failure(data));
 	}
 
 	public ServiceResponse failure(String code, Locale locale) {
