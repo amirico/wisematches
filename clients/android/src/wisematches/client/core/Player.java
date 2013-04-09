@@ -1,4 +1,4 @@
-package wisematches.client.android;
+package wisematches.client.core;
 
 import java.util.TimeZone;
 
@@ -52,5 +52,19 @@ public class Player {
 
 	public boolean isOnline() {
 		return online;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("Player{");
+		sb.append("id=").append(id);
+		sb.append(", nickname='").append(nickname).append('\'');
+		sb.append(", language='").append(language).append('\'');
+		sb.append(", timeZone=").append(timeZone);
+		sb.append(", type='").append(type).append('\'');
+		sb.append(", membership='").append(membership).append('\'');
+		sb.append(", online=").append(online);
+		sb.append('}');
+		return sb.toString();
 	}
 }

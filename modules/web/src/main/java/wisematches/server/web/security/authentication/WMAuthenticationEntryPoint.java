@@ -19,15 +19,11 @@ public class WMAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-		if (authException != null) {
-			final String exceptionCode = authenticationFailureHandler.getExceptionCode(authException.getClass());
-			response.addHeader("AuthenticateErrorCode", exceptionCode);
-		}
-
 		if (authException == null) {
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		} else {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+			final String exceptionCode = authenticationFailureHandler.getExceptionCode(authException.getClass());
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exceptionCode);
 		}
 	}
 
