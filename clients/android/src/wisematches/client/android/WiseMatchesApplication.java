@@ -151,7 +151,7 @@ public class WiseMatchesApplication extends Application {
 					data.optString("membership", null),
 					true);
 
-			final SharedPreferences preferences = getSharedPreferences("player", Context.MODE_PRIVATE);
+			final SharedPreferences preferences = getSharedPreferences("principal", Context.MODE_PRIVATE);
 			final SharedPreferences.Editor edit = preferences.edit();
 			edit.putLong("id", player.getId());
 			edit.putString("credentials", credentials);
