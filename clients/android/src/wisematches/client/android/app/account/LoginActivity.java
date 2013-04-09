@@ -1,7 +1,6 @@
 package wisematches.client.android.app.account;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import wisematches.client.android.R;
-import wisematches.client.android.WiseMatchesApplication;
 import wisematches.client.android.app.WiseMatchesActivity;
 import wisematches.client.android.app.playground.DashboardActivity;
 import wisematches.client.android.os.ProgressTask;
@@ -57,7 +55,7 @@ public class LoginActivity extends WiseMatchesActivity {
 					@Override
 					protected Exception doInBackground(String... strings) {
 						try {
-							getWiseMatches().authenticate(strings[0], strings[1]);
+							getWMApplication().authenticate(strings[0], strings[1]);
 							startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
 							return null;
 						} catch (Exception ex) {
@@ -77,13 +75,10 @@ public class LoginActivity extends WiseMatchesActivity {
 			}
 		});
 
-		final WiseMatchesApplication application = getWiseMatches();
-
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + application.getServerHost() + "/account/create"));
-				startActivity(Intent.createChooser(intent, "Chose browser"));
+				getWMServer().open("/account/create", LoginActivity.this);
 //				final Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
 //				intent.putExtra("username", usernameField.getText().toString());
 //				startActivity(intent);
@@ -93,8 +88,7 @@ public class LoginActivity extends WiseMatchesActivity {
 		restorePwdButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + application.getServerHost() + "/account/recovery/request"));
-				startActivity(Intent.createChooser(intent, "Chose browser"));
+				getWMServer().open("/account/recovery/request", LoginActivity.this);
 //				final Intent intent = new Intent(LoginActivity.this, RestoreActivity.class);
 //				intent.putExtra("username", usernameField.getText().toString());
 //				startActivity(intent);

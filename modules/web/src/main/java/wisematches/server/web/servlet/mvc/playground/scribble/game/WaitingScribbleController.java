@@ -71,10 +71,10 @@ public class WaitingScribbleController extends AbstractScribbleController {
 
 	@RequestMapping("join.ajax")
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ServiceResponse activeProposalsService() {
+	public ServiceResponse activeProposalsService(Locale locale) {
 		final Player principal = getPrincipal();
 		log.debug("Loading waiting games for personality: {}", principal);
-		return responseFactory.success(createProposals(principal));
+		return responseFactory.success(createProposals(principal, locale));
 	}
 
 	@RequestMapping("accept.ajax")
@@ -130,14 +130,14 @@ public class WaitingScribbleController extends AbstractScribbleController {
 		}
 	}
 
-	private WaitingGamesInfo createProposals(Player principal) {
+	private WaitingGamesInfo createProposals(Player principal, Locale locale) {
 		final Collection<CriterionViolation> globalViolations = checkGlobalViolations(principal);
 		final List<ProposalInfo> activeProposals = new ArrayList<>();
 		for (GameProposal<ScribbleSettings> proposal : proposalManager.searchEntities(principal, ProposalRelation.AVAILABLE, null, null)) {
 			if (globalViolations == null) {
-				activeProposals.add(new ProposalInfo(proposal, checkProposalViolation(proposal)));
+				activeProposals.add(new ProposalInfo(proposal, checkProposalViolation(proposal), playerStateManager, messageSource, locale));
 			} else {
-				activeProposals.add(new ProposalInfo(proposal, globalViolations));
+				activeProposals.add(new ProposalInfo(proposal, globalViolations, playerStateManager, messageSource, locale));
 			}
 		}
 		log.debug("Found {} proposals for personality: {}", activeProposals.size(), principal);

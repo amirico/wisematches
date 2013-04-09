@@ -1,14 +1,7 @@
 package wisematches.client.android.app.account;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import wisematches.client.android.R;
-import wisematches.client.android.WiseMatchesApplication;
 import wisematches.client.android.app.WiseMatchesActivity;
 
 /**
@@ -25,10 +18,7 @@ public class RegisterActivity extends WiseMatchesActivity {
 			final String username = extras.getString("username");
 		}
 */
-		final WiseMatchesApplication application = getWiseMatches();
-
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + application.getServerHost() + "/account/create"));
-		startActivity(Intent.createChooser(intent, "Chose browser"));
+		getWMServer().open("/account/create", this);
 /*
 		final WebView viewById = (WebView) findViewById(R.id.registerView);
 		WebSettings settings = viewById.getSettings();

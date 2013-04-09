@@ -7,11 +7,10 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 import wisematches.client.android.CommunicationException;
 import wisematches.client.android.CooperationException;
-import wisematches.client.android.app.account.LoginActivity;
-import wisematches.client.core.Player;
 import wisematches.client.android.R;
 import wisematches.client.android.app.account.LoginActivity;
 import wisematches.client.android.app.playground.DashboardActivity;
+import wisematches.client.core.Player;
 
 public class EntryPointActivity extends WiseMatchesActivity {
 	private TextView status;
@@ -38,7 +37,7 @@ public class EntryPointActivity extends WiseMatchesActivity {
 			protected Player doInBackground(Void... voids) {
 				Player player = null;
 				try {
-					player = getWiseMatches().authenticate();
+					player = getWMApplication().authenticate();
 					if (player != null) {
 						startActivity(new Intent(EntryPointActivity.this, DashboardActivity.class));
 					} else {
