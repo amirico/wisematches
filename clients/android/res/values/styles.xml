@@ -7,5 +7,7 @@
 
     <style name="link">
         <item name="android:textColor">#0000FF</item>
-    </style><style name="black"></style>
+    </style>
+
+    <style name="black"></style>
 </resources>

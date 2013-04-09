@@ -29,18 +29,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51d65069-92c6-43d0-bd58-3e2e6988c8fe" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleInfo.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleInfoAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/http/ServerResponse.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesServer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/playground_dashboard_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/mvc/playground/scribble/game/ActiveScribbleController.java" afterPath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/mvc/playground/scribble/game/ActiveScribbleController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/DashboardActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/playground/DashboardActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/sdo/scribble/game/GameInfo.java" afterPath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/sdo/scribble/game/GameInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/sdo/scribble/game/ProposalInfo.java" afterPath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/sdo/scribble/game/ProposalInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/mvc/playground/scribble/game/WaitingScribbleController.java" afterPath="$PROJECT_DIR$/../../modules/web/src/main/java/wisematches/server/web/servlet/mvc/playground/scribble/game/WaitingScribbleController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wisematches/client/android/WiseMatchesApplication.java" afterPath="$PROJECT_DIR$/src/wisematches/client/android/WiseMatchesApplication.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/android.iws" afterPath="$PROJECT_DIR$/android.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/playground_dashboard.xml" afterPath="$PROJECT_DIR$/res/layout/playground_dashboard.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/styles.xml" afterPath="$PROJECT_DIR$/res/values/styles.xml" />
     </list>
     <ignored path="android.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/strings.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365499470359" ignored="false" />
     <file path="/a.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365071346978" ignored="false" />
-    <file path="/fragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365507734102" ignored="false" />
+    <file path="/fragment.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365512874716" ignored="false" />
     <file path="/ApplicationAtivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365067739322" ignored="false" />
     <file path="/ServerRequest.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365066112309" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365506841928" ignored="false" />
-    <file path="/Dummy.txt" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365509300770" ignored="false" />
+    <file path="/Dummy.txt" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365513873102" ignored="false" />
     <file path="/SignInActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505661451" ignored="false" />
     <file path="$PROJECT_DIR$/src/wisematches/client/android/activity/account/AuthorizationActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365068115089" ignored="false" />
     <file path="/a.dummy" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365509364313" ignored="false" />
@@ -66,16 +83,25 @@
     <file path="/rotate_indefinitely.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365495094759" ignored="false" />
     <file path="/styles.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365496895366" ignored="false" />
     <file path="/colors.xml" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365498094621" ignored="false" />
-    <file path="/DashboardActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365506654192" ignored="false" />
+    <file path="/DashboardActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365512796987" ignored="false" />
     <file path="/WaitingAsyncTask.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365502913887" ignored="false" />
     <file path="/CommunicationException.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505939420" ignored="false" />
-    <file path="/WiseMatchesApplication.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365507413454" ignored="false" />
+    <file path="/WiseMatchesApplication.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510991359" ignored="false" />
     <file path="/CooperationException.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505786315" ignored="false" />
     <file path="/RegistrationActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365504882575" ignored="false" />
     <file path="/RestoreActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365507648873" ignored="false" />
     <file path="/ProgressAsyncTask.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365505472622" ignored="false" />
-    <file path="/LoginActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365509055302" ignored="false" />
-    <file path="/RegisterActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365507625520" ignored="false" />
+    <file path="/LoginActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365511193430" ignored="false" />
+    <file path="/RegisterActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365511144895" ignored="false" />
+    <file path="/GameInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510306496" ignored="false" />
+    <file path="/WiseMatchesServer.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510884636" ignored="false" />
+    <file path="/ServerResponse.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510565041" ignored="false" />
+    <file path="/WiseMatchesActivity.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365510949775" ignored="false" />
+    <file path="/ScribbleInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365512676599" ignored="false" />
+    <file path="/ScribbleInfoAdapter.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365512401267" ignored="false" />
+    <file path="/ProposalInfo.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365513121318" ignored="false" />
+    <file path="/ActiveScribbleController.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365513137382" ignored="false" />
+    <file path="/WaitingScribbleController.java" changelist="51d65069-92c6-43d0-bd58-3e2e6988c8fe" time="1365513182571" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +117,7 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java" line="40">
+      <breakpoint url="file://$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleInfoAdapter.java" line="30" class="wisematches.client.android.view.playground.ScribbleInfoAdapter" package="wisematches.client.android.view.playground">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -152,7 +178,28 @@
     <favorites_list name="android" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="ScribbleInfoAdapter.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleInfoAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="32" column="35" selection-start="961" selection-end="961" vertical-scroll-proportion="0.70608693">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DashboardActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/DashboardActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="40" selection-start="1736" selection-end="1736" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -167,22 +214,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegistrationActivity.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/SignInActivity.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/os/ProgressAsyncTask.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/CooperationException.java" />
         <option value="$PROJECT_DIR$/src/wisematches/client/android/CommunicationException.java" />
         <option value="$PROJECT_DIR$/src/wisematches/client/android/os/ProgressTask.java" />
+        <option value="$PROJECT_DIR$/res/layout/account_register.xml" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/http/ServerResponse.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesServer.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/WiseMatchesApplication.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleInfoAdapter.java" />
+        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/ScribbleInfo.java" />
+        <option value="$PROJECT_DIR$/res/layout/playground_scribble_active_row.xml" />
         <option value="$PROJECT_DIR$/res/layout/playground_dashboard.xml" />
         <option value="$PROJECT_DIR$/src/wisematches/client/android/app/playground/DashboardActivity.java" />
-        <option value="$PROJECT_DIR$/res/layout/account_register.xml" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/src/wisematches/client/android/WiseMatchesApplication.java" />
       </list>
     </option>
   </component>
@@ -303,7 +350,33 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="os" />
+              <option name="myItemId" value="playground" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -360,36 +433,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="playground" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="account" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -676,7 +719,11 @@
       <created>1365509317698</created>
       <updated>1365509317698</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="+Issue 124: login activity is ready (registration and restore are external - browser).">
+      <created>1365509441529</created>
+      <updated>1365509441529</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -703,25 +750,25 @@
     <frame x="1272" y="-8" width="1296" height="1010" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3517018" sideWeight="0.6052632" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26256078" sideWeight="0.6052632" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3517018" sideWeight="0.687643" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26256078" sideWeight="0.687643" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31235698" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31235698" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31235698" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25121555" sideWeight="0.74485123" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837528" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22690438" sideWeight="0.687643" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25121555" sideWeight="0.687643" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25364667" sideWeight="0.687643" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4197731" sideWeight="0.6533181" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951945" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -795,113 +842,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/CooperationException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="230" selection-end="230" vertical-scroll-proportion="0.35051546">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Software/adt/sdk/platforms/android-8/android.jar!/android/content/ContextWrapper.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="45" selection-start="1530" selection-end="1530" vertical-scroll-proportion="0.33293414">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/os/ProgressTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="0" selection-start="1131" selection-end="1131" vertical-scroll-proportion="0.8620283">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#790#960#0" expanded="true" />
-            <element signature="e#955#956#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/CommunicationException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="37" selection-start="413" selection-end="413" vertical-scroll-proportion="0.30070755">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/playground_dashboard.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="20" column="15" selection-start="798" selection-end="798" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Software/adt/sdk/platforms/android-8/android.jar!/android/app/Activity.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="19" selection-start="1754" selection-end="1754" vertical-scroll-proportion="0.33265308">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Software/adt/sdk/platforms/android-8/android.jar!/android/webkit/WebView.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="28" selection-start="4654" selection-end="4654" vertical-scroll-proportion="0.33292383">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/account_register.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="10" column="24" selection-start="393" selection-end="393" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="0" selection-start="863" selection-end="1049" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="6" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="68" selection-start="723" selection-end="748" vertical-scroll-proportion="0.4009434">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="38" selection-start="3120" selection-end="3120" vertical-scroll-proportion="0.6287425">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1699#2560#0" expanded="true" />
-            <element signature="e#1870#1895#0" expanded="true" />
-            <element signature="e#2555#2556#0" expanded="true" />
-            <element signature="e#2664#3124#0" expanded="true" />
-            <element signature="e#3166#3635#0" expanded="true" />
-            <element signature="e#3630#3631#0" expanded="true" />
-            <element signature="class#ClearErrorListener#0;class#LoginActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="51" selection-start="929" selection-end="929" vertical-scroll-proportion="0.4811321">
@@ -911,22 +851,143 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/EntryPointActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="49" selection-start="1261" selection-end="1261" vertical-scroll-proportion="0.46826348">
+        <state line="40" column="21" selection-start="1233" selection-end="1233" vertical-scroll-proportion="0.50898206">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/http/ServerResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="58" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/http/WiseMatchesServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="59" column="37" selection-start="2244" selection-end="2244" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="docComment;class#WiseMatchesServer#0" expanded="false" />
+            <element signature="method#WiseMatchesServer#0;class#WiseMatchesServer#0" expanded="false" />
+            <element signature="method#post#0;class#WiseMatchesServer#0" expanded="false" />
+            <element signature="method#post#1;class#WiseMatchesServer#0" expanded="false" />
+            <element signature="method#post#2;class#WiseMatchesServer#0" expanded="false" />
+            <element signature="method#post#3;class#WiseMatchesServer#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/WiseMatchesActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="43" selection-start="412" selection-end="412" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/WiseMatchesApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="35" selection-start="5192" selection-end="5192" vertical-scroll-proportion="0.40958083">
+        <state line="60" column="25" selection-start="1671" selection-end="1671" vertical-scroll-proportion="0.64742017">
+          <folding>
+            <element signature="docComment;class#WiseMatchesApplication#0" expanded="false" />
+            <element signature="method#getPrincipal#0;class#WiseMatchesApplication#0" expanded="false" />
+            <element signature="method#getWMServer#0;class#WiseMatchesApplication#0" expanded="false" />
+            <element signature="method#authenticate#0;class#WiseMatchesApplication#0" expanded="false" />
+            <element signature="method#authenticate#1;class#WiseMatchesApplication#0" expanded="false" />
+            <element signature="method#authImpl#0;class#WiseMatchesApplication#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Software/adt/sdk/platforms/android-8/android.jar!/org/json/JSONArray.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="13" selection-start="151" selection-end="151" vertical-scroll-proportion="0.10442261">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/account/RegisterActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="0" selection-start="565" selection-end="612" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/account/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="39" selection-start="2599" selection-end="2599" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1699#2562#0" expanded="true" />
+            <element signature="e#1870#1895#0" expanded="true" />
+            <element signature="e#2557#2558#0" expanded="true" />
+            <element signature="e#2602#2935#0" expanded="true" />
+            <element signature="e#2930#2931#0" expanded="true" />
+            <element signature="e#2977#3319#0" expanded="true" />
+            <element signature="e#3314#3315#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/account/RestoreActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="56" selection-start="438" selection-end="495" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/os/ProgressTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="0" selection-start="717" selection-end="717" vertical-scroll-proportion="0.5113773">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="18" selection-start="365" selection-end="365" vertical-scroll-proportion="0.53217393">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/playground_dashboard_item.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/playground_dashboard.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state line="13" column="15" selection-start="517" selection-end="517" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/app/playground/DashboardActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="78" selection-start="603" selection-end="603" vertical-scroll-proportion="0.30070755">
+        <state line="43" column="40" selection-start="1736" selection-end="1736" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wisematches/client/android/view/playground/ScribbleInfoAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="35" selection-start="961" selection-end="961" vertical-scroll-proportion="0.70608693">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

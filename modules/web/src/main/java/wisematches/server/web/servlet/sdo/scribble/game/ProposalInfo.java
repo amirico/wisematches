@@ -1,24 +1,33 @@
 package wisematches.server.web.servlet.sdo.scribble.game;
 
+import wisematches.core.Player;
+import wisematches.playground.GameMessageSource;
 import wisematches.playground.propose.CriterionViolation;
 import wisematches.playground.propose.GameProposal;
 import wisematches.playground.propose.ProposalType;
 import wisematches.playground.scribble.ScribbleSettings;
+import wisematches.server.services.state.PlayerStateManager;
+import wisematches.server.web.servlet.sdo.InternationalisedInfo;
 import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
 import wisematches.server.web.servlet.sdo.scribble.SettingsInfo;
 import wisematches.server.web.servlet.sdo.time.TimeInfo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class ProposalInfo {
+public class ProposalInfo extends InternationalisedInfo {
+	private final PlayerStateManager stateManager;
 	private final GameProposal<ScribbleSettings> proposal;
 	private final Collection<CriterionViolation> violations;
 
-	public ProposalInfo(GameProposal<ScribbleSettings> proposal, Collection<CriterionViolation> violations) {
+	public ProposalInfo(GameProposal<ScribbleSettings> proposal, Collection<CriterionViolation> violations, PlayerStateManager stateManager, GameMessageSource messageSource, Locale locale) {
+		super(messageSource, locale);
+		this.stateManager = stateManager;
 		this.proposal = proposal;
 		this.violations = violations;
 	}
@@ -28,23 +37,38 @@ public class ProposalInfo {
 	}
 
 	public SettingsInfo getSettings() {
-		throw new UnsupportedOperationException("Not implemented");
+		return new SettingsInfo(proposal.getSettings(), null, messageSource, locale);
 	}
 
 	public TimeInfo getCreationDate() {
-		throw new UnsupportedOperationException("Not implemented");
+		return new TimeInfo(proposal.getCreationDate(), messageSource, locale);
 	}
 
 	public long getInitiator() {
-		throw new UnsupportedOperationException("Not implemented");
+		return proposal.getInitiator().getId();
 	}
 
 	public List<PersonalityInfo> getPlayers() {
-		throw new UnsupportedOperationException("Not implemented");
+		final List<Player> players = proposal.getPlayers();
+
+		final List<PersonalityInfo> res = new ArrayList<>(players.size());
+		for (Player player : players) {
+			if (player == null) {
+				res.add(null);
+			} else {
+				res.add(new PersonalityInfo(messageSource.getPersonalityNick(player, locale), player, stateManager));
+			}
+		}
+		return res;
 	}
 
 	public List<Long> getJoinedPlayers() {
-		throw new UnsupportedOperationException("Not implemented");
+		final List<Player> joinedPlayers = proposal.getJoinedPlayers();
+		List<Long> res = new ArrayList<>(joinedPlayers.size());
+		for (Player joinedPlayer : joinedPlayers) {
+			res.add(joinedPlayer.getId());
+		}
+		return res;
 	}
 
 	public boolean isReady() {

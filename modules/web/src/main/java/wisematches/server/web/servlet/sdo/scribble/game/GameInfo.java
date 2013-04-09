@@ -2,6 +2,7 @@ package wisematches.server.web.servlet.sdo.scribble.game;
 
 import wisematches.core.Personality;
 import wisematches.playground.GameMessageSource;
+import wisematches.playground.GameResolution;
 import wisematches.playground.scribble.ScribbleDescription;
 import wisematches.server.services.state.PlayerStateManager;
 import wisematches.server.web.servlet.sdo.person.PersonalityInfo;
@@ -44,7 +45,11 @@ public class GameInfo {
 	}
 
 	public String getResolution() {
-		return messageSource.getMessage("game.resolution." + description.getResolution().name().toLowerCase(), locale);
+		final GameResolution resolution = description.getResolution();
+		if (resolution != null) {
+			return messageSource.getMessage("game.resolution." + resolution.name().toLowerCase(), locale);
+		}
+		return null;
 	}
 
 	public String getStartedDate() {

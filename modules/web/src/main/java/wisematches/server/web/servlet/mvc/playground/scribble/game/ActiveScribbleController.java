@@ -95,7 +95,7 @@ public class ActiveScribbleController extends AbstractScribbleController {
 			final List<GameProposal<ScribbleSettings>> proposals = proposalManager.searchEntities(principal, ProposalRelation.INVOLVED, null, null);
 			proposalInfos = new ArrayList<>(proposals.size());
 			for (GameProposal<ScribbleSettings> proposal : proposals) {
-				proposalInfos.add(new ProposalInfo(proposal, null));
+				proposalInfos.add(new ProposalInfo(proposal, null, playerStateManager, messageSource, locale));
 			}
 		}
 		return new ActiveGamesInfo(boards, proposalInfos);
