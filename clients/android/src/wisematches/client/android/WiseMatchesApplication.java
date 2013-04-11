@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import wisematches.client.android.http.ServerResponse;
 import wisematches.client.android.http.WiseMatchesServer;
-import wisematches.client.core.Player;
+import wisematches.client.android.view.PlayerInfo;
 
 import java.util.TimeZone;
 
@@ -17,13 +17,13 @@ import java.util.TimeZone;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class WiseMatchesApplication extends Application {
-	private Player principal;
+	private PlayerInfo principal;
 	private WiseMatchesServer wiseMatchesServer;
 
 	public WiseMatchesApplication() {
 	}
 
-	public Player getPrincipal() {
+	public PlayerInfo getPrincipal() {
 		return principal;
 	}
 
@@ -32,7 +32,7 @@ public class WiseMatchesApplication extends Application {
 	}
 
 
-	public Player authenticate() throws CommunicationException, CooperationException {
+	public PlayerInfo authenticate() throws CommunicationException, CooperationException {
 		final SharedPreferences preferences = getSharedPreferences("principal", Context.MODE_PRIVATE);
 		final String credentials = preferences.getString("credentials", null);
 		if (credentials != null) {
@@ -42,7 +42,7 @@ public class WiseMatchesApplication extends Application {
 		return null;
 	}
 
-	public Player authenticate(String username, String password) throws CommunicationException, CooperationException {
+	public PlayerInfo authenticate(String username, String password) throws CommunicationException, CooperationException {
 		final String credentials = Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
 		this.principal = authImpl(credentials);
 		return this.principal;
@@ -63,13 +63,13 @@ public class WiseMatchesApplication extends Application {
 	}
 
 
-	private Player authImpl(String credentials) throws CommunicationException, CooperationException {
+	private PlayerInfo authImpl(String credentials) throws CommunicationException, CooperationException {
 		final BasicHeader basicHeader = new BasicHeader("Authorization", "Basic " + credentials);
 		final ServerResponse r = wiseMatchesServer.post("/account/login.ajax", basicHeader);
 
 		try {
 			final JSONObject data = r.getData();
-			Player player = new Player(
+			PlayerInfo player = new PlayerInfo(
 					data.getLong("id"),
 					data.getString("nickname"),
 					data.getString("language"),

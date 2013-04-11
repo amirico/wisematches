@@ -103,7 +103,29 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		}
 	}
 
-	@RequestMapping("make")
+	@RequestMapping("load.ajax")
+	public ServiceResponse loadBoardService(@RequestParam("b") long gameId, Locale locale) throws UnknownEntityException {
+		try {
+			final Player player = getPrincipal();
+
+			final ScribbleBoard board = playManager.openBoard(gameId);
+			if (board == null) { // unknown board
+				return responseFactory.failure();
+			}
+			Tile[] handTiles = null;
+			final ScribblePlayerHand playerHand = board.getPlayerHand(player);
+			if (playerHand != null) {
+				handTiles = playerHand.getTiles();
+			}
+			final BoardInfo info = new BoardInfo(board, handTiles, playerStateManager, messageSource, locale);
+			return responseFactory.success(info);
+		} catch (BoardLoadingException e) {
+			return responseFactory.failure();
+		}
+	}
+
+
+	@RequestMapping("make.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse makeTurnAjax(@RequestParam("b") final long gameId,
 										@RequestBody final ScribbleWordForm word, final Locale locale) {
@@ -125,7 +147,7 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		}, locale);
 	}
 
-	@RequestMapping("pass")
+	@RequestMapping("pass.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse passTurnAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		log.debug("Process player's pass: {}", gameId);
@@ -146,7 +168,7 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		}, locale);
 	}
 
-	@RequestMapping("exchange")
+	@RequestMapping("exchange.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse exchangeTilesAjax(@RequestParam("b") final long gameId,
 											 @RequestBody final ScribbleTileForm[] tiles, final Locale locale) {
@@ -173,7 +195,7 @@ public class ScribbleBoardController extends AbstractScribbleController {
 		}, locale);
 	}
 
-	@RequestMapping("resign")
+	@RequestMapping("resign.ajax")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ServiceResponse resignGameAjax(@RequestParam("b") final long gameId, final Locale locale) {
 		log.debug("Process player's resign: {}", gameId);
