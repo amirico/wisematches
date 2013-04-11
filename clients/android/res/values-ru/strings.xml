@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WiseMatches Эрудит</string>
+    <string name="login.login.label">EMail</string>
+    <string name="login.login.desc">Ваша эл. почты</string>
+    <string name="login.pwd.label">Пароль</string>
+    <string name="login.signin">Войти</string>
+    <string name="login.register.desc">Нажмите, что бы создать новый аккаунт WiseMatches</string>
+    <string name="login.register.label">Зарегистрироваться</string>
+    <string name="login.restore.label">восстановать пароль</string>
+</resources>

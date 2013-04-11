@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Board #"
+            android:id="@+id/textView"/>
+
+    <RelativeLayout
+            android:layout_width="356px"
+            android:layout_height="370px">
+
+        <view
+                android:layout_width="356px"
+                android:layout_height="370px"
+                class="wisematches.client.android.app.playground.BoardView"
+                android:id="@+id/scribbleBoardView"
+                android:layout_gravity="center|right"
+                android:layout_centerInParent="true"
+                android:background="#FFFFFF"/>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Make"
+                android:id="@+id/button"
+                />
+
+        <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                android:id="@+id/button1"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select"
+                android:id="@+id/button2"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pass"
+                android:id="@+id/button3"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exchange"
+                android:id="@+id/button4"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resign"
+                android:id="@+id/button5"/>
+    </LinearLayout>
+
+</LinearLayout>
