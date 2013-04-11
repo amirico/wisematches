@@ -10,11 +10,11 @@ import wisematches.client.android.CooperationException;
 import wisematches.client.android.R;
 import wisematches.client.android.app.account.LoginActivity;
 import wisematches.client.android.app.playground.DashboardActivity;
-import wisematches.client.core.Player;
+import wisematches.client.android.view.PlayerInfo;
 
 public class EntryPointActivity extends WiseMatchesActivity {
 	private TextView status;
-	private AsyncTask<Void, Void, Player> authTask;
+	private AsyncTask<Void, Void, PlayerInfo> authTask;
 
 	/**
 	 * Called when the activity is first created.
@@ -32,10 +32,10 @@ public class EntryPointActivity extends WiseMatchesActivity {
 	}
 
 	private void doAuth() {
-		authTask = new AsyncTask<Void, Void, Player>() {
+		authTask = new AsyncTask<Void, Void, PlayerInfo>() {
 			@Override
-			protected Player doInBackground(Void... voids) {
-				Player player = null;
+			protected PlayerInfo doInBackground(Void... voids) {
+				PlayerInfo player = null;
 				try {
 					player = getWMApplication().authenticate();
 					if (player != null) {

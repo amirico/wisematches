@@ -1,11 +1,11 @@
-package wisematches.client.core;
+package wisematches.client.android.view;
 
 import java.util.TimeZone;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class Player {
+public class PlayerInfo {
 	private final long id;
 	private final String nickname;
 	private final String language;
@@ -16,7 +16,7 @@ public class Player {
 
 	private final boolean online;
 
-	public Player(long id, String nickname, String language, TimeZone timeZone, String type, String membership, boolean online) {
+	public PlayerInfo(long id, String nickname, String language, TimeZone timeZone, String type, String membership, boolean online) {
 		this.id = id;
 		this.nickname = nickname;
 		this.language = language;
