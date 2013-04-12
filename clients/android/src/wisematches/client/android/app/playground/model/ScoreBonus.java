@@ -3,12 +3,12 @@ package wisematches.client.android.app.playground.model;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public final class BonusCell {
+public final class ScoreBonus {
 	private final int row;
 	private final int column;
 	private final Type type;
 
-	public BonusCell(int row, int column, Type type) {
+	public ScoreBonus(int row, int column, Type type) {
 		this.row = row;
 		this.column = column;
 		this.type = type;
