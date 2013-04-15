@@ -7,12 +7,12 @@
     <packaging>jar</packaging>
 
     <artifactId>core</artifactId>
-    <version>5.1.6-SNAPSHOT</version>
+    <version>5.1.8-SNAPSHOT</version>
 
     <parent>
         <groupId>wisematches</groupId>
         <artifactId>application</artifactId>
-        <version>5.1.6-SNAPSHOT</version>
+        <version>5.1.8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -39,14 +39,6 @@
             <artifactId>hibernate-validator</artifactId>
             <version>${org.hibernate-validator.version}</version>
         </dependency>
-        <!--
-
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.15.0-GA</version>
-        </dependency>
--->
 
         <dependency>
             <groupId>mysql</groupId>
@@ -65,14 +57,6 @@
             <artifactId>jta</artifactId>
             <version>1.1</version>
         </dependency>
-        <!--
-
-        <dependency>
-            <groupId>c3p0</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
-        </dependency>
--->
 
         <dependency>
             <groupId>net.sf.ehcache</groupId>
