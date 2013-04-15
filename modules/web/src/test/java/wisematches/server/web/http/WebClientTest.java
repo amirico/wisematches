@@ -38,6 +38,11 @@ public class WebClientTest {
 	}
 
 	@Test
+	public void testMSIE() {
+		assertNull(WebClient.detect("Mozilla/4.0 (compatible- MSIE 6.0- Windows NT 5.1- SV1- .NET CLR 1.1.4322"));
+	}
+
+	@Test
 	public void testRobots() {
 		assertNull(WebClient.detect("Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"));
 		assertNull(WebClient.detect("Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"));
