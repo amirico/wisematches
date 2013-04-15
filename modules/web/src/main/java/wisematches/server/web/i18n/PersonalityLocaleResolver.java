@@ -49,9 +49,11 @@ public class PersonalityLocaleResolver extends SessionLocaleResolver {
 	 * @return resolved locale
 	 */
 	protected Locale resolveLocale(Locale locale) {
-		Language language = Language.byLocale(locale);
-		if (language != null) {
-			return language.getLocale();
+		if (locale != null) {
+			final Language language = Language.byLocale(locale);
+			if (language != null) {
+				return language.getLocale();
+			}
 		}
 		return Language.DEFAULT.getLocale();
 	}
