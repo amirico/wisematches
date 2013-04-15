@@ -38,12 +38,11 @@
                     <tr>
                         <th rowspan="2"><@message code="tourney.tourney.label"/></th>
                         <th rowspan="2"><@message code="tourney.started.label"/></th>
-                        <th colspan="${Language.values()?size?string}"
+                        <th width="100%" colspan="${Language.values()?size?string}"
                             class="ui-state-default"
                             style="font-size: small; border-bottom: 1px solid !important; white-space: nowrap">
                             <@message code="tourney.active.rs"/>
                         </th>
-                        <th rowspan="2" width="100%"></th>
                     </tr>
                     <tr>
                         <#list Language.values()?reverse as l>
@@ -53,18 +52,19 @@
                     </thead>
                     <tbody>
                         <#list divisionsTree.tourneys as tourney>
-                        <td>
-                            <@wm.tourney.tourney tourney.id, true/>
-                        </td>
-                        <td>
-                        ${messageSource.formatDate(tourney.startedDate, locale)}
-                        </td>
-                            <#list Language.values()?reverse as l>
+                        <tr>
                             <td>
-                                <@divisionsInfo tourney=tourney language=l/>
+                                <@wm.tourney.tourney tourney.id, true/>
                             </td>
+                            <td>
+                            ${messageSource.formatDate(tourney.startedDate, locale)}
+                            </td>
+                            <#list Language.values()?reverse as l>
+                                <td>
+                                    <@divisionsInfo tourney=tourney language=l/>
+                                </td>
                             </#list>
-                        <td>&nbsp;</td>
+                        </tr>
                         </#list>
                     </tbody>
                 </table>
@@ -88,9 +88,8 @@
             { "bSortable": true },
             { "bSortable": true },
         <#list Language.values() as l>
-            { "bSortable": true },
+            { "bSortable": true }<#if l_has_next>,</#if>
         </#list>
-            { "bSortable": false }
         ]
     });
 </script>
