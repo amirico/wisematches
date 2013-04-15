@@ -7,12 +7,12 @@
     <packaging>jar</packaging>
 
     <artifactId>gameplay</artifactId>
-    <version>5.1.6-SNAPSHOT</version>
+    <version>5.1.8-SNAPSHOT</version>
 
     <parent>
         <artifactId>application</artifactId>
         <groupId>wisematches</groupId>
-        <version>5.1.6-SNAPSHOT</version>
+        <version>5.1.8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>wisematches</groupId>
             <artifactId>core</artifactId>
-            <version>5.1.6-SNAPSHOT</version>
+            <version>5.1.8-SNAPSHOT</version>
         </dependency>
 
         <dependency>
