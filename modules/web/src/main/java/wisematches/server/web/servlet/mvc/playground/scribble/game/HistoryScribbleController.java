@@ -52,7 +52,7 @@ public class HistoryScribbleController extends AbstractScribbleController {
 	public ServiceResponse loadHistoryGames(@RequestParam(value = "p", required = false) Long pid, @RequestBody DataTablesRequest tableRequest, Locale locale) {
 		final Player player = getPlayerToShow(pid);
 		if (player == null) {
-			return responseFactory.failure("game.history.err.player", locale);
+			return responseFactory.success(new DataTablesResponse(0, Collections.emptyList(), tableRequest));
 		}
 
 		final int totalCount = searchManager.getTotalCount(player, FINISHED_GAMES_CTX);
