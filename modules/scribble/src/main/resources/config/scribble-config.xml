@@ -143,5 +143,4 @@
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
         <property name="personalityManager" ref="personalityManager"/>
     </bean>
-    <bean class="wisematches.server.services.award.impl.assembly.DictionaryJudicialAssembly" id=""/>
 </beans>
