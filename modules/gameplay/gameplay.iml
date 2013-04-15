@@ -7,6 +7,15 @@
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
           <file>file://$MODULE_DIR$/../core/src/main/resources/config/properties-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/gameplay-config.xml</file>
+        </fileset>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/config/gameplay-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/cache-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/database-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/personality-config.xml</file>
+          <file>file://$MODULE_DIR$/../core/src/main/resources/config/properties-config.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/config/restriction-config.xml</file>
         </fileset>
       </configuration>
     </facet>

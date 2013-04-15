@@ -6,14 +6,18 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import wisematches.core.*;
 import wisematches.playground.*;
+import wisematches.playground.dictionary.DictionaryReclaimListener;
+import wisematches.playground.dictionary.DictionaryReclaimManager;
+import wisematches.playground.dictionary.ReclaimResolution;
+import wisematches.playground.dictionary.WordReclaim;
 import wisematches.playground.tourney.TourneyWinner;
 import wisematches.playground.tourney.regular.RegularTourneyListener;
 import wisematches.playground.tourney.regular.RegularTourneyManager;
 import wisematches.playground.tourney.regular.Tourney;
 import wisematches.playground.tourney.regular.TourneyDivision;
-import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
 import wisematches.playground.tracking.StatisticsListener;
+import wisematches.playground.tracking.StatisticsManager;
 
 import java.util.Collection;
 import java.util.Set;
@@ -24,10 +28,11 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public abstract class AbstractStatisticManager<S extends Statistics, E extends StatisticsEditor> implements StatisticManager<S> {
-	private PersonalityManager personalityManager;
+public abstract class AbstractStatisticsManager<S extends Statistics, E extends StatisticsEditor> implements StatisticsManager<S> {
 	private GamePlayManager gamePlayManager;
 	private RegularTourneyManager tourneyManager;
+	private PersonalityManager personalityManager;
+	private DictionaryReclaimManager reclaimManager;
 
 	private final StatisticsTrapper<E> statisticsTrapper;
 
@@ -36,24 +41,25 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 	private final BoardListener gamePlayListener = new TheBoardListener();
 	private final PersonalityListener playerListener = new ThePersonalityListener();
 	private final RegularTourneyListener tourneyListener = new TheRegularTourneyListener();
+	private final DictionaryReclaimListener reclaimListener = new TheDictionaryReclaimListener();
 
 	private final Set<StatisticsListener> statisticsListeners = new CopyOnWriteArraySet<>();
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.playground.tracking");
 
-	protected AbstractStatisticManager(StatisticsTrapper<E> statisticsTrapper) {
+	protected AbstractStatisticsManager(StatisticsTrapper<E> statisticsTrapper) {
 		this.statisticsTrapper = statisticsTrapper;
 	}
 
 	@Override
-	public void addStatisticListener(StatisticsListener l) {
+	public void addStatisticsListener(StatisticsListener l) {
 		if (l != null) {
 			statisticsListeners.add(l);
 		}
 	}
 
 	@Override
-	public void removeStatisticListener(StatisticsListener l) {
+	public void removeStatisticsListener(StatisticsListener l) {
 		if (l != null) {
 			statisticsListeners.remove(l);
 		}
@@ -116,6 +122,18 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 
 		if (this.tourneyManager != null) {
 			this.tourneyManager.addRegularTourneyListener(tourneyListener);
+		}
+	}
+
+	public void setDictionaryReclaimManager(DictionaryReclaimManager reclaimManager) {
+		if (this.reclaimManager != null) {
+			this.reclaimManager.removeDictionaryReclaimListener(reclaimListener);
+		}
+
+		this.reclaimManager = reclaimManager;
+
+		if (this.reclaimManager != null) {
+			this.reclaimManager.addDictionaryReclaimListener(reclaimListener);
 		}
 	}
 
@@ -201,6 +219,25 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		}
 	}
 
+	protected void processDictionaryReclaims(WordReclaim reclaim, ReclaimResolution resolution) {
+		final Member member = personalityManager.getMember(reclaim.getRequester());
+		if (member == null) {
+			return;
+		}
+
+		statisticLock.lock();
+		try {
+			final E editor = loadStatisticEditor(member);
+			statisticsTrapper.trapDictionaryReclaims(member, editor, reclaim, resolution);
+			saveStatisticEditor(editor);
+			fireStatisticUpdated(member, editor);
+		} catch (Throwable th) {
+			log.error("Statistic can't be updated for member: {}", member, th);
+		} finally {
+			statisticLock.unlock();
+		}
+	}
+
 	protected void fireStatisticUpdated(Member player, StatisticsEditor statistic) {
 		final Set<String> strings = statistic.takeChangedProperties();
 		for (StatisticsListener statisticsListener : statisticsListeners) {
@@ -274,6 +311,25 @@ public abstract class AbstractStatisticManager<S extends Statistics, E extends S
 		@Override
 		public void tourneyFinished(Tourney tourney, TourneyDivision division) {
 			processTourneyFinished(division);
+		}
+	}
+
+	private class TheDictionaryReclaimListener implements DictionaryReclaimListener {
+		private TheDictionaryReclaimListener() {
+		}
+
+		@Override
+		public void wordReclaimRaised(WordReclaim reclaim) {
+			processDictionaryReclaims(reclaim, ReclaimResolution.WAITING);
+		}
+
+		@Override
+		public void wordReclaimUpdated(WordReclaim reclaim) {
+		}
+
+		@Override
+		public void wordReclaimResolved(WordReclaim reclaim, ReclaimResolution resolution) {
+			processDictionaryReclaims(reclaim, resolution);
 		}
 	}
 }

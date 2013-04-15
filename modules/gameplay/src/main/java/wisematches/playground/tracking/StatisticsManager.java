@@ -7,10 +7,10 @@ import java.util.Date;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface StatisticManager<S extends Statistics> {
-	void addStatisticListener(StatisticsListener l);
+public interface StatisticsManager<S extends Statistics> {
+	void addStatisticsListener(StatisticsListener l);
 
-	void removeStatisticListener(StatisticsListener l);
+	void removeStatisticsListener(StatisticsListener l);
 
 	/**
 	 * Returns statistic for specified player.

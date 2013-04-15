@@ -13,6 +13,10 @@ import wisematches.core.expiration.ExpirationListener;
 import wisematches.core.search.Range;
 import wisematches.core.task.BreakingDayListener;
 import wisematches.playground.*;
+import wisematches.playground.dictionary.DictionaryReclaimListener;
+import wisematches.playground.dictionary.DictionaryReclaimManager;
+import wisematches.playground.dictionary.ReclaimResolution;
+import wisematches.playground.dictionary.WordReclaim;
 import wisematches.playground.propose.*;
 import wisematches.playground.scribble.ScribbleSettings;
 import wisematches.playground.scribble.expiration.ScribbleExpirationManager;
@@ -23,9 +27,6 @@ import wisematches.server.services.award.Award;
 import wisematches.server.services.award.AwardDescriptor;
 import wisematches.server.services.award.AwardsListener;
 import wisematches.server.services.award.AwardsManager;
-import wisematches.server.services.dictionary.DictionarySuggestionListener;
-import wisematches.server.services.dictionary.DictionarySuggestionManager;
-import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.message.MessageListener;
 import wisematches.server.services.message.MessageManager;
@@ -51,7 +52,7 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 	private RegularTourneyManager tourneyManager;
 	private ReliablePropertiesManager propertiesManager;
 	private ScribbleExpirationManager scribbleExpirationManager;
-	private DictionarySuggestionManager dictionarySuggestionManager;
+	private DictionaryReclaimManager dictionaryReclaimManager;
 	private ProposalExpirationManager<ScribbleSettings> proposalExpirationManager;
 
 	private NotificationService notificationDistributor;
@@ -186,15 +187,15 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
-		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.removeDictionarySuggestionListener(dictionaryListener);
+	public void setdictionaryReclaimManager(DictionaryReclaimManager dictionaryReclaimManager) {
+		if (this.dictionaryReclaimManager != null) {
+			this.dictionaryReclaimManager.removeDictionaryReclaimListener(dictionaryListener);
 		}
 
-		this.dictionarySuggestionManager = dictionarySuggestionManager;
+		this.dictionaryReclaimManager = dictionaryReclaimManager;
 
-		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.addDictionarySuggestionListener(dictionaryListener);
+		if (this.dictionaryReclaimManager != null) {
+			this.dictionaryReclaimManager.addDictionaryReclaimListener(dictionaryListener);
 		}
 	}
 
@@ -270,26 +271,21 @@ public class NotificationOriginCenter implements BreakingDayListener, Initializi
 		}
 	}
 
-	private class TheDictionaryListener implements DictionarySuggestionListener {
+	private class TheDictionaryListener implements DictionaryReclaimListener {
 		private TheDictionaryListener() {
 		}
 
 		@Override
-		public void changeRequestRaised(WordSuggestion request) {
+		public void wordReclaimRaised(WordReclaim reclaim) {
 		}
 
 		@Override
-		public void changeRequestUpdated(WordSuggestion request) {
+		public void wordReclaimUpdated(WordReclaim reclaim) {
 		}
 
 		@Override
-		public void changeRequestApproved(WordSuggestion request) {
-			processNotification(request.getRequester(), "playground.dictionary.accepted", request);
-		}
-
-		@Override
-		public void changeRequestRejected(WordSuggestion request) {
-			processNotification(request.getRequester(), "playground.dictionary.rejected", request);
+		public void wordReclaimResolved(WordReclaim reclaim, ReclaimResolution resolution) {
+			processNotification(reclaim.getRequester(), "playground.dictionary." + resolution.name().toLowerCase(), reclaim);
 		}
 	}
 

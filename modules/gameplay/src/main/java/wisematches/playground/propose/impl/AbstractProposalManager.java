@@ -13,7 +13,7 @@ import wisematches.core.search.Orders;
 import wisematches.core.search.Range;
 import wisematches.playground.GameSettings;
 import wisematches.playground.propose.*;
-import wisematches.playground.tracking.StatisticManager;
+import wisematches.playground.tracking.StatisticsManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractProposalManager<S extends GameSettings> implements GameProposalManager<S>, InitializingBean {
-	private StatisticManager playerStatisticManager;
+	private StatisticsManager playerStatisticManager;
 	private PersonalityManager personalityManager;
 	protected TransactionTemplate transactionTemplate;
 
@@ -279,7 +279,7 @@ public abstract class AbstractProposalManager<S extends GameSettings> implements
 		this.transactionTemplate = transactionTemplate;
 	}
 
-	public void setPlayerStatisticManager(StatisticManager playerStatisticManager) {
+	public void setPlayerStatisticManager(StatisticsManager playerStatisticManager) {
 		this.playerStatisticManager = playerStatisticManager;
 	}
 

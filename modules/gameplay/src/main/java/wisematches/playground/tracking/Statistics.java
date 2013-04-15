@@ -134,6 +134,13 @@ public interface Statistics {
 	float getAveragePoints();
 
 
+	int getReclaimsRaised();
+
+	int getReclaimsApproved();
+
+	int getReclaimsRejected();
+
+
 	/**
 	 * Returns number of games played with specified robot types.
 	 *

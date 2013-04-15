@@ -5,9 +5,9 @@ import org.springframework.cache.CacheManager;
 import wisematches.core.Player;
 import wisematches.core.cache.NoOpCache;
 import wisematches.playground.tracking.RatingCurve;
-import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
 import wisematches.playground.tracking.StatisticsListener;
+import wisematches.playground.tracking.StatisticsManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -20,11 +20,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class CacheableStatisticManager<S extends Statistics> implements StatisticManager<S> {
+public class CacheableStatisticsManager<S extends Statistics> implements StatisticsManager<S> {
 	private Cache ratingCache = NoOpCache.INSTANCE;
 	private Cache statisticCache = NoOpCache.INSTANCE;
 
-	private StatisticManager<S> playerStatisticManager;
+	private StatisticsManager<S> playerStatisticManager;
 
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final Lock readLock = lock.readLock();
@@ -33,18 +33,18 @@ public class CacheableStatisticManager<S extends Statistics> implements Statisti
 	private final TheStatisticsListener statisticsListener = new TheStatisticsListener();
 	private final Collection<StatisticsListener> listeners = new CopyOnWriteArraySet<>();
 
-	public CacheableStatisticManager() {
+	public CacheableStatisticsManager() {
 	}
 
 	@Override
-	public void addStatisticListener(StatisticsListener l) {
+	public void addStatisticsListener(StatisticsListener l) {
 		if (l != null) {
 			listeners.add(l);
 		}
 	}
 
 	@Override
-	public void removeStatisticListener(StatisticsListener l) {
+	public void removeStatisticsListener(StatisticsListener l) {
 		listeners.remove(l);
 	}
 
@@ -103,15 +103,15 @@ public class CacheableStatisticManager<S extends Statistics> implements Statisti
 		}
 	}
 
-	public void setPlayerStatisticManager(StatisticManager<S> playerStatisticManager) {
+	public void setPlayerStatisticManager(StatisticsManager<S> playerStatisticManager) {
 		if (this.playerStatisticManager != null) {
-			this.playerStatisticManager.removeStatisticListener(statisticsListener);
+			this.playerStatisticManager.removeStatisticsListener(statisticsListener);
 		}
 
 		this.playerStatisticManager = playerStatisticManager;
 
 		if (this.playerStatisticManager != null) {
-			this.playerStatisticManager.addStatisticListener(statisticsListener);
+			this.playerStatisticManager.addStatisticsListener(statisticsListener);
 		}
 	}
 

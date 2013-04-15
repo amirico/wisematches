@@ -1,9 +1,9 @@
 package wisematches.playground.scribble.tracking;
 
-import wisematches.playground.tracking.StatisticManager;
+import wisematches.playground.tracking.StatisticsManager;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface ScribbleStatisticsManager extends StatisticManager<ScribbleStatistics> {
+public interface ScribbleStatisticsManager extends StatisticsManager<ScribbleStatistics> {
 }

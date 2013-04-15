@@ -1,9 +1,9 @@
-<#-- @ftlvariable name="context" type="wisematches.server.services.dictionary.WordSuggestion" -->
+<#-- @ftlvariable name="context" type="wisematches.playground.dictionary.WordReclaim" -->
 <#import "../../utils.ftl" as util>
 
 <p>
     Your change suggestion has been accepted. Word <strong>${context.word}</strong> has been
-<#if context.suggestionType == "CREATE">added to the dictionary<#elseif context.suggestionType == "REMOVE">removed from
+<#if context.resolutionType == "CREATE">added to the dictionary<#elseif context.resolutionType == "REMOVE">removed from
     the
     dictionary<#else>updated</#if>.
 </p>

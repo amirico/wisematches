@@ -20,8 +20,8 @@ import wisematches.playground.restriction.Restriction;
 import wisematches.playground.restriction.RestrictionManager;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
-import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
+import wisematches.playground.tracking.StatisticsManager;
 import wisematches.server.web.servlet.mvc.UnknownEntityException;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.mvc.playground.tourney.form.EntityIdForm;
@@ -39,7 +39,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/playground/tourney")
 public class TourneyController extends WisematchesController {
-	private StatisticManager statisticManager;
+	private StatisticsManager statisticManager;
 	private RegularTourneyManager tourneyManager;
 	private RestrictionManager restrictionManager;
 
@@ -274,7 +274,7 @@ public class TourneyController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setStatisticManager(StatisticManager statisticManager) {
+	public void setStatisticManager(StatisticsManager statisticManager) {
 		this.statisticManager = statisticManager;
 	}
 

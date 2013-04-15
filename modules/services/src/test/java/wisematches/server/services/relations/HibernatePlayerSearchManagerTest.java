@@ -28,8 +28,9 @@ import java.util.List;
 		"classpath:/config/properties-config.xml",
 		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
-		"classpath:/config/playground-config.xml",
+		"classpath:/config/gameplay-config.xml",
 		"classpath:/config/scribble-config.xml",
+		"classpath:/config/wisematches-config.xml",
 })
 public class HibernatePlayerSearchManagerTest {
 	@Autowired

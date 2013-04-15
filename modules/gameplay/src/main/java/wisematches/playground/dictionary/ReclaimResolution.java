@@ -1,9 +1,9 @@
-package wisematches.server.services.dictionary;
+package wisematches.playground.dictionary;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public enum SuggestionState {
+public enum ReclaimResolution {
 	WAITING,
 	APPROVED,
 	REJECTED

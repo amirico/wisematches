@@ -116,6 +116,16 @@ public class StatisticsEditor implements Statistics, Serializable {
 	@Column(name = "winsTT")
 	private int tourneyWinsThird;
 
+
+	@Column(name = "reclaimsRaised")
+	private int reclaimsRaised;
+
+	@Column(name = "reclaimsApproved")
+	private int reclaimsApproved;
+
+	@Column(name = "reclaimsRejected")
+	private int reclaimsRejected;
+
 	@Transient
 	private final Set<String> changedProperties = new HashSet<>();
 
@@ -449,6 +459,36 @@ public class StatisticsEditor implements Statistics, Serializable {
 		throw new IllegalArgumentException("Unsupported place type: " + place);
 	}
 
+	@Override
+	public int getReclaimsRejected() {
+		return reclaimsRejected;
+	}
+
+	@Override
+	public int getReclaimsApproved() {
+		return reclaimsApproved;
+	}
+
+	@Override
+	public int getReclaimsRaised() {
+		return reclaimsRaised;
+	}
+
+	public void setReclaimsRejected(int reclaimsRejected) {
+		this.reclaimsRejected = reclaimsRejected;
+		propertyChanged("reclaimsRejected");
+	}
+
+	public void setReclaimsApproved(int reclaimsApproved) {
+		this.reclaimsApproved = reclaimsApproved;
+		propertyChanged("reclaimsApproved");
+	}
+
+	public void setReclaimsRaised(int reclaimsRaised) {
+		this.reclaimsRaised = reclaimsRaised;
+		propertyChanged("reclaimsRaised");
+	}
+
 	public Set<String> takeChangedProperties() {
 		if (changedProperties.size() == 0) {
 			return Collections.emptySet();
@@ -492,6 +532,9 @@ public class StatisticsEditor implements Statistics, Serializable {
 				", lowestPoints=" + lowestPoints +
 				", averagePoints=" + averagePoints +
 				", highestPoints=" + highestPoints +
+				", reclaimsRaised=" + reclaimsRaised +
+				", reclaimsApproved=" + reclaimsApproved +
+				", reclaimsRejected=" + reclaimsRejected +
 				'}';
 	}
 }

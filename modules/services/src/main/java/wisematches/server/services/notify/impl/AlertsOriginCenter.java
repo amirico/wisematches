@@ -8,12 +8,13 @@ import org.springframework.mail.SimpleMailMessage;
 import wisematches.core.personality.player.account.Account;
 import wisematches.core.personality.player.account.AccountListener;
 import wisematches.core.personality.player.account.AccountManager;
+import wisematches.playground.dictionary.DictionaryReclaimListener;
+import wisematches.playground.dictionary.DictionaryReclaimManager;
+import wisematches.playground.dictionary.ReclaimResolution;
+import wisematches.playground.dictionary.WordReclaim;
 import wisematches.server.services.ServerDescriptor;
 import wisematches.server.services.abuse.AbuseReportListener;
 import wisematches.server.services.abuse.AbuseReportManager;
-import wisematches.server.services.dictionary.DictionarySuggestionListener;
-import wisematches.server.services.dictionary.DictionarySuggestionManager;
-import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.message.Message;
 import wisematches.server.services.notify.NotificationSender;
 
@@ -27,7 +28,7 @@ public class AlertsOriginCenter {
 	private AccountManager accountManager;
 	private ServerDescriptor serverDescriptor;
 	private AbuseReportManager abuseReportManager;
-	private DictionarySuggestionManager dictionarySuggestionManager;
+	private DictionaryReclaimManager dictionaryReclaimManager;
 
 	private final TheAccountListener accountListener = new TheAccountListener();
 	private final TheDictionaryListener dictionaryListener = new TheDictionaryListener();
@@ -85,15 +86,15 @@ public class AlertsOriginCenter {
 		}
 	}
 
-	public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
-		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.removeDictionarySuggestionListener(dictionaryListener);
+	public void setDictionaryReclaimManager(DictionaryReclaimManager dictionaryReclaimManager) {
+		if (this.dictionaryReclaimManager != null) {
+			this.dictionaryReclaimManager.removeDictionaryReclaimListener(dictionaryListener);
 		}
 
-		this.dictionarySuggestionManager = dictionarySuggestionManager;
+		this.dictionaryReclaimManager = dictionaryReclaimManager;
 
-		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.addDictionarySuggestionListener(dictionaryListener);
+		if (this.dictionaryReclaimManager != null) {
+			this.dictionaryReclaimManager.addDictionaryReclaimListener(dictionaryListener);
 		}
 	}
 
@@ -129,32 +130,27 @@ public class AlertsOriginCenter {
 		}
 	}
 
-	private class TheDictionaryListener implements DictionarySuggestionListener {
+	private class TheDictionaryListener implements DictionaryReclaimListener {
 		private TheDictionaryListener() {
 		}
 
 		@Override
-		public void changeRequestRaised(WordSuggestion request) {
-			raiseAlarm("DIC", "Suggestion raised: " + request.getWord() + " [" + request.getSuggestionType() + "]",
-					request.getDefinition() + "\n" + request.getAttributes());
+		public void wordReclaimRaised(WordReclaim reclaim) {
+			raiseAlarm("DIC", "Reclaim raised: " + reclaim.getWord() + " [" + reclaim.getResolutionType() + "]",
+					reclaim.getDefinition() + "\n" + reclaim.getAttributes());
 		}
 
 		@Override
-		public void changeRequestApproved(WordSuggestion request) {
-			raiseAlarm("DIC", "Suggestion approved: " + request.getWord() + " [" + request.getSuggestionType() + "]",
-					request.getDefinition() + "\n" + request.getAttributes());
+		public void wordReclaimResolved(WordReclaim reclaim, ReclaimResolution resolution) {
+			raiseAlarm("DIC", "Reclaim " + resolution.name().toLowerCase() + ": " +
+					reclaim.getWord() + " [" + reclaim.getResolutionType() + "]",
+					reclaim.getDefinition() + "\n" + reclaim.getAttributes());
 		}
 
 		@Override
-		public void changeRequestRejected(WordSuggestion request) {
-			raiseAlarm("DIC", "Suggestion rejected: " + request.getWord() + " [" + request.getSuggestionType() + "]",
-					request.getDefinition() + "\n" + request.getAttributes());
-		}
-
-		@Override
-		public void changeRequestUpdated(WordSuggestion request) {
-			raiseAlarm("DIC", "Suggestion updated: " + request.getWord() + " [" + request.getSuggestionType() + "]",
-					request.getDefinition() + "\n" + request.getAttributes());
+		public void wordReclaimUpdated(WordReclaim reclaim) {
+			raiseAlarm("DIC", "Reclaim updated: " + reclaim.getWord() + " [" + reclaim.getResolutionType() + "]",
+					reclaim.getDefinition() + "\n" + reclaim.getAttributes());
 		}
 	}
 }

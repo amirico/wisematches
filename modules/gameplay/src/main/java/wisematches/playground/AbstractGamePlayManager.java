@@ -9,7 +9,7 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import wisematches.core.*;
 import wisematches.core.cache.NoOpCache;
-import wisematches.playground.tracking.StatisticManager;
+import wisematches.playground.tracking.StatisticsManager;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -32,7 +32,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 	private Cache boardsCache = NoOpCache.INSTANCE;
 
 	protected TaskExecutor taskExecutor;
-	protected StatisticManager statisticManager;
+	protected StatisticsManager statisticManager;
 	protected PersonalityManager personalityManager;
 
 	private final Logger log;
@@ -285,7 +285,7 @@ public abstract class AbstractGamePlayManager<S extends GameSettings, B extends 
 		this.ratingSystem = ratingSystem;
 	}
 
-	public void setStatisticManager(StatisticManager statisticManager) {
+	public void setStatisticManager(StatisticsManager statisticManager) {
 		this.statisticManager = statisticManager;
 	}
 

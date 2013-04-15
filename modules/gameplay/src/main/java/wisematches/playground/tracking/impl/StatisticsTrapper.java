@@ -5,6 +5,8 @@ import wisematches.core.Player;
 import wisematches.core.Robot;
 import wisematches.core.RobotType;
 import wisematches.playground.*;
+import wisematches.playground.dictionary.ReclaimResolution;
+import wisematches.playground.dictionary.WordReclaim;
 import wisematches.playground.tourney.TourneyPlace;
 
 import java.util.*;
@@ -172,6 +174,20 @@ public class StatisticsTrapper<E extends StatisticsEditor> {
 
 	public void trapTourneyFinished(Player player, E editor, TourneyPlace place) {
 		editor.setTourneyWins(place, editor.getTourneyWins(place) + 1);
+	}
+
+	public void trapDictionaryReclaims(Player player, E editor, WordReclaim reclaim, ReclaimResolution resolution) {
+		switch (resolution) {
+			case WAITING:
+				editor.setReclaimsRaised(editor.getReclaimsRaised() + 1);
+				break;
+			case APPROVED:
+				editor.setReclaimsApproved(editor.getReclaimsApproved() + 1);
+				break;
+			case REJECTED:
+				editor.setReclaimsRejected(editor.getReclaimsRejected() + 1);
+				break;
+		}
 	}
 
 	protected final Date previousMoveTime(GameBoard<? extends GameSettings, ? extends GamePlayerHand, ? extends GameMove> board, GameMove move) {

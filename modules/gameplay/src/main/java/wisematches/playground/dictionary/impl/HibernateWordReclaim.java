@@ -1,11 +1,7 @@
-package wisematches.server.services.dictionary.impl;
+package wisematches.playground.dictionary.impl;
 
 import wisematches.core.Language;
-import wisematches.playground.dictionary.WordAttribute;
-import wisematches.playground.dictionary.WordEntry;
-import wisematches.server.services.dictionary.SuggestionState;
-import wisematches.server.services.dictionary.SuggestionType;
-import wisematches.server.services.dictionary.WordSuggestion;
+import wisematches.playground.dictionary.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,8 +11,8 @@ import java.util.EnumSet;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 @Entity
-@Table(name = "dictionary_changes")
-public class HibernateWordSuggestion implements WordSuggestion {
+@Table(name = "dictionary_reclaim")
+public class HibernateWordReclaim implements WordReclaim {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,36 +41,36 @@ public class HibernateWordSuggestion implements WordSuggestion {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date requestDate;
 
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "resolution")
+	private ReclaimResolution resolution;
+
 	@Column(name = "resolutionDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date resolutionDate;
 
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "suggestionType")
-	private SuggestionType suggestionType;
-
-	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "suggestionState")
-	private SuggestionState suggestionState;
+	@Column(name = "resolutionType")
+	private ReclaimType resolutionType;
 
 	@Transient
 	private EnumSet<WordAttribute> wordAttributes;
 
-	protected HibernateWordSuggestion() {
+	protected HibernateWordReclaim() {
 	}
 
-	public HibernateWordSuggestion(String word, long requester, Language language, String definition, EnumSet<WordAttribute> attributes, SuggestionType suggestionType) {
+	public HibernateWordReclaim(String word, long requester, Language language, String definition, EnumSet<WordAttribute> attributes, ReclaimType resolutionType) {
 		this.word = word;
 		this.requester = requester;
 		this.language = language;
 		this.attributes = attributes != null ? WordAttribute.encode(attributes) : null;
 		this.wordAttributes = attributes;
 		this.definition = definition;
-		this.suggestionType = suggestionType;
+		this.resolutionType = resolutionType;
 
 		resolutionDate = null;
 		requestDate = new Date();
-		suggestionState = SuggestionState.WAITING;
+		resolution = ReclaimResolution.WAITING;
 	}
 
 	@Override
@@ -129,13 +125,13 @@ public class HibernateWordSuggestion implements WordSuggestion {
 	}
 
 	@Override
-	public SuggestionType getSuggestionType() {
-		return suggestionType;
+	public ReclaimType getResolutionType() {
+		return resolutionType;
 	}
 
 	@Override
-	public SuggestionState getSuggestionState() {
-		return suggestionState;
+	public ReclaimResolution getResolution() {
+		return resolution;
 	}
 
 	void updateDefinition(String definition, EnumSet<WordAttribute> attributes) {
@@ -143,8 +139,8 @@ public class HibernateWordSuggestion implements WordSuggestion {
 		this.attributes = attributes != null ? WordAttribute.encode(attributes) : null;
 	}
 
-	void resolveSuggestion(SuggestionState state, String commentary) {
-		this.suggestionState = state;
+	void resolveReclaim(ReclaimResolution resolution, String commentary) {
+		this.resolution = resolution;
 		this.commentary = commentary;
 		resolutionDate = new Date();
 	}
@@ -155,7 +151,7 @@ public class HibernateWordSuggestion implements WordSuggestion {
 
 	@Override
 	public String toString() {
-		return "HibernateWordSuggestion{" +
+		return "HibernateWordReclaim{" +
 				"id=" + id +
 				", word='" + word + '\'' +
 				", requester=" + requester +
@@ -164,8 +160,8 @@ public class HibernateWordSuggestion implements WordSuggestion {
 				", definition='" + definition + '\'' +
 				", requestDate=" + requestDate +
 				", resolutionDate=" + resolutionDate +
-				", suggestionType=" + suggestionType +
-				", suggestionState=" + suggestionState +
+				", resolutionType=" + resolutionType +
+				", resolution=" + resolution +
 				'}';
 	}
 }

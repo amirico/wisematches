@@ -4,7 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="awards-config.xml"/>
-    <import resource="restriction-config.xml"/>
     <import resource="notifications-config.xml"/>
 
     <bean id="serverDescriptor" class="wisematches.server.services.ServerDescriptor">
@@ -21,13 +20,12 @@
                 <bean class="wisematches.server.services.award.impl.assembly.RobotJudicialAssembly">
                     <property name="statisticManager" ref="scribbleStatisticsManager"/>
                 </bean>
+                <bean class="wisematches.server.services.award.impl.assembly.DictionaryJudicialAssembly">
+                    <property name="statisticManager" ref="scribbleStatisticsManager"/>
+                </bean>
                 <bean class="wisematches.server.services.award.impl.assembly.TourneyJudicialAssembly">
                     <property name="personalityManager" ref="personalityManager"/>
                     <property name="tourneyManager" ref="regularTourneyManager"/>
-                </bean>
-                <bean class="wisematches.server.services.award.impl.assembly.DictionaryJudicialAssembly">
-                    <property name="personalityManager" ref="personalityManager"/>
-                    <property name="dictionarySuggestionManager" ref="dictionarySuggestionManager"/>
                 </bean>
             </list>
         </property>
@@ -66,13 +64,6 @@
     <bean id="advertisementManager" class="wisematches.server.services.reclame.impl.XMLAdvertisementManager">
         <property name="adsResource" value="${advertisement.providers.file}"/>
     </bean>
-
-    <bean id="dictionarySuggestionManager"
-          class="wisematches.server.services.dictionary.impl.HibernateDictionarySuggestionManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="dictionaryManager" ref="dictionaryManager"/>
-    </bean>
-
 
     <bean id="notificationMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="${mail.server.host}"/>
@@ -214,7 +205,7 @@
 
         <property name="accountManager" ref="accountManager"/>
         <property name="abuseReportManager" ref="abuseReportManager"/>
-        <property name="dictionarySuggestionManager" ref="dictionarySuggestionManager"/>
+        <property name="dictionaryReclaimManager" ref="dictionaryReclaimManager"/>
     </bean>
 
     <bean class="wisematches.server.services.notify.impl.NotificationOriginCenter">
@@ -227,7 +218,7 @@
         <property name="proposalManager" ref="scribbleProposalManager"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="propertiesManager" ref="reliablePropertiesManager"/>
-        <property name="dictionarySuggestionManager" ref="dictionarySuggestionManager"/>
+        <property name="dictionaryReclaimManager" ref="dictionaryReclaimManager"/>
         <property name="scribbleExpirationManager" ref="scribbleGameExpirationManager"/>
         <property name="proposalExpirationManager" ref="scribbleProposalExpirationManager"/>
     </bean>

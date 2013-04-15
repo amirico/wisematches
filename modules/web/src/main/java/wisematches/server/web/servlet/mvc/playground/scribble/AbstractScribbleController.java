@@ -13,7 +13,7 @@ import wisematches.playground.propose.ProposalRelation;
 import wisematches.playground.scribble.*;
 import wisematches.playground.scribble.settings.BoardSettings;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
-import wisematches.playground.tracking.StatisticManager;
+import wisematches.playground.tracking.StatisticsManager;
 import wisematches.server.web.servlet.mvc.WisematchesController;
 import wisematches.server.web.servlet.sdo.ServiceResponse;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/playground/scribble")
 public class AbstractScribbleController extends WisematchesController {
-	protected StatisticManager statisticManager;
+	protected StatisticsManager statisticManager;
 	protected ScribblePlayManager playManager;
 	protected ScribbleSearchManager searchManager;
 	protected BoardSettingsManager boardSettingsManager;
@@ -136,7 +136,7 @@ public class AbstractScribbleController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setStatisticManager(StatisticManager statisticManager) {
+	public void setStatisticManager(StatisticsManager statisticManager) {
 		this.statisticManager = statisticManager;
 	}
 
