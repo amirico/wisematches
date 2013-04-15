@@ -123,7 +123,8 @@ public class WebClient {
 				} else if (userAgentString.contains("MSIE ")) {
 					ua = UserAgent.IE;
 					ver = userAgentString.substring(userAgentString.indexOf("MSIE ") + 5);
-					ver = ver.substring(0, ver.indexOf(";")).trim();
+					final int endIndex = ver.indexOf(";");
+					ver = ver.substring(0, endIndex).trim();
 				} else if (userAgentString.contains("Java")) {
 					ua = UserAgent.JAVA;
 					ver = userAgentString.substring(userAgentString.indexOf("/1.") + 3);
@@ -140,7 +141,7 @@ public class WebClient {
 					return new WebClient(ua, Integer.parseInt(ver.substring(0, ver.indexOf("."))), ver);
 				}
 			} catch (Exception ex) {
-				log.error("WebClient can't be parsed for {}", userAgentString, ex);
+				log.info("WebClient can't be parsed for: {}", userAgentString);
 			}
 		}
 		return null;
