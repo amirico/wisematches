@@ -39,6 +39,7 @@ import static org.junit.Assert.assertNotNull;
 		"classpath:/config/properties-config.xml",
 		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
+		"classpath:/config/gameplay-config.xml",
 		"classpath:/config/scribble-config.xml"
 })
 public class HibernateScribbleStatisticsManagerTest {

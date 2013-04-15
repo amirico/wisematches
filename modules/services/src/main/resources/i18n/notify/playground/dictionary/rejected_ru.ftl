@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="context" type="wisematches.server.services.dictionary.WordSuggestion" -->
+<#-- @ftlvariable name="context" type="wisematches.playground.dictionary.WordReclaim" -->
 <#import "../../utils.ftl" as util>
 
 <p>

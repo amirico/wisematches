@@ -18,8 +18,8 @@ import wisematches.core.search.Orders;
 import wisematches.playground.scribble.settings.BoardSettingsManager;
 import wisematches.playground.tourney.TourneyPlace;
 import wisematches.playground.tracking.RatingCurve;
-import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
+import wisematches.playground.tracking.StatisticsManager;
 import wisematches.server.services.award.Award;
 import wisematches.server.services.award.AwardContext;
 import wisematches.server.services.award.AwardsManager;
@@ -45,7 +45,7 @@ import java.util.Locale;
 public class ProfileController extends WisematchesController {
 	private AwardsManager awardsManager;
 	private CountriesManager countriesManager;
-	private StatisticManager statisticManager;
+	private StatisticsManager statisticManager;
 	private PlayerProfileManager profileManager;
 	private BoardSettingsManager boardSettingsManager;
 
@@ -242,7 +242,7 @@ public class ProfileController extends WisematchesController {
 	}
 
 	@Autowired
-	public void setStatisticManager(StatisticManager statisticManager) {
+	public void setStatisticManager(StatisticsManager statisticManager) {
 		this.statisticManager = statisticManager;
 	}
 

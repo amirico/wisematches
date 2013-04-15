@@ -10,7 +10,7 @@ import wisematches.core.Player;
 import wisematches.playground.scribble.tracking.ScribbleStatistics;
 import wisematches.playground.scribble.tracking.ScribbleStatisticsManager;
 import wisematches.playground.tracking.RatingCurve;
-import wisematches.playground.tracking.impl.AbstractStatisticManager;
+import wisematches.playground.tracking.impl.AbstractStatisticsManager;
 
 import java.util.Date;
 
@@ -18,7 +18,7 @@ import java.util.Date;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class HibernateScribbleStatisticsManager
-		extends AbstractStatisticManager<ScribbleStatistics, ScribbleStatisticsEditor>
+		extends AbstractStatisticsManager<ScribbleStatistics, ScribbleStatisticsEditor>
 		implements ScribbleStatisticsManager {
 	private SessionFactory sessionFactory;
 

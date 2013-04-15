@@ -2,9 +2,9 @@ package wisematches.server.services.award.impl.assembly;
 
 import wisematches.core.Player;
 import wisematches.core.RobotType;
-import wisematches.playground.tracking.StatisticManager;
 import wisematches.playground.tracking.Statistics;
 import wisematches.playground.tracking.StatisticsListener;
+import wisematches.playground.tracking.StatisticsManager;
 import wisematches.server.services.award.AwardWeight;
 
 import java.util.Set;
@@ -13,7 +13,7 @@ import java.util.Set;
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class RobotJudicialAssembly extends AbstractJudicialAssembly {
-	private StatisticManager statisticManager;
+	private StatisticsManager statisticManager;
 	private final TheAwardsListener listener = new TheAwardsListener();
 
 	public RobotJudicialAssembly() {
@@ -50,15 +50,15 @@ public class RobotJudicialAssembly extends AbstractJudicialAssembly {
 		}
 	}
 
-	public void setStatisticManager(StatisticManager statisticManager) {
+	public void setStatisticManager(StatisticsManager statisticManager) {
 		if (this.statisticManager != null) {
-			this.statisticManager.removeStatisticListener(listener);
+			this.statisticManager.removeStatisticsListener(listener);
 		}
 
 		this.statisticManager = statisticManager;
 
 		if (this.statisticManager != null) {
-			this.statisticManager.addStatisticListener(listener);
+			this.statisticManager.addStatisticsListener(listener);
 		}
 	}
 

@@ -24,6 +24,7 @@ import wisematches.core.search.Range;
 import wisematches.core.task.executor.TransactionAwareExecutor;
 import wisematches.playground.*;
 import wisematches.playground.dictionary.Dictionary;
+import wisematches.playground.dictionary.*;
 import wisematches.playground.propose.*;
 import wisematches.playground.propose.impl.DefaultPrivateProposal;
 import wisematches.playground.scribble.Direction;
@@ -37,10 +38,6 @@ import wisematches.playground.scribble.expiration.ScribbleExpirationType;
 import wisematches.playground.tourney.TourneyEntity;
 import wisematches.playground.tourney.regular.*;
 import wisematches.server.services.award.*;
-import wisematches.server.services.dictionary.DictionarySuggestionListener;
-import wisematches.server.services.dictionary.DictionarySuggestionManager;
-import wisematches.server.services.dictionary.SuggestionType;
-import wisematches.server.services.dictionary.WordSuggestion;
 import wisematches.server.services.message.MessageListener;
 import wisematches.server.services.message.MessageManager;
 import wisematches.server.services.message.impl.HibernateMessage;
@@ -67,8 +64,9 @@ import static org.junit.Assert.fail;
 		"classpath:/config/properties-config.xml",
 		"classpath:/config/database-config.xml",
 		"classpath:/config/personality-config.xml",
-		"classpath:/config/playground-config.xml",
+		"classpath:/config/gameplay-config.xml",
 		"classpath:/config/scribble-config.xml",
+		"classpath:/config/wisematches-config.xml",
 })
 public class NotificationOriginCenterTest {
 	@Autowired
@@ -249,8 +247,8 @@ public class NotificationOriginCenterTest {
 
 		final BoardManager boardManager = createStrictMock(BoardManager.class);
 		boardManager.addBoardListener(isA(BoardListener.class));
-		expect(boardManager.openBoard(1L)).andReturn((GameBoard) board1).times(3);
-		expect(boardManager.openBoard(2L)).andReturn((GameBoard) board2).times(3);
+		expect(boardManager.openBoard(1L)).andReturn(board1).times(3);
+		expect(boardManager.openBoard(2L)).andReturn(board2).times(3);
 		boardManager.removeBoardListener(isA(BoardListener.class));
 		replay(boardManager);
 
@@ -516,30 +514,30 @@ public class NotificationOriginCenterTest {
 
 	@Test
 	public void testDictionaryChange() throws InterruptedException {
-		final Capture<DictionarySuggestionListener> tourneyListener = new Capture<>(CaptureType.ALL);
+		final Capture<DictionaryReclaimListener> tourneyListener = new Capture<>(CaptureType.ALL);
 
-		final DictionarySuggestionManager suggestionManager = createMock(DictionarySuggestionManager.class);
-		suggestionManager.addDictionarySuggestionListener(capture(tourneyListener));
-		suggestionManager.removeDictionarySuggestionListener(capture(tourneyListener));
-		replay(suggestionManager);
+		final DictionaryReclaimManager reclaimManager = createMock(DictionaryReclaimManager.class);
+		reclaimManager.addDictionaryReclaimListener(capture(tourneyListener));
+		reclaimManager.removeDictionaryReclaimListener(capture(tourneyListener));
+		replay(reclaimManager);
 
-		publisherCenter.setDictionarySuggestionManager(suggestionManager);
+		publisherCenter.setdictionaryReclaimManager(reclaimManager);
 
-		final WordSuggestion suggestion = createMock(WordSuggestion.class);
-		expect(suggestion.getRequester()).andReturn(p1.getId()).times(2);
-		expect(suggestion.getWord()).andReturn("MockSuggest").times(2);
-		expect(suggestion.getSuggestionType()).andReturn(SuggestionType.CREATE);
-		expect(suggestion.getCommentary()).andReturn(null);
-		replay(suggestion);
+		final WordReclaim reclaim = createMock(WordReclaim.class);
+		expect(reclaim.getRequester()).andReturn(p1.getId()).times(2);
+		expect(reclaim.getWord()).andReturn("MockSuggest").times(2);
+		expect(reclaim.getResolutionType()).andReturn(ReclaimType.CREATE);
+		expect(reclaim.getCommentary()).andReturn(null);
+		replay(reclaim);
 
-		tourneyListener.getValue().changeRequestApproved(suggestion);
-		tourneyListener.getValue().changeRequestRejected(suggestion);
+		tourneyListener.getValue().wordReclaimResolved(reclaim, ReclaimResolution.APPROVED);
+		tourneyListener.getValue().wordReclaimResolved(reclaim, ReclaimResolution.REJECTED);
 
 		assertEquals(2, publishedNotifications.getValues().size());
 		System.out.println(publishedNotifications);
 
-		publisherCenter.setDictionarySuggestionManager(null);
+		publisherCenter.setdictionaryReclaimManager(null);
 
-		verify(suggestionManager, suggestion);
+		verify(reclaimManager, reclaim);
 	}
 }

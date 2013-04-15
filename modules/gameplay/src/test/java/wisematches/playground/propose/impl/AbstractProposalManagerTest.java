@@ -12,7 +12,7 @@ import wisematches.core.personality.DefaultMember;
 import wisematches.playground.GameSettings;
 import wisematches.playground.MockGameSettings;
 import wisematches.playground.propose.*;
-import wisematches.playground.tracking.StatisticManager;
+import wisematches.playground.tracking.StatisticsManager;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +40,7 @@ public class AbstractProposalManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		final StatisticManager psm = createMock(StatisticManager.class);
+		final StatisticsManager psm = createMock(StatisticsManager.class);
 		expect(psm.getStatistic(EasyMock.<Player>anyObject())).andReturn(null).anyTimes();
 		replay(psm);
 

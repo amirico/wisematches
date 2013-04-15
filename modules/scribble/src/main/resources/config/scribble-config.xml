@@ -7,10 +7,6 @@
         <property name="banksPath" value="classpath:/banks/*"/>
     </bean>
 
-    <bean id="dictionaryManager" class="wisematches.playground.dictionary.impl.FileDictionaryManager">
-        <property name="dictionariesFolder" value="${server.dictionary.path}"/>
-    </bean>
-
     <bean id="scribbleRobotTaskExecutor" class="wisematches.core.task.executor.TransactionAwareExecutor">
         <property name="taskExecutor">
             <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -59,7 +55,7 @@
         <property name="statisticsTrapper" ref="scribbleStatisticTrapper"/>
     </bean>
 
-    <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticManager">
+    <bean id="scribbleStatisticsManager" class="wisematches.playground.tracking.impl.CacheableStatisticsManager">
         <property name="cacheManager" ref="cacheManager"/>
         <property name="playerStatisticManager">
             <bean class="wisematches.playground.scribble.tracking.impl.HibernateScribbleStatisticsManager">
@@ -67,6 +63,7 @@
                 <property name="gamePlayManager" ref="scribbleBoardManager"/>
                 <property name="tourneyManager" ref="regularTourneyManager"/>
                 <property name="personalityManager" ref="personalityManager"/>
+                <property name="dictionaryReclaimManager" ref="dictionaryReclaimManager"/>
             </bean>
         </property>
     </bean>
@@ -146,4 +143,5 @@
         <property name="settingsProvider" ref="scribbleSettingsProvider"/>
         <property name="personalityManager" ref="personalityManager"/>
     </bean>
+    <bean class="wisematches.server.services.award.impl.assembly.DictionaryJudicialAssembly" id=""/>
 </beans>

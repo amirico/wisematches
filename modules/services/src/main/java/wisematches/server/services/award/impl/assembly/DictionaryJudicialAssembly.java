@@ -2,35 +2,31 @@ package wisematches.server.services.award.impl.assembly;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import wisematches.core.Personality;
-import wisematches.core.PersonalityManager;
 import wisematches.core.Player;
+import wisematches.playground.tracking.Statistics;
+import wisematches.playground.tracking.StatisticsListener;
+import wisematches.playground.tracking.StatisticsManager;
 import wisematches.server.services.award.AwardWeight;
-import wisematches.server.services.dictionary.*;
 
-import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
 public class DictionaryJudicialAssembly extends AbstractJudicialAssembly {
-	private PersonalityManager personalityManager;
-	private DictionarySuggestionManager dictionarySuggestionManager;
+	private StatisticsManager statisticManager;
 
-	private final TheDictionarySuggestionListener suggestionListener = new TheDictionarySuggestionListener();
+	private final StatisticsListener statisticsListener = new TheStatisticsListener();
 
 	private static final Logger log = LoggerFactory.getLogger("wisematches.awards.DictionaryJudicial");
 
 	public DictionaryJudicialAssembly() {
 	}
 
-	protected void processDictionaryChanged(long requester) {
-		final Personality person = personalityManager.getPerson(requester);
-		if (person != null && person instanceof Player) {
-			final int totalCount = dictionarySuggestionManager.getTotalCount(person, new SuggestionContext(null, null, EnumSet.of(SuggestionState.APPROVED), null));
-
+	protected void processDictionaryChanged(Player requester, int approvedReclaims) {
+		if (requester != null) {
 			AwardWeight weight = null;
-			switch (totalCount) {
+			switch (approvedReclaims) {
 				case 5:
 					weight = AwardWeight.BRONZE;
 					break;
@@ -42,48 +38,34 @@ public class DictionaryJudicialAssembly extends AbstractJudicialAssembly {
 					break;
 			}
 			if (weight != null) {
-				grantAward((Player) person, "dictionary.editor", weight, null);
+				grantAward(requester, "dictionary.editor", weight, null);
 			}
 		} else {
 			log.error("Very strange, unknown player changed dictionary: {}", requester);
 		}
 	}
 
-	public void setPersonalityManager(PersonalityManager personalityManager) {
-		this.personalityManager = personalityManager;
-	}
-
-	public void setDictionarySuggestionManager(DictionarySuggestionManager dictionarySuggestionManager) {
-		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.removeDictionarySuggestionListener(suggestionListener);
+	public void setStatisticManager(StatisticsManager statisticManager) {
+		if (this.statisticManager != null) {
+			this.statisticManager.removeStatisticsListener(statisticsListener);
 		}
 
-		this.dictionarySuggestionManager = dictionarySuggestionManager;
+		this.statisticManager = statisticManager;
 
-		if (this.dictionarySuggestionManager != null) {
-			this.dictionarySuggestionManager.addDictionarySuggestionListener(suggestionListener);
+		if (this.statisticManager != null) {
+			this.statisticManager.addStatisticsListener(statisticsListener);
 		}
 	}
 
-	private final class TheDictionarySuggestionListener implements DictionarySuggestionListener {
-		private TheDictionarySuggestionListener() {
+	private final class TheStatisticsListener implements StatisticsListener {
+		private TheStatisticsListener() {
 		}
 
 		@Override
-		public void changeRequestRaised(WordSuggestion request) {
-		}
-
-		@Override
-		public void changeRequestUpdated(WordSuggestion request) {
-		}
-
-		@Override
-		public void changeRequestApproved(WordSuggestion request) {
-			processDictionaryChanged(request.getRequester());
-		}
-
-		@Override
-		public void changeRequestRejected(WordSuggestion request) {
+		public void playerStatisticUpdated(Player player, Statistics statistic, Set<String> changes) {
+			if (changes.contains("reclaimsApproved")) {
+				processDictionaryChanged(player, statistic.getReclaimsApproved());
+			}
 		}
 	}
 }

@@ -2,7 +2,7 @@
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>
-<#assign suggestionStates=["WAITING", "APPROVED", "REJECTED"]/>
+<#assign reclaimResolutions=["WAITING", "APPROVED", "REJECTED"]/>
 
 <@wm.ui.playground id="dictionaryWidget">
     <@wm.ui.table.header>
@@ -14,8 +14,8 @@
     <form id="filterForm">
         <input type="hidden" name="pid" value="${player.id}"/>
 
-        <div id="suggestionStates" class="wm-ui-buttonset">
-            <#list suggestionStates as a>
+        <div id="reclaimResolutions" class="wm-ui-buttonset">
+            <#list reclaimResolutions as a>
                 <input id="suggestionState${a}" name="state" type="radio" value="${a}"
                        <#if a_index==0>checked="checked"</#if>/>
                 <label for="suggestionState${a}"><@messageCapFirst code="suggestion.state.${a?lower_case}.label"/></label>
@@ -23,10 +23,10 @@
         </div>
 
     <#--
-            <div id="suggestionTypes" class="wm-ui-buttonset">
+            <div id="reclaimTypes" class="wm-ui-buttonset">
                 <#list ["CREATE", "REMOVE", "UPDATE"] as a>
-                    <input id="suggestionType${a}" name="type" type="checkbox" value="${a}" checked="checked"/>
-                    <label for="suggestionType${a}"><@messageCapFirst code="suggestion.type.${a?lower_case}.label"/></label>
+                    <input id="resolutionType${a}" name="type" type="checkbox" value="${a}" checked="checked"/>
+                    <label for="resolutionType${a}"><@messageCapFirst code="suggestion.type.${a?lower_case}.label"/></label>
                 </#list>
             </div>
     -->
@@ -87,7 +87,7 @@
         "bServerSide": true,
         "aoColumns": [
             { "mDataProp": 'word', "sClass": 'word', "bSortable": true },
-            { "mDataProp": 'suggestionType', "sClass": 'type', "bSortable": true,
+            { "mDataProp": 'resolutionType', "sClass": 'type', "bSortable": true,
                 mRender: function (data, type, row) {
                     return langs[data];
                 }
@@ -100,7 +100,7 @@
                 mRender: function (data, type, row) {
                     return data.text;
                 } },
-            { "mDataProp": 'attributes', "sClass": 'attributes', "bSortable": false,
+            { "mDataProp": 'attributes', "sDefaultContent": '', "sClass": 'attributes', "bSortable": false,
                 mRender: function (data, type, row) {
                     if (data == null) {
                         return null;
@@ -108,7 +108,7 @@
                     return langs[data];
                 }
             },
-            { "mDataProp": 'definition', "sClass": 'definition', "bSortable": false }
+            { "mDataProp": 'definition', "sDefaultContent": '', "sClass": 'definition', "bSortable": false }
         ],
         "sAjaxSource": "/playground/dictionary/personalWordEntries.ajax",
         "fnServerData": function (sSource, aoData, fnCallback) {

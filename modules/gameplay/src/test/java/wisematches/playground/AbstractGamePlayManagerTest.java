@@ -13,7 +13,7 @@ import wisematches.core.RobotType;
 import wisematches.core.cache.ReferenceMapCacheManager;
 import wisematches.core.cache.ReferenceType;
 import wisematches.core.personality.DefaultMember;
-import wisematches.playground.tracking.StatisticManager;
+import wisematches.playground.tracking.StatisticsManager;
 
 import java.util.*;
 
@@ -178,7 +178,7 @@ public class AbstractGamePlayManagerTest {
 		expect(ratingSystem.calculateRatings(aryEq(new short[]{1000, 2000}), aryEq(new short[]{100, 200}))).andReturn(new short[]{990, 2010});
 		replay(ratingSystem);
 
-		final StatisticManager statisticManager = createMock(StatisticManager.class);
+		final StatisticsManager statisticManager = createMock(StatisticsManager.class);
 		expect(statisticManager.getRating(player1)).andReturn((short) 1000).anyTimes();
 		expect(statisticManager.getRating(player2)).andReturn((short) 2000).anyTimes();
 		replay(statisticManager);

@@ -40,7 +40,7 @@
         <bean parent="notification" c:code="playground.tourney.announced" c:scope="GLOBAL"/>
 
 
-        <bean parent="notification" c:code="playground.dictionary.accepted" c:scope="INTERNAL"/>
+        <bean parent="notification" c:code="playground.dictionary.approved" c:scope="INTERNAL"/>
 
         <bean parent="notification" c:code="playground.dictionary.rejected" c:scope="INTERNAL"/>
 

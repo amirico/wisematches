@@ -1,7 +1,6 @@
-package wisematches.server.services.dictionary;
+package wisematches.playground.dictionary;
 
 import wisematches.core.Language;
-import wisematches.playground.dictionary.WordAttribute;
 
 import java.util.Date;
 import java.util.EnumSet;
@@ -9,7 +8,7 @@ import java.util.EnumSet;
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public interface WordSuggestion {
+public interface WordReclaim {
 	long getId();
 
 	String getWord();
@@ -26,9 +25,9 @@ public interface WordSuggestion {
 
 	Date getResolutionDate();
 
-	SuggestionType getSuggestionType();
+	ReclaimType getResolutionType();
 
-	SuggestionState getSuggestionState();
+	ReclaimResolution getResolution();
 
 	EnumSet<WordAttribute> getAttributes();
 }

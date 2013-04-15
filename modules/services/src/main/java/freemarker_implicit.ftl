@@ -3,4 +3,4 @@
 [#-- @ftlvariable name="locale" type="java.util.Locale" --]
 [#-- @ftlvariable name="personality" type="wisematches.core.Personality" --]
 [#-- @ftlvariable name="messageSource" type="wisematches.playground.GameMessageSource" --]
-[#-- @ftlvariable name="statisticsManager" type="wisematches.playground.tracking.StatisticManager" --]
+[#-- @ftlvariable name="statisticsManager" type="wisematches.playground.tracking.StatisticsManager" --]

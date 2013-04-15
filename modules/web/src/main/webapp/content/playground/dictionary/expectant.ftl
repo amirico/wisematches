@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="suggestions" type="wisematches.server.services.dictionary.WordSuggestion[]" -->
+<#-- @ftlvariable name="reclaims" type="wisematches.playground.dictionary.WordReclaim[]" -->
 <#include "/core.ftl"/>
 
 <@wm.ui.table.dtinit/>
@@ -19,7 +19,10 @@
         <thead>
         <tr>
             <#if moderator>
-                <th></th>
+                <th>
+                    <label for="selectAll"></label><input title="select all messages" type="checkbox" id="selectAll"
+                                                          name="selectAll" value="false">
+                </th>
             </#if>
             <th>
                 <@message code="suggestion.word.label"/>
@@ -42,7 +45,7 @@
         </tr>
         </thead>
         <tbody>
-            <#list suggestions as s>
+            <#list reclaims as s>
             <tr class="ui-state-default" valign="top">
                 <#if moderator>
                     <td>
@@ -60,7 +63,7 @@
                     </#if>
                 </td>
                 <td class="type">
-                    <@message code="suggestion.type.${s.suggestionType.name()?lower_case}.label"/>
+                    <@message code="suggestion.type.${s.resolutionType.name()?lower_case}.label"/>
                 </td>
                 <td class="requester">
                     <@wm.player.name personalityManager.getPerson(s.requester) false false true/>
@@ -160,6 +163,11 @@
                 }
             });
         };
+
+        $("#selectAll").click(function () {
+            var checkBoxes = $("input[name='suggestion']");
+            checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+        });
 
         $("#approveChanges").click(function () {
             sendRequest('approve', null);
