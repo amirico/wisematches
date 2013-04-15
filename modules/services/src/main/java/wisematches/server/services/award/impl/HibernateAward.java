@@ -18,6 +18,7 @@ import java.util.Map;
 public class HibernateAward implements Award {
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@Column(name = "code", insertable = true, updatable = false, nullable = false)
