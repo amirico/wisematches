@@ -8,7 +8,7 @@ public class CommunicationException extends Exception {
 	private final String statusReason;
 
 	public CommunicationException(int statusCode, String statusReason) {
-		super(statusReason);
+		super(statusCode + ": " + statusReason);
 		this.statusReason = statusReason;
 		this.statusCode = statusCode;
 	}

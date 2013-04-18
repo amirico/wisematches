@@ -1,9 +1,10 @@
-package wisematches.client.android.app.playground.surface;
+package wisematches.client.android.app.playground.scribble.surface;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import wisematches.client.android.app.playground.model.Tile;
+import wisematches.client.android.app.BitmapFactory;
+import wisematches.client.android.app.playground.scribble.model.ScribbleTile;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
@@ -12,20 +13,20 @@ public class TileSurface {
 	private boolean pinned = false;
 	private boolean selected = false;
 
-	private Tile tile;
-	private final TileBitmapFactory bitmapFactory;
+	private ScribbleTile tile;
+	private final BitmapFactory bitmapFactory;
 
-	public TileSurface(Tile tile, TileBitmapFactory bitmapFactory) {
+	public TileSurface(ScribbleTile tile, BitmapFactory bitmapFactory) {
 		this(tile, false, bitmapFactory);
 	}
 
-	public TileSurface(Tile tile, boolean pinned, TileBitmapFactory bitmapFactory) {
+	public TileSurface(ScribbleTile tile, boolean pinned, BitmapFactory bitmapFactory) {
 		this.tile = tile;
 		this.pinned = pinned;
 		this.bitmapFactory = bitmapFactory;
 	}
 
-	public Tile getTile() {
+	public ScribbleTile getTile() {
 		return tile;
 	}
 
@@ -60,7 +61,7 @@ public class TileSurface {
 		} else {
 			paint.setColor(Color.WHITE);
 		}
-		canvas.drawText(tile.getLetter(), x + 11, y + 18, paint);
+		canvas.drawText(tile.getLetter().toUpperCase(), x + 11, y + 18, paint);
 		paint.setAntiAlias(false);
 	}
 

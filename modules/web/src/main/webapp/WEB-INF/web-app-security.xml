@@ -134,9 +134,9 @@
 
     <http use-expressions="true">
         <intercept-url pattern="/playground/profile/view" access="permitAll"/>
-        <intercept-url pattern="/playground/profile/awards" access="permitAll"/>
         <intercept-url pattern="/playground/profile/image/view" access="permitAll"/>
-        <intercept-url pattern="/playground/scribble/board" access="permitAll"/>
+        <intercept-url pattern="/playground/profile/awards/**" access="permitAll"/>
+        <intercept-url pattern="/playground/scribble/board/**" access="permitAll"/>
 
         <intercept-url pattern="/playground/dictionary/loadWordEntry.ajax" access="permitAll"/>
         <intercept-url pattern="/playground/dictionary/loadWordEntries.ajax" access="permitAll"/>

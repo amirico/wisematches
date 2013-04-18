@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/white">
+              android:background="#a6e1df">
 
     <TextView
             android:layout_width="wrap_content"
@@ -14,66 +14,89 @@
 
     <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
         <view
-                android:layout_width="356dp"
-                android:layout_height="370dp"
-                class="wisematches.client.android.app.playground.BoardView"
+                android:layout_width="356px"
+                android:layout_height="370px"
+                class="wisematches.client.android.app.playground.scribble.BoardView"
                 android:id="@+id/scribbleBoardView"
                 android:layout_gravity="center|right"
-                android:layout_centerInParent="true"
-                android:background="#FFFFFF"/>
+                android:background="@android:color/transparent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"/>
     </RelativeLayout>
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="2dp">
 
         <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:text="Make"
-                android:id="@+id/button"
-                />
-
-        <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Clear"
-                android:id="@+id/button1"/>
+                android:id="@+id/scribbleBoardBtnMake"
+                android:background="@drawable/board_gbtn"/>
 
         <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="Clear"
+                android:id="@+id/scribbleBoardBtnClear"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
                 android:text="Select"
-                android:id="@+id/button2"/>
+                android:id="@+id/scribbleBoardBtnSelect"
+                android:background="@drawable/board_gbtn"/>
     </LinearLayout>
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="2dp">
 
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pass"
-                android:id="@+id/button3"/>
+                android:id="@+id/scribbleBoardBtnPass"/>
 
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Exchange"
-                android:id="@+id/button4"/>
+                android:id="@+id/scribbleBoardBtnExchange"
+                android:background="@drawable/board_gbtn"/>
 
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Resign"
-                android:id="@+id/button5"/>
+                android:id="@+id/scribbleBoardBtnResign"
+                android:background="@drawable/board_gbtn"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="New EditText"
+                android:id="@+id/editText"
+                android:layout_gravity="center"/>
     </LinearLayout>
 
 </LinearLayout>

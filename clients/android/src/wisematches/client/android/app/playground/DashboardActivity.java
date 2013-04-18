@@ -12,6 +12,7 @@ import wisematches.client.android.CommunicationException;
 import wisematches.client.android.CooperationException;
 import wisematches.client.android.R;
 import wisematches.client.android.app.WiseMatchesActivity;
+import wisematches.client.android.app.playground.scribble.ScribbleBoardActivity;
 import wisematches.client.android.http.ServerResponse;
 import wisematches.client.android.os.ProgressTask;
 import wisematches.client.android.view.playground.ScribbleGameInfo;
@@ -75,7 +76,7 @@ public class DashboardActivity extends WiseMatchesActivity {
 	}
 
 	private void openBoard(final long boardId) {
-		final Intent intent = new Intent(this, GameBoardActivity.class);
+		final Intent intent = new Intent(this, ScribbleBoardActivity.class);
 		intent.putExtra("boardId", boardId);
 		startActivity(intent);
 	}

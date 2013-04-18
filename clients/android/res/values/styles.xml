@@ -10,4 +10,8 @@
     </style>
 
     <style name="black"></style>
+
+    <style name="GameButton" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/board_gbtn</item>
+    </style>
 </resources>

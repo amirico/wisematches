@@ -1,11 +1,11 @@
-package wisematches.client.android.app.playground.surface;
+package wisematches.client.android.app;
 
 import android.graphics.Bitmap;
 
 /**
  * @author Sergey Klimenko (smklimenko@gmail.com)
  */
-public class TileBitmapFactory {
+public class BitmapFactory {
 	private final Bitmap[] tilesHighlighters = new Bitmap[11];
 
 	private final Bitmap[] tilesSelected = new Bitmap[11];
@@ -13,7 +13,7 @@ public class TileBitmapFactory {
 	private final Bitmap[] tilesPinnedSelected = new Bitmap[11];
 	private final Bitmap[] tilesPinnedUnselected = new Bitmap[11];
 
-	public TileBitmapFactory(Bitmap bitmap) {
+	public BitmapFactory(Bitmap bitmap) {
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 242, 110, true);
 		for (int i = 0; i < 11; i++) {
 			tilesHighlighters[i] = Bitmap.createBitmap(scaledBitmap, 22 * i, 88, 22, 22);
