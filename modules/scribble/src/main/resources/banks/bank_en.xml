@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    WARNING: this file can't be changed! Otherwise stored games will be loaded incorrect.
+    Tiles count and cost taken from here: http://en.wikipedia.org/wiki/Scrabble_letter_distributions#English
+-->
+<bank version="1.0">
+    <letter char="A" count="9" cost="1"/>
+    <letter char="B" count="2" cost="3"/>
+    <letter char="C" count="2" cost="3"/>
+    <letter char="D" count="4" cost="2"/>
+    <letter char="E" count="12" cost="1"/>
+    <letter char="F" count="2" cost="4"/>
+    <letter char="G" count="3" cost="2"/>
+    <letter char="H" count="2" cost="4"/>
+    <letter char="I" count="9" cost="1"/>
+    <letter char="J" count="1" cost="8"/>
+    <letter char="K" count="1" cost="5"/>
+    <letter char="L" count="4" cost="1"/>
+    <letter char="M" count="2" cost="3"/>
+    <letter char="N" count="6" cost="1"/>
+    <letter char="O" count="8" cost="1"/>
+    <letter char="P" count="2" cost="3"/>
+    <letter char="Q" count="1" cost="10"/>
+    <letter char="R" count="6" cost="1"/>
+    <letter char="S" count="4" cost="1"/>
+    <letter char="T" count="6" cost="1"/>
+    <letter char="U" count="4" cost="1"/>
+    <letter char="V" count="2" cost="4"/>
+    <letter char="W" count="2" cost="4"/>
+    <letter char="X" count="1" cost="8"/>
+    <letter char="Y" count="2" cost="4"/>
+    <letter char="Z" count="1" cost="10"/>
+    <letter char="*" count="1" cost="0" forEachPlayer="true"/>
+</bank>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="error">
+        <item name="android:textColor">#cd0a0a</item>
+    </style>
+
+    <style name="link">
+        <item name="android:textColor">#0000FF</item>
+    </style>
+
+    <style name="black"></style>
+
+    <style name="GameButton" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/board_gbtn</item>
+    </style>
+</resources>

@@ -1,0 +1,84 @@
+<#-- @ftlvariable name="messageManager" type="wisematches.server.services.message.MessageManager" -->
+<#-- @ftlvariable name="newMessagesCount" type="java.lang.Integer" -->
+<#include "/core.ftl">
+
+<#assign hasNewFeatues=false/>
+
+<table style="width: 100%; height: 70px; padding-left: 2px">
+    <tr>
+        <td valign="top" align="left">
+        <@wm.security.authorize granted="admin">
+            <a href="/maintain/admin/main"
+               style="color: rgba(128,128,128,0.27)"><@message code="game.menu.admin.label"/></a>
+        </@wm.security.authorize>
+        </td>
+        <td valign="top" align="right">
+        <@wm.player.name principal true false/>
+        <#if hasNewFeatues>
+            |
+            <a href="/info/features"
+               style="color: #FF3300; font-weight: bold;"><@message code="game.menu.features.label"/></a>
+        </#if>
+            |
+        <#if principal.type.member><a
+                href="/account/modify"><@message code="game.menu.settings.label"/></a>
+            |
+        </#if>
+            <a href="/info/help"><@message code="game.menu.help.label"/></a>
+            |
+            <a href="/account/logout"><@message code="account.signout.label"/></a>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" valign="bottom" colspan="2">
+            <div id="gameToolbar" align="left" style="display: none">
+                <div class="wm-ui-buttonset">
+                    <a href="/playground/scribble/active"><@message code="game.menu.games.label"/></a>
+                    <a href="/playground/scribble/join"><@message code="game.menu.join.label"/></a>
+                    <a href="/playground/scribble/create"><@message code="game.menu.create.label"/></a>
+                </div>
+
+                <div class="wm-ui-buttonset">
+                <#assign messageManager=springMacroRequestContext.webApplicationContext.getBean("messageManager")!""/>
+                <#if messageManager?has_content>
+                    <#assign newMessagesCount=messageManager.getNewMessagesCount(principal)/>
+                    <#assign newMessages=newMessagesCount?? && newMessagesCount !=0/>
+                    <a href="/playground/messages/view">
+                        <#if newMessages><img src="<@wm.ui.static "images/dashboard/newMessageIcon.png"/>"
+                                              style="width: 16px; height: 16px; padding-right: 5px; padding-bottom: 2px; vertical-align: bottom;"
+                                              alt=""/></#if><@message code="game.menu.messages.label"/><#if newMessages>
+                        <strong>(${newMessagesCount})</strong>
+                    </#if>
+                    </a>
+                </#if>
+                </div>
+
+                <div class="wm-ui-buttonset">
+                    <a href="/playground/tourney"><@message code="game.menu.tourneys.label"/></a>
+                </div>
+
+                <div class="wm-ui-splitbutton">
+                    <a href="/playground/dictionary/view"><@message code="game.menu.dictionary.label"/></a>
+                    <ul class="ui-helper-hidden">
+                        <li>
+                            <a href="/playground/dictionary/personal"><@message code="game.menu.dictionary.changes.personal.label"/></a>
+                            <a href="/playground/dictionary/expectant"><@message code="game.menu.dictionary.changes.expectant.label"/></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="wm-ui-splitbutton">
+                    <a href="/playground/players"><@message code="game.menu.players.label"/></a>
+                    <ul class="ui-helper-hidden">
+                        <li>
+                            <a href="/playground/friends/view"><@message code="game.menu.friends.label"/></a>
+                        </li>
+                        <li>
+                            <a href="/playground/blacklist/view"><@message code="game.menu.blacklist.label"/></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
